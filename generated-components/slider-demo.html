@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Slider Lit Demo</title>
+    <link rel="stylesheet" href="./slider-global-vars.css" />
+    <style>
+      :root {
+  --color-background-component: #FFFFFF;
+  --color-background-controls-brand-base: #0076CE;
+  --color-background-gray-light: #EAEAEA;
+  --color-border-accessible: #757575;
+  --color-border-brand-base: #0076CE;
+  --color-border-disabled: #757575;
+  --color-icon-brand-base: #0076CE;
+  --color-icon-brand-strong: #0062AB;
+  --color-icon-disabled: #757575;
+  --color-text-brand-base: #0076CE;
+  --color-text-disabled: #757575;
+  --color-text-neutral-strong: #252525;
+  --color-text-white: #FFFFFF;
+      }
+      body { margin:0; padding:24px; background:#f4f4f4; color:#111619; font-family:Roboto,Arial,sans-serif; }
+      .stack { display:grid; gap:20px; max-width:640px; }
+      .card { background:#fff; border:1px solid #d9d9d9; border-radius:8px; padding:16px; display:grid; gap:12px; }
+      .theme-dark {
+  --color-background-component: #111619;
+  --color-background-controls-brand-base: #0076CE;
+  --color-background-gray-light: #393939;
+  --color-border-accessible: #8898A5;
+  --color-border-brand-base: #4C9FDD;
+  --color-border-disabled: #9E9E9E;
+  --color-icon-brand-base: #4C9FDD;
+  --color-icon-brand-strong: #94C5EA;
+  --color-icon-disabled: #C5C5C5;
+  --color-text-brand-base: #4C9FDD;
+  --color-text-disabled: #C5C5C5;
+  --color-text-neutral-strong: #B8C1C9;
+  --color-text-white: #FFFFFF;
+        background:#111619; color:#fff; border-color:#34414c;
+      }
+      h2 { margin:0; font-size:16px; }
+    </style>
+  </head>
+  <body>
+    <div class="stack">
+      <div class="card"><h2>Single Slider</h2><slider-component id="single" min="0" max="100" step="5" showLable></slider-component></div>
+      <div class="card"><h2>Range Slider</h2><slider-component id="range" min="0" max="100" step="10"></slider-component></div>
+      <div class="card"><h2>Labels + Stepper + Value Input</h2><slider-component id="full" min="0" max="50" step="5" showLable showStepper showValueInput></slider-component></div>
+      <div class="card"><h2>Disabled</h2><slider-component min="0" max="100" step="5" disabled></slider-component></div>
+      <div class="card theme-dark"><h2>Dark Theme</h2><slider-component min="0" max="100" step="5" showLable showValueInput></slider-component></div>
+    </div>
+    <script type="module">
+      import './slider.js';
+      const single = document.getElementById('single');
+      single.value = 40;
+      const range = document.getElementById('range');
+      range.value = [20, 70];
+      const full = document.getElementById('full');
+      full.customLabel = ['Min', 'Max'];
+      full.value = 25;
+      document.querySelectorAll('slider-component').forEach((node) => {
+        node.addEventListener('onValueChange', (e) => console.log('onValueChange', e.detail));
+      });
+    </script>
+  </body>
+</html>

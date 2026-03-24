@@ -1,0 +1,144 @@
+# Segmented Button Design Spec
+
+## Metadata
+- Component: Segmented Button
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54583&m=dev
+- Node ID: 11067-54583
+
+## Anatomy
+- Segmented button container
+- Individual button segments
+- Selected segment indicator
+- Focus ring for keyboard navigation
+- Optional icons for each segment
+- Grouped border styling
+
+## Layout & Measurements
+- Standard height: 32px
+- Segment width: Auto (based on content)
+- Horizontal padding: 12px per segment
+- Border radius: 4px (container), 0 (internal borders)
+- Focus ring: 2px offset from segment
+- Minimum segment width: 40px
+- Icon size: 16px × 16px
+- Spacing between segments: 0 (adjacent)
+
+## Typography
+- Header 5: Roboto Regular 24px/32px (large segmented buttons)
+- Header 6: Roboto Regular 18px/25px (medium segmented buttons)
+- Body 2: Roboto Regular 14px/20px (standard segmented buttons)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #111619
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- White text: `var(--color-text-white)` = #ffffff
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- White icon: `var(--color-icon-white)` = #ffffff
+
+### Background Colors
+- Brand stronger: `var(--color-background-controls-brand-stronger)` = #06528a
+- Brand strong: `var(--color-background-controls-brand-strong)` = #0062ab
+- Brand light: `var(--color-background-controls-brand-light)` = #d9eaf8
+- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Slate 900: `UI Palettes/Slate/slate-900` = #111619
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Segment (Default) | transparent | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Segment (Hover) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Segment (Focus) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Segment (Selected) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Segment (Selected Hover) | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Segment (Selected Focus) | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Segment (Disabled) | transparent | `var(--color-border-accessible)` (#757575) | `UI Palettes/Gray/gray-900` (#252525) | `UI Palettes/Gray/gray-900` (#252525) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Text and border colors remain consistent via semantic variables
+- Selected segment uses brand colors for clear indication
+- Hover states provide visual feedback
+
+## Interactions
+- Click segment to select option
+- Hover provides visual feedback with background changes
+- Focus ring uses brand color for keyboard navigation
+- Only one segment can be selected at a time
+- Keyboard navigation: Arrow keys to navigate, Enter to select
+- Disabled segments prevent interaction and use gray colors
+- Selected segment provides clear visual indication
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to segmented control, Arrow keys to navigate, Enter to select
+- Screen reader support: Proper ARIA attributes for segmented control
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use radio group with proper role attributes
+- Focus management: Logical tab order through segments
+- Selection announcements: Screen reader announces selected option
+
+## Variants
+- **Default**: Standard horizontal segmented button
+- **Vertical**: Stacked vertical orientation
+- **With Icons**: Segments with icons only or icon + text
+- **Disabled**: Non-interactive state
+- **Small**: Reduced size for tight spaces
+- **Large**: Increased size for prominence
+- **Full Width**: Segments fill container width
+- **Multi-Select**: Allow multiple selections (radio vs checkbox behavior)
+
+## Behavior & Guidelines
+- Use segmented buttons for mutually exclusive options
+- Provide clear, concise labels for each segment
+- Use consistent styling across the application
+- Ensure adequate touch targets for mobile devices
+- Test with screen readers for proper option announcement
+- Consider responsive behavior for different screen sizes
+- Use appropriate number of segments (3-7 recommended)
+- Provide visual indication of selected state
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Selected states use brand colors for clear indication
+- Disabled states maintain accessibility with proper contrast
+- Dark theme adaptation through semantic tokens
+
+## Deliverable Checklist
+- [ ] Implement segment selection functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement disabled state styling
+- [ ] Add icon support
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test mobile touch interactions
+
+## Source Mapping
+- Figma component: Segmented Button (11067-54583)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Segmented Button" (category "Formelements"; node "11067-54583")

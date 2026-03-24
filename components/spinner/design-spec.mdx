@@ -1,0 +1,125 @@
+# Spinner Design Spec
+
+## Metadata
+- Component: Spinner
+- Category: Loading and Progress
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54673&m=dev
+- Node ID: 11067-54673
+
+## Anatomy
+- Spinner container
+- Rotating circular element
+- Optional loading text
+- Optional backdrop overlay
+- Focus ring for keyboard navigation
+- Animation states
+
+## Layout & Measurements
+- Standard size: 24px × 24px
+- Small size: 16px × 16px
+- Large size: 32px × 32px
+- Border width: 3px (standard), 2px (small), 4px (large)
+- Border radius: 50% (circular)
+- Focus ring: 2px offset from spinner
+- Text spacing: 8px from spinner
+- Minimum touch target: 44px × 44px
+
+## Typography
+- Header 2: Roboto Regular 36px/44px (large loading messages)
+- Body 2: Roboto Regular 14px/20px (loading text)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-surface-2)` = #ffffff
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+
+### Static Colors
+- Static white: `var(--color-static-gray-white)` = #ffffff
+- Static brand 500: `var(--color-static-brand-500)` = #0076ce
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+## States (Light Theme)
+| Element | Background | Border | Text | Animation |
+|---|---|---|---|---|
+| Spinner (Default) | transparent | `var(--color-border-brand-base)` (#0076ce) | transparent | Continuous rotation |
+| Spinner (Overlay) | `rgba(255, 255, 255, 0.8)` | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral-strong)` (#252525) | Continuous rotation |
+| Small Spinner | transparent | `var(--color-border-brand-base)` (#0076ce) | transparent | Fast rotation |
+| Large Spinner | transparent | `var(--color-border-brand-base)` (#0076ce) | transparent | Slow rotation |
+| Loading Text | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | None |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Text and border colors remain consistent via semantic variables
+- Spinner maintains visibility in dark theme
+- Overlay background adapts to dark theme
+
+## Interactions
+- Spinner is non-interactive (loading indicator)
+- Focus ring appears when spinner is keyboard focusable
+- Hover states not applicable (non-interactive)
+- Loading text can be updated dynamically
+- Overlay can be clicked to cancel (optional)
+- Auto-dismiss when loading completes
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to spinner when focusable
+- Screen reader support: Proper ARIA attributes for loading state
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use div with proper loading indication
+- Loading announcements: Screen reader announces loading state
+- Focus management: Trap focus when overlay is present
+
+## Variants
+- **Default**: Standard spinner without text
+- **With Text**: Spinner with loading message
+- **Overlay**: Spinner with backdrop overlay
+- **Small**: Reduced size for tight spaces
+- **Large**: Increased size for prominence
+- **Brand**: Brand-colored spinner
+- **Neutral**: Gray-colored spinner
+- **Determinate**: Progress indicator with percentage
+
+## Behavior & Guidelines
+- Use spinners for loading states
+- Provide loading text for context when appropriate
+- Use overlay for full-page loading
+- Consider animation speed and smoothness
+- Test with screen readers for proper loading announcement
+- Ensure spinner doesn't block critical interactions
+- Use consistent sizing across the application
+- Consider performance impact of animations
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Animation states should be smooth and performant
+- Focus states use brand colors for visual consistency
+- Dark theme adaptation through semantic tokens
+- Spinner animations should be accessible and performant
+
+## Deliverable Checklist
+- [ ] Implement smooth rotation animation
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test different size variants
+- [ ] Implement overlay functionality
+- [ ] Add loading text support
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test animation performance
+
+## Source Mapping
+- Figma component: Spinner (11067-54673)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Spinner" (category "Loading and Progress"; node "11067-54673")

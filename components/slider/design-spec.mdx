@@ -1,0 +1,161 @@
+# Slider Design Spec
+
+## Metadata
+- Component: Slider
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=43799-178868&m=dev
+- Node ID: 43799-178868
+- File key: `(skipped)`
+
+## Anatomy
+- Track base (unfilled rail)
+- Progress segment (filled rail)
+- Thumb/marker handle
+- Optional ticks
+- Optional labels and value display
+- Optional end value input field
+
+## Layout & Measurements
+- Verified from updated Figma slider area (`node-id=43799-178868`) and slider instances.
+- Slider main instance width in sample frame: `477px` (reference only; implementation should be container-driven).
+- Slider main height in sample frame: `32px`.
+- Track height: `4px`.
+- Stepper size: `8px` (dot marker).
+- Marker/thumb size in component parts: `16px x 16px`.
+- Runtime width behavior: slider should sync to parent width (`width: 100%`, `box-sizing: border-box`).
+- Label layout: when `showLable=true`, render labels inline as `<min label> <slider track> <max label>` (not above the track).
+
+## Typography
+- Labels and value text: use semantic typography tokens from theme (no hardcoded font values in implementation).
+
+## Tokens
+### Global style token collections available in this Figma file
+- `Tokens` (theme-aware: Light / Dark)
+- `Primitive` (base primitives available in file)
+- `Density Primitive` (density baseline values used by layout)
+
+### Slider semantic tokens (Light / Dark)
+- `var(--color-background-component)` = #FFFFFF (light) / #111619 (dark)
+- `var(--color-background-gray-light)` = #EAEAEA (light) / #393939 (dark)
+- `var(--color-background-controls-brand-base)` = #0076CE (light) / #0076CE (dark)
+- `var(--color-border-brand-base)` = #0076CE (light) / #4C9FDD (dark)
+- `var(--color-border-disabled)` = #757575 (light) / #9E9E9E (dark)
+- `var(--color-border-accessible)` = #757575 (light) / #8898A5 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #B8C1C9 (dark)
+- `var(--color-text-brand-base)` = #0076CE (light) / #4C9FDD (dark)
+- `var(--color-text-disabled)` = #757575 (light) / #C5C5C5 (dark)
+- `var(--color-text-white)` = #FFFFFF (light) / #FFFFFF (dark)
+- `var(--color-icon-brand-strong)` = #0062AB (light) / #94C5EA (dark)
+- `var(--color-icon-disabled)` = #757575 (light) / #C5C5C5 (dark)
+- `var(--color-icon-brand-base)` = #0076CE (light) / #4C9FDD (dark)
+
+## States (Light Theme)
+| Area | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Track | Default | `var(--color-background-gray-light)` (#EAEAEA) | `var(--color-border-accessible)` (#757575) | — |
+| Track | Filled/Progress | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-brand-base)` (#0076CE) | — |
+| Thumb | Default | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-brand-base)` (#0076CE) | `var(--color-text-white)` (#FFFFFF) |
+| Thumb | Hover | `var(--color-icon-brand-strong)` (#0062AB) | `var(--color-icon-brand-strong)` (#0062AB) | `var(--color-text-white)` (#FFFFFF) |
+| Thumb | Focus | `var(--color-icon-brand-strong)` (#0062AB) | `var(--color-border-brand-base)` (#0076CE) | `var(--color-text-white)` (#FFFFFF) |
+| Slider | Disabled | Track `var(--color-background-gray-light)` (#EAEAEA), thumb `var(--color-icon-disabled)` (#757575) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575), thumb/icon `var(--color-icon-disabled)` (#757575) |
+| Label/Value | Default | — | — | `var(--color-text-brand-base)` (#0076CE) |
+| Stepper | Selected | `var(--color-icon-brand-base)` (#0076CE) | `var(--color-icon-brand-base)` (#0076CE) | — |
+| Stepper | Unselected | `var(--color-background-gray-light)` (#EAEAEA) | `var(--color-border-disabled)` (#757575) | — |
+
+## States (Dark Theme)
+| Area | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Track | Default | `var(--color-background-gray-light)` (#393939) | `var(--color-border-accessible)` (#8898A5) | — |
+| Track | Filled/Progress | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-brand-base)` (#4C9FDD) | — |
+| Thumb | Default | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-brand-base)` (#4C9FDD) | `var(--color-text-white)` (#FFFFFF) |
+| Thumb | Hover | `var(--color-icon-brand-strong)` (#94C5EA) | `var(--color-icon-brand-strong)` (#94C5EA) | `var(--color-text-white)` (#FFFFFF) |
+| Thumb | Focus | `var(--color-icon-brand-strong)` (#94C5EA) | `var(--color-border-brand-base)` (#4C9FDD) | `var(--color-text-white)` (#FFFFFF) |
+| Slider | Disabled | Track `var(--color-background-gray-light)` (#393939), thumb `var(--color-icon-disabled)` (#C5C5C5) | `var(--color-border-disabled)` (#9E9E9E) | `var(--color-text-disabled)` (#C5C5C5), thumb/icon `var(--color-icon-disabled)` (#C5C5C5) |
+| Label/Value | Default | — | — | `var(--color-text-brand-base)` (#4C9FDD) |
+| Stepper | Selected | `var(--color-icon-brand-base)` (#4C9FDD) | `var(--color-icon-brand-base)` (#4C9FDD) | — |
+| Stepper | Unselected | `var(--color-background-gray-light)` (#393939) | `var(--color-border-disabled)` (#9E9E9E) | — |
+
+## Interactions
+- Clicking on track updates slider value to nearest valid step position.
+- Dragging thumb updates value continuously (or step-wise when `step` is defined).
+- In range mode, min-thumb and max-thumb drag independently (no pointer-capture conflict between thumbs).
+- In range mode, thumbs do not cross: min value is constrained to `<=` max value, max is constrained to `>=` min value.
+- Keyboard support: Arrow keys for increment/decrement, Home/End for min/max.
+- Disabled state blocks pointer and keyboard interactions.
+- Optional steppers (`showTicks` / `showStepper`) render on the slider track based on the configured `step` interval.
+- Stepper visual states:
+  - Selected steppers (at or below current value, or inside selected range) use `var(--color-icon-brand-base)`.
+  - Unselected steppers use component/neutral surface + disabled border tokens.
+  - Steppers are dot markers on track (no numeric tick labels).
+  - Steppers include both end points (`min` and `max`).
+  - Selected steppers are solid (no extra outer ring treatment).
+  - Stepper dots are center-aligned to thumb travel path (including endpoint inset).
+- Optional labels (`showLable`) are display controls and do not change value semantics.
+- When labels are shown, min/max labels are placed at track edges in the same row as the track.
+- Selected value labels are displayed below thumb(s) for both single-value and range sliders.
+- Value labels align to thumb centerline and render below the thumb with clear vertical separation.
+- Stepper and value-label placement use the same thumb-travel geometry (including thumb-radius endpoint offsets) to avoid edge drift.
+- Stepper dots are vertically centered on the track centerline.
+- In range mode, both thumbs are vertically centered on the same track centerline.
+- Stepper horizontal placement follows track endpoints (`0%` to `100%`), with explicit first/last endpoint anchoring.
+- In disabled state, value-under-thumb text uses `var(--color-text-disabled)`.
+
+## Component API
+Use this API contract in generated component code when user requests implementation:
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `min` | `number` | *(required by consumer or component default policy)* | Minimum slider value. |
+| `max` | `number` | *(required by consumer or component default policy)* | Maximum slider value. |
+| `value` | `string \\| number \\| (string \\| number)[]` | `''` | Current value. Supports scalar or range-array representations. |
+| `disabled` | `boolean` | `false` | Disables interaction and applies disabled styling/state. |
+| `customLabel` | `string[]` | `[]` | Custom label list for replacing default labels. |
+| `showLable` | `boolean` | `false` | Show labels for slider values (kept as requested API name). |
+| `showTicks` | `boolean` | `false` | Show ticks on track based on `step` configuration. |
+| `showStepper` | `boolean` | `false` | Alias for `showTicks`; renders stepper points on track. |
+| `step` | `number` | *(implementation default policy)* | Gap between adjacent slider values. |
+| `showValueInput` | `boolean` | `false` | Show end value input box(es) near slider. |
+
+## Events
+- Emits `onValueChange` with payload type `number | string`.
+- Emit on pointer/keyboard/value-input updates when effective value changes.
+
+## Disabled Input Styling
+- Disabled value input text: `var(--color-text-disabled)`
+- Disabled value input border: `var(--color-border-accessible)`
+- Disabled value input background: `var(--color-background-gray-light)`
+
+## Accessibility
+- Use proper slider semantics (`role="slider"` or native range input equivalent per framework).
+- Keep `aria-valuemin`, `aria-valuemax`, `aria-valuenow` synchronized.
+- Provide visible focus indicator and keyboard operability.
+- Ensure disabled state is announced and non-interactive.
+
+## Variants
+- Single value slider
+- Range slider (when `value` uses array form)
+- Disabled slider
+- Slider with labels/ticks/value input
+
+## Behavior & Guidelines
+- Use for bounded numeric/string value selection where drag + keyboard are expected.
+- Keep `min`, `max`, `step`, and `value` consistent (clamp/normalize invalid values).
+- For range mode, ensure ordered values and non-crossing behavior (or document crossing policy).
+- Keep styling token-driven; no hardcoded visual values in implementation code.
+
+## Token Gaps / Notes
+- Prefer semantic tokens from `theme.css` and this spec.
+- Avoid raw palette token usage in component code when semantic tokens exist.
+- If additional slider-specific semantic tokens are introduced, add them to this section and update state tables.
+
+## Deliverable Checklist
+- [ ] Metadata synced with `data/component-figma-map.json`.
+- [ ] Light and dark state tables use semantic tokens.
+- [ ] Component API includes all requested properties with defaults.
+- [ ] `onValueChange` event contract documented.
+- [ ] Accessibility and keyboard interaction documented.
+
+## Source Mapping
+- Figma REST: `GET /v1/files/(skipped)/nodes` and `GET /v1/files/(skipped)/variables`
+- Component map: `data/component-figma-map.json`
+- Design source: Slider (`node-id=43799-178868`)

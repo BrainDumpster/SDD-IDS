@@ -1,0 +1,141 @@
+# Radio Button Design Spec
+
+## Metadata
+- Component: Radio Button
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54579&m=dev
+- Node ID: 11067-54579
+
+## Anatomy
+- Radio input element (native or custom)
+- Selected indicator (dot/circle)
+- Label text container
+- Focus ring for keyboard navigation
+- Container wrapper with proper spacing
+
+## Layout & Measurements
+- Standard radio size: 16px × 16px
+- Label spacing: 8px from radio button
+- Touch target: Minimum 44px × 44px for accessibility
+- Border radius: 50% (circular for radio buttons)
+- Focus ring: 2px offset from radio button
+- Selected dot: 6px diameter (centered)
+
+## Typography
+- Body 1 - Medium: Roboto Medium 16px/24px (radio labels)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+- Lo Res Body 2: Comic Sans MS 14px/20px (low resolution mode)
+
+## Tokens
+### Colors
+- White: `var(--color-icon-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Brand background: `var(--color-background-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Neutral: `var(--color-text-neutral)` = #4d4d4d
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Disabled border: `var(--color-border-disabled)` = #757575
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Strong border: `var(--color-border-strong)` = #252525
+- Brand strong: `var(--color-background-brand-strong)` = #0062ab
+
+### Icons
+- White icon: `var(--color-icon-white)` = #ffffff
+- Info icon: `var(--color-icon-alerting-info)` = #005ece
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+
+### Borders
+- White border: `var(--color-border-white)` = #ffffff
+- Info border: `var(--color-border-alerting-info-white)` = #005ece
+
+### Text Colors
+- Critical text: `var(--color-text-critical)` = #af0000
+
+### Surfaces
+- Surface dark: `var(--color-background-surface-1)` = #111619
+
+### UI Palettes
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 200: `UI Palettes/Gray/gray-200` = #EAEAEA
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+## States (Light Theme)
+| State | Background | Border | Selected Dot | Label |
+|---|---|---|---|---|
+| Unselected | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | transparent | `var(--color-text-neutral-strong)` (#252525) |
+| Unselected Hover | `var(--color-background-gray-light)` (#eaeaea) | `var(--color-border-strong)` (#252525) | transparent | `var(--color-text-neutral-strong)` (#252525) |
+| Unselected Focus | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | transparent | `var(--color-text-neutral-strong)` (#252525) |
+| Selected | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) | `var(--color-text-neutral-strong)` (#252525) |
+| Selected Hover | `var(--color-background-brand-strong)` (#0062ab) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) | `var(--color-text-neutral-strong)` (#252525) |
+| Selected Focus | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) | `var(--color-text-neutral-strong)` (#252525) |
+| Disabled | `var(--color-background-component)` (#ffffff) | `var(--color-border-disabled)` (#757575) | `var(--color-background-gray-light)` (#eaeaea) | `var(--color-text-disabled)` (#757575) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Text and border colors remain consistent via semantic variables
+- Disabled state uses gray tokens for dark theme compatibility
+
+## Interactions
+- Click selects radio button (deselects others in group)
+- Hover provides visual feedback with border/background changes
+- Focus ring uses brand color for keyboard navigation
+- Disabled state prevents interaction and uses gray colors
+- Only one radio can be selected in a group
+- Smooth transitions for state changes
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Touch target: Minimum 44px for mobile accessibility
+- Keyboard navigation: Tab to radio group, Arrow keys to navigate, Space to select
+- Screen reader support: Proper ARIA labels and group attributes
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use native radio element with fieldset/legend for groups
+
+## Variants
+- **Default**: Standard radio button with brand colors
+- **Error**: Critical state for validation errors
+- **Warning**: Info state for warnings
+- **Disabled**: Non-interactive state
+- **Grouped**: Multiple radios with shared name attribute
+
+## Behavior & Guidelines
+- Use radio buttons for single selection scenarios
+- Provide clear, concise labels for each option
+- Group related radio buttons with fieldset/legend
+- Ensure at least one option is selected by default when appropriate
+- Use vertical stacking for better readability
+- Test with screen readers for proper group announcement
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Disabled states maintain accessibility with proper contrast
+- Error states use critical color tokens for validation feedback
+- Lo Res mode uses Comic Sans MS for low-resolution displays
+
+## Deliverable Checklist
+- [ ] Implement selected/unselected/disabled states
+- [ ] Add proper focus management for groups
+- [ ] Test keyboard navigation (Tab, Arrows, Space)
+- [ ] Verify ARIA labels and group attributes
+- [ ] Test error and warning states
+- [ ] Validate disabled state styling
+- [ ] Ensure touch target minimums
+- [ ] Test dark theme compatibility
+- [ ] Verify single selection behavior
+
+## Source Mapping
+- Figma component: Radio Button (11067-54579)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Radio Button" (category "Formelements"; node "11067-54579")
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Radio Button" (category "Formelements"; node "11067-54579")

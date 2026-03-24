@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Accordion Lit Demo</title>
+    <link rel="stylesheet" href="./accordion-global-vars.css" />
+    <style>
+      :root {
+  --color-background-brand-light: #D9EAF8;
+  --color-background-brand-lighter: #EBF4FB;
+  --color-background-component: #FFFFFF;
+  --color-border-accessible: #757575;
+  --color-border-brand-base: #0076CE;
+  --color-border-brand-dark: #0062AB;
+  --color-border-strong: #252525;
+  --color-icon-accessible: #757575;
+  --color-text-link-brand-base: #0062AB;
+  --color-text-neutral-strong: #252525;
+      }
+
+      body {
+        margin: 0;
+        font-family: Roboto, Arial, sans-serif;
+        background: #f4f4f4;
+        color: #111619;
+      }
+
+      .page {
+        padding: 24px;
+        display: grid;
+        gap: 24px;
+      }
+
+      .theme {
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        background: transparent;
+      }
+
+      .theme.theme-dark {
+  --color-background-brand-light: #34414C;
+  --color-background-brand-lighter: #1E262C;
+  --color-background-component: #111619;
+  --color-border-accessible: #8898A5;
+  --color-border-brand-base: #4C9FDD;
+  --color-border-brand-dark: #94C5EA;
+  --color-border-strong: #B8C1C9;
+  --color-icon-accessible: #8898A5;
+  --color-text-link-brand-base: #4C9FDD;
+  --color-text-neutral-strong: #B8C1C9;
+        background: #111619;
+        color: #fff;
+      }
+
+      .stack {
+        display: grid;
+        gap: 0;
+        width: 480px;
+        max-width: 100%;
+      }
+
+      .stack accordion-component + accordion-component {
+        margin-top: -1px;
+      }
+
+      .theme h2 {
+        margin: 0 0 12px 0;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="theme theme-light">
+        <h2>Light Theme - Accordion States</h2>
+        <div class="stack">
+
+          <accordion-component data-state="collapsed-default" title="Collapsed default"></accordion-component>
+          <accordion-component data-state="collapsed-hover" title="Collapsed hover"></accordion-component>
+          <accordion-component data-state="expanded-default" title="Expanded default"></accordion-component>
+          <accordion-component data-state="expanded-hover" title="Expanded hover"></accordion-component>
+    
+        </div>
+      </section>
+
+      <section class="theme theme-dark">
+        <h2>Dark Theme - Accordion States</h2>
+        <div class="stack">
+
+          <accordion-component data-state="collapsed-default" title="Collapsed default"></accordion-component>
+          <accordion-component data-state="collapsed-hover" title="Collapsed hover"></accordion-component>
+          <accordion-component data-state="expanded-default" title="Expanded default"></accordion-component>
+          <accordion-component data-state="expanded-hover" title="Expanded hover"></accordion-component>
+    
+        </div>
+      </section>
+
+      <section class="theme theme-light">
+        <h2>Interaction - Single Open (mode="single")</h2>
+        <div class="stack">
+          <accordion-group mode="single"></accordion-group>
+        </div>
+      </section>
+
+      <section class="theme theme-light">
+        <h2>Interaction - Multiple Open (mode="multiple")</h2>
+        <div class="stack">
+          <accordion-group mode="multiple"></accordion-group>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="./accordion.js"></script>
+  </body>
+</html>

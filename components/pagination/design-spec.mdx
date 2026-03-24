@@ -1,0 +1,143 @@
+# Pagination Design Spec
+
+## Metadata
+- Component: Pagination
+- Category: Table and Data Grids
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=37721-115815&m=dev
+- Node ID: 37721-115815
+
+## Anatomy
+- Pagination container
+- Previous page button
+- Page number buttons
+- Current page indicator
+- Next page button
+- Optional page size selector
+- Optional total items display
+- Focus ring for keyboard navigation
+- Optional jump to page input
+
+## Layout & Measurements
+- Standard height: 40px
+- Button width: 40px (page numbers), 80px (prev/next)
+- Button spacing: 4px
+- Border radius: 4px (buttons)
+- Focus ring: 2px offset from button
+- Minimum width: 200px
+- Page number padding: 8px 12px
+- Icon size: 16px × 16px
+
+## Typography
+- Body 2: Roboto Regular 14px/20px (page numbers and labels)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #f4f4f4
+- Surface 2: `var(--color-background-surface-2)` = #ffffff
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Accessible border: `var(--color-border-accessible)` = #757575
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- Accessible icon: `var(--color-icon-accessible)` = #757575
+- Disabled icon: `var(--color-icon-disabled)` = #757575
+- Dell Blue icon: `icon-DellBlue` = #0076CE
+
+### UI Palettes
+- Dell Blue 100: `UI Palettes/Dell Blue/dell-blue-100` = #EBF4FB
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Dell Blue 600: `UI Palettes/Dell Blue/dell-blue-600` = #0062AB
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 600: `UI Palettes/Gray/gray-600` = #616161
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Container | `var(--color-background-surface-2)` (#ffffff) | transparent | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Page Number (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Page Number (Hover) | `UI Palettes/Dell Blue/dell-blue-100` (#EBF4FB) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Page Number (Focus) | `UI Palettes/Dell Blue/dell-blue-100` (#EBF4FB) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Current Page | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Prev/Next (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-accessible)` (#757575) |
+| Prev/Next (Hover) | `UI Palettes/Dell Blue/dell-blue-100` (#EBF4FB) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Prev/Next (Disabled) | `var(--color-background-surface-1)` (#f4f4f4) | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-icon-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
+- Text and border colors remain consistent via semantic variables
+- Current page uses brand colors for clear indication
+
+## Interactions
+- Click page numbers to navigate to specific pages
+- Click Previous/Next to navigate sequentially
+- Hover provides visual feedback with background changes
+- Focus ring uses brand color for keyboard navigation
+- Disabled buttons prevent navigation at boundaries
+- Jump to page input for direct navigation (optional)
+- Page size selector for items per page (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab through controls, Enter to activate
+- Screen reader support: Proper ARIA attributes for navigation
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use nav element with pagination role
+- Current page indication: Proper aria-current="page" attribute
+- Focus management: Logical tab order through pagination controls
+
+## Variants
+- **Default**: Standard pagination with page numbers
+- **Simple**: Previous/Next only
+- **Compact**: Reduced size for space-constrained interfaces
+- **With Jump**: With jump to page input
+- **With Size Selector**: With items per page selector
+- **With Info**: Showing current page and total items
+- **Ellipsis**: With ellipsis for many pages
+
+## Behavior & Guidelines
+- Use pagination for large datasets
+- Show current page clearly
+- Provide Previous/Next navigation
+- Limit visible page numbers (typically 5-7)
+- Include page information when helpful
+- Test with screen readers for proper navigation announcement
+- Consider responsive behavior for mobile devices
+- Use consistent styling across the application
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Current page uses brand colors for clear indication
+- Disabled states maintain accessibility with proper contrast
+- Dark theme adaptation through semantic tokens
+
+## Deliverable Checklist
+- [ ] Implement page navigation functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter, Arrows)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement disabled state for boundaries
+- [ ] Add jump to page functionality
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test responsive behavior
+
+## Source Mapping
+- Figma component: Pagination (37721-115815)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Pagination" (category "Table and Data Grids"; node "37721-115815")

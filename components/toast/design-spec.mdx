@@ -1,0 +1,160 @@
+# Toast Design Spec
+
+## Metadata
+- Component: Toast
+- Category: Alerts and Notifications
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54653&m=dev
+- Node ID: 11067-54653
+
+## Anatomy
+- Toast container with background
+- Toast icon (status indicator)
+- Toast title (optional)
+- Toast message/content
+- Close button (×)
+- Focus ring for keyboard navigation
+- Optional action button
+- Slide-in animation
+
+## Layout & Measurements
+- Standard height: Auto (based on content)
+- Horizontal padding: 16px
+- Vertical padding: 12px
+- Border radius: 4px
+- Focus ring: 2px offset from toast
+- Icon size: 20px × 20px
+- Close button: 16px × 16px
+- Minimum width: 300px
+- Maximum width: 500px
+- Spacing between elements: 8px
+
+## Typography
+- Display 1/Default: Roboto Light 72px/88px (hero toast titles)
+- Body 2: Roboto Regular 14px/20px (toast messages)
+- Body 2 - Underline: Roboto Regular 14px/20px (link text)
+
+## Tokens
+### Colors
+- White: `var(--color-static-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Static gray 800: `var(--color-static-gray-800)` = #393939
+- Static gray 900: `var(--color-static-gray-900)` = #252525
+- Black text: `var(--color-text-black)` = #252525
+- Black icon: `var(--color-icon-black)` = #252525
+- White text: `var(--color-text-white)` = #ffffff
+- White icon: `var(--color-icon-white)` = #ffffff
+- Strong border: `var(--color-border-strong)` = #252525
+- White border: `var(--color-border-white)` = #ffffff
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Neutral border: `var(--color-border-neutral)` = #4d4d4d
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- Accessible icon: `var(--color-icon-accessible)` = #757575
+- Inverse icon: `var(--color-icon-inverse)` = #ffffff
+- Info blue icon: `icon-info-blue` = #005ECE
+- White icon: `icon-white` = #FFFFFF
+
+### Alert Colors
+- Info icon: `var(--color-icon-alerting-info)` = #005ece
+- Info border: `var(--color-border-alerting-info-white)` = #005ece
+- Success icon: `var(--color-icon-alerting-success)` = #1b8500
+- Success border: `var(--color-border-alerting-success-white)` = #1b8500
+- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
+- Minor border: `var(--color-border-alerting-minor-transparent)` = #9c622e
+- Major icon: `var(--color-icon-alerting-major)` = #ed6400
+- Major border: `var(--color-border-alerting-major-white)` = #ed6400
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+- Critical border: `var(--color-border-alerting-critical-white)` = #af0000
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Secondary Palettes
+- Teal 400: `Secondary Palettes/Teal/teal-400` = #4CA7BB
+
+## States (Light Theme)
+| Variant | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Default | `var(--color-static-gray-800)` (#393939) | `var(--color-border-neutral)` (#4d4d4d) | `var(--color-static-gray-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Info | `var(--color-icon-alerting-info)` (#005ece) | `var(--color-border-alerting-info-white)` (#005ece) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Success | `var(--color-icon-alerting-success)` (#1b8500) | `var(--color-border-alerting-success-white)` (#1b8500) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Warning | `var(--color-icon-alerting-minor)` (#ffc700) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-black)` (#252525) | `var(--color-icon-black)` (#252525) |
+| Error | `var(--color-icon-alerting-major)` (#ed6400) | `var(--color-border-alerting-major-white)` (#ed6400) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Critical | `var(--color-icon-alerting-critical)` (#af0000) | `var(--color-border-alerting-critical-white)` (#af0000) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Static colors provide consistent appearance
+- Toast colors maintain visibility in dark theme
+- Dark backgrounds ensure readability
+
+## Interactions
+- Click close button to dismiss toast
+- Click toast to focus/activate (optional)
+- Hover provides visual feedback on close button
+- Focus ring uses brand color for keyboard navigation
+- Auto-dismiss after timeout (default behavior)
+- Slide-in/out animations
+- Keyboard navigation: Tab to toast, Enter to action, Escape to dismiss
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to toast, Enter for actions, Escape to dismiss
+- Screen reader support: Proper ARIA attributes and toast announcements
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use proper toast/role attributes
+- Focus management: Auto-focus on new toasts
+- Dismiss announcements: Screen reader announces when toast is dismissed
+
+## Variants
+- **Default**: Standard dark toast
+- **Info**: Blue informational toast
+- **Success**: Green success toast
+- **Warning**: Yellow warning toast
+- **Error**: Orange error toast
+- **Critical**: Red critical toast
+- **With Title**: Toast with heading
+- **With Action**: Toast with action button
+- **Persistent**: Toast that requires user action
+- **Stacked**: Multiple toasts stacked vertically
+
+## Behavior & Guidelines
+- Use toasts for non-critical notifications
+- Position at top-right or bottom-right of screen
+- Auto-dismiss after appropriate timeout (3-5 seconds)
+- Provide clear, concise messages
+- Include dismiss functionality for user control
+- Test with screen readers for proper announcement
+- Consider mobile touch interactions
+- Use consistent styling across toast types
+- Limit number of concurrent toasts
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Toast variants use appropriate color psychology
+- Dark backgrounds ensure text readability
+- Dark theme adaptation through semantic tokens
+
+## Deliverable Checklist
+- [ ] Implement slide-in/out animations
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test different toast variants
+- [ ] Implement auto-dismiss functionality
+- [ ] Add toast stacking logic
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test mobile touch interactions
+
+## Source Mapping
+- Figma component: Toast (11067-54653)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Toast" (category "Alerts and Notifications"; node "11067-54653")

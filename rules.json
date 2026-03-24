@@ -1,0 +1,82 @@
+[
+  {
+    "rule_id": "ab3de64c-7b59-4569-a17b-0eae58cc3b06",
+    "component": "designer-guidelines",
+    "category": "layout",
+    "description": "Note: redlines apply to all wizard sizes",
+    "severity": "medium",
+    "source_section": "layout_rules"
+  },
+  {
+    "rule_id": "0b0415a2-f146-46dd-87f9-ec2fee78b0df",
+    "component": "color",
+    "category": "accessibility",
+    "description": "Make sure the contrast ratio between colors adequately meets accessibility standards.\nDo not rely on color alone to indicate meaning.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "11379add-a1bc-41f2-9353-cc8499d9d44c",
+    "component": "color",
+    "category": "accessibility",
+    "description": "Color contrast is the difference between the brightness of the text or graphics and the brightness of the background color behind it.\n                It\u2019s expressed as a ratio ranging from 1:1 (white on white) to 21:1 (black on white).",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "700513bb-b159-4719-907d-0b2a9a0be2f1",
+    "component": "color",
+    "category": "accessibility",
+    "description": "A higher contrast ratio means that text or graphics will be easier to read for color blind users, those who read in bright- or\n                low-light conditions, or for those with vision impairments.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "c3b31204-6a34-42c0-8c80-633d3c3f846c",
+    "component": "color",
+    "category": "accessibility",
+    "description": "The main WCAG guidelines for contrast requirements are featured below. Remember, these ratios are the minimum requirements. Having a\n                higher ratio will mean even better accessibility.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "7f0f2202-8dc7-409d-94c4-5ca988b89664",
+    "component": "color",
+    "category": "accessibility",
+    "description": "There are different contrast requirements for text depending on font-size and weight.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "f42cc5c6-cca2-4783-8892-936abe67209b",
+    "component": "color",
+    "category": "accessibility",
+    "description": "All UI (user interface) components require adequate contrast. A UI component is defined as anything \u201cperceived as a control for a\n                distinct function,\u201d such as a button. The smaller or thinner an element appears, the higher contrast it will need. The higher contrast\n                requirement will overrule a lower one, such as small text on a button, or a thin-stroked icon in a UI element.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "b05b8331-3070-4bab-a5b4-d485b0e7982e",
+    "component": "color",
+    "category": "accessibility",
+    "description": "For graphics, contrast is only required for elements that relay meaning, such as icons or data visualizations.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "995dff3c-d457-4787-bd9b-ad412fff709b",
+    "component": "color",
+    "category": "accessibility",
+    "description": "Some graphical elements are exempt from WCAG\u2019s current contrast requirements. If there\u2019s any doubt that an element is exempt, proceed\n                with the assumption that it does require contrast ratios be met.",
+    "severity": "high",
+    "source_section": "accessibility"
+  },
+  {
+    "rule_id": "b3e85e09-668c-4ca9-b618-fabd0cadd31b",
+    "component": "color",
+    "category": "accessibility",
+    "description": "Logo images that can\u2019t be replaced by actual text\nDisabled UI component states\nGraphics with no text that are used purely to create a sensory effect\nInformation that is available in an accessible format either elsewhere on the same page or linked from the page\nA graphic that conveys the same information with text embedded or overlaid, such as labels and values on charts",
+    "severity": "high",
+    "source_section": "accessibility"
+  }
+]

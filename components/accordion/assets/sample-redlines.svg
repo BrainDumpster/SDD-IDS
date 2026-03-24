@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" width="320" height="120">
+  <rect x="8" y="12" width="300" height="36" fill="#f4f4f4" stroke="#757575" stroke-width="1" rx="4"/>
+  <text x="16" y="35" font-family="Roboto, sans-serif" font-size="14" fill="#252525">Accordion header</text>
+  <rect x="8" y="52" width="300" height="56" fill="#ffffff" stroke="#757575" stroke-width="1"/>
+  <text x="16" y="82" font-family="Roboto, sans-serif" font-size="12" fill="#4d4d4d">Content area</text>
+  <line x1="8" y1="12" x2="308" y2="12" stroke="#af0000" stroke-width="1"/>
+  <text x="12" y="10" font-size="10" fill="#af0000">8px outer padding</text>
+</svg>

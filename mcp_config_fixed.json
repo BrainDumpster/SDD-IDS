@@ -1,0 +1,48 @@
+{
+  "mcpServers": {
+    "figma-remote-mcp-server": {
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.figma.com/mcp",
+        "--static-oauth-client-metadata",
+        "{\"client_name\":\"Windsurf\",\"client_uri\":\"https://windsurf.ai\"}"
+      ],
+      "command": "npx",
+      "disabled": false,
+      "env": {
+        "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt",
+        "FIGMA_TOKEN": "figd_0sDugG-DQ5bNyU2oF4edSN6QFcqhGA2UfSM0wrpx"
+      }
+    },
+    "github-docker": {
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "/etc/ssl/certs:/etc/ssl/certs:ro",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "-e",
+        "GITHUB_HOST=https://eos2git.cec.lab.emc.com",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "command": "docker",
+      "disabled": false,
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+      }
+    },
+    "simple-rag-component-generator": {
+      "command": "python3",
+      "args": [
+        "/home/muthu/projects/AI/CascadeProjects/windsurf-project/mcp_tools/simple_rag_generator.py"
+      ],
+      "disabled": false,
+      "env": {
+        "PYTHONPATH": "/home/muthu/projects/AI/CascadeProjects/windsurf-project"
+      }
+    }
+  }
+}

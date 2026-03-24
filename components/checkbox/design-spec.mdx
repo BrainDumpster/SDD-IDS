@@ -1,0 +1,132 @@
+# Checkbox Design Spec
+
+## Metadata
+- Component: Checkbox
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54543&m=dev
+- Node ID: 11067-54543
+
+## Anatomy
+- Checkbox input element (native or custom)
+- Check/cross icon for selected state
+- Label text container
+- Focus ring for keyboard navigation
+- Container wrapper with proper spacing
+
+## Layout & Measurements
+- Standard checkbox size: 16px × 16px
+- Label spacing: 8px from checkbox
+- Touch target: Minimum 44px × 44px for accessibility
+- Border radius: 2px (standard for form controls)
+- Focus ring: 2px offset from checkbox
+
+## Typography
+- Body 1 - Medium: Roboto Medium 16px/24px (checkbox labels)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+
+## Tokens
+### Colors
+- White: `var(--color-icon-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Neutral: `var(--color-text-neutral)` = #4d4d4d
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Strong border: `var(--color-border-strong)` = #252525
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Disabled border: `var(--color-border-disabled)` = #757575
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Gray base: `var(--color-background-gray-base)` = #757575
+- Brand strong: `var(--color-background-controls-brand-strong)` = #0062ab
+
+### Icons
+- White icon: `var(--color-icon-white)` = #ffffff
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Info icon: `var(--color-icon-alerting-info)` = #005ece
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+- Inverse icon: `var(--color-icon-inverse)` = #ffffff
+
+### Borders
+- White border: `var(--color-border-white)` = #ffffff
+- Info border: `var(--color-border-alerting-info-white)` = #005ece
+- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
+
+### Text Colors
+- Critical text: `var(--color-text-critical)` = #af0000
+
+### Surfaces
+- Surface dark: `var(--color-background-surface-1)` = #111619
+
+## States (Light Theme)
+| State | Background | Border | Icon | Label |
+|---|---|---|---|---|
+| Unchecked | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | transparent | `var(--color-text-neutral-strong)` (#252525) |
+| Unchecked Hover | `var(--color-background-gray-light)` (#eaeaea) | `var(--color-border-strong)` (#252525) | transparent | `var(--color-text-neutral-strong)` (#252525) |
+| Unchecked Focus | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | transparent | `var(--color-text-neutral-strong)` (#252525) |
+| Checked | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) | `var(--color-text-neutral-strong)` (#252525) |
+| Checked Hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) | `var(--color-text-neutral-strong)` (#252525) |
+| Checked Focus | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) | `var(--color-text-neutral-strong)` (#252525) |
+| Disabled | `var(--color-background-gray-base)` (#757575) | `var(--color-border-disabled)` (#757575) | `var(--color-icon-inverse)` (#ffffff) | `var(--color-text-disabled)` (#757575) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Text and border colors remain consistent via semantic variables
+- Disabled state uses gray base token for dark theme compatibility
+
+## Interactions
+- Click toggles checked/unchecked state
+- Hover provides visual feedback with border/background changes
+- Focus ring uses brand color for keyboard navigation
+- Disabled state prevents interaction and uses gray colors
+- Smooth transitions for state changes
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Touch target: Minimum 44px for mobile accessibility
+- Keyboard navigation: Tab to checkbox, Space to toggle
+- Screen reader support: Proper ARIA labels and states
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use native checkbox element when possible
+
+## Variants
+- **Default**: Standard checkbox with brand colors
+- **Error**: Critical state for validation errors
+- **Warning**: Info state for warnings
+- **Disabled**: Non-interactive state
+- **Indeterminate**: Partially selected state (tri-state)
+
+## Behavior & Guidelines
+- Use checkboxes for multiple selection scenarios
+- Provide clear, concise labels for each checkbox
+- Group related checkboxes with fieldset/legend
+- Use indeterminate state for "select all" functionality
+- Ensure adequate spacing between checkbox options
+- Test with screen readers for proper announcement
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Disabled states maintain accessibility with proper contrast
+- Error states use critical color tokens for validation feedback
+
+## Deliverable Checklist
+- [ ] Implement checked/unchecked/indeterminate states
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Space)
+- [ ] Verify ARIA labels and states
+- [ ] Test error and warning states
+- [ ] Validate disabled state styling
+- [ ] Ensure touch target minimums
+- [ ] Test dark theme compatibility
+
+## Source Mapping
+- Figma component: Checkbox (11067-54543)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Checkbox" (category "Formelements"; node "11067-54543")
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Checkbox" (category "Formelements"; node "11067-54543")

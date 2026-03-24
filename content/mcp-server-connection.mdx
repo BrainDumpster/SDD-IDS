@@ -1,0 +1,429 @@
+---
+title: MCP Server Connection Guide
+description: Complete guide for connecting to and using the RAG Component Generator MCP server
+category: Development Tools
+server_type: MCP
+transport: stdio
+---
+
+# MCP Server Connection Guide
+
+## 🚀 Server Information
+
+### Connection Details
+- **Server Name**: `simple-rag-component-generator`
+- **IP Address**: `172.22.84.1`
+- **Hostname**: `W-8S4HFB4`
+- **Transport Protocol**: `stdio` (stdin/stdout)
+- **Port**: `N/A` (stdio transport - no network port)
+- **Working Directory**: `/home/muthu/projects/AI/CascadeProjects/windsurf-project`
+
+### Available Tools
+1. **`generate_component_from_query`** - Generate components from natural language
+2. **`get_server_info`** - Get server connection details
+3. **`test_rag_system`** - Test RAG system connectivity
+
+## 🔧 Starting the Server
+
+### Command Line
+```bash
+cd /home/muthu/projects/AI/CascadeProjects/windsurf-project
+python3 mcp_tools/simple_rag_generator.py
+```
+
+### Using the Helper Script
+```bash
+# Show server information only
+python3 scripts/show_server_info.py
+
+# Start server with information display
+python3 scripts/show_server_info.py --start
+```
+
+## 📡 MCP Client Configuration
+
+### JSON Configuration
+```json
+{
+  "mcpServers": {
+    "rag-component-generator": {
+      "command": "python3",
+      "args": ["/home/muthu/projects/AI/CascadeProjects/windsurf-project/mcp_tools/simple_rag_generator.py"],
+      "cwd": "/home/muthu/projects/AI/CascadeProjects/windsurf-project"
+    }
+  }
+}
+```
+
+### TypeScript/JavaScript Client
+```typescript
+import { MCPServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+
+// Configure the server
+const server = new MCPServer({
+  name: "rag-component-generator",
+  command: "python3",
+  args: ["/home/muthu/projects/AI/CascadeProjects/windsurf-project/mcp_tools/simple_rag_generator.py"],
+  cwd: "/home/muthu/projects/AI/CascadeProjects/windsurf-project"
+});
+
+// Start the server
+await server.start();
+```
+
+## 🎯 Tool Usage Examples
+
+### Generate Component from Query
+```javascript
+const result = await server.call("generate_component_from_query", {
+  query: "Create a primary button with hover effects and loading state",
+  framework: "React",
+  style_mode: "css-module"
+});
+
+console.log(result.generated_code.component);
+console.log(result.generated_code.css);
+```
+
+### Get Server Information
+```javascript
+const info = await server.call("get_server_info", {});
+console.log(info);
+```
+
+### Test RAG System
+```javascript
+const test = await server.call("test_rag_system", {});
+console.log(test.test_results);
+```
+
+## 🔍 Understanding stdio Transport
+
+### What is stdio Transport?
+- **No Network Port**: Communication happens via stdin/stdout, not network sockets
+- **Process-based**: Client spawns the server process as a subprocess
+- **JSON-RPC**: Messages are exchanged using JSON-RPC protocol over standard I/O
+- **Secure**: No network exposure, communication is contained within the process
+
+### Benefits
+- **Security**: No network ports exposed
+- **Simplicity**: Easy to set up and configure
+- **Performance**: Direct process communication
+- **Isolation**: Each client gets its own server instance
+
+### Limitations
+- **Local Only**: Cannot be accessed from remote machines
+- **Process Management**: Client must handle server process lifecycle
+- **Single Client**: Each server instance handles one client
+
+## 🛠️ Client Implementation Examples
+
+### Python Client
+```python
+import subprocess
+import json
+import asyncio
+
+class MCPClient:
+    def __init__(self):
+        self.process = None
+    
+    async def start_server(self):
+        """Start the MCP server process"""
+        self.process = subprocess.Popen(
+            ["python3", "mcp_tools/simple_rag_generator.py"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd="/home/muthu/projects/AI/CascadeProjects/windsurf-project"
+        )
+    
+    async def call_tool(self, tool_name, params):
+        """Call a tool on the MCP server"""
+        request = {
+            "jsonrpc": "2.0",
+            "method": "tools/call",
+            "params": {
+                "name": tool_name,
+                "arguments": params
+            },
+            "id": 1
+        }
+        
+        # Send request
+        self.process.stdin.write(json.dumps(request) + "\n")
+        self.process.stdin.flush()
+        
+        # Read response
+        response_line = self.process.stdout.readline()
+        response = json.loads(response_line.strip())
+        
+        return response.get("result", {})
+    
+    async def close(self):
+        """Close the server process"""
+        if self.process:
+            self.process.terminate()
+            await self.process.wait()
+
+# Usage
+async def main():
+    client = MCPClient()
+    await client.start_server()
+    
+    try:
+        # Generate a component
+        result = await client.call_tool("generate_component_from_query", {
+            "query": "Create a primary button with hover effects",
+            "framework": "React",
+            "style_mode": "css-module"
+        })
+        
+        print("Generated Component:")
+        print(result["generated_code"]["component"])
+        
+    finally:
+        await client.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Node.js Client
+```javascript
+const { spawn } = require('child_process');
+
+class MCPClient {
+  constructor() {
+    this.server = null;
+    this.requestId = 1;
+    this.pendingRequests = new Map();
+  }
+  
+  startServer() {
+    return new Promise((resolve, reject) => {
+      this.server = spawn('python3', [
+        '/home/muthu/projects/AI/CascadeProjects/windsurf-project/mcp_tools/simple_rag_generator.py'
+      ], {
+        cwd: '/home/muthu/projects/AI/CascadeProjects/windsurf-project',
+        stdio: ['pipe', 'pipe', 'inherit']
+      });
+      
+      this.server.stdout.on('data', (data) => {
+        const lines = data.toString().trim().split('\n');
+        lines.forEach(line => {
+          if (line.trim()) {
+            try {
+              const response = JSON.parse(line);
+              const pending = this.pendingRequests.get(response.id);
+              if (pending) {
+                pending.resolve(response.result || response.error);
+                this.pendingRequests.delete(response.id);
+              }
+            } catch (e) {
+              console.error('Failed to parse response:', line);
+            }
+          }
+        });
+      });
+      
+      this.server.on('error', reject);
+      this.server.on('spawn', resolve);
+    });
+  }
+  
+  async callTool(toolName, params) {
+    return new Promise((resolve, reject) => {
+      const request = {
+        jsonrpc: "2.0",
+        method: "tools/call",
+        params: {
+          name: toolName,
+          arguments: params
+        },
+        id: this.requestId++
+      };
+      
+      this.pendingRequests.set(request.id, { resolve, reject });
+      
+      this.server.stdin.write(JSON.stringify(request) + '\n');
+      
+      // Timeout after 30 seconds
+      setTimeout(() => {
+        const pending = this.pendingRequests.get(request.id);
+        if (pending) {
+          this.pendingRequests.delete(request.id);
+          reject(new Error('Request timeout'));
+        }
+      }, 30000);
+    });
+  }
+  
+  close() {
+    if (this.server) {
+      this.server.kill();
+    }
+  }
+}
+
+// Usage
+async function main() {
+  const client = new MCPClient();
+  
+  try {
+    await client.startServer();
+    
+    // Generate a component
+    const result = await client.callTool('generate_component_from_query', {
+      query: 'Create a primary button with hover effects',
+      framework: 'React',
+      style_mode: 'css-module'
+    });
+    
+    console.log('Generated Component:');
+    console.log(result.generated_code.component);
+    
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    client.close();
+  }
+}
+
+main().catch(console.error);
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### Server Won't Start
+```bash
+# Check Python path
+which python3
+python3 --version
+
+# Check file exists
+ls -la mcp_tools/simple_rag_generator.py
+
+# Check permissions
+chmod +x mcp_tools/simple_rag_generator.py
+```
+
+#### Connection Issues
+```bash
+# Test server manually
+python3 mcp_tools/simple_rag_generator.py
+
+# Check working directory
+pwd
+ls -la mcp_tools/
+```
+
+#### Import Errors
+```bash
+# Install dependencies
+pip install mcp fastapi
+
+# Check Python path
+echo $PYTHONPATH
+export PYTHONPATH=/home/muthu/projects/AI/CascadeProjects/windsurf-project
+```
+
+### Debug Mode
+```python
+# Enable debug logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Add to server startup
+python3 -c "import logging; logging.basicConfig(level=logging.DEBUG); exec(open('mcp_tools/simple_rag_generator.py').read())"
+```
+
+## 📚 API Reference
+
+### generate_component_from_query
+**Parameters:**
+- `query` (string): Natural language description of the component
+- `framework` (string): Target framework ("React" or "Angular")
+- `style_mode` (string): Styling approach ("css-module", "css-in-js", "angular-scss")
+
+**Returns:**
+```json
+{
+  "query": "string",
+  "component_info": {
+    "name": "string",
+    "purpose": "string",
+    "features": ["string"]
+  },
+  "framework": "string",
+  "style_mode": "string",
+  "design_knowledge": "string",
+  "generated_code": {
+    "component": "string",
+    "css": "string"
+  },
+  "metadata": {
+    "rag_enabled": true,
+    "model": "string",
+    "embedding_model": "string"
+  }
+}
+```
+
+### get_server_info
+**Parameters:** None
+
+**Returns:**
+```json
+{
+  "server_name": "string",
+  "local_ip": "string",
+  "port": "number",
+  "status": "string",
+  "available_tools": ["string"],
+  "connection_info": {
+    "mcp_server": "string",
+    "transport": "string",
+    "note": "string"
+  }
+}
+```
+
+### test_rag_system
+**Parameters:** None
+
+**Returns:**
+```json
+{
+  "test_results": {
+    "qdrant_connection": "string",
+    "collections": ["string"],
+    "indexed_components": "number",
+    "indexed_documents": "number",
+    "embedding_model": "string",
+    "llm_model": "string",
+    "status": "string"
+  },
+  "sample_queries": ["string"]
+}
+```
+
+## 🎉 Quick Start Checklist
+
+- [ ] **Server Setup**: Run `python3 scripts/show_server_info.py` to verify configuration
+- [ ] **Dependencies**: Ensure Python 3.8+ and required packages are installed
+- [ ] **Working Directory**: Navigate to `/home/muthu/projects/AI/CascadeProjects/windsurf-project`
+- [ ] **Start Server**: Run `python3 mcp_tools/simple_rag_generator.py`
+- [ ] **Client Connection**: Configure MCP client with stdio transport
+- [ ] **Test Connection**: Call `get_server_info` tool to verify connectivity
+- [ ] **Generate Component**: Use `generate_component_from_query` with natural language
+
+## 🔗 Related Resources
+
+- [RAG Component Generator Guide](./rag-component-generator.mdx)
+- [Component Specifications](../components/)
+- [Design System Documentation](../design-system/)
+- [API Reference](../api/)

@@ -1,0 +1,141 @@
+# Tab Design Spec
+
+## Metadata
+- Component: Tab
+- Category: Navigation
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54530&m=dev
+- Node ID: 11067-54530
+
+## Anatomy
+- Tab label (text and optional icon)
+- Tab container with border
+- Active indicator (bottom border)
+- Focus ring for keyboard navigation
+- Tab panel content area
+- Tab list container
+
+## Layout & Measurements
+- Standard height: 40px
+- Horizontal padding: 16px
+- Vertical padding: 8px
+- Border radius: 4px (top corners only)
+- Active indicator: 2px bottom border
+- Focus ring: 2px offset from tab
+- Minimum width: 80px
+- Tab spacing: 0px (adjacent tabs)
+
+## Typography
+- Body 1: Roboto Regular 16px/24px (tab labels)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+- Lo Res Body 1: Comic Sans MS 16px/24px (low resolution mode)
+
+## Tokens
+### Colors
+- White: `var(--color-icon-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Brand dark: `var(--color-border-brand-dark)` = #0062ab
+- Component background: `var(--color-background-surface-2)` = #ffffff
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+
+### Background Colors
+- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Brand light: `var(--color-background-brand-light)` = #d9eaf8
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- White icon: `var(--color-icon-white)` = #ffffff
+
+### UI Palettes
+- Dell Blue 400: `UI Palettes/Dell Blue/dell-blue-400` = #4C9FDD
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+
+### Surfaces
+- Surface dark: `var(--color-background-surface-1)` = #111619
+
+## States (Light Theme)
+| State | Background | Border | Text | Indicator | Icon |
+|---|---|---|---|---|---|
+| Inactive | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | transparent | `var(--color-icon-neutral)` (#4d4d4d) |
+| Inactive Hover | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | transparent | `var(--color-icon-neutral)` (#4d4d4d) |
+| Inactive Focus | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | transparent | `var(--color-icon-neutral)` (#4d4d4d) |
+| Active | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-brand-base)` (#0076ce) |
+| Active Hover | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-border-brand-dark)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Active Focus | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-icon-brand-base)` (#0076ce) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619), `var(--color-background-surface-2)` (#ffffff)
+- Text and border colors remain consistent via semantic variables
+- Active indicator uses brand colors for visibility
+
+## Interactions
+- Click to activate tab and show corresponding panel
+- Hover provides visual feedback with background changes
+- Focus ring uses brand color for keyboard navigation
+- Active tab shows bottom border indicator
+- Keyboard navigation: Arrow keys between tabs, Enter to activate
+- Smooth transitions for state changes
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to tab list, Arrow keys to navigate, Enter/Space to activate
+- Screen reader support: Proper ARIA attributes (tablist, tab, tabpanel)
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use tablist, tab, tabpanel roles
+- Focus management: Proper focus handling between tabs and panels
+
+## Variants
+- **Default**: Standard horizontal tabs
+- **Vertical**: Stacked vertical orientation
+- **Contained**: Tabs with background styling
+- **Underline**: Minimal styling with bottom indicator only
+- **Icons**: Tabs with icons only or icon + text
+- **Disabled**: Non-interactive tabs
+
+## Behavior & Guidelines
+- Use tabs to organize related content in the same view
+- Ensure tab labels are concise and descriptive
+- Provide clear visual indication of active tab
+- Maintain consistent tab order and structure
+- Test with screen readers for proper announcement
+- Consider overflow handling for many tabs
+- Use proper focus management for keyboard users
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Active states use brand colors for clear indication
+- Lo Res mode uses Comic Sans MS for low-resolution displays
+- Tab panels should be properly associated with tabs
+
+## Deliverable Checklist
+- [ ] Implement active/inactive state transitions
+- [ ] Add proper focus management for tab list
+- [ ] Test keyboard navigation (Tab, Arrows, Enter/Space)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test overflow handling for many tabs
+- [ ] Validate disabled state styling
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test vertical orientation
+
+## Source Mapping
+- Figma component: Tab (11067-54530)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Tab" (category "Navigation"; node "11067-54530")
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Tab" (category "Navigation"; node "11067-54530")

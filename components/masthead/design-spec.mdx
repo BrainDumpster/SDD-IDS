@@ -1,0 +1,187 @@
+# Masthead Design Spec
+
+## Metadata
+- Component: Masthead
+- Category: Navigation
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24736&m=dev
+- Node ID: 9054-24736
+
+## Anatomy
+- Masthead container with brand background
+- Logo/brand identity
+- Application title
+- Navigation items
+- User account section
+- Search functionality
+- Status indicators
+- Focus ring for keyboard navigation
+- Optional notification badges
+
+## Layout & Measurements
+- Standard height: 64px
+- Logo width: 120px
+- Title spacing: 16px from logo
+- Navigation spacing: 32px between items
+- Horizontal padding: 16px
+- Border radius: 0 (full-width masthead)
+- Focus ring: 2px offset from item
+- Icon size: 24px × 24px
+- Status indicator size: 8px × 8px
+- Minimum width: Full viewport width
+
+## Typography
+- Display 1/Default: Roboto Light 72px/88px (large masthead titles)
+- Body 1: Roboto Regular 16px/24px (masthead content)
+- Body 1 - Medium: Roboto Medium 16px/24px (emphasized content)
+- Body 2: Roboto Regular 14px/20px (secondary content)
+- Body 2 - Medium: Roboto Medium 14px/20px (emphasized secondary)
+- Body 2 - Underline: Roboto Regular 14px/20px (link text)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #f4f4f4
+- Surface 2: `var(--color-background-surface-2)` = #ffffff
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- White text: `var(--color-text-white)` = #ffffff
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- White border: `var(--color-border-white)` = #ffffff
+- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
+- White icon: `var(--color-icon-white)` = #ffffff
+- Standard gray icon: `icon-standard-gray` = #616161
+- Dell Blue icon: `icon-DellBlue` = #0076CE
+- Status icons: green (#1B8500), red (#AF0000), yellow (#FFC700), orange (#ED6400)
+
+### Background Colors
+- Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
+- Gray neutral alt: `var(--color-background-gray-neutral-alt)` = #eaeaea
+- Gray base: `var(--color-background-gray-base)` = #757575
+- Brand base: `var(--color-background-brand-base)` = #0076ce
+- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Masthead brand base: `var(--color-background-masthead-brand-base)` = #0076ce
+- Masthead brand strong: `var(--color-background-masthead-brand-strong)` = #0062ab
+- Masthead brand stronger: `var(--color-background-masthead-brand-stronger)` = #06528a
+
+### Alert Backgrounds
+- Success background: `var(--color-background-alerting-success)` = #1b8500
+- Critical background: `var(--color-background-alerting-critical)` = #af0000
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Dell Blue 600: `UI Palettes/Dell Blue/dell-blue-600` = #0062AB
+- White: `UI Palettes/White` = #FFFFFF
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 300: `UI Palettes/Gray/gray-300` = #C5C5C5
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 600: `UI Palettes/Gray/gray-600` = #616161
+- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
+- Gray 800: `UI Palettes/Gray/gray-800` = #393939
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Alert Palettes
+- Yellow 800: `UI Palettes/Alert Palettes/Yellow/yellow-800` = #9C622E
+
+### Static Colors
+- Static white: `var(--color-static-gray-white)` = #ffffff
+- Static brand 500: `var(--color-static-brand-500)` = #0076ce
+
+### Neutral Colors
+- White: `Neutral/White - #FFFFFF` = #FFFFFF
+- Gray 100: `Neutral/Gray-100 - #F7F7F7` = #F7F7F7
+- Gray 300: `Neutral/Gray-300 - #E4E4E4` = #E4E4E4
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Masthead Container | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Logo Section | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Default) | transparent | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Focus) | `var(--color-background-masthead-brand-strong)` (#0062ab) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Active) | `var(--color-background-masthead-brand-stronger)` (#06528a) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| User Section (Default) | transparent | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| User Section (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Status Indicator (Success) | `var(--color-background-alerting-success)` (#1b8500) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-green` (#1B8500) |
+| Status Indicator (Critical) | `var(--color-background-alerting-critical)` (#af0000) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-red` (#AF0000) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
+- Text and border colors remain consistent via semantic variables
+- Masthead maintains consistent branding
+- Status indicators maintain visibility
+
+## Interactions
+- Click navigation items to navigate to respective pages
+- Hover provides visual feedback with background changes
+- Focus ring uses brand color for keyboard navigation
+- User section shows account options on click
+- Status indicators show system state
+- Keyboard navigation: Arrow keys, Enter, Tab, Escape
+- Search functionality within masthead (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Arrow keys, Enter, Tab, Escape
+- Screen reader support: Proper ARIA attributes for navigation
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use header element with nav landmarks
+- Focus management: Logical tab order through masthead items
+- Status announcements: Screen reader announces status changes
+
+## Variants
+- **Default**: Standard brand masthead
+- **With Search**: Masthead with integrated search
+- **With Notifications**: Masthead with notification badges
+- **With User Menu**: Masthead with user account section
+- **Sticky**: Masthead that stays visible on scroll
+- **Compact**: Reduced height for space-constrained interfaces
+- **Dark**: Dark themed masthead
+- **With Status**: Masthead with system status indicators
+
+## Behavior & Guidelines
+- Use masthead for application branding and primary navigation
+- Maintain consistent branding across the application
+- Provide clear visual hierarchy with proper spacing
+- Use responsive design for mobile devices
+- Test with screen readers for proper navigation announcement
+- Consider sticky positioning for long pages
+- Provide visual feedback for all interactions
+- Use consistent styling across masthead variants
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Active states use brand colors for clear indication
+- Status indicators use appropriate color psychology
+- Dark theme adaptation through semantic tokens
+
+## Deliverable Checklist
+- [ ] Implement masthead navigation functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Tab, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement user menu functionality
+- [ ] Add status indicators
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test responsive behavior
+
+## Source Mapping
+- Figma component: Masthead (9054-24736)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Masthead" (category "Navigation"; node "9054-24736")

@@ -1,0 +1,166 @@
+# Dropdown: Single-select Design Spec
+
+## Metadata
+- Component: Dropdown: Single-select
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54559&m=dev
+- Node ID: 11067-54559
+
+## Anatomy
+- Dropdown input field
+- Single-select dropdown list
+- Option items with radio buttons
+- Selected option indicator
+- Search/filter functionality
+- Focus ring for keyboard navigation
+- Option groups (optional)
+- Clear button (optional)
+
+## Layout & Measurements
+- Input field height: 40px
+- Dropdown width: 100% of container
+- Option height: 32px
+- Radio button size: 16px × 16px
+- Horizontal padding: 12px
+- Border radius: 4px
+- Focus ring: 2px offset from element
+- Minimum dropdown height: 200px
+- Maximum dropdown height: 300px (with scroll)
+- Icon size: 16px × 16px
+
+## Typography
+- Header 5: Roboto Regular 24px/32px (dropdown headers)
+- Body 1 - Medium: Roboto Medium 16px/24px (selected value)
+- Body 2: Roboto Regular 14px/20px (option text)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #f4f4f4
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand text: `var(--color-text-brand-base)` = #0076ce
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- Link brand lighter: `var(--color-text-link-brand-lighter)` = #ebf4fb
+- Critical text: `var(--color-text-critical)` = #af0000
+- White text: `var(--color-text-white)` = #ffffff
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Brand neutral border: `var(--color-border-brand-neutral)` = #0076ce
+- Strong border: `var(--color-border-strong)` = #252525
+- Disabled border: `var(--color-border-disabled)` = #757575
+
+### Icons
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- Accessible icon: `var(--color-icon-accessible)` = #757575
+- White icon: `var(--color-icon-white)` = #ffffff
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+
+### Background Colors
+- Brand base: `var(--color-background-brand-base)` = #0076ce
+- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Brand light: `var(--color-background-brand-light)` = #d9eaf8
+- Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Gray base: `var(--color-background-gray-base)` = #757575
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+- Color annotation: `var(--color-annotation)` = #e8178a
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Hover) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-accessible)` (#757575) |
+| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
+| Dropdown Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Option (Default) | transparent | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Option (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Option (Selected) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Radio Button (Default) | transparent | `var(--color-border-accessible)` (#757575) | transparent | transparent |
+| Radio Button (Checked) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-background-brand-base)` (#0076ce) | transparent | `var(--color-icon-white)` (#ffffff) |
+| Clear Button (Default) | transparent | transparent | `var(--color-icon-accessible)` (#757575) | `var(--color-icon-accessible)` (#757575) |
+| Clear Button (Hover) | transparent | transparent | `var(--color-icon-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#f4f4f4)
+- Text and border colors remain consistent via semantic variables
+- Dropdown container maintains visibility in dark theme
+- Options adapt to dark theme
+
+## Interactions
+- Click input field to open dropdown
+- Click options to select single option
+- Click radio buttons to select option
+- Click clear button to reset selection
+- Hover provides visual feedback on interactive elements
+- Focus ring uses brand color for keyboard navigation
+- Keyboard navigation: Arrow keys, Enter, Space, Tab, Escape
+- Search to filter options (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Arrow keys, Enter, Space, Tab, Escape
+- Screen reader support: Proper ARIA attributes for single-select
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use select element with proper attributes
+- Focus management: Logical tab order through options
+- Selection announcements: Screen reader announces selection
+
+## Variants
+- **Default**: Standard single-select dropdown
+- **With Search**: Dropdown with search functionality
+- **With Groups**: Options organized in groups
+- **Compact**: Reduced size for space-constrained interfaces
+- **With Clear**: With clear button functionality
+- **Virtual**: Virtual scrolling for large option lists
+- **With Validation**: With validation error states
+- **With Icons**: Options with icons
+
+## Behavior & Guidelines
+- Use single-select dropdown for selecting one option
+- Provide clear visual indication of selected option
+- Use consistent styling across dropdown variants
+- Test with screen readers for proper option announcement
+- Consider keyboard navigation for accessibility
+- Use responsive design for different screen sizes
+- Provide visual feedback for all interactions
+- Consider performance for large option lists
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Selected states use brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- Single-select dropdown should be responsive and accessible
+
+## Deliverable Checklist
+- [ ] Implement single-selection functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Space, Tab, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement clear button functionality
+- [ ] Add search/filter functionality
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test virtual scrolling for large lists
+
+## Source Mapping
+- Figma component: Dropdown: Single-select (11067-54559)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Dropdown: Single-select" (category "Formelements"; node "11067-54559")

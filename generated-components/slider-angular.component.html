@@ -1,0 +1,106 @@
+<div class="root">
+  <div class="track-row">
+    <span class="edge-label">{{ labels[0] }}</span>
+
+    <div class="range-wrap">
+      <div class="base-track"></div>
+      <div class="fill-track" [ngStyle]="trackFillStyle()"></div>
+
+      @if (stepperEnabled) {
+        <div class="tick-overlay">
+          @for (tick of stepValues; track tick; let i = $index) {
+            <span
+              class="tick-mark"
+              [class.selected]="isStepperSelected(tick)"
+              [class.edge-start]="i === 0"
+              [class.edge-end]="i === stepValues.length - 1"
+              [style]="thumbLeftStyle(((tick - normalizedMin) / ((normalizedMax - normalizedMin) || 1)) * 100)"
+            ></span>
+          }
+        </div>
+      }
+
+      <div class="value-overlay">
+        @for (percent of thumbPercents; track percent; let i = $index) {
+          <span class="value-chip" [style]="thumbLeftStyle(percent)">
+            {{
+              (isRange ? ($any(normalizedValue)[i]) : normalizedValue)
+            }}
+          </span>
+        }
+      </div>
+
+      @if (isRange) {
+        <input
+          class="range-min"
+          type="range"
+          [min]="normalizedMin"
+          [max]="normalizedMax"
+          [step]="normalizedStep"
+          [disabled]="disabled"
+          [value]="$any(normalizedValue)[0]"
+          (input)="onRangeInput(0, $any($event.target).value)"
+        />
+        <div class="range-top">
+          <input
+            class="range-max"
+            type="range"
+            [min]="normalizedMin"
+            [max]="normalizedMax"
+            [step]="normalizedStep"
+            [disabled]="disabled"
+            [value]="$any(normalizedValue)[1]"
+            (input)="onRangeInput(1, $any($event.target).value)"
+          />
+        </div>
+      } @else {
+        <input
+          type="range"
+          [min]="normalizedMin"
+          [max]="normalizedMax"
+          [step]="normalizedStep"
+          [disabled]="disabled"
+          [value]="normalizedValue"
+          (input)="onSingleInput($any($event.target).value)"
+        />
+      }
+    </div>
+
+    <span class="edge-label">{{ labels[1] }}</span>
+
+    @if (showValueInput) {
+      <div class="value-inputs">
+        @if (isRange) {
+          <input
+            type="number"
+            [disabled]="disabled"
+            [min]="normalizedMin"
+            [max]="normalizedMax"
+            [step]="normalizedStep"
+            [value]="$any(normalizedValue)[0]"
+            (input)="onRangeInput(0, $any($event.target).value)"
+          />
+          <input
+            type="number"
+            [disabled]="disabled"
+            [min]="normalizedMin"
+            [max]="normalizedMax"
+            [step]="normalizedStep"
+            [value]="$any(normalizedValue)[1]"
+            (input)="onRangeInput(1, $any($event.target).value)"
+          />
+        } @else {
+          <input
+            type="number"
+            [disabled]="disabled"
+            [min]="normalizedMin"
+            [max]="normalizedMax"
+            [step]="normalizedStep"
+            [value]="normalizedValue"
+            (input)="onSingleInput($any($event.target).value)"
+          />
+        }
+      </div>
+    }
+  </div>
+</div>

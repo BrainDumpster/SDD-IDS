@@ -1,0 +1,122 @@
+# Search Design Spec
+
+## Metadata
+- Component: Search
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=43581-121822&m=dev
+- Node ID: 43581-121822
+
+## Anatomy
+- Search input field
+- Search icon (leading)
+- Clear button (trailing, when text present)
+- Container wrapper with border
+- Focus ring for keyboard navigation
+- Optional search results dropdown
+
+## Layout & Measurements
+- Standard height: 40px
+- Input padding: 12px horizontal, 8px vertical
+- Icon spacing: 8px from input edges
+- Border radius: 4px (standard)
+- Focus ring: 2px offset from container
+- Minimum width: 200px (expandable)
+
+## Typography
+- Body 2: Roboto Regular 14px/20px (search input text)
+
+## Tokens
+### Colors
+- White: `var(--color-icon-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Strong border: `var(--color-border-strong)` = #252525
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Accessible icon: `var(--color-icon-accessible)` = #757575
+
+### Surfaces
+- Surface dark: `var(--color-background-surface-1)` = #111619
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+
+## States (Light Theme)
+| State | Background | Border | Text | Icons |
+|---|---|---|---|---|
+| Default | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-accessible)` (#757575) |
+| Hover | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-accessible)` (#757575) |
+| Focus | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Disabled | `var(--color-background-component)` (#ffffff) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-accessible)` (#757575) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Text and border colors remain consistent via semantic variables
+- Disabled state uses gray tokens for dark theme compatibility
+
+## Interactions
+- Click to focus input field
+- Typing reveals clear button
+- Click clear button to reset search
+- Hover provides visual feedback with border changes
+- Focus ring uses brand color for keyboard navigation
+- Disabled state prevents interaction and uses gray colors
+- Enter key triggers search action
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to search, type to input, Enter to search, Escape to clear
+- Screen reader support: Proper ARIA labels and search status
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use search input type with proper attributes
+- Clear button: Proper button element with aria-label
+
+## Variants
+- **Default**: Standard search input with icon
+- **Compact**: Reduced height for tight spaces
+- **Expanded**: Full-width search with prominent styling
+- **Disabled**: Non-interactive state
+- **With Results**: Dropdown showing search suggestions
+
+## Behavior & Guidelines
+- Use search for content filtering and discovery
+- Provide clear placeholder text describing search functionality
+- Show clear button only when text is present
+- Implement debounced search for performance
+- Provide search suggestions when appropriate
+- Use semantic search input type for mobile optimization
+- Test with screen readers for proper announcement
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens
+- Focus states use brand colors for visual consistency
+- Disabled states maintain accessibility with proper contrast
+- Search icon should be recognizable and consistently positioned
+- Clear button should be easily discoverable when present
+
+## Deliverable Checklist
+- [ ] Implement focus/blur states
+- [ ] Add clear button functionality
+- [ ] Test keyboard navigation (Tab, Enter, Escape)
+- [ ] Verify ARIA labels and descriptions
+- [ ] Test disabled state styling
+- [ ] Implement search debouncing
+- [ ] Add search suggestions dropdown
+- [ ] Test dark theme compatibility
+- [ ] Verify mobile keyboard behavior
+
+## Source Mapping
+- Figma component: Search (43581-121822)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Search" (category "Formelements"; node "43581-121822")
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Search" (category "Formelements"; node "43581-121822")

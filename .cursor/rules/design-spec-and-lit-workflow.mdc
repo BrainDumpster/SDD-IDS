@@ -1,0 +1,115 @@
+---
+description: End-to-end workflow for Figma-aligned design-spec creation; implementation/codegen is optional
+alwaysApply: true
+---
+
+# Design-Spec First Workflow (Figma-Aligned)
+
+## Purpose
+Primary goal: create and maintain `components/<slug>/design-spec.mdx` with maximum fidelity to Figma.
+Implementation/code generation is optional and only done when explicitly requested by the user.
+
+## Source of Truth
+- Always read `data/component-figma-map.json` first.
+- Use mapped `figmaUrl` + `node-id` for the component.
+- Figma semantic variables (`var(--...)`) are authoritative for token naming.
+- If implementation tuning is required after visual review, update the design spec so regeneration preserves behavior.
+
+## Required Spec Sections
+For each `components/<slug>/design-spec.mdx`, ensure these are concrete and non-placeholder:
+- `## Metadata`
+- `## Layout & Measurements`
+- `## Tokens`
+- `## States (Light Theme)`
+- `## States (Dark Theme)`
+- `## Interactions`
+
+## Spec Authoring Rules
+- Use semantic token syntax in spec: `` `var(--token-name)` ``.
+- Include Light/Dark resolved values where possible.
+- Never hardcode colors, spacing, typography, radius, border width, or motion values in implementation guidance; always reference CSS variables/design tokens.
+- State tables must be explicit and deterministic:
+  - Background
+  - Border
+  - Text/Icon
+- Light and Dark state tables must remain structurally parallel.
+- Separate fixed values from sample/reference values.
+  - If Figma frame width is sample-only, state runtime behavior explicitly (e.g., container-driven width).
+
+## Layout/Behavior Fidelity Rules
+- Record behavior discovered during visual validation in spec (do not keep only in generated code).
+- Typical examples to capture when applicable:
+  - panel grouping model
+  - contiguous rows / overlap spacing
+  - active indicator geometry and continuity
+  - header/content border continuity
+  - responsive width behavior (`width: 100%`, `box-sizing: border-box`)
+
+## Interaction Contract Rules
+Document and implement interaction behavior in spec:
+- Define interaction triggers for the component (click, keyboard, hover, focus, etc.).
+- Define explicit state transitions for each interactive state.
+- Define visual cues per state (icons, motion, outlines, indicators, cursor changes).
+- If multiple interaction modes/strategies exist, document each mode and transition rules.
+- Component-specific behavior takes precedence and must be declared in `components/<slug>/design-spec.mdx`.
+- Runtime default must stay interactive.
+- Forced state attributes (`data-state`) are demo/testing-only and must not block runtime interaction.
+
+## Optional Implementation / Codegen Rules
+Only apply this section when the user explicitly asks for implementation or code generation.
+- Framework is user-driven and not fixed: Angular, React, Vue, Lit, or other requested target.
+- Parse design spec sections, do not hardcode drift-prone values.
+- Never hardcode colors, spacing, typography, or other styling values; always use CSS variables.
+- Apply design tokens for all styling values.
+- All design tokens from Figma are defined as CSS variables in `theme.css`; always use these variables instead of hardcoded values.
+- Generate:
+  - framework-specific component output (based on user request)
+  - optional demo/sandbox output (if requested)
+  - optional global-vars stylesheet output (if requested)
+- Use CSS vars with parsed fallback values.
+- Use layout components/utilities instead of writing custom layout CSS with Grid/Flexbox where the target framework/design system provides them.
+- Avoid custom layout CSS; only add layout CSS when explicitly required and no layout component/utility exists.
+- If spec defines interaction API/modes, implement those contracts in the chosen framework.
+- Use `components/theme.css` for global css and refer this in generated component examples.
+- When framework-specific component generated make sure there should be document notification where `theme.css` should be used in the application.
+
+## Global Token CSS Rules
+- Build global CSS vars from Figma collections:
+  - `Tokens`
+  - `Primitive`
+  - `Density Primitive`
+- Prefer collection priority to resolve duplicate codeSyntax names:
+  - `Tokens` > `Primitive` > `Density Primitive`
+- Produce both Light and Dark blocks.
+- store it under `components` folder. 
+- DO NOT create this for each component but check for any changes and update.
+
+## Optional Drift Validation Rules
+Only apply this section when user requests token drift validation.
+- Compare generated CSS vars with live Figma token values.
+- Report:
+  - checked vars
+  - mismatches
+  - missing in figma map
+- Handle duplicate codeSyntax values safely (set-based comparison accepted).
+- Goal: mismatches should be zero before finalizing.
+
+## Visual Validation Loop
+- Design-spec validation is mandatory.
+- Implementation validation is optional (run when codegen/implementation is requested).
+1. Validate spec sections and token/state mappings against Figma.
+2. If implementation exists, compare rendered states against Figma screenshots/frames.
+3. If mismatch:
+   - adjust implementation (if in scope)
+   - update spec with exact corrected behavior
+   - re-run generation/validation as applicable
+4. Repeat until match is acceptable ("at-most design match").
+
+## Completion Checklist
+- [ ] Spec sections are concrete and Figma-aligned.
+- [ ] Interaction contract is in spec.
+- [ ] Implementation/codegen executed only if explicitly requested.
+- [ ] If implementation exists, generated component reflects spec behavior.
+- [ ] If requested, global vars generated from required collections.
+- [ ] If requested, drift checker runs with zero mismatches.
+- [ ] Visual deltas (if any) are documented in spec notes.

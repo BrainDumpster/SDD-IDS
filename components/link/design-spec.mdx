@@ -1,0 +1,128 @@
+# Link Design Spec
+
+## Metadata
+- Component: Link
+- Category: Navigation
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54506&m=dev
+- Node ID: 11067-54506
+
+## Anatomy
+- Link text content
+- Optional icon
+- Focus ring for keyboard navigation
+- Hover state indicator
+- Optional underline decoration
+
+## Layout & Measurements
+- Standard height: Auto (based on content)
+- Horizontal padding: 4px (for touch targets)
+- Vertical padding: 2px (for touch targets)
+- Border radius: 2px (for focus state)
+- Focus ring: 2px offset from link
+- Minimum touch target: 44px × 44px
+- Icon spacing: 4px from text
+
+## Typography
+- Header 5: Roboto Regular 24px/32px (large links)
+- Body 2: Roboto Regular 14px/20px (standard links)
+- Body 2 - Underline: Roboto Regular 14px/20px (with underline)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Black text: `UI Palettes/Gray/gray-900` = #252525
+
+### Link Colors
+- Link brand base: `var(--color-text-link-brand-base)` = #0062ab
+- Link brand light: `var(--color-text-link-brand-light)` = #d9eaf8
+- Link brand lighter: `var(--color-text-link-brand-lighter)` = #ebf4fb
+- Link brand strong: `var(--color-text-link-brand-strong)` = #06528a
+- Link brand stronger: `var(--color-text-link-brand-stronger)` = #003a65
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Slate 900: `UI Palettes/Slate/slate-900` = #111619
+
+## States (Light Theme)
+| State | Text Color | Underline | Background | Icon |
+|---|---|---|---|---|
+| Default | `var(--color-text-link-brand-base)` (#0062ab) | none | transparent | `var(--color-text-link-brand-base)` (#0062ab) |
+| Hover | `var(--color-text-link-brand-strong)` (#06528a) | underline | `var(--color-text-link-brand-lighter)` (#ebf4fb) | `var(--color-text-link-brand-strong)` (#06528a) |
+| Focus | `var(--color-text-link-brand-strong)` (#06528a) | underline | `var(--color-text-link-brand-lighter)` (#ebf4fb) | `var(--color-text-link-brand-strong)` (#06528a) |
+| Active | `var(--color-text-link-brand-stronger)` (#003a65) | underline | `var(--color-text-link-brand-light)` (#d9eaf8) | `var(--color-text-link-brand-stronger)` (#003a65) |
+| Visited | `var(--color-text-link-brand-base)` (#0062ab) | none | transparent | `var(--color-text-link-brand-base)` (#0062ab) |
+| Disabled | `UI Palettes/Gray/gray-900` (#252525) | none | transparent | `UI Palettes/Gray/gray-900` (#252525) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Text colors remain consistent via semantic variables
+- Background colors provide subtle hover feedback
+- Dark theme: `UI Palettes/Slate/slate-900` (#111619)
+
+## Interactions
+- Click link to navigate to target URL
+- Hover provides visual feedback with underline and background
+- Focus ring uses brand color for keyboard navigation
+- Active state shows during click interaction
+- Visited state indicates previously accessed links
+- Disabled state prevents interaction and uses gray colors
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to links, Enter to activate
+- Screen reader support: Proper link text and descriptions
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use anchor element with proper href
+- Focus management: Clear focus indication for keyboard users
+- Link text: Descriptive and meaningful text content
+
+## Variants
+- **Default**: Standard text link
+- **With Icon**: Link with accompanying icon
+- **Inline**: Link within paragraph text
+- **Standalone**: Link as standalone element
+- **Button Style**: Link styled as button
+- **Underlined**: Link with permanent underline
+- **External**: Link with external indicator
+- **Download**: Link with download indicator
+
+## Behavior & Guidelines
+- Use links for navigation between pages
+- Provide descriptive link text that indicates destination
+- Use consistent styling across the application
+- Ensure adequate touch targets for mobile devices
+- Test with screen readers for proper link announcement
+- Consider open in new tab for external links
+- Use proper hover and focus states for accessibility
+- Avoid link text like "click here" - use descriptive text
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Link states provide clear visual feedback
+- Dark theme adaptation through semantic tokens
+- Link styling should be consistent with brand guidelines
+
+## Deliverable Checklist
+- [ ] Implement click navigation functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement visited state styling
+- [ ] Add external link indicators
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test mobile touch interactions
+
+## Source Mapping
+- Figma component: Link (11067-54506)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Link" (category "Navigation"; node "11067-54506")

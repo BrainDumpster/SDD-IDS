@@ -1,0 +1,70 @@
+# Accordion Component Tokens & States
+Extracted from Figma node 11067:54535 with mappings to existing semantic tokens for light/dark. Use existing tokens first; propose new semantic only when noted.
+
+## Figma Reference
+- File: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54535&m=dev
+- Nodes: Accordion-Main (10962:89111), .Accordion-Element-Left (10962:89124), .Accordion-Element-Right (10962:89134)
+
+## Anatomy
+- Header (title + chevron)
+- Content container (body with optional "Swap content" card)
+- Active indicator bar (left)
+
+## Tokens (preferred existing)
+- Backgrounds: `--color-background-component`, `--color-background-brand-lighter`, `--color-background-brand-light` (hover in some sublayers)
+- Borders: `--color-border-accessible`, `--color-border-brand-base`, `--color-border-brand-dark` (content card)
+- Text: `--color-text-neutral-strong`
+- Icons: `--color-icon-accessible` default, `--color-border-strong` hover/active
+- Focus: `--color-focus-primary` (fallback `--color-border-brand-base`)
+- Typography: Header text 14/20 (Roboto Regular) → `var(--ids-font-size-small, 0.875rem)`; Body text 12/18; Body heading 18/25
+- Spacing: Header padding 12px top/bottom, 16px left/right; active header left padding 13px (0.813rem) to offset bar; Content padding 8px top, 24px right, 16px bottom, 40px left
+- Icon size: 16px
+- Active bar width: 4px (brand base)
+
+## States (Light theme)
+| Area | State | Background | Border | Text/Icon |
+| --- | --- | --- | --- | --- |
+| Header | Collapsed default | `--color-background-component` | `--color-border-accessible` (container) | Text `--color-text-neutral-strong`, Icon `--color-icon-accessible` |
+| Header | Collapsed hover | `--color-background-brand-lighter` | `--color-border-accessible` | Text `--color-text-neutral-strong`, Icon `--color-border-strong` |
+| Header | Expanded default | `--color-background-brand-lighter` | `--color-border-accessible`; left bar `--color-border-brand-base` (4px) | Text `--color-text-neutral-strong`, Icon up `--color-border-strong` |
+| Header | Expanded hover | `--color-background-brand-light` (if available) or `--color-background-brand-lighter` | `--color-border-accessible`; left bar `--color-border-brand-base` | Text `--color-text-neutral-strong`, Icon up `--color-border-strong` |
+| Content | Expanded | `--color-background-component` with inner card `--color-background-brand-lighter` | Container border `--color-border-accessible`; Card border `--color-border-brand-dark` | Body heading 18/25 `--color-text-neutral-strong`; body text 12/18 `--color-text-neutral-strong`; link `--color-text-link-brand-base` |
+
+## States (Dark theme)
+- Use same semantic tokens; theme variables will resolve to dark equivalents. Honor the same state matrix.
+
+## Measurements
+- Header height: ~40px collapsed; ~40px with hover; ~40px top row of expanded; overall expanded block height includes content.
+- Content height example: card 161px min, content padding as above.
+- Active bar: 4px full height of expanded panel.
+
+## Icon Mapping
+- Use Figma chevrons: `chev-down-thick` for collapsed; `chev-up-thick` for expanded; 16px size. Hover/active color `--color-border-strong`, default `--color-icon-accessible`.
+
+## Interactions & A11y
+- Keyboard: Tab/Shift+Tab between headers; Enter/Space toggles; optional Up/Down to move focus (per designer-guidelines). Only one header focused at a time.
+- aria-expanded reflects panel state; aria-disabled when disabled. Headers are buttons or button-like elements.
+- Focus ring: `--color-focus-primary` outline 2px with offset 2px.
+
+## Gaps / New Semantic Tokens
+- If `--color-background-brand-light` is unavailable for hover, continue with `--color-background-brand-lighter`. No new tokens required unless closer mid-tone blue is needed; propose `--color-background-brand-light` if design review requests it.
+
+## Content Card (“Swap content”)
+- Background `--color-background-brand-lighter`
+- Border `--color-border-brand-dark`
+- Heading 18/25 `--color-text-neutral-strong`
+- Body 12/18 `--color-text-neutral-strong`; green emphasis `#1b8500` (add semantic if present; else use existing success text token)
+- Link color `--color-text-link-brand-base`
+- Spacing: 24px padding, 4px gap between heading/body, 16px top padding of container to card
+
+## Usage Notes
+- Default all collapsed; allow one open by default if needed.
+- Keep chevron on the left for accessibility; optional right-side variant matches provided right-aligned instance.
+- Ensure last panel shows bottom border (`--color-border-accessible`).
+
+## Deliverable Checklist
+- Header styling per state matrix (light/dark) using semantic tokens
+- Content container/card styling with brand-lighter background and brand-dark border
+- Chevron assets from Figma; color transitions via tokens
+- Focus states and aria attributes per guidelines
+- Note any token gaps discovered during implementation

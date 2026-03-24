@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Button Lit Demo</title>
+    <link rel="stylesheet" href="./button-global-vars.css" />
+    <style>
+      :root {
+  --color-background-controls-brand-base: #0076CE;
+  --color-background-controls-brand-strong: #0062AB;
+  --color-background-controls-brand-stronger: #06528A;
+  --color-background-gray-light: #EAEAEA;
+  --color-border-brand-base: #0076CE;
+  --color-border-disabled: #757575;
+  --color-text-disabled: #757575;
+  --color-text-white: #FFFFFF;
+      }
+
+      body {
+        margin: 0;
+        font-family: Roboto, Arial, sans-serif;
+        background: #f4f4f4;
+        color: #111619;
+      }
+
+      .page {
+        padding: 24px;
+        display: grid;
+        gap: 24px;
+      }
+
+      .theme {
+        border: 1px solid #d4d4d4;
+        border-radius: 8px;
+        padding: 16px;
+        background: #fff;
+      }
+
+      .theme.theme-dark {
+  --color-background-controls-brand-base: #0076CE;
+  --color-background-controls-brand-strong: #0062AB;
+  --color-background-controls-brand-stronger: #06528A;
+  --color-background-gray-light: #393939;
+  --color-border-brand-base: #4C9FDD;
+  --color-border-disabled: #9E9E9E;
+  --color-text-disabled: #C5C5C5;
+  --color-text-white: #FFFFFF;
+        background: #111619;
+        color: #fff;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .theme h2 {
+        margin: 0 0 12px 0;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="theme theme-light">
+        <h2>Light Theme - Primary Button States (Large)</h2>
+        <div class="row">
+          <button-component data-state="default">Default</button-component>
+<button-component data-state="hover">Hover</button-component>
+<button-component data-state="active">Active</button-component>
+<button-component data-state="disabled">Disabled</button-component>
+<button-component data-state="focus">Focus</button-component>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button-component size="medium">Medium</button-component>
+          <button-component size="small">Small</button-component>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button-component size="large" density="compact">Large Compact</button-component>
+          <button-component size="large" density="standard">Large Standard</button-component>
+          <button-component size="large" density="loose">Large Loose</button-component>
+        </div>
+      </section>
+
+      <section class="theme theme-dark">
+        <h2>Dark Theme - Primary Button States (Large)</h2>
+        <div class="row">
+          <button-component data-state="default">Default</button-component>
+<button-component data-state="hover">Hover</button-component>
+<button-component data-state="active">Active</button-component>
+<button-component data-state="disabled">Disabled</button-component>
+<button-component data-state="focus">Focus</button-component>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button-component size="medium">Medium</button-component>
+          <button-component size="small">Small</button-component>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button-component size="large" density="compact">Large Compact</button-component>
+          <button-component size="large" density="standard">Large Standard</button-component>
+          <button-component size="large" density="loose">Large Loose</button-component>
+        </div>
+      </section>
+    </div>
+    <script type="module" src="./button.js"></script>
+  </body>
+</html>

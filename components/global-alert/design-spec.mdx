@@ -1,0 +1,148 @@
+# Global Alert Design Spec
+
+## Metadata
+- Component: Global Alert
+- Category: Alerts and Notifications
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54641&m=dev
+- Node ID: 11067-54641
+
+## Anatomy
+- Alert container with full-width background
+- Alert icon (status indicator)
+- Alert title and message
+- Close button (×)
+- Focus ring for keyboard navigation
+- Optional action buttons
+- Dismiss animation
+
+## Layout & Measurements
+- Standard height: 48px
+- Horizontal padding: 16px
+- Vertical padding: 12px
+- Border radius: 0 (full-width alert)
+- Focus ring: 2px offset from alert
+- Icon size: 24px × 24px
+- Close button: 16px × 16px
+- Minimum width: Full viewport width
+- Spacing between elements: 12px
+
+## Typography
+- Header 5: Roboto Regular 24px/32px (alert titles)
+- Base Styles/Default Text: Roboto Regular 14px/20px (alert messages)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Black text: `var(--color-text-black)` = #252525
+- Black border: `var(--color-border-black)` = #252525
+- Black icon: `var(--color-icon-black)` = #252525
+- White border: `var(--color-border-white)` = #ffffff
+- Strong border: `var(--color-border-strong)` = #252525
+
+### Alert Colors
+- Info background: `var(--color-background-alerting-info)` = #005ece
+- Info strong: `var(--color-background-alerting-info-strong)` = #004eab
+- Info transparent: `var(--color-border-alerting-transparent-info)` = #005ece00
+- Info icon: `var(--color-icon-alerting-info)` = #005ece
+
+- Minor background: `var(--color-background-alerting-minor)` = #ffc700
+- Minor strong: `var(--color-background-alerting-minor-strong)` = #e5a51a
+- Minor transparent: `var(--color-border-alerting-minor-transparent)` = #9c622e
+
+- Major background: `var(--color-background-alerting-major)` = #ed6400
+- Major strong: `var(--color-background-alerting-major-strong)` = #c55300
+- Major transparent: `var(--color-border-alerting-transparent-major)` = #ed640000
+- Major icon: `var(--color-icon-alerting-major)` = #ed6400
+
+- Critical background: `var(--color-background-alerting-critical)` = #af0000
+- Critical strong: `var(--color-background-alerting-critical-strong)` = #910000
+- Critical transparent: `var(--color-border-alerting-transparent-critical)` = #af000000
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Slate 900: `UI Palettes/Slate/slate-900` = #111619
+
+## States (Light Theme)
+| Variant | Background | Text | Icon | Border |
+|---|---|---|---|---|
+| Info | `var(--color-background-alerting-info)` (#005ece) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+| Info Hover | `var(--color-background-alerting-info-strong)` (#004eab) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+| Warning | `var(--color-background-alerting-minor)` (#ffc700) | `var(--color-text-black)` (#252525) | `var(--color-icon-black)` (#252525) | `var(--color-border-black)` (#252525) |
+| Warning Hover | `var(--color-background-alerting-minor-strong)` (#e5a51a) | `var(--color-text-black)` (#252525) | `var(--color-icon-black)` (#252525) | `var(--color-border-black)` (#252525) |
+| Error | `var(--color-background-alerting-major)` (#ed6400) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+| Error Hover | `var(--color-background-alerting-major-strong)` (#c55300) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+| Critical | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+| Critical Hover | `var(--color-background-alerting-critical-strong)` (#910000) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `UI Palettes/Slate/slate-900` (#111619)
+- Text and border colors remain consistent via semantic variables
+- Alert colors maintain visibility in dark theme
+
+## Interactions
+- Click close button to dismiss alert
+- Hover provides visual feedback with stronger colors
+- Focus ring uses brand color for keyboard navigation
+- Auto-dismiss after timeout (optional)
+- Action buttons for user responses
+- Keyboard navigation: Tab to alert, Enter to action, Escape to dismiss
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to alert, Enter for actions, Escape to dismiss
+- Screen reader support: Proper ARIA attributes (alert, role, status)
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use alert element with proper role
+- Focus management: Auto-focus on new alerts
+- Dismiss announcements: Screen reader announces when alert is dismissed
+
+## Variants
+- **Info**: Blue informational alert
+- **Warning**: Yellow caution alert
+- **Error**: Orange error alert
+- **Critical**: Red critical alert
+- **Success**: Green success alert
+- **Persistent**: Alert that requires user action
+- **Auto-dismiss**: Alert that dismisses automatically
+- **With Actions**: Alert with action buttons
+
+## Behavior & Guidelines
+- Use global alerts for important system messages
+- Position alerts at top of page for visibility
+- Use appropriate color variants for severity levels
+- Provide clear, concise messages
+- Include dismiss functionality for non-critical alerts
+- Test with screen readers for proper announcement
+- Consider auto-dismiss for non-critical notifications
+- Use consistent styling across alert types
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Alert variants use appropriate color psychology
+- Dark theme adaptation through semantic tokens
+- Alert positioning should be consistent and accessible
+
+## Deliverable Checklist
+- [ ] Implement dismiss functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement auto-dismiss functionality
+- [ ] Add action buttons for user responses
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test alert positioning and stacking
+
+## Source Mapping
+- Figma component: Global Alert (11067-54641)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Global Alert" (category "Alerts and Notifications"; node "11067-54641")

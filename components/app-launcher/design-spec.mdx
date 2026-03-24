@@ -1,0 +1,151 @@
+# App Launcher Design Spec
+
+## Metadata
+- Component: App Launcher
+- Category: Navigation
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54490&m=dev
+- Node ID: 11067-54490
+
+## Anatomy
+- App launcher container
+- App grid layout
+- App icons with labels
+- Search functionality
+- Category filters
+- Recently used apps
+- Focus ring for keyboard navigation
+- App descriptions (optional)
+
+## Layout & Measurements
+- Grid columns: 4-6 columns (responsive)
+- App card size: 120px × 120px
+- Icon size: 48px × 48px
+- Label height: 40px
+- Card spacing: 16px
+- Grid padding: 24px
+- Border radius: 8px (cards)
+- Focus ring: 2px offset from card
+- Search bar height: 40px
+- Filter height: 32px
+
+## Typography
+- Display 1/Default: Roboto Light 72px/88px (large launcher titles)
+- Body 2: Roboto Regular 14px/20px (app labels and descriptions)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #111619
+- Surface 2: `var(--color-background-surface-2)` = #ffffff
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- White text: `var(--color-text-white)` = #ffffff
+- Accessible border: `var(--color-border-accessible)` = #757575
+- White border: `var(--color-border-white)` = #ffffff
+- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+
+### Icons
+- Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
+- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- White icon: `var(--color-icon-white)` = #ffffff
+
+### Background Colors
+- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Brand light: `var(--color-background-brand-light)` = #d9eaf8
+- Masthead brand base: `var(--color-background-masthead-brand-base)` = #0076ce
+- Masthead brand stronger: `var(--color-background-masthead-brand-stronger)` = #06528a
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Launcher Container | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
+| App Card (Default) | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `UI Palettes/Gray/gray-700` (#4D4D4D) | `UI Palettes/Gray/gray-500` (#757575) |
+| App Card (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
+| App Card (Focus) | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-accessible)` (#757575) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
+| Search Bar | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
+| Search Bar (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-brand-strong)` (#0062ab) |
+| Filter Button (Default) | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `UI Palettes/Gray/gray-700` (#4D4D4D) | `UI Palettes/Gray/gray-500` (#757575) |
+| Filter Button (Active) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Category Header | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619), `var(--color-background-surface-2)` (#ffffff)
+- Text and border colors remain consistent via semantic variables
+- App cards maintain visibility in dark theme
+- Search and filter components adapt to dark theme
+
+## Interactions
+- Click app cards to launch applications
+- Hover provides visual feedback with background changes
+- Focus ring uses brand color for keyboard navigation
+- Search functionality to filter apps
+- Category filters to organize apps
+- Keyboard navigation: Arrow keys, Enter, Tab
+- Recently used apps prioritized
+- Drag and drop to organize apps (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Arrow keys, Enter, Tab
+- Screen reader support: Proper ARIA attributes for app grid
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use grid layout with proper landmarks
+- Focus management: Logical tab order through apps
+- App announcements: Screen reader announces app names
+
+## Variants
+- **Default**: Standard app grid launcher
+- **List View**: Linear list of applications
+- **Compact**: Reduced size app cards
+- **With Search**: Launcher with integrated search
+- **With Categories**: Organized by app categories
+- **With Recents**: Recently used apps section
+- **Dark**: Dark themed launcher
+- **Customizable**: User can organize and customize
+
+## Behavior & Guidelines
+- Use app launcher for application selection
+- Organize apps logically by category or usage
+- Provide clear app icons and labels
+- Use search for large app collections
+- Test with screen readers for proper app announcement
+- Consider responsive design for different screen sizes
+- Use consistent styling across the launcher
+- Provide visual feedback for all interactions
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Active states use brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- App launcher should be responsive and accessible
+
+## Deliverable Checklist
+- [ ] Implement app launch functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Tab)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement search functionality
+- [ ] Add category filters
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test responsive behavior
+
+## Source Mapping
+- Figma component: App Launcher (11067-54490)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "App Launcher" (category "Navigation"; node "11067-54490")

@@ -1,0 +1,169 @@
+# Dropdown: Multiselect Design Spec
+
+## Metadata
+- Component: Dropdown: Multiselect
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54555&m=dev
+- Node ID: 11067-54555
+
+## Anatomy
+- Dropdown input field
+- Multi-select dropdown list
+- Checkboxes for item selection
+- Select all/clear all functionality
+- Selected items display
+- Search/filter functionality
+- Focus ring for keyboard navigation
+- Option groups (optional)
+
+## Layout & Measurements
+- Input field height: 40px
+- Dropdown width: 100% of container
+- Option height: 32px
+- Checkbox size: 16px × 16px
+- Horizontal padding: 12px
+- Border radius: 4px
+- Focus ring: 2px offset from element
+- Minimum dropdown height: 200px
+- Maximum dropdown height: 300px (with scroll)
+- Icon size: 16px × 16px
+
+## Typography
+- Header 3: Roboto Regular 32px/40px (large dropdown headers)
+- Header 5: Roboto Regular 24px/32px (dropdown headers)
+- Body 1 - Medium: Roboto Medium 16px/24px (selected items)
+- Body 2: Roboto Regular 14px/20px (option text)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- Critical text: `var(--color-text-critical)` = #af0000
+- White text: `var(--color-text-white)` = #ffffff
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Strong border: `var(--color-border-strong)` = #252525
+- White border: `var(--color-border-white)` = #ffffff
+- Disabled border: `var(--color-border-disabled)` = #757575
+- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
+
+### Icons
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- White icon: `var(--color-icon-white)` = #ffffff
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+
+### Background Colors
+- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
+- Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Gray base: `var(--color-background-gray-base)` = #757575
+- Info background: `var(--color-background-alerting-info)` = #005ece
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+- Static gray 500: `var(--color-static-gray-500)` = #757575
+
+### Effects
+- Tooltip Drop Shadow: Drop shadow effect for dropdown
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Hover) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
+| Dropdown Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Option (Default) | transparent | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Option (Hover) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Option (Selected) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Checkbox (Default) | transparent | `var(--color-border-accessible)` (#757575) | transparent | transparent |
+| Checkbox (Checked) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | transparent | `var(--color-icon-white)` (#ffffff) |
+| Select All Button (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Select All Button (Hover) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-neutral)` (#4d4d4d) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Text and border colors remain consistent via semantic variables
+- Dropdown container maintains visibility in dark theme
+- Options adapt to dark theme
+
+## Interactions
+- Click input field to open dropdown
+- Click options to select/deselect items
+- Click checkboxes to select/deselect items
+- Click Select All to select all visible options
+- Click Clear All to deselect all options
+- Hover provides visual feedback on interactive elements
+- Focus ring uses brand color for keyboard navigation
+- Keyboard navigation: Arrow keys, Enter, Space, Tab, Escape
+- Search to filter options (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Arrow keys, Enter, Space, Tab, Escape
+- Screen reader support: Proper ARIA attributes for multiselect
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use select element with multiple attribute
+- Focus management: Logical tab order through options
+- Selection announcements: Screen reader announces selections
+
+## Variants
+- **Default**: Standard multiselect dropdown
+- **With Search**: Dropdown with search functionality
+- **With Groups**: Options organized in groups
+- **Compact**: Reduced size for space-constrained interfaces
+- **With Tags**: Selected items shown as tags
+- **Virtual**: Virtual scrolling for large option lists
+- **With Select All**: With select/clear all functionality
+- **With Validation**: With validation error states
+
+## Behavior & Guidelines
+- Use multiselect dropdown for selecting multiple options
+- Provide clear visual indication of selected items
+- Use consistent styling across dropdown variants
+- Test with screen readers for proper option announcement
+- Consider keyboard navigation for accessibility
+- Use responsive design for different screen sizes
+- Provide visual feedback for all interactions
+- Consider performance for large option lists
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Selected states use brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- Multiselect dropdown should be responsive and accessible
+
+## Deliverable Checklist
+- [ ] Implement multi-selection functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Space, Tab, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement select all/clear all functionality
+- [ ] Add search/filter functionality
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test virtual scrolling for large lists
+
+## Source Mapping
+- Figma component: Dropdown: Multiselect (11067-54555)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Dropdown: Multiselect" (category "Formelements"; node "11067-54555")

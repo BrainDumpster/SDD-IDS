@@ -1,0 +1,24 @@
+/* Tokens CSS Variables */
+
+--border-radius-border-radius-2xl: 24px;
+--border-radius-border-radius-full: 9999px;
+--border-radius-border-radius-lg: 12px;
+--border-radius-border-radius-md: 8px;
+--border-radius-border-radius-sm: 4px;
+--border-radius-border-radius-xl: 16px;
+--opacity-opacity-0: 0;
+--opacity-opacity-100: 1;
+--opacity-opacity-25: 0.25;
+--opacity-opacity-50: 0.5;
+--opacity-opacity-75: 0.75;
+--shadow-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+--shadow-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+--shadow-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+--shadow-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+--spacing-spacing-2xl: 24px;
+--spacing-spacing-3xl: 32px;
+--spacing-spacing-lg: 16px;
+--spacing-spacing-md: 12px;
+--spacing-spacing-sm: 8px;
+--spacing-spacing-xl: 20px;
+--spacing-spacing-xs: 4px;

@@ -1,0 +1,159 @@
+# Main Menu/Top Design Spec
+
+## Metadata
+- Component: Main Menu/Top
+- Category: Navigation
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54522&m=dev
+- Node ID: 11067-54522
+
+## Anatomy
+- Top navigation container
+- Logo/brand identity
+- Primary navigation menu items
+- Secondary navigation items
+- User account menu
+- Search functionality
+- Mobile menu toggle
+- Focus ring for keyboard navigation
+- Dropdown submenus
+
+## Layout & Measurements
+- Standard height: 64px
+- Logo width: 120px
+- Menu item spacing: 32px
+- Horizontal padding: 16px
+- Border radius: 0 (full-width menu)
+- Focus ring: 2px offset from item
+- Icon size: 24px × 24px
+- Dropdown height: Auto (based on content)
+- Minimum width: Full viewport width
+
+## Typography
+- Display 1/Default: Roboto Light 72px/88px (large brand text)
+- Header 5: Roboto Regular 24px/32px (menu headers)
+- Body 1: Roboto Regular 16px/24px (primary menu items)
+- Body 2: Roboto Regular 14px/20px (secondary menu items)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #111619
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- White text: `var(--color-text-white)` = #ffffff
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Brand dark border: `var(--color-border-brand-dark)` = #0062ab
+- Brand neutral border: `var(--color-border-brand-neutral)` = #0076ce
+- White border: `var(--color-border-white)` = #ffffff
+- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- White icon: `var(--color-icon-white)` = #ffffff
+- Standard gray icon: `icon-standard-gray` = #616161
+- Dell Blue icon: `icon-DellBlue` = #0076CE
+
+### Background Colors
+- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Brand light: `var(--color-background-brand-light)` = #d9eaf8
+- Masthead brand: `var(--color-background-masthead-brand-base)` = #0076ce
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Slate 900: `UI Palettes/Slate/slate-900` = #111619
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Menu Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `icon-standard-gray` (#616161) |
+| Logo Section | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Primary Menu Item (Default) | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `icon-standard-gray` (#616161) |
+| Primary Menu Item (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Primary Menu Item (Focus) | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Primary Menu Item (Active) | `var(--color-background-brand-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Secondary Menu Item (Default) | transparent | transparent | `UI Palettes/Gray/gray-900` (#252525) | `icon-standard-gray` (#616161) |
+| Secondary Menu Item (Hover) | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
+| User Menu (Default) | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `icon-standard-gray` (#616161) |
+| User Menu (Hover) | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
+| Mobile Menu Toggle | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Text and border colors remain consistent via semantic variables
+- Logo section maintains consistent branding
+- Menu items adapt to dark theme
+
+## Interactions
+- Click menu items to navigate to respective pages
+- Hover provides visual feedback with background changes
+- Focus ring uses brand color for keyboard navigation
+- Dropdown submenus appear on hover/click
+- User menu shows account options
+- Mobile menu toggle opens mobile navigation
+- Keyboard navigation: Arrow keys, Enter, Tab, Escape
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Arrow keys, Enter, Tab, Escape
+- Screen reader support: Proper ARIA attributes for navigation
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use header element with nav landmarks
+- Focus management: Logical tab order through menu items
+- Current page indication: Proper aria-current="page" attribute
+
+## Variants
+- **Default**: Standard top navigation
+- **Dark**: Dark themed menu
+- **With Search**: Menu with integrated search
+- **With User Menu**: Menu with user account section
+- **Sticky**: Menu that stays visible on scroll
+- **Responsive**: Adaptive layout for different screen sizes
+- **Multi-level**: Menu with dropdown submenus
+- **Compact**: Reduced height for space-constrained interfaces
+
+## Behavior & Guidelines
+- Use top menu for primary application navigation
+- Organize items logically by importance
+- Provide clear labels and consistent styling
+- Use responsive design for mobile devices
+- Test with screen readers for proper navigation announcement
+- Consider sticky positioning for long pages
+- Use consistent branding across the application
+- Provide visual feedback for all interactions
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Active states use brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- Menu layouts should be responsive and accessible
+
+## Deliverable Checklist
+- [ ] Implement menu navigation functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Tab, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement dropdown submenus
+- [ ] Add user menu functionality
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test responsive behavior
+
+## Source Mapping
+- Figma component: Main Menu/Top (11067-54522)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Main Menu/Top" (category "Navigation"; node "11067-54522")

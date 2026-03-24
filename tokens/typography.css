@@ -1,0 +1,14 @@
+/* Typography CSS Variables */
+
+--body-1: Font(family: "Roboto", style: Regular, size: 16, weight: 400, lineHeight: 24, letterSpacing: 0);
+--body-1---medium: Font(family: "Roboto", style: Medium, size: 16, weight: 500, lineHeight: 24, letterSpacing: 0);
+--body-2: Font(family: "Roboto", style: Regular, size: 14, weight: 400, lineHeight: 20, letterSpacing: 0);
+--body-2---medium: Font(family: "Roboto", style: Medium, size: 14, weight: 500, lineHeight: 20, letterSpacing: 0);
+--body-3: Font(family: "Roboto", style: Regular, size: 12, weight: 400, lineHeight: 18, letterSpacing: 0);
+--header-1: Font(family: "Roboto", style: Regular, size: 48, weight: 400, lineHeight: 58, letterSpacing: 0);
+--header-2: Font(family: "Roboto", style: Regular, size: 36, weight: 400, lineHeight: 44, letterSpacing: 0);
+--header-3: Font(family: "Roboto", style: Regular, size: 32, weight: 400, lineHeight: 40, letterSpacing: 0);
+--header-4: Font(family: "Roboto", style: Regular, size: 28, weight: 400, lineHeight: 34, letterSpacing: 0);
+--header-5: Font(family: "Roboto", style: Regular, size: 24, weight: 400, lineHeight: 32, letterSpacing: 0);
+--header-6: Font(family: "Roboto", style: Regular, size: 18, weight: 400, lineHeight: 25, letterSpacing: 0);
+--header-6---medium: Font(family: "Roboto", style: Medium, size: 18, weight: 500, lineHeight: 25, letterSpacing: 0);

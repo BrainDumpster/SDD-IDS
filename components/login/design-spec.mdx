@@ -1,0 +1,179 @@
+# Login Design Spec
+
+## Metadata
+- Component: Login
+- Category: Patterns and Templates
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38428-117113&m=dev
+- Node ID: 38428-117113
+
+## Anatomy
+- Login container/card
+- Application logo/brand
+- Login form with fields
+- Username/email input
+- Password input
+- Remember me checkbox
+- Forgot password link
+- Login button
+- Social login options (optional)
+- Error/success messages
+- Focus ring for keyboard navigation
+
+## Layout & Measurements
+- Container width: 400px
+- Container height: Auto (based on content)
+- Logo size: 64px × 64px
+- Input field height: 40px
+- Button height: 40px
+- Horizontal padding: 32px
+- Vertical padding: 32px
+- Border radius: 8px
+- Focus ring: 2px offset from element
+- Field spacing: 16px
+- Icon size: 16px × 16px
+
+## Typography
+- Header 1: Roboto Regular 48px/58px (login title)
+- Body 2: Roboto Regular 14px/1.5 (form labels and links)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-2)` = #ffffff
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Link brand text: `var(--color-text-link-brand-base)` = #0062ab
+- White text: `var(--color-text-white)` = #ffffff
+- Accessible border: `var(--color-border-accessible)` = #757575
+- White border: `var(--color-border-white)` = #ffffff
+- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- White icon: `var(--color-icon-white)` = #ffffff
+- Info icon: `var(--color-icon-alerting-info)` = #005ece
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+- Major icon: `var(--color-icon-alerting-major)` = #ed6400
+- Success icon: `var(--color-icon-alerting-success)` = #1b8500
+- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
+
+### Alert Backgrounds
+- Critical light: `var(--color-background-alerting-critical-light)` = #f3d9d9
+- Critical transparent: `var(--color-border-alerting-critical-transparent)` = #af0000
+- Major light: `var(--color-background-alerting-major-light)` = #fce8d9
+- Major transparent: `var(--color-border-alerting-major-transparent)` = #ed6400
+- Info light: `var(--color-background-alerting-info-light)` = #d9e7f8
+- Info transparent: `var(--color-border-alerting-info-transparent)` = #005ece
+- Success light: `var(--color-background-alerting-success-light)` = #ddedd9
+- Success transparent: `var(--color-border-alerting-success-transparent)` = #1b8500
+- Minor light: `var(--color-background-alerting-minor-light)` = #fff7d9
+- Minor transparent: `var(--color-border-alerting-minor-transparent)` = #9c622e
+
+### Alert Borders
+- Info border: `var(--color-border-alerting-info-white)` = #005ece
+- Warning border: `Color/Border/Alerting/Warning-Accessible` = #9c622e
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Alert Palettes
+- Yellow 500: `Alert Palettes/Yellow/yellow-500` = #FFC700
+- Yellow 800: `Alert Palettes/Yellow/yellow-800` = #9C622E
+
+### Static Colors
+- Static white: `var(--color-static-gray-white)` = #ffffff
+- Static gray 900: `var(--color-static-gray-900)` = #252525
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Login Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Logo Section | transparent | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-brand-base)` (#0076ce) |
+| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-background-controls-brand-base)` (#0076ce) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-brand-base)` (#0076ce) |
+| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-icon-alerting-critical)` (#af0000) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-alerting-critical)` (#af0000) |
+| Login Button (Default) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Login Button (Hover) | `var(--color-icon-alerting-major)` (#ed6400) | `var(--color-icon-alerting-major)` (#ed6400) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Forgot Password Link | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Success Message | `var(--color-background-alerting-success-light)` (#ddedd9) | `var(--color-border-alerting-success-transparent)` (#1b8500) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-success)` (#1b8500) |
+| Error Message | `var(--color-background-alerting-critical-light)` (#f3d9d9) | `var(--color-border-alerting-critical-transparent)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
+| Warning Message | `var(--color-background-alerting-minor-light)` (#fff7d9) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-minor)` (#ffc700) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-2)` (#ffffff)
+- Text and border colors remain consistent via semantic variables
+- Login container maintains visibility in dark theme
+- Alert messages adapt to dark theme
+
+## Interactions
+- Click login button to submit form
+- Click forgot password link to reset password
+- Hover provides visual feedback on interactive elements
+- Focus ring uses brand color for keyboard navigation
+- Form validation with error messages
+- Keyboard navigation: Tab to navigate, Enter to submit
+- Social login options (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab, Enter, Escape
+- Screen reader support: Proper ARIA attributes for login form
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use form element with proper landmarks
+- Focus management: Logical tab order through form fields
+- Error announcements: Screen reader announces validation errors
+
+## Variants
+- **Default**: Standard login form
+- **With Social**: Login with social media options
+- **With Registration**: Login with registration link
+- **Minimal**: Simplified login form
+- **Branded**: Enhanced branding and styling
+- **Two-factor**: Login with two-factor authentication
+- **With Captcha**: Login with captcha verification
+- **Inline**: Login inline in page content
+
+## Behavior & Guidelines
+- Use login form for user authentication
+- Provide clear form labels and instructions
+- Include forgot password functionality
+- Use consistent styling across login variants
+- Test with screen readers for proper form announcement
+- Consider responsive behavior for different screen sizes
+- Use keyboard navigation for accessibility
+- Provide visual feedback for all interactions
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Error states use critical colors for validation feedback
+- Dark theme adaptation through semantic tokens
+- Login form should be responsive and accessible
+
+## Deliverable Checklist
+- [ ] Implement form validation
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement forgot password functionality
+- [ ] Add social login options
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test responsive behavior
+
+## Source Mapping
+- Figma component: Login (38428-117113)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Login" (category "Patterns and Templates"; node "38428-117113")

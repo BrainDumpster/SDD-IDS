@@ -1,0 +1,183 @@
+# Tooltip Design Spec
+
+## Metadata
+- Component: Tooltip
+- Category: Alerts and Notifications
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54657&m=dev
+- Node ID: 11067-54657
+
+## Anatomy
+- Tooltip container with arrow
+- Tooltip text content
+- Optional icon
+- Focus ring for keyboard navigation
+- Positioning relative to trigger element
+- Optional close button
+
+## Layout & Measurements
+- Standard padding: 8px 12px
+- Border radius: 4px
+- Arrow size: 8px × 8px
+- Arrow offset: 16px from edge
+- Focus ring: 2px offset from tooltip
+- Maximum width: 200px
+- Minimum width: 40px
+- Z-index: High (above other elements)
+
+## Typography
+- Display 1/Default: Roboto Light 72px/88px (hero tooltips)
+- Body 2: Roboto Regular 14px/20px (standard tooltips)
+- Body 2 - Medium: Roboto Medium 14px/20px (emphasized tooltips)
+- Body 2 - Underline: Roboto Regular 14px/20px (link tooltips)
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-surface-2)` = #ffffff
+- Surface background: `var(--color-background-surface-1)` = #111619
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Black text: `var(--color-text-black)` = #252525
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- Link brand text: `var(--color-text-link-brand-base)` = #4c9fdd
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Neutral border: `var(--color-border-neutral)` = #4d4d4d
+- White border: `var(--color-border-white)` = #ffffff
+- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- White icon: `var(--color-icon-white)` = #ffffff
+- Info blue icon: `icon-info-blue` = #005ECE
+- Status icons: red (#AF0000), yellow (#FFC700)
+- Alert icons: critical (#af0000), success (#1b8500), minor (#ffc700)
+
+### Background Colors
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Gray base: `var(--color-background-gray-base)` = #757575
+- Brand background: `var(--color-background-brand-base)` = #0076ce
+
+### Alert Backgrounds
+- Critical background: `var(--color-background-alerting-critical)` = #af0000
+- Success background: `var(--color-background-alerting-success)` = #1b8500
+- Minor background: `var(--color-background-alerting-minor)` = #ffc700
+
+### Alert Borders
+- Critical transparent: `var(--color-border-alerting-transparent-critical)` = #af000000
+- Success transparent: `var(--color-border-alerting-transparent-success)` = #1b850000
+- Minor transparent: `var(--color-border-alerting-transparent-white)` = #ffc70000
+- Critical white: `var(--color-border-alerting-critical-white)` = #af0000
+- Success white: `var(--color-border-alerting-success-white)` = #1b8500
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Dell Blue 600: `UI Palettes/Dell Blue/dell-blue-600` = #0062AB
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 300: `UI Palettes/Gray/gray-300` = #C5C5C5
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 600: `UI Palettes/Gray/gray-600` = #616161
+- Gray 800: `UI Palettes/Gray/gray-800` = #393939
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Alert Palettes
+- Blue 500: `UI Palettes/Alert Palettes/Blue/blue-500` = #005ECE
+- Green 500: `UI Palettes/Alert Palettes/Green/green-500` = #1B8500
+- Yellow 500: `UI Palettes/Alert Palettes/Yellow/yellow-500` = #FFC700
+- Yellow 800: `UI Palettes/Alert Palettes/Yellow/yellow-800` = #9C622E
+- Red 500: `UI Palettes/Alert Palettes/Red/red-500` = #AF0000
+- Orange 500: `UI Palettes/Alert Palettes/Orange/orange-500` = #ED6400
+
+### Secondary Palettes
+- Teal 500: `Secondary Palettes/Teal/teal-500` = #00819E
+- Berry 500: `Secondary Palettes/Berry/berry-500` = #A10061
+- Violet 500: `Secondary Palettes/Violet/violet-500` = #7C01B7`
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+- Color annotation: `var(--color-annotation)` = #f389c3
+
+### Effects
+- Tooltip Drop Shadow: Drop shadow effect for elevation
+
+## States (Light Theme)
+| Variant | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Default | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Info | `UI Palettes/Alert Palettes/Blue/blue-500` (#005ECE) | `UI Palettes/Alert Palettes/Blue/blue-500` (#005ECE) | `var(--color-text-white)` (#ffffff) | `icon-white` (#FFFFFF) |
+| Success | `var(--color-background-alerting-success)` (#1b8500) | `var(--color-border-alerting-success-white)` (#1b8500) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Warning | `var(--color-background-alerting-minor)` (#ffc700) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-black)` (#252525) | `icon-status-yellow` (#FFC700) |
+| Error | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-alerting-critical-white)` (#af0000) | `var(--color-text-white)` (#ffffff) | `icon-status-red` (#AF0000) |
+| Dark | `var(--color-background-surface-1)` (#111619) | `var(--color-border-accessible)` (#757575) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Surface tokens: `var(--color-background-surface-1)` (#111619), `var(--color-background-surface-2)` (#ffffff)
+- Text and border colors remain consistent via semantic variables
+- Alert variants maintain visibility in dark theme
+
+## Interactions
+- Hover over trigger element to show tooltip
+- Click to dismiss (optional)
+- Focus to show tooltip (for keyboard users)
+- Escape to dismiss (optional)
+- Auto-hide after timeout (optional)
+- Tooltip follows mouse movement (optional)
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to trigger, focus to show
+- Screen reader support: Proper ARIA attributes and descriptions
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use proper tooltip attributes
+- Focus management: Tooltip appears on focus
+- Content announcements: Screen reader announces tooltip content
+
+## Variants
+- **Default**: Standard tooltip with neutral styling
+- **Info**: Blue informational tooltip
+- **Success**: Green success tooltip
+- **Warning**: Yellow warning tooltip
+- **Error**: Red error tooltip
+- **Dark**: Dark themed tooltip
+- **With Icon**: Tooltip with accompanying icon
+- **Persistent**: Tooltip that stays visible until dismissed
+
+## Behavior & Guidelines
+- Use tooltips to provide additional context
+- Keep tooltip text concise and helpful
+- Position tooltips to avoid covering important content
+- Use appropriate colors for different message types
+- Test with screen readers for proper content announcement
+- Consider mobile touch interactions
+- Use consistent positioning across the application
+- Avoid critical information in tooltips
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Alert variants use appropriate color psychology
+- Dark theme adaptation through semantic tokens
+- Tooltip positioning should be intelligent and adaptive
+
+## Deliverable Checklist
+- [ ] Implement hover trigger functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test different tooltip variants
+- [ ] Implement positioning logic
+- [ ] Add auto-dismiss functionality
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test mobile touch interactions
+
+## Source Mapping
+- Figma component: Tooltip (11067-54657)
+- Variable collection: UI Palettes, Alert Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Tooltip" (category "Alerts and Notifications"; node "11067-54657")

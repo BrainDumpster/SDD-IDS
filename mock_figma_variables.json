@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "variables": {
+      "font/roboto/header1": {
+        "name": "font/roboto/header1",
+        "description": "Header 1 font style",
+        "value": "Font(family: \"Roboto\", style: Regular, size: 48, weight: 400, lineHeight: 58, letterSpacing: 0)",
+        "type": "FONT"
+      },
+      "font/roboto/header3": {
+        "name": "font/roboto/header3",
+        "description": "Header 3 font style",
+        "value": "Font(family: \"Roboto\", style: Regular, size: 32, weight: 400, lineHeight: 40, letterSpacing: 0)",
+        "type": "FONT"
+      },
+      "color/icon/black": {
+        "name": "color/icon/black",
+        "description": "Icon black color",
+        "value": "#252525",
+        "type": "COLOR"
+      },
+      "color/primary/blue": {
+        "name": "color/primary/blue",
+        "description": "Primary blue color",
+        "value": "#0066CC",
+        "type": "COLOR"
+      },
+      "color/gray/light": {
+        "name": "color/gray/light",
+        "description": "Light gray color",
+        "value": "#F5F5F5",
+        "type": "COLOR"
+      },
+      "spacing/small": {
+        "name": "spacing/small",
+        "description": "Small spacing unit",
+        "value": "8px",
+        "type": "FLOAT"
+      },
+      "spacing/medium": {
+        "name": "spacing/medium",
+        "description": "Medium spacing unit",
+        "value": "16px",
+        "type": "FLOAT"
+      },
+      "border/radius/small": {
+        "name": "border/radius/small",
+        "description": "Small border radius",
+        "value": "4px",
+        "type": "FLOAT"
+      },
+      "border/radius/medium": {
+        "name": "border/radius/medium",
+        "description": "Medium border radius",
+        "value": "8px",
+        "type": "FLOAT"
+      }
+    }
+  }
+}

@@ -1,0 +1,158 @@
+<!-- auto:generated:start -->
+# Accordion Design Spec
+
+> Generated 2026-03-19T07:15:37Z from Figma REST API + local/GitHub documentation images (Ollama vision). Overwrites previous auto-generated body.
+
+## Metadata
+- Component: Accordion
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev
+- Node ID: 16551-26036
+- File key: `(skipped)`
+
+## Anatomy
+
+- *(No automated extractions for this block.)*
+
+### Documentation image 1
+
+- *(Vision skipped)* `sample-redlines.svg` under *Accordion documentation images > Anatomy*
+
+## Layout & Measurements
+
+- Based on Accordion redlines and verified semantic usage in Figma token collections.
+- Accordion panels are grouped inside one parent container variant (`Accordion-Main`) using vertical auto-layout.
+- Parent container uses `itemSpacing = -1` so adjacent panel borders overlap by 1px (no visual gap between panels).
+- Header row is a 40px interaction target with compact horizontal spacing and 16px chevron icon.
+- Expanded content container uses an inset card pattern with larger left indentation for hierarchy.
+
+### Accordion measurements (from documentation/redlines)
+
+| Area | Measurement |
+|---|---|
+| Accordion group container | Vertical auto-layout, `itemSpacing: -1`, no fill, no stroke, no radius; Figma sample width is 480px but implementation width is container-driven (`width: 100%`) |
+| Responsive width behavior | Component host uses `width: 100%` and `box-sizing: border-box` so panel width syncs with parent container width |
+| Header height | 40px |
+| Header padding | 10px top / 16px right / 10px bottom / 16px left |
+| Header left padding (expanded with active bar) | 16px |
+| Active indicator bar | 4px width, spans expanded panel (header + content), flush to left panel edge (no horizontal gap) |
+| Chevron icon | 16px |
+| Content container padding | 8px top / 24px right / 16px bottom / 40px left |
+| Content card padding | 24px |
+| Content card heading/body gap | 4px |
+
+### Documentation image 1
+
+- *(Vision skipped)* `sample-redlines.svg` under *Accordion documentation images > Layout & Measurements*
+
+## Typography
+
+- *(No automated extractions for this block.)*
+
+## Tokens
+
+### Variable definitions (Figma file)
+
+- `Tokens` (theme-aware: Light / Dark)
+- `Primitive` (base primitives available in file)
+- `Density Primitive` (density baseline values used by layout)
+- Note: names match Figma collection names exactly.
+
+### Colors from inspected nodes
+
+- `var(--color-background-component)` = #FFFFFF (light) / #111619 (dark)
+- `var(--color-background-brand-lighter)` = #EBF4FB (light) / #1E262C (dark)
+- `var(--color-background-brand-light)` = #D9EAF8 (light) / #34414C (dark)
+- `var(--color-border-accessible)` = #757575 (light) / #8898A5 (dark)
+- `var(--color-border-brand-base)` = #0076CE (light) / #4C9FDD (dark)
+- `var(--color-border-brand-dark)` = #0062AB (light) / #94C5EA (dark)
+- `var(--color-border-strong)` = #252525 (light) / #B8C1C9 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #B8C1C9 (dark)
+- `var(--color-text-link-brand-base)` = #0062AB (light) / #4C9FDD (dark)
+- `var(--color-icon-accessible)` = #757575 (light) / #8898A5 (dark)
+- Focus outline uses brand focus mapping via `var(--color-border-brand-base)` in this file.
+
+
+## States (Light Theme)
+
+| Area | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Header | Collapsed default | `var(--color-background-component)` (#FFFFFF) | `var(--color-border-accessible)` (#757575) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-icon-accessible)` (#757575) |
+| Header | Collapsed hover | `var(--color-background-brand-lighter)` (#EBF4FB) | `var(--color-border-accessible)` (#757575) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-border-strong)` (#252525) |
+| Header | Expanded default | `var(--color-background-brand-lighter)` (#EBF4FB) | `var(--color-border-accessible)` (#757575), left bar `var(--color-border-brand-base)` (#0076CE) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-border-strong)` (#252525) |
+| Header | Expanded hover | `var(--color-background-brand-light)` (#D9EAF8) | `var(--color-border-accessible)` (#757575), left bar `var(--color-border-brand-base)` (#0076CE) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-border-strong)` (#252525) |
+| Content | Expanded panel | `var(--color-background-component)` (#FFFFFF) | Panel `var(--color-border-accessible)` (#757575), left bar `var(--color-border-brand-base)` (#0076CE) | Heading/body `var(--color-text-neutral-strong)` (#252525), link `var(--color-text-link-brand-base)` (#0062AB) |
+
+
+## States (Dark Theme)
+
+| Area | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Header | Collapsed default | `var(--color-background-component)` (#111619) | `var(--color-border-accessible)` (#8898A5) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-icon-accessible)` (#8898A5) |
+| Header | Collapsed hover | `var(--color-background-brand-lighter)` (#1E262C) | `var(--color-border-accessible)` (#8898A5) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-border-strong)` (#B8C1C9) |
+| Header | Expanded default | `var(--color-background-brand-lighter)` (#1E262C) | `var(--color-border-accessible)` (#8898A5), left bar `var(--color-border-brand-base)` (#4C9FDD) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-border-strong)` (#B8C1C9) |
+| Header | Expanded hover | `var(--color-background-brand-light)` (#34414C) | `var(--color-border-accessible)` (#8898A5), left bar `var(--color-border-brand-base)` (#4C9FDD) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-border-strong)` (#B8C1C9) |
+| Content | Expanded panel | `var(--color-background-component)` (#111619) | Panel `var(--color-border-accessible)` (#8898A5), left bar `var(--color-border-brand-base)` (#4C9FDD) | Heading/body `var(--color-text-neutral-strong)` (#B8C1C9), link `var(--color-text-link-brand-base)` (#4C9FDD) |
+
+
+## Interactions
+
+- Component variants define panel interaction states directly in Figma: `Collapsed/Expanded` x `Default/Hover`.
+- Click target and toggle behavior:
+  - Clicking the panel header toggles the panel.
+  - Clicking the chevron icon also toggles the same panel (same action as header click).
+- Hover behavior:
+  - Collapsed hover uses `var(--color-background-brand-lighter)` and stronger chevron color (`var(--color-border-strong)`).
+  - Expanded hover uses `var(--color-background-brand-light)` while preserving active bar token (`var(--color-border-brand-base)`).
+- Expand/collapse behavior:
+  - Chevron points down when collapsed and up when expanded.
+  - Expanded state reveals content container and active left indicator bar.
+- Open-mode behavior:
+  - Single-open mode (`one panel at a time`): opening a panel closes any other open panel; clicking the already-expanded panel toggles it closed.
+  - Multi-open mode (`multiple panels allowed`): each panel toggles independently; multiple expanded panels can coexist.
+  - Suggested API contract for implementation: `mode="single|multiple"` with controlled open-state input (for example `openIndexes`).
+- Implementation note for generated/runtime component:
+  - Keep panel interaction enabled by default (`data-state` should be empty/undefined in runtime usage).
+  - Use explicit `data-state` values only for visual demo/testing snapshots (forced state rendering).
+- Group behavior:
+  - In grouped accordion, panels are contiguous with no spacing between rows (border-overlap pattern).
+- Map focus rings to `var(--color-border-brand-base)` (brand focus mapping in this file).
+
+
+## Accessibility
+
+- Keyboard operable; visible focus; ARIA attributes per component pattern.
+- Meet WCAG AA for text and interactive contrast.
+
+
+## Variants
+
+- Default variant; additional variants per Figma component set.
+
+
+## Behavior & Guidelines
+
+### Documentation image 1
+
+- *(Vision skipped)* `sample-redlines.svg` under *Accordion documentation images > Behavior & Guidelines*
+
+
+## Token Gaps / Notes
+
+- Cross-check semantic CSS variables (`var(--...)`) against your theme build.
+- Re-run generation after Figma or documentation image updates.
+
+## Deliverable Checklist
+
+- [ ] Implement component API matching framework conventions (Angular / React / Vue / Lit)
+- [ ] Wire tokens from CSS variables
+- [ ] Cover keyboard + screen reader requirements
+- [ ] Verify light and dark themes
+- [ ] Match spacing / typography within tolerance of Figma
+
+## Source Mapping
+
+- Figma REST: `GET /v1/files/(skipped)/nodes` and `GET /v1/files/(skipped)/variables`
+- Component map: `data/component-figma-map.json`
+- Documentation images: resolved relative to MDX under `components/<slug>/`
+<!-- auto:generated:end -->
