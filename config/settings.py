@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class Settings:
 
     github_host = os.getenv("GITHUB_HOST")
@@ -28,5 +29,22 @@ class Settings:
     # Text / embeddings model names on Ollama (host = OLLAMA_HOST above)
     llm_model = os.getenv("LLM_MODEL", "llama3")
     embed_model = os.getenv("EMBED_MODEL", "embeddinggemma")
+
+    # Active design system: "ids" (default) or "synapse"
+    design_system = os.getenv("DESIGN_SYSTEM", "ids")
+
+    _design_system_config = None
+
+    @property
+    def design_system_config(self):
+        """Lazy-load the active DesignSystemConfig from YAML."""
+        if self._design_system_config is None:
+            from config.design_system_config import load_design_system
+            self._design_system_config = load_design_system(self.design_system)
+            # Override qdrant_collection from config when not explicitly set via env
+            if not os.getenv("QDRANT_COLLECTION_NAME"):
+                self.qdrant_collection = self._design_system_config.qdrant_collection
+        return self._design_system_config
+
 
 settings = Settings()

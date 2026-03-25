@@ -261,15 +261,15 @@ class FigmaAwareGenerator:
         """
         Parse structured output from LLM with Figma awareness
         """
-        
+
         def extract(tag: str):
             pattern = rf"=== {tag} ===(.*?)(?===|\Z)"
             match = re.search(pattern, text, re.DOTALL)
             return match.group(1).strip() if match else ""
-        
+
         # React parsing
         if framework.lower() == "react":
-            
+
             if style_mode == StyleMode.CSS_MODULE:
                 return {
                     "component": extract("COMPONENT"),
@@ -277,7 +277,7 @@ class FigmaAwareGenerator:
                     "framework": "react",
                     "style_mode": "css-module"
                 }
-            
+
             elif style_mode == StyleMode.CSS_IN_JS:
                 return {
                     "component": extract("COMPONENT"),
@@ -285,10 +285,18 @@ class FigmaAwareGenerator:
                     "framework": "react",
                     "style_mode": "css-in-js"
                 }
-        
+
+            elif style_mode == StyleMode.BASE_UI_CSS:
+                return {
+                    "component": extract("COMPONENT"),
+                    "css": extract("CSS"),
+                    "framework": "react",
+                    "style_mode": "base-ui-css"
+                }
+
         # Angular parsing
         elif framework.lower() == "angular":
-            
+
             return {
                 "component_ts": extract("COMPONENT_TS"),
                 "component_html": extract("COMPONENT_HTML"),
@@ -296,7 +304,7 @@ class FigmaAwareGenerator:
                 "framework": "angular",
                 "style_mode": "angular-scss"
             }
-        
+
         # Fallback
         return {"raw": text, "framework": framework.lower()}
     
@@ -306,22 +314,23 @@ class FigmaAwareGenerator:
         figma_spec: ComponentSpec
     ) -> Dict[str, Any]:
         """
-        Validate generated code against Figma specifications
+        Validate generated code against Figma specifications.
+        Includes Synapse/Base UI checks when style_mode is BASE_UI_CSS.
         """
-        
+
         validation = {
             "score": 0,
             "checks": {},
             "issues": [],
             "warnings": []
         }
-        
+
         # Combine all generated code for validation
         all_code = ""
         for key, value in generated.items():
-            if key != "metadata":
+            if key != "metadata" and isinstance(value, str):
                 all_code += value + "\n"
-        
+
         # Check for measurements
         if figma_spec.width and figma_spec.height:
             if f"{figma_spec.width}" in all_code or f"{figma_spec.height}" in all_code:
@@ -329,7 +338,7 @@ class FigmaAwareGenerator:
                 validation["score"] += 20
             else:
                 validation["issues"].append("Figma dimensions not found in generated code")
-        
+
         # Check for font specifications
         if figma_spec.font_family:
             if figma_spec.font_family.lower() in all_code.lower():
@@ -337,49 +346,58 @@ class FigmaAwareGenerator:
                 validation["score"] += 15
             else:
                 validation["issues"].append("Font family from Figma not found")
-        
+
         # Check for design tokens usage
         if figma_spec.design_tokens:
             token_count = 0
             for token in figma_spec.design_tokens:
                 if token['name'].lower() in all_code.lower():
                     token_count += 1
-            
+
             if token_count > 0:
                 validation["checks"]["tokens"] = True
                 validation["score"] += min(25, (token_count / len(figma_spec.design_tokens)) * 25)
             else:
                 validation["issues"].append("No design tokens from Figma found")
-        
+
         # Check for states implementation
         if figma_spec.states:
             state_count = 0
             for state in figma_spec.states:
                 if state['name'].lower() in all_code.lower():
                     state_count += 1
-            
+
             if state_count > 0:
                 validation["checks"]["states"] = True
                 validation["score"] += min(20, (state_count / len(figma_spec.states)) * 20)
             else:
                 validation["warnings"].append("Component states from Figma not implemented")
-        
+
         # Check for anatomy structure
         if figma_spec.anatomy:
             anatomy_count = 0
             for part in figma_spec.anatomy:
                 if part['name'].lower() in all_code.lower():
                     anatomy_count += 1
-            
+
             if anatomy_count > 0:
                 validation["checks"]["anatomy"] = True
                 validation["score"] += min(20, (anatomy_count / len(figma_spec.anatomy)) * 20)
             else:
                 validation["warnings"].append("Component anatomy from Figma not fully implemented")
-        
+
+        # Synapse / Base UI validation (bonus checks when applicable)
+        style_mode_str = generated.get("style_mode", "")
+        if style_mode_str == "base-ui-css":
+            from validation.baseui_validator import BaseUIValidator
+            baseui_result = BaseUIValidator().validate(all_code)
+            validation["checks"]["base_ui_compliance"] = baseui_result.get("score", 0) >= 80
+            validation["issues"].extend(baseui_result.get("issues", []))
+            validation["warnings"].extend(baseui_result.get("warnings", []))
+
         # Validate score
         validation["score"] = min(100, validation["score"])
-        
+
         return validation
     
     def batch_generate(

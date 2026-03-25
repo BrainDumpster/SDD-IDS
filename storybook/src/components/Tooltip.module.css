@@ -1,0 +1,20 @@
+.trigger {
+  display: inline;
+  cursor: default;
+}
+
+.popup {
+  background: var(--color-background-gray-stronger);
+  color: var(--color-text-white);
+  padding: var(--padding-padding-6) var(--padding-padding-10);
+  border-radius: var(--corner-radius-radius-4);
+  font-size: var(--font-size-body-3);
+  line-height: var(--font-line-height-line-height-18);
+  box-shadow: var(--shadow-drop-shadow-8-x) var(--shadow-drop-shadow-8-y) var(--shadow-drop-shadow-8-blur) var(--shadow-drop-shadow-8-color);
+  max-width: 320px;
+  z-index: 1070;
+}
+
+.arrow {
+  fill: var(--color-background-gray-stronger);
+}

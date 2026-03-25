@@ -11,7 +11,7 @@ class ComponentGenerator:
     Production-grade AI Component Generator
     ---------------------------------------
     Supports:
-      • React (CSS Modules / CSS-in-JS)
+      • React (CSS Modules / CSS-in-JS / Base UI)
       • Angular (SCSS)
       • Dark/Light theme token usage
       • Structured output parsing
@@ -39,20 +39,20 @@ class ComponentGenerator:
         Args:
             context: compiled component context
             framework: React | Angular
-            style_mode: CSS_MODULE | CSS_IN_JS | ANGULAR_SCSS
+            style_mode: CSS_MODULE | CSS_IN_JS | ANGULAR_SCSS | BASE_UI_CSS
 
         Returns:
             dict with structured output sections
         """
 
-        # 1️⃣ Build prompt
+        # 1. Build prompt
         base_prompt = build_prompt(framework, style_mode)
         full_prompt = inject_context(base_prompt, context)
 
-        # 2️⃣ Generate with LLM
+        # 2. Generate with LLM
         raw_output = self.llm.invoke(full_prompt)
 
-        # 3️⃣ Parse structured output
+        # 3. Parse structured output
         parsed = self._parse_output(raw_output, framework, style_mode)
 
         return parsed
@@ -93,6 +93,14 @@ class ComponentGenerator:
                     "css": "",
                     "framework": "react",
                     "style_mode": "css-in-js"
+                }
+
+            elif style_mode == StyleMode.BASE_UI_CSS:
+                return {
+                    "component": extract("COMPONENT"),
+                    "css": extract("CSS"),
+                    "framework": "react",
+                    "style_mode": "base-ui-css"
                 }
 
         # ---------------- Angular ----------------

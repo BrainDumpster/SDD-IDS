@@ -1,0 +1,410 @@
+{
+  "button": {
+    "base_ui_component": "Button",
+    "import": "@base-ui-components/react/button",
+    "pattern": "simple",
+    "parts": ["Button"],
+    "notes": "Direct mapping. Use data-* attributes for state styling. Support variant/size via className callback."
+  },
+  "checkbox": {
+    "base_ui_component": "Checkbox",
+    "import": "@base-ui-components/react/checkbox",
+    "pattern": "compound",
+    "parts": ["Checkbox.Root", "Checkbox.Indicator"],
+    "notes": "Compound pattern. Use CheckboxGroup for grouped checkboxes. data-checked attribute for styling."
+  },
+  "radio-button": {
+    "base_ui_component": "RadioGroup",
+    "import": "@base-ui-components/react/radio-group",
+    "pattern": "compound",
+    "parts": ["RadioGroup", "Radio.Root", "Radio.Indicator"],
+    "notes": "RadioGroup wraps Radio items. Use data-checked for selected state styling."
+  },
+  "toggle-switch": {
+    "base_ui_component": "Switch",
+    "import": "@base-ui-components/react/switch",
+    "pattern": "simple",
+    "parts": ["Switch.Root", "Switch.Thumb"],
+    "notes": "Simple compound. data-checked for on state. Animate thumb position via CSS."
+  },
+  "slider": {
+    "base_ui_component": "Slider",
+    "import": "@base-ui-components/react/slider",
+    "pattern": "compound",
+    "parts": ["Slider.Root", "Slider.Control", "Slider.Track", "Slider.Indicator", "Slider.Thumb"],
+    "notes": "Full compound component. Support range (multi-thumb) via value array."
+  },
+  "text-input": {
+    "base_ui_component": "Input",
+    "import": "@base-ui-components/react/input",
+    "pattern": "compound",
+    "parts": ["Field.Root", "Field.Label", "Field.Control", "Field.Description", "Field.Error"],
+    "notes": "Wrap Input in Field compound for label/error. Use data-invalid for error state."
+  },
+  "textbox": {
+    "base_ui_component": "Input",
+    "import": "@base-ui-components/react/input",
+    "pattern": "compound",
+    "parts": ["Field.Root", "Field.Label", "Field.Control", "Field.Description", "Field.Error"],
+    "notes": "Same as text-input. TextBox is the Form Elements page variant."
+  },
+  "tooltip": {
+    "base_ui_component": "Tooltip",
+    "import": "@base-ui-components/react/tooltip",
+    "pattern": "compound",
+    "parts": ["Tooltip.Provider", "Tooltip.Root", "Tooltip.Trigger", "Tooltip.Positioner", "Tooltip.Popup", "Tooltip.Arrow"],
+    "notes": "Wrap app in Tooltip.Provider. Use Positioner for placement. Arrow is optional."
+  },
+  "tabs": {
+    "base_ui_component": "Tabs",
+    "import": "@base-ui-components/react/tabs",
+    "pattern": "compound",
+    "parts": ["Tabs.Root", "Tabs.List", "Tabs.Tab", "Tabs.Panel"],
+    "notes": "Compound tabs. value prop for controlled. data-selected for active tab styling."
+  },
+  "tab": {
+    "base_ui_component": "Tabs",
+    "import": "@base-ui-components/react/tabs",
+    "pattern": "compound",
+    "parts": ["Tabs.Root", "Tabs.List", "Tabs.Tab", "Tabs.Panel"],
+    "notes": "Navigation page Tab maps to same Tabs compound component."
+  },
+  "accordion": {
+    "base_ui_component": "Accordion",
+    "import": "@base-ui-components/react/accordion",
+    "pattern": "compound",
+    "parts": ["Accordion.Root", "Accordion.Item", "Accordion.Header", "Accordion.Trigger", "Accordion.Panel"],
+    "notes": "Supports single or multiple open. data-open for expanded state."
+  },
+  "toast": {
+    "base_ui_component": "Toast",
+    "import": "@base-ui-components/react/toast",
+    "pattern": "compound",
+    "parts": ["Toast.Provider", "Toast.Viewport", "Toast.Root", "Toast.Title", "Toast.Description", "Toast.Close"],
+    "notes": "Provider at app root. Use toast.add() API. Support severity variants."
+  },
+  "dialog": {
+    "base_ui_component": "Dialog",
+    "import": "@base-ui-components/react/dialog",
+    "pattern": "compound",
+    "parts": ["Dialog.Root", "Dialog.Trigger", "Dialog.Backdrop", "Dialog.Popup", "Dialog.Title", "Dialog.Description", "Dialog.Close"],
+    "notes": "Modal dialog. Backdrop for overlay. Traps focus automatically."
+  },
+  "modal-dialog": {
+    "base_ui_component": "Dialog",
+    "import": "@base-ui-components/react/dialog",
+    "pattern": "compound",
+    "parts": ["Dialog.Root", "Dialog.Trigger", "Dialog.Backdrop", "Dialog.Popup", "Dialog.Title", "Dialog.Description", "Dialog.Close"],
+    "notes": "Same as dialog. Modal Dialog is the Modals page variant."
+  },
+  "modal-single-multi": {
+    "base_ui_component": "Dialog",
+    "import": "@base-ui-components/react/dialog",
+    "pattern": "compound",
+    "parts": ["Dialog.Root", "Dialog.Trigger", "Dialog.Backdrop", "Dialog.Popup", "Dialog.Title", "Dialog.Description", "Dialog.Close"],
+    "notes": "Single/multi-page modal uses Dialog with internal step state management."
+  },
+  "dropdown-single": {
+    "base_ui_component": "Select",
+    "import": "@base-ui-components/react/select",
+    "pattern": "compound",
+    "parts": ["Select.Root", "Select.Trigger", "Select.Value", "Select.Positioner", "Select.Popup", "Select.Option", "Select.OptionIndicator"],
+    "notes": "Full compound select. Positioner for dropdown placement. data-selected on options."
+  },
+  "dropdown-combo": {
+    "base_ui_component": "Select",
+    "import": "@base-ui-components/react/select",
+    "pattern": "compound",
+    "parts": ["Select.Root", "Select.Trigger", "Select.Value", "Select.Positioner", "Select.Popup", "Select.Option"],
+    "notes": "Combo box variant. Add text input in trigger for filtering."
+  },
+  "dropdown-multi": {
+    "base_ui_component": "Select",
+    "import": "@base-ui-components/react/select",
+    "pattern": "compound",
+    "parts": ["Select.Root", "Select.Trigger", "Select.Value", "Select.Positioner", "Select.Popup", "Select.Option"],
+    "notes": "Multi-select. Track selection array. Render tags for selected items."
+  },
+  "search": {
+    "base_ui_component": "Input",
+    "import": "@base-ui-components/react/input",
+    "pattern": "compound",
+    "parts": ["Field.Root", "Field.Control"],
+    "notes": "Search uses Input with icon prefix and clear button. Add Popover for suggestions."
+  },
+  "progress-bar": {
+    "base_ui_component": "Progress",
+    "import": "@base-ui-components/react/progress",
+    "pattern": "simple",
+    "parts": ["Progress.Root", "Progress.Track", "Progress.Indicator"],
+    "notes": "Simple progress. Use value prop. data-complete when 100%."
+  },
+  "scroll-bar": {
+    "base_ui_component": "ScrollArea",
+    "import": "@base-ui-components/react/scroll-area",
+    "pattern": "compound",
+    "parts": ["ScrollArea.Root", "ScrollArea.Viewport", "ScrollArea.Scrollbar", "ScrollArea.Thumb", "ScrollArea.Corner"],
+    "notes": "Custom scrollbar styling. Supports horizontal and vertical."
+  },
+  "segmented-button": {
+    "base_ui_component": "ToggleGroup",
+    "import": "@base-ui-components/react/toggle-group",
+    "pattern": "compound",
+    "parts": ["ToggleGroup", "Toggle"],
+    "notes": "Use toggleMultiple=false for single-select segmented control."
+  },
+  "overlay": {
+    "base_ui_component": "Dialog",
+    "import": "@base-ui-components/react/dialog",
+    "pattern": "compound",
+    "parts": ["Dialog.Root", "Dialog.Backdrop", "Dialog.Popup"],
+    "notes": "Overlay/Drawer. Use Dialog without modal prop for slide-over panels."
+  },
+  "tag": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "simple",
+    "parts": [],
+    "notes": "Custom component. Dismissible chip with label and optional close button. Style with Synapse tokens."
+  },
+  "link": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "simple",
+    "parts": [],
+    "notes": "Native <a> element styled with Synapse tokens. No Base UI primitive needed."
+  },
+
+  "masthead": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "composition",
+    "parts": [],
+    "notes": "Compose from Toolbar pattern + NavigationMenu. Custom header bar with logo, nav, actions."
+  },
+  "left-nav": {
+    "base_ui_component": "Collapsible",
+    "import": "@base-ui-components/react/collapsible",
+    "pattern": "composition",
+    "parts": ["Collapsible.Root", "Collapsible.Trigger", "Collapsible.Panel"],
+    "notes": "Vertical nav with collapsible sections. Compose NavigationMenu + Collapsible."
+  },
+  "app-launcher": {
+    "base_ui_component": "Menu",
+    "import": "@base-ui-components/react/menu",
+    "pattern": "composition",
+    "parts": ["Menu.Root", "Menu.Trigger", "Menu.Positioner", "Menu.Popup", "Menu.Item"],
+    "notes": "Grid-style popover. Use Menu for structure, custom grid layout inside popup."
+  },
+  "dropdown-menu": {
+    "base_ui_component": "Menu",
+    "import": "@base-ui-components/react/menu",
+    "pattern": "compound",
+    "parts": ["Menu.Root", "Menu.Trigger", "Menu.Positioner", "Menu.Popup", "Menu.Item", "Menu.Separator"],
+    "notes": "Direct Menu mapping. Support submenu via nested Menu. data-highlighted for hover."
+  },
+  "global-alert": {
+    "base_ui_component": "AlertDialog",
+    "import": "@base-ui-components/react/alert-dialog",
+    "pattern": "composition",
+    "parts": ["AlertDialog.Root", "AlertDialog.Trigger", "AlertDialog.Backdrop", "AlertDialog.Popup", "AlertDialog.Title", "AlertDialog.Description", "AlertDialog.Close"],
+    "notes": "Page-level notification. Can also use Toast for auto-dismissing variant."
+  },
+  "inline-alert": {
+    "base_ui_component": "Collapsible",
+    "import": "@base-ui-components/react/collapsible",
+    "pattern": "composition",
+    "parts": ["Collapsible.Root", "Collapsible.Trigger", "Collapsible.Panel"],
+    "notes": "Dismissible inline alert. Collapsible for show/hide animation."
+  },
+  "wizard-modal": {
+    "base_ui_component": "Dialog",
+    "import": "@base-ui-components/react/dialog",
+    "pattern": "composition",
+    "parts": ["Dialog.Root", "Dialog.Backdrop", "Dialog.Popup", "Dialog.Title", "Dialog.Close"],
+    "notes": "Multi-step dialog. Internal stepper state management. Use Dialog shell with custom step content."
+  },
+  "power-filter": {
+    "base_ui_component": "Popover",
+    "import": "@base-ui-components/react/popover",
+    "pattern": "composition",
+    "parts": ["Popover.Root", "Popover.Trigger", "Popover.Positioner", "Popover.Popup"],
+    "notes": "Filter panel in popover. Compose form elements inside popup."
+  },
+  "stepper": {
+    "base_ui_component": "Progress",
+    "import": "@base-ui-components/react/progress",
+    "pattern": "composition",
+    "parts": ["Progress.Root", "Progress.Track", "Progress.Indicator"],
+    "notes": "Step indicator. Use Progress for visual bar + custom step circles."
+  },
+  "date-time-picker": {
+    "base_ui_component": "Popover",
+    "import": "@base-ui-components/react/popover",
+    "pattern": "composition",
+    "parts": ["Popover.Root", "Popover.Trigger", "Popover.Positioner", "Popover.Popup", "Field.Root", "Field.Control"],
+    "notes": "Calendar popover + input. Custom calendar grid inside Popover.Popup."
+  },
+  "dual-list-box": {
+    "base_ui_component": "ScrollArea",
+    "import": "@base-ui-components/react/scroll-area",
+    "pattern": "composition",
+    "parts": ["ScrollArea.Root", "ScrollArea.Viewport", "ScrollArea.Scrollbar", "ScrollArea.Thumb"],
+    "notes": "Two scrollable lists with transfer buttons. Compose 2x ScrollArea + Button."
+  },
+  "form": {
+    "base_ui_component": "Form",
+    "import": "@base-ui-components/react/form",
+    "pattern": "composition",
+    "parts": ["Form", "Fieldset", "Field.Root", "Field.Label", "Field.Control", "Field.Error"],
+    "notes": "Form composition with validation. Use Field compound for each input."
+  },
+  "breadcrumb": {
+    "base_ui_component": "Separator",
+    "import": "@base-ui-components/react/separator",
+    "pattern": "composition",
+    "parts": ["Separator"],
+    "notes": "Nav breadcrumb. Use Separator between items. Semantic <nav> with <ol>."
+  },
+  "pagination": {
+    "base_ui_component": "NumberField",
+    "import": "@base-ui-components/react/number-field",
+    "pattern": "composition",
+    "parts": ["NumberField.Root", "NumberField.Input", "NumberField.Increment", "NumberField.Decrement"],
+    "notes": "Page navigation. Compose Button + NumberField for page input."
+  },
+  "badge": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Notification badge. Custom component with Synapse tokens. Position absolute on parent."
+  },
+
+  "table": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom table with Synapse tokens. Semantic <table> with sortable headers."
+  },
+  "data-grid": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom data grid. Consider wrapping TanStack Table or AG Grid with Synapse styling."
+  },
+  "tree": {
+    "base_ui_component": "Collapsible",
+    "import": "@base-ui-components/react/collapsible",
+    "pattern": "custom",
+    "parts": ["Collapsible.Root", "Collapsible.Trigger", "Collapsible.Panel"],
+    "notes": "Recursive tree structure. Nested Collapsible components for expand/collapse."
+  },
+  "filter-panel": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom filter panel. Side panel with form elements for data filtering."
+  },
+  "detail-panel": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom detail/inspector panel. Slide-in panel showing row details."
+  },
+  "columns": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Column configuration component for data grid. Custom implementation."
+  },
+  "spinner": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "CSS animation spinner. Use Synapse tokens for color. role='status' + sr-only text."
+  },
+  "skeleton-loader": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "CSS animation skeleton. Pulsing placeholder blocks matching content layout."
+  },
+  "chat-area": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom chat container. Scrollable message list with auto-scroll."
+  },
+  "chat-input-box": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom chat input. Textarea with send button and attachment support."
+  },
+  "chat-system-response": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom AI/system message bubble. Supports markdown rendering."
+  },
+  "chart-widget": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom chart wrapper. Card shell with header and visualization area."
+  },
+  "line-chart": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom line chart visualization. Consider D3 or Recharts with Synapse tokens."
+  },
+  "topology": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom network topology visualization. D3 force layout with Synapse styling."
+  },
+  "tracker": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom progress/status tracker. Visual status indicator with steps."
+  },
+  "error-card": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Card variant for error states. Custom component with error icon and message."
+  },
+  "empty-dashboard-widget": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Empty state placeholder for dashboard widgets. Icon + message + CTA."
+  },
+  "page-layout": {
+    "base_ui_component": null,
+    "import": null,
+    "pattern": "custom",
+    "parts": [],
+    "notes": "Custom application shell layout. Masthead + Left Nav + Content area composition."
+  }
+}

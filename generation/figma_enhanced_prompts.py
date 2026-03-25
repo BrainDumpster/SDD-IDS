@@ -107,13 +107,38 @@ STRICT REQUIREMENTS:
     @staticmethod
     def _get_framework_rules(framework: str, style_mode: StyleMode) -> str:
         """Get framework-specific rules"""
-        
+
+        if style_mode == StyleMode.BASE_UI_CSS:
+            return FigmaEnhancedPrompts._get_base_ui_rules()
         if framework.lower() == "react":
             return FigmaEnhancedPrompts._get_react_rules(style_mode)
         elif framework.lower() == "angular":
             return FigmaEnhancedPrompts._get_angular_rules(style_mode)
         else:
             return FigmaEnhancedPrompts._get_generic_rules()
+
+    @staticmethod
+    def _get_base_ui_rules() -> str:
+        """Get Base UI (Synapse) framework rules"""
+        return """
+BASE UI + SYNAPSE FRAMEWORK REQUIREMENTS:
+
+• Import from `@base-ui-components/react/<component>` (individual sub-paths)
+• Use compound component pattern: Root > Parts
+  Example: Select.Root > Select.Trigger > Select.Positioner > Select.Popup > Select.Option
+• Use `data-*` attribute selectors for state-based styling
+• Use `className` callbacks for dynamic class names
+• All styling via CSS Modules with Synapse CSS custom properties
+• Do NOT import from @mui/material, @radix-ui, @headlessui, or other UI libraries
+
+CSS MODULE + BASE UI SPECIFIC:
+• Generate separate CSS Module file
+• Use className={styles.className} for static classes
+• Use className={(state) => ...} for state-aware classes
+• Style states via [data-checked], [data-open], [data-disabled], etc.
+• All colors, spacing, radius MUST use Synapse design tokens
+• NO hardcoded hex, rgb, or pixel values
+"""
     
     @staticmethod
     def _get_react_rules(style_mode: StyleMode) -> str:
@@ -294,7 +319,28 @@ FIGMA SOURCE: {figma_spec.figma_url}
     @staticmethod
     def _get_output_structure(framework: str, style_mode: StyleMode) -> str:
         """Get output structure based on framework and style mode"""
-        
+
+        if style_mode == StyleMode.BASE_UI_CSS:
+            return """
+OUTPUT STRUCTURE:
+
+=== COMPONENT ===
+React TypeScript component using Base UI compound components:
+- Imports from @base-ui-components/react
+- TypeScript interfaces for props
+- Compound component composition (Root > Parts)
+- className callbacks for state-aware styling
+- Accessibility built-in via Base UI
+- Export statement
+
+=== CSS ===
+CSS Module with:
+- Synapse design token usage (CSS custom properties)
+- data-* attribute selectors for state styling
+- Component-scoped class names
+- Responsive design with Synapse breakpoints
+"""
+
         if framework.lower() == "react":
             if style_mode == StyleMode.CSS_MODULE:
                 return """

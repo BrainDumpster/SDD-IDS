@@ -1,0 +1,114 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# RadioButton Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | RadioButton |
+| Category | Form Elements |
+| Figma Page | Form Elements |
+| Node ID | 11067:54579 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **group**
+- **indicator**
+- **label**
+- **root**
+- **wrapper**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+> Layout data not yet extracted. Run `python scripts/figma_layout_enricher.py` to populate.
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--border-width-border-2)` = 2px
+- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-controls-brand-base)` = #0076ce
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-border-neutral-light)` = #757575 (light) / #34414c (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--spacing-space-12)` = 12px
+- `var(--spacing-space-8)` = 8px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | checked |  | `var(--color-background-controls-brand-base)` (#0076ce) |  |  |
+| default | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--border-width-border-2)` (2px) `var(--color-border-neutral-light)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |  |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover |  | `var(--color-border-brand-base)` (#0076ce) |  |  |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | checked |  | `var(--color-background-controls-brand-base)` (#0076ce) |  |  |
+| default | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--border-width-border-2)` (2px) `var(--color-border-neutral-light)` (#34414c) | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover |  | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
+
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
+> This section documents additional or overriding behaviors for this component.
+
+**Pattern**: radio-group
+
+### Behaviors
+
+- Single selection within a group of options
+- Arrow keys move selection between radio buttons
+- Selection wraps from last to first and vice versa
+
+### Keyboard
+
+| Key | Action |
+|---|---|
+| ArrowUp | Select previous radio button |
+| ArrowLeft | Select previous radio button |
+| ArrowDown | Select next radio button |
+| ArrowRight | Select next radio button |
+| Tab | Enter or leave the radio group (does not move between radios) |
+
+### ARIA
+
+| Element | Attributes |
+|---|---|
+| group | {'role': 'radiogroup', 'aria-labelledby': 'ID of the group label'} |
+| radio | {'role': 'radio', 'aria-checked': 'true on the selected radio'} |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

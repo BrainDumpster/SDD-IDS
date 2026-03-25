@@ -1,0 +1,60 @@
+.wrapper {
+  width: 100%;
+  overflow-x: auto;
+  font-family: inherit;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--color-text-neutral-strong);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  border-bottom: var(--border-width-border-2) solid var(--color-border-light);
+  background: var(--color-background-surface-1);
+  white-space: nowrap;
+}
+
+.td {
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  color: var(--color-text-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-lighter);
+}
+
+.tr:hover {
+  background: var(--color-background-brand-lighter);
+}
+
+.sortButton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: inherit;
+  color: inherit;
+  user-select: none;
+}
+.sortButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+  border-radius: var(--corner-radius-radius-2);
+}
+.sortButton:hover {
+  color: var(--color-text-brand-base);
+}
+
+.sortIcon {
+  flex-shrink: 0;
+  color: var(--color-icon-neutral);
+}
+.sortButton:hover .sortIcon {
+  color: var(--color-text-brand-base);
+}

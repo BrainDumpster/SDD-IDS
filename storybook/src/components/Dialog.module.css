@@ -1,0 +1,81 @@
+.triggerReset {
+  all: unset;
+  display: inline-flex;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-background-overlay-1);
+  z-index: 1040;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-background-component);
+  border-radius: var(--corner-radius-radius-8);
+  box-shadow: var(--shadow-drop-shadow-32-x) var(--shadow-drop-shadow-32-y) var(--shadow-drop-shadow-32-blur) var(--shadow-drop-shadow-32-color);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  outline: none;
+}
+
+.sm { width: 400px; }
+.md { width: 560px; }
+.lg { width: 720px; }
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--padding-padding-16) var(--padding-padding-24);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-lighter);
+}
+
+.title {
+  font-size: var(--font-size-header-6);
+  font-weight: 600;
+  color: var(--color-text-neutral-strong);
+  margin: 0;
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-32);
+  height: var(--scale-32);
+  border-radius: var(--corner-radius-radius-4);
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral);
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+.close:hover {
+  background: var(--color-background-gray-lighter);
+}
+.close:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.description {
+  padding: var(--padding-padding-12) var(--padding-padding-24) 0;
+  font-size: var(--font-size-body-2);
+  color: var(--color-text-neutral);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.body {
+  padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24);
+  overflow-y: auto;
+  font-size: var(--font-size-body-2);
+  color: var(--color-text-neutral-strong);
+  line-height: var(--font-line-height-line-height-20);
+}

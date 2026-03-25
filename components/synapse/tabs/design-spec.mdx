@@ -1,0 +1,112 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# Tabs Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Tabs |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 47803:1704 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **list**
+- **panel**
+- **root**
+- **selected**
+- **tab**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--border-width-border-1)` = 1px
+- `var(--border-width-border-2)` = 2px
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-text-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--corner-radius-radius-2)` = 2px
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--padding-padding-16)` = 16px
+- `var(--padding-padding-8)` = 8px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
+| default | hover |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
+| default | hover |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
+
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
+> This section documents additional or overriding behaviors for this component.
+
+**Pattern**: tablist
+
+### Behaviors
+
+- Horizontal tab navigation between tab elements
+- Activates associated panel on tab selection
+- Supports automatic activation (focus = select) or manual activation (Enter to select)
+
+### Keyboard
+
+| Key | Action |
+|---|---|
+| ArrowLeft | Move focus to previous tab |
+| ArrowRight | Move focus to next tab |
+| Home | Move focus to first tab |
+| End | Move focus to last tab |
+
+### ARIA
+
+| Element | Attributes |
+|---|---|
+| container | {'role': 'tablist'} |
+| tab | {'role': 'tab', 'aria-selected': 'true on the active tab', 'aria-controls': 'ID of the associated tabpanel'} |
+| panel | {'role': 'tabpanel', 'aria-labelledby': 'ID of the associated tab'} |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

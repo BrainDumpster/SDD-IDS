@@ -1,0 +1,1 @@
+import{f as r}from"./useRenderElement-RsBRv27X.js";import{r as e}from"./index-JhL3uwfD.js";const s=e.createContext({legendId:void 0,setLegendId:()=>{},disabled:void 0});function a(o=!1){const t=e.useContext(s);if(!t&&!o)throw new Error(r(86));return t}export{a as u};

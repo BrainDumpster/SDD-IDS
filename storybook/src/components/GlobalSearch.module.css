@@ -1,0 +1,104 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  font-family: inherit;
+}
+
+/* Collapsed trigger button */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-32);
+  height: var(--scale-32);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  color: var(--color-text-white);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.trigger:hover {
+  background: var(--color-background-masthead-brand-strong);
+}
+
+.trigger:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-text-white);
+  outline-offset: 2px;
+}
+
+/* Expanded input wrapper */
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  height: var(--scale-32);
+  padding: 0 var(--padding-padding-8);
+  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-light);
+  border-radius: var(--corner-radius-radius-4);
+  min-width: 240px;
+  box-shadow:
+    var(--shadow-drop-shadow-2-x)
+    var(--shadow-drop-shadow-2-y)
+    var(--shadow-drop-shadow-2-blur)
+    var(--shadow-drop-shadow-2-color);
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+}
+
+.inputIcon {
+  flex-shrink: 0;
+  color: var(--color-icon-neutral);
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  color: var(--color-text-neutral-strong);
+  outline: none;
+  line-height: var(--font-line-height-line-height-20);
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: var(--color-text-disabled);
+}
+
+/* Webkit search cancel button removal */
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-20);
+  height: var(--scale-20);
+  border: none;
+  border-radius: var(--corner-radius-radius-2);
+  background: transparent;
+  color: var(--color-icon-neutral);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.closeButton:hover {
+  background: var(--color-background-surface-1);
+  color: var(--color-text-neutral-strong);
+}
+
+.closeButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}

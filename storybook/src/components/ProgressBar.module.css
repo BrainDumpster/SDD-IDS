@@ -1,0 +1,44 @@
+.root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: var(--font-size-body-3);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong);
+}
+
+.value {
+  font-size: var(--font-size-body-3);
+  color: var(--color-text-neutral);
+}
+
+.track {
+  width: 100%;
+  border-radius: var(--corner-radius-radius-24);
+  background: var(--color-background-gray-light);
+  overflow: hidden;
+}
+
+.sm { height: 4px; }
+.md { height: 8px; }
+
+.indicator {
+  height: 100%;
+  border-radius: var(--corner-radius-radius-24);
+  background: var(--color-background-controls-brand-base);
+  transition: width 300ms ease;
+}
+
+.root[data-complete] .indicator {
+  background: var(--alert-green-500);
+}

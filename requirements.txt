@@ -6,6 +6,7 @@ beautifulsoup4
 markdown>=3.5
 requests
 python-dotenv
+pyyaml
 tqdm
 ollama
 fastapi

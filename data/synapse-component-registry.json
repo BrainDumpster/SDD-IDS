@@ -1,0 +1,2053 @@
+{
+  "accordion": {
+    "name": "Accordion",
+    "slug": "accordion",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54535",
+    "anatomy": [
+      "content",
+      "header",
+      "icon",
+      "item",
+      "panel",
+      "root",
+      "trigger"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--padding-padding-16"
+    ]
+  },
+  "anchormenu": {
+    "name": "AnchorMenu",
+    "slug": "anchormenu",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "11067:54486",
+    "anatomy": [
+      "active",
+      "heading",
+      "item",
+      "link",
+      "list",
+      "nav"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-24",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-4",
+      "--spacing-space-4"
+    ]
+  },
+  "applauncher": {
+    "name": "AppLauncher",
+    "slug": "applauncher",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "49927:29663",
+    "anatomy": [
+      "appIcon",
+      "appName",
+      "appTile",
+      "grid",
+      "popup",
+      "trigger"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-gray-lighter",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-lighter",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--shadow-drop-shadow-2-blur",
+      "--shadow-drop-shadow-2-color",
+      "--shadow-drop-shadow-2-x",
+      "--shadow-drop-shadow-2-y",
+      "--spacing-space-8"
+    ]
+  },
+  "badge": {
+    "name": "Badge",
+    "slug": "badge",
+    "category": "Alerts",
+    "figmaPage": "Alerts",
+    "nodeId": "11067:54637",
+    "anatomy": [
+      "badge",
+      "count",
+      "wrapper"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-red-500",
+      "--color-text-white",
+      "--corner-radius-radius-24",
+      "--padding-padding-4"
+    ]
+  },
+  "breadcrumb": {
+    "name": "Breadcrumb",
+    "slug": "breadcrumb",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "11067:54494",
+    "anatomy": [
+      "current",
+      "item",
+      "link",
+      "list",
+      "nav",
+      "separator"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-border-brand-base",
+      "--color-text-link-brand-base",
+      "--color-text-link-brand-strong",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-1",
+      "--padding-padding-4",
+      "--spacing-space-4"
+    ]
+  },
+  "button": {
+    "name": "Button",
+    "slug": "button",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47808:31410",
+    "anatomy": [
+      "button",
+      "labelHidden",
+      "loading",
+      "spinner"
+    ],
+    "states": [
+      "active",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "danger",
+      "ghost",
+      "primary",
+      "secondary",
+      "tertiary"
+    ],
+    "sizes": [
+      "lg",
+      "md",
+      "sm"
+    ],
+    "tokens": [
+      "--alert-red-500",
+      "--alert-red-600",
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-brand-lighter",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-background-controls-brand-stronger",
+      "--color-background-gray-lighter",
+      "--color-border-brand-base",
+      "--color-text-brand-base",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-8",
+      "--scale-28",
+      "--scale-36",
+      "--scale-44",
+      "--spacing-space-8"
+    ]
+  },
+  "card": {
+    "name": "Card",
+    "slug": "card",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "50419:259141",
+    "anatomy": [
+      "body",
+      "card",
+      "footer",
+      "header",
+      "title"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "elevated",
+      "outlined"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-component",
+      "--color-border-lighter",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-8",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-24",
+      "--font-size-body-2",
+      "--font-size-header-6",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-24",
+      "--shadow-drop-shadow-4-blur",
+      "--shadow-drop-shadow-4-color",
+      "--shadow-drop-shadow-4-x",
+      "--shadow-drop-shadow-4-y"
+    ]
+  },
+  "chatarea": {
+    "name": "ChatArea",
+    "slug": "chatarea",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47816:4025",
+    "anatomy": [
+      "bubble",
+      "content",
+      "messages",
+      "root",
+      "system",
+      "timestamp",
+      "user"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-surface-1",
+      "--color-border-lighter",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--spacing-space-12",
+      "--spacing-space-4"
+    ]
+  },
+  "chatinputbox": {
+    "name": "ChatInputBox",
+    "slug": "chatinputbox",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "50756:224054",
+    "anatomy": [
+      "disabled",
+      "root",
+      "send",
+      "textarea"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-text-disabled",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--padding-padding-4",
+      "--padding-padding-8",
+      "--spacing-space-8"
+    ]
+  },
+  "chatsystemresponse": {
+    "name": "ChatSystemResponse",
+    "slug": "chatsystemresponse",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "50756:226212",
+    "anatomy": [
+      "avatar",
+      "bubble",
+      "content",
+      "root",
+      "timestamp"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-background-surface-1",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "checkbox": {
+    "name": "Checkbox",
+    "slug": "checkbox",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54543",
+    "anatomy": [
+      "indicator",
+      "label",
+      "root",
+      "wrapper"
+    ],
+    "states": [
+      "checked",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-border-brand-base",
+      "--color-border-neutral-light",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--spacing-space-8"
+    ]
+  },
+  "datagrid": {
+    "name": "DataGrid",
+    "slug": "datagrid",
+    "category": "Tables",
+    "figmaPage": "Tables",
+    "nodeId": "37721:112481",
+    "anatomy": [
+      "sortButton",
+      "sortIcon",
+      "table",
+      "td",
+      "th",
+      "tr",
+      "wrapper"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-brand-lighter",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-10",
+      "--padding-padding-16",
+      "--spacing-space-4"
+    ]
+  },
+  "dialog": {
+    "name": "Dialog",
+    "slug": "dialog",
+    "category": "Modals",
+    "figmaPage": "Modals",
+    "nodeId": "50276:239953",
+    "anatomy": [
+      "backdrop",
+      "body",
+      "close",
+      "description",
+      "header",
+      "popup",
+      "title",
+      "triggerReset"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-gray-lighter",
+      "--color-background-overlay-1",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--corner-radius-radius-8",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-header-6",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-24",
+      "--scale-32",
+      "--shadow-drop-shadow-32-blur",
+      "--shadow-drop-shadow-32-color",
+      "--shadow-drop-shadow-32-x",
+      "--shadow-drop-shadow-32-y"
+    ]
+  },
+  "dropdownmenu": {
+    "name": "DropdownMenu",
+    "slug": "dropdownmenu",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "49927:272743",
+    "anatomy": [
+      "item",
+      "popup",
+      "separator",
+      "triggerReset"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "highlighted"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-text-brand-base",
+      "--color-text-disabled",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--corner-radius-radius-6",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--padding-padding-4",
+      "--padding-padding-8",
+      "--shadow-drop-shadow-8-blur",
+      "--shadow-drop-shadow-8-color",
+      "--shadow-drop-shadow-8-x",
+      "--shadow-drop-shadow-8-y",
+      "--spacing-space-4"
+    ]
+  },
+  "emptystate": {
+    "name": "EmptyState",
+    "slug": "emptystate",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "48458:53177",
+    "anatomy": [
+      "action",
+      "description",
+      "icon",
+      "root",
+      "title"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-24",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--padding-padding-16",
+      "--padding-padding-32",
+      "--scale-36",
+      "--spacing-space-12",
+      "--spacing-space-16",
+      "--spacing-space-4"
+    ]
+  },
+  "errorcard": {
+    "name": "ErrorCard",
+    "slug": "errorcard",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "49861:302744",
+    "anatomy": [
+      "accent",
+      "action",
+      "body",
+      "card",
+      "content",
+      "iconWrapper",
+      "message",
+      "title"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-red-500",
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-strong",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-24",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--padding-padding-16",
+      "--padding-padding-20",
+      "--spacing-space-12",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "footer": {
+    "name": "Footer",
+    "slug": "footer",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "38732:114951",
+    "anatomy": [
+      "column",
+      "columns",
+      "copyright",
+      "footer",
+      "item",
+      "link"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-text-link-brand-base",
+      "--color-text-neutral",
+      "--corner-radius-radius-2",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-16",
+      "--padding-padding-2",
+      "--padding-padding-24",
+      "--padding-padding-32",
+      "--spacing-space-24",
+      "--spacing-space-48",
+      "--spacing-space-8"
+    ]
+  },
+  "globalalert": {
+    "name": "GlobalAlert",
+    "slug": "globalalert",
+    "category": "Alerts",
+    "figmaPage": "Alerts",
+    "nodeId": "11067:54641",
+    "anatomy": [
+      "banner",
+      "close",
+      "description",
+      "icon",
+      "inner",
+      "text",
+      "title"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "error",
+      "info",
+      "success",
+      "warning"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-blue-500",
+      "--alert-green-500",
+      "--alert-red-500",
+      "--alert-yellow-200",
+      "--alert-yellow-600",
+      "--alert-yellow-800",
+      "--border-width-border-2",
+      "--color-background-alerting-critical-slate",
+      "--color-background-alerting-info-slate",
+      "--color-background-alerting-success-slate",
+      "--color-background-gray-lighter",
+      "--color-border-alerting-critical-critical",
+      "--color-border-alerting-info-info",
+      "--color-border-alerting-success-white",
+      "--color-border-brand-base",
+      "--color-icon-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-18",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-1",
+      "--padding-padding-12",
+      "--padding-padding-24",
+      "--scale-24",
+      "--spacing-space-12",
+      "--spacing-space-2"
+    ]
+  },
+  "globalsearch": {
+    "name": "GlobalSearch",
+    "slug": "globalsearch",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "11067:54498",
+    "anatomy": [
+      "closeButton",
+      "input",
+      "inputIcon",
+      "inputWrapper",
+      "trigger",
+      "wrapper"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-masthead-brand-strong",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-icon-neutral",
+      "--color-text-disabled",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-2",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-8",
+      "--scale-20",
+      "--scale-32",
+      "--shadow-drop-shadow-2-blur",
+      "--shadow-drop-shadow-2-color",
+      "--shadow-drop-shadow-2-x",
+      "--shadow-drop-shadow-2-y",
+      "--spacing-space-8"
+    ]
+  },
+  "inlinealert": {
+    "name": "InlineAlert",
+    "slug": "inlinealert",
+    "category": "Alerts",
+    "figmaPage": "Alerts",
+    "nodeId": "11067:54645",
+    "anatomy": [
+      "alert",
+      "close",
+      "description",
+      "icon",
+      "text",
+      "title"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "error",
+      "info",
+      "success",
+      "warning"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-blue-500",
+      "--alert-green-500",
+      "--alert-red-500",
+      "--alert-yellow-200",
+      "--alert-yellow-600",
+      "--alert-yellow-800",
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-alerting-critical-slate",
+      "--color-background-alerting-info-slate",
+      "--color-background-alerting-success-slate",
+      "--color-background-gray-lighter",
+      "--color-border-alerting-critical-critical",
+      "--color-border-alerting-info-info",
+      "--color-border-alerting-success-white",
+      "--color-border-brand-base",
+      "--color-icon-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--corner-radius-radius-6",
+      "--font-line-height-line-height-18",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-1",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--scale-24",
+      "--spacing-space-12",
+      "--spacing-space-2"
+    ]
+  },
+  "leftnav": {
+    "name": "LeftNav",
+    "slug": "leftnav",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47807:7906",
+    "anatomy": [
+      "collapsed",
+      "expanded",
+      "group",
+      "groupIcon",
+      "groupLabel",
+      "groupPanel",
+      "groupTitle",
+      "groupTrigger",
+      "icon",
+      "itemList",
+      "label",
+      "link",
+      "linkActive",
+      "nav"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-4",
+      "--padding-padding-6",
+      "--padding-padding-8",
+      "--scale-20",
+      "--scale-32",
+      "--scale-36",
+      "--scale-48",
+      "--spacing-space-1",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "link": {
+    "name": "Link",
+    "slug": "link",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "11067:54506",
+    "anatomy": [
+      "externalIcon",
+      "link"
+    ],
+    "states": [
+      "active",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-border-brand-base",
+      "--color-text-link-brand-base",
+      "--color-text-link-brand-strong",
+      "--color-text-link-brand-stronger",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--spacing-space-4"
+    ]
+  },
+  "masthead": {
+    "name": "Masthead",
+    "slug": "masthead",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47807:3591",
+    "anatomy": [
+      "actions",
+      "left",
+      "logo",
+      "masthead",
+      "nav",
+      "navItem",
+      "navLink",
+      "navLinkActive",
+      "navList"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-background-masthead-brand-base",
+      "--color-background-masthead-brand-strong",
+      "--color-background-masthead-brand-stronger",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--padding-padding-16",
+      "--padding-padding-8",
+      "--scale-32",
+      "--scale-48",
+      "--spacing-space-24",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "overlay": {
+    "name": "Overlay",
+    "slug": "overlay",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "49842:37303",
+    "anatomy": [
+      "backdrop",
+      "body",
+      "close",
+      "header",
+      "panel",
+      "title",
+      "triggerReset"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-gray-lighter",
+      "--color-background-overlay-1",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-header-6",
+      "--padding-padding-16",
+      "--padding-padding-24",
+      "--scale-32",
+      "--shadow-drop-shadow-32-blur",
+      "--shadow-drop-shadow-32-color",
+      "--shadow-drop-shadow-32-x",
+      "--shadow-drop-shadow-32-y"
+    ]
+  },
+  "pagelayout": {
+    "name": "PageLayout",
+    "slug": "pagelayout",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47803:1845",
+    "anatomy": [
+      "content",
+      "hasMasthead",
+      "hasSidebar",
+      "masthead",
+      "root",
+      "sidebar"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-component",
+      "--color-background-surface-1",
+      "--color-border-lighter",
+      "--padding-padding-16"
+    ]
+  },
+  "pagination": {
+    "name": "Pagination",
+    "slug": "pagination",
+    "category": "Tables",
+    "figmaPage": "Tables",
+    "nodeId": "37721:115815",
+    "anatomy": [
+      "button",
+      "current",
+      "ellipsis",
+      "pageButton",
+      "pages",
+      "pagination",
+      "prevNext"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-neutral-light",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-size-body-2",
+      "--padding-padding-6",
+      "--padding-padding-8",
+      "--scale-32",
+      "--spacing-space-2",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "progressbar": {
+    "name": "ProgressBar",
+    "slug": "progressbar",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "50724:317216",
+    "anatomy": [
+      "indicator",
+      "label",
+      "meta",
+      "root",
+      "track",
+      "value"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-green-500",
+      "--color-background-controls-brand-base",
+      "--color-background-gray-light",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-24",
+      "--font-size-body-3",
+      "--spacing-space-4"
+    ]
+  },
+  "radiobutton": {
+    "name": "RadioButton",
+    "slug": "radiobutton",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54579",
+    "anatomy": [
+      "group",
+      "indicator",
+      "label",
+      "root",
+      "wrapper"
+    ],
+    "states": [
+      "checked",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-border-brand-base",
+      "--color-border-neutral-light",
+      "--color-text-neutral-strong",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--spacing-space-12",
+      "--spacing-space-8"
+    ]
+  },
+  "scrollbar": {
+    "name": "ScrollBar",
+    "slug": "scrollbar",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "48149:7196",
+    "anatomy": [
+      "root",
+      "scrollbar",
+      "thumb",
+      "viewport"
+    ],
+    "states": [
+      "default",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-component",
+      "--color-border-light",
+      "--color-border-lighter",
+      "--color-text-neutral",
+      "--corner-radius-radius-4"
+    ]
+  },
+  "search": {
+    "name": "Search",
+    "slug": "search",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "43581:121822",
+    "anatomy": [
+      "clear",
+      "input",
+      "searchIcon",
+      "wrapper"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--scale-36",
+      "--spacing-space-8"
+    ]
+  },
+  "segmentedbutton": {
+    "name": "SegmentedButton",
+    "slug": "segmentedbutton",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54583",
+    "anatomy": [
+      "button",
+      "root",
+      "selected"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-background-gray-lighter",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-2",
+      "--corner-radius-radius-4",
+      "--font-size-body-2",
+      "--padding-padding-16",
+      "--padding-padding-8"
+    ]
+  },
+  "select": {
+    "name": "Select",
+    "slug": "select",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54551",
+    "anatomy": [
+      "chevron",
+      "field",
+      "label",
+      "option",
+      "optionIndicator",
+      "popup",
+      "positioner",
+      "trigger"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "highlighted",
+      "hover",
+      "selected"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-neutral",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--padding-padding-4",
+      "--padding-padding-8",
+      "--scale-36",
+      "--shadow-drop-shadow-16-blur",
+      "--shadow-drop-shadow-16-color",
+      "--shadow-drop-shadow-16-x",
+      "--shadow-drop-shadow-16-y",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "skeletonloader": {
+    "name": "SkeletonLoader",
+    "slug": "skeletonloader",
+    "category": "Loading",
+    "figmaPage": "Loading",
+    "nodeId": "11067:54669",
+    "anatomy": [
+      "skeleton",
+      "text"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "rectangle",
+      "text"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-background-surface-1",
+      "--corner-radius-radius-4"
+    ]
+  },
+  "slider": {
+    "name": "Slider",
+    "slug": "slider",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "21983:31228",
+    "anatomy": [
+      "control",
+      "indicator",
+      "label",
+      "root",
+      "thumb",
+      "track",
+      "wrapper"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--border-width-border-4",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-light",
+      "--color-background-gray-light",
+      "--color-border-brand-base",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--spacing-space-8"
+    ]
+  },
+  "spinner": {
+    "name": "Spinner",
+    "slug": "spinner",
+    "category": "Loading",
+    "figmaPage": "Loading",
+    "nodeId": "11067:54673",
+    "anatomy": [
+      "arc",
+      "spinner",
+      "srOnly",
+      "svg",
+      "track"
+    ],
+    "states": [],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-background-controls-brand-base",
+      "--color-border-light"
+    ]
+  },
+  "stepper": {
+    "name": "Stepper",
+    "slug": "stepper",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "48160:11907",
+    "anatomy": [
+      "connector",
+      "connectorActive",
+      "label",
+      "number",
+      "root",
+      "step"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "circle"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-green-500",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-border-lighter",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--font-size-body-3",
+      "--spacing-space-8"
+    ]
+  },
+  "switch": {
+    "name": "Switch",
+    "slug": "switch",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54591",
+    "anatomy": [
+      "label",
+      "root",
+      "thumb",
+      "wrapper"
+    ],
+    "states": [
+      "checked",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-background-controls-brand-base",
+      "--color-background-gray-base",
+      "--color-background-gray-light",
+      "--color-background-white",
+      "--color-border-brand-base",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-24",
+      "--font-size-body-2",
+      "--shadow-drop-shadow-2-blur",
+      "--shadow-drop-shadow-2-color",
+      "--shadow-drop-shadow-2-x",
+      "--shadow-drop-shadow-2-y",
+      "--spacing-space-8"
+    ]
+  },
+  "table": {
+    "name": "Table",
+    "slug": "table",
+    "category": "Tables",
+    "figmaPage": "Tables",
+    "nodeId": "16008:130403",
+    "anatomy": [
+      "table",
+      "td",
+      "th",
+      "tr",
+      "wrapper"
+    ],
+    "states": [
+      "default",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-brand-lighter",
+      "--color-background-surface-1",
+      "--color-border-light",
+      "--color-border-lighter",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-10",
+      "--padding-padding-16"
+    ]
+  },
+  "tabs": {
+    "name": "Tabs",
+    "slug": "tabs",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47803:1704",
+    "anatomy": [
+      "list",
+      "panel",
+      "root",
+      "selected",
+      "tab"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-16",
+      "--padding-padding-8"
+    ]
+  },
+  "tag": {
+    "name": "Tag",
+    "slug": "tag",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "50724:304757",
+    "anatomy": [
+      "dismiss",
+      "label",
+      "tag"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "error",
+      "info",
+      "success",
+      "warning"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-yellow-200",
+      "--alert-yellow-600",
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-alerting-critical-slate",
+      "--color-background-alerting-info-slate",
+      "--color-background-alerting-success-slate",
+      "--color-background-gray-lighter",
+      "--color-border-alerting-critical-critical",
+      "--color-border-alerting-info-info",
+      "--color-border-alerting-success-white",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-text-neutral-strong",
+      "--color-text-tag-critical",
+      "--color-text-tag-info",
+      "--color-text-tag-success",
+      "--color-text-tag-warning",
+      "--corner-radius-radius-2",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-18",
+      "--font-size-body-3",
+      "--padding-padding-2",
+      "--padding-padding-8",
+      "--spacing-space-4"
+    ]
+  },
+  "textinput": {
+    "name": "TextInput",
+    "slug": "textinput",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47833:47702",
+    "anatomy": [
+      "field",
+      "focused",
+      "helper",
+      "input",
+      "invalid",
+      "label"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "error"
+    ],
+    "sizes": [
+      "lg",
+      "md",
+      "sm"
+    ],
+    "tokens": [
+      "--alert-red-500",
+      "--border-width-border-1",
+      "--color-background-component",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-neutral",
+      "--color-text-critical",
+      "--color-text-disabled",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-8",
+      "--scale-28",
+      "--scale-36",
+      "--scale-44",
+      "--spacing-space-4"
+    ]
+  },
+  "toast": {
+    "name": "Toast",
+    "slug": "toast",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "48467:82945",
+    "anatomy": [
+      "close",
+      "content",
+      "description",
+      "iconWrap",
+      "root",
+      "title",
+      "viewport"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "error",
+      "info",
+      "success",
+      "warning"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-blue-500",
+      "--alert-green-500",
+      "--alert-red-500",
+      "--alert-yellow-500",
+      "--alert-yellow-800",
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--border-width-border-4",
+      "--color-background-component",
+      "--color-background-gray-lighter",
+      "--color-border-brand-base",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--corner-radius-radius-8",
+      "--font-line-height-line-height-18",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-2",
+      "--scale-24",
+      "--shadow-drop-shadow-8-blur",
+      "--shadow-drop-shadow-8-color",
+      "--shadow-drop-shadow-8-x",
+      "--shadow-drop-shadow-8-y",
+      "--spacing-space-12",
+      "--spacing-space-2",
+      "--spacing-space-8"
+    ]
+  },
+  "tooltip": {
+    "name": "Tooltip",
+    "slug": "tooltip",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "48625:111469",
+    "anatomy": [
+      "arrow",
+      "popup",
+      "trigger"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-background-gray-stronger",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-18",
+      "--font-size-body-3",
+      "--padding-padding-10",
+      "--padding-padding-6",
+      "--shadow-drop-shadow-8-blur",
+      "--shadow-drop-shadow-8-color",
+      "--shadow-drop-shadow-8-x",
+      "--shadow-drop-shadow-8-y"
+    ]
+  },
+  "tracker": {
+    "name": "Tracker",
+    "slug": "tracker",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "48254:161809",
+    "anatomy": [
+      "active",
+      "bar",
+      "complete",
+      "label",
+      "label_active",
+      "label_complete",
+      "label_pending",
+      "labels",
+      "pending",
+      "root",
+      "segment"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--alert-green-500",
+      "--alert-green-600",
+      "--color-background-controls-brand-base",
+      "--color-background-gray-lighter",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--corner-radius-radius-4",
+      "--font-size-body-3",
+      "--spacing-space-8"
+    ]
+  },
+  "tree": {
+    "name": "Tree",
+    "slug": "tree",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "11067:54609",
+    "anatomy": [
+      "branch",
+      "chevron",
+      "group",
+      "icon",
+      "label",
+      "leaf",
+      "root",
+      "trigger"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-background-gray-lighter",
+      "--color-border-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-4",
+      "--padding-padding-8",
+      "--spacing-space-4"
+    ]
+  },
+  "wizardmodal": {
+    "name": "WizardModal",
+    "slug": "wizardmodal",
+    "category": "Modals",
+    "figmaPage": "Modals",
+    "nodeId": "11067:54629",
+    "anatomy": [
+      "actions",
+      "backdrop",
+      "body",
+      "btnPrimary",
+      "btnSecondary",
+      "close",
+      "footer",
+      "header",
+      "popup",
+      "progress",
+      "step",
+      "stepLabel",
+      "stepNumber",
+      "stepper",
+      "title",
+      "triggerReset"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-background-gray-lighter",
+      "--color-background-overlay-1",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-light",
+      "--color-border-lighter",
+      "--color-icon-neutral",
+      "--color-text-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--color-text-white",
+      "--corner-radius-radius-4",
+      "--corner-radius-radius-8",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--font-size-body-3",
+      "--font-size-header-6",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-24",
+      "--scale-24",
+      "--scale-32",
+      "--scale-36",
+      "--shadow-drop-shadow-32-blur",
+      "--shadow-drop-shadow-32-color",
+      "--shadow-drop-shadow-32-x",
+      "--shadow-drop-shadow-32-y",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  }
+}

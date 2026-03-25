@@ -1,0 +1,514 @@
+{
+  "masthead": {
+    "extracted_at": null,
+    "figma_node_id": "47807:3591",
+    "figma_component": "Masthead",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "left-nav": {
+    "extracted_at": null,
+    "figma_node_id": "47807:7906",
+    "figma_component": "Left Nav",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "app-launcher": {
+    "extracted_at": null,
+    "figma_node_id": "49927:29663",
+    "figma_component": "App Launcher",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "dropdown-menu": {
+    "extracted_at": null,
+    "figma_node_id": "49927:272743",
+    "figma_component": "Dropdown Menu",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "tabs": {
+    "extracted_at": null,
+    "figma_node_id": "47803:1704",
+    "figma_component": "Tabs",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "button": {
+    "extracted_at": null,
+    "figma_node_id": "47808:31410",
+    "figma_component": "Button",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "text-input": {
+    "extracted_at": null,
+    "figma_node_id": "47833:47702",
+    "figma_component": "Text Input",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "tag": {
+    "extracted_at": null,
+    "figma_node_id": "50724:304757",
+    "figma_component": "Tag",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "toast": {
+    "extracted_at": null,
+    "figma_node_id": "48467:82945",
+    "figma_component": "Toast",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "alerting-status-icon": {
+    "extracted_at": null,
+    "figma_node_id": "51682:22823",
+    "figma_component": "Alerting/Status Icon",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "tooltip": {
+    "extracted_at": null,
+    "figma_node_id": "48625:111469",
+    "figma_component": "Tooltip",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "card": {
+    "extracted_at": null,
+    "figma_node_id": "50419:259141",
+    "figma_component": "Card",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "error-card": {
+    "extracted_at": null,
+    "figma_node_id": "49861:302744",
+    "figma_component": "Error Card",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "overlay": {
+    "extracted_at": null,
+    "figma_node_id": "49842:37303",
+    "figma_component": "Overlay",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "stepper": {
+    "extracted_at": null,
+    "figma_node_id": "48160:11907",
+    "figma_component": "Stepper",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "progressbar": {
+    "extracted_at": null,
+    "figma_node_id": "50724:317216",
+    "figma_component": "ProgressBar",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "powerfilter": {
+    "extracted_at": null,
+    "figma_node_id": "48294:12354",
+    "figma_component": "PowerFilter",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "empty-dashboard-widget": {
+    "extracted_at": null,
+    "figma_node_id": "48458:53177",
+    "figma_component": "Empty Dashboard Widget",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "scroll-bar": {
+    "extracted_at": null,
+    "figma_node_id": "48149:7196",
+    "figma_component": "Scroll Bar",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "tracker": {
+    "extracted_at": null,
+    "figma_node_id": "48254:161809",
+    "figma_component": "Tracker",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "page-layout": {
+    "extracted_at": null,
+    "figma_node_id": "47803:1845",
+    "figma_component": "Page Layout",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "chat-area": {
+    "extracted_at": null,
+    "figma_node_id": "47816:4025",
+    "figma_component": "Chat Area",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "chat-input-box": {
+    "extracted_at": null,
+    "figma_node_id": "50756:224054",
+    "figma_component": "Chat Input Box",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "chat-system-response": {
+    "extracted_at": null,
+    "figma_node_id": "50756:226212",
+    "figma_component": "Chat System Response",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "chart-widget": {
+    "extracted_at": null,
+    "figma_node_id": "48365:52918",
+    "figma_component": "Chart Widget",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "line-chart": {
+    "extracted_at": null,
+    "figma_node_id": "48685:18365",
+    "figma_component": "Line Chart",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "topology": {
+    "extracted_at": null,
+    "figma_node_id": "48306:5980",
+    "figma_component": "Topology",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "wizard-modal": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54629",
+    "figma_component": "Wizard Modal",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "modal-single-multi": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54621",
+    "figma_component": "Modal Single/Multi",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "modal-dialog": {
+    "extracted_at": null,
+    "figma_node_id": "50276:239953",
+    "figma_component": "Modal Dialog",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "tree": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54609",
+    "figma_component": "Tree",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "tab": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54530",
+    "figma_component": "Tab",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "main-menu-top": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54522",
+    "figma_component": "Main Menu/Top",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "link": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54506",
+    "figma_component": "Link",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "global-search": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54498",
+    "figma_component": "Global Search",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "footer": {
+    "extracted_at": null,
+    "figma_node_id": "38732:114951",
+    "figma_component": "Footer",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "breadcrumb": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54494",
+    "figma_component": "Breadcrumb",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "anchor-menu": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54486",
+    "figma_component": "Anchor Menu",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "main-menu-left": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54518",
+    "figma_component": "Main Menu/Left",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "toggle-switch": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54591",
+    "figma_component": "Toggle Switch",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "search": {
+    "extracted_at": null,
+    "figma_node_id": "43581:121822",
+    "figma_component": "Search",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "textbox": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54575",
+    "figma_component": "TextBox",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "slider": {
+    "extracted_at": null,
+    "figma_node_id": "21983:31228",
+    "figma_component": "Slider",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "segmented-button": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54583",
+    "figma_component": "Segmented Button",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "radio-button": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54579",
+    "figma_component": "Radio Button",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "form": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54571",
+    "figma_component": "Form",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "dual-list-box": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54563",
+    "figma_component": "Dual List Box",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "dropdown-single": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54559",
+    "figma_component": "Dropdown/Single",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "dropdown-multi": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54555",
+    "figma_component": "Dropdown/Multi",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "dropdown-combo": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54551",
+    "figma_component": "Dropdown/Combo",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "date-time-picker": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54547",
+    "figma_component": "Date/Time Picker",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "checkbox": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54543",
+    "figma_component": "Checkbox",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "accordion": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54535",
+    "figma_component": "Accordion",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "table": {
+    "extracted_at": null,
+    "figma_node_id": "16008:130403",
+    "figma_component": "Table",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "filter-panel": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54567",
+    "figma_component": "Filter Panel",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "detail-panel": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54601",
+    "figma_component": "Detail Panel",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "data-grid": {
+    "extracted_at": null,
+    "figma_node_id": "37721:112481",
+    "figma_component": "Data Grid",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "pagination": {
+    "extracted_at": null,
+    "figma_node_id": "37721:115815",
+    "figma_component": "Pagination",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "columns": {
+    "extracted_at": null,
+    "figma_node_id": "50815:218288",
+    "figma_component": "Columns",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "inlinealert": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54645",
+    "figma_component": "InlineAlert",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "globalalert": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54641",
+    "figma_component": "GlobalAlert",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "badge": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54637",
+    "figma_component": "Badge",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "spinner": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54673",
+    "figma_component": "Spinner",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  },
+  "skeleton-loader": {
+    "extracted_at": null,
+    "figma_node_id": "11067:54669",
+    "figma_component": "Skeleton Loader",
+    "layout": {},
+    "variants": {},
+    "typography": []
+  }
+}

@@ -1,0 +1,535 @@
+{
+  "$schema": "synapse-interaction-templates",
+  "$version": "1.0.0",
+  "$description": "Interaction pattern templates for the 22 Tier 1 Synapse components. The remaining 24 components inherit from the root spec baseline.",
+  "accordion": {
+    "pattern": "disclosure",
+    "behaviors": [
+      "Expand/collapse panels on header activation",
+      "Only one panel open at a time by default (multi-expand configurable)",
+      "Collapsed panels are hidden from accessibility tree"
+    ],
+    "keyboard": {
+      "ArrowUp": "Move focus to previous accordion header",
+      "ArrowDown": "Move focus to next accordion header",
+      "Home": "Move focus to first accordion header",
+      "End": "Move focus to last accordion header"
+    },
+    "aria": {
+      "trigger": {
+        "aria-expanded": "true/false based on panel state",
+        "aria-controls": "ID of the associated panel"
+      },
+      "panel": {
+        "role": "region",
+        "aria-labelledby": "ID of the associated trigger"
+      }
+    }
+  },
+  "button": {
+    "pattern": "action",
+    "behaviors": [
+      "Triggers action on click",
+      "Shows loading state when async operation in progress",
+      "Disabled state prevents interaction and removes from tab order"
+    ],
+    "keyboard": {
+      "Enter": "Activate the button",
+      "Space": "Activate the button"
+    },
+    "aria": {
+      "root": {
+        "element": "<button>",
+        "aria-disabled": "true when disabled (prefer over HTML disabled for focusability)",
+        "aria-busy": "true when in loading state"
+      }
+    }
+  },
+  "checkbox": {
+    "pattern": "toggle",
+    "behaviors": [
+      "Toggles between checked and unchecked states",
+      "Supports indeterminate (mixed) state for partial group selection",
+      "Group selection: parent checkbox reflects aggregate child state"
+    ],
+    "keyboard": {
+      "Space": "Toggle checked state"
+    },
+    "aria": {
+      "root": {
+        "role": "checkbox",
+        "aria-checked": "true | false | mixed",
+        "aria-labelledby": "ID of the associated label"
+      }
+    }
+  },
+  "dialog": {
+    "pattern": "dialog",
+    "behaviors": [
+      "Renders as modal overlay on top of page content",
+      "Focus trap: Tab/Shift+Tab cycles focus within dialog boundary",
+      "Closes on Escape key press",
+      "Returns focus to the trigger element on close",
+      "Blocks interaction with background content"
+    ],
+    "keyboard": {
+      "Escape": "Close the dialog",
+      "Tab": "Move focus to next focusable element within dialog",
+      "Shift+Tab": "Move focus to previous focusable element within dialog"
+    },
+    "aria": {
+      "root": {
+        "role": "dialog",
+        "aria-modal": "true",
+        "aria-labelledby": "ID of the dialog title element",
+        "aria-describedby": "ID of the dialog content/description element"
+      }
+    }
+  },
+  "select": {
+    "pattern": "combobox",
+    "behaviors": [
+      "Opens dropdown listbox on click or Enter",
+      "Highlights option on arrow key navigation",
+      "Selects highlighted option on Enter",
+      "Type-ahead filters or jumps to matching options",
+      "Closes on Escape or outside click"
+    ],
+    "keyboard": {
+      "ArrowDown": "Open listbox (when closed) or move to next option (when open)",
+      "ArrowUp": "Move to previous option",
+      "Enter": "Select the highlighted option and close",
+      "Escape": "Close the listbox without selecting",
+      "Home": "Move to first option",
+      "End": "Move to last option",
+      "Type-ahead": "Jump to option matching typed characters"
+    },
+    "aria": {
+      "trigger": {
+        "role": "combobox",
+        "aria-expanded": "true/false based on listbox visibility",
+        "aria-activedescendant": "ID of the currently highlighted option",
+        "aria-haspopup": "listbox"
+      },
+      "listbox": {
+        "role": "listbox"
+      },
+      "option": {
+        "role": "option",
+        "aria-selected": "true on the selected option"
+      }
+    }
+  },
+  "tabs": {
+    "pattern": "tablist",
+    "behaviors": [
+      "Horizontal tab navigation between tab elements",
+      "Activates associated panel on tab selection",
+      "Supports automatic activation (focus = select) or manual activation (Enter to select)"
+    ],
+    "keyboard": {
+      "ArrowLeft": "Move focus to previous tab",
+      "ArrowRight": "Move focus to next tab",
+      "Home": "Move focus to first tab",
+      "End": "Move focus to last tab"
+    },
+    "aria": {
+      "container": {
+        "role": "tablist"
+      },
+      "tab": {
+        "role": "tab",
+        "aria-selected": "true on the active tab",
+        "aria-controls": "ID of the associated tabpanel"
+      },
+      "panel": {
+        "role": "tabpanel",
+        "aria-labelledby": "ID of the associated tab"
+      }
+    }
+  },
+  "toast": {
+    "pattern": "notification",
+    "behaviors": [
+      "Auto-dismiss after configurable duration (default 5s)",
+      "Pause dismiss timer on hover or focus",
+      "Manual dismiss via close button",
+      "Multiple toasts stack vertically",
+      "Content announced to screen readers on appearance"
+    ],
+    "keyboard": {
+      "Tab": "Move focus to the close button",
+      "Escape": "Dismiss the toast"
+    },
+    "aria": {
+      "root": {
+        "role": "alert | status",
+        "aria-live": "polite (info/success) | assertive (error/warning)",
+        "aria-atomic": "true"
+      }
+    }
+  },
+  "tooltip": {
+    "pattern": "tooltip",
+    "behaviors": [
+      "Appears on hover (mouse) after ~200ms delay",
+      "Appears on focus (keyboard) without delay",
+      "Disappears on mouse leave or blur",
+      "Contains no interactive content (text only)"
+    ],
+    "keyboard": {
+      "Escape": "Dismiss the tooltip when trigger is focused"
+    },
+    "aria": {
+      "tooltip": {
+        "role": "tooltip"
+      },
+      "trigger": {
+        "aria-describedby": "ID of the tooltip element"
+      }
+    }
+  },
+  "textinput": {
+    "pattern": "input",
+    "behaviors": [
+      "Accepts text input from user",
+      "Shows placeholder text when empty",
+      "Supports validation with error state styling and message",
+      "Clear button appears when input has content",
+      "Supports prefix and suffix icon slots"
+    ],
+    "keyboard": {},
+    "aria": {
+      "root": {
+        "element": "<input>",
+        "aria-invalid": "true when validation fails",
+        "aria-describedby": "ID of helper text or error message element",
+        "aria-required": "true when field is required"
+      }
+    }
+  },
+  "switch": {
+    "pattern": "toggle",
+    "behaviors": [
+      "Toggles between on and off (binary state)",
+      "Triggers immediate action (no form submit required)",
+      "Visually distinct from checkbox to signal immediate effect"
+    ],
+    "keyboard": {
+      "Space": "Toggle the switch",
+      "Enter": "Toggle the switch"
+    },
+    "aria": {
+      "root": {
+        "role": "switch",
+        "aria-checked": "true/false",
+        "aria-labelledby": "ID of the associated label"
+      }
+    }
+  },
+  "radiobutton": {
+    "pattern": "radio-group",
+    "behaviors": [
+      "Single selection within a group of options",
+      "Arrow keys move selection between radio buttons",
+      "Selection wraps from last to first and vice versa"
+    ],
+    "keyboard": {
+      "ArrowUp": "Select previous radio button",
+      "ArrowLeft": "Select previous radio button",
+      "ArrowDown": "Select next radio button",
+      "ArrowRight": "Select next radio button",
+      "Tab": "Enter or leave the radio group (does not move between radios)"
+    },
+    "aria": {
+      "group": {
+        "role": "radiogroup",
+        "aria-labelledby": "ID of the group label"
+      },
+      "radio": {
+        "role": "radio",
+        "aria-checked": "true on the selected radio"
+      }
+    }
+  },
+  "slider": {
+    "pattern": "slider",
+    "behaviors": [
+      "Drag thumb or use arrow keys to change value",
+      "Respects min, max, and step constraints",
+      "Displays current value visually",
+      "Supports range mode with two thumbs"
+    ],
+    "keyboard": {
+      "ArrowLeft": "Decrease value by one step",
+      "ArrowDown": "Decrease value by one step",
+      "ArrowRight": "Increase value by one step",
+      "ArrowUp": "Increase value by one step",
+      "Home": "Set to minimum value",
+      "End": "Set to maximum value",
+      "PageUp": "Increase by a larger step",
+      "PageDown": "Decrease by a larger step"
+    },
+    "aria": {
+      "thumb": {
+        "role": "slider",
+        "aria-valuenow": "Current numeric value",
+        "aria-valuemin": "Minimum allowed value",
+        "aria-valuemax": "Maximum allowed value",
+        "aria-label": "Accessible name for the slider",
+        "aria-labelledby": "ID of the associated label (alternative to aria-label)"
+      }
+    }
+  },
+  "breadcrumb": {
+    "pattern": "navigation",
+    "behaviors": [
+      "Shows current page location within a hierarchy",
+      "Last item represents the current page and is not a link",
+      "Visual separator rendered between items"
+    ],
+    "keyboard": {
+      "Tab": "Move focus through breadcrumb links"
+    },
+    "aria": {
+      "nav": {
+        "element": "<nav>",
+        "aria-label": "Breadcrumb"
+      },
+      "currentItem": {
+        "aria-current": "page"
+      }
+    }
+  },
+  "pagination": {
+    "pattern": "navigation",
+    "behaviors": [
+      "Navigate between pages of paginated content",
+      "Displays current page indicator",
+      "Previous/Next buttons for sequential navigation",
+      "Optional direct page number input"
+    ],
+    "keyboard": {
+      "Tab": "Move focus between pagination controls",
+      "Enter": "Navigate to the focused page or activate prev/next"
+    },
+    "aria": {
+      "nav": {
+        "element": "<nav>",
+        "aria-label": "Pagination"
+      },
+      "currentPage": {
+        "aria-current": "page"
+      },
+      "prevNext": {
+        "aria-disabled": "true when at first/last page boundary"
+      }
+    }
+  },
+  "table": {
+    "pattern": "grid",
+    "behaviors": [
+      "Sortable columns via header click",
+      "Row selection via click",
+      "Column resize via drag on header border"
+    ],
+    "keyboard": {
+      "ArrowUp": "Navigate to cell above (grid mode)",
+      "ArrowDown": "Navigate to cell below (grid mode)",
+      "ArrowLeft": "Navigate to cell left (grid mode)",
+      "ArrowRight": "Navigate to cell right (grid mode)",
+      "Enter": "Sort column when header is focused",
+      "Space": "Select/deselect row"
+    },
+    "aria": {
+      "root": {
+        "role": "grid or <table> element"
+      },
+      "header": {
+        "scope": "col",
+        "aria-sort": "ascending | descending | none"
+      },
+      "row": {
+        "aria-selected": "true/false on selectable rows"
+      }
+    }
+  },
+  "datagrid": {
+    "pattern": "grid",
+    "behaviors": [
+      "Virtualized row rendering for large datasets",
+      "Sortable and filterable columns",
+      "Editable cells with inline editing",
+      "Row selection (single or multi-select)",
+      "Column reordering via drag"
+    ],
+    "keyboard": {
+      "ArrowUp": "Navigate to cell above",
+      "ArrowDown": "Navigate to cell below",
+      "ArrowLeft": "Navigate to cell left",
+      "ArrowRight": "Navigate to cell right",
+      "Enter": "Enter edit mode on focused cell",
+      "Escape": "Cancel cell edit and revert",
+      "Space": "Toggle row selection",
+      "Ctrl+A": "Select all rows"
+    },
+    "aria": {
+      "root": {
+        "role": "grid",
+        "aria-rowcount": "Total row count (including virtualized/off-screen rows)",
+        "aria-colcount": "Total column count"
+      },
+      "header": {
+        "aria-sort": "ascending | descending | none"
+      },
+      "row": {
+        "aria-selected": "true/false on selectable rows",
+        "aria-rowindex": "1-based index in full dataset"
+      }
+    }
+  },
+  "stepper": {
+    "pattern": "stepper",
+    "behaviors": [
+      "Multi-step linear flow with numbered step indicators",
+      "Shows current, completed, and upcoming step states",
+      "Allows navigation back to completed steps",
+      "Blocks forward navigation until current step is valid"
+    ],
+    "keyboard": {
+      "Tab": "Move focus between step indicators",
+      "Enter": "Navigate to a completed step"
+    },
+    "aria": {
+      "container": {
+        "role": "list"
+      },
+      "step": {
+        "role": "listitem"
+      },
+      "currentStep": {
+        "aria-current": "step"
+      },
+      "completedStep": {
+        "aria-label": "Includes 'completed' in accessible description"
+      }
+    }
+  },
+  "wizardmodal": {
+    "pattern": "wizard",
+    "behaviors": [
+      "Modal dialog containing a multi-step flow",
+      "Back/Next button navigation between steps",
+      "Step validation required before proceeding forward",
+      "Final step replaces Next with Submit action",
+      "Focus trap within modal (same as dialog pattern)",
+      "Escape to close with confirmation if form has unsaved changes"
+    ],
+    "keyboard": {
+      "Tab": "Move focus between form elements and navigation buttons",
+      "Shift+Tab": "Move focus to previous focusable element within modal",
+      "Enter": "Activate Next/Submit button",
+      "Escape": "Close modal (prompts confirmation if dirty)"
+    },
+    "aria": {
+      "root": {
+        "role": "dialog",
+        "aria-modal": "true",
+        "aria-labelledby": "ID of the wizard title"
+      },
+      "stepProgress": {
+        "aria-live": "polite",
+        "aria-label": "Step X of Y"
+      },
+      "stepIndicators": {
+        "role": "list",
+        "aria-current": "step on the current step"
+      }
+    }
+  },
+  "search": {
+    "pattern": "combobox",
+    "behaviors": [
+      "Text input with search icon",
+      "Shows suggestions dropdown as user types",
+      "Debounced API calls to reduce request frequency",
+      "Clear button to reset input",
+      "Loading state displayed during async result fetch"
+    ],
+    "keyboard": {
+      "ArrowDown": "Move focus into suggestions list",
+      "ArrowUp": "Move to previous suggestion",
+      "Enter": "Select highlighted suggestion or submit search query",
+      "Escape": "Close suggestions dropdown"
+    },
+    "aria": {
+      "input": {
+        "role": "combobox",
+        "aria-expanded": "true/false based on suggestions visibility",
+        "aria-autocomplete": "list",
+        "aria-controls": "ID of the suggestions listbox",
+        "aria-activedescendant": "ID of the currently highlighted suggestion"
+      },
+      "listbox": {
+        "role": "listbox"
+      },
+      "option": {
+        "role": "option"
+      }
+    }
+  },
+  "tag": {
+    "pattern": "action",
+    "behaviors": [
+      "Displays a label with optional dismiss (remove) action",
+      "Click dismiss button to remove the tag",
+      "Variant colors indicate different categories or states"
+    ],
+    "keyboard": {
+      "Tab": "Move focus to the tag or its dismiss button",
+      "Enter": "Remove the tag (if dismissible)",
+      "Delete": "Remove the tag (if dismissible)"
+    },
+    "aria": {
+      "root": {
+        "aria-label": "Meaningful tag text content"
+      },
+      "dismissButton": {
+        "aria-label": "Remove [tag name]"
+      }
+    }
+  },
+  "overlay": {
+    "pattern": "overlay",
+    "behaviors": [
+      "Renders background dimming layer behind modal content",
+      "Click overlay to dismiss (optional, configurable)",
+      "Prevents background page scroll while active"
+    ],
+    "keyboard": {
+      "Escape": "Close the overlay and associated content"
+    },
+    "aria": {
+      "background": {
+        "aria-hidden": "true on all background content behind overlay"
+      }
+    }
+  },
+  "link": {
+    "pattern": "navigation",
+    "behaviors": [
+      "Navigates to URL on click",
+      "External links open in a new tab",
+      "Visited state styling for previously visited links"
+    ],
+    "keyboard": {
+      "Enter": "Activate the link"
+    },
+    "aria": {
+      "root": {
+        "element": "<a>",
+        "aria-label": "Includes 'opens in new tab' for external links"
+      }
+    }
+  }
+}

@@ -24,6 +24,22 @@ STRICT REQUIREMENTS:
 • Do NOT include explanations.
 """
 
+# ---------------------------------------------------------
+# BASE UI RULES (Synapse + Base UI React)
+# ---------------------------------------------------------
+
+BASE_UI_RULES = """
+BASE UI FRAMEWORK REQUIREMENTS (@base-ui-components/react):
+
+• Import from `@base-ui-components/react/<component>` (individual sub-paths)
+• Use compound component pattern: Root > Parts (e.g., Select.Root > Select.Trigger > Select.Popup)
+• Use `data-*` attribute selectors for state-based styling ([data-checked], [data-open], etc.)
+• Use `className` callbacks for dynamic styling: className={(state) => ...}
+• Do NOT import from @mui/material, @radix-ui, @headlessui, or other UI libraries
+• All styling via CSS Modules with Synapse CSS custom properties
+• Implement accessible patterns — Base UI handles ARIA roles and keyboard nav
+"""
+
 
 # ---------------------------------------------------------
 # THEME TOKEN RULES
@@ -106,6 +122,27 @@ HTML template
 
 === COMPONENT_SCSS ===
 SCSS styles
+"""
+
+BASE_UI_CSS_RULES = """
+STYLE MODE: BASE UI + CSS MODULES
+
+• Use Base UI compound components from @base-ui-components/react
+• Generate a separate CSS Module file
+• Use className={styles.className} binding for static classes
+• Use className callback for state-aware classes: className={(state) => ...}
+• Style states via data-* attribute selectors: [data-checked], [data-open], [data-disabled]
+• All values must use Synapse design tokens (CSS custom properties)
+• Do NOT use global selectors or element selectors
+• Do NOT hardcode colors, spacing, or dimensions
+
+Output structure:
+
+=== COMPONENT ===
+React component using Base UI compound components + CSS Modules
+
+=== CSS ===
+CSS Module with data-attribute selectors and Synapse tokens
 """
 
 
@@ -224,6 +261,9 @@ def build_prompt(framework: str, style_mode: StyleMode) -> str:
         style_rules = CSS_IN_JS_RULES
     elif style_mode == StyleMode.ANGULAR_SCSS:
         style_rules = ANGULAR_SCSS_RULES
+    elif style_mode == StyleMode.BASE_UI_CSS:
+        style_rules = BASE_UI_CSS_RULES
+        framework_rules = BASE_UI_RULES  # Override framework rules for Base UI
 
     prompt = f"""
 {BASE_RULES}
@@ -455,16 +495,19 @@ Remember:
 
 def build_rag_prompt(framework: str, style_mode: StyleMode) -> str:
     """Build RAG-enhanced prompt based on framework and style mode"""
-    
+
     if framework.lower() == "react":
         if style_mode == StyleMode.CSS_MODULE:
             return RAG_REACT_CSS_MODULE
         elif style_mode == StyleMode.CSS_IN_JS:
             return RAG_REACT_CSS_IN_JS
-    
+        elif style_mode == StyleMode.BASE_UI_CSS:
+            # Base UI uses the standard prompt builder with BASE_UI_CSS rules
+            return build_prompt(framework, style_mode)
+
     elif framework.lower() == "angular":
         return RAG_ANGULAR_SCSS
-    
+
     # Fallback to original prompts
     return build_prompt(framework, style_mode)
 

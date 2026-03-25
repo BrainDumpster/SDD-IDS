@@ -1,0 +1,107 @@
+.viewport {
+  position: fixed;
+  top: var(--padding-padding-16);
+  right: var(--padding-padding-16);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  outline: none;
+}
+
+.root {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-12);
+  padding: var(--padding-padding-12) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-8);
+  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  background: var(--color-background-component);
+  box-shadow:
+    var(--shadow-drop-shadow-8-x)
+    var(--shadow-drop-shadow-8-y)
+    var(--shadow-drop-shadow-8-blur)
+    var(--shadow-drop-shadow-8-color);
+  font-family: inherit;
+}
+
+/* Variant colors */
+.info {
+  border-left: var(--border-width-border-4) solid var(--alert-blue-500);
+}
+.info .iconWrap {
+  color: var(--alert-blue-500);
+}
+
+.success {
+  border-left: var(--border-width-border-4) solid var(--alert-green-500);
+}
+.success .iconWrap {
+  color: var(--alert-green-500);
+}
+
+.warning {
+  border-left: var(--border-width-border-4) solid var(--alert-yellow-500);
+}
+.warning .iconWrap {
+  color: var(--alert-yellow-800);
+}
+
+.error {
+  border-left: var(--border-width-border-4) solid var(--alert-red-500);
+}
+.error .iconWrap {
+  color: var(--alert-red-500);
+}
+
+.iconWrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding-top: var(--padding-padding-2);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong);
+  margin: 0;
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.description {
+  font-size: var(--font-size-body-3);
+  color: var(--color-text-neutral);
+  margin-top: var(--spacing-space-2);
+  line-height: var(--font-line-height-line-height-18);
+}
+
+.close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-24);
+  height: var(--scale-24);
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-4);
+  padding: 0;
+  transition: background 100ms ease;
+}
+.close:hover {
+  background: var(--color-background-gray-lighter);
+}
+.close:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}

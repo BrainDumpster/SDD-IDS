@@ -1,0 +1,93 @@
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-12);
+  padding: var(--padding-padding-12) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-6);
+  border: var(--border-width-border-1) solid transparent;
+  font-family: inherit;
+}
+
+/* Variant styles */
+.info {
+  background: var(--color-background-alerting-info-slate);
+  border-color: var(--color-border-alerting-info-info);
+}
+.info .icon {
+  color: var(--alert-blue-500);
+}
+
+.success {
+  background: var(--color-background-alerting-success-slate);
+  border-color: var(--color-border-alerting-success-white);
+}
+.success .icon {
+  color: var(--alert-green-500);
+}
+
+.warning {
+  background: var(--alert-yellow-200);
+  border-color: var(--alert-yellow-600);
+}
+.warning .icon {
+  color: var(--alert-yellow-800);
+}
+
+.error {
+  background: var(--color-background-alerting-critical-slate);
+  border-color: var(--color-border-alerting-critical-critical);
+}
+.error .icon {
+  color: var(--alert-red-500);
+}
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding-top: var(--padding-padding-1);
+}
+
+.text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.description {
+  font-size: var(--font-size-body-3);
+  color: var(--color-text-neutral);
+  line-height: var(--font-line-height-line-height-18);
+}
+
+.close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-24);
+  height: var(--scale-24);
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-4);
+  padding: 0;
+  transition: background 100ms ease;
+}
+.close:hover {
+  background: var(--color-background-gray-lighter);
+}
+.close:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}

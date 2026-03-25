@@ -1,0 +1,53 @@
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sm {
+  width: 16px;
+  height: 16px;
+}
+
+.md {
+  width: 24px;
+  height: 24px;
+}
+
+.lg {
+  width: 40px;
+  height: 40px;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  animation: spin 0.8s linear infinite;
+}
+
+.track {
+  stroke: var(--color-border-light);
+}
+
+.arc {
+  stroke: var(--color-background-controls-brand-base);
+  stroke-dasharray: 42 63;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

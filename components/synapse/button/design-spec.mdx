@@ -1,0 +1,140 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# Button Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Button |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 47808:31410 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **button**
+- **labelHidden**
+- **loading**
+- **spinner**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--alert-red-500)` = #af0000
+- `var(--alert-red-600)` = #910000
+- `var(--border-width-border-1)` = 1px
+- `var(--border-width-border-2)` = 2px
+- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
+- `var(--color-background-controls-brand-base)` = #0076ce
+- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-controls-brand-stronger)` = #06528a
+- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-text-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-white)` = #ffffff
+- `var(--corner-radius-radius-4)` = 4px
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-1)` = 16px
+- `var(--font-size-body-2)` = 14px
+- `var(--font-size-body-3)` = 12px
+- `var(--padding-padding-12)` = 12px
+- `var(--padding-padding-16)` = 16px
+- `var(--padding-padding-8)` = 8px
+- `var(--scale-28)` = 28px
+- `var(--scale-36)` = 36px
+- `var(--scale-44)` = 44px
+- `var(--spacing-space-8)` = 8px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| danger | default | `var(--alert-red-500)` (#af0000) |  | `var(--color-text-white)` (#ffffff) |  |
+| danger | hover | `var(--alert-red-600)` (#910000) |  |  |  |
+| default | default |  | `var(--border-width-border-1)` (1px) |  | radius: `var(--corner-radius-radius-4)` |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| ghost | default |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
+| ghost | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
+| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) |  | `var(--color-text-white)` (#ffffff) |  |
+| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
+| secondary | default |  | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-base)` (#0076ce) |  |
+| secondary | hover | `var(--color-background-brand-lighter)` (#ebf4fb) |  |  |  |
+| tertiary | default |  |  | `var(--color-text-brand-base)` (#0076ce) |  |
+| tertiary | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| danger | default | `var(--alert-red-500)` (#af0000) |  | `var(--color-text-white)` (#ffffff) |  |
+| danger | hover | `var(--alert-red-600)` (#910000) |  |  |  |
+| default | default |  | `var(--border-width-border-1)` (1px) |  | radius: `var(--corner-radius-radius-4)` |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| ghost | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| ghost | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
+| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) |  | `var(--color-text-white)` (#ffffff) |  |
+| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
+| secondary | default |  | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-brand-base)` (#4c9fdd) |  |
+| secondary | hover | `var(--color-background-brand-lighter)` (#1e262c) |  |  |  |
+| tertiary | default |  |  | `var(--color-text-brand-base)` (#4c9fdd) |  |
+| tertiary | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
+
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
+> This section documents additional or overriding behaviors for this component.
+
+**Pattern**: action
+
+### Behaviors
+
+- Triggers action on click
+- Shows loading state when async operation in progress
+- Disabled state prevents interaction and removes from tab order
+
+### Keyboard
+
+| Key | Action |
+|---|---|
+| Enter | Activate the button |
+| Space | Activate the button |
+
+### ARIA
+
+| Element | Attributes |
+|---|---|
+| root | {'element': '<button>', 'aria-disabled': 'true when disabled (prefer over HTML disabled for focusability)', 'aria-busy': 'true when in loading state'} |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

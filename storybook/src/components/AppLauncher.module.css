@@ -1,0 +1,85 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: var(--border-width-border-1) solid var(--color-border-light);
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral-strong);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.trigger:hover {
+  background: var(--color-background-gray-lighter);
+}
+
+.trigger:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.popup {
+  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border-radius: var(--corner-radius-radius-4);
+  padding: var(--padding-padding-16);
+  box-shadow:
+    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur) var(--shadow-drop-shadow-2-color);
+  min-width: 240px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-space-8);
+}
+
+.appTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-12);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 150ms ease;
+  font-family: inherit;
+}
+
+.appTile:hover {
+  background: var(--color-background-gray-lighter);
+}
+
+.appTile:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.appIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-surface-1);
+  color: var(--color-background-controls-brand-base);
+}
+
+.appName {
+  font-size: var(--font-size-body-3);
+  font-family: inherit;
+  color: var(--color-text-neutral-strong);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 72px;
+}

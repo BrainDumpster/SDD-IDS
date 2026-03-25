@@ -1,0 +1,129 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# Tag Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Tag |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 50724:304757 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **dismiss**
+- **label**
+- **tag**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--alert-yellow-200)` = #fff7d9
+- `var(--alert-yellow-600)` = #e5a51a
+- `var(--border-width-border-1)` = 1px
+- `var(--border-width-border-2)` = 2px
+- `var(--color-background-alerting-critical-slate)` = #f3d9d9 (light) / #1e262c (dark)
+- `var(--color-background-alerting-info-slate)` = #d9e7f8 (light) / #1e262c (dark)
+- `var(--color-background-alerting-success-slate)` = #ddedd9 (light) / #1e262c (dark)
+- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
+- `var(--color-border-alerting-critical-critical)` = #af0000
+- `var(--color-border-alerting-info-info)` = #005ece (light) / #4c8edd (dark)
+- `var(--color-border-alerting-success-white)` = #1b8500 (light) / #ffffff (dark)
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-tag-critical)` = #af0000 (light) / #dd9494 (dark)
+- `var(--color-text-tag-info)` = #0062ab (light) / #94bbea (dark)
+- `var(--color-text-tag-success)` = #125800 (light) / #5faa4c (dark)
+- `var(--color-text-tag-warning)` = #6d4028 (light) / #ffe794 (dark)
+- `var(--corner-radius-radius-2)` = 2px
+- `var(--corner-radius-radius-4)` = 4px
+- `var(--font-line-height-line-height-18)` = 18px
+- `var(--font-size-body-3)` = 12px
+- `var(--padding-padding-2)` = 2px
+- `var(--padding-padding-8)` = 8px
+- `var(--spacing-space-4)` = 4px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-light)` (#c5c5c5) | `var(--color-text-neutral-strong)` (#252525) | opacity: 0.7; radius: `var(--corner-radius-radius-2)` |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover |  |  |  | opacity: 1 |
+| error | default | `var(--color-background-alerting-critical-slate)` (#f3d9d9) | `var(--color-border-alerting-critical-critical)` (#af0000) | `var(--color-text-tag-critical)` (#af0000) |  |
+| info | default | `var(--color-background-alerting-info-slate)` (#d9e7f8) | `var(--color-border-alerting-info-info)` (#005ece) | `var(--color-text-tag-info)` (#0062ab) |  |
+| success | default | `var(--color-background-alerting-success-slate)` (#ddedd9) | `var(--color-border-alerting-success-white)` (#1b8500) | `var(--color-text-tag-success)` (#125800) |  |
+| warning | default | `var(--alert-yellow-200)` (#fff7d9) | `var(--alert-yellow-600)` (#e5a51a) | `var(--color-text-tag-warning)` (#6d4028) |  |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-light)` (#34414c) | `var(--color-text-neutral-strong)` (#e6e9ec) | opacity: 0.7; radius: `var(--corner-radius-radius-2)` |
+| default | disabled |  |  |  | opacity: 0.5 |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover |  |  |  | opacity: 1 |
+| error | default | `var(--color-background-alerting-critical-slate)` (#1e262c) | `var(--color-border-alerting-critical-critical)` (#af0000) | `var(--color-text-tag-critical)` (#dd9494) |  |
+| info | default | `var(--color-background-alerting-info-slate)` (#1e262c) | `var(--color-border-alerting-info-info)` (#4c8edd) | `var(--color-text-tag-info)` (#94bbea) |  |
+| success | default | `var(--color-background-alerting-success-slate)` (#1e262c) | `var(--color-border-alerting-success-white)` (#ffffff) | `var(--color-text-tag-success)` (#5faa4c) |  |
+| warning | default | `var(--alert-yellow-200)` (#fff7d9) | `var(--alert-yellow-600)` (#e5a51a) | `var(--color-text-tag-warning)` (#ffe794) |  |
+
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
+
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
+> This section documents additional or overriding behaviors for this component.
+
+**Pattern**: action
+
+### Behaviors
+
+- Displays a label with optional dismiss (remove) action
+- Click dismiss button to remove the tag
+- Variant colors indicate different categories or states
+
+### Keyboard
+
+| Key | Action |
+|---|---|
+| Tab | Move focus to the tag or its dismiss button |
+| Enter | Remove the tag (if dismissible) |
+| Delete | Remove the tag (if dismissible) |
+
+### ARIA
+
+| Element | Attributes |
+|---|---|
+| root | {'aria-label': 'Meaningful tag text content'} |
+| dismissButton | {'aria-label': 'Remove [tag name]'} |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

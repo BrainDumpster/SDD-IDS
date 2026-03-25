@@ -1,0 +1,62 @@
+# Synapse Design System Configuration
+# Based on "Synapse Hi Fi components" Figma file
+
+name: synapse
+display_name: Synapse
+token_transform: synapse
+
+figma_file_key: ""  # Set via FIGMA_FILE_KEY env var
+
+figma_map_path: data/synapse-component-figma-map.json
+rules_path: data/synapse-rules.json
+allowed_tokens_path: data/synapse-allowed-tokens.json
+component_registry_path: data/synapse-component-registry.json
+theme_css_path: components/synapse-theme.css
+base_ui_mapping_path: data/synapse-baseui-mapping.json
+
+components_dir: components/synapse
+
+qdrant_collection: synapse_design_knowledge
+
+framework_layer: base-ui
+
+root_spec_path: components/synapse/root-spec.mdx
+alias_path: data/synapse-component-aliases.json
+interaction_templates_path: data/synapse-interaction-templates.json
+layout_cache_path: data/synapse-figma-layout-cache.json
+
+framework_options:
+  - id: base-ui
+    display: "React + Base UI"
+  - id: angular
+    display: "Angular"
+  - id: lit
+    display: "Lit Web Components"
+
+typography:
+  font_family: "Roboto"
+  weights: [400, 500, 700]
+  scale:
+    header-1: { size: "48px", line_height: "58px" }
+    header-2: { size: "36px", line_height: "44px" }
+    header-3: { size: "32px", line_height: "40px" }
+    header-4: { size: "28px", line_height: "34px" }
+    header-5: { size: "24px", line_height: "32px" }
+    header-6: { size: "18px", line_height: "25px" }
+    body-1: { size: "16px", line_height: "24px" }
+    body-2: { size: "14px", line_height: "20px" }
+    body-3: { size: "12px", line_height: "18px" }
+
+breakpoints:
+  mobile: "576px"
+  tablet: "768px"
+  small-desktop: "1024px"
+  desktop: "1440px"
+  large: "1441px"
+
+elevation_levels:
+  "0": "Default - nav, form elements, data grid"
+  "1": "Slight raise - search, app launcher, hover, cards"
+  "2": "Filter panel, tooltip, toast"
+  "3": "Selected states (dropdown, calendar)"
+  "4": "Modal, dialog, wizards"

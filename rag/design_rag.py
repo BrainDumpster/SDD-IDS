@@ -5,9 +5,9 @@ from langchain_community.llms import Ollama
 
 class DesignRAG:
 
-    def __init__(self):
+    def __init__(self, collection_name=None):
 
-        self.retriever = DesignRetriever()
+        self.retriever = DesignRetriever(collection_name=collection_name)
         self.detector = ComponentDetector()
 
         self.llm = Ollama(

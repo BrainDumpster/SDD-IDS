@@ -1,0 +1,100 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# Tooltip Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Tooltip |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 48625:111469 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **arrow**
+- **popup**
+- **trigger**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--color-background-gray-stronger)` = #252525 (light) / #ffffff (dark)
+- `var(--color-text-white)` = #ffffff
+- `var(--corner-radius-radius-4)` = 4px
+- `var(--font-line-height-line-height-18)` = 18px
+- `var(--font-size-body-3)` = 12px
+- `var(--padding-padding-10)` = 10px
+- `var(--padding-padding-6)` = 6px
+- `var(--shadow-drop-shadow-8-blur)` = 8px
+- `var(--shadow-drop-shadow-8-color)` = rgba(37, 37, 37, 0.08) (light) / rgba(17, 22, 25, 0.08) (dark)
+- `var(--shadow-drop-shadow-8-x)` = 0
+- `var(--shadow-drop-shadow-8-y)` = 8px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-gray-stronger)` (#252525) |  | `var(--color-text-white)` (#ffffff) | shadow: `var(--shadow-drop-shadow-8-x)` `var(--shadow-drop-shadow-8-y)` `var(--shadow-drop-shadow-8-blur)` `var(--shadow-drop-shadow-8-color)`; radius: `var(--corner-radius-radius-4)` |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-gray-stronger)` (#ffffff) |  | `var(--color-text-white)` (#ffffff) | shadow: `var(--shadow-drop-shadow-8-x)` `var(--shadow-drop-shadow-8-y)` `var(--shadow-drop-shadow-8-blur)` `var(--shadow-drop-shadow-8-color)`; radius: `var(--corner-radius-radius-4)` |
+
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
+
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
+> This section documents additional or overriding behaviors for this component.
+
+**Pattern**: tooltip
+
+### Behaviors
+
+- Appears on hover (mouse) after ~200ms delay
+- Appears on focus (keyboard) without delay
+- Disappears on mouse leave or blur
+- Contains no interactive content (text only)
+
+### Keyboard
+
+| Key | Action |
+|---|---|
+| Escape | Dismiss the tooltip when trigger is focused |
+
+### ARIA
+
+| Element | Attributes |
+|---|---|
+| tooltip | {'role': 'tooltip'} |
+| trigger | {'aria-describedby': 'ID of the tooltip element'} |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

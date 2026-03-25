@@ -1,0 +1,640 @@
+<!-- auto:generated:start -->
+# Synapse Design System — Root Spec
+
+> Generated 2026-03-25T01:42:04Z. Global design system specification — framework-agnostic.
+> All component specs inherit from this document. Component specs only override what is specific.
+
+<!-- ds:section id=identity -->
+## Design System Identity
+
+| Property | Value |
+|---|---|
+| Name | Synapse |
+| Framework Layer | base-ui |
+| Figma File | Synapse Hi Fi components |
+| Theme Mechanism | CSS Custom Properties + `data-theme` attribute |
+
+### Supported Frameworks
+
+- **base-ui**: React + Base UI
+- **angular**: Angular
+- **lit**: Lit Web Components
+
+<!-- ds:section id=color-system -->
+## Color System
+
+All colors are expressed as CSS custom properties. Semantic tokens resolve to different values in Light vs Dark themes. Primitive palette tokens are static across themes.
+
+### Background Tokens (61 tokens)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-background-alerting-critical-slate` | #f3d9d9 | #1e262c |
+| `--color-background-alerting-info-slate` | #d9e7f8 | #1e262c |
+| `--color-background-alerting-major-slate` | #fce8d9 | #1e262c |
+| `--color-background-alerting-minor-slate` | None | #1e262c |
+| `--color-background-alerting-success-slate` | #ddedd9 | #1e262c |
+| `--color-background-black` | #252525 | #252525 |
+| `--color-background-brand-base` | #0076ce | #4c9fdd |
+| `--color-background-brand-light` | #d9eaf8 | #34414c |
+| `--color-background-brand-lighter` | #ebf4fb | #1e262c |
+| `--color-background-brand-lighter-alt` | #ebf4fb | #002642 |
+| `--color-background-brand-strong` | #0062ab | #94c5ea |
+| `--color-background-brand-stronger` | #06528a | #d9eaf8 |
+| `--color-background-component` | #ffffff | #111619 |
+| `--color-background-component-light` | #f4f4f4 | #171d21 |
+| `--color-background-container-2` | #ffffff | #1a2226 |
+| `--color-background-container-4` | #ffffff | #2b3840 |
+| `--color-background-controls-brand-base` | #0076ce | #0076ce |
+| `--color-background-controls-brand-light` | #d9eaf8 | #002642 |
+| `--color-background-controls-brand-lighter` | #ebf4fb | #003a65 |
+| `--color-background-controls-brand-strong` | #0062ab | #0062ab |
+| `--color-background-controls-brand-stronger` | #06528a | #06528a |
+| `--color-background-gradient-chat-button-end-violet` | #7c01b7 | #520179 |
+| `--color-background-gradient-chat-end` | #f4f4f4 | rgba(86, 108, 127, 0.20) |
+| `--color-background-gradient-chat-start` | #f4f4f4 | rgba(19, 21, 25, 0.10) |
+| `--color-background-gradient-left-nav-end` | #ffffff | rgba(19, 21, 25, 0.10) |
+| `--color-background-gradient-left-nav-start` | #ffffff | rgba(0, 118, 206, 0.20) |
+| `--color-background-gradient-masthead-end` | #0076ce | rgba(19, 21, 25, 0.10) |
+| `--color-background-gradient-masthead-start` | #003e88 | rgba(0, 118, 206, 0.50) |
+| `--color-background-gray-base` | #757575 | #9e9e9e |
+| `--color-background-gray-light` | #eaeaea | #393939 |
+| `--color-background-gray-lighter` | #f4f4f4 | #393939 |
+| `--color-background-gray-neutral-alt` | #eaeaea | #1e262c |
+| `--color-background-gray-neutral-light` | #eaeaea | #34414c |
+| `--color-background-gray-neutral-lighter` | #f4f4f4 | #1e262c |
+| `--color-background-gray-strong` | #616161 | #ffffff |
+| `--color-background-gray-stronger` | #252525 | #ffffff |
+| `--color-background-masthead-brand-base` | #0076ce | #1e262c |
+| `--color-background-masthead-brand-strong` | #0062ab | #34414c |
+| `--color-background-masthead-brand-stronger` | #06528a | #455666 |
+| `--color-background-n-tabs-x-hover` | #d9eaf8 | #455666 |
+| `--color-background-overlay-1` | rgba(37, 37, 37, 0.65) | rgba(37, 37, 37, 0.75) |
+| `--color-background-power-filter` | #34414c | #455666 |
+| `--color-background-secondary-berry-base` | #a10061 | #bd4c90 |
+| `--color-background-secondary-berry-light` | #f1d9e7 | #6a0040 |
+| `--color-background-secondary-berry-lighter` | #f7ebf2 | #4f0030 |
+| `--color-background-secondary-berry-strong` | #860051 | #d894bd |
+| `--color-background-secondary-berry-stronger` | #6a0040 | #f1d9e7 |
+| `--color-background-secondary-teal-base` | #00819e | #4ca7bb |
+| `--color-background-secondary-teal-light` | #d9ecf0 | #005568 |
+| `--color-background-secondary-teal-lighter` | #ebf5f7 | #003f4d |
+| `--color-background-secondary-teal-strong` | #006b83 | #94cad6 |
+| `--color-background-secondary-teal-stronger` | #005568 | #d9ecf0 |
+| `--color-background-secondary-violet-base` | #7c01b7 | #a34dcd |
+| `--color-background-secondary-violet-light` | #ebd9f4 | #520179 |
+| `--color-background-secondary-violet-lighter` | #f5ebf9 | #28003b |
+| `--color-background-secondary-violet-strong` | #670198 | #c894e1 |
+| `--color-background-secondary-violet-stronger` | #520179 | #ebd9f4 |
+| `--color-background-surface-1` | #f4f4f4 | #111619 |
+| `--color-background-surface-2` | #ffffff | #1e262c |
+| `--color-background-white` | #ffffff | #ffffff |
+| `--color-background-white-transparant-blue` | #ffffff | rgba(0, 38, 66, 0.50) |
+
+### Border Tokens (48 tokens)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-border-accessible` | #757575 | #8898a5 |
+| `--color-border-alerting-critical-base` | None | #dd9494 |
+| `--color-border-alerting-critical-critical` | #af0000 | #af0000 |
+| `--color-border-alerting-critical-transparent` | #af0000 | rgba(221, 148, 148, 0.00) |
+| `--color-border-alerting-critical-white` | #af0000 | #ffffff |
+| `--color-border-alerting-info-base` | None | #94bbea |
+| `--color-border-alerting-info-info` | #005ece | #4c8edd |
+| `--color-border-alerting-info-transparent` | #005ece | rgba(148, 187, 234, 0.00) |
+| `--color-border-alerting-info-white` | #005ece | #ffffff |
+| `--color-border-alerting-major-base` | None | #f7be94 |
+| `--color-border-alerting-major-major` | #ed6400 | #ed6400 |
+| `--color-border-alerting-major-transparent` | #ed6400 | rgba(247, 190, 148, 0.00) |
+| `--color-border-alerting-major-white` | #ed6400 | #ffffff |
+| `--color-border-alerting-minor-minor` | #9c622e | #9c622e |
+| `--color-border-alerting-minor-transparent` | #9c622e | rgba(255, 255, 255, 0.00) |
+| `--color-border-alerting-minor-white` | #9c622e | #ffffff |
+| `--color-border-alerting-success-base` | None | #9fcc94 |
+| `--color-border-alerting-success-transparent` | #1b8500 | rgba(159, 204, 148, 0.00) |
+| `--color-border-alerting-success-white` | #1b8500 | #ffffff |
+| `--color-border-alerting-transparent-critical` | rgba(175, 0, 0, 0.00) | #dd9494 |
+| `--color-border-alerting-transparent-info` | rgba(0, 94, 206, 0.00) | #94bbea |
+| `--color-border-alerting-transparent-major` | rgba(237, 100, 0, 0.00) | #f7be94 |
+| `--color-border-alerting-transparent-minor` | rgba(255, 199, 0, 0.00) | #ffffff |
+| `--color-border-alerting-transparent-success` | rgba(27, 133, 0, 0.00) | #9fcc94 |
+| `--color-border-berry-base` | #a10061 | #bd4c90 |
+| `--color-border-berry-light` | #bd4c90 | #6a0040 |
+| `--color-border-berry-strong` | #4f0030 | #f1d9e7 |
+| `--color-border-black` | #252525 | #252525 |
+| `--color-border-brand-base` | #0076ce | #4c9fdd |
+| `--color-border-brand-dark` | #0062ab | #94c5ea |
+| `--color-border-brand-neutral` | #0076ce | #8898a5 |
+| `--color-border-disabled` | #757575 | #9e9e9e |
+| `--color-border-light` | #c5c5c5 | #34414c |
+| `--color-border-lighter` | #eaeaea | #1e262c |
+| `--color-border-neutral` | #4d4d4d | #8898a5 |
+| `--color-border-neutral-light` | #757575 | #34414c |
+| `--color-border-strong` | #252525 | #b8c1c9 |
+| `--color-border-teal-base` | #00819e | #4ca7bb |
+| `--color-border-teal-light` | #4ca7bb | #005568 |
+| `--color-border-teal-strong` | #003f4d | #d9ecf0 |
+| `--color-border-transparent-brand` | rgba(255, 255, 255, 0.00) | #4c9fdd |
+| `--color-border-transparent-neutral` | rgba(255, 255, 255, 0.00) | #8898a5 |
+| `--color-border-transparent-neutral-light` | rgba(255, 255, 255, 0.00) | #34414c |
+| `--color-border-user-chat-input` | #eaeaea | #06528a |
+| `--color-border-violet-base` | #7c01b7 | #a34dcd |
+| `--color-border-violet-light` | #a34dcd | #a34dcd |
+| `--color-border-violet-strong` | #670198 | #c894e1 |
+| `--color-border-white` | #ffffff | #ffffff |
+
+### Text Tokens (28 tokens)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-text-berry-base` | #a10061 | #bd4c90 |
+| `--color-text-berry-strong` | #6a0040 | #d894bd |
+| `--color-text-berry-stronger` | #34001f | #f1d9e7 |
+| `--color-text-black` | #252525 | #252525 |
+| `--color-text-brand-base` | #0076ce | #4c9fdd |
+| `--color-text-brand-strong` | #0062ab | #94c5ea |
+| `--color-text-critical` | #af0000 | #dd9494 |
+| `--color-text-disabled` | #757575 | #9e9e9e |
+| `--color-text-link-brand-base` | #0062ab | #4c9fdd |
+| `--color-text-link-brand-light` | #d9eaf8 | #d9eaf8 |
+| `--color-text-link-brand-lighter` | #ebf4fb | #ebf4fb |
+| `--color-text-link-brand-strong` | #06528a | #94c5ea |
+| `--color-text-link-brand-stronger` | #003a65 | #d9eaf8 |
+| `--color-text-neutral` | #4d4d4d | #b8c1c9 |
+| `--color-text-neutral-strong` | #252525 | #e6e9ec |
+| `--color-text-tag-critical` | #af0000 | #dd9494 |
+| `--color-text-tag-info` | #0062ab | #94bbea |
+| `--color-text-tag-major` | #9c4200 | #f2934c |
+| `--color-text-tag-success` | #125800 | #5faa4c |
+| `--color-text-tag-warning` | #6d4028 | #ffe794 |
+| `--color-text-teal-base` | #00819e | #4ca7bb |
+| `--color-text-teal-strong` | #005568 | #94cad6 |
+| `--color-text-teal-stronger` | #002933 | #d9ecf0 |
+| `--color-text-violet-base` | #7c01b7 | #a34dcd |
+| `--color-text-violet-strong` | #520179 | #c894e1 |
+| `--color-text-violet-stronger` | #28003b | #ebd9f4 |
+| `--color-text-warning` | #6d4028 | #6d4028 |
+| `--color-text-white` | #ffffff | #ffffff |
+
+### Icon Tokens (20 tokens)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-icon-accessible` | #757575 | #8898a5 |
+| `--color-icon-berry-base` | #a10061 | #bd4c90 |
+| `--color-icon-berry-strong` | #6a0040 | #d894bd |
+| `--color-icon-berry-stronger` | #4f0030 | #f1d9e7 |
+| `--color-icon-black` | #252525 | #252525 |
+| `--color-icon-brand-base` | #0076ce | #4c9fdd |
+| `--color-icon-brand-strong` | #0062ab | #94c5ea |
+| `--color-icon-brand-stronger` | #06528a | #d9eaf8 |
+| `--color-icon-disabled` | #757575 | #c5c5c5 |
+| `--color-icon-inverse` | #ffffff | #252525 |
+| `--color-icon-neutral` | #4d4d4d | #b8c1c9 |
+| `--color-icon-neutral-light` | #4d4d4d | #e6e9ec |
+| `--color-icon-neutral-strong` | None | #f2f3f5 |
+| `--color-icon-teal-base` | #00819e | #4ca7bb |
+| `--color-icon-teal-strong` | #005568 | #94cad6 |
+| `--color-icon-teal-strong-2` | #003f4d | #d9ecf0 |
+| `--color-icon-violet-base` | #7c01b7 | #a34dcd |
+| `--color-icon-violet-strong` | #670198 | #c894e1 |
+| `--color-icon-violet-stronger` | #3d005a | #ebd9f4 |
+| `--color-icon-white` | #ffffff | #ffffff |
+
+### Gradient Tokens (5 tokens)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-gradient-overflow-horizontal-end` | rgba(244, 244, 244, 0.00) | rgba(17, 22, 25, 0.00) |
+| `--color-gradient-overflow-horizontal-middle` | rgba(244, 244, 244, 0.90) | rgba(17, 22, 25, 0.90) |
+| `--color-gradient-overflow-horizontal-start` | #f4f4f4 | #111619 |
+| `--color-gradient-overflow-vertical-end` | rgba(255, 255, 255, 0.00) | rgba(17, 22, 25, 0.40) |
+| `--color-gradient-overflow-vertical-start` | rgba(182, 182, 182, 0.40) | #111619 |
+
+### Static Color Tokens (19 tokens)
+
+These do not change between themes.
+
+| Token | Value |
+|---|---|
+| `--color-static-brand-100` | #ebf4fb |
+| `--color-static-brand-200` | #d9eaf8 |
+| `--color-static-brand-300` | #94c5ea |
+| `--color-static-brand-400` | #4c9fdd |
+| `--color-static-brand-500` | #0076ce |
+| `--color-static-brand-600` | #0062ab |
+| `--color-static-brand-700` | #06528a |
+| `--color-static-brand-800` | #003a65 |
+| `--color-static-brand-900` | #002642 |
+| `--color-static-gray-100` | #f4f4f4 |
+| `--color-static-gray-200` | #eaeaea |
+| `--color-static-gray-300` | #c5c5c5 |
+| `--color-static-gray-400` | #9e9e9e |
+| `--color-static-gray-500` | #757575 |
+| `--color-static-gray-600` | #616161 |
+| `--color-static-gray-700` | #4d4d4d |
+| `--color-static-gray-800` | #393939 |
+| `--color-static-gray-900` | #252525 |
+| `--color-static-gray-white` | #ffffff |
+
+### Primitive Palette — Alert (45 tokens)
+
+| Token | Value |
+|---|---|
+| `--alert-blue-100` | #ebf2fb |
+| `--alert-blue-200` | #d9e7f8 |
+| `--alert-blue-300` | #94bbea |
+| `--alert-blue-400` | #4c8edd |
+| `--alert-blue-500` | #005ece |
+| `--alert-blue-600` | #004eab |
+| `--alert-blue-700` | #003e88 |
+| `--alert-blue-800` | #002e65 |
+| `--alert-blue-900` | #001e42 |
+| `--alert-green-100` | #edf5eb |
+| `--alert-green-200` | #ddedd9 |
+| `--alert-green-300` | #9fcc94 |
+| `--alert-green-400` | #5faa4c |
+| `--alert-green-500` | #1b8500 |
+| `--alert-green-600` | #166e00 |
+| `--alert-green-700` | #125800 |
+| `--alert-green-800` | #0d4100 |
+| `--alert-green-900` | #092b00 |
+| `--alert-orange-100` | #fef3eb |
+| `--alert-orange-200` | #fce8d9 |
+| `--alert-orange-300` | #f7be94 |
+| `--alert-orange-400` | #f2934c |
+| `--alert-orange-500` | #ed6400 |
+| `--alert-orange-600` | #c55300 |
+| `--alert-orange-700` | #9c4200 |
+| `--alert-orange-800` | #743100 |
+| `--alert-orange-900` | #4c2000 |
+| `--alert-red-100` | #f9ebeb |
+| `--alert-red-200` | #f3d9d9 |
+| `--alert-red-300` | #dd9494 |
+| `--alert-red-400` | #c74c4c |
+| `--alert-red-500` | #af0000 |
+| `--alert-red-600` | #910000 |
+| `--alert-red-700` | #730000 |
+| `--alert-red-800` | #560000 |
+| `--alert-red-900` | #380000 |
+| `--alert-yellow-100` | #fffbeb |
+| `--alert-yellow-200` | #fff7d9 |
+| `--alert-yellow-300` | #ffe794 |
+| `--alert-yellow-400` | #ffd84c |
+| `--alert-yellow-500` | #ffc700 |
+| `--alert-yellow-600` | #e5a51a |
+| `--alert-yellow-700` | #c48429 |
+| `--alert-yellow-800` | #9c622e |
+| `--alert-yellow-900` | #6d4028 |
+
+### Primitive Palette — UI & Secondary (58 tokens)
+
+| Token | Value |
+|---|---|
+| `--secondary-palette-berry-100` | #f7ebf2 |
+| `--secondary-palette-berry-200` | #f1d9e7 |
+| `--secondary-palette-berry-300` | #d894bd |
+| `--secondary-palette-berry-400` | #bd4c90 |
+| `--secondary-palette-berry-500` | #a10061 |
+| `--secondary-palette-berry-600` | #860051 |
+| `--secondary-palette-berry-700` | #6a0040 |
+| `--secondary-palette-berry-800` | #4f0030 |
+| `--secondary-palette-berry-900` | #34001f |
+| `--secondary-palette-teal-100` | #ebf5f7 |
+| `--secondary-palette-teal-200` | #d9ecf0 |
+| `--secondary-palette-teal-300` | #94cad6 |
+| `--secondary-palette-teal-400` | #4ca7bb |
+| `--secondary-palette-teal-500` | #00819e |
+| `--secondary-palette-teal-600` | #006b83 |
+| `--secondary-palette-teal-700` | #005568 |
+| `--secondary-palette-teal-800` | #003f4d |
+| `--secondary-palette-teal-900` | #002933 |
+| `--secondary-palette-violet-100` | #f5ebf9 |
+| `--secondary-palette-violet-200` | #ebd9f4 |
+| `--secondary-palette-violet-300` | #c894e1 |
+| `--secondary-palette-violet-400` | #a34dcd |
+| `--secondary-palette-violet-500` | #7c01b7 |
+| `--secondary-palette-violet-600` | #670198 |
+| `--secondary-palette-violet-700` | #520179 |
+| `--secondary-palette-violet-800` | #3d005a |
+| `--secondary-palette-violet-900` | #28003b |
+| `--ui-palette-brand-100` | #ebf4fb |
+| `--ui-palette-brand-200` | #d9eaf8 |
+| `--ui-palette-brand-300` | #94c5ea |
+| `--ui-palette-brand-400` | #4c9fdd |
+| `--ui-palette-brand-500` | #0076ce |
+| `--ui-palette-brand-600` | #0062ab |
+| `--ui-palette-brand-700` | #06528a |
+| `--ui-palette-brand-800` | #003a65 |
+| `--ui-palette-brand-900` | #002642 |
+| `--ui-palette-gray-100` | #f4f4f4 |
+| `--ui-palette-gray-200` | #eaeaea |
+| `--ui-palette-gray-300` | #c5c5c5 |
+| `--ui-palette-gray-400` | #9e9e9e |
+| `--ui-palette-gray-500` | #757575 |
+| `--ui-palette-gray-600` | #616161 |
+| `--ui-palette-gray-700` | #4d4d4d |
+| `--ui-palette-gray-800` | #393939 |
+| `--ui-palette-gray-900` | #252525 |
+| `--ui-palette-slate-100` | #f2f3f5 |
+| `--ui-palette-slate-200` | #e6e9ec |
+| `--ui-palette-slate-300` | #b8c1c9 |
+| `--ui-palette-slate-400` | #8898a5 |
+| `--ui-palette-slate-500` | #566c7f |
+| `--ui-palette-slate-600` | #455666 |
+| `--ui-palette-slate-700` | #34414c |
+| `--ui-palette-slate-800` | #1e262c |
+| `--ui-palette-slate-820` | #2b3840 |
+| `--ui-palette-slate-840` | #242f36 |
+| `--ui-palette-slate-860` | #1a2226 |
+| `--ui-palette-slate-880` | #171d21 |
+| `--ui-palette-slate-900` | #111619 |
+
+<!-- ds:section id=typography -->
+## Typography Scale
+
+- **Font Family**: Roboto
+- **Weights**: 400, 500, 700
+
+| Level | Size | Line Height |
+|---|---|---|
+| header-1 | 48px | 58px |
+| header-2 | 36px | 44px |
+| header-3 | 32px | 40px |
+| header-4 | 28px | 34px |
+| header-5 | 24px | 32px |
+| header-6 | 18px | 25px |
+| body-1 | 16px | 24px |
+| body-2 | 14px | 20px |
+| body-3 | 12px | 18px |
+
+### Font Size Tokens
+
+| Token | Value |
+|---|---|
+| `--font-size-body-1` | 16px |
+| `--font-size-body-2` | 14px |
+| `--font-size-body-3` | 12px |
+| `--font-size-header-1` | 48px |
+| `--font-size-header-2` | 36px |
+| `--font-size-header-3` | 32px |
+| `--font-size-header-4` | 28px |
+| `--font-size-header-5` | 24px |
+| `--font-size-header-6` | 18px |
+
+### Line Height Tokens
+
+| Token | Value |
+|---|---|
+| `--font-line-height-line-height-18` | 18px |
+| `--font-line-height-line-height-20` | 20px |
+| `--font-line-height-line-height-24` | 24px |
+| `--font-line-height-line-height-25` | 25px |
+| `--font-line-height-line-height-32` | 32px |
+| `--font-line-height-line-height-34` | 34px |
+| `--font-line-height-line-height-40` | 40px |
+| `--font-line-height-line-height-44` | 44px |
+| `--font-line-height-line-height-58` | 58px |
+| `--font-line-height-line-height-8` | 8px |
+
+<!-- ds:section id=spacing -->
+## Spacing & Sizing
+
+### Padding Tokens
+
+| Token | Value |
+|---|---|
+| `--padding-padding-1` | 1px |
+| `--padding-padding-10` | 10px |
+| `--padding-padding-12` | 12px |
+| `--padding-padding-14` | 14px |
+| `--padding-padding-16` | 16px |
+| `--padding-padding-2` | 2px |
+| `--padding-padding-20` | 20px |
+| `--padding-padding-24` | 24px |
+| `--padding-padding-28` | 28px |
+| `--padding-padding-32` | 32px |
+| `--padding-padding-4` | 4px |
+| `--padding-padding-52` | 52px |
+| `--padding-padding-58` | 58px |
+| `--padding-padding-6` | 6px |
+| `--padding-padding-8` | 8px |
+| `--padding-padding-none` | 0 |
+
+### Spacing Tokens
+
+| Token | Value |
+|---|---|
+| `--spacing-space-1` | 1px |
+| `--spacing-space-10` | 10px |
+| `--spacing-space-12` | 12px |
+| `--spacing-space-16` | 16px |
+| `--spacing-space-2` | 2px |
+| `--spacing-space-24` | 24px |
+| `--spacing-space-32` | 32px |
+| `--spacing-space-4` | 4px |
+| `--spacing-space-48` | 48px |
+| `--spacing-space-56` | 56px |
+| `--spacing-space-6` | 6px |
+| `--spacing-space-8` | 8px |
+| `--spacing-space-none` | 0 |
+
+### Sizing Tokens
+
+| Token | Value |
+|---|---|
+| `--sizing-size-32` | 32px |
+| `--sizing-size-40` | 40px |
+
+### Primitive Scale
+
+| Token | Value |
+|---|---|
+| `--scale-0` | 0 |
+| `--scale-1` | 1px |
+| `--scale-10` | 10px |
+| `--scale-12` | 12px |
+| `--scale-128` | 128px |
+| `--scale-14` | 14px |
+| `--scale-16` | 16px |
+| `--scale-18` | 18px |
+| `--scale-2` | 2px |
+| `--scale-20` | 20px |
+| `--scale-24` | 24px |
+| `--scale-256` | 256px |
+| `--scale-28` | 28px |
+| `--scale-32` | 32px |
+| `--scale-34` | 34px |
+| `--scale-36` | 36px |
+| `--scale-4` | 4px |
+| `--scale-40` | 40px |
+| `--scale-44` | 44px |
+| `--scale-48` | 48px |
+| `--scale-512` | 512px |
+| `--scale-52` | 52px |
+| `--scale-56` | 56px |
+| `--scale-58` | 58px |
+| `--scale-6` | 6px |
+| `--scale-64` | 64px |
+| `--scale-8` | 8px |
+| `--scale-80` | 80px |
+| `--scale-96` | 96px |
+
+<!-- ds:section id=border -->
+## Border Width
+
+| Token | Value |
+|---|---|
+| `--border-width-border-1` | 1px |
+| `--border-width-border-2` | 2px |
+| `--border-width-border-4` | 4px |
+| `--border-width-border-6` | 6px |
+| `--border-width-border-none` | 0 |
+
+<!-- ds:section id=corner-radius -->
+## Corner Radius
+
+| Token | Value |
+|---|---|
+| `--corner-radius-radius-12` | 12px |
+| `--corner-radius-radius-16` | 16px |
+| `--corner-radius-radius-2` | 2px |
+| `--corner-radius-radius-24` | 24px |
+| `--corner-radius-radius-4` | 4px |
+| `--corner-radius-radius-6` | 6px |
+| `--corner-radius-radius-8` | 8px |
+| `--corner-radius-radius-none` | 0 |
+
+<!-- ds:section id=elevation -->
+## Elevation System
+
+| Level | Shadow Token Set | Use Cases |
+|---|---|---|
+| 0 | *(none — flat)* | Default - nav, form elements, data grid |
+| 1 | `--shadow-drop-shadow-4-*` | Slight raise - search, app launcher, hover, cards |
+| 2 | `--shadow-drop-shadow-8-*` | Filter panel, tooltip, toast |
+| 3 | `--shadow-drop-shadow-16-*` | Selected states (dropdown, calendar) |
+| 4 | `--shadow-drop-shadow-32-*` | Modal, dialog, wizards |
+
+### Shadow Tokens (25 tokens)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--shadow-drop-shadow-16-blur` | 16px | 16px |
+| `--shadow-drop-shadow-16-color` | rgba(37, 37, 37, 0.08) | rgba(17, 22, 25, 0.08) |
+| `--shadow-drop-shadow-16-spread` | 0 | 0 |
+| `--shadow-drop-shadow-16-x` | 0 | 0 |
+| `--shadow-drop-shadow-16-y` | 16px | 16px |
+| `--shadow-drop-shadow-2-blur` | 2px | 2px |
+| `--shadow-drop-shadow-2-color` | rgba(37, 37, 37, 0.08) | rgba(17, 22, 25, 0.08) |
+| `--shadow-drop-shadow-2-spread` | 0 | 0 |
+| `--shadow-drop-shadow-2-x` | 0 | 0 |
+| `--shadow-drop-shadow-2-y` | 2px | 2px |
+| `--shadow-drop-shadow-32-blur` | 32px | 32px |
+| `--shadow-drop-shadow-32-color` | rgba(37, 37, 37, 0.08) | rgba(17, 22, 25, 0.08) |
+| `--shadow-drop-shadow-32-spread` | 0 | 0 |
+| `--shadow-drop-shadow-32-x` | 0 | 0 |
+| `--shadow-drop-shadow-32-y` | 32px | 32px |
+| `--shadow-drop-shadow-4-blur` | 4px | 4px |
+| `--shadow-drop-shadow-4-color` | rgba(37, 37, 37, 0.08) | rgba(17, 22, 25, 0.08) |
+| `--shadow-drop-shadow-4-spread` | 0 | 0 |
+| `--shadow-drop-shadow-4-x` | 0 | 0 |
+| `--shadow-drop-shadow-4-y` | 4px | 4px |
+| `--shadow-drop-shadow-8-blur` | 8px | 8px |
+| `--shadow-drop-shadow-8-color` | rgba(37, 37, 37, 0.08) | rgba(17, 22, 25, 0.08) |
+| `--shadow-drop-shadow-8-spread` | 0 | 0 |
+| `--shadow-drop-shadow-8-x` | 0 | 0 |
+| `--shadow-drop-shadow-8-y` | 8px | 8px |
+
+<!-- ds:section id=opacity -->
+## Opacity Scale
+
+| Token | Value |
+|---|---|
+| `--opacity-0` | 0 |
+| `--opacity-10` | 0.1 |
+| `--opacity-100` | 1 |
+| `--opacity-20` | 0.2 |
+| `--opacity-30` | 0.3 |
+| `--opacity-40` | 0.4 |
+| `--opacity-50` | 0.5 |
+| `--opacity-60` | 0.6 |
+| `--opacity-70` | 0.7 |
+| `--opacity-80` | 0.8 |
+| `--opacity-90` | 0.9 |
+
+<!-- ds:section id=breakpoints -->
+## Responsive Breakpoints
+
+| Name | Min Width |
+|---|---|
+| mobile | 576px |
+| tablet | 768px |
+| small-desktop | 1024px |
+| desktop | 1440px |
+| large | 1441px |
+
+- Component width is determined by its container (`width: 100%` or intrinsic)
+- Typography tokens are fixed (no fluid type) — responsive adjustments come from layout, not component internals
+
+<!-- ds:section id=interactions-baseline -->
+## Interaction Baseline
+
+All components inherit these baseline interaction behaviors unless overridden in their component spec.
+
+### Focus Management
+- Focus ring: `var(--color-border-brand-base)` outline with `var(--border-width-border-2)` width
+- All interactive elements must have visible focus indicators
+- Focus follows keyboard navigation order (DOM order or explicit tabindex)
+
+### Keyboard Baseline
+- **Tab**: Move focus to/from component
+- **Enter / Space**: Activate the focused element
+- **Escape**: Dismiss overlays, cancel operations (where applicable)
+
+### Mouse
+- **Hover**: Visual feedback on interactive elements (background/border color change)
+- **Click/Press**: Active state feedback, triggers primary action
+
+### Touch
+- Touch targets must be at least 44x44px per WCAG 2.1
+- Hover states must not be required for functionality
+
+<!-- ds:section id=accessibility-baseline -->
+## Accessibility Baseline
+
+All components must meet these requirements. Component specs only document additional, component-specific accessibility needs.
+
+- **Contrast**: Minimum 4.5:1 for normal text, 3:1 for large text (WCAG AA)
+- **Focus**: All interactive elements must have visible focus indicators
+- **Semantic HTML**: Use elements appropriate to the component role
+- **ARIA**: Provide ARIA attributes where semantic HTML is insufficient
+- **Screen Readers**: Support announcements for state changes
+- **Keyboard**: Ensure keyboard operability for all interactions
+
+<!-- ds:section id=theming -->
+## Theming Mechanism
+
+- All color tokens resolve to different values per theme (see Color System tables)
+- Spacing, typography, and radius tokens are theme-invariant
+- Shadow color tokens change between themes (slightly cooler in dark)
+- Theme is set via `data-theme` attribute on a parent element
+- Implementation must NOT use separate stylesheets per theme — use the same CSS custom properties
+
+<!-- ds:section id=variable-collections -->
+## Variable Collections (Figma)
+
+- **Tokens** — semantic, theme-aware (Light / Dark modes). Maps to `--color-*`, `--shadow-*` tokens.
+- **Primitive** — base palette values (static across themes). Maps to `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, `--opacity-*`, `--scale-*`.
+- **Sizes** — spacing, padding, corner radius, font sizes, border widths. Maps to `--padding-*`, `--spacing-*`, `--sizing-*`, `--corner-radius-*`, `--border-width-*`, `--font-*`.
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+| Config | `config/design_systems/synapse.yaml` |
+<!-- auto:generated:end -->

@@ -1,0 +1,47 @@
+.root {
+  position: relative;
+  overflow: hidden;
+  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-component);
+}
+
+.viewport {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  width: 6px;
+  padding: 0;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.root:hover .scrollbar,
+.scrollbar[data-scrolling] {
+  opacity: 1;
+}
+
+.thumb {
+  width: 100%;
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-border-light);
+  transition: background 150ms ease;
+}
+
+.thumb:hover {
+  background: var(--color-text-neutral);
+}

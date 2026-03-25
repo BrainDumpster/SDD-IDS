@@ -1,0 +1,138 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# Toast Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Toast |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 48467:82945 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **close**
+- **content**
+- **description**
+- **iconWrap**
+- **root**
+- **title**
+- **viewport**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--alert-blue-500)` = #005ece
+- `var(--alert-green-500)` = #1b8500
+- `var(--alert-red-500)` = #af0000
+- `var(--alert-yellow-500)` = #ffc700
+- `var(--alert-yellow-800)` = #9c622e
+- `var(--border-width-border-1)` = 1px
+- `var(--border-width-border-2)` = 2px
+- `var(--border-width-border-4)` = 4px
+- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--corner-radius-radius-4)` = 4px
+- `var(--corner-radius-radius-8)` = 8px
+- `var(--font-line-height-line-height-18)` = 18px
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--font-size-body-3)` = 12px
+- `var(--padding-padding-12)` = 12px
+- `var(--padding-padding-16)` = 16px
+- `var(--padding-padding-2)` = 2px
+- `var(--scale-24)` = 24px
+- `var(--shadow-drop-shadow-8-blur)` = 8px
+- `var(--shadow-drop-shadow-8-color)` = rgba(37, 37, 37, 0.08) (light) / rgba(17, 22, 25, 0.08) (dark)
+- `var(--shadow-drop-shadow-8-x)` = 0
+- `var(--shadow-drop-shadow-8-y)` = 8px
+- `var(--spacing-space-12)` = 12px
+- `var(--spacing-space-2)` = 2px
+- `var(--spacing-space-8)` = 8px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#eaeaea) | `var(--color-icon-neutral)` (#4d4d4d) | shadow: `var(--shadow-drop-shadow-8-x)` `var(--shadow-drop-shadow-8-y)` `var(--shadow-drop-shadow-8-blur)` `var(--shadow-drop-shadow-8-color)`; radius: `var(--corner-radius-radius-4)` |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+| error | default |  |  | `var(--alert-red-500)` (#af0000) |  |
+| info | default |  |  | `var(--alert-blue-500)` (#005ece) |  |
+| success | default |  |  | `var(--alert-green-500)` (#1b8500) |  |
+| warning | default |  |  | `var(--alert-yellow-800)` (#9c622e) |  |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#1e262c) | `var(--color-icon-neutral)` (#b8c1c9) | shadow: `var(--shadow-drop-shadow-8-x)` `var(--shadow-drop-shadow-8-y)` `var(--shadow-drop-shadow-8-blur)` `var(--shadow-drop-shadow-8-color)`; radius: `var(--corner-radius-radius-4)` |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+| error | default |  |  | `var(--alert-red-500)` (#af0000) |  |
+| info | default |  |  | `var(--alert-blue-500)` (#005ece) |  |
+| success | default |  |  | `var(--alert-green-500)` (#1b8500) |  |
+| warning | default |  |  | `var(--alert-yellow-800)` (#9c622e) |  |
+
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
+
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
+> This section documents additional or overriding behaviors for this component.
+
+**Pattern**: notification
+
+### Behaviors
+
+- Auto-dismiss after configurable duration (default 5s)
+- Pause dismiss timer on hover or focus
+- Manual dismiss via close button
+- Multiple toasts stack vertically
+- Content announced to screen readers on appearance
+
+### Keyboard
+
+| Key | Action |
+|---|---|
+| Tab | Move focus to the close button |
+| Escape | Dismiss the toast |
+
+### ARIA
+
+| Element | Attributes |
+|---|---|
+| root | {'role': 'alert | status', 'aria-live': 'polite (info/success) | assertive (error/warning)', 'aria-atomic': 'true'} |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

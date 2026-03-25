@@ -1,0 +1,107 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
+# InlineAlert Design Spec
+
+> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+
+<!-- ds:section id=metadata -->
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | InlineAlert |
+| Category | Alerts |
+| Figma Page | Alerts |
+| Node ID | 11067:54645 |
+| Design System | Synapse |
+
+<!-- ds:section id=anatomy -->
+## Anatomy
+
+The component is composed of these structural parts:
+
+- **alert**
+- **close**
+- **description**
+- **icon**
+- **text**
+- **title**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
+## Layout & Measurements
+
+<!-- ds:section id=tokens -->
+## Component Tokens
+
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Below are tokens referenced by this component's CSS module.
+
+- `var(--alert-blue-500)` = #005ece
+- `var(--alert-green-500)` = #1b8500
+- `var(--alert-red-500)` = #af0000
+- `var(--alert-yellow-200)` = #fff7d9
+- `var(--alert-yellow-600)` = #e5a51a
+- `var(--alert-yellow-800)` = #9c622e
+- `var(--border-width-border-1)` = 1px
+- `var(--border-width-border-2)` = 2px
+- `var(--color-background-alerting-critical-slate)` = #f3d9d9 (light) / #1e262c (dark)
+- `var(--color-background-alerting-info-slate)` = #d9e7f8 (light) / #1e262c (dark)
+- `var(--color-background-alerting-success-slate)` = #ddedd9 (light) / #1e262c (dark)
+- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
+- `var(--color-border-alerting-critical-critical)` = #af0000
+- `var(--color-border-alerting-info-info)` = #005ece (light) / #4c8edd (dark)
+- `var(--color-border-alerting-success-white)` = #1b8500 (light) / #ffffff (dark)
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--corner-radius-radius-4)` = 4px
+- `var(--corner-radius-radius-6)` = 6px
+- `var(--font-line-height-line-height-18)` = 18px
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--font-size-body-3)` = 12px
+- `var(--padding-padding-1)` = 1px
+- `var(--padding-padding-12)` = 12px
+- `var(--padding-padding-16)` = 16px
+- `var(--scale-24)` = 24px
+- `var(--spacing-space-12)` = 12px
+- `var(--spacing-space-2)` = 2px
+
+<!-- ds:section id=states-light -->
+## States (Light Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default |  | `var(--border-width-border-1)` (1px) | `var(--color-icon-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+| error | default | `var(--color-background-alerting-critical-slate)` (#f3d9d9) | `var(--color-border-alerting-critical-critical)` (#af0000) | `var(--alert-red-500)` (#af0000) |  |
+| info | default | `var(--color-background-alerting-info-slate)` (#d9e7f8) | `var(--color-border-alerting-info-info)` (#005ece) | `var(--alert-blue-500)` (#005ece) |  |
+| success | default | `var(--color-background-alerting-success-slate)` (#ddedd9) | `var(--color-border-alerting-success-white)` (#1b8500) | `var(--alert-green-500)` (#1b8500) |  |
+| warning | default | `var(--alert-yellow-200)` (#fff7d9) | `var(--alert-yellow-600)` (#e5a51a) | `var(--alert-yellow-800)` (#9c622e) |  |
+
+<!-- ds:section id=states-dark -->
+## States (Dark Theme)
+
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default |  | `var(--border-width-border-1)` (1px) | `var(--color-icon-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
+| default | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+| error | default | `var(--color-background-alerting-critical-slate)` (#1e262c) | `var(--color-border-alerting-critical-critical)` (#af0000) | `var(--alert-red-500)` (#af0000) |  |
+| info | default | `var(--color-background-alerting-info-slate)` (#1e262c) | `var(--color-border-alerting-info-info)` (#4c8edd) | `var(--alert-blue-500)` (#005ece) |  |
+| success | default | `var(--color-background-alerting-success-slate)` (#1e262c) | `var(--color-border-alerting-success-white)` (#ffffff) | `var(--alert-green-500)` (#1b8500) |  |
+| warning | default | `var(--alert-yellow-200)` (#fff7d9) | `var(--alert-yellow-600)` (#e5a51a) | `var(--alert-yellow-800)` (#9c622e) |  |
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

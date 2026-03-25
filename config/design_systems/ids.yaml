@@ -1,0 +1,29 @@
+# IDS Design System Configuration
+# Preserves full backward compatibility with existing pipeline
+
+name: ids
+display_name: IDS
+token_transform: ids
+
+figma_file_key: "VZJ48bbVYrIynw8DdSukWw"
+
+figma_map_path: data/component-figma-map.json
+rules_path: rules.json
+allowed_tokens_path: allowed_tokens.json
+component_registry_path: component_registry.json
+theme_css_path: components/theme.css
+base_ui_mapping_path: ""
+
+components_dir: components
+
+qdrant_collection: design_knowledge
+
+framework_layer: ""
+
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+
+elevation_levels: {}

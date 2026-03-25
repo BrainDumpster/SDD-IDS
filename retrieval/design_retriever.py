@@ -31,7 +31,7 @@ class CustomQdrantStore(Qdrant):
 
 class DesignRetriever:
 
-    def __init__(self):
+    def __init__(self, collection_name=None):
 
         embedder = EmbeddingService().get_embedder()
 
@@ -41,9 +41,13 @@ class DesignRetriever:
             https=False,
         )
 
+        # Allow explicit override; otherwise use settings (which may be
+        # design-system-aware via design_system_config).
+        resolved_collection = collection_name or settings.qdrant_collection or "design_knowledge"
+
         self.vector_store = CustomQdrantStore(
             client=client,
-            collection_name=settings.qdrant_collection or "design_knowledge",
+            collection_name=resolved_collection,
             embeddings=embedder
         )
 

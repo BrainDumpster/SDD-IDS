@@ -1,0 +1,50 @@
+.root {
+  display: inline-flex;
+  border: var(--border-width-border-1) solid var(--color-border-light);
+  border-radius: var(--corner-radius-radius-4);
+  overflow: hidden;
+  background: var(--color-background-component);
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--color-text-neutral);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+.button + .button {
+  border-left: var(--border-width-border-1) solid var(--color-border-light);
+}
+
+.button:hover:not(.selected) {
+  background: var(--color-background-gray-lighter);
+  color: var(--color-text-neutral-strong);
+}
+
+.button:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+  border-radius: var(--corner-radius-radius-2);
+  z-index: 1;
+}
+
+.selected {
+  background: var(--color-background-controls-brand-base);
+  color: var(--color-text-white);
+}
+
+.selected:hover {
+  background: var(--color-background-controls-brand-strong);
+}

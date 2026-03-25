@@ -1,0 +1,60 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 100%;
+}
+
+.bar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  border-radius: var(--corner-radius-radius-4);
+  overflow: hidden;
+}
+
+.segment {
+  flex: 1;
+  height: 100%;
+  transition: background 150ms ease;
+}
+
+.complete {
+  background: var(--alert-green-500);
+}
+
+.active {
+  background: var(--color-background-controls-brand-base);
+}
+
+.pending {
+  background: var(--color-background-gray-lighter);
+}
+
+.labels {
+  display: flex;
+  gap: 2px;
+}
+
+.label {
+  flex: 1;
+  font-size: var(--font-size-body-3);
+  font-family: inherit;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.label_complete {
+  color: var(--alert-green-600);
+}
+
+.label_active {
+  color: var(--color-text-brand-base);
+  font-weight: 500;
+}
+
+.label_pending {
+  color: var(--color-text-neutral);
+}
