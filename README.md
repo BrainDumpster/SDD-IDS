@@ -1,475 +1,212 @@
-# Design Intelligence System
+# SDD-IDS — Spec-Driven Design Intelligence System
 
-A comprehensive RAG (Retrieval-Augmented Generation) system for design system documentation and intelligent design assistance.
+A RAG-powered platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.mdx` files, and serves them to downstream AI coding agents and development teams.
 
-## 🎯 Overview
+## What It Does
 
-This system integrates multiple components to provide intelligent design assistance:
-- **GitHub Repository Indexing**: Recursively fetches and indexes MDX design documentation
-- **Vector Storage**: Uses Qdrant for semantic search and retrieval
-- **RAG API**: FastAPI server for querying the indexed knowledge
-- **Search API**: Semantic search endpoint for website integration
-- **Design Chat Agent**: Interactive CLI interface for design questions
-- **Figma Token Sync**: Synchronizes design tokens from Figma using MCP
+- **Extracts** component specs from Figma via MCP tools (tokens, states, anatomy, measurements)
+- **Generates** framework-agnostic `design-spec.mdx` files — the canonical deliverable for any developer (React, Angular, Vue, native)
+- **Validates** generated code against design system rules and tokens
+- **Indexes** design system documentation (MDX from GitHub Enterprise) into Qdrant vectors for RAG
+- **Answers** design system questions via chat agent and semantic search API
 
-## 🏗️ System Architecture
+Supports multiple design systems via `DESIGN_SYSTEM` env var:
+- **IDS** (default): Original IDS design system
+- **Synapse**: Synapse design system with Base UI (`@base-ui-components/react`) as the React implementation layer
+
+## Spec Pipeline
+
+The primary output is a hierarchy of design specs that downstream agents consume:
 
 ```
-GitHub Enterprise API → Recursive File Discovery → MDX Content Fetch → 
-MDX Parsing → Chunk Building → Embedding Generation → Qdrant Vector Store
-                                                              ↓
-RAG API (FastAPI) ← Query Processing ← Retrieval ← Semantic Search
-                                                              ↓
-Design Chat Agent ← User Interface ← LLM Integration (Ollama)
+components/synapse/
+├── root-spec.mdx              # Global: tokens, typography, elevation, breakpoints, baselines
+├── button/design-spec.mdx     # Component override: anatomy, states, tokens, interactions
+├── dialog/design-spec.mdx
+├── table/design-spec.mdx
+└── ... (46 components)
 ```
 
-## 📋 Prerequisites
+**Root spec** (`root-spec.mdx`) centralizes everything shared across all components:
+- ~175 semantic color tokens (light/dark) grouped by role (background, border, text, icon, shadow, gradient)
+- ~146 primitive palette tokens (alert, UI palette, secondary palette)
+- Typography scale (Roboto, header-1 through body-3 with sizes + line heights)
+- Spacing, sizing, padding, corner radius, border width tokens
+- 5-level elevation system with shadow token sets
+- Responsive breakpoints (mobile through large)
+- Interaction baseline (focus, keyboard, mouse, touch)
+- Accessibility baseline (WCAG AA, contrast, ARIA, screen readers)
+- Theming mechanism (CSS custom properties + `data-theme`)
+- Framework options (React + Base UI, Angular, Lit)
 
-### Required Services
-1. **Qdrant Vector Database** - Local instance running on port 6333
-2. **Ollama LLM Server** - Local instance with `llama3` and `embeddinggemma` models
-3. **GitHub Enterprise API Access** - Personal access token for repository access
+**Component specs** inherit from root and only document overrides:
+- Component-specific anatomy, tokens, states (light + dark)
+- 22 Tier 1 components have detailed interaction sections (keyboard, behaviors, ARIA)
+- Remaining 24 components inherit root baseline
+- All specs include `<!-- ds:inherits root-spec -->` marker
 
-### Python Environment
-- Python 3.12+
-- Virtual environment (recommended)
-
-## 🚀 Quick Start
-
-### 1. Environment Setup
+### Generate Specs
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd windsurf-project
+# Full regeneration (root + 46 components + registry + verification)
+python scripts/rebuild_specs.py --verify
 
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# Root spec only
+python scripts/rebuild_specs.py --root-only
 
-# Install dependencies
-pip install -r requirements.txt
+# Single component
+python scripts/rebuild_specs.py --component button
+
+# Audit (check for stale specs, token drift)
+python scripts/synapse_spec_audit.py --once
+python scripts/synapse_spec_audit.py --once --fix    # auto-regenerate stale specs
+python scripts/synapse_spec_audit.py --watch          # persistent watcher (port 8099)
+
+# Generate layout measurement skeleton (populate via Figma MCP)
+python scripts/figma_layout_enricher.py --skeleton
 ```
 
-### 2. Configure Environment
+## Data Files
 
-Copy and update the `.env` file with your configuration:
+| File | Purpose |
+|---|---|
+| `data/synapse-component-figma-map.json` | Figma node IDs for ~80 components across all pages |
+| `data/synapse-component-registry.json` | Component anatomy, states, variants, tokens (46 entries) |
+| `data/synapse-component-aliases.json` | Figma display name to CSS slug mapping + developer aliases |
+| `data/synapse-interaction-templates.json` | 22 Tier 1 component interaction patterns (keyboard, ARIA, behaviors) |
+| `data/synapse-figma-layout-cache.json` | Cached Figma measurements (skeleton, enriched via MCP) |
+| `data/synapse-allowed-tokens.json` | 209 valid Synapse CSS variable names |
+| `data/synapse-baseui-mapping.json` | Component to Base UI implementation strategy |
+| `data/synapse-rules.json` | 31 design system rules |
+| `components/synapse-theme.css` | Global CSS variables from Figma (light + dark themes) |
+
+## Configuration
+
+Design system abstraction via YAML configs:
+
+```
+config/
+├── design_system_config.py         # DesignSystemConfig dataclass + loader
+├── design_systems/
+│   ├── ids.yaml                    # IDS design system config
+│   └── synapse.yaml                # Synapse config
+└── settings.py                     # Global settings (env vars, paths)
+```
+
+Key `synapse.yaml` fields:
+- `framework_options`: React + Base UI, Angular, Lit Web Components
+- `typography`: Roboto scale (header-1 through body-3 with sizes + line heights)
+- `breakpoints`: mobile (576px) through large (1441px)
+- `elevation_levels`: 5-level shadow system mapped to use cases
+- `root_spec_path`, `alias_path`, `interaction_templates_path`, `layout_cache_path`
+
+## Setup
 
 ```bash
-# GitHub Configuration
-GITHUB_PERSONAL_ACCESS_TOKEN=your_github_token_here
-GITHUB_HOST=https://your-github-enterprise.com
-GITHUB_REPO=your-org/your-repo
+# Python dependencies (uses uv)
+uv pip install -r requirements.txt
 
-# Ollama Configuration
-OLLAMA_HOST=http://localhost:11434
-LLM_MODEL=llama3
-EMBED_MODEL=embeddinggemma
+# Required services (for RAG features)
+docker run -p 6333:6333 qdrant/qdrant          # vector DB
+ollama serve                                     # LLM backend
+ollama pull llama3 && ollama pull embeddinggemma  # models
 
-# Qdrant Configuration
-QDRANT_HOST=localhost
-QDRANT_PORT=6333
-QDRANT_COLLECTION_NAME=design_knowledge
-
-# Figma Configuration (optional)
-FIGMA_FILE_URL=https://www.figma.com/design/your-file-key/your-design
+# Environment
+cp .env.example .env
+# Edit .env: FIGMA_TOKEN, GITHUB_HOST, GITHUB_REPO, GITHUB_PERSONAL_ACCESS_TOKEN
 ```
 
-### 3. Start Required Services
+## APIs
 
-#### Start Qdrant Vector Database
-```bash
-# Using Docker (recommended)
-docker run -p 6333:6333 qdrant/qdrant
+| API | Port | Module | Purpose |
+|---|---|---|---|
+| RAG Query | 8000 | `api/rag_api.py` | Design system Q&A |
+| Figma Specs | 8001 | `api/figma_specs_api.py` | Figma spec extraction |
+| Enhanced Generation | 8002 | `api/enhanced_generation_api.py` | Framework-aware code gen |
+| Search | 8005 | `api/search_api.py` | Semantic search for website |
+| MCP Streamable | 8080 | `mcp_tools/streamable_mcp_server.py` | MCP tool server |
+| Audit Status | 8099 | `scripts/synapse_spec_audit.py` | Spec audit status (watch mode) |
 
-# Or install locally
-# See: https://qdrant.tech/documentation/guides/installation/
+## Architecture
+
+```
+Figma (MCP tools)
+  │
+  ├──► tokens/figma_spec_extractor.py ──► components/synapse-theme.css
+  │
+  └──► scripts/rebuild_specs.py
+         ├── parse_theme() ──► token categorization
+         ├── build_root_spec() ──► components/synapse/root-spec.mdx
+         └── build_component_spec() ──► components/synapse/<slug>/design-spec.mdx
+              ├── CSS modules (storybook/src/components/*.module.css)
+              ├── synapse-component-aliases.json (name resolution)
+              ├── synapse-interaction-templates.json (keyboard/ARIA)
+              └── synapse-figma-layout-cache.json (measurements)
+
+GitHub Enterprise MDX
+  │
+  └──► ingestion/ (parse/chunk) ──► embeddings/ ──► Qdrant
+                                                       │
+  User query ──► rag/ (component detection + retrieval) ┘──► LLM ──► answer
+             ──► generation/ (prompt compilation) ──► code output
+             ──► validation/ (rules + tokens + structure) ──► report
 ```
 
-#### Start Ollama Server
-```bash
-# Install Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
+### Key Subsystems
 
-# Start Ollama server
-ollama serve
+- **Spec pipeline** (`scripts/rebuild_specs.py`): Root spec + 46 component override specs from CSS modules, Figma map, theme CSS, interaction templates, and layout cache
+- **Audit agent** (`scripts/synapse_spec_audit.py`): Persistent watcher or single-pass auditor that detects stale specs, invalid tokens, hardcoded values
+- **Ingestion** (`pipeline/index_pipeline.py`): GitHub MDX fetch, parse, chunk, embed, store in Qdrant
+- **RAG** (`rag/`): Component detection, filtered semantic search, LLM answer generation
+- **Generation** (`generation/`): Framework-aware code gen with Base UI, Angular, CSS Modules adapters
+- **Validation** (`validation/`): Rule + token + structure validation with severity scoring
+- **Token management** (`tokens/`): Figma MCP client, token extraction, CSS syntax generation
 
-# Pull required models (in separate terminal)
-ollama pull llama3
-ollama pull embeddinggemma
+## Project Structure
+
+```
+├── agent/                  # Chat agents (design_chat.py, rag_agent.py)
+├── api/                    # FastAPI servers (RAG, search, figma specs, generation)
+├── components/
+│   ├── synapse-theme.css   # Global CSS variables (light + dark)
+│   └── synapse/
+│       ├── root-spec.mdx   # Global design system spec
+│       └── <slug>/design-spec.mdx  # 46 component override specs
+├── config/
+│   ├── design_system_config.py     # DesignSystemConfig dataclass
+│   ├── design_systems/             # Per-DS YAML configs
+│   └── settings.py                 # Global settings
+├── data/                   # JSON data files (figma map, registry, aliases, etc.)
+├── generation/             # Code generation (adapters, prompts, theme injection)
+├── ingestion/              # GitHub MDX ingestion, Figma spec extraction
+├── knowledge/              # Component registry, pattern graphs, schema
+├── mcp_tools/              # MCP server implementation
+├── pipeline/               # Orchestration (index, rules, knowledge)
+├── rag/                    # RAG chain (component detection, retrieval)
+├── retrieval/              # Semantic search, reranking
+├── rules/                  # Rule extraction, filtering, confidence scoring
+├── scripts/                # CLI tools (rebuild_specs, audit, enricher, indexing)
+├── storybook/              # 46 Synapse component implementations (React + CSS Modules)
+├── tokens/                 # Figma token management (extraction, sync, mapping)
+├── validation/             # Design validation engine (rules, tokens, structure)
+└── requirements.txt
 ```
 
-### 4. Index Design Documentation
+## Storybook
 
-```bash
-# Run the indexing pipeline to fetch and index MDX files
-python scripts/index_repo.py
-```
-
-This will:
-- Connect to your GitHub Enterprise repository
-- Recursively discover all MDX files (found 191 files)
-- Fetch content from each file
-- Parse MDX and create semantic chunks
-- Generate embeddings using `embeddinggemma`
-- Store in Qdrant vector database
-
-### 4b. Index Canonical Component Specs
-
-When component `design-spec.mdx` files are generated, index them as high-priority chunks for component queries:
-
-```bash
-python scripts/index_component_specs.py
-```
-
-This indexer splits each `design-spec.mdx` by `##` section and stores metadata:
-- `doc_type=canonical_design_spec`
-- `section` and `section_priority`
-- `component`, `category`, and source mapping fields
-
-For retrieval tuning, filter or boost `doc_type=canonical_design_spec` for component-specific questions.
-
-### 5. Start RAG API Server
-
-```bash
-# Start the FastAPI server
-uvicorn api.rag_api:app --host 0.0.0.0 --port 8000 --reload
-```
-
-The API will be available at `http://localhost:8000`
-
-#### Test the API
-```bash
-# Test query endpoint
-curl -X POST "http://localhost:8000/query" \
-  -H "Content-Type: application/json" \
-  -d '{"question": "What are the footer truncation rules?"}'
-```
-
-### 6. Start Search API Server
-
-The Search API provides semantic search functionality to replace GitHub API calls for website search.
-
-```bash
-# Start the Search API server
-python -m api.search_api
-```
-
-The Search API will be available at `http://localhost:8005`
-
-#### Search API Endpoints
-
-##### Health Check
-```bash
-curl "http://localhost:8005/health"
-```
-
-##### Debug Information
-```bash
-curl "http://localhost:8005/debug"
-```
-
-##### Search Endpoint
-```bash
-# Basic search
-curl -X POST "http://localhost:8005/design/search" \
-  -H "Content-Type: application/json" \
-  -d '{"query": "datagrid usage", "top_k": 5}'
-
-# Search with more results
-curl -X POST "http://localhost:8005/design/search" \
-  -H "Content-Type: application/json" \
-  -d '{"query": "accordion component", "top_k": 10}'
-```
-
-#### Stop the Search API
+46 Synapse component implementations with CSS Modules, used as the source of truth for token extraction:
 
 ```bash
-# Stop the Search API server
-pkill -f "search_api.py"
+cd storybook
+pnpm install
+pnpm dev        # dev server
+pnpm build      # production build
 ```
 
-#### Search API Response Format
+## Environment
 
-```json
-{
-  "results": [
-    {
-      "name": "Data Grid",
-      "url": "content/datagrid/overview.mdx"
-    },
-    {
-      "name": "Accordion",
-      "url": "content/accordion/overview.mdx"
-    }
-  ]
-}
-```
-
-### 7. Use Design Chat Agent
-
-```bash
-# Start the interactive design chat
-python agent/design_chat.py
-```
-
-Example interaction:
-```
-Design Intelligence Agent Ready
-> What are the color guidelines for primary buttons?
-[AI response with design system information]
-> How should I implement responsive typography?
-[AI response with typography guidelines]
-```
-
-## 📁 Project Structure
-
-```
-windsurf-project/
-├── agent/                  # Chat agents and interfaces
-│   ├── design_chat.py      # Interactive CLI design assistant
-│   └── rag_agent.py        # RAG agent implementation
-├── api/                    # FastAPI servers
-│   ├── rag_api.py          # RAG query endpoint
-│   └── search_api.py       # Semantic search endpoint
-├── config/                 # Configuration settings
-│   └── settings.py         # Environment configuration
-├── embeddings/             # Text embedding services
-│   └── embedding_service.py # Ollama embedding wrapper
-├── ingestion/              # Data ingestion and parsing
-│   ├── github_loader.py    # GitHub API integration
-│   ├── mdx_parser.py       # MDX file parsing
-│   └── chunk_builder.py    # Document chunking
-├── pipeline/               # Processing pipelines
-│   └── index_pipeline.py   # Main indexing workflow
-├── retrieval/              # Search and retrieval
-│   ├── retriever.py        # Semantic search implementation
-│   └── reranker.py         # Result reranking
-├── scripts/                # Utility scripts
-│   ├── index_repo.py       # Repository indexing script
-│   └── sync_figma_tokens.py # Figma token synchronization
-├── storage/                # Data storage utilities
-│   └── document_registry.py # File change tracking
-├── tokens/                 # Design token management
-│   ├── figma_client.py     # Figma MCP integration
-│   ├── token_extractor.py  # Token data extraction
-│   └── markdown_generator.py # Token documentation generation
-├── utils/                  # Utility functions
-│   └── file_hash.py        # File hashing for change detection
-├── vectorstore/            # Vector database integration
-│   └── qdrant_store.py     # Qdrant client wrapper
-├── design-system-knowledge/ # Generated token documentation
-└── requirements.txt        # Python dependencies
-```
-
-## 🔧 Components
-
-### GitHub Loader (`ingestion/github_loader.py`)
-- **Recursive File Discovery**: Traverses all subdirectories
-- **MDX File Filtering**: Only processes `.mdx` files
-- **Enterprise GitHub Support**: Handles self-signed certificates
-- **SSL Verification**: Configurable for corporate environments
-
-### Vector Store (`vectorstore/qdrant_store.py`)
-- **Collection Management**: Auto-creates collections with correct dimensions
-- **Embedding Support**: 768-dimensional vectors for `embeddinggemma`
-- **Document Storage**: Metadata-rich document storage
-- **Semantic Search**: Fast similarity search capabilities
-
-### RAG API (`api/rag_api.py`)
-- **FastAPI Integration**: RESTful API endpoints
-- **Query Processing**: Natural language to vector search
-- **Response Generation**: Context-aware answers
-- **Error Handling**: Robust error management
-
-### Search API (`api/search_api.py`)
-- **Semantic Search**: Vector-based search functionality
-- **Website Integration**: Replaces GitHub API calls
-- **Diverse Results**: Filters duplicates and ensures variety
-- **Debug Support**: Comprehensive logging and debugging endpoints
-
-### Design Chat Agent (`agent/design_chat.py`)
-- **Interactive Interface**: Command-line chat experience
-- **RAG Integration**: Direct API communication
-- **Context Awareness**: Maintains conversation context
-- **Design Focus**: Specialized for design system questions
-
-## 🔄 Workflow
-
-### 1. Repository Indexing
-```mermaid
-graph TD
-    A[GitHub Repository] --> B[Recursive File Discovery]
-    B --> C[MDX Content Fetch]
-    C --> D[Content Parsing]
-    D --> E[Chunk Building]
-    E --> F[Embedding Generation]
-    F --> G[Vector Storage]
-```
-
-### 2. Query Processing
-```mermaid
-graph TD
-    A[User Question] --> B[Query Embedding]
-    B --> C[Semantic Search]
-    C --> D[Context Retrieval]
-    D --> E[Answer Generation]
-    E --> F[Response Delivery]
-```
-
-## 📊 Performance Metrics
-
-### Indexing Performance
-- **Files Processed**: 191 MDX files
-- **Processing Time**: ~2-3 minutes
-- **Embedding Model**: `embeddinggemma` (768 dimensions)
-- **Vector Database**: Qdrant with COSINE distance
-
-### Query Performance
-- **Response Time**: <1 second for most queries
-- **Relevance**: High semantic similarity
-- **Context**: Retrieved from relevant design documentation
-
-## 🛠️ Troubleshooting
-
-### Common Issues
-
-#### 1. Qdrant Connection Error
-```bash
-# Ensure Qdrant is running
-curl http://localhost:6333/health
-
-# Check collection exists
-curl http://localhost:6333/collections/design_knowledge
-```
-
-#### 2. Ollama Model Not Found
-```bash
-# Check available models
-ollama list
-
-# Pull missing models
-ollama pull llama3
-ollama pull embeddinggemma
-```
-
-#### 3. GitHub API Authentication
-```bash
-# Test GitHub token
-curl -H "Authorization: token YOUR_TOKEN" \
-     https://your-github-enterprise.com/api/v3/user
-```
-
-#### 4. Vector Dimension Mismatch
-```bash
-# Delete and recreate collection
-curl -X DELETE http://localhost:6333/collections/design_knowledge
-# Then re-run indexing
-python scripts/index_repo.py
-```
-
-#### 5. Search API Issues
-```bash
-# Check if Search API is running
-curl "http://localhost:8005/health"
-
-# Check debug information
-curl "http://localhost:8005/debug"
-
-# Restart Search API
-pkill -f "search_api.py"
-python -m api.search_api
-
-# Check for port conflicts
-netstat -tulpn | grep :8005
-```
-
-### Debug Mode
-
-Enable debug output in the chat agent:
-```python
-# In agent/rag_agent.py
-print(f"DEBUG: API Response: {response_data}")
-```
-
-## 🔒 Security Considerations
-
-### API Keys and Tokens
-- Store sensitive data in `.env` file
-- Never commit `.env` to version control
-- Use GitHub Personal Access Tokens with minimal permissions
-- Rotate tokens regularly
-
-### Network Security
-- GitHub Enterprise SSL verification can be disabled for testing
-- Use HTTPS for all API communications
-- Consider VPN for corporate network access
-
-## 🚀 Extensions and Customization
-
-### Adding New Data Sources
-1. Create new loader in `ingestion/` directory
-2. Implement required interface methods
-3. Update `pipeline/index_pipeline.py`
-4. Add configuration options
-
-### Custom Embedding Models
-1. Update `embeddings/embedding_service.py`
-2. Adjust vector dimensions in `vectorstore/qdrant_store.py`
-3. Re-index the repository
-
-### Additional Query Types
-1. Extend `api/rag_api.py` with new endpoints
-2. Update retrieval logic in `retrieval/`
-3. Add corresponding agent capabilities
-
-## 📈 Monitoring and Maintenance
-
-### Regular Tasks
-- **Re-indexing**: Run `python scripts/index_repo.py` after content updates
-- **Model Updates**: Pull latest Ollama models periodically
-- **Storage Cleanup**: Monitor Qdrant storage usage
-- **Token Sync**: Run Figma token sync for design updates
-
-### Performance Monitoring
-- Monitor API response times
-- Track embedding generation performance
-- Monitor Qdrant memory usage
-- Log GitHub API rate limits
-
-## 🤝 Contributing
-
-### Development Setup
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-pytest tests/
-
-# Code formatting
-black .
-flake8 .
-```
-
-### Adding Features
-1. Create feature branch
-2. Implement changes with tests
-3. Update documentation
-4. Submit pull request
-
-## 📄 License
-
-[Add your license information here]
-
-## 🆘 Support
-
-For issues and questions:
-1. Check troubleshooting section
-2. Review debug logs
-3. Check GitHub Issues
-4. Contact maintainers
-
----
-
-**Design Intelligence System** - Empowering designers with AI-driven assistance 🎨🤖
+- Python 3.12+ (`.python-version` = 3.12)
+- Node.js + pnpm (for Storybook)
+- Config via `.env` (see `.env.example`)
+- Embedding dimension: 768 (embeddinggemma), Qdrant distance: COSINE
+- `DESIGN_SYSTEM=synapse` for Synapse pipeline (default: IDS)
