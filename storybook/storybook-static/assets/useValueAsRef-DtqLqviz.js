@@ -1,1 +1,0 @@
-import{u as r}from"./useIsoLayoutEffect-CnFbsThY.js";import{u as n}from"./useRenderElement-RsBRv27X.js";function c(e){const t=n(f,e).current;return t.next=e,r(t.effect),t}function f(e){const t={current:e,next:e,effect:()=>{t.current=t.next}};return t}export{c as u};

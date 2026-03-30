@@ -1,1 +1,0 @@
-import{o as l,r as u}from"./index-JhL3uwfD.js";const d={...l};let n=0;function f(s,t="mui"){const[e,a]=u.useState(s),c=s||e;return u.useEffect(()=>{e==null&&(n+=1,a(`${t}-${n}`))},[e,t]),c}const o=d.useId;function r(s,t){if(o!==void 0){const e=o();return s??(t?`${t}-${e}`:e)}return f(s,t)}export{r as u};

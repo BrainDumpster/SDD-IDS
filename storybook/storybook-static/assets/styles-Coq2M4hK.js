@@ -1,1 +1,0 @@
-import{j as s}from"./jsx-runtime-D_zvdyIk.js";const e="base-ui-disable-scrollbar",r={className:e,element:s.jsx("style",{href:e,precedence:"base-ui:low",children:`.${e}{scrollbar-width:none}.${e}::-webkit-scrollbar{display:none}`})};export{r as s};
