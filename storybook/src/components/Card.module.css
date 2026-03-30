@@ -1,5 +1,10 @@
 .card {
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+  box-sizing: border-box;
   background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-light);
   border-radius: var(--corner-radius-radius-8);
   font-family: inherit;
   overflow: hidden;
@@ -14,13 +19,48 @@
     var(--shadow-drop-shadow-4-color);
 }
 
-/* Outlined — uses border token */
+/* Bordered variant — emphasis matches spec default border; kept for API parity */
 .outlined {
-  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border-color: var(--color-border-light);
 }
 
+/* design-spec: Header padding 16px 16px 8px 16px */
 .header {
-  padding: var(--padding-padding-16) var(--padding-padding-24) 0;
+  padding:
+    var(--padding-padding-16)
+    var(--padding-padding-16)
+    var(--padding-padding-8)
+    var(--padding-padding-16);
+  flex-shrink: 0;
+}
+
+/* Divider below header when a body or footer follows */
+.headerDivider {
+  border-bottom: var(--border-width-border-1) solid var(--color-border-light);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--padding-padding-8);
+  min-width: 0;
+}
+
+.headerTitleCluster {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-padding-8);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.headerIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-icon-accessible);
 }
 
 .title {
@@ -28,17 +68,34 @@
   font-weight: 500;
   color: var(--color-text-neutral-strong);
   margin: 0;
-  line-height: var(--font-line-height-line-height-24);
+  line-height: var(--font-line-height-line-height-25);
 }
 
+.headerTitleCluster .title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* design-spec: Content padding 8px 16px; Body 1 typography */
 .body {
-  padding: var(--padding-padding-16) var(--padding-padding-24);
-  font-size: var(--font-size-body-2);
+  flex: 1 1 auto;
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  font-size: var(--font-size-body-1);
   color: var(--color-text-neutral);
-  line-height: var(--font-line-height-line-height-20);
+  line-height: var(--font-line-height-line-height-24);
+  min-height: 0;
 }
 
+/* design-spec: Footer padding 8px 16px 16px 16px */
 .footer {
-  padding: var(--padding-padding-12) var(--padding-padding-24);
-  border-top: var(--border-width-border-1) solid var(--color-border-lighter);
+  flex-shrink: 0;
+  padding:
+    var(--padding-padding-8)
+    var(--padding-padding-16)
+    var(--padding-padding-16)
+    var(--padding-padding-16);
+  border-top: var(--border-width-border-1) solid var(--color-border-light);
 }

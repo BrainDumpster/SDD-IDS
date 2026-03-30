@@ -6,34 +6,71 @@
   border: var(--border-width-border-1) solid transparent;
   border-radius: var(--corner-radius-radius-4);
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
   transition: all 150ms ease;
   position: relative;
   white-space: nowrap;
+  /* Native <button> focus ring; Base UI does not set data-focus-visible on Button */
+  outline: none;
 }
 
 /* Sizes */
 .sm {
-  height: var(--scale-28);
-  padding: 0 var(--padding-padding-8);
-  font-size: var(--font-size-body-3);
+  min-height: var(--scale-24);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
 }
 .md {
-  height: var(--scale-36);
-  padding: 0 var(--padding-padding-12);
-  font-size: var(--font-size-body-2);
+  min-height: var(--scale-32);
+  padding: var(--padding-padding-6) var(--padding-padding-16);
 }
 .lg {
-  height: var(--scale-44);
-  padding: 0 var(--padding-padding-16);
-  font-size: var(--font-size-body-1);
+  min-height: var(--scale-40);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+}
+
+/* Icon-only padding synced to Figma (48×32 / 48×40 intrinsic with 16×16 icon) */
+.iconOnly.md {
+  min-height: var(--scale-32);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+}
+
+.iconOnly.lg {
+  min-height: var(--scale-40);
+  padding: var(--padding-padding-12) var(--padding-padding-16);
+}
+
+/* Small icon-only: not in inspected Primary set; symmetric padding around 16×16 */
+.iconOnly.sm {
+  min-height: var(--scale-24);
+  padding: var(--padding-padding-4) var(--padding-padding-16);
+}
+
+.iconSlot {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconSlot svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.visuallyHidden {
+  visibility: hidden;
 }
 
 /* Variants */
 .primary {
   background: var(--color-background-controls-brand-base);
+  border-color: var(--color-border-transparent-brand);
   color: var(--color-text-white);
 }
 .primary:hover:not(:disabled) {
@@ -42,23 +79,46 @@
 .primary:active:not(:disabled) {
   background: var(--color-background-controls-brand-stronger);
 }
+.primary:disabled {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
 
 .secondary {
-  background: transparent;
-  color: var(--color-text-brand-base);
+  background: var(--color-background-gray-neutral-lighter);
+  color: var(--color-text-brand-strong);
   border-color: var(--color-border-brand-base);
 }
 .secondary:hover:not(:disabled) {
   background: var(--color-background-brand-lighter);
 }
+.secondary:active:not(:disabled) {
+  background: var(--color-background-brand-light);
+}
+.secondary:disabled {
+  background: transparent;
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
 
 .tertiary {
   background: transparent;
-  color: var(--color-text-brand-base);
+  color: var(--color-text-brand-strong);
   border-color: transparent;
 }
 .tertiary:hover:not(:disabled) {
-  background: var(--color-background-gray-lighter);
+  background: var(--color-background-brand-lighter);
+  border-color: var(--color-border-brand-base);
+}
+.tertiary:active:not(:disabled) {
+  background: var(--color-background-brand-light);
+  border-color: var(--color-border-brand-base);
+}
+.tertiary:disabled {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-disabled);
 }
 
 .ghost {
@@ -69,24 +129,55 @@
 .ghost:hover:not(:disabled) {
   background: var(--color-background-gray-lighter);
 }
+.ghost:disabled {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-disabled);
+}
 
 .danger {
-  background: var(--alert-red-500);
+  background: var(--color-background-alerting-critical);
+  border-color: var(--color-border-alerting-transparent-critical);
   color: var(--color-text-white);
 }
 .danger:hover:not(:disabled) {
   background: var(--alert-red-600);
 }
+.danger:active:not(:disabled) {
+  background: var(--alert-red-700);
+}
+.danger:disabled {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
 
 /* States */
 .button:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.button[data-focus-visible] {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+/* Focus: outer ring 1px brand, 3px outside button (matches component-set Focus state) */
+.button:focus-visible:not(:disabled) {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 3px;
+}
+
+.primary:focus-visible:not(:disabled) {
+  border-color: var(--color-border-transparent-brand);
+}
+
+.secondary:focus-visible:not(:disabled),
+.tertiary:focus-visible:not(:disabled) {
+  border-color: var(--color-border-brand-base);
+}
+
+.danger:focus-visible:not(:disabled) {
+  border-color: var(--color-border-alerting-transparent-critical);
+}
+
+.ghost:focus-visible:not(:disabled) {
+  border-color: transparent;
 }
 
 /* Loading */

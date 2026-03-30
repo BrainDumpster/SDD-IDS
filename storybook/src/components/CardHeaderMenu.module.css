@@ -1,0 +1,36 @@
+.kebabTrigger {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--padding-padding-32);
+  height: var(--padding-padding-32);
+  margin: calc(var(--padding-padding-4) * -1) calc(var(--padding-padding-4) * -1)
+    calc(var(--padding-padding-4) * -1) 0;
+  border-radius: var(--corner-radius-radius-4);
+  color: var(--color-icon-neutral);
+  cursor: pointer;
+  outline: none;
+}
+
+.kebabTrigger[data-popup-open],
+.kebabTrigger[data-popup-open]:hover {
+  color: var(--icon-standard-gray);
+}
+
+.kebabTrigger:hover {
+  color: var(--color-icon-brand-base);
+  background: var(--color-background-brand-lighter);
+}
+
+.kebabTrigger:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.kebabIcon {
+  display: block;
+  pointer-events: none;
+}

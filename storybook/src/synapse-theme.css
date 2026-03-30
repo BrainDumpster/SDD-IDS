@@ -35,9 +35,12 @@ html, body {
 :root {
   --color-annotation: #e8178a;
   --color-background-alerting-critical-slate: #f3d9d9;
+  --color-background-alerting-critical: #af0000;
   --color-background-alerting-info-slate: #d9e7f8;
   --color-background-alerting-major-slate: #fce8d9;
+  --color-background-alerting-minor: #ffc700;
   --color-background-alerting-success-slate: #ddedd9;
+  --color-backtground-alerting-success-1: #1b8500;
   --color-background-black: #252525;
   --color-background-brand-base: #0076ce;
   --color-background-brand-light: #d9eaf8;
@@ -153,8 +156,12 @@ html, body {
   --color-icon-brand-stronger: #06528a;
   --color-icon-disabled: #757575;
   --color-icon-inverse: #ffffff;
+  --color-icon-alerting-success-1: #1b8500;
+  --color-icon-alerting-minor-1: #FFC700;
+  --color-icon-alerting-critical: #af0000;
   --color-icon-neutral: #4d4d4d;
   --color-icon-neutral-light: #4d4d4d;
+  --icon-standard-gray: #616161;
   --color-icon-teal-base: #00819e;
   --color-icon-teal-strong: #005568;
   --color-icon-teal-strong-2: #003f4d;
@@ -455,10 +462,13 @@ html, body {
 [data-theme="dark"] {
   --color-annotation: #f288c2;
   --color-background-alerting-critical-slate: #1e262c;
+  --color-background-alerting-critical: #dd9494;
   --color-background-alerting-info-slate: #1e262c;
   --color-background-alerting-major-slate: #1e262c;
   --color-background-alerting-minor-slate: #1e262c;
+  --color-background-alerting-minor: #ffe794;
   --color-background-alerting-success-slate: #1e262c;
+  --color-backtground-alerting-success-1: #5faa4c;
   --color-background-brand-base: #4c9fdd;
   --color-background-brand-light: #34414c;
   --color-background-brand-lighter: #1e262c;
@@ -566,8 +576,12 @@ html, body {
   --color-icon-brand-stronger: #d9eaf8;
   --color-icon-disabled: #c5c5c5;
   --color-icon-inverse: #252525;
+  --color-icon-alerting-success-1: #9fcc94;
+  --color-icon-alerting-minor-1: #FFC700;
+  --color-icon-alerting-critical: #dd9494;
   --color-icon-neutral: #b8c1c9;
   --color-icon-neutral-light: #e6e9ec;
+  --icon-standard-gray: #616161;
   --color-icon-neutral-strong: #f2f3f5;
   --color-icon-teal-base: #4ca7bb;
   --color-icon-teal-strong: #94cad6;
