@@ -1,72 +1,192 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
-# ProgressBar Design Spec
+# Progress Bar Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
+- Component: ProgressBar
+- Category: Components
+- Design System: Synapse
+- Figma: Resolve from `data/synapse-component-figma-map.json` → entry **ProgressBar** (`figmaUrl` + `nodeId` when present)
+- Node ID: 50724:317216
 
-| Property | Value |
-|---|---|
-| Component | ProgressBar |
-| Category | Components |
-| Figma Page | Components |
-| Node ID | 50724:317216 |
-| Design System | Synapse |
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+- Progress container (track)
+- Progress fill bar
+- Optional top label row (label + progress value)
+- Optional helper text (below bar, left aligned)
+- Focus ring for keyboard navigation
+- Optional step indicators
 
-The component is composed of these structural parts:
+## Composition & API (code generation)
+Use this contract when generating framework components. Prefer semantic tokens and avoid hardcoded values.
 
-- **indicator**
-- **label**
-- **meta**
-- **root**
-- **track**
-- **value**
+| Prop | Type | Default | Behavior |
+|---|---|---|---|
+| `type` | `"with-label" \| "inline" \| "indeterminate"` | `"inline"` | **with-label**: label row above bar, label aligned left. **inline**: bar-only (or compact metadata usage if product requires). **indeterminate**: animated indicator with unknown completion duration. |
+| `thickness` | `"thick" \| "medium" \| "thin"` | `"medium"` | Controls track/indicator height (see Layout mapping). |
+| `state` | `"in-progress" \| "completed-success" \| "completed-warning" \| "failed-error"` | `"in-progress"` | Controls fill color/text semantics and completion affordances. |
+| `showHelperText` | `boolean` | `false` | When `true`, render helper text under the progress bar, left aligned to bar start edge. |
+| `value` | `number` (0-100) | `0` | Determinate progress value for non-indeterminate types. Clamp to `[0,100]`. |
+| `label` | `string` | `undefined` | Primary label content used in `with-label` type. |
+| `helperText` | `string` | `undefined` | Supportive text below bar; only visible when `showHelperText=true`. |
 
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+**Control rules**
+- `type="with-label"`: show top metadata row; label on left; optional value/status on right if implementation provides it.
+- Top-row label and percentage value color: `var(--color-text-neutral-strong)`.
+- `type="inline"`: no dedicated top row by default.
+- `type="indeterminate"`: ignore fixed completion percentage for UI rendering; use continuous animated indicator.
+- `showHelperText=false`: helper text region omitted entirely (no reserved vertical space).
+- `showHelperText=true`: helper text is rendered below track and aligned with the track left edge.
 
-<!-- ds:section id=layout -->
 ## Layout & Measurements
+- `thickness` mapping:
+  - **Thin**: 4px track height + `1px` border
+  - **Medium**: 8px track height + `1px` border
+  - **Thick**: 16px track height + `1px` border
+- Container width: 100% of available space
+- Border: `var(--border-width-border-1)` using progress border token (default `var(--color-border-accessible)`)
+- Border radius: 4px (thin/medium), 6px (thick)
+- Focus ring: 2px offset from container
+- Minimum width: 200px
+- Top label row spacing from bar: 8px (`with-label` type)
+- Helper text spacing from bar: 8px when `showHelperText=true`
+- Helper text status icon size: 16px × 16px
+- Step indicator size: 12px × 12px
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+## Typography
+- Header 5: Roboto Regular 24px/32px (large progress labels)
+- Body 2: Roboto Regular 14px/20px (progress labels and status)
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Black text: `var(--color-text-black)` = #252525
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- White border: `var(--color-border-white)` = #ffffff
 
-- `var(--alert-green-500)` = #1b8500
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-background-gray-light)` = #eaeaea (light) / #393939 (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--corner-radius-radius-24)` = 24px
-- `var(--font-size-body-3)` = 12px
-- `var(--spacing-space-4)` = 4px
+### Background Colors
+- Gray neutral alt: `var(--color-background-gray-neutral-alt)` = #eaeaea
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Brand background: `var(--color-background-brand-base)` = #0076ce
 
-<!-- ds:section id=states-light -->
+### Alert Colors
+- Success background: `var(--color-backtground-alerting-success-1)` (fallback: `var(--color-background-alerting-success)`) = #1b8500
+- Success border: `var(--color-border-alerting-success-base)` = #1b8500
+- Success border white: `var(--color-border-alerting-success-white)` = #1b8500
+- Minor background: `var(--color-background-alerting-minor)` = #ffc700
+- Minor border: `var(--color-border-alerting-minor-transparent)` = #9c622e
+- Critical background: `var(--color-background-alerting-critical)` = #af0000
+- Critical border: `var(--color-border-alerting-critical-base)` = #af0000
+- Critical border white: `var(--color-border-alerting-critical-white)` = #af0000
+
+### Icons
+- Success icon: `var(--color-icon-alerting-success-1)` = #1b8500
+- Minor icon: `var(--color-icon-alerting-minor-1)` = #ffc700
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+- Helper icon names by state:
+  - `in-progress`: none
+  - `completed-success`: `status-ok-circ-solid`
+  - `completed-warning`: `status-warn-tri-solid`
+  - `failed-error`: `status-critical-square-solid`
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
 ## States (Light Theme)
+| State | Track Background | Fill Background | Border | Text |
+|---|---|---|---|---|
+| In Progress | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
+| Completed/Success | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-backtground-alerting-success-1)` (fallback: `var(--color-background-alerting-success)`) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
+| Completed with Exceptions/Warning | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-alerting-minor)` (#ffc700) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-black)` (#252525) |
+| Failed/Error | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
+| Indeterminate | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
+| Disabled | `var(--color-background-gray-light)` (#eaeaea) | `var(--color-border-accessible)` (#757575) | `var(--color-border-accessible)` (#757575) | `var(--color-text-disabled)` (#757575) |
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--alert-green-500)` (#1b8500) |  | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-24)` |
-
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Text and border colors remain consistent via semantic variables
+- Progress fill colors maintain visibility in dark theme
+- Disabled state uses gray tokens for dark theme compatibility
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--alert-green-500)` (#1b8500) |  | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-24)` |
+## Interactions
+- Progress bar is typically non-interactive (display only)
+- Focus ring appears when progress bar is keyboard focusable
+- Hover states not applicable (non-interactive)
+- Progress value updates dynamically
+- `type="indeterminate"` shows continuous animation
+- `type="with-label"` shows top label row (left aligned label)
+- `showHelperText=true` shows helper text under the bar (left aligned)
+- Helper text color: `var(--color-text-neutral)`
+- Helper text icon mapping:
+  - `in-progress`: no icon
+  - `completed-success`: `status-ok-circ-solid`
+  - `completed-warning`: `status-warn-tri-solid`
+  - `failed-error`: `status-critical-square-solid`
+- Step indicators show current progress step
+
+## Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to progress bar when focusable
+- Screen reader support: Proper ARIA attributes for progress indication
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use progress element with proper attributes
+- Progress announcements: Screen reader announces current progress
+- Focus management: Clear focus indication when focusable
+
+## Variants
+- **Type / layout**:
+  - **With Label**: Label positioned on top-left of the progress bar
+  - **Inline**: Compact progress bar presentation
+  - **Indeterminate**: Animated unknown-duration progress
+- **Thickness**: Thin / Medium / Thick
+- **State**:
+  - **In Progress**
+  - **Completed/Success**
+  - **Completed with Exceptions/Warning**
+  - **Failed/Error**
+- **Helper text visibility**: `showHelperText=true/false`
+
+## Behavior & Guidelines
+- Use progress bars to show completion status
+- For `with-label`, keep label left aligned above bar
+- Use color variants to indicate status
+- Use `indeterminate` type for unknown duration
+- Use `showHelperText=true` only when support text adds actionable context
+- Test with screen readers for proper progress announcement
+- Use appropriate animation speeds for indeterminate state
+- Ensure progress fills are clearly visible
+- Consider responsive behavior for different screen sizes
+
+## Token Gaps / Notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Progress variants use appropriate color psychology
+- Dark theme adaptation through semantic tokens
+- Progress animations should be smooth and performant
+
+## Deliverable Checklist
+- [ ] Implement progress fill animation
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab)
+- [ ] Verify ARIA attributes and roles
+- [ ] Implement `type` support (with-label, inline, indeterminate)
+- [ ] Implement `thickness` support (thin, medium, thick)
+- [ ] Implement `state` support (in-progress, success, warning, error)
+- [ ] Implement `showHelperText` behavior and alignment
+- [ ] Implement indeterminate animation
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test animation performance
 
 ## Source Mapping
-
-| Source | Location |
-|---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
-| Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+- Figma component: ProgressBar — node **50724:317216** (`data/synapse-component-figma-map.json`)
+- Variable collection: UI Palettes, Typography tokens (per linked Figma file)
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Root spec: `components/synapse/root-spec.mdx`
+- Theme CSS: `components/synapse-theme.css`
+- Spec path: `components/synapse/progressbar/design-spec.mdx` (slug **`progressbar`**; alias **progress-bar** in `data/synapse-component-aliases.json`)

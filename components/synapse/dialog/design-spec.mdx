@@ -1,10 +1,6 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Dialog Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
@@ -12,114 +8,199 @@
 | Component | Dialog |
 | Category | Modals |
 | Figma Page | Modals |
-| Node ID | 50276:239953 |
+| Figma URL | https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=43461-175960&m=dev |
+| Node ID | 43461:175960 |
 | Design System | Synapse |
 
-<!-- ds:section id=anatomy -->
 ## Anatomy
 
-The component is composed of these structural parts:
+The dialog is composed of these parts:
 
 - **backdrop**
-- **body**
-- **close**
-- **description**
-- **header**
 - **popup**
-- **title**
-- **triggerReset**
+- **header**
+  - **alertIcon (optional)**: Rendered alongside the title when `dialogType != "None"`.
+    - `dialogType="Info"` -> informational icon
+    - `dialogType="Warning"` -> warning icon
+    - `dialogType="Major"` -> major icon
+    - `dialogType="Danger"` -> critical/danger icon
+    - `dialogType="Success"` -> success icon
+  - **title**
+  - **closeIcon**
+- **body**
+- **footer**
+  - **tertiaryButton (optional)**
+  - **primaryButton**
 
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+Notes:
+- The alert icon is optional; non-alerting variant renders title without alert icon.
+- There is **no border/divider** between header and body.
 
-<!-- ds:section id=layout -->
+## Composition & API (code generation)
+Use this contract when generating framework components (React, Angular, Lit, etc.).
+
+### Inputs (Props)
+
+| Prop | Type | Default | Behavior |
+|---|---|---|---|
+| `openDidalog` | `boolean` | `false` | Controlled visibility for the dialog. When `true`, the dialog popup is shown; when `false`, the popup is hidden. |
+| `dialogTitle` | `string` | `""` | Title text rendered in the header (paired with optional alert icon). |
+| `dialogType` | `"None" \| "Success" \| "Warning" \| "Major" \| "Danger" \| "Info"` | `"None"` | Controls the optional alert icon in the header. `None` renders no alert icon. |
+| `dialogSize` | `"sm" \| "lg" \| "xl"` | `"lg"` | Controls dialog width preset in implementations. |
+| `dialogClosable` | `boolean` | `true` | When `true`, shows the close icon and allows closing. When `false`, hides the close icon. |
+| `primaryButtonName` | `string` | `""` | Primary button label in the footer. |
+| `enableActionButton` | `boolean` | `true` | When `false`, the primary button is disabled and does not emit `onPrimaryButtonClick`. |
+| `tertiaryButtonName` | `string` | `""` | Tertiary button label in the footer. If empty/omitted, tertiary button is not rendered. |
+| `enableTertiaryButtton` | `boolean` | `true` | When `false` and the tertiary button is rendered, it is disabled and does not emit `onTertiaryButtonClick`. |
+
+### Outputs (Events)
+
+| Event | When it fires | Payload |
+|---|---|---|
+| `onClose` | Close icon click (only when `dialogClosable=true`) | none |
+| `onPrimaryButtonClick` | Primary button click (only when `enableActionButton=true`) | none |
+| `onTertiaryButtonClick` | Tertiary button click (only if tertiary is rendered and enabled) | none |
+
+### Rendering rules
+- Header alert icon:
+  - `dialogType="None"`: do not render alert icon.
+  - Other `dialogType` values: render the alert icon in the header before the title:
+    - `Info` -> informational icon
+    - `Warning` -> warning icon
+    - `Major` -> major icon
+    - `Danger` -> critical/danger icon
+    - `Success` -> success icon
+- Footer buttons:
+  - Primary button is always part of the footer layout (disabled when `enableActionButton=false`).
+  - Tertiary button is rendered only when `tertiaryButtonName` is non-empty.
+
 ## Layout & Measurements
 
-> Layout data not yet extracted. Run `python scripts/figma_layout_enricher.py` to populate.
+Figma source analyzed: `43461:175960` (component set `ModalDialog-Main`) and variants:
+`Type=Non-Alerting`, `Type=Informational`, `Type=Warning`, `Type=Major`, `Type=Critical`.
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+- **Dialog width**: 640px (all listed variants).
+- **Dialog height**:
+  - Non-alerting / Informational: 232px
+  - Warning / Major / Critical: 244px
+- **Corner radius**: 5px.
+- **Dialog outer border**: 1px inside stroke (`var(--border-width-border-1)` + dialog border token).
+- **Header container padding**: 24px top, 24px right, 8px bottom, 24px left (no border/divider between header and body).
+- **Header icon-title spacing**: 16px (`alertIcon` to `title`).
+- **Close icon size**: 16px visual glyph.
+- **Body text/content row padding**: 8px top/bottom, 24px left/right.
+- **Body content row padding**:
+  - Base: 16px top, 24px left/right
+  - Bottom: 24px in non-alerting/informational variants
+- **Footer container padding**: 24px on all sides.
+- **Button group spacing**:
+  - Tertiary + Primary: 12px
+  - Single Primary: no inter-button spacing needed
+- **Footer structural spacing** (checkbox region to action group): 16px.
+- **Header/body divider**: none.
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+### Shadow (from Figma effects)
 
-- `var(--border-width-border-1)` = 1px
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
-- `var(--color-background-overlay-1)` = rgba(37, 37, 37, 0.65) (light) / rgba(37, 37, 37, 0.75) (dark)
-- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--corner-radius-radius-4)` = 4px
-- `var(--corner-radius-radius-8)` = 8px
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-size-body-2)` = 14px
-- `var(--font-size-header-6)` = 18px
-- `var(--padding-padding-12)` = 12px
-- `var(--padding-padding-16)` = 16px
-- `var(--padding-padding-24)` = 24px
-- `var(--scale-32)` = 32px
-- `var(--shadow-drop-shadow-32-blur)` = 32px
-- `var(--shadow-drop-shadow-32-color)` = rgba(37, 37, 37, 0.08) (light) / rgba(17, 22, 25, 0.08) (dark)
-- `var(--shadow-drop-shadow-32-x)` = 0
-- `var(--shadow-drop-shadow-32-y)` = 32px
+Dialog elevation uses a 4-layer drop-shadow stack:
+- `x: 0, y: 16, blur: 16, color: rgba(37, 37, 37, 0.08)`
+- `x: 0, y: 8, blur: 8, color: rgba(37, 37, 37, 0.08)`
+- `x: 0, y: 4, blur: 4, color: rgba(37, 37, 37, 0.08)`
+- `x: 0, y: 2, blur: 2, color: rgba(37, 37, 37, 0.08)`
 
-<!-- ds:section id=states-light -->
+## Tokens
+
+Global tokens are inherited from `components/synapse/root-spec.mdx`.
+Dialog-specific token usage should resolve via semantic CSS variables:
+
+- Surface / overlay
+  - `var(--color-background-component)`
+  - `var(--color-background-overlay-1)`
+- Borders / focus
+  - `var(--border-width-border-1)`
+  - `var(--border-width-border-2)`
+  - `var(--color-border-lighter)`
+  - `var(--color-border-brand-base)`
+- Typography
+  - `var(--font-size-header-5)`
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-32)`
+  - `var(--font-line-height-line-height-20)`
+- Text / icon
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-neutral)`
+  - `var(--color-icon-neutral)`
+  - `var(--color-icon-alerting-info)`
+  - `var(--color-icon-alerting-minor)`
+  - `var(--color-icon-alerting-major)`
+  - `var(--color-icon-alerting-critical)`
+- Spacing / radius / scale
+  - `var(--padding-padding-8)`
+  - `var(--padding-padding-16)`
+  - `var(--padding-padding-24)`
+  - `var(--corner-radius-radius-4)`
+  - `var(--corner-radius-radius-8)`
+  - `var(--scale-32)`
+
 ## States (Light Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
+| Element | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) |  | `var(--color-text-neutral-strong)` (#252525) | shadow: `var(--shadow-drop-shadow-32-x)` `var(--shadow-drop-shadow-32-y)` `var(--shadow-drop-shadow-32-blur)` `var(--shadow-drop-shadow-32-color)`; radius: `var(--corner-radius-radius-4)` |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+| popup | default | `var(--color-background-component)` | `var(--border-width-border-1)` + `var(--color-border-lighter)` | `var(--color-text-neutral-strong)` | 4-layer elevation shadow |
+| header | default | `var(--color-background-component)` | none between header/body | title: `var(--color-text-neutral-strong)` | no divider under header |
+| closeIcon button | default | transparent | none | `var(--color-icon-neutral)` | icon-only action |
+| closeIcon button | hover | `var(--color-background-gray-lighter)` | none | `var(--color-icon-neutral)` | hover surface only |
+| closeIcon button | focus-visible | transparent | `var(--border-width-border-2)` + `var(--color-border-brand-base)` | `var(--color-icon-neutral)` | focus ring |
+| header alertIcon | informational | transparent | none | `var(--color-icon-alerting-info)` | optional |
+| header alertIcon | warning | transparent | none | `var(--color-icon-alerting-minor)` | optional |
+| header alertIcon | major | transparent | none | `var(--color-icon-alerting-major)` | optional |
+| header alertIcon | critical | transparent | none | `var(--color-icon-alerting-critical)` | optional |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) |  | `var(--color-text-neutral-strong)` (#e6e9ec) | shadow: `var(--shadow-drop-shadow-32-x)` `var(--shadow-drop-shadow-32-y)` `var(--shadow-drop-shadow-32-blur)` `var(--shadow-drop-shadow-32-color)`; radius: `var(--corner-radius-radius-4)` |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+Same semantic structure as Light Theme. Values resolve through theme variables:
+- Popup uses `var(--color-background-component)` dark value.
+- Overlay uses `var(--color-background-overlay-1)` dark alpha.
+- Title/body text and icons resolve via dark-mode semantic tokens.
+- Header/body divider remains absent in dark theme as well.
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Interactions
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+- **Open**: dialog is shown when `openDidalog=true` (or via a trigger in demo implementations) and traps focus.
+- **Close icon click**: closes dialog and emits `onClose`.
+- **Escape key**: closes dialog.
+- **Backdrop click** (if enabled by product): closes dialog.
+- **Primary button click**: emits `onPrimaryButtonClick` (and may close dialog depending on product intent).
+- **Tertiary button click** (when rendered): emits `onTertiaryButtonClick` (and may close dialog depending on product intent).
 
-**Pattern**: dialog
+### Event contract (for code generation)
 
-### Behaviors
+- `onClose()` fired on close icon click (only when `dialogClosable=true`).
+- `onPrimaryButtonClick()` fired on primary button click (only when `enableActionButton=true`).
+- `onTertiaryButtonClick()` fired on tertiary button click (only when tertiary is rendered and `enableTertiaryButtton=true`).
 
-- Renders as modal overlay on top of page content
-- Focus trap: Tab/Shift+Tab cycles focus within dialog boundary
-- Closes on Escape key press
-- Returns focus to the trigger element on close
-- Blocks interaction with background content
-
-### Keyboard
+### Keyboard / focus
 
 | Key | Action |
 |---|---|
-| Escape | Close the dialog |
-| Tab | Move focus to next focusable element within dialog |
-| Shift+Tab | Move focus to previous focusable element within dialog |
+| Escape | Close dialog |
+| Tab | Next focusable within dialog |
+| Shift+Tab | Previous focusable within dialog |
+| Enter/Space on close icon | Close dialog (`onClose()`) |
+| Enter/Space on action buttons | Emit corresponding button event |
 
 ### ARIA
 
 | Element | Attributes |
 |---|---|
-| root | {'role': 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'ID of the dialog title element', 'aria-describedby': 'ID of the dialog content/description element'} |
+| popup root | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-describedby` |
+| close icon button | `aria-label="Close"` |
+| alert icon | `aria-hidden="true"` when decorative |
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
 | Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+| Synapse map entry | `data/synapse-component-figma-map.json` (`Modal Dialog` node `50276:239953`) |
+| Figma validation target | `43461:175960` (user-provided URL) |

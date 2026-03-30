@@ -1,140 +1,130 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Button Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
 |---|---|
 | Component | Button |
 | Category | Components |
-| Figma Page | Components |
-| Node ID | 47808:31410 |
 | Design System | Synapse |
+| Figma URL | https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=47808-32519&m=dev |
+| Inspected Button Root | `47808:31410` |
+| Inspected Button Set | `47808:31665` |
 
-<!-- ds:section id=anatomy -->
 ## Anatomy
 
-The component is composed of these structural parts:
+The button component set is built from:
+- **root** (`button` element)
+- **label** (text)
+- **icon** (optional leading icon)
+- **icon-only glyph** (when `Icon Only=Yes`)
+- **loading spinner** (implementation behavior)
 
-- **button**
-- **labelHidden**
-- **loading**
-- **spinner**
+Variant axes present in Figma (`47808:31665`):
+- `Style`: `Primary | Secondary | Tertiary | Destructive`
+- `State`: `Default | Hover | Press | Focus | Disabled`
+- `Size`: `Large | Medium | Small`
+- `Icon`: `No | Yes`
+- `Icon Only`: `No | Yes`
+- `Low Res`: `No` (single option in inspected set)
 
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+### Size and spacing
+- Shared layout: horizontal auto-layout with `itemSpacing: 8px`.
+- Border radius: `var(--corner-radius-radius-4)`.
+- Border width: `var(--border-width-border-1)` for bordered variants.
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+| Size | Height | Vertical padding | Horizontal padding | Label typography |
+|---|---:|---:|---:|---|
+| Large | 40px | 10px top / bottom | 16px left / right | Roboto 14 / 20, weight 400 |
+| Medium | 32px | 6px top / bottom | 16px left / right | Roboto 14 / 20, weight 400 |
+| Small | 24px | 2px top / bottom | 16px left / right | Roboto 14 / 20, weight 400 |
 
-- `var(--alert-red-500)` = #af0000
-- `var(--alert-red-600)` = #910000
-- `var(--border-width-border-1)` = 1px
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-background-controls-brand-strong)` = #0062ab
-- `var(--color-background-controls-brand-stronger)` = #06528a
-- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
-- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--color-text-white)` = #ffffff
-- `var(--corner-radius-radius-4)` = 4px
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-size-body-1)` = 16px
-- `var(--font-size-body-2)` = 14px
-- `var(--font-size-body-3)` = 12px
-- `var(--padding-padding-12)` = 12px
-- `var(--padding-padding-16)` = 16px
-- `var(--padding-padding-8)` = 8px
-- `var(--scale-28)` = 28px
-- `var(--scale-36)` = 36px
-- `var(--scale-44)` = 44px
-- `var(--spacing-space-8)` = 8px
+### Icon layouts
+- Icon + label (`Icon=Yes`, `Icon Only=No`, large):
+  - Height `40px`, width sample `98px`
+  - Icon size `16x16`
+  - Internal gap `8px`
+- Icon-only (`Icon Only=Yes`, large):
+  - Height `40px`, width sample `48px`
+  - Padding `12px 16px`
+  - Icon size `16x16`
 
-<!-- ds:section id=states-light -->
+> Width values are content-driven samples from Figma instances and should remain intrinsic in implementation.
+
+## Tokens
+
+Use semantic tokens from `components/synapse-theme.css` and root spec. Do not hardcode colors in implementation code.
+
+Core tokens used by button variants:
+- `var(--color-background-controls-brand-base)` (primary default)
+- `var(--color-border-transparent-brand)` (primary border)
+- `var(--color-background-controls-brand-strong)` (primary hover)
+- `var(--color-background-controls-brand-stronger)` (primary pressed; map to closest semantic token for `#004E88` where needed)
+- `var(--color-border-brand-base)`
+- `var(--color-text-brand-strong)` (secondary/tertiary label)
+- `var(--color-background-gray-neutral-lighter)` (secondary background)
+- `var(--color-text-white)`
+- `var(--color-background-brand-lighter)` / `var(--color-background-brand-light)` (hover/press surfaces for secondary/tertiary)
+- `var(--color-background-alerting-critical)` (destructive default)
+- `var(--color-border-alerting-transparent-critical)` (destructive border)
+- `var(--color-background-gray-light)` + `var(--color-text-disabled)` + `var(--color-border-disabled)` (disabled)
+- **Focus:** keep each variant’s default/hover border treatment on the button surface, and add a **visible outer focus indicator**: `1px` solid `var(--color-border-brand-base)` drawn **3px outside** the button bounds (same ring color for Primary, Secondary, Tertiary, and Destructive in the published set).
+
+Typography and geometry tokens:
+- `var(--font-size-body-2)` + `var(--font-line-height-line-height-20)`
+- `var(--corner-radius-radius-4)`
+- `var(--spacing-space-8)`
+
 ## States (Light Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
+| Style | State | Background | Border | Text/Icon | Notes |
 |---|---|---|---|---|---|
-| danger | default | `var(--alert-red-500)` (#af0000) |  | `var(--color-text-white)` (#ffffff) |  |
-| danger | hover | `var(--alert-red-600)` (#910000) |  |  |  |
-| default | default |  | `var(--border-width-border-1)` (1px) |  | radius: `var(--corner-radius-radius-4)` |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| ghost | default |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
-| ghost | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
-| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
-| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) |  | `var(--color-text-white)` (#ffffff) |  |
-| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
-| secondary | default |  | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-base)` (#0076ce) |  |
-| secondary | hover | `var(--color-background-brand-lighter)` (#ebf4fb) |  |  |  |
-| tertiary | default |  |  | `var(--color-text-brand-base)` (#0076ce) |  |
-| tertiary | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+| Primary | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` | filled |
+| Primary | Hover | `#0062AB` (`var(--color-background-controls-brand-strong)`) | transparent | `#FFFFFF` |  |
+| Primary | Press | `#004E88` (map to closest semantic stronger brand token) | transparent | `#FFFFFF` |  |
+| Primary | Focus | same as default | `var(--color-border-transparent-brand)` | `#FFFFFF` | plus outer focus ring: 1px `var(--color-border-brand-base)`, 3px offset |
+| Primary | Disabled | `#EAEAEA` | `var(--color-border-disabled)` | `#757575` | no interaction |
+| Secondary | Default | `var(--color-background-gray-neutral-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | outlined |
+| Secondary | Hover | `#EBF4FB` | `#0076CE` | `#0062AB` |  |
+| Secondary | Press | `#D9EAF8` | `#0076CE` | `#0062AB` |  |
+| Secondary | Focus | transparent | `var(--color-border-brand-base)` | `#0062AB` | plus outer focus ring: 1px `var(--color-border-brand-base)`, 3px offset |
+| Secondary | Disabled | transparent | `var(--color-border-disabled)` | `#757575` |  |
+| Tertiary | Default | transparent | none | `var(--color-text-brand-strong)` | text-like |
+| Tertiary | Hover | `#EBF4FB` | `#0076CE` | `#0062AB` | bordered hover in inspected set |
+| Tertiary | Press | `#D9EAF8` | `#0076CE` | `#0062AB` |  |
+| Tertiary | Focus | transparent | `var(--color-border-brand-base)` | `#0062AB` | plus outer focus ring: 1px `var(--color-border-brand-base)`, 3px offset |
+| Tertiary | Disabled | transparent | none | `#757575` |  |
+| Destructive | Default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` | filled destructive |
+| Destructive | Hover | `#910000` | transparent | `#FFFFFF` |  |
+| Destructive | Press | `#730000` | transparent | `#FFFFFF` |  |
+| Destructive | Focus | same as default | `var(--color-border-alerting-transparent-critical)` | `#FFFFFF` | plus outer focus ring: 1px `var(--color-border-brand-base)`, 3px offset |
+| Destructive | Disabled | `#EAEAEA` | `var(--color-border-disabled)` | `#757575` |  |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| danger | default | `var(--alert-red-500)` (#af0000) |  | `var(--color-text-white)` (#ffffff) |  |
-| danger | hover | `var(--alert-red-600)` (#910000) |  |  |  |
-| default | default |  | `var(--border-width-border-1)` (1px) |  | radius: `var(--corner-radius-radius-4)` |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| ghost | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
-| ghost | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
-| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
-| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) |  | `var(--color-text-white)` (#ffffff) |  |
-| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
-| secondary | default |  | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-brand-base)` (#4c9fdd) |  |
-| secondary | hover | `var(--color-background-brand-lighter)` (#1e262c) |  |  |  |
-| tertiary | default |  |  | `var(--color-text-brand-base)` (#4c9fdd) |  |
-| tertiary | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+Same structural state matrix as light theme; values must resolve through dark semantic tokens:
+- Primary/brand hues resolve to dark brand ramps (`--color-background-controls-brand-*` dark values).
+- Secondary/tertiary border and text resolve to dark brand/text tokens.
+- Disabled uses dark disabled tokens (`--color-text-disabled`, `--color-border-accessible`, gray backgrounds in dark mode).
+- Focus follows the same variant border treatment on the surface; the outer focus ring uses `var(--color-border-brand-base)` (resolve to dark-theme brand border token).
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Interactions
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
-
-**Pattern**: action
-
-### Behaviors
-
-- Triggers action on click
-- Shows loading state when async operation in progress
-- Disabled state prevents interaction and removes from tab order
-
-### Keyboard
-
-| Key | Action |
-|---|---|
-| Enter | Activate the button |
-| Space | Activate the button |
-
-### ARIA
-
-| Element | Attributes |
-|---|---|
-| root | {'element': '<button>', 'aria-disabled': 'true when disabled (prefer over HTML disabled for focusability)', 'aria-busy': 'true when in loading state'} |
+- Click / Enter / Space activates button when enabled.
+- `Disabled` state prevents activation and pointer interaction.
+- `Focus` state keeps variant-specific **surface** border treatment and adds the **outer** 1px brand focus ring at 3px offset (`var(--color-border-brand-base)`, `var(--border-width-border-1)`). On a native `<button>`, implement this with **`:focus-visible`** (and suppress the user-agent focus ring with `outline: none` on the base control); Base UI `Button` does not emit `data-focus-visible` for this primitive.
+- `Hover` and `Press` states use variant-specific color transitions.
+- Icon-only buttons must expose accessible text via `aria-label`.
+- Loading state (when implemented) should set `aria-busy="true"` and suppress duplicate clicks.
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
 | Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+| Synapse map | `data/synapse-component-figma-map.json` (`Button` node `47808:31410`) |
+| Figma inspected set | `47808:31665` |

@@ -1,84 +1,243 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Card Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
+- Component: Card
+- Category: Components
+- Design System: Synapse
+- Figma: Resolve from `data/synapse-component-figma-map.json` → entry **Card** (`figmaUrl` + `nodeId` when present)
+- Node ID: 50419:259141
 
-| Property | Value |
-|---|---|
-| Component | Card |
-| Category | Components |
-| Figma Page | Components |
-| Node ID | 50419:259141 |
-| Design System | Synapse |
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+- **Root**: Card container (flex column, minimum height, background, default border, optional elevation shadow). Hosts collision/clipping context for the header options overlay.
+- **Header (optional)**:
+  - **Title row (default)** — Optional **leading header icon** + **title** (`title` string rendered as heading), or **title only** if no icon.
+  - **Trailing control** — Optional **vertical ellipsis** (kebab) control on the **end** (inline end in LTR) of the header row. Opens the **options overlay**.
+  - **Custom header slot** — `header` replaces the default title cluster; kebab can still render on the same row when `menuOptions` is provided.
+  - Header region is omitted when there is no title, icon, custom header, or menu to show.
+- **Header options overlay**: Floating list of **per-card** options (not global). Clipped/stacked so **total height does not extend below the host card’s bottom edge** (see Layout & Interactions).
+- **Body (required)**: Primary content slot; default region typography for plain text; nested blocks supply their own typography.
+- **Footer (optional)**: Actions (buttons), metadata, or custom nodes. Omits entire region when not provided.
+- **Dividers**: Horizontal rule between header→body and body→footer using border tokens (not a separate DOM element unless framework requires it).
+- **Optional**: Media/image area inside body; focus ring for interactive cards; elevation.
 
-The component is composed of these structural parts:
+## Composition & API (code generation)
+Use this contract when generating framework components (React, Angular, Lit, etc.). **Do not hardcode** colors, radii, spacing, or border widths—always use semantic tokens below.
 
-- **body**
-- **card**
-- **footer**
-- **header**
-- **title**
+| Slot / prop | Required | Behavior |
+|---|---|---|
+| `title` | No | Non-empty string renders the default heading in the title cluster (unless `header` is set). |
+| `headerIcon` | No | Optional leading icon or glyph in the **default** title row only (ignored when `header` is set). Pairs with `title` or may appear with menu-only headers per implementation. |
+| `showIcon` | No (default `false`) | Controls default header icon visibility. `true` shows the leading icon near title; `false` hides it. Effective when using default header row (i.e., when `header` is not set). |
+| `header` / custom header slot | No | When set, **replaces** the default title + `headerIcon` cluster. **Kebab + overlay** still render on the same row when `menuOptions` is non-empty. |
+| Body / `children` / default slot | Yes | Main content. May include nested cards, templates, or “swap” placeholder panels (see Body patterns). |
+| `footer` | No | Footer region for actions or supplementary content. |
+| `showButtons` | No (default `false`) | Controls footer action area. `true` enables rendering footer button row; `false` omits button row and footer region is not rendered for buttons. |
+| `menuOptions` | No | **Per-card** array of options: `{ value: string, label: string, disabled?: boolean }`. Each card instance on a page **supplies its own list**; lists are **not** shared across cards. Empty or omitted = no kebab. |
+| `showOverFlowMenu` | No (default `false`) | Controls visibility of vertical ellipsis trigger. `true` shows kebab (requires `menuOptions` for interactive list); `false` hides kebab and overlay. |
+| `onOptionSelected` | No | Callback when the user activates an overlay item. **`value`** is the selected option’s `value` (see Interactions). **Codegen:** React `onOptionSelected(value: string)`; Angular `@Output() optionSelected = new EventEmitter<string>()`; Lit `@event option-selected` with `detail` = `string`. |
+| `elevated` | No | When true, apply elevation shadow token set (see Tokens). |
+| `outlined` / `bordered` | No | Reserved for emphasis parity with design variants; border still uses semantic border token (see Layout). |
 
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+**Control-property mapping (codegen normalization)**
+- `showIcon = true` → render `headerIcon` in default title row (near `title`); `showIcon = false` → do not render header icon.
+- `showOverFlowMenu = true` + non-empty `menuOptions` → render vertical ellipsis and overlay list.
+- `showOverFlowMenu = true` + empty/missing `menuOptions` → render disabled/no-op kebab only if product requires visual placeholder; otherwise hide trigger.
+- `showButtons = true` → render footer button row (typically tertiary/secondary/primary variants as per Footer actions table).
+- `showButtons = false` → do not render footer button row; if no other footer content is provided, omit footer region entirely.
+- If `header` is provided, it overrides default title+icon composition; `showIcon` affects only the default header layout.
 
-<!-- ds:section id=layout -->
+**DOM / measurement hooks (implementation)**
+- Card root: attach `ref` / element reference for overlay **collision boundary** and **max-height** math.
+- Header wrapper: `data-card-header` on the header region container (includes title row height used to compute overlay max height).
+- Footer wrapper: `data-card-footer` on the footer region when present (footer height subtracted from available overlay height).
+
+**Visibility rules**
+- `hasHeader = (header != null) || (title is non-empty) || (showIcon && headerIcon != null) || (showOverFlowMenu && menuOptions is non-empty)`
+- `hasFooter = showButtons && footer != null` (footer region renders only when footer content exists **and** `showButtons` is true)
+- Render header wrapper only if `hasHeader`; render footer wrapper only if `hasFooter`.
+- **Divider under header**: `border-bottom` on header wrapper, `var(--border-width-border-1)` solid `var(--color-border-light)`, present whenever header region is shown.
+- **Divider above footer**: `border-top` on footer wrapper, same width and color as header divider, present whenever footer region is shown.
+
+**Semantic HTML (guidance)**
+- Non-interactive informational card: outer element may be `<article>` with optional `aria-labelledby` pointing at header title id.
+- Interactive/selectable card: follow Interactions and Accessibility; do not wrap footer primary actions in the card click target unless specified.
+
 ## Layout & Measurements
+- **Root**: `display: flex`; `flex-direction: column`; `box-sizing: border-box`; `min-height: 120px`; `overflow: hidden`; `border-radius`: `var(--corner-radius-radius-8)`.
+- **Default border (container)**: `var(--border-width-border-1)` solid `var(--color-border-light)` on the card root.
+- **Header padding**: `16px 16px 8px 16px` → `var(--padding-padding-16) var(--padding-padding-16) var(--padding-padding-8) var(--padding-padding-16)`; `flex-shrink: 0`.
+- **Header title row**: Flex row; `align-items: center`; `justify-content: space-between`; `gap: var(--padding-padding-8)`. Title cluster `flex: 1 1 auto`; `min-width: 0`; long titles **`text-overflow: ellipsis`**; optional leading icon `flex-shrink: 0` with `var(--color-icon-accessible)`.
+- **Options overlay max height**: `max(96px, card.clientHeight - header.offsetHeight - footer.offsetHeight - paddingFudge)` where `paddingFudge` is a small tokenized gap (e.g. `var(--padding-padding-12)`); overlay list **`overflow-y: auto`** inside that cap so the menu **never grows past the bottom of the host card**.
+- **Body padding**: `8px 16px` → `var(--padding-padding-8) var(--padding-padding-16)`; `flex: 1 1 auto`; `min-height: 0` (allows scroll in constrained layouts).
+- **Footer padding**: `8px 16px 16px 16px` → `var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-16) var(--padding-padding-16)`; `flex-shrink: 0`.
+- **Elevation (optional)**: Use shadow tokens (e.g. drop shadow level 4) from theme; never raw `box-shadow` color values.
+- **Grid gap** between multiple cards in a layout: `16px` → prefer `var(--padding-padding-16)` or spacing token from theme if defined.
+- **Focus ring** (interactive card): `2px` brand focus outline; offset as per design system focus pattern.
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+## Section chrome & dividers
+| Region | Border | Token |
+|---|---|---|
+| Card outer edge | Full perimeter | `var(--border-width-border-1)` `var(--color-border-light)` |
+| Below header (when header shown) | Bottom edge of header | Same width and `var(--color-border-light)` |
+| Above footer (when footer shown) | Top edge of footer | Same width and `var(--color-border-light)` |
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+## Header options overlay (menu)
+- **Trigger**: Icon-only control (vertical ellipsis), `aria-label` naming the action (e.g. “Card options” or include card title for context). Icon color states: **default** `var(--color-icon-neutral)`; **open (dropdown visible / clicked state)** `var(--icon-standard-gray)`.
+- **Surface**: Reuse design-system menu / popup tokens: background `var(--color-background-component)`, border `var(--border-width-border-1)` `var(--color-border-lighter)`, elevation shadow per dropdown spec, item text `var(--color-text-neutral-strong)`, highlighted row `var(--color-background-brand-lighter)` (or equivalent menu item tokens).
+- **Positioning**: Open below trigger, **aligned to the inline end** of the header row (`align: end` in LTR). **Collision boundary** = **card root element** so the panel stays visually within the card footprint; combine with **hard max-height** (see Layout) so scroll kicks in before exceeding the card’s lower bound.
+- **Data**: Each menu item exposes **`value`** (machine id) and **`label`** (visible string). Multiple cards may use the same labels with **different `value`s**; generators must bind lists **per card instance**.
+- **Selection**: Choosing an item closes the overlay (default menu behavior) and emits **`onOptionSelected`** with the **`value`** of the chosen option (not index-based).
 
-- `var(--border-width-border-1)` = 1px
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--corner-radius-radius-8)` = 8px
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-line-height-line-height-24)` = 24px
-- `var(--font-size-body-2)` = 14px
-- `var(--font-size-header-6)` = 18px
-- `var(--padding-padding-12)` = 12px
-- `var(--padding-padding-16)` = 16px
-- `var(--padding-padding-24)` = 24px
-- `var(--shadow-drop-shadow-4-blur)` = 4px
-- `var(--shadow-drop-shadow-4-color)` = rgba(37, 37, 37, 0.08) (light) / rgba(17, 22, 25, 0.08) (dark)
-- `var(--shadow-drop-shadow-4-x)` = 0
-- `var(--shadow-drop-shadow-4-y)` = 4px
+## Footer actions (buttons)
+Footer content is **slot-based**; for action rows, compose with the design system **Button** component.
 
-<!-- ds:section id=states-light -->
+| Pattern | Variants | Layout | Notes |
+|---|---|---|---|
+| Dual dismiss + commit (e.g. Cancel / Save) | Prefer **tertiary** for both when design calls for minimal emphasis; use **secondary** + **primary** when hierarchy requires a single strong CTA | Horizontal row, `justify-content: flex-end`, gap `var(--padding-padding-8)` | Use **small** (`sm`) button size in dense card footers unless spec says otherwise. |
+| Single secondary action | **secondary** | Align **start** (left in LTR) for template-style placeholder; **end** for dialogs | Matches “single action” card templates. |
+| Single primary / main CTA | **primary** | As needed | Use when the footer is the main page action. |
+
+**Codegen rules**
+- Import/use the design system `Button` (or equivalent); pass `variant` and `size` props—**never** duplicate button colors inside Card CSS.
+- Footer must **not** assume button count; allow arbitrary `ReactNode` / projected content for metadata (text, captions, links).
+
+## Body patterns (nested content)
+- **Plain body**: Inherited body typography from card body region: `var(--font-size-body-1)`, `var(--font-line-height-line-height-24)`, `var(--color-text-neutral)`.
+- **“Swap content” / template placeholder** (optional reference composition): Inner block inside the body: background `var(--color-background-brand-light)`; border `var(--border-width-border-1)` solid `var(--color-border-brand-base)` (cyan/blue emphasis, matches dark template); `var(--corner-radius-radius-8)`; inner padding `var(--padding-padding-16)`. Slot icon uses `var(--color-icon-brand-base)`. Emphasized phrase in instructional copy: `var(--color-text-tag-success)`. In-body links: Link component tokens (`var(--color-text-link-brand-base)` / hover `var(--color-text-link-brand-strong)`), underlined—not hardcoded hex.
+
+## Typography
+- **Default header title (from `title`)**: Header 6 equivalent — `var(--font-size-header-6)`, weight 500, `var(--font-line-height-line-height-25)`, `var(--color-text-neutral-strong)`; element: heading level appropriate to page outline (commonly `h3` under section `h2`).
+- **Body 1**: `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` — card body default for unstructured text.
+- **Body 2**: `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)` — secondary paragraphs inside slots.
+- **Body 3**: `var(--font-size-body-3)` / `var(--font-line-height-line-height-18)` — captions, footnotes inside body/footer text nodes.
+
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-2)` = #ffffff
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- Link: `var(--color-text-link-brand-base)`; stronger link: `var(--color-text-link-brand-strong)` = #06528a
+- Light border: `var(--color-border-light)` = #c5c5c5
+
+### Structure (layout tokens)
+- Border width: `var(--border-width-border-1)`
+- Corner radius (card and inner placeholder blocks): `var(--corner-radius-radius-8)`
+- Padding scale: `var(--padding-padding-8)`, `var(--padding-padding-12)`, `var(--padding-padding-16)` (map to header/body/footer rules above)
+- Shadow (elevated): `var(--shadow-drop-shadow-4-x)`, `var(--shadow-drop-shadow-4-y)`, `var(--shadow-drop-shadow-4-blur)`, `var(--shadow-drop-shadow-4-color)` (compose per theme)
+
+### Icons
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- Accessible icon: `var(--color-icon-accessible)` = #757575
+- Standard gray icon: `var(--icon-standard-gray)` = #616161
+- White icon: `icon-white` = #FFFFFF
+- Status green icon: `icon-status-green` = #1B8500
+
+### Background Colors
+- Brand light: `var(--color-background-brand-light)` = #d9eaf8
+- Success background: `var(--color-background-alerting-success)` = #1b8500
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 400: `UI Palettes/Gray/gray-400` = #9E9E9E
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+
+### Spacing & Sizing
+- Compact Density: `Compact Density` = 36
+- Compact Cell Padding: `Compact/Cell - Vertical padding` = 8
+
 ## States (Light Theme)
+| State | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Default | `var(--color-background-component)` (#ffffff) | `var(--color-border-light)` (#c5c5c5) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Hover | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Focus | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Selected | `var(--color-background-brand-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Disabled | `UI Palettes/Gray/gray-100` (#F4F4F4) | `UI Palettes/Gray/gray-400` (#9E9E9E) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-accessible)` (#757575) |
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) |  | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-8)` |
-| elevated | default |  |  |  | shadow: `var(--shadow-drop-shadow-4-x)` `var(--shadow-drop-shadow-4-y)` `var(--shadow-drop-shadow-4-blur)` `var(--shadow-drop-shadow-4-color)` |
-| outlined | default |  | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#eaeaea) |  |  |
-
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
+Same semantic tokens as light; values resolve via `data-theme` / global theme rules. Do not hardcode dark hex in generated styles.
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) |  | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-8)` |
-| elevated | default |  |  |  | shadow: `var(--shadow-drop-shadow-4-x)` `var(--shadow-drop-shadow-4-y)` `var(--shadow-drop-shadow-4-blur)` `var(--shadow-drop-shadow-4-color)` |
-| outlined | default |  | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#1e262c) |  |  |
+| State | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Default | `var(--color-background-component)` | `var(--color-border-light)` | `var(--color-text-neutral)` | `var(--color-icon-neutral)` |
+| Hover | `var(--color-background-component)` | `var(--color-border-brand-base)` | `var(--color-text-neutral)` | `var(--color-icon-brand-base)` |
+| Focus | `var(--color-background-component)` | `var(--color-border-brand-base)` | `var(--color-text-neutral)` | `var(--color-icon-brand-base)` |
+| Selected | `var(--color-background-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
+| Disabled | `var(--color-background-component)` (or palette gray via theme) | `var(--color-border-lighter)` | `var(--color-text-disabled)` | `var(--color-icon-accessible)` |
+
+**Note:** If the active theme maps disabled background to a dedicated semantic token (e.g. alerting/gray surface), prefer that token from `theme.css` / global vars instead of literals. Section dividers (header bottom / footer top) use the same border token column as the default state for the active theme.
+
+## Interactions
+- **Interactive card (whole surface)**: Click or keyboard activates selection or navigation; hover and focus use border/icon tokens per state rules above. Do **not** nest this behavior over the header **kebab** or footer buttons without explicit product intent.
+- **Static card**: No card-level click handler; **footer buttons** and **header kebab** remain independently focusable; `Enter`/`Space` activate the focused control.
+- **Header title & icon**: Decorative/structural unless wrapped in explicit links or buttons; default title is plain text/heading.
+- **Header kebab (overflow)**:
+  - **Open**: `Click` / `Enter` / `Space` on trigger; keyboard arrow keys move highlight inside overlay per menu / WAI-ARIA menu pattern.
+  - **Close**: Select item, `Escape`, or dismiss via focus loss per component library.
+  - **Per-card options**: Each card passes its own `menuOptions`; changing one card’s list does not affect another.
+  - **Height constraint**: Overlay list height is capped so content **scrolls inside** the panel before the panel would extend **past the bottom edge of that card**; recalculate on card resize (e.g. `ResizeObserver` on card root).
+- **`onOptionSelected`**: Fires **once per user selection** with signature **`(value: string)`** where `value` matches the selected **`CardMenuOption.value`**. Framework mappings: React callback prop; Angular `EventEmitter<string>`; Lit `CustomEvent` detail string; Vue `emit('option-selected', value)`.
+- **Focus order**: Title cluster (if any) → **kebab trigger** (if present) → body focusables → footer actions. When overlay is open, focus is **trapped/managed** inside the menu per the menu primitive.
+- Cards may be containers only or full interactive surfaces; declare the mode in implementation and keep footer actions and overflow menu **outside** the card-wide hit target when the card body is the only selectable region.
+
+## Accessibility
+- Focus ring: 2px brand color outline on interactive card root, **kebab trigger**, menu items, and footer controls per pattern.
+- **Kebab**: `aria-label` (or `aria-labelledby`) on the trigger; menu uses **menu + menuitem** semantics from the design-system Menu primitive.
+- Keyboard navigation: Tab order through header controls (including kebab), body, footer; arrow keys / typeahead inside open menu; `Escape` closes overlay.
+- Screen readers: Associated label for selectable cards; footer actions as real `button` elements; each overlay item label from `menuOptions[].label`.
+- High contrast: WCAG AA via semantic tokens.
+- Semantic HTML: `article` for static content cards when appropriate; footer uses real buttons; overflow uses **menu button** + **menu**, not a bare `div` without roles.
+
+## Variants
+- **Default**: Standard content card with semantic border and optional sections.
+- **Interactive**: Clickable card with hover/focus border changes.
+- **Selected**: Brand-tinted background and border.
+- **Disabled**: Non-interactive card; muted text and borders.
+- **Elevated**: Shadow tokens on root.
+- **Outlined / bordered**: Border emphasis flag; still uses `var(--color-border-light)` unless design system defines a stronger bordered token.
+- **Compact**: Reduced padding (define with density tokens when available).
+- **Media**: Image or media in body slot.
+
+## Behavior & Guidelines
+- Group related content; keep card sizes consistent within grids.
+- Use optional header for titles and optional footer for **actions** or metadata; preserve dividers whenever a section is present.
+- Prefer design-system **Button** in footers; align action rows per Footer actions table.
+- Test responsive layout and screen reader order with optional regions omitted.
+
+## Token Gaps / Notes
+- All chrome uses semantic CSS custom properties; no raw hex in generated component styles.
+- Button visual treatment lives on **Button**, not duplicated in Card.
+- Typography tokens must match theme; header title uses header-6 scale.
+- Inner “swap” panels are **body content**, not part of the Card primitive API.
+
+## Deliverable Checklist
+- [ ] Implement interactive card behavior
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Tab, Enter/Space)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement selected state styling
+- [ ] Add responsive grid layout
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test card elevation and shadows
+- [ ] Optional header/footer slots with correct dividers and padding
+- [ ] Footer composed with design-system Button variants
+- [ ] Optional `headerIcon` + `title` row; optional `menuOptions` + kebab; `data-card-header` / `data-card-footer` for measurements
+- [ ] Options overlay: collision boundary = card root; max-height so list scrolls within card; `onOptionSelected(value)` wired
 
 ## Source Mapping
-
-| Source | Location |
-|---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
-| Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+- Figma component: Card — node **50419:259141** (`data/synapse-component-figma-map.json`)
+- Variable collection: UI Palettes, Typography tokens (per linked Figma file)
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Root spec: `components/synapse/root-spec.mdx`
+- Theme CSS: `components/synapse-theme.css`
