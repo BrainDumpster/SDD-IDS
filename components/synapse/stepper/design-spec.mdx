@@ -1,107 +1,106 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Stepper Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
 |---|---|
 | Component | Stepper |
 | Category | Components |
-| Figma Page | Components |
-| Node ID | 48160:11907 |
 | Design System | Synapse |
+| Figma URL (provided for review) | https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=48160-12318&m=dev |
+| Synapse map node | `48160:11907` |
+| Inspected state set | `48160:12248` (`Stepper Item`) |
+| Inspected icon set | `48160:12129` (`Stepper Icon`) |
 
-<!-- ds:section id=anatomy -->
 ## Anatomy
 
-The component is composed of these structural parts:
+- **root**: horizontal sequence of step items.
+- **step item**: one step in the flow.
+- **icon and line rail**: top row containing connector line + 20x20 status icon.
+- **number label row**: bottom row with numeric prefix and step text.
+- **connector line**: 4px rail that changes color by state.
+- **status icon**: Not Started / In Progress / Completed visual marker.
 
-- **connector**
-- **connectorActive**
-- **label**
-- **number**
-- **root**
-- **step**
-
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+### Step item geometry (from `Stepper Item` variants)
+- Step item size: `180x50`.
+- Vertical stack: two rows with `6px` spacing.
+- Top row (`Icon and line`): `180x20`.
+- Connector line: `180x4`.
+- Status icon: `20x20`.
+- Bottom row (`Process Steps Item`): `103x24`.
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+### Label alignment (validated)
+- Number text (`"1."`): Roboto, `14/20`, weight `500`, `textAlignHorizontal: LEFT`, `textAlignVertical: CENTER`.
+- Step label (`"Step name"`): Roboto, `14/20`, weight `400`, `textAlignHorizontal: LEFT`, `textAlignVertical: CENTER`.
+- Number + label are left-aligned in a single horizontal row under the icon/line rail.
 
-- `var(--alert-green-500)` = #1b8500
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--color-text-white)` = #ffffff
-- `var(--font-size-body-3)` = 12px
-- `var(--spacing-space-8)` = 8px
+### Available properties in Figma component set
+`Stepper Item` (`48160:12248`) exposes:
+- `Active` (variant boolean): `true | false`
+- `State` (variant enum): `Not Started | Active | Completed`
 
-<!-- ds:section id=states-light -->
+`Stepper Icon` (`48160:12129`) exposes:
+- `Completed` (variant boolean): `true | false`
+- `Active` (variant boolean): `true | false`
+
+## Tokens
+
+Use semantic tokens from `components/synapse-theme.css`; do not hardcode design values in implementation code.
+
+- `var(--color-background-gray-neutral-light)` for **incomplete track** background in light theme.
+- `var(--color-border-lighter)` for not-started connector outline in legacy instances (tracks migrate to background token above).
+- `var(--color-border-accessible)` for not-started icon stroke.
+- `var(--color-background-component)` for not-started/active icon fill.
+- `var(--color-border-brand-base)` for in-progress icon stroke and completed connector.
+- `var(--color-background-brand-base)` for completed icon fill (circle behind the checkmark) in light theme.
+- `var(--color-icon-inverse)` for completed icon glyph in dark theme (checkmark).
+- `var(--color-text-white)` for completed checkmark glyph in light theme.
+- `var(--color-text-neutral-strong)` for number and step label text.
+- `var(--font-size-body-2)` + `var(--font-line-height-line-height-20)` for label typography.
+
 ## States (Light Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| circle | default | `var(--alert-green-500)` (#1b8500) | `var(--alert-green-500)` (#1b8500) | `var(--color-text-white)` (#ffffff) |  |
-| default | default | `var(--color-background-controls-brand-base)` (#0076ce) |  | `var(--color-text-neutral-strong)` (#252525) |  |
+| Item State | Connector | Icon container | Icon glyph | Label text |
+|---|---|---|---|---|
+| Not Started | `var(--color-background-gray-neutral-light)` | fill `var(--color-background-component)`, stroke `var(--color-border-accessible)` | none | `var(--color-text-neutral-strong)` |
+| In Progress (`State=Active`, `Active=true`) | `var(--color-background-gray-neutral-light)` | fill `var(--color-background-component)`, stroke `var(--color-border-brand-base)` | inner dot `var(--color-border-brand-base)` | `var(--color-text-neutral-strong)` on label container `var(--color-background-gray-neutral-light)` with padding `2px 8px` and radius `6px` |
+| Completed | `var(--color-border-brand-base)` | fill `var(--color-background-brand-base)` | checkmark `var(--color-text-white)` | `var(--color-text-neutral-strong)` |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| circle | default | `var(--alert-green-500)` (#1b8500) | `var(--alert-green-500)` (#1b8500) | `var(--color-text-white)` (#ffffff) |  |
-| default | default | `var(--color-background-controls-brand-base)` (#0076ce) |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+Use the same structural mapping as light theme, resolved through dark token values:
+- Not Started connector uses dark `--color-background-gray-neutral-light` equivalent.
+- Not Started icon stroke uses dark accessible border token.
+- In Progress stroke and Completed connector resolve to dark brand border/base tokens.
+- Completed icon circle resolves to dark `--color-background-brand-base` equivalent; the checkmark glyph uses `var(--color-icon-inverse)`.
+- Label text resolves through dark `--color-text-neutral-strong`.
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Interactions
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+- Stepper conveys progress with three visual states: `Not Started`, `In Progress`, `Completed`.
+- `Completed` is the only state with a filled status icon + check glyph.
+- `In Progress` keeps connector in neutral rail color while emphasizing the current step icon with brand stroke.
+- Active step label container uses `var(--color-background-gray-neutral-light)` with `2px 8px` padding and `6px` corner radius.
+- Labels remain left-aligned and do not shift between states.
 
-**Pattern**: stepper
+### Composition & API (runtime)
 
-### Behaviors
-
-- Multi-step linear flow with numbered step indicators
-- Shows current, completed, and upcoming step states
-- Allows navigation back to completed steps
-- Blocks forward navigation until current step is valid
-
-### Keyboard
-
-| Key | Action |
-|---|---|
-| Tab | Move focus between step indicators |
-| Enter | Navigate to a completed step |
-
-### ARIA
-
-| Element | Attributes |
-|---|---|
-| container | {'role': 'list'} |
-| step | {'role': 'listitem'} |
-| currentStep | {'aria-current': 'step'} |
-| completedStep | {'aria-label': "Includes 'completed' in accessible description"} |
+- **Input props (minimum contract)**:
+  - `steps: string[]` — ordered list of step labels (`["Account", "Profile", ...]`).
+  - `activeStep: number` — zero-based index into `steps` for the in-progress step.
+  - optional `completed: number[]` — zero-based indices of steps in the `Completed` state.
+- Recommended higher-level state shape:
+  - derive per-step `state` (`not-started | active | completed`) from `steps`, `activeStep`, and `completed`.
+  - optional click handling for back navigation to completed steps only.
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
 | Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+| Synapse map | `data/synapse-component-figma-map.json` (`Stepper` -> `48160:11907`) |
+| Figma set inspected | `48160:12248` (`Stepper Item`), `48160:12129` (`Stepper Icon`) |

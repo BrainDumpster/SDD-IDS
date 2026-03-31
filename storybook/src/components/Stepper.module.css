@@ -1,84 +1,103 @@
 .root {
   display: flex;
   align-items: flex-start;
+  gap: 0;
   width: 100%;
+  overflow-x: auto;
 }
 
 .step {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  flex: 1;
+  align-items: flex-start;
+  flex: 0 0 180px;
   position: relative;
-  gap: var(--spacing-space-8);
+  gap: 6px;
+}
+
+.topRow {
+  position: relative;
+  width: 180px;
+  height: var(--scale-20);
 }
 
 .connector {
   position: absolute;
-  top: 16px;
-  right: 50%;
-  left: calc(-50% + 20px);
-  width: calc(100% - 40px);
-  height: 2px;
-  background: var(--color-border-lighter);
-  transform: translateX(-50%);
-  left: -50%;
+  top: 50%;
+  left: 0;
   width: 100%;
+  height: 4px;
+  background: var(--color-background-gray-neutral-light);
+  transform: translateY(-50%);
 }
 
-.connectorActive {
-  background: var(--color-background-controls-brand-base);
+.connectorCompleted {
+  background: var(--color-border-brand-base);
 }
 
 .circle {
-  width: 32px;
-  height: 32px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--scale-20);
+  height: var(--scale-20);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: var(--border-width-border-2) solid var(--color-border-lighter);
+  border: var(--border-width-border-2) solid var(--color-border-accessible);
   background: var(--color-background-component);
-  color: var(--color-text-neutral);
-  font-size: var(--font-size-body-3);
-  font-weight: 500;
-  font-family: inherit;
-  position: relative;
+  color: var(--color-text-white);
   z-index: 1;
   transition: all 150ms ease;
 }
 
-.number {
-  line-height: 1;
-}
-
 .label {
-  font-size: var(--font-size-body-3);
-  color: var(--color-text-neutral);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
   font-family: inherit;
-  text-align: center;
+  font-weight: 400;
+  text-align: left;
   white-space: nowrap;
 }
 
-/* Active step */
-.active .circle {
-  border-color: var(--color-background-controls-brand-base);
-  background: var(--color-background-controls-brand-base);
-  color: var(--color-text-white);
+.labelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-height: 24px;
 }
 
-.active .label {
+.active .labelRow {
+  background: var(--color-background-gray-neutral-light);
+  padding: var(--padding-padding-2) var(--padding-padding-8);
+  border-radius: var(--corner-radius-radius-6);
+}
+
+.number {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+  font-family: inherit;
   color: var(--color-text-neutral-strong);
   font-weight: 500;
 }
 
-/* Completed step */
-.completed .circle {
-  border-color: var(--alert-green-500);
-  background: var(--alert-green-500);
-  color: var(--color-text-white);
+.circleActive {
+  border-width: var(--border-width-border-2);
+  border-color: var(--color-border-brand-base);
 }
 
-.completed .label {
-  color: var(--color-text-neutral-strong);
+.activeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border-brand-base);
+}
+
+.circleCompleted {
+  border-color: var(--color-background-brand-base);
+  background: var(--color-background-brand-base);
+  color: var(--color-icon-inverse);
 }
