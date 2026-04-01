@@ -19,23 +19,6 @@ const meta: Meta<typeof Card> = {
 export default meta;
 type Story = StoryObj<typeof Card>;
 
-/** Optional leading header icon (swap / component affordance) */
-function HeaderSwapIcon() {
-  return (
-    <svg
-      width={20}
-      height={20}
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <path
-        fill="currentColor"
-        d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"
-      />
-    </svg>
-  );
-}
-
 /** Layout/swap grid icon (Figma-style placeholder) */
 function SwapLayoutIcon() {
   return (
@@ -275,7 +258,7 @@ export const WithHeaderOptionsMenu: Story = {
         </p>
         <Card
           title="Card Title"
-          headerIcon={<HeaderSwapIcon />}
+          headerIcon="swap"
           showIcon
           outlined
           showOverFlowMenu

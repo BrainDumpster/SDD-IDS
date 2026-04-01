@@ -27,12 +27,12 @@ function VerticalEllipsisIcon() {
       className={styles.kebabIcon}
       width={20}
       height={20}
-      viewBox="0 0 24 24"
+      viewBox="0 0 32 32"
       aria-hidden="true"
     >
-      <circle cx="12" cy="6" r="1.75" fill="currentColor" />
-      <circle cx="12" cy="12" r="1.75" fill="currentColor" />
-      <circle cx="12" cy="18" r="1.75" fill="currentColor" />
+      <circle cx="16" cy="4.5" r="3" fill="currentColor" />
+      <circle cx="16" cy="16.5" r="3" fill="currentColor" />
+      <circle cx="16" cy="27.5" r="3" fill="currentColor" />
     </svg>
   );
 }

@@ -27,7 +27,7 @@ Use this contract when generating framework components (React, Angular, Lit, etc
 | Slot / prop | Required | Behavior |
 |---|---|---|
 | `title` | No | Non-empty string renders the default heading in the title cluster (unless `header` is set). |
-| `headerIcon` | No | Optional leading icon or glyph in the **default** title row only (ignored when `header` is set). Pairs with `title` or may appear with menu-only headers per implementation. |
+| `headerIcon` | No | Optional leading icon in the **default** title row only (ignored when `header` is set). Accepts either a render node or an **icon slug string** (for example `swap`). When a string is provided, resolve to `assets/icons/<slug>.svg`. |
 | `showIcon` | No (default `false`) | Controls default header icon visibility. `true` shows the leading icon near title; `false` hides it. Effective when using default header row (i.e., when `header` is not set). |
 | `header` / custom header slot | No | When set, **replaces** the default title + `headerIcon` cluster. **Kebab + overlay** still render on the same row when `menuOptions` is non-empty. |
 | Body / `children` / default slot | Yes | Main content. May include nested cards, templates, or “swap” placeholder panels (see Body patterns). |
@@ -41,6 +41,7 @@ Use this contract when generating framework components (React, Angular, Lit, etc
 
 **Control-property mapping (codegen normalization)**
 - `showIcon = true` → render `headerIcon` in default title row (near `title`); `showIcon = false` → do not render header icon.
+- `headerIcon` as string → resolve through icon asset map (`assets/icons/<slug>.svg`); unknown slug should safely no-op (no icon rendered).
 - `showOverFlowMenu = true` + non-empty `menuOptions` → render vertical ellipsis and overlay list.
 - `showOverFlowMenu = true` + empty/missing `menuOptions` → render disabled/no-op kebab only if product requires visual placeholder; otherwise hide trigger.
 - `showButtons = true` → render footer button row (typically tertiary/secondary/primary variants as per Footer actions table).
@@ -83,7 +84,7 @@ Use this contract when generating framework components (React, Angular, Lit, etc
 | Above footer (when footer shown) | Top edge of footer | Same width and `var(--color-border-light)` |
 
 ## Header options overlay (menu)
-- **Trigger**: Icon-only control (vertical ellipsis), `aria-label` naming the action (e.g. “Card options” or include card title for context). Icon color states: **default** `var(--color-icon-neutral)`; **open (dropdown visible / clicked state)** `var(--icon-standard-gray)`.
+- **Trigger**: Icon-only control (vertical ellipsis), canonical icon slug **`overflow-menu-dots`** (`assets/icons/overflow-menu-dots.svg`), `aria-label` naming the action (e.g. “Card options” or include card title for context). Icon color states: **default** `var(--color-icon-neutral)`; **open (dropdown visible / clicked state)** `var(--icon-standard-gray)`.
 - **Surface**: Reuse design-system menu / popup tokens: background `var(--color-background-component)`, border `var(--border-width-border-1)` `var(--color-border-lighter)`, elevation shadow per dropdown spec, item text `var(--color-text-neutral-strong)`, highlighted row `var(--color-background-brand-lighter)` (or equivalent menu item tokens).
 - **Positioning**: Open below trigger, **aligned to the inline end** of the header row (`align: end` in LTR). **Collision boundary** = **card root element** so the panel stays visually within the card footprint; combine with **hard max-height** (see Layout) so scroll kicks in before exceeding the card’s lower bound.
 - **Data**: Each menu item exposes **`value`** (machine id) and **`label`** (visible string). Multiple cards may use the same labels with **different `value`s**; generators must bind lists **per card instance**.
@@ -136,6 +137,7 @@ Footer content is **slot-based**; for action rows, compose with the design syste
 - Standard gray icon: `var(--icon-standard-gray)` = #616161
 - White icon: `icon-white` = #FFFFFF
 - Status green icon: `icon-status-green` = #1B8500
+- Kebab trigger icon asset: `overflow-menu-dots` → `assets/icons/overflow-menu-dots.svg`
 
 ### Background Colors
 - Brand light: `var(--color-background-brand-light)` = #d9eaf8

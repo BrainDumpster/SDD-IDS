@@ -8,8 +8,8 @@ export type { CardMenuOption };
 interface CardProps {
   /** Optional header label — rendered when `header` is not provided */
   title?: string;
-  /** Optional leading icon in the title row (with `title`; omitted if using custom `header`) */
-  headerIcon?: ReactNode;
+  /** Optional leading icon in the title row (ReactNode or icon slug string; omitted if using custom `header`) */
+  headerIcon?: ReactNode | string;
   /** Controls whether headerIcon should render in default title row. */
   showIcon?: boolean;
   /** Custom header region — replaces default title row layout; pair with `menuOptions` to keep kebab on the right */
@@ -55,7 +55,16 @@ export function Card({
 
   const showMenu =
     showOverFlowMenu && menuOptions != null && menuOptions.length > 0;
-  const showHeaderIcon = showIcon && headerIcon != null;
+  const resolvedHeaderIcon =
+    typeof headerIcon === "string" &&
+    /^[a-z0-9-]+$/.test(headerIcon) &&
+    headerIcon.length > 0
+      ? `/assets/icons/${headerIcon}.svg`
+      : undefined;
+  const showHeaderIcon =
+    showIcon &&
+    headerIcon != null &&
+    (typeof headerIcon === "string" ? resolvedHeaderIcon != null : true);
   const hasHeader =
     header != null ||
     (title != null && String(title).length > 0) ||
@@ -100,7 +109,19 @@ export function Card({
             <div className={styles.headerRow}>
               <div className={styles.headerTitleCluster}>
                 {showHeaderIcon && (
-                  <span className={styles.headerIcon}>{headerIcon}</span>
+                  <span className={styles.headerIcon}>
+                    {typeof headerIcon === "string" ? (
+                      resolvedHeaderIcon ? (
+                        <img
+                          src={resolvedHeaderIcon}
+                          alt=""
+                          className={styles.headerIconImage}
+                        />
+                      ) : null
+                    ) : (
+                      headerIcon
+                    )}
+                  </span>
                 )}
                 {title != null && String(title).length > 0 && (
                   <h3 id={titleId} className={styles.title}>

@@ -63,6 +63,12 @@
   color: var(--color-icon-accessible);
 }
 
+.headerIconImage {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .title {
   font-size: var(--font-size-header-6);
   font-weight: 500;
