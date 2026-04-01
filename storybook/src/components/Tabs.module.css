@@ -1,30 +1,47 @@
 .root {
   width: 100%;
+  box-sizing: border-box;
+}
+
+.listWrap {
+  width: 100%;
+  overflow: hidden;
 }
 
 .list {
   display: flex;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-lighter);
+  align-items: center;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-light);
   gap: 0;
+  width: 100%;
+  min-width: 0;
 }
 
 .tab {
-  padding: var(--padding-padding-8) var(--padding-padding-16);
+  height: 32px;
+  padding: var(--padding-padding-6) var(--padding-padding-8) var(--padding-padding-6)
+    var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   font-weight: 500;
   color: var(--color-text-neutral);
-  background: transparent;
-  border: none;
-  border-bottom: var(--border-width-border-2) solid transparent;
+  background: var(--color-background-component);
+  border: 0;
+  border-right: var(--border-width-border-1) solid var(--color-border-light);
   cursor: pointer;
   transition: all 150ms ease;
   outline: none;
-  margin-bottom: -1px;
   white-space: nowrap;
   font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex: 0 1 auto;
+  min-width: 80px;
+  max-width: 250px;
 }
 
 .tab:hover:not([data-disabled]) {
+  background: var(--color-background-n-tabs-x-hover);
   color: var(--color-text-neutral-strong);
 }
 
@@ -35,13 +52,137 @@
 }
 
 .selected {
-  color: var(--color-text-brand-base);
-  border-bottom-color: var(--color-border-brand-base);
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  border-right-color: var(--color-border-light);
 }
 
 .tab[data-disabled] {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.tabIcon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tabIcon img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.tabLabel {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-icon-neutral);
+}
+
+.closeIcon {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.moreTrigger {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--component-gap-s, var(--spacing-space-8));
+  padding: var(--padding-padding-8) var(--padding-padding-12);
+  height: 32px;
+  background: var(--color-background-component);
+  border: 0;
+  border-right: var(--border-width-border-1) solid var(--color-border-light);
+  color: var(--color-text-neutral);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.moreTrigger:hover {
+  background: var(--color-background-n-tabs-x-hover);
+  color: var(--color-text-neutral-strong);
+}
+
+.moreTrigger[data-popup-open],
+.moreTrigger[data-popup-open]:hover {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+}
+
+.moreIcon {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.moreMenu {
+  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  box-shadow:
+    var(--shadow-drop-shadow-8-x)
+    var(--shadow-drop-shadow-8-y)
+    var(--shadow-drop-shadow-8-blur)
+    var(--shadow-drop-shadow-8-color);
+  min-width: 160px;
+  overflow: hidden;
+}
+
+.moreItem {
+  padding: var(--padding-padding-8) var(--padding-padding-12);
+  color: var(--color-text-neutral-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.moreItem:hover,
+.moreItem[data-highlighted] {
+  background: var(--color-background-n-tabs-x-hover);
+}
+
+.addButton {
+  all: unset;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  background: var(--color-background-component);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-icon-neutral);
+  flex-shrink: 0;
+  border-left: var(--border-width-border-1) solid var(--color-border-light);
+}
+
+.addButton:hover {
+  background: var(--color-background-n-tabs-x-hover);
+  color: var(--color-icon-neutral);
+}
+
+.addIcon {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
 
 .panel {

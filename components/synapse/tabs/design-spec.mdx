@@ -1,112 +1,228 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Tabs Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
+- Component: Tabs
+- Category: Components
+- Design System: Synapse
+- Figma:
+  - Primary Tabs: `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=47803-1727&m=dev`
+  - Optional icon-in-tab patterns: `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=47807-3185&m=dev`
+- Mapped Node ID (registry): `47803:1704` from `data/synapse-component-figma-map.json`
+- Runtime scope: horizontal tabs with per-tab panel, optional close, optional add-tab, responsive overflow with More menu
 
-| Property | Value |
-|---|---|
-| Component | Tabs |
-| Category | Components |
-| Figma Page | Components |
-| Node ID | 47803:1704 |
-| Design System | Synapse |
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+- **root**: top-level tabs container.
+- **listWrap**: horizontal clipping container for the tab row.
+- **tablist**: interactive list (`role="tablist"`), contains visible tabs and optional More trigger.
+- **tab**: one tab button (`role="tab"`), optional leading icon, text label, optional close action.
+- **tabLabel**: text node inside tab button, truncates with ellipsis.
+- **tabClose** (optional): close control per tab.
+- **addTabTrigger** (optional): add new tab action at tab-row end.
+- **moreTrigger** (conditional): overflow trigger labeled "More" with down chevron icon.
+- **moreMenu** (conditional): menu listing hidden tabs.
+- **panelRegion**: container for tab panels.
+- **tabPanel**: content region for the active tab (`role="tabpanel"`).
 
-The component is composed of these structural parts:
-
-- **list**
-- **panel**
-- **root**
-- **selected**
-- **tab**
-
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
+- Root uses container-driven width: `width: 100%`, `box-sizing: border-box`.
+- Tab row is horizontal and non-wrapping: `display: flex`, `align-items: stretch`, `white-space: nowrap`.
+- Tab row bottom baseline: single `1px` line using `var(--color-border-light)`.
+- Vertical separators between tabs: `1px` using `var(--color-border-light)`.
+- Tab control height: `32px`.
+- Tab item padding: `6px 8px 6px 16px` (top/right/bottom/left).
+- Each tab width constraints:
+  - **minimum**: `80px`
+  - **maximum**: `250px`
+  - min/max include label + optional tab icon + optional close icon.
+- Tab label overflow rule:
+  - label area is flexible (`flex: 1 1 auto`, `min-width: 0`)
+  - apply `overflow: hidden; text-overflow: ellipsis; white-space: nowrap`.
+- Close icon target is right-aligned within tab and included in width budget.
+- More trigger remains visible at row end when hidden tabs exist.
+- More trigger label/icon spacing: `var(--component-gap-s, var(--spacing-space-8))` (`8px` effective).
+- Overflow behavior is responsive to container width changes (observe root/list width; recompute visible tabs on resize).
+- Active panel is rendered below tab row with full available width.
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+## Tokens
+- Typography:
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-20)`
+- Spacing/sizing:
+  - `var(--padding-padding-8)`
+  - `var(--padding-padding-12)`
+  - `var(--padding-padding-16)`
+  - `var(--spacing-space-8)`
+  - `var(--sizing-size-32)` (touch target baseline)
+- Borders/radius:
+  - `var(--border-width-border-1)`
+  - `var(--border-width-border-2)`
+  - `var(--corner-radius-radius-2)`
+  - `var(--corner-radius-radius-4)`
+- Tab/list colors:
+  - `var(--color-background-component)`
+  - `var(--color-background-n-tabs-x-hover)`
+  - `var(--color-border-lighter)`
+  - `var(--color-border-light)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-text-neutral)`
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-brand-base)`
+  - `var(--color-icon-neutral)`
+  - `var(--color-icon-brand-base)`
+  - `var(--color-icon-white)` (only where inverse icon is required by host surface)
+- Overflow gradients (optional visual affordance):
+  - `var(--color-gradient-overflow-horizontal-start)`
+  - `var(--color-gradient-overflow-horizontal-middle)`
+  - `var(--color-gradient-overflow-horizontal-end)`
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
-
-- `var(--border-width-border-1)` = 1px
-- `var(--border-width-border-2)` = 2px
-- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-text-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--corner-radius-radius-2)` = 2px
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-size-body-2)` = 14px
-- `var(--padding-padding-16)` = 16px
-- `var(--padding-padding-8)` = 8px
-
-<!-- ds:section id=states-light -->
 ## States (Light Theme)
+| Element | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Tab | Default | `var(--color-background-component)` | right separator `var(--color-border-light)` + row bottom baseline `var(--color-border-light)` | `var(--color-text-neutral)` / `var(--color-icon-neutral)` |
+| Tab | Hover | `var(--color-background-n-tabs-x-hover)` | `var(--color-border-lighter)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral)` |
+| Tab | Active | `var(--color-background-brand-light)` | keep right separator; no brand underline; rely on row bottom baseline | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| Tab | Focus-visible | inherits current state bg | outline `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits current state text/icon |
+| Tab | Disabled (if supported) | `var(--color-background-component)` | `var(--color-border-lighter)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| More Trigger | Default | `var(--color-background-component)` (same as standard tab) | `var(--color-border-lighter)` | `var(--color-text-neutral)` / `var(--color-icon-neutral)` |
+| More Trigger | Hover | `var(--color-background-n-tabs-x-hover)` | keep separator/baseline border tokens | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral)` |
+| More Trigger | Open | `var(--color-background-brand-light)` | keep separator/baseline border tokens | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
-| default | hover |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
-
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
+| Element | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Tab | Default | `var(--color-background-component)` | right separator `var(--color-border-light)` + row bottom baseline `var(--color-border-light)` | `var(--color-text-neutral)` / `var(--color-icon-neutral)` |
+| Tab | Hover | `var(--color-background-n-tabs-x-hover)` | `var(--color-border-lighter)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral)` |
+| Tab | Active | `var(--color-background-brand-light)` | keep right separator; no brand underline; rely on row bottom baseline | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| Tab | Focus-visible | inherits current state bg | outline `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits current state text/icon |
+| Tab | Disabled (if supported) | `var(--color-background-component)` | `var(--color-border-lighter)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| More Trigger | Default | `var(--color-background-component)` (same as standard tab) | `var(--color-border-lighter)` | `var(--color-text-neutral)` / `var(--color-icon-neutral)` |
+| More Trigger | Hover | `var(--color-background-n-tabs-x-hover)` | keep separator/baseline border tokens | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral)` |
+| More Trigger | Open | `var(--color-background-brand-light)` | keep separator/baseline border tokens | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
-| default | hover |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+## Interactions
+- **Tab activation**:
+  - Clicking a tab activates it and displays its panel.
+  - Exactly one tab is active at a time.
+- **Closable tabs**:
+  - Each tab may show a close action when `closable=true` for that tab.
+  - Closing the active tab activates the nearest surviving tab (prefer right sibling, else left).
+  - Closing must be blocked when only one tab remains (one tab must always exist).
+- **Add tab (optional)**:
+  - Add action uses icon slug `shape-plus` (`assets/icons/shape-plus.svg`).
+  - Trigger can appear at tab-row end when enabled.
+- **Overflow / More**:
+  - If tabs exceed available container width, move trailing non-active tabs into hidden collection.
+  - Show `More` trigger with chevron-down icon (`chev-down.svg`, 12px).
+  - Clicking More opens a list of hidden tabs.
+  - When user selects a hidden tab from More list:
+    1. selected hidden tab becomes active,
+    2. selected tab is promoted into visible row,
+    3. one currently visible tab is demoted to hidden so visible slot count stays stable,
+    4. More remains as overflow entry point if hidden tabs still exist.
+- **Optional tab icon with label**:
+  - Tab may include an icon before label when provided.
+  - Icon is decorative unless product defines semantic meaning.
+- **Keyboard**:
+  - `ArrowLeft`/`ArrowRight`: move focus across visible tabs.
+  - `Home`/`End`: jump focus to first/last visible tab.
+  - `Enter`/`Space`: activate focused tab.
+  - `Delete` (optional): close focused tab if closable and more than one tab exists.
+  - `Enter`/`Space` on More opens hidden-tab menu; arrows navigate menu; Enter selects.
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Composition & API (runtime)
+| Slot/Prop | Required | Behavior |
+|---|---|---|
+| `tabs` | Yes | Ordered list of tab models. Each item: `{ id, label, panel, icon?, closable?, disabled? }`. |
+| `activeTabId` | Yes (controlled) | Currently active tab id. |
+| `defaultActiveTabId` | No (uncontrolled) | Initial active tab id when uncontrolled mode is used. |
+| `onActiveTabChange(id)` | Yes | Fired when active tab changes via click/keyboard/overflow selection. |
+| `onTabClose(id)` | No | Fired when a tab close action succeeds. Must not fire when close is blocked by single-tab rule. |
+| `allowAddTab` | No | Enables Add tab trigger. |
+| `onAddTab()` | No | Called when add trigger is clicked/activated. |
+| `showMoreOverflow` | No (default `true`) | Enables responsive overflow-to-More behavior. |
+| `moreLabel` | No (default `"More"`) | Localizable label for overflow trigger. |
+| `minTabWidth` | No (default `80`) | Minimum width in px for a tab item. |
+| `maxTabWidth` | No (default `250`) | Maximum width in px for a tab item. |
+| `renderTabIcon` / `icon` field | No | Optional icon renderer/value for icon+label tabs. |
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+Implementation rules:
+- Always keep at least one tab item in runtime state.
+- Enforce `minTabWidth` and `maxTabWidth` at render/layout level.
+- Tab label truncation must be deterministic and token-compatible.
+- Panels are associated by stable id mapping (`tab.id` ↔ `tabpanel` id).
 
-**Pattern**: tablist
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic slot schema
+- `root`
+  - `listWrap`
+    - `tablist`
+      - `visibleTab[]`
+      - optional `moreTrigger`
+      - optional `addTabTrigger`
+    - optional `moreMenu`
+  - `panelRegion`
+    - `activeTabPanel`
 
-### Behaviors
+### Supported matrix
+- Tab visibility mode: all-visible | overflow-with-more.
+- Tab composition: label-only | icon+label.
+- Close mode: non-closable | mixed closable | all closable (still one-tab minimum).
+- Add mode: no add trigger | add trigger enabled.
+- Control mode: controlled | uncontrolled.
 
-- Horizontal tab navigation between tab elements
-- Activates associated panel on tab selection
-- Supports automatic activation (focus = select) or manual activation (Enter to select)
+### Style contract
+- Tab item width clamp: `min 80px`, `max 250px`.
+- Tab item height: `32px`.
+- Tab padding: `6px 8px 6px 16px`.
+- Truncation is required for labels exceeding available width.
+- More chevron icon is **12px**.
+- All style values use semantic tokens except fixed width constraints above.
+- Responsive overflow recalculates on:
+  - container resize,
+  - tab add/remove,
+  - label/icon changes that affect measured width.
 
-### Keyboard
+### Behavior contract
+- Selection from More promotes selected hidden tab into visible active set.
+- Active tab must always have a panel rendered.
+- Close action cannot remove final remaining tab.
+- Closing a tab preserves deterministic next-active selection logic.
 
-| Key | Action |
-|---|---|
-| ArrowLeft | Move focus to previous tab |
-| ArrowRight | Move focus to next tab |
-| Home | Move focus to first tab |
-| End | Move focus to last tab |
+### Accessibility contract
+- `tablist` has `role="tablist"`.
+- Each tab has `role="tab"`, `aria-selected`, `aria-controls`, and stable `id`.
+- Each panel has `role="tabpanel"` and `aria-labelledby`.
+- More trigger has button semantics + expanded state when menu is open.
+- Hidden-tab list uses menu/listbox semantics consistently per framework primitive.
 
-### ARIA
+### Asset and bundling contract
+- Required assets:
+  - Add tab icon: `assets/icons/shape-plus.svg` (user wording "shape-plush" maps to `shape-plus` asset slug).
+  - More chevron: `assets/icons/chev-down.svg` (12px render size).
+- Asset folder must be available in framework bundle/runtime path when generating code.
 
-| Element | Attributes |
-|---|---|
-| container | {'role': 'tablist'} |
-| tab | {'role': 'tab', 'aria-selected': 'true on the active tab', 'aria-controls': 'ID of the associated tabpanel'} |
-| panel | {'role': 'tabpanel', 'aria-labelledby': 'ID of the associated tab'} |
+### Fallback/error rules
+- Missing `activeTabId`: fallback to first available tab.
+- Invalid `activeTabId`: fallback to first non-disabled tab.
+- Empty tabs input: generator/runtime must create one default non-closable tab placeholder.
+- Unknown icon slug: render label without icon; do not crash.
+
+### Validation checklist
+- [ ] One-tab-minimum invariant is enforced.
+- [ ] Min/max tab width constraints are enforced (80/250).
+- [ ] Long labels truncate with ellipsis.
+- [ ] Overflow switches to More when tabs exceed container width.
+- [ ] Selecting hidden tab from More promotes it to visible active tab.
+- [ ] More chevron icon renders at 12px.
+- [ ] Optional add-tab icon uses `shape-plus` asset.
+- [ ] Keyboard + ARIA behavior conforms to tab pattern and overflow menu behavior.
+- [ ] Light/dark states are token-driven only.
 
 ## Source Mapping
-
-| Source | Location |
-|---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
-| Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+- Root spec: `components/synapse/root-spec.mdx`
+- Theme CSS: `components/synapse-theme.css`
+- Component map: `data/synapse-component-figma-map.json` (Tabs entry node `47803:1704`)
+- Figma references:
+  - `47803:1727` (primary tabs and overflow behavior reference)
+  - `47807:3185` (optional tab icon+label patterns)
