@@ -21,7 +21,7 @@
 - **Dividers**: Horizontal rule between header→body and body→footer using border tokens (not a separate DOM element unless framework requires it).
 - **Optional**: Media/image area inside body; focus ring for interactive cards; elevation.
 
-## Composition & API (code generation)
+## Composition & API (runtime)
 Use this contract when generating framework components (React, Angular, Lit, etc.). **Do not hardcode** colors, radii, spacing, or border widths—always use semantic tokens below.
 
 | Slot / prop | Required | Behavior |
@@ -234,6 +234,60 @@ Same semantic tokens as light; values resolve via `data-theme` / global theme ru
 - [ ] Footer composed with design-system Button variants
 - [ ] Optional `headerIcon` + `title` row; optional `menuOptions` + kebab; `data-card-header` / `data-card-footer` for measurements
 - [ ] Options overlay: collision boundary = card root; max-height so list scrolls within card; `onOptionSelected(value)` wired
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+This section is normative for generation and validation.
+
+### Deterministic structure
+- `root`
+  - optional `header`
+    - optional `headerIcon`
+    - optional `title`
+    - optional `overflowTrigger`
+  - optional `overflowOverlay` (anchored to trigger)
+  - required `body`
+  - optional `footer`
+
+### Supported matrix
+- Header composition:
+  - default title row (`title` + optional `headerIcon`)
+  - custom header slot
+  - headerless card
+- Interaction mode:
+  - static content card
+  - interactive/selectable card
+- Overflow:
+  - no menu
+  - per-card menu options list
+- Footer:
+  - none
+  - slot-only metadata
+  - button action row
+
+### Slot style contract
+- Root border/radius/padding/divider behavior must follow this spec and use semantic tokens.
+- Header and footer dividers are conditional (render only when regions exist).
+- Body must be flexible (`flex: 1`) and preserve layout without header/footer.
+- Overflow overlay must be bounded to card height and scroll internally.
+
+### Behavior and accessibility contract
+- Kebab trigger opens/closes overlay with click/keyboard.
+- Selecting a menu item emits `onOptionSelected(value: string)`.
+- Overlay uses menu semantics (`menu`/`menuitem`) and keyboard navigation.
+- Interactive card mode must not swallow footer/button/kebab interactions.
+
+### Fallback/error rules
+- Missing `menuOptions` => no interactive overlay.
+- Missing `title` + `header` + menu => header omitted.
+- Unknown menu item shape => omit invalid items and warn.
+
+### Validation checklist
+- [ ] Header/body/footer conditional rendering is deterministic.
+- [ ] Divider rules are correct for all header/footer presence combinations.
+- [ ] Overflow overlay stays inside card boundary with internal scrolling.
+- [ ] `onOptionSelected(value)` emits correct value for each item.
+- [ ] Accessibility semantics pass for menu button/menu items and card focus modes.
 
 ## Source Mapping
 - Figma component: Card — node **50419:259141** (`data/synapse-component-figma-map.json`)

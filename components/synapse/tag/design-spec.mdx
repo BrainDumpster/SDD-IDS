@@ -151,6 +151,47 @@ Use the same structural/state matrix as light theme, resolving values through da
   - `onRemove` (closable)
   - `onTextFocus` / `onTextBlur` (editable focus variants)
 
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+This section is normative for generation and validation.
+
+### Deterministic structure
+- `root`
+  - optional `labelPrefix`
+  - `valueText`
+  - optional `badge`
+  - optional `closeButton`
+
+### Supported matrix
+- Type: `info | success | minor | major | critical | non-alerting`
+- Mode: `readOnly | clickable | editable | closable | badge`
+- Size: `small | large`
+- Booleans: `selected`, `showLabel`, `focusOnText`
+
+### Slot style contract
+- Capsule sizing/padding/gap by mode/size must match this spec.
+- Clickable selected vs unselected palette is deterministic.
+- Editable text-focus ring must be `1px` brand with `2px` radius.
+- Closable icon sizing and state transitions follow `Tag-Element-Close`.
+
+### Behavior and accessibility contract
+- Clickable toggles selection and emits `onSelectedChange`.
+- Editable focuses internal text region (not outer capsule).
+- Closable emits remove action on close activation.
+- Close button has accessible name.
+
+### Fallback/error rules
+- Unknown type -> fallback `non-alerting`.
+- If `badgeCount` missing/null, badge slot omitted.
+- If `closable=false`, close slot omitted.
+
+### Validation checklist
+- [ ] All alerting and non-alerting variants match token/state mapping.
+- [ ] Clickable selection toggles deterministically.
+- [ ] Editable focus-on-text behavior and ring match spec.
+- [ ] Badge layout spacing remains valid in all states.
+- [ ] Accessibility semantics pass.
+
 ## Source Mapping
 
 | Source | Location |

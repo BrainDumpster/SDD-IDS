@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<path class="st0" d="M16.06,15c3.06,0,5.55-2.46,5.55-5.49c0-3.03-2.49-5.49-5.55-5.49c-3.06,0-5.56,2.46-5.56,5.49
+		C10.5,12.53,12.99,15,16.06,15z M16.06,6.02c1.96,0,3.55,1.57,3.55,3.49c0,1.92-1.59,3.49-3.55,3.49c-1.96,0-3.56-1.57-3.56-3.49
+		C12.5,7.59,14.1,6.02,16.06,6.02z"/>
+	<rect x="10.5" y="18" class="st0" width="13" height="2"/>
+	<rect x="10.5" y="23" class="st0" width="13" height="2"/>
+	<path class="st0" d="M29.51,0L7.51,0l-2,0l-3,0c-1.1,0-2,0.89-2,2L0.5,30c0,1.1,0.89,2,2,2l3,0l2,0l22,0.01c1.1,0,2-0.89,2-2
+		L31.5,2C31.5,0.9,30.61,0,29.51,0z M5.5,30l-3,0L2.5,2l3,0L5.5,30z M29.5,30L7.5,30L7.5,2L29.5,2L29.5,30z"/>
+	<circle class="st0" cx="16.06" cy="9.51" r="1.5"/>
+</g>
+</svg>

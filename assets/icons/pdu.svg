@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.NEW_x0020_TILE_x0020_COLOR{fill:url(#SVGID_1_);}
+	.st0{fill:#616161;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-184" y1="-184" x2="-184" y2="-185">
+	<stop  offset="0" style="stop-color:#0057AD"/>
+	<stop  offset="0.2959" style="stop-color:#0066BD"/>
+	<stop  offset="0.6535" style="stop-color:#0072CA"/>
+	<stop  offset="0.9963" style="stop-color:#0076CE"/>
+</linearGradient>
+<g>
+	<path class="st0" d="M31,9H1c-0.55,0-1,0.45-1,1v12c0,0.55,0.45,1,1,1h30c0.55,0,1-0.45,1-1V10C32,9.45,31.55,9,31,9z M4.32,11
+		h6.49v10H4.32V11z M12.8,11h6.24v10H12.8V11z M21.04,11h6.54v10h-6.54V11z"/>
+	<rect x="5.28" y="17.58" class="st0" width="2.37" height="0.79"/>
+	<rect x="5.28" y="13.63" class="st0" width="1.58" height="0.79"/>
+	<rect x="8.44" y="15.21" class="st0" width="1.58" height="1.58"/>
+	<rect x="13.65" y="17.58" class="st0" width="2.37" height="0.79"/>
+	<rect x="13.65" y="13.63" class="st0" width="1.58" height="0.79"/>
+	<rect x="16.66" y="15.21" class="st0" width="1.58" height="1.58"/>
+	<rect x="21.88" y="17.58" class="st0" width="2.37" height="0.79"/>
+	<rect x="21.88" y="13.63" class="st0" width="1.58" height="0.79"/>
+	<rect x="25.04" y="15.21" class="st0" width="1.58" height="1.58"/>
+</g>
+</svg>

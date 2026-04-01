@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.NEW_x0020_TILE_x0020_COLOR{fill:url(#SVGID_1_);}
+	.st0{fill:#616161;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-184" y1="-184" x2="-184" y2="-185">
+	<stop  offset="0" style="stop-color:#0057AD"/>
+	<stop  offset="0.2959" style="stop-color:#0066BD"/>
+	<stop  offset="0.6535" style="stop-color:#0072CA"/>
+	<stop  offset="0.9963" style="stop-color:#0076CE"/>
+</linearGradient>
+<g id="svg" transform="translate(665 48)">
+	<path id="Path_6387" class="st0" d="M-659.27-28.09l6.35,6.38l13.53-13.52l-6.36-6.36L-659.27-28.09z"/>
+	<path id="Path_6388" class="st0" d="M-633.88-42.3l-4.82-4.82c-0.6-0.4-1.42-0.27-1.86,0.31l-3.8,3.8l6.36,6.36l3.8-3.8
+		C-633.61-40.88-633.47-41.7-633.88-42.3z"/>
+	<path id="Path_6389" class="st0" d="M-660.9-26.46l-3.36,9.02c-0.3,0.57,0.14,1,0.71,0.71l9.06-3.4l0.16-0.16l-6.35-6.38
+		L-660.9-26.46z"/>
+</g>
+</svg>

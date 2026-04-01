@@ -36,7 +36,7 @@ Notes:
 - The alert icon is optional; non-alerting variant renders title without alert icon.
 - There is **no border/divider** between header and body.
 
-## Composition & API (code generation)
+## Composition & API (runtime)
 Use this contract when generating framework components (React, Angular, Lit, etc.).
 
 ### Inputs (Props)
@@ -195,6 +195,55 @@ Same semantic structure as Light Theme. Values resolve through theme variables:
 | popup root | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-describedby` |
 | close icon button | `aria-label="Close"` |
 | alert icon | `aria-hidden="true"` when decorative |
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+This section is normative for generation and validation.
+
+### Deterministic structure
+- `backdrop`
+- `popup`
+  - `header`
+    - optional `alertIcon`
+    - `title`
+    - optional `closeButton`
+  - `body`
+  - `footer`
+    - optional `tertiaryButton`
+    - `primaryButton`
+
+### Supported matrix
+- `dialogType`: `none | info | warning | major | danger | success`
+- `dialogSize`: `sm | lg | xl`
+- `dialogClosable`: `true | false`
+- footer composition:
+  - primary only
+  - primary + tertiary
+
+### Slot style contract
+- Header/body separator: none.
+- Dialog width/height/padding/radius/shadow must follow this spec.
+- Close icon button visual size and focus-visible treatment must be deterministic.
+- Alert icon token must map to `dialogType`.
+
+### Behavior and accessibility contract
+- Focus trap required while open.
+- Escape closes dialog (unless explicitly disabled by consumer API).
+- Close button emits `onClose`.
+- Primary and tertiary emit their events only when enabled.
+- `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + `aria-describedby` are required.
+
+### Fallback/error rules
+- Unknown `dialogType` -> fallback `none`.
+- Missing tertiary label -> tertiary button omitted.
+- If `dialogClosable=false`, close control is not rendered.
+
+### Validation checklist
+- [ ] All dialog types render correct alert icon behavior.
+- [ ] Header/body spacing and no-divider rule are respected.
+- [ ] Event contract (`onClose`, `onPrimaryButtonClick`, `onTertiaryButtonClick`) is deterministic.
+- [ ] Keyboard/focus trap behavior passes.
+- [ ] ARIA contract passes.
 
 ## Source Mapping
 

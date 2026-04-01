@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="state-progress-circle" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #0076ce;
+      }
+    </style>
+  </defs>
+  <path id="Base" class="cls-2" d="M16,0c8.84,0,16,7.16,16,16s-7.16,16-16,16S0,24.84,0,16,7.16,0,16,0Z"/>
+  <g id="Overlay">
+    <path class="cls-1" d="M16.85,3.97l-1.64,1.14,1.92,2.76c-4.27-.88-8.65,1.51-10.12,5.74-.77,2.22-.63,4.62.39,6.75,1.03,2.12,2.82,3.72,5.04,4.5l.66-1.89c-3.56-1.24-5.44-5.14-4.21-8.7,1.11-3.19,4.36-5.03,7.59-4.48l-2.42,1.69,1.14,1.64,5.39-3.75-3.75-5.39Z"/>
+    <circle class="cls-1" cx="19.55" cy="23.46" r="1"/>
+    <circle class="cls-1" cx="22.39" cy="20.59" r="1"/>
+    <circle class="cls-1" cx="15.73" cy="24.46" r="1"/>
+    <circle class="cls-1" cx="23.48" cy="16.74" r="1"/>
+    <circle class="cls-1" cx="22.5" cy="12.84" r="1"/>
+  </g>
+</svg>

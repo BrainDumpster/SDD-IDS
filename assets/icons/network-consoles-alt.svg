@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<polygon class="st0" points="22.38,29.48 22.38,28.41 20.58,28.41 20.58,26.01 18.42,26.01 18.42,28.41 16.63,28.41 16.63,29.48 
+		11.59,29.48 11.59,30.92 16.63,30.92 16.63,32 22.38,32 22.38,30.92 27.41,30.92 27.41,29.48 	"/>
+	<path id="XMLID_7316_" class="st0" d="M30,11v11H9V11H30 M31,9H8c-0.55,0-1,0.45-1,1v13c0,0.55,0.45,1,1,1h23c0.55,0,1-0.45,1-1V10
+		C32,9.45,31.55,9,31,9L31,9z"/>
+	<path id="XMLID_7196_" class="st0" d="M27.97,13.03v6.93H11.09v-6.93h16.83"/>
+	<path class="st0" d="M2,13V2h21v5h2V1c0-0.55-0.45-1-1-1H1C0.45,0,0,0.45,0,1v13c0,0.55,0.45,1,1,1h4v-2H2z"/>
+	<path class="st0" d="M7.4,7h13.56V4.03h-0.05H4.09v6.93H5V9.4C5,8.08,6.08,7,7.4,7z"/>
+</g>
+</svg>

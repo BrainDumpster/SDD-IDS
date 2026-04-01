@@ -86,7 +86,7 @@ Use the same structural mapping as light theme, resolved through dark token valu
 - Active step label container uses `var(--color-background-gray-neutral-light)` with `2px 8px` padding and `6px` corner radius.
 - Labels remain left-aligned and do not shift between states.
 
-### Composition & API (runtime)
+## Composition & API (runtime)
 
 - **Input props (minimum contract)**:
   - `steps: string[]` — ordered list of step labels (`["Account", "Profile", ...]`).
@@ -95,6 +95,48 @@ Use the same structural mapping as light theme, resolved through dark token valu
 - Recommended higher-level state shape:
   - derive per-step `state` (`not-started | active | completed`) from `steps`, `activeStep`, and `completed`.
   - optional click handling for back navigation to completed steps only.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+This section is normative for generation and validation.
+
+### Deterministic structure
+- `root`
+  - repeated `stepItem`
+    - `iconRail`
+      - `connector`
+      - `statusIcon`
+    - `labelRow`
+      - `stepNumber`
+      - `stepText`
+
+### Supported matrix
+- Per-step state: `not-started | active | completed`
+- Active emphasis toggled by active step index.
+
+### Slot style contract
+- Step item geometry (`180x50`) and internal row sizes must match this spec.
+- Connector thickness (`4px`) and icon size (`20x20`) are fixed.
+- Label row typography and left alignment are deterministic.
+- Active label chip uses `2px 8px` padding and `6px` radius.
+
+### Behavior and accessibility contract
+- Active step derived from `activeStep`.
+- Completed steps from `completed[]` (or derived rule if consumer omits).
+- Optional click interactions may be limited to completed steps only.
+- Expose current step semantics (`aria-current="step"` on active item when appropriate).
+
+### Fallback/error rules
+- Out-of-range `activeStep` -> clamp to valid range.
+- Unknown step state -> fallback `not-started`.
+- Empty `steps` -> render nothing and warn.
+
+### Validation checklist
+- [ ] Not-started/active/completed visuals match token contract.
+- [ ] Connector and icon transitions by state are correct.
+- [ ] Active label chip styling is correct.
+- [ ] Typography/alignment remain stable across states.
+- [ ] Accessibility semantics for active step pass.
 
 ## Source Mapping
 

@@ -1,11 +1,20 @@
 import { Toast as BaseToast } from "@base-ui-components/react/toast";
 import type { ReactNode } from "react";
+import infoIcon from "../../../assets/icons/info-circ-solid.svg";
+import successIcon from "../../../assets/icons/status-ok-circ-solid.svg";
+import minorIcon from "../../../assets/icons/status-warn-tri-solid.svg";
+import majorIcon from "../../../assets/icons/status-error-diamond-solid.svg";
+import criticalIcon from "../../../assets/icons/status-critical-square-solid.svg";
 import styles from "./Toast.module.css";
 
-type ToastVariant = "info" | "success" | "warning" | "error";
+export type ToastVariant = "info" | "success" | "minor" | "major" | "critical";
 
 interface ToastData {
   variant?: ToastVariant;
+  showLink?: boolean;
+  closable?: boolean;
+  onLinkClick?: () => void;
+  linkLabel?: string;
 }
 
 interface ToastSetupProps {
@@ -20,88 +29,95 @@ export function ToastSetup({ children }: ToastSetupProps) {
   return (
     <BaseToast.Provider timeout={5000}>
       {children}
-      <BaseToast.Viewport className={styles.viewport}>
-        {(toast) => {
-          const variant = (toast.data as ToastData | undefined)?.variant ?? "info";
-          return (
-            <BaseToast.Root
-              key={toast.id}
-              toast={toast}
-              className={`${styles.root} ${styles[variant]}`}
-            >
-              <div className={styles.iconWrap}>
-                <VariantIcon variant={variant} />
-              </div>
-              <div className={styles.content}>
-                {toast.title && (
-                  <BaseToast.Title className={styles.title}>
-                    {toast.title}
-                  </BaseToast.Title>
-                )}
-                {toast.description && (
-                  <BaseToast.Description className={styles.description}>
-                    {toast.description}
-                  </BaseToast.Description>
-                )}
-              </div>
-              <BaseToast.Close className={styles.close} aria-label="Close">
-                <CloseIcon />
-              </BaseToast.Close>
-            </BaseToast.Root>
-          );
-        }}
-      </BaseToast.Viewport>
+      <ToastViewport />
     </BaseToast.Provider>
   );
 }
 
 export const useToast = BaseToast.useToastManager;
 
+function ToastViewport() {
+  const toastManager = useToast();
+  return (
+    <BaseToast.Viewport className={styles.viewport}>
+      {toastManager.toasts.map((toast) => {
+        const variant = (toast.data as ToastData | undefined)?.variant ?? "info";
+        const showLink = Boolean((toast.data as ToastData | undefined)?.showLink);
+        const closable = (toast.data as ToastData | undefined)?.closable ?? true;
+        const onLinkClick = (toast.data as ToastData | undefined)?.onLinkClick;
+        const linkLabel = (toast.data as ToastData | undefined)?.linkLabel ?? "View Details";
+        return (
+          <BaseToast.Root
+            key={toast.id}
+            toast={toast}
+            className={`${styles.root} ${styles[variant]}`}
+          >
+            <div className={styles.iconWrap}>
+              <VariantIcon variant={variant} />
+            </div>
+            <div className={styles.content}>
+              <BaseToast.Description className={styles.description}>
+                {toast.description ?? toast.title}
+              </BaseToast.Description>
+            </div>
+            {showLink ? (
+              <BaseToast.Action
+                className={styles.link}
+                onClick={() => {
+                  onLinkClick?.();
+                }}
+              >
+                <span>{linkLabel}</span>
+              </BaseToast.Action>
+            ) : null}
+            {closable ? (
+              <BaseToast.Close className={styles.close} aria-label="Close">
+                <CloseIcon />
+              </BaseToast.Close>
+            ) : (
+              <span className={styles.closePlaceholder} aria-hidden="true" />
+            )}
+          </BaseToast.Root>
+        );
+      })}
+    </BaseToast.Viewport>
+  );
+}
+
 function VariantIcon({ variant }: { variant: ToastVariant }) {
-  const size = 20;
+  const iconByVariant: Record<ToastVariant, string> = {
+    info: infoIcon,
+    success: successIcon,
+    minor: minorIcon,
+    major: majorIcon,
+    critical: criticalIcon,
+  };
+
   switch (variant) {
     case "info":
-      return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" />
-          <path d="M10 9V14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="10" cy="6.5" r="1" fill="currentColor" />
-        </svg>
-      );
     case "success":
-      return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" />
-          <path d="M6 10L9 13L14 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      );
-    case "warning":
-      return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
-          <path d="M10 2L19 18H1L10 2Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M10 8V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="10" cy="15" r="1" fill="currentColor" />
-        </svg>
-      );
-    case "error":
-      return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" />
-          <path d="M7 7L13 13M13 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      );
+    case "minor":
+    case "major":
+    case "critical":
+      return <img src={iconByVariant[variant]} alt="" className={styles.variantIcon} />;
   }
 }
 
 function CloseIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M12 4L4 12M4 4L12 12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
+    <svg
+      className={styles.closeIcon}
+      width="12"
+      height="12"
+      viewBox="0 0 32 32"
+      fill="none"
+      aria-hidden="true"
+    >
+      <polygon
+        points="2.94,32 16,18.94 29.06,32 32,29.06 18.94,16 32,2.94 29.06,0 16,13.06 2.94,0 0,2.94 13.06,16 0,29.06"
+        fill="currentColor"
       />
     </svg>
   );
 }
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="state-queued-clock-solid" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #0076ce;
+      }
+    </style>
+  </defs>
+  <circle id="base" class="cls-2" cx="16" cy="16.07" r="16"/>
+  <g id="overlay">
+    <path class="cls-1" d="M6.25,16.07c0-5.38,4.37-9.75,9.75-9.75,1.88,0,3.63.54,5.12,1.47l.76-1.88c-1.73-1.01-3.74-1.59-5.89-1.59-6.49,0-11.75,5.26-11.75,11.75,0,5.49,3.78,10.09,8.87,11.38l.76-1.87c-4.36-.97-7.63-4.86-7.63-9.51Z"/>
+    <polygon class="cls-1" points="21.85 22.66 14.7 19.48 14.7 9.35 16.7 9.35 16.7 18.18 22.67 20.83 21.85 22.66"/>
+  </g>
+</svg>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="icons" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 29.3.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 151)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+      }
+
+      .st1 {
+        mask: url(#mask);
+      }
+
+      .st2 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 2.2px;
+      }
+
+      .st3 {
+        filter: url(#luminosity-noclip);
+      }
+    </style>
+    <filter id="luminosity-noclip" x="0" y="0" width="32" height="32" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <mask id="mask" x="0" y="0" width="32" height="32" maskUnits="userSpaceOnUse">
+      <g class="st3">
+        <g>
+          <line class="st2" x1="6.92" y1="16.04" x2="26.17" y2="16.04"/>
+          <polyline class="st2" points="11.47 10.16 5.83 16.04 11.47 21.84"/>
+          <polyline class="st2" points="20.38 10.16 26.02 16.04 20.38 21.84"/>
+        </g>
+      </g>
+    </mask>
+  </defs>
+  <g class="st1">
+    <circle id="source" class="st0" cx="16" cy="16" r="16"/>
+  </g>
+</svg>

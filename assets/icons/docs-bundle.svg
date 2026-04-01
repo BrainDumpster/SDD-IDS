@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+	.st1{filter:url(#Adobe_OpacityMaskFilter);}
+	.st2{mask:url(#XMLID_00000078026894301105527310000006700766667810985657_);}
+	.st3{filter:url(#Adobe_OpacityMaskFilter_00000068655614413566586740000013496036000185974696_);}
+	.st4{mask:url(#XMLID_00000146476830238566834810000011784130621176000144_);}
+</style>
+<g>
+	<g>
+		<g id="XMLID_00000114772382214454703720000005193981311944799901_">
+			<g id="XMLID_00000041290690359704927550000015983913165317538453_">
+				<g id="XMLID_00000132071659187023598840000015143196857823606153_">
+					<rect x="6" y="7" class="st0" width="12" height="2"/>
+				</g>
+				<g id="XMLID_00000176746381831032437400000003200610317960368529_">
+					<path class="st0" d="M21,2v20H3V2H21 M22,0H2C1.45,0,1,0.45,1,1v22c0,0.55,0.45,1,1,1h20c0.55,0,1-0.45,1-1V1
+						C23,0.45,22.55,0,22,0L22,0z"/>
+				</g>
+			</g>
+			<g id="XMLID_00000152261603260280921800000006707367964098801544_">
+				<rect x="6" y="11" class="st0" width="12" height="2"/>
+			</g>
+			<g id="XMLID_00000142161415106492579680000001776176169012515503_">
+				<rect x="6" y="15" class="st0" width="12" height="2"/>
+			</g>
+		</g>
+		<defs>
+			<filter id="Adobe_OpacityMaskFilter" filterUnits="userSpaceOnUse" x="5" y="4" width="22" height="24">
+				<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+				<feBlend  in="SourceGraphic" in2="back" mode="normal"/>
+			</filter>
+		</defs>
+		
+			<mask maskUnits="userSpaceOnUse" x="5" y="4" width="22" height="24" id="XMLID_00000000917335813324475540000014713432382732785820_">
+			<g class="st1">
+				<g>
+					<rect x="0" y="-1" width="24" height="26"/>
+					<path d="M23,0v24H1V0H23 M25-2h-2H1h-2v2v24v2h2h22h2v-2V0V-2L25-2z"/>
+				</g>
+			</g>
+		</mask>
+		
+			<g id="XMLID_00000031201095754771423060000006194161042350885268_" style="mask:url(#XMLID_00000000917335813324475540000014713432382732785820_);">
+			<path class="st0" d="M25,6v20H7V6H25 M26,4H5v23c0,0.55,0.45,1,1,1h20c0.55,0,1-0.45,1-1V5C27,4.45,26.55,4,26,4L26,4z"/>
+		</g>
+		<defs>
+			
+				<filter id="Adobe_OpacityMaskFilter_00000105412932299127539780000007321044326572423864_" filterUnits="userSpaceOnUse" x="9" y="8" width="22" height="24">
+				<feFlood  style="flood-color:white;flood-opacity:1" result="back"/>
+				<feBlend  in="SourceGraphic" in2="back" mode="normal"/>
+			</filter>
+		</defs>
+		
+			<mask maskUnits="userSpaceOnUse" x="9" y="8" width="22" height="24" id="XMLID_00000098205362181289439730000011071314290365810837_">
+			<g style="filter:url(#Adobe_OpacityMaskFilter_00000105412932299127539780000007321044326572423864_);">
+				<g>
+					<rect x="4" y="3" width="24" height="26"/>
+					<path d="M27,4v24H5V4H27 M29,2h-2H5H3v2v24v2h2h22h2v-2V4V2L29,2z"/>
+				</g>
+			</g>
+		</mask>
+		
+			<g id="XMLID_00000001626268720856402630000000221785671591453109_" style="mask:url(#XMLID_00000098205362181289439730000011071314290365810837_);">
+			<path class="st0" d="M29,10v20H11V10H29 M30,8H9v23c0,0.55,0.45,1,1,1h20c0.55,0,1-0.45,1-1V9C31,8.45,30.55,8,30,8L30,8z"/>
+		</g>
+	</g>
+</g>
+</svg>

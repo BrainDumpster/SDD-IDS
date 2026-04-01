@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="guides" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.NEW_x0020_TILE_x0020_COLOR{fill:url(#SVGID_1_);}
+	.st0{fill:#616161;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-184" y1="-184" x2="-184" y2="-185">
+	<stop  offset="0" style="stop-color:#0057AD"/>
+	<stop  offset="0.2959" style="stop-color:#0066BD"/>
+	<stop  offset="0.6535" style="stop-color:#0072CA"/>
+	<stop  offset="0.9963" style="stop-color:#0076CE"/>
+</linearGradient>
+<g>
+	<path class="st0" d="M30.76,0H14.24C13.55,0,13,0.67,13,1.5v29c0,0.83,0.55,1.5,1.24,1.5h16.52c0.68,0,1.24-0.67,1.24-1.5v-29
+		C32,0.67,31.45,0,30.76,0z M30.05,1.95V8h-15.1V1.95H30.05z M14.95,15v-5h15.1v5H14.95z M30.05,17v6h-15.1v-6H30.05z M14.95,30.05
+		V25h15.1v5.05H14.95z"/>
+	<rect x="16.75" y="4" class="st0" width="3" height="2"/>
+	<rect x="16.75" y="26.55" class="st0" width="3" height="2"/>
+	<rect x="16.75" y="19" class="st0" width="3" height="2"/>
+	<rect x="16.75" y="11.4" class="st0" width="3" height="2"/>
+	<path class="st0" d="M10.7,0.29L10.6,0.2C10.44,0.08,10.26,0,10.04,0H0.96C0.74,0,0.56,0.08,0.4,0.2H0.36v0.03
+		C0.14,0.4,0,0.66,0,0.96v30.09c0,0.34,0.19,0.63,0.46,0.8v0.06h0.09C0.67,31.96,0.81,32,0.96,32h9.09c0.53,0,0.96-0.43,0.96-0.96
+		V0.96c0-0.22-0.09-0.41-0.21-0.57L10.7,0.29z M1.91,27.68V21.2h7.17v6.49H1.91z M1.91,19.2v-6.24h7.17v6.24H1.91z M1.91,10.96V4.42
+		h7.17v6.54H1.91z"/>
+	<rect x="7.08" y="24.35" class="st0" width="0.79" height="2.37"/>
+	<rect x="3.13" y="25.14" class="st0" width="0.79" height="1.58"/>
+	<rect x="4.71" y="21.98" class="st0" width="1.58" height="1.58"/>
+	<rect x="7.08" y="15.98" class="st0" width="0.79" height="2.37"/>
+	<rect x="3.13" y="16.77" class="st0" width="0.79" height="1.58"/>
+	<rect x="4.71" y="13.76" class="st0" width="1.58" height="1.58"/>
+	<rect x="7.08" y="7.75" class="st0" width="0.79" height="2.37"/>
+	<rect x="3.13" y="8.54" class="st0" width="0.79" height="1.58"/>
+	<rect x="4.71" y="5.38" class="st0" width="1.58" height="1.58"/>
+</g>
+</svg>

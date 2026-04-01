@@ -9,3 +9,9 @@ wheels/
 # Virtual environments
 .venv
 design-system-knowledge
+**/node_modules/
+node_modules/
+**/stoybook/node_modules/
+.cache/
+**/.cache/
+

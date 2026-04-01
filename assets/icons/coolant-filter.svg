@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="coolant-filter" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 29.0.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 192)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #616161;
+      }
+    </style>
+  </defs>
+  <path id="base" class="st0" d="M5.94,23.74v6.26h6.65v2h6.84v-2h6.65v-6.26h-2.95v-15.49h2.95V2h-6.65V0h-6.84v2h-6.65v6.26h2.95v15.49h-2.95ZM24.06,28.48H7.94v-3.23h16.13v3.23h-.01ZM16.99,8.26v15.49h-2.04v-15.49h2.04ZM21.11,23.74h-2.12v-15.49h2.12v15.49ZM7.94,3.52h16.13v3.23H7.94v-3.23ZM10.89,8.26h2.06v15.49h-2.06s0-15.49,0-15.49Z"/>
+</svg>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<path class="st0" d="M13,2v28H3V2H13 M15,0H1v32h14V0L15,0z"/>
+	<path class="st0" d="M30,11v19H20V11H30 M32,9H18v23h14V9L32,9z"/>
+	<polygon class="st0" points="7,4 4,4 4,7 7,7 7,4 	"/>
+	<polygon class="st0" points="12,4 9,4 9,7 12,7 12,4 	"/>
+	<polygon class="st0" points="7,9 4,9 4,12 7,12 7,9 	"/>
+	<polygon class="st0" points="12,9 9,9 9,12 12,12 12,9 	"/>
+	<polygon class="st0" points="7,14 4,14 4,17 7,17 7,14 	"/>
+	<polygon class="st0" points="12,14 9,14 9,17 12,17 12,14 	"/>
+	<polygon class="st0" points="7,19 4,19 4,22 7,22 7,19 	"/>
+	<polygon class="st0" points="12,19 9,19 9,22 12,22 12,19 	"/>
+	<polygon class="st0" points="24,13 21,13 21,16 24,16 24,13 	"/>
+	<polygon class="st0" points="29,13 26,13 26,16 29,16 29,13 	"/>
+	<polygon class="st0" points="24,18 21,18 21,21 24,21 24,18 	"/>
+	<polygon class="st0" points="29,18 26,18 26,21 29,21 29,18 	"/>
+</g>
+</svg>

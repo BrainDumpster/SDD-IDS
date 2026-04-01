@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="grid" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 29.3.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 151)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #616161;
+      }
+    </style>
+  </defs>
+  <path class="st0" d="M27.84,4l-4.8,6H4.16l4.8-6h18.88M32,2H8L0,12h24l8-10h0Z"/>
+  <polygon class="st0" points="27.77 13 23.09 19 4.1 19 8 14 5.46 14 0 21 24.06 21 31.87 11 27.39 11 25.76 13 27.77 13"/>
+  <polygon class="st0" points="27.77 22 23.09 28 4.1 28 8 23 5.46 23 0 30 24.06 30 31.87 20 27.32 20 25.72 22 27.77 22"/>
+</svg>

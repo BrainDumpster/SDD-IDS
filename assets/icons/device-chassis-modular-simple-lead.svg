@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<path class="st0" d="M7.39,24.94H4.46v-8.62h2.93V24.94z M7.39,13.12H4.46V4.5h2.93V13.12z M13.26,24.94h-2.93v-8.62h2.93V24.94z
+		 M13.26,13.12h-2.93V4.5h2.93V13.12z M19.13,13.12H16.2V4.5h2.93V13.12z M22.07,13.12V4.5H25v8.62H22.07z"/>
+	<rect x="4.46" y="4.5" class="st0" width="2.93" height="8.62"/>
+	<rect x="10.33" y="4.5" class="st0" width="2.93" height="8.62"/>
+	<rect x="4.46" y="16.32" class="st0" width="2.93" height="8.62"/>
+	<rect x="10.33" y="16.32" class="st0" width="2.93" height="8.62"/>
+	<path class="st0" d="M18.91,16.32h-2.88v3.06C16.76,18.16,17.74,17.11,18.91,16.32z"/>
+	<rect x="16.2" y="4.5" class="st0" width="2.93" height="8.62"/>
+	<rect x="22.07" y="4.5" class="st0" width="2.93" height="8.62"/>
+	<path class="st0" d="M2,27.5V2h25.5v13.2c0.71,0.25,1.38,0.57,2,0.97V0H0v29.5h16.17c-0.4-0.62-0.72-1.29-0.97-2H2z"/>
+	<circle class="st0" cx="24.33" cy="24.33" r="7.67"/>
+</g>
+</svg>

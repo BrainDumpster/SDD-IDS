@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<path class="st0" d="M18.01,15.98c3.06,0,5.55-2.46,5.55-5.49c0-3.03-2.49-5.49-5.55-5.49c-3.06,0-5.56,2.46-5.56,5.49
+		C12.46,13.51,14.95,15.98,18.01,15.98z M18.02,7c1.96,0,3.55,1.57,3.55,3.49c0,1.92-1.59,3.49-3.55,3.49
+		c-1.96,0-3.56-1.57-3.56-3.49C14.46,8.56,16.06,7,18.02,7z"/>
+	<rect x="10.5" y="19" class="st0" width="13" height="2"/>
+	<rect x="10.5" y="24" class="st0" width="13" height="2"/>
+	<path class="st0" d="M28.5,0L4.5,0c-0.55,0-1,0.45-1,1l0,3l-2,0l0,3l2,0l0,3l-2,0l0,3l2,0l0,5l-2,0l0,3l2,0l0,3l-2,0l0,3l2,0l0,4
+		c0,0.55,0.45,1,1,1l24,0.01c1.1,0,2-0.89,2-2L30.5,2C30.5,0.9,29.61,0,28.5,0z M28.5,30L5.5,30L5.5,2L28.5,2L28.5,30z"/>
+</g>
+</svg>

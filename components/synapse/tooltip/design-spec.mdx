@@ -1,100 +1,196 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Tooltip Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
 |---|---|
 | Component | Tooltip |
 | Category | Components |
-| Figma Page | Components |
-| Node ID | 48625:111469 |
 | Design System | Synapse |
+| Figma URL (provided for review) | https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50533-27248&m=dev |
+| Synapse map node | `48625:111469` |
+| Reviewed frame node | `50533:27248` |
+| Primary instance set | `Tooltip-Main` (`50533:27282` ... `50533:27296`) |
 
-<!-- ds:section id=anatomy -->
 ## Anatomy
 
-The component is composed of these structural parts:
+- **trigger anchor**: UI element that owns tooltip visibility.
+- **tooltip root**: container that holds content and arrow.
+- **content panel**: rounded rectangle with tooltip text (and optional title/close).
+- **title (optional)**: `Tooltip Title`.
+- **body copy**: primary descriptive text.
+- **dismiss button (optional)**: close icon shown for dismissible variant.
+- **arrow (optional)**: directional pointer for placement alignment.
 
-- **arrow**
-- **popup**
-- **trigger**
-
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+### Core sizes (from inspected instances)
+- **No Title** (`Show Title=false`, arrow on): overall `240x115`; content `240x104`; arrow lane `240x12`.
+- **With Title** (`Show Title=true`, non-dismissible): overall `240x139`; content `240x128`; arrow lane `240x12`.
+- **Dismissible + Title** (`Show Dismissable=true`): overall `264x139`; content `264x128`; arrow lane `264x12`.
+- **Right/Left arrow variants**: overall `251x128` (`12px` arrow lane + `240px` content).
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+### Content panel spacing
+- Content frame padding: `12px 12px 12px 12px`.
+- Content layout gap: `4px`.
+- Tooltip container (title + body) layout gap: `4px`.
+- Corner radius: `8px`.
+- Border: `1px`.
 
-- `var(--color-background-gray-stronger)` = #252525 (light) / #ffffff (dark)
-- `var(--color-text-white)` = #ffffff
-- `var(--corner-radius-radius-4)` = 4px
-- `var(--font-line-height-line-height-18)` = 18px
-- `var(--font-size-body-3)` = 12px
-- `var(--padding-padding-10)` = 10px
-- `var(--padding-padding-6)` = 6px
-- `var(--shadow-drop-shadow-8-blur)` = 8px
-- `var(--shadow-drop-shadow-8-color)` = rgba(37, 37, 37, 0.08) (light) / rgba(17, 22, 25, 0.08) (dark)
-- `var(--shadow-drop-shadow-8-x)` = 0
-- `var(--shadow-drop-shadow-8-y)` = 8px
+### Typography
+- Title: Roboto Medium `14/20`.
+- Body: Roboto Regular `14/20`.
 
-<!-- ds:section id=states-light -->
+### Arrow geometry and placement matrix
+- Arrow vector size:
+  - Down/Up: `10x6`.
+  - Left/Right: `6x10`.
+- Arrow lane thickness:
+  - Down/Up: `12px` height.
+  - Left/Right: `12px` width.
+- Alignment contract by axis:
+  - `Start`: `16px` inset from start edge.
+  - `Center`: centered on axis (implemented in Figma by reduced `8px` lane side padding).
+  - `End`: `16px` inset from end edge.
+
+Supported placement permutations:
+- Down: Start, Center, End
+- Up: Start, Center, End
+- Right: Start, Center, End
+- Left: Start, Center, End
+
+### Storybook implementation calibration (validated against Figma `Up-Start`)
+- Tooltip popup is rendered in portal with explicit side/alignment attributes.
+- Arrow rendering uses SVG with:
+  - fill triangle (`10x6` for up/down; `6x10` for left/right)
+  - slanted-side stroke path only (no base stroke line) to avoid detached base edge.
+- Arrow anchor offsets used in implementation:
+  - `bottom`: `top: -6px`
+  - `top`: `bottom: -5px`
+  - `left`: `right: -5px`
+  - `right`: `left: -5px`
+- Alignment offsets used in implementation:
+  - start: `16px`
+  - center: `calc(50% - 5px)`
+  - end: `calc(100% - 26px)`
+- Popup border notch masking under arrow base (to merge arrow + border):
+  - top/bottom notch width: `10px`
+  - left/right notch height: `12px`
+
+## Tokens
+
+Use semantic tokens from `components/synapse-theme.css`; do not hardcode values in implementation.
+
+- Surface and border:
+  - `var(--color-background-surface-2)` (tooltip panel + arrow fill)
+  - `var(--color-border-accessible)` (panel/arrow outline)
+- Typography:
+  - `var(--color-text-neutral-strong)` (title)
+  - `var(--color-text-neutral)` (body copy)
+- Shape/spacing:
+  - `var(--corner-radius-radius-8)` (panel radius)
+  - `var(--padding-padding-12)` (panel inset)
+  - `var(--spacing-space-4)` (title/body spacing)
+- Elevation:
+  - Figma instance shadow resolves to `x:1 y:1 blur:2 rgba(37,37,37,0.25)`; keep tooltip elevation aligned with this visual depth contract.
+
 ## States (Light Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-gray-stronger)` (#252525) |  | `var(--color-text-white)` (#ffffff) | shadow: `var(--shadow-drop-shadow-8-x)` `var(--shadow-drop-shadow-8-y)` `var(--shadow-drop-shadow-8-blur)` `var(--shadow-drop-shadow-8-color)`; radius: `var(--corner-radius-radius-4)` |
+| Variant | Background | Border | Text/Icon |
+|---|---|---|---|
+| No Title | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-text-neutral)` |
+| With Title | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` |
+| Dismissible | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)`, close icon uses neutral icon token |
+| Arrow (all directions/alignments) | same as panel fill | same as panel border | n/a |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-gray-stronger)` (#ffffff) |  | `var(--color-text-white)` (#ffffff) | shadow: `var(--shadow-drop-shadow-8-x)` `var(--shadow-drop-shadow-8-y)` `var(--shadow-drop-shadow-8-blur)` `var(--shadow-drop-shadow-8-color)`; radius: `var(--corner-radius-radius-4)` |
+| Variant | Background | Border | Text/Icon |
+|---|---|---|---|
+| No Title | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | body `var(--color-text-neutral)` |
+| With Title | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | title `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` |
+| Dismissible | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | title `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)`, close icon uses dark neutral icon token |
+| Arrow (all directions/alignments) | same as panel fill | same as panel border | n/a |
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Interactions
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+- **No Title / With Title (non-dismissible)**:
+  - Opens on hover/focus of trigger.
+  - Closes when hover/focus leaves trigger region.
+- **Dismissible**:
+  - Does not auto-close on hover/focus leave.
+  - Must close only via close action or `Escape`.
+  - Emits close callback when dismissed.
+- **Arrow behavior**:
+  - Arrow orientation and alignment are controlled by placement props:
+    - `arrowDirection`: `down | up | right | left`
+    - `arrowAlign`: `start | center | end`
+- **Accessibility**:
+  - Tooltip container: `role="tooltip"`.
+  - Trigger uses `aria-describedby` pointing to tooltip id.
+  - Dismiss button has accessible label and keyboard activation.
 
-**Pattern**: tooltip
+## Composition & API (runtime)
 
-### Behaviors
+- `title?: string` (omit for No Title).
+- `content: string | ReactNode`.
+- `dismissible?: boolean` (default `false`).
+- `showArrow?: boolean` (default `true`).
+- `arrowDirection?: "down" | "up" | "right" | "left"` (default `down`).
+- `arrowAlign?: "start" | "center" | "end"` (default `center`).
+- `open?: boolean` / `defaultOpen?: boolean`.
+- `onOpenChange?: (open: boolean) => void`.
+- `onDismiss?: () => void` (dismissible only).
 
-- Appears on hover (mouse) after ~200ms delay
-- Appears on focus (keyboard) without delay
-- Disappears on mouse leave or blur
-- Contains no interactive content (text only)
+## Codegen Contract (Framework-Agnostic Blueprint)
 
-### Keyboard
+This section is normative for generation and validation.
 
-| Key | Action |
-|---|---|
-| Escape | Dismiss the tooltip when trigger is focused |
+### Deterministic structure
+- `trigger`
+- `portal`
+  - `positioner`
+    - `popup`
+      - optional `title`
+      - `body`
+      - optional `dismissButton`
+      - optional `arrow`
 
-### ARIA
+### Supported matrix
+- Content mode: `no-title | with-title | dismissible`
+- Arrow visibility: `showArrow=true|false`
+- Placement: 12 permutations (`up|down|left|right` x `start|center|end`)
 
-| Element | Attributes |
-|---|---|
-| tooltip | {'role': 'tooltip'} |
-| trigger | {'aria-describedby': 'ID of the tooltip element'} |
+### Slot style contract
+- Popup dimensions/padding/radius/border follow this spec.
+- Arrow geometry and offsets follow calibration values in this spec.
+- Border-notch masking under arrow base is required where applicable.
+- Title/body typography and token mapping are deterministic.
+
+### Behavior and accessibility contract
+- Non-dismissible mode: opens on hover/focus, closes on leave/blur.
+- Dismissible mode: close action or Escape required to dismiss.
+- `role="tooltip"` on popup; trigger references tooltip id.
+- Dismiss button has accessible name.
+
+### Fallback/error rules
+- Unknown side/align -> fallback `down` + `center`.
+- If title is empty, title slot omitted.
+- If `dismissible=false`, dismiss button omitted.
+
+### Validation checklist
+- [ ] 12 placement permutations render with correct arrow orientation/alignment.
+- [ ] Arrow and popup border merge without seam artifacts.
+- [ ] Dismissible and non-dismissible interaction behaviors pass.
+- [ ] Token usage for light/dark is deterministic.
+- [ ] ARIA contract passes.
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
 | Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+| Synapse map | `data/synapse-component-figma-map.json` (`Tooltip` -> `48625:111469`) |
+| Figma frame reviewed for variant matrix | `50533:27248` |

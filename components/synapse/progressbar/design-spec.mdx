@@ -16,7 +16,7 @@
 - Focus ring for keyboard navigation
 - Optional step indicators
 
-## Composition & API (code generation)
+## Composition & API (runtime)
 Use this contract when generating framework components. Prefer semantic tokens and avoid hardcoded values.
 
 | Prop | Type | Default | Behavior |
@@ -73,7 +73,7 @@ Use this contract when generating framework components. Prefer semantic tokens a
 - Brand background: `var(--color-background-brand-base)` = #0076ce
 
 ### Alert Colors
-- Success background: `var(--color-backtground-alerting-success-1)` (fallback: `var(--color-background-alerting-success)`) = #1b8500
+- Success background: `var(--color-background-alerting-success-1)` (fallback: `var(--color-background-alerting-success)`) = #1b8500
 - Success border: `var(--color-border-alerting-success-base)` = #1b8500
 - Success border white: `var(--color-border-alerting-success-white)` = #1b8500
 - Minor background: `var(--color-background-alerting-minor)` = #ffc700
@@ -100,7 +100,7 @@ Use this contract when generating framework components. Prefer semantic tokens a
 | State | Track Background | Fill Background | Border | Text |
 |---|---|---|---|---|
 | In Progress | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
-| Completed/Success | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-backtground-alerting-success-1)` (fallback: `var(--color-background-alerting-success)`) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
+| Completed/Success | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-alerting-success-1)` (fallback: `var(--color-background-alerting-success)`) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
 | Completed with Exceptions/Warning | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-alerting-minor)` (#ffc700) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-black)` (#252525) |
 | Failed/Error | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
 | Indeterminate | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |
@@ -182,6 +182,56 @@ Use this contract when generating framework components. Prefer semantic tokens a
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test animation performance
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+This section is normative for generation and validation.
+
+### Deterministic structure
+- `root`
+  - optional `topRow` (`label`, optional value/status text)
+  - `track`
+    - `fill` (or animated `indeterminateFill`)
+  - optional `helperRow` (optional status icon + helper text)
+  - optional `stepIndicators`
+
+### Supported matrix
+- `type`: `with-label | inline | indeterminate`
+- `thickness`: `thin | medium | thick`
+- `state`: `in-progress | completed-success | completed-warning | failed-error`
+- `showHelperText`: `true | false`
+
+### Slot style contract
+- Track/fill heights must follow thickness mapping exactly.
+- Border/radius/focus ring must follow this spec.
+- Helper text and icon spacing/size must follow this spec.
+- Label row only appears for `with-label`.
+
+### Behavior and accessibility contract
+- Determinate mode clamps `value` to `[0,100]`.
+- Indeterminate mode ignores fixed percentage width and uses continuous animation.
+- Non-interactive by default; if focusable, focus ring must render.
+- Use semantic progress attributes (`role="progressbar"` or native `<progress>` semantics with min/max/value).
+
+### Asset and bundling contract
+- Helper status icons must resolve from shared icon assets:
+  - `status-ok-circ-solid`
+  - `status-warn-tri-solid`
+  - `status-critical-square-solid`
+- Generators must ensure referenced icon assets are included in the final app bundle (framework static/public/import pipeline).
+
+### Fallback/error rules
+- Unknown type -> fallback `inline`.
+- Unknown thickness -> fallback `medium`.
+- Unknown state -> fallback `in-progress`.
+- Missing helper text while `showHelperText=true` -> render helper row omitted and report warning.
+
+### Validation checklist
+- [ ] Type/thickness/state matrix renders deterministically.
+- [ ] Indeterminate animation exists and is smooth.
+- [ ] Helper icon mapping by state is correct.
+- [ ] ARIA/progress semantics pass screen reader checks.
+- [ ] Tokenized light/dark behavior matches spec.
 
 ## Source Mapping
 - Figma component: ProgressBar — node **50724:317216** (`data/synapse-component-figma-map.json`)

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="active-directory-ldap" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 32 32">
+  <!-- Generator: Adobe Illustrator 29.2.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 116)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #616161;
+      }
+    </style>
+  </defs>
+  <path id="base" class="st0" d="M28.5,0H4.5c-.55,0-1,.45-1,1v3H1.5v3h2v3H1.5v3h2v5H1.5v3h2v3H1.5v3h2v4c0,.55.45,1,1,1h24c1.1,0,2-.9,2-2V2c0-1.1-.9-2-2-2ZM28.5,30H5.5V2h23v28Z"/>
+  <path id="overlay" class="st0" d="M15.28,16.36v1.8h1.51v1.27h-1.51v1.93h1.51v1.23h-1.51v2.02l1.57,1.1,2.62-1.7v-7.67c1.76-.81,2.99-2.57,2.99-4.63,0-2.82-2.29-5.11-5.11-5.11s-5.11,2.29-5.11,5.11c0,2.08,1.25,3.87,3.04,4.66ZM17.35,8.87c1.37,0,2.48,1.11,2.48,2.48h-4.96c0-1.37,1.11-2.48,2.48-2.48Z"/>
+</svg>

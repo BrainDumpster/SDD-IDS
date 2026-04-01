@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<path class="st0" d="M26.5,12h-2V7.73C24.5,3.47,20.69,0,16,0c-4.69,0-8.5,3.47-8.5,7.73V12h-2c-1.1,0-2,0.9-2,2v16
+		c0,1.1,0.9,2,2,2h21c1.1,0,2-0.9,2-2V14C28.5,12.9,27.6,12,26.5,12z M9.5,7.73C9.5,4.57,12.42,2,16,2c3.58,0,6.5,2.57,6.5,5.73V12
+		h-13V7.73z M26.5,30h-21V14h21V30z"/>
+	<path class="st0" d="M14.44,26h3.12C17.8,26,18,25.8,18,25.56v-7.11C18,18.2,17.8,18,17.55,18h-3.11C14.2,18,14,18.2,14,18.44v7.12
+		C14,25.8,14.2,26,14.44,26z"/>
+</g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.9.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="grid" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="32px" height="32px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#616161;}
+</style>
+<g>
+	<path class="st0" d="M22.75,5.51h-3.7V0h-6v5.51h-3.7c-1.1,0-2,0.9-2,2v2h17.39v-2C24.75,6.41,23.85,5.51,22.75,5.51z M17.05,4.41
+		h-2v-2h2V4.41z"/>
+	<path class="st0" d="M26.5,2C26.5,2,26.5,2,26.5,2l-5.37,0.01v2L26.5,4h0v26h-21V4.04l5.46-0.01v-2L5.5,2.04c-1.1,0-2,0.9-2,2V30
+		c0,1.1,0.9,2,2,2h21c1.1,0,2-0.9,2-2V4C28.5,2.9,27.6,2,26.5,2z"/>
+	<path id="XMLID_3_" class="st0" d="M23.55,18.93c-0.23-2.22-1.49-4.28-3.52-5.37c-0.93-0.5-1.92-0.73-2.89-0.75v6.12H23.55z"/>
+	<path class="st0" d="M23.02,20.41c0,4.05-3.28,7.33-7.33,7.33s-7.33-3.28-7.33-7.33s3.28-7.33,7.33-7.33v7.33H23.02z"/>
+</g>
+</svg>

@@ -78,6 +78,20 @@ Typography and geometry tokens:
 - `var(--corner-radius-radius-4)`
 - `var(--spacing-space-8)`
 
+## Composition & API (runtime)
+
+- `style`: `primary | secondary | tertiary | destructive`
+- `size`: `large | medium | small`
+- `disabled`: `boolean`
+- `icon`: optional icon slug/node
+- `iconOnly`: `boolean`
+- `loading`: `boolean`
+- `ariaLabel`: required when `iconOnly=true`
+- events:
+  - `onClick`
+  - `onFocus`
+  - `onBlur`
+
 ## States (Light Theme)
 
 | Style | State | Background | Border | Text/Icon | Notes |
@@ -119,6 +133,48 @@ Same structural state matrix as light theme; values must resolve through dark se
 - `Hover` and `Press` states use variant-specific color transitions.
 - Icon-only buttons must expose accessible text via `aria-label`.
 - Loading state (when implemented) should set `aria-busy="true"` and suppress duplicate clicks.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+This section is normative for generation and validation.
+
+### Deterministic structure
+- `root(button)`
+  - optional `leadingIcon`
+  - optional `label` (omitted for icon-only)
+  - optional `spinner` (loading mode)
+
+### Supported matrix
+- `Style`: `primary | secondary | tertiary | destructive`
+- `State`: `default | hover | press | focus-visible | disabled`
+- `Size`: `large | medium | small`
+- `Icon`: `true | false`
+- `IconOnly`: `true | false`
+
+### Slot style contract
+- Root height/padding must follow size table in this spec.
+- Root radius: `var(--corner-radius-radius-4)`.
+- Root gap between icon and label: `var(--spacing-space-8)`.
+- Focus-visible ring: `1px` `var(--color-border-brand-base)` at `3px` offset.
+- Disabled must block interaction and use disabled tokens.
+
+### Behavior and accessibility contract
+- Activation: click, Enter, Space (when enabled).
+- Icon-only must require `aria-label`.
+- Disabled must not emit click/action events.
+- Loading mode (if emitted) sets `aria-busy="true"` and blocks duplicate activation.
+
+### Fallback/error rules
+- Unknown style -> fallback `primary`.
+- Unknown size -> fallback `medium`.
+- Missing icon asset -> fail generation with warning (no silent substitute).
+
+### Validation checklist
+- [ ] Full style/state/size matrix renders deterministically.
+- [ ] Icon-only has accessible name.
+- [ ] Focus-visible ring is token-correct and offset-correct.
+- [ ] Disabled blocks events.
+- [ ] Loading behavior is deterministic when enabled.
 
 ## Source Mapping
 

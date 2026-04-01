@@ -10,10 +10,18 @@ Primary goal: create and maintain `components/<slug>/design-spec.mdx` with maxim
 Implementation/code generation is optional and only done when explicitly requested by the user.
 
 ## Source of Truth
-- Always read `data/component-figma-map.json` first.
-- Use mapped `figmaUrl` + `node-id` for the component.
+- Always resolve the component from a design-system map file first (for example `data/component-figma-map.json` or `data/<design-system>-component-figma-map.json`).
+- Use mapped `figmaUrl` + `node-id` for the component when available.
+- If multiple map files exist, pick the one for the active design system before extracting spec details.
+- If no map entry exists, explicitly record the manual Figma URL/node used in spec metadata.
 - Figma semantic variables (`var(--...)`) are authoritative for token naming.
 - If implementation tuning is required after visual review, update the design spec so regeneration preserves behavior.
+
+## Design-System Agnostic Requirements
+- The workflow must not assume IDS/Synapse-only naming or folder structure.
+- Keep spec language generic so the same contract applies to any target framework and any design system.
+- Component metadata must include design system identity and source mapping used for extraction.
+- Asset contracts (icons/illustrations) must be explicitly documented with stable slug-to-file mapping.
 
 ## Required Spec Sections
 For each `components/<slug>/design-spec.mdx`, ensure these are concrete and non-placeholder:
@@ -23,6 +31,29 @@ For each `components/<slug>/design-spec.mdx`, ensure these are concrete and non-
 - `## States (Light Theme)`
 - `## States (Dark Theme)`
 - `## Interactions`
+- `## Composition & API (runtime)`
+- `## Codegen Contract (Framework-Agnostic Blueprint)`
+- `## Source Mapping`
+
+## Mandatory Blueprint Content (inside Codegen Contract)
+- Deterministic slot/anatomy schema (required order + optional branches).
+- Supported variant/option matrix (all valid combinations).
+- Per-slot style contract using semantic tokens (not only global token list).
+- Behavior contract (state transitions, timers, triggers, close/open logic).
+- Accessibility contract (roles, aria attributes, keyboard behavior).
+- Asset resolution + bundling contract (icons/images/fonts if used).
+- Fallback/error rules for unknown variants, missing tokens, missing assets.
+- Validation checklist with pass/fail items suitable for automated codegen QA.
+
+## Production-Ready Gate (must pass before marking spec ready)
+- Metadata is complete and points to validated source nodes.
+- Composition/API section has explicit prop/event contracts and defaults.
+- Codegen Contract exists and is internally consistent with other sections.
+- Light and Dark state tables are complete and structurally parallel.
+- No unresolved placeholders like "TBD", "sample only", or ambiguous behavior language.
+- Asset contracts include stable slug-to-file mapping and bundling rule (if assets are used).
+- Fallback/error behavior is defined for unknown variants and missing inputs.
+- Validation checklist is actionable and testable.
 
 ## Spec Authoring Rules
 - Use semantic token syntax in spec: `` `var(--token-name)` ``.
@@ -59,6 +90,7 @@ Document and implement interaction behavior in spec:
 Only apply this section when the user explicitly asks for implementation or code generation.
 - Framework is user-driven and not fixed: Angular, React, Vue, Lit, or other requested target.
 - Parse design spec sections, do not hardcode drift-prone values.
+- Treat design spec as single source of truth; generated code must be derivable from spec without hidden assumptions.
 - Never hardcode colors, spacing, typography, or other styling values; always use CSS variables.
 - Apply design tokens for all styling values.
 - All design tokens from Figma are defined as CSS variables in `theme.css`; always use these variables instead of hardcoded values.
@@ -107,7 +139,11 @@ Only apply this section when user requests token drift validation.
 
 ## Completion Checklist
 - [ ] Spec sections are concrete and Figma-aligned.
+- [ ] Codegen Contract is complete and deterministic.
+- [ ] Variant/option matrix is explicit and complete.
+- [ ] Per-slot token mapping is explicit.
 - [ ] Interaction contract is in spec.
+- [ ] Accessibility and asset/bundling contracts are documented.
 - [ ] Implementation/codegen executed only if explicitly requested.
 - [ ] If implementation exists, generated component reflects spec behavior.
 - [ ] If requested, global vars generated from required collections.
