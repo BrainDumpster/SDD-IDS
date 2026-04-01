@@ -45,6 +45,138 @@ components/synapse/
 - Remaining 24 components inherit root baseline
 - All specs include `<!-- ds:inherits root-spec -->` marker
 
+## Using Design Specs As Source Of Truth
+
+Production-ready component specs under `components/synapse/<slug>/design-spec.mdx` are intended for spec-driven generation across frameworks (React, Angular, Vue, Lit, and others), provided generators follow the spec contract sections.
+
+### Read order for generation
+
+For any component `<slug>`, parse in this order:
+
+1. `components/synapse/root-spec.mdx`
+2. `components/synapse-theme.css`
+3. `components/synapse/<slug>/design-spec.mdx`
+4. Referenced assets (for example `assets/icons/*.svg`)
+
+### Required sections in component specs
+
+- `Metadata`
+- `Anatomy`
+- `Layout & Measurements`
+- `Tokens`
+- `States (Light Theme)`
+- `States (Dark Theme)`
+- `Interactions`
+- `Composition & API (runtime)`
+- `Codegen Contract (Framework-Agnostic Blueprint)`
+- `Source Mapping`
+
+### Root spec vs component spec
+
+- `root-spec.mdx`: shared design-system baseline (global tokens, typography, spacing, elevation, baseline interactions/accessibility).
+- component `design-spec.mdx`: deterministic per-component contract and overrides.
+- `synapse-theme.css`: concrete token values for light/dark resolution.
+
+Generator rule:
+- Use component values first;
+- inherit from root when not overridden;
+- resolve styles through CSS variables from `synapse-theme.css`.
+
+### Assets (icons/images) contract
+
+When component specs reference assets:
+
+- resolve the exact slug-to-file mapping declared in the spec;
+- include the mapped files in the final app bundle (public/static/import pipeline);
+- do not silently substitute missing assets.
+
+### Framework-agnostic expectations
+
+Framework syntax can vary, but generated output must preserve:
+
+- deterministic anatomy/slot order
+- variant and state matrix
+- per-slot tokenized styling
+- interaction behavior
+- accessibility semantics
+- fallback/error rules
+
+## Spec-Driven Generation Quickstart
+
+### For developers
+
+1. Open `components/synapse/<slug>/design-spec.mdx`.
+2. Implement from `Composition & API` + `Codegen Contract`.
+3. Use only semantic tokens (`var(--...)`) from `synapse-theme.css`.
+4. Validate against the component's checklist.
+
+### For agents
+
+Prompt guidance:
+
+- treat `root-spec.mdx`, `synapse-theme.css`, and component `design-spec.mdx` as canonical;
+- do not invent styles/behaviors not present in spec;
+- if information is missing, return explicit gaps instead of guessing.
+
+### For MCP server / API flows
+
+- resolve source node from `data/synapse-component-figma-map.json`;
+- preserve `Source Mapping` metadata in generated outputs;
+- return code + contract checklist pass/fail status.
+
+## Production-Ready Gate
+
+Before auto-generation, verify:
+
+- `Codegen Contract` exists and is deterministic.
+- Light/Dark state structures are parallel.
+- Prop/event contract and defaults are explicit.
+- Asset mapping and bundling rules are explicit (if assets exist).
+- Fallback/error behavior is defined.
+- Validation checklist is actionable.
+
+## Reusing Specs In Another Repository
+
+You can copy these design specs to another repository and generate components (styles + interactions + accessibility), as long as the target repository includes the required dependencies of the spec.
+
+### Minimum files to copy
+
+- `components/synapse/root-spec.mdx`
+- `components/synapse-theme.css` (or an equivalent token file with the same variables)
+- `components/synapse/<slug>/design-spec.mdx`
+- any referenced assets (for example `assets/icons/*.svg`)
+
+### Portability requirements
+
+- Token variables referenced by the spec must exist in the target repo.
+- Asset slug-to-file mapping must be preserved.
+- The generator/agent must treat spec contracts as canonical and not invent missing values.
+
+### Copy-paste prompt template for AI agents
+
+Use this template in the target repository:
+
+```
+Generate <framework> component(s) from the provided design spec.
+
+Source of truth (in order):
+1) root-spec.mdx
+2) theme CSS variables file
+3) component design-spec.mdx
+4) referenced assets (icons/images)
+
+Requirements:
+- Implement full Composition/API and Codegen Contract.
+- Include styles, interactions, states (light/dark), and accessibility behavior.
+- Use semantic tokens (var(--...)) only; do not hardcode drift-prone values.
+- Preserve slot/anatomy order and variant matrix exactly.
+- If any token/asset/contract data is missing, return a gap list and stop guessing.
+```
+
+### Expected output quality
+
+When the above inputs are present, generated components should be framework-agnostic in behavior and visually consistent with the design spec contract. Differences should be limited to framework syntax and project scaffolding conventions.
+
 ### Generate Specs
 
 ```bash
