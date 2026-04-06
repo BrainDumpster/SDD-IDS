@@ -1,50 +1,144 @@
 .root {
+  box-sizing: border-box;
   display: inline-flex;
-  border: var(--border-width-border-1) solid var(--color-border-light);
-  border-radius: var(--corner-radius-radius-4);
-  overflow: hidden;
+  align-items: stretch;
+  gap: var(--spacing-space-2);
+  padding: var(--spacing-space-2);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: var(--corner-radius-radius-2);
   background: var(--color-background-component);
 }
 
-.button {
+.root[data-type="text"] .segmentText {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.segment {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--padding-padding-8) var(--padding-padding-16);
-  font-size: var(--font-size-body-2);
-  font-weight: 500;
-  font-family: inherit;
-  color: var(--color-text-neutral);
-  background: transparent;
-  border: none;
+  margin: 0;
   cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
   outline: none;
-  transition: all 150ms ease;
-  white-space: nowrap;
-  position: relative;
-}
-
-.button + .button {
-  border-left: var(--border-width-border-1) solid var(--color-border-light);
-}
-
-.button:hover:not(.selected) {
-  background: var(--color-background-gray-lighter);
-  color: var(--color-text-neutral-strong);
-}
-
-.button:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  /* Invisible edge between segments: use CSS transparent. Do not use
+     --color-border-transparent-brand in dark theme — it resolves to a visible blue (#4c9fdd). */
+  border: var(--border-width-border-1) solid transparent;
   border-radius: var(--corner-radius-radius-2);
-  z-index: 1;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
 }
 
+.segmentText {
+  min-height: 32px;
+  padding: var(--padding-padding-4) var(--padding-padding-8);
+  white-space: nowrap;
+}
+
+.segmentIcon {
+  min-height: 37px;
+  min-width: 40px;
+  padding: var(--padding-padding-8);
+}
+
+.segment:disabled {
+  cursor: not-allowed;
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
+
+.segment:disabled .iconMask {
+  background: var(--color-text-disabled) !important;
+}
+
+/* Unselected interactions — hover matches Figma: controls-brand-lighter on Option 2 (Hover). */
+.segment:not(:disabled):not(.selected):hover {
+  background: var(--color-background-controls-brand-lighter);
+  border-color: transparent;
+  color: var(--color-text-neutral);
+}
+
+.segment:not(:disabled):not(.selected):active {
+  background: var(--color-background-controls-brand-light);
+  border-color: transparent;
+  color: var(--color-text-brand-strong);
+}
+
+.segment:not(:disabled):not(.selected):focus-visible {
+  background: var(--color-background-component);
+  border-color: var(--color-border-brand-base);
+}
+
+/* Selected */
 .selected {
+  background: var(--color-background-controls-brand-base) !important;
+  border-color: transparent !important;
+  color: var(--color-text-white) !important;
+}
+
+.segment.selected:not(:disabled):focus-visible {
+  border-color: var(--color-border-brand-base) !important;
+}
+
+.segment.selected:not(:disabled):hover {
   background: var(--color-background-controls-brand-base);
   color: var(--color-text-white);
 }
 
-.selected:hover {
-  background: var(--color-background-controls-brand-strong);
+/* Icon mask (slug assets) */
+.iconMask {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background-color: var(--color-icon-brand-base);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.selected:not(:disabled) .iconMask {
+  background-color: var(--color-icon-white);
+}
+
+.segment:not(:disabled):not(.selected):active .iconMask {
+  background-color: var(--color-icon-brand-base);
+}
+
+.customIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--color-icon-brand-base);
+}
+
+.selected:not(:disabled) .customIcon {
+  color: var(--color-icon-white);
+}
+
+.iconMissing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-critical);
 }
