@@ -45,6 +45,17 @@ export const WithDisabledOption: Story = {
   },
 };
 
+export const DisabledSelected: Story = {
+  args: {
+    name: "disabled-selected-radio",
+    options: [
+      { value: "selected", label: "Selected (disabled)", disabled: true },
+      { value: "other", label: "Other option" },
+    ],
+    defaultValue: "selected",
+  },
+};
+
 export const Horizontal: Story = {
   args: {
     name: "horizontal-radio",
