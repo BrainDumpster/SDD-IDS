@@ -1,80 +1,203 @@
 import { Popover } from "@base-ui-components/react/popover";
 import type { ReactNode } from "react";
 import styles from "./AppLauncher.module.css";
+import gridSquare9Icon from "../../../assets/icons/grid-square-9-16.svg";
 
-interface AppItem {
+export interface AppLauncherProduct {
+  id?: string;
   name: string;
+  /** Omit to use default `shield-encrypt-alt` asset (Figma sample). */
   icon?: ReactNode;
   href?: string;
+  onSelect?: () => void;
 }
 
-interface AppLauncherProps {
-  apps: AppItem[];
+export interface AppLauncherOption {
+  id?: string;
+  label: string;
+  onSelect?: () => void;
 }
 
-export function AppLauncher({ apps }: AppLauncherProps) {
+export interface AppLauncherProductTileProps extends AppLauncherProduct {}
+
+/** Single product cell: 148×125, 32×32 icon slot, body-2 label (Figma `AppLauncher-Element`). */
+export function AppLauncherProductTile({
+  name,
+  icon,
+  href,
+  onSelect,
+}: AppLauncherProductTileProps) {
+  const graphic =
+    icon ??
+    (
+      <span className={styles.defaultProductIcon} aria-hidden="true" />
+    );
+
+  const inner = (
+    <div className={styles.labelStack}>
+      <div className={styles.iconSlot}>{graphic}</div>
+      <span className={styles.appName}>{name}</span>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        className={styles.appTile}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <button type="button" className={styles.appTile} onClick={onSelect}>
+      {inner}
+    </button>
+  );
+}
+
+export interface AppLauncherOptionsListProps {
+  options: AppLauncherOption[];
+  footerAction?: { label: string; onClick: () => void };
+  showTopSeparator?: boolean;
+}
+
+/** Options list block below product grid (Figma `Dropdown-SingleSelect-Elements-Menu` pattern). */
+export function AppLauncherOptionsList({
+  options,
+  footerAction,
+  showTopSeparator = false,
+}: AppLauncherOptionsListProps) {
+  if (options.length === 0 && !footerAction) return null;
+
+  return (
+    <div
+      className={[
+        styles.optionsRegion,
+        showTopSeparator ? styles.optionsRegionWithSeparator : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {options.length > 0 ? (
+        <ul className={styles.optionsList}>
+          {options.map((opt, index) => (
+            <li key={opt.id ?? index}>
+              <button
+                type="button"
+                className={styles.optionItem}
+                onClick={opt.onSelect}
+              >
+                {opt.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {footerAction ? (
+        <div className={styles.optionsFooter}>
+          <button
+            type="button"
+            className={styles.footerAction}
+            onClick={footerAction.onClick}
+          >
+            {footerAction.label}
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export interface AppLauncherProps {
+  /** Product tiles (2-column rows with column dividers per Figma). */
+  products?: AppLauncherProduct[];
+  /** @deprecated Use `products` */
+  apps?: AppLauncherProduct[];
+  options?: AppLauncherOption[];
+  footerAction?: { label: string; onClick: () => void };
+  /** Grid columns for products; Figma uses 2. */
+  columns?: number;
+}
+
+function chunkRows<T>(items: T[], columns: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += columns) {
+    rows.push(items.slice(i, i + columns));
+  }
+  return rows;
+}
+
+export function AppLauncher({
+  products,
+  apps,
+  options,
+  footerAction,
+  columns = 2,
+}: AppLauncherProps) {
+  const list = products ?? apps ?? [];
+  const rows = chunkRows(list, Math.max(1, columns));
+  const showOptions =
+    (options && options.length > 0) || footerAction != null;
+
   return (
     <Popover.Root>
-      <Popover.Trigger className={styles.trigger}>
-        <GridIcon />
+      <Popover.Trigger
+        className={styles.trigger}
+        aria-label="App launcher"
+      >
+        <img
+          src={gridSquare9Icon}
+          alt=""
+          className={styles.triggerIcon}
+          width={16}
+          height={16}
+          aria-hidden="true"
+        />
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={8}>
-          <Popover.Popup className={styles.popup}>
-            <div className={styles.grid}>
-              {apps.map((app, index) => {
-                const content = (
-                  <>
-                    <span className={styles.appIcon}>
-                      {app.icon || <DefaultAppIcon />}
-                    </span>
-                    <span className={styles.appName}>{app.name}</span>
-                  </>
-                );
-
-                return app.href ? (
-                  <a
-                    key={index}
-                    href={app.href}
-                    className={styles.appTile}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {content}
-                  </a>
-                ) : (
-                  <button
-                    key={index}
-                    type="button"
-                    className={styles.appTile}
-                  >
-                    {content}
-                  </button>
-                );
-              })}
-            </div>
+        <Popover.Positioner sideOffset={8} align="end">
+          <Popover.Popup className={styles.launcherSurface}>
+            {list.length > 0 ? (
+              <div className={styles.productRegion}>
+                {rows.map((row, rowIndex) => (
+                  <div key={rowIndex}>
+                    {rowIndex > 0 ? <div className={styles.rowDivider} aria-hidden="true" /> : null}
+                    <div
+                      className={[
+                        styles.productRow,
+                        row.length === 1 && columns === 2 ? styles.productRowSingle : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      {row.map((product, cellIndex) => (
+                        <div key={product.id ?? `${rowIndex}-${cellIndex}`} style={{ display: "contents" }}>
+                          {cellIndex > 0 ? (
+                            <div className={styles.columnDivider} aria-hidden="true" />
+                          ) : null}
+                          <AppLauncherProductTile {...product} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {showOptions ? (
+              <AppLauncherOptionsList
+                options={options ?? []}
+                footerAction={footerAction}
+                showTopSeparator={list.length > 0}
+              />
+            ) : null}
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
-  );
-}
-
-function GridIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <rect x="3" y="3" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="12" y="3" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="3" y="12" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function DefaultAppIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
   );
 }

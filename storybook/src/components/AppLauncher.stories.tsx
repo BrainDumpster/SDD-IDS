@@ -9,52 +9,122 @@ const meta: Meta<typeof AppLauncher> = {
 export default meta;
 type Story = StoryObj<typeof AppLauncher>;
 
-export const SixApps: Story = {
+/** Default icon per Figma: `shield-encrypt-alt` when `icon` is omitted. */
+export const DefaultShieldIcons: Story = {
   args: {
-    apps: [
-      { name: "Dashboard", href: "#" },
-      { name: "Analytics", href: "#" },
-      { name: "Reports", href: "#" },
-      { name: "Settings", href: "#" },
-      { name: "Users", href: "#" },
-      { name: "Docs", href: "#" },
+    products: [
+      { name: "Product Name 1", href: "#" },
+      { name: "Product Name 2", href: "#" },
+      { name: "Product Name 3", href: "#" },
+    ],
+  },
+};
+
+/** Two columns with vertical column borders between cells (Figma-aligned). */
+export const FourProducts: Story = {
+  args: {
+    products: [
+      { name: "Product Name 1", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+    ],
+  },
+};
+
+/** Separator parity check: 4 products shows column dividers + center row divider together. */
+export const SeparatorParityFourProducts: Story = {
+  args: {
+    products: [
+      { name: "Product Name 1", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+    ],
+  },
+};
+
+/** Figma "3 products" shape: verifies odd last row and divider alignment. */
+export const ThreeProductsOddRow: Story = {
+  args: {
+    products: [
+      { name: "Product Name 1", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+    ],
+  },
+};
+
+export const WithOptionsAndFooter: Story = {
+  args: {
+    products: [
+      { name: "Product Name 1", href: "#" },
+      { name: "Product Name", href: "#" },
+    ],
+    options: [
+      { id: "1", label: "Option" },
+      { id: "2", label: "Option" },
+      { id: "3", label: "Option" },
+    ],
+    footerAction: { label: "Action", onClick: () => {} },
+  },
+};
+
+/** Mixed layout: product grid separators + options region separator. */
+export const MixedGridAndOptions: Story = {
+  args: {
+    products: [
+      { name: "Product Name 1", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+      { name: "Product Name", href: "#" },
+    ],
+    options: [
+      { id: "1", label: "Option" },
+      { id: "2", label: "Option" },
+      { id: "3", label: "Option" },
+      { id: "4", label: "Option" },
+    ],
+  },
+};
+
+export const OptionsOnly: Story = {
+  args: {
+    products: [],
+    options: [
+      { id: "1", label: "Option" },
+      { id: "2", label: "Option" },
     ],
   },
 };
 
 export const WithCustomIcons: Story = {
   args: {
-    apps: [
+    products: [
       {
         name: "Mail",
         icon: (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
             <path d="M3 7L12 13L21 7" stroke="currentColor" strokeWidth="1.5" />
           </svg>
         ),
+        href: "#",
       },
       {
         name: "Calendar",
-        icon: (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M3 9H21" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M8 3V5M16 3V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        ),
+        href: "#",
       },
-      {
-        name: "Files",
-        icon: (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M4 6C4 4.89543 4.89543 4 6 4H10L12 6H18C19.1046 6 20 6.89543 20 8V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6Z" stroke="currentColor" strokeWidth="1.5" />
-          </svg>
-        ),
-      },
-      { name: "Tasks" },
-      { name: "Chat" },
-      { name: "Admin" },
+    ],
+  },
+};
+
+/** Backward compatibility: `apps` maps to `products`. */
+export const LegacyAppsProp: Story = {
+  args: {
+    apps: [
+      { name: "Dashboard", href: "#" },
+      { name: "Analytics", href: "#" },
     ],
   },
 };

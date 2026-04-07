@@ -29,8 +29,15 @@ The component is composed of these structural parts:
 - **navLink**
 - **navLinkActive**
 - **navList**
+- **appLauncherTrigger** (optional): **App Launcher** control in **actions**; canonical icon **`grid-square-9-16`** at **16×16** (`assets/icons/grid-square-9-16.svg`). Opens the App Launcher popover anchored to this control. **Normative UI spec:** `components/synapse/app-launcher/design-spec.mdx` (Figma examples `49927:30551`; host frame `47807:3591`).
 
 Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+## App Launcher integration
+
+- **Placement:** **Masthead** `actions` cluster, before user/profile affordances (Figma: help → **grid** → user initials).
+- **Behavior:** Trigger toggles **App Launcher** surface (`AppLauncher-Main`); align popover to **inline end** of trigger, below masthead.
+- **Do not** redefine launcher grid/options tokens in this file — use **`components/synapse/app-launcher/design-spec.mdx`** as source of truth for the dropdown content.
 
 <!-- ds:section id=layout -->
 ## Layout & Measurements
@@ -83,4 +90,5 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
+| App Launcher (popover) | `components/synapse/app-launcher/design-spec.mdx` |
 <!-- auto:generated:end -->

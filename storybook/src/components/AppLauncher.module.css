@@ -22,30 +22,86 @@
   outline-offset: 2px;
 }
 
-.popup {
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-lighter);
-  border-radius: var(--corner-radius-radius-4);
-  padding: var(--padding-padding-16);
-  box-shadow:
-    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur) var(--shadow-drop-shadow-2-color);
-  min-width: 240px;
+.triggerIcon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-space-8);
+.launcherSurface {
+  --separator-inset: var(--padding-padding-16);
+  box-sizing: border-box;
+  background: var(--color-background-surface-2);
+  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-radius: var(--corner-radius-radius-4);
+  padding: var(--padding-padding-1);
+  box-shadow: 1px 1px 5px 0 var(--shadow-drop-shadow-2-color);
+  width: max-content;
+  max-width: min(500px, calc(100vw - 24px));
 }
+
+.productRegion {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-block: var(--separator-inset);
+}
+
+.productRow {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* Figma parity: when a row has a single odd tile, center it within 2-column width. */
+.productRowSingle {
+  justify-content: center;
+}
+
+/* Figma: hairline between adjacent cells in the same row (vertical column border). */
+.columnDivider {
+  flex: 0 0 0;
+  width: 0;
+  align-self: stretch;
+  border: none;
+  border-inline-start: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  margin: 0;
+  padding: 0;
+  min-height: 125px;
+}
+
+/* Figma: horizontal separation between product rows (dotted / dashed). */
+.rowDivider {
+  flex-shrink: 0;
+  height: var(--separator-inset);
+  margin: 0 var(--separator-inset);
+  border: none;
+  position: relative;
+}
+
+.rowDivider::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(50% - (var(--border-width-border-1) / 2));
+  border-top: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+}
+
+/* ---------- AppLauncherProductTile ---------- */
 
 .appTile {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-space-8);
-  padding: var(--padding-padding-12);
+  justify-content: center;
+  width: 148px;
+  min-height: 125px;
+  padding: 0;
   border: none;
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: 0;
   background: transparent;
   cursor: pointer;
   text-decoration: none;
@@ -62,24 +118,152 @@
   outline-offset: -2px;
 }
 
-.appIcon {
+.labelStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-12);
+  width: 147px;
+  padding: var(--padding-padding-28) var(--padding-padding-1);
+  box-sizing: border-box;
+}
+
+.iconSlot {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--corner-radius-radius-4);
-  background: var(--color-background-surface-1);
-  color: var(--color-background-controls-brand-base);
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.productIconImg {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* Default Figma icon from assets; tint via neutral-strong token. */
+.defaultProductIcon {
+  display: block;
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-icon-neutral-strong, var(--color-icon-neutral));
+  -webkit-mask-image: url("../../../assets/icons/shield-encrypt-alt.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  mask-image: url("../../../assets/icons/shield-encrypt-alt.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
 }
 
 .appName {
-  font-size: var(--font-size-body-3);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
   font-family: inherit;
+  font-weight: 400;
   color: var(--color-text-neutral-strong);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 72px;
+  max-width: 111px;
+  margin: 0;
+}
+
+/* ---------- AppLauncherOptionsList ---------- */
+
+.optionsRegion {
+  box-sizing: border-box;
+  background: var(--color-background-component);
+  border-top: none;
+  min-width: 185px;
+  max-width: 500px;
+  overflow: hidden;
+}
+
+.optionsRegionWithSeparator {
+  position: relative;
+}
+
+.optionsRegionWithSeparator::before {
+  content: "";
+  position: absolute;
+  inset-inline: var(--separator-inset);
+  inset-block-start: 0;
+  border-top: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  pointer-events: none;
+}
+
+/* Options-only launcher: no separator above list (nothing above it in the surface). */
+.launcherSurface > .optionsRegion:first-child {
+  border-top: none;
+}
+
+.optionsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.optionItem {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  border: none;
+  background: var(--color-background-component);
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  text-align: start;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.optionItem:hover {
+  background: var(--color-background-gray-lighter);
+}
+
+.optionItem:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.optionsFooter {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-8) 0;
+  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.footerAction {
+  margin: 0;
+  margin-inline-start: var(--padding-padding-16);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-brand-strong);
+  cursor: pointer;
+  text-align: start;
+}
+
+.footerAction:hover {
+  text-decoration: underline;
+}
+
+.footerAction:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
 }
