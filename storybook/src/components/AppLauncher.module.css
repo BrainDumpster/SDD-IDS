@@ -151,10 +151,20 @@
   text-decoration: none;
   transition: background 150ms ease;
   font-family: inherit;
+  color: var(--color-icon-neutral-strong, var(--color-icon-neutral));
 }
 
 .appTile:hover {
-  background: var(--color-background-gray-lighter);
+  background: var(--color-background-brand-lighter);
+}
+
+.appTile:active {
+  background: var(--color-background-brand-light);
+  color: var(--color-icon-brand-strong);
+}
+
+.appTile:active .appName {
+  color: var(--color-text-brand-strong);
 }
 
 .appTile:focus-visible {
@@ -195,7 +205,7 @@
   display: block;
   width: 32px;
   height: 32px;
-  background-color: var(--color-icon-neutral-strong, var(--color-icon-neutral));
+  background-color: currentColor;
   -webkit-mask-image: url("../../../assets/icons/shield-encrypt-alt.svg");
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: contain;

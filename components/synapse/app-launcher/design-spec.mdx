@@ -82,7 +82,7 @@ Use semantic CSS variables only.
 | Region / control | Default | Hover | Focus-visible | Press | Disabled |
 |---|---|---|---|---|---|
 | `launcherSurface` | surface-2, neutral-light border, elevation | n/a | n/a | n/a | n/a |
-| `productTile` | transparent | `var(--color-background-gray-lighter)` or surface hover token | focus ring `var(--color-border-brand-base)` | active per button/link | no navigation if no `href`/`onSelect` |
+| `productTile` (`AppLauncher-Element` `13231:109521`) | transparent tile; label `var(--color-text-neutral-strong)`; icon neutral-strong | `var(--color-background-brand-lighter)` | focus ring `var(--color-border-brand-base)` | `var(--color-background-brand-light)` + label `var(--color-text-brand-strong)` + icon `var(--color-icon-brand-strong)` | no navigation if no `href`/`onSelect` |
 | `optionItem` | component bg, neutral text | row hover per Dropdown spec | focus-visible row | active | disabled text token |
 | Masthead **trigger** (grid icon) | per **Masthead** actions | per Masthead | per Masthead | per Masthead | `aria-disabled` / omit |
 
@@ -91,7 +91,8 @@ Use semantic CSS variables only.
 | Region / control | Default | Hover | Focus-visible | Press | Disabled |
 |---|---|---|---|---|---|
 | `launcherSurface` | `var(--color-background-surface-2)` dark resolve | n/a | n/a | n/a | n/a |
-| `productTile` / `optionItem` | semantic dark text/surface | same structure as Light | same | same | same |
+| `productTile` (`AppLauncher-Element`) | semantic dark-resolved text/surface | `var(--color-background-brand-lighter)` dark resolve | same structure as Light | `var(--color-background-brand-light)` dark resolve + brand-strong text/icon resolve | same |
+| `optionItem` | semantic dark text/surface | same structure as Light (Dropdown dark resolve) | same | same | same |
 | Dividers | `var(--color-border-neutral-light)` dark resolve | n/a | n/a | n/a | n/a |
 
 ## Interactions
