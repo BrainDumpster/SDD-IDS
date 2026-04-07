@@ -1,0 +1,168 @@
+<!-- ds:inherits root-spec -->
+# About (Synapse) Design Spec
+
+## Metadata
+- **Component / pattern:** About
+- **Category:** Patterns
+- **Design System:** Synapse
+- **Figma (pattern frame — validated):** `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=49962-53917&m=dev`
+- **Pattern frame ID:** `49962:53917` (frame name in file: `Masthead`; child **`About`** documents full-screen pattern)
+- **Modal surface ID (implement this):** `49962:53921` — instance **`About-Synapse`** (centered dialog: product title, version, Dell Technologies horizontal logo, legal copy, footer **Close**)
+- **Related nested IDs (Dev Mode):**
+  - Scrim / overlay reference: `49842:37477` / `49842:37475` (`Dark Mode Overlay` — `rgba(0,0,0,0.6)` + optional `backdrop-blur`)
+  - Modal shell / card: `49962:53921`
+  - Modal body root: `I49962:53921;49962:52709` (`Modal-Main`)
+  - Header row (dismiss): `I49962:53921;49962:52711`
+  - Center stack: `I49962:53921;49962:52721` (`CENTER AREA`)
+  - Product title + version: `I49962:53921;49962:52724` / `I49962:53921;49962:52725` / `I49962:53921;49962:52726`
+  - Copyright + logo: `I49962:53921;49962:52730` / `I49962:53921;49962:52731` / `I49962:53921;49962:52732`
+  - Footer + primary **Close**: `I49962:53921;49962:52733` / `I49962:53921;49962:53027`
+- **Figma description (pattern):** About dialog over application chrome; mutually exclusive with underlying page interaction until dismissed.
+
+## Anatomy
+1. **`patternRoot`** (optional outer wrapper when embedding in page mock): hosts **page**, **scrim**, **dialog**.
+2. **`scrim`**: full-viewport layer above page; blocks pointer events to content below; optional subtle **backdrop blur** (Figma: `1px`).
+3. **`dialog`**: centered **modal surface** (`About-Synapse`); clips overflow; outer border + large corner radius.
+4. **`modalMain`**: column flex; **modal background**, **elevation shadow stack**; contains **header**, **body**, **footer**.
+5. **`header`**: top bar — **leading spacer / reserved region** (Figma empty `78px` cluster), **trailing dismiss** control (icon-only **close**, `16×16`).
+6. **`body`**: scrollable if needed; vertically centered **content column**:
+   - **`productBlock`**: **`productTitle`** + **`versionLine`** (stacked, centered).
+   - **`brandBlock`**: **`logo`** (horizontal Dell Technologies mark, fixed aspect sample in Figma).
+   - **`legalCopy`**: one or more centered paragraphs (`Body 2`).
+7. **`footer`**: top **divider**; horizontal row **`justify-end`**; **primary Close** button (synapse Button primary pattern).
+
+## Layout & Measurements
+- **Dialog (About-Synapse, sample from Figma):** width `1152px`, height `596px`; **centered** in viewport (`50%` / `-translate` pattern in file). **Runtime:** prefer `max-width: min(1152px, 100vw - tokenized gutters)`, `width` auto or `100%` inside margins; height **content-driven** with `min-height` optional; **do not hardcode** `596px` in production unless product locks aspect.
+- **Dialog outer chrome:** `border-radius`: `var(--corner-radius-radius-16)`; border `var(--border-width-border-1)` solid `var(--color-border-neutral-light)`.
+- **`modalMain`:** `background`: `var(--color-background-component)`; **shadow** (Figma): stacked drop shadows Y `2px`, `4px`, `8px`, `16px`, color **`rgba(37,37,37,0.08)`** — implement via design-system shadow tokens (e.g. composite of `--shadow-drop-shadow-2-*`, `--shadow-drop-shadow-4-*`, `--shadow-drop-shadow-8-*`, `--shadow-drop-shadow-16-*`) or equivalent single elevation token if provided.
+- **Header:** padding `var(--padding-padding-24)` top, `var(--padding-padding-16)` bottom, horizontal `var(--padding-padding-24)`; row **`justify-content: space-between`**; dismiss control **`16×16`**, **inline end** aligned.
+- **Body (`Frame-Center`):** horizontal padding `var(--padding-padding-24)`; bottom padding `var(--padding-padding-24)`; **flex** column **center** main axis; inner **`CENTER AREA`** max content width Figma sample `1056px` (runtime: `max-width` + `width 100%`).
+- **Gap** between **`productBlock`** and **`brandBlock` cluster** (product vs copyright section): `var(--spacing-space-56)` (Figma `loose-density` / `56px`).
+- **Product title:** `var(--font-size-header-1)`; line-height `var(--font-line-height-line-height-58)`; color `var(--color-icon-brand-base)` (Figma binds product wordmark to icon brand blue); **center** text; max width sample `800px` — use **`max-width` + `margin-inline: auto`** for long titles.
+- **Version line:** `var(--font-size-body-2)`; line-height `var(--font-line-height-line-height-20)`; color `var(--color-text-neutral-strong)`; **center**.
+- **Logo region:** height sample `32px`; width driven by asset intrinsic ratio (Figma ~`249.693px` wide cluster).
+- **Legal copy:** `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; color `var(--color-text-neutral)`; **text-align: center**; multiline paragraphs with normal flow.
+- **Footer:** `border-top` `var(--border-width-border-1)` solid `var(--color-border-neutral-light)`; padding `var(--padding-padding-24)`; row gap `var(--spacing-space-16)`; **actions end-aligned** (Close only in reference).
+- **Close button (primary):** padding horizontal `var(--padding-padding-16)`, vertical `var(--padding-padding-10)`; radius `var(--corner-radius-radius-4)`; background `var(--color-background-controls-brand-base)`; border `var(--border-width-border-1)` solid `var(--color-border-transparent-brand)`; label `var(--font-size-body-2)` / `var(--color-text-white)` (see States).
+- **Scrim:** full viewport; fill use `var(--color-background-overlay-1)` **or** token matching Figma **`rgba(0,0,0,0.6)`** — validate visually against node `49842:37475`; optional `backdrop-filter: blur(1px)` when spec requires parity.
+
+## Tokens
+Use semantic CSS variables only for implementation guidance.
+
+- **Surfaces:** `var(--color-background-component)`, `var(--color-background-overlay-1)`.
+- **Borders:** `var(--border-width-border-1)`, `var(--color-border-neutral-light)`, `var(--color-border-transparent-brand)`.
+- **Text / icons:** `var(--color-icon-brand-base)` (product title), `var(--color-text-neutral-strong)` (version), `var(--color-text-neutral)` (legal), `var(--color-text-white)` (footer Close label), **`var(--color-icon-neutral)`** (header dismiss / close icon, same as Synapse Dialog).
+- **Typography:** `var(--font-size-header-1)`, `var(--font-size-body-2)`, `var(--font-line-height-line-height-58)`, `var(--font-line-height-line-height-20)`, `var(--typography-font-style-primary)` / body font stack.
+- **Spacing / radius:** `var(--padding-padding-24)`, `var(--padding-padding-16)`, `var(--padding-padding-10)`, `var(--spacing-space-16)`, `var(--spacing-space-56)`, `var(--spacing-space-8)`, `var(--spacing-space-4)`, `var(--corner-radius-radius-16)`, `var(--corner-radius-radius-4)`.
+- **Shadows:** compose from `--shadow-drop-shadow-{2,4,8,16}-*` tokens (Synapse theme) to match Figma four-layer stack, or document elevation preset name if design system adds one.
+- **Dismiss icon (header close):** **`var(--color-icon-neutral)`** for the glyph (aligned with `components/synapse/dialog/design-spec.mdx` closeIcon); **hover/focus** per Dialog close control.
+
+## States (Light Theme)
+
+| Region / control | Default | Hover | Focus-visible | Press | Disabled |
+|---|---|---|---|---|---|
+| Scrim | `var(--color-background-overlay-1)` (or Figma-matched black 60%) | n/a | n/a | n/a | n/a |
+| Dialog chrome | border `var(--color-border-neutral-light)` | n/a | n/a | n/a | n/a |
+| Product title | `var(--color-icon-brand-base)` | n/a (text) | n/a | n/a | n/a |
+| Version | `var(--color-text-neutral-strong)` | n/a | n/a | n/a | n/a |
+| Legal | `var(--color-text-neutral)` | n/a | n/a | n/a | n/a |
+| Dismiss icon | `var(--color-icon-neutral)` | `var(--color-background-gray-lighter)` hover surface (per Dialog) | focus ring `var(--color-border-brand-base)` (`var(--border-width-border-2)` per Dialog spec) | active state per icon button | `opacity` / `var(--color-text-disabled)` if dialog cannot close |
+| **Close** button | bg `var(--color-background-controls-brand-base)`; text `var(--color-text-white)`; border transparent token | bg `var(--color-background-controls-brand-strong)` (or hover token from Button spec) | focus ring per primary button | press per Button | not used in reference |
+
+## States (Dark Theme)
+Structurally the same; all values resolve from dark semantic maps. Revalidate scrim opacity, dialog background, borders, and text contrast (product title on dark modal surface still uses brand/icon token per Figma variable mode).
+
+| Region / control | Default | Hover | Focus-visible | Press | Disabled |
+|---|---|---|---|---|---|
+| Scrim | `var(--color-background-overlay-1)` (dark resolve) | n/a | n/a | n/a | n/a |
+| `modalMain` background | `var(--color-background-component)` | n/a | n/a | n/a | n/a |
+| Product title | `var(--color-icon-brand-base)` | n/a | n/a | n/a | n/a |
+| Version / legal | `var(--color-text-neutral-strong)` / `var(--color-text-neutral)` | n/a | n/a | n/a | n/a |
+| Dismiss icon | `var(--color-icon-neutral)` | same as Light / Dialog close | same as Light / Dialog close | n/a | n/a |
+| Close (primary) | brand base / white text | brand strong hover | focus-visible per Button | press | per Button disabled |
+
+## Interactions
+- **Open:** pattern is mounted (or `open=true`); scrim + dialog visible; **focus trap** inside dialog on open; **initial focus** on dismiss or Close per product a11y policy (recommend first focusable = Close or dismiss).
+- **Dismiss paths:** (1) **Dismiss** icon → `onClose` / `onOpenChange(false)`; (2) **Close** button → same; (3) optional: **Escape** key; (4) optional: **scrim click** (only if spec allows; Figma does not mandate — default **do not** close on scrim unless explicitly required).
+- **Scroll:** body scrolls if legal copy exceeds viewport; header/footer remain visually fixed (sticky within dialog) **or** scroll as one column per implementation — Figma shows single column; prefer **header + footer fixed, body scroll** for long legal text.
+- **Underlying page:** inert / `aria-hidden` while open (when dialog is modal).
+
+## Composition & API (runtime)
+
+| Prop / slot | Required | Behavior |
+|---|---|---|
+| `open` | Yes (controlled) | Whether About is visible. |
+| `onOpenChange` / `onClose` | Yes | Fires when user closes via dismiss or Close (payload boolean or void). |
+| `productTitle` | Yes | String (e.g. “Synapse”); renders as header-level display with Header 1 / brand color token. |
+| `versionLabel` | Yes | String (e.g. semantic version); Body 2 / neutral-strong. |
+| `legalContent` | Yes | `string` (markdown optional per product) **or** slot for rich text; centered Body 2. |
+| `logo` | No | Default: bundled **horizontal Dell Technologies** asset; override slot for white-label. Canonical repo slug: `logo-delltech-horiz.svg` under `assets/icons/`. |
+| `closeLabel` | No (default `"Close"`) | Footer primary button label. |
+| `onCloseButtonClick` | No | Optional extra handler; must still call `onOpenChange(false)` when closing. |
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+### Deterministic structure
+```
+patternRoot (optional)
+├── scrim
+└── dialog
+    └── modalMain
+        ├── header
+        │   ├── headerStartSpacer (optional)
+        │   └── dismissButton
+        ├── body
+        │   └── contentColumn
+        │       ├── productBlock (productTitle, versionLabel)
+        │       └── brandBlock (logo, legalCopy)
+        └── footer
+            └── closeButton (primary)
+```
+
+### Variant matrix
+- **Density:** default only in source; future: compact legal / no logo (out of scope unless new Figma).
+- **Theme:** light | dark via tokens.
+- **White-label:** `logo` slot override; `productTitle` / `legalContent` strings required.
+
+### Per-slot style contract
+- All colors, radii, borders, typography from **Tokens** and **States** tables.
+- Dismiss: **16×16** hit target minimum **44×44** if design system requires enlarged tap area (document touch target in implementation notes).
+
+### Behavior contract
+- Closing always unmounts or sets `open=false` exactly once per user gesture.
+- No duplicate `onOpenChange` emissions from dismiss + Close unless separate analytics hooks provided.
+- **Restore focus** to trigger element on close (dialog a11y).
+
+### Accessibility contract
+- **Role:** `dialog`; **`aria-modal="true"`**; **`aria-labelledby`** pointing at product title id; optional **`aria-describedby`** for legal region.
+- **Keyboard:** `Tab` cycles focus within dialog; `Escape` closes if product enables it.
+- **Dismiss control:** `aria-label="Close"` (or localized string).
+
+### Asset + bundling contract
+| Asset | Path |
+|---|---|
+| Close icon (dismiss) | `assets/icons/shape-x.svg` (or `shape-x-thick.svg` per design QA) |
+| Dell Technologies horizontal list mark | `assets/icons/logo-delltech-horiz.svg` |
+
+Bundle rule: ship icons with app; do not rely on Figma MCP asset URLs in production.
+
+### Fallback/error rules
+- Missing `productTitle`: generator error; refuse empty.
+- Missing logo file: show **alt text** / `aria-label` for brand; optional placeholder glyph.
+- Unknown markdown in `legalContent`: strip or safe-render per product sanitizer policy.
+
+### Validation checklist
+- [ ] Dialog shell matches `components/synapse/dialog/design-spec.mdx` (`variant="about"`) for dismiss, footer close, visibility API, and `shape-x`.
+- [ ] Dialog dimensions and radius match `49962:53921` / `Modal-Main` when viewport allows.
+- [ ] Scrim matches overlay token / Figma contrast.
+- [ ] Product title uses `header-1` + `color-icon-brand-base` per Figma.
+- [ ] Footer Close matches primary button tokens (`controls-brand-base`, white text).
+- [ ] Focus trap and `aria-labelledby` verified.
+- [ ] Dark theme token resolution checked.
+- [ ] Assets resolve from `assets/icons/` slugs above.
+
+## Source Mapping
+- **Map entry:** `data/synapse-component-figma-map.json` → **About** (Synapse) with `figmaUrl` + `nodeId` `49962:53917`.
+- **Implementation focus:** modal node **`49962:53921`** (`About-Synapse`).
+- **Modal shell / shared Dialog contract (source of truth for backdrop, popup chrome, header dismiss, footer close primitive, `open`/`onOpenChange`, `shape-x`):** `components/synapse/dialog/design-spec.mdx` — implement via **`variant="about"`**; this About spec defines **inner** content and pattern-only tokens.
+- **Extraction:** Figma MCP `get_metadata` + `get_design_context` on `49962:53917` (Synapse Hi-Fi components file `Td1bnsvRj1PCGs9RVJkIvJ`).

@@ -1,16 +1,24 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
 import type { ReactNode } from "react";
 import styles from "./Dialog.module.css";
+import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
+import shapeXIcon from "../../../assets/icons/shape-x.svg";
 
 type DialogType = "None" | "Success" | "Warning" | "Major" | "Danger" | "Info";
 type DialogSize = "sm" | "lg" | "xl";
+export type DialogVariant = "default" | "about";
 
 interface DialogProps {
-  trigger: ReactNode;
+  /** Use `about` for the Synapse About pattern (centered product line, optional slots in children). */
+  variant?: DialogVariant;
+  /** Omit when controlling visibility with `open` / `onOpenChange`. */
+  trigger?: ReactNode;
 
   // Visibility
   openDidalog?: boolean; // initial open in uncontrolled dialog demo
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 
   // Header
   dialogTitle: string;
@@ -33,8 +41,11 @@ interface DialogProps {
 }
 
 export function Dialog({
+  variant = "default",
   trigger,
   openDidalog = false,
+  open,
+  onOpenChange,
   dialogTitle,
   dialogType = "None",
   dialogSize = "lg",
@@ -49,83 +60,145 @@ export function Dialog({
   onPrimaryButtonClick,
   onTertiaryButtonClick,
 }: DialogProps) {
+  const controlled = open !== undefined;
+  if (!controlled && trigger == null) {
+    throw new Error("Dialog: pass `trigger`, or use controlled mode with `open`.");
+  }
+
+  const showTertiary =
+    variant !== "about" && Boolean(tertiaryButtonName);
+
+  const popupClassName =
+    variant === "about"
+      ? `${styles.popup} ${styles.popupAbout}`
+      : `${styles.popup} ${styles[dialogSize]}`;
+
   return (
-    <BaseDialog.Root defaultOpen={openDidalog}>
-      <BaseDialog.Trigger className={styles.triggerReset}>
-        {trigger}
-      </BaseDialog.Trigger>
+    <BaseDialog.Root
+      modal
+      disablePointerDismissal={variant === "about"}
+      open={controlled ? open : undefined}
+      defaultOpen={controlled ? undefined : openDidalog}
+      onOpenChange={(next) => onOpenChange?.(next)}
+    >
+      {trigger != null ? (
+        <BaseDialog.Trigger className={styles.triggerReset}>{trigger}</BaseDialog.Trigger>
+      ) : null}
       <BaseDialog.Portal>
-        <BaseDialog.Backdrop className={styles.backdrop} />
-        <BaseDialog.Popup className={`${styles.popup} ${styles[dialogSize]}`}>
-          <div className={styles.header}>
-            <div className={styles.headerLeft}>
-              {dialogType !== "None" && (
-                <span
-                  className={styles.alertIcon}
-                  aria-hidden="true"
-                  style={{ color: getDialogTypeIconColor(dialogType) }}
+        <BaseDialog.Backdrop
+          className={variant === "about" ? styles.backdropAbout : styles.backdrop}
+        />
+        <BaseDialog.Popup className={popupClassName}>
+          {variant === "about" ? (
+            <>
+              <div className={styles.modalMainAbout}>
+                <header className={styles.aboutHeader}>
+                  <div className={styles.aboutHeaderSpacer} aria-hidden="true" />
+                  {dialogClosable ? (
+                    <BaseDialog.Close
+                      className={styles.close}
+                      aria-label="Close"
+                      onClick={() => onClose?.()}
+                    >
+                      <DialogCloseGlyph />
+                    </BaseDialog.Close>
+                  ) : null}
+                </header>
+                <div className={styles.aboutBody}>
+                  <BaseDialog.Title className={styles.aboutProductTitle}>
+                    {dialogTitle}
+                  </BaseDialog.Title>
+                  {children}
+                </div>
+                <footer className={styles.aboutFooter}>
+                  <BaseDialog.Close
+                    className={[
+                      buttonStyles.button,
+                      buttonStyles.primary,
+                      buttonStyles.md,
+                    ].join(" ")}
+                    disabled={!enableActionButton}
+                    onClick={() => onPrimaryButtonClick?.()}
+                  >
+                    {primaryButtonName}
+                  </BaseDialog.Close>
+                </footer>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.header}>
+                <div className={styles.headerLeft}>
+                  {dialogType !== "None" && (
+                    <span
+                      className={styles.alertIcon}
+                      aria-hidden="true"
+                      style={{ color: getDialogTypeIconColor(dialogType) }}
+                    >
+                      <DialogTypeIcon type={dialogType} />
+                    </span>
+                  )}
+                  <BaseDialog.Title className={styles.title}>
+                    {dialogTitle}
+                  </BaseDialog.Title>
+                </div>
+
+                {dialogClosable && (
+                  <BaseDialog.Close
+                    className={styles.close}
+                    aria-label="Close"
+                    onClick={() => onClose?.()}
+                  >
+                    <DialogCloseGlyph />
+                  </BaseDialog.Close>
+                )}
+              </div>
+
+              {description ? (
+                <BaseDialog.Description className={styles.description}>
+                  {description}
+                </BaseDialog.Description>
+              ) : null}
+
+              {children ? <div className={styles.body}>{children}</div> : null}
+
+              <div className={styles.footer}>
+                {showTertiary ? (
+                  <Button
+                    variant="tertiary"
+                    disabled={!enableTertiaryButtton}
+                    onClick={() => onTertiaryButtonClick?.()}
+                  >
+                    {tertiaryButtonName}
+                  </Button>
+                ) : null}
+                <Button
+                  variant="primary"
+                  disabled={!enableActionButton}
+                  onClick={() => onPrimaryButtonClick?.()}
                 >
-                  <DialogTypeIcon type={dialogType} />
-                </span>
-              )}
-              <BaseDialog.Title className={styles.title}>
-                {dialogTitle}
-              </BaseDialog.Title>
-            </div>
-
-            {dialogClosable && (
-              <BaseDialog.Close
-                className={styles.close}
-                aria-label="Close"
-                onClick={() => onClose?.()}
-              >
-                <CloseIcon />
-              </BaseDialog.Close>
-            )}
-          </div>
-
-          {description && (
-            <BaseDialog.Description className={styles.description}>
-              {description}
-            </BaseDialog.Description>
+                  {primaryButtonName}
+                </Button>
+              </div>
+            </>
           )}
-
-          {children && <div className={styles.body}>{children}</div>}
-
-          <div className={styles.footer}>
-            {tertiaryButtonName && (
-              <Button
-                variant="tertiary"
-                disabled={!enableTertiaryButtton}
-                onClick={() => onTertiaryButtonClick?.()}
-              >
-                {tertiaryButtonName}
-              </Button>
-            )}
-            <Button
-              variant="primary"
-              disabled={!enableActionButton}
-              onClick={() => onPrimaryButtonClick?.()}
-            >
-              {primaryButtonName}
-            </Button>
-          </div>
         </BaseDialog.Popup>
       </BaseDialog.Portal>
     </BaseDialog.Root>
   );
 }
 
-function CloseIcon() {
+/** Canonical asset: `assets/icons/shape-x.svg` */
+function DialogCloseGlyph() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M12 4L4 12M4 4L12 12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    <img
+      src={shapeXIcon}
+      alt=""
+      className={styles.closeIcon}
+      width={16}
+      height={16}
+      aria-hidden="true"
+    />
   );
 }
 
