@@ -488,6 +488,8 @@ html, body {
   --color-background-controls-brand-light: #002642;
   /* Figma variable name: color-background-controls-brand-lighter (hover surfaces). Was #003a65—too near component #111619 for visible hover; lifted to match intent of light-theme hover contrast. */
   --color-background-controls-brand-lighter: #1e262c;
+  --color-background-controls-brand-strong: #34414c;
+  --color-background-controls-brand-stronger: #455666;
   --color-background-gradient-chat-button-end-violet: #520179;
   --color-background-gradient-chat-end: rgba(86, 108, 127, 0.20);
   --color-background-gradient-chat-start: rgba(19, 21, 25, 0.10);

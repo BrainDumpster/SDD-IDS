@@ -1,94 +1,194 @@
-<!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
-# Masthead Design Spec
+# Masthead (Synapse) Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
 |---|---|
 | Component | Masthead |
 | Category | Components |
-| Figma Page | Components |
-| Node ID | 47807:3591 |
 | Design System | Synapse |
+| Figma URL (validated) | `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50294-112093&m=dev` |
+| Root frame ID | `50294:112093` |
+| Related node: Masthead actions | `49852:73090` |
+| Related node: help icon 16 | `29515:170428` |
+| Related node: app launcher icon 16 | `29515:170249` |
+| Related node: avatar initials | `49852:73083` |
+| Related node: user icon alt | `29515:170430` |
+| Related examples in frame | `Default (Initials)`, `User Icon`, `User Initials + menu`, `User Icon + menu`, `App Launcher` |
 
-<!-- ds:section id=anatomy -->
 ## Anatomy
 
-The component is composed of these structural parts:
+1. **`mastheadRoot`**: top horizontal chrome bar.
+2. **`brandGroup`**: optional **`logoSlot`** + required **`productName`** text.
+3. **`actionsGroup`**: right-aligned controls; order is deterministic:
+   - **`actionButtonContainer`** inside **`iconsSlot`** (optional), containing one or more **`actionIconButton`** children; commonly help icon first
+   - **`appLauncherSlot`** (optional; usually trigger for App Launcher)
+   - **`avatarSlot`** (required, last visual item; initials chip or user icon chip)
+4. **`overlaySlot`** (optional): contextual floating menu/panel anchored to avatar or app launcher (example: profile menu, app launcher dropdown).
 
-- **actions**
-- **left**
-- **logo**
-- **masthead**
-- **nav**
-- **navItem**
-- **navLink**
-- **navLinkActive**
-- **navList**
-- **appLauncherTrigger** (optional): **App Launcher** control in **actions**; canonical icon **`grid-square-9-16`** at **16×16** (`assets/icons/grid-square-9-16.svg`). Opens the App Launcher popover anchored to this control. **Normative UI spec:** `components/synapse/app-launcher/design-spec.mdx` (Figma examples `49927:30551`; host frame `47807:3591`).
-
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-## App Launcher integration
-
-- **Placement:** **Masthead** `actions` cluster, before user/profile affordances (Figma: help → **grid** → user initials).
-- **Behavior:** Trigger toggles **App Launcher** surface (`AppLauncher-Main`); align popover to **inline end** of trigger, below masthead.
-- **Do not** redefine launcher grid/options tokens in this file — use **`components/synapse/app-launcher/design-spec.mdx`** as source of truth for the dropdown content.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+- **Masthead bar**
+  - Height: `var(--scale-48)`.
+  - Horizontal padding: `var(--padding-padding-16)`.
+  - Layout: `display: flex`, `justify-content: space-between`, vertical center alignment.
+  - Background: masthead gradient from `var(--color-background-gradient-masthead-start)` to `var(--color-background-gradient-masthead-end)`.
+- **Brand group**
+  - Horizontal gap between optional logo and product name: `var(--spacing-space-8)` to `var(--spacing-space-24)` depending on logo footprint.
+  - Product name style: body-2 regular, white text token.
+- **Actions group**
+  - Right aligned, full masthead-height interactive rail.
+  - Gap between controls: `0` (visual separation comes from per-control horizontal padding).
+  - Icon action grouping: `actionButtonContainer` uses `inline-flex`, stretches to masthead height, and hosts one or more child actions.
+  - Icon control geometry (normative): 16x16 glyph with `padding-inline: var(--padding-padding-16)`, `padding-block: 0`, and full-height background fill.
+  - App launcher trigger follows the same geometry and must anchor its overlay to masthead bottom (`sideOffset: 0` equivalent behavior).
+- **Avatar slot**
+  - Chip sample size: `24x24`.
+  - Shape: circle.
+  - Border: 1px white/translucent stroke.
+- **Overlays (example in frame)**
+  - Profile/App menu width sample: 269px.
+  - Border: `var(--border-width-border-1)` + neutral-light border token.
+  - Shadow: two-layer dropdown shadow (2px/4px stack).
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+## Tokens
 
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-masthead-brand-base)` = #0076ce (light) / #1e262c (dark)
-- `var(--color-background-masthead-brand-strong)` = #0062ab (light) / #34414c (dark)
-- `var(--color-background-masthead-brand-stronger)` = #06528a (light) / #455666 (dark)
-- `var(--color-text-white)` = #ffffff
-- `var(--corner-radius-radius-4)` = 4px
-- `var(--font-size-body-1)` = 16px
-- `var(--font-size-body-2)` = 14px
-- `var(--padding-padding-16)` = 16px
-- `var(--padding-padding-8)` = 8px
-- `var(--scale-32)` = 32px
-- `var(--scale-48)` = 48px
-- `var(--spacing-space-24)` = 24px
-- `var(--spacing-space-4)` = 4px
-- `var(--spacing-space-8)` = 8px
+Use semantic tokens only.
 
-<!-- ds:section id=states-light -->
+| Use | Token |
+|---|---|
+| Masthead gradient start | `var(--color-background-gradient-masthead-start)` |
+| Masthead gradient end | `var(--color-background-gradient-masthead-end)` |
+| Text/icon on masthead | `var(--color-text-white)` |
+| Product name typography | `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)` |
+| Masthead height | `var(--scale-48)` |
+| Horizontal padding | `var(--padding-padding-16)` |
+| Action horizontal padding (each icon action) | `var(--padding-padding-16)` |
+| Action hover background | `var(--color-background-controls-brand-strong)` |
+| Action selected/open background | `var(--color-background-masthead-brand-stronger)` |
+| Avatar border | `var(--border-width-border-1)` + white/translucent semantic equivalent |
+| Overlay border | `var(--border-width-border-1)`, `var(--color-border-neutral-light)` |
+
 ## States (Light Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
+| Region / control | Default | Hover | Focus-visible | Press | Disabled |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-masthead-brand-stronger)` (#06528a) |  | `var(--color-text-white)` (#ffffff) | opacity: 1; radius: `var(--corner-radius-radius-4)` |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-text-white)`; opacity: 1 |
-| default | hover | `var(--color-background-masthead-brand-strong)` (#0062ab) |  |  | opacity: 1 |
+| `mastheadRoot` | gradient start/end tokens | n/a | n/a | n/a | n/a |
+| `productName` | `var(--color-text-white)` | n/a | n/a | n/a | n/a |
+| `iconsSlot` actionIconButton | transparent bg + `var(--color-text-white)` glyph | `var(--color-background-controls-brand-strong)` full-height fill | focus ring (`var(--border-width-border-2)` + white/border-brand per a11y) | `var(--color-background-masthead-brand-stronger)` | reduced opacity + no pointer |
+| `appLauncherSlot` trigger | transparent bg + `var(--color-text-white)` glyph | `var(--color-background-controls-brand-strong)` full-height fill | focus ring (`var(--border-width-border-2)` + white/border-brand per a11y) | `var(--color-background-masthead-brand-stronger)` (open/selected) | reduced opacity + no pointer |
+| `avatarSlot` | white text/icon + circular border | subtle fill/opacity | focus ring | active fill | reduced opacity |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-| Variant | State | Background | Border | Text / Icon | Other |
+| Region / control | Default | Hover | Focus-visible | Press | Disabled |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-masthead-brand-stronger)` (#455666) |  | `var(--color-text-white)` (#ffffff) | opacity: 1; radius: `var(--corner-radius-radius-4)` |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-text-white)`; opacity: 1 |
-| default | hover | `var(--color-background-masthead-brand-strong)` (#34414c) |  |  | opacity: 1 |
+| `mastheadRoot` | dark-resolved masthead gradient tokens | n/a | n/a | n/a | n/a |
+| `productName` | `var(--color-text-white)` (dark resolve) | n/a | n/a | n/a | n/a |
+| `iconsSlot` actionIconButton | transparent bg + white-resolved glyph | `var(--color-background-controls-brand-strong)` (dark resolve) | same structure as light | `var(--color-background-masthead-brand-stronger)` (dark resolve) | reduced opacity + no pointer |
+| `appLauncherSlot` trigger | transparent bg + white-resolved glyph | `var(--color-background-controls-brand-strong)` (dark resolve) | same structure as light | `var(--color-background-masthead-brand-stronger)` (dark resolve, open/selected) | reduced opacity + no pointer |
+| `avatarSlot` | structurally same as light; dark token resolves | same | same | same | same |
+
+## Interactions
+
+- Masthead remains fixed visual chrome while page content scrolls (app dependent).
+- `iconsSlot` and `appLauncherSlot` controls are consumer-owned interactions; masthead only provides placement.
+- `avatarSlot` is the final action and can open user menu/popover.
+- Keyboard:
+  - `Tab` order follows anatomy order: icons -> app launcher -> avatar.
+  - `Enter` / `Space` activates the focused action.
+  - `Esc` closes any open overlay/popover when supported by child control.
+
+## Composition & API (runtime)
+
+| Prop / slot | Required | Behavior |
+|---|---|---|
+| `productName` | Yes | Brand/product text in left group. |
+| `logo` | No | Leading brand logo/icon before product name. |
+| `iconsSlot` | No | User-defined icons/actions slot (e.g. help icon). |
+| `appLauncherSlot` | No | App launcher trigger/component slot. |
+| `avatarSlot` | Yes | Last/right-most slot; accepts initials chip or user icon chip. |
+| native header props | No | Pass-through (`className`, `id`, etc.). |
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+### Deterministic structure
+
+```
+mastheadRoot
+├── brandGroup
+│   ├── logoSlot? 
+│   └── productName
+└── actionsGroup
+    ├── iconsSlot?
+    ├── appLauncherSlot?
+    └── avatarSlot (required, last)
+```
+
+### Variant / option matrix
+
+| logo | iconsSlot | appLauncherSlot | avatarSlot | Valid |
+|---|---|---|---|---|
+| no | no | no | initials/user icon | yes |
+| no/yes | yes | no | initials/user icon | yes |
+| no/yes | yes/no | yes | initials/user icon | yes |
+| any | any | any | missing | **invalid** |
+
+### Per-slot style contract
+
+- `mastheadRoot`: gradient background + fixed 48px height + 16px horizontal padding.
+- `productName`: body-2 regular white text.
+- `iconsSlot`: `actionButtonContainer` with one or more `actionIconButton` children; each child is full masthead height with 16px horizontal padding on both sides and a centered 16px glyph.
+- `appLauncherSlot`: launcher trigger follows the same full-height control geometry and opens overlay attached to masthead bottom edge.
+- `avatarSlot`: circular affordance, 24px sample size, bordered.
+
+### Behavior contract
+
+- Order of right controls is fixed by slot contract.
+- Action icons are grouped using `actionButtonContainer`; each icon is an independent interactive child.
+- Masthead must not impose child-specific business logic (icons/app launcher/avatar actions remain external).
+- Maintain keyboard reachability and visible focus for each actionable child.
+
+### Accessibility contract
+
+- `mastheadRoot` uses semantic `header` role (or native `<header>`).
+- Actionable children in slots must provide accessible names (`aria-label`) and focus-visible styles.
+- Product name remains readable at AA contrast against masthead background.
+
+### Asset + bundling contract
+
+| Asset slug | Path |
+|---|---|
+| `help-circ-16` | `assets/icons/help-circ-16.svg` |
+| `grid-square-9-16` | `assets/icons/grid-square-9-16.svg` |
+| `user-single-16` | `assets/icons/user-single-16.svg` |
+
+Assets are optional per slot usage; bundle locally, do not use temporary Figma-hosted URLs in production.
+
+### Fallback / error rules
+
+- Missing `productName`: codegen error (required).
+- Missing `avatarSlot`: codegen error (required last slot).
+- Unknown icon assets: render fallback text/icon placeholder with accessible label.
+
+### Validation checklist
+
+- [ ] Metadata maps to Figma node `50294:112093`.
+- [ ] `productName` and `avatarSlot` are required in generated API.
+- [ ] Actions order is icons -> app launcher -> avatar.
+- [ ] Action controls use full-height background fills for hover and selected/open states.
+- [ ] Hover and selected/open tokens match spec: `var(--color-background-controls-brand-strong)` and `var(--color-background-masthead-brand-stronger)`.
+- [ ] Action control geometry matches 16x16 glyph + 16px left/right padding.
+- [ ] Optional logo and optional app launcher render correctly.
+- [ ] Light/Dark state tables are structurally parallel.
+- [ ] Focus/keyboard behavior verified for slotted controls.
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
-| Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-| App Launcher (popover) | `components/synapse/app-launcher/design-spec.mdx` |
-<!-- auto:generated:end -->
+| Component map entry | `data/synapse-component-figma-map.json` (`Masthead`) |
+| App launcher composition | `components/synapse/app-launcher/design-spec.mdx` |
+| Theme variables | `components/synapse-theme.css` |
+| Storybook reference impl | `storybook/src/components/Masthead.tsx` |

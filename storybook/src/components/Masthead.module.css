@@ -4,7 +4,12 @@
   justify-content: space-between;
   height: var(--scale-48);
   padding: 0 var(--padding-padding-16);
-  background: var(--color-background-masthead-brand-base);
+  background:
+    linear-gradient(
+      90deg,
+      var(--color-background-gradient-masthead-start) 0%,
+      var(--color-background-gradient-masthead-end) 100%
+    );
   font-family: inherit;
   box-sizing: border-box;
 }
@@ -26,60 +31,124 @@
   flex-shrink: 0;
 }
 
-.nav {
+.productName {
   display: flex;
   align-items: center;
-}
-
-.navList {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-space-4);
-  list-style: none;
+  color: var(--color-text-white);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  white-space: nowrap;
   margin: 0;
   padding: 0;
 }
 
-.navItem {
-  display: flex;
-  align-items: center;
-}
-
-.navLink {
-  display: flex;
-  align-items: center;
-  height: var(--scale-32);
-  padding: 0 var(--padding-padding-8);
-  border-radius: var(--corner-radius-radius-4);
-  font-size: var(--font-size-body-2);
-  font-weight: 400;
-  color: var(--color-text-white);
-  text-decoration: none;
-  transition: background 150ms ease;
-  white-space: nowrap;
-  opacity: 0.85;
-}
-
-.navLink:hover {
-  background: var(--color-background-masthead-brand-strong);
-  opacity: 1;
-}
-
-.navLink:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-text-white);
-  outline-offset: -2px;
-  opacity: 1;
-}
-
-.navLinkActive {
-  background: var(--color-background-masthead-brand-stronger);
-  opacity: 1;
-  font-weight: 500;
-}
-
 .actions {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-space-8);
+  align-items: stretch;
+  gap: 0;
+  height: 100%;
   flex-shrink: 0;
+}
+
+.iconsSlot {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  gap: 0;
+}
+
+.appLauncherSlot {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.avatarSlot {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-24);
+  height: var(--scale-24);
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--color-text-white);
+  border-radius: var(--corner-radius-radius-4);
+  opacity: 1;
+  cursor: pointer;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.iconButton:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.iconButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-text-white);
+  outline-offset: 1px;
+}
+
+.actionButtonContainer {
+  display: inline-flex;
+  align-items: stretch;
+  height: 100%;
+  gap: 0;
+}
+
+.actionIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding-inline: var(--padding-padding-16);
+  min-width: calc(var(--scale-16) + (var(--padding-padding-16) * 2));
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-white);
+  padding-block: 0;
+  cursor: pointer;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.actionIconButton:hover {
+  background-color: var(--color-background-controls-brand-strong);
+}
+
+.actionIconButton[aria-pressed="true"] {
+  background-color: var(--color-background-masthead-brand-stronger);
+}
+
+.actionIconButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-text-white);
+  outline-offset: 1px;
+}
+
+.actionIconGlyph {
+  width: var(--scale-16);
+  height: var(--scale-16);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarChip {
+  width: var(--scale-24);
+  height: var(--scale-24);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: var(--border-width-border-1) solid rgba(255, 255, 255, 0.6);
+  color: var(--color-text-white);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  background: transparent;
 }

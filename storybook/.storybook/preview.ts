@@ -27,10 +27,11 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const theme = context.globals.theme || "light";
-      document.documentElement.setAttribute(
-        "data-theme",
-        theme === "dark" ? "dark" : ""
-      );
+      const resolvedTheme = theme === "dark" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", resolvedTheme);
+      document.body.setAttribute("data-theme", resolvedTheme);
+
+      document.body.style.backgroundColor = "var(--color-background-surface-1)";
       return Story();
     },
   ],

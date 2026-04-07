@@ -1,7 +1,7 @@
 [
-  {"category": "Components", "component": "Masthead", "designSystem": "synapse", "nodeId": "47807:3591", "page": "Components"},
+  {"category": "Components", "component": "Masthead", "designSystem": "synapse", "nodeId": "50294:112093", "page": "Components", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50294-112093&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ"},
   {"category": "Components", "component": "Left Nav", "designSystem": "synapse", "nodeId": "47807:7906", "page": "Components"},
-  {"category": "Components", "component": "App Launcher", "designSystem": "synapse", "nodeId": "49927:30551", "page": "Components", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=49927-30551&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ", "appLauncherMainNodeId": "13231:123761", "appLauncherElementNodeId": "13231:109521", "mastheadNodeId": "47807:3591"},
+  {"category": "Components", "component": "App Launcher", "designSystem": "synapse", "nodeId": "49927:30551", "page": "Components", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=49927-30551&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ", "appLauncherMainNodeId": "13231:123761", "appLauncherElementNodeId": "13231:109521", "mastheadNodeId": "50294:112093"},
   {"category": "Components", "component": "Dropdown Menu", "designSystem": "synapse", "nodeId": "49927:272743", "page": "Components"},
   {"category": "Components", "component": "Tabs", "designSystem": "synapse", "nodeId": "47803:1704", "page": "Components"},
   {"category": "Components", "component": "Button", "designSystem": "synapse", "nodeId": "47808:31410", "page": "Components"},

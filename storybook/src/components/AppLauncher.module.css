@@ -30,6 +30,48 @@
   object-fit: contain;
 }
 
+/* Launcher trigger glyph uses mask so color can follow context (default/masthead). */
+.triggerGlyph {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask-image: url("../../../assets/icons/grid-square-9-16.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  mask-image: url("../../../assets/icons/grid-square-9-16.svg");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+}
+
+.triggerMasthead {
+  height: 100%;
+  padding-inline: var(--padding-padding-16);
+  min-width: calc(var(--scale-16) + (var(--padding-padding-16) * 2));
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-white);
+  padding-block: 0;
+  align-self: stretch;
+}
+
+.triggerMasthead:hover {
+  background: var(--color-background-controls-brand-strong);
+}
+
+.triggerMasthead[data-state="open"],
+.triggerMasthead[aria-expanded="true"] {
+  background: var(--color-background-masthead-brand-stronger);
+}
+
+.triggerMasthead:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-text-white);
+  outline-offset: 2px;
+}
+
 .launcherSurface {
   --separator-inset: var(--padding-padding-16);
   box-sizing: border-box;
@@ -40,6 +82,8 @@
   box-shadow: 1px 1px 5px 0 var(--shadow-drop-shadow-2-color);
   width: max-content;
   max-width: min(500px, calc(100vw - 24px));
+  position: relative;
+  z-index: 1000;
 }
 
 .productRegion {

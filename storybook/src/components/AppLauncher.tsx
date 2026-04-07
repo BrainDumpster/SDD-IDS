@@ -1,7 +1,6 @@
 import { Popover } from "@base-ui-components/react/popover";
 import type { ReactNode } from "react";
 import styles from "./AppLauncher.module.css";
-import gridSquare9Icon from "../../../assets/icons/grid-square-9-16.svg";
 
 export interface AppLauncherProduct {
   id?: string;
@@ -122,6 +121,10 @@ export interface AppLauncherProps {
   footerAction?: { label: string; onClick: () => void };
   /** Grid columns for products; Figma uses 2. */
   columns?: number;
+  /** Trigger visual mode. Use `masthead` for white icon on masthead bar. */
+  triggerVariant?: "default" | "masthead";
+  /** Popover vertical offset from trigger. Use `0` for attached masthead behavior. */
+  sideOffset?: number;
 }
 
 function chunkRows<T>(items: T[], columns: number): T[][] {
@@ -138,6 +141,8 @@ export function AppLauncher({
   options,
   footerAction,
   columns = 2,
+  triggerVariant = "default",
+  sideOffset = 8,
 }: AppLauncherProps) {
   const list = products ?? apps ?? [];
   const rows = chunkRows(list, Math.max(1, columns));
@@ -147,20 +152,18 @@ export function AppLauncher({
   return (
     <Popover.Root>
       <Popover.Trigger
-        className={styles.trigger}
+        className={[
+          styles.trigger,
+          triggerVariant === "masthead" ? styles.triggerMasthead : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         aria-label="App launcher"
       >
-        <img
-          src={gridSquare9Icon}
-          alt=""
-          className={styles.triggerIcon}
-          width={16}
-          height={16}
-          aria-hidden="true"
-        />
+        <span className={styles.triggerGlyph} aria-hidden="true" />
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={8} align="end">
+        <Popover.Positioner sideOffset={sideOffset} align="end">
           <Popover.Popup className={styles.launcherSurface}>
             {list.length > 0 ? (
               <div className={styles.productRegion}>
