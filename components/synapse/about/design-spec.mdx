@@ -144,6 +144,8 @@ patternRoot (optional)
 | Close icon (dismiss) | `assets/icons/shape-x.svg` (or `shape-x-thick.svg` per design QA) |
 | Dell Technologies horizontal list mark | `assets/icons/logo-delltech-horiz.svg` |
 
+Apply root-spec icon-resolution baseline: if the framework/library has an `Icon` component, resolve close glyph by icon name (`shape-x` primary) via its supported input prop before using raw SVG asset fallback.
+
 Bundle rule: ship icons with app; do not rely on Figma MCP asset URLs in production.
 
 ### Fallback/error rules

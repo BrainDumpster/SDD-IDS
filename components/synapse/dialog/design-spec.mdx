@@ -322,6 +322,7 @@ This section is normative for generation and validation.
 ### Asset resolution + bundling contract
 
 - **Mandatory:** `assets/icons/shape-x.svg` → stable slug `shape-x`; include in app bundle or public URL map; no runtime network fetch unless product explicitly allows.
+- Apply root-spec icon-resolution baseline: if target framework/library exposes an `Icon` component, prefer it and pass `shape-x` through the supported shape/name input prop; use the SVG asset fallback only when no compatible icon component exists.
 
 ### Behavior and accessibility contract
 

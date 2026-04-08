@@ -601,6 +601,12 @@ All components inherit these baseline interaction behaviors unless overridden in
 - Touch targets must be at least 44x44px per WCAG 2.1
 - Hover states must not be required for functionality
 
+### Icon Resolution Baseline (Framework-Agnostic)
+- When a component requires an icon, generators must first look for an existing framework/library `Icon` component in the target codebase.
+- Generators must inspect that `Icon` component API and use the real shape/name input prop (for example `name`, `icon`, `shape`, `glyph`) rather than assuming a fixed prop key.
+- Icon lookup should prefer canonical design-spec icon names first, then declared fallbacks in component specs.
+- Raw SVG/image fallback is allowed only when no compatible icon component or named icon is available.
+
 <!-- ds:section id=accessibility-baseline -->
 ## Accessibility Baseline
 
