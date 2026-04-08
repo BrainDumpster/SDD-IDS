@@ -131,11 +131,67 @@ This section is normative for generation and validation.
 - Label row base uses `2px 8px` padding; active state additionally applies chip background + `6px` radius.
 - `statusIcon` is anchored at the rail start and overlays connector line (prevents duplicate-circle artifacts in generated layouts).
 
+### Icon sizing and positioning (codegen critical)
+- Status icon container: `20x20px` (fixed)
+- Completed state checkmark: `12x12px` (60% of container size)
+- Active state dot: `8x8px` (40% of container size)
+- Icon positioning: Centered both vertically and horizontally within container
+- Icon overlay: `z-index:1` to mask connector line underneath
+- Icon scaling: All elements use `calc(var(--sizing-status-icon, 20px) * percentage)` for proportional scaling
+
+### Icon component properties (codegen critical)
+- **Icon component properties** (framework-agnostic):
+  - Icon name/shape: "shape-check-thick" (primary) or "check" (fallback)
+  - Icon size: "12" (for checkmark), "8" (for active dot)
+  - Icon width: "12" (for checkmark), "8" (for active dot)  
+  - Icon height: "12" (for checkmark), "8" (for active dot)
+  - Icon color: `var(--color-text-white)` (completed state checkmark)
+- **SVG fallback properties**:
+  - `viewBox`: "0 0 20 20"
+  - `width/height`: "12" (checkmark) or "8" (dot)
+  - `stroke`: `var(--color-text-white)` (checkmark)
+
+### Icon alignment implementation (codegen critical)
+- **Status icon container**: `display: flex; align-items: center; justify-content: center`
+- **Icon elements**: `display: flex; align-items: center; justify-content: center`
+- **Absolute positioning**: `position: absolute; left: 0; top: 0`
+- **Centering method**: Flexbox centering for cross-browser compatibility
+
+### Stepper item sizing (codegen critical)
+- **Container width**: `flex: 1` with `min-width: 180px`
+- **Fixed dimensions**: `width: 180px` (basis), `height: 50px`
+- **Responsive behavior**: Utilizes full container width
+- **Icon rail**: `width: 100%; height: 20px`
+- **Label row**: `width: 100%; height: 24px`
+
+### Framework implementation guidance (codegen critical)
+- **Icon component**: Use framework's native icon component (e.g., Icon, ids-ng-icon, etc.)
+- **Properties**: Apply both size and explicit width/height attributes where supported
+- **Module imports**: Import required icon system modules for the target framework
+- **CSS classes**: Use consistent CSS classes for icon styling (e.g., `.icon-checkmark`)
+- **Token usage**: All dimensions via `var(--sizing-status-icon, 20px)` calculations
+
+### Visual state specifications (codegen critical)
+- **Not Started**: No icon, empty 20x20px container with border
+- **Active**: 8x8px dot, `var(--color-border-brand-base)` color
+- **Completed**: 12x12px checkmark, `var(--color-text-white)` color on brand background
+- **Icon scaling**: All icons scale proportionally with container size
+- **Color tokens**: Use semantic tokens for theme support
+
 ### Behavior and accessibility contract
 - Active step derived from `activeStep`.
 - Completed steps from `completed[]` (or derived rule if consumer omits).
 - Optional click interactions may be limited to completed steps only.
 - Expose current step semantics (`aria-current="step"` on active item when appropriate).
+
+
+### Asset resolution + icon fallback contract
+- For the **Completed** state glyph, codegen must resolve icon assets/components in this order:
+  1. `shape-check-thick` (primary, Figma-aligned)
+  2. `check` (fallback when primary is unavailable in target framework/library)
+- This resolution rule applies across frameworks (React/Angular/Vue/Lit/etc.) and should prefer an existing icon component in the target codebase before raw SVG fallback.
+- When an `Icon` component exists, codegen must inspect its input/prop API and pass the icon shape/name through the framework-native icon input (for example `name`, `icon`, `shape`, `glyph`, etc.) instead of assuming a fixed prop key.
+- If neither icon exists, render a minimal semantic checkmark fallback and emit a generation warning.
 
 ### Fallback/error rules
 - Out-of-range `activeStep` -> clamp to valid range.
@@ -148,8 +204,15 @@ This section is normative for generation and validation.
 - [ ] Active label chip styling is correct.
 - [ ] `labelRow` base padding (`2px 8px`) exists in all states; active adds only chip bg/radius.
 - [ ] Exactly `steps.length` circles are rendered (no extra terminal marker).
+- [ ] If target framework/design-system provides an `Icon` component, completed-state glyph is rendered using that component with icon-name lookup (`shape-check-thick` first, then `check` fallback) and the actual shape/name input prop supported by that component.
 - [ ] Typography/alignment remain stable across states.
 - [ ] Accessibility semantics for active step pass.
+- [ ] Icon sizing: Status container 20x20px, checkmark 12x12px, active dot 8x8px.
+- [ ] Icon alignment: Centered vertically and horizontally within container.
+- [ ] Icon properties: Correct size, width, height, and color attributes applied.
+- [ ] Stepper item sizing: flex:1 with min-width:180px, utilizes full container width.
+- [ ] Icon positioning: Absolute positioning at left:0, top:0 with z-index:1 overlay.
+- [ ] Token-based scaling: All dimensions use var(--sizing-status-icon, 20px) calculations.
 
 ## Source Mapping
 
