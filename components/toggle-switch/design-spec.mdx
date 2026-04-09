@@ -1,126 +1,169 @@
 # Toggle Switch Design Spec
 
 ## Metadata
+- Design system: IDS
 - Component: Toggle Switch
 - Category: Formelements
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54591&m=dev
-- Node ID: 11067-54591
+- Figma file: `VZJ48bbVYrIynw8DdSukWw`
+- Primary node: `11067:54591`
+- Source URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54591&m=dev
+- Runtime role: Binary form control for boolean on/off values
+- Spec status: Production-ready blueprint for framework-agnostic codegen
 
 ## Anatomy
-- Toggle track (background)
-- Toggle thumb (sliding element)
-- Container wrapper
-- Focus ring for keyboard navigation
-- Optional label text
+Deterministic slot order:
+1. `root` (label wrapper / control container)
+2. `input` (native checkbox input; visually hidden but focusable)
+3. `switch` (interactive visual switch rail)
+4. `track` (background rail)
+5. `thumb` (movable knob)
+6. `label` (optional visible text)
+7. `assistiveText` (optional helper/description, if product uses it)
 
 ## Layout & Measurements
-- Standard width: 48px
-- Standard height: 24px
-- Thumb size: 20px × 20px
-- Thumb offset: 2px from track edges
-- Border radius: 12px (track), 10px (thumb)
-- Focus ring: 2px offset from track
-- Label spacing: 8px from toggle
-
-## Typography
-- Body 2: Roboto Regular 14px/20px (toggle labels)
+- Track width: `48px` (fixed visual size)
+- Track height: `24px` (fixed visual size)
+- Thumb size: `20px x 20px`
+- Thumb inset from track edges: `2px`
+- Border radius: track `12px`, thumb `10px`
+- Thumb travel distance (off -> on): `24px` (48 - 20 - 2 - 2)
+- Label gap from switch: `var(--spacing-space-8)` (fallback `8px`)
+- Label min line-height: `20px` (Body 2 token equivalent)
+- Interactive target rule: visual switch remains `48x24`, but click target must be at least `44px` tall in runtime layout.
+- Sample-only note: frame widths in Figma are showcase values; runtime width is container-driven when label text varies.
 
 ## Tokens
-### Colors
-- White: `var(--color-icon-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Brand background: `var(--color-background-brand-base)` = #4c9fdd
-- Component background: `var(--color-background-component)` = #111619
-- Neutral text: `var(--color-text-neutral)` = #8898a5
-- Disabled text: `var(--color-text-disabled)` = #c5c5c5
-- Disabled border: `var(--color-border-disabled)` = #9e9e9e
-- Brand border: `var(--color-border-brand-base)` = #4c9fdd
-- Brand border dark: `var(--color-border-brand-dark)` = #94c5ea
-- Brand strong: `var(--color-background-brand-strong)` = #94c5ea
-- Gray light: `var(--color-background-gray-light)` = #393939
-- Gray neutral light: `var(--color-background-gray-neutral-light)` = #8898a5
-- Neutral border: `var(--color-border-neutral)` = #8898a5
-- Strong border: `var(--color-border-strong)` = #b8c1c9
-- Annotation: `var(--color-annotation)` = #e8178a
+Per-slot semantic tokens:
 
-### Surfaces
-- Surface dark: `var(--color-background-surface-1)` = #111619
+- `track.off.background`: `var(--color-background-gray-light)`
+- `track.off.border`: `var(--color-border-neutral)`
+- `track.off.hover.background`: `var(--color-background-gray-neutral-light)`
+- `track.off.hover.border`: `var(--color-border-strong)`
+- `track.on.background`: `var(--color-background-brand-base)`
+- `track.on.border`: `var(--color-border-brand-base)`
+- `track.on.hover.background`: `var(--color-background-brand-strong)`
+- `track.on.hover.border`: `var(--color-border-brand-dark)`
+- `track.disabled.background`: `var(--color-background-gray-light)`
+- `track.disabled.checked.background`: `var(--color-background-gray-base)`
+- `track.disabled.border`: `var(--color-border-disabled)`
 
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- `thumb.default.background`: `var(--color-icon-white)`
+- `thumb.disabled.background`: `var(--color-text-disabled)`
+
+- `label.default.text`: `var(--color-text-neutral)`
+- `label.disabled.text`: `var(--color-text-disabled)`
+
+- `focus.outline`: `var(--color-border-brand-base)`
+- `focus.outlineWidth`: `var(--border-width-border-1)`
+- `focus.outlineOffset`: `var(--border-width-border-2)`
 
 ## States (Light Theme)
-| State | Track Background | Thumb Color | Border | Label |
+| State | Track Background | Track Border | Thumb | Label |
 |---|---|---|---|---|
-| Off | `var(--color-background-gray-light)` (#393939) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-neutral)` (#8898a5) | `var(--color-text-neutral)` (#8898a5) |
-| Off Hover | `var(--color-background-gray-neutral-light)` (#8898a5) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-strong)` (#b8c1c9) | `var(--color-text-neutral)` (#8898a5) |
-| Off Focus | `var(--color-background-gray-light)` (#393939) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-neutral)` (#8898a5) |
-| On | `var(--color-background-brand-base)` (#4c9fdd) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-neutral)` (#8898a5) |
-| On Hover | `var(--color-background-brand-strong)` (#94c5ea) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-brand-dark)` (#94c5ea) | `var(--color-text-neutral)` (#8898a5) |
-| On Focus | `var(--color-background-brand-base)` (#4c9fdd) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-neutral)` (#8898a5) |
-| Disabled | `var(--color-background-gray-light)` (#393939) | `var(--color-text-disabled)` (#c5c5c5) | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#c5c5c5) |
+| Off / default | `var(--color-background-gray-light)` | `var(--color-border-neutral)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Off / hover | `var(--color-background-gray-neutral-light)` | `var(--color-border-strong)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Off / focus-visible | `var(--color-background-gray-light)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-dark)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-text-disabled)` |
+| Disabled / on | `var(--color-background-gray-base)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-text-disabled)` |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#111619)
-- Text and border colors remain consistent via semantic variables
-- Disabled state uses gray tokens for dark theme compatibility
+| State | Track Background | Track Border | Thumb | Label |
+|---|---|---|---|---|
+| Off / default | `var(--color-background-gray-light)` | `var(--color-border-neutral)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Off / hover | `var(--color-background-gray-neutral-light)` | `var(--color-border-strong)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Off / focus-visible | `var(--color-background-gray-light)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-dark)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-text-disabled)` |
+| Disabled / on | `var(--color-background-gray-base)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-text-disabled)` |
 
 ## Interactions
-- Click to toggle between on/off states
-- Hover provides visual feedback with color changes
-- Focus ring uses brand color for keyboard navigation
-- Disabled state prevents interaction and uses gray colors
-- Smooth sliding animation for thumb movement
-- Keyboard navigation: Space to toggle
+- Pointer click/tap on the switch or associated label toggles checked state when not disabled.
+- Keyboard: `Tab` focuses input, `Space` toggles checked state.
+- `focus-visible` ring appears only for keyboard focus strategy, not for pointer focus.
+- Hover visuals apply only when `disabled=false`.
+- Press state can reuse default state visuals unless product introduces explicit press token overrides.
+- Thumb transition must animate position and rail color change with a short duration (suggested `120ms-200ms`, ease-out).
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Touch target: Minimum 44px × 24px for mobile accessibility
-- Keyboard navigation: Tab to toggle, Space to toggle
-- Screen reader support: Proper ARIA labels and state announcements
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use checkbox input with proper styling
+## Composition & API (runtime)
+Required props:
+- `checked?: boolean` (controlled value)
+- `defaultChecked?: boolean` (uncontrolled initial value)
+- `onCheckedChange?: (checked: boolean) => void`
+- `disabled?: boolean` (default `false`)
+- `label?: string` (optional visible label)
+- `id?: string` (for label association)
+- `name?: string` (form integration)
+- `value?: string` (form integration)
+- `aria-label?: string` (required when visible label is absent)
+- `aria-describedby?: string` (optional helper text association)
 
-## Variants
-- **Default**: Standard toggle with brand colors
-- **Small**: Compact size for tight spaces
-- **Large**: Increased size for better accessibility
-- **Disabled**: Non-interactive state
-- **Labeled**: Toggle with descriptive text
+Behavioral requirements:
+- Support both controlled and uncontrolled patterns.
+- If `checked` is provided, runtime treats component as controlled and only mutates through `onCheckedChange`.
+- If `checked` is absent, internal state is allowed using `defaultChecked`.
+- Disabled state blocks pointer and keyboard toggles and emits no change events.
 
-## Behavior & Guidelines
-- Use toggles for binary on/off settings
-- Provide clear labels describing what the toggle controls
-- Use consistent on/off positioning (left = off, right = on)
-- Ensure smooth transitions between states
-- Test with screen readers for proper state announcement
-- Consider using switches for mobile-optimized interfaces
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic rendering contract:
+1. Render native checkbox input for accessibility and form interoperability.
+2. Bind visual `switch/track/thumb` to input state (`checked`, `disabled`, hover, focus-visible).
+3. Move thumb by transform/translate, not layout reflow, to avoid jitter.
+4. Keep slot order exactly as defined in Anatomy unless framework has strict input-label wrapper requirements.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens
-- Focus states use brand colors for visual consistency
-- Disabled states maintain accessibility with proper contrast
-- Animation timing should follow design system guidelines
-- Thumb positioning should be precise and centered
+Variant/option matrix:
+- `checked`: `false | true`
+- `disabled`: `false | true`
+- `hasLabel`: `false | true`
+- Valid matrix: all 8 combinations are valid.
 
-## Deliverable Checklist
-- [ ] Implement on/off state transitions
-- [ ] Add smooth thumb sliding animation
-- [ ] Test keyboard navigation (Tab, Space)
-- [ ] Verify ARIA labels and state announcements
-- [ ] Test disabled state styling
-- [ ] Validate touch target minimums
-- [ ] Test dark theme compatibility
-- [ ] Verify mobile interaction patterns
-- [ ] Test with screen readers
+Per-slot style contract:
+- `root`: inline-flex alignment, pointer cursor when enabled.
+- `input`: visually hidden, still focusable; linked to `switch` via sibling/state selectors or state binding.
+- `track`: fixed `48x24`, rounded corners, tokenized background/border by state table.
+- `thumb`: fixed `20x20`, tokenized fill, translated along x-axis on checked.
+- `label`: tokenized text color; disabled text token when disabled.
+
+Behavior contract:
+- Trigger state change only through input activation pathways (click label, click switch, press Space).
+- Emit single change event per successful toggle.
+- Do not emit change when disabled.
+- Preserve focus on input during toggle.
+
+Accessibility contract:
+- Underlying semantic control must be `input[type="checkbox"]` or equivalent ARIA `role="switch"` implementation that preserves checkbox-like behavior.
+- If using `role="switch"`, keep `aria-checked` synchronized.
+- Ensure label association through `<label for>` + `id` or wrapping label pattern.
+- Require accessible name (`label` text or `aria-label`).
+- Maintain visible focus indicator meeting contrast requirements.
+
+Asset resolution + bundling contract:
+- No icon/image assets required for baseline toggle-switch rendering.
+- If product overlays optional icons in thumb/track, those assets must be provided as explicit optional slots and must not replace semantic state cues.
+
+Fallback/error rules:
+- Unknown size variant: fallback to default geometry (`48x24`, thumb `20`).
+- Missing token at runtime: keep semantic token reference and allow CSS fallback chain in implementation (no hardcoded color literals in generated output).
+- Missing `onCheckedChange` in controlled mode: no internal mutation; warn in generator diagnostics.
+- Missing accessible name: generator emits a validation error.
+
+Validation checklist (pass/fail):
+- [ ] All required sections present and non-placeholder.
+- [ ] Checkbox/switch semantics exist and are keyboard-operable.
+- [ ] Off/on + hover/focus-visible + disabled states match token tables.
+- [ ] Light and dark tables remain structurally parallel.
+- [ ] Controlled and uncontrolled usage both supported.
+- [ ] Thumb moves via transform, no layout shift.
+- [ ] Disabled mode blocks toggles and emits no change event.
+- [ ] Generated output avoids hardcoded design values when semantic tokens exist.
 
 ## Source Mapping
-- Figma component: Toggle Switch (11067-54591)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Toggle Switch" (category "Formelements"; node "11067-54591")
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Toggle Switch" (category "Formelements"; node "11067-54591")
+- Map file: `data/component-figma-map.json`
+- Map entry: component `Toggle Switch`, category `Formelements`, node `11067-54591`
+- Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54591&m=dev
+- Primary extraction node (normalized): `11067:54591`
+- Evidence used: existing map entry + Figma design-context/state extraction for off/on, hover, focus, disabled.
