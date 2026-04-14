@@ -33,7 +33,7 @@ class ComponentContextCompiler:
         registry_path = config.component_registry_path if config else "component_registry.json"
         self.registry = _load_json_safe(registry_path)
 
-        self._spec_dir = Path(config.components_dir) if config else Path("components")
+        self._spec_dir = Path(config.components_dir) if config else Path("components/ids")
 
     def load_tokens(self, component):
         path = Path(f"design-system-knowledge/components/{component}_tokens.md")

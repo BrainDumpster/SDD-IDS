@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Patch `components/{slug}/design-spec.mdx` so:
+Patch `components/ids/{slug}/design-spec.mdx` so:
 
 - `## Tokens` contains Button state-related semantic CSS variables (`var(--...)`)
 - `## States (Light Theme)` and `## States (Dark Theme)` use the fixed row

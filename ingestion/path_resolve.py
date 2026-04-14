@@ -6,7 +6,7 @@ from pathlib import PurePosixPath
 
 def resolve_relative_to_mdx(mdx_repo_path: str, ref: str) -> str:
     """
-    mdx_repo_path: path inside project, e.g. components/accordion/documentation.mdx
+    mdx_repo_path: path inside project, e.g. components/ids/accordion/documentation.mdx
     ref: e.g. ./assets/x.svg, ../img/a.png
     Returns normalized path with forward slashes.
     """

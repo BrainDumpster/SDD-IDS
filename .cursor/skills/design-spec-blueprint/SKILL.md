@@ -5,7 +5,7 @@ description: Build production-ready, framework-agnostic design-spec blueprints f
 
 # Design-Spec Blueprint Skill
 
-Use this skill when creating or upgrading `components/<design-system>/<component>/design-spec.mdx` for spec-driven code generation.
+Use this skill when creating or upgrading design specs for spec-driven code generation, for example **`components/ids/<component>/design-spec.mdx`** (IDS) or **`components/synapse/<component>/design-spec.mdx`** (Synapse).
 
 ## Objective
 

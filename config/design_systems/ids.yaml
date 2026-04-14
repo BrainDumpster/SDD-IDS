@@ -14,7 +14,7 @@ component_registry_path: component_registry.json
 theme_css_path: components/theme.css
 base_ui_mapping_path: ""
 
-components_dir: components
+components_dir: components/ids
 
 qdrant_collection: design_knowledge
 

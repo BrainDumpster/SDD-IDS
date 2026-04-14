@@ -67,7 +67,7 @@ def show_file_comparison():
     print("📁 FILE COMPARISON")
     print("=" * 50)
     print("OLD TEMPLATE (generate_specs_from_map.py):")
-    print("   components/accordion/design-spec.mdx")
+    print("   components/ids/accordion/design-spec.mdx")
     print("   → Template with TODO sections")
     print("   → No real data")
     print("")

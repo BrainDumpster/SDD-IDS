@@ -301,6 +301,8 @@ GitHub Enterprise MDX
 ├── api/                    # FastAPI servers (RAG, search, figma specs, generation)
 ├── components/
 │   ├── synapse-theme.css   # Global CSS variables (light + dark)
+│   ├── ids/
+│   │   └── <slug>/design-spec.mdx  # IDS component specs (from `data/component-figma-map.json`)
 │   └── synapse/
 │       ├── root-spec.mdx   # Global design system spec
 │       └── <slug>/design-spec.mdx  # 46 component override specs

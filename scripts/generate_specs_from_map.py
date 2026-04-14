@@ -72,7 +72,7 @@ def parse_args():
 def main():
     args = parse_args()
     map_path = Path("data/component-figma-map.json")
-    components_root = Path("components")
+    components_root = Path("components/ids")
     components_root.mkdir(exist_ok=True)
 
     data = json.loads(map_path.read_text())

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Generate consolidated `components/{slug}/design-spec.mdx` from:
+Generate consolidated `components/ids/{slug}/design-spec.mdx` from:
   - Figma REST API (nodes + variables) using `figmaUrl` + `nodeId` from
     `data/component-figma-map.json` (file key is parsed from each URL, not from FIGMA_FILE_KEY).
-  - Documentation MDX (local `components/{slug}/` and/or GitHub `content/<slug>/` on branch `main` by default — see GITHUB_REF)
+  - Documentation MDX (local `components/ids/{slug}/` and/or GitHub `content/<slug>/` on branch `main` by default — see GITHUB_REF)
   - Ollama vision for each relative image, routed by MDX heading context.
     Unmatched headings become dynamic `##` sections in the spec (see `section_routes`).
 
@@ -24,8 +24,25 @@ from collections.abc import Callable
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+IDS_COMPONENTS = ROOT / "components" / "ids"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+
+def ids_component_dir(slug: str) -> Path:
+    """Prefer ``components/ids/<slug>``; fall back to legacy flat ``components/<slug>``."""
+    modern = IDS_COMPONENTS / slug
+    if modern.is_dir():
+        return modern
+    legacy = ROOT / "components" / slug
+    if legacy.is_dir():
+        return legacy
+    return modern
+
+
+def ids_spec_out_dir(slug: str) -> Path:
+    """Write consolidated specs under ``components/ids/<slug>``."""
+    return IDS_COMPONENTS / slug
 
 from config.settings import settings  # noqa: E402
 from ingestion.design_spec_composer import compose_design_spec_mdx  # noqa: E402
@@ -116,6 +133,8 @@ def _github_path_prefixes(
             f"content/pages/components/{s}",
             f"content/docs/{c}",
             f"content/docs/{s}",
+            f"components/ids/{c}",
+            f"components/ids/{s}",
             f"components/{c}",
             f"components/{s}",
         ]
@@ -334,7 +353,7 @@ def collect_vision_for_component(
     local_doc_by_section: defaultdict[str, list[str]] = defaultdict(list)
 
     if docs_source in ("local", "both"):
-        comp_dir = ROOT / "components" / slug
+        comp_dir = ids_component_dir(slug)
         if comp_dir.is_dir():
             for mdx_path in sorted(comp_dir.glob("*.mdx")):
                 if mdx_path.name == "design-spec.mdx":
@@ -539,7 +558,7 @@ def main() -> int:
         map_path=_map_display_path(args.map),
     )
 
-    out_dir = ROOT / "components" / slug
+    out_dir = ids_spec_out_dir(slug)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "design-spec.mdx"
     out_path.write_text(mdx, encoding="utf-8")

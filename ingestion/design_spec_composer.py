@@ -1,4 +1,4 @@
-"""Compose canonical components/{slug}/design-spec.mdx (docs-first, LLM-friendly)."""
+"""Compose canonical components/ids/{slug}/design-spec.mdx (docs-first, LLM-friendly)."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -364,6 +364,6 @@ def compose_design_spec_mdx(
 - Figma REST: `GET /v1/files/{file_key}/nodes` and `GET /v1/files/{file_key}/variables`
 - Component map: `{map_path}`
 - GitHub docs: MDX under `content/<component>/` and shared assets under `content/assets/images/...`
-- Local docs fallback: `components/<slug>/` when GitHub docs are absent/incomplete
+- Local docs fallback: `components/ids/<slug>/` when GitHub docs are absent/incomplete
 {doc_block}<!-- auto:generated:end -->
 """

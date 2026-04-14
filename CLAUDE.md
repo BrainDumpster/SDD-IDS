@@ -63,7 +63,7 @@ python test_api_formats.py
 GitHub Enterprise MDX → ingestion/ (fetch/parse/chunk) → embeddings/ (Ollama embeddinggemma 768d)
     → vectorstore/qdrant_store.py → Qdrant collection "design_knowledge"
 
-Figma → tokens/figma_spec_extractor.py → components/<slug>/design-spec.mdx → vector store
+Figma → tokens/figma_spec_extractor.py → components/ids/<slug>/design-spec.mdx → vector store
      → tokens/figma_client.py (MCP) → token extraction/sync
 
 User query → rag/design_rag.py (component detection + retrieval) → Ollama llama3 → answer
@@ -101,7 +101,7 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 - `data/synapse-rules.json` — Synapse design system rules (31 rules).
 - `data/synapse-allowed-tokens.json` — flat list of valid Synapse CSS variable names (209 tokens).
 - `rules.json` — IDS design system rules (accessibility, layout) with severity levels.
-- `components/<slug>/design-spec.mdx` — IDS Figma-aligned component specifications.
+- `components/ids/<slug>/design-spec.mdx` — IDS Figma-aligned component specifications.
 - `components/synapse/<slug>/design-spec.mdx` — Synapse component specifications.
 - `components/theme.css` — IDS global CSS variables from Figma token collections.
 - `components/synapse-theme.css` — Synapse global CSS variables (light + dark themes).
@@ -116,7 +116,7 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 
 ## Design-Spec Workflow (from Cursor rules)
 
-The primary workflow is creating/maintaining `components/<slug>/design-spec.mdx` with maximum Figma fidelity. Implementation/codegen is **optional** — only when explicitly requested.
+The primary workflow is creating/maintaining `components/ids/<slug>/design-spec.mdx` with maximum Figma fidelity. Implementation/codegen is **optional** — only when explicitly requested.
 
 1. Read `data/component-figma-map.json` to get the component's `figmaUrl` and `nodeId`.
 2. Figma semantic variables (`var(--...)`) are authoritative for token naming.

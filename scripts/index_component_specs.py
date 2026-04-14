@@ -67,40 +67,66 @@ class ComponentSpecIndexer:
         except Exception as e:
             logger.error(f"Error creating collection: {e}")
             
+    def _discover_design_spec_paths(self) -> List[Path]:
+        """Return paths to ``design-spec.mdx`` for IDS (``components/ids``) and Synapse."""
+        found: List[Path] = []
+        ids_root = ROOT / "components" / "ids"
+        if ids_root.is_dir():
+            for component_dir in sorted(ids_root.iterdir()):
+                if component_dir.is_dir():
+                    spec_file = component_dir / "design-spec.mdx"
+                    if spec_file.is_file():
+                        found.append(spec_file)
+        syn_root = ROOT / "components" / "synapse"
+        if syn_root.is_dir():
+            for component_dir in sorted(syn_root.iterdir()):
+                if component_dir.is_dir():
+                    spec_file = component_dir / "design-spec.mdx"
+                    if spec_file.is_file():
+                        found.append(spec_file)
+        # Legacy: flat ``components/<slug>/`` (excluding container dirs)
+        legacy_root = ROOT / "components"
+        skip = {"synapse", "ids"}
+        if legacy_root.is_dir():
+            for component_dir in sorted(legacy_root.iterdir()):
+                if component_dir.is_dir() and component_dir.name not in skip:
+                    spec_file = component_dir / "design-spec.mdx"
+                    if spec_file.is_file():
+                        found.append(spec_file)
+        return found
+
     def load_component_specs(self) -> List[Dict[str, Any]]:
         """Load all component design specs from local components directory."""
         specs = []
-        components_dir = ROOT / "components"
-        if not components_dir.is_dir():
-            logger.warning("Components directory missing: %s", components_dir)
+        spec_paths = self._discover_design_spec_paths()
+        if not spec_paths:
+            logger.warning("No design-spec.mdx files found under components/ids or components/synapse")
             return specs
-        
-        for component_dir in components_dir.iterdir():
-            if component_dir.is_dir():
-                spec_file = component_dir / "design-spec.mdx"
-                if spec_file.exists():
-                    try:
-                        with open(spec_file, 'r', encoding='utf-8') as f:
-                            content = f.read()
-                        
-                        # Parse metadata from the spec
-                        metadata = self.parse_metadata(content)
-                        
-                        specs.append({
-                            "component": metadata.get("Component", component_dir.name),
-                            "category": metadata.get("Category", "Unknown"),
-                            "figma_url": metadata.get("Figma", ""),
-                            "node_id": metadata.get("Node ID", ""),
-                            "content": content,
-                            "file_path": str(spec_file),
-                            "tokens": self.extract_tokens(content),
-                            "states": self.extract_states(content),
-                            "accessibility": self.extract_accessibility(content),
-                            "variants": self.extract_variants(content)
-                        })
-                    except Exception as e:
-                        logger.error(f"Error loading spec from {spec_file}: {e}")
-                        
+
+        for spec_file in spec_paths:
+            component_dir = spec_file.parent
+            try:
+                with open(spec_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+
+                # Parse metadata from the spec
+                metadata = self.parse_metadata(content)
+
+                specs.append({
+                    "component": metadata.get("Component", component_dir.name),
+                    "category": metadata.get("Category", "Unknown"),
+                    "figma_url": metadata.get("Figma", ""),
+                    "node_id": metadata.get("Node ID", ""),
+                    "content": content,
+                    "file_path": str(spec_file),
+                    "tokens": self.extract_tokens(content),
+                    "states": self.extract_states(content),
+                    "accessibility": self.extract_accessibility(content),
+                    "variants": self.extract_variants(content)
+                })
+            except Exception as e:
+                logger.error(f"Error loading spec from {spec_file}: {e}")
+
         logger.info(f"Loaded {len(specs)} component specs")
         return specs
         
