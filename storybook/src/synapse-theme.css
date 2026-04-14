@@ -71,6 +71,8 @@ html, body {
   --color-background-gray-light: #eaeaea;
   --color-background-gray-lighter: #f4f4f4;
   --color-background-gray-neutral-alt: #eaeaea;
+  --color-background-gray-neutral-dark: #616161;
+  --color-background-gray-neutral-darker: #252525;
   --color-background-gray-neutral-light: #eaeaea;
   --color-background-gray-neutral-lighter: #f4f4f4;
   --color-background-gray-strong: #616161;
@@ -501,6 +503,8 @@ html, body {
   --color-background-gray-light: #393939;
   --color-background-gray-lighter: #393939;
   --color-background-gray-neutral-alt: #1e262c;
+  --color-background-gray-neutral-dark: #616161;
+  --color-background-gray-neutral-darker: #252525;
   --color-background-gray-neutral-light: #34414c;
   --color-background-gray-neutral-lighter: #1e262c;
   --color-background-gray-strong: #ffffff;
