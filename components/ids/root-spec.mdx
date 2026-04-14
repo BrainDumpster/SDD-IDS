@@ -1,0 +1,256 @@
+<!-- auto:generated:start -->
+# IDS Design System — Root Spec
+
+> Global IDS specification for spec-driven, framework-agnostic component generation.
+> All `components/ids/<slug>/design-spec.mdx` files inherit this baseline and only override component-specific behavior.
+
+<!-- ds:section id=identity -->
+## Design System Identity
+
+| Property | Value |
+|---|---|
+| Name | IDS |
+| Framework Layer | framework-agnostic |
+| Figma File Key | `VZJ48bbVYrIynw8DdSukWw` |
+| Component map | `data/component-figma-map.json` |
+| Components directory | `components/ids/` |
+| Theme mechanism | CSS custom properties + theme mode selection |
+
+### Supported Generation Targets
+- React
+- Angular
+- Vue
+- Lit
+- Other frameworks that can consume CSS variables and semantic state contracts
+
+<!-- ds:section id=color-system -->
+## Color System
+
+All component styling must use semantic tokens (`var(--...)`), not hardcoded color values.
+The variables below are confirmed from IDS Figma component nodes listed in Source Mapping.
+
+### Core Semantic Background Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-background-component` | `#ffffff` | `#111619` |
+| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
+| `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-background-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-background-brand-lighter` | `#ebf4fb` | `#1e262c` |
+| `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
+| `--color-background-controls-brand-strong` | `#0062ab` | `#0062ab` |
+| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#002642` |
+| `--color-background-gray-light` | `#eaeaea` | `#393939` |
+| `--color-background-gray-base` | `#757575` | `#9e9e9e` |
+| `--color-background-gray-neutral-light` | `#eaeaea` | `#8898a5` |
+| `--color-background-masthead-brand-base` | `#0076ce` | mode-specific |
+| `--color-background-masthead-brand-strong` | `#0062ab` | mode-specific |
+| `--color-background-masthead-brand-stronger` | `#06528a` | mode-specific |
+
+### Core Border Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-border-accessible` | `#757575` | `#8898a5` |
+| `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-border-brand-dark` | `#0062ab` | `#94c5ea` |
+| `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-border-strong` | `#252525` | `#b8c1c9` |
+| `--color-border-disabled` | `#757575` | `#9e9e9e` |
+| `--color-border-light` | `#c5c5c5` | mode-specific |
+| `--color-border-transparent-brand` | `#ffffff00` | `#4c9fdd` (mode contract may differ by component) |
+| `--color-border-transparent-neutral` | `#ffffff00` | mode-specific |
+
+### Core Text Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-text-white` | `#ffffff` | `#ffffff` |
+| `--color-text-black` | `#252525` | `#252525` |
+| `--color-text-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-text-neutral-strong` | `#252525` | `#b8c1c9` |
+| `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-text-disabled` | `#757575` | `#c5c5c5` |
+
+### Core Icon Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-icon-white` | `#ffffff` | `#ffffff` |
+| `--color-icon-inverse` | `#ffffff` | mode-specific |
+| `--color-icon-neutral` | `#4d4d4d` | mode-specific |
+| `--color-icon-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-icon-brand-strong` | `#0062ab` | mode-specific |
+| `--color-icon-disabled` | `#757575` | `#c5c5c5` |
+| `--color-icon-alerting-info` | `#005ece` | mode-specific |
+| `--color-icon-alerting-major` | `#ed6400` | mode-specific |
+| `--color-icon-alerting-minor` | `#ffc700` | mode-specific |
+| `--color-icon-alerting-critical` | `#af0000` | mode-specific |
+
+### Alerting Semantic Tokens (Common IDS)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-background-alerting-critical` | `#af0000` | mode-specific |
+| `--color-background-alerting-critical-strong` | mode-specific | `#910000` |
+| `--color-background-alerting-critical-stronger` | mode-specific | `#730000` |
+| `--color-background-alerting-success` | `#1b8500` | mode-specific |
+| `--color-border-alerting-transparent-critical` | `#af000000` | `#dd9494` |
+| `--color-border-alerting-critical-white` | `#af0000` | mode-specific |
+| `--color-border-alerting-major-white` | `#ed6400` | mode-specific |
+| `--color-border-alerting-minor-transparent` | `#9c622e` | mode-specific |
+| `--color-border-alerting-info-white` | `#005ece` | mode-specific |
+
+<!-- ds:section id=typography -->
+## Typography Scale
+
+- Primary family: **Roboto**
+- Common text styles used across IDS nodes:
+  - `Body 1`: 16 / 24
+  - `Body 2`: 14 / 20
+  - `Body 2 Medium`: 14 / 20, weight 500
+  - `Body 3`: 12 / 18
+  - `Header 6`: 18 / 25
+  - `Header 5`: 24 / 32
+  - `Header 4`: 28 / 34
+  - `Display 1`: 72 / 88, light
+
+<!-- ds:section id=spacing -->
+## Spacing & Sizing
+
+Use semantic scale tokens throughout generated output.
+
+- Spacing examples used in IDS specs:
+  - `--spacing-space-2`, `--spacing-space-4`, `--spacing-space-8`, `--spacing-space-12`, `--spacing-space-16`
+- Padding examples used in IDS specs:
+  - `--padding-padding-4`, `--padding-padding-8`, `--padding-padding-10`, `--padding-padding-16`
+- Sizing examples used in IDS specs:
+  - `--sizing-size-32`, `--sizing-size-40`
+
+<!-- ds:section id=border -->
+## Border Width
+
+| Token | Value |
+|---|---|
+| `--border-width-border-1` | `1px` |
+| `--border-width-border-2` | `2px` |
+
+<!-- ds:section id=corner-radius -->
+## Corner Radius
+
+| Token | Value |
+|---|---|
+| `--corner-radius-radius-2` | `2px` |
+| `--corner-radius-radius-4` | `4px` |
+| `--corner-radius-radius-8` | `8px` |
+| `--corner-radius-radius-12` | `12px` |
+
+<!-- ds:section id=elevation -->
+## Elevation System
+
+| Level | Shadow Contract | Use Cases |
+|---|---|---|
+| 0 | none | flat controls, lists, layout containers |
+| 1 | subtle drop shadow | cards, hover-raised surfaces |
+| 2 | medium drop shadow | popovers, tooltips |
+| 3 | strong drop shadow | overlay emphasis |
+| 4 | multi-layer modal shadow | dialogs, modals, high-elevation overlays |
+
+- IDS dialog-level references include layered drop shadows equivalent to Level 4.
+
+<!-- ds:section id=opacity -->
+## Opacity Scale
+
+Use primitive opacity tokens from IDS Figma collections (`0` to `1` scale) when a component requires translucent overlays/states.
+
+<!-- ds:section id=breakpoints -->
+## Responsive Breakpoints
+
+From IDS config (`config/design_systems/ids.yaml`):
+
+| Name | Min Width |
+|---|---|
+| sm | `576px` |
+| md | `768px` |
+| lg | `992px` |
+| xl | `1200px` |
+
+<!-- ds:section id=interactions-baseline -->
+## Interaction Baseline
+
+All IDS components inherit these baseline rules unless component specs override:
+
+- Focus indicators must be visible and use brand focus token (`--color-border-brand-base`) with tokenized border widths.
+- Keyboard support:
+  - `Tab` for focus traversal
+  - `Enter` / `Space` for activation where applicable
+  - `Escape` for dismissible overlays
+- Hover and press states must be token-driven and not required for core task completion.
+- Disabled state must block interaction and use disabled token set for border/background/text/icon.
+
+### Icon Resolution Baseline (Framework-Agnostic)
+
+- Prefer the framework/library `Icon` component when available.
+- Detect actual icon-name prop (`name`, `shape`, `icon`, `glyph`, etc.) instead of assuming a fixed prop.
+- Use canonical icon names from component spec first; then any documented fallback icon names.
+- Raw SVG fallback is allowed only if no compatible icon component exists.
+
+<!-- ds:section id=accessibility-baseline -->
+## Accessibility Baseline
+
+- WCAG AA contrast targets (4.5:1 normal text, 3:1 large text/non-text UI where applicable).
+- All interactive controls are keyboard operable.
+- Semantic HTML first; ARIA only when semantic primitives are insufficient.
+- Visible focus state required for keyboard users.
+- State changes must be perceivable to assistive technologies.
+
+<!-- ds:section id=theming -->
+## Theming Mechanism
+
+- IDS tokens are semantic CSS custom properties resolved per theme mode.
+- Component implementations must avoid hardcoded values when a semantic token exists.
+- Global IDS token stylesheet target path remains:
+  - `components/theme.css`
+- When `components/theme.css` is regenerated from Figma, this root-spec remains the normative semantic contract for generators.
+
+<!-- ds:section id=variable-collections -->
+## Variable Collections (Figma)
+
+The IDS file (`VZJ48bbVYrIynw8DdSukWw`) exposes variables from:
+- `Tokens` (semantic theme-aware variables)
+- `Primitive` (palette/foundation values)
+- `Density Primitive` (when present in extraction scope)
+- Typography and effect styles used in IDS component frames
+
+## Codegen Baseline Contract
+
+- All `components/ids/<slug>/design-spec.mdx` files inherit this root contract.
+- Component spec can override only component-specific anatomy, variant matrix, and interaction nuances.
+- Generators must:
+  - Preserve semantic token names from specs.
+  - Keep Light/Dark state tables structurally parallel.
+  - Use deterministic state naming (`default`, `hover`, `press`, `focus-visible`, `disabled`).
+  - Emit validation errors for missing required tokens/props/accessibility labels.
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| IDS component map | `data/component-figma-map.json` |
+| IDS config | `config/design_systems/ids.yaml` |
+| IDS component specs | `components/ids/<slug>/design-spec.mdx` |
+| Synapse root format reference | `components/synapse/root-spec.mdx` |
+
+### Figma extraction nodes used for this IDS root baseline
+
+- Toggle Switch: `42848:100536` (updated IDS map node)
+- Legacy Toggle Switch sample: `11067:54591`
+- Button: `42808:93601`
+- Accordion: `16551:26036`
+- Checkbox: `8505:14296`
+- Masthead: `9054:24736`
+- Dialog: `43461:174177`
+
+These node-based variable snapshots were used to assemble the IDS root token baseline above.
+<!-- auto:generated:end -->
