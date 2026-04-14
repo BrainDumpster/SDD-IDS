@@ -16,3 +16,7 @@ storybook/storybook-static/
 .cache/
 **/.cache/
 
+# Temporary workspace artifacts
+.tmp_*
+**/.tmp_*
+
