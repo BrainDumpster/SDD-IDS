@@ -12,7 +12,12 @@
 
 ## Anatomy
 
-- *(No automated extractions for this block.)*
+- Canonical structure for framework-agnostic generation:
+  - `Accordion` (root)
+    - repeated `AccordionItem`
+      - `AccordionHeader`
+      - `AccordionBody` (framework alias: `AccordionPanel`)
+- `AccordionBody` contains the expandable content region for each item.
 
 ### Documentation image 1
 
