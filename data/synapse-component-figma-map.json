@@ -57,7 +57,7 @@
   {"category": "Form Elements", "component": "Date/Time Picker", "designSystem": "synapse", "nodeId": "11067:54547", "page": "Form Elements"},
   {"category": "Form Elements", "component": "Checkbox", "designSystem": "synapse", "nodeId": "11067:54543", "page": "Form Elements"},
   {"category": "Form Elements", "component": "Button", "designSystem": "synapse", "nodeId": "11067:54539", "page": "Form Elements"},
-  {"category": "Form Elements", "component": "Accordion", "designSystem": "synapse", "nodeId": "11067:54535", "page": "Form Elements"},
+  {"category": "Form Elements", "component": "Accordion", "designSystem": "synapse", "nodeId": "16551:26036", "page": "Form Elements", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=16551-26036&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ"},
 
   {"category": "Tables", "component": "Table", "designSystem": "synapse", "nodeId": "16008:130403", "page": "Tables"},
   {"category": "Tables", "component": "Filter Panel", "designSystem": "synapse", "nodeId": "11067:54567", "page": "Tables"},

@@ -28,15 +28,15 @@ const items = [
 ];
 
 export const Default: Story = {
-  args: { items },
+  args: { items, chevronPosition: "left", variant: "default" },
 };
 
 export const FirstOpen: Story = {
-  args: { items, defaultValue: ["section1"] },
+  args: { items, defaultValue: ["section1"], chevronPosition: "left", variant: "default" },
 };
 
 export const Multiple: Story = {
-  args: { items, multiple: true, defaultValue: ["section1", "section2"] },
+  args: { items, multiple: true, defaultValue: ["section1", "section2"], chevronPosition: "left", variant: "default" },
 };
 
 export const WithDisabled: Story = {
@@ -44,6 +44,57 @@ export const WithDisabled: Story = {
     items: [
       ...items,
       { value: "locked", title: "Premium features (locked)", content: "Upgrade to access.", disabled: true },
+    ],
+    chevronPosition: "left",
+    variant: "default",
+  },
+};
+
+export const ChevronRight: Story = {
+  args: {
+    items,
+    chevronPosition: "right",
+    variant: "default",
+  },
+};
+
+export const AccordionWithForm: Story = {
+  args: {
+    chevronPosition: "left",
+    variant: "form",
+    items: [
+      {
+        value: "form1",
+        title: "Network settings",
+        content: "Configure values for this section.",
+        formSlot: (
+          <div style={{ display: "grid", gap: 8 }}>
+            <label>
+              Host
+              <input style={{ marginLeft: 8 }} defaultValue="localhost" />
+            </label>
+            <label>
+              Port
+              <input style={{ marginLeft: 8 }} defaultValue="8080" />
+            </label>
+          </div>
+        ),
+      },
+      {
+        value: "form2",
+        title: "Security options",
+        content: "Toggle security-related preferences.",
+        formSlot: (
+          <div style={{ display: "grid", gap: 8 }}>
+            <label>
+              <input type="checkbox" defaultChecked /> Enable TLS
+            </label>
+            <label>
+              <input type="checkbox" /> Require client certificate
+            </label>
+          </div>
+        ),
+      },
     ],
   },
 };

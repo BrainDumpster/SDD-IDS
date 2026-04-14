@@ -1,115 +1,159 @@
-<!-- auto:generated:start -->
-<!-- ds:inherits root-spec -->
 # Accordion Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
+- Component: Accordion
+- Design System: Synapse
+- Category: Form Elements
+- Figma URL: https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=16551-26036&m=dev
+- File key: `Td1bnsvRj1PCGs9RVJkIvJ`
+- Primary node: `16551:26036`
+- Includes scenarios: all collapsed, one expanded, multi expanded, accordion with form
 
-| Property | Value |
-|---|---|
-| Component | Accordion |
-| Category | Form Elements |
-| Figma Page | Form Elements |
-| Node ID | 11067:54535 |
-| Design System | Synapse |
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+Main component:
+- `AccordionRoot`
 
-The component is composed of these structural parts:
+Child components (deterministic order):
+1. `AccordionItem`
+2. `AccordionHeader`
+3. `AccordionTrigger`
+4. `AccordionChevron` (left or right slot)
+5. `AccordionBody` (framework alias: `AccordionPanel`)
+6. `AccordionContent`
 
-- **content**
-- **header**
-- **icon**
-- **item**
-- **panel**
-- **root**
-- **trigger**
+Optional child sub-slots:
+- `AccordionFormSlot` (for "accordion with form" usage)
+- `AccordionMetaSlot` (optional helper text/metadata)
 
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
+- Root width is container-driven (`width: 100%`).
+- Item separators: `var(--border-width-border-1)` using neutral divider token.
+- Trigger row uses horizontal padding token pair (`12/16` pattern in current implementation).
+- Trigger/content gap and block rhythm follow `var(--spacing-space-8)` and body text line-height contracts.
+- Chevron can be placed on:
+  - `left` (leading; default)
+  - `right` (trailing)
+- Expanded trigger renders a 4px left highlighter using `var(--color-border-brand-base)`.
+- Focus indicator must be visible on trigger row and not clipped by item container.
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+## Tokens
+- Surface:
+  - `var(--color-background-component)`
+  - `var(--color-background-surface-1)`
+- Borders:
+  - `var(--border-width-border-1)`
+  - `var(--border-width-border-2)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-brand-base)`
+- Text/Icon:
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-neutral)`
+  - `var(--color-icon-neutral)`
+- Icon asset:
+  - canonical chevron icon name: `chev-down-thick`
+- Radius/spacing/type:
+  - `var(--corner-radius-radius-4)`
+  - `var(--padding-padding-12)`
+  - `var(--padding-padding-16)`
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-20)`
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
-
-- `var(--border-width-border-1)` = 1px
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
-- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--corner-radius-radius-4)` = 4px
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-size-body-2)` = 14px
-- `var(--padding-padding-12)` = 12px
-- `var(--padding-padding-16)` = 16px
-
-<!-- ds:section id=states-light -->
 ## States (Light Theme)
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| trigger | default (collapsed) | `var(--color-background-component)` | item divider `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` |
+| trigger | hover (collapsed) | `var(--color-background-brand-lighter)` | unchanged divider | title `var(--color-text-neutral-strong)`, chevron `var(--color-border-strong)` |
+| trigger | hover (expanded) | `var(--color-background-brand-light)` | unchanged divider, left bar `var(--color-border-brand-base)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-border-strong)` |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | same as default |
+| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
+| panel/content | expanded | `var(--color-background-component)` | item divider `var(--color-border-accessible)`, left bar `var(--color-border-brand-base)` | body `var(--color-text-neutral)` |
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-surface-1)` (#f4f4f4) |  |  |  |
-
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| trigger | default (collapsed) | `var(--color-background-component)` | item divider `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` |
+| trigger | hover (collapsed) | `var(--color-background-brand-lighter)` | unchanged divider | title `var(--color-text-neutral-strong)`, chevron `var(--color-border-strong)` |
+| trigger | hover (expanded) | `var(--color-background-brand-light)` | unchanged divider, left bar `var(--color-border-brand-base)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-border-strong)` |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | same as default |
+| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
+| panel/content | expanded | `var(--color-background-component)` | item divider `var(--color-border-accessible)`, left bar `var(--color-border-brand-base)` | body `var(--color-text-neutral)` |
 
-| Variant | State | Background | Border | Text / Icon | Other |
-|---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#1e262c) | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-surface-1)` (#111619) |  |  |  |
+## Interactions
+- Trigger activation toggles panel expansion.
+- Single-expand mode (`multiple=false`) keeps max one open panel.
+- Multi-expand mode (`multiple=true`) allows more than one open panel.
+- Disabled item is non-interactive.
+- Arrow key roving focus is supported between triggers.
+- Home/End move focus to first/last trigger.
+- Panel content participates in layout only when expanded.
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Composition & API (runtime)
+Main inputs:
+- `items: AccordionItemInput[]` (required)
+- `multiple?: boolean` (default `false`)
+- `defaultValue?: string[]`
+- `chevronPosition?: "left" | "right"` (default `"left"`)
+- `variant?: "default" | "form"` (default `"default"`)
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+Per-item inputs:
+- `value: string` (required stable ID)
+- `title: string` (required)
+- `content: RenderableNode` (required; framework-native renderable/content type)
+- `disabled?: boolean`
+- `meta?: RenderableNode`
+- `formSlot?: RenderableNode`
 
-**Pattern**: disclosure
+Outputs:
+- `onValueChange?(openValues: string[])`
 
-### Behaviors
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic structure:
+- `AccordionRoot`
+  - repeated `AccordionItem`
+    - `AccordionHeader`
+      - `AccordionTrigger`
+        - optional leading `AccordionChevron` (left variant)
+        - `title`
+        - optional trailing `AccordionChevron` (right variant)
+    - `AccordionBody` (aka `AccordionPanel` for libraries that use panel naming)
+      - `AccordionContent`
+      - optional `AccordionMetaSlot`
+      - optional `AccordionFormSlot`
 
-- Expand/collapse panels on header activation
-- Only one panel open at a time by default (multi-expand configurable)
-- Collapsed panels are hidden from accessibility tree
+Variant matrix:
+- `variant`: `default | form`
+- `chevronPosition`: `left | right`
+- expand behavior: `single | multiple` (resolved from user input)
+- item state: `collapsed | expanded | disabled`
 
-### Keyboard
+Behavior contract:
+- If `multiple=false`, opening one item closes the previously open item.
+- If `multiple=true`, toggles item independently.
+- `disabled` prevents toggle and focus activation by keyboard/pointer.
 
-| Key | Action |
-|---|---|
-| ArrowUp | Move focus to previous accordion header |
-| ArrowDown | Move focus to next accordion header |
-| Home | Move focus to first accordion header |
-| End | Move focus to last accordion header |
+Accessibility contract:
+- Trigger carries `aria-expanded` and `aria-controls`.
+- Panel carries `role="region"` and `aria-labelledby`.
+- Keyboard support: `Enter`, `Space`, `ArrowUp`, `ArrowDown`, `Home`, `End`.
 
-### ARIA
+Fallback/error rules:
+- Unknown `chevronPosition` -> fallback to `"left"`.
+- Unknown `variant` -> fallback to `"default"`.
+- Missing `value` or duplicate `value` entries are validation errors.
 
-| Element | Attributes |
-|---|---|
-| trigger | {'aria-expanded': 'true/false based on panel state', 'aria-controls': 'ID of the associated panel'} |
-| panel | {'role': 'region', 'aria-labelledby': 'ID of the associated trigger'} |
+Validation checklist:
+- [ ] Generated hierarchy is `Accordion -> AccordionItem -> AccordionHeader -> AccordionBody`.
+- [ ] All state rows map to semantic tokens (light/dark parallel).
+- [ ] Single and multi expand behavior both implemented.
+- [ ] Chevron renders correctly in both left and right positions.
+- [ ] Focus-visible ring is visible and not clipped.
+- [ ] Disabled rows are non-interactive.
+- [ ] `form` variant supports form slot without breaking structure.
 
 ## Source Mapping
-
 | Source | Location |
 |---|---|
 | Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+| Storybook implementation | `storybook/src/components/Accordion.tsx`, `storybook/src/components/Accordion.module.css` |
