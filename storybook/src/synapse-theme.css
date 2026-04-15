@@ -104,6 +104,7 @@ html, body {
   --color-background-white-transparant-blue: #ffffff;
   --color-border-accessible: #757575;
   --color-border-alerting-critical-critical: #af0000;
+  --color-border-alerting-critical-base: #af0000;
   --color-border-alerting-critical-transparent: #af0000;
   --color-border-alerting-critical-white: #af0000;
   --color-border-alerting-info-info: #005ece;

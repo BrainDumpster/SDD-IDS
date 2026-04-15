@@ -2,10 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TextInput } from "./TextInput";
 
 const meta: Meta<typeof TextInput> = {
-  title: "Synapse/TextInput",
+  title: "Synapse/Text Input",
   component: TextInput,
   argTypes: {
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    componentType: { control: "select", options: ["text-input", "text-area"] },
+    size: { control: "select", options: ["large", "small"] },
+    state: {
+      control: "select",
+      options: ["default", "hover", "selected", "focus", "disabled", "error"],
+    },
+    showLabel: { control: "boolean" },
+    showHelperText: { control: "boolean" },
+    showIcon: { control: "boolean" },
     disabled: { control: "boolean" },
     invalid: { control: "boolean" },
   },
@@ -15,45 +23,84 @@ export default meta;
 type Story = StoryObj<typeof TextInput>;
 
 export const Default: Story = {
-  args: { label: "Email", placeholder: "you@example.com" },
-};
-
-export const WithHelper: Story = {
   args: {
-    label: "Username",
-    placeholder: "Enter username",
-    helperText: "Must be 3-20 characters",
+    componentType: "text-input",
+    size: "large",
+    state: "default",
+    placeholder: "Placeholder Text",
+    showLabel: false,
+    helperText: "Helper text",
+    showHelperText: true,
+    showIcon: false,
   },
 };
 
-export const WithError: Story = {
+export const Small: Story = {
   args: {
-    label: "Password",
-    type: "password",
+    componentType: "text-input",
+    size: "small",
+    state: "default",
+    value: "Filled Text",
+    helperText: "Helper text",
+    showHelperText: true,
+  },
+};
+
+export const WithIcon: Story = {
+  args: {
+    componentType: "text-input",
+    size: "large",
+    state: "default",
+    value: "Filled Text",
+    helperText: "Helper text",
+    showHelperText: true,
+    showIcon: true,
+    iconName: "mail",
+  },
+};
+
+export const Error: Story = {
+  args: {
+    componentType: "text-input",
+    size: "large",
+    state: "error",
     invalid: true,
-    errorText: "Password must be at least 8 characters",
+    placeholder: "Placeholder Text",
+    errorText: "Error message",
+    showHelperText: true,
   },
 };
 
 export const Disabled: Story = {
-  args: { label: "Read only", value: "Cannot edit", disabled: true },
+  args: {
+    componentType: "text-input",
+    size: "large",
+    disabled: true,
+    value: "Filled Text",
+    helperText: "Helper text",
+    showHelperText: true,
+  },
 };
 
-export const Small: Story = {
-  args: { label: "Compact", size: "sm", placeholder: "Small input" },
+export const TextArea: Story = {
+  args: {
+    componentType: "text-area",
+    size: "large",
+    placeholder: "Placeholder Text",
+    helperText: "Helper text",
+    showHelperText: true,
+  },
 };
 
-export const Large: Story = {
-  args: { label: "Full name", size: "lg", placeholder: "Large input" },
-};
-
-export const FormExample: Story = {
+export const StateMatrix: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 360 }}>
-      <TextInput label="First name" placeholder="John" />
-      <TextInput label="Last name" placeholder="Doe" />
-      <TextInput label="Email" placeholder="john@example.com" type="email" helperText="We'll never share your email" />
-      <TextInput label="Password" type="password" invalid errorText="Required field" />
+    <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(2, minmax(260px, 300px))" }}>
+      <TextInput value="Filled Text" helperText="Helper text" state="default" />
+      <TextInput value="Filled Text" helperText="Helper text" state="hover" />
+      <TextInput value="Filled Text" helperText="Helper text" state="selected" />
+      <TextInput value="Filled Text" helperText="Helper text" state="focus" />
+      <TextInput value="Filled Text" helperText="Helper text" disabled />
+      <TextInput placeholder="Placeholder Text" invalid state="error" errorText="Error message" />
     </div>
   ),
 };
