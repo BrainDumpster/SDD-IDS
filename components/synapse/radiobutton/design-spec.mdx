@@ -1,114 +1,155 @@
-<!-- auto:generated:start -->
-<!-- ds:inherits root-spec -->
-# RadioButton Design Spec
+# Radio Button Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
+- Component: Radio Button
+- Category: Formelements
+- Design System: IDS
+- Figma (map source): `https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=8505-14225&m=dev`
+- Node ID (map source): `8505:14225`
+- Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | press | focus-visible | disabled`) x validation (`default | error`, optional)
 
-| Property | Value |
-|---|---|
-| Component | RadioButton |
-| Category | Form Elements |
-| Figma Page | Form Elements |
-| Node ID | 11067:54579 |
-| Design System | Synapse |
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+- **groupRoot** (optional): semantic grouping wrapper for radio collections.
+- **root**: one radio row item (control + label).
+- **input**: native `input[type="radio"]`.
+- **controlOuter**: circular visual ring (16x16).
+- **controlInnerDot**: selected indicator dot (centered).
+- **label**: associated text.
+- **assistiveText** (optional): helper/error copy.
 
-The component is composed of these structural parts:
-
-- **group**
-- **indicator**
-- **label**
-- **root**
-- **wrapper**
-
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
+- Outer control size: `16px x 16px`.
+- Outer shape: circle (`border-radius: 50%`).
+- Selected dot size: `8px x 8px`, centered.
+- Dot-to-ring inset: `4px` (computed from 16 outer and 8 inner).
+- Label gap from control: `var(--spacing-space-8)`.
+- Min hit area: `44px` height (control can be visually smaller than hit target).
+- Focus-visible ring:
+  - 1px outline with `var(--color-border-brand-base)`,
+  - 4px offset from the outer control.
 
-> Layout data not yet extracted. Run `python scripts/figma_layout_enricher.py` to populate.
+## Tokens
+- Borders:
+  - `var(--border-width-border-1)`
+  - `var(--border-width-border-2)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-strong)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-border-disabled)`
+- Backgrounds:
+  - `var(--color-background-component)`
+  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-background-gray-light)`
+  - `var(--color-background-gray-base)`
+- Text/Icon:
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-disabled)`
+  - `var(--color-text-critical)` (error mode)
+  - `var(--color-icon-white)`
+  - `var(--color-icon-inverse)`
+- Typography:
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-20)`
 
-<!-- ds:section id=tokens -->
-## Component Tokens
-
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
-
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-neutral-light)` = #757575 (light) / #34414c (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-size-body-2)` = 14px
-- `var(--spacing-space-12)` = 12px
-- `var(--spacing-space-8)` = 8px
-
-<!-- ds:section id=states-light -->
 ## States (Light Theme)
-
-| Variant | State | Background | Border | Text / Icon | Other |
+| Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
-| default | checked |  | `var(--color-background-controls-brand-base)` (#0076ce) |  |  |
-| default | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--border-width-border-2)` (2px) `var(--color-border-neutral-light)` (#757575) | `var(--color-text-neutral-strong)` (#252525) |  |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover |  | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Press | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Press | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Any | Disabled | `var(--color-background-gray-light)` for unselected; `var(--color-background-component)` for selected | `var(--color-border-disabled)` | selected dot in `var(--color-border-disabled)`; unselected none | `var(--color-text-disabled)` |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
+Same semantic matrix as light theme; dark values are resolved by token mappings. Do not hardcode dark hex values.
 
-| Variant | State | Background | Border | Text / Icon | Other |
+| Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
-| default | checked |  | `var(--color-background-controls-brand-base)` (#0076ce) |  |  |
-| default | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--border-width-border-2)` (2px) `var(--color-border-neutral-light)` (#34414c) | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
-| default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover |  | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Press | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Press | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Any | Disabled | `var(--color-background-gray-light)` for unselected; `var(--color-background-component)` for selected | `var(--color-border-disabled)` | selected dot in `var(--color-border-disabled)`; unselected none | `var(--color-text-disabled)` |
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Interactions
+- Click on a radio selects it and deselects sibling radios with the same `name`.
+- Radio is single-select in group; one selected value at a time.
+- Keyboard:
+  - `Tab`: enters/leaves group,
+  - `Arrow` keys: move selection among enabled radios in group,
+  - `Space`: select focused radio.
+- Disabled radios are skipped by selection changes and cannot be activated.
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+## Composition & API (runtime)
+| Prop / Slot | Required | Behavior |
+|---|---|---|
+| `name` | Yes (grouped) | Shared group id for single-selection behavior. |
+| `value` | Yes | Unique option value in group. |
+| `checked` | No (controlled) | Controlled selected state for the individual radio. |
+| `defaultChecked` | No (uncontrolled) | Initial selected state. |
+| `disabled` | No | Applies disabled styling and blocks interactions. |
+| `label` | Yes | Visible option text associated with input. |
+| `onChange(value)` | No | Fires when this radio becomes selected. |
+| `error` | No | Optional validation mode for border/assistive text. |
+| `helperText` | No | Secondary helper/error copy. |
 
-**Pattern**: radio-group
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+- `groupRoot` (optional)
+  - `radioItem[]`
+    - `input`
+    - `controlOuter`
+      - optional `controlInnerDot`
+    - `label`
+    - optional `assistiveText`
 
-### Behaviors
+### Supported matrix
+- Selection: unselected | selected.
+- Interaction: default | hover | press | focus-visible | disabled.
+- Validation: default | error.
+- Mode: controlled | uncontrolled.
+- Group behavior: standalone | grouped single-select.
 
-- Single selection within a group of options
-- Arrow keys move selection between radio buttons
-- Selection wraps from last to first and vice versa
+### Style contract
+- Control stays circular and 16x16 across states.
+- Dot appears only when selected.
+- Label spacing stays `var(--spacing-space-8)`.
+- Focus-visible ring uses 2px brand token.
+- No hardcoded values for color/border/typography.
 
-### Keyboard
+### Behavior + accessibility contract
+- Native radio semantics preferred.
+- Group semantics:
+  - radios share `name`,
+  - optionally wrapped in `fieldset` + `legend`.
+- ARIA/semantic expectations:
+  - input `type="radio"` handles role/checked state,
+  - `aria-disabled` when disabled,
+  - helper/error text associated with `aria-describedby` when present.
 
-| Key | Action |
-|---|---|
-| ArrowUp | Select previous radio button |
-| ArrowLeft | Select previous radio button |
-| ArrowDown | Select next radio button |
-| ArrowRight | Select next radio button |
-| Tab | Enter or leave the radio group (does not move between radios) |
+### Fallback/error rules
+- If multiple radios are `checked=true` in controlled data, first checked wins; warn.
+- If no radio selected in required group, generator should support explicit validation state.
+- Missing label is invalid for accessibility; generator must warn.
 
-### ARIA
-
-| Element | Attributes |
-|---|---|
-| group | {'role': 'radiogroup', 'aria-labelledby': 'ID of the group label'} |
-| radio | {'role': 'radio', 'aria-checked': 'true on the selected radio'} |
+### Validation checklist
+- [ ] Single-selection group behavior is deterministic.
+- [ ] Full state matrix is token-mapped.
+- [ ] Focus-visible and keyboard navigation work for grouped radios.
+- [ ] Disabled radios are non-interactive and correctly styled.
+- [ ] Label/input association passes accessibility checks.
+- [ ] Dark theme values resolve through semantic tokens only.
 
 ## Source Mapping
-
-| Source | Location |
-|---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
-| Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+- Figma component (map): Radio Button (`8505:14225`)
+- Component map entry: `data/component-figma-map.json` → `Radio Button`
+- Figma map URL: `https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=8505-14225&m=dev`
