@@ -1,24 +1,33 @@
-import type { ReactNode } from "react";
 import styles from "./Badge.module.css";
 
+type BadgeType = "default" | "critical" | "warning" | "disabled" | "success";
+
 interface BadgeProps {
-  count?: number;
-  dot?: boolean;
-  children: ReactNode;
+  value: string | number;
+  type?: BadgeType;
+  ariaLabel?: string;
 }
 
-export function Badge({ count, dot, children }: BadgeProps) {
-  const showBadge = dot || (count != null && count > 0);
-  const displayCount = count != null && count > 99 ? "99+" : count;
+export function Badge({
+  value,
+  type = "default",
+  ariaLabel,
+}: BadgeProps) {
+  const valueText = String(value);
+  const digitCount = valueText.length;
+  const sizeClass =
+    digitCount <= 1
+      ? styles.singleDigit
+      : digitCount === 2
+        ? styles.twoDigits
+        : styles.threePlusDigits;
 
   return (
-    <span className={styles.wrapper}>
-      {children}
-      {showBadge && (
-        <span className={`${styles.badge} ${dot ? styles.dot : styles.count}`}>
-          {!dot && displayCount}
-        </span>
-      )}
+    <span
+      className={[styles.badge, styles[type], sizeClass].join(" ")}
+      aria-label={ariaLabel}
+    >
+      <span className={styles.content}>{valueText}</span>
     </span>
   );
 }

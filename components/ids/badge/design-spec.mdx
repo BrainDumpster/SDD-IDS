@@ -2,123 +2,157 @@
 
 ## Metadata
 - Component: Badge
+- Design System: IDS
 - Category: Alerts and Notifications
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54637&m=dev
-- Node ID: 11067-54637
+- Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11446-99238&m=dev
+- File key: `VZJ48bbVYrIynw8DdSukWw`
+- Primary node: `11446:99238`
+- Variant axes observed in node:
+  - `Background`: `Blue | White/Gray`
+  - `Type`: `Default | Critical | Warning | Disabled | Success`
+- Content sample in Figma: numeric count (`"1"`)
 
 ## Anatomy
-- Badge container with rounded corners
-- Badge text/content
-- Optional icon
-- Focus ring for keyboard navigation
-- Optional count indicator
+Main component:
+- `BadgeRoot`
+
+Deterministic slot order:
+1. `BadgeContainer`
+2. `BadgeContent`
+
+Optional slots:
+- `BadgeLeadingIcon` (optional icon+text composition when required by consuming component)
+- `BadgeSrOnlyText` (assistive-only contextual label)
 
 ## Layout & Measurements
-- Standard height: 20px
-- Horizontal padding: 6px
-- Vertical padding: 2px
-- Border radius: 10px (pill shape)
-- Focus ring: 2px offset from badge
-- Minimum width: 20px (for single character)
-- Icon size: 12px × 12px
-
-## Typography
-- Body 3: Roboto Regular 12px/18px (badge text)
+- Geometry from Figma sample variants:
+  - Height: `18px`
+  - Horizontal padding: `5.5px` per side (runtime may use nearest tokenized equivalent if sub-pixel values are unsupported)
+  - Border width: `1px`
+  - Radius: `100px` (pill)
+- Content alignment:
+  - center/center inside pill
+  - single-line text only
+- Badge is shrink-to-content with minimum practical width defined by content + horizontal padding.
+- Typography for content:
+  - font family: `Roboto`
+  - weight: `400`
+  - size: `12px`
+  - line-height ratio in sample: `1.758`
 
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Black text: `var(--color-text-black)` = #252525
-- Static gray 500: `var(--color-static-gray-500)` = #757575
-- White border: `var(--color-border-white)` = #ffffff
-
-### Alert Colors
-- Success background: `var(--color-background-alerting-success)` = #1b8500
-- Minor background: `var(--color-background-alerting-minor)` = #ffc700
-- Minor border: `var(--color-border-alerting-minor-transparent)` = #9c622e
-- Critical background: `var(--color-background-alerting-critical)` = #af0000
-- Info background: `var(--color-background-alerting-info)` = #005ece
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
-- Gray 300: `UI Palettes/Gray/gray-300` = #C5C5C5
-- Slate 900: `UI Palettes/Slate/slate-900` = #111619
+Required semantic tokens from Figma variable extraction:
+- `var(--color-text-white)` = `#ffffff`
+- `var(--color-text-black)` = `#252525`
+- `var(--color-background-alerting-info)` = `#005ece`
+- `var(--color-background-alerting-critical)` = `#af0000`
+- `var(--color-background-alerting-minor)` = `#ffc700`
+- `var(--color-background-alerting-success)` = `#1b8500`
+- `var(--color-static-gray-500)` = `#757575`
+- `var(--color-border-white)` = `#ffffff`
+- `var(--color-border-alerting-minor-transparent)` = `#9c622e`
 
 ## States (Light Theme)
-| Variant | Background | Text | Border |
+| Variant key (`Background` + `Type`) | Background | Border | Text |
 |---|---|---|---|
-| Default | `UI Palettes/Gray/gray-300` (#C5C5C5) | `var(--color-text-black)` (#252525) | transparent |
-| Brand | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | transparent |
-| Success | `var(--color-background-alerting-success)` (#1b8500) | `var(--color-text-white)` (#ffffff) | transparent |
-| Warning | `var(--color-background-alerting-minor)` (#ffc700) | `var(--color-text-black)` (#252525) | `var(--color-border-alerting-minor-transparent)` (#9c622e) |
-| Error | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-text-white)` (#ffffff) | transparent |
-| Info | `var(--color-background-alerting-info)` (#005ece) | `var(--color-text-white)` (#ffffff) | transparent |
-| Neutral | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-static-gray-500)` (#757575) | transparent |
+| Blue + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Blue + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Blue + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-white)` | `var(--color-text-black)` |
+| Blue + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Blue + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-text-black)` |
+| White/Gray + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `UI Palettes/Slate/slate-900` (#111619)
-- Text and border colors remain consistent via semantic variables
-- Badge colors maintain visibility in dark theme
+| Variant key (`Background` + `Type`) | Background | Border | Text |
+|---|---|---|---|
+| Blue + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Blue + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Blue + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-white)` | `var(--color-text-black)` |
+| Blue + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Blue + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-text-black)` |
+| White/Gray + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| White/Gray + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
 
 ## Interactions
-- Click badge to trigger associated action
-- Hover provides visual feedback with opacity changes
-- Focus ring uses brand color for keyboard navigation
-- Badges can be used as indicators or interactive elements
-- Count badges update dynamically based on data
+- Default Badge behavior is non-interactive (status/count indicator).
+- If consuming implementation opts into interactivity (clickable badge):
+  - cursor and focus handling are controlled by host component, not Badge itself.
+  - visual colors in this spec remain unchanged unless explicit interactive variant is introduced.
+- Badge content updates are data-driven; no internal state transitions are required.
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab to badges, Enter/Space to activate
-- Screen reader support: Proper ARIA labels and state announcements
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use span element with proper attributes
-- Focus management: Clear focus indication for keyboard users
+## Composition & API (runtime)
+Main inputs:
+- `value: string | number` (required visual content)
+- `background?: "blue" | "white-gray"` (default `"blue"`)
+- `type?: "default" | "critical" | "warning" | "disabled" | "success"` (default `"default"`)
+- `as?: string` (optional semantic element, default `span`)
+- `ariaLabel?: string` (optional explicit label when value alone is ambiguous)
 
-## Variants
-- **Default**: Neutral gray styling
-- **Brand**: Primary brand color
-- **Success**: Green for positive status
-- **Warning**: Yellow for caution
-- **Error**: Red for negative status
-- **Info**: Blue for informational
-- **Neutral**: Light gray for secondary information
-- **Count**: Numeric indicator with circle shape
+Outputs:
+- none (presentational/status component)
 
-## Behavior & Guidelines
-- Use badges to show status, counts, or categories
-- Keep badge text concise (1-4 characters recommended)
-- Use color variants to convey meaning and status
-- Position badges near related content
-- Test color combinations for accessibility
-- Use consistent sizing across the application
-- Consider badge overflow for long content
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic structure:
+- `BadgeRoot`
+  - `BadgeContainer`
+    - `BadgeContent`
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Alert colors follow standard design system conventions
-- Badge sizing should be consistent with text content
-- Dark theme adaptation through semantic tokens
+Variant matrix:
+- `background`: `blue | white-gray`
+- `type`: `default | critical | warning | disabled | success`
+- content form: `string | number`
 
-## Deliverable Checklist
-- [ ] Implement color variants (default, brand, success, warning, error, info)
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Tab, Enter/Space)
-- [ ] Verify ARIA labels and descriptions
-- [ ] Test hover and focus states
-- [ ] Implement count badge functionality
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test badge positioning and overflow
+Per-slot style contract:
+- `BadgeContainer`
+  - display: inline-flex
+  - align-items / justify-content: center
+  - height: 18px
+  - border-width: 1px
+  - border-style: solid
+  - border-radius: 100px
+  - horizontal padding: 5.5px per side (or closest deterministic tokenized fallback)
+- `BadgeContent`
+  - single line text
+  - center aligned
+  - typography as declared in Layout & Measurements
+
+Behavior contract:
+- Badge does not manage internal interaction state.
+- All visual output is fully determined by (`background`, `type`, `value`).
+
+Accessibility contract:
+- Non-interactive usage: render as text-level semantic element (`span`) with readable content.
+- If value is purely numeric and context is missing, allow `ariaLabel` to provide meaning.
+- If rendered interactive by host, host must provide button/link semantics and keyboard behavior.
+
+Asset resolution + bundling:
+- No icon/image assets required for baseline Badge contract.
+
+Fallback/error rules:
+- Unknown `background` -> fallback to `blue`.
+- Unknown `type` -> fallback to `default`.
+- Empty `value` -> render nothing or host-defined placeholder; treat as validation warning in codegen QA.
+- Values longer than intended single-line count should not wrap; truncate/clip behavior must be explicit in generated output.
+
+Validation checklist:
+- [ ] All variant combinations map to explicit token triples (background/border/text).
+- [ ] Light and Dark tables are structurally parallel.
+- [ ] Runtime output is deterministic for (`background`, `type`, `value`).
+- [ ] Badge remains single-line and pill-shaped.
+- [ ] No hardcoded non-token colors are introduced in generated code.
 
 ## Source Mapping
-- Figma component: Badge (11067-54637)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Badge" (category "Alerts and Notifications"; node "11067-54637")
+| Source | Location |
+|---|---|
+| IDS root spec | `components/ids/root-spec.mdx` |
+| IDS theme tokens | `components/theme.css` |
+| Component map | `data/component-figma-map.json` |
+| Figma context node | `11446:99238` |
+| Figma MCP extraction | `get_design_context` + `get_variable_defs` |

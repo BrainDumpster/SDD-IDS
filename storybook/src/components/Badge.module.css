@@ -1,36 +1,68 @@
-.wrapper {
-  position: relative;
-  display: inline-flex;
-}
-
 .badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--alert-red-500);
-  color: var(--color-text-white);
-  font-family: inherit;
-  font-weight: 600;
-  border-radius: var(--corner-radius-radius-24);
-  pointer-events: none;
-}
-
-.count {
-  min-width: 18px;
   height: 18px;
-  padding: 0 var(--padding-padding-4);
-  font-size: 11px;
-  line-height: 18px;
-  top: -6px;
-  right: -8px;
+  min-width: 18px;
+  border-width: var(--border-width-border-1);
+  border-style: solid;
+  border-radius: 100px;
+  font-family: var(--typography-font-style-primary, inherit);
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  top: -2px;
-  right: -2px;
+.content {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: center;
+}
+
+.singleDigit {
+  padding: 0;
+  width: 18px;
+}
+
+.twoDigits {
+  padding: 0 4px;
+}
+
+.threePlusDigits {
+  padding: 0 5.5px;
+}
+
+.default {
+  background: var(--color-background-alerting-info, #005ece);
+  border-color: var(--color-border-white, #ffffff);
+  color: var(--color-text-white, #ffffff);
+}
+
+.critical {
+  background: var(--color-background-alerting-critical);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
+}
+
+.warning {
+  background: var(--color-background-alerting-minor);
+  border-color: var(--color-border-white);
+  color: var(--color-text-black);
+}
+
+.disabled {
+  background: var(--color-static-gray-500);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
+}
+
+.success {
+  background: var(--color-background-alerting-success);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
+}
+
+.badge:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
 }
