@@ -11,17 +11,18 @@
 }
 
 .switch {
-  width: 48px;
-  height: 24px;
-  border-radius: 12px;
+  width: 32px;
+  height: 16px;
+  border-radius: 999px;
   border: 1px solid var(--color-border-neutral);
-  background: var(--color-background-gray-light);
-  padding: 1px;
+  background: var(--color-background-gray-neutral-dark);
+  padding: 0;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
   cursor: inherit;
   outline: none;
+  box-sizing: content-box;
   transition:
     background 160ms ease,
     border-color 160ms ease;
@@ -43,8 +44,16 @@
 }
 
 .switch:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: var(--border-width-border-2);
+  position: relative;
+}
+
+.switch:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: 20px;
+  pointer-events: none;
 }
 
 .switch[data-disabled]:not([data-checked]) {
@@ -53,29 +62,44 @@
 }
 
 .switch[data-disabled][data-checked] {
-  background: var(--color-background-gray-base);
+  background: var(--color-background-gray-light);
   border-color: var(--color-border-disabled);
 }
 
 .thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
-  background: var(--color-icon-white);
-  transition: transform 160ms ease;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  box-sizing: border-box;
+  border: var(--border-width-border-1) solid var(--color-border-neutral);
+  background: var(--color-background-component);
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.switch:hover:not([data-disabled]):not([data-checked]) .thumb {
+  border-color: var(--color-border-strong);
 }
 
 .switch[data-checked] .thumb {
-  transform: translateX(24px);
+  transform: translateX(16px);
+  border-color: var(--color-border-brand-base);
+}
+
+.switch[data-checked]:hover:not([data-disabled]) .thumb {
+  border-color: var(--color-border-brand-dark);
 }
 
 .switch[data-disabled] .thumb {
-  background: var(--color-text-disabled);
+  background: var(--color-background-component);
+  border-color: var(--color-border-disabled);
 }
 
 .label {
   color: var(--color-text-neutral);
-  line-height: 20px;
+  line-height: 16px;
   user-select: none;
 }
 

@@ -82,3 +82,23 @@ export const StateMatrix: Story = {
     </div>
   ),
 };
+
+/** Aligns with Figma matrix frame `42848:100536` (dark surface + tokens). */
+export const StateMatrixDark: Story = {
+  parameters: {
+    globals: { theme: "dark" },
+    backgrounds: { default: "dark" },
+  },
+  render: () => (
+    <div style={{ display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", gap: 24 }}>
+        <ToggleSwitch label="Off" defaultChecked={false} />
+        <ToggleSwitch label="On" defaultChecked />
+      </div>
+      <div style={{ display: "flex", gap: 24 }}>
+        <ToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
+        <ToggleSwitch label="Disabled On" disabled defaultChecked />
+      </div>
+    </div>
+  ),
+};

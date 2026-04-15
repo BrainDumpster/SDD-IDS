@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
 import "../src/synapse-theme.css";
+import "../src/ids-theme.css";
 
 const preview: Preview = {
   parameters: {
@@ -28,8 +29,12 @@ const preview: Preview = {
     (Story, context) => {
       const theme = context.globals.theme || "light";
       const resolvedTheme = theme === "dark" ? "dark" : "light";
+      const title = context.title || "";
+      const designSystem = title.startsWith("IDS/") ? "ids" : "synapse";
       document.documentElement.setAttribute("data-theme", resolvedTheme);
       document.body.setAttribute("data-theme", resolvedTheme);
+      document.documentElement.setAttribute("data-design-system", designSystem);
+      document.body.setAttribute("data-design-system", designSystem);
 
       document.body.style.backgroundColor = "var(--color-background-surface-1)";
       return Story();
