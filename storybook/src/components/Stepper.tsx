@@ -4,20 +4,33 @@ interface StepperProps {
   steps: string[];
   activeStep: number;
   completed?: number[];
+  orientation?: "horizontal" | "vertical";
 }
 
-export function Stepper({ steps, activeStep, completed = [] }: StepperProps) {
+export function Stepper({
+  steps,
+  activeStep,
+  completed = [],
+  orientation = "horizontal",
+}: StepperProps) {
+  const isVertical = orientation === "vertical";
   return (
-    <div className={styles.root} role="list">
+    <div
+      className={[styles.root, isVertical ? styles.rootVertical : ""].filter(Boolean).join(" ")}
+      role="list"
+      aria-orientation={orientation}
+    >
       {steps.map((label, index) => {
         const isCompleted = completed.includes(index);
         const isActive = index === activeStep && !isCompleted;
+        const isLastStep = index === steps.length - 1;
 
         return (
           <div
             key={index}
             className={[
               styles.step,
+              isVertical ? styles.stepVertical : "",
               isActive ? styles.active : "",
               isCompleted ? styles.completed : "",
             ]
@@ -26,11 +39,13 @@ export function Stepper({ steps, activeStep, completed = [] }: StepperProps) {
             role="listitem"
             aria-current={isActive ? "step" : undefined}
           >
-            <div className={styles.topRow}>
+            <div className={[styles.topRow, isVertical ? styles.topRowVertical : ""].join(" ")}>
               <div
                 className={[
                   styles.connector,
+                  isVertical ? styles.connectorVertical : "",
                   isCompleted ? styles.connectorCompleted : "",
+                  isLastStep ? styles.connectorTerminal : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
