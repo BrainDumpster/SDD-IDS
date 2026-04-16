@@ -41,7 +41,7 @@
   {"category": "Navigation", "component": "Footer", "designSystem": "synapse", "nodeId": "38732:114951", "page": "Navigation"},
   {"category": "Navigation", "component": "Breadcrumb", "designSystem": "synapse", "nodeId": "11067:54494", "page": "Navigation"},
   {"category": "Navigation", "component": "Anchor Menu", "designSystem": "synapse", "nodeId": "11067:54486", "page": "Navigation"},
-  {"category": "Navigation", "component": "Main Menu/Left", "designSystem": "synapse", "nodeId": "11067:54518", "page": "Navigation"},
+  {"category": "Navigation", "component": "Main Menu/Left", "designSystem": "synapse", "nodeId": "47807:8153", "page": "Navigation", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=47807-8153&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ", "primaryElementStateNodeId": "47807:8058", "primaryIconStateNodeId": "47807:8043", "secondaryItemStateNodeId": "47807:8043"},
 
   {"category": "Form Elements", "component": "Toggle Switch", "designSystem": "synapse", "nodeId": "52721:273164", "page": "Form Elements", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=52721-273164&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ"},
   {"category": "Form Elements", "component": "Search", "designSystem": "synapse", "nodeId": "43581:121822", "page": "Form Elements"},

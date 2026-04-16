@@ -1,0 +1,225 @@
+<!-- ds:inherits root-spec -->
+# Main Menu - Left Design Spec
+
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Main Menu - Left |
+| Category | Navigation |
+| Design System | Synapse |
+| Figma file key | `Td1bnsvRj1PCGs9RVJkIvJ` |
+| Main layout node | `47807:8153` |
+| Primary element state ref | `47807:8058` |
+| Primary icon state ref | `47807:8043` |
+| Secondary item ref | `47807:8043` (provided ref; secondary row structure verified from `47807:8058`) |
+| Source URL | https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=47807-8153&m=dev |
+
+Variant axes from Figma:
+- Container state: `Expanded | Collapsed`
+- Initial state flag: `true | false`
+- Primary item state: `Default | Hover | Press | Selected | Default-Focus | Selected-Focus`
+- Secondary menu state on primary item: `Expanded | Collapsed`
+
+## Anatomy
+
+Deterministic slot order:
+1. `MainMenuLeftRoot`
+2. `PrimarySection`
+   - repeated `PrimaryItem`
+     - `PrimaryItemContainer`
+     - `PrimaryLeadingIcon`
+     - `PrimaryLabel` (hidden in icon-only mode)
+     - optional `PrimaryActionButton` (`shape-plus`)
+     - optional `PrimaryChevron` (`chev-right-thick` / `chev-down-thick`)
+     - optional `PrimaryFocusRing`
+     - optional `PrimarySelectedInset`
+3. optional `SecondarySection` (rendered only when primary item expands)
+   - repeated `SecondaryItem`
+     - `SecondaryLabel`
+4. `BottomToggleArea`
+   - `CollapseExpandToggleButton` (`double-chev-left` in expanded, `double-chev-right` in collapsed)
+
+## Layout & Measurements
+
+- Expanded container width: `250px`; collapsed container width: `64px`.
+- Main nav height sample: `700px`; runtime height is container-driven.
+- Primary row height: `40px`.
+- Primary row horizontal padding: `24px`.
+- Primary row gap: `16px` between icon and label/action area.
+- Primary icon size: `16px`.
+- Chevron size: `14px`.
+- Focus ring geometry on row: `1px` border with `4px` radius around `40px` row.
+- Selected inset indicator: `4px` left inset stripe.
+- Secondary item row height: `32px`.
+- Secondary item left indent: `58px`; right padding: `16px`.
+- Secondary item text size: `14px / 20px`.
+- Bottom toggle area sits at container bottom with divider border above.
+- Bottom toggle area padding: horizontal `24px`, vertical `16px`; toggle icon aligns to bottom edge (`items-end` behavior).
+- Root surface includes `linear-gradient(180deg, var(--color-background-gradient-left-nav-start) 0%, var(--color-background-gradient-left-nav-end) 100%)` over base surface.
+
+Runtime layout rules:
+- `Expanded` shows icon + label + optional secondary section.
+- `Collapsed` shows icon-only item rows.
+- Label text is visually hidden (not removed semantically) in collapsed mode.
+- Secondary section is rendered only for `Secondary Menu=Expanded`.
+
+## Tokens
+
+Primary interaction and structure tokens (from Figma MCP extraction):
+- `var(--color-background-component)` for container surface.
+- `var(--color-background-controls-brand-lighter)` for hover/selected row background.
+- `var(--color-background-controls-brand-light)` for press row background.
+- `var(--color-border-brand-base)` for focus ring and selected inset (default selected).
+- `var(--color-border-brand-dark)` for selected-focus inset.
+- `var(--color-border-neutral-light)` for container separators.
+- `var(--color-text-neutral-strong)` default primary/secondary text.
+- `var(--color-text-brand-strong)` selected primary text.
+- `var(--color-icon-neutral-strong)` default icon.
+- `var(--color-icon-brand-strong)` for primary expand/collapse chevrons (`chev-right-thick`, `chev-down-thick`).
+- `var(--color-icon-brand-base)` / `var(--color-icon-brand-strong)` selected/press icon emphasis.
+- `var(--font-size-body-1)` + `var(--font-line-height-line-height-24)` for primary label.
+- `var(--font-size-body-2)` + `var(--font-line-height-line-height-20)` for secondary label.
+- `var(--padding-padding-24)`, `var(--padding-padding-16)`, `var(--padding-padding-12)`, `var(--padding-padding-8)`, `var(--padding-padding-6)`.
+- `var(--spacing-space-16)`, `var(--spacing-space-12)`, `var(--spacing-space-10)`, `var(--spacing-space-8)`.
+- `var(--corner-radius-radius-4)` for focusable row shape.
+
+## States (Light Theme)
+
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| primary row | default | transparent | none | label `var(--color-text-neutral-strong)`, icon `var(--color-icon-neutral-strong)` |
+| primary row | hover | `var(--color-background-controls-brand-lighter)` | none | label `var(--color-text-neutral-strong)`, icon `var(--color-icon-neutral-strong)` |
+| primary row | press | `var(--color-background-controls-brand-light)` | none | label `var(--color-text-brand-strong)`, icon `var(--color-icon-brand-strong)` |
+| primary row | selected | `var(--color-background-controls-brand-lighter)` | left inset `var(--color-border-brand-base)` | label `var(--color-text-brand-strong)`, icon `var(--color-icon-brand-base)` |
+| primary row | default-focus | default bg | outer focus ring `1px var(--color-border-brand-base)` | same as default |
+| primary row | selected-focus | selected bg | outer focus ring `1px var(--color-border-brand-base)` + left inset `var(--color-border-brand-dark)` | label `var(--color-text-brand-strong)`, icon `var(--color-icon-brand-base)` |
+| secondary row | default | transparent | none | label `var(--color-text-neutral-strong)` |
+| collapse toggle | default | transparent | top divider `var(--color-border-neutral-light)` | icon `var(--color-icon-neutral-strong)` |
+| collapse toggle | hover/press | follows icon button host rules | divider unchanged | icon emphasis follows control state |
+
+## States (Dark Theme)
+
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| primary row | default | transparent | none | label `var(--color-text-neutral-strong)`, icon `var(--color-icon-neutral-light)` |
+| primary row | hover | `var(--color-background-controls-brand-lighter)` | none | label `var(--color-text-neutral-strong)`, icon `var(--color-icon-neutral-light)` |
+| primary row | press | `var(--color-background-controls-brand-light)` | none | label `var(--color-text-brand-strong)`, icon `var(--color-icon-brand-strong)` |
+| primary row | selected | `var(--color-background-controls-brand-lighter)` | left inset `var(--color-border-brand-base)` | label `var(--color-text-brand-strong)`, icon `var(--color-icon-brand-base)` |
+| primary row | default-focus | default bg | outer focus ring `1px var(--color-border-brand-base)` | same as default |
+| primary row | selected-focus | selected bg | outer focus ring `1px var(--color-border-brand-base)` + left inset `var(--color-border-brand-dark)` | label `var(--color-text-brand-strong)`, icon `var(--color-icon-brand-base)` |
+| secondary row | default | transparent | none | label `var(--color-text-neutral-strong)` |
+| collapse toggle | default | transparent | top divider `var(--color-border-neutral-light)` | icon `var(--color-icon-neutral-light)` |
+| collapse toggle | hover/press | follows icon button host rules | divider unchanged | icon emphasis follows control state |
+
+## Interactions
+
+- Selecting a primary item updates its state to `selected` (or `selected-focus` when keyboard-focused).
+- Hover and press states apply to interactive rows only.
+- `Secondary Menu=Expanded` on a primary item reveals secondary items below that row.
+- In collapsed mode, only primary icons and bottom toggle control remain visible.
+- Bottom toggle switches container state between expanded/collapsed.
+- Focus-visible state uses explicit focus ring and must be keyboard-triggered.
+
+## Composition & API (runtime)
+
+Required inputs:
+- `items: MainMenuLeftPrimaryItem[]`
+- `expanded: boolean`
+- `selectedKey?: string`
+- `expandedSecondaryKey?: string | null`
+
+Optional inputs:
+- `onSelect?: (key: string) => void`
+- `onToggleExpanded?: (expanded: boolean) => void`
+- `onToggleSecondary?: (key: string, expanded: boolean) => void`
+- `showPrimaryActionButton?: boolean`
+
+Type contract (framework-agnostic):
+- `MainMenuLeftPrimaryItem`:
+  - `key: string`
+  - `label: string`
+  - `primaryIcon: string`
+  - `secondaryItems?: { key: string; label: string }[]`
+  - `disabled?: boolean`
+
+Accessibility runtime contract:
+- Root uses navigation semantics (`nav` landmark + list structure).
+- Primary and secondary items are keyboard-focusable controls.
+- Current page/menu item is exposed via `aria-current` or `aria-selected`.
+- Collapsed rows keep accessible labels via text or `aria-label`.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+Deterministic structure:
+- `MainMenuLeftRoot`
+  - repeated `PrimaryItem`
+    - `PrimaryLeadingIcon`
+    - optional `PrimaryLabel`
+    - optional `PrimaryActionButton`
+    - optional `PrimaryChevron`
+    - optional `PrimaryFocusRing`
+    - optional `PrimarySelectedInset`
+    - optional `SecondarySection`
+      - repeated `SecondaryItem`
+  - `BottomToggleArea`
+    - `CollapseExpandToggleButton`
+
+Variant/option matrix:
+- `containerState`: `expanded | collapsed`
+- `primaryState`: `default | hover | press | selected | default-focus | selected-focus`
+- `secondaryMenu`: `expanded | collapsed`
+- `showPrimaryActionButton`: `true | false`
+
+Per-slot style contract:
+- Primary row height fixed at `40px`; secondary row fixed at `32px`.
+- Expanded root width `250px`; collapsed root width `64px`.
+- Selected inset width fixed at `4px`.
+- Focus ring border width fixed at `1px`.
+- Icon slots map to tokenized color states, no hardcoded hex.
+
+Behavior contract:
+- Exactly one selected primary item at a time (unless host allows none).
+- Secondary expansion can be single-open or controlled by host; default single-open.
+- In collapsed mode, secondary section is not rendered.
+- Row interaction state precedence: `selected-focus` > `focus` > `press` > `hover` > `default`.
+
+Accessibility contract:
+- Keyboard: `Tab` focus traversal; `Enter/Space` activate row.
+- Arrow-key roving is optional but must be consistent if implemented.
+- Focus ring visible on keyboard focus for both selected and unselected rows.
+- Collapsed toggle button has explicit label (`Expand navigation` / `Collapse navigation`).
+
+Asset resolution + bundling contract:
+- Primary icon names are consumer-provided and resolved through the project icon component.
+- Chevron assets: `chev-right-thick` and `chev-down-thick`.
+- Bottom toggle assets: `double-chev-left` and `double-chev-right`.
+- Optional action icon asset: `shape-plus`.
+- Apply global icon fallback rule from root spec (icon component first, then asset fallback).
+
+Fallback/error rules:
+- Unknown primary state -> fallback `default`.
+- Missing icon name -> render placeholder icon slot and emit generator warning.
+- Empty secondary list with `secondaryMenu=expanded` -> render no secondary rows.
+- Invalid `selectedKey` -> no selected row; keep focus behavior intact.
+
+Validation checklist:
+- [ ] Expanded and collapsed container states match width/visibility rules.
+- [ ] Primary row states map to correct bg/border/text/icon tokens.
+- [ ] Secondary section renders only for expanded secondary state.
+- [ ] Selected inset and focus ring can co-exist (`selected-focus`).
+- [ ] Icon-only collapsed rows keep accessible labels.
+- [ ] Bottom toggle semantics and icon state are correct.
+- [ ] No hardcoded color literals in generated output.
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| Root spec | `components/synapse/root-spec.mdx` |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+| Main layout source | `47807:8153` |
+| Primary element states source | `47807:8058` |
+| Primary icon states source | `47807:8043` |
+| Figma URLs | `...node-id=47807-8153`, `...node-id=47807-8058`, `...node-id=47807-8043` |

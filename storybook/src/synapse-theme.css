@@ -489,8 +489,7 @@ html, body {
   --color-background-container-2: #1a2226;
   --color-background-container-4: #2b3840;
   --color-background-controls-brand-light: #002642;
-  /* Figma variable name: color-background-controls-brand-lighter (hover surfaces). Was #003a65—too near component #111619 for visible hover; lifted to match intent of light-theme hover contrast. */
-  --color-background-controls-brand-lighter: #1e262c;
+  --color-background-controls-brand-lighter: #003a65;
   --color-background-controls-brand-strong: #34414c;
   --color-background-controls-brand-stronger: #455666;
   --color-background-gradient-chat-button-end-violet: #520179;

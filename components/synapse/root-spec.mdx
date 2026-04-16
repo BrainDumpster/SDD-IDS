@@ -1,7 +1,7 @@
 <!-- auto:generated:start -->
 # Synapse Design System — Root Spec
 
-> Generated 2026-03-25T01:42:04Z. Global design system specification — framework-agnostic.
+> Generated 2026-04-16T10:29:01Z. Global design system specification — framework-agnostic.
 > All component specs inherit from this document. Component specs only override what is specific.
 
 <!-- ds:section id=identity -->
@@ -25,14 +25,19 @@
 
 All colors are expressed as CSS custom properties. Semantic tokens resolve to different values in Light vs Dark themes. Primitive palette tokens are static across themes.
 
-### Background Tokens (61 tokens)
+### Background Tokens (68 tokens)
 
 | Token | Light | Dark |
 |---|---|---|
+| `--color-background-alerting-critical` | #af0000 | #dd9494 |
 | `--color-background-alerting-critical-slate` | #f3d9d9 | #1e262c |
+| `--color-background-alerting-info-1` | #005ece | #4c8edd |
 | `--color-background-alerting-info-slate` | #d9e7f8 | #1e262c |
+| `--color-background-alerting-major` | #ed6400 | #f7be94 |
 | `--color-background-alerting-major-slate` | #fce8d9 | #1e262c |
+| `--color-background-alerting-minor` | #ffc700 | #ffe794 |
 | `--color-background-alerting-minor-slate` | None | #1e262c |
+| `--color-background-alerting-success-1` | #1b8500 | #5faa4c |
 | `--color-background-alerting-success-slate` | #ddedd9 | #1e262c |
 | `--color-background-black` | #252525 | #252525 |
 | `--color-background-brand-base` | #0076ce | #4c9fdd |
@@ -48,8 +53,8 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-background-controls-brand-base` | #0076ce | #0076ce |
 | `--color-background-controls-brand-light` | #d9eaf8 | #002642 |
 | `--color-background-controls-brand-lighter` | #ebf4fb | #003a65 |
-| `--color-background-controls-brand-strong` | #0062ab | #0062ab |
-| `--color-background-controls-brand-stronger` | #06528a | #06528a |
+| `--color-background-controls-brand-strong` | #0062ab | #34414c |
+| `--color-background-controls-brand-stronger` | #06528a | #455666 |
 | `--color-background-gradient-chat-button-end-violet` | #7c01b7 | #520179 |
 | `--color-background-gradient-chat-end` | #f4f4f4 | rgba(86, 108, 127, 0.20) |
 | `--color-background-gradient-chat-start` | #f4f4f4 | rgba(19, 21, 25, 0.10) |
@@ -98,7 +103,7 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | Token | Light | Dark |
 |---|---|---|
 | `--color-border-accessible` | #757575 | #8898a5 |
-| `--color-border-alerting-critical-base` | None | #dd9494 |
+| `--color-border-alerting-critical-base` | #af0000 | #dd9494 |
 | `--color-border-alerting-critical-critical` | #af0000 | #af0000 |
 | `--color-border-alerting-critical-transparent` | #af0000 | rgba(221, 148, 148, 0.00) |
 | `--color-border-alerting-critical-white` | #af0000 | #ffffff |
@@ -179,11 +184,14 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-text-warning` | #6d4028 | #6d4028 |
 | `--color-text-white` | #ffffff | #ffffff |
 
-### Icon Tokens (20 tokens)
+### Icon Tokens (23 tokens)
 
 | Token | Light | Dark |
 |---|---|---|
 | `--color-icon-accessible` | #757575 | #8898a5 |
+| `--color-icon-alerting-critical` | #af0000 | #dd9494 |
+| `--color-icon-alerting-minor-1` | #FFC700 | #FFC700 |
+| `--color-icon-alerting-success-1` | #1b8500 | #9fcc94 |
 | `--color-icon-berry-base` | #a10061 | #bd4c90 |
 | `--color-icon-berry-strong` | #6a0040 | #d894bd |
 | `--color-icon-berry-stronger` | #4f0030 | #f1d9e7 |
@@ -602,12 +610,6 @@ All components inherit these baseline interaction behaviors unless overridden in
 ### Touch
 - Touch targets must be at least 44x44px per WCAG 2.1
 - Hover states must not be required for functionality
-
-### Icon Resolution Baseline (Framework-Agnostic)
-- When a component requires an icon, generators must first look for an existing framework/library `Icon` component in the target codebase.
-- Generators must inspect that `Icon` component API and use the real shape/name input prop (for example `name`, `icon`, `shape`, `glyph`) rather than assuming a fixed prop key.
-- Icon lookup should prefer canonical design-spec icon names first, then declared fallbacks in component specs.
-- Raw SVG/image fallback is allowed only when no compatible icon component or named icon is available.
 
 <!-- ds:section id=accessibility-baseline -->
 ## Accessibility Baseline
