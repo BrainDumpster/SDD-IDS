@@ -1,148 +1,307 @@
+<!-- ds:inherits root-spec -->
 # Global Alert Design Spec
 
 ## Metadata
-- Component: Global Alert
-- Category: Alerts and Notifications
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54641&m=dev
-- Node ID: 11067-54641
+
+| Property | Value |
+|---|---|
+| Component | Global Alert |
+| Category | Alerts and Notifications |
+| Design System | IDS |
+| Figma file key | `VZJ48bbVYrIynw8DdSukWw` |
+| Main layout node | `11067:54641` |
+| Main showcase node | `10829:75187` |
+| Carousel element node | `10934:89861` |
+| Source URL | https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54641&m=dev |
+
+Variant axes from Figma:
+- `severity`: `critical | warning-major | warning-minor | informational`
+- `showLink`: `true | false`
+- `showAction`: `true | false`
+- `showCarousel`: `true | false`
+
+Figma documents `4 x 2 x 2 x 2 = 32` concrete combinations.
 
 ## Anatomy
-- Alert container with full-width background
-- Alert icon (status indicator)
-- Alert title and message
-- Close button (×)
-- Focus ring for keyboard navigation
-- Optional action buttons
-- Dismiss animation
+
+Deterministic slot order:
+1. `GlobalAlertRoot`
+2. optional `CarouselRail`
+   - `CarouselPreviousButton`
+   - `CarouselCount`
+   - `CarouselNextButton`
+3. `ContentRow`
+   - `LeadingStatusIcon`
+   - `Message`
+   - optional `InlineLink`
+4. `ActionsRow`
+   - optional `ActionButton`
+   - optional `DismissButton`
+
+Notes:
+- `Message` and `InlineLink` are part of the same reading flow.
+- `DismissButton` is absent in the critical, no-action configuration shown in Figma.
+- `ActionButton` and `DismissButton` can coexist.
 
 ## Layout & Measurements
-- Standard height: 48px
-- Horizontal padding: 16px
-- Vertical padding: 12px
-- Border radius: 0 (full-width alert)
-- Focus ring: 2px offset from alert
-- Icon size: 24px × 24px
-- Close button: 16px × 16px
-- Minimum width: Full viewport width
-- Spacing between elements: 12px
 
-## Typography
-- Header 5: Roboto Regular 24px/32px (alert titles)
-- Base Styles/Default Text: Roboto Regular 14px/20px (alert messages)
-- Body 2: Roboto Regular 14px/20px (secondary text)
+- Root width in Figma examples: `1300px` sample; runtime width is container-driven (`width: 100%`).
+- Root minimum height: `40px`.
+- Root left padding without carousel: `var(--padding-padding-20)`.
+- Root left padding with carousel: `0` (carousel rail is the leading flex child; do not reserve a fixed pixel inset that can drift from measured rail width).
+- Spacing between carousel rail trailing edge and leading status icon: `var(--spacing-space-16)` (in addition to the root flex `gap` between major regions).
+- Content row vertical padding: `var(--padding-padding-10)`.
+- Content row gap: `var(--spacing-space-8)`.
+- Status icon size: `16px x 16px`.
+- Actions row padding: `var(--padding-padding-8) var(--padding-padding-16)`.
+- Actions row gap when action present: `var(--spacing-space-16)`.
+- Dismiss/chevron icon size: `12px x 12px`.
+- Carousel rail padding: `var(--padding-padding-10) var(--padding-padding-14)`.
+- Carousel rail content gap: `22px`.
+- Carousel chevron color: must match carousel count text contrast (white chevrons on `critical`, `warning-major`, and `informational` rails; black chevrons on `warning-minor` rail). Source SVGs may be neutral gray; implementations may tint via `filter` or equivalent so chevrons are not mid-gray on dark rails.
+- Action button horizontal padding: `16px`.
+- Action button vertical padding: `2px`.
+- Action button radius: `2px`.
+- Action button border width: `1px`.
+
+Runtime layout rules:
+- Root is a full-width banner and must not wrap into multiple stacked rows.
+- `CarouselRail` is a leading in-flow flex child and spans the full banner height (stretch).
+- `ContentRow` grows to consume available width between the carousel rail (when present) and the actions row.
+- `ActionsRow` is always right aligned.
+- Long message text may wrap, but action and dismiss controls remain right aligned.
 
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Black text: `var(--color-text-black)` = #252525
-- Black border: `var(--color-border-black)` = #252525
-- Black icon: `var(--color-icon-black)` = #252525
-- White border: `var(--color-border-white)` = #ffffff
-- Strong border: `var(--color-border-strong)` = #252525
 
-### Alert Colors
-- Info background: `var(--color-background-alerting-info)` = #005ece
-- Info strong: `var(--color-background-alerting-info-strong)` = #004eab
-- Info transparent: `var(--color-border-alerting-transparent-info)` = #005ece00
-- Info icon: `var(--color-icon-alerting-info)` = #005ece
+Primary structure tokens:
+- `var(--font-size-body-2)`
+- `var(--font-line-height-line-height-20)`
+- `var(--spacing-space-8)`
+- `var(--spacing-space-16)`
+- `var(--padding-padding-20)` sample leading inset
+- `var(--padding-padding-16)`
+- `var(--padding-padding-14)`
+- `var(--padding-padding-10)`
+- `var(--padding-padding-2)`
+- `var(--corner-radius-radius-2)`
+- `var(--border-width-border-1)`
+- `var(--border-width-border-2)`
 
-- Minor background: `var(--color-background-alerting-minor)` = #ffc700
-- Minor strong: `var(--color-background-alerting-minor-strong)` = #e5a51a
-- Minor transparent: `var(--color-border-alerting-minor-transparent)` = #9c622e
+Severity surface and content tokens:
+- Informational surface: `var(--color-background-alerting-info-1)` or `var(--color-background-alerting-info)`
+- Informational carousel rail: `var(--color-background-alerting-info-strong)`
+- Informational border: `var(--color-border-alerting-transparent-info)`
+- Informational text: `var(--color-text-white)`
+- Informational leading icon: `var(--color-icon-alerting-info)`
+- Informational dismiss icon: `var(--color-icon-white)`
+- Warning major surface: `var(--color-background-alerting-major)`
+- Warning major carousel rail: `var(--color-background-alerting-major-strong)`
+- Warning major border: `var(--color-border-alerting-transparent-major)`
+- Warning major text: `var(--color-text-white)`
+- Warning major leading icon: `var(--color-icon-alerting-major)`
+- Warning major dismiss icon: `var(--color-icon-black)`
+- Warning minor surface: `var(--color-background-alerting-minor)`
+- Warning minor carousel rail: `var(--color-background-alerting-minor-strong)`
+- Warning minor border: `var(--color-border-alerting-minor-transparent)`
+- Warning minor text: `var(--color-text-black)`
+- Warning minor leading icon: `var(--color-icon-black)`
+- Warning minor dismiss icon: `var(--color-icon-black)`
+- Critical surface: `var(--color-background-alerting-critical)`
+- Critical carousel rail: `var(--color-background-alerting-critical-strong)`
+- Critical border: `var(--color-border-alerting-transparent-critical)`
+- Critical text: `var(--color-text-white)`
+- Critical leading icon: `var(--color-icon-alerting-critical)`
+- Critical dismiss icon: `var(--color-icon-black)`
 
-- Major background: `var(--color-background-alerting-major)` = #ed6400
-- Major strong: `var(--color-background-alerting-major-strong)` = #c55300
-- Major transparent: `var(--color-border-alerting-transparent-major)` = #ed640000
-- Major icon: `var(--color-icon-alerting-major)` = #ed6400
-
-- Critical background: `var(--color-background-alerting-critical)` = #af0000
-- Critical strong: `var(--color-background-alerting-critical-strong)` = #910000
-- Critical transparent: `var(--color-border-alerting-transparent-critical)` = #af000000
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Slate 900: `UI Palettes/Slate/slate-900` = #111619
+Focus and interaction tokens:
+- Focus outline: `var(--color-border-brand-base)`
+- Dismiss/action/link content uses inherited severity text color unless overridden by host app.
 
 ## States (Light Theme)
-| Variant | Background | Text | Icon | Border |
+
+| Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Info | `var(--color-background-alerting-info)` (#005ece) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
-| Info Hover | `var(--color-background-alerting-info-strong)` (#004eab) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
-| Warning | `var(--color-background-alerting-minor)` (#ffc700) | `var(--color-text-black)` (#252525) | `var(--color-icon-black)` (#252525) | `var(--color-border-black)` (#252525) |
-| Warning Hover | `var(--color-background-alerting-minor-strong)` (#e5a51a) | `var(--color-text-black)` (#252525) | `var(--color-icon-black)` (#252525) | `var(--color-border-black)` (#252525) |
-| Error | `var(--color-background-alerting-major)` (#ed6400) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
-| Error Hover | `var(--color-background-alerting-major-strong)` (#c55300) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
-| Critical | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
-| Critical Hover | `var(--color-background-alerting-critical-strong)` (#910000) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | `var(--color-border-white)` (#ffffff) |
+| root | informational | `var(--color-background-alerting-info-1)` | `var(--color-border-alerting-transparent-info)` | text `var(--color-text-white)`, leading icon `var(--color-icon-alerting-info)` |
+| root | warning-major | `var(--color-background-alerting-major)` | `var(--color-border-alerting-transparent-major)` | text `var(--color-text-white)`, leading icon `var(--color-icon-alerting-major)` |
+| root | warning-minor | `var(--color-background-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | text `var(--color-text-black)`, leading icon `var(--color-icon-black)` |
+| root | critical | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | text `var(--color-text-white)`, leading icon `var(--color-icon-alerting-critical)` |
+| carousel rail | informational | `var(--color-background-alerting-info-strong)` | none | text/icon `var(--color-text-white)` / `var(--color-icon-white)` |
+| carousel rail | warning-major | `var(--color-background-alerting-major-strong)` | none | text/icon `var(--color-text-white)` / `var(--color-icon-white)` |
+| carousel rail | warning-minor | `var(--color-background-alerting-minor-strong)` | none | text/icon `var(--color-text-black)` / `var(--color-icon-black)` |
+| carousel rail | critical | `var(--color-background-alerting-critical-strong)` | none | text/icon `var(--color-text-white)` / `var(--color-icon-white)` |
+| action button | default | transparent | `1px currentColor` | inherits severity text color |
+| dismiss button | informational | transparent | none | icon `var(--color-icon-white)` |
+| dismiss button | warning-major / warning-minor / critical | transparent | none | icon `var(--color-icon-black)` |
+| link | default | transparent | none | inherits severity text color + underline |
+| action button / dismiss / link | focus-visible | unchanged | outline `2px var(--color-border-brand-base)` | unchanged |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `UI Palettes/Slate/slate-900` (#111619)
-- Text and border colors remain consistent via semantic variables
-- Alert colors maintain visibility in dark theme
+
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| root | informational | `var(--color-background-alerting-info-1)` | `var(--color-border-alerting-transparent-info)` | text `var(--color-text-white)`, leading icon `var(--color-icon-alerting-info)` |
+| root | warning-major | `var(--color-background-alerting-major)` | `var(--color-border-alerting-transparent-major)` | text `var(--color-text-white)`, leading icon `var(--color-icon-alerting-major)` |
+| root | warning-minor | `var(--color-background-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | text `var(--color-text-black)`, leading icon `var(--color-icon-black)` |
+| root | critical | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | text `var(--color-text-white)`, leading icon `var(--color-icon-alerting-critical)` |
+| carousel rail | informational | `var(--color-background-alerting-info-strong)` | none | text/icon `var(--color-text-white)` / `var(--color-icon-white)` |
+| carousel rail | warning-major | `var(--color-background-alerting-major-strong)` | none | text/icon `var(--color-text-white)` / `var(--color-icon-white)` |
+| carousel rail | warning-minor | `var(--color-background-alerting-minor-strong)` | none | text/icon `var(--color-text-black)` / `var(--color-icon-black)` |
+| carousel rail | critical | `var(--color-background-alerting-critical-strong)` | none | text/icon `var(--color-text-white)` / `var(--color-icon-white)` |
+| action button | default | transparent | `1px currentColor` | inherits severity text color |
+| dismiss button | informational | transparent | none | icon `var(--color-icon-white)` |
+| dismiss button | warning-major / warning-minor / critical | transparent | none | icon `var(--color-icon-black)` |
+| link | default | transparent | none | inherits severity text color + underline |
+| action button / dismiss / link | focus-visible | unchanged | outline `2px var(--color-border-brand-base)` | unchanged |
 
 ## Interactions
-- Click close button to dismiss alert
-- Hover provides visual feedback with stronger colors
-- Focus ring uses brand color for keyboard navigation
-- Auto-dismiss after timeout (optional)
-- Action buttons for user responses
-- Keyboard navigation: Tab to alert, Enter to action, Escape to dismiss
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab to alert, Enter for actions, Escape to dismiss
-- Screen reader support: Proper ARIA attributes (alert, role, status)
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use alert element with proper role
-- Focus management: Auto-focus on new alerts
-- Dismiss announcements: Screen reader announces when alert is dismissed
+- `DismissButton` emits `onDismiss` and removes the banner from the current render tree.
+- `ActionButton` emits `onAction` when activated by click, `Enter`, or `Space`.
+- `InlineLink` emits `onLinkClick` when present; if `linkHref` is also provided, host navigation behavior should proceed unless prevented.
+- `CarouselPreviousButton` emits `onPrevious`.
+- `CarouselNextButton` emits `onNext`.
+- `showCarousel=true` only changes layout and exposes navigation controls; **the component does not own the alert-item list or the active index**. The host application (or a thin wrapper) must:
+  - Store an ordered list of alert payloads (at minimum the string shown as `message`, plus any per-item link/action overrides if the product requires them).
+  - Derive `carousel.currentItem` as **1-based** index into that list for the active item.
+  - Set `carousel.totalItems` to the list length (minimum `1` for a stable counter).
+  - Update the active index when `onPrevious` / `onNext` fire; wrapping at the ends vs clamping is **host-defined** (Storybook examples use wrap-around for demo usability).
+  - Pass the active item’s copy as `message` (and optional `linkLabel` / `actionLabel` if they vary per item).
+- `showAction=true` never suppresses dismiss affordance.
+- Figma shows `critical` without action as non-dismissible by default; all other documented default variants include dismiss control.
 
-## Variants
-- **Info**: Blue informational alert
-- **Warning**: Yellow caution alert
-- **Error**: Orange error alert
-- **Critical**: Red critical alert
-- **Success**: Green success alert
-- **Persistent**: Alert that requires user action
-- **Auto-dismiss**: Alert that dismisses automatically
-- **With Actions**: Alert with action buttons
+**Storybook (reference implementation):** `GlobalAlert.stories.tsx` includes `CarouselInteractive` and `CarouselInteractiveInformational`, which keep `items[]` in React state, wire `onPrevious` / `onNext`, and expose **Add alert item** / **Remove current item** so carousel behavior can be exercised without hard-coded static `currentItem` / `totalItems` only.
 
-## Behavior & Guidelines
-- Use global alerts for important system messages
-- Position alerts at top of page for visibility
-- Use appropriate color variants for severity levels
-- Provide clear, concise messages
-- Include dismiss functionality for non-critical alerts
-- Test with screen readers for proper announcement
-- Consider auto-dismiss for non-critical notifications
-- Use consistent styling across alert types
+## Composition & API (runtime)
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Alert variants use appropriate color psychology
-- Dark theme adaptation through semantic tokens
-- Alert positioning should be consistent and accessible
+Required inputs:
+- `message: string`
 
-## Deliverable Checklist
-- [ ] Implement dismiss functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Tab, Enter, Escape)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test hover and focus states
-- [ ] Implement auto-dismiss functionality
-- [ ] Add action buttons for user responses
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test alert positioning and stacking
+Optional inputs:
+- `severity?: "critical" | "warning-major" | "warning-minor" | "informational"`
+- `linkLabel?: string`
+- `linkHref?: string`
+- `onLinkClick?: () => void`
+- `actionLabel?: string`
+- `onAction?: () => void`
+- `dismissible?: boolean`
+- `onDismiss?: () => void`
+- `carousel?: { currentItem: number; totalItems: number; onPrevious?: () => void; onNext?: () => void }`
+
+**Multi-item carousel (host pattern):** the public API stays flat (`message` + `carousel` counter + callbacks). For N user-supplied alerts, the host keeps `alerts: AlertPayload[]`, `activeIndex: number` (0-based internally), and passes:
+- `message = alerts[activeIndex].message` (and per-item link/action fields if modeled).
+- `carousel = { currentItem: activeIndex + 1, totalItems: alerts.length, onPrevious, onNext }` with handlers that update `activeIndex` (and optionally remove items from `alerts`).
+
+Runtime rules:
+- `linkLabel` without `linkHref` still renders an interactive inline control and relies on `onLinkClick`.
+- `actionLabel` without `onAction` still renders a button; host may attach behavior later.
+- `dismissible` defaults to `false` for `critical` without action and `true` otherwise.
+- `carousel.currentItem` is **1-based** in the visible counter (`"k of N"`).
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+Deterministic slot schema:
+- `GlobalAlertRoot`
+  - optional `CarouselRail`
+    - `CarouselPreviousButton`
+    - `CarouselCount`
+    - `CarouselNextButton`
+  - `ContentRow`
+    - `LeadingStatusIcon`
+    - `Message`
+    - optional `InlineLink`
+  - `ActionsRow`
+    - optional `ActionButton`
+    - optional `DismissButton`
+
+Supported matrix:
+- `severity`: `critical | warning-major | warning-minor | informational`
+- `showLink`: derived from `linkLabel`
+- `showAction`: derived from `actionLabel`
+- `showCarousel`: derived from `carousel`
+- Full valid matrix is all 32 combinations from Figma.
+
+Per-slot style contract:
+- Root fills container width and uses severity surface tokens only.
+- `CarouselRail` background uses the severity **strong** background token only (no hardcoded hex fallbacks): `var(--color-background-alerting-critical-strong)` | `var(--color-background-alerting-major-strong)` | `var(--color-background-alerting-minor-strong)` | `var(--color-background-alerting-info-strong)` matching `critical` | `warning-major` | `warning-minor` | `informational`.
+- `CarouselRail` is a **leading in-flow** flex child (full-height stretch), not an absolutely positioned overlay; root must not rely on a fixed `padding-left` inset to “guess” rail width—spacing before `LeadingStatusIcon` uses rail `margin-inline-end: var(--spacing-space-16)` plus the root flex `gap`.
+- Carousel chevron assets may encode neutral gray fills; implementations must tint chevrons to match rail/count contrast (white on `critical` / `warning-major` / `informational`; black on `warning-minor`).
+- `LeadingStatusIcon` uses canonical shape names:
+  - `critical` -> `status-critical-square` (`16x16`, color `var(--color-icon-alerting-critical)`)
+  - `warning-major` -> `status-error-diamond`
+    (`16x16`, color `var(--color-icon-alerting-major)`)
+  - `warning-minor` -> `status-warn-tri` (`16x16`, color `var(--color-icon-black)`)
+  - `informational` -> `info-circ` (`16x16`, color `var(--color-icon-alerting-info)`)
+- `DismissButton` uses `shape-x`; icon color is `var(--color-icon-white)` for informational and `var(--color-icon-black)` for all other severities.
+- `InlineLink` and `ActionButton` inherit severity foreground color.
+- `ActionButton` is outlined only; no filled variant is shown in Figma.
+
+Behavior contract:
+- Component is presentational plus event-emitting only; it does **not** manage carousel index, item collection, or navigation—only emits `onPrevious` / `onNext` when the user activates the carousel controls (disabled state for those buttons is host-defined if the product requires it; default Storybook wiring always calls handlers).
+- `onAction`, `onDismiss`, `onPrevious`, `onNext`, and `onLinkClick` are emitted independently.
+- Dismiss action hides the alert only in demo/story contexts unless host chooses controlled behavior.
+
+Accessibility contract:
+- Root uses `role="alert"` and assertive live region behavior.
+- Dismiss, action, link, and carousel controls are keyboard reachable.
+- Buttons expose accessible labels:
+  - dismiss: `Dismiss alert`
+  - previous: `Previous alert`
+  - next: `Next alert`
+- Counter text remains programmatically readable, e.g. `1 of 4`.
+
+Asset resolution + bundling contract:
+- Prefer project `Icon` component when available; Storybook reference uses `<img src={...svg?url}>` from `assets/icons` so Vite does not inline SVG as `data:image/svg+xml`.
+- Canonical icon names (codegen / spec names):
+  - `info-circ`
+  - `status-critical-square`
+  - `status-error-diamond`
+  - `status-warn-tri`
+  - `shape-x`
+  - `chev-left-16`
+  - `chev-right-16`
+- Leading status icons may map to `*-solid.svg` files in `assets/icons` for visual parity when non-solid glyphs match the banner hue; canonical names above remain the stable API.
+- Raw SVG fallback is allowed only when the destination library lacks a compatible icon component.
+
+Fallback/error rules:
+- Unknown `severity` -> fallback to `critical`.
+- `carousel.totalItems < 1` -> render `1 of 1`.
+- `carousel.currentItem < 1` -> clamp to `1`.
+- `linkLabel` missing -> no link rendered.
+- `actionLabel` missing -> no action button rendered.
+
+Validation checklist:
+- [ ] All 32 documented Figma combinations can be represented by API inputs.
+- [ ] `onAction` is emitted when action button is activated.
+- [ ] `onPrevious` / `onNext` are emitted when carousel buttons are activated and host updates `message` + `currentItem` + `totalItems` for multi-item flows.
+- [ ] `critical` without action defaults to non-dismissible behavior.
+- [ ] Severity-specific foreground color flips to black only for `warning-minor`.
+- [ ] Carousel rail uses strong severity background tokens only (`*-strong` variables), not base banner surface tokens.
+- [ ] Carousel rail is in-flow (no absolute overlay + fixed leading inset); spacing before `LeadingStatusIcon` matches layout contract.
+- [ ] Carousel chevrons meet contrast vs rail + counter text (not mid-gray on dark rails).
+- [ ] Icon names map to canonical IDS assets or destination icon component names.
+- [ ] No hardcoded visual values replace semantic color tokens (except Figma-documented `22px` rail inner gap where no spacing token exists).
+
+## Implementation reconciliation (Storybook + spec)
+
+Captured here so spec-driven codegen and reviews stay aligned with the current reference UI:
+
+| Topic | Contract |
+|---|---|
+| Carousel item data | Host-owned list; component receives a single `message` for the active item and `carousel.{currentItem,totalItems}` plus `onPrevious` / `onNext`. |
+| Carousel rail fill | `var(--color-background-alerting-critical-strong)`, `var(--color-background-alerting-major-strong)`, `var(--color-background-alerting-minor-strong)`, `var(--color-background-alerting-info-strong)` for the four severities—**semantic vars only**, no hex fallbacks in CSS. |
+| Carousel layout | Leading **in-flow** flex child, stretch height; **no** `position: absolute` rail + **no** fixed `padding-left` inset for “clearance”. |
+| Rail → icon spacing | `margin-inline-end: var(--spacing-space-16)` on the rail (plus root `gap`) so the leading status icon does not collide with variable-width counters. |
+| Chevron color | Neutral SVG fills tinted: white chevrons on `critical` / `warning-major` / `informational`; black on `warning-minor`. |
+| Demo / QA | Storybook: `CarouselInteractive`, `CarouselInteractiveInformational` demonstrate add/remove items and prev/next; static `WithCarousel` remains for fixed `1 of 4` layout checks. |
 
 ## Source Mapping
-- Figma component: Global Alert (11067-54641)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Global Alert" (category "Alerts and Notifications"; node "11067-54641")
+
+| Source | Location |
+|---|---|
+| Root spec | `components/ids/root-spec.mdx` |
+| Theme CSS | `components/ids-theme.css` |
+| Component map | `data/component-figma-map.json` |
+| Main layout source | `11067:54641` |
+| Main showcase source | `10829:75187` |
+| Carousel element source | `10934:89861` |
+| Figma URL | `...node-id=11067-54641` |

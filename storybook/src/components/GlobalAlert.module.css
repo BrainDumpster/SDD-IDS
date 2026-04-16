@@ -1,95 +1,207 @@
 .banner {
+  position: relative;
   width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+  padding-left: 0;
+  border: var(--border-width-border-1) solid transparent;
   font-family: inherit;
 }
 
-.inner {
+.banner:not([data-carousel="true"]) {
+  padding-left: var(--padding-padding-20);
+}
+
+.content {
+  min-width: 0;
+  flex: 1;
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-space-12);
-  padding: var(--padding-padding-12) var(--padding-padding-24);
+  gap: var(--spacing-space-8);
+  padding-block: var(--padding-padding-10);
 }
 
-/* Variant backgrounds */
-.info {
-  background: var(--color-background-alerting-info-slate);
-  border-bottom: var(--border-width-border-2) solid var(--color-border-alerting-info-info);
-}
-.info .icon {
-  color: var(--alert-blue-500);
-}
-
-.success {
-  background: var(--color-background-alerting-success-slate);
-  border-bottom: var(--border-width-border-2) solid var(--color-border-alerting-success-white);
-}
-.success .icon {
-  color: var(--alert-green-500);
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-space-16);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  flex-shrink: 0;
 }
 
-.warning {
-  background: var(--alert-yellow-200);
-  border-bottom: var(--border-width-border-2) solid var(--alert-yellow-600);
-}
-.warning .icon {
-  color: var(--alert-yellow-800);
-}
-
-.error {
-  background: var(--color-background-alerting-critical-slate);
-  border-bottom: var(--border-width-border-2) solid var(--color-border-alerting-critical-critical);
-}
-.error .icon {
-  color: var(--alert-red-500);
+.iconWrap {
+  display: flex;
+  align-items: center;
+  padding-top: 2px;
 }
 
 .icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  padding-top: var(--padding-padding-1);
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  object-fit: contain;
 }
 
-.text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-space-2);
+.message {
+  margin: 0;
   min-width: 0;
-}
-
-.title {
   font-size: var(--font-size-body-2);
-  font-weight: 500;
-  color: var(--color-text-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
+  color: inherit;
 }
 
-.description {
-  font-size: var(--font-size-body-3);
-  color: var(--color-text-neutral);
-  line-height: var(--font-line-height-line-height-18);
+.link,
+.linkButton {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.close {
-  flex-shrink: 0;
+.actionButton {
+  min-height: 24px;
+  padding: 2px 16px;
+  border: var(--border-width-border-1) solid currentColor;
+  border-radius: var(--corner-radius-radius-2);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.dismissButton,
+.carouselButton {
+  width: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--scale-24);
-  height: var(--scale-24);
   border: none;
   background: transparent;
-  color: var(--color-icon-neutral);
-  cursor: pointer;
-  border-radius: var(--corner-radius-radius-4);
+  color: inherit;
   padding: 0;
-  transition: background 100ms ease;
+  cursor: pointer;
 }
-.close:hover {
-  background: var(--color-background-gray-lighter);
+
+.dismissIcon,
+.carouselChevron {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  object-fit: contain;
 }
-.close:focus-visible {
+
+.dismissButton:focus-visible,
+.carouselButton:focus-visible,
+.actionButton:focus-visible,
+.linkButton:focus-visible,
+.link:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline-offset: 2px;
+}
+
+.carouselRail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  gap: 22px;
+  padding: var(--padding-padding-10) var(--padding-padding-14);
+  margin-inline-end: var(--spacing-space-16);
+  border-right: var(--border-width-border-1) solid transparent;
+}
+
+.carouselCount {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: inherit;
+}
+
+.critical {
+  background: var(--color-background-alerting-critical);
+  border-color: var(--color-border-alerting-transparent-critical);
+  color: var(--color-text-white);
+  --alert-icon-color: var(--color-icon-alerting-critical);
+  --icon-contrast-color: var(--color-icon-white);
+}
+
+.warning-major {
+  background: var(--color-background-alerting-major);
+  border-color: var(--color-border-alerting-transparent-major);
+  color: var(--color-text-white);
+  --alert-icon-color: var(--color-icon-alerting-major);
+  --icon-contrast-color: var(--color-icon-white);
+}
+
+.warning-minor {
+  background: var(--color-background-alerting-minor);
+  border-color: var(--color-border-alerting-minor-transparent);
+  color: var(--color-text-black);
+  --alert-icon-color: var(--color-icon-black);
+  --icon-contrast-color: var(--color-icon-black);
+}
+
+.informational {
+  background: var(--color-background-alerting-info-1, var(--color-background-alerting-info));
+  border-color: var(--color-border-alerting-transparent-info);
+  color: var(--color-text-white);
+  --alert-icon-color: var(--color-icon-alerting-info);
+  --icon-contrast-color: var(--color-icon-white);
+}
+
+.critical .dismissButton,
+.warning-major .dismissButton,
+.warning-minor .dismissButton {
+  color: var(--color-icon-black);
+}
+
+.critical .dismissIcon,
+.warning-major .dismissIcon,
+.warning-minor .dismissIcon {
+  filter: none;
+}
+
+.informational .dismissButton {
+  color: var(--color-icon-white);
+}
+
+.informational .dismissIcon {
+  filter: brightness(0) invert(1);
+}
+
+.critical .carouselRail {
+  background: var(--color-background-alerting-critical-strong);
+}
+
+.warning-major .carouselRail {
+  background: var(--color-background-alerting-major-strong);
+}
+
+.warning-minor .carouselRail {
+  background: var(--color-background-alerting-minor-strong);
+}
+
+.informational .carouselRail {
+  background: var(--color-background-alerting-info-strong);
+}
+
+/* Carousel chevrons ship as #616161; tint to match rail + banner text tokens */
+.critical .carouselChevron,
+.warning-major .carouselChevron,
+.informational .carouselChevron {
+  filter: brightness(0) invert(1);
+}
+
+.warning-minor .carouselChevron {
+  filter: brightness(0);
 }

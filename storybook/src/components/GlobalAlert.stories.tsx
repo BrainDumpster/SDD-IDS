@@ -1,13 +1,15 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { GlobalAlert } from "./GlobalAlert";
+import type { GlobalAlertSeverity } from "./GlobalAlert";
 
 const meta: Meta<typeof GlobalAlert> = {
-  title: "Synapse/GlobalAlert",
+  title: "IDS/Global Alert",
   component: GlobalAlert,
   argTypes: {
-    variant: {
+    severity: {
       control: "select",
-      options: ["info", "success", "warning", "error"],
+      options: ["critical", "warning-major", "warning-minor", "informational"],
     },
     dismissible: { control: "boolean" },
   },
@@ -16,49 +18,173 @@ const meta: Meta<typeof GlobalAlert> = {
 export default meta;
 type Story = StoryObj<typeof GlobalAlert>;
 
-export const Info: Story = {
+export const Informational: Story = {
   args: {
-    variant: "info",
-    title: "System maintenance scheduled",
-    description: "The platform will be unavailable on Saturday from 2:00 AM to 4:00 AM EST.",
+    severity: "informational",
+    message: "This is an application-level alert that communicates an informational message.",
     dismissible: true,
   },
 };
 
-export const Success: Story = {
+export const WarningMinor: Story = {
   args: {
-    variant: "success",
-    title: "Deployment complete",
-    description: "Version 2.4.1 has been successfully deployed to production.",
+    severity: "warning-minor",
+    message: "This is an application-level alert that communicates a warning (minor) message.",
     dismissible: true,
   },
 };
 
-export const Warning: Story = {
+export const WarningMajor: Story = {
   args: {
-    variant: "warning",
-    title: "API rate limit approaching",
-    description: "You have used 90% of your monthly API quota.",
+    severity: "warning-major",
+    message: "This is an application-level alert that communicates a warning (major) message.",
     dismissible: true,
   },
 };
 
-export const Error: Story = {
+export const Critical: Story = {
   args: {
-    variant: "error",
-    title: "Service disruption detected",
-    description: "Some users may experience intermittent errors. Our team is investigating.",
+    severity: "critical",
+    message: "This is an application-level alert that communicates a critical message.",
+    dismissible: false,
+  },
+};
+
+export const WithLink: Story = {
+  args: {
+    severity: "informational",
+    message: "This is an application-level alert that communicates an informational message. It may include a",
+    linkLabel: "link to another page.",
     dismissible: true,
   },
 };
 
-export const AllVariants: Story = {
+export const WithAction: Story = {
+  args: {
+    severity: "warning-major",
+    message: "This is an application-level alert that communicates a warning (major) message. It may include actions.",
+    actionLabel: "Action",
+    dismissible: true,
+  },
+};
+
+export const WithCarousel: Story = {
+  args: {
+    severity: "critical",
+    message: "This is an application-level alert that communicates a critical message.",
+    dismissible: false,
+    carousel: {
+      currentItem: 1,
+      totalItems: 4,
+    },
+  },
+};
+
+/** Host-owned alert list: prev/next update index; message reflects the active item. */
+function CarouselInteractiveHost({
+  severity = "critical",
+  initialMessages,
+}: {
+  severity?: GlobalAlertSeverity;
+  initialMessages: string[];
+}) {
+  const [items, setItems] = useState<string[]>(() => [...initialMessages]);
+  const [index, setIndex] = useState(0);
+  const total = Math.max(1, items.length);
+  const safeIndex = ((index % total) + total) % total;
+  const message = items[safeIndex] ?? "";
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 900 }}>
+      <GlobalAlert
+        severity={severity}
+        message={message}
+        dismissible={severity !== "critical"}
+        carousel={{
+          currentItem: safeIndex + 1,
+          totalItems: total,
+          onPrevious: () => setIndex((i) => (i - 1 + total) % total),
+          onNext: () => setIndex((i) => (i + 1) % total),
+        }}
+      />
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+        <button type="button" onClick={() => setItems((prev) => [...prev, `New alert item ${prev.length + 1}.`])}>
+          Add alert item
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (items.length <= 1) return;
+            const next = items.filter((_, i) => i !== safeIndex);
+            const nextIndex = Math.min(safeIndex, Math.max(0, next.length - 1));
+            setItems(next);
+            setIndex(nextIndex);
+          }}
+          disabled={items.length <= 1}
+        >
+          Remove current item
+        </button>
+        <span style={{ fontSize: 13, color: "#444" }}>
+          {total} item(s) · index {safeIndex + 1} — use chevrons on the banner to navigate.
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export const CarouselInteractive: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-      <GlobalAlert variant="info" title="Info: System update available" dismissible />
-      <GlobalAlert variant="success" title="Success: All services operational" dismissible />
-      <GlobalAlert variant="warning" title="Warning: Disk usage at 85%" dismissible />
-      <GlobalAlert variant="error" title="Error: Database connection failed" dismissible />
+    <CarouselInteractiveHost
+      severity="critical"
+      initialMessages={[
+        "Critical alert 1 of N — host supplies the list; carousel only shows index.",
+        "Critical alert 2 of N — onPrevious / onNext are wired in this story.",
+        "Critical alert 3 of N — use “Add alert item” to grow the carousel.",
+        "Critical alert 4 of N — remove current item to shrink the list.",
+      ]}
+    />
+  ),
+};
+
+export const CarouselInteractiveInformational: Story = {
+  render: () => (
+    <CarouselInteractiveHost
+      severity="informational"
+      initialMessages={[
+        "Informational item A — chevrons match white label text on the rail.",
+        "Informational item B — severity rail uses info-strong token.",
+      ]}
+    />
+  ),
+};
+
+export const VariantMatrix: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 24 }}>
+      <div style={{ display: "grid", gap: 8 }}>
+        <GlobalAlert severity="critical" message="This is an application-level alert that communicates a critical message." dismissible={false} />
+        <GlobalAlert severity="warning-major" message="This is an application-level alert that communicates a warning (major) message." />
+        <GlobalAlert severity="warning-minor" message="This is an application-level alert that communicates a warning (minor) message." />
+        <GlobalAlert severity="informational" message="This is an application-level alert that communicates an informational message." />
+      </div>
+      <div style={{ display: "grid", gap: 8 }}>
+        <GlobalAlert severity="critical" message="This is an application-level alert that communicates a critical message. It may include a" linkLabel="link to another page." dismissible={false} />
+        <GlobalAlert severity="warning-major" message="This is an application-level alert that communicates a warning (major) message. It may include a" linkLabel="link to another page." />
+        <GlobalAlert severity="warning-minor" message="This is an application-level alert that communicates a warning (minor) message. It may include a" linkLabel="link to another page." />
+        <GlobalAlert severity="informational" message="This is an application-level alert that communicates an informational message. It may include a" linkLabel="link to another page." />
+      </div>
+      <div style={{ display: "grid", gap: 8 }}>
+        <GlobalAlert severity="critical" message="This is an application-level alert that communicates a critical message. It may include actions." actionLabel="Action" />
+        <GlobalAlert severity="warning-major" message="This is an application-level alert that communicates a warning (major) message. It may include actions." actionLabel="Action" />
+        <GlobalAlert severity="warning-minor" message="This is an application-level alert that communicates a warning (minor) message. It may include actions." actionLabel="Action" />
+        <GlobalAlert severity="informational" message="This is an application-level alert that communicates an informational message. It may include actions." actionLabel="Action" />
+      </div>
+      <div style={{ display: "grid", gap: 8 }}>
+        <GlobalAlert severity="critical" message="This is an application-level alert that communicates a critical message. It may include actions or a" linkLabel="link to another page." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
+        <GlobalAlert severity="warning-major" message="This is an application-level alert that communicates a warning (major) message. It may include actions or a" linkLabel="link to another page." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
+        <GlobalAlert severity="warning-minor" message="This is an application-level alert that communicates a warning (minor) message. It may include actions or a" linkLabel="link to another page." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
+        <GlobalAlert severity="informational" message="This is an application-level alert that communicates an informational message. It may include actions or a" linkLabel="link to another page." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
+      </div>
     </div>
   ),
 };
