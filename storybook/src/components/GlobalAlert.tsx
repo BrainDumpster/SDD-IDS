@@ -1,11 +1,5 @@
 import { useState } from "react";
-import infoIconSolid from "../../../assets/icons/info-circ-solid.svg?url";
-import criticalIconSolid from "../../../assets/icons/status-critical-square-solid.svg?url";
-import majorIconSolid from "../../../assets/icons/status-error-diamond-solid.svg?url";
-import minorIconSolid from "../../../assets/icons/status-warn-tri-solid.svg?url";
-import shapeXIcon from "../../../assets/icons/shape-x.svg?url";
-import chevLeftIcon from "../../../assets/icons/chev-left-16.svg?url";
-import chevRightIcon from "../../../assets/icons/chev-right-16.svg?url";
+import { Icon } from "./Icon";
 import styles from "./GlobalAlert.module.css";
 
 export type GlobalAlertSeverity =
@@ -35,21 +29,12 @@ export interface GlobalAlertProps {
   carousel?: GlobalAlertCarouselProps;
 }
 
+/** Canonical `shapeName` values; assets resolve under `assets/icons/<slug>.svg`. */
 const severityToIconName: Record<GlobalAlertSeverity, string> = {
   critical: "status-critical-square",
   "warning-major": "status-error-diamond",
   "warning-minor": "status-warn-tri",
   informational: "info-circ",
-};
-
-const iconAssetByName: Record<string, string> = {
-  // Keep canonical names requested for design-spec/codegen, but use
-  // the visible solid assets in Storybook so icons don't blend into
-  // same-color alert backgrounds.
-  "status-critical-square": criticalIconSolid,
-  "status-error-diamond": majorIconSolid,
-  "status-warn-tri": minorIconSolid,
-  "info-circ": infoIconSolid,
 };
 
 export function GlobalAlert({
@@ -91,7 +76,7 @@ export function GlobalAlert({
             aria-label="Previous alert"
             onClick={carousel.onPrevious}
           >
-            <img src={chevLeftIcon} alt="" aria-hidden="true" className={styles.carouselChevron} />
+            <Icon shapeName="chev-left-16" variant="img" className={styles.carouselChevron} />
           </button>
           <span className={styles.carouselCount}>{counterText}</span>
           <button
@@ -100,19 +85,14 @@ export function GlobalAlert({
             aria-label="Next alert"
             onClick={carousel.onNext}
           >
-            <img src={chevRightIcon} alt="" aria-hidden="true" className={styles.carouselChevron} />
+            <Icon shapeName="chev-right-16" variant="img" className={styles.carouselChevron} />
           </button>
         </div>
       ) : null}
 
       <div className={styles.content}>
         <div className={styles.iconWrap}>
-          <img
-            src={iconAssetByName[severityToIconName[severity]]}
-            alt=""
-            aria-hidden="true"
-            className={styles.icon}
-          />
+          <Icon shapeName={severityToIconName[severity]} variant="img" className={styles.icon} />
         </div>
         <p className={styles.message}>
           {message}
@@ -147,7 +127,7 @@ export function GlobalAlert({
               onDismiss?.();
             }}
           >
-            <img src={shapeXIcon} alt="" aria-hidden="true" className={styles.dismissIcon} />
+            <Icon shapeName="shape-x" variant="img" className={styles.dismissIcon} />
           </button>
         ) : null}
       </div>

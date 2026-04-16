@@ -250,7 +250,9 @@ Accessibility contract:
 - Counter text remains programmatically readable, e.g. `1 of 4`.
 
 Asset resolution + bundling contract:
-- Prefer project `Icon` component when available; Storybook reference uses `<img src={...svg?url}>` from `assets/icons` so Vite does not inline SVG as `data:image/svg+xml`.
+- Storybook reference uses the shared `Icon` component with `shapeName` set to the canonical slugs below and `variant="img"` for full-color SVG rendering on alert surfaces. `Icon` resolves `assets/icons/<slug>.svg` via Vite `import.meta.glob(..., { query: '?url' })` so bundled URLs are file URLs, not `data:image/svg+xml`.
+- Default `Icon` variant for other surfaces (e.g. navigation) remains `mask` (CSS mask + `currentColor`); alerts use `img` only where multi-hue glyphs or `filter`-based chevron tinting is required.
+- Do not ship inline `<svg>` trees or custom “fallback shape” renderers inside application code; missing slugs render as an empty placeholder until assets exist.
 - Canonical icon names (codegen / spec names):
   - `info-circ`
   - `status-critical-square`
@@ -259,8 +261,7 @@ Asset resolution + bundling contract:
   - `shape-x`
   - `chev-left-16`
   - `chev-right-16`
-- Leading status icons may map to `*-solid.svg` files in `assets/icons` for visual parity when non-solid glyphs match the banner hue; canonical names above remain the stable API.
-- Raw SVG fallback is allowed only when the destination library lacks a compatible icon component.
+- If a destination app uses a different icon package, map these slugs to that library’s components while preserving the same `shapeName` contract.
 
 Fallback/error rules:
 - Unknown `severity` -> fallback to `critical`.

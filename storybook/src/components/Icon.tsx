@@ -1,8 +1,10 @@
 import type { CSSProperties } from "react";
 
+/** Resolved asset URLs only (Vite `?url`); never inline `data:image/svg+xml`. */
 const iconUrlBySlug: Record<string, string> = (() => {
   const modules = import.meta.glob<string>("../../../assets/icons/*.svg", {
     eager: true,
+    query: "?url",
     import: "default",
   });
   const out: Record<string, string> = {};
@@ -14,17 +16,37 @@ const iconUrlBySlug: Record<string, string> = (() => {
 })();
 
 export interface IconProps {
-  /** Canonical icon slug from assets/icons/<slug>.svg. */
+  /** Canonical icon slug from `assets/icons/<slug>.svg`. */
   shapeName: string;
   className?: string;
   title?: string;
+  /**
+   * `mask` (default): CSS mask + `background-color: currentColor` from styles (tintable monochrome assets).
+   * `img`: `<img src>` for full-color SVGs (e.g. alert severity glyphs).
+   */
+  variant?: "mask" | "img";
 }
 
-export function Icon({ shapeName, className, title }: IconProps) {
-  const src = /^[a-z0-9-]+$/.test(shapeName) ? iconUrlBySlug[shapeName] : undefined;
+function resolveUrl(shapeName: string): string | undefined {
+  if (!/^[a-z0-9-]+$/.test(shapeName)) return undefined;
+  return iconUrlBySlug[shapeName];
+}
+
+export function Icon({ shapeName, className, title, variant = "mask" }: IconProps) {
+  const src = resolveUrl(shapeName);
 
   if (!src) {
-    return <span className={className} aria-hidden="true" title={title ?? `Missing icon: ${shapeName}`} />;
+    return (
+      <span
+        className={className}
+        aria-hidden="true"
+        title={title ?? `Missing icon: ${shapeName}`}
+      />
+    );
+  }
+
+  if (variant === "img") {
+    return <img src={src} alt="" aria-hidden="true" className={className} title={title} />;
   }
 
   const style = {
