@@ -80,7 +80,7 @@
 
 .arrow[data-side="bottom"][data-align="start"],
 .arrow[data-side="top"][data-align="start"] {
-  left: 16px !important;
+  left: 8px !important;
 }
 
 .arrow[data-side="bottom"][data-align="center"],
@@ -90,12 +90,12 @@
 
 .arrow[data-side="bottom"][data-align="end"],
 .arrow[data-side="top"][data-align="end"] {
-  left: calc(100% - 26px) !important;
+  left: calc(100% - 18px) !important;
 }
 
 .arrow[data-side="left"][data-align="start"],
 .arrow[data-side="right"][data-align="start"] {
-  top: 16px !important;
+  top: 8px !important;
 }
 
 .arrow[data-side="left"][data-align="center"],
@@ -105,7 +105,7 @@
 
 .arrow[data-side="left"][data-align="end"],
 .arrow[data-side="right"][data-align="end"] {
-  top: calc(100% - 26px) !important;
+  top: calc(100% - 18px) !important;
 }
 
 .popup::before,
@@ -132,7 +132,7 @@
 
 .popup[data-side="bottom"][data-align="start"]::before,
 .popup[data-side="top"][data-align="start"]::before {
-  left: 16px;
+  left: 8px;
 }
 
 .popup[data-side="bottom"][data-align="center"]::before,
@@ -142,7 +142,7 @@
 
 .popup[data-side="bottom"][data-align="end"]::before,
 .popup[data-side="top"][data-align="end"]::before {
-  left: calc(100% - 27px);
+  left: calc(100% - 18px);
 }
 
 .popup[data-side="left"]::after,
@@ -161,7 +161,7 @@
 
 .popup[data-side="left"][data-align="start"]::after,
 .popup[data-side="right"][data-align="start"]::after {
-  top: 15px;
+  top: 7px;
 }
 
 .popup[data-side="left"][data-align="center"]::after,
@@ -171,7 +171,7 @@
 
 .popup[data-side="left"][data-align="end"]::after,
 .popup[data-side="right"][data-align="end"]::after {
-  top: calc(100% - 27px);
+  top: calc(100% - 19px);
 }
 
 .popupStandard {

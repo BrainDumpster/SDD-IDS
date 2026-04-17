@@ -43,6 +43,15 @@ Arrow geometry contract:
 - Up/down pointer triangle: `10x6`.
 - Left/right pointer triangle: `6x10`.
 - Arrow position axis: `start | center | end` for each side.
+- Trigger-to-tooltip spacing (with arrow): `8px` (runtime positioner side offset).
+- Storybook-calibrated arrow alignment insets:
+  - Top/Bottom `start`: `left: 8px`
+  - Top/Bottom `end`: `left: calc(100% - 18px)`
+  - Left/Right `start`: `top: 8px`
+  - Left/Right `end`: `top: calc(100% - 18px)`
+- Left/Right arrow attachment calibration:
+  - Arrow container offset: `left/right: -5px`
+  - Border-notch masking offsets: `start: 7px`, `center: calc(50% - 6px)`, `end: calc(100% - 19px)`
 - Supported permutations: `4 sides x 3 alignments = 12`.
 
 ## Tokens
@@ -119,7 +128,7 @@ Per-slot style contract:
 - `Header`: Body 2 Medium + strong text token.
 - `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots.
 - `CloseAction`: renders icon component with `shapeName="shape-x"` at `12x12`.
-- `Arrow`: shares panel surface and border tokens; size/rotation depends on side.
+- `Arrow`: shares panel surface and border tokens; size/rotation depends on side and must apply the alignment/attachment calibration values above.
 
 Behavior contract:
 - `closable=false`: hover/focus transient pattern (auto closes on leave/blur).
