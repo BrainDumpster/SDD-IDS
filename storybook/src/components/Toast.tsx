@@ -1,13 +1,21 @@
 import { Toast as BaseToast } from "@base-ui-components/react/toast";
 import type { ReactNode } from "react";
-import infoIcon from "../../../assets/icons/info-circ-solid.svg";
-import successIcon from "../../../assets/icons/status-ok-circ-solid.svg";
-import minorIcon from "../../../assets/icons/status-warn-tri-solid.svg";
-import majorIcon from "../../../assets/icons/status-error-diamond-solid.svg";
-import criticalIcon from "../../../assets/icons/status-critical-square-solid.svg";
+import { Icon } from "./Icon";
 import styles from "./Toast.module.css";
 
-export type ToastVariant = "info" | "success" | "minor" | "major" | "critical";
+export type ToastVariant =
+  | "info"
+  | "critical"
+  | "major-warning"
+  | "minor-warning"
+  | "success";
+export type ToastPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 
 interface ToastData {
   variant?: ToastVariant;
@@ -15,31 +23,38 @@ interface ToastData {
   closable?: boolean;
   onLinkClick?: () => void;
   linkLabel?: string;
+  duration?: number;
 }
 
 interface ToastSetupProps {
   children: ReactNode;
+  position?: ToastPosition;
+  duration?: number;
 }
 
 /**
  * Wrap your app root with <ToastSetup> to enable toasts.
  * Use the `useToast()` hook from Base UI to trigger toasts inside.
  */
-export function ToastSetup({ children }: ToastSetupProps) {
+export function ToastSetup({
+  children,
+  position = "top-right",
+  duration = 8000,
+}: ToastSetupProps) {
   return (
-    <BaseToast.Provider timeout={5000}>
+    <BaseToast.Provider timeout={duration}>
       {children}
-      <ToastViewport />
+      <ToastViewport position={position} />
     </BaseToast.Provider>
   );
 }
 
 export const useToast = BaseToast.useToastManager;
 
-function ToastViewport() {
+function ToastViewport({ position }: { position: ToastPosition }) {
   const toastManager = useToast();
   return (
-    <BaseToast.Viewport className={styles.viewport}>
+    <BaseToast.Viewport className={styles.viewport} data-position={position}>
       {toastManager.toasts.map((toast) => {
         const variant = (toast.data as ToastData | undefined)?.variant ?? "info";
         const showLink = Boolean((toast.data as ToastData | undefined)?.showLink);
@@ -52,31 +67,35 @@ function ToastViewport() {
             toast={toast}
             className={`${styles.root} ${styles[variant]}`}
           >
-            <div className={styles.iconWrap}>
-              <VariantIcon variant={variant} />
+            <div className={styles.contentGroup}>
+              <div className={styles.iconWrap}>
+                <VariantIcon variant={variant} />
+              </div>
+              <div className={styles.content}>
+                <BaseToast.Description className={styles.description}>
+                  {toast.description ?? toast.title}
+                </BaseToast.Description>
+              </div>
             </div>
-            <div className={styles.content}>
-              <BaseToast.Description className={styles.description}>
-                {toast.description ?? toast.title}
-              </BaseToast.Description>
+            <div className={styles.actionsGroup}>
+              {showLink ? (
+                <BaseToast.Action
+                  className={styles.link}
+                  onClick={() => {
+                    onLinkClick?.();
+                  }}
+                >
+                  <span>{linkLabel}</span>
+                </BaseToast.Action>
+              ) : null}
+              {closable ? (
+                <BaseToast.Close className={styles.close} aria-label="Close">
+                  <CloseIcon />
+                </BaseToast.Close>
+              ) : (
+                <span className={styles.closePlaceholder} aria-hidden="true" />
+              )}
             </div>
-            {showLink ? (
-              <BaseToast.Action
-                className={styles.link}
-                onClick={() => {
-                  onLinkClick?.();
-                }}
-              >
-                <span>{linkLabel}</span>
-              </BaseToast.Action>
-            ) : null}
-            {closable ? (
-              <BaseToast.Close className={styles.close} aria-label="Close">
-                <CloseIcon />
-              </BaseToast.Close>
-            ) : (
-              <span className={styles.closePlaceholder} aria-hidden="true" />
-            )}
           </BaseToast.Root>
         );
       })}
@@ -86,38 +105,17 @@ function ToastViewport() {
 
 function VariantIcon({ variant }: { variant: ToastVariant }) {
   const iconByVariant: Record<ToastVariant, string> = {
-    info: infoIcon,
-    success: successIcon,
-    minor: minorIcon,
-    major: majorIcon,
-    critical: criticalIcon,
+    info: "info-circ-solid",
+    critical: "status-critical-square-solid",
+    "major-warning": "status-error-diamond-solid",
+    "minor-warning": "status-warn-tri-solid",
+    success: "status-ok-circ-solid",
   };
 
-  switch (variant) {
-    case "info":
-    case "success":
-    case "minor":
-    case "major":
-    case "critical":
-      return <img src={iconByVariant[variant]} alt="" className={styles.variantIcon} />;
-  }
+  return <Icon shapeName={iconByVariant[variant]} variant="img" className={styles.variantIcon} />;
 }
 
 function CloseIcon() {
-  return (
-    <svg
-      className={styles.closeIcon}
-      width="12"
-      height="12"
-      viewBox="0 0 32 32"
-      fill="none"
-      aria-hidden="true"
-    >
-      <polygon
-        points="2.94,32 16,18.94 29.06,32 32,29.06 18.94,16 32,2.94 29.06,0 16,13.06 2.94,0 0,2.94 13.06,16 0,29.06"
-        fill="currentColor"
-      />
-    </svg>
-  );
+  return <Icon shapeName="shape-x" variant="img" className={styles.closeIcon} />;
 }
 

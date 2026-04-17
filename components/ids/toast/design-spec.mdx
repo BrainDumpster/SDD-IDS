@@ -1,160 +1,149 @@
-# Toast Design Spec
+<!-- ds:inherits root-spec -->
+# Toast (IDS)
 
 ## Metadata
 - Component: Toast
 - Category: Alerts and Notifications
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54653&m=dev
-- Node ID: 11067-54653
-
-## Anatomy
-- Toast container with background
-- Toast icon (status indicator)
-- Toast title (optional)
-- Toast message/content
-- Close button (×)
-- Focus ring for keyboard navigation
-- Optional action button
-- Slide-in animation
+- Design system: IDS
+- File key: `VZJ48bbVYrIynw8DdSukWw`
+- Examples node: `42903:139689`
+- Base icon node: `39484:7432`
+- Examples URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42903-139689&m=dev
+- Base URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=39484-7432&m=dev
 
 ## Layout & Measurements
-- Standard height: Auto (based on content)
-- Horizontal padding: 16px
-- Vertical padding: 12px
-- Border radius: 4px
-- Focus ring: 2px offset from toast
-- Icon size: 20px × 20px
-- Close button: 16px × 16px
-- Minimum width: 300px
-- Maximum width: 500px
-- Spacing between elements: 8px
-
-## Typography
-- Display 1/Default: Roboto Light 72px/88px (hero toast titles)
-- Body 2: Roboto Regular 14px/20px (toast messages)
-- Body 2 - Underline: Roboto Regular 14px/20px (link text)
+- Item container: `height: 48px`, `padding-inline: 24px`, `padding-block: 14px`.
+- Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
+- Root surface: `background: var(--color-static-gray-900)`, `border: 1px solid var(--color-border-white)`, `border-radius: 2px`.
+- Row composition: two horizontal groups with `justify-content: space-between`:
+  - `ContentGroup` (status icon + message)
+  - `ActionGroup` (optional link + close)
+- Content row: horizontal layout with icon/message gap exactly `8px`.
+- Action row: horizontal layout with link/close gap exactly `24px` when link exists.
+- Vertical alignment: status icon and message must be center-aligned on the same row centerline (`align-items: center` in content group).
+- Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
+- Close icon slot: `12x12` using `shape-x`.
 
 ## Tokens
-### Colors
-- White: `var(--color-static-gray-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Static gray 800: `var(--color-static-gray-800)` = #393939
-- Static gray 900: `var(--color-static-gray-900)` = #252525
-- Black text: `var(--color-text-black)` = #252525
-- Black icon: `var(--color-icon-black)` = #252525
-- White text: `var(--color-text-white)` = #ffffff
-- White icon: `var(--color-icon-white)` = #ffffff
-- Strong border: `var(--color-border-strong)` = #252525
-- White border: `var(--color-border-white)` = #ffffff
-- Brand border: `var(--color-border-brand-base)` = #0076ce
-- Neutral border: `var(--color-border-neutral)` = #4d4d4d
 
-### Icons
-- Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Accessible icon: `var(--color-icon-accessible)` = #757575
-- Inverse icon: `var(--color-icon-inverse)` = #ffffff
-- Info blue icon: `icon-info-blue` = #005ECE
-- White icon: `icon-white` = #FFFFFF
+### Core surface/text tokens
+- Surface: `var(--color-static-gray-900)`
+- Border: `var(--color-border-white)`
+- Message text: `var(--color-static-gray-white)`
+- Link text: `var(--color-text-white)`
+- Close icon: `var(--color-icon-white)`
 
-### Alert Colors
-- Info icon: `var(--color-icon-alerting-info)` = #005ece
-- Info border: `var(--color-border-alerting-info-white)` = #005ece
-- Success icon: `var(--color-icon-alerting-success)` = #1b8500
-- Success border: `var(--color-border-alerting-success-white)` = #1b8500
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
-- Minor border: `var(--color-border-alerting-minor-transparent)` = #9c622e
-- Major icon: `var(--color-icon-alerting-major)` = #ed6400
-- Major border: `var(--color-border-alerting-major-white)` = #ed6400
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-- Critical border: `var(--color-border-alerting-critical-white)` = #af0000
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Secondary Palettes
-- Teal 400: `Secondary Palettes/Teal/teal-400` = #4CA7BB
+### Status tokens and icon mapping
+| Type | Icon (`shapeName`) | Icon color token | Border token | Text token |
+|---|---|---|---|---|
+| `info` | `info-circ-solid` | `var(--color-icon-alerting-info)` | `var(--color-border-alerting-info-white)` | `var(--color-static-gray-white)` |
+| `critical` | `status-critical-square-solid` | `var(--color-icon-alerting-critical)` | `var(--color-border-alerting-critical-white)` | `var(--color-static-gray-white)` |
+| `major-warning` | `status-error-diamond-solid` | `var(--color-icon-alerting-major)` | `var(--color-border-alerting-major-white)` | `var(--color-static-gray-white)` |
+| `minor-warning` | `status-warn-tri-solid` | `var(--color-icon-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-static-gray-white)` |
+| `success` | `status-ok-circ-solid` | `var(--color-icon-alerting-success)` | `var(--color-border-alerting-success-white)` | `var(--color-static-gray-white)` |
 
 ## States (Light Theme)
-| Variant | Background | Border | Text | Icon |
-|---|---|---|---|---|
-| Default | `var(--color-static-gray-800)` (#393939) | `var(--color-border-neutral)` (#4d4d4d) | `var(--color-static-gray-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Info | `var(--color-icon-alerting-info)` (#005ece) | `var(--color-border-alerting-info-white)` (#005ece) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Success | `var(--color-icon-alerting-success)` (#1b8500) | `var(--color-border-alerting-success-white)` (#1b8500) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Warning | `var(--color-icon-alerting-minor)` (#ffc700) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-black)` (#252525) | `var(--color-icon-black)` (#252525) |
-| Error | `var(--color-icon-alerting-major)` (#ed6400) | `var(--color-border-alerting-major-white)` (#ed6400) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Critical | `var(--color-icon-alerting-critical)` (#af0000) | `var(--color-border-alerting-critical-white)` (#af0000) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| State | Background | Border | Text/Icon |
+|---|---|---|---|
+| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close `var(--color-icon-white)` |
+| Hover close | No root color change required | No change | Close affordance can use subtle focus-visible only (no color drift from tokens) |
+| Focus-visible action | No root color change | No change | Focus ring uses brand token from root-spec rules |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Static colors provide consistent appearance
-- Toast colors maintain visibility in dark theme
-- Dark backgrounds ensure readability
+Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.
 
 ## Interactions
-- Click close button to dismiss toast
-- Click toast to focus/activate (optional)
-- Hover provides visual feedback on close button
-- Focus ring uses brand color for keyboard navigation
-- Auto-dismiss after timeout (default behavior)
-- Slide-in/out animations
-- Keyboard navigation: Tab to toast, Enter to action, Escape to dismiss
+- Toast appears with entrance motion and exits with dismissal motion.
+- `close` click removes toast item and emits dismissal event.
+- Optional link action emits link event or navigates depending on link contract.
+- Auto-dismiss timer runs per toast item when `duration > 0`.
+- Hover/focus pauses auto-dismiss timer for that item (recommended behavior contract).
+- `Escape` dismisses focused toast item.
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab to toast, Enter for actions, Escape to dismiss
-- Screen reader support: Proper ARIA attributes and toast announcements
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use proper toast/role attributes
-- Focus management: Auto-focus on new toasts
-- Dismiss announcements: Screen reader announces when toast is dismissed
+## Composition & API (runtime)
 
-## Variants
-- **Default**: Standard dark toast
-- **Info**: Blue informational toast
-- **Success**: Green success toast
-- **Warning**: Yellow warning toast
-- **Error**: Orange error toast
-- **Critical**: Red critical toast
-- **With Title**: Toast with heading
-- **With Action**: Toast with action button
-- **Persistent**: Toast that requires user action
-- **Stacked**: Multiple toasts stacked vertically
+### `ToastItem` (single notification)
+- `type`: `info | critical | major-warning | minor-warning | success` (default `info`).
+- `message`: string (required).
+- `duration`: number, default `8000` (host-configurable timeout input).
+- `closable`: boolean, default `true`.
+- `link`: optional structured link object (see link contract below).
+- `onClose`: emitted with item id/reason.
+- `onTimeout`: emitted when timer dismisses.
 
-## Behavior & Guidelines
-- Use toasts for non-critical notifications
-- Position at top-right or bottom-right of screen
-- Auto-dismiss after appropriate timeout (3-5 seconds)
-- Provide clear, concise messages
-- Include dismiss functionality for user control
-- Test with screen readers for proper announcement
-- Consider mobile touch interactions
-- Use consistent styling across toast types
-- Limit number of concurrent toasts
+### `ToastViewport` (stack + queue owner)
+- `position`: `top-left | top-center | top-right | bottom-left | bottom-center | bottom-right` (default `top-right`).
+- `maxVisible`: number (recommended default `3`).
+- `queueStrategy`: FIFO.
+- `items`: controlled list OR internal queue adapter.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Toast variants use appropriate color psychology
-- Dark backgrounds ensure text readability
-- Dark theme adaptation through semantic tokens
+Queue/stack behavior contract:
+1. New item is appended to queue.
+2. If visible slots are full, item waits in queue.
+3. When an item closes/expires, next queued item enters visible stack.
+4. In top positions, newest visible toast appears at bottom; older items move upward.
+5. In bottom positions, newest visible toast appears at top; older items move downward.
 
-## Deliverable Checklist
-- [ ] Implement slide-in/out animations
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Tab, Enter, Escape)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test different toast variants
-- [ ] Implement auto-dismiss functionality
-- [ ] Add toast stacking logic
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test mobile touch interactions
+## Link Contract (framework-agnostic)
+`link` object shape:
+- `label: string` (required if link exists)
+- `href?: string`
+- `routerLink?: string | string[]`
+- `target?: "_self" | "_blank" | "_parent" | "_top"`
+- `onClick?: (event) => void`
+
+Resolution rules:
+1. Angular: if `routerLink` is present, render router navigation binding.
+2. Else if `href` is present, render anchor navigation.
+3. Else render button-style link and emit `onClick`.
+4. If both `routerLink` and `href` are provided, prefer `routerLink`.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+### Deterministic anatomy
+- `ToastViewport` -> repeated `ToastItem` -> `Content` + `ActionContainer`.
+- `Content` always renders icon + message.
+- `ActionContainer` renders optional `LinkAction`, then optional `CloseAction`.
+
+### Variant matrix
+- Supported types: `info`, `critical`, `major-warning`, `minor-warning`, `success`.
+- `link` optional for each type.
+- `duration` and `position` supported for all combinations.
+
+### Per-slot styling rules
+- Root/background/border/text/close must use semantic tokens defined in this spec.
+- Status icon must use icon component with `shapeName` from mapping table.
+- Status icon slot and rendered glyph must both remain `16x16`; message alignment must remain vertically centered with icon.
+- Icon assets must resolve from `assets/icons`; no inline SVG or `data:image/svg+xml`.
+
+### Behavior rules
+- Timer lifecycle: start on mount, pause on hover/focus, resume on unhover/blur, clear on unmount.
+- Dismissal reasons: `close-click | timeout | programmatic`.
+- Queue lifecycle: deterministic FIFO as defined above.
+
+### Accessibility rules
+- Viewport: `aria-live="polite"`, `aria-atomic="false"`.
+- Item role: `status` by default; allow severity-driven escalation to `alert` when product rules require.
+- Close action: accessible label ("Dismiss notification").
+- Keyboard: tab to link/close, `Escape` dismiss focused item.
+
+### Fallback/error rules
+- Unknown `type` -> fallback to `info`.
+- Missing icon asset -> render no icon and log non-blocking warning.
+- Invalid `position` -> fallback to `top-right`.
+- Invalid `duration` (<0 or NaN) -> fallback to `8000`.
+
+### Validation checklist (pass/fail)
+- [ ] All required sections in this spec are complete and deterministic.
+- [ ] Variant to token/icon mapping matches table exactly.
+- [ ] Queue behavior is implemented at viewport level, not single item level.
+- [ ] `position` API supports all six values with default `top-right`.
+- [ ] Link routing contract supports `routerLink`, `href`, and event mode.
+- [ ] Close icon is `shape-x` at `12x12`.
+- [ ] No hardcoded style values in generated code where token exists.
 
 ## Source Mapping
-- Figma component: Toast (11067-54653)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Toast" (category "Alerts and Notifications"; node "11067-54653")
+- Figma examples: `42903:139689` (toast variants with/without link).
+- Figma icon base: `39484:7432` (alerting icon family).
+- Active IDS map file: `data/component-figma-map.json`.
+- Suggested map alignment for Toast: example node `42903:139689`, base icon node `39484:7432`.

@@ -1,5 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ToastSetup, type ToastVariant, useToast } from "./Toast";
+import {
+  ToastSetup,
+  type ToastPosition,
+  type ToastVariant,
+  useToast,
+} from "./Toast";
 import { Button } from "./Button";
 
 interface ToastStoryArgs {
@@ -8,30 +13,46 @@ interface ToastStoryArgs {
   showLink: boolean;
   closable: boolean;
   linkLabel: string;
+  position: ToastPosition;
+  duration: number;
 }
 
 const meta: Meta<ToastStoryArgs> = {
-  title: "Synapse/Toast",
+  title: "IDS/Toast",
   args: {
     variant: "info",
     message: "This is a temporary and brief notification following a user action.",
     showLink: true,
     closable: true,
     linkLabel: "View Details",
+    position: "top-right",
+    duration: 8000,
   },
   argTypes: {
     variant: {
       control: "select",
-      options: ["info", "success", "minor", "major", "critical"],
+      options: ["info", "critical", "major-warning", "minor-warning", "success"],
     },
     message: { control: "text" },
     showLink: { control: "boolean" },
     closable: { control: "boolean" },
     linkLabel: { control: "text" },
+    position: {
+      control: "select",
+      options: [
+        "top-left",
+        "top-center",
+        "top-right",
+        "bottom-left",
+        "bottom-center",
+        "bottom-right",
+      ],
+    },
+    duration: { control: { type: "number", min: 0, step: 500 } },
   },
   decorators: [
-    (Story) => (
-      <ToastSetup>
+    (Story, ctx) => (
+      <ToastSetup position={ctx.args.position} duration={ctx.args.duration}>
         <Story />
       </ToastSetup>
     ),
@@ -50,7 +71,7 @@ function getToastType(variant: ToastVariant): "info" | "success" | "warning" | "
 
 function ToastDemo(args: ToastStoryArgs) {
   const toastManager = useToast();
-  const { variant, message, showLink, closable, linkLabel } = args;
+  const { variant, message, showLink, closable, linkLabel, duration } = args;
 
   const showToast = () => {
     toastManager.add({
@@ -61,6 +82,7 @@ function ToastDemo(args: ToastStoryArgs) {
         showLink,
         closable,
         linkLabel,
+        duration,
       },
     });
   };
@@ -80,12 +102,18 @@ export const Default: Story = {
 
 export const AlertingTypes: Story = {
   args: {
-    closable: false
+    closable: false,
   },
 
   render: () => {
     const toastManager = useToast();
-    const variants: ToastVariant[] = ["info", "success", "minor", "major", "critical"];
+    const variants: ToastVariant[] = [
+      "info",
+      "critical",
+      "major-warning",
+      "minor-warning",
+      "success",
+    ];
     return (
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {variants.map((variant) => (
@@ -110,5 +138,46 @@ export const AlertingTypes: Story = {
         ))}
       </div>
     );
-  }
+  },
+};
+
+export const QueueAndStack: Story = {
+  args: {
+    showLink: false,
+    closable: true,
+  },
+  render: (args) => {
+    const toastManager = useToast();
+    const variants: ToastVariant[] = [
+      "info",
+      "critical",
+      "major-warning",
+      "minor-warning",
+      "success",
+    ];
+
+    const enqueueFive = () => {
+      variants.forEach((variant, index) => {
+        toastManager.add({
+          description: `Queue item ${index + 1}: ${variant}`,
+          type: getToastType(variant),
+          data: {
+            variant,
+            showLink: args.showLink,
+            closable: args.closable,
+            linkLabel: args.linkLabel,
+            duration: args.duration,
+          },
+        });
+      });
+    };
+
+    return (
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <Button variant="secondary" onClick={enqueueFive}>
+          Enqueue 5 Toasts
+        </Button>
+      </div>
+    );
+  },
 };
