@@ -1,0 +1,269 @@
+<!-- ds:inherits root-spec -->
+# Alert (IDS)
+
+Unified specification for **Global** (application banner) and **Inline** (contextual) alerts. One logical component family with `display: global | inline`; layout tokens and severity palettes differ by display.
+
+## Metadata
+
+| Property | Value |
+|---|---|
+| Component | Alert |
+| Design system | IDS |
+| Category | Alerts and Notifications |
+
+### Source mapping — Global (banner)
+
+| Property | Value |
+|---|---|
+| Figma file key | `VZJ48bbVYrIynw8DdSukWw` |
+| Main layout node | `11067:54641` |
+| Main showcase node | `10829:75187` |
+| Carousel element node | `10934:89861` |
+| Source URL | https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54641&m=dev |
+| Component map | `data/component-figma-map.json` → `Global Alert` |
+
+### Source mapping — Inline (contextual)
+
+| Property | Value |
+|---|---|
+| Figma file key | `VZJ48bbVYrIynw8DdSukWw` |
+| Showcase / matrix node | `42903:139522` |
+| Representative instances | Detailed row: `42903:139032` · Compact row: `42903:139071` |
+| Source URL | https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42903-139522&m=dev |
+| Component map | `data/component-figma-map.json` → `Inline Alert` |
+| Last Figma re-fetch | 2026-04-16 (`get_design_context`, `get_metadata`, `get_variable_defs`) |
+
+## Display modes
+
+| `display` | Role | Carousel | Typical container |
+|---|---|---|---|
+| `global` | Full-width application alert banner | Optional **carousel rail** when multiple items are active | Viewport / shell |
+| `inline` | Contextual alert in page content | **Not used** (one item per instance) | Form, card, panel |
+
+### Severity sets
+
+- **Global:** `critical | warning-major | warning-minor | informational` (Figma global matrix).
+- **Inline:** `critical | warning-major | warning-minor | informational | success` (success is **inline-only**; global codegen should reject or map `success` → validation error / fallback per product rules).
+
+## Component composition (fully component-based)
+
+### Single alert item (shared logical model)
+
+Every rendered alert (global or inline) reflects **one** `AlertItem` at a time:
+
+- **`severity`** — semantic state (see sets above).
+- **Details** — primary copy (`message`); inline may also show optional **`title`** when `density = detailed`.
+- **Link** — optional; see **Link contract** below.
+- **Action** — optional text-style or outlined control per display rules.
+- **Dismiss** — optional per display and severity defaults.
+
+### Cross-component dependency contract (Button)
+
+`Alert` must reuse IDS Button behavior/geometry for action controls instead of inventing alert-local button primitives.
+
+- Canonical source: `components/ids/button/design-spec.mdx`
+- Action control mapping:
+  - Global alert action -> IDS Button **small** outlined signature (`24px` height, `2/16/2/16` padding, radius `2`)
+  - Inline alert action -> IDS Button **small** outlined signature with alert-specific color tokens
+- Runtime API for action remains `actionLabel` + `onAction`, but codegen should implement this by composing/reusing the project Button component when available (or faithfully mirroring Button spec signatures if the destination stack has no shared Button primitive yet).
+- If Button spec and Alert spec conflict, Button geometry/interaction contracts win; Alert may only override semantic color tokens.
+
+### Multi-alert (carousel) — `AlertGroup` (global only)
+
+When multiple alert items must share **one** banner chrome:
+
+- Use a container component **`AlertGroup`** (name is codegen-conventional; not a separate Figma node).
+- **`AlertGroup`** owns: ordered **`items: AlertItem[]`**, **`activeIndex`** (0-based internally), optional add/remove policy, and **wrap vs clamp** for prev/next.
+- **`Alert`** (`display="global"`) renders **one** banner; the group passes the **active** item’s fields (`message`, `link`, `action`, `severity`, …) plus **`carousel`**: `{ currentItem: activeIndex + 1, totalItems: items.length }` and **`onPrevious` / `onNext`** that update `activeIndex`.
+
+**Do not** stack multiple `Alert` global roots for carousel mode; **one** root + **swapped** item content.
+
+### Deterministic slot order (codegen)
+
+**Global (`display="global"`):**
+
+1. `AlertRoot` (`role="alert"`, `aria-live` per accessibility contract)
+2. optional `CarouselRail` (only when `carousel` is provided / group mode)
+   - `CarouselPreviousButton`
+   - `CarouselCount` (`k of n`, **1-based** `k`)
+   - `CarouselNextButton`
+3. `ContentRow`
+   - `LeadingStatusIcon`
+   - `Message` (+ optional inline link in reading order)
+4. `ActionsRow`
+   - optional `ActionButton`
+   - optional `DismissButton`
+
+**Inline (`display="inline"`):**
+
+1. `AlertRoot` (`role="alert"`) — full-width row; **inset4px leading “rail”** via `box-shadow` (not a separate rail node in Figma export)
+2. `ContentRow` (`inlineMain`) — flex `1 1 auto`, horizontal `gap: var(--spacing-space-8)`
+   - `LeadingIcon` — `16×16` glyph; icon container uses `1px` vertical nudge (detailed) or `2px` (compact) to align with first text line
+   - `ContentBlock` — column `gap: var(--spacing-space-4)`; optional `Title` (`density=detailed` only) + `Message` + optional inline link
+3. `TrailingControls` — `shrink-0`; horizontal `gap: var(--spacing-space-10)`; optional **outlined** `ActionButton` + optional `DismissButton`
+
+## Link contract (framework-agnostic, required for Angular `routerLink`)
+
+Do not pass a single ambiguous URL string as the only navigation input. Codegen should emit:
+
+| Field | Use |
+|---|---|
+| `link.label` | Visible text |
+| `link.href` | External / full URL / standard navigation URL |
+| `link.routerLink` | **Angular:** in-app route command (`string` or `any[]`); mutually exclusive with `href` in generated templates |
+| `onLinkClick` | Host handler; may `preventDefault` on anchor |
+
+**Rule:** If `routerLink` is set, render `RouterLink`; if `href` is set (and not `routerLink`), render `<a href>`. If only `label` + `onLinkClick`, render button-styled control.
+
+## Layout & measurements
+
+### Global
+
+- Root: `width: 100%`, min height `40px`, single horizontal row (no wrapping into stacked rows).
+- Leading padding: `var(--padding-padding-20)` when **no** carousel; `0` when carousel rail is first flex child.
+- Rail → leading icon spacing: rail `margin-inline-end: var(--spacing-space-16)` plus root flex `gap`.
+- Content row: vertical padding `var(--padding-padding-10)`, gap `var(--spacing-space-8)`.
+- Actions row: padding `var(--padding-padding-8) var(--padding-padding-16)`, gap `var(--spacing-space-16)`.
+- Status icon: `16×16`; carousel/dismiss chevrons: `12×12`.
+- Carousel rail: padding `var(--padding-padding-10) var(--padding-padding-14)`, inner gap `22px` (Figma-documented).
+
+### Inline (from Figma `InlineAlert` instances `42903:139032`, `42903:139071`)
+
+- Root: `width: 100%`, `box-sizing: border-box`, `justify-content: space-between`, `align-items: flex-start`, `padding-left: var(--padding-padding-20)`, **no corner radius** (`border-radius: 0`), `border: var(--border-width-border-1) solid` + **severity border token** (Figma semantic “transparent” alerting border variables), **background** = severity **`-light`** alerting background token.
+- Sample widths from refetched matrix node:
+  - Compact row references: `1057px` (`42903:139071` family), runtime still container-driven.
+  - Detailed row references: `631px` (`42903:139032` family), runtime still container-driven.
+- **Accent rail treatment:** default is `box-shadow: inset 4px 0 0 0` + severity **solid** alerting background.  
+  `warning-minor` uses a dedicated 4px left bar layer in Figma with the same solid minor fill plus warning-accessible edge stroke token.
+- **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`, `padding-right: var(--padding-padding-8)`; trailing cluster `padding: var(--padding-padding-14) 17px var(--padding-padding-14) var(--padding-padding-16)` and **vertical centering** for dismiss-only / actions column.
+- **Detailed** (`density: detailed`): root sample height `85px` (content may grow); content row `padding-block: var(--padding-padding-12)`; trailing `padding: var(--padding-padding-16) 17px var(--padding-padding-16) var(--padding-padding-16)`.
+- **Typography:** title (when present) = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`; message = **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; text color `var(--color-static-gray-900)`.
+- **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
+- **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-static-brand-500)`, label `var(--color-static-brand-600)`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
+- **Dismiss** glyph: `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
+
+## Tokens
+
+### Global — severity surfaces (banner)
+
+Use global alerting **solid** banner tokens (see global Figma): informational / major / minor / critical backgrounds and transparent borders; carousel rail uses **strong** background tokens only:
+
+- `var(--color-background-alerting-critical-strong)` | `var(--color-background-alerting-major-strong)` | `var(--color-background-alerting-minor-strong)` | `var(--color-background-alerting-info-strong)`
+
+Chevron tinting: white on `critical`, `warning-major`, `informational` rails; black on `warning-minor` rail (neutral SVG assets may need `filter`).
+
+### Inline — severity surfaces (Figma “light tint + solid rail”)
+
+Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from `components/ids-theme.css` / Storybook `ids-theme.css`); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info)`).
+
+| Severity | Background | Border | Inset rail (4px) | Leading icon (`shapeName`, `16x16`) + color |
+|---|---|---|---|---|
+| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-transparent)` | `var(--color-background-alerting-info)` | `info-circ-solid` + `var(--color-icon-alerting-info)` |
+| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-transparent)` | `var(--color-background-alerting-success)` | `status-ok-circ-solid` + `var(--color-icon-alerting-success)` |
+| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-background-alerting-minor)` (+ warning-accessible edge `Color/Border/Alerting/Warning-Accessible` on explicit rail layer) | `status-warn-tri-solid` + `var(--color-icon-alerting-minor)` |
+| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `status-error-diamond-solid` + `var(--color-icon-alerting-major)` |
+| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `status-critical-square-solid` + `var(--color-icon-alerting-critical)` |
+
+Inline **message link** and **outlined action** use **static brand** tokens above, not legacy “slate” border/background pairs.
+
+## States (Light Theme)
+
+### Inline (`display: inline`)
+
+Structural states follow **`density`** (compact vs detailed) and optional slots (title, link, action, dismiss). Surface tokens per severity:
+
+| Severity | Root background | Root border | Inset rail | Title / body text | Icon | Link | Action border | Action label |
+|---|---|---|---|---|---|---|---|---|
+| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-transparent)` | `var(--color-background-alerting-info)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-info)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
+| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-transparent)` | `var(--color-background-alerting-success)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-success)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
+| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-background-alerting-minor)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-minor)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
+| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-major)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
+| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
+
+**Dismiss** control: icon glyph `var(--color-icon-black)` on default surface; hover/focus per **Interactions**.
+
+### Global (`display: global`)
+
+Root row + carousel rail row per severity (informational, warning-major, warning-minor, critical) — unchanged from global Figma mapping (`11067:54641`).
+
+## States (Dark Theme)
+
+Use the same **semantic token names**; resolved values are defined per theme in `components/ids-theme.css` (and Storybook mirrors). **Inline** surfaces must stay structurally parallel to Light: background, border, inset rail, typography, link, and action tokens reference the same `var(--...)` names so theme switching does not fork component logic.
+
+**Global** carousel / banner tokens follow the global dark block in the same file.
+
+## Interactions
+
+- **Dismiss**, **action**, **link**, **carousel prev/next** emit distinct events.
+- **Global carousel:** `Alert` does **not** own list state; `AlertGroup` (or app shell) does.
+- **Inline:** no carousel; one item per component instance.
+- Default dismissibility: global **`critical`** without action tends **non-dismissible** (per Figma); other defaults follow prior global spec.
+
+## Composition & API (runtime)
+
+### `Alert` (single surface)
+
+**Required**
+
+- `display: "global" | "inline"`
+- `message: string`
+
+**Optional (both)**
+
+- `severity` (per display set)
+- `link`: `{ label: string; href?: string; routerLink?: string | any[] }` (see Link contract)
+- `actionLabel`, `onAction`
+- `dismissible`, `onDismiss`
+- `onLinkClick`
+
+**Global-only**
+
+- `carousel?: { currentItem: number; totalItems: number; onPrevious?: () => void; onNext?: () => void }`
+
+**Inline-only**
+
+- `title?: string`
+- `density?: "compact" | "detailed"`
+
+### `AlertGroup` (global, multi-item)
+
+- `items: AlertItem[]`
+- `activeIndex` (internal)
+- Renders **one** `Alert` with `display="global"` bound to `items[activeIndex]` and `carousel` counter + handlers.
+
+## Reusable component generation contract
+
+Code generator outputs should be reusable primitives, not one-off story/demo code:
+
+- Generate a single reusable `Alert` component (display-driven) with stable typed inputs/outputs.
+- Generate an optional reusable `AlertGroup` wrapper for host-owned multi-item global carousel state.
+- Do not embed app-specific text, routes, or business logic in generated component internals.
+- Keep icon and button composition through shared system primitives (`Icon`, `Button`) when those components exist in destination library.
+- Keep framework adapters thin: Angular/React/Vue wrappers map framework events to the same conceptual API (`dismiss`, `action`, `link`, `previous`, `next`).
+- Ensure all styling remains token-driven (`var(--...)`) with no hardcoded visual constants except Figma-documented structural exceptions (e.g., carousel inner gap `22px`).
+
+## Codegen Contract (blueprint summary)
+
+- One **`Alert`** implementation with display branching; optional separate **`AlertGroup`** file for list + carousel.
+- **Icon:** canonical `shapeName` slugs resolved from `assets/icons/<slug>.svg`; use shared `Icon` with `variant="img"` where multi-hue glyphs or chevron filters apply; no inline `<svg>` factories.
+- **Action control reuse:** compose IDS Button spec (`components/ids/button/design-spec.mdx`) for action controls; do not create alert-specific button geometry.
+- **Inline action:** Figma uses **outlined** button (brand border + brand-strong label), not link-only text.
+- **Accessibility:** `role="alert"`; carousel buttons labeled “Previous alert” / “Next alert”; dismiss “Dismiss alert”.
+- **Validation:** reject `display="global"` + `severity="success"` unless product explicitly maps success → informational.
+
+## Production-ready SDD gate
+
+- [ ] Metadata includes both global and inline source nodes and canonical Figma URLs.
+- [ ] Deterministic anatomy/slot order is explicit for both `display` modes.
+- [ ] Variant matrix is explicit (`display`, severity set by display, density, link/action/dismiss, carousel).
+- [ ] Action button contract explicitly reuses IDS Button spec (not ad-hoc alert button).
+- [ ] Link contract includes `href` vs `routerLink` disambiguation for Angular generation.
+- [ ] Fallback/error behavior is defined for invalid `display`/severity combinations and missing optional slots.
+- [ ] Accessibility roles, labels, keyboard behavior, and live-region behavior are specified.
+- [ ] Asset contract uses canonical icon slugs and shared Icon primitive with no inline SVG fallback functions.
+
+## Storybook reference
+
+- `storybook/src/components/Alert.tsx` — unified implementation (`display` prop)
+- `storybook/src/components/Alert.stories.tsx` — **IDS/Alert** (single entry; global vs inline via `display`)
+- `storybook/src/components/GlobalAlert.tsx` / `InlineAlert.tsx` — optional thin re-exports for app code; not separate Storybook entries
