@@ -6,6 +6,7 @@ This folder contains DAP-specific IDS Storybook components and stories.
 - `IdsMastheadDap`
 - `IdsLeftNavigation`
 - `IdsPagination`
+- `IdsDapSidePanel`
 
 ## Grouping rules
 - Keep DAP components under this folder.
