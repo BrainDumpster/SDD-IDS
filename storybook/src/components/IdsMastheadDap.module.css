@@ -1,0 +1,123 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  width: 100%;
+  background: var(--color-background-masthead-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-transparent-neutral);
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: var(--padding-padding-24);
+}
+
+.productName,
+.productArea {
+  color: var(--color-text-white);
+  font-size: 18px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.productDivider {
+  width: 1px;
+  height: 28px;
+  background: color-mix(in srgb, var(--color-text-white) 65%, transparent);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  padding-right: var(--padding-padding-8);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--color-background-masthead-brand-base);
+  padding: 19px var(--padding-padding-16);
+  color: var(--color-icon-white);
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  background: var(--color-background-masthead-brand-strong);
+}
+
+.actionButtonOpen {
+  background: var(--color-background-masthead-brand-stronger);
+}
+
+.actionButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-white);
+  outline-offset: 1px;
+}
+
+.actionIcon {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+  background-color: currentColor;
+}
+
+.helpMenu {
+  width: 138px;
+  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  box-shadow: 1px 1px 5px 0 rgb(0 0 0 / 15%);
+}
+
+.helpList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.helpItem {
+  width: 100%;
+  border: 0;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  text-align: left;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10) var(--padding-padding-16);
+  cursor: pointer;
+}
+
+.helpItem:hover {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+}
+
+.helpItem:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.launcherSlot {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.userInitials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 11px var(--padding-padding-8);
+  border-radius: 999px;
+  border: var(--border-width-border-1) solid var(--color-border-white);
+  color: var(--color-text-white);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
