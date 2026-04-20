@@ -1,0 +1,179 @@
+.root {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rootForm {
+  background: var(--color-background-component);
+}
+
+.item {
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  margin-top: calc(-1 * var(--border-width-border-1));
+  background: var(--color-background-component);
+}
+
+.item[data-first="true"] {
+  margin-top: 0;
+}
+
+.header {
+  margin: 0;
+}
+
+.trigger {
+  width: 100%;
+  height: var(--scale-40);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-12) var(--padding-padding-16);
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral-strong);
+}
+
+.triggerLeft {
+  justify-content: flex-start;
+  gap: var(--spacing-space-8);
+}
+
+.triggerRight {
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+}
+
+/* Mask icon: `Icon` applies mask from `assets/icons/<shapeName>.svg`; tint via `color` + `currentColor` fill (same pattern as MainMenuLeft). */
+.icon {
+  display: inline-block;
+  width: var(--scale-16);
+  height: var(--scale-16);
+  flex-shrink: 0;
+  vertical-align: middle;
+  background-color: currentColor;
+  color: var(--color-icon-neutral);
+  transition: transform 120ms ease;
+}
+
+.trigger:hover:not([data-disabled]) {
+  background: var(--color-background-brand-lighter);
+}
+
+.trigger:hover:not([data-disabled]) .icon {
+  color: var(--color-icon-neutral-strong);
+}
+
+.trigger:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.disabled,
+.trigger[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Left highlighter: gradient (opaque child layers hide parent inset box-shadow). */
+.open,
+.trigger[data-panel-open],
+.item[data-open] .trigger {
+  background-color: var(--color-background-brand-lighter);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-brand-lighter) 4px,
+    var(--color-background-brand-lighter) 100%
+  );
+}
+
+.open:hover:not([data-disabled]),
+.trigger[data-panel-open]:hover:not([data-disabled]),
+.item[data-open] .trigger:hover:not([data-disabled]) {
+  background-color: var(--color-background-brand-light);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-brand-light) 4px,
+    var(--color-background-brand-light) 100%
+  );
+}
+
+.open .icon,
+.trigger[data-panel-open] .icon,
+.item[data-open] .trigger .icon {
+  transform: rotate(180deg);
+  color: var(--color-icon-neutral);
+}
+
+.panel {
+  overflow: hidden;
+}
+
+/* Spec 40px inset: use tokens that exist in Storybook themes (`--padding-padding-40` is undefined). */
+.content {
+  padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-16)
+    calc(var(--padding-padding-32) + var(--padding-padding-8));
+  background-color: var(--color-background-component);
+}
+
+/* Expanded body: no border-top under header (IDS); left highlighter via gradient only. */
+.item[data-open] .panel > .content,
+.panel[data-open] > .content {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-component) 4px,
+    var(--color-background-component) 100%
+  );
+}
+
+.item[data-open] .meta,
+.item[data-open] .formSlot,
+.panel[data-open] > .meta,
+.panel[data-open] > .formSlot {
+  background-color: var(--color-background-component);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-component) 4px,
+    var(--color-background-component) 100%
+  );
+}
+
+.contentCard {
+  padding: var(--padding-padding-24);
+  background-color: var(--color-background-brand-lighter);
+  border-width: var(--border-width-border-1);
+  border-style: solid;
+  border-color: var(--color-border-brand-dark);
+  border-top: none;
+}
+
+.meta {
+  padding: 0 var(--padding-padding-24) var(--padding-padding-16)
+    calc(var(--padding-padding-32) + var(--padding-padding-8));
+  background-color: var(--color-background-component);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+}
+
+.formSlot {
+  padding: 0 var(--padding-padding-24) var(--padding-padding-16)
+    calc(var(--padding-padding-32) + var(--padding-padding-8));
+  background-color: var(--color-background-component);
+}

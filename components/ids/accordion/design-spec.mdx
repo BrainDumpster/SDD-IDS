@@ -1,163 +1,231 @@
-<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
 # Accordion Design Spec
-
-> Generated 2026-03-19T07:15:37Z from Figma REST API + local/GitHub documentation images (Ollama vision). Overwrites previous auto-generated body.
 
 ## Metadata
 - Component: Accordion
-- Category: Formelements
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev
-- Node ID: 16551-26036
-- File key: `(skipped)`
+- Design System: IDS
+- Category: Form Elements
+- Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev
+- File key: `VZJ48bbVYrIynw8DdSukWw`
+- Primary node: `16551:26036` (library / layout contract)
+- Related component-set nodes (same file): `.Accordion-Main` `10962:89111`; `.Accordion-Element-Left` `10962:89124`; `.Accordion-Element-Right` `10962:89134`; showcase `11067:54535`
+- **Canonical IDS Design Library (colors / published accordion examples):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42156-108639&m=dev — file key `0bHk3XhrjFhowgFkz9yLr4`, node `42156:108639` (`Content` frame: accordion states + Swap content).
+- Includes scenarios: all collapsed, one expanded, multi expanded, accordion with form
 
 ## Anatomy
+Main component:
+- `AccordionRoot`
 
-- Canonical structure for framework-agnostic generation:
-  - `Accordion` (root)
-    - repeated `AccordionItem`
-      - `AccordionHeader`
-      - `AccordionBody` (framework alias: `AccordionPanel`)
-- `AccordionBody` contains the expandable content region for each item.
+Child components (deterministic order):
+1. `AccordionItem`
+2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Implementations may use an inner native `button` or a library sub-component (e.g. Base UI `Accordion.Trigger`) **inside** this header for semantics; that inner node is **not** a separate public IDS slot or second generated component—codegen exposes one header/trigger API.
+3. `AccordionChevron` (left or right slot)
+4. `AccordionBody` (framework alias: `AccordionPanel`)
+5. `AccordionContent`
 
-### Documentation image 1
-
-- *(Vision skipped)* `sample-redlines.svg` under *Accordion documentation images > Anatomy*
+Optional child sub-slots:
+- `AccordionFormSlot` (for "accordion with form" usage)
+- `AccordionMetaSlot` (optional helper text/metadata)
 
 ## Layout & Measurements
+- Root width is container-driven (`width: 100%`).
+- Item separators: `var(--border-width-border-1)` using accessible divider token.
+- Trigger row uses IDS Figma contract: `height: 40px`, padding `12px 16px` (`var(--padding-padding-12)` `var(--padding-padding-16)`).
+- **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
+- Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
+- Selected/open state does **not** add a second item outline beyond shared row borders.
+- Trigger/content gap and block rhythm follow `var(--spacing-space-8)` and body text line-height contracts.
+- Chevron can be placed on:
+  - `left` (leading; default)
+  - `right` (trailing)
+- Expanded item: left highlighter reads as **one** continuous **4px** strip through header and body (same token); render on surfaces that carry the row fill (trigger + panel slots), aligned so the bar does not stack into a seam.
+- Expanded panel keeps contiguous border continuity with header (no visual break).
+- Focus indicator must be visible on trigger row and not clipped by item container.
+- Group rows follow Figma contiguous model (1px overlap/no vertical gaps).
+- Expanded content container padding: `8px 24px 16px 40px` (implementations: `var(--padding-padding-40)` when present, otherwise `calc(var(--padding-padding-32) + var(--padding-padding-8))` so left inset is valid in Storybook themes).
+- Optional inner **content card** (“Swap content” in Figma): padding `24px`; background `var(--color-background-brand-lighter)`; stroke `var(--color-border-brand-dark)` on **left, right, and bottom** only (`border-top: none`) so the card does not draw an extra rule under the header.
 
-- Based on Accordion redlines and verified semantic usage in Figma token collections.
-- Accordion panels are grouped inside one parent container variant (`Accordion-Main`) using vertical auto-layout.
-- Parent container uses `itemSpacing = -1` so adjacent panel borders overlap by 1px (no visual gap between panels).
-- Header row is a 40px interaction target with compact horizontal spacing and 16px chevron icon.
-- Expanded content container uses an inset card pattern with larger left indentation for hierarchy.
+## IDS Design Library — color crosswalk (Light, node `42156:108639`)
+Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}/nodes`); pair with `components/ids-theme.css` **light** block.
 
-### Accordion measurements (from documentation/redlines)
+| Visual role (Figma) | Approx. hex | Semantic token (`theme.css`) |
+|---|---|---|
+| Artboard / frame backdrop | `#F4F4F4` | `var(--color-background-surface-1)` (or nearest doc backdrop token used in app shell) |
+| Accordion row / collapsed surface | `#FFFFFF` | `var(--color-background-component)` |
+| Expanded **Panel** row (header tint) | `#EBF4FB` | `var(--color-background-brand-lighter)` |
+| **Swap content** inner card fill | `#EBF4FB` (same tint as expanded panel in file) | `var(--color-background-brand-lighter)` |
+| Left **4px** selection rail (`Rectangle 1`) | `#0076CE` | `var(--color-border-brand-base)` |
+| Primary label / body text | `#252525` | `var(--color-text-neutral-strong)` |
+| Inline link (“Learn how…”) | `#0062AB` | `var(--color-text-link-brand-base)` |
+| Chevron (IDS library) | ~`#4D4D4D` / `#252525` in samples | `var(--color-icon-neutral)` default & expanded; `var(--color-icon-neutral-strong)` on hover |
 
-| Area | Measurement |
-|---|---|
-| Accordion group container | Vertical auto-layout, `itemSpacing: -1`, no fill, no stroke, no radius; Figma sample width is 480px but implementation width is container-driven (`width: 100%`) |
-| Responsive width behavior | Component host uses `width: 100%` and `box-sizing: border-box` so panel width syncs with parent container width |
-| Header height | 40px |
-| Header padding | 10px top / 16px right / 10px bottom / 16px left |
-| Header left padding (expanded with active bar) | 16px |
-| Active indicator bar | 4px width, spans expanded panel (header + content), flush to left panel edge (no horizontal gap) |
-| Chevron icon | 16px |
-| Content container padding | 8px top / 24px right / 16px bottom / 40px left |
-| Content card padding | 24px |
-| Content card heading/body gap | 4px |
-
-### Documentation image 1
-
-- *(Vision skipped)* `sample-redlines.svg` under *Accordion documentation images > Layout & Measurements*
-
-## Typography
-
-- *(No automated extractions for this block.)*
+**Note:** Dark theme values come from the same semantic names in `components/ids-theme.css` dark block (e.g. brand base / link shift to lighter blues for contrast)—re-validate against dark variants in Figma when available.
 
 ## Tokens
-
-### Variable definitions (Figma file)
-
-- `Tokens` (theme-aware: Light / Dark)
-- `Primitive` (base primitives available in file)
-- `Density Primitive` (density baseline values used by layout)
-- Note: names match Figma collection names exactly.
-
-### Colors from inspected nodes
-
-- `var(--color-background-component)` = #FFFFFF (light) / #111619 (dark)
-- `var(--color-background-brand-lighter)` = #EBF4FB (light) / #1E262C (dark)
-- `var(--color-background-brand-light)` = #D9EAF8 (light) / #34414C (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898A5 (dark)
-- `var(--color-border-brand-base)` = #0076CE (light) / #4C9FDD (dark)
-- `var(--color-border-brand-dark)` = #0062AB (light) / #94C5EA (dark)
-- `var(--color-border-strong)` = #252525 (light) / #B8C1C9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #B8C1C9 (dark)
-- `var(--color-text-link-brand-base)` = #0062AB (light) / #4C9FDD (dark)
-- `var(--color-icon-accessible)` = #757575 (light) / #8898A5 (dark)
-- Focus outline uses brand focus mapping via `var(--color-border-brand-base)` in this file.
-
+- Surface:
+  - `var(--color-background-component)`
+  - `var(--color-background-brand-lighter)`
+  - `var(--color-background-brand-light)`
+- Borders:
+  - `var(--border-width-border-1)`
+  - `var(--border-width-border-2)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-border-brand-dark)` (inner content card outline)
+  - `var(--color-border-strong)`
+- Text/Icon:
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-neutral)`
+  - `var(--color-text-link-brand-base)`
+  - `var(--color-icon-neutral)`
+  - `var(--color-icon-neutral-strong)`
+- Icon asset:
+  - canonical chevron **shapeName**: `chev-down-thick` → `assets/icons/chev-down-thick.svg` (see **Icon primitive & asset delivery (codegen)** for Icon-vs-fallback rules and Storybook reference).
+- Radius/spacing/type:
+  - `var(--padding-padding-12)` (trigger vertical rhythm)
+  - `var(--padding-padding-16)`
+  - `var(--padding-padding-24)`
+  - `var(--padding-padding-40)` or `calc(var(--padding-padding-32) + var(--padding-padding-8))` for 40px inset when `40` token is absent
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-20)`
 
 ## States (Light Theme)
-
-| Area | State | Background | Border | Text/Icon |
+| Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Header | Collapsed default | `var(--color-background-component)` (#FFFFFF) | `var(--color-border-accessible)` (#757575) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-icon-accessible)` (#757575) |
-| Header | Collapsed hover | `var(--color-background-brand-lighter)` (#EBF4FB) | `var(--color-border-accessible)` (#757575) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-border-strong)` (#252525) |
-| Header | Expanded default | `var(--color-background-brand-lighter)` (#EBF4FB) | `var(--color-border-accessible)` (#757575), left bar `var(--color-border-brand-base)` (#0076CE) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-border-strong)` (#252525) |
-| Header | Expanded hover | `var(--color-background-brand-light)` (#D9EAF8) | `var(--color-border-accessible)` (#757575), left bar `var(--color-border-brand-base)` (#0076CE) | Text `var(--color-text-neutral-strong)` (#252525), Icon `var(--color-border-strong)` (#252525) |
-| Content | Expanded panel | `var(--color-background-component)` (#FFFFFF) | Panel `var(--color-border-accessible)` (#757575), left bar `var(--color-border-brand-base)` (#0076CE) | Heading/body `var(--color-text-neutral-strong)` (#252525), link `var(--color-text-link-brand-base)` (#0062AB) |
-
+| trigger | default (collapsed) | `var(--color-background-component)` | item divider `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` |
+| trigger | hover (collapsed) | `var(--color-background-brand-lighter)` | unchanged divider | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
+| trigger | hover (expanded) | `var(--color-background-brand-light)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
+| trigger | expanded (open) | `var(--color-background-brand-lighter)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` (rotated) |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | same as default |
+| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
+| panel/content | expanded | `var(--color-background-component)` | item perimeter `var(--color-border-accessible)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-neutral)`, link `var(--color-text-link-brand-base)` |
+| content-card | expanded (optional) | `var(--color-background-brand-lighter)` | L/R/B `var(--color-border-brand-dark)`; **no** top stroke (`border-top: none`) | heading/body per content; link `var(--color-text-link-brand-base)` |
 
 ## States (Dark Theme)
-
-| Area | State | Background | Border | Text/Icon |
+| Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Header | Collapsed default | `var(--color-background-component)` (#111619) | `var(--color-border-accessible)` (#8898A5) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-icon-accessible)` (#8898A5) |
-| Header | Collapsed hover | `var(--color-background-brand-lighter)` (#1E262C) | `var(--color-border-accessible)` (#8898A5) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-border-strong)` (#B8C1C9) |
-| Header | Expanded default | `var(--color-background-brand-lighter)` (#1E262C) | `var(--color-border-accessible)` (#8898A5), left bar `var(--color-border-brand-base)` (#4C9FDD) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-border-strong)` (#B8C1C9) |
-| Header | Expanded hover | `var(--color-background-brand-light)` (#34414C) | `var(--color-border-accessible)` (#8898A5), left bar `var(--color-border-brand-base)` (#4C9FDD) | Text `var(--color-text-neutral-strong)` (#B8C1C9), Icon `var(--color-border-strong)` (#B8C1C9) |
-| Content | Expanded panel | `var(--color-background-component)` (#111619) | Panel `var(--color-border-accessible)` (#8898A5), left bar `var(--color-border-brand-base)` (#4C9FDD) | Heading/body `var(--color-text-neutral-strong)` (#B8C1C9), link `var(--color-text-link-brand-base)` (#4C9FDD) |
-
+| trigger | default (collapsed) | `var(--color-background-component)` | item divider `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` |
+| trigger | hover (collapsed) | `var(--color-background-brand-lighter)` | unchanged divider | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
+| trigger | hover (expanded) | `var(--color-background-brand-light)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
+| trigger | expanded (open) | `var(--color-background-brand-lighter)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` (rotated) |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | same as default |
+| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
+| panel/content | expanded | `var(--color-background-component)` | item perimeter `var(--color-border-accessible)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-neutral)`, link `var(--color-text-link-brand-base)` |
+| content-card | expanded (optional) | `var(--color-background-brand-lighter)` | L/R/B `var(--color-border-brand-dark)`; **no** top stroke (`border-top: none`) | heading/body per content; link `var(--color-text-link-brand-base)` |
 
 ## Interactions
+- Trigger activation toggles panel expansion.
+- Single-expand mode (`multiple=false`) keeps max one open panel.
+- Multi-expand mode (`multiple=true`) allows more than one open panel.
+- Disabled item is non-interactive.
+- Chevron rotates 180deg in expanded state for both left and right positions.
+- Arrow key roving focus is supported between triggers.
+- Home/End move focus to first/last trigger.
+- Panel content participates in layout only when expanded.
 
-- Component variants define panel interaction states directly in Figma: `Collapsed/Expanded` x `Default/Hover`.
-- Click target and toggle behavior:
-  - Clicking the panel header toggles the panel.
-  - Clicking the chevron icon also toggles the same panel (same action as header click).
-- Hover behavior:
-  - Collapsed hover uses `var(--color-background-brand-lighter)` and stronger chevron color (`var(--color-border-strong)`).
-  - Expanded hover uses `var(--color-background-brand-light)` while preserving active bar token (`var(--color-border-brand-base)`).
-- Expand/collapse behavior:
-  - Chevron points down when collapsed and up when expanded.
-  - Expanded state reveals content container and active left indicator bar.
-- Open-mode behavior:
-  - Single-open mode (`one panel at a time`): opening a panel closes any other open panel; clicking the already-expanded panel toggles it closed.
-  - Multi-open mode (`multiple panels allowed`): each panel toggles independently; multiple expanded panels can coexist.
-  - Suggested API contract for implementation: `mode="single|multiple"` with controlled open-state input (for example `openIndexes`).
-- Implementation note for generated/runtime component:
-  - Keep panel interaction enabled by default (`data-state` should be empty/undefined in runtime usage).
-  - Use explicit `data-state` values only for visual demo/testing snapshots (forced state rendering).
-- Group behavior:
-  - In grouped accordion, panels are contiguous with no spacing between rows (border-overlap pattern).
-- Map focus rings to `var(--color-border-brand-base)` (brand focus mapping in this file).
+## Icon primitive & asset delivery (codegen)
+Use this section whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. Names vary by framework (`Icon`, `CdsIcon`, `mat-icon` + registry, `SpriteIcon`, etc.); the contract is the same.
 
+**When the target library exposes an Icon / glyph component**
+- **Prefer it** for `AccordionChevron` instead of hand-rolling `<img src>` or hard-coded file paths in the accordion module.
+- Pass a **stable asset slug** (here: `chev-down-thick`) via whatever prop the library uses (`shapeName`, `name`, `icon`, `glyph`, …). That slug must match the **asset contract** entry for this component (see below).
+- For **monochrome** chevrons, use the library’s **tintable** mode when offered (e.g. mask + semantic `color`, or SVG `currentColor`). Map states to tokens from this spec’s state tables (`var(--color-icon-neutral)`, `var(--color-icon-neutral-strong)` on hover, etc.).
+- For **multi-color** SVGs only, use the library’s **non-tinted / raster** mode if required; accordion chevron is **not** in that category.
 
-## Accessibility
+**When no Icon primitive exists**
+- Fallback is still slug-driven: inline SVG with `fill="currentColor"`, sprite id, or framework asset pipeline, but the **same slug** and **same token → color** mapping must apply. Do not rely on `color` CSS on `<img>` for fixed-fill SVG assets.
 
-- Keyboard operable; visible focus; ARIA attributes per component pattern.
-- Meet WCAG AA for text and interactive contrast.
+**Asset contract (accordion chevron)**
+- Slug: `chev-down-thick`
+- File: `assets/icons/chev-down-thick.svg` (repo root; bundler resolves from app/storybook config)
+- Rotation: `180deg` when expanded (CSS transform on the chevron slot wrapper is acceptable)
 
+**IDS / Storybook reference implementation**
+- `Icon` in `storybook/src/components/Icon.tsx`: `import.meta.glob` over `assets/icons/*.svg`, default **`variant` `mask`**, optional `variant` `img` for full-color glyphs. Accordion uses **`Icon` + `shapeName="chev-down-thick"`** + mask tint pattern (`color` + `background-color: currentColor` on the slot class). See `IdsAccordion.tsx` / `IdsAccordion.module.css`.
 
-## Variants
+## Composition & API (runtime)
+Canonical machine-readable mirror (Storybook + codegen QA; MDX is not executed by Storybook): `storybook/src/spec-contracts/ids-accordion.contract.tsx`.
 
-- Default variant; additional variants per Figma component set.
+Main inputs:
+- `items: AccordionItemInput[]` (required)
+- `multiple?: boolean` (default `false`)
+- `defaultValue?: string[]`
+- `chevronPosition?: "left" | "right"` (default `"left"`)
+- `variant?: "default" | "form"` (default `"default"`)
 
+Per-item inputs:
+- `value: string` (required stable ID)
+- `title: string` (required)
+- `content: RenderableNode` (required; framework-native renderable/content type)
+- `disabled?: boolean`
+- `meta?: RenderableNode`
+- `formSlot?: RenderableNode`
 
-## Behavior & Guidelines
+Outputs:
+- `onValueChange?(openValues: string[])`
 
-### Documentation image 1
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic structure:
+- `AccordionRoot`
+  - repeated `AccordionItem`
+    - `AccordionHeader` (trigger surface — single public slot; see **Anatomy**)
+      - optional leading `AccordionChevron` (left variant)
+      - `title`
+      - optional trailing `AccordionChevron` (right variant)
+      - *implementation detail:* inner focusable control / library `Trigger` wrapper when required by the target primitive; must not surface as a second IDS peer component
+    - `AccordionBody` (aka `AccordionPanel` for libraries that use panel naming)
+      - `AccordionContent`
+      - optional `AccordionMetaSlot`
+      - optional `AccordionFormSlot`
 
-- *(Vision skipped)* `sample-redlines.svg` under *Accordion documentation images > Behavior & Guidelines*
+Variant matrix:
+- `variant`: `default | form`
+- `chevronPosition`: `left | right`
+- expand behavior: `single | multiple` (resolved from user input)
+- item state: `collapsed | expanded | disabled`
 
+Asset & icon primitive contract:
+- `AccordionChevron` resolves asset by slug **`chev-down-thick`** (stable across frameworks; path rule in **Icon primitive & asset delivery**).
+- If generated code targets a design system that provides **`Icon` (or equivalent)** → render chevron **through that component** with the slug/shape prop required by that library; apply state colors from this spec via that component’s tintable API.
+- If no Icon exists → document chosen fallback (inline `currentColor` SVG, sprite, etc.) in generated module header and keep slug + token mapping identical.
 
-## Token Gaps / Notes
+Behavior contract:
+- If `multiple=false`, opening one item closes the previously open item.
+- If `multiple=true`, toggles item independently.
+- `disabled` prevents toggle and focus activation by keyboard/pointer.
+- Expanded header/panel border continuity must be preserved (no seam).
+- Expanded open item must show a continuous **4px** left highlighter `var(--color-border-brand-base)` on header and body (aligned surfaces; avoid parent-only `inset` shadow hidden by opaque children). Panel body wrapper must **not** add `border-top` under the header. Implementations may key off library open markers (Base UI: `data-panel-open` on trigger, `data-open` on item/panel).
 
-- Cross-check semantic CSS variables (`var(--...)`) against your theme build.
-- Re-run generation after Figma or documentation image updates.
+Accessibility contract:
+- The header/trigger surface carries `aria-expanded` and `aria-controls` on the actual focusable control (if the header wraps an inner `button`, those attributes live on that element).
+- Panel carries `role="region"` and `aria-labelledby`.
+- Keyboard support: `Enter`, `Space`, `ArrowUp`, `ArrowDown`, `Home`, `End`.
 
-## Deliverable Checklist
+Fallback/error rules:
+- Unknown `chevronPosition` -> fallback to `"left"`.
+- Unknown `variant` -> fallback to `"default"`.
+- Missing `value` or duplicate `value` entries are validation errors.
 
-- [ ] Implement component API matching framework conventions (Angular / React / Vue / Lit)
-- [ ] Wire tokens from CSS variables
-- [ ] Cover keyboard + screen reader requirements
-- [ ] Verify light and dark themes
-- [ ] Match spacing / typography within tolerance of Figma
+Validation checklist:
+- [ ] Generated hierarchy is `Accordion -> AccordionItem -> AccordionHeader -> AccordionBody` (no separate public `AccordionTrigger` peer; header subsumes trigger).
+- [ ] All state rows map to semantic tokens (light/dark parallel).
+- [ ] Single and multi expand behavior both implemented.
+- [ ] Chevron renders correctly in both left and right positions.
+- [ ] If the target library exposes an **Icon** (or equivalent), `AccordionChevron` is implemented **through** it with slug `chev-down-thick` (no ad-hoc asset paths in the accordion file); otherwise fallback is documented and still token-tinted per state tables.
+- [ ] Focus-visible ring is visible and not clipped.
+- [ ] Disabled rows are non-interactive.
+- [ ] Expanded open item shows a visible left highlighter on trigger and body (aligned; not hidden under opaque fills); expanded body has **no** `border-top` under the header.
+- [ ] Optional inner content card uses `var(--color-background-brand-lighter)` and `var(--color-border-brand-dark)` on sides/bottom only (no top brand stroke under header).
+- [ ] `form` variant supports form slot without breaking structure.
 
 ## Source Mapping
-
-- Figma REST: `GET /v1/files/(skipped)/nodes` and `GET /v1/files/(skipped)/variables`
-- Component map: `data/component-figma-map.json`
-- Documentation images: resolved relative to MDX under `components/ids/<slug>/`
-<!-- auto:generated:end -->
+| Source | Location |
+|---|---|
+| Root spec | `components/ids/root-spec.mdx` |
+| Theme CSS | `components/ids-theme.css` (Storybook: `storybook/src/ids-theme.css`) |
+| Component map | `data/component-figma-map.json` → `Accordion` (`16551:26036` + related node ids on entry) |
+| Figma token/state notes | `accordion.mdx` (extracted matrix aligned to `11067:54535` / `10962:891xx`) |
+| IDS Design Library (canonical colors / examples) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42156-108639&m=dev (`42156:108639`) |
+| Storybook implementation | `storybook/src/components/IdsAccordion.tsx`, `storybook/src/components/IdsAccordion.module.css`, `storybook/src/components/IdsAccordion.stories.tsx` |
+| Shared Icon primitive (Storybook) | `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`) |
+| Runtime story / codegen contract | `storybook/src/spec-contracts/ids-accordion.contract.tsx` (mirrors this spec’s API + anatomy constants; stories import it) |
