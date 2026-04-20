@@ -27,11 +27,21 @@ Produce deterministic, production-ready specs that can generate components acros
 ## Extraction Workflow
 
 1. Resolve component source from design-system map file.
-2. Validate Figma nodes/frames used for extraction.
-3. Extract variant axes, dimensions, spacing, typography, and token bindings.
-4. Document runtime behavior and accessibility requirements.
-5. Add deterministic fallback/error rules.
-6. Add pass/fail validation checklist.
+2. Run live Figma verification using MCP tools (preferred) or Figma REST API:
+   - metadata/structure for the target node(s)
+   - variable/token bindings for those node(s)
+   - variant/state evidence from main + elements/component-set nodes
+3. Validate Figma nodes/frames used for extraction.
+4. Extract variant axes, dimensions, spacing, typography, and token bindings.
+5. Document runtime behavior and accessibility requirements.
+6. Add deterministic fallback/error rules.
+7. Add pass/fail validation checklist.
+
+## Mandatory Live Verification Rule
+
+- For any "create design-spec", "update design-spec", or "verify design-spec" request, you MUST connect to Figma live (MCP/API) before finalizing.
+- Do not rely solely on existing repository spec text or user-provided URLs without fetching live node data.
+- Capture verification evidence in the spec `Metadata` and `Source Mapping` sections (file key, node IDs, verification method).
 
 ## Codegen Contract Requirements
 

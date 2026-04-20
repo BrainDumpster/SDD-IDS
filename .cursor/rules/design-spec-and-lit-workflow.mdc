@@ -16,6 +16,12 @@ Implementation/code generation is optional and only done when explicitly request
 - If no map entry exists, explicitly record the manual Figma URL/node used in spec metadata.
 - Figma semantic variables (`var(--...)`) are authoritative for token naming.
 - If implementation tuning is required after visual review, update the design spec so regeneration preserves behavior.
+- **Live Figma verification is mandatory** for any design-spec creation, update, or verification request. Do not finalize based only on existing repo content or user-provided URLs.
+- Live verification must use Figma MCP tools (preferred) or Figma REST API when MCP is unavailable.
+- Minimum required live checks:
+  - node/frame metadata (structure + dimensions)
+  - variable/token bindings for the target nodes
+  - state/variant evidence from the referenced nodes or component sets
 
 ## Design-System Agnostic Requirements
 - The workflow must not assume IDS/Synapse-only naming or folder structure.
@@ -136,6 +142,12 @@ Only apply this section when user requests token drift validation.
    - update spec with exact corrected behavior
    - re-run generation/validation as applicable
 4. Repeat until match is acceptable ("at-most design match").
+
+## Evidence Logging Requirement
+- Every finalized design spec must include live-source evidence in metadata/source-mapping:
+  - file key + node ids used for validation
+  - verification method (`Figma MCP` or `Figma REST API`)
+  - date/time (or session context) of last live verification
 
 ## Completion Checklist
 - [ ] Spec sections are concrete and Figma-aligned.

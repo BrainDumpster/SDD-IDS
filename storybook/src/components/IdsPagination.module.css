@@ -1,0 +1,268 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-16);
+  min-height: 48px;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  padding: var(--padding-padding-8) calc(var(--padding-padding-16) * 2) var(--padding-padding-8)
+    var(--padding-padding-24);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}
+
+.rootNone {
+  background: var(--color-background-component);
+}
+
+.rootGray {
+  background: var(--color-background-surface-1);
+}
+
+.resultsGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+}
+
+.label {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}
+
+.dropdownWrap {
+  position: relative;
+}
+
+.dropdownTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90px;
+  height: 32px;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  padding: 6px var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.dropdownTrigger:hover:not(:disabled) {
+  border-color: var(--color-border-brand-base);
+}
+
+.dropdownTrigger:focus-visible,
+.iconButton:focus-visible,
+.dropdownOption:focus-visible,
+.pageOffsetTrigger:focus-visible,
+.pageOffsetOption:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.dropdownTrigger:disabled,
+.iconButton:disabled {
+  color: var(--color-icon-disabled);
+  cursor: not-allowed;
+}
+
+.caretIcon {
+  width: 10px;
+  height: 10px;
+  color: var(--color-icon-neutral);
+  background-color: currentColor;
+}
+
+.dropdownMenu {
+  position: absolute;
+  left: 0;
+  width: 90px;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  list-style: none;
+  margin: 0;
+  padding: 0 1px;
+  box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
+  z-index: 2;
+}
+
+.dropdownMenuBelow {
+  top: 31px;
+}
+
+.dropdownMenuAbove {
+  bottom: 31px;
+}
+
+.dropdownOptionWrap {
+  margin: 0;
+  padding: 0;
+}
+
+.dropdownOption {
+  width: 100%;
+  border: 0;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  text-align: left;
+  padding: 10px var(--padding-padding-24) 10px var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.dropdownOption:hover {
+  background: var(--color-background-brand-lighter);
+}
+
+.dropdownOptionSelected {
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+}
+
+.pageNavGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-icon-brand-base);
+  cursor: pointer;
+}
+
+.iconButton:disabled {
+  color: var(--color-icon-disabled);
+}
+
+.navIcon {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+  background-color: currentColor;
+}
+
+.pageInputWrap {
+  display: inline-flex;
+  align-items: center;
+  width: 40px;
+  height: 32px;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  padding: 5px var(--padding-padding-16) 6px var(--padding-padding-16);
+}
+
+.pageInput {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-neutral);
+  text-align: right;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  padding: 0;
+}
+
+.pageInput:focus {
+  outline: 0;
+}
+
+.pageOffsetWrap {
+  position: relative;
+}
+
+.pageOffsetTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 40px;
+  height: 32px;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  padding: 5px 6px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.pageOffsetTrigger:hover:not(:disabled) {
+  border-color: var(--color-border-brand-base);
+}
+
+.pageOffsetCaretIcon {
+  width: 10px;
+  height: 10px;
+  color: var(--color-icon-neutral);
+  background-color: currentColor;
+}
+
+.pageOffsetMenu {
+  position: absolute;
+  left: 0;
+  width: 40px;
+  max-height: 160px;
+  overflow-y: auto;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
+  z-index: 2;
+}
+
+.pageOffsetMenuBelow {
+  top: 31px;
+}
+
+.pageOffsetMenuAbove {
+  bottom: 31px;
+}
+
+.pageOffsetOptionWrap {
+  margin: 0;
+  padding: 0;
+}
+
+.pageOffsetOption {
+  width: 100%;
+  border: 0;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  text-align: right;
+  padding: 10px 6px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.pageOffsetOption:hover {
+  background: var(--color-background-brand-lighter);
+}
+
+.pageOffsetOptionSelected {
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-brand-strong);
+}
+
+.countText {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}
