@@ -1,0 +1,274 @@
+/*
+ * DAP Design System — Global Theme Tokens
+ * Baseline aligned with IDS semantic token contract for DAP components.
+ * Scope: [data-design-system="dap"]
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+html[data-design-system="dap"],
+body[data-design-system="dap"] {
+  --border-width-border-1: 1px;
+  --border-width-border-2: 2px;
+
+  --corner-radius-radius-2: 2px;
+  --corner-radius-radius-4: 4px;
+  --corner-radius-radius-8: 8px;
+  --corner-radius-radius-12: 12px;
+  --corner-radius-radius-20: 20px;
+
+  --font-size-body-1: 16px;
+  --font-size-body-2: 14px;
+  --font-size-body-3: 12px;
+  --font-size-header-5: 24px;
+  --font-size-header-6: 18px;
+
+  --font-line-height-line-height-18: 18px;
+  --font-line-height-line-height-20: 20px;
+  --font-line-height-line-height-24: 24px;
+  --font-line-height-line-height-25: 25px;
+  --font-line-height-line-height-32: 32px;
+
+  --padding-padding-2: 2px;
+  --padding-padding-4: 4px;
+  --padding-padding-6: 6px;
+  --padding-padding-8: 8px;
+  --padding-padding-10: 10px;
+  --padding-padding-12: 12px;
+  --padding-padding-16: 16px;
+  --padding-padding-20: 20px;
+  --padding-padding-24: 24px;
+  --padding-padding-32: 32px;
+
+  --spacing-space-2: 2px;
+  --spacing-space-4: 4px;
+  --spacing-space-6: 6px;
+  --spacing-space-8: 8px;
+  --spacing-space-10: 10px;
+  --spacing-space-12: 12px;
+  --spacing-space-16: 16px;
+  --spacing-space-24: 24px;
+  --spacing-space-32: 32px;
+
+  --sizing-size-32: 32px;
+  --sizing-size-40: 40px;
+
+  --opacity-0: 0;
+  --opacity-10: 0.1;
+  --opacity-20: 0.2;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-100: 1;
+
+  --color-background-component: #ffffff;
+  --color-background-component-light: #f4f4f4;
+  --color-background-surface-1: #f4f4f4;
+  --color-background-surface-2: #ffffff;
+  --color-background-container-1: #ffffff;
+  --color-background-container-2: #ffffff;
+  --color-background-container-3: #ffffff;
+  --color-background-container-4: #ffffff;
+  --color-background-overlay: rgba(37, 37, 37, 0.65);
+  --color-background-overlay-2: rgba(37, 37, 37, 0.6);
+
+  --color-background-brand-base: #0076ce;
+  --color-background-brand-light: #d9eaf8;
+  --color-background-brand-lighter: #ebf4fb;
+  --color-background-brand-strong: #0062ab;
+  --color-background-brand-stronger: #06528a;
+
+  --color-background-controls-brand-base: #0076ce;
+  --color-background-controls-brand-light: #d9eaf8;
+  --color-background-controls-brand-lighter: #ebf4fb;
+  --color-background-controls-brand-strong: #0062ab;
+  --color-background-controls-brand-stronger: #06528a;
+
+  --color-background-gray-base: #757575;
+  --color-background-gray-light: #eaeaea;
+  --color-background-gray-lighter: #f4f4f4;
+  --color-background-gray-neutral-alt: #eaeaea;
+  --color-background-gray-neutral-light: #eaeaea;
+  --color-background-gray-neutral-lighter: #f4f4f4;
+  --color-background-gray-neutral-dark: #616161;
+  --color-background-gray-strong: #616161;
+  --color-background-gray-stronger: #252525;
+
+  --color-background-alerting-info: #005ece;
+  --color-background-alerting-info-light: #d9e7f8;
+  --color-background-alerting-minor: #ffc700;
+  --color-background-alerting-minor-light: #fff7d9;
+  --color-background-alerting-major: #ed6400;
+  --color-background-alerting-major-light: #fce8d9;
+  --color-background-alerting-critical: #af0000;
+  --color-background-alerting-critical-light: #f3d9d9;
+  --color-background-alerting-success: #1b8500;
+  --color-background-alerting-success-light: #ddedd9;
+
+  --color-border-accessible: #757575;
+  --color-border-brand-base: #0076ce;
+  --color-border-brand-dark: #0062ab;
+  --color-border-brand-neutral: #0076ce;
+  --color-border-disabled: #757575;
+  --color-border-light: #c5c5c5;
+  --color-border-lighter: #eaeaea;
+  --color-border-neutral: #4d4d4d;
+  --color-border-strong: #252525;
+  --color-border-white: #ffffff;
+  --color-border-transparent-brand: rgba(255, 255, 255, 0);
+  --color-border-transparent-neutral: rgba(255, 255, 255, 0);
+
+  --color-border-alerting-info-base: #005ece;
+  --color-border-alerting-info-transparent: #005ece;
+  --color-border-alerting-info-white: #005ece;
+  --color-border-alerting-minor-transparent: #9c622e;
+  --color-border-alerting-minor-white: #9c622e;
+  --color-border-alerting-major-base: #ed6400;
+  --color-border-alerting-major-transparent: #ed6400;
+  --color-border-alerting-major-white: #ed6400;
+  --color-border-alerting-critical-base: #af0000;
+  --color-border-alerting-critical-transparent: #af0000;
+  --color-border-alerting-critical-white: #af0000;
+  --color-border-alerting-success-base: #1b8500;
+  --color-border-alerting-success-transparent: #1b8500;
+  --color-border-alerting-success-white: #1b8500;
+
+  --color-text-white: #ffffff;
+  --color-text-black: #252525;
+  --color-text-neutral: #4d4d4d;
+  --color-text-neutral-strong: #252525;
+  --color-text-disabled: #757575;
+  --color-text-warning: #6d4028;
+  --color-text-brand-base: #0076ce;
+  --color-text-brand-strong: #0062ab;
+  --color-text-critical: #af0000;
+
+  --color-icon-white: #ffffff;
+  --color-icon-black: #252525;
+  --color-icon-neutral: #4d4d4d;
+  --color-icon-neutral-strong: #252525;
+  --color-icon-disabled: #757575;
+  --color-icon-brand-base: #0076ce;
+  --color-icon-brand-strong: #0062ab;
+  --color-icon-brand-stronger: #06528a;
+  --color-icon-alerting-info: #005ece;
+  --color-icon-alerting-minor: #ffc700;
+  --color-icon-alerting-major: #ed6400;
+  --color-icon-alerting-critical: #af0000;
+  --color-icon-alerting-success: #1b8500;
+  --color-icon-inverse: #ffffff;
+
+  --color-static-brand-100: #ebf4fb;
+  --color-static-brand-200: #d9eaf8;
+  --color-static-brand-300: #94c5ea;
+  --color-static-brand-400: #4c9fdd;
+  --color-static-brand-500: #0076ce;
+  --color-static-brand-600: #0062ab;
+  --color-static-brand-700: #06528a;
+  --color-static-brand-800: #003a65;
+  --color-static-brand-900: #002642;
+
+  --color-static-gray-100: #f4f4f4;
+  --color-static-gray-200: #eaeaea;
+  --color-static-gray-300: #c5c5c5;
+  --color-static-gray-400: #9e9e9e;
+  --color-static-gray-500: #757575;
+  --color-static-gray-600: #616161;
+  --color-static-gray-700: #4d4d4d;
+  --color-static-gray-800: #393939;
+  --color-static-gray-900: #252525;
+  --color-static-gray-white: #ffffff;
+
+  --shadow-shadow-1-drop-shadow-2-color: rgba(37, 37, 37, 0.08);
+  --shadow-shadow-2-drop-shadow-4-color: rgba(37, 37, 37, 0.08);
+  --shadow-shadow-3-drop-shadow-8-color: rgba(37, 37, 37, 0.08);
+  --shadow-shadow-4-drop-shadow-16-color: rgba(37, 37, 37, 0.08);
+  --shadow-shadow-4-drop-shadow-32-color: rgba(37, 37, 37, 0.08);
+}
+
+html[data-design-system="dap"][data-theme="dark"],
+body[data-design-system="dap"][data-theme="dark"] {
+  --color-background-component: #111619;
+  --color-background-component-light: #1e262c;
+  --color-background-surface-1: #111619;
+  --color-background-surface-2: #1e262c;
+  --color-background-container-1: #171d21;
+  --color-background-container-2: #1a2226;
+  --color-background-container-3: #242f36;
+  --color-background-container-4: #2b3840;
+  --color-background-overlay: rgba(37, 37, 37, 0.75);
+  --color-background-overlay-2: rgba(227, 227, 227, 0.15);
+
+  --color-background-brand-base: #4c9fdd;
+  --color-background-brand-light: #34414c;
+  --color-background-brand-lighter: #1e262c;
+  --color-background-brand-strong: #94c5ea;
+  --color-background-brand-stronger: #d9eaf8;
+
+  --color-background-controls-brand-base: #0076ce;
+  --color-background-controls-brand-light: #003a65;
+  --color-background-controls-brand-lighter: #002642;
+  --color-background-controls-brand-strong: #0062ab;
+  --color-background-controls-brand-stronger: #06528a;
+
+  --color-background-gray-base: #9e9e9e;
+  --color-background-gray-light: #393939;
+  --color-background-gray-lighter: #393939;
+  --color-background-gray-neutral-alt: #1e262c;
+  --color-background-gray-neutral-light: #34414c;
+  --color-background-gray-neutral-lighter: #1e262c;
+  --color-background-gray-strong: #ffffff;
+  --color-background-gray-stronger: #ffffff;
+
+  --color-border-accessible: #8898a5;
+  --color-border-brand-base: #4c9fdd;
+  --color-border-brand-dark: #94c5ea;
+  --color-border-brand-neutral: #8898a5;
+  --color-border-disabled: #9e9e9e;
+  --color-border-light: #34414c;
+  --color-border-lighter: #1e262c;
+  --color-border-neutral: #8898a5;
+  --color-border-strong: #b8c1c9;
+  --color-border-transparent-brand: #4c9fdd;
+  --color-border-transparent-neutral: #8898a5;
+
+  --color-border-alerting-info-base: #94bbea;
+  --color-border-alerting-info-transparent: rgba(148, 187, 234, 0);
+  --color-border-alerting-info-white: #ffffff;
+  --color-border-alerting-minor-transparent: rgba(255, 255, 255, 0);
+  --color-border-alerting-minor-white: #ffffff;
+  --color-border-alerting-major-base: #f7be94;
+  --color-border-alerting-major-transparent: rgba(247, 190, 148, 0);
+  --color-border-alerting-major-white: #ffffff;
+  --color-border-alerting-critical-base: #dd9494;
+  --color-border-alerting-critical-transparent: rgba(221, 148, 148, 0);
+  --color-border-alerting-critical-white: #ffffff;
+  --color-border-alerting-success-base: #9fcc94;
+  --color-border-alerting-success-transparent: rgba(159, 204, 148, 0);
+  --color-border-alerting-success-white: #ffffff;
+
+  --color-text-neutral: #8898a5;
+  --color-text-neutral-strong: #b8c1c9;
+  --color-text-disabled: #c5c5c5;
+  --color-text-brand-base: #4c9fdd;
+  --color-text-brand-strong: #94c5ea;
+  --color-text-critical: #dd9494;
+
+  --color-icon-neutral: #8898a5;
+  --color-icon-neutral-strong: #b8c1c9;
+  --color-icon-disabled: #c5c5c5;
+  --color-icon-brand-base: #4c9fdd;
+  --color-icon-brand-strong: #94c5ea;
+  --color-icon-brand-stronger: #d9eaf8;
+  --color-icon-inverse: #252525;
+
+  --shadow-shadow-1-drop-shadow-2-color: rgba(17, 22, 25, 0.08);
+  --shadow-shadow-2-drop-shadow-4-color: rgba(17, 22, 25, 0.08);
+  --shadow-shadow-3-drop-shadow-8-color: rgba(17, 22, 25, 0.08);
+  --shadow-shadow-4-drop-shadow-16-color: rgba(17, 22, 25, 0.08);
+  --shadow-shadow-4-drop-shadow-32-color: rgba(17, 22, 25, 0.08);
+}

@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/react";
 import "../src/synapse-theme.css";
 import "../src/ids-theme.css";
+import "../../components/dap-theme.css";
 
 const preview: Preview = {
   parameters: {
@@ -30,7 +31,12 @@ const preview: Preview = {
       const theme = context.globals.theme || "light";
       const resolvedTheme = theme === "dark" ? "dark" : "light";
       const title = context.title || "";
-      const designSystem = title.startsWith("IDS/") ? "ids" : "synapse";
+      const isDapStory = title.startsWith("IDS/DAP/");
+      const designSystem = isDapStory
+        ? "dap"
+        : title.startsWith("IDS/")
+          ? "ids"
+          : "synapse";
       document.documentElement.setAttribute("data-theme", resolvedTheme);
       document.body.setAttribute("data-theme", resolvedTheme);
       document.documentElement.setAttribute("data-design-system", designSystem);

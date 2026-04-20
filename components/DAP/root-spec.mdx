@@ -1,0 +1,175 @@
+<!-- auto:generated:start -->
+# DAP Design System — Root Spec
+
+> Global DAP specification for spec-driven, framework-agnostic component generation.
+> All `components/DAP/<slug>/design-spec.mdx` files inherit this baseline and only override component-specific behavior.
+
+## Design System Identity
+
+| Property | Value |
+|---|---|
+| Name | DAP |
+| Parent Design System | IDS |
+| Framework Layer | framework-agnostic |
+| Figma URL | https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=46810-208360&p=f&view=variables&var-set-id=41837-5094&m=dev |
+| Figma File Key | `HIbl2AgqTSdR9STZueMvTH` |
+| Root Node | `46810:208360` (`-- DAP components`) |
+| Variable Set | `41837:5094` |
+| Component map | `data/component-figma-map.json` |
+| Components directory | `components/DAP/` |
+| Theme mechanism | CSS custom properties + `data-theme` + `data-design-system="dap"` |
+
+### Supported Generation Targets
+- React
+- Angular
+- Vue
+- Lit
+- Other frameworks that can consume CSS variables and semantic state contracts
+
+## Color System
+
+All DAP component styling must use semantic tokens (`var(--...)`), not hardcoded values.
+DAP uses IDS-compatible semantic naming and theme behavior (Light/Dark).
+
+### Core Semantic Background Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-background-component` | `#ffffff` | `#111619` |
+| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
+| `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
+| `--color-background-gray-light` | `#eaeaea` | `#393939` |
+| `--color-background-overlay` | `rgba(37,37,37,0.65)` | `rgba(37,37,37,0.75)` |
+
+### Core Border Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-border-accessible` | `#757575` | `#8898a5` |
+| `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-border-disabled` | `#757575` | `#9e9e9e` |
+| `--color-border-light` | `#c5c5c5` | `#34414c` |
+| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#4c9fdd` |
+
+### Core Text Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-text-white` | `#ffffff` | `#ffffff` |
+| `--color-text-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-text-neutral-strong` | `#252525` | `#b8c1c9` |
+| `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-text-disabled` | `#757575` | `#c5c5c5` |
+
+### Core Icon Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-icon-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-icon-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-icon-disabled` | `#757575` | `#c5c5c5` |
+| `--color-icon-white` | `#ffffff` | `#ffffff` |
+| `--color-icon-alerting-success` | `#1b8500` | `#1b8500` |
+
+## Typography Scale
+
+- Primary family: **Roboto**
+- Common styles:
+  - `Body 1`: 16 / 24
+  - `Body 2`: 14 / 20
+  - `Body 3`: 12 / 18
+  - `Header 6`: 18 / 25
+  - `Header 5`: 24 / 32
+
+## Spacing & Sizing
+
+Use semantic tokens only:
+- Spacing: `--spacing-space-2`, `--spacing-space-4`, `--spacing-space-8`, `--spacing-space-12`, `--spacing-space-16`, `--spacing-space-24`
+- Padding: `--padding-padding-4`, `--padding-padding-8`, `--padding-padding-12`, `--padding-padding-16`, `--padding-padding-24`
+- Sizing: `--sizing-size-32`, `--sizing-size-40`
+
+## Border Width
+
+| Token | Value |
+|---|---|
+| `--border-width-border-1` | `1px` |
+| `--border-width-border-2` | `2px` |
+
+## Corner Radius
+
+| Token | Value |
+|---|---|
+| `--corner-radius-radius-2` | `2px` |
+| `--corner-radius-radius-4` | `4px` |
+| `--corner-radius-radius-8` | `8px` |
+| `--corner-radius-radius-12` | `12px` |
+| `--corner-radius-radius-20` | `20px` |
+
+## Elevation System
+
+| Level | Shadow Contract | Use Cases |
+|---|---|---|
+| 0 | none | flat controls, lists, layout containers |
+| 1 | subtle drop shadow | cards, hover-raised surfaces |
+| 2 | medium drop shadow | popovers, tooltips |
+| 3 | strong drop shadow | overlay emphasis |
+| 4 | multi-layer modal shadow | dialogs, modals, side panels |
+
+## Interaction Baseline
+
+- Visible focus indicators are mandatory; use `--color-border-brand-base`.
+- Keyboard support:
+  - `Tab` for focus traversal
+  - `Enter` / `Space` for activation
+  - `Escape` for dismissible overlays/drawers
+- Hover/press states must be token-driven.
+- Disabled state must block interaction and use disabled token set.
+
+## Accessibility Baseline
+
+- WCAG AA contrast targets (4.5:1 normal text, 3:1 large text/non-text UI where applicable)
+- All interactive controls are keyboard operable
+- Semantic HTML first; ARIA when semantic primitives are insufficient
+- State changes must be perceivable to assistive technologies
+
+## Theming Mechanism
+
+- DAP uses semantic CSS custom properties resolved per theme mode.
+- Runtime selectors:
+  - Light/default: `html[data-design-system="dap"]`, `body[data-design-system="dap"]`
+  - Dark: `html[data-design-system="dap"][data-theme="dark"]`, `body[data-design-system="dap"][data-theme="dark"]`
+- Global DAP token stylesheet:
+  - `components/dap-theme.css`
+
+## Variable Collections (Figma)
+
+DAP file (`HIbl2AgqTSdR9STZueMvTH`) is expected to use IDS-compatible variable organization:
+- `Tokens` (semantic, theme-aware)
+- `Primitive` (palette and foundational values)
+- `Density Primitive` (density and layout scales)
+
+## Codegen Baseline Contract
+
+- All `components/DAP/<slug>/design-spec.mdx` files inherit this root contract.
+- Component specs can override only component-specific anatomy, variants, and interactions.
+- Generators must:
+  - Preserve semantic token names from specs.
+  - Keep Light/Dark state tables structurally parallel.
+  - Emit validation errors for missing required tokens/props/a11y labels.
+  - Avoid hardcoded style constants when a token exists.
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| DAP component map entries | `data/component-figma-map.json` (`group: "DAP"`) |
+| DAP component specs | `components/DAP/<slug>/design-spec.mdx` |
+| DAP theme file | `components/dap-theme.css` |
+| Reference root structure | `components/synapse/root-spec.mdx`, `components/ids/root-spec.mdx` |
+
+### Live verification evidence
+
+- `get_metadata` executed successfully for DAP root node `46810:208360` (Figma MCP).
+- `get_variable_defs` and `get_design_context` currently required an active desktop selection in this environment; token values in `dap-theme.css` are initialized from IDS-compatible baseline tokens used by existing DAP specs/components.
+<!-- auto:generated:end -->
