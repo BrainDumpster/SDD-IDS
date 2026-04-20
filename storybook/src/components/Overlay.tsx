@@ -1,5 +1,5 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
-import type { ReactNode } from "react";
+import { isValidElement, type ReactNode } from "react";
 import styles from "./Overlay.module.css";
 
 interface OverlayProps {
@@ -15,11 +15,14 @@ export function Overlay({
   children,
   width = "400px",
 }: OverlayProps) {
+  const triggerRender = isValidElement(trigger) ? trigger : undefined;
   return (
     <BaseDialog.Root>
-      <BaseDialog.Trigger className={styles.triggerReset}>
-        {trigger}
-      </BaseDialog.Trigger>
+      {triggerRender ? (
+        <BaseDialog.Trigger className={styles.triggerReset} render={triggerRender} />
+      ) : (
+        <BaseDialog.Trigger className={styles.triggerReset}>{trigger}</BaseDialog.Trigger>
+      )}
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className={styles.backdrop} />
         <BaseDialog.Popup

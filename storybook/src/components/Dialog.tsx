@@ -1,5 +1,5 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
-import type { ReactNode } from "react";
+import { isValidElement, type ReactNode } from "react";
 import styles from "./Dialog.module.css";
 import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
@@ -73,6 +73,8 @@ export function Dialog({
       ? `${styles.popup} ${styles.popupAbout}`
       : `${styles.popup} ${styles[dialogSize]}`;
 
+  const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
+
   return (
     <BaseDialog.Root
       modal
@@ -82,7 +84,11 @@ export function Dialog({
       onOpenChange={(next) => onOpenChange?.(next)}
     >
       {trigger != null ? (
-        <BaseDialog.Trigger className={styles.triggerReset}>{trigger}</BaseDialog.Trigger>
+        triggerRender ? (
+          <BaseDialog.Trigger className={styles.triggerReset} render={triggerRender} />
+        ) : (
+          <BaseDialog.Trigger className={styles.triggerReset}>{trigger}</BaseDialog.Trigger>
+        )
       ) : null}
       <BaseDialog.Portal>
         <BaseDialog.Backdrop

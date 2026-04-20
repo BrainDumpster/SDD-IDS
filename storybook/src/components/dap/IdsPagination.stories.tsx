@@ -4,7 +4,7 @@ import { IdsPagination } from "./IdsPagination";
 import {
   IDS_PAGINATION_DESIGN_SPEC_PATH,
   PAGINATION_API_DEFAULTS,
-} from "../spec-contracts/ids-pagination.contract";
+} from "../../spec-contracts/ids-pagination.contract";
 
 const frameStyle = {
   padding: 20,
@@ -12,7 +12,7 @@ const frameStyle = {
 } as const;
 
 const meta: Meta<typeof IdsPagination> = {
-  title: "IDS/Pagination",
+  title: "IDS/DAP/Pagination",
   component: IdsPagination,
   parameters: {
     docs: {

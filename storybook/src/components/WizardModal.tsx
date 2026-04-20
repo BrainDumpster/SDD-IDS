@@ -1,5 +1,5 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
-import { type ReactNode, useState } from "react";
+import { isValidElement, type ReactNode, useState } from "react";
 import styles from "./WizardModal.module.css";
 
 interface WizardStep {
@@ -21,15 +21,19 @@ export function WizardModal({ steps, trigger, onFinish }: WizardModalProps) {
 
   const reset = () => setCurrent(0);
 
+  const triggerRender = isValidElement(trigger) ? trigger : undefined;
+
   return (
     <BaseDialog.Root
       onOpenChange={(open) => {
         if (!open) reset();
       }}
     >
-      <BaseDialog.Trigger className={styles.triggerReset}>
-        {trigger}
-      </BaseDialog.Trigger>
+      {triggerRender ? (
+        <BaseDialog.Trigger className={styles.triggerReset} render={triggerRender} />
+      ) : (
+        <BaseDialog.Trigger className={styles.triggerReset}>{trigger}</BaseDialog.Trigger>
+      )}
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className={styles.backdrop} />
         <BaseDialog.Popup className={styles.popup}>

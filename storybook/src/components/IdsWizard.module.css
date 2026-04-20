@@ -1,0 +1,265 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral-strong);
+  min-height: 520px;
+}
+
+.medium {
+  width: 576px;
+}
+
+.large {
+  width: 864px;
+}
+
+.x-large {
+  width: 1152px;
+}
+
+.full-screen {
+  width: 100%;
+  min-height: 100%;
+}
+
+.modalRoot.full-screen {
+  width: min(100vw, 1280px);
+  min-height: min(100vh, 900px);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 20px 24px;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  color: var(--color-text-neutral-strong);
+}
+
+.closeButton {
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2);
+}
+
+.closeButton:hover {
+  background: var(--color-background-gray-lighter);
+}
+
+.closeButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.closeIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-neutral);
+  background-color: currentColor;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.stepsPane {
+  width: 256px;
+  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-right: var(--border-width-border-1) solid var(--color-border-accessible);
+  overflow: auto;
+}
+
+.stepItem,
+.substepItem {
+  width: 100%;
+  border: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 34px;
+  color: var(--color-text-disabled);
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.substepItem {
+  padding-left: 24px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.stepItemActive {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+  box-shadow: inset 4px 0 0 0 var(--color-text-brand-strong);
+}
+
+.stepLabel {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.substepCode {
+  min-width: 26px;
+  color: var(--color-text-neutral);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.substepList {
+  border-left: var(--border-width-border-1) solid var(--color-border-accessible);
+}
+
+.statusIcon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+}
+
+.statussuccess {
+  color: var(--color-icon-alerting-success);
+}
+
+.statuswarning {
+  color: var(--color-icon-alerting-minor);
+}
+
+.statuserror {
+  color: var(--color-icon-alerting-critical);
+}
+
+.statusnone {
+  color: transparent;
+}
+
+.contentPane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+}
+
+.pageTitleWrap {
+  padding: 8px 24px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  color: var(--color-text-neutral-strong);
+}
+
+.pageContent {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 24px 24px;
+  overflow: auto;
+}
+
+.fallbackText {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral);
+}
+
+.footer {
+  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  gap: 16px;
+}
+
+.progress {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral);
+}
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.secondaryButton,
+.primaryButton {
+  border-radius: var(--corner-radius-radius-2);
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-gray-lighter);
+  color: var(--color-text-neutral);
+}
+
+.primaryButton {
+  border: var(--border-width-border-1) solid var(--color-border-transparent-brand);
+  background: var(--color-background-controls-brand-base);
+  color: var(--color-text-white);
+}
+
+.secondaryButton:disabled,
+.primaryButton:disabled {
+  border-color: var(--color-border-disabled);
+  background: var(--color-background-gray-lighter);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.secondaryButton:focus-visible,
+.primaryButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.modalTriggerReset {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(37 37 37 / 65%);
+}
+
+.modalPopup {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 48px);
+}

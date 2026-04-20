@@ -1,0 +1,239 @@
+<!-- ds:inherits root-spec -->
+# Wizard Design Spec
+
+## Metadata
+- Component: Wizard
+- Design System: IDS
+- Category: Modals and Wizards
+- Figma URL (canonical): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12690-246134&m=dev
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
+- Main node: `12690:246134` (`WizardInline-Main`)
+- Variant nodes (MCP-verified): `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164`
+- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`, `get_design_context`) against nodes above in this session.
+- Runtime references used for API semantics:
+  - https://clarity.design/documentation/wizard/api
+  - https://clarity.design/documentation/wizard
+
+## Anatomy
+Main component:
+- `WizardRoot`
+
+Deterministic child structure (required order):
+1. `WizardHeader`
+2. `WizardHeaderTitle`
+3. `WizardCloseAction` (optional in inline mode; required in modal mode)
+4. `WizardBody`
+5. `WizardStepsPane`
+6. `WizardStepItem`
+7. `WizardStepLabel`
+8. `WizardStepStatusIndicator` (optional per step)
+9. `WizardSubstepList` (optional)
+10. `WizardSubstepItem` (optional)
+11. `WizardContentPane`
+12. `WizardPageTitle`
+13. `WizardPageContent`
+14. `WizardFooter`
+15. `WizardProgressLabel`
+16. `WizardFooterActions`
+17. `WizardCancelButton`
+18. `WizardPreviousButton`
+19. `WizardPrimaryButton` (`Next` or `Finish` or page-specific replacement)
+
+## Layout & Measurements
+- Figma sample "one size" frame: `1594px x 843px` (sample only; runtime is token/prop driven).
+- Header padding: `20px 24px` (right side includes close action spacing in sample).
+- Footer padding: `24px`; footer has top border.
+- Steps pane sample width: `256px`.
+- Step row padding: `8px 34px` with optional right-side status indicator.
+- Step active accent: 4px leading stripe style (tokenized brand strong color).
+- Content pane has page title block + body content block + optional inner scroll gradients.
+- Supported runtime sizes:
+  - `medium`: `576px`
+  - `large`: `864px`
+  - `x-large`: `1152px`
+  - `full-screen`: viewport-constrained (`100vw/100vh` in modal; container fill in inline)
+- Modal mode uses backdrop and centered shell; inline mode renders in normal document flow.
+
+## Tokens
+- Container/surfaces:
+  - `var(--color-background-component)`
+  - `var(--color-background-gray-lighter)`
+  - `var(--color-background-brand-lighter)`
+- Text:
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-neutral)`
+  - `var(--color-text-disabled)`
+  - `var(--color-text-brand-strong)`
+  - `var(--color-text-white)`
+- Border/lines:
+  - `var(--color-border-accessible)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-border-disabled)`
+  - `var(--color-border-transparent-brand)`
+- Action fills:
+  - `var(--color-background-controls-brand-base)`
+- Status icon colors:
+  - success `var(--color-icon-alerting-success)`
+  - warning `var(--color-icon-alerting-minor)` (fallback to warning token family)
+  - error `var(--color-icon-alerting-critical)` (fallback to critical token family)
+- Overflow gradients:
+  - `var(--color-gradient-overflow-vertical-start)`
+  - `var(--color-gradient-overflow-vertical-end)`
+
+MCP variable evidence (`12690:246134`):
+- `var(--color-background-component)` = `#ffffff`
+- `var(--color-border-accessible)` = `#757575`
+- `var(--color-background-brand-lighter)` = `#ebf4fb`
+- `var(--color-text-brand-strong)` = `#0062ab`
+- `var(--color-background-controls-brand-base)` = `#0076ce`
+- `var(--color-text-white)` = `#ffffff`
+- `var(--color-text-disabled)` = `#757575`
+- `Header 5` = `Roboto 24/32`
+- `Body 1` = `Roboto 16/24`
+- `Body 2` = `Roboto 14/20`
+
+## States (Light Theme)
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| wizard root | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
+| step item | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
+| step item | active | `var(--color-background-brand-lighter)` | `var(--color-border-accessible)` + active leading accent | `var(--color-text-brand-strong)` |
+| step item | completed | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` + success icon |
+| step item | warning | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + warning icon |
+| step item | error | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + error icon |
+| footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-accessible)` | neutral text |
+| footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
+| footer primary button | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+## States (Dark Theme)
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| wizard root | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
+| step item | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
+| step item | active | `var(--color-background-brand-lighter)` | `var(--color-border-accessible)` + active leading accent | `var(--color-text-brand-strong)` |
+| step item | completed | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` + success icon |
+| step item | warning | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + warning icon |
+| step item | error | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + error icon |
+| footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-accessible)` | neutral text |
+| footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
+| footer primary button | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+## Interactions
+- Clicking step/substep navigates to that page when target is visible and enabled.
+- Parent step with children acts as group node and does not own page content; selecting it moves focus to first visible child.
+- Steps/substeps can be shown/hidden at runtime through conditional visibility rules.
+- Steps/substeps can be injected dynamically at runtime; flow recalculates navigation/progress labels immediately.
+- Footer `Next`/`Finish` primary action respects validation state (`enabled`/`disabled`).
+- Page-specific footer actions can replace default footer button set.
+- Footer progress label format:
+  - top-level step page: `Step 1 of 5`
+  - substep page: `Step 2a of 5`
+- Button events are emitted for `Cancel`, `Previous`, `Next`, and `Finish`.
+
+## Composition & API (runtime)
+Main inputs:
+- `mode?: "inline" | "modal"` (default `"inline"`)
+- `size?: "medium" | "large" | "x-large" | "full-screen"` (default `"large"`)
+- `title: string`
+- `steps: WizardStepInput[]` (required; supports nested children)
+- `initialStepId?: string`
+- `showCloseButton?: boolean` (default `true`)
+- `isPrimaryEnabled?: boolean | ((ctx: WizardContext) => boolean)` (default `true`)
+
+`WizardStepInput`:
+- `id: string`
+- `label: string`
+- `pageTitle?: string`
+- `content?: Renderable` (required for leaf steps; optional for parent steps with children)
+- `status?: "none" | "success" | "warning" | "error"`
+- `isVisible?: boolean | ((ctx: WizardContext) => boolean)` (default `true`)
+- `children?: WizardStepInput[]`
+- `footerButtons?: WizardFooterButtons` (optional page override)
+
+`WizardFooterButtons`:
+- `showCancel?: boolean`
+- `showPrevious?: boolean`
+- `primaryLabel?: "Next" | "Finish" | string`
+
+Outputs/events:
+- `onCancel(event: WizardEventPayload): void`
+- `onPrevious(event: WizardEventPayload): void`
+- `onNext(event: WizardEventPayload): void`
+- `onFinish(event: WizardEventPayload): void`
+- `onStepChange(event: WizardEventPayload): void`
+
+`WizardEventPayload` includes:
+- `stepId`
+- `parentStepId?`
+- `stepIndex` (top-level index)
+- `substepIndex?` (child index)
+- `stepCode` (e.g., `2`, `2a`)
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic slot schema:
+- Always render `WizardHeader`, `WizardBody`, `WizardFooter`.
+- `WizardStepsPane` left, `WizardContentPane` right.
+- Parent nodes with children render as grouping rows; leaf nodes map to content pages.
+
+Variant/options matrix:
+- mode: `inline | modal`
+- size: `medium | large | x-large | full-screen`
+- step tree: `flat | nested`
+- visibility: `static | conditional`
+- footer actions: `default | per-page override`
+- primary action state: `enabled | disabled`
+
+Per-slot style contract:
+- Step rows must use `Body 1` tokenized text sizing.
+- Page titles must use `Header 5`; page body content defaults to `Body 2`.
+- Status indicators render on right side of step rows.
+- Footer progress text uses `Body 2`.
+
+Behavior contract:
+- Navigation model is leaf-step based.
+- `Next` advances to next visible leaf.
+- `Previous` goes to previous visible leaf.
+- Parent with children has no page and reports consolidated status from child statuses (`error > warning > success > none` priority).
+- Dynamic injection/removal preserves nearest valid current leaf.
+
+Accessibility contract:
+- Root uses `role="region"` (inline) or dialog semantics (modal mode).
+- Steps list uses `role="tree"` with nested `treeitem` semantics (or equivalent nav semantics by framework).
+- Active step communicates `aria-current="step"`.
+- Footer buttons are keyboard reachable and emit on Enter/Space.
+
+Asset resolution and bundling:
+- Status icon slugs:
+  - success: `status-check-16`
+  - warning: `status-warn-tri-solid-16`
+  - error: `status-error-diamond-solid`
+- Optional close icon slug: `ctrl-close-16` (fallback to local close glyph if missing).
+
+Fallback/error rules:
+- If `initialStepId` is invalid, start at first visible leaf.
+- If no visible leaf exists, render empty state and disable primary/previous.
+- If parent has children and all hidden, parent is hidden.
+- If step content missing for a leaf, render guarded placeholder message.
+
+Validation checklist:
+- [ ] Supports flat + nested steps with deterministic ordering.
+- [ ] Parent-with-children has no page and computes consolidated status.
+- [ ] Conditional visibility and runtime injection update navigation flow safely.
+- [ ] Progress labels render `Step N of T` and `Step Na of T`.
+- [ ] Footer default and page override buttons both work.
+- [ ] Cancel/Previous/Next/Finish emit typed events.
+- [ ] Primary action disabled state is respected.
+- [ ] Modal and inline mode + all sizes render correctly.
+
+## Source Mapping
+| Source | Location |
+|---|---|
+| Component map baseline | `data/component-figma-map.json` (`Wizard - Inline`, `Wizard - Modal`) |
+| New unified IDS wizard spec target | `components/ids/wizard/design-spec.mdx` |
+| Figma canonical node | `12690:246134` (`WizardInline-Main`) |
+| Figma variant nodes | `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164` |
+| Live verification method | Figma MCP: `get_metadata`, `get_variable_defs`, `get_design_context` |
+| Runtime API reference | https://clarity.design/documentation/wizard/api |
+| Runtime behavior reference | https://clarity.design/documentation/wizard |

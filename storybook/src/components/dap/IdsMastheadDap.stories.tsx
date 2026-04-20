@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { IdsMastheadDap } from "./IdsMastheadDap";
-import { MASTHEAD_DAP_DEFAULTS } from "../spec-contracts/ids-masthead-dap.contract";
+import { MASTHEAD_DAP_DEFAULTS } from "../../spec-contracts/ids-masthead-dap.contract";
 
 const meta: Meta<typeof IdsMastheadDap> = {
-  title: "IDS/Masthead - DAP",
+  title: "IDS/DAP/Masthead",
   component: IdsMastheadDap,
   parameters: {
     layout: "fullscreen",

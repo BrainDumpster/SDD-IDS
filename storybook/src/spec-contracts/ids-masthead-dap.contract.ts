@@ -1,4 +1,4 @@
-export const IDS_MASTHEAD_DAP_DESIGN_SPEC_PATH = "components/ids/masthead-dap/design-spec.mdx";
+export const IDS_MASTHEAD_DAP_DESIGN_SPEC_PATH = "components/DAP/masthead-dap/design-spec.mdx";
 
 export const MASTHEAD_DAP_CODEGEN_ANATOMY = [
   "MastheadDapRoot",

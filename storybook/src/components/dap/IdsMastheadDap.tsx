@@ -1,7 +1,7 @@
 import { Popover } from "@base-ui-components/react/popover";
 import { useMemo, useState } from "react";
-import { AppLauncher, type AppLauncherOption, type AppLauncherProduct } from "./AppLauncher";
-import { Icon } from "./Icon";
+import { AppLauncher, type AppLauncherOption, type AppLauncherProduct } from "../AppLauncher";
+import { Icon } from "../Icon";
 import styles from "./IdsMastheadDap.module.css";
 
 export interface IdsMastheadDapProps {

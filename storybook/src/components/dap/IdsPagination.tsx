@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
-import { Icon } from "./Icon";
+import { Icon } from "../Icon";
 import styles from "./IdsPagination.module.css";
 
 export type IdsPaginationDropdownState = "collapsed" | "expanded-below" | "expanded-above";

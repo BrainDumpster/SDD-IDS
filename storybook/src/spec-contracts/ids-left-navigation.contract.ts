@@ -1,7 +1,7 @@
-import type { IdsLeftNavigationItem, IdsLeftNavigationProps } from "../components/IdsLeftNavigation";
+import type { IdsLeftNavigationItem, IdsLeftNavigationProps } from "../components/dap/IdsLeftNavigation";
 
 export const IDS_LEFT_NAVIGATION_DESIGN_SPEC_PATH =
-  "components/ids/left-navigation/design-spec.mdx" as const;
+  "components/DAP/left-navigation/design-spec.mdx" as const;
 
 export const LEFT_NAVIGATION_ROOT_PROP_KEYS = [
   "title",

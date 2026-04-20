@@ -5,10 +5,10 @@ import {
   IDS_LEFT_NAVIGATION_DESIGN_SPEC_PATH,
   LEFT_NAVIGATION_API_DEFAULTS,
   LEFT_NAVIGATION_DEFAULT_ITEMS,
-} from "../spec-contracts/ids-left-navigation.contract";
+} from "../../spec-contracts/ids-left-navigation.contract";
 
 const meta: Meta<typeof IdsLeftNavigation> = {
-  title: "IDS/Left Navigation",
+  title: "IDS/DAP/Left Navigation",
   component: IdsLeftNavigation,
   parameters: {
     docs: {
