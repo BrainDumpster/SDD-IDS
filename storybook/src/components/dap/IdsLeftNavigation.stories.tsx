@@ -8,7 +8,7 @@ import {
 } from "../../spec-contracts/ids-left-navigation.contract";
 
 const meta: Meta<typeof IdsLeftNavigation> = {
-  title: "IDS/DAP/Left Navigation",
+  title: "DAP/Left Navigation",
   component: IdsLeftNavigation,
   parameters: {
     docs: {

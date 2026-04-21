@@ -4,7 +4,7 @@ import { IdsMastheadDap } from "./IdsMastheadDap";
 import { MASTHEAD_DAP_DEFAULTS } from "../../spec-contracts/ids-masthead-dap.contract";
 
 const meta: Meta<typeof IdsMastheadDap> = {
-  title: "IDS/DAP/Masthead",
+  title: "DAP/Masthead",
   component: IdsMastheadDap,
   parameters: {
     layout: "fullscreen",

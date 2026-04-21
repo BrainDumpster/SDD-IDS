@@ -10,5 +10,5 @@ This folder contains DAP-specific IDS Storybook components and stories.
 
 ## Grouping rules
 - Keep DAP components under this folder.
-- Keep Storybook titles under `IDS/DAP/*` so they appear in a dedicated DAP menu group.
+- Keep Storybook titles under `DAP/*` so they appear as a top-level group parallel to `IDS/*`.
 - Keep design-spec references in contracts pointed to `components/DAP/*/design-spec.mdx`.

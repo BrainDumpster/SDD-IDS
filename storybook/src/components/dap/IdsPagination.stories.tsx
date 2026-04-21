@@ -12,7 +12,7 @@ const frameStyle = {
 } as const;
 
 const meta: Meta<typeof IdsPagination> = {
-  title: "IDS/DAP/Pagination",
+  title: "DAP/Pagination",
   component: IdsPagination,
   parameters: {
     docs: {

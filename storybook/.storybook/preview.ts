@@ -37,7 +37,7 @@ const preview: Preview = {
       const theme = context.globals.theme || "light";
       const resolvedTheme = theme === "dark" ? "dark" : "light";
       const title = context.title || "";
-      const isDapStory = title.startsWith("IDS/DAP/");
+      const isDapStory = title.startsWith("DAP/");
       const designSystem = isDapStory
         ? "dap"
         : title.startsWith("IDS/")

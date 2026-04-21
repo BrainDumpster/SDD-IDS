@@ -5,7 +5,7 @@ import { IdsDapSidePanel } from "./IdsDapSidePanel";
 import { IDS_DAP_SIDE_PANEL_DESIGN_SPEC_PATH, DAP_SIDE_PANEL_DEFAULTS } from "../../spec-contracts/ids-dap-side-panel.contract";
 
 const meta: Meta<typeof IdsDapSidePanel> = {
-  title: "IDS/DAP/Side Panel",
+  title: "DAP/Side Panel",
   component: IdsDapSidePanel,
   parameters: {
     layout: "fullscreen",
