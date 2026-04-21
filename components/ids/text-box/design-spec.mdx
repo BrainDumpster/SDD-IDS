@@ -1,147 +1,174 @@
-# Text Box Design Spec
+# IDS Text Box Design Spec
 
 ## Metadata
 - Component: Text Box
+- Design system: IDS
 - Category: Formelements
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54575&m=dev
-- Node ID: 11067-54575
+- Spec path: `components/ids/text-box/design-spec.mdx`
+- Primary Figma (verified): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42065-39424&m=dev
+- Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
+- Primary node id: `42065:39424`
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Verified at: 2026-04-20
 
 ## Anatomy
-- Input field container
-- Text input area
-- Optional label
-- Optional helper text
-- Optional validation message
-- Focus ring for keyboard navigation
-- Optional clear button
+- `TextBoxRoot` (field wrapper)
+- `TextBoxControl` (input/textarea container)
+- `TextBoxInput` (single-line `<input>`)
+- `TextBoxTextArea` (multi-line `<textarea>`)
+- `TextBoxSuffixIcon` (optional trailing icon, default `mail`)
+- `TextBoxHelperRow` (helper/error row)
+- `TextBoxHelperText`
+- `TextBoxErrorIcon` (critical icon `status-critical-square-solid`)
+- `TextBoxErrorText`
 
 ## Layout & Measurements
-- Standard height: 40px
-- Horizontal padding: 12px
-- Vertical padding: 8px
-- Border radius: 4px (standard)
-- Focus ring: 2px offset from container
-- Label spacing: 4px from input
-- Helper text spacing: 4px from input
-- Minimum width: 200px (expandable)
-
-## Typography
-- Header 5: Roboto Regular 24px/32px (large text boxes)
-- Header 6: Roboto Regular 18px/25px (medium text boxes)
-- Body 1 - Medium: Roboto Medium 16px/24px (input text)
-- Body 2: Roboto Regular 14px/20px (labels, helper text)
+- Runtime width is container-driven (`width: 100%`) with sample frame width `300px`.
+- Input size variants:
+  - `large`: control height `40px`
+  - `small`: control height `32px`
+- Text area sample height: `150px` total component height (control plus helper row).
+- Horizontal insets:
+  - input/text area control: `16px` left and right
+  - control content gap: `10px` (text-to-icon)
+- Vertical spacing:
+  - control to helper row: `4px`
+  - helper row icon-to-text gap: `8px`
+- Control corner radius: `0` (square corners in verified sample)
+- Text area padding aligns to sample: `9px` top and `10px` bottom.
+- Trailing icon size: `16px x 16px`.
+- Focus-visible ring is outside the control boundary and uses the brand border token.
 
 ## Tokens
-### Colors
-- White: `var(--color-icon-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Disabled text: `var(--color-text-disabled)` = #757575
-- Disabled icon: `var(--color-icon-disabled)` = #757575
-- Accessible border: `var(--color-border-accessible)` = #757575
-- Brand border: `var(--color-border-brand-base)` = #0076ce
-- Strong border: `var(--color-border-strong)` = #252525
-
-### Icons
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
-- Standard gray icon: `icon-standard-gray` = #616161
-- White icon: `var(--color-icon-white)` = #ffffff
-
-### Alert Colors
-- Critical text: `var(--color-text-critical)` = #af0000
-- Critical border: `var(--color-border-alerting-critical-base)` = #af0000
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-
-### Background Colors
-- Gray light: `var(--color-background-gray-light)` = #eaeaea
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
-- Gray 500: `UI Palettes/Gray/gray-500` = #757575
-- Gray 600: `UI Palettes/Gray/gray-600` = #616161
-- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Other Colors
-- Annotation: `Annotation` = #E8178A
+- Surface/background:
+  - `var(--color-background-component)` (default)
+  - `var(--color-background-gray-light)` (disabled)
+- Border:
+  - `var(--color-border-accessible)` (default)
+  - `var(--color-border-strong)` (hover)
+  - `var(--color-border-brand-base)` (selected)
+  - `var(--color-border-brand-base)` (focus outline)
+  - `var(--color-border-alerting-critical-base)` (error)
+- Text:
+  - `var(--color-text-neutral)` (input value, helper text)
+  - `var(--color-text-disabled)` (disabled value/placeholder)
+  - `var(--color-text-critical)` (error message)
+- Icon:
+  - `var(--color-icon-neutral)` (default suffix icon)
+  - `var(--color-icon-neutral)` (hover suffix icon)
+  - `var(--color-icon-disabled)` (disabled suffix icon)
+  - `var(--color-icon-alerting-critical)` (error icon)
+- Typography:
+  - input/helper/error text: Body 2 (`14/20`)
 
 ## States (Light Theme)
-| State | Background | Border | Text | Icon |
+| Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Default | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Hover | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral-strong)` (#252525) |
-| Focus | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
-| Disabled | `var(--color-background-gray-light)` (#eaeaea) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
-| Error | `var(--color-background-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
+| TextBoxControl | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | selected | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | focus-visible | `var(--color-background-component)` | control border `var(--color-border-accessible)` + outer outline `var(--color-border-brand-base)` (radius `4px`) | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
+| TextBoxControl | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, helper row icon/text critical |
+| TextBoxHelperRow | helper | transparent | none | `var(--color-text-neutral)` |
+| TextBoxHelperRow | error | transparent | none | icon `var(--color-icon-alerting-critical)`, text `var(--color-text-critical)` |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Text and border colors remain consistent via semantic variables
-- Disabled state uses gray tokens for dark theme compatibility
-- Error state uses critical colors for validation feedback
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| TextBoxControl | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | selected | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | focus-visible | `var(--color-background-component)` | control border `var(--color-border-accessible)` + outer outline `var(--color-border-brand-base)` (radius `4px`) | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
+| TextBoxControl | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, helper row icon/text critical |
+| TextBoxHelperRow | helper | transparent | none | `var(--color-text-neutral)` |
+| TextBoxHelperRow | error | transparent | none | icon `var(--color-icon-alerting-critical)`, text `var(--color-text-critical)` |
 
 ## Interactions
-- Click to focus input field
-- Typing updates input value
-- Hover provides visual feedback with border changes
-- Focus ring uses brand color for keyboard navigation
-- Disabled state prevents interaction and uses gray colors
-- Error state shows critical border for validation
-- Clear button appears when text is present
+- Default runtime mode is interactive and token-driven.
+- Click/focus places caret in input/textarea.
+- Hover updates control border from accessible to strong.
+- Pointer focus (click inside input) is treated as active/selected visual: control border `var(--color-border-brand-base)` with no outline.
+- Keyboard focus-visible keeps control border `var(--color-border-accessible)` and draws an outer 1px `var(--color-border-brand-base)` ring with 4px radius.
+- Disabled removes interaction and uses disabled text/icon/background tokens.
+- Error state keeps control interactive (unless separately disabled) and shows critical helper row.
+- Demo/testing mode may force visual states with `data-state`; this must not block runtime pointer/keyboard behavior.
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab to input, type to input, Enter to submit
-- Screen reader support: Proper ARIA labels and descriptions
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use appropriate input types and attributes
-- Error messages: Proper association with input field
+## Composition & API (runtime)
+- `componentType: "text-input" | "text-area"` (default `"text-input"`)
+- `size: "large" | "small"` (default `"large"`; `small` valid for text-input)
+- `state: "default" | "hover" | "selected" | "focus" | "disabled" | "error"` (default `"default"`; demo override)
+- `value?: string` / `defaultValue?: string`
+- `placeholder?: string`
+- `disabled?: boolean`
+- `invalid?: boolean`
+- `helperText?: string`
+- `errorText?: string`
+- `showHelperText?: boolean` (default `true`)
+- `showIcon?: boolean` (default `true`)
+- `iconName?: string` (default `"mail"`; user-defined icon slug from `assets/icons`)
+- `rows?: number` (textarea only; default `4`)
+- `inputType?: string` (text-input only; default `"text"`)
+- `id?: string`, `name?: string`, `ariaLabel?: string`, `ariaDescribedBy?: string`
+- `onValueChange?: (value: string) => void`
 
-## Variants
-- **Default**: Standard text input
-- **Multiline**: Textarea for longer content
-- **Password**: Input with masked characters
-- **Search**: With search icon and clear button
-- **Error**: With validation styling
-- **Disabled**: Non-interactive state
-- **Sizes**: Small (32px), Medium (40px), Large (48px)
-
-## Behavior & Guidelines
-- Use text boxes for user input of text data
-- Provide clear labels describing expected input
-- Use appropriate input types (email, password, etc.)
-- Show validation errors clearly and accessibly
-- Implement proper focus management
-- Test with screen readers for proper announcement
-- Use placeholder text for additional guidance
-
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Disabled states maintain accessibility with proper contrast
-- Error states use critical colors for validation feedback
-- Input validation should be implemented with proper ARIA
-
-## Deliverable Checklist
-- [ ] Implement focus/blur states
-- [ ] Add validation error handling
-- [ ] Test keyboard navigation (Tab, Enter)
-- [ ] Verify ARIA labels and descriptions
-- [ ] Test disabled state styling
-- [ ] Implement clear button functionality
-- [ ] Add multiline variant (textarea)
-- [ ] Test dark theme compatibility
-- [ ] Verify mobile keyboard behavior
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic slot order:
+  1. `TextBoxRoot`
+  2. `TextBoxControl`
+  3. `TextBoxInput | TextBoxTextArea`
+  4. `TextBoxSuffixIcon?`
+  5. `TextBoxHelperRow?`
+  6. `TextBoxErrorIcon?`
+  7. `TextBoxHelperText | TextBoxErrorText`
+- Variant matrix:
+  - componentType: `text-input | text-area`
+  - size: `large | small` (small only for text-input)
+  - content: `empty | filled`
+  - visualState: `default | hover | selected | focus-visible | disabled | error`
+  - helperMode: `none | helper | error`
+  - suffixIcon: `hidden | visible(mail or custom slug)`
+- Per-slot style contract:
+  - `TextBoxControl` owns all border/background state styling.
+  - text field slot is transparent, borderless, inherits typography/color tokens.
+  - helper/error row is always outside control with 4px vertical gap.
+- Behavior contract:
+  - `onValueChange` emits on every text change.
+  - `disabled` overrides hover/focus/selected/error visuals to disabled visual model.
+  - `invalid || errorText` activates error helper row styling.
+  - runtime focus semantics:
+    - pointer focus (`:focus:not(:focus-visible)`) -> active border only (`var(--color-border-brand-base)`), no outline ring
+    - keyboard focus (`:focus-visible`) -> control border `var(--color-border-accessible)` + visible outer focus ring (4px radius)
+- Accessibility contract:
+  - input/textarea must expose `aria-invalid` when invalid.
+  - helper/error row must be linked via `aria-describedby`.
+  - keyboard operations use native input semantics.
+- Asset resolution + bundling:
+  - suffix icon is user-defined via `iconName` and resolves from `assets/icons/<slug>.svg` (default `mail`).
+  - error helper icon slug is `status-critical-square-solid` and resolves from `assets/icons/status-critical-square-solid.svg`.
+  - if icon asset missing, render no icon and preserve text layout.
+- Fallback/error rules:
+  - unknown `size` -> `large`
+  - unknown `componentType` -> `text-input`
+  - if `showHelperText=false`, suppress helper/error row.
+  - if `componentType="text-area"` and `size="small"`, keep text-area height behavior and ignore small height constraint.
+- Validation checklist (pass/fail):
+  - [ ] all visual states match tokenized border/background/text/icon model
+  - [ ] helper and error rows are mutually exclusive in render output
+  - [ ] disabled prevents editing and pointer interaction
+  - [ ] focus-visible ring appears only when focused
+  - [ ] dark theme uses same semantic tokens (no hardcoded literals)
+  - [ ] unknown icon slug does not crash rendering
 
 ## Source Mapping
-- Figma component: Text Box (11067-54575)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Text Box" (category "Formelements"; node "11067-54575")
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Text Box" (category "Formelements"; node "11067-54575")
+- Map source: `data/component-figma-map.json` -> component `"Text Box"`.
+- IDS design library source:
+  - file key: `0bHk3XhrjFhowgFkz9yLr4`
+  - node id: `42065:39424`
+  - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42065-39424&m=dev
+- Verified instance evidence includes:
+  - Text input states (`default`, `hover`, `selected`, `focus`, `disabled`, `error`)
+  - Text area states (`default`, `hover`, `selected`, `focus`, `disabled`, `error`)
+  - Size examples (`large 40`, `small 32`)
+- Variable evidence extracted via `get_variable_defs` for border/text/icon/background tokens listed in this spec.
