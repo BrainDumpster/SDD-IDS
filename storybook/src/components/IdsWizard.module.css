@@ -1,22 +1,24 @@
 .root {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   background: var(--color-background-component);
   color: var(--color-text-neutral-strong);
-  min-height: 520px;
+  min-height: 843px;
+  width: 100%;
 }
 
 .medium {
-  width: 576px;
+  max-width: 576px;
 }
 
 .large {
-  width: 864px;
+  max-width: 864px;
 }
 
 .x-large {
-  width: 1152px;
+  max-width: 1152px;
 }
 
 .full-screen {
@@ -79,7 +81,6 @@
 
 .stepsPane {
   width: 256px;
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
   border-right: var(--border-width-border-1) solid var(--color-border-accessible);
   overflow: auto;
 }
@@ -88,7 +89,6 @@
 .substepItem {
   width: 100%;
   border: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
   background: var(--color-background-component);
   display: flex;
   align-items: center;
@@ -102,7 +102,7 @@
 }
 
 .substepItem {
-  padding-left: 24px;
+  padding-left: 34px;
   font-size: 14px;
   line-height: 20px;
 }
@@ -113,6 +113,11 @@
   box-shadow: inset 4px 0 0 0 var(--color-text-brand-strong);
 }
 
+.substepItemActive {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+}
+
 .stepLabel {
   flex: 1;
   min-width: 0;
@@ -121,15 +126,8 @@
   text-overflow: ellipsis;
 }
 
-.substepCode {
-  min-width: 26px;
-  color: var(--color-text-neutral);
-  font-size: 12px;
-  line-height: 18px;
-}
-
 .substepList {
-  border-left: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-left: 0;
 }
 
 .statusIcon {
@@ -159,7 +157,6 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
 }
 
 .pageTitleWrap {
@@ -178,6 +175,21 @@
   flex: 1;
   min-height: 0;
   padding: 8px 24px 24px;
+  overflow: hidden;
+  border-bottom: var(--border-width-border-1) solid transparent;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(
+    to bottom,
+    var(--color-gradient-overflow-vertical-end),
+    var(--color-gradient-overflow-vertical-start)
+  );
+  box-shadow: none;
+  position: relative;
+}
+
+.pageContentScroll {
+  height: 100%;
+  min-height: 0;
   overflow: auto;
 }
 
@@ -189,14 +201,19 @@
 
 .footer {
   border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 24px;
   gap: 16px;
+  background: var(--color-background-component);
+  box-shadow: none;
 }
 
 .progress {
+  flex: 1 1 0;
+  min-width: 0;
   font-size: 14px;
   line-height: 20px;
   color: var(--color-text-neutral);
@@ -206,6 +223,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-left: auto;
 }
 
 .secondaryButton,

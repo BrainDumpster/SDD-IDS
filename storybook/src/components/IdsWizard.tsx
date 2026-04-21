@@ -23,6 +23,7 @@ export interface IdsWizardStep {
   pageTitle?: string;
   content?: ReactNode;
   status?: IdsWizardStepStatus;
+  statusIconSlug?: string | null;
   isVisible?: boolean | ((ctx: IdsWizardContext) => boolean);
   children?: IdsWizardStep[];
   footerButtons?: IdsWizardFooterButtons;
@@ -126,10 +127,17 @@ function consolidatedStatus(step: DisplayStep): IdsWizardStepStatus {
 }
 
 function statusIcon(status: IdsWizardStepStatus): string | undefined {
-  if (status === "success") return "status-check-16";
+  if (status === "success") return "shape-check";
   if (status === "warning") return "status-warn-tri-solid-16";
   if (status === "error") return "status-error-diamond-solid";
   return undefined;
+}
+
+function resolveStatusIcon(step: IdsWizardStep, fallbackStatus: IdsWizardStepStatus): string | undefined {
+  if (step.statusIconSlug === null) return undefined;
+  const explicitSlug = typeof step.statusIconSlug === "string" ? step.statusIconSlug.trim() : "";
+  if (explicitSlug) return explicitSlug;
+  return statusIcon(fallbackStatus);
 }
 
 export function IdsWizard({
@@ -224,7 +232,7 @@ export function IdsWizard({
           {display.map((group) => {
             const groupHasChildren = group.children.length > 0;
             const groupStatus = consolidatedStatus(group);
-            const groupIcon = statusIcon(groupStatus);
+            const groupIcon = resolveStatusIcon(group.top.node, groupStatus);
             const topActive =
               currentLeaf &&
               ((groupHasChildren && currentLeaf.parentId === group.top.node.id) || (!groupHasChildren && currentLeaf.node.id === group.top.node.id));
@@ -245,17 +253,15 @@ export function IdsWizard({
                   <div className={styles.substepList}>
                     {group.children.map((child) => {
                       const active = currentLeaf?.node.id === child.node.id;
-                      const icon = statusIcon(child.node.status ?? "none");
-                      const code = toStepCode(child.topLevelIndex, child.childIndex);
+                      const icon = resolveStatusIcon(child.node, child.node.status ?? "none");
                       return (
                         <button
                           key={child.node.id}
                           type="button"
-                          className={[styles.substepItem, active ? styles.stepItemActive : ""].filter(Boolean).join(" ")}
+                          className={[styles.substepItem, active ? styles.substepItemActive : ""].filter(Boolean).join(" ")}
                           onClick={() => goToLeaf(child)}
                           aria-current={active ? "step" : undefined}
                         >
-                          <span className={styles.substepCode}>{code}</span>
                           <span className={styles.stepLabel}>{child.node.label}</span>
                           {icon ? <Icon shapeName={icon} className={[styles.statusIcon, styles[`status${child.node.status ?? "none"}`]].join(" ")} /> : null}
                         </button>
@@ -273,60 +279,61 @@ export function IdsWizard({
             <h3 className={styles.pageTitle}>{currentLeaf?.node.pageTitle ?? currentLeaf?.node.label ?? "Page"}</h3>
           </div>
           <div className={styles.pageContent}>
-            {currentLeaf?.node.content ?? (
-              <p className={styles.fallbackText}>No page content is defined for this step.</p>
-            )}
+            <div className={styles.pageContentScroll}>
+              {currentLeaf?.node.content ?? (
+                <p className={styles.fallbackText}>No page content is defined for this step.</p>
+              )}
+            </div>
           </div>
+          <footer className={styles.footer}>
+            <span className={styles.progress}>{progressLabel}</span>
+            <div className={styles.footerActions}>
+              {showCancel ? (
+                <button
+                  type="button"
+                  className={styles.secondaryButton}
+                  onClick={() => {
+                    if (currentLeaf) onCancel?.(payloadFromNode(currentLeaf));
+                  }}
+                >
+                  Cancel
+                </button>
+              ) : null}
+              {showPrevious ? (
+                <button
+                  type="button"
+                  className={styles.secondaryButton}
+                  disabled={isFirstLeaf || !currentLeaf}
+                  onClick={() => {
+                    const prev = currentIndex > 0 ? leaves[currentIndex - 1] : undefined;
+                    goToLeaf(prev);
+                    if (prev) onPrevious?.(payloadFromNode(prev));
+                  }}
+                >
+                  Previous
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className={styles.primaryButton}
+                disabled={!primaryEnabled || !currentLeaf}
+                onClick={() => {
+                  if (!currentLeaf) return;
+                  if (isLastLeaf || primaryLabel.toLowerCase() === "finish") {
+                    onFinish?.(payloadFromNode(currentLeaf));
+                    return;
+                  }
+                  const next = currentIndex >= 0 ? leaves[currentIndex + 1] : undefined;
+                  goToLeaf(next);
+                  if (next) onNext?.(payloadFromNode(next));
+                }}
+              >
+                {primaryLabel}
+              </button>
+            </div>
+          </footer>
         </section>
       </div>
-
-      <footer className={styles.footer}>
-        <span className={styles.progress}>{progressLabel}</span>
-        <div className={styles.footerActions}>
-          {showCancel ? (
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={() => {
-                if (currentLeaf) onCancel?.(payloadFromNode(currentLeaf));
-              }}
-            >
-              Cancel
-            </button>
-          ) : null}
-          {showPrevious ? (
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              disabled={isFirstLeaf || !currentLeaf}
-              onClick={() => {
-                const prev = currentIndex > 0 ? leaves[currentIndex - 1] : undefined;
-                goToLeaf(prev);
-                if (prev) onPrevious?.(payloadFromNode(prev));
-              }}
-            >
-              Previous
-            </button>
-          ) : null}
-          <button
-            type="button"
-            className={styles.primaryButton}
-            disabled={!primaryEnabled || !currentLeaf}
-            onClick={() => {
-              if (!currentLeaf) return;
-              if (isLastLeaf || primaryLabel.toLowerCase() === "finish") {
-                onFinish?.(payloadFromNode(currentLeaf));
-                return;
-              }
-              const next = currentIndex >= 0 ? leaves[currentIndex + 1] : undefined;
-              goToLeaf(next);
-              if (next) onNext?.(payloadFromNode(next));
-            }}
-          >
-            {primaryLabel}
-          </button>
-        </div>
-      </footer>
     </section>
   );
 

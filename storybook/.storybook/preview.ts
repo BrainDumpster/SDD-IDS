@@ -4,6 +4,9 @@ import "../src/ids-theme.css";
 import "../../components/dap-theme.css";
 
 const preview: Preview = {
+  initialGlobals: {
+    theme: "light",
+  },
   parameters: {
     backgrounds: {
       default: "light",
@@ -15,14 +18,17 @@ const preview: Preview = {
   },
   globalTypes: {
     theme: {
-      description: "Synapse theme",
+      description: "Theme mode",
+      defaultValue: "light",
       toolbar: {
         title: "Theme",
+        icon: "mirror",
         items: [
           { value: "light", title: "Light" },
           { value: "dark", title: "Dark" },
         ],
         dynamicTitle: true,
+        showName: true,
       },
     },
   },

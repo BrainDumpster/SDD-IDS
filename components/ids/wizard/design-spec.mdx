@@ -41,12 +41,23 @@ Deterministic child structure (required order):
 
 ## Layout & Measurements
 - Figma sample "one size" frame: `1594px x 843px` (sample only; runtime is token/prop driven).
+- Wizard body region is two columns (`steps pane` + `content pane`) with equal vertical span.
+- Footer belongs to the **content pane only** (right column) and is anchored at its bottom.
+- Steps pane continues full height beside the content pane/footer stack (left column is not shortened by footer).
+- Width behavior is container-driven in runtime; size presets are max-width constraints (`medium|large|x-large`) and must not clip right-side footer actions.
 - Header padding: `20px 24px` (right side includes close action spacing in sample).
+- Header has **no bottom divider line** in the verified sample.
 - Footer padding: `24px`; footer has top border.
+- Footer uses a 1px top border (`--color-border-accessible`) and no shadow treatment.
 - Steps pane sample width: `256px`.
 - Step row padding: `8px 34px` with optional right-side status indicator.
+- Step rows are borderless in default state; only the pane separator and selected-row leading accent are visible.
 - Step active accent: 4px leading stripe style (tokenized brand strong color).
 - Content pane has page title block + body content block + optional inner scroll gradients.
+- Page content area does not add a bottom border to separate footer.
+- `WizardPageContent` container uses a gradient bottom border treatment (not a separate overlay layer) with:
+  - start: `var(--color-gradient-overflow-vertical-start)`
+  - end: `var(--color-gradient-overflow-vertical-end)`
 - Supported runtime sizes:
   - `medium`: `576px`
   - `large`: `864px`
@@ -96,11 +107,11 @@ MCP variable evidence (`12690:246134`):
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | wizard root | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
-| step item | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
-| step item | active | `var(--color-background-brand-lighter)` | `var(--color-border-accessible)` + active leading accent | `var(--color-text-brand-strong)` |
-| step item | completed | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` + success icon |
-| step item | warning | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + warning icon |
-| step item | error | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + error icon |
+| step item | default | `var(--color-background-component)` | none (row-level) | `var(--color-text-disabled)` |
+| step item | active | `var(--color-background-brand-lighter)` | no row border + active leading accent | `var(--color-text-brand-strong)` |
+| step item | completed | `var(--color-background-component)` | none (row-level) | `var(--color-text-neutral-strong)` + success icon |
+| step item | warning | `var(--color-background-component)` | none (row-level) | neutral text + warning icon |
+| step item | error | `var(--color-background-component)` | none (row-level) | neutral text + error icon |
 | footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-accessible)` | neutral text |
 | footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 | footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
@@ -110,11 +121,11 @@ MCP variable evidence (`12690:246134`):
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | wizard root | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
-| step item | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
-| step item | active | `var(--color-background-brand-lighter)` | `var(--color-border-accessible)` + active leading accent | `var(--color-text-brand-strong)` |
-| step item | completed | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` + success icon |
-| step item | warning | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + warning icon |
-| step item | error | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + error icon |
+| step item | default | `var(--color-background-component)` | none (row-level) | `var(--color-text-disabled)` |
+| step item | active | `var(--color-background-brand-lighter)` | no row border + active leading accent | `var(--color-text-brand-strong)` |
+| step item | completed | `var(--color-background-component)` | none (row-level) | `var(--color-text-neutral-strong)` + success icon |
+| step item | warning | `var(--color-background-component)` | none (row-level) | neutral text + warning icon |
+| step item | error | `var(--color-background-component)` | none (row-level) | neutral text + error icon |
 | footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-accessible)` | neutral text |
 | footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 | footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
@@ -148,6 +159,7 @@ Main inputs:
 - `pageTitle?: string`
 - `content?: Renderable` (required for leaf steps; optional for parent steps with children)
 - `status?: "none" | "success" | "warning" | "error"`
+- `statusIconSlug?: string | null` (optional; when `null`, suppress icon rendering even if `status` is set)
 - `isVisible?: boolean | ((ctx: WizardContext) => boolean)` (default `true`)
 - `children?: WizardStepInput[]`
 - `footerButtons?: WizardFooterButtons` (optional page override)
@@ -187,6 +199,8 @@ Variant/options matrix:
 
 Per-slot style contract:
 - Step rows must use `Body 1` tokenized text sizing.
+- Header block must not introduce a dedicated bottom border.
+- Step rows must remain borderless; selected row highlight is the only row-level stroke treatment (4px leading accent).
 - Page titles must use `Header 5`; page body content defaults to `Body 2`.
 - Status indicators render on right side of step rows.
 - Footer progress text uses `Body 2`.
@@ -206,9 +220,11 @@ Accessibility contract:
 
 Asset resolution and bundling:
 - Status icon slugs:
-  - success: `status-check-16`
-  - warning: `status-warn-tri-solid-16`
-  - error: `status-error-diamond-solid`
+  - default success: `shape-check`
+  - default warning: `status-warn-tri-solid-16`
+  - default error: `status-error-diamond-solid`
+  - `statusIconSlug` is optional per step; if omitted, defaults above are used from `status`
+  - set `statusIconSlug: null` to render no status icon for that step
 - Optional close icon slug: `ctrl-close-16` (fallback to local close glyph if missing).
 
 Fallback/error rules:
