@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { TextInput } from "./TextInput";
 
 const meta: Meta<typeof Dialog> = {
-  title: "Synapse/Dialog",
+  title: "Synapse/Modal/Dialog",
   component: Dialog,
 };
 

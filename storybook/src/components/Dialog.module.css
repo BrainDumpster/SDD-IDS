@@ -16,7 +16,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-background-component);
-  border-radius: var(--corner-radius-radius-8);
+  border-radius: 0;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
   box-shadow: var(--shadow-drop-shadow-32-x) var(--shadow-drop-shadow-32-y) var(--shadow-drop-shadow-32-blur) var(--shadow-drop-shadow-32-color);
   z-index: 1050;
   display: flex;
@@ -25,9 +26,9 @@
   outline: none;
 }
 
-.sm { width: 400px; }
-.lg { width: 560px; }
-.xl { width: 720px; }
+.sm { width: 480px; }
+.lg { width: 640px; }
+.xl { width: 800px; }
 
 .headerLeft {
   display: flex;
@@ -57,6 +58,13 @@
   width: 24px;
   height: 24px;
   display: block;
+}
+
+.typeIconImage {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
 }
 
 .title {

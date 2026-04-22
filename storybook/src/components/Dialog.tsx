@@ -4,8 +4,22 @@ import styles from "./Dialog.module.css";
 import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
+import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
+import statusWarnTriSolidIcon from "../../../assets/icons/status-warn-tri-solid.svg";
+import statusErrorDiamondSolidIcon from "../../../assets/icons/status-error-diamond-solid.svg";
+import infoCircSolidIcon from "../../../assets/icons/info-circ-solid.svg";
 
-type DialogType = "None" | "Success" | "Warning" | "Major" | "Danger" | "Info";
+type DialogType =
+  | "Non-Alerting"
+  | "Informational"
+  | "Warning"
+  | "Major"
+  | "Critical"
+  | "Destructive"
+  | "None"
+  | "Info"
+  | "Danger"
+  | "Success";
 type DialogSize = "sm" | "lg" | "xl";
 export type DialogVariant = "default" | "about";
 
@@ -135,13 +149,12 @@ export function Dialog({
             <>
               <div className={styles.header}>
                 <div className={styles.headerLeft}>
-                  {dialogType !== "None" && (
+                  {normalizeDialogType(dialogType) !== "Non-Alerting" && (
                     <span
                       className={styles.alertIcon}
                       aria-hidden="true"
-                      style={{ color: getDialogTypeIconColor(dialogType) }}
                     >
-                      <DialogTypeIcon type={dialogType} />
+                      <DialogTypeIcon type={normalizeDialogType(dialogType)} />
                     </span>
                   )}
                   <BaseDialog.Title className={styles.title}>
@@ -179,7 +192,11 @@ export function Dialog({
                   </Button>
                 ) : null}
                 <Button
-                  variant="primary"
+                  variant={
+                    normalizeDialogType(dialogType) === "Destructive"
+                      ? "destructive"
+                      : "primary"
+                  }
                   disabled={!enableActionButton}
                   onClick={() => onPrimaryButtonClick?.()}
                 >
@@ -208,114 +225,49 @@ function DialogCloseGlyph() {
   );
 }
 
-function DialogTypeIcon({ type }: { type: Exclude<DialogType, "None"> }) {
-  if (type === "Success") {
-    // status-ok-circ-solid (simple check-circle)
-    return (
-      <svg className={styles.typeIcon} viewBox="0 0 16 16" aria-hidden="true">
-        <circle cx="8" cy="8" r="7" fill="currentColor" opacity="0.15" />
-        <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" />
-        <path
-          d="M4.3 8.2 6.9 10.7 11.8 5.6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
+function DialogTypeIcon({
+  type,
+}: {
+  type: "Informational" | "Warning" | "Major" | "Critical" | "Destructive";
+}) {
+  const iconByType = {
+    Warning: statusWarnTriSolidIcon,
+    Major: statusErrorDiamondSolidIcon,
+    Critical: statusCriticalSquareSolidIcon,
+    Destructive: statusCriticalSquareSolidIcon,
+    Informational: infoCircSolidIcon,
+  } as const;
 
-  if (type === "Warning") {
-    // status-warn-tri-solid (triangle)
-    return (
-      <svg className={styles.typeIcon} viewBox="0 0 16 16" aria-hidden="true">
-        <path
-          d="M8 1.3 15 14.2H1z"
-          fill="currentColor"
-          opacity="0.15"
-          stroke="currentColor"
-        />
-        <path
-          d="M8 5.2v4.6M8 11.9h.01"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
-  if (type === "Major") {
-    // Use a diamond-like icon for Major
-    return (
-      <svg className={styles.typeIcon} viewBox="0 0 16 16" aria-hidden="true">
-        <path
-          d="M8 1.6 14.4 8 8 14.4 1.6 8z"
-          fill="currentColor"
-          opacity="0.15"
-          stroke="currentColor"
-        />
-      </svg>
-    );
-  }
-
-  if (type === "Danger") {
-    // status-critical-square-solid (square)
-    return (
-      <svg className={styles.typeIcon} viewBox="0 0 16 16" aria-hidden="true">
-        <rect
-          x="2"
-          y="2"
-          width="12"
-          height="12"
-          rx="2"
-          fill="currentColor"
-          opacity="0.15"
-          stroke="currentColor"
-        />
-        <path
-          d="M5.2 5.2 10.8 10.8M10.8 5.2 5.2 10.8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-
-  // Info
   return (
-    <svg className={styles.typeIcon} viewBox="0 0 16 16" aria-hidden="true">
-      <circle cx="8" cy="8" r="7" fill="currentColor" opacity="0.15" stroke="currentColor" />
-      <path
-        d="M8 7v4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      <circle cx="8" cy="4.8" r="1" fill="currentColor" />
-    </svg>
+    <img
+      src={iconByType[type]}
+      alt=""
+      className={styles.typeIconImage}
+      width={24}
+      height={24}
+      aria-hidden="true"
+    />
   );
 }
 
-function getDialogTypeIconColor(type: DialogType): string {
+function normalizeDialogType(type: DialogType):
+  | "Non-Alerting"
+  | "Informational"
+  | "Warning"
+  | "Major"
+  | "Critical"
+  | "Destructive" {
   switch (type) {
-    case "Success":
-      return "var(--color-icon-alerting-success-1)";
-    case "Warning":
-      return "var(--color-icon-alerting-minor-1)";
-    case "Major":
-      return "var(--color-border-alerting-major-major)";
-    case "Danger":
-      return "var(--color-icon-alerting-critical)";
     case "Info":
-      return "var(--color-icon-brand-base)";
+      return "Informational";
+    case "Danger":
+      return "Destructive";
+    case "None":
+      return "Non-Alerting";
+    case "Success":
+      return "Informational";
     default:
-      return "var(--color-icon-neutral)";
+      return type;
   }
 }
+
