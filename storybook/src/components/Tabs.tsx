@@ -1,8 +1,8 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import shapePlusIcon from "../../../assets/icons/shape-plus.svg";
-import chevDownIcon from "../../../assets/icons/chev-down.svg";
+import stateAddCircSolidIcon from "../../../assets/icons/state-add-circ-solid.svg";
+import arrowTriDownSolidIcon from "../../../assets/icons/arrow-tri-down-solid.svg";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import styles from "./Tabs.module.css";
 
@@ -20,8 +20,11 @@ interface TabsProps {
   defaultActiveTabId?: string;
   showAddTab?: boolean;
   onAddTab?: () => void;
+  addTabLabel?: string;
   minTabWidth?: number;
   maxTabWidth?: number;
+  variant?: "primary" | "secondary";
+  moreLabel?: string;
 }
 
 export function Tabs({
@@ -29,8 +32,11 @@ export function Tabs({
   defaultActiveTabId,
   showAddTab = false,
   onAddTab,
+  addTabLabel = "Add Tab",
   minTabWidth = 80,
   maxTabWidth = 250,
+  variant = "secondary",
+  moreLabel = "More",
 }: TabsProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -39,6 +45,7 @@ export function Tabs({
     defaultActiveTabId ?? items[0]?.id ?? "",
   );
   const [visibleCount, setVisibleCount] = useState<number>(items.length);
+  const [overflowLabel, setOverflowLabel] = useState<string | null>(null);
 
   useEffect(() => {
     setTabs(items);
@@ -53,7 +60,9 @@ export function Tabs({
     const recomputeVisibleCount = () => {
       const available = list.clientWidth;
       const moreWidth = 84;
-      const addWidth = showAddTab ? 40 : 0;
+      const addWidth = showAddTab
+        ? Math.min(220, Math.max(56, 36 + addTabLabel.length * 8))
+        : 0;
       const perTab = Math.max(minTabWidth, 80);
       const maxVisible = Math.max(
         1,
@@ -66,30 +75,23 @@ export function Tabs({
     const ro = new ResizeObserver(recomputeVisibleCount);
     ro.observe(list);
     return () => ro.disconnect();
-  }, [tabs.length, showAddTab, minTabWidth]);
-
-  const activeIndex = tabs.findIndex((t) => t.id === activeTabId);
-  const safeActiveIndex = activeIndex >= 0 ? activeIndex : 0;
+  }, [tabs.length, showAddTab, minTabWidth, addTabLabel]);
 
   const { visibleTabs, hiddenTabs } = useMemo(() => {
     if (tabs.length <= visibleCount) return { visibleTabs: tabs, hiddenTabs: [] };
-    const nextVisible = tabs.slice(0, visibleCount);
-    const nextHidden = tabs.slice(visibleCount);
-    const activeTab = tabs[safeActiveIndex];
-    if (
-      activeTab &&
-      !nextVisible.some((t) => t.id === activeTab.id) &&
-      nextVisible.length > 0
-    ) {
-      const demoted = nextVisible[nextVisible.length - 1];
-      nextVisible[nextVisible.length - 1] = activeTab;
-      const hiddenWithoutActive = nextHidden.filter((t) => t.id !== activeTab.id);
-      return { visibleTabs: nextVisible, hiddenTabs: [demoted, ...hiddenWithoutActive] };
-    }
-    return { visibleTabs: nextVisible, hiddenTabs: nextHidden };
-  }, [tabs, visibleCount, safeActiveIndex]);
+    return {
+      visibleTabs: tabs.slice(0, visibleCount),
+      hiddenTabs: tabs.slice(visibleCount),
+    };
+  }, [tabs, visibleCount]);
 
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
+
+  useEffect(() => {
+    if (hiddenTabs.length === 0 && overflowLabel !== null) {
+      setOverflowLabel(null);
+    }
+  }, [hiddenTabs.length, overflowLabel]);
 
   const closeTab = (id: string) => {
     if (tabs.length <= 1) return;
@@ -101,6 +103,16 @@ export function Tabs({
       const nextActive = nextTabs[idx] ?? nextTabs[idx - 1] ?? nextTabs[0];
       if (nextActive) setActiveTabId(nextActive.id);
     }
+  };
+
+  const handleVisibleTabSelect = (id: string) => {
+    setActiveTabId(id);
+    setOverflowLabel(null);
+  };
+
+  const handleHiddenTabSelect = (id: string, label: string) => {
+    setActiveTabId(id);
+    setOverflowLabel(label);
   };
 
   return (
@@ -116,9 +128,13 @@ export function Tabs({
               aria-controls={`panel-${item.id}`}
               aria-selected={activeTabId === item.id}
               disabled={item.disabled}
-              className={`${styles.tab} ${activeTabId === item.id ? styles.selected : ""}`}
+              className={[
+                styles.tab,
+                variant === "primary" ? styles.tabPrimary : styles.tabSecondary,
+                activeTabId === item.id ? styles.selected : "",
+              ].join(" ")}
               style={{ minWidth: `${minTabWidth}px`, maxWidth: `${maxTabWidth}px` }}
-              onClick={() => setActiveTabId(item.id)}
+              onClick={() => handleVisibleTabSelect(item.id)}
             >
               {item.icon ? <span className={styles.tabIcon}>{item.icon}</span> : null}
               <span className={styles.tabLabel}>{item.label}</span>
@@ -148,9 +164,20 @@ export function Tabs({
 
           {hiddenTabs.length > 0 ? (
             <Menu.Root>
-              <Menu.Trigger className={styles.moreTrigger} aria-label="More tabs">
-                More
-                <img src={chevDownIcon} alt="" className={styles.moreIcon} />
+              <Menu.Trigger
+                className={[
+                  styles.moreTrigger,
+                  overflowLabel ? styles.moreTriggerSelected : "",
+                  variant === "primary"
+                    ? styles.moreTriggerPrimary
+                    : styles.moreTriggerSecondary,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-label="More tabs"
+              >
+                {overflowLabel ?? moreLabel}
+                <img src={arrowTriDownSolidIcon} alt="" className={styles.moreIcon} />
               </Menu.Trigger>
               <Menu.Portal>
                 <Menu.Positioner side="bottom" align="end" sideOffset={4}>
@@ -159,7 +186,7 @@ export function Tabs({
                       <Menu.Item
                         key={tab.id}
                         className={styles.moreItem}
-                        onClick={() => setActiveTabId(tab.id)}
+                        onClick={() => handleHiddenTabSelect(tab.id, tab.label)}
                       >
                         {tab.label}
                       </Menu.Item>
@@ -173,11 +200,15 @@ export function Tabs({
           {showAddTab ? (
             <button
               type="button"
-              className={styles.addButton}
-              aria-label="Add tab"
+              className={[
+                styles.addButton,
+                variant === "primary" ? styles.addButtonPrimary : styles.addButtonSecondary,
+              ].join(" ")}
+              aria-label={addTabLabel}
               onClick={onAddTab}
             >
-              <img src={shapePlusIcon} alt="" className={styles.addIcon} />
+              <img src={stateAddCircSolidIcon} alt="" className={styles.addIcon} />
+              <span className={styles.addLabel}>{addTabLabel}</span>
             </button>
           ) : null}
         </div>
