@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react";
 import "../src/synapse-theme.css";
-import "../src/ids-theme.css";
+import "../../components/ids-theme.css";
 import "../../components/dap-theme.css";
 
 const preview: Preview = {

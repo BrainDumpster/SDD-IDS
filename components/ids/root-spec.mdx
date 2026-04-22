@@ -11,7 +11,7 @@
 |---|---|
 | Name | IDS |
 | Framework Layer | framework-agnostic |
-| Figma File Key | `VZJ48bbVYrIynw8DdSukWw` |
+| Figma File Key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Component map | `data/component-figma-map.json` |
 | Components directory | `components/ids/` |
 | Theme mechanism | CSS custom properties + theme mode selection |
@@ -98,12 +98,14 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--color-background-alerting-critical` | `#af0000` | mode-specific |
 | `--color-background-alerting-critical-strong` | mode-specific | `#910000` |
 | `--color-background-alerting-critical-stronger` | mode-specific | `#730000` |
+| `--color-background-alerting-minor` | `#ffc700` | mode-specific |
 | `--color-background-alerting-success` | `#1b8500` | mode-specific |
 | `--color-border-alerting-transparent-critical` | `#af000000` | `#dd9494` |
 | `--color-border-alerting-critical-white` | `#af0000` | mode-specific |
 | `--color-border-alerting-major-white` | `#ed6400` | mode-specific |
 | `--color-border-alerting-minor-transparent` | `#9c622e` | mode-specific |
 | `--color-border-alerting-info-white` | `#005ece` | mode-specific |
+| `--color-text-black` | `#252525` | `#252525` |
 
 <!-- ds:section id=primitive-static -->
 ### Primitive palette (Figma — `Primitive` collection, COLOR)
@@ -645,7 +647,7 @@ Use this contract for every IDS component spec and for any framework target that
 <!-- ds:section id=variable-collections -->
 ## Variable Collections (Figma)
 
-The IDS file (`VZJ48bbVYrIynw8DdSukWw`) exposes variables from:
+The IDS file (`0bHk3XhrjFhowgFkz9yLr4`) exposes variables from:
 - **Tokens** — semantic, theme-aware (Light / Dark). Maps primarily to `--color-*` semantic CSS variables used in component specs.
 - **Primitive** — base palette values (static across themes). Maps to `--color-static-*`, `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, `--opacity-*`, and foundational scales.
 - **Density Primitive** — density and layout scale (when present). Maps to `--scale-*` and related spacing contracts used with semantic padding/spacing tokens.
@@ -672,14 +674,9 @@ The IDS file (`VZJ48bbVYrIynw8DdSukWw`) exposes variables from:
 
 ### Figma extraction nodes used for this IDS root baseline
 
-- IDS variables / library scope (page): `11067:54471` — [Figma](https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54471)
-- Toggle Switch: `42848:100536` (updated IDS map node)
-- Legacy Toggle Switch sample: `11067:54591`
-- Button: `42808:93601`
-- Accordion: `16551:26036`
-- Checkbox: `8505:14296`
-- Masthead: `9054:24736`
-- Dialog: `43461:174177`
+- IDS variables / library scope (Tag board): `42012:26676` — [Figma](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42012-26676)
+- Alerting minor tag sample: `38910:51190` — [Figma](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38910-51190)
+- Tag example cluster: `42012:26686`
 
-These node-based variable snapshots were used to assemble the IDS root token baseline above.
+These node-based variable snapshots were used to assemble and re-validate the IDS root token baseline above.
 <!-- auto:generated:end -->
