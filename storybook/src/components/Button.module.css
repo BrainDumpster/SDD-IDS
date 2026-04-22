@@ -4,7 +4,7 @@
   justify-content: center;
   gap: var(--spacing-space-8);
   border: var(--border-width-border-1) solid transparent;
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: var(--corner-radius-radius-2);
   font-family: inherit;
   font-weight: 400;
   font-size: var(--font-size-body-2);
@@ -58,6 +58,12 @@
 }
 
 .iconSlot svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.iconImage {
   display: block;
   width: 16px;
   height: 16px;

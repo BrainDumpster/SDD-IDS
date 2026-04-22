@@ -1,470 +1,207 @@
-<!-- auto:generated:start -->
-# Button Design Spec
+# IDS Button Design Spec
 
-> Generated 2026-03-19T18:09:24Z. Canonical docs-first artifact for design-system Q&A and code generation.
-
-<!-- ds:section id=metadata -->
 ## Metadata
 - Component: Button
+- Design system: IDS
 - Category: Formelements
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42808-93601&m=dev
-- Node ID: 42808-93601
-- File key: `(skipped)`
-- Canonical Priority: GitHub docs > Figma extraction > vision/image inference
-- Documentation lines indexed: 147
-- Local-doc fallback lines: 0
+- Spec path: `components/ids/button/design-spec.mdx`
+- Primary Figma URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-116183&m=dev
+- Primary node id: `41894:116183`
+- States matrix URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-25120&m=dev
+- States matrix node id: `9662:25120`
+- Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
+- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
+- Verified at: 2026-04-22
 
-<!-- ds:section id=summary -->
-## Executive Summary
-
-- A button is a designated clickable area that uses color, text, and/or icons to indicate the action it performs. It allows users to initiate or complete a task. Place buttons where they are easy to find or where users expect to see them. There is flexibility to the number and type of buttons that can be used on the screen, but users should be able to understand the intent of actions when buttons are placed in close proximity.
-- Common uses of buttons are:
-- Submitting a form
-- Navigating a wizard
-- Initiating a modal, wizard or a dialog
-- Dropdown buttons reveal a list of actions
-- Performing a task on a set of data within a data grid
-
-<!-- ds:section id=overview -->
-## Overview
-
-- A button is a designated clickable area that uses color, text, and/or icons to indicate the action it performs. It allows users to initiate or complete a task. Place buttons where they are easy to find or where users expect to see them. There is flexibility to the number and type of buttons that can be used on the screen, but users should be able to understand the intent of actions when buttons are placed in close proximity.
-- Common uses of buttons are:
-- Submitting a form
-- Navigating a wizard
-- Initiating a modal, wizard or a dialog
-- Dropdown buttons reveal a list of actions
-- Performing a task on a set of data within a data grid
-
-<!-- ds:section id=purpose-usage -->
-## Purpose & Usage
-
-- Destructive buttons should not be used for reversible actions
-- Overuse can increase confusion, frustration, and clutter on the screen
-- Ensure consistent placement of destructive buttons
-- Use a clear label (e.g., ‘Delete’, see above) to describe an irreversible action, instead of ‘OK’ or ‘Confirm’
-- Buttons should have a concise and descriptive label to provide clear guidance to the user.
-- Button labels need to be short, preferably one or two words.
-- Button labels are title case. For example, labels could be ‘Submit Order’, ‘File Search’, or ‘Manage License’.
-- Button labels should correspond to the actions they perform. Use a clear label (e.g., ‘Delete’, see above) to describe an irreversible action, instead of ‘OK’ or ‘Confirm’.
-- The labels on buttons should not be a brand name.
-- The labels on buttons should not contain any post-prepositions or articles such as ‘a’, ‘an’, or ‘the’.
-- Avoid using punctuation within button labels.
-- Use verbs for buttons rather than yes or no to make buttons more user-friendly and glanceable, and leave less room for misinterpretation. For example, ‘Submit, ‘Cancel’, ‘Save’, ‘Search’ or ‘Apply’.
-- Do not use all caps for button labels. If there is no fitting action text, ‘OK’ is acceptable.
-- Examples of commonly used button labels:
-- Note: The image above provides a glimpse of various button labels portrayed in different styles. This is not an exhaustive list, nor is it suggesting that a particular style should be used with a specific label.
-- When used with data grids or tables, the button group should be left-aligned.
-- Button order:
-- (from left to right) Add, Edit, Delete, More Actions, Export
-- Export button is always last in the button group
-- Example of left-aligned button group for a data grid:
-- When used in dialogs, modals, or wizards, the button group should be right-aligned. When buttons are right-aligned the tertiary button is placed first, and the primary button is placed last.
-- Example of right-aligned button group for a modal:
-- Example of right-aligned buttons within different sections of the page:
-- Apply the same style to buttons that are in close proximity and of equal importance.
-- Use primary buttons for main actions or more commonly performed actions on a page, form, or data grid. When buttons are left-aligned, place primary button(s) first.
-- Use secondary buttons for actions that are not the main focus on the page or a form. For example, within a wizard, ‘Next’ is the primary button and ‘Back’ is the secondary button because ‘Back’ is not the main action.
-- Disabled buttons should be accompanied with a tooltip to guide users on what needs to be done to enable the button. When permissions are required to enable a button, show the button only when a user has the appropriate permissions. For example, a user can enable a button by filling out the required fields in a form, or by selecting a few rows in the data grid, or changing a certain setting within the application. If a button is permanently disabled for a user, it’s usually better not to show it at all to create an intuitive and secure UI.
-- Example of left-aligned button group for a data grid when selection-related actions become enabled:
-- This type of button represents binary choices: pin/unpin, acknowledged/unacknowledged, flag/unflag, play/pause, mute/unmute, bookmark/remove bookmark, and so on.
-- The action/label of this type of button can be switched out based on item selection. For example, within a data grid, the same button can be used to represent actions ‘Acknowledged’ and/or ‘Unacknowledged’. The label is determined by current item selection.
-- This type of button should not be confused with a toggle switch. Changes made using a toggle switch might affect the whole page or the application, but a binary button only affects selections within a data grid.
-- Icon buttons may be used when space is limited and if icons are universally recognized. For example, a trash can icon for a delete action, or a pencil icon for an edit action.
-- A stand alone tertiary button that resembles a link is the only instance when both an icon and text may be suitable
-- Button response time, also known as latency, allows for 100 ms or less between press and end of animation.
-- Functionality
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+- `ButtonRoot` (interactive control surface; native `button` in web targets)
+- `ButtonLabel` (optional for icon-only mode)
+- `ButtonLeadingIcon` (optional; icon slug driven)
 
-- Label: Text that describes the action the button performs
-- Icon: A stand alone tertiary button that resembles a link is the only instance when both an icon and text may be suitable
-- Container Area: The size of the container is determined by the elements within the button (e.g., label and icon)
-- Chevron: Differentiates a dropdown button from a button
-- Dropdown Menu: Contains a list of options from which the user may select
+Deterministic order:
+1. `ButtonRoot`
+2. optional `ButtonLeadingIcon`
+3. optional `ButtonLabel`
 
-<!-- ds:section id=layout-measurements -->
 ## Layout & Measurements
+- Border radius: `2px`.
+- Horizontal gap between icon and label: `8px`.
+- Horizontal padding (all text and icon-text variants): `16px` left and right.
+- Width is content-driven with product-level guidance:
+  - minimum width `56px`
+  - maximum width `320px`
+- Size signatures:
+  - `small`: height `24px`, vertical padding `2px`
+  - `medium`: height `32px`, vertical padding `6px`
+  - `large`: height `40px`, vertical padding `10px`
+- Icon-only signatures:
+  - `medium`: height `32px`, vertical padding `8px`
+  - `large`: height `40px`, vertical padding `12px`
+- Icon glyph size: `16px x 16px`.
+- Focus ring geometry (focus-visible):
+  - outer ring stroke: `1px` (`var(--border-width-border-1)`)
+  - ring offset from control edge: `3px`
+  - ring corner radius: `4px` (outer ring only; button container remains `2px`)
 
-- Verified from Figma Button instances (`node-id=42808-93601`) using horizontal auto-layout.
-- Common geometry: `layoutMode=HORIZONTAL`, `itemSpacing=8`, `cornerRadius=2`, horizontal padding `16` left/right.
-- Width behavior from docs guidance: min `56px`, max `320px` (content-driven in between).
-
-### Button size signatures found in Figma
-
-| Size signature | Height | Padding (Top/Right/Bottom/Left) | Gap | Radius |
-|---|---:|---|---:|---:|
-| Small | 24px | 2 / 16 / 2 / 16 | 8px | 2px |
-| Medium (compact) | 32px | 6 / 16 / 6 / 16 | 8px | 2px |
-| Medium (standard) | 32px | 8 / 16 / 8 / 16 | 8px | 2px |
-| Large (standard) | 40px | 10 / 16 / 10 / 16 | 8px | 2px |
-| Large (loose) | 40px | 12 / 16 / 12 / 16 | 8px | 2px |
-
-### Density primitive references
-
-- `Density Primitive/Compact/Header - Vertical padding` = `4`
-- `Density Primitive/Compact/Cell - Vertical padding` = `8`
-- `Density Primitive/Standard/Header - Vertical padding` = `8`
-- `Density Primitive/Standard/Cell - Vertical padding` = `10`
-- `Density Primitive/Loose/Header - Vertical padding` = `12`
-- `Density Primitive/Loose/Cell - Vertical padding` = `14`
-
-<!-- ds:section id=typography -->
-## Typography
-
-- Default buttons may contain a label or an icon, but not both. They can exhibit one of four distinct styles: Primary, Secondary, Tertiary, or Destructive. A stand alone tertiary button that resembles a link is the only instance when an icon and text may be suitable. Each style serves a unique purpose and provides a different visual cue to the user.
-- Dropdown button menus serve to present a collection of actions that can be executed on a specific data set. An example of this is the ‘More Actions’ dropdown menu in a data grid, which reveals a list of potential actions that can be performed on the data within the grid. Once an action from the list is selected the dropdown menu automatically closes. Dropdown menu also closes when a click is registered outside the dropdown menu or when the ‘Esc’ key is pressed. Dropdown menus are available in three distinct styles: Primary, Secondary, and Tertiary, each offering a different visual emphasis.
-
-<!-- ds:section id=tokens -->
 ## Tokens
-### Global style token collections available in this Figma file
+- Typography:
+  - `Body 2` (`14/20`, regular) for button text.
+- Core primary tokens:
+  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-background-controls-brand-stronger)`
+  - `var(--color-border-transparent-brand)`
+  - `var(--color-text-white)`
+- Secondary/tertiary tokens:
+  - `var(--color-background-controls-brand-lighter)`
+  - `var(--color-background-controls-brand-light)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-text-brand-strong)`
+- Destructive tokens:
+  - `var(--color-background-alerting-critical)`
+  - `var(--color-background-alerting-critical-strong)`
+  - `var(--color-background-alerting-critical-stronger)`
+  - `var(--color-border-alerting-transparent-critical)`
+- Disabled tokens:
+  - `var(--color-background-gray-lighter)`
+  - `var(--color-border-disabled)`
+  - `var(--color-text-disabled)`
+  - `var(--color-icon-disabled)`
+- Icon tokens:
+  - `var(--color-icon-brand-base)`
+  - `var(--color-icon-white)`
 
-- `Tokens` (theme-aware: Light / Dark)
-- `Primitive` (base primitives available in file)
-- `Density Primitive` (density baseline values used by layout)
-- Note: collection names are exactly as returned by Figma (`Primitive`, `Density Primitive`), not pluralized.
-
-### Tokens (Light / Dark) used by Button states
-
-- `var(--color-background-controls-brand-base)` = #0076CE (light) / #0076CE (dark)
-- `var(--color-background-controls-brand-strong)` = #0062AB (light) / #0062AB (dark)
-- `var(--color-background-controls-brand-stronger)` = #06528A (light) / #06528A (dark)
-- `var(--color-background-gray-light)` = #EAEAEA (light) / #393939 (dark)
-- `var(--color-border-brand-base)` = #0076CE (light) / #4C9FDD (dark)
-- `var(--color-border-disabled)` = #757575 (light) / #9E9E9E (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #C5C5C5 (dark)
-- `var(--color-text-white)` = #FFFFFF (light) / #FFFFFF (dark)
-
-### Density Primitive (global spacing density references)
-
-- `Compact/Header - Vertical padding` = `4`
-- `Compact/Cell - Vertical padding` = `8`
-- `Standard/Header - Vertical padding` = `8`
-- `Standard/Cell - Vertical padding` = `10`
-- `Loose/Header - Vertical padding` = `12`
-- `Loose/Cell - Vertical padding` = `14`
 ## States (Light Theme)
-
-| Area | State | Background | Border | Text/Icon |
+| Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| *See Figma* | Default | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-transparent-brand)` (none) | `var(--color-text-white)` (#FFFFFF) |
-| *See Figma* | Hover | `var(--color-background-controls-brand-strong)` (#0062AB) | `var(--color-border-transparent-brand)` (none) | `var(--color-text-white)` (#FFFFFF) |
-| *See Figma* | Active | `var(--color-background-controls-brand-stronger)` (#06528A) | `var(--color-border-transparent-brand)` (none) | `var(--color-text-white)` (#FFFFFF) |
-| *See Figma* | Disabled | `var(--color-background-gray-light)` (#EAEAEA) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |
-| *See Figma* | Focus | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-brand-base)` (#0076CE) | `var(--color-text-white)` (#FFFFFF) |
+| primary | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| primary | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| primary | press | `var(--color-background-controls-brand-stronger)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| primary | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
+| secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | disabled | transparent | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| secondary | focus-visible | same as current interactive base state | control border `var(--color-border-brand-base)` + outer brand focus outline | text/icon unchanged |
+| tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | disabled | transparent | transparent | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| tertiary | focus-visible | same as current interactive base state | control border by state + outer brand focus outline | text/icon unchanged |
+| destructive | default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| destructive | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
+
 ## States (Dark Theme)
-
-| Area | State | Background | Border | Text/Icon |
+| Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| *See Figma* | Default | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-transparent-brand)` (#4C9FDD) | `var(--color-text-white)` (#FFFFFF) |
-| *See Figma* | Hover | `var(--color-background-controls-brand-strong)` (#0062AB) | `var(--color-border-transparent-brand)` (#4C9FDD) | `var(--color-text-white)` (#FFFFFF) |
-| *See Figma* | Active | `var(--color-background-controls-brand-stronger)` (#06528A) | `var(--color-border-transparent-brand)` (#4C9FDD) | `var(--color-text-white)` (#FFFFFF) |
-| *See Figma* | Disabled | `var(--color-background-gray-light)` (#393939) | `var(--color-border-disabled)` (#9E9E9E) | `var(--color-text-disabled)` (#C5C5C5) |
-| *See Figma* | Focus | `var(--color-background-controls-brand-base)` (#0076CE) | `var(--color-border-brand-base)` (#4C9FDD) | `var(--color-text-white)` (#FFFFFF) |
+| primary | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| primary | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| primary | press | `var(--color-background-controls-brand-stronger)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| primary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
+| secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | disabled | transparent | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| secondary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
+| tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | disabled | transparent | transparent | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| tertiary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
+| destructive | default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| destructive | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
+
 ## Interactions
+- Trigger: pointer click, `Enter`, and `Space`.
+- `hover` appears on pointer hover for interactive buttons.
+- `press` appears while pointer or keyboard activation is held.
+- `focus-visible` appears for keyboard modality with an outer brand focus outline.
+- Disabled state blocks all interaction and event emission.
+- Runtime default must remain interactive.
+- Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
 
-- Click / keyboard interaction patterns: implement per platform guidelines.
-- Map focus rings to `var(--color-focus-primary)` or brand focus token where specified.
+## Composition & API (runtime)
+- Suggested runtime component: `IdsButton`.
 
+Inputs:
+- `label?: string` (required unless `iconOnly=true`)
+- `variant?: "primary" | "secondary" | "tertiary" | "destructive"` (default `primary`)
+- `size?: "small" | "medium" | "large"` (default `large`)
+- `iconSlug?: string` (optional; user-defined icon slug from `/asset/icons/<slug>.svg`)
+- `iconOnly?: boolean` (default `false`)
+- `disabled?: boolean` (default `false`)
+- `loading?: boolean` (default `false`; if true, interactions are blocked)
+- `type?: "button" | "submit" | "reset"` (default `button`)
+- `ariaLabel?: string` (required when `iconOnly=true`)
+- `name?: string`
+- `value?: string`
+- `autofocus?: boolean`
+- `dataState?: "default" | "hover" | "press" | "focus-visible" | "disabled"` (demo/testing override only)
 
-<!-- ds:section id=accessibility -->
-## Accessibility
+Outputs / events:
+- `onClick(event)` — emitted on successful activation.
+- `onFocus(event)` — emitted when focus enters the button.
+- `onBlur(event)` — emitted when focus leaves the button.
+- `onKeyDown(event)` — emitted on key press while focused.
+- `onKeyUp(event)` — emitted on key release while focused.
+- `onPressStart(event)` — optional convenience event for press lifecycle.
+- `onPressEnd(event)` — optional convenience event for press lifecycle.
 
-- Keyboard operable; visible focus; ARIA attributes per component pattern.
-- Meet WCAG AA for text and interactive contrast.
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic slot schema:
+  1. `ButtonRoot`
+  2. optional `ButtonLeadingIcon`
+  3. optional `ButtonLabel`
+- Variant matrix:
+  - `variant`: `primary | secondary | tertiary | destructive`
+  - `size`: `small | medium | large`
+  - icon modes: `iconSlug omitted` / `iconSlug present with label` / `iconOnly with iconSlug`
+  - states: `default | hover | press | focus-visible | disabled`
+- Per-slot style contract:
+  - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
+  - `ButtonLeadingIcon`: `16x16`, color token follows variant/state.
+  - `ButtonLabel`: `Body 2`.
+- Behavior contract:
+  - `disabled || loading` blocks activation and output events.
+  - `iconOnly=true` requires accessible label.
+  - `press` state is transient and cleared on pointer/key release.
+  - `iconOnly=true` is supported for `medium` and `large` sizes only.
+- Accessibility contract:
+  - Native `button` semantics.
+  - `aria-disabled` mirrors disabled state for non-native fallbacks.
+  - Keyboard parity: `Enter` and `Space` activate.
+  - Visible `focus-visible` treatment required.
+- Asset resolution + bundling:
+  - Icon input uses slug: `iconSlug`.
+  - Resolve icon from `/asset/icons/<iconSlug>.svg`.
+  - Unknown slug fallback: hide icon slot and continue rendering label.
+- Fallback/error rules:
+  - Unknown `variant` -> `primary`.
+  - Unknown `size` -> `large`.
+  - `iconOnly=true` and missing `ariaLabel` -> validation error.
+  - `iconOnly=true` and missing `iconSlug` -> validation error.
+  - `iconOnly=true` with `size=small` -> validation error (or coerce to `medium` only if product explicitly enables coercion).
+- Validation checklist:
+  - [ ] All variant x size x state combinations resolve tokenized styles.
+  - [ ] Icon slug path resolution works and gracefully handles missing slugs.
+  - [ ] Disabled/loading modes prevent output events.
+  - [ ] Keyboard and pointer activation parity is preserved.
+  - [ ] Light/Dark tables remain structurally parallel.
 
-
-<!-- ds:section id=variants -->
-## Variants
-
-- Default variant; additional variants per Figma component set.
-
-
-<!-- ds:section id=behavior-guidelines -->
-## Behavior & Guidelines
-
-- Follow design-system usage guidance for this component family.
-
-
-<!-- ds:section id=api-contract -->
-## API & Contract
-
-- API/contract details not extracted from docs.
-
-<!-- ds:section id=implementation-notes -->
-## Implementation Notes
-
-- Implementation notes not extracted.
-
-<!-- ds:section id=troubleshooting -->
-## Troubleshooting
-
-- Troubleshooting notes not extracted.
-
-<!-- ds:section id=related-links -->
-## Related Links
-
-- Data Grid
-- Wizard
-- Modal: Single-Page
-- Modal: Multi-Page
-- Modal: Dialog
-- Form
-
-<!-- ds:section id=dynamic-destructive -->
-## Destructive
-
-- These buttons can be used to create visual friction when a user is confronted with an action that introduces risk
-- This button should be used when actions lead to irreversible change
-- Destructive buttons are used for deleting data or overriding a task
-
-<!-- ds:section id=dynamic-height -->
-## Height
-
-- Large - Large buttons are 40px in height, and the default
-      padding on the left and the right is 16px. These are used in most places,
-      including modal dialogs. padding on the top and bottom is 6px.
-- Medium - Medium buttons are 32px in height, and the
-      default padding on the left and right is 16px. padding on the top and bottom is 6px. They are used in places
-      where the normal-sized button would appear too large and heavy.
-- Small - Small buttons are 24px in height, and the default
-      padding on the left and right is 16px. padding on the top and bottom is 2px. The text is 13pt for small buttons
-      only. They are used in places where the other sizes wouldn't fit, but
-      where it is important to include a button shape. This could include small
-      inline alerts with actions, or inside a table row.
-- Example: Different button sizes with respect to height (40px, 32px and
-      24px). Icon buttons are available only in two sizes.
-
-<!-- ds:section id=dynamic-primary -->
-## Primary
-
-- Primary buttons have the strongest visual weight of all buttons
-- The purpose of primary buttons are to call the user's attention to the most important actions on the screen
-- Some examples of primary actions may include: ‘Apply’, ‘Add’, and, ‘Edit’ but this is not a complete list
-
-<!-- ds:section id=dynamic-secondary -->
-## Secondary
-
-- They are used to indicate actions that compliment primary actions or to offer high contrast between primary actions and less important tasks
-- Use secondary button sparingly
-- Some examples of placement for secondary buttons are within cards, modals, and wizards
-
-<!-- ds:section id=dynamic-tertiary -->
-## Tertiary
-
-- Tertiary buttons have the weakest visual weight of all three button styles
-- They are used for actions that do not require the user’s focus
-- Buttons like ‘Skip’ and ‘Cancel’ are usually tertiary style buttons
-- A stand alone tertiary button that resembles a link is the only instance when both an icon and text may be suitable
-
-<!-- ds:section id=dynamic-width -->
-## Width
-
-- Min - The minimum width of a button (with text) should not
-      be less than 56px
-- Max - The maximum width of a button (with text) should not
-      be more than 320px
-- Different button sizes with respect to width (56px and 320px).
-
-<!-- ds:section id=source-conflicts -->
-## Source Conflict Notes
-
-- No cross-source conflicts detected.
-
-<!-- ds:section id=token-gaps-notes -->
-## Token Gaps / Notes
-
-- Cross-check semantic CSS variables (`var(--...)`) against your theme build.
-- Re-run generation after Figma or documentation image updates.
-
-<!-- ds:section id=deliverable-checklist -->
-## Deliverable Checklist
-
-- [ ] Implement component API matching framework conventions (Angular / React / Vue / Lit)
-- [ ] Wire tokens from CSS variables
-- [ ] Cover keyboard + screen reader requirements
-- [ ] Verify light and dark themes
-- [ ] Match spacing / typography within tolerance of Figma
-
-<!-- ds:section id=source-mapping -->
 ## Source Mapping
-
-- Figma REST: `GET /v1/files/(skipped)/nodes` and `GET /v1/files/(skipped)/variables`
-- Component map: `data/component-figma-map.json`
-- GitHub docs: MDX under `content/<component>/` and shared assets under `content/assets/images/...`
-- Local docs fallback: `components/ids/<slug>/` when GitHub docs are absent/incomplete
-
-## Documentation imagery
-
-### Vision-derived state tokens (deterministic fallback)
-
-- Default Bg: var(--color-background-controls-brand-base) - #0076CE
-- Default Outline/Border: var(--color-border-brand-base) - #0076CE
-- Default Text/Icon: var(--color-text-white) - #FFFFFF
-- Hover Bg: var(--color-background-controls-brand-strong) - #0062AB
-- Hover Outline/Border: var(--color-border-brand-base) - #0076CE
-- Hover Text/Icon: var(--color-text-white) - #FFFFFF
-- Active Bg: var(--color-background-controls-brand-stronger) - #06528A
-- Active Outline/Border: var(--color-border-brand-base) - #0076CE
-- Active Text/Icon: var(--color-text-white) - #FFFFFF
-- Disabled Bg: var(--color-background-gray-light) - #EAEAEA
-- Disabled Outline/Border: var(--color-border-disabled) - #757575
-- Disabled Text/Icon: var(--color-text-disabled) - #757575
-- Focus Bg: var(--color-background-controls-brand-base) - #0076CE
-- Focus Outline/Border: var(--color-border-brand-base) - #0076CE
-- Focus Text/Icon: var(--color-text-white) - #FFFFFF
-
-- Notes: SVG vision labels may be unavailable; this block uses Figma semantic token values.
-### Documentation image 1
-
-*Image `content/assets/images/components/button/overview-01.svg` — (root) [github]*
-
-It appears you've provided a snippet of SVG code that represents some geometric shapes. The code defines various paths and rectangles, which are used to draw the figure. The first path is a complex curve composed of multiple segments, which create a smooth and flowing shape. Following this, there are two sets of rectangles with rounded corners. The rectangles are positioned at different angles and heights, adding depth and perspective to the image.
-
-The color attributes within the paths define how the shapes are filled or outlined. For example, the "fill" attribute determines whether the interior of a shape is filled in with color, while the "stroke" attribute determines the line that outlines the shape. The "stroke-width" attribute adjusts the thickness of this line.
-
-This SVG code is used to create graphics in web pages or other applications that can interpret and display SVG content.
-
-### Documentation image 2
-
-*Image `content/assets/images/components/button/overview-02.svg` — (root) [github]*
-
-This is an SVG image, which stands for Scalable Vector Graphics. It's a vector image format that can be scaled to any size without losing quality. The image contains one or more shapes, and the text in the image appears to describe the shape and style attributes of those shapes. The exact meaning of each attribute would depend on the context in which they are used.
-
-### Documentation image 3
-
-*Image `content/assets/images/components/button/overview-03.svg` — (root) [github]*
-
-This appears to be a snippet of SVG code, which is used for vector graphics. The code defines a path that consists of several commands (M, L, C, and S) that describe the shape of an object in the image.
-
-Here's what each command means:
-
-* M: Move to the specified point without drawing a line.
-* L: Draw a straight line from the current position to the specified point.
-* C: Curve to the specified point, with the control points at the current position and another point specified by two coordinates.
-* S: Curve to the specified point, using a quadratic Bézier curve, with the control points at the current position and another point specified by one coordinate (the previous point on the path) and another point specified by two coordinates.
-
-The numbers in parentheses after each command represent the x and y coordinates of the points involved in the commands. For example, the first M command moves to the point (45.1184, 66.7309), while the second C command curves to the point (42.8197, 66.8385) using the control points at the current position and another point specified by two coordinates.
-
-Overall, this SVG code defines a complex shape with various lines and curves that make up the image content. Without additional context or data, it's difficult to provide more specific information about what the shape represents.
-
-### Documentation image 4
-
-*Image `content/assets/images/components/button/overview-04.svg` — (root) [github]*
-
-This appears to be an SVG (Scalable Vector Graphics) file, which is a vector image format used for creating and displaying images in web browsers. The content within the `<svg>` tags is written using XML markup language. Specifically, it contains a series of paths and groups that define various shapes and elements on the page.
-
-The image shows a stylized graphic with curved lines, shapes, and shading. It seems to be a custom design or logo, but without more context, I cannot determine its specific meaning or purpose. The use of vector graphics allows for smooth scaling and high-quality rendering at any size.
-
-### Documentation image 5
-
-*Image `content/assets/images/components/button/overview-05.svg` — (root) [github]*
-
-This is an SVG (Scalable Vector Graphics) file, which is a vector image format that is used to display graphics on web pages and other applications. The SVG file contains XML code with graphics elements such as <rect>, <path>, <polygon>, etc., that define various shapes and colors using mathematical equations.
-
-In this particular SVG file, there are three rectangles with rounded corners, two of which are filled in with a light blue color, while the third one is not filled in. The first rectangle is at the bottom left corner of the image, the second rectangle is in the middle right corner, and the third rectangle is at the top right corner.
-
-Each rectangle has a stroke (outline) that is black in color. There are also two paths defined by <path> elements, one of which appears to be a curved line or shape, while the other path is not visible in this image. The <defs> element contains a clipPath definition for clipping the graphics to a specified area.
-
-Overall, the SVG file defines a simple graphic with basic shapes and colors that can be used as an icon or decoration on a website or other application.
-
-### Documentation image 6
-
-*Image `content/assets/images/components/button/overview-06.svg` — (root) [github]*
-
-This appears to be an SVG (Scalable Vector Graphics) image file, which is a type of vector graphics file format used for creating and displaying two-dimensional vector graphics in web pages, in various applications, and on different platforms and devices. The SVG file contains XML code with embedded vector graphic data defined using the <path>, <rect>, and <circle> elements, along with other standard SVG elements such as <defs>, <clipPath>, and <use>.
-
-The image itself is a stylized representation of an object, possibly a tool or a scientific apparatus, composed of rectangles, circles, and lines. It is likely that the object depicted here is related to some form of scientific measurement or experimentation. The color scheme consists mainly of shades of blue and white, with the background being mostly white and the subject matter in blue tones.
-
-Without additional context or information, it's not possible to determine the exact purpose or meaning behind this image, but it does seem to be a digital illustration designed for visual clarity and simplicity.
-
-### Documentation image 7
-
-*Image `content/assets/images/components/button/overview-07.svg` — (root) [github]*
-
-This is an image of a path on the ground. The path appears to be smooth and straight, leading towards the bottom right corner of the image. There is also a darker area that seems to be a shadow or another object casting a shadow on the path. The surrounding environment is not clearly visible due to the focus being on the path itself.
-
-### Documentation image 8
-
-*Image `content/assets/images/components/button/overview-08.svg` — (root) [github]*
-
-The image shows a set of concentric circles with a black background and white coloring. These circles appear to be a part of a larger design or pattern, but the full context is not visible in the provided section of the image. The inner circle contains a small dot near its bottom left corner, and the outermost circle has a smooth curve connecting its two ends. There are no texts or distinguishable features that provide additional information about the image's content or purpose.
-
-### Documentation image 9
-
-*Image `content/assets/images/components/button/overview-09.svg` — (root) [github]*
-
-The image you have provided appears to be a screenshot of a computer interface, possibly showing a graphical user interface or a web page. However, due to the resolution and angle at which the photo was taken, it's difficult to make out specific details about the content displayed on the screen. If you need help with something related to this image, please provide more information or clarify your question.
-
-### Documentation image 10
-
-*Image `content/assets/images/components/button/overview-10.svg` — (root) [github]*
-
-This image appears to be a screenshot of a vector graphics editor displaying a complex, multi-layered design or logo. The design is composed of various shapes and text, with different colors and gradients that suggest depth and dimensionality. Without more context, it's difficult to provide any specific information about the purpose or significance of the design. It looks like the image may have been exported from a software program used for creating vector graphics, such as Adobe Illustrator or CorelDRAW.
-
-### Documentation image 11
-
-*Image `content/assets/images/components/button/overview-11.svg` — (root) [github]*
-
-The image you've provided appears to be a screenshot of a digital drawing or illustration, with a predominantly muted color palette consisting of earth tones and pastel shades. The artwork features what looks like a landscape or natural scene, possibly a forest or meadow given the presence of what could be trees in the background and some foliage on the right side of the image.
-
-The style is somewhat impressionistic, with visible brush strokes that suggest movement or a sense of organic growth. The use of light and shadow adds depth to the scene, creating a three-dimensional effect and giving the viewer a sense of space.
-
-Overall, the artwork seems to be a digital painting that captures a serene and peaceful landscape. The artist has paid attention to detail, with careful consideration given to the texture of the foliage and the interplay between light and shadow.
-
-### Documentation image 12
-
-*Image `content/assets/images/components/button/overview-12.svg` — (root) [github]*
-
-This appears to be an HTML-like code snippet with inline CSS styling and JavaScript code. It's a fragment of a webpage that displays a button element, a heading, and some paragraph text. The button has the class "btn btn-primary", which suggests it's styled to resemble Bootstrap 4 buttons.
-
-The styles in the `<style>` tag define the basic appearance of the page, including font sizes, padding, and background colors. The JavaScript code at the bottom appears to be a simple function that updates the text content of the heading (`h1`) and paragraphs (`p`) with some dynamic values when the button is clicked.
-
-It's important to note that this snippet is incomplete and likely intended for use within a larger HTML document or project. The JavaScript code is looking for elements with specific class names, so it should be included within the main body of an HTML document rather than being used as-is.
-
-### Documentation image 13
-
-*Image `content/assets/images/components/button/overview-13.svg` — (root) [github]*
-
-It seems you've provided a SVG code for a rectangular shape with rounded corners and a white fill color. This shape is not fully enclosed by the rectangle itself, as some parts of its path are exposed outside the bounding box of the rectangle. If you want to adjust the appearance or properties of this shape, you can modify the attributes within the SVG code.
-
-Here's an explanation of the attributes used in this SVG code:
-
-* `width` and `height` define the dimensions of the rectangle.
-* `x` and `y` represent the x-coordinate and y-coordinate offset of the top-left corner of the rectangle.
-* `rx` and `ry` control the radius of the rounded corners, where `rx` affects the horizontal radius and `ry` affects the vertical radius.
-* The `fill` attribute sets the fill color for the shape (white in this case).
-* The `stroke` and `stroke-width` attributes define the line color and width for the outline of the rectangle.
-
-If you want to change the appearance of the shape, such as the fill or stroke colors, the dimensions or position, or the radius of the rounded corners, simply adjust the corresponding attribute values in the code.
-
-### Documentation image 14
-
-*Image `content/assets/images/components/button/overview-14.svg` — (root) [github]*
-
-It seems there was an error in the text you provided, as it appears to be a repeated block of text without any context or content. If you have a specific question or request related to this text, please provide more information so I can assist you better.
-
-### Documentation image 15
-
-*Image `content/assets/images/components/button/overview-15.svg` — (root) [github]*
-
-The image you've provided appears to be an SVG or vector graphic of a stylized representation of a person, possibly in the midst of a dance move or other action. The figure is depicted with exaggerated proportions and lines that suggest movement. However, without more context or information on what exactly the figure represents, it's difficult to determine its specific meaning or purpose. If you have any further questions about this image, feel free to ask!
-
-### Documentation image 16
-
-*Image `content/assets/images/components/button/overview-16.svg` — (root) [github]*
-
-It appears you have shared a SVG (Scalable Vector Graphics) file. This is an XML-based vector image format for two-dimensional graphics with support for interactivity and animation with scripting languages such as JavaScript, and a small subset of the Extensible Stylesheet Language (CSS). SVG images are scalable, meaning they can be resized without losing quality.
-
-This particular SVG contains various shapes, paths, rectangles, and other graphical elements, along with their respective colors, styles, and attributes defined within the XML structure. The file uses a combination of path data, fill rules, stroke properties, and text to create its visual representation.
-
-If you have any specific questions about SVGs or need assistance with a particular aspect of this file, feel free to ask!
-
-### Documentation image 17
-
-*Image `content/assets/images/components/button/overview-17.svg` — (root) [github]*
-
-This appears to be a set of instructions or data that could be used for various purposes, such as for training a neural network or for creating images with a particular style. The data seems to consist of arrays of values and possibly additional information that is not visible in the image provided. Without more context, it's difficult to provide further details about what this data might represent or how it could be used.
-
-<!-- auto:generated:end -->
+- Component map entry: `data/component-figma-map.json` -> `Button`.
+- Primary node: `41894:116183` (IDS library button board).
+- States matrix node: `9662:25120` (style x state x size matrix evidence).
+- Figma MCP calls used:
+  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
+  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
+  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
