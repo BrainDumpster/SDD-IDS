@@ -1,5 +1,5 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
-import { isValidElement, type ReactNode } from "react";
+import { isValidElement, type ReactNode, useEffect, useRef, useState } from "react";
 import styles from "./Dialog.module.css";
 import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
@@ -42,7 +42,7 @@ interface DialogProps {
   description?: string;
   children?: ReactNode;
 
-  // Footer buttons
+  // Footer buttons (labels are product/user-defined at runtime)
   primaryButtonName: string;
   enableActionButton?: boolean;
   tertiaryButtonName?: string;
@@ -74,6 +74,10 @@ export function Dialog({
   onPrimaryButtonClick,
   onTertiaryButtonClick,
 }: DialogProps) {
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  const [bodyScrollable, setBodyScrollable] = useState(false);
+  const [showBodyScrollShadow, setShowBodyScrollShadow] = useState(false);
+
   const controlled = open !== undefined;
   if (!controlled && trigger == null) {
     throw new Error("Dialog: pass `trigger`, or use controlled mode with `open`.");
@@ -88,6 +92,36 @@ export function Dialog({
       : `${styles.popup} ${styles[dialogSize]}`;
 
   const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
+
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) {
+      setBodyScrollable(false);
+      setShowBodyScrollShadow(false);
+      return;
+    }
+
+    const updateContentOverflow = () => {
+      const scrollable = el.scrollHeight - el.clientHeight > 1;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+      setBodyScrollable(scrollable);
+      setShowBodyScrollShadow(scrollable && !atBottom);
+    };
+
+    updateContentOverflow();
+    el.addEventListener("scroll", updateContentOverflow, { passive: true });
+
+    const resizeObserver = new ResizeObserver(updateContentOverflow);
+    resizeObserver.observe(el);
+    if (el.firstElementChild instanceof HTMLElement) {
+      resizeObserver.observe(el.firstElementChild);
+    }
+
+    return () => {
+      el.removeEventListener("scroll", updateContentOverflow);
+      resizeObserver.disconnect();
+    };
+  }, [children, description, dialogSize, dialogType, open, openDidalog, variant]);
 
   return (
     <BaseDialog.Root
@@ -179,7 +213,28 @@ export function Dialog({
                 </BaseDialog.Description>
               ) : null}
 
-              {children ? <div className={styles.body}>{children}</div> : null}
+              {children ? (
+                <div
+                  ref={bodyRef}
+                  className={[
+                    styles.body,
+                    bodyScrollable ? styles.bodyScrollable : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {children}
+                </div>
+              ) : null}
+
+              <div
+                className={
+                  showBodyScrollShadow
+                    ? styles.contentScrollShadow
+                    : styles.contentSeparator
+                }
+                aria-hidden="true"
+              />
 
               <div className={styles.footer}>
                 {showTertiary ? (

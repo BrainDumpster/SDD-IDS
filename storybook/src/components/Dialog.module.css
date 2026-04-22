@@ -113,6 +113,7 @@
 }
 
 .body {
+  position: relative;
   padding: 0 var(--padding-padding-24) var(--padding-padding-24);
   flex: 1 1 auto;
   min-height: 0;
@@ -120,6 +121,26 @@
   font-size: var(--font-size-body-2);
   color: var(--color-text-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
+}
+
+.bodyScrollable {
+  overflow-y: auto;
+}
+
+.contentSeparator {
+  height: 1px;
+  background: var(--color-border-accessible);
+  flex-shrink: 0;
+}
+
+.contentScrollShadow {
+  height: 19px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-gradient-overflow-vertical-end, rgba(255, 255, 255, 0)) 0%,
+    var(--color-gradient-overflow-vertical-start, rgba(182, 182, 182, 0.4)) 100%
+  );
 }
 
 .footer {

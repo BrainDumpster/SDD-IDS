@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Dialog } from "./Dialog";
 import { Button } from "./Button";
 import { TextInput } from "./TextInput";
+import { Tabs } from "./Tabs";
 
 const meta: Meta<typeof Dialog> = {
   title: "IDS/Modal/Dialog",
@@ -167,4 +168,91 @@ export const Destructive: Story = {
       </Dialog>
     );
   },
+};
+
+export const SinglePageModalUsage: Story = {
+  render: () => (
+    <Dialog
+      trigger={<Button variant="secondary">Open Single-Page Modal</Button>}
+      dialogTitle="Header"
+      dialogType="Non-Alerting"
+      dialogSize="xl"
+      dialogClosable={true}
+      openDidalog={false}
+      description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit."
+      primaryButtonName="Apply"
+      enableActionButton={true}
+      tertiaryButtonName="Cancel"
+      enableTertiaryButtton={true}
+      onClose={logEvent("onClose")}
+      onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
+      onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
+    >
+      <div
+        style={{
+          minHeight: 220,
+          border: "1px solid var(--color-border-brand-base)",
+          background: "var(--color-background-brand-lighter)",
+          padding: 16,
+          color: "var(--color-text-neutral)",
+        }}
+      >
+        <strong style={{ display: "block", marginBottom: 8 }}>Swap content</strong>
+        Single-page usage keeps one continuous content panel without tab/page switching.
+      </div>
+    </Dialog>
+  ),
+};
+
+export const MultiPageModalUsage: Story = {
+  render: () => (
+    <Dialog
+      trigger={<Button variant="secondary">Open Multi-Page Modal</Button>}
+      dialogTitle="Header"
+      dialogType="Non-Alerting"
+      dialogSize="xl"
+      dialogClosable={true}
+      openDidalog={false}
+      description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
+      primaryButtonName="Apply"
+      enableActionButton={true}
+      tertiaryButtonName="Cancel"
+      enableTertiaryButtton={true}
+      onClose={logEvent("onClose")}
+      onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
+      onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
+    >
+      <Tabs
+        variant="secondary"
+        items={[
+          {
+            id: "details",
+            label: "Details",
+            panel: "Page 1 content: overview details and context.",
+          },
+          {
+            id: "settings",
+            label: "Settings",
+            panel: "Page 2 content: configurable settings and options.",
+          },
+          {
+            id: "review",
+            label: "Review",
+            panel: "Page 3 content: final review before apply.",
+          },
+          {
+            id: "audit",
+            label: "Audit Trail",
+            panel: "Optional hidden page content via overflow.",
+          },
+          {
+            id: "integrations",
+            label: "Integrations",
+            panel: "Optional hidden page content via overflow.",
+          },
+        ]}
+        moreLabel="More"
+      />
+    </Dialog>
+  ),
 };
