@@ -3,6 +3,12 @@
   gap: var(--spacing-space-12);
 }
 
+.field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
 .vertical {
   flex-direction: column;
 }
@@ -53,7 +59,7 @@
 
 .root:focus-visible {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
 .root[data-checked] {
@@ -74,7 +80,7 @@
 }
 
 .root[data-disabled][data-checked] {
-  background: var(--color-background-component);
+  background: var(--color-background-gray-light);
   border-color: var(--color-border-disabled);
 }
 
@@ -92,7 +98,7 @@
 }
 
 .root[data-disabled][data-checked] .indicator {
-  background: var(--color-border-disabled);
+  background: var(--color-icon-disabled);
 }
 
 .label {
@@ -100,5 +106,33 @@
 }
 
 .wrapper[data-disabled] .label {
+  color: var(--color-text-disabled);
+}
+
+.root[data-error="true"]:not([data-checked]) {
+  border-color: var(--color-text-critical);
+}
+
+.root[data-error="true"]:not([data-checked]):hover:not([data-disabled]),
+.root[data-error="true"]:not([data-checked]):active:not([data-disabled]) {
+  border-color: var(--color-text-critical);
+}
+
+.labelError {
+  color: var(--color-text-critical);
+}
+
+.assistiveText {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  margin-left: calc(16px + var(--spacing-space-8));
+}
+
+.assistiveTextError {
+  color: var(--color-text-critical);
+}
+
+.assistiveTextDisabled {
   color: var(--color-text-disabled);
 }
