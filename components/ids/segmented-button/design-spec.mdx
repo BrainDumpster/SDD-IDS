@@ -4,8 +4,15 @@
 - **Component:** Segmented Button
 - **Category:** Formelements
 - **Design System:** IDS
-- **Figma (validated):** `https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=8218-13149&m=dev`
-- **Node ID:** `8218:13149` (frame `SegmentedButton-Main`)
+- **Figma (validated):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42113-67348&m=dev`
+- **Node ID:** `42113:67348` (frame `Content`, includes Segmented Button state matrixes)
+- **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
+- **Text option component node:** `9015:20992` (`.Segemented Button Text`)
+- **Icon option component node:** `10148:29576` (`.SegementedButton-Element-OptionIcon`)
+- **Figma references used for validation:**
+  - Main/state matrix: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42113-67348&m=dev`
+  - Text option component: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9015-20992&m=dev`
+  - Icon option component: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=10148-29576&m=dev`
 - **Variant axes (from Figma component set):**
   - **Type:** `Text` | `Icon`
   - **# Options:** `2`–`5` when `Type=Text`; `2`–`3` when `Type=Icon`
@@ -46,7 +53,7 @@ Use semantic tokens only (no literals for color, border width, radius, typograph
 
 - **Layout & shape:** `var(--corner-radius-radius-2)`, `var(--border-width-border-1)`, `var(--spacing-space-2)`, `var(--padding-padding-4)`, `var(--padding-padding-8)`, `var(--padding-padding-10)` (icon vertical QA only).
 - **Borders:** `var(--color-border-accessible)` (group outline only), `var(--color-border-brand-base)` (segment **focus-visible** only), `var(--color-border-disabled)`; segment “invisible” edges use the keyword **`transparent`** (see Anatomy — avoid `var(--color-border-transparent-brand)` for segment outlines in dark).
-- **Backgrounds:** `var(--color-background-component)`, `var(--color-background-controls-brand-base)`, `var(--color-background-controls-brand-lighter)`, `var(--color-background-controls-brand-light)`.
+- **Backgrounds:** `var(--color-background-component)`, `var(--color-background-controls-brand-base)`, `var(--color-background-brand-lighter)`, `var(--color-background-brand-light)`.
 - **Text:** `var(--color-text-white)`, `var(--color-text-neutral)`, `var(--color-text-brand-strong)`.
 - **Icons:** `var(--color-icon-white)`, `var(--color-icon-brand-base)`.
 - **Disabled (runtime extension — see note in States):** `var(--color-text-disabled)`, `var(--color-border-disabled)`, `var(--color-background-gray-light)` (align with other IDS form controls when disabled is required).
@@ -59,8 +66,8 @@ Use semantic tokens only (no literals for color, border width, radius, typograph
 | Selected | Default | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-white)` |
 | Selected | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-white)` |
 | Unselected | Default | `var(--color-background-component)` | `var(--border-width-border-1)` solid **transparent** (not `var(--color-border-transparent-brand)` in dark — see Anatomy) | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-controls-brand-lighter)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` |
-| Unselected | Press | `var(--color-background-controls-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` |
+| Unselected | Hover | `var(--color-background-brand-lighter)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` |
+| Unselected | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 
@@ -70,8 +77,8 @@ Use semantic tokens only (no literals for color, border width, radius, typograph
 | Selected | Default | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid `var(--color-border-transparent-brand)` | `var(--color-icon-white)` |
 | Selected | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-icon-white)` |
 | Unselected | Default | `var(--color-background-component)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
-| Unselected | Hover | `var(--color-background-controls-brand-lighter)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
-| Unselected | Press | `var(--color-background-controls-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
+| Unselected | Hover | `var(--color-background-brand-lighter)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
+| Unselected | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` (icon follows disabled foreground) |
 
@@ -85,14 +92,14 @@ Structurally identical to **Light Theme**. All colors must resolve from the acti
 | Selected | Default | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-white)` / `var(--color-icon-white)` |
 | Selected | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-white)` / `var(--color-icon-white)` |
 | Unselected | Default | `var(--color-background-component)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
-| Unselected | Hover | `var(--color-background-controls-brand-lighter)` (Figma `9015:22164` Option 2 Hover) | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
-| Unselected | Press | `var(--color-background-controls-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| Unselected | Hover | `var(--color-background-brand-lighter)` (Figma `9015:22164` Option 2 Hover) | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
+| Unselected | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 
 ## Interactions
 - **Pointer:** click / tap selects a segment; only one selected value in single-select mode.
-- **Hover:** applies **only** to non-disabled unselected segments (selected segment may omit hover visual unless product adds a validated “selected hover” variant). **Figma (verified):** unselected hover segment background is `var(--color-background-controls-brand-lighter)` (e.g. node `9015:22164` / `42869:141924`). Light and dark both use this **same semantic token**; ensure the dark theme maps it to a value visibly distinct from `var(--color-background-component)` so hover is perceptible.
+- **Hover:** applies **only** to non-disabled unselected segments (selected segment may omit hover visual unless product adds a validated “selected hover” variant). **Figma (verified):** unselected hover segment background is `var(--color-background-brand-lighter)` (e.g. node `9015:22164` / `42869:141924`). Light and dark both use this **same semantic token**; ensure the dark theme maps it to a value visibly distinct from `var(--color-background-component)` so hover is perceptible.
 - **Press (active pointer down):** applies to non-disabled unselected segments; uses brand-light surface and stronger label color (Text) per Figma.
 - **Focus-visible:** keyboard focus shows **1px** `var(--color-border-brand-base)` on the focused segment; mouse-only focus must not steal keyboard focus styles (`:focus-visible` pattern).
 - **Disabled:** segments (or entire group) skip hover/press/focus styling and do not emit selection changes.
@@ -247,7 +254,7 @@ Bundle rule: any slug used at runtime MUST exist in the app bundle under `assets
 - [ ] Disabled extension still meets contrast or documents exception.
 
 ## Source Mapping
-- **Primary Figma frame:** `SegmentedButton-Main` — `8218:13149`
-- **Component map:** `data/component-figma-map.json` → **Segmented Button** (`nodeId` `8218-13149`, URL aligned with this spec)
-- **Nested referenced in Dev Mode output:** `.SegementedButton-Element-OptionText` (`10148:29600`), `.SegementedButton-Element-OptionIcon` (`10148:29576`), `.SegementedButton-Element-Icons` (`10148:29563`)
-- **Extraction method:** Figma MCP `get_metadata` + `get_design_context` on `8218:13149` (validated 2026-04-06).
+- **Primary Figma frame:** `Content` — `42113:67348`
+- **Component map:** `data/component-figma-map.json` → **Segmented Button** (`figmaUrl`, `fileKey`, `nodeId`, `textOptionNodeId`, `iconOptionNodeId`)
+- **Nested referenced in Dev Mode output:** `.Segemented Button Text` (`9015:20992`), `.SegementedButton-Element-OptionIcon` (`10148:29576`), `.SegementedButton-Element-Icons` (`10148:29563`)
+- **Extraction method:** Figma MCP `get_design_context` on `42113:67348`, `9015:20992`, `10148:29576` + `get_variable_defs` on `42113:67348` (validated 2026-04-20).

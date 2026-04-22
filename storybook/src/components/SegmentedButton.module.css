@@ -63,13 +63,13 @@
 
 /* Unselected interactions — hover matches Figma: controls-brand-lighter on Option 2 (Hover). */
 .segment:not(:disabled):not(.selected):hover {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   border-color: transparent;
   color: var(--color-text-neutral);
 }
 
 .segment:not(:disabled):not(.selected):active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-brand-light);
   border-color: transparent;
   color: var(--color-text-brand-strong);
 }

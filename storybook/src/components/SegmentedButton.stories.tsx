@@ -6,7 +6,7 @@ import {
 } from "./SegmentedButton";
 
 const meta: Meta<typeof SegmentedButton> = {
-  title: "Synapse/SegmentedButton",
+  title: "IDS/Segmented Button",
   component: SegmentedButton,
 };
 
