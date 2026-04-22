@@ -66,7 +66,7 @@
 
 .tag[data-focus] {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 1px;
+  outline-offset: 3px;
 }
 
 /* Tone + emphasis */
@@ -77,69 +77,69 @@
 }
 
 .tone_info.emphasis_light {
-  background: var(--color-background-alerting-info-slate);
-  border-color: var(--color-border-alerting-info-info, var(--color-border-alerting-info-base));
-  color: var(--color-text-tag-info);
+  background: var(--color-background-alerting-info);
+  border-color: var(--color-background-alerting-info);
+  color: var(--color-text-white);
 }
 
 .tone_success.emphasis_light {
-  background: var(--color-background-alerting-success-slate);
-  border-color: var(--color-text-tag-success);
-  color: var(--color-text-tag-success);
+  background: var(--color-background-alerting-success);
+  border-color: var(--color-background-alerting-success);
+  color: var(--color-text-white);
 }
 
 .tone_minor.emphasis_light {
-  background: var(--color-background-alerting-minor-slate, var(--alert-yellow-200));
-  border-color: var(--color-border-alerting-minor-minor, var(--color-border-alerting-minor-base, var(--color-text-tag-warning)));
-  color: var(--color-text-tag-warning);
+  background: var(--color-background-alerting-minor);
+  border-color: var(--color-border-alerting-minor-transparent);
+  color: var(--color-text-warning);
 }
 
 .tone_major.emphasis_light {
-  background: var(--color-background-alerting-major-slate, var(--alert-yellow-200));
-  border-color: var(--color-border-alerting-major-major, var(--color-border-alerting-major-base));
-  color: var(--color-text-tag-major, var(--color-border-alerting-major-major));
+  background: var(--color-background-alerting-major);
+  border-color: var(--color-background-alerting-major);
+  color: var(--color-text-white);
 }
 
 .tone_critical.emphasis_light {
-  background: var(--color-background-alerting-critical-slate);
-  border-color: var(--color-border-alerting-critical-critical, var(--color-border-alerting-critical-base));
-  color: var(--color-text-tag-critical);
+  background: var(--color-background-alerting-critical);
+  border-color: var(--color-border-alerting-critical-base);
+  color: var(--color-text-white);
 }
 
 .tone_info.emphasis_strong {
-  background: var(--color-background-alerting-info-1, var(--color-border-alerting-info-info));
-  border-color: var(--color-border-alerting-info-white);
-  color: var(--color-icon-inverse);
+  background: var(--color-background-alerting-info);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
 }
 
 .tone_success.emphasis_strong {
-  background: var(--color-background-alerting-success-1, var(--color-background-alerting-success));
-  border-color: var(--color-border-alerting-success-white);
-  color: var(--color-icon-inverse);
+  background: var(--color-background-alerting-success);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
 }
 
 .tone_minor.emphasis_strong {
   background: var(--color-background-alerting-minor);
   border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-icon-inverse);
+  color: var(--color-text-warning);
 }
 
 .tone_major.emphasis_strong {
   background: var(--color-background-alerting-major);
-  border-color: var(--color-border-alerting-major-white);
-  color: var(--color-icon-inverse);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
 }
 
 .tone_critical.emphasis_strong {
   background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-critical-white);
-  color: var(--color-icon-inverse);
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
 }
 
 .clickable.selected {
-  background: var(--color-background-brand-base);
-  border-color: var(--color-icon-inverse);
-  color: var(--color-icon-inverse);
+  background: var(--color-background-controls-brand-base);
+  border-color: var(--color-border-transparent-brand);
+  color: var(--color-text-white);
 }
 
 .clickable:not(.selected) {
@@ -197,7 +197,7 @@
   height: 16px;
   padding: 0 4px;
   border-radius: 999px;
-  background: var(--color-background-brand-base);
+  background: var(--color-background-controls-brand-base);
   color: var(--color-text-white);
   display: inline-flex;
   align-items: center;
