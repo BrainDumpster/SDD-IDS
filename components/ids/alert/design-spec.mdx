@@ -154,7 +154,7 @@ Chevron tinting: white on `critical`, `warning-major`, `informational` rails; bl
 
 ### Inline — severity surfaces (Figma “light tint + solid rail”)
 
-Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from `components/ids-theme.css` / Storybook `ids-theme.css`); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info)`).
+Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from canonical `components/ids-theme.css` used by Storybook and generated outputs); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info)`).
 
 | Severity | Background | Border | Inset rail (4px) | Leading icon (`shapeName`, `16x16`) + color |
 |---|---|---|---|---|
