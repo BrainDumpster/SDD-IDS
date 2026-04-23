@@ -17,7 +17,9 @@ export interface AppLauncherOption {
   onSelect?: () => void;
 }
 
-export interface AppLauncherProductTileProps extends AppLauncherProduct {}
+export interface AppLauncherProductTileProps extends AppLauncherProduct {
+  tileClassName?: string;
+}
 
 /** Single product cell: 148×125, 32×32 icon slot, body-2 label (Figma `AppLauncher-Element`). */
 export function AppLauncherProductTile({
@@ -25,6 +27,7 @@ export function AppLauncherProductTile({
   icon,
   href,
   onSelect,
+  tileClassName,
 }: AppLauncherProductTileProps) {
   const graphic =
     icon ??
@@ -43,7 +46,7 @@ export function AppLauncherProductTile({
     return (
       <a
         href={href}
-        className={styles.appTile}
+        className={[styles.appTile, tileClassName].filter(Boolean).join(" ")}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -53,7 +56,7 @@ export function AppLauncherProductTile({
   }
 
   return (
-    <button type="button" className={styles.appTile} onClick={onSelect}>
+    <button type="button" className={[styles.appTile, tileClassName].filter(Boolean).join(" ")} onClick={onSelect}>
       {inner}
     </button>
   );
@@ -148,6 +151,7 @@ export function AppLauncher({
   const rows = chunkRows(list, Math.max(1, columns));
   const showOptions =
     (options && options.length > 0) || footerAction != null;
+  const useTwoProductSeparator = list.length === 2 && !showOptions;
 
   return (
     <Popover.Root>
@@ -181,9 +185,19 @@ export function AppLauncher({
                       {row.map((product, cellIndex) => (
                         <div key={product.id ?? `${rowIndex}-${cellIndex}`} style={{ display: "contents" }}>
                           {cellIndex > 0 ? (
-                            <div className={styles.columnDivider} aria-hidden="true" />
+                            <div
+                              className={
+                                useTwoProductSeparator
+                                  ? styles.columnDividerSolid
+                                  : styles.columnDivider
+                              }
+                              aria-hidden="true"
+                            />
                           ) : null}
-                          <AppLauncherProductTile {...product} />
+                          <AppLauncherProductTile
+                            {...product}
+                            tileClassName={undefined}
+                          />
                         </div>
                       ))}
                     </div>

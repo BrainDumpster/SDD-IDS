@@ -76,10 +76,12 @@
   --separator-inset: var(--padding-padding-16);
   box-sizing: border-box;
   background: var(--color-background-surface-2);
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: 0;
   padding: var(--padding-padding-1);
-  box-shadow: 1px 1px 5px 0 var(--shadow-drop-shadow-2-color);
+  box-shadow:
+    0 4px 4px 0 var(--shadow-drop-shadow-4-color),
+    0 2px 2px 0 var(--shadow-drop-shadow-2-color);
   width: max-content;
   max-width: min(500px, calc(100vw - 24px));
   position: relative;
@@ -110,10 +112,21 @@
   width: 0;
   align-self: stretch;
   border: none;
-  border-inline-start: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  border-inline-start: var(--border-width-border-1) dashed var(--color-border-accessible);
   margin: 0;
   padding: 0;
   min-height: 125px;
+}
+
+.columnDividerSolid {
+  flex: 0 0 0;
+  width: 0;
+  align-self: stretch;
+  border: none;
+  border-inline-start: var(--border-width-border-1) solid var(--color-border-accessible);
+  margin: calc(-1 * var(--separator-inset)) 0;
+  padding: 0;
+  min-height: auto;
 }
 
 /* Figma: horizontal separation between product rows (dotted / dashed). */
@@ -130,7 +143,7 @@
   position: absolute;
   inset-inline: 0;
   inset-block-start: calc(50% - (var(--border-width-border-1) / 2));
-  border-top: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) dashed var(--color-border-accessible);
 }
 
 /* ---------- AppLauncherProductTile ---------- */
@@ -250,7 +263,7 @@
   position: absolute;
   inset-inline: var(--separator-inset);
   inset-block-start: 0;
-  border-top: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) dashed var(--color-border-accessible);
   pointer-events: none;
 }
 
@@ -295,7 +308,7 @@
   display: flex;
   align-items: center;
   padding: var(--padding-padding-8) 0;
-  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
 }
 
 .footerAction {
