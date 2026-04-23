@@ -551,8 +551,8 @@ body[data-design-system="ids"][data-theme="dark"] {
   --color-text-link-brand-lighter: #ebf4fb;
   --color-text-link-brand-strong: #94c5ea;
   --color-text-link-brand-stronger: #d9eaf8;
-  --color-text-neutral: #8898a5;
-  --color-text-neutral-strong: #b8c1c9;
+  --color-text-neutral: #b8c1c9;
+  --color-text-neutral-strong: #e6e9ec;
   --color-text-warning: #6d4028;
   --color-text-white: #ffffff;
   --corner-radius-radius-12: 12px;
