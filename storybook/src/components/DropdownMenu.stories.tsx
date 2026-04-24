@@ -74,6 +74,7 @@ export const SectionedSingleSelect: Story = {
       <DropdownMenu
         trigger={<Button variant="secondary">Select Option</Button>}
         selectionMode="single"
+        showSearch
         selectedValues={[selected]}
         items={[
           { label: "Section Title", kind: "section" },
@@ -96,6 +97,7 @@ export const ScrollableSectioned: Story = {
   args: {
     trigger: <Button variant="secondary">Long List</Button>,
     maxHeight: 220,
+    showSearch: true,
     items: [
       { label: "Section Title", kind: "section" },
       { label: "Option", selectable: true },
@@ -124,6 +126,7 @@ export const SectionedMultiSelect: Story = {
       <DropdownMenu
         trigger={<Button variant="secondary">Select Multiple</Button>}
         selectionMode="multi"
+        showSearch
         selectedValues={selectedValues}
         items={[
           { label: "Section Title", kind: "section" },
@@ -156,6 +159,7 @@ export const PersistentOpenSelection: Story = {
         <DropdownMenu
           trigger={<Button variant="secondary">Single-select (stays open)</Button>}
           selectionMode="single"
+          showSearch
           selectedValues={[single]}
           items={[
             { label: "Section Title", kind: "section" },
@@ -170,6 +174,7 @@ export const PersistentOpenSelection: Story = {
         <DropdownMenu
           trigger={<Button variant="secondary">Multi-select (stays open)</Button>}
           selectionMode="multi"
+          showSearch
           selectedValues={multi}
           items={[
             { label: "Section Title", kind: "section" },
@@ -203,6 +208,7 @@ export const DisabledOptionsSelection: Story = {
         <DropdownMenu
           trigger={<Button variant="secondary">Single-select + disabled</Button>}
           selectionMode="single"
+          showSearch
           selectedValues={[single]}
           items={[
             { label: "Section Title", kind: "section" },
@@ -214,6 +220,7 @@ export const DisabledOptionsSelection: Story = {
         <DropdownMenu
           trigger={<Button variant="secondary">Multi-select + disabled</Button>}
           selectionMode="multi"
+          showSearch
           selectedValues={multi}
           items={[
             { label: "Section Title", kind: "section" },

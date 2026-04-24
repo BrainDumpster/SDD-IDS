@@ -1,7 +1,8 @@
 import { Menu } from "@base-ui-components/react/menu";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import styles from "./DropdownMenu.module.css";
+import search16Icon from "../../../assets/icons/search-16.svg";
 
 interface MenuItem {
   id?: string;
@@ -9,98 +10,262 @@ interface MenuItem {
   value?: string;
   onClick?: () => void;
   disabled?: boolean;
-  kind?: "item" | "section";
+  kind?: "item" | "section" | "divider";
   selectable?: boolean;
   selected?: boolean;
+  indeterminate?: boolean;
 }
 
 interface DropdownMenuProps {
   trigger: ReactNode;
   items: MenuItem[];
+  disabled?: boolean;
   selectionMode?: "single" | "multi" | "none";
+  showSingleSelectRadio?: boolean;
+  showSelectAllClearAll?: boolean;
+  selectAllLabel?: string;
+  clearAllLabel?: string;
+  selectAllChecked?: boolean;
+  selectAllIndeterminate?: boolean;
+  onSelectAllClick?: () => void;
+  onClearAllClick?: () => void;
+  clearAllDisabled?: boolean;
+  footerActionLabel?: string;
+  onFooterActionClick?: () => void;
   selectedValues?: string[];
   maxHeight?: number;
+  sideOffset?: number;
+  matchTriggerWidth?: boolean;
+  defaultOpen?: boolean;
+  showSearch?: boolean;
+  searchValue?: string;
+  searchPlaceholder?: string;
+  onSearchValueChange?: (value: string) => void;
 }
 
 export function DropdownMenu({
   trigger,
   items,
+  disabled = false,
   selectionMode = "none",
+  showSingleSelectRadio = false,
+  showSelectAllClearAll = false,
+  selectAllLabel = "Select All",
+  clearAllLabel = "Clear All",
+  selectAllChecked = false,
+  selectAllIndeterminate = false,
+  onSelectAllClick,
+  onClearAllClick,
+  clearAllDisabled = false,
+  footerActionLabel,
+  onFooterActionClick,
   selectedValues = [],
   maxHeight,
+  sideOffset = 0,
+  matchTriggerWidth = true,
+  defaultOpen = false,
+  showSearch = false,
+  searchValue,
+  searchPlaceholder = "Search",
+  onSearchValueChange,
 }: DropdownMenuProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen && !disabled);
+  const triggerMeasureRef = useRef<HTMLSpanElement | null>(null);
+  const [triggerWidth, setTriggerWidth] = useState<number>();
+
+  useLayoutEffect(() => {
+    const el = triggerMeasureRef.current;
+    if (!el) return;
+
+    const updateWidth = () => {
+      const nextWidth = Math.round(el.getBoundingClientRect().width);
+      setTriggerWidth((prev) => (prev === nextWidth ? prev : nextWidth));
+    };
+
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const popupStyle = {
+    ...(matchTriggerWidth && triggerWidth
+      ? {
+          width: `${triggerWidth}px`,
+          minWidth: `${triggerWidth}px`,
+          maxWidth: `${triggerWidth}px`,
+          "--dropdown-trigger-width": `${triggerWidth}px`,
+        }
+      : {}),
+  };
+  const positionerStyle = matchTriggerWidth && triggerWidth
+    ? {
+        width: `${triggerWidth}px`,
+        minWidth: `${triggerWidth}px`,
+        maxWidth: `${triggerWidth}px`,
+        "--dropdown-trigger-width": `${triggerWidth}px`,
+      }
+    : undefined;
 
   return (
-    <Menu.Root open={open} onOpenChange={setOpen}>
-      <Menu.Trigger className={styles.triggerReset}>
-        {trigger}
+    <Menu.Root
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (disabled) {
+          setOpen(false);
+          return;
+        }
+        setOpen(nextOpen);
+      }}
+    >
+      <Menu.Trigger
+        className={styles.triggerReset}
+        disabled={disabled}
+        style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+      >
+        <span ref={triggerMeasureRef} className={styles.triggerMeasure}>
+          {trigger}
+        </span>
       </Menu.Trigger>
       <Menu.Portal>
-        <Menu.Positioner sideOffset={4} alignment="start">
-          <Menu.Popup
-            className={styles.popup}
-            style={maxHeight ? { maxHeight, overflowY: "auto" } : undefined}
-          >
-            {items.map((item, i) => {
-              if (item.kind === "section") {
-                return (
-                  <div key={item.id ?? i} className={styles.sectionHeader} role="presentation">
-                    {item.label}
+        <Menu.Positioner sideOffset={sideOffset} alignment="start" style={positionerStyle}>
+          <Menu.Popup className={styles.popup} style={popupStyle}>
+            {showSearch ? (
+              <>
+                <div className={styles.searchRow}>
+                  <div className={styles.searchField}>
+                    <span
+                      className={styles.searchIcon}
+                      aria-hidden="true"
+                      style={{
+                        WebkitMaskImage: `url('${search16Icon}')`,
+                        maskImage: `url('${search16Icon}')`,
+                      }}
+                    />
+                    <div className={styles.searchInputWrap}>
+                      <input
+                        className={styles.searchInput}
+                        type="text"
+                        value={searchValue}
+                        placeholder={searchPlaceholder}
+                        onChange={(event) => onSearchValueChange?.(event.target.value)}
+                        onKeyDown={(event) => event.stopPropagation()}
+                      />
+                    </div>
                   </div>
-                );
-              }
-              const isSelectable = item.selectable && (selectionMode === "single" || selectionMode === "multi");
-              const isSelected =
-                item.selected ??
-                (item.value ? selectedValues.includes(item.value) : false);
-              if (isSelectable) {
-                return (
-                  <button
-                    key={item.id ?? i}
-                    type="button"
-                    className={styles.item}
-                    disabled={item.disabled}
-                    data-disabled={item.disabled ? "true" : undefined}
-                    data-selectable="true"
-                    data-selection-mode={selectionMode}
-                    data-selected={isSelected ? "true" : undefined}
-                    onClick={() => item.onClick?.()}
-                    role={selectionMode === "multi" ? "menuitemcheckbox" : "menuitemradio"}
-                    aria-checked={isSelected}
-                  >
-                    <span className={styles.leadingControl} aria-hidden="true">
-                      {selectionMode === "multi" ? (
-                        <span className={styles.checkboxOuter}>
-                          {isSelected ? (
-                            <span className={styles.checkboxTick} />
-                          ) : null}
-                        </span>
-                      ) : (
-                        <span className={styles.radioOuter}>
-                          {isSelected ? (
-                            <span className={styles.radioInner} />
-                          ) : null}
-                        </span>
-                      )}
-                    </span>
-                    {item.label}
-                  </button>
-                );
-              }
-              return (
-                <Menu.Item
-                  key={item.id ?? i}
-                  className={styles.item}
-                  onSelect={() => item.onClick?.()}
-                  disabled={item.disabled}
-                  data-selectable="false"
-                  data-selected={isSelected ? "true" : undefined}
+                </div>
+              </>
+            ) : null}
+            {showSelectAllClearAll ? (
+              <div className={styles.selectAllClearAllRow}>
+                <button
+                  type="button"
+                  className={styles.selectAllButton}
+                  data-checked={selectAllChecked ? "true" : undefined}
+                  data-indeterminate={selectAllIndeterminate ? "true" : undefined}
+                  onClick={() => onSelectAllClick?.()}
                 >
-                  {item.label}
-                </Menu.Item>
-              );
-            })}
+                  <span className={`${styles.checkboxOuter} ${styles.selectAllCheckbox}`} aria-hidden="true">
+                    {selectAllIndeterminate ? (
+                      <span className={styles.checkboxDash} />
+                    ) : selectAllChecked ? (
+                      <span className={styles.checkboxTick} />
+                    ) : null}
+                  </span>
+                  <span>{selectAllLabel}</span>
+                </button>
+                <button
+                  type="button"
+                  className={styles.clearAllButton}
+                  onClick={() => onClearAllClick?.()}
+                  disabled={clearAllDisabled}
+                >
+                  {clearAllLabel}
+                </button>
+              </div>
+            ) : null}
+            <div
+              className={styles.optionsScrollRegion}
+              style={maxHeight ? { maxHeight, overflowY: "auto" } : undefined}
+            >
+              {items.map((item, i) => {
+                if (item.kind === "section") {
+                  return (
+                    <div key={item.id ?? i} className={styles.sectionHeader} role="presentation">
+                      {item.label}
+                    </div>
+                  );
+                }
+                if (item.kind === "divider") {
+                  return <div key={item.id ?? i} className={styles.sectionDivider} role="presentation" />;
+                }
+                const isSelectable = item.selectable && (selectionMode === "single" || selectionMode === "multi");
+                const isIndeterminate = item.indeterminate ?? false;
+                const isSelected =
+                  item.selected ??
+                  (item.value ? selectedValues.includes(item.value) : false);
+                if (isSelectable) {
+                  return (
+                    <button
+                      key={item.id ?? i}
+                      type="button"
+                      className={styles.item}
+                      disabled={item.disabled}
+                      data-disabled={item.disabled ? "true" : undefined}
+                      data-selectable="true"
+                      data-selection-mode={selectionMode}
+                      data-selected={isSelected ? "true" : undefined}
+                      data-indeterminate={isIndeterminate ? "true" : undefined}
+                      onClick={() => item.onClick?.()}
+                      role={selectionMode === "multi" ? "menuitemcheckbox" : "menuitemradio"}
+                      aria-checked={selectionMode === "multi" && isIndeterminate ? "mixed" : isSelected}
+                    >
+                      {selectionMode === "multi" ? (
+                        <span className={styles.leadingControl} aria-hidden="true">
+                          <span className={styles.checkboxOuter}>
+                            {isIndeterminate ? (
+                              <span className={styles.checkboxDash} />
+                            ) : isSelected ? (
+                              <span className={styles.checkboxTick} />
+                            ) : null}
+                          </span>
+                        </span>
+                      ) : null}
+                      {selectionMode === "single" && showSingleSelectRadio ? (
+                        <span className={styles.leadingControl} aria-hidden="true">
+                          <span className={styles.radioOuter}>
+                            {isSelected ? <span className={styles.radioInner} /> : null}
+                          </span>
+                        </span>
+                      ) : null}
+                      {item.label}
+                    </button>
+                  );
+                }
+                return (
+                  <Menu.Item
+                    key={item.id ?? i}
+                    className={styles.item}
+                    onSelect={() => item.onClick?.()}
+                    disabled={item.disabled}
+                    data-selectable="false"
+                    data-selected={isSelected ? "true" : undefined}
+                  >
+                    {item.label}
+                  </Menu.Item>
+                );
+              })}
+            </div>
+            {footerActionLabel ? (
+              <button
+                type="button"
+                className={styles.footerAction}
+                onClick={() => onFooterActionClick?.()}
+              >
+                {footerActionLabel}
+              </button>
+            ) : null}
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>

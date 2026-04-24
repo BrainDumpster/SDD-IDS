@@ -3,167 +3,242 @@
 ## Metadata
 - Component: Dropdown: Multiselect
 - Category: Formelements
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54555&m=dev
-- Node ID: 11067-54555
+- Design System: IDS
+- Figma design: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43406-39370&m=dev`
+- Figma component matrix: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12608-93872&m=dev`
+- Figma menu elements: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12579-19725&m=dev`
+- Figma option states: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12363-13866&m=dev`
+- Figma selected badge + tooltip: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12608-95848&m=dev`
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
 
 ## Anatomy
-- Dropdown input field
-- Multi-select dropdown list
-- Checkboxes for item selection
-- Select all/clear all functionality
-- Selected items display
-- Search/filter functionality
-- Focus ring for keyboard navigation
-- Option groups (optional)
+1. `DropdownMultiSelectRoot`
+2. optional `Label`
+3. `FieldContainer`
+4. `ValueSlot` (placeholder or selected summary)
+5. `IndicatorSlot` (caret)
+6. optional `HelperText`
+7. optional `ValidationError` (critical icon + text)
+8. optional `MenuPopup`
+9. optional `SearchRow`
+10. optional `SelectAllClearAllRow`
+11. `OptionList`
+12. optional `SectionHeaderRow[]`
+13. optional `ActionRow`
+14. optional `SelectedCountBadge` (IDS Badge)
+15. optional `SelectedCountTooltip` (IDS Tooltip)
 
 ## Layout & Measurements
-- Input field height: 40px
-- Dropdown width: 100% of container
-- Option height: 32px
-- Checkbox size: 16px × 16px
-- Horizontal padding: 12px
-- Border radius: 4px
-- Focus ring: 2px offset from element
-- Minimum dropdown height: 200px
-- Maximum dropdown height: 300px (with scroll)
-- Icon size: 16px × 16px
-
-## Typography
-- Header 3: Roboto Regular 32px/40px (large dropdown headers)
-- Header 5: Roboto Regular 24px/32px (dropdown headers)
-- Body 1 - Medium: Roboto Medium 16px/24px (selected items)
-- Body 2: Roboto Regular 14px/20px (option text)
+- Field sizes:
+  - `Large`: `40px`
+  - `Small`: `32px`
+- Field horizontal padding: `var(--padding-padding-16)`.
+- Field vertical padding:
+  - Large: `var(--padding-padding-10)`
+  - Small: `var(--padding-padding-6)`
+- Checkbox geometry (must follow IDS checkbox spec):
+  - outer `16x16`
+  - checkmark glyph inside selected control
+  - optional indeterminate dash for mixed state.
+- Option rows:
+  - tokenized visual rhythm (`10px` vertical, `16px` horizontal)
+  - minimum hit area: `44px`.
+- Menu width:
+  - sample `300px`
+  - runtime contract: matches trigger width unless host overrides.
+- `SelectAllClearAllRow`:
+  - fixed/stable row above options
+  - not scrollable with options list
+  - clear top/bottom border separation.
+- Options list:
+  - scrollable region for long sets (overflow menu variants).
+- Selected count badge:
+  - uses IDS Badge size/shape contract (`18px` pill).
 
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Critical text: `var(--color-text-critical)` = #af0000
-- White text: `var(--color-text-white)` = #ffffff
-- Disabled text: `var(--color-text-disabled)` = #757575
-- Accessible border: `var(--color-border-accessible)` = #757575
-- Brand border: `var(--color-border-brand-base)` = #0076ce
-- Strong border: `var(--color-border-strong)` = #252525
-- White border: `var(--color-border-white)` = #ffffff
-- Disabled border: `var(--color-border-disabled)` = #757575
-- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
-
-### Icons
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- White icon: `var(--color-icon-white)` = #ffffff
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-
-### Background Colors
-- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
-- Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
-- Gray light: `var(--color-background-gray-light)` = #eaeaea
-- Gray base: `var(--color-background-gray-base)` = #757575
-- Info background: `var(--color-background-alerting-info)` = #005ece
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
-- Gray 500: `UI Palettes/Gray/gray-500` = #757575
-- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Other Colors
-- Annotation: `Annotation` = #E8178A
-- Static gray 500: `var(--color-static-gray-500)` = #757575
-
-### Effects
-- Tooltip Drop Shadow: Drop shadow effect for dropdown
+- Field/menu tokens:
+  - `var(--color-background-component)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-strong)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-text-neutral)`
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-disabled)`
+  - `var(--color-background-gray-light)`
+  - `var(--color-background-gray-lighter)`
+- Selection tokens:
+  - `var(--color-background-controls-brand-lighter)`
+  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-text-brand-strong)`
+  - `var(--color-border-transparent-brand)`
+  - `var(--color-icon-white)`
+  - `var(--color-icon-inverse)`
+- Error tokens:
+  - `var(--color-border-alerting-critical-base)`
+  - `var(--color-icon-alerting-critical)`
+  - `var(--color-text-critical)`
+- Geometry/spacing:
+  - `var(--corner-radius-radius-2)`
+  - `var(--corner-radius-radius-4)`
+  - `var(--spacing-space-8)`
+  - `var(--padding-padding-8)`
+  - `var(--padding-padding-10)`
+  - `var(--padding-padding-16)`
 
 ## States (Light Theme)
-| Element | Background | Border | Text | Icon |
+| Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Hover) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
-| Dropdown Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Option (Default) | transparent | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Option (Hover) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Option (Selected) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Checkbox (Default) | transparent | `var(--color-border-accessible)` (#757575) | transparent | transparent |
-| Checkbox (Checked) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | transparent | `var(--color-icon-white)` (#ffffff) |
-| Select All Button (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Select All Button (Hover) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Field container | default | component | accessible border | neutral text + accessible icon |
+| Field container | hover | component | strong border | neutral text |
+| Field container | show-dropdown | component | accessible border | neutral text |
+| Field container | focus-visible | component | brand border + focus ring | neutral text |
+| Field container | disabled | gray-light | disabled border | disabled text/icon |
+| Field container | error | component | critical border | critical helper/icon |
+| Option row | default | component | none | neutral/strong text per checkbox spec |
+| Option row | hover | brand-lighter | tokenized hover stroke | neutral text |
+| Option row | selected (multi) | component | none | checkbox selected + neutral text |
+| Option row | indeterminate | component | none | checkbox dash token state |
+| Option row | disabled | component/gray-light per checkbox matrix | disabled border | disabled text |
+| SelectAll row | default | component | accessible divider | neutral text + checkbox |
+| ClearAll action | default | transparent | none | brand-strong |
+| ClearAll action | disabled | transparent | none | disabled text |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Text and border colors remain consistent via semantic variables
-- Dropdown container maintains visibility in dark theme
-- Options adapt to dark theme
+Dark theme must preserve the same state matrix and resolve values through semantic IDS tokens only.
+
+| Element | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
+| Option rows | default/hover/selected/indeterminate/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+| SelectAll / ClearAll | default/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 
 ## Interactions
-- Click input field to open dropdown
-- Click options to select/deselect items
-- Click checkboxes to select/deselect items
-- Click Select All to select all visible options
-- Click Clear All to deselect all options
-- Hover provides visual feedback on interactive elements
-- Focus ring uses brand color for keyboard navigation
-- Keyboard navigation: Arrow keys, Enter, Space, Tab, Escape
-- Search to filter options (optional)
+- Trigger:
+  - click/`Enter`/`Space` toggles menu.
+  - `Escape` closes menu and restores trigger focus.
+- Option selection:
+  - clicking option toggles inclusion in selected set.
+  - disabled options cannot be toggled.
+- `Select All`:
+  - selects all currently visible and enabled options (post-filter semantics).
+  - checkbox state:
+    - checked when all visible enabled options selected
+    - indeterminate when partial
+    - unchecked when none.
+- `Clear All`:
+  - clears entire selected set
+  - disabled when selected count is zero.
+- Search:
+  - filters visible options in real time; source options remain unchanged.
+- Badge + tooltip:
+  - selected count badge updates with selected length.
+  - tooltip content shows selected summary/details when enabled.
+- Optional action row:
+  - user-defined label
+  - emits explicit action event.
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Arrow keys, Enter, Space, Tab, Escape
-- Screen reader support: Proper ARIA attributes for multiselect
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use select element with multiple attribute
-- Focus management: Logical tab order through options
-- Selection announcements: Screen reader announces selections
+## Composition & API (runtime)
+| Prop / Slot | Required | Type | Notes |
+|---|---|---|---|
+| `size` | No | `"small" \| "large"` | Default `large`. |
+| `label` | No | `string` | Optional label. |
+| `placeholder` | No | `string` | User-defined placeholder. |
+| `helperText` | No | `string` | User-defined helper text. |
+| `errorText` | No | `string` | User-defined error text. |
+| `disabled` | No | `boolean` | Blocks trigger/menu interactions. |
+| `searchable` | No | `boolean` | Enables search row. |
+| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical options. |
+| `value` | No | `string[]` | Controlled selected values. |
+| `onChange` | No | `(values: string[] \| optionObject[]) => void` | Payload strategy app-defined. |
+| `showSelectAllClearAll` | No | `boolean` | Enables top controls row. |
+| `selectAllLabel` | No | `string` | Default `"Select All"`. |
+| `clearAllLabel` | No | `string` | Default `"Clear All"`. |
+| `onSelectAll` | No | `() => void` | Select all callback. |
+| `onClearAll` | No | `() => void` | Clear callback. |
+| `clearAllDisabled` | No | `boolean` | Disabled state for clear action. |
+| `showSelectedBadge` | No | `boolean` | Enables selected-count badge. |
+| `showSelectedTooltip` | No | `boolean` | Enables selected summary tooltip. |
+| `actionLabel` | No | `string` | Optional action row label. |
+| `onAction` | No | `() => void` | Optional action row event. |
+| `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
+| `onSearch` | No | `(query: string) => void` | Search callback. |
 
-## Variants
-- **Default**: Standard multiselect dropdown
-- **With Search**: Dropdown with search functionality
-- **With Groups**: Options organized in groups
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Tags**: Selected items shown as tags
-- **Virtual**: Virtual scrolling for large option lists
-- **With Select All**: With select/clear all functionality
-- **With Validation**: With validation error states
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic slot schema
+1. `DropdownMultiSelectRoot`
+2. optional `Label`
+3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
+4. optional `HelperText` or `ValidationError`
+5. optional `MenuPopup`
+6. optional `SearchRow`
+7. optional `SelectAllClearAllRow`
+8. `OptionList` -> `OptionRow[]`
+9. optional `SectionHeaderRow[]`
+10. optional `ActionRow`
+11. optional `SelectedCountBadge`
+12. optional `SelectedCountTooltip`
 
-## Behavior & Guidelines
-- Use multiselect dropdown for selecting multiple options
-- Provide clear visual indication of selected items
-- Use consistent styling across dropdown variants
-- Test with screen readers for proper option announcement
-- Consider keyboard navigation for accessibility
-- Use responsive design for different screen sizes
-- Provide visual feedback for all interactions
-- Consider performance for large option lists
+### Supported matrix
+- `size`: `small | large`
+- `content`: `empty | selected-visible | selected-hidden`
+- `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
+- `option-state`: `default | hover | selected | indeterminate | focus-visible | disabled`
+- `menu-variant`: `small | overflowing | sectioned | with-action`
+- `controls-row`: `enabled | disabled`
+- `search`: `enabled | disabled`
+- `badge-tooltip`: `badge-off | badge-on-tooltip-off | badge-on-tooltip-on`
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Selected states use brand colors for clear indication
-- Dark theme adaptation through semantic tokens
-- Multiselect dropdown should be responsive and accessible
+### Per-slot style contract
+- Field/menu/option styling must be token-only.
+- Checkbox visuals must match IDS checkbox design-spec (including indeterminate).
+- `SelectAllClearAllRow` must be fixed and outside scroll region.
+- `Clear All` disabled style uses disabled token.
+- Badge and tooltip must use IDS badge/tooltip specs respectively.
 
-## Deliverable Checklist
-- [ ] Implement multi-selection functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Arrows, Enter, Space, Tab, Escape)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test hover and focus states
-- [ ] Implement select all/clear all functionality
-- [ ] Add search/filter functionality
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test virtual scrolling for large lists
+### Behavior contract
+- Multi-select list is deterministic ordered selection set.
+- `Select All` and `Clear All` semantics are deterministic and filter-aware.
+- Indeterminate state reflects partial selection.
+- Disabled options are excluded from `Select All`.
+- Disabled field blocks open and mutation events.
+- Action row emits only `onAction` when present.
+
+### Accessibility contract
+- Trigger exposes combobox semantics.
+- Option rows expose checkbox semantics (`aria-checked=true|false|mixed`).
+- Validation text linked via `aria-describedby`.
+- `Select All` and `Clear All` are keyboard-activatable controls.
+
+### Asset resolution + bundling contract
+- Caret icon: `arrow-drop-tri-caret`.
+- Error icon: `status-critical-square-solid`.
+- Checkbox glyphs: `shape-check-checkbox`, `shape-dash-thick`.
+- Badge + tooltip are component dependencies, not duplicated custom visuals.
+
+### Fallback/error rules
+- Unknown `size` -> `large`.
+- Missing/empty options -> empty option list, no crash.
+- Unknown selected ids -> ignore and render remaining valid selections.
+- `clearAllDisabled` defaults true when no selection.
+- Unknown labels/events fallback to defaults/no-op callbacks.
+
+### Validation checklist
+- [ ] Main multi-select examples match `43406:39370`.
+- [ ] Component matrix matches `12608:93872`.
+- [ ] Menu structure matches `12579:19725`.
+- [ ] Option state matrix matches `12363:13866`.
+- [ ] `Select All` checked/unchecked/indeterminate and `Clear All` disabled states are correct.
+- [ ] `SelectAllClearAllRow` remains fixed while options scroll.
+- [ ] Badge uses IDS Badge spec and tooltip uses IDS Tooltip spec.
+- [ ] Light/dark outputs remain semantic-token driven.
 
 ## Source Mapping
-- Figma component: Dropdown: Multiselect (11067-54555)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Dropdown: Multiselect" (category "Formelements"; node "11067-54555")
+- Figma design frame: `43406:39370`
+- Figma component matrix: `12608:93872`
+- Figma menu elements: `12579:19725`
+- Figma option state elements: `12363:13866`
+- Figma badge + tooltip reference: `12608:95848`
+- Badge dependency spec: `components/ids/badge/design-spec.mdx`
+- Tooltip dependency spec: `components/ids/tooltip/design-spec.mdx`
+- Checkbox dependency spec: `components/ids/checkbox/design-spec.mdx`
