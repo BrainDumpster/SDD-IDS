@@ -1,117 +1,213 @@
-<!-- auto:generated:start -->
-<!-- ds:inherits root-spec -->
 # Search Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
-
-<!-- ds:section id=metadata -->
 ## Metadata
+- Design system: Synapse
+- Component: Search
+- Category: Form Elements
+- Figma: https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=43581-121822&m=dev
+- File key: `Td1bnsvRj1PCGs9RVJkIvJ`
+- Primary node: `43581:121822` (Search documentation frame)
+- Component set node: `43581:121967` (`Search-Main`)
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Last live verification: 2026-04-27
 
-| Property | Value |
-|---|---|
-| Component | Search |
-| Category | Form Elements |
-| Figma Page | Form Elements |
-| Node ID | 43581:121822 |
-| Design System | Synapse |
-
-<!-- ds:section id=anatomy -->
 ## Anatomy
+Deterministic slot order:
+1. `root`
+2. `leadingIconSlot`
+3. `inputViewport`
+4. `inputText`
+5. `caret` (optional; shown in `typing` and `filled`)
+6. `clearButtonSlot` (optional; shown in `typing` and `filled`)
+7. `focusRing` (optional; shown in `focus`)
 
-The component is composed of these structural parts:
+Notes:
+- `leadingIconSlot` uses the search icon (`16x16`) and stays visible in all documented states.
+- `inputViewport` expands to fill remaining horizontal width.
+- `focusRing` is a sibling overlay rectangle around `root`, not a border replacement.
+- Input semantics (caret behavior, value editing model, and text field accessibility expectations) follow the textbox baseline in `components/ids/text-box/design-spec.mdx`, but Figma Search states/tokens remain the source of truth when there is any conflict.
 
-- **clear**
-- **input**
-- **searchIcon**
-- **wrapper**
-
-Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
-
-<!-- ds:section id=layout -->
 ## Layout & Measurements
+- Variant axes from Figma component set:
+  - `State`: `default | hover | typing | focus | filled`
+  - `Size`: `large (40px) | small (32px)`
+- Root width in sample frame: `300px` (runtime may be container-driven; preserve height tokens by size).
+- Root layout: horizontal row.
+- Root padding:
+  - `large`: top/bottom `6px`, left/right `16px`
+  - `small`: top/bottom `2px`, left/right `16px`
+- Input viewport internal padding: top/bottom `4px`, left `8px`.
+- Input typography: Body 2 (`14px` / `20px`).
+- Clear button icon size (when present): `16x16` (`ctrl-close-16`).
+- Focus overlay geometry:
+  - large: `308x48`
+  - small: `308x40`
+  - stroke width: `1px`
 
-<!-- ds:section id=tokens -->
-## Component Tokens
+## Tokens
+Resolved from live variable bindings and mapped to Synapse CSS variables:
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
-> Below are tokens referenced by this component's CSS module.
+- `search.root.background`: `var(--color-background-component)` (light `#ffffff`, dark `#111619`)
+- `search.root.border.default`: `var(--color-border-accessible)` (light `#757575`, dark `#8898a5`)
+- `search.root.border.hover`: `var(--color-border-strong)` (light `#252525`, dark `#b8c1c9`)
+- `search.focusRing.border`: `var(--color-border-brand-base)` (light `#0076ce`, dark `#4c9fdd`)
+- `search.leadingIcon`: `var(--color-icon-brand-base)` (light `#0076ce`, dark `#4c9fdd`) across all states
+- `search.input.placeholder`: `var(--color-text-disabled)` (light `#757575`, dark `#9e9e9e`)
+- `search.input.value`: `var(--color-text-neutral)` (light `#4d4d4d`, dark `#b8c1c9`)
+- `search.caret.stroke`: `var(--color-border-strong)` (light `#252525`, dark `#b8c1c9`)
+- `search.clearButton.icon`: `var(--color-icon-accessible)` (light `#757575`, dark `#8898a5`)
+- `search.border.width`: `var(--border-width-border-default)` (`1px`)
+- `search.typography.font-size`: `var(--font-size-body-2)` (`14px`)
+- `search.typography.line-height`: `var(--font-line-height-line-height-20)` (`20px`)
 
-- `var(--border-width-border-1)` = 1px
-- `var(--border-width-border-2)` = 2px
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
-- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
-- `var(--color-border-neutral)` = #4d4d4d (light) / #8898a5 (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--corner-radius-radius-2)` = 2px
-- `var(--corner-radius-radius-4)` = 4px
-- `var(--font-line-height-line-height-20)` = 20px
-- `var(--font-size-body-2)` = 14px
-- `var(--padding-padding-12)` = 12px
-- `var(--scale-36)` = 36px
-- `var(--spacing-space-8)` = 8px
+Icon asset + color contract (explicit):
+- `search-16` (`16x16`)
+  - `default | hover | typing | filled | focus`: `var(--color-icon-brand-base)`
+- `ctrl-close-16` (`16x16`)
+  - visible only when input value is non-empty
+  - `typing | filled`: `var(--color-icon-accessible)`
 
-<!-- ds:section id=states-light -->
 ## States (Light Theme)
-
-| Variant | State | Background | Border | Text / Icon | Other |
+| Size | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-1)` (1px) `var(--color-border-light)` (#c5c5c5) | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-2)` |
-| default | disabled | `var(--color-background-surface-1)` (#f4f4f4) |  |  | opacity: 0.5 |
-| default | focus |  | `var(--color-border-brand-base)` (#0076ce) |  | shadow: `var(--color-border-brand-base)`; focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover |  | `var(--color-border-neutral)` (#4d4d4d) | `var(--color-text-neutral-strong)` (#252525) |  |
+| large/small | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | placeholder text `var(--color-text-disabled)`; leading icon `var(--color-icon-brand-base)` | no clear button |
+| large/small | hover | `var(--color-background-component)` | `1px solid var(--color-border-strong)` | placeholder text `var(--color-text-disabled)`; leading icon `var(--color-icon-brand-base)` | no clear button |
+| large/small | typing | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | typed text `var(--color-text-neutral)`; leading icon `var(--color-icon-brand-base)`; caret `var(--color-border-strong)` | clear button visible (must appear whenever value is non-empty) |
+| large/small | filled | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | typed text `var(--color-text-neutral)`; leading icon `var(--color-icon-brand-base)`; caret `var(--color-border-strong)` | clear button visible (must appear whenever value is non-empty) |
+| large/small | focus | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` + outer focus ring `1px solid var(--color-border-brand-base)` | placeholder text `var(--color-text-disabled)`; leading icon `var(--color-icon-brand-base)` | focus ring rectangle outside root |
 
-<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
-
-| Variant | State | Background | Border | Text / Icon | Other |
+| Size | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-1)` (1px) `var(--color-border-light)` (#34414c) | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-2)` |
-| default | disabled | `var(--color-background-surface-1)` (#111619) |  |  | opacity: 0.5 |
-| default | focus |  | `var(--color-border-brand-base)` (#4c9fdd) |  | shadow: `var(--color-border-brand-base)`; focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover |  | `var(--color-border-neutral)` (#8898a5) | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| large/small | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | placeholder text `var(--color-text-disabled)`; leading icon `var(--color-icon-brand-base)` | no clear button |
+| large/small | hover | `var(--color-background-component)` | `1px solid var(--color-border-strong)` | placeholder text `var(--color-text-disabled)`; leading icon `var(--color-icon-brand-base)` | no clear button |
+| large/small | typing | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | typed text `var(--color-text-neutral)`; leading icon `var(--color-icon-brand-base)`; caret `var(--color-border-strong)` | clear button visible (must appear whenever value is non-empty) |
+| large/small | filled | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | typed text `var(--color-text-neutral)`; leading icon `var(--color-icon-brand-base)`; caret `var(--color-border-strong)` | clear button visible (must appear whenever value is non-empty) |
+| large/small | focus | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` + outer focus ring `1px solid var(--color-border-brand-base)` | placeholder text `var(--color-text-disabled)`; leading icon `var(--color-icon-brand-base)` | focus ring rectangle outside root |
 
-<!-- ds:section id=interactions -->
-## Interactions (Component-Specific)
+## Interactions
+- Input is text-editable in all documented Figma states (`default`, `hover`, `typing`, `filled`, `focus`).
+- `focus` adds a dedicated outer ring slot (`focusRing`) while preserving base border.
+- `typing` begins when input receives non-empty text; caret is shown.
+- `filled` keeps typed value and clear button visible.
+- Clear icon must appear whenever input value is non-empty.
+- Clear action removes value and returns to `default` (if blurred) or `focus` (if still focused).
+- Hover changes only border emphasis; it does not alter value text token.
+- Keyboard:
+  - `Tab` enters/leaves control.
+  - `Enter` dispatches search submit event with current query.
+  - `Escape` clears active query when value is non-empty.
 
-> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.
-> This section documents additional or overriding behaviors for this component.
+## Composition & API (runtime)
+Required runtime inputs:
+- `value?: string`
+- `defaultValue?: string`
+- `onValueChange?: (value: string) => void`
+- `onSearch?: (value: string) => void`
+- `placeholder?: string` (default `"Search"`)
+- `size?: "large" | "small"` (default `"large"`)
+- `showClearButton?: boolean` (default `true`)
+- `aria-label?: string`
+- `aria-describedby?: string`
+- `id?: string`
+- `name?: string`
 
-**Pattern**: combobox
+Runtime outputs:
+- `onValueChange` fires after every user text mutation.
+- `onSearch` fires on `Enter` or explicit search action.
+- Clear button action emits `onValueChange("")`.
 
-### Behaviors
+Controlled/uncontrolled rule:
+- If `value` is provided, component is controlled and internal state must not diverge.
+- If `value` is omitted, component is uncontrolled and initializes from `defaultValue`.
 
-- Text input with search icon
-- Shows suggestions dropdown as user types
-- Debounced API calls to reduce request frequency
-- Clear button to reset input
-- Loading state displayed during async result fetch
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic rendering schema:
+- Always render slots in anatomy order.
+- Only render `clearButtonSlot` when value is non-empty and `showClearButton=true`.
+- Only render `caret` in `typing` and `filled` visual states.
+- Only render `focusRing` when `state=focus`.
 
-### Keyboard
+Variant/option matrix:
+- `size`: `large | small`
+- `state`: `default | hover | typing | filled | focus`
+- `hasValue`: `false | true`
 
-| Key | Action |
-|---|---|
-| ArrowDown | Move focus into suggestions list |
-| ArrowUp | Move to previous suggestion |
-| Enter | Select highlighted suggestion or submit search query |
-| Escape | Close suggestions dropdown |
+Per-slot style contract:
+- `root`
+  - horizontal layout, fixed height by `size`, border width `var(--border-width-border-default)`
+  - default/typing/filled/focus border: `var(--color-border-accessible)`
+  - hover border: `var(--color-border-strong)`
+- `leadingIconSlot`
+  - icon asset: `search-16` (`16x16`)
+  - all states token: `var(--color-icon-brand-base)`
+- `inputText`
+  - placeholder token: `var(--color-text-disabled)`
+  - typed value token: `var(--color-text-neutral)`
+  - typography: `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`
+- `caret`
+  - stroke color: `var(--color-border-strong)`
+  - stroke width: `var(--border-width-border-default)`
+- `clearButtonSlot`
+  - icon asset: `ctrl-close-16` (`16x16`)
+  - icon token: `var(--color-icon-accessible)`
+- `focusRing`
+  - `1px` border using `var(--color-border-brand-base)`
+  - geometry must exceed root bounds (outer rectangle)
 
-### ARIA
+Behavior contract:
+- Value transitions:
+  - empty + no focus -> `default`
+  - empty + focus -> `focus`
+  - non-empty + editing -> `typing`
+  - non-empty + stable -> `filled`
+- Clear-button visibility transition:
+  - empty value -> clear button hidden
+  - non-empty value -> clear button visible
+- `hover` is additive to pointer hover and overrides border token only.
 
-| Element | Attributes |
-|---|---|
-| input | {'role': 'combobox', 'aria-expanded': 'true/false based on suggestions visibility', 'aria-autocomplete': 'list', 'aria-controls': 'ID of the suggestions listbox', 'aria-activedescendant': 'ID of the currently highlighted suggestion'} |
-| listbox | {'role': 'listbox'} |
-| option | {'role': 'option'} |
+Accessibility contract:
+- Render as native search input (`type="search"`) or equivalent combobox/textbox primitive.
+- Must expose accessible name through visible label context or `aria-label`.
+- Clear control must have an accessible label (for example: "Clear search").
+- Preserve keyboard operability for input and clear action.
+
+Asset resolution and bundling:
+- Required icons:
+  - `search-16` (`16x16`) for `leadingIconSlot`
+  - `ctrl-close-16` (`16x16`) for `clearButtonSlot`
+- Required icon color bindings for code generation:
+  - `search-16` MUST always render with `var(--color-icon-brand-base)` in all states.
+  - `ctrl-close-16` MUST render with `var(--color-icon-accessible)` when visible.
+- Icons must resolve from the Synapse icon package/registry, not inline hardcoded SVG literals in generated templates.
+
+Fallback and error rules:
+- Unknown `size` -> fallback to `large`.
+- Unknown visual state hint -> fallback to `default` or derived runtime state from value/focus.
+- Missing icon asset -> render slot with reserved space and log generator warning.
+- Missing required text token -> fallback to nearest semantic category (`disabled` for placeholder, `neutral` for value) and emit warning.
+- Unsupported `disabled` input (if passed by host app) -> ignore and keep Figma-documented interactive behavior; emit warning in generator diagnostics.
+
+Validation checklist:
+- [ ] Slot order matches anatomy.
+- [ ] `large` and `small` keep heights `40px` and `32px`.
+- [ ] Hover only changes border token.
+- [ ] Focus-visible renders outer ring in addition to base border.
+- [ ] Typing/filled states show clear button and caret.
+- [ ] Placeholder/value text tokens switch correctly by empty vs non-empty value.
+- [ ] `search-16` uses `var(--color-icon-brand-base)` in every state.
+- [ ] `ctrl-close-16` uses `var(--color-icon-accessible)` when shown.
+- [ ] Light and dark state tables remain structurally parallel.
 
 ## Source Mapping
-
 | Source | Location |
 |---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
-| Theme CSS | `components/synapse-theme.css` |
-| Component map | `data/synapse-component-figma-map.json` |
-<!-- auto:generated:end -->
+| Component map | `data/synapse-component-figma-map.json` (`Search` -> `43581:121822`) |
+| Figma URL | https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=43581-121822&m=dev |
+| Verified frame node | `43581:121822` |
+| Verified component set node | `43581:121967` (`Search-Main`) |
+| Verified variant evidence | `State={Default, Hover, Typing, Focus, Filled}` x `Size={Large - 40 px, Small - 32 px}` |
+| Verified variable source | Figma MCP `get_variable_defs` |
+| Input behavior reference | `components/ids/text-box/design-spec.mdx` (baseline only; Figma Search has priority) |
+| Theme CSS reference | `components/synapse-theme.css` |
+| Root spec reference | `components/synapse/root-spec.mdx` |

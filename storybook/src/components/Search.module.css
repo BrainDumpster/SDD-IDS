@@ -1,55 +1,72 @@
 .wrapper {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-space-8);
+  justify-content: space-between;
   width: 100%;
-  height: var(--scale-36);
-  padding: 0 var(--padding-padding-12);
-  border: var(--border-width-border-1) solid var(--color-border-light);
-  border-radius: var(--corner-radius-radius-4);
+  height: 40px;
+  padding: 6px 16px;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: 0;
   background: var(--color-background-component);
-  transition: border-color 150ms ease;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  position: relative;
 }
 
-.wrapper:hover:not([data-disabled]) {
-  border-color: var(--color-border-neutral);
+.wrapper[data-size="small"] {
+  height: 32px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
-.wrapper:focus-within:not([data-disabled]) {
-  border-color: var(--color-border-brand-base);
-  box-shadow: 0 0 0 1px var(--color-border-brand-base);
+.wrapper:hover {
+  border-color: var(--color-border-strong);
 }
 
-.wrapper[data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: var(--color-background-surface-1);
+.wrapper:focus-within {
+  border-color: var(--color-border-accessible);
+  box-shadow: none;
+}
+
+.wrapper:focus-within::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: 4px;
+  pointer-events: none;
 }
 
 .searchIcon {
   flex-shrink: 0;
-  color: var(--color-text-neutral);
+  width: 16px;
+  height: 16px;
+  display: block;
+  /* search-16.svg has a fixed fill; keep it mapped to brand-base in all states */
+  filter: invert(32%) sepia(82%) saturate(2218%) hue-rotate(187deg) brightness(94%)
+    contrast(101%);
+}
+
+.wrapper:focus-within .searchIcon {
+  /* Keep same color in focus (no state change). */
+  filter: invert(32%) sepia(82%) saturate(2218%) hue-rotate(187deg) brightness(94%)
+    contrast(101%);
 }
 
 .input {
   flex: 1;
   border: none;
   background: transparent;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-neutral);
   font-family: inherit;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   outline: none;
-  padding: 0;
+  padding: 4px 0 4px 8px;
   min-width: 0;
 }
 
 .input::placeholder {
-  color: var(--color-text-neutral);
-}
-
-.input:disabled {
-  cursor: not-allowed;
+  color: var(--color-text-disabled);
 }
 
 /* Hide default search clear button in webkit browsers */
@@ -61,20 +78,23 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border: none;
   background: transparent;
-  color: var(--color-text-neutral);
   cursor: pointer;
-  border-radius: var(--corner-radius-radius-2);
   padding: 0;
   flex-shrink: 0;
-  transition: color 100ms ease;
+}
+
+.clear img {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
 
 .clear:hover {
-  color: var(--color-text-neutral-strong);
+  opacity: 1;
 }
 
 .clear:focus-visible {

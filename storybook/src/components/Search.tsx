@@ -1,51 +1,64 @@
-import { type ComponentProps, useCallback } from "react";
+import { type ComponentProps, useCallback, useState } from "react";
 import styles from "./Search.module.css";
+import search16Icon from "../../../assets/icons/search-16.svg";
+import ctrlClose16Icon from "../../../assets/icons/ctrl-close-16.svg";
 
 interface SearchProps extends Omit<ComponentProps<"input">, "onChange" | "type"> {
   placeholder?: string;
   value?: string;
   onChange?: (value: string) => void;
   onClear?: () => void;
-  disabled?: boolean;
+  size?: "large" | "small";
 }
 
 export function Search({
-  placeholder = "Search...",
+  placeholder = "Search",
   value,
+  defaultValue,
   onChange,
   onClear,
-  disabled,
+  size = "large",
   className,
   ...rest
 }: SearchProps) {
+  const [uncontrolledValue, setUncontrolledValue] = useState(String(defaultValue ?? ""));
+  const currentValue = value ?? uncontrolledValue;
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange?.(e.target.value);
+      const next = e.target.value;
+      if (value === undefined) {
+        setUncontrolledValue(next);
+      }
+      onChange?.(next);
     },
-    [onChange],
+    [onChange, value],
   );
 
   const handleClear = useCallback(() => {
+    if (value === undefined) {
+      setUncontrolledValue("");
+    }
     onClear?.();
     onChange?.("");
-  }, [onClear, onChange]);
+  }, [onClear, onChange, value]);
 
   return (
     <div
       className={`${styles.wrapper} ${className || ""}`}
-      data-disabled={disabled || undefined}
+      data-size={size}
     >
       <SearchIcon />
       <input
         type="search"
         className={styles.input}
         placeholder={placeholder}
-        value={value}
+        value={currentValue}
         onChange={handleChange}
-        disabled={disabled}
+        defaultValue={undefined}
         {...rest}
       />
-      {value && !disabled && (
+      {currentValue.length > 0 && (
         <button
           type="button"
           className={styles.clear}
@@ -61,41 +74,27 @@ export function Search({
 
 function SearchIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
+    <img
+      src={search16Icon}
+      width={16}
+      height={16}
       className={styles.searchIcon}
       aria-hidden="true"
-    >
-      <path
-        d="M7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 14L10.5 10.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      alt=""
+      data-icon-name="search-16"
+    />
   );
 }
 
 function ClearIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path
-        d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
+    <img
+      src={ctrlClose16Icon}
+      width={16}
+      height={16}
+      aria-hidden="true"
+      alt=""
+      data-icon-name="ctrl-close-16"
+    />
   );
 }
