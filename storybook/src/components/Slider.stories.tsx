@@ -2,70 +2,163 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Slider } from "./Slider";
 
 const meta: Meta<typeof Slider> = {
-  title: "Synapse/Slider",
+  title: "IDS/Slider",
   component: Slider,
   argTypes: {
     min: { control: "number" },
     max: { control: "number" },
     step: { control: "number" },
     disabled: { control: "boolean" },
+    showStepper: { control: "boolean" },
+    showValueLabel: { control: "boolean" },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Slider>;
 
-export const Default: Story = {
+export const DefaultNoStepper: Story = {
   args: {
-    min: 0,
-    max: 100,
-  },
-};
-
-export const WithDefaultValue: Story = {
-  args: {
+    mode: "single",
     min: 0,
     max: 100,
     defaultValue: 50,
+    minLabel: "0",
+    maxLabel: "100",
+    showStepper: false,
+    showValueLabel: true,
   },
 };
 
-export const WithLabel: Story = {
+export const DefaultWithStepper: Story = {
   args: {
-    label: "Volume",
+    mode: "single",
     min: 0,
     max: 100,
-    defaultValue: 75,
+    defaultValue: 50,
+    minLabel: "0",
+    maxLabel: "100",
+    showStepper: true,
+    stepperFrequency: 10,
+    showValueLabel: true,
   },
 };
 
-export const Disabled: Story = {
+export const ValueZero: Story = {
   args: {
-    label: "Brightness",
+    mode: "single",
     min: 0,
     max: 100,
-    defaultValue: 40,
+    defaultValue: 0,
+    minLabel: "0",
+    maxLabel: "100",
+    showStepper: false,
+    showValueLabel: true,
+  },
+};
+
+export const ValueHundred: Story = {
+  args: {
+    mode: "single",
+    min: 0,
+    max: 100,
+    defaultValue: 100,
+    minLabel: "0",
+    maxLabel: "100",
+    showStepper: false,
+    showValueLabel: true,
+  },
+};
+
+export const DisabledNoStepper: Story = {
+  args: {
+    mode: "single",
+    min: 0,
+    max: 100,
+    defaultValue: 50,
+    minLabel: "0",
+    maxLabel: "100",
     disabled: true,
+    showStepper: false,
+    showValueLabel: true,
   },
 };
 
-export const CustomRange: Story = {
+export const DisabledWithStepper: Story = {
   args: {
-    label: "Temperature (°C)",
-    min: -20,
-    max: 50,
-    step: 5,
-    defaultValue: 20,
+    mode: "single",
+    min: 0,
+    max: 100,
+    defaultValue: 50,
+    minLabel: "0",
+    maxLabel: "100",
+    disabled: true,
+    showStepper: true,
+    stepperFrequency: 10,
+    showValueLabel: true,
   },
 };
 
-export const AllVariants: Story = {
+export const WithLabels: Story = {
+  args: {
+    mode: "single",
+    min: 0,
+    max: 100,
+    defaultValue: 45,
+    minLabel: "Min",
+    maxLabel: "Max",
+    showStepper: true,
+    showValueLabel: true,
+  },
+};
+
+export const RangeWithInputsAndSteppers: Story = {
+  args: {
+    mode: "range",
+    min: 0,
+    max: 100,
+    defaultValue: [25, 75],
+    minLabel: "0",
+    maxLabel: "100",
+    showStepper: true,
+    stepperFrequency: 10,
+    showValueLabel: true,
+    showValueInput: true,
+  },
+};
+
+export const IDSStateMatrix: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 360 }}>
-      <Slider label="Default" min={0} max={100} />
-      <Slider label="Midpoint" min={0} max={100} defaultValue={50} />
-      <Slider label="Fine step" min={0} max={1} step={0.01} defaultValue={0.5} />
-      <Slider label="Disabled" min={0} max={100} defaultValue={30} disabled />
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, maxWidth: 900 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <strong>Default</strong>
+        <Slider min={0} max={100} defaultValue={50} showStepper={false} />
+        <Slider min={0} max={100} defaultValue={50} showStepper />
+        <Slider min={0} max={100} defaultValue={0} showStepper={false} />
+        <Slider min={0} max={100} defaultValue={0} showStepper />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <strong>Disabled</strong>
+        <Slider min={0} max={100} defaultValue={50} disabled showStepper={false} />
+        <Slider min={0} max={100} defaultValue={50} disabled showStepper />
+        <Slider min={0} max={100} defaultValue={100} disabled showStepper={false} />
+        <Slider min={0} max={100} defaultValue={100} disabled showStepper />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, gridColumn: "1 / span 2" }}>
+        <strong>Range</strong>
+        <Slider
+          mode="range"
+          min={0}
+          max={100}
+          defaultValue={[20, 80]}
+          minLabel="0"
+          maxLabel="100"
+          showStepper
+          stepperFrequency={10}
+          showValueLabel
+          showValueInput
+        />
+      </div>
     </div>
   ),
 };
