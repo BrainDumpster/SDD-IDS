@@ -10,6 +10,7 @@
 - Main node: `46812:251428` (`content`)
 - State/reference nodes:
   - base masthead: `46812:251454`
+  - actions state matrix: `46812:248324` (`.Masthead-Element-Actions`)
   - help dropdown state: `46812:251450` / `46812:251451` / `46812:251452`
   - app launcher dropdown state: `46812:251446` / `46812:251447`
 - Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`, `get_design_context`) against the nodes above in this session.
@@ -83,7 +84,7 @@ Deterministic child slots:
   - `var(--shadow-shadow-4-drop-shadow-4-blur)`
   - `var(--shadow-shadow-4-drop-shadow-4-spread)`
 
-MCP-verified variable evidence (`46812:251428`):
+MCP-verified variable evidence (`46812:251428`, `46812:248324`):
 - `Color/Background/Masthead/Brand-Base` = `#0076ce`
 - `Color/Background/Masthead/Brand-Strong` = `#0062ab`
 - `Color/Background/Masthead/Brand-Stronger` = `#06528a`
@@ -101,11 +102,13 @@ MCP-verified variable evidence (`46812:251428`):
 | masthead root | default | `var(--color-background-masthead-brand-base)` | bottom `var(--color-border-transparent-neutral)` | labels/icons `var(--color-text-white)` / `var(--color-icon-white)` |
 | settings/help/app-launcher action | default | `var(--color-background-masthead-brand-base)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | active/open | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | focus-visible | current fill | focus ring `var(--border-width-border-2)` `var(--color-border-white)` | icon unchanged |
+| settings/help/app-launcher action | press/select | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
+| settings/help/app-launcher action | focus | `var(--color-background-masthead-brand-base)` | dashed `var(--border-width-border-1)` `var(--color-border-white)` | icon unchanged |
 | user initials chip | default | transparent | `var(--color-border-white)` | `var(--color-text-white)` |
 | help menu row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| help menu row | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` |
+| help menu row | hover | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
+| help menu row | press | `var(--color-background-controls-brand-light)` | top/bottom `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| help menu row | focus-visible | current-state fill | outer focus `var(--border-width-border-2)` `var(--color-border-brand-base)` | text unchanged |
 | app launcher tile | default | `var(--color-background-component)` | separators per launcher contract | icon/text neutral strong |
 | app launcher tile | hover | `var(--color-background-brand-lighter)` | unchanged separators | text/icon brand-strong |
 
@@ -115,11 +118,13 @@ MCP-verified variable evidence (`46812:251428`):
 | masthead root | default | `var(--color-background-masthead-brand-base)` | bottom `var(--color-border-transparent-neutral)` | labels/icons `var(--color-text-white)` / `var(--color-icon-white)` |
 | settings/help/app-launcher action | default | `var(--color-background-masthead-brand-base)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | active/open | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | focus-visible | current fill | focus ring `var(--border-width-border-2)` `var(--color-border-white)` | icon unchanged |
+| settings/help/app-launcher action | press/select | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
+| settings/help/app-launcher action | focus | `var(--color-background-masthead-brand-base)` | dashed `var(--border-width-border-1)` `var(--color-border-white)` | icon unchanged |
 | user initials chip | default | transparent | `var(--color-border-white)` | `var(--color-text-white)` |
 | help menu row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| help menu row | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` |
+| help menu row | hover | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
+| help menu row | press | `var(--color-background-controls-brand-light)` | top/bottom `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| help menu row | focus-visible | current-state fill | outer focus `var(--border-width-border-2)` `var(--color-border-brand-base)` | text unchanged |
 | app launcher tile | default | `var(--color-background-component)` | separators per launcher contract | icon/text neutral strong |
 | app launcher tile | hover | `var(--color-background-brand-lighter)` | unchanged separators | text/icon brand-strong |
 
@@ -164,13 +169,13 @@ Deterministic structure:
 
 Variant/option matrix:
 - masthead menu state: `base | help-open | app-launcher-open`
-- action state: `default | hover | active/open | focus-visible`
+- action state: `default | hover | press/select | focus`
 - theme mode: `light | dark` (semantic token driven)
 
 Per-slot style contract:
 - Masthead root must use masthead-brand token family and white icon/text tokens.
 - Help menu and launcher surfaces must use component background + accessible border + drop shadow.
-- Help menu rows follow dropdown option spacing and typography contract (`Body 2`).
+- Help menu rows follow dropdown option spacing and interaction contract (`default | hover | press | focus-visible`) using the same token model as IDS dropdown rows.
 
 Behavior contract:
 - Help and launcher trigger states are independently controllable.
@@ -210,6 +215,7 @@ Validation checklist:
 | IDS app launcher reference spec | `components/ids/app-launcher/design-spec.mdx` |
 | Component map | `data/component-figma-map.json` |
 | Canonical DAP masthead frame | https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/IDS-Design-Library---WIP?node-id=46812-251428&m=dev (`46812:251428`) |
+| Actions state matrix | https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=46812-248324&m=dev (`46812:248324`) |
 | Help dropdown state nodes | `46812:251450`, `46812:251451`, `46812:251452` |
 | App launcher state nodes | `46812:251446`, `46812:251447` |
 | Live verification method | Figma MCP: `get_metadata`, `get_variable_defs`, `get_design_context` |

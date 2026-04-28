@@ -42,7 +42,7 @@
   justify-content: center;
   border: 0;
   background: var(--color-background-masthead-brand-base);
-  padding: 19px var(--padding-padding-16);
+  padding: 18px var(--padding-padding-16);
   color: var(--color-icon-white);
   cursor: pointer;
 }
@@ -55,9 +55,17 @@
   background: var(--color-background-masthead-brand-stronger);
 }
 
+.actionButtonOpen:hover {
+  background: var(--color-background-masthead-brand-strong);
+}
+
+.actionButton:active {
+  background: var(--color-background-masthead-brand-stronger);
+}
+
 .actionButton:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-white);
-  outline-offset: 1px;
+  outline: var(--border-width-border-1) dashed var(--color-border-white);
+  outline-offset: -1px;
 }
 
 .actionIcon {
@@ -93,8 +101,17 @@
 }
 
 .helpItem:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-neutral);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+}
+
+.helpItem:active {
+  background: var(--color-background-controls-brand-light);
   color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
 }
 
 .helpItem:focus-visible {
@@ -114,10 +131,14 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  margin: 11px var(--padding-padding-8);
+  margin: 0;
   border-radius: 999px;
   border: var(--border-width-border-1) solid var(--color-border-white);
   color: var(--color-text-white);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
+}
+
+.userButton {
+  padding: 10px var(--padding-padding-8);
 }

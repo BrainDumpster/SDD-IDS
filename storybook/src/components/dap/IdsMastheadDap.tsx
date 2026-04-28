@@ -115,9 +115,13 @@ export function IdsMastheadDap({
           />
         </div>
 
-        <div className={styles.userInitials} aria-label={`User initials ${userInitials}`}>
-          {userInitials}
-        </div>
+        <button
+          type="button"
+          className={[styles.actionButton, styles.userButton].join(" ")}
+          aria-label={`User settings ${userInitials}`}
+        >
+          <span className={styles.userInitials}>{userInitials}</span>
+        </button>
       </div>
     </header>
   );
