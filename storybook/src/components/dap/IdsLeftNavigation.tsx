@@ -7,6 +7,13 @@ export interface IdsLeftNavigationItem {
   disabled?: boolean;
   href?: string;
   routeRef?: string;
+  state?:
+    | "default"
+    | "hover"
+    | "press"
+    | "selected"
+    | "default-focus"
+    | "selected-focus";
 }
 
 export interface IdsLeftNavigationNavigateTarget {
@@ -21,6 +28,8 @@ export interface IdsLeftNavigationProps {
   selectedId?: string;
   defaultSelectedId?: string;
   interactive?: boolean;
+  /** Story/demo mode: render explicit per-item visual states. */
+  forceStates?: boolean;
   ariaLabel?: string;
   onSelect?: (itemId: string) => void;
   onNavigate?: (target: IdsLeftNavigationNavigateTarget) => void;
@@ -36,6 +45,7 @@ export function IdsLeftNavigation({
   selectedId,
   defaultSelectedId,
   interactive = true,
+  forceStates = false,
   ariaLabel = "Left navigation",
   onSelect,
   onNavigate,
@@ -56,18 +66,26 @@ export function IdsLeftNavigation({
       <div className={styles.title}>{title}</div>
       <div className={styles.list}>
         {items.map((item) => {
-          const isSelected = item.id === currentSelectedId;
+          const forcedState = forceStates ? item.state : undefined;
+          const forcedSelected =
+            forcedState === "selected" || forcedState === "selected-focus";
+          const isSelected = forcedSelected || item.id === currentSelectedId;
           return (
             <button
               key={item.id}
               type="button"
-              className={[styles.item, isSelected ? styles.itemSelected : "", item.disabled ? styles.itemDisabled : ""]
+              className={[
+                styles.item,
+                isSelected ? styles.itemSelected : "",
+                item.disabled ? styles.itemDisabled : "",
+                forcedState ? styles[`state${toPascal(forcedState)}`] : "",
+              ]
                 .filter(Boolean)
                 .join(" ")}
               aria-current={isSelected ? "page" : undefined}
-              disabled={item.disabled || !interactive}
+              disabled={item.disabled || (!interactive && !forceStates)}
               onClick={() => {
-                if (!interactive || item.disabled) return;
+                if (!interactive || item.disabled || forceStates) return;
                 if (selectedId == null) setInternalSelectedId(item.id);
                 onSelect?.(item.id);
                 onNavigate?.({ itemId: item.id, href: item.href, routeRef: item.routeRef });
@@ -80,4 +98,13 @@ export function IdsLeftNavigation({
       </div>
     </nav>
   );
+}
+
+function toPascal(
+  state: NonNullable<IdsLeftNavigationItem["state"]>,
+): string {
+  return state
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
 }

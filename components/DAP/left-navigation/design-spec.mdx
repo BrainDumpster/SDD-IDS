@@ -77,28 +77,32 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 |---|---|---|---|---|
 | `LeftNavigationPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
 | `LeftNavigationItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-border-brand-dark)` | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | focus-visible | current fill | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-dark)` | text unchanged |
-| `LeftNavigationItem` | disabled (optional) | transparent | none | reduced emphasis using disabled text contract |
+| `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
+| `LeftNavigationItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
+| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `LeftNavigationItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
+| `LeftNavigationItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | `LeftNavigationPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
 | `LeftNavigationItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-border-brand-dark)` | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | focus-visible | current fill | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-dark)` | text unchanged |
-| `LeftNavigationItem` | disabled (optional) | transparent | none | reduced emphasis using disabled text contract |
+| `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
+| `LeftNavigationItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
+| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `LeftNavigationItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
+| `LeftNavigationItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
 
 ## Interactions
 - Clicking an item sets selected state and active indicator on that row.
-- Hover applies brand-lighter background and brand-strong text.
+- Hover applies brand-lighter background; text remains neutral-strong.
+- Press applies brand-light background and brand-strong text.
 - Keyboard:
   - `Tab` to move focus into list.
   - `ArrowUp` / `ArrowDown` to move between items (roving focus pattern when implemented).
   - `Enter` / `Space` to activate current item.
+- Focus states map to the two documented variants only: `default-focus` and `selected-focus`.
 - Selected state persists until another item is selected.
 
 ## Composition & API (runtime)
@@ -118,7 +122,6 @@ Child-composition model:
 Per-item inputs:
 - `id: string` (required stable key)
 - `label: string` (required)
-- `disabled?: boolean`
 - `href?: string`
 - `routeRef?: string`
 
@@ -137,7 +140,7 @@ Deterministic structure:
 
 Variant/option matrix:
 - Context background: `surface-1 | surface-2`
-- Item state: `default | hover | selected | focus-visible | disabled`
+- Item state: `default | hover | press | selected | default-focus | selected-focus`
 - Runtime mode: `interactive | forced-state-demo`
 
 Per-slot style contract:
@@ -150,7 +153,7 @@ Behavior contract:
 - Exactly one selected item in single-select mode.
 - If `selectedId` provided, component is controlled.
 - If uncontrolled, initialize with `defaultSelectedId` or first enabled item.
-- Disabled items are focus-skipped and non-activating.
+- No disabled row state is defined in the canonical DAP state node; generators must not fabricate a disabled visual variant unless a separate DAP source node is provided.
 
 Accessibility contract:
 - Root uses `nav` and `aria-label`.
@@ -170,6 +173,7 @@ Fallback/error rules:
 Validation checklist:
 - [ ] Required sections are complete and tokenized.
 - [ ] Light/Dark tables are structurally parallel.
+- [ ] Six-state matrix matches canonical DAP node (`default`, `hover`, `press`, `selected`, `default-focus`, `selected-focus`).
 - [ ] Selected state includes fill + text + 4px active indicator.
 - [ ] Keyboard navigation and activation are defined.
 - [ ] Inputs/outputs are explicit and deterministic.

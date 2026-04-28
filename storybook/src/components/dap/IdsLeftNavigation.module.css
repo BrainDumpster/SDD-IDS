@@ -34,16 +34,40 @@
   font-size: 16px;
   line-height: 24px;
   cursor: pointer;
+  border-radius: 0;
 }
 
 .item:hover:not(:disabled) {
   background: var(--color-background-brand-lighter);
+  color: var(--color-text-neutral-strong);
+}
+
+.stateHover {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-neutral-strong);
+}
+
+.statePress {
+  background: var(--color-background-brand-light);
   color: var(--color-text-brand-strong);
 }
 
 .item:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-dark);
-  outline-offset: -1px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: var(--corner-radius-radius-4);
+  border-bottom-right-radius: var(--corner-radius-radius-4);
+}
+
+.stateDefaultFocus {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: var(--corner-radius-radius-4);
+  border-bottom-right-radius: var(--corner-radius-radius-4);
 }
 
 .itemSelected {
@@ -58,7 +82,16 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background: var(--color-border-brand-dark);
+  background: var(--color-text-brand-strong);
+}
+
+.stateSelectedFocus {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: var(--corner-radius-radius-4);
+  border-bottom-right-radius: var(--corner-radius-radius-4);
 }
 
 .itemDisabled {
