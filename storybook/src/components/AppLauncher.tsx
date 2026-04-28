@@ -168,7 +168,14 @@ export function AppLauncher({
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={sideOffset} align="end">
-          <Popover.Popup className={styles.launcherSurface}>
+          <Popover.Popup
+            className={[
+              styles.launcherSurface,
+              useTwoProductSeparator ? styles.launcherSurfaceTwoProduct : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
             {list.length > 0 ? (
               <div className={styles.productRegion}>
                 {rows.map((row, rowIndex) => (

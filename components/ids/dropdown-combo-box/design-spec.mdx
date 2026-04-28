@@ -92,7 +92,9 @@
 | Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
 | Field container | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | error icon/text tokenized critical |
 | Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Option row | hover | `var(--color-background-brand-lighter)` | none | neutral text |
+| Option row | hover | `var(--color-background-brand-lighter)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
+| Option row | press | `var(--color-background-brand-light)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Option row | focus-visible | current-state fill | focus indicator tokenized with `var(--color-border-brand-base)` | text/icon unchanged |
 | Option row | selected (single) | `var(--color-background-brand-lighter)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
 | Option row | selected (multi) | component background with checked checkbox | none | neutral text + selected checkbox visuals |
 
@@ -106,7 +108,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 | Field container | focus-visible | semantic token resolved | semantic token resolved | semantic token resolved |
 | Field container | disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 | Field container | error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/selected | semantic token resolved | semantic token resolved | semantic token resolved |
+| Option rows | default/hover/press/focus-visible/selected | semantic token resolved | semantic token resolved | semantic token resolved |
 
 ## Interactions
 - Trigger interaction:
@@ -160,12 +162,16 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - `size`: `small | large`
 - `content`: `empty | filled`
 - `state`: `default | hover | selected | focus-visible | disabled | error`
+  - option-row interaction subset: `default | hover | press | focus-visible | selected`
 - `search`: `enabled | disabled`
 
 ### Per-slot style contract
 - Field container must keep tokenized border/background/text for all states.
 - Focus-visible uses an outer ring tokenized with brand border color.
-- Menu rows use tokenized row padding and brand-lighter selected/hover backgrounds.
+- Menu rows use tokenized row padding and explicit interaction mapping:
+  - hover: `var(--color-background-brand-lighter)` + inset row emphasis strokes
+  - press: `var(--color-background-brand-light)` + inset row emphasis strokes + brand-strong text
+  - focus-visible: visible focus indicator using brand-base border token
 - Multi-select checkbox uses `2px` corner token and control-brand tokens for checked state.
 
 ### Behavior contract

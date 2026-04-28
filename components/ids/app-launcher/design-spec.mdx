@@ -5,15 +5,18 @@
 - **Category:** Navigation
 - **Design System:** IDS
 - **Figma (usage):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42266-95085&m=dev`
+- **Figma (usage alt scenario):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42266-95081&m=dev`
 - **Figma (component details):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-123761&m=dev`
 - **Figma (element states):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-109521&m=dev`
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
-- **Validated nodes:** `42266:95085`, `13231:123761`, `13231:109521`
+- **Validated nodes:** `42266:95085`, `42266:95081`, `13231:123761`, `13231:109521`
 - **Last live verification:** Figma MCP `get_design_context` + `get_variable_defs` on the nodes above.
 
 ## Layout & Measurements
 - Launcher surface width: `298px` (menu body width observed in usage/details).
 - Product tile footprint: `148px x 125px` per `.AppLauncher-Element`.
+- Tile state fill behavior: hover/press fills the complete tile footprint (`148px x 125px`); divider remains a separate element and must not be merged into tile background.
+- Separator rule: dividers are rendered as separate row/column elements, so product tile occupancy remains full-size; any visual gap is only from outer edge/separator treatment, not from shrinking the tile content area.
 - Product icon slot: `32px x 32px`.
 - Product label box: `111px` max width with `Body 2` text.
 - Vertical product separators: dotted divider using `var(--color-border-accessible)`; in 2-product no-options scenario, separator is solid and touches top/bottom of the launcher surface.
@@ -50,11 +53,12 @@
 |---|---|---|---|---|
 | Launcher surface | default | `var(--color-background-surface-2)` | `1px var(--color-border-accessible)` | n/a |
 | Product tile | default | `var(--color-background-surface-2)` | row/column dividers use `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
-| Product tile | hover | `var(--color-background-brand-lighter)` | divider unchanged | neutral strong text/icon |
+| Product tile | hover | `var(--color-background-brand-lighter)` (fills entire tile footprint) | divider unchanged and rendered as separate element | neutral strong text/icon |
 | Product tile | press/selected | `var(--color-background-brand-light)` | divider unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
 | Product tile | no-icon variant | `var(--color-background-surface-2)` | divider unchanged | neutral strong text only |
 | Options row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Options row | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
+| Options row | hover | `var(--color-background-brand-lighter)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
+| Options row | press | `var(--color-background-brand-light)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 Dark theme follows the same slot/state matrix as Light Theme, resolved exclusively via semantic tokens. No hardcoded colors are permitted in implementation.
@@ -114,8 +118,10 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 
 ### Per-slot style contract
 - `ProductTile`: `148x125`, icon `32x32`, label width clamp `111px`.
-- `ProductRegion`: dotted row/column dividers from accessible border token.
+- `ProductRegion`: dotted row/column dividers from accessible border token; dividers are independent elements (not part of tile fill layer).
+- Product content container must span the tile (`width: 100%`, `height: 100%`) so hover/press states use the full tile area.
 - `OptionsRegion`: simple stacked rows, no custom radius.
+- `OptionRow`: mirrors IDS dropdown-combo-box option contract for default/hover/press token behavior.
 - `AppLauncherSurface`: `1px` accessible border + Shadow 1 token stack.
 
 ### Behavior contract
@@ -144,13 +150,14 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 - [ ] Surface, tile, divider, and option row metrics match validated nodes.
 - [ ] Tile states (`default/hover/press/no-icon`) match state node `13231:109521`.
 - [ ] Product count layouts (`1/2/3/4/8`) match component node `13231:123761`.
-- [ ] Usage-level masthead anchor/open behavior aligns with node `42266:95085`.
+- [ ] Usage-level masthead anchor/open behavior aligns with nodes `42266:95085` and `42266:95081`.
 - [ ] Product and option selection callbacks emit deterministic payloads.
 - [ ] Light/Dark styles remain semantic-token driven.
 
 ## Source Mapping
 - **Component map entry:** `data/component-figma-map.json` -> `App Launcher`.
 - **Primary usage node:** `42266:95085`.
+- **Secondary usage node:** `42266:95081`.
 - **Component details node:** `13231:123761`.
 - **Element states node:** `13231:109521`.
 - **Figma MCP evidence:** `get_design_context` on all three nodes + `get_variable_defs` on `13231:123761`.
