@@ -88,6 +88,14 @@ MCP-verified token bindings on pagination nodes:
 | `PaginationPrev`/`PaginationNext` | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-accessible)` |
 | `PaginationPrev`/`PaginationNext` | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-accessible)` | text `var(--color-text-neutral-strong)`, icon `var(--color-icon-brand-base)` |
 | `PaginationPrev`/`PaginationNext` | disabled | `var(--color-background-surface-1)` | `var(--color-border-disabled)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | hover | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | press | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | focus-visible | `var(--color-background-component)` | trigger border + outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | text/icon unchanged |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, caret `var(--color-icon-disabled)` |
+| Dropdown option row | hover | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-neutral)` |
+| Dropdown option row | press | `var(--color-background-controls-brand-light)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-brand-strong)` |
+| Dropdown option row | selected | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-brand-strong)` |
 | `PaginationEllipsis` | static | transparent | none | text/icon `var(--color-text-neutral)` |
 
 ## States (Dark Theme)
@@ -101,6 +109,14 @@ MCP-verified token bindings on pagination nodes:
 | `PaginationPrev`/`PaginationNext` | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-accessible)` |
 | `PaginationPrev`/`PaginationNext` | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-accessible)` | text `var(--color-text-neutral-strong)`, icon `var(--color-icon-brand-base)` |
 | `PaginationPrev`/`PaginationNext` | disabled | `var(--color-background-surface-1)` | `var(--color-border-disabled)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | hover | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | press | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | focus-visible | `var(--color-background-component)` | trigger border + outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | text/icon unchanged |
+| `PaginationPageSize` / `PaginationPageOffset` trigger | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, caret `var(--color-icon-disabled)` |
+| Dropdown option row | hover | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-neutral)` |
+| Dropdown option row | press | `var(--color-background-controls-brand-light)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-brand-strong)` |
+| Dropdown option row | selected | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-brand-strong)` |
 | `PaginationEllipsis` | static | transparent | none | text/icon `var(--color-text-neutral)` |
 
 Dark values verified from MCP node variables:
@@ -122,6 +138,11 @@ Dark values verified from MCP node variables:
   - `Enter`/`Space` activate focused control.
   - Optional roving model may support `ArrowLeft`/`ArrowRight` between page buttons when framework pattern requires it.
 - Focus ring must remain visible and not be clipped by root overflow.
+- Page input (`PaginationJumpToPage`) is editable:
+  - accepts numeric input only,
+  - commits on `blur` or `Enter`,
+  - value clamps to `[1, totalPages]`,
+  - invalid/empty commit reverts to current page.
 
 ## Composition & API (runtime)
 Main inputs:

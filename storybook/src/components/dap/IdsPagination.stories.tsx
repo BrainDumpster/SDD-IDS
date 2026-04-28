@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { IdsPagination } from "./IdsPagination";
+import "../../../../components/dap-theme.css";
 import {
   IDS_PAGINATION_DESIGN_SPEC_PATH,
   PAGINATION_API_DEFAULTS,
@@ -51,7 +52,6 @@ export const Default: Story = {
           {...args}
           currentPage={page}
           pageSize={pageSize}
-          dropdownState="collapsed"
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
         />

@@ -62,6 +62,7 @@ export function IdsPagination({
     [pageOffsetOptions, safeTotalPages]
   );
   const [internalPage, setInternalPage] = useState(controlledCurrentPage);
+  const [pageInputValue, setPageInputValue] = useState(String(controlledCurrentPage));
   const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
   const [pageOffsetMenuOpen, setPageOffsetMenuOpen] = useState(false);
   const resolvedPerPageDropdownState =
@@ -79,6 +80,10 @@ export function IdsPagination({
     setInternalPage(controlledCurrentPage);
   }, [controlledCurrentPage, onPageChange]);
 
+  useEffect(() => {
+    setPageInputValue(String(safeCurrentPage));
+  }, [safeCurrentPage]);
+
   const atFirstPage = safeCurrentPage <= 1;
   const atLastPage = safeCurrentPage >= safeTotalPages;
 
@@ -90,6 +95,15 @@ export function IdsPagination({
       return;
     }
     setInternalPage(clamped);
+  };
+
+  const commitPageInput = () => {
+    const parsed = Number.parseInt(pageInputValue, 10);
+    if (!Number.isFinite(parsed)) {
+      setPageInputValue(String(safeCurrentPage));
+      return;
+    }
+    goToPage(parsed);
   };
 
   const togglePageOffsetMenu = () => {
@@ -268,8 +282,15 @@ export function IdsPagination({
           <div className={styles.pageInputWrap}>
             <input
               className={styles.pageInput}
-              value={safeCurrentPage}
-              readOnly
+              value={pageInputValue}
+              onChange={(event) => setPageInputValue(event.target.value.replace(/[^\d]/g, ""))}
+              onBlur={commitPageInput}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  commitPageInput();
+                  event.currentTarget.blur();
+                }
+              }}
               aria-label="Current page"
             />
           </div>

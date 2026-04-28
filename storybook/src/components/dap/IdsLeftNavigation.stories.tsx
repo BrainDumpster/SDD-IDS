@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { IdsLeftNavigation } from "./IdsLeftNavigation";
+import "../../../../components/dap-theme.css";
 import {
   IDS_LEFT_NAVIGATION_DESIGN_SPEC_PATH,
   LEFT_NAVIGATION_API_DEFAULTS,

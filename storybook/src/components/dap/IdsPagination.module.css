@@ -44,6 +44,7 @@
   width: 90px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: var(--corner-radius-radius-4);
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   padding: 6px var(--padding-padding-16);
@@ -53,6 +54,10 @@
 }
 
 .dropdownTrigger:hover:not(:disabled) {
+  border-color: var(--color-border-brand-base);
+}
+
+.dropdownTrigger:active:not(:disabled) {
   border-color: var(--color-border-brand-base);
 }
 
@@ -71,6 +76,12 @@
   cursor: not-allowed;
 }
 
+.dropdownTrigger:disabled {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-accessible);
+  color: var(--color-text-disabled);
+}
+
 .caretIcon {
   width: 10px;
   height: 10px;
@@ -82,11 +93,13 @@
   position: absolute;
   left: 0;
   width: 90px;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-radius: var(--corner-radius-radius-4);
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
+  overflow: clip;
   box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
   z-index: 2;
 }
@@ -117,7 +130,17 @@
 }
 
 .dropdownOption:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-neutral);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+}
+
+.dropdownOption:active {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
 }
 
 .dropdownOptionSelected {
@@ -193,6 +216,7 @@
   width: 40px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: var(--corner-radius-radius-4);
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   padding: 5px 6px;
@@ -203,6 +227,16 @@
 
 .pageOffsetTrigger:hover:not(:disabled) {
   border-color: var(--color-border-brand-base);
+}
+
+.pageOffsetTrigger:active:not(:disabled) {
+  border-color: var(--color-border-brand-base);
+}
+
+.pageOffsetTrigger:disabled {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-accessible);
+  color: var(--color-text-disabled);
 }
 
 .pageOffsetCaretIcon {
@@ -218,11 +252,13 @@
   width: 40px;
   max-height: 160px;
   overflow-y: auto;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-radius: var(--corner-radius-radius-4);
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 1px;
+  overflow-x: clip;
   box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
   z-index: 2;
 }
@@ -253,12 +289,24 @@
 }
 
 .pageOffsetOption:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-neutral);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+}
+
+.pageOffsetOption:active {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
 }
 
 .pageOffsetOptionSelected {
   background: var(--color-background-controls-brand-lighter);
   color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
 }
 
 .countText {

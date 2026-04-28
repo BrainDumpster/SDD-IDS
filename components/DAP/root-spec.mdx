@@ -39,6 +39,7 @@ DAP uses IDS-compatible semantic naming and theme behavior (Light/Dark).
 | `--color-background-surface-1` | `#f4f4f4` | `#111619` |
 | `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
 | `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
+| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#003a65` |
 | `--color-background-gray-light` | `#eaeaea` | `#393939` |
 | `--color-background-overlay` | `rgba(37,37,37,0.65)` | `rgba(37,37,37,0.75)` |
 
@@ -50,6 +51,7 @@ DAP uses IDS-compatible semantic naming and theme behavior (Light/Dark).
 | `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
 | `--color-border-disabled` | `#757575` | `#9e9e9e` |
 | `--color-border-light` | `#c5c5c5` | `#34414c` |
+| `--color-border-neutral-light` | `#c5c5c5` | `#34414c` |
 | `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#4c9fdd` |
 
 ### Core Text Tokens
@@ -57,8 +59,8 @@ DAP uses IDS-compatible semantic naming and theme behavior (Light/Dark).
 | Token | Light | Dark |
 |---|---|---|
 | `--color-text-white` | `#ffffff` | `#ffffff` |
-| `--color-text-neutral` | `#4d4d4d` | `#8898a5` |
-| `--color-text-neutral-strong` | `#252525` | `#b8c1c9` |
+| `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
 | `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
 | `--color-text-disabled` | `#757575` | `#c5c5c5` |
 
@@ -66,7 +68,7 @@ DAP uses IDS-compatible semantic naming and theme behavior (Light/Dark).
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-icon-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-icon-neutral` | `#4d4d4d` | `#b8c1c9` |
 | `--color-icon-brand-base` | `#0076ce` | `#4c9fdd` |
 | `--color-icon-disabled` | `#757575` | `#c5c5c5` |
 | `--color-icon-white` | `#ffffff` | `#ffffff` |
@@ -172,4 +174,10 @@ DAP file (`HIbl2AgqTSdR9STZueMvTH`) is expected to use IDS-compatible variable o
 
 - `get_metadata` executed successfully for DAP root node `46810:208360` (Figma MCP).
 - `get_variable_defs` and `get_design_context` currently required an active desktop selection in this environment; token values in `dap-theme.css` are initialized from IDS-compatible baseline tokens used by existing DAP specs/components.
+- Additional live token validation executed against DAP Pagination node `46961:304003`:
+  - verified `--color-background-controls-brand-lighter` dark = `#003a65`
+  - verified `--color-text-neutral` dark = `#b8c1c9`
+  - verified `--color-text-neutral-strong` dark = `#e6e9ec`
+  - verified `--color-icon-neutral` dark = `#b8c1c9`
+  - verified neutral-light border family dark = `#34414c`
 <!-- auto:generated:end -->
