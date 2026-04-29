@@ -19,8 +19,8 @@
 - Separator rule: dividers are rendered as separate row/column elements, so product tile occupancy remains full-size; any visual gap is only from outer edge/separator treatment, not from shrinking the tile content area.
 - Product icon slot: `32px x 32px`.
 - Product label box: `111px` max width with `Body 2` text.
-- Vertical product separators: dotted divider using `var(--color-border-accessible)`; in 2-product no-options scenario, separator is solid and touches top/bottom of the launcher surface.
-- Between-row divider: dotted horizontal divider with inset margins.
+- Vertical product separators: dotted divider using `var(--color-border-accessible)` with fixed `93px` height, vertically centered between the two product panels; in 2-product no-options scenario, separator is solid and touches top/bottom of the launcher surface.
+- Between-row divider: dotted horizontal separator with fixed `262px` width, horizontally centered between product panels.
 - Options block width: `295px` in dropdown menu detail node.
 - Option row padding: `10px 16px 10px 16px`.
 - Surface stroke/shadow:
@@ -119,6 +119,8 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 ### Per-slot style contract
 - `ProductTile`: `148x125`, icon `32x32`, label width clamp `111px`.
 - `ProductRegion`: dotted row/column dividers from accessible border token; dividers are independent elements (not part of tile fill layer).
+  - vertical dotted divider: fixed `93px`, centered in `125px` tile block.
+  - horizontal dotted divider: fixed `262px`, centered across the panel seam.
 - Product content container must span the tile (`width: 100%`, `height: 100%`) so hover/press states use the full tile area.
 - `OptionsRegion`: simple stacked rows, no custom radius.
 - `OptionRow`: mirrors IDS dropdown-combo-box option contract for default/hover/press token behavior.
