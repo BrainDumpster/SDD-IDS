@@ -118,12 +118,17 @@
 }
 
 .dropdownOption {
+  display: block;
   width: 100%;
+  box-sizing: border-box;
   border: 0;
+  border-top: var(--border-width-border-1) solid transparent;
+  border-bottom: var(--border-width-border-1) solid transparent;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   text-align: left;
   padding: 10px var(--padding-padding-24) 10px var(--padding-padding-16);
+  min-height: 40px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
@@ -183,6 +188,7 @@
 .pageInputWrap {
   display: inline-flex;
   align-items: center;
+  box-sizing: border-box;
   width: 40px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
@@ -192,10 +198,11 @@
 
 .pageInput {
   width: 100%;
+  min-width: 0;
   border: 0;
   background: transparent;
   color: var(--color-text-neutral);
-  text-align: right;
+  text-align: center;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   padding: 0;
@@ -277,12 +284,17 @@
 }
 
 .pageOffsetOption {
+  display: block;
   width: 100%;
+  box-sizing: border-box;
   border: 0;
+  border-top: var(--border-width-border-1) solid transparent;
+  border-bottom: var(--border-width-border-1) solid transparent;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   text-align: right;
   padding: 10px 6px;
+  min-height: 40px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;

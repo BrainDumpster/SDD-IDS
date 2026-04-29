@@ -42,6 +42,11 @@
   color: var(--color-text-neutral-strong);
 }
 
+.item:active:not(:disabled) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+}
+
 .stateHover {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral-strong);
@@ -73,6 +78,8 @@
 .itemSelected {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-brand-strong);
+  margin-right: calc(-1 * var(--border-width-border-1));
+  border-right: var(--border-width-border-1) solid var(--color-background-brand-lighter);
 }
 
 .itemSelected::before {

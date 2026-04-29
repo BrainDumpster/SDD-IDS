@@ -39,6 +39,7 @@ Optional wrappers (demo/composition context):
   - row fill: `var(--color-background-brand-lighter)`
   - text color: `var(--color-text-brand-strong)`
   - leading active indicator: `4px` inset bar in strong brand tone (maps to `var(--color-border-brand-dark)`/`var(--color-text-brand-strong)` family).
+  - selected row right edge overlays panel divider by `1px` so the selected surface owns the right boundary in that row.
 - Root width is container-driven at runtime; `278px` is sample width from reference frame.
 
 ## Tokens
@@ -79,7 +80,7 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 | `LeftNavigationItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
 | `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
 | `LeftNavigationItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
 | `LeftNavigationItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
 | `LeftNavigationItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
 
@@ -90,7 +91,7 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 | `LeftNavigationItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
 | `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
 | `LeftNavigationItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
 | `LeftNavigationItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
 | `LeftNavigationItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
 
@@ -98,6 +99,7 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 - Clicking an item sets selected state and active indicator on that row.
 - Hover applies brand-lighter background; text remains neutral-strong.
 - Press applies brand-light background and brand-strong text.
+- Press is a runtime interaction state (`:active` equivalent), not demo-only.
 - Keyboard:
   - `Tab` to move focus into list.
   - `ArrowUp` / `ArrowDown` to move between items (roving focus pattern when implemented).
@@ -148,6 +150,7 @@ Per-slot style contract:
 - Title always uses Header-5 rhythm and 24px horizontal inset.
 - Items use Body-1 rhythm with 24px horizontal inset.
 - Selected item uses brand-lighter fill, brand-strong text, and 4px leading active indicator.
+- Selected item also overlays the panel right divider by `1px` to visually cover that edge in the selected row.
 
 Behavior contract:
 - Exactly one selected item in single-select mode.

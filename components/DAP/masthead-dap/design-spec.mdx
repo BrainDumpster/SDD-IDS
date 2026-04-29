@@ -53,6 +53,9 @@ Deterministic child slots:
 - App launcher dropdown:
   - surface width: `298px`
   - 2x2 grid tile block + lower options block (`Product Name 5/6/8` rows).
+  - internal IDS app-launcher separators must follow referenced IDS contract:
+    - vertical dashed divider: `93px`, vertically centered between adjacent product panels
+    - horizontal dashed divider: `262px`, horizontally centered between upper/lower product panel rows
 - Popovers anchor to the corresponding masthead action and open below the bar (`top offset = 56px` in frame).
 
 ## Tokens
@@ -103,6 +106,8 @@ MCP-verified variable evidence (`46812:251428`, `46812:248324`):
 | settings/help/app-launcher action | default | `var(--color-background-masthead-brand-base)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | press/select | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
+| settings/help/app-launcher action | open + hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
+| settings/help/app-launcher action | open + press | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | focus | `var(--color-background-masthead-brand-base)` | dashed `var(--border-width-border-1)` `var(--color-border-white)` | icon unchanged |
 | user initials chip | default | transparent | `var(--color-border-white)` | `var(--color-text-white)` |
 | help menu row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
@@ -119,6 +124,8 @@ MCP-verified variable evidence (`46812:251428`, `46812:248324`):
 | settings/help/app-launcher action | default | `var(--color-background-masthead-brand-base)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | press/select | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
+| settings/help/app-launcher action | open + hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
+| settings/help/app-launcher action | open + press | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
 | settings/help/app-launcher action | focus | `var(--color-background-masthead-brand-base)` | dashed `var(--border-width-border-1)` `var(--color-border-white)` | icon unchanged |
 | user initials chip | default | transparent | `var(--color-border-white)` | `var(--color-text-white)` |
 | help menu row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
@@ -180,6 +187,8 @@ Per-slot style contract:
 Behavior contract:
 - Help and launcher trigger states are independently controllable.
 - Trigger buttons expose open state via `aria-expanded`.
+- Action-state precedence is deterministic: `press/select` overrides `hover` (including when a trigger is already open).
+- App launcher trigger must preserve masthead parity with settings/help: `open + press` uses `var(--color-background-masthead-brand-stronger)`.
 - Popup menus close on blur/outside click/Escape.
 
 Accessibility contract:

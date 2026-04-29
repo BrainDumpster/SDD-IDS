@@ -90,7 +90,10 @@
 
 .helpItem {
   width: 100%;
-  border: 0;
+  box-sizing: border-box;
+  border: none;
+  border-top: var(--border-width-border-1) solid transparent;
+  border-bottom: var(--border-width-border-1) solid transparent;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   text-align: left;
