@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { IdsPagination } from "./dap/IdsPagination";
+import { IdsPagination } from "./IdsPagination";
 import "../../../components/ids-theme.css";
 import {
   IDS_PAGINATION_DESIGN_SPEC_PATH,

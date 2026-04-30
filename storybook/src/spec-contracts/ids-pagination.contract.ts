@@ -2,7 +2,7 @@ import type {
   IdsPaginationBackground,
   IdsPaginationDropdownState,
   IdsPaginationProps,
-} from "../components/dap/IdsPagination";
+} from "../components/IdsPagination";
 
 export const IDS_PAGINATION_DESIGN_SPEC_PATH =
   "components/ids/pagination/design-spec.mdx" as const;
