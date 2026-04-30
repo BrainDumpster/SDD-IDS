@@ -36,7 +36,8 @@ Optional sub-slots:
 - Main row border: `1px` (`var(--border-width-border-1)`) with `var(--color-border-accessible)`.
 - Left "results per page" group gap is ~`15.5px` in source node; implementations may normalize to nearest spacing token while preserving visual rhythm.
 - Right page-nav group uses `16px` inter-item spacing.
-- Page textbox/input sample width is `40px`, control height `32px`, with `16px` horizontal inner padding.
+- Page textbox/input sample width is `52px`, control height `32px`, with `16px` horizontal inner padding.
+- DAP override: page textbox/input uses `border-radius: var(--corner-radius-radius-4)` (4px token).
 - Per-page dropdown trigger sample width is `90px`, control height `32px`; menu items use `10px` vertical and `16px/24px` horizontal padding.
 - Chevron and double-chevron icon slots are `16px`; dropdown caret slot is `10px`.
 - Pagination supports `Background=Gray` and `Background=None` container contexts.
@@ -193,6 +194,7 @@ Variant/option matrix:
 Per-slot style contract:
 - Root uses neutral background context and tokenized gap.
 - Page controls share shape, border width, and typography contracts.
+- Page textbox/input (`PaginationJumpToPage`) uses width `52px` and `border-radius: var(--corner-radius-radius-4)`.
 - Selected page always uses brand control tokens with inverse text/icon.
 - Disabled controls always use disabled text/icon/border tokens and block pointer/keyboard activation.
 
@@ -230,6 +232,7 @@ Validation checklist:
 - [ ] `aria-current="page"` is applied to exactly one visible page control.
 - [ ] Keyboard activation works with Enter/Space on interactive controls.
 - [ ] Optional summary/page-size/jump slots do not break base layout contract.
+- [ ] `PaginationJumpToPage` uses width `52px` and `border-radius: var(--corner-radius-radius-4)`.
 
 ## Source Mapping
 | Source | Location |
