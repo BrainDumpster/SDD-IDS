@@ -2,170 +2,209 @@
 
 ## Metadata
 - Component: Detail Panel
+- Design System: IDS
 - Category: Table and Data Grids
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54601&m=dev
-- Node ID: 11067-54601
+- Datagrid-attached (expanded): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44257-246888&m=dev
+- Datagrid-attached (collapsed): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44332-174644&m=dev
+- Page-attached (expanded): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44333-174879&m=dev
+- Page-attached (collapsed): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44333-174882&m=dev
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
+- Validated nodes: `44257:246888`, `44332:174644`, `44333:174879`, `44333:174882`
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Last verified: 2026-04-30 (current session)
+- Component map baseline: `data/component-figma-map.json` entry exists for "Detail Panel"; this spec is upgraded to IDS Design Library nodes above.
 
 ## Anatomy
-- Panel container with background
-- Panel header with title
-- Close/collapse button
-- Content sections
-- Data fields with labels
-- Action buttons
-- Focus ring for keyboard navigation
-- Optional tabs or sections
-- Status indicators
+- `DetailPanelRoot`
+- `DetailPanelContent`
+- Variant branch: `attachMode="datagrid"`
+  - expanded: `DetailPanelHeader` + `DetailPanelBody`
+  - collapsed: `DetailPanelCollapsedRail` (icon-only)
+- Variant branch: `attachMode="page"`
+  - expanded: `DetailPanelBody` + `DetailPanelFooter`
+  - collapsed: `DetailPanelCollapsedRail` (icon-only)
+- `DetailPanelToggleButton`
+  - expanded icon: `double-chev-right` (`16x16`)
+  - collapsed icon: `double-chev-left` (`16x16`)
 
 ## Layout & Measurements
-- Standard width: 400px (expandable)
-- Header height: 48px
-- Section padding: 16px
-- Field height: 32px
-- Horizontal padding: 20px
-- Border radius: 8px
-- Focus ring: 2px offset from element
-- Icon size: 16px × 16px
-- Button height: 32px
-- Spacing between sections: 16px
+- Shared width behavior:
+  - expanded width: `398px`
+  - collapsed width: `40px`
+- Datagrid-attached mode:
+  - root height is tied to datagrid height (`height: 100%` of datagrid container at runtime).
+  - sample in Figma node `44257:246888` / `44332:174644`: `792px`.
+- Page-attached mode:
+  - root height is tied to page content region height (`height: 100%` of page container at runtime).
+  - sample in Figma node `44333:174879` / `44333:174882`: `1024px`.
+- Borders:
+  - root border: `1px solid var(--color-border-accessible)`.
+  - sections use same accessible border continuity as shown in source nodes.
+- Expanded mode composition:
+  - toggle control area uses right-side placement (header for datagrid mode, footer for page mode).
+  - body content area is scrollable when content exceeds available vertical space.
+- Collapsed mode composition:
+  - icon-only rail of width `40px` with centered/edge-aligned toggle control per mode.
+- Runtime sizing constraints:
+  - `DetailPanelRoot` uses `box-sizing: border-box`.
+  - width transition is state-driven only (`398px <-> 40px`) and must not introduce intermediate non-deterministic layout widths in codegen outputs.
+  - body region must allow vertical scroll when content exceeds available height.
 
-## Typography
-- Header 6: Roboto Regular 18px/25px (panel headers)
-- Base Styles/Data Header: Roboto Medium 14px/20px (field labels)
-- Body 2: Roboto Regular 14px/20px (field values)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized values)
-- Body 3: Roboto Regular 12px/18px (helper text)
+## Responsiveness
+- Host-driven height remains authoritative in all breakpoints:
+  - datagrid mode follows datagrid host height.
+  - page mode follows page host/content container height.
+- Width behavior is fixed by state, not viewport:
+  - expanded stays `398px`
+  - collapsed stays `40px`
+- On narrow viewports:
+  - panel remains docked to host edge and preserves toggle accessibility.
+  - host layout handles remaining content width; detail panel contract does not auto-switch to overlay mode.
+- Long titles/body content:
+  - title must truncate gracefully (no layout break).
+  - body must scroll internally without shifting header/footer/toggle placement.
 
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Static gray 900: `var(--color-static-gray-900)` = #252525
-- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Link brand text: `var(--color-text-link-brand-base)` = #0062ab
-- Link brand strong: `var(--color-text-link-brand-strong)` = #06528a
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
-- Brand dark border: `var(--color-border-brand-dark)` = #0062ab
-- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
-
-### Icons
-- Accessible icon: `var(--color-icon-accessible)` = #757575
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Standard gray icon: `icon-standard-gray` = #616161
-
-### Background Colors
-- Brand light: `var(--color-background-brand-light)` = #d9eaf8
-- Minor background: `var(--color-background-alerting-minor)` = #ffc700
-- Minor light: `var(--color-background-alerting-minor-light)` = #fff7d9
-- Success background: `var(--color-background-alerting-success)` = #1b8500
-
-### UI Palettes
-- Dell Blue 100: `UI Palettes/Dell Blue/dell-blue-100` = #EBF4FB
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Dell Blue 600: `UI Palettes/Dell Blue/dell-blue-600` = #0062AB
-- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
-- Gray 300: `UI Palettes/Gray/gray-300` = #C5C5C5
-- Gray 500: `UI Palettes/Gray/gray-500` = #757575
-- Gray 600: `UI Palettes/Gray/gray-600` = #616161
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Alert Colors
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
-- Minor border: `var(--color-border-alerting-minor-transparent)` = #9c622e
-- Warning border: `Color/Border/Alerting/Warning-Accessible` = #9c622e
-
-### Other Colors
-- Annotation: `Annotation` = #E8178A
-
-### Spacing & Sizing
-- Compact Density: `Compact Density` = 36
-- Compact Cell Padding: `Compact/Cell - Vertical padding` = 8
+- Surface/background:
+  - `var(--color-background-component)`
+  - `var(--color-background-controls-brand-base)` (for nested actions shown in template content)
+- Border:
+  - `var(--color-border-accessible)`
+  - `var(--color-border-transparent-brand)`
+- Text:
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-neutral)`
+  - `var(--color-text-brand-strong)`
+  - `var(--color-text-white)`
+  - `var(--color-text-link-brand-base)`
+- Icon:
+  - `var(--color-icon-neutral)` (required for both expand/collapse toggle icons)
+  - `var(--color-icon-accessible)`
+- Typography:
+  - `Base Styles/Data Header` (14/20 medium)
+  - `Body 2` (14/20 regular)
 
 ## States (Light Theme)
-| Element | Background | Border | Text | Icon |
+| Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Panel Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `icon-standard-gray` (#616161) |
-| Panel Header | `UI Palettes/Dell Blue/dell-blue-100` (#EBF4FB) | `var(--color-border-accessible)` (#757575) | `Header 6` (Roboto Regular 18px/25px) | `var(--color-icon-accessible)` (#757575) |
-| Field Label | transparent | transparent | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `icon-standard-gray` (#616161) |
-| Field Value | transparent | transparent | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
-| Action Button (Default) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Action Button (Hover) | `UI Palettes/Dell Blue/dell-blue-600` (#0062AB) | `UI Palettes/Dell Blue/dell-blue-600` (#0062AB) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Close Button (Default) | transparent | transparent | `var(--color-icon-accessible)` (#757575) | `var(--color-icon-accessible)` (#757575) |
-| Close Button (Hover) | transparent | transparent | `var(--color-icon-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Status Indicator (Warning) | `var(--color-background-alerting-minor-light)` (#fff7d9) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-alerting-minor)` (#ffc700) |
-| Status Indicator (Success) | `var(--color-background-alerting-success)` (#1b8500) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| `DetailPanelRoot` | expanded | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | text token-resolved |
+| `DetailPanelRoot` | collapsed | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | icon token-resolved |
+| `DetailPanelToggleButton` | default | transparent | none | `double-chev-right` or `double-chev-left` in `var(--color-icon-neutral)` |
+| `DetailPanelToggleButton` | hover | transparent | none | `var(--color-icon-neutral)` |
+| `DetailPanelToggleButton` | press | transparent | none | `var(--color-icon-neutral)` |
+| `DetailPanelToggleButton` | focus-visible | transparent | focus outline/focus ring tokenized | icon unchanged |
+| `DetailPanelHeader` (datagrid expanded) | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | title `var(--color-text-neutral-strong)` |
+| `DetailPanelFooter` (page expanded) | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | icon `var(--color-icon-neutral)` |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Text and border colors remain consistent via semantic variables
-- Panel container maintains visibility in dark theme
-- Status indicators maintain visibility
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| `DetailPanelRoot` | expanded/collapsed | semantic token-resolved | semantic token-resolved | semantic token-resolved |
+| `DetailPanelToggleButton` | default/hover/press/focus-visible | semantic token-resolved | semantic token-resolved | semantic token-resolved |
+| `DetailPanelHeader` | default | semantic token-resolved | semantic token-resolved | semantic token-resolved |
+| `DetailPanelFooter` | default | semantic token-resolved | semantic token-resolved | semantic token-resolved |
+
+Dark table is structurally parallel to light; runtime must not hardcode color literals.
 
 ## Interactions
-- Click close button to collapse/close panel
-- Click action buttons to perform actions
-- Hover provides visual feedback on interactive elements
-- Focus ring uses brand color for keyboard navigation
-- Keyboard navigation: Tab to navigate, Enter to activate
-- Panel can be resized (optional)
-- Panel can be docked/undocked (optional)
+- Toggle behavior (both modes):
+  - clicking the chevron control toggles `expanded <-> collapsed`.
+  - expanded shows `double-chev-right`.
+  - collapsed shows `double-chev-left`.
+- Datagrid-attached mode:
+  - toggle control lives in header section.
+  - header always remains visible in expanded mode.
+- Page-attached mode:
+  - toggle control lives in footer section.
+  - footer always remains visible in expanded mode.
+- Keyboard:
+  - `Tab` focuses toggle.
+  - `Enter` / `Space` toggles expand/collapse.
+- Focus:
+  - focus-visible styling must be present on toggle control.
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab, Enter, Escape
-- Screen reader support: Proper ARIA attributes for panel content
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use aside element with proper landmarks
-- Focus management: Logical tab order through panel elements
-- Content announcements: Screen reader announces panel content
+## Composition & API (runtime)
+- Required props:
+  - `attachMode: "datagrid" | "page"`
+  - `isExpanded: boolean`
+  - `onExpandedChange: (next: boolean) => void`
+  - `body: RenderableContent`
+- Optional props:
+  - `title?: string` (default `"Details"` for datagrid mode header)
+  - `showHeader?: boolean` (default `true` in datagrid mode)
+  - `showFooter?: boolean` (default `true` in page mode)
+  - `ariaLabelExpand?: string` (default `"Expand details panel"`)
+  - `ariaLabelCollapse?: string` (default `"Collapse details panel"`)
+  - `className?: string`
+  - `collapsedWidth?: number` (default `40`)
+  - `expandedWidth?: number` (default `398`)
+  - `id?: string` (for deterministic `aria-controls` linkage)
 
-## Variants
-- **Default**: Standard detail panel
-- **Collapsible**: Panel that can be collapsed
-- **Resizable**: Panel that can be resized
-- **Docked**: Panel docked to side of screen
-- **Floating**: Floating panel overlay
-- **With Tabs**: Panel with tabbed sections
-- **With Actions**: Panel with action buttons
-- **With Status**: Panel with status indicators
-
-## Behavior & Guidelines
-- Use detail panel for displaying detailed information
-- Provide clear section headers and labels
-- Use consistent styling across panel sections
-- Test with screen readers for proper content announcement
-- Consider responsive behavior for different screen sizes
-- Use keyboard navigation for accessibility
-- Provide visual feedback for all interactions
-- Consider panel positioning and z-index
-
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Status indicators use appropriate color psychology
-- Dark theme adaptation through semantic tokens
-- Panel layouts should be responsive and accessible
-
-## Deliverable Checklist
-- [ ] Implement panel collapse/expand functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Tab, Enter, Escape)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test hover and focus states
-- [ ] Implement action button functionality
-- [ ] Add status indicators
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test panel resizing functionality
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic slot schema:
+  1. `DetailPanelRoot`
+  2. conditional branch by `attachMode`
+     - datagrid/expanded: `DetailPanelHeader` + `DetailPanelBody`
+     - datagrid/collapsed: `DetailPanelCollapsedRail` + `DetailPanelToggleButton`
+     - page/expanded: `DetailPanelBody` + `DetailPanelFooter`
+     - page/collapsed: `DetailPanelCollapsedRail` + `DetailPanelToggleButton`
+- Branch invariants:
+  - datagrid expanded branch MUST include header.
+  - page expanded branch MUST include footer.
+  - collapsed branch MUST be icon-only rail (body hidden).
+- Variant matrix:
+  - `attachMode`: `datagrid | page`
+  - `panelState`: `expanded | collapsed`
+  - `toggleState`: `default | hover | press | focus-visible`
+- Per-slot style contract:
+  - root width uses `398px` expanded and `40px` collapsed.
+  - root border uses `1px solid var(--color-border-accessible)`.
+  - toggle icon size is fixed `16px`.
+  - toggle icon color uses `var(--color-icon-neutral)`.
+  - datagrid-expanded uses header+body; page-expanded uses body+footer.
+- Behavior contract:
+  - toggle action is deterministic and idempotent (`onExpandedChange(!isExpanded)` once per activation).
+  - datagrid mode root height follows datagrid container height.
+  - page mode root height follows page container height.
+  - collapsed mode hides body content from layout and assistive tech flow (unless explicitly configured otherwise).
+  - expanded mode restores the correct mode-specific branch (`Header+Body` or `Body+Footer`) without losing body scroll position unless host explicitly resets content.
+- Accessibility contract:
+  - root should be an `aside` landmark (or equivalent region role) with accessible label.
+  - toggle button exposes `aria-expanded` reflecting panel state.
+  - toggle button SHOULD expose `aria-controls` linking to body container id when body is present.
+  - toggle button accessible name switches between expand/collapse labels.
+  - keyboard activation supports `Enter` and `Space`.
+  - collapsed rail must remain reachable in tab order via toggle button.
+- Asset/bundling:
+  - expanded state icon: `double-chev-right`
+  - collapsed state icon: `double-chev-left`
+  - generator MUST use project/library `Icon` component with `shapeName`/icon-name mapping when available; inline SVG is fallback-only.
+- Fallback/error rules:
+  - unknown `attachMode` -> fallback to `datagrid`.
+  - invalid widths (`<= 0`) -> fallback to `expanded=398`, `collapsed=40`.
+  - missing `onExpandedChange` -> component may render but must not throw; local state fallback allowed.
+  - `showHeader=false` while `attachMode=datagrid` and expanded -> ignore override and render header to preserve contract.
+  - `showFooter=false` while `attachMode=page` and expanded -> ignore override and render footer to preserve contract.
+- Validation checklist:
+  - [ ] expanded/collapsed widths are exactly `398`/`40`.
+  - [ ] datagrid variant uses `Header + Body`; page variant uses `Body + Footer`.
+  - [ ] expanded icon is `double-chev-right`; collapsed icon is `double-chev-left`.
+  - [ ] toggle icon color is `var(--color-icon-neutral)` in both variants.
+  - [ ] toggle click/keyboard activation correctly toggles panel state.
+  - [ ] root height tracks host container (datagrid/page) rather than fixed sample heights.
+  - [ ] light/dark state tables remain structurally parallel and token-driven.
+  - [ ] datagrid/page branch invariants are preserved in expanded and collapsed states.
+  - [ ] responsive behavior remains host-driven with fixed state widths (`398/40`) and internal body scroll.
 
 ## Source Mapping
-- Figma component: Detail Panel (11067-54601)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Detail Panel" (category "Table and Data Grids"; node "11067-54601")
+- Component map baseline:
+  - `data/component-figma-map.json` -> component `"Detail Panel"` (legacy exploration node)
+- IDS authoritative nodes used for this spec:
+  - Datagrid expanded: `44257:246888`
+  - Datagrid collapsed: `44332:174644`
+  - Page expanded: `44333:174879`
+  - Page collapsed: `44333:174882`
+- Live verification evidence:
+  - `get_metadata` on all four nodes (dimensions/structure)
+  - `get_design_context` on all four nodes (layout + icon placement/sections)
+  - `get_variable_defs` on expanded nodes (`44257:246888`, `44333:174879`) for token validation
