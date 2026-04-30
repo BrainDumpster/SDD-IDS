@@ -44,7 +44,7 @@
   width: 90px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: 0;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   padding: 6px var(--padding-padding-16);
@@ -94,7 +94,7 @@
   left: 0;
   width: 90px;
   border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: 0;
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
@@ -189,7 +189,7 @@
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  width: 40px;
+  width: 52px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   background: var(--color-background-component);
@@ -223,7 +223,7 @@
   width: 40px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: 0;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   padding: 5px 6px;
@@ -260,7 +260,7 @@
   max-height: 160px;
   overflow-y: auto;
   border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: 0;
   background: var(--color-background-component);
   list-style: none;
   margin: 0;

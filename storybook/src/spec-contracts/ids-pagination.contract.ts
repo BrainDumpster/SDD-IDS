@@ -5,7 +5,7 @@ import type {
 } from "../components/dap/IdsPagination";
 
 export const IDS_PAGINATION_DESIGN_SPEC_PATH =
-  "components/DAP/pagination/design-spec.mdx" as const;
+  "components/ids/pagination/design-spec.mdx" as const;
 
 export const PAGINATION_ROOT_PROP_KEYS = [
   "currentPage",
