@@ -1,0 +1,326 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+.topBar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modeLabel {
+  color: var(--color-text-neutral);
+  font-size: 14px;
+}
+
+.contentRow {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-background-component);
+  overflow: hidden;
+}
+
+.gridWrap {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-background-component);
+  overflow: hidden;
+}
+
+.tableViewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  border-bottom: 0;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.headerCell {
+  position: relative;
+  box-sizing: border-box;
+  height: 48px;
+  padding: 0;
+  border-top: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-background-component);
+  text-align: left;
+  vertical-align: middle;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 5px 12px 5px 16px;
+  gap: 8px;
+}
+
+
+.titleButton {
+  all: unset;
+  flex: 1;
+  min-width: 0;
+  cursor: default;
+}
+
+.headerTitle {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-neutral-strong);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  background-color: currentColor;
+}
+
+.sortIcon {
+  color: var(--color-icon-neutral);
+}
+
+.sortIconSelected {
+  color: var(--color-icon-brand-base);
+}
+
+.filterIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.filter-default {
+  color: var(--color-icon-neutral);
+}
+
+.filter-hover {
+  color: var(--color-icon-neutral);
+}
+
+.filter-selected {
+  color: var(--color-icon-brand-base);
+}
+
+.filter-press {
+  color: var(--color-icon-brand-stronger);
+}
+
+.resizeHandle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 24px;
+  transform: translateY(-50%);
+  border: none;
+  background: var(--color-border-light);
+  cursor: col-resize;
+  margin: 0;
+  padding: 0;
+}
+
+.selectionColumn {
+  box-sizing: border-box;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  padding: 0;
+  text-align: center;
+}
+
+.headerSelectionColumn {
+  padding: 0;
+  position: relative;
+}
+
+.headerSelectionColumn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 24px;
+  transform: translateY(-50%);
+  background: var(--color-border-light);
+  pointer-events: none;
+}
+
+.selectionHeaderContent {
+  box-sizing: border-box;
+  height: 100%;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  padding: var(--Selection-Header, 16px) 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  align-self: stretch;
+}
+
+.rowSelectionCell {
+  box-sizing: border-box;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.selectionRowContent {
+  box-sizing: border-box;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  height: 100%;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rowSelectionCell input,
+.selectionHeaderContent input {
+  display: block;
+  margin: 0 auto;
+  width: 16px;
+  height: 16px;
+}
+
+.settingsColumn {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: var(--color-background-component);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.settingsIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-neutral);
+  display: block;
+  background-color: currentColor;
+  margin: 0 auto;
+}
+
+.bodyRow {
+  height: 40px;
+  cursor: pointer;
+}
+
+.bodyRow:hover {
+  background: var(--color-background-gray-neutral-lighter);
+}
+
+.bodyRowSelected {
+  background: var(--color-background-brand-lighter);
+}
+
+.bodyCell {
+  height: 40px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--color-text-neutral);
+  font-size: 14px;
+  line-height: 20px;
+  vertical-align: middle;
+}
+
+
+.cellText {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filterPopup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 240px;
+  background: var(--color-background-component);
+  border: 1px solid var(--color-border-accessible);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  z-index: 5;
+}
+
+.filterPopupTopBorder,
+.filterPopupBottomBorder {
+  height: 1px;
+  background: var(--color-border-light);
+}
+
+.filterPopupBody {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--color-text-neutral);
+}
+
+.footer {
+  flex: 0 0 auto;
+  background: var(--color-background-component);
+  border-top: 1px solid var(--color-border-light);
+  padding: 0;
+}
+
+.footer :global(nav) {
+  border: 0;
+  margin: 0;
+}
+
+.detailPanel {
+  align-self: stretch;
+  height: auto;
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 1px solid var(--color-border-light) !important;
+}
+
+.detailBody {
+  color: var(--color-text-neutral);
+  font-size: 14px;
+}

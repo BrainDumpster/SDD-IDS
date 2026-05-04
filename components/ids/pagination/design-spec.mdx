@@ -23,7 +23,7 @@
   - `FirstPageButton` (`double-chev-left`)
   - `PrevPageButton` (`chev-left`)
   - `PageInput` (textbox)
-  - `PageCountText` ("of N" or "1 page")
+  - `PageCountText` (format is `"of {totalPages}"` with exactly one space after `of`; single-page fallback `"1 page"`)
   - `NextPageButton` (`chev-right`)
   - `LastPageButton` (`double-chev-right`)
 - `OptionalPageOffsetDropdown` (trigger + menu with `arrow-drop-tri-caret`)
@@ -40,6 +40,9 @@
   - Width: `52px`
   - Height: `32px`
   - Padding: `5px/6px` vertical + `16px` horizontal (visual equivalent).
+- Page count text:
+  - Must render as `of {totalPages}` with one whitespace separator.
+  - Example: `of 16`.
 - Results-per-page dropdown trigger:
   - Width: `90px`
   - Height: `32px`
@@ -169,6 +172,7 @@ Dark table is structurally parallel to light; runtime must not hardcode literal 
   - Use IDS semantic variables above.
   - Results-per-page dropdown trigger + menu corners are square (`border-radius: 0`).
   - Optional page-offset trigger + menu corners are square (`border-radius: 0`).
+  - `PageCountText` string contract: `of {totalPages}` (single space).
   - Dropdown rows reserve transparent top/bottom borders in default to prevent jump.
 - Behavior contract:
   - Recompute navigation disabled states on every `currentPage`/`totalPages` update.
