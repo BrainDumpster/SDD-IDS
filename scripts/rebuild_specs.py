@@ -369,6 +369,7 @@ def build_root_spec(theme: dict, config: dict) -> str:
 | Name | Synapse |
 | Framework Layer | {config.get('framework_layer', 'base-ui')} |
 | Figma File | Synapse Hi Fi components |
+| Figma URL (reference) | `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=11067-54471` |
 | Theme Mechanism | CSS Custom Properties + `data-theme` attribute |
 
 ### Supported Frameworks
@@ -528,7 +529,8 @@ All components must meet these requirements. Component specs only document addit
 <!-- ds:section id=variable-collections -->
 ## Variable Collections (Figma)
 
-- **Tokens** — semantic, theme-aware (Light / Dark modes). Maps to `--color-*`, `--shadow-*` tokens.
+- **Color Mode** — primary semantic COLOR variables (Light / Dark). Maps to most `--color-*` tokens.
+- **Tokens** — supplemental semantic COLOR + shadow COLOR + shadow FLOAT geometry (Light / Dark where applicable). Maps to `--color-*`, `--shadow-drop-shadow-*`.
 - **Primitive** — base palette values (static across themes). Maps to `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, `--opacity-*`, `--scale-*`.
 - **Sizes** — spacing, padding, corner radius, font sizes, border widths. Maps to `--padding-*`, `--spacing-*`, `--sizing-*`, `--corner-radius-*`, `--border-width-*`, `--font-*`.
 
@@ -536,10 +538,12 @@ All components must meet these requirements. Component specs only document addit
 
 | Source | Location |
 |---|---|
-| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Figma variables | `GET /v1/files/Td1bnsvRj1PCGs9RVJkIvJ/variables/local` (Figma REST API); last sync timestamp in `components/synapse-theme.css` header |
+| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `11067:54471` (CANVAS `-- Form Elements` — page context for this sync) |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
 | Config | `config/design_systems/synapse.yaml` |
+| Theme sync script | `scripts/sync_synapse_theme_from_figma.py` |
 <!-- auto:generated:end -->
 """
     return spec
