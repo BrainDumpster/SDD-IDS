@@ -24,7 +24,7 @@
 2. **`scrim`**: full-viewport layer above page; blocks pointer events to content below; optional subtle **backdrop blur** (Figma: `1px`).
 3. **`dialog`**: centered **modal surface** (`About-Synapse`); clips overflow; outer border + large corner radius.
 4. **`modalMain`**: column flex; **modal background**, **elevation shadow stack**; contains **header**, **body**, **footer**.
-5. **`header`**: top bar — **leading spacer / reserved region** (Figma empty `78px` cluster), **trailing dismiss** control (icon-only **close**, `16×16`).
+5. **`header`**: top bar — **leading spacer / reserved region** (Figma empty `78px` cluster), **trailing dismiss** icon (icon-only **close**, `16×16`) — not a button, simple icon control.
 6. **`body`**: scrollable if needed; vertically centered **content column**:
    - **`productBlock`**: **`productTitle`** + **`versionLine`** (stacked, centered).
    - **`brandBlock`**: **`logo`** (horizontal Dell Technologies mark, fixed aspect sample in Figma).
@@ -41,7 +41,7 @@
 - **Product title:** `var(--font-size-header-1)`; line-height `var(--font-line-height-line-height-58)`; color `var(--color-icon-brand-base)` (Figma binds product wordmark to icon brand blue); **center** text; max width sample `800px` — use **`max-width` + `margin-inline: auto`** for long titles.
 - **Version line:** `var(--font-size-body-2)`; line-height `var(--font-line-height-line-height-20)`; color `var(--color-text-neutral-strong)`; **center**.
 - **Logo region:** height sample `32px`; width driven by asset intrinsic ratio (Figma ~`249.693px` wide cluster).
-- **Legal copy:** `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; color `var(--color-text-neutral)`; **text-align: center**; multiline paragraphs with normal flow.
+- **Legal copy:** `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; color `var(--color-text-neutral)`; **text-align: center**; multiline paragraphs with normal flow; **gap** between logo and legal copy: `var(--spacing-space-8)`.
 - **Footer:** `border-top` `var(--border-width-border-1)` solid `var(--color-border-neutral-light)`; padding `var(--padding-padding-24)`; row gap `var(--spacing-space-16)`; **actions end-aligned** (Close only in reference).
 - **Close button (primary):** padding horizontal `var(--padding-padding-16)`, vertical `var(--padding-padding-10)`; radius `var(--corner-radius-radius-4)`; background `var(--color-background-controls-brand-base)`; border `var(--border-width-border-1)` solid `var(--color-border-transparent-brand)`; label `var(--font-size-body-2)` / `var(--color-text-white)` (see States).
 - **Scrim:** full viewport; fill use `var(--color-background-overlay-1)` **or** token matching Figma **`rgba(0,0,0,0.6)`** — validate visually against node `49842:37475`; optional `backdrop-filter: blur(1px)` when spec requires parity.

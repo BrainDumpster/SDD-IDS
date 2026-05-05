@@ -169,7 +169,7 @@ export function Dialog({
                     className={[
                       buttonStyles.button,
                       buttonStyles.primary,
-                      buttonStyles.md,
+                      buttonStyles.lg,
                     ].join(" ")}
                     disabled={!enableActionButton}
                     onClick={() => onPrimaryButtonClick?.()}

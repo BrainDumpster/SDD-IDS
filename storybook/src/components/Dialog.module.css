@@ -161,6 +161,7 @@
 
 .popupAbout {
   width: min(1152px, calc(100vw - var(--padding-padding-24) * 2));
+  height: 596px;
   max-height: 90vh;
   border: var(--border-width-border-1) solid var(--color-border-neutral-light);
   border-radius: var(--corner-radius-radius-16);

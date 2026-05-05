@@ -19,9 +19,7 @@ export const Default: Story = {
       productTitle="Synapse"
       versionLabel="Version 2.4.1"
       logoSrc={logoDelltech}
-      copyrightText={`Copyright © 2026 Dell Inc. or its subsidiaries. All Rights Reserved. Dell Technologies, Dell and other trademarks are trademarks of Dell Inc. or its subsidiaries.
-
-Other trademarks may be trademarks of their respective owners.`}
+      copyrightText="Copyright © 2026 Dell Inc. or its subsidiaries. All Rights Reserved. Dell Technologies, Dell and other trademarks are trademarks of Dell Inc. or its subsidiaries. Other trademarks may be trademarks of their respective owners."
     />
   ),
 };
