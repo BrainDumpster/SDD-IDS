@@ -159,7 +159,7 @@
   outline: none;
   transition: background 80ms ease;
   user-select: none;
-  min-height: 44px;
+  min-height: 40px;
 }
 
 .item[data-selectable="false"] {
@@ -167,19 +167,19 @@
 }
 
 .item:hover:not([data-disabled]) {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
 }
 
 .item[data-highlighted] {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
 }
 
 .item[data-focus-visible] {
