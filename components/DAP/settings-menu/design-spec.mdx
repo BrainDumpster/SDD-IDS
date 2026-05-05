@@ -82,7 +82,8 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 | `SettingsMenuItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
 | `SettingsMenuItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
 | `SettingsMenuItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
-| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` + `outline-offset: 0` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | disabled | transparent | none | reduced emphasis (opacity 0.6) + non-interactive cursor |
 
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
@@ -93,7 +94,8 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 | `SettingsMenuItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
 | `SettingsMenuItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
 | `SettingsMenuItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
-| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` + `outline-offset: 0` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | disabled | transparent | none | reduced emphasis (opacity 0.6) + non-interactive cursor |
 
 ## Interactions
 - Clicking an item sets selected state and active indicator on that row.

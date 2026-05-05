@@ -60,19 +60,13 @@
 .item:focus-visible {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: var(--corner-radius-radius-4);
-  border-bottom-right-radius: var(--corner-radius-radius-4);
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .stateDefaultFocus {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: var(--corner-radius-radius-4);
-  border-bottom-right-radius: var(--corner-radius-radius-4);
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .itemSelected {
@@ -95,10 +89,7 @@
 .stateSelectedFocus {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: var(--corner-radius-radius-4);
-  border-bottom-right-radius: var(--corner-radius-radius-4);
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .itemDisabled {
