@@ -158,6 +158,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral-strong);
+  font-weight: 500;
 }
 
 .propertyValueEmphasize {
