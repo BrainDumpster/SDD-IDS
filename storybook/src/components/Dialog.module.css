@@ -88,9 +88,7 @@
   cursor: pointer;
   transition: background 100ms ease;
 }
-.close:hover {
-  background: var(--color-background-gray-lighter);
-}
+
 .close:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: -2px;

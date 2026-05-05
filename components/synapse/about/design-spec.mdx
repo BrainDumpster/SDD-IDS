@@ -43,7 +43,7 @@
 - **Logo region:** height sample `32px`; width driven by asset intrinsic ratio (Figma ~`249.693px` wide cluster).
 - **Legal copy:** `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; color `var(--color-text-neutral)`; **text-align: center**; multiline paragraphs with normal flow; **gap** between logo and legal copy: `var(--spacing-space-8)`.
 - **Footer:** `border-top` `var(--border-width-border-1)` solid `var(--color-border-neutral-light)`; padding `var(--padding-padding-24)`; row gap `var(--spacing-space-16)`; **actions end-aligned** (Close only in reference).
-- **Close button (primary):** padding horizontal `var(--padding-padding-16)`, vertical `var(--padding-padding-10)`; radius `var(--corner-radius-radius-4)`; background `var(--color-background-controls-brand-base)`; border `var(--border-width-border-1)` solid `var(--color-border-transparent-brand)`; label `var(--font-size-body-2)` / `var(--color-text-white)` (see States).
+- **Close button (primary):** size **large**; padding horizontal `var(--padding-padding-16)`, vertical `var(--padding-padding-10)`; radius `var(--corner-radius-radius-4)`; background `var(--color-background-controls-brand-base)`; border `var(--border-width-border-1)` solid `var(--color-border-transparent-brand)`; label `var(--font-size-body-2)` / `var(--color-text-white)` (see States).
 - **Scrim:** full viewport; fill use `var(--color-background-overlay-1)` **or** token matching Figma **`rgba(0,0,0,0.6)`** — validate visually against node `49842:37475`; optional `backdrop-filter: blur(1px)` when spec requires parity.
 
 ## Tokens
@@ -55,7 +55,7 @@ Use semantic CSS variables only for implementation guidance.
 - **Typography:** `var(--font-size-header-1)`, `var(--font-size-body-2)`, `var(--font-line-height-line-height-58)`, `var(--font-line-height-line-height-20)`, `var(--typography-font-style-primary)` / body font stack.
 - **Spacing / radius:** `var(--padding-padding-24)`, `var(--padding-padding-16)`, `var(--padding-padding-10)`, `var(--spacing-space-16)`, `var(--spacing-space-56)`, `var(--spacing-space-8)`, `var(--spacing-space-4)`, `var(--corner-radius-radius-16)`, `var(--corner-radius-radius-4)`.
 - **Shadows:** compose from `--shadow-drop-shadow-{2,4,8,16}-*` tokens (Synapse theme) to match Figma four-layer stack, or document elevation preset name if design system adds one.
-- **Dismiss icon (header close):** **`var(--color-icon-neutral)`** for the glyph (aligned with `components/synapse/dialog/design-spec.mdx` closeIcon); **hover/focus** per Dialog close control.
+- **Dismiss icon (header close):** **`var(--color-icon-neutral)`** for the glyph (aligned with `components/synapse/dialog/design-spec.mdx` closeIcon); **focus** only (no hover state).
 
 ## States (Light Theme)
 
@@ -66,7 +66,7 @@ Use semantic CSS variables only for implementation guidance.
 | Product title | `var(--color-icon-brand-base)` | n/a (text) | n/a | n/a | n/a |
 | Version | `var(--color-text-neutral-strong)` | n/a | n/a | n/a | n/a |
 | Legal | `var(--color-text-neutral)` | n/a | n/a | n/a | n/a |
-| Dismiss icon | `var(--color-icon-neutral)` | `var(--color-background-gray-lighter)` hover surface (per Dialog) | focus ring `var(--color-border-brand-base)` (`var(--border-width-border-2)` per Dialog spec) | active state per icon button | `opacity` / `var(--color-text-disabled)` if dialog cannot close |
+| Dismiss icon | `var(--color-icon-neutral)` | n/a (no hover state) | focus ring `var(--color-border-brand-base)` (`var(--border-width-border-2)` per Dialog spec) | n/a (simple icon control) | `opacity` / `var(--color-text-disabled)` if dialog cannot close |
 | **Close** button | bg `var(--color-background-controls-brand-base)`; text `var(--color-text-white)`; border transparent token | bg `var(--color-background-controls-brand-strong)` (or hover token from Button spec) | focus ring per primary button | press per Button | not used in reference |
 
 ## States (Dark Theme)
@@ -78,7 +78,7 @@ Structurally the same; all values resolve from dark semantic maps. Revalidate sc
 | `modalMain` background | `var(--color-background-component)` | n/a | n/a | n/a | n/a |
 | Product title | `var(--color-icon-brand-base)` | n/a | n/a | n/a | n/a |
 | Version / legal | `var(--color-text-neutral-strong)` / `var(--color-text-neutral)` | n/a | n/a | n/a | n/a |
-| Dismiss icon | `var(--color-icon-neutral)` | same as Light / Dialog close | same as Light / Dialog close | n/a | n/a |
+| Dismiss icon | `var(--color-icon-neutral)` | n/a (no hover state) | focus ring `var(--color-border-brand-base)` | n/a (simple icon control) | n/a |
 | Close (primary) | brand base / white text | brand strong hover | focus-visible per Button | press | per Button disabled |
 
 ## Interactions

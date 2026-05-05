@@ -39,7 +39,7 @@
     - `dialogType="Danger"` → critical/danger icon
     - `dialogType="Success"` → success icon
   - **title** (`dialogTitle`) — header row, `header-5` treatment
-  - **closeButton** (when `dialogClosable`): **closeIcon** glyph (see Assets)
+  - **dismissIcon** (when `dialogClosable`): **closeIcon** glyph (see Assets) — simple icon control, not a button
 - **description** (optional): when `description` string is provided
 - **body** (optional): `children`
 - **footer**
@@ -55,7 +55,7 @@ Notes:
 - **backdrop** — same overlay token as default; **optional `backdrop-filter: blur(1px)`** for Figma parity (About overlay reference `49842:37475` / `49842:37477`).
 - **popup** — outer shell: **`var(--corner-radius-radius-16)`**, border **`var(--border-width-border-1)`** solid **`var(--color-border-neutral-light)`**; width **`min(1152px, 100vw − gutters)`**; `max-height` content/viewport-driven (e.g. `90vh`); centered in viewport.
 - **modalMain** (inner surface) — background **`var(--color-background-component)`**; **four-layer** drop shadow stack using `var(--shadow-drop-shadow-{2,4,8,16}-*)` tokens (same rgba stack intent as default dialog elevation).
-- **header** — **leading spacer** (Figma ~78px cluster; tokenized implementation may use `var(--scale-80)` or equivalent); **trailing closeButton** (same **closeIcon** asset and 32×32 hit target as default).
+- **header** — **leading spacer** (Figma ~78px cluster; tokenized implementation may use `var(--scale-80)` or equivalent); **trailing dismiss icon** (same **closeIcon** asset and 32×32 hit target as default).
 - **body** — **title** = `dialogTitle` rendered as **product title** slot ( **`var(--font-size-header-1)`**, **`var(--color-icon-brand-base)`**, centered — details in About spec); then **`children`** (version, optional logo, optional legal — **About spec**).
 - **footer** — top border **`var(--color-border-neutral-light)`**; **single primary** control labeled `primaryButtonName` (default `"Close"`) that **closes the dialog** (dismiss primitive + optional `onPrimaryButtonClick`).
 
@@ -169,8 +169,8 @@ Dialog elevation uses a 4-layer drop-shadow stack:
 
 **Bundling / resolution (codegen):**
 
-- Resolve at build time to a URL or imported asset ID; **16×16 CSS display** size; **`alt=""`** + **`aria-hidden="true"`** on the glyph; **`aria-label="Close"`** (or i18n) on the **button**.
-- Glyph fill is **defined inside the SVG** (e.g. `#616161`); it **does not** inherit `var(--color-icon-neutral)` unless the asset is refactored to `currentColor`. **Hit target / hover surface** still follow the close button states table.
+- Resolve at build time to a URL or imported asset ID; **16×16 CSS display** size; **`alt=""`** + **`aria-hidden="true"`** on the glyph; **`aria-label="Close"`** (or i18n) on the dismiss icon container; dismiss icon is a simple icon control with `role="button"` and keyboard support (Enter/Space to close).
+- Glyph fill is **defined inside the SVG** (e.g. `#616161`); it **does not** inherit `var(--color-icon-neutral)` unless the asset is refactored to `currentColor`.
 
 ## Tokens
 
@@ -217,9 +217,9 @@ Dialog-specific token usage should resolve via semantic CSS variables:
 |---|---|---|---|---|---|
 | popup | default | `var(--color-background-component)` | `var(--border-width-border-1)` + `var(--color-border-lighter)` | `var(--color-text-neutral-strong)` | 4-layer elevation shadow |
 | header | default | `var(--color-background-component)` | none between header/body | title: `var(--color-text-neutral-strong)` | no divider under header |
-| closeIcon button | default | transparent | none | `var(--color-icon-neutral)` | icon-only action |
-| closeIcon button | hover | `var(--color-background-gray-lighter)` | none | `var(--color-icon-neutral)` | hover surface only |
-| closeIcon button | focus-visible | transparent | `var(--border-width-border-2)` + `var(--color-border-brand-base)` | `var(--color-icon-neutral)` | focus ring |
+| dismissIcon | default | transparent | none | `var(--color-icon-neutral)` | icon-only action |
+| dismissIcon | hover | n/a (no hover state) | n/a | n/a | simple icon control |
+| dismissIcon | focus-visible | transparent | `var(--border-width-border-2)` + `var(--color-border-brand-base)` | `var(--color-icon-neutral)` | focus ring |
 | header alertIcon | informational | transparent | none | `var(--color-icon-alerting-info)` | optional |
 | header alertIcon | warning | transparent | none | `var(--color-icon-alerting-minor)` | optional |
 | header alertIcon | major | transparent | none | `var(--color-icon-alerting-major)` | optional |
@@ -266,7 +266,7 @@ Same semantic structure as Light Theme. Values resolve through theme variables:
 | Element | Attributes |
 |---|---|
 | popup root | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-describedby` |
-| close icon button | `aria-label="Close"` |
+| dismiss icon container | `role="button"`, `aria-label="Close"` |
 | alert icon | `aria-hidden="true"` when decorative |
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -284,7 +284,7 @@ This section is normative for generation and validation.
   - `header`
     - optional `alertIcon`
     - `title`
-    - optional `closeButton` → contains **closeIcon** (`shape-x` asset)
+    - optional `dismissIcon` → contains **closeIcon** (`shape-x` asset)
   - optional `description`
   - optional `body` → `children`
   - `footer`
@@ -298,7 +298,7 @@ This section is normative for generation and validation.
 - `backdrop` (optional blur per Layout)
 - `popup` (radius-16, border-neutral-light)
   - `modalMain` (surface + 4-layer shadow)
-    - `header` → `headerSpacer` + optional `closeButton` (**shape-x**)
+    - `header` → `headerSpacer` + optional `dismissIcon` (**shape-x**)
     - `body` → `title` (product) + `children`
     - `footer` → `primaryClose` (dismiss primitive + label `primaryButtonName`)
 
@@ -316,7 +316,7 @@ This section is normative for generation and validation.
 
 - **`default`:** Header/body separator: none.
 - **Widths/radius/shadow/padding** per **Layout & Measurements** for each variant.
-- **closeButton:** 32×32 hit target; **closeIcon** 16×16 display; **shape-x** asset; focus-visible per states table.
+- **dismissIcon:** 32×32 hit target; **closeIcon** 16×16 display; **shape-x** asset; simple icon control (not a button) with `role="button"` and keyboard support; focus-visible per states table; no hover state.
 - **Alert icon** token map → `dialogType` (`default` only).
 
 ### Asset resolution + bundling contract

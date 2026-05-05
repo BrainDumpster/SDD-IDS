@@ -149,13 +149,25 @@ export function Dialog({
                 <header className={styles.aboutHeader}>
                   <div className={styles.aboutHeaderSpacer} aria-hidden="true" />
                   {dialogClosable ? (
-                    <BaseDialog.Close
+                    <div
                       className={styles.close}
+                      role="button"
+                      tabIndex={0}
                       aria-label="Close"
-                      onClick={() => onClose?.()}
+                      onClick={() => {
+                        onClose?.();
+                        onOpenChange?.(false);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onClose?.();
+                          onOpenChange?.(false);
+                        }
+                      }}
                     >
                       <DialogCloseGlyph />
-                    </BaseDialog.Close>
+                    </div>
                   ) : null}
                 </header>
                 <div className={styles.aboutBody}>
@@ -197,13 +209,21 @@ export function Dialog({
                 </div>
 
                 {dialogClosable && (
-                  <BaseDialog.Close
+                  <div
                     className={styles.close}
+                    role="button"
+                    tabIndex={0}
                     aria-label="Close"
                     onClick={() => onClose?.()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onClose?.();
+                      }
+                    }}
                   >
                     <DialogCloseGlyph />
-                  </BaseDialog.Close>
+                  </div>
                 )}
               </div>
 
@@ -325,4 +345,3 @@ function normalizeDialogType(type: DialogType):
       return type;
   }
 }
-
