@@ -1,31 +1,31 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { IdsLeftNavigation } from "./IdsLeftNavigation";
+import { IdsSettingsMenu } from "./IdsSettingsMenu";
 import "../../../../components/dap-theme.css";
 import {
-  IDS_LEFT_NAVIGATION_DESIGN_SPEC_PATH,
-  LEFT_NAVIGATION_API_DEFAULTS,
-  LEFT_NAVIGATION_DEFAULT_ITEMS,
-} from "../../spec-contracts/ids-left-navigation.contract";
+  IDS_SETTINGS_MENU_DESIGN_SPEC_PATH,
+  SETTINGS_MENU_API_DEFAULTS,
+  SETTINGS_MENU_DEFAULT_ITEMS,
+} from "../../spec-contracts/ids-settings-menu.contract";
 
-const meta: Meta<typeof IdsLeftNavigation> = {
-  title: "DAP/Left Navigation",
-  component: IdsLeftNavigation,
+const meta: Meta<typeof IdsSettingsMenu> = {
+  title: "DAP/Settings Menu",
+  component: IdsSettingsMenu,
   parameters: {
     docs: {
       description: {
-        component: `Spec-driven IDS Left Navigation aligned to \`${IDS_LEFT_NAVIGATION_DESIGN_SPEC_PATH}\` (WIP IDS Library node \`46812:246786\`).`,
+        component: `Spec-driven IDS Settings Menu aligned to \`${IDS_SETTINGS_MENU_DESIGN_SPEC_PATH}\` (WIP IDS Library node \`46812:246786\)`,
       },
     },
   },
   args: {
-    ...LEFT_NAVIGATION_API_DEFAULTS,
-    items: LEFT_NAVIGATION_DEFAULT_ITEMS,
+    ...SETTINGS_MENU_API_DEFAULTS,
+    items: SETTINGS_MENU_DEFAULT_ITEMS,
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof IdsLeftNavigation>;
+type Story = StoryObj<typeof IdsSettingsMenu>;
 
 export const Default: Story = {
   render: (args) => {
@@ -38,7 +38,7 @@ export const Default: Story = {
           minHeight: 1050,
         }}
       >
-        <IdsLeftNavigation
+        <IdsSettingsMenu
           {...args}
           selectedId={selectedId}
           onSelect={setSelectedId}
@@ -47,4 +47,3 @@ export const Default: Story = {
     );
   },
 };
-

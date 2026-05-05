@@ -1,9 +1,9 @@
-import type { IdsLeftNavigationItem, IdsLeftNavigationProps } from "../components/dap/IdsLeftNavigation";
+import type { IdsSettingsMenuItem, IdsSettingsMenuProps } from "../components/dap/IdsSettingsMenu";
 
-export const IDS_LEFT_NAVIGATION_DESIGN_SPEC_PATH =
-  "components/DAP/left-navigation/design-spec.mdx" as const;
+export const IDS_SETTINGS_MENU_DESIGN_SPEC_PATH =
+  "components/DAP/settings-menu/design-spec.mdx" as const;
 
-export const LEFT_NAVIGATION_ROOT_PROP_KEYS = [
+export const SETTINGS_MENU_ROOT_PROP_KEYS = [
   "title",
   "items",
   "selectedId",
@@ -14,15 +14,15 @@ export const LEFT_NAVIGATION_ROOT_PROP_KEYS = [
   "onNavigate",
 ] as const;
 
-export const LEFT_NAVIGATION_CODEGEN_ANATOMY = [
-  "LeftNavigationRoot",
-  "LeftNavigationPanel",
-  "LeftNavigationTitle",
-  "LeftNavigationItem",
-  "LeftNavigationItemActiveIndicator?",
+export const SETTINGS_MENU_CODEGEN_ANATOMY = [
+  "SettingsMenuRoot",
+  "SettingsMenuPanel",
+  "SettingsMenuTitle",
+  "SettingsMenuItem",
+  "SettingsMenuItemActiveIndicator?",
 ] as const;
 
-export const LEFT_NAVIGATION_DEFAULT_ITEMS: IdsLeftNavigationItem[] = [
+export const SETTINGS_MENU_DEFAULT_ITEMS: IdsSettingsMenuItem[] = [
   { id: "identity-management", label: "Identity Management", routeRef: "settings.identity-management" },
   { id: "entitlement", label: "Entitlement", routeRef: "settings.entitlement" },
   { id: "system-settings", label: "System Settings", routeRef: "settings.system-settings" },
@@ -31,12 +31,12 @@ export const LEFT_NAVIGATION_DEFAULT_ITEMS: IdsLeftNavigationItem[] = [
   { id: "audit-logs", label: "Audit Logs", routeRef: "settings.audit-logs" },
 ];
 
-export const LEFT_NAVIGATION_API_DEFAULTS: Pick<
-  IdsLeftNavigationProps,
+export const SETTINGS_MENU_API_DEFAULTS: Pick<
+  IdsSettingsMenuProps,
   "title" | "interactive" | "defaultSelectedId" | "ariaLabel"
 > = {
   title: "Settings",
   interactive: true,
   defaultSelectedId: "identity-management",
-  ariaLabel: "Left navigation",
+  ariaLabel: "Settings Menu",
 };

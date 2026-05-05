@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import styles from "./IdsLeftNavigation.module.css";
+import styles from "./IdsSettingsMenu.module.css";
 
-export interface IdsLeftNavigationItem {
+export interface IdsSettingsMenuItem {
   id: string;
   label: string;
   disabled?: boolean;
@@ -16,15 +16,15 @@ export interface IdsLeftNavigationItem {
     | "selected-focus";
 }
 
-export interface IdsLeftNavigationNavigateTarget {
+export interface IdsSettingsMenuNavigateTarget {
   itemId: string;
   href?: string;
   routeRef?: string;
 }
 
-export interface IdsLeftNavigationProps {
+export interface IdsSettingsMenuProps {
   title?: string;
-  items: IdsLeftNavigationItem[];
+  items: IdsSettingsMenuItem[];
   selectedId?: string;
   defaultSelectedId?: string;
   interactive?: boolean;
@@ -32,24 +32,24 @@ export interface IdsLeftNavigationProps {
   forceStates?: boolean;
   ariaLabel?: string;
   onSelect?: (itemId: string) => void;
-  onNavigate?: (target: IdsLeftNavigationNavigateTarget) => void;
+  onNavigate?: (target: IdsSettingsMenuNavigateTarget) => void;
 }
 
-function firstEnabledItemId(items: IdsLeftNavigationItem[]): string | undefined {
+function firstEnabledItemId(items: IdsSettingsMenuItem[]): string | undefined {
   return items.find((item) => !item.disabled)?.id;
 }
 
-export function IdsLeftNavigation({
+export function IdsSettingsMenu({
   title = "Settings",
   items,
   selectedId,
   defaultSelectedId,
   interactive = true,
   forceStates = false,
-  ariaLabel = "Left navigation",
+  ariaLabel = "Settings Menu",
   onSelect,
   onNavigate,
-}: IdsLeftNavigationProps) {
+}: IdsSettingsMenuProps) {
   const initialSelected = useMemo(() => {
     const fallback = firstEnabledItemId(items);
     if (defaultSelectedId && items.some((item) => item.id === defaultSelectedId && !item.disabled)) {
@@ -101,7 +101,7 @@ export function IdsLeftNavigation({
 }
 
 function toPascal(
-  state: NonNullable<IdsLeftNavigationItem["state"]>,
+  state: NonNullable<IdsSettingsMenuItem["state"]>,
 ): string {
   return state
     .split("-")

@@ -1,8 +1,8 @@
 <!-- ds:inherits root-spec -->
-# Left Navigation Design Spec
+# Settings Menu Design Spec
 
 ## Metadata
-- Component: Left Navigation
+- Component: Settings Menu
 - Design System: IDS
 - Category: Navigation
 - Figma URL (canonical): https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/IDS-Design-Library---WIP?node-id=46812-246786&m=dev
@@ -15,17 +15,17 @@
 
 ## Anatomy
 Main component:
-- `LeftNavigationRoot` (`nav` landmark)
+- `SettingsMenuRoot` (`nav` landmark)
 
 Deterministic child slots:
-1. `LeftNavigationPanel`
-2. `LeftNavigationTitle`
-3. repeated `LeftNavigationItem` (**user-defined children**)
-4. optional `LeftNavigationItemActiveIndicator` (4px leading inset bar for selected item)
+1. `SettingsMenuPanel`
+2. `SettingsMenuTitle`
+3. repeated `SettingsMenuItem` (**user-defined children**)
+4. optional `SettingsMenuItemActiveIndicator` (4px leading inset bar for selected item)
 
 Optional wrappers (demo/composition context):
-- `LeftNavigationSurface` (sample frame with `surface-1` background)
-- `LeftNavigationHeader` (label + mode text shown in the library showcase)
+- `SettingsMenuSurface` (sample frame with `surface-1` background)
+- `SettingsMenuHeader` (label + mode text shown in the library showcase)
 
 ## Layout & Measurements
 - Sample panel size from Figma instances: `278px` wide, `984px` high.
@@ -76,24 +76,24 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `LeftNavigationPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
-| `LeftNavigationItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `SettingsMenuPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
+| `SettingsMenuItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
+| `SettingsMenuItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
+| `SettingsMenuItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
+| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `LeftNavigationPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
-| `LeftNavigationItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
-| `LeftNavigationItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
-| `LeftNavigationItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
+| `SettingsMenuPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
+| `SettingsMenuItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
+| `SettingsMenuItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
+| `SettingsMenuItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
+| `SettingsMenuItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
+| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
 
 ## Interactions
 - Clicking an item sets selected state and active indicator on that row.
@@ -110,16 +110,16 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 ## Composition & API (runtime)
 Main inputs:
 - `title?: string` (default `"Settings"`)
-- `items: LeftNavigationItemInput[]` (required; user-defined nav items)
+- `items: SettingsMenuItemInput[]` (required; user-defined nav items)
 - `selectedId?: string`
 - `defaultSelectedId?: string`
 - `interactive?: boolean` (default `true`)
-- `ariaLabel?: string` (default `"Left navigation"`)
+- `ariaLabel?: string` (default `"Settings Menu"`)
 
 Child-composition model:
-- `LeftNavigationRoot` owns structure and interaction state; consumers provide the repeated `LeftNavigationItem` definitions.
+- `SettingsMenuRoot` owns structure and interaction state; consumers provide the repeated `SettingsMenuItem` definitions.
 - Each nav item is consumer-defined (`id`, `label`, optional `href`/`routeRef`, optional `disabled`) and rendered in declared order.
-- Frameworks that support JSX/templated children may expose `LeftNavigationItem` as explicit child nodes; JSON/config-driven frameworks may pass the same contract through `items[]`. Both are equivalent contracts.
+- Frameworks that support JSX/templated children may expose `SettingsMenuItem` as explicit child nodes; JSON/config-driven frameworks may pass the same contract through `items[]`. Both are equivalent contracts.
 
 Per-item inputs:
 - `id: string` (required stable key)
@@ -133,12 +133,12 @@ Outputs/events:
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
-- `LeftNavigationRoot`
-  - `LeftNavigationPanel`
-    - `LeftNavigationTitle`
-    - repeated `LeftNavigationItem`
-      - `LeftNavigationItemLabel`
-      - optional `LeftNavigationItemActiveIndicator` (selected only)
+- `SettingsMenuRoot`
+  - `SettingsMenuPanel`
+    - `SettingsMenuTitle`
+    - repeated `SettingsMenuItem`
+      - `SettingsMenuItemLabel`
+      - optional `SettingsMenuItemActiveIndicator` (selected only)
 
 Variant/option matrix:
 - Context background: `surface-1 | surface-2`
@@ -165,7 +165,7 @@ Accessibility contract:
 - Focus-visible indicator must remain visible and unclipped.
 
 Asset/bundling contract:
-- No icon asset required for this minimal left-navigation variant.
+- No icon asset required for this minimal settings-menu variant.
 - If icons are added in future variants, resolve through shared `Icon` primitive and documented slugs.
 
 Fallback/error rules:
@@ -187,7 +187,7 @@ Validation checklist:
 |---|---|
 | Root spec | `components/ids/root-spec.mdx` |
 | Component map | `data/component-figma-map.json` |
-| Canonical left-navigation frame | https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/IDS-Design-Library---WIP?node-id=46812-246786&m=dev (`46812:246786`) |
+| Canonical settings-menu frame | https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/IDS-Design-Library---WIP?node-id=46812-246786&m=dev (`46812:246786`) |
 | Default state instance | node `46812:246811` (`Settings Menu`) |
 | Selected state instance | node `46812:246839` (`Settings Menu`) |
 | Live verification method | Figma MCP: `get_metadata`, `get_variable_defs`, `get_design_context` |
