@@ -47,15 +47,16 @@
 }
 
 .triggerMasthead {
-  height: 100%;
-  padding-inline: var(--padding-padding-16);
-  min-width: calc(var(--scale-16) + (var(--padding-padding-16) * 2));
+  width: auto;
+  height: auto;
+  padding-top: 19px;
+  padding-right: var(--padding-padding-16);
+  padding-bottom: 19px;
+  padding-left: var(--padding-padding-16);
   border: none;
   border-radius: 0;
   background: var(--color-background-masthead-brand-base);
   color: var(--color-text-white);
-  padding-block: 0;
-  align-self: stretch;
 }
 
 .triggerMasthead:hover {

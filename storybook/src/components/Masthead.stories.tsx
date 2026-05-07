@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { CSSProperties } from "react";
-import { Masthead, MastheadActionButtonContainer, MastheadActionIconButton } from "./Masthead";
+import {
+  IdsMasthead,
+  IdsMastheadActionButtonContainer,
+  IdsMastheadActionIconButton,
+  IdsMastheadAvatar,
+} from "./IdsMasthead";
 import { AppLauncher } from "./AppLauncher";
 import helpIcon from "../../../assets/icons/help-circ-16.svg";
 import userIcon from "../../../assets/icons/user-single-16.svg";
@@ -20,65 +25,38 @@ const helpGlyphStyle: CSSProperties = {
   maskSize: "contain",
 };
 
-const avatarInitialsStyle: CSSProperties = {
-  width: 24,
-  height: 24,
-  borderRadius: 999,
-  border: "1px solid rgba(255,255,255,0.6)",
-  color: "var(--color-text-white)",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: 12,
-  fontWeight: 500,
-};
-
-const avatarIconStyle: CSSProperties = {
-  width: 24,
-  height: 24,
-  borderRadius: 999,
-  border: "1px solid rgba(255,255,255,0.6)",
-  color: "var(--color-text-white)",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const avatarUserGlyphStyle: CSSProperties = {
-  width: 16,
-  height: 16,
-  display: "inline-block",
-  backgroundColor: "currentColor",
-  WebkitMaskImage: `url(${userIcon})`,
-  WebkitMaskRepeat: "no-repeat",
-  WebkitMaskPosition: "center",
-  WebkitMaskSize: "contain",
-  maskImage: `url(${userIcon})`,
-  maskRepeat: "no-repeat",
-  maskPosition: "center",
-  maskSize: "contain",
-};
-
-const meta: Meta<typeof Masthead> = {
-  title: "Synapse/Masthead",
-  component: Masthead,
+const meta: Meta<typeof IdsMasthead> = {
+  title: "IDS/Masthead",
+  component: IdsMasthead,
   parameters: {
     layout: "fullscreen",
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Masthead>;
+type Story = StoryObj<typeof IdsMasthead>;
 
 export const Default: Story = {
   args: {
     productName: "Synapse",
     iconsSlot: (
-      <MastheadActionButtonContainer>
-        <MastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
-      </MastheadActionButtonContainer>
+      <IdsMastheadActionButtonContainer>
+        <IdsMastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
+      </IdsMastheadActionButtonContainer>
     ),
-    avatarSlot: <span style={avatarInitialsStyle}>YK</span>,
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
+  },
+};
+
+export const HelpActionOnly: Story = {
+  args: {
+    productName: "Synapse",
+    iconsSlot: (
+      <IdsMastheadActionButtonContainer>
+        <IdsMastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
+      </IdsMastheadActionButtonContainer>
+    ),
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
   },
 };
 
@@ -86,15 +64,15 @@ export const WithActions: Story = {
   args: {
     productName: "Synapse",
     iconsSlot: (
-      <MastheadActionButtonContainer>
-        <MastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
-        <MastheadActionIconButton
+      <IdsMastheadActionButtonContainer>
+        <IdsMastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
+        <IdsMastheadActionIconButton
           aria-label="Custom icon"
           icon={<span aria-hidden="true" style={{ fontSize: 14, lineHeight: 1 }}>*</span>}
         />
-      </MastheadActionButtonContainer>
+      </IdsMastheadActionButtonContainer>
     ),
-    avatarSlot: <span style={avatarInitialsStyle}>YK</span>,
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
   },
 };
 
@@ -104,7 +82,7 @@ export const LogoOnly: Story = {
       <span style={{ width: 12, height: 12, borderRadius: 999, background: "var(--color-text-white)" }} />
     ),
     productName: "Synapse Platform",
-    avatarSlot: <span style={avatarInitialsStyle}>YK</span>,
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
   },
 };
 
@@ -113,9 +91,9 @@ export const WithAppLauncherExample: Story = {
   args: {
     productName: "Synapse",
     iconsSlot: (
-      <MastheadActionButtonContainer>
-        <MastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
-      </MastheadActionButtonContainer>
+      <IdsMastheadActionButtonContainer>
+        <IdsMastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
+      </IdsMastheadActionButtonContainer>
     ),
     appLauncherSlot: (
       <AppLauncher
@@ -135,7 +113,7 @@ export const WithAppLauncherExample: Story = {
         ]}
       />
     ),
-    avatarSlot: <span style={avatarInitialsStyle}>YK</span>,
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
   },
 };
 
@@ -143,22 +121,18 @@ export const UserIconAvatar: Story = {
   args: {
     productName: "Synapse",
     iconsSlot: (
-      <MastheadActionButtonContainer>
-        <MastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
-      </MastheadActionButtonContainer>
+      <IdsMastheadActionButtonContainer>
+        <IdsMastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
+      </IdsMastheadActionButtonContainer>
     ),
-    avatarSlot: (
-      <span style={avatarIconStyle}>
-        <span style={avatarUserGlyphStyle} aria-hidden="true" />
-      </span>
-    ),
+    avatarSlot: <IdsMastheadAvatar imageSrc={userIcon} imageAlt="User profile" />,
   },
 };
 
 export const ProductNameOnlyNoLogoNoLauncher: Story = {
   args: {
     productName: "Synapse",
-    avatarSlot: <span style={avatarInitialsStyle}>YK</span>,
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
   },
 };
 
@@ -178,9 +152,9 @@ export const WithLogoAndAppLauncher: Story = {
     ),
     productName: "Synapse",
     iconsSlot: (
-      <MastheadActionButtonContainer>
-        <MastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
-      </MastheadActionButtonContainer>
+      <IdsMastheadActionButtonContainer>
+        <IdsMastheadActionIconButton aria-label="Help" icon={<span style={helpGlyphStyle} />} />
+      </IdsMastheadActionButtonContainer>
     ),
     appLauncherSlot: (
       <AppLauncher
@@ -192,6 +166,6 @@ export const WithLogoAndAppLauncher: Story = {
         ]}
       />
     ),
-    avatarSlot: <span style={avatarInitialsStyle}>YK</span>,
+    avatarSlot: <IdsMastheadAvatar initials="YK" />,
   },
 };

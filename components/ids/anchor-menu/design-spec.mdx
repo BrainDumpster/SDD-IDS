@@ -17,8 +17,10 @@
 
 ## Layout & Measurements
 - Standard height: Auto (based on content)
+- Header text line box height: `24px` (`Body 1` rhythm)
+- Header container vertical padding: `12px` top and `12px` bottom (no horizontal padding)
 - Item height: 40px
-- Horizontal padding: 16px
+- Section-item padding: `8px` top/bottom and `24px` left/right
 - Border radius: 4px
 - Focus ring: 2px offset from item
 - Minimum width: 200px
@@ -30,6 +32,7 @@
 - Display 1/Default: Roboto Light 72px/88px (large anchor titles)
 - Header 5: Roboto Regular 24px/32px (anchor section headers)
 - Body 1: Roboto Regular 16px/24px (anchor menu items)
+- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-neutral-strong)`.
 
 ## Tokens
 ### Colors
@@ -49,10 +52,10 @@
 | Element | Background | Border | Text |
 |---|---|---|---|
 | Menu Container | transparent | `var(--color-border-accessible)` (#8898a5) | `var(--color-text-neutral)` (#8898a5) |
-| Anchor Item (Default) | transparent | transparent | `var(--color-text-neutral)` (#8898a5) |
-| Anchor Item (Hover) | transparent | transparent | `var(--color-text-brand-strong)` (#94c5ea) |
+| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` (#8898a5) |
+| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#8898a5) |
 | Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-brand-strong)` (#94c5ea) |
-| Anchor Item (Active) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) |
+| Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#94c5ea) |
 | Progress Indicator | `var(--color-background-controls-brand-base)` (#0076ce) | transparent | transparent |
 
 ## States (Dark Theme)
@@ -100,6 +103,7 @@
 - Consider responsive behavior for mobile devices
 - Use consistent styling across the application
 - Provide visual feedback for all interactions
+- Match section-element typography and spacing from node `11955:229729`: header uses Body 1 (regular, no text transform) with vertical-only `12px` padding and item rows use `Body 1` (`16/24`) with `8/24` padding and left-border state transitions (`1.2px` default, `4px` hover/active).
 
 ## Token Gaps / Notes
 - All colors use semantic CSS custom properties for theme consistency

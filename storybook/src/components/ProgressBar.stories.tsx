@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ProgressBar } from "./ProgressBar";
+import { IdsProgressBar } from "./IdsProgressBar";
 
-const meta: Meta<typeof ProgressBar> = {
-  title: "Synapse/ProgressBar",
-  component: ProgressBar,
+const meta: Meta<typeof IdsProgressBar> = {
+  title: "IDS/ProgressBar",
+  component: IdsProgressBar,
   argTypes: {
     value: { control: { type: "range", min: 0, max: 100 } },
     type: { control: "select", options: ["with-label", "inline", "indeterminate"] },
@@ -17,7 +17,7 @@ const meta: Meta<typeof ProgressBar> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof ProgressBar>;
+type Story = StoryObj<typeof IdsProgressBar>;
 
 export const Default: Story = {
   args: { value: 60, type: "inline", thickness: "medium", state: "in-progress" },
@@ -48,7 +48,7 @@ export const WithLabelThinHelperInProgress: Story = {
 export const ThicknessReference: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}>
-      <ProgressBar
+      <IdsProgressBar
         value={30}
         label="Thin"
         type="with-label"
@@ -57,7 +57,7 @@ export const ThicknessReference: Story = {
         showHelperText
         helperText="4px track + 1px border"
       />
-      <ProgressBar
+      <IdsProgressBar
         value={30}
         label="Medium"
         type="with-label"
@@ -66,7 +66,7 @@ export const ThicknessReference: Story = {
         showHelperText
         helperText="8px track + 1px border"
       />
-      <ProgressBar
+      <IdsProgressBar
         value={30}
         label="Thick"
         type="with-label"
@@ -82,7 +82,7 @@ export const ThicknessReference: Story = {
 export const States: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}>
-      <ProgressBar
+      <IdsProgressBar
         value={35}
         label="In Progress"
         type="with-label"
@@ -90,7 +90,7 @@ export const States: Story = {
         showHelperText
         helperText="No status icon for in-progress"
       />
-      <ProgressBar
+      <IdsProgressBar
         value={100}
         label="Completed/Success"
         type="with-label"
@@ -98,7 +98,7 @@ export const States: Story = {
         showHelperText
         helperText="Success with status-ok-circ-solid"
       />
-      <ProgressBar
+      <IdsProgressBar
         value={100}
         label="Completed with Exceptions/Warning"
         type="with-label"
@@ -106,7 +106,7 @@ export const States: Story = {
         showHelperText
         helperText="Warning with status-warn-tri-solid"
       />
-      <ProgressBar
+      <IdsProgressBar
         value={100}
         label="Failed/Error"
         type="with-label"
@@ -141,7 +141,7 @@ export const SpecMatchedExample: Story = {
   },
   render: (args) => (
     <div style={{ maxWidth: 320 }}>
-      <ProgressBar {...args} />
+      <IdsProgressBar {...args} />
     </div>
   ),
 };

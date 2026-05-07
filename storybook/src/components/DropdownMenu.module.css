@@ -242,12 +242,17 @@
 
 .leadingControl {
   display: inline-flex;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   pointer-events: none;
+}
+
+.item[data-selection-mode="single"] .leadingControl {
+  width: 16px;
+  height: 16px;
 }
 
 .radioOuter {
@@ -270,8 +275,8 @@
 }
 
 .checkboxOuter {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--corner-radius-radius-2);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   display: inline-flex;
@@ -282,18 +287,18 @@
 }
 
 .checkboxTick {
-  width: 10px;
-  height: 6px;
-  border-left: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(-45deg) translateY(-1px);
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%);
+  transform: translateY(-0.5px);
 }
 
 .checkboxDash {
   width: 8px;
   height: 2px;
   background: var(--color-icon-brand-base);
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 .item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,

@@ -301,6 +301,20 @@ export const InlineDetailedLayout: Story = {
   },
 };
 
+export const InlineDetailedWithLinkActionDismiss: Story = {
+  args: {
+    display: "inline",
+    severity: "critical",
+    density: "detailed",
+    title: "Alert Title",
+    message:
+      "This is an page-level alert that communicates a critical message. It may include actions.",
+    linkLabel: "Learn more",
+    actionLabel: "Action",
+    dismissible: true,
+  },
+};
+
 export const InlineVariantMatrix: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 1100 }}>

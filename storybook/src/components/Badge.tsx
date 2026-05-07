@@ -24,7 +24,11 @@ export function Badge({
 
   return (
     <span
-      className={[styles.badge, styles[type], sizeClass].join(" ")}
+      className={[
+        styles.badge,
+        styles[type],
+        sizeClass,
+      ].join(" ")}
       aria-label={ariaLabel}
     >
       <span className={styles.content}>{valueText}</span>

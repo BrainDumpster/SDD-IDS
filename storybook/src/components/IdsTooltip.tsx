@@ -77,7 +77,7 @@ export function IdsTooltip({
           {children}
         </BaseTooltip.Trigger>
         <BaseTooltip.Portal>
-          <BaseTooltip.Positioner side={side} align={align} sideOffset={8}>
+          <BaseTooltip.Positioner side={side} align={align} sideOffset={16}>
             <BaseTooltip.Popup className={popupClassName}>
               {showArrow ? (
                 <BaseTooltip.Arrow className={styles.arrow}>

@@ -1,5 +1,5 @@
 .badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 18px;
@@ -13,9 +13,13 @@
 }
 
 .content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   font-size: 12px;
   font-weight: 400;
-  line-height: 18px;
+  line-height: 1;
   text-align: center;
 }
 
@@ -46,7 +50,10 @@
 
 .warning {
   background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-white);
+  border-color: var(
+    --ids-badge-warning-border-color,
+    var(--color-border-white)
+  );
   color: var(--color-text-black);
 }
 

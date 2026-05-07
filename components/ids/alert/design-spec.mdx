@@ -33,6 +33,17 @@ Unified specification for **Global** (application banner) and **Inline** (contex
 | Component map | `data/component-figma-map.json` → `Inline Alert` |
 | Last Figma re-fetch | 2026-04-16 (`get_design_context`, `get_metadata`, `get_variable_defs`) |
 
+### Additional inline scenario validation
+
+| Property | Value |
+|---|---|
+| Figma file key | `0bHk3XhrjFhowgFkz9yLr4` |
+| Validated node | `11946:230644` |
+| Source URL | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11946-230644&m=dev |
+| Scenario intent | Detailed inline alert with `title` + description/message and optional trailing controls (`link`, outlined `action`, dismiss icon) using the same inline token model |
+| Verification method | `get_metadata` + `get_design_context` (Figma MCP) |
+| Last Figma re-fetch | 2026-05-06 |
+
 ## Display modes
 
 | `display` | Role | Carousel | Typical container |
@@ -142,6 +153,15 @@ Do not pass a single ambiguous URL string as the only navigation input. Codegen 
 - **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-static-brand-500)`, label `var(--color-static-brand-600)`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
 - **Dismiss** glyph: `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
 
+#### Detailed all-details scenario (`11946:230644`) visual checklist
+
+- Sample frame size: `1000 x 68` (reference only; runtime remains container-driven width).
+- Root surface: `border: 1px solid var(--color-border-alerting-critical-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
+- Inset rail: `box-shadow: inset 4px 0 0 0 var(--color-background-alerting-critical)`.
+- Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
+- Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
+- Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) and optional dismiss icon button; link behavior/appearance follows inline link contract and does not change other visual attributes.
+
 ## Tokens
 
 ### Global — severity surfaces (banner)
@@ -181,6 +201,8 @@ Structural states follow **`density`** (compact vs detailed) and optional slots 
 | critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
 
 **Dismiss** control: icon glyph `var(--color-icon-black)` on default surface; hover/focus per **Interactions**.
+
+**Detailed all-details scenario:** a detailed inline alert may concurrently render title + body/message + inline link + outlined action + dismiss icon. This is a valid composition and should be represented in generated examples/tests.
 
 ### Global (`display: global`)
 

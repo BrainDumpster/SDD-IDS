@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: var(--scale-48);
+  height: var(--scale-56);
   padding: 0 var(--padding-padding-16);
   background:
     linear-gradient(
@@ -36,7 +36,7 @@
   align-items: center;
   color: var(--color-text-white);
   font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
+  line-height: var(--font-line-height-line-height-32);
   font-weight: 400;
   white-space: nowrap;
   margin: 0;
@@ -45,22 +45,22 @@
 
 .actions {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   gap: 0;
-  height: 100%;
+  height: 54px;
   flex-shrink: 0;
 }
 
 .iconsSlot {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   height: 100%;
   gap: 0;
 }
 
 .appLauncherSlot {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   height: 100%;
 }
 
@@ -97,8 +97,7 @@
 
 .actionButtonContainer {
   display: inline-flex;
-  align-items: stretch;
-  height: 100%;
+  align-items: center;
   gap: 0;
 }
 
@@ -106,14 +105,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding-inline: var(--padding-padding-16);
-  min-width: calc(var(--scale-16) + (var(--padding-padding-16) * 2));
+  padding-top: 19px;
+  padding-right: var(--padding-padding-16);
+  padding-bottom: 19px;
+  padding-left: var(--padding-padding-16);
   border: none;
   border-radius: 0;
   background: transparent;
   color: var(--color-text-white);
-  padding-block: 0;
+  box-sizing: border-box;
   cursor: pointer;
   transition: background-color 120ms ease, opacity 120ms ease;
 }
@@ -139,9 +139,33 @@
   justify-content: center;
 }
 
+.avatarAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 11px;
+  padding-right: var(--padding-padding-8);
+  padding-bottom: 11px;
+  padding-left: var(--padding-padding-8);
+  border: none;
+  background: transparent;
+  color: var(--color-text-white);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.avatarAction:hover {
+  background-color: var(--color-background-controls-brand-strong);
+}
+
+.avatarAction:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-text-white);
+  outline-offset: 1px;
+}
+
 .avatarChip {
-  width: var(--scale-24);
-  height: var(--scale-24);
+  width: var(--scale-32);
+  height: var(--scale-32);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -151,4 +175,11 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   background: transparent;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }

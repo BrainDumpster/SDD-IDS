@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
-import { Badge } from "./Badge";
+import { IdsBadge } from "./IdsBadge";
 import { DropdownMenu } from "./DropdownMenu";
 import { IdsTooltip } from "./IdsTooltip";
 import arrowDropTriCaretIcon from "../../../assets/icons/arrow-drop-tri-caret.svg";
@@ -80,7 +80,7 @@ function MultiSelectTrigger({
             showArrow
           >
             <span style={{ display: "inline-flex" }}>
-              <Badge value={selectedCount} type={disabled ? "disabled" : "default"} />
+              <IdsBadge value={selectedCount} type={disabled ? "disabled" : "default"} />
             </span>
           </IdsTooltip>
         ) : null}

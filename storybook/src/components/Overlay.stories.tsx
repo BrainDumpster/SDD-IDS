@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Overlay } from "./Overlay";
-import { Button } from "./Button";
-import { TextInput } from "./TextInput";
+import { IdsButton } from "./IdsButton";
+import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof Overlay> = {
   title: "Synapse/Overlay",
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof Overlay>;
 
 export const Default: Story = {
   args: {
-    trigger: <Button>Open Overlay</Button>,
+    trigger: <IdsButton>Open Overlay</IdsButton>,
     title: "Details Panel",
     children: (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -25,11 +25,11 @@ export const Default: Story = {
           It's useful for viewing details or editing forms without leaving the
           current page context.
         </p>
-        <TextInput label="Name" placeholder="Enter name" />
-        <TextInput label="Description" placeholder="Enter description" />
+        <IdsTextBox placeholder="Enter name" ariaLabel="Name" />
+        <IdsTextBox placeholder="Enter description" ariaLabel="Description" />
         <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <Button size="sm">Save</Button>
-          <Button variant="secondary" size="sm">Cancel</Button>
+          <IdsButton size="sm">Save</IdsButton>
+          <IdsButton variant="secondary" size="sm">Cancel</IdsButton>
         </div>
       </div>
     ),
@@ -38,7 +38,7 @@ export const Default: Story = {
 
 export const WidePanel: Story = {
   args: {
-    trigger: <Button variant="secondary">Open Wide Panel</Button>,
+    trigger: <IdsButton variant="secondary">Open Wide Panel</IdsButton>,
     title: "Configuration",
     width: "560px",
     children: (
@@ -47,10 +47,10 @@ export const WidePanel: Story = {
           A wider panel for more complex content layouts.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          <TextInput label="First name" placeholder="First" />
-          <TextInput label="Last name" placeholder="Last" />
-          <TextInput label="Email" placeholder="Email" />
-          <TextInput label="Phone" placeholder="Phone" />
+          <IdsTextBox placeholder="First" ariaLabel="First name" />
+          <IdsTextBox placeholder="Last" ariaLabel="Last name" />
+          <IdsTextBox placeholder="Email" ariaLabel="Email" />
+          <IdsTextBox placeholder="Phone" ariaLabel="Phone" />
         </div>
       </div>
     ),
@@ -59,20 +59,20 @@ export const WidePanel: Story = {
 
 export const NarrowPanel: Story = {
   args: {
-    trigger: <Button variant="ghost">Open Narrow</Button>,
+    trigger: <IdsButton variant="ghost">Open Narrow</IdsButton>,
     title: "Quick Actions",
     width: "320px",
     children: (
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <Button variant="secondary" style={{ justifyContent: "flex-start" }}>
+        <IdsButton variant="secondary" style={{ justifyContent: "flex-start" }}>
           Export data
-        </Button>
-        <Button variant="secondary" style={{ justifyContent: "flex-start" }}>
+        </IdsButton>
+        <IdsButton variant="secondary" style={{ justifyContent: "flex-start" }}>
           Import data
-        </Button>
-        <Button variant="secondary" style={{ justifyContent: "flex-start" }}>
+        </IdsButton>
+        <IdsButton variant="secondary" style={{ justifyContent: "flex-start" }}>
           Download report
-        </Button>
+        </IdsButton>
       </div>
     ),
   },

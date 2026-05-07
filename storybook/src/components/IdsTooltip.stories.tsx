@@ -92,6 +92,10 @@ export const RichContent: Story = {
 };
 
 export const ArrowMatrix: Story = {
+  args: {
+    closable: true
+  },
+
   render: () => (
     <div
       style={{
@@ -117,5 +121,5 @@ export const ArrowMatrix: Story = {
         ))
       )}
     </div>
-  ),
+  )
 };

@@ -5,7 +5,7 @@ import {
   type ToastVariant,
   useToast,
 } from "./Toast";
-import { Button } from "./Button";
+import { IdsButton } from "./IdsButton";
 
 interface ToastStoryArgs {
   variant: ToastVariant;
@@ -89,9 +89,9 @@ function ToastDemo(args: ToastStoryArgs) {
 
   return (
     <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-      <Button variant="secondary" onClick={showToast}>
+      <IdsButton variant="secondary" onClick={showToast}>
         Show Toast
-      </Button>
+      </IdsButton>
     </div>
   );
 }
@@ -117,7 +117,7 @@ export const AlertingTypes: Story = {
     return (
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {variants.map((variant) => (
-          <Button
+          <IdsButton
             key={variant}
             variant="secondary"
             onClick={() =>
@@ -134,7 +134,7 @@ export const AlertingTypes: Story = {
             }
           >
             {variant}
-          </Button>
+          </IdsButton>
         ))}
       </div>
     );
@@ -174,9 +174,9 @@ export const QueueAndStack: Story = {
 
     return (
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <Button variant="secondary" onClick={enqueueFive}>
+        <IdsButton variant="secondary" onClick={enqueueFive}>
           Enqueue 5 Toasts
-        </Button>
+        </IdsButton>
       </div>
     );
   },

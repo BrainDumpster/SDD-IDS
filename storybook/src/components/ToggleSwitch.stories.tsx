@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { ToggleSwitch } from "./ToggleSwitch";
+import { IdsToggleSwitch } from "./IdsToggleSwitch";
 
-const meta: Meta<typeof ToggleSwitch> = {
+const meta: Meta<typeof IdsToggleSwitch> = {
   title: "IDS/Toggle Switch",
-  component: ToggleSwitch,
+  component: IdsToggleSwitch,
   argTypes: {
     disabled: { control: "boolean" },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ToggleSwitch>;
+type Story = StoryObj<typeof IdsToggleSwitch>;
 
 export const Off: Story = {
   args: {
@@ -55,7 +55,7 @@ export const Controlled: Story = {
     const [checked, setChecked] = useState(false);
     return (
       <div style={{ display: "grid", gap: 8 }}>
-        <ToggleSwitch
+        <IdsToggleSwitch
           label="Enable alerts"
           checked={checked}
           onCheckedChange={setChecked}
@@ -72,12 +72,12 @@ export const StateMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Off" defaultChecked={false} />
-        <ToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch label="Off" defaultChecked={false} />
+        <IdsToggleSwitch label="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <ToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),
@@ -92,12 +92,12 @@ export const StateMatrixDark: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Off" defaultChecked={false} />
-        <ToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch label="Off" defaultChecked={false} />
+        <IdsToggleSwitch label="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <ToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),

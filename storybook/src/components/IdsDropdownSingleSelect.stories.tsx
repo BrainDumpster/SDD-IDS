@@ -100,8 +100,8 @@ function useSingleSelectItems(
 }
 
 export const MainScenarios: Story = {
-  args: { showSingleSelectRadio: false },
-  render: ({ showSingleSelectRadio = false }) => {
+  args: { showSingleSelectRadio: true },
+  render: ({ showSingleSelectRadio = true }) => {
     const [smallValue, setSmallValue] = useState("Option 2");
     const [overflowValue, setOverflowValue] = useState("Option 2");
     const [sectionValue, setSectionValue] = useState("Option 2");
@@ -228,8 +228,8 @@ export const MainScenarios: Story = {
 };
 
 export const StatesAndSizes: Story = {
-  args: { showSingleSelectRadio: false },
-  render: ({ showSingleSelectRadio = false }) => {
+  args: { showSingleSelectRadio: true },
+  render: ({ showSingleSelectRadio = true }) => {
     const emptyItems = [
       { id: "e1", value: "Option 1", label: "Option 1", selectable: true },
       { id: "e2", value: "Option 2", label: "Option 2", selectable: true },

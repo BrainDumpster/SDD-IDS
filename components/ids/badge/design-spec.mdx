@@ -8,8 +8,9 @@
 - File key: `VZJ48bbVYrIynw8DdSukWw`
 - Primary node: `11446:99238`
 - Variant axes observed in node:
-  - `Background`: `Blue | White/Gray`
   - `Type`: `Default | Critical | Warning | Disabled | Success`
+- Visual context observed in node (showcase-only, not runtime API axis):
+  - `Background`: `Blue | White/Gray`
 - Content sample in Figma: numeric count (`"1"`)
 
 ## Anatomy
@@ -51,34 +52,26 @@ Required semantic tokens from Figma variable extraction:
 - `var(--color-static-gray-500)` = `#757575`
 - `var(--color-border-white)` = `#ffffff`
 - `var(--color-border-alerting-minor-transparent)` = `#9c622e`
+- Optional host-context token for warning border showcase parity:
+  - `var(--ids-badge-warning-border-color)` -> defaults to `var(--color-border-white)`, can be overridden by host to `var(--color-border-alerting-minor-transparent)` in White/Gray showcase contexts.
 
 ## States (Light Theme)
-| Variant key (`Background` + `Type`) | Background | Border | Text |
+| Variant key (`Type`) | Background | Border | Text |
 |---|---|---|---|
-| Blue + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Blue + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Blue + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-white)` | `var(--color-text-black)` |
-| Blue + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Blue + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-text-black)` |
-| White/Gray + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
+| Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
 
 ## States (Dark Theme)
-| Variant key (`Background` + `Type`) | Background | Border | Text |
+| Variant key (`Type`) | Background | Border | Text |
 |---|---|---|---|
-| Blue + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Blue + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Blue + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-white)` | `var(--color-text-black)` |
-| Blue + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Blue + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Warning | `var(--color-background-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-text-black)` |
-| White/Gray + Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| White/Gray + Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
+| Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
 
 ## Interactions
 - Default Badge behavior is non-interactive (status/count indicator).
@@ -90,7 +83,6 @@ Required semantic tokens from Figma variable extraction:
 ## Composition & API (runtime)
 Main inputs:
 - `value: string | number` (required visual content)
-- `background?: "blue" | "white-gray"` (default `"blue"`)
 - `type?: "default" | "critical" | "warning" | "disabled" | "success"` (default `"default"`)
 - `as?: string` (optional semantic element, default `span`)
 - `ariaLabel?: string` (optional explicit label when value alone is ambiguous)
@@ -105,7 +97,6 @@ Deterministic structure:
     - `BadgeContent`
 
 Variant matrix:
-- `background`: `blue | white-gray`
 - `type`: `default | critical | warning | disabled | success`
 - content form: `string | number`
 
@@ -117,6 +108,7 @@ Per-slot style contract:
   - border-width: 1px
   - border-style: solid
   - border-radius: 100px
+  - warning border color should use `var(--ids-badge-warning-border-color, var(--color-border-white))` so host showcase context can override to `var(--color-border-alerting-minor-transparent)` without introducing a new runtime variant axis.
   - horizontal padding: 5.5px per side (or closest deterministic tokenized fallback)
 - `BadgeContent`
   - single line text
@@ -125,7 +117,9 @@ Per-slot style contract:
 
 Behavior contract:
 - Badge does not manage internal interaction state.
-- All visual output is fully determined by (`background`, `type`, `value`).
+- All visual output is fully determined by (`type`, `value`).
+- Blue/White-Gray is a showcase context in docs/stories and is not a runtime badge prop.
+- Host may provide visual-context CSS overrides (for example warning border token) without changing Badge runtime props.
 
 Accessibility contract:
 - Non-interactive usage: render as text-level semantic element (`span`) with readable content.
@@ -136,7 +130,6 @@ Asset resolution + bundling:
 - No icon/image assets required for baseline Badge contract.
 
 Fallback/error rules:
-- Unknown `background` -> fallback to `blue`.
 - Unknown `type` -> fallback to `default`.
 - Empty `value` -> render nothing or host-defined placeholder; treat as validation warning in codegen QA.
 - Values longer than intended single-line count should not wrap; truncate/clip behavior must be explicit in generated output.
@@ -144,7 +137,7 @@ Fallback/error rules:
 Validation checklist:
 - [ ] All variant combinations map to explicit token triples (background/border/text).
 - [ ] Light and Dark tables are structurally parallel.
-- [ ] Runtime output is deterministic for (`background`, `type`, `value`).
+- [ ] Runtime output is deterministic for (`type`, `value`).
 - [ ] Badge remains single-line and pill-shaped.
 - [ ] No hardcoded non-token colors are introduced in generated code.
 
