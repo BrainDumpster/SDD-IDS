@@ -22,3 +22,8 @@ export const MASTHEAD_DAP_DEFAULTS = {
   userInitials: "DT",
   helpItems: ["Help", "What's New", "Get Started", "About"],
 } as const;
+
+export const MASTHEAD_DAP_HELP_MENU_SURFACE = {
+  widthPx: 138,
+  borderRadiusPx: 0,
+} as const;

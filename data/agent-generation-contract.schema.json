@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgentGenerationContract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "root_spec_path",
+    "component_spec_path",
+    "theme_css_paths",
+    "component_name",
+    "target_framework",
+    "style_mode"
+  ],
+  "properties": {
+    "root_spec_path": { "type": "string", "minLength": 1 },
+    "component_spec_path": { "type": "string", "minLength": 1 },
+    "theme_css_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "component_name": { "type": "string", "minLength": 1 },
+    "target_framework": {
+      "type": "string",
+      "enum": ["react", "angular", "vue", "lit", "other"]
+    },
+    "style_mode": {
+      "type": "string",
+      "enum": ["css-module", "css-in-js", "scss", "base-ui-css", "other"]
+    },
+    "program_name": { "type": "string" },
+    "program_root_delta_path": { "type": "string" },
+    "program_component_delta_path": { "type": "string" },
+    "asset_map_path": { "type": "string" },
+    "validation_checklist_path": { "type": "string" }
+  }
+}
+

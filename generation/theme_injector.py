@@ -15,16 +15,23 @@ class ThemeInjector:
         the header references that file instead of embedding empty blocks.
         """
         if self._config and self._config.theme_css_path:
+            baseline_path = self._config.resolve(self._config.baseline_theme_css_path)
+            program_path = self._config.resolve(
+                self._config.program_theme_css_path or self._config.theme_css_path
+            )
+            baseline_css = baseline_path.read_text() if baseline_path.exists() else ""
+            program_css = (
+                program_path.read_text()
+                if program_path.exists() and program_path != baseline_path
+                else ""
+            )
             theme_header = f"""
-/* Theme tokens: {self._config.theme_css_path} */
+/* Theme tokens baseline: {self._config.baseline_theme_css_path} */
+/* Theme tokens program delta: {self._config.program_theme_css_path or self._config.theme_css_path} */
 
-:root {{
-  /* {self._config.display_name} Light Theme — loaded from {self._config.theme_css_path} */
-}}
+{baseline_css}
 
-[data-theme="dark"] {{
-  /* {self._config.display_name} Dark Theme — loaded from {self._config.theme_css_path} */
-}}
+{program_css}
 """
         else:
             theme_header = """

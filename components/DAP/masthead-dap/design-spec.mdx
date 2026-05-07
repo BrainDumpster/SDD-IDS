@@ -48,6 +48,7 @@ Deterministic child slots:
   - user initials wrapper: horizontal padding `8px`, vertical `11px` (32px initials chip).
 - Help dropdown:
   - surface width: `138px`
+  - surface corner radius: `0px` (override only for masthead-help dropdown usage).
   - row padding: `10px 16px 10px 24px`
   - rows: Help, What's New, Get Started, About.
 - App launcher dropdown:
@@ -182,6 +183,7 @@ Variant/option matrix:
 Per-slot style contract:
 - Masthead root must use masthead-brand token family and white icon/text tokens.
 - Help menu and launcher surfaces must use component background + accessible border + drop shadow.
+- Help menu surface corner radius is explicitly `0px` for masthead usage (do not apply this override globally to unrelated dropdown components).
 - Help menu rows follow dropdown option spacing and interaction contract (`default | hover | press | focus-visible`) using the same token model as IDS dropdown rows.
 
 Behavior contract:

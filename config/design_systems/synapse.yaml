@@ -15,6 +15,12 @@ theme_css_path: components/synapse-theme.css
 base_ui_mapping_path: data/synapse-baseui-mapping.json
 
 components_dir: components/synapse
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.mdx
+baseline_theme_css_path: components/theme.css
+program_components_dir: components/synapse
+program_root_spec_path: components/synapse/root-spec.mdx
+program_theme_css_path: components/synapse-theme.css
 
 qdrant_collection: synapse_design_knowledge
 

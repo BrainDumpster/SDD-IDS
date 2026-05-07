@@ -290,6 +290,25 @@ def inject_context(prompt: str, context: dict) -> str:
     Injects design intelligence context into the base prompt.
     """
 
+    spec_layers = context.get("spec_layers", [])
+    theme_layers = context.get("theme_layers", [])
+    validation_issues = context.get("validation_issues", [])
+    baseline_layer_summary = "\n".join(
+        f"- {layer.get('layer')}: {layer.get('path')} (exists={layer.get('exists')})"
+        for layer in spec_layers
+        if str(layer.get("layer", "")).startswith("ids_")
+    )
+    program_delta_summary = "\n".join(
+        f"- {layer.get('layer')}: {layer.get('path')} (exists={layer.get('exists')})"
+        for layer in spec_layers
+        if str(layer.get("layer", "")).startswith("program_")
+    )
+    theme_layer_summary = "\n".join(
+        f"- {layer.get('layer')}: {layer.get('path')} (exists={layer.get('exists')})"
+        for layer in theme_layers
+    )
+    validation_summary = "\n".join(f"- {issue}" for issue in validation_issues) or "- none"
+
     return f"""
 {prompt}
 
@@ -302,8 +321,27 @@ def inject_context(prompt: str, context: dict) -> str:
 ================ DESIGN TOKENS ================
 {context.get("tokens", "")}
 
-================ COMPONENT SPECIFICATION ================
+================ PRECEDENCE RULES ================
+Apply layer precedence strictly:
+{context.get("layer_precedence", "program_component_delta > program_root_delta > ids_component > ids_root")}
+
+================ IDS BASELINE ================
+{baseline_layer_summary or "- none"}
+
+================ PROGRAM DELTAS ================
+{program_delta_summary or "- none"}
+
+================ THEME LAYERS ================
+{theme_layer_summary or "- none"}
+
+================ COMPONENT SPECIFICATION (LAYERED) ================
 {context.get("spec", "")}
+
+================ THEME CSS (LAYERED) ================
+{context.get("theme_css", "")}
+
+================ SPEC VALIDATION ================
+{validation_summary}
 
 ================ USER REQUEST ================
 {context.get("request", "")}

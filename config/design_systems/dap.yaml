@@ -1,31 +1,31 @@
-# IDS Design System Configuration
-# Preserves full backward compatibility with existing pipeline
+# DAP Design System Configuration
+# DAP uses IDS as baseline with DAP-specific deltas.
 
-name: ids
-display_name: IDS
+name: dap
+display_name: DAP
 token_transform: ids
 
-figma_file_key: "VZJ48bbVYrIynw8DdSukWw"
+figma_file_key: ""
 
 figma_map_path: data/component-figma-map.json
 rules_path: rules.json
 allowed_tokens_path: allowed_tokens.json
 component_registry_path: component_registry.json
-theme_css_path: components/ids-theme.css
+theme_css_path: components/dap-theme.css
 base_ui_mapping_path: ""
 
-components_dir: components/ids
+components_dir: components/DAP
 baseline_components_dir: components/ids
 baseline_root_spec_path: components/ids/root-spec.mdx
 baseline_theme_css_path: components/ids-theme.css
-program_components_dir: ""
-program_root_spec_path: ""
-program_theme_css_path: ""
+program_components_dir: components/DAP
+program_root_spec_path: components/DAP/root-spec.mdx
+program_theme_css_path: components/dap-theme.css
 
-qdrant_collection: design_knowledge
+qdrant_collection: dap_design_knowledge
 
 framework_layer: ""
-root_spec_path: components/ids/root-spec.mdx
+root_spec_path: components/DAP/root-spec.mdx
 
 breakpoints:
   sm: "576px"

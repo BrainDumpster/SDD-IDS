@@ -13,6 +13,7 @@ A RAG-powered platform that extracts design system knowledge from Figma, generat
 Supports multiple design systems via `DESIGN_SYSTEM` env var:
 - **IDS** (default): Original IDS design system
 - **Synapse**: Synapse design system with Base UI (`@base-ui-components/react`) as the React implementation layer
+- **DAP**: Program-specific deltas layered on top of IDS baseline specs and tokens
 
 ## Spec Pipeline
 
@@ -81,6 +82,84 @@ Generator rule:
 - Use component values first;
 - inherit from root when not overridden;
 - resolve styles through CSS variables from `synapse-theme.css`.
+
+## IDS Baseline + Program Overrides
+
+The generator now supports a layered model where IDS is always the base.
+
+Layer precedence used at runtime:
+1. program component delta (`components/<program>/<slug>/design-spec.mdx`) — optional
+2. program root delta (`components/<program>/root-spec.mdx`) — optional but recommended
+3. IDS component baseline (`components/ids/<slug>/design-spec.mdx`) — required
+4. IDS root baseline (`components/ids/root-spec.mdx`) — required
+
+Theme precedence used at runtime:
+1. `components/ids-theme.css`
+2. `components/<program>-theme.css` (or `components/<program>/theme.css`)
+
+### What happens when a program has no separate component spec?
+
+If `components/<program>/<slug>/design-spec.mdx` does not exist, codegen still works by combining:
+- `components/ids/<slug>/design-spec.mdx` (baseline component behavior/contract)
+- `components/<program>/root-spec.mdx` (program-level visual/behavior deltas)
+- `components/ids-theme.css` + program theme file (token value overrides)
+
+This is the recommended mode when program deltas are centralized in root spec instead of per-component files.
+
+### Concrete DAP example (no component delta file)
+
+For DAP Button, if there is no `components/DAP/button/design-spec.mdx`, generator still resolves:
+1. `components/ids/root-spec.mdx`
+2. `components/ids/button/design-spec.mdx`
+3. `components/DAP/root-spec.mdx` (button deltas in Program Delta Register)
+4. `components/ids-theme.css`
+5. `components/dap-theme.css`
+
+This allows DAP to inherit IDS behavior and override only visual/contract deltas in root + theme files.
+
+### How a program should add its own components or override IDS
+
+For a new program `<program>`:
+1. Add config file `config/design_systems/<program>.yaml` with layered paths:
+   - `baseline_components_dir: components/ids`
+   - `baseline_root_spec_path: components/ids/root-spec.mdx`
+   - `baseline_theme_css_path: components/ids-theme.css`
+   - `program_components_dir: components/<program>`
+   - `program_root_spec_path: components/<program>/root-spec.mdx`
+   - `program_theme_css_path: components/<program>-theme.css` (or equivalent)
+2. Put global deltas in `components/<program>/root-spec.mdx` (layout, typography, visual attributes, interaction deltas, variant constraints).
+3. Put token value deltas in `components/<program>-theme.css`.
+4. Create `components/<program>/<slug>/design-spec.mdx` only when the component is truly program-specific or needs a dedicated per-component delta contract.
+5. Set `DESIGN_SYSTEM=<program>` before running generation.
+
+## Generation Folder Roles
+
+The `generation/` folder contains runtime codegen orchestration and adapters (not generated output artifacts):
+
+- `generation/component_context_compiler.py`
+  - Builds layered context for each component.
+  - Composes IDS baseline + program deltas + theme layers.
+  - Adds layer validation diagnostics (required layers, inherits marker, hardcoded drift checks).
+- `generation/prompt_templates.py`
+  - Defines prompt rules/templates and context injection.
+  - Injects `PRECEDENCE RULES`, `IDS BASELINE`, `PROGRAM DELTAS`, and `THEME LAYERS`.
+- `generation/component_generator.py`
+  - Calls the LLM with compiled prompt/context.
+  - Parses structured output sections (`COMPONENT`, `CSS`, etc.).
+- `generation/generation_pipeline.py`
+  - High-level orchestrator: compile context -> generate -> repair/validate.
+- `generation/theme_injector.py`
+  - Materializes theme layers in deterministic order (IDS theme first, program theme second).
+- `generation/auto_repair_engine.py`
+  - Post-generation auto-repair loop driven by validation feedback.
+- `generation/rag_component_generator.py`
+  - RAG-aware generation path using retrieved design knowledge context.
+- `generation/figma_aware_generator.py` and `generation/figma_enhanced_prompts.py`
+  - Figma-context-aware generation helpers/prompts.
+- `generation/framework_adapters/*`
+  - Framework-specific shaping/adaptation (`react_css_adapter.py`, `angular_adapter.py`, `base_ui_adapter.py`).
+- `generation/style_modes.py`
+  - Enumerates supported style output modes.
 
 ### Assets (icons/images) contract
 
@@ -173,6 +252,86 @@ Requirements:
 - If any token/asset/contract data is missing, return a gap list and stop guessing.
 ```
 
+## Framework-Agnostic Component Generation Guide
+
+Use the following files as the minimum generation inputs:
+- component baseline spec: `components/ids/<slug>/design-spec.mdx`
+- IDS baseline root spec: `components/ids/root-spec.mdx`
+- IDS theme: `components/ids-theme.css`
+- optional program root delta: `components/<program>/root-spec.mdx`
+- optional program theme delta: `components/<program>-theme.css`
+- optional program component delta: `components/<program>/<slug>/design-spec.mdx`
+
+For machine-consumable handoff between agents:
+- contract doc: `data/agent-generation-contract.md`
+- contract schema: `data/agent-generation-contract.schema.json`
+
+### Prompt example: IDS baseline only
+
+```text
+Generate a framework-agnostic component implementation plan and then code for Button.
+
+Source-of-truth (highest to lowest):
+1) components/ids/button/design-spec.mdx
+2) components/ids/root-spec.mdx
+
+Theme:
+1) components/ids-theme.css
+
+Requirements:
+- Preserve anatomy, variants, states, interactions, and accessibility contract.
+- Use semantic tokens only (var(--...)); do not hardcode visual values.
+- Include fallback behavior for unknown variant/size and missing icon assets.
+- Output sections:
+  === COMPONENT ===
+  === CSS ===
+```
+
+### Prompt example: IDS baseline + program deltas (DAP)
+
+```text
+Generate DAP Button from layered design specs.
+
+Layer precedence (highest to lowest):
+1) components/DAP/root-spec.mdx   # Program Delta Register contains Button deltas
+2) components/ids/button/design-spec.mdx
+3) components/ids/root-spec.mdx
+
+Theme precedence:
+1) components/ids-theme.css
+2) components/dap-theme.css
+
+Requirements:
+- Apply DAP visual deltas from Program Delta Register.
+- Keep IDS behavior and accessibility unless overridden by DAP root-spec.
+- Use only semantic CSS tokens.
+- Return:
+  === COMPONENT ===
+  === CSS ===
+```
+
+### Prompt example: with program-specific component delta
+
+```text
+Generate <program> <component> using layered specs.
+
+Layer precedence:
+1) components/<program>/<slug>/design-spec.mdx
+2) components/<program>/root-spec.mdx
+3) components/ids/<slug>/design-spec.mdx
+4) components/ids/root-spec.mdx
+
+Theme precedence:
+1) components/ids-theme.css
+2) components/<program>-theme.css
+
+Enforce:
+- full variant/state matrix
+- interaction and keyboard contracts
+- accessibility requirements
+- token-only visual properties
+```
+
 ### Expected output quality
 
 When the above inputs are present, generated components should be framework-agnostic in behavior and visually consistent with the design spec contract. Differences should be limited to framework syntax and project scaffolding conventions.
@@ -221,9 +380,15 @@ config/
 ├── design_system_config.py         # DesignSystemConfig dataclass + loader
 ├── design_systems/
 │   ├── ids.yaml                    # IDS design system config
-│   └── synapse.yaml                # Synapse config
+│   ├── synapse.yaml                # Synapse config
+│   └── dap.yaml                    # DAP config (IDS baseline + DAP deltas)
 └── settings.py                     # Global settings (env vars, paths)
 ```
+
+Key layered config fields (`synapse.yaml`, `dap.yaml`):
+- `baseline_components_dir`, `baseline_root_spec_path`, `baseline_theme_css_path`
+- `program_components_dir`, `program_root_spec_path`, `program_theme_css_path`
+- precedence during generation: program component delta > program root delta > IDS component > IDS root
 
 Key `synapse.yaml` fields:
 - `framework_options`: React + Base UI, Angular, Lit Web Components
@@ -343,4 +508,6 @@ pnpm build      # production build
 - Node.js + pnpm (for Storybook)
 - Config via `.env` (see `.env.example`)
 - Embedding dimension: 768 (embeddinggemma), Qdrant distance: COSINE
-- `DESIGN_SYSTEM=synapse` for Synapse pipeline (default: IDS)
+- `DESIGN_SYSTEM=synapse` for Synapse pipeline
+- `DESIGN_SYSTEM=dap` for DAP pipeline (IDS baseline + DAP overrides)
+- default when unset: `DESIGN_SYSTEM=ids`

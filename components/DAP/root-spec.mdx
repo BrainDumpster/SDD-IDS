@@ -181,3 +181,32 @@ DAP file (`HIbl2AgqTSdR9STZueMvTH`) is expected to use IDS-compatible variable o
   - verified `--color-icon-neutral` dark = `#b8c1c9`
   - verified neutral-light border family dark = `#34414c`
 <!-- auto:generated:end -->
+
+## Program Delta Register
+
+### Button (DAP vs IDS baseline)
+
+Delta source:
+- DAP Figma matrix: https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=9662-25120&m=dev (`9662:25120`)
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in current session.
+
+#### Layout deltas
+- Button corner radius family uses `var(--corner-radius-radius-4)` for DAP button surfaces.
+- Focus-visible outer ring remains IDS baseline geometry (1px stroke, 3px offset) and aligns to the 4px corner family.
+
+#### Typography deltas
+- No typography delta. Keep IDS baseline `Body 2` (`14/20`, regular).
+
+#### Style and visual-property deltas
+- Runtime variant set is constrained to `primary | secondary | tertiary | destructive` for DAP usage.
+- `secondary` default remains transparent (no filled neutral surface).
+- State behavior, icon geometry (16x16), and size paddings inherit from IDS unless a component delta spec overrides them.
+
+#### Variable/token deltas
+- Corner token override in practice: `--corner-radius-radius-4`.
+- All remaining color/spacing/border/text/icon tokens resolve through:
+  1. IDS baseline theme (`components/ids-theme.css`)
+  2. DAP override theme (`components/dap-theme.css`)
+
+#### Component delta spec pointer
+- Button deltas are recorded directly in this root spec under `## Program Delta Register`.
