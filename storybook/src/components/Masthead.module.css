@@ -119,7 +119,8 @@
 }
 
 .actionIconButton:hover {
-  background-color: var(--color-background-controls-brand-strong);
+  background-color: var(--color-background-n-tabs-x-hover);
+  border: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .actionIconButton[aria-pressed="true"] {

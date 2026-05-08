@@ -169,17 +169,15 @@
 .item:hover:not([data-disabled]) {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .item[data-highlighted] {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .item[data-focus-visible] {
@@ -318,9 +316,8 @@
 .item[data-selected] {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-brand-strong);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .item[data-selection-mode="multi"][data-selected] {
@@ -337,9 +334,8 @@
 .item:active:not([data-disabled]) {
   background: var(--color-background-brand-light);
   color: var(--color-text-brand-strong);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */

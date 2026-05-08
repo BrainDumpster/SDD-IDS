@@ -58,7 +58,7 @@
 
 - `var(--color-background-component)` for menu and option row background.
 - `var(--color-border-neutral-light)` for menu border, section separators, and scrollbar thumb.
-- `var(--color-border-brand-base)` for option-row hover/press/selected top+bottom emphasis border.
+- `var(--color-border-brand-neutral)` for option-row hover/press/selected top+bottom emphasis border.
 - `var(--color-border-brand-base)` for focus ring.
 - `var(--color-text-neutral)` for option labels.
 - `var(--color-text-neutral-strong)` for section headers.
@@ -78,7 +78,7 @@
 | Region / control | Default | Hover | Focus-visible | Press | Disabled |
 |---|---|---|---|---|---|
 | `menuSurface` | component bg + neutral-light border | n/a | n/a | n/a | n/a |
-| `optionRow` (`type=Options`, text-only) | component bg + neutral text | `var(--color-background-brand-lighter)` + top/bottom border `var(--color-border-brand-base)` | outer focus ring `var(--color-border-brand-base)` (1px) with `4px` inset offset model | `var(--color-background-brand-light)` + brand-strong label | `var(--color-background-gray-light)` + disabled label |
+| `optionRow` (`type=Options`, text-only) | component bg + neutral text | `var(--color-background-brand-lighter)` + top/bottom border `var(--color-border-brand-neutral)` | outer focus ring `var(--color-border-brand-base)` (1px) with `4px` inset offset model | `var(--color-background-brand-light)` + brand-strong label | `var(--color-background-gray-light)` + disabled label |
 | `optionRow` (`type=Options`, single-select) | row visuals same as text-only + leading control slot | same as text-only; leading control from RadioButton hover state | same as text-only + leading control from RadioButton focus-visible | same as text-only + leading control from RadioButton press/selected | same as text-only + leading control from RadioButton disabled |
 | `optionRow` (`type=Options`, multi-select) | row visuals same as text-only + leading control slot | same as text-only; leading control from Checkbox hover state | same as text-only + leading control from Checkbox focus-visible | same as text-only + leading control from Checkbox press/checked | same as text-only + leading control from Checkbox disabled |
 | `optionRow` (`state=selected`) | selected row uses `var(--color-background-brand-lighter)` and `var(--color-text-brand-strong)`; top/bottom emphasis border `var(--color-border-brand-neutral)` | same structure | same structure + focus ring when keyboard-focused | selected+press resolves to press visuals | disabled wins if set |
