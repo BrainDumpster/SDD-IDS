@@ -125,6 +125,26 @@
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
 
+## Composition & API (runtime)
+- `items: Array<{ label: string; href: string; active?: boolean }>` (required)
+- `title?: string` (optional section heading)
+- `sticky?: boolean` (default `true` for long-page usage)
+- `onItemClick?: (href: string) => void`
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic slot order:
+  1. `AnchorMenuRoot`
+  2. `AnchorMenuHeader?`
+  3. repeated `AnchorMenuItem`
+  4. `AnchorActiveIndicator`
+- Behavior contract:
+  - active item is token-highlighted and left-indicator aligned
+  - click navigates to corresponding anchor section
+  - keyboard navigation supports Tab/Enter on items
+- Fallback/error rules:
+  - unknown/missing `href` disables navigation for that item
+  - empty items array renders empty state without crash
+
 ## Source Mapping
 - Figma component: Anchor Menu (11067-54486)
 - Variable collection: UI Palettes, Typography tokens

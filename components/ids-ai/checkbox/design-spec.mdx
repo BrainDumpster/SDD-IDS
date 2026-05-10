@@ -1,0 +1,185 @@
+<!-- ds:inherits root-spec -->
+
+# Checkbox Design Spec
+
+## Metadata
+- Component: Checkbox
+- Category: Formelements
+- Design System: IDS-AI
+- Primary Figma: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=41895-299512&m=dev`
+- Primary node ID: `41895:299512`
+- States matrix (light): `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=8505-14296&m=dev`
+- States matrix node ID: `8505:14296`
+- Scenario Figma: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=41895-299554&m=dev`
+- Scenario node ID: `41895:299554`
+- Figma file key: `rr8F0NGA6RNY9Z0cNeh3jh`
+- Variant axes covered: selection (`unselected | selected | partial`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
+
+## Anatomy
+- **root**: clickable control row, aligns box + label.
+- **input**: native `input[type="checkbox"]` (visually hidden or visible depending on implementation).
+- **controlBox**: 16x16 visual square.
+- **indicator**: checkmark or indeterminate dash glyph rendered only when selected state requires it.
+- **label**: text node associated to input (`for`/`id` or `aria-labelledby`).
+- **assistiveText** (optional): helper or error text below/next to root.
+
+## Layout & Measurements
+- Control box visual size: `16px x 16px` with `1px` border outside (effective outer footprint `18px x 18px`).
+- Control border radius: `var(--corner-radius-radius-2)`.
+- Root spacing between control and label: `var(--spacing-space-8)`.
+- Root min tap target: `44px` height (hit area may exceed visual box).
+- Label aligns vertically with control center.
+- Checked indicator geometry: CSS-drawn thick check mark in an `8px x 8px` lane with sharp corners/edges (no rounded stroke caps), center-aligned to match Figma placement with optical Y nudge `-0.5px`.
+- Indeterminate indicator geometry: CSS-drawn horizontal stroke centered within the control (`8px` width, `2px` height) with rounded ends.
+- Assistive text indentation aligns to the full control footprint + label gap: `calc(18px + var(--spacing-space-8))`.
+- Focus-visible ring:
+  - 1px outline using `var(--color-border-brand-base)`,
+  - ring offset outside control by 3px.
+
+## Tokens
+Use semantic tokens only.
+
+- Borders:
+  - `var(--border-width-border-default)`
+  - `var(--border-width-border-thick)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-strong)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-border-disabled)`
+- Backgrounds:
+  - `var(--color-background-component)`
+  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-background-gray-light)`
+  - `var(--color-background-gray-base)`
+- Text/Icon:
+  - `var(--color-text-neutral)` (default label; Figma `8505:14296` / `Color/Text/Neutral`)
+  - `var(--color-text-neutral-strong)` (when product requires stronger label emphasis)
+  - `var(--color-text-disabled)`
+  - `var(--color-text-critical)` (error state)
+  - `var(--color-icon-white)`
+  - `var(--color-icon-inverse)`
+  - `var(--color-icon-brand-base)` (focus/semantic emphasis when needed)
+- Typography:
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-20)`
+
+## States (Light Theme)
+| Selection | Interaction | Box Background | Box Border | Indicator | Label |
+|---|---|---|---|---|---|
+| Unchecked | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
+| Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | none | `var(--color-text-neutral)` |
+| Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 3px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Unchecked | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Checked | Disabled | `var(--color-background-gray-base)` | no visible stroke (use `transparent` / `var(--color-border-transparent-brand)` for layout parity; Figma `8505:14361`) | check in `var(--color-icon-inverse)` | `var(--color-text-disabled)` |
+| Indeterminate | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dash in `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+## States (Dark Theme)
+Same semantic matrix as light theme. Dark values must resolve from the active token map; do not hardcode hex.
+
+| Selection | Interaction | Box Background | Box Border | Indicator | Label |
+|---|---|---|---|---|---|
+| Unchecked | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
+| Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | none | `var(--color-text-neutral)` |
+| Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 3px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Unchecked | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Checked | Disabled | `var(--color-background-gray-base)` | no visible stroke (use `transparent` / `var(--color-border-transparent-brand)` for layout parity; Figma `8505:14361`) | check in `var(--color-icon-inverse)` | `var(--color-text-disabled)` |
+| Indeterminate | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dash in `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+## Interactions
+- Click root/control toggles between checked and unchecked (unless disabled).
+- Space key toggles when control has focus.
+- Indeterminate behavior:
+  - programmatic state (`aria-checked="mixed"`),
+  - next user toggle transitions to checked (recommended deterministic rule).
+- Hover: unchecked/indeterminate keep component background; borders move accessible → strong or brand → strong as in the state table; **checked** fill moves **brand-base → brand-strong** (Figma `8505:14296`). Label keeps `var(--color-text-neutral)` except disabled/error.
+- Disabled blocks pointer + keyboard interactions.
+
+## Composition & API (runtime)
+| Prop / Slot | Required | Behavior |
+|---|---|---|
+| `checked` | No (controlled) | Controlled selection state. |
+| `defaultChecked` | No (uncontrolled) | Initial selection for uncontrolled usage. |
+| `indeterminate` | No | Enables mixed state visual and ARIA mapping. |
+| `disabled` | No | Locks interaction and applies disabled state tokens. |
+| `label` | Yes | Visible or sr-only text; always used for accessible name. |
+| `showLabel` | No | When `false`, label is visually hidden but remains associated (Figma “control only” column). |
+| `simulateFocusVisible` | No | Demo-only: draw the 1px brand outline + 3px offset without keyboard focus (e.g. Storybook matrix). |
+| `name` / `value` | No | Native form integration. |
+| `onChange(checked)` | No | Emits resolved checked value after toggle. |
+| `error` | No | Optional validation styling/assistive text mode. |
+| `helperText` | No | Secondary descriptive text. |
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+- `root`
+  - `input`
+  - `controlBox`
+    - optional `indicator`
+  - `label`
+  - optional `assistiveText`
+
+### Supported matrix
+- Selection: unchecked | checked | indeterminate.
+- Interaction: default | hover | focus-visible | disabled.
+- Validation: default | error.
+- Mode: controlled | uncontrolled.
+
+### Style contract
+- Control visual box remains 16x16 in all states, with 1px outer border (effective footprint 18x18).
+- Indicator appears only for checked or indeterminate.
+- Indicator implementation must be CSS-only (no image or inline SVG):
+  - checked: draw with sharp-corner CSS geometry in an `8x8` lane (no rounded caps), using deterministic polygon points:
+    - `clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%)`
+    - optical placement: `translateY(-0.5px)`
+  - indeterminate: draw a centered rounded horizontal stroke (`8x2`) with radius `2px`.
+- Focus-visible ring uses 1px brand outline with 3px offset outside the box.
+- Label gap from control remains `var(--spacing-space-8)`.
+- No hardcoded colors; token-only.
+
+### Behavior + accessibility contract
+- Native checkbox semantics preferred.
+- ARIA:
+  - `aria-checked`: `true | false | mixed`,
+  - `aria-disabled` when disabled,
+  - label association via `for/id` or `aria-labelledby`.
+- Keyboard:
+  - `Tab` focus traversal,
+  - `Space` toggles.
+
+### Fallback/error rules
+- If both `checked` and `defaultChecked` provided, controlled `checked` wins.
+- If `indeterminate=true` and `checked=true`, indeterminate visual takes precedence until next explicit change.
+- Missing label is invalid for accessibility; generator must emit warning.
+- `showLabel=false` still requires `label` (or equivalent) for accessible name; generator must wire `aria-label` / visually hidden label.
+- `simulateFocusVisible` is **documentation-only**; production must use real `:focus-visible` — do not treat simulation as the accessibility implementation.
+
+### Validation checklist
+- [ ] All state rows in the light/dark tables (including split disabled: unchecked / checked / indeterminate) map to tokens.
+- [ ] Indeterminate visuals and ARIA `mixed` are implemented.
+- [ ] Checked indicator uses sharp-corner geometry (no rounded caps) and preserves the inner-left notch shape.
+- [ ] Checked and indeterminate indicators remain optically centered inside the control.
+- [ ] Focus-visible ring appears for keyboard focus; optional `simulateFocusVisible` only for static docs matrices.
+- [ ] Disabled blocks interaction and uses disabled tokens.
+- [ ] Label association is screen-reader valid.
+- [ ] Dark theme resolves only through semantic tokens.
+
+## Source Mapping
+- Figma component: Checkbox (`41895:299512`)
+- Component map: IDS-AI override input supplied directly by product links
+- Figma link used for extraction: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=41895-299512&m=dev`
+- Scenario source: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=41895-299554&m=dev`
+- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
+- Verified at: 2026-05-09

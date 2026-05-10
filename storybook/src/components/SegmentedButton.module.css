@@ -3,7 +3,8 @@
   display: inline-flex;
   align-items: stretch;
   gap: var(--spacing-space-2);
-  padding: var(--spacing-space-2);
+  /* Figma SegmentedButton-Main: padding token is Padding/padding-2 (2px inset). */
+  padding: var(--padding-padding-2);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-radius: var(--corner-radius-radius-2);
   background: var(--color-background-component);
@@ -45,9 +46,13 @@
 }
 
 .segmentIcon {
-  min-height: 37px;
-  min-width: 40px;
-  padding: var(--padding-padding-8);
+  box-sizing: border-box;
+  width: var(--sizing-size-32);
+  height: var(--sizing-size-32);
+  min-width: var(--sizing-size-32);
+  min-height: var(--sizing-size-32);
+  flex-shrink: 0;
+  padding: 0;
 }
 
 .segment:disabled {
@@ -79,10 +84,10 @@
   border-color: var(--color-border-brand-base);
 }
 
-/* Selected */
+/* Selected — Figma uses brand border on segment surface (matches fill; required for icon cells). */
 .selected {
   background: var(--color-background-controls-brand-base) !important;
-  border-color: transparent !important;
+  border-color: var(--color-border-brand-base) !important;
   color: var(--color-text-white) !important;
 }
 
@@ -95,11 +100,11 @@
   color: var(--color-text-white);
 }
 
-/* Icon mask (slug assets) */
+/* Icon mask (slug assets) — Figma glyph frame 16×14 inside 32×32 cell */
 .iconMask {
   display: block;
   width: 16px;
-  height: 16px;
+  height: 14px;
   flex-shrink: 0;
   background-color: var(--color-icon-brand-base);
   mask-size: contain;
@@ -123,7 +128,7 @@
   align-items: center;
   justify-content: center;
   width: 16px;
-  height: 16px;
+  height: 14px;
   flex-shrink: 0;
   color: var(--color-icon-brand-base);
 }
@@ -137,7 +142,7 @@
   align-items: center;
   justify-content: center;
   width: 16px;
-  height: 16px;
+  height: 14px;
   font-size: 12px;
   font-weight: 600;
   color: var(--color-text-critical);

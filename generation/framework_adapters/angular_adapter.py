@@ -50,4 +50,7 @@ Angular HTML template
 
 === COMPONENT_SCSS ===
 Angular SCSS stylesheet
+
+=== STORYBOOK ===
+Storybook stories file
 """

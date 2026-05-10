@@ -64,6 +64,25 @@ def _path_name_to_token(name: str) -> str:
     return "--" + "-".join(parts)
 
 
+def _sanitize_css_token(token: str) -> str:
+    """Match ids-ai-theme.css sync: valid custom properties, Figma path quirks."""
+    t = token.replace("m<ajor", "major")
+    t = re.sub(r"(\d+)%", r"\1", t)
+    if "%" in t:
+        t = t.replace("%", "-pct")
+    return t
+
+
+def _token_from_variable(v: Dict[str, Any]) -> str:
+    """Prefer path-derived token when WEB disagrees (mis-bound codeSyntax in Figma)."""
+    path_tok = _sanitize_css_token(_path_name_to_token(v.get("name") or ""))
+    web_raw = _web_token_from_code_syntax(v.get("codeSyntax"))
+    web_tok = _sanitize_css_token(web_raw) if web_raw else None
+    if web_tok and web_tok != path_tok:
+        return path_tok
+    return web_tok or path_tok
+
+
 def _theme_from_mode_name(mode_name: str) -> Optional[str]:
     n = (mode_name or "").strip().lower()
     if n.startswith("light"):
@@ -152,8 +171,7 @@ def _variable_rows(
             continue
         if resolved_type and v.get("resolvedType") != resolved_type:
             continue
-        web = _web_token_from_code_syntax(v.get("codeSyntax"))
-        token = web or _path_name_to_token(v.get("name") or "")
+        token = _token_from_variable(v)
         rows.append(
             {
                 "name": v.get("name"),
@@ -230,14 +248,31 @@ def _md_table_two(headers: str, rows: List[Tuple[str, str]]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_markdown(payload: Dict[str, Any]) -> str:
+def build_markdown(
+    payload: Dict[str, Any],
+    *,
+    file_key_for_banner: Optional[str] = None,
+    theme_color_collection: str = "Tokens",
+    theme_color_heading: Optional[str] = None,
+    theme_color_intro_md: Optional[str] = None,
+) -> str:
     variables, vars_by_id, mode_id_to_theme, collection_name = _collect_variables(payload)  # type: ignore[misc]
+
+    banner_key = file_key_for_banner or IDS_FILE_KEY
+    heading_tc = theme_color_heading or (
+        "### Tokens collection — COLOR (Figma — `Tokens`)"
+        if theme_color_collection == "Tokens"
+        else f"### {theme_color_collection} — COLOR (Figma — `{theme_color_collection}`)"
+    )
+    intro_tc = theme_color_intro_md or (
+        "> Semantic color tokens from the IDS file. One row per variable; values resolved after alias chains.\n\n"
+    )
 
     parts: List[str] = []
     parts.append(
         "<!-- ds:section id=primitive-static -->\n"
         "### Primitive palette (Figma — `Primitive` collection, COLOR)\n\n"
-        f"> Auto-synced from Figma `GET /v1/files/{IDS_FILE_KEY}/variables/local`. "
+        f"> Auto-synced from Figma `GET /v1/files/{banner_key}/variables/local`. "
         "Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.\n\n"
     )
 
@@ -329,31 +364,27 @@ def build_markdown(payload: Dict[str, Any]) -> str:
             rows3.append((t, lt or "—", dk or "—"))
         parts.append(_md_table_color_ld("| Token | Light | Dark |", rows3))
 
-    # Tokens COLOR appendix
+    # Theme-aware semantic COLOR appendix (IDS: `Tokens`; IDS-AI: `Color Mode`)
     tok_c = _variable_rows(
         variables,
         vars_by_id,
         mode_id_to_theme,
         collection_name,
-        collection_filter="Tokens",
+        collection_filter=theme_color_collection,
         resolved_type="COLOR",
     )
     tok_c.sort(key=lambda r: r["token"])
-    _seen_tc: set[str] = set()
-    _tok_c_u: List[Dict[str, Any]] = []
+    _seen_tc2: set[str] = set()
+    _tok_c_u2: List[Dict[str, Any]] = []
     for r in tok_c:
         t = r["token"]
-        if t in _seen_tc:
+        if t in _seen_tc2:
             continue
-        _seen_tc.add(t)
-        _tok_c_u.append(r)
-    tok_c = _tok_c_u
+        _seen_tc2.add(t)
+        _tok_c_u2.append(r)
+    tok_c = _tok_c_u2
 
-    parts.append(
-        "\n<!-- ds:section id=tokens-color -->\n"
-        "### Tokens collection — COLOR (Figma — `Tokens`)\n\n"
-        "> Semantic color tokens from the IDS file. One row per variable; values resolved after alias chains.\n\n"
-    )
+    parts.append("\n<!-- ds:section id=tokens-color -->\n" f"{heading_tc}\n\n" + intro_tc)
     rows_t: List[Tuple[str, str, str]] = []
     for r in tok_c:
         lt, dk = _color_light_dark(r["raw"], vars_by_id, mode_id_to_theme)

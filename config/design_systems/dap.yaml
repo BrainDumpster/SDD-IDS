@@ -15,9 +15,10 @@ theme_css_path: components/dap-theme.css
 base_ui_mapping_path: ""
 
 components_dir: components/DAP
-baseline_components_dir: components/ids
-baseline_root_spec_path: components/ids/root-spec.mdx
-baseline_theme_css_path: components/ids-theme.css
+# DAP component specs layer on IDS-AI (token + variable usage baseline), not legacy IDS.
+baseline_components_dir: components/ids-ai
+baseline_root_spec_path: components/ids-ai/root-spec.mdx
+baseline_theme_css_path: components/ids-ai-theme.css
 program_components_dir: components/DAP
 program_root_spec_path: components/DAP/root-spec.mdx
 program_theme_css_path: components/dap-theme.css
@@ -26,6 +27,8 @@ qdrant_collection: dap_design_knowledge
 
 framework_layer: ""
 root_spec_path: components/DAP/root-spec.mdx
+generated_storybook_dir: storybook-generated/dap
+strict_storybook_gate: false
 
 breakpoints:
   sm: "576px"

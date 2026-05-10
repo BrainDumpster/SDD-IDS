@@ -10,8 +10,9 @@
 - Component/state matrix node ID: `42077:26730`
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-04-22
+- Verified at: 2026-05-10
 - Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
+- Reference implementation: `storybook/src/components/RadioButton.tsx` (shared IDS / IDS-AI). Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
 
 ## Anatomy
 - **groupRoot** (optional): semantic grouping wrapper for radio collections.
@@ -48,11 +49,14 @@
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-base)`
 - Text/Icon:
-  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-neutral)` (default option label)
+  - `var(--color-text-neutral-strong)` (optional stronger label emphasis)
   - `var(--color-text-disabled)`
   - `var(--color-text-critical)` (error mode)
   - `var(--color-icon-white)`
   - `var(--color-icon-inverse)`
+  - `var(--color-icon-brand-strong)` (selected dot hover)
+  - `var(--color-icon-disabled)` (disabled selected dot)
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
@@ -61,12 +65,13 @@
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
 | Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
 | Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
 | Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` (both unselected and selected) | `var(--color-border-disabled)` | selected dot in `var(--color-icon-disabled)`; unselected none | `var(--color-text-disabled)` |
+| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
 
 ## States (Dark Theme)
 Same semantic matrix as light theme; dark values are resolved by token mappings. Do not hardcode dark hex values.
@@ -74,16 +79,20 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
 | Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
 | Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
 | Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` (both unselected and selected) | `var(--color-border-disabled)` | selected dot in `var(--color-icon-disabled)`; unselected none | `var(--color-text-disabled)` |
+| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
 
 ## Interactions
 - Click on a radio selects it and deselects sibling radios with the same `name`.
 - Radio is single-select in group; one selected value at a time.
+- Hover trigger area is the full radio row hit target (control + label), not only the 16x16 control:
+  - Unselected hover: border shifts to `var(--color-border-strong)` while background remains `var(--color-background-component)`.
+  - Selected hover: border/icon shift to hover tokens while fill stays `var(--color-background-component)`.
 - Keyboard:
   - `Tab`: enters/leaves group,
   - `Arrow` keys: move selection among enabled radios in group,
@@ -91,17 +100,28 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 - Disabled radios are skipped by selection changes and cannot be activated.
 
 ## Composition & API (runtime)
-| Prop / Slot | Required | Behavior |
+
+### Aggregate component (`RadioButton` — `storybook/src/components/RadioButton.tsx`)
+| Prop | Required | Behavior |
 |---|---|---|
-| `name` | Yes (grouped) | Shared group id for single-selection behavior. |
-| `value` | Yes | Unique option value in group. |
-| `checked` | No (controlled) | Controlled selected state for the individual radio. |
-| `defaultChecked` | No (uncontrolled) | Initial selected state. |
-| `disabled` | No | Applies disabled styling and blocks interactions. |
-| `label` | Yes | Visible option text associated with input. |
-| `onChange(value)` | No | Fires when this radio becomes selected. |
-| `error` | No | Optional validation mode for border/assistive text. |
-| `helperText` | No | Secondary helper/error copy. |
+| `name` | Yes | Shared group id for single-selection behavior. |
+| `options` | Yes | Array of option objects (see below). |
+| `value` | No | Controlled selected value (string matching one option `value`). |
+| `defaultValue` | No | Initial selected value when uncontrolled. |
+| `onChange(value)` | No | Fires with the new value when selection changes. |
+| `disabled` | No | When true, disables the entire group (merged with per-option `disabled`). |
+| `orientation` | No | `vertical` (default) or `horizontal`. |
+| `id` | No | Optional id prefix for assistive text ids. |
+
+### Option object (`options[]` items)
+| Field | Required | Behavior |
+|---|---|---|
+| `value` | Yes | Unique value within the group. |
+| `label` | Yes | Visible label for the option row. |
+| `disabled` | No | Disables this option only. |
+| `error` | No | Error border/label styling for this option. |
+| `helperText` | No | Helper or error line under the option row. |
+| `simulatedState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` for static matrices; not a substitute for real `:hover` / `:focus-visible` in production. |
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
@@ -122,9 +142,10 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 
 ### Style contract
 - Control stays circular and 16x16 across states.
-- Dot appears only when selected.
+- Dot appears only when selected; default dot fill `var(--color-background-controls-brand-base)`; selected hover dot `var(--color-icon-brand-strong)` per state table.
 - Label spacing stays `var(--spacing-space-8)`.
 - Focus-visible ring uses 1px brand outline with 3px offset.
+- Harness-only simulated state (`data-simulated-state` or equivalent) is allowed for Storybook; omit in production defaults unless documenting fixtures.
 - No hardcoded values for color/border/typography.
 
 ### Behavior + accessibility contract
@@ -140,7 +161,8 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 ### Fallback/error rules
 - If multiple radios are `checked=true` in controlled data, first checked wins; warn.
 - If no radio selected in required group, generator should support explicit validation state.
-- Missing label is invalid for accessibility; generator must warn.
+- Missing `label` on any option is invalid for accessibility; generator must warn.
+- `simulatedState` must not be the only focus/hover implementation for end-user UI.
 
 ### Validation checklist
 - [ ] Single-selection group behavior is deterministic.
@@ -154,3 +176,4 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 - Component map entry: `data/component-figma-map.json` → `Radio Button`
 - Primary extraction source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26737&m=dev`
 - Component/state matrix source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26730&m=dev`
+- Additional state validation board: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14225&m=dev`

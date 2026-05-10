@@ -2,7 +2,6 @@ import json
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from rag.design_rag import DesignRAG
 
 
 def _load_json_safe(path_str: str):
@@ -15,7 +14,7 @@ def _load_json_safe(path_str: str):
 
 class ComponentContextCompiler:
 
-    def __init__(self, config=None):
+    def __init__(self, config=None, enable_rag: bool = True):
         """
         Args:
             config: Optional DesignSystemConfig. If None, loads from settings.
@@ -30,7 +29,14 @@ class ComponentContextCompiler:
         self._config = config
 
         collection = config.qdrant_collection if config else None
-        self.rag = DesignRAG(collection_name=collection)
+        self.rag = None
+        if enable_rag:
+            try:
+                # RAG is optional for strict spec-driven workflows.
+                from rag.design_rag import DesignRAG  # local import to avoid hard dependency
+                self.rag = DesignRAG(collection_name=collection)
+            except Exception:
+                self.rag = None
 
         registry_path = config.component_registry_path if config else "component_registry.json"
         self.registry = _load_json_safe(registry_path)
@@ -86,10 +92,14 @@ class ComponentContextCompiler:
     def load_layered_specs(self, component: str) -> List[Dict[str, Any]]:
         baseline_component_path = self._baseline_components_dir / component / "design-spec.mdx"
         program_component_path = self._program_components_dir / component / "design-spec.mdx"
+        baseline_spec_exists = baseline_component_path.is_file()
+        program_spec_exists = program_component_path.is_file()
+        # Program-only slugs (e.g. DAP `settings-menu`) may have no baseline copy under ids/ids-ai.
+        ids_component_required = baseline_spec_exists or not program_spec_exists
 
         layers = [
             self._spec_layer("ids_root", self._baseline_root_spec_path, required=True),
-            self._spec_layer("ids_component", baseline_component_path, required=True),
+            self._spec_layer("ids_component", baseline_component_path, required=ids_component_required),
         ]
 
         if self._program_root_spec_path and self._program_root_spec_path != self._baseline_root_spec_path:
@@ -178,9 +188,14 @@ class ComponentContextCompiler:
         validation_issues = self._validate_spec_layers(spec_layers)
         tokens = self.load_tokens(component)
 
-        knowledge = self.rag.query(
-            f"Provide complete design rules and behavior for {component}"
-        )
+        knowledge = ""
+        if self.rag is not None:
+            try:
+                knowledge = self.rag.query(
+                    f"Provide complete design rules and behavior for {component}"
+                )
+            except Exception:
+                knowledge = ""
 
         anatomy = self.registry.get(component, {}).get("anatomy", [])
 

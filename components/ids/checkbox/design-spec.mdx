@@ -66,7 +66,7 @@ Use semantic tokens only.
 | Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral-strong)` |
 | Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | none | `var(--color-text-neutral-strong)` |
 | Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Hover | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 3px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
@@ -82,7 +82,7 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
 | Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral-strong)` |
 | Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | none | `var(--color-text-neutral-strong)` |
 | Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Hover | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 3px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
@@ -95,7 +95,7 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
 - Indeterminate behavior:
   - programmatic state (`aria-checked="mixed"`),
   - next user toggle transitions to checked (recommended deterministic rule).
-- Hover affects control visuals only; label remains semantic text color except disabled/error modes.
+- Hover affects border/icon emphasis only; background remains unchanged from each selection baseline. Label remains semantic text color except disabled/error modes.
 - Disabled blocks pointer + keyboard interactions.
 
 ## Composition & API (runtime)

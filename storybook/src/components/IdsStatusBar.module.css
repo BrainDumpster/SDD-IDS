@@ -1,0 +1,258 @@
+.root {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  gap: 0;
+}
+
+.withTotal {
+  gap: var(--spacing-space-24);
+}
+
+.large {
+  min-height: 77px;
+}
+
+.small {
+  min-height: 57px;
+}
+
+.contentWrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border: var(--border-width-border-1) solid var(--color-border-disabled);
+  background: var(--color-background-component);
+}
+
+.content {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.item,
+.totalItem {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex-shrink: 0;
+  background: var(--color-background-component);
+}
+
+.item {
+  border-right: 0;
+}
+
+.totalItem {
+  border: var(--border-width-border-1) solid var(--color-border-disabled);
+}
+
+.divider {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 56px;
+  border-right: 1px dashed var(--color-border-disabled);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.leftDivider {
+  left: -1px;
+}
+
+.rightDivider {
+  right: -1px;
+}
+
+.large .item,
+.large .totalItem {
+  padding: 16px var(--padding-padding-24);
+}
+
+.small .item,
+.small .totalItem {
+  padding: 12.5px var(--padding-padding-24) 12.5px var(--padding-padding-24);
+}
+
+.iconStack {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.small .iconStack {
+  width: 16px;
+  height: 16px;
+}
+
+.mainIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.badgeIcon {
+  position: absolute;
+  right: -4px;
+  top: -5px;
+  width: 16px;
+  height: 16px;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
+  color: var(--color-icon-brand-base);
+  background-color: currentColor;
+}
+
+.value {
+  color: var(--color-text-neutral);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.large .value {
+  font-size: 36px;
+  line-height: var(--font-line-height-line-height-44);
+}
+
+.small .value {
+  font-size: var(--font-size-heading-5);
+  line-height: var(--font-line-height-line-height-32);
+}
+
+.meta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.category {
+  color: var(--color-text-neutral);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.label {
+  color: var(--color-text-brand-base);
+  white-space: nowrap;
+}
+
+.large .label {
+  font-size: 18px;
+  line-height: var(--font-line-height-line-height-25);
+}
+
+.small .label {
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+}
+
+.default {
+  background: var(--color-background-component);
+}
+
+.hover {
+  background: var(--color-background-brand-lighter);
+}
+
+.press,
+.selected {
+  background: var(--color-background-brand-light);
+}
+
+.disabled {
+  background: var(--color-background-component-light);
+}
+
+.disabled .value,
+.disabled .category,
+.disabled .label {
+  color: var(--color-text-disabled);
+}
+
+.disabled .icon {
+  color: var(--color-icon-accessible);
+}
+
+.overflowLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.overflowButton {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.overflowButton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  pointer-events: none;
+}
+
+.left {
+  left: 0;
+  border-right: var(--border-width-border-1) solid var(--color-border-disabled);
+  background: var(--color-background-component);
+}
+
+.left::after {
+  right: -48px;
+  background: linear-gradient(
+    to right,
+    var(--color-gradient-overflow-horizontal-inverse-start) 35%,
+    var(--color-gradient-overflow-horizontal-inverse-end) 100%
+  );
+}
+
+.right {
+  right: 0;
+  border-left: var(--border-width-border-1) solid var(--color-border-disabled);
+  background: var(--color-background-component);
+}
+
+.right::after {
+  left: -48px;
+  background: linear-gradient(
+    to left,
+    var(--color-gradient-overflow-horizontal-inverse-start) 35%,
+    var(--color-gradient-overflow-horizontal-inverse-end) 100%
+  );
+}
+
+.overflowIcon {
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  color: var(--color-icon-brand-base);
+  background-color: currentColor;
+}
+

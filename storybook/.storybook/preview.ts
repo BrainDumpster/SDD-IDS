@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
 import "../src/synapse-theme.css";
+import "../../components/ids-ai-theme.css";
 import "../../components/ids-theme.css";
 import "../../components/dap-theme.css";
 
@@ -37,12 +38,17 @@ const preview: Preview = {
       const theme = context.globals.theme || "light";
       const resolvedTheme = theme === "dark" ? "dark" : "light";
       const title = context.title || "";
-      const isDapStory = title.startsWith("DAP/");
-      const designSystem = isDapStory
-        ? "dap"
-        : title.startsWith("IDS/")
-          ? "ids"
-          : "synapse";
+      const upperTitle = title.toUpperCase();
+      // Support legacy folders (IDS/, DAP/), IDS-AI (must run before IDS substring checks),
+      // and generated folders (Spec Generated/IDS/*, Spec Generated/IDS-AI/*).
+      const designSystem =
+        upperTitle.includes("/DAP/") || upperTitle.startsWith("DAP/")
+          ? "dap"
+          : upperTitle.includes("IDS-AI")
+            ? "ids-ai"
+            : upperTitle.includes("/IDS/") || upperTitle.startsWith("IDS/")
+              ? "ids"
+              : "synapse";
       document.documentElement.setAttribute("data-theme", resolvedTheme);
       document.body.setAttribute("data-theme", resolvedTheme);
       document.documentElement.setAttribute("data-design-system", designSystem);

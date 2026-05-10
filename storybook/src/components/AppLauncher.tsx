@@ -1,5 +1,6 @@
 import { Popover } from "@base-ui-components/react/popover";
 import type { ReactNode } from "react";
+import { Icon } from "./Icon";
 import styles from "./AppLauncher.module.css";
 
 export interface AppLauncherProduct {
@@ -30,9 +31,12 @@ export function AppLauncherProductTile({
   tileClassName,
 }: AppLauncherProductTileProps) {
   const graphic =
-    icon ??
-    (
-      <span className={styles.defaultProductIcon} aria-hidden="true" />
+    icon ?? (
+      <Icon
+        shapeName="shield-encrypt-alt"
+        className={styles.defaultProductIcon}
+        variant="inline"
+      />
     );
 
   const inner = (
@@ -164,7 +168,16 @@ export function AppLauncher({
           .join(" ")}
         aria-label="App launcher"
       >
-        <span className={styles.triggerGlyph} aria-hidden="true" />
+        <Icon
+          shapeName="grid-square-9-16"
+          className={styles.triggerIcon}
+          variant="inline"
+          color={
+            triggerVariant === "masthead"
+              ? "var(--color-text-white)"
+              : "var(--color-text-neutral-strong)"
+          }
+        />
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={sideOffset} align="end">

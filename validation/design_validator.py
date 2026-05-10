@@ -6,6 +6,7 @@ from validation.token_validator import TokenValidator
 from validation.structure_validator import StructureValidator
 from validation.severity_engine import SeverityEngine
 from validation.report_builder import ReportBuilder
+from validation.spec_storybook_validators import SpecStorybookGateValidator
 
 
 def _load_json(path_str: str):
@@ -40,6 +41,7 @@ class DesignValidator:
         self.structure_validator = StructureValidator(self.registry)
         self.severity_engine = SeverityEngine()
         self.report_builder = ReportBuilder()
+        self.spec_storybook_validator = SpecStorybookGateValidator()
 
     def validate(self, component_name: str, content: str):
 
@@ -60,3 +62,13 @@ class DesignValidator:
         violations = self.severity_engine.score(violations)
 
         return self.report_builder.build(violations)
+
+    def validate_spec_storybook(self, spec_text: str, css_text: str, storybook_text: str):
+        """
+        Strict gate validation for spec-driven Storybook generation.
+        """
+        return self.spec_storybook_validator.validate(
+            spec_text=spec_text,
+            css_text=css_text,
+            storybook_text=storybook_text,
+        )

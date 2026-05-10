@@ -48,12 +48,12 @@
 }
 
 .root:hover:not([data-disabled]) {
-  background: var(--color-background-gray-light);
+  background: var(--color-background-component);
   border-color: var(--color-border-strong);
 }
 
 .root:active:not([data-disabled]) {
-  background: var(--color-background-gray-light);
+  background: var(--color-background-component);
   border-color: var(--color-border-strong);
 }
 
@@ -71,6 +71,21 @@
 .root[data-checked]:active:not([data-disabled]) {
   background: var(--color-background-component);
   border-color: var(--color-border-strong);
+}
+
+.wrapper:hover .root:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.wrapper:hover .root[data-checked]:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.root[data-checked]:hover:not([data-disabled]) .indicator,
+.root[data-checked]:active:not([data-disabled]) .indicator {
+  background: var(--color-icon-brand-strong);
 }
 
 .root[data-disabled] {
@@ -99,6 +114,26 @@
 
 .root[data-disabled][data-checked] .indicator {
   background: var(--color-icon-disabled);
+}
+
+/* Deterministic visual simulation for Storybook harnesses. */
+.root[data-simulated-state="hover"]:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.root[data-checked][data-simulated-state="hover"]:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.root[data-checked][data-simulated-state="hover"]:not([data-disabled]) .indicator {
+  background: var(--color-icon-brand-strong);
+}
+
+.root[data-simulated-state="focus-visible"] {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 3px;
 }
 
 .label {

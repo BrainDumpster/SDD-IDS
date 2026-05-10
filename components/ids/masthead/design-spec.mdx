@@ -179,6 +179,27 @@
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
 
+## Composition & API (runtime)
+- `productName: string` (required)
+- `logo?: RenderableNode`
+- `iconsSlot?: RenderableNode`
+- `appLauncherSlot?: RenderableNode`
+- `avatarSlot?: RenderableNode`
+- `sticky?: boolean` (default `false`)
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic slot order:
+  1. `MastheadRoot`
+  2. `MastheadBrandSlot` (logo + product name)
+  3. `MastheadActionsSlot` (icons, app launcher, avatar)
+- Behavior contract:
+  - brand area remains left-aligned and actions right-aligned
+  - action buttons maintain 16x16 icon contract and tokenized hover/active states
+  - optional app launcher integrates in action row without breaking spacing
+- Fallback/error rules:
+  - missing logo falls back to product name-only rendering
+  - missing avatar falls back to initials/avatar placeholder
+
 ## Source Mapping
 - Figma component: Masthead (9054-24736)
 - Variable collection: UI Palettes, Typography tokens

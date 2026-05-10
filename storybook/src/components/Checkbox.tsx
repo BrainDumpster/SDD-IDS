@@ -4,6 +4,10 @@ import styles from "./Checkbox.module.css";
 interface CheckboxProps {
   id?: string;
   label: string;
+  /** When false, label is sr-only (Figma “no label” column still needs a name for a11y). */
+  showLabel?: boolean;
+  /** Static demo only: draw the focus ring (e.g. Storybook matrix “Focus” row). */
+  simulateFocusVisible?: boolean;
   checked?: boolean;
   defaultChecked?: boolean;
   indeterminate?: boolean;
@@ -18,6 +22,8 @@ interface CheckboxProps {
 export function Checkbox({
   id,
   label,
+  showLabel = true,
+  simulateFocusVisible = false,
   checked,
   defaultChecked,
   indeterminate,
@@ -38,7 +44,7 @@ export function Checkbox({
           id={resolvedId}
           name={name}
           value={value}
-          className={styles.root}
+          className={[styles.root, simulateFocusVisible ? styles.rootSimulatedFocus : ""].filter(Boolean).join(" ")}
           checked={checked}
           defaultChecked={defaultChecked}
           indeterminate={indeterminate}
@@ -53,7 +59,16 @@ export function Checkbox({
             data-indicator-type={indeterminate ? "minus" : "check"}
           />
         </BaseCheckbox.Root>
-        <span className={[styles.label, error ? styles.labelError : ""].filter(Boolean).join(" ")}>{label}</span>
+        <span
+          className={[
+            showLabel ? styles.label : styles.visuallyHidden,
+            error ? styles.labelError : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {label}
+        </span>
       </label>
       {helperText ? (
         <div

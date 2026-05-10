@@ -232,7 +232,12 @@
   border: var(--border-width-border-1) solid transparent;
   border-radius: 0;
   font-family: inherit;
-  box-shadow: inset 4px 0 0 0 var(--inline-rail, var(--color-background-alerting-info));
+  /* --inline-rail is set per severity; fallbacks cover IDS-AI token names (info-1 / success-1). */
+  box-shadow: inset 4px 0 0 0
+    var(
+      --inline-rail,
+      var(--color-background-alerting-info, var(--color-background-alerting-info-1))
+    );
 }
 
 .inlineMain {
@@ -257,7 +262,8 @@
 }
 
 .inlineRoot[data-density="detailed"] .inlineIconWrap {
-  padding-top: var(--padding-padding-1);
+  /* Align 16px icon to the visual center of 24px title line box. */
+  padding-top: var(--padding-padding-4);
 }
 
 .inlineIconWrap {
@@ -386,24 +392,41 @@
 }
 
 .inlineRoot[data-severity="informational"] {
-  --inline-alert-icon: var(--color-icon-alerting-info);
-  --inline-rail: var(--color-background-alerting-info);
+  --inline-alert-icon: var(--color-icon-alerting-info, var(--color-icon-alerting-info-1));
+  --inline-rail: var(--color-background-alerting-info, var(--color-background-alerting-info-1));
   background: var(--color-background-alerting-info-light);
   border-color: var(--color-border-alerting-info-transparent);
 }
 
 .inlineRoot[data-severity="success"] {
-  --inline-alert-icon: var(--color-icon-alerting-success);
-  --inline-rail: var(--color-background-alerting-success);
+  --inline-alert-icon: var(--color-icon-alerting-success, var(--color-icon-alerting-success-1));
+  --inline-rail: var(--color-background-alerting-success, var(--color-background-alerting-success-1));
   background: var(--color-background-alerting-success-light);
   border-color: var(--color-border-alerting-success-transparent);
 }
 
+/* Warning-minor: 4px rail = solid minor fill + 1px inner edge (Figma warning-accessible stroke). */
 .inlineRoot[data-severity="warning-minor"] {
   --inline-alert-icon: var(--color-icon-alerting-minor);
   --inline-rail: var(--color-background-alerting-minor);
   background: var(--color-background-alerting-minor-light);
   border-color: var(--color-border-alerting-minor-transparent);
+  box-shadow: none;
+}
+
+.inlineRoot[data-severity="warning-minor"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-background-alerting-minor) 0 75%,
+    var(--color-border-alerting-warning-accessible, var(--color-border-alerting-minor-minor)) 75% 100%
+  );
+  pointer-events: none;
 }
 
 .inlineRoot[data-severity="warning-major"] {

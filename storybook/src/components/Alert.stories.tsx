@@ -203,25 +203,25 @@ export const GlobalCarouselInteractiveInformational: Story = {
 export const GlobalVariantMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 24 }}>
-      <div style={{ display: "grid", gap: 8 }}>
+      <div style={{ display: "grid", gap: 16 }}>
         <Alert display="global" severity="critical" message="Critical global message." dismissible={false} />
         <Alert display="global" severity="warning-major" message="Warning major global message." />
         <Alert display="global" severity="warning-minor" message="Warning minor global message." />
         <Alert display="global" severity="informational" message="Informational global message." />
       </div>
-      <div style={{ display: "grid", gap: 8 }}>
+      <div style={{ display: "grid", gap: 16 }}>
         <Alert display="global" severity="critical" message="Critical with link." linkLabel="link to another page." dismissible={false} />
         <Alert display="global" severity="warning-major" message="Major with link." linkLabel="link to another page." />
         <Alert display="global" severity="warning-minor" message="Minor with link." linkLabel="link to another page." />
         <Alert display="global" severity="informational" message="Info with link." linkLabel="link to another page." />
       </div>
-      <div style={{ display: "grid", gap: 8 }}>
+      <div style={{ display: "grid", gap: 16 }}>
         <Alert display="global" severity="critical" message="Critical with action." actionLabel="Action" />
         <Alert display="global" severity="warning-major" message="Major with action." actionLabel="Action" />
         <Alert display="global" severity="warning-minor" message="Minor with action." actionLabel="Action" />
         <Alert display="global" severity="informational" message="Info with action." actionLabel="Action" />
       </div>
-      <div style={{ display: "grid", gap: 8 }}>
+      <div style={{ display: "grid", gap: 16 }}>
         <Alert display="global" severity="critical" message="Critical with link + action + carousel." linkLabel="link." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
         <Alert display="global" severity="warning-major" message="Major with link + action + carousel." linkLabel="link." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
         <Alert display="global" severity="warning-minor" message="Minor with link + action + carousel." linkLabel="link." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
@@ -317,7 +317,7 @@ export const InlineDetailedWithLinkActionDismiss: Story = {
 
 export const InlineVariantMatrix: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 1100 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 1100 }}>
       <Alert display="inline" severity="informational" message="Informational inline." dismissible />
       <Alert display="inline" severity="success" message="Success inline." dismissible />
       <Alert display="inline" severity="warning-minor" message="Warning minor inline." dismissible />

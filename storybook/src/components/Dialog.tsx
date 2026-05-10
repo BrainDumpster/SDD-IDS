@@ -149,25 +149,15 @@ export function Dialog({
                 <header className={styles.aboutHeader}>
                   <div className={styles.aboutHeaderSpacer} aria-hidden="true" />
                   {dialogClosable ? (
-                    <div
+                    <BaseDialog.Close
                       className={styles.close}
-                      role="button"
-                      tabIndex={0}
                       aria-label="Close"
                       onClick={() => {
                         onClose?.();
-                        onOpenChange?.(false);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          onClose?.();
-                          onOpenChange?.(false);
-                        }
                       }}
                     >
                       <DialogCloseGlyph />
-                    </div>
+                    </BaseDialog.Close>
                   ) : null}
                 </header>
                 <div className={styles.aboutBody}>
@@ -209,21 +199,13 @@ export function Dialog({
                 </div>
 
                 {dialogClosable && (
-                  <div
+                  <BaseDialog.Close
                     className={styles.close}
-                    role="button"
-                    tabIndex={0}
                     aria-label="Close"
                     onClick={() => onClose?.()}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        onClose?.();
-                      }
-                    }}
                   >
                     <DialogCloseGlyph />
-                  </div>
+                  </BaseDialog.Close>
                 )}
               </div>
 

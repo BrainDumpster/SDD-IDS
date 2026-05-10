@@ -27,23 +27,7 @@
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  object-fit: contain;
-}
-
-/* Launcher trigger glyph uses mask so color can follow context (default/masthead). */
-.triggerGlyph {
-  display: block;
-  width: 16px;
-  height: 16px;
-  background-color: currentColor;
-  -webkit-mask-image: url("../../../assets/icons/grid-square-9-16.svg");
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  -webkit-mask-position: center;
-  mask-image: url("../../../assets/icons/grid-square-9-16.svg");
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
+  line-height: 0;
 }
 
 .triggerMasthead {
@@ -245,20 +229,13 @@
   object-fit: contain;
 }
 
-/* Default Figma icon from assets; tint via neutral-strong token. */
+/* Default product tile: inline SVG uses `currentColor` from `.appTile`. */
 .defaultProductIcon {
   display: block;
   width: 32px;
   height: 32px;
-  background-color: currentColor;
-  -webkit-mask-image: url("../../../assets/icons/shield-encrypt-alt.svg");
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  -webkit-mask-position: center;
-  mask-image: url("../../../assets/icons/shield-encrypt-alt.svg");
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
+  flex-shrink: 0;
+  line-height: 0;
 }
 
 .appName {

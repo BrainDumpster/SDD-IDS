@@ -4,7 +4,7 @@
   justify-content: center;
   gap: var(--spacing-space-8);
   border: var(--border-width-border-1) solid transparent;
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--corner-radius-radius-4);
   font-family: inherit;
   font-weight: 400;
   font-size: var(--font-size-body-2);
@@ -57,10 +57,20 @@
   justify-content: center;
 }
 
+/* Leading icon: Figma `9662:25505` uses a 16×16 frame; fill slot when child omits size (e.g. legacy nodes). */
+.iconSlot > * {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 16px;
+  max-height: 16px;
+  box-sizing: border-box;
+}
+
 .iconSlot svg {
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 100%;
+  height: 100%;
 }
 
 .iconImage {

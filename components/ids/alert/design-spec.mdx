@@ -109,7 +109,7 @@ When multiple alert items must share **one** banner chrome:
 
 1. `AlertRoot` (`role="alert"`) — full-width row; **inset4px leading “rail”** via `box-shadow` (not a separate rail node in Figma export)
 2. `ContentRow` (`inlineMain`) — flex `1 1 auto`, horizontal `gap: var(--spacing-space-8)`
-   - `LeadingIcon` — `16×16` glyph; icon container uses `1px` vertical nudge (detailed) or `2px` (compact) to align with first text line
+- `LeadingIcon` — shared `Icon` component instance at `16×16` (`shapeName` by severity); icon container uses `4px` vertical nudge (detailed) or `2px` (compact) to align with first text line
    - `ContentBlock` — column `gap: var(--spacing-space-4)`; optional `Title` (`density=detailed` only) + `Message` + optional inline link
 3. `TrailingControls` — `shrink-0`; horizontal `gap: var(--spacing-space-10)`; optional **outlined** `ActionButton` + optional `DismissButton`
 
@@ -126,7 +126,7 @@ Do not pass a single ambiguous URL string as the only navigation input. Codegen 
 
 **Rule:** If `routerLink` is set, render `RouterLink`; if `href` is set (and not `routerLink`), render `<a href>`. If only `label` + `onLinkClick`, render button-styled control.
 
-## Layout & measurements
+## Layout & Measurements
 
 ### Global
 
@@ -151,7 +151,7 @@ Do not pass a single ambiguous URL string as the only navigation input. Codegen 
 - **Typography:** title (when present) = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`; message = **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; text color `var(--color-static-gray-900)`.
 - **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
 - **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-static-brand-500)`, label `var(--color-static-brand-600)`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
-- **Dismiss** glyph: `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
+- **Dismiss** icon (`Icon` component): visual size `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
 
 #### Detailed all-details scenario (`11946:230644`) visual checklist
 
@@ -200,7 +200,7 @@ Structural states follow **`density`** (compact vs detailed) and optional slots 
 | warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-major)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
 | critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical)` | `var(--color-static-brand-500)` | `var(--color-static-brand-500)` | `var(--color-static-brand-600)` |
 
-**Dismiss** control: icon glyph `var(--color-icon-black)` on default surface; hover/focus per **Interactions**.
+**Dismiss** control: `Icon` component tinted with `var(--color-icon-black)` on default surface; hover/focus per **Interactions**.
 
 **Detailed all-details scenario:** a detailed inline alert may concurrently render title + body/message + inline link + outlined action + dismiss icon. This is a valid composition and should be represented in generated examples/tests.
 
@@ -264,10 +264,10 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - Keep framework adapters thin: Angular/React/Vue wrappers map framework events to the same conceptual API (`dismiss`, `action`, `link`, `previous`, `next`).
 - Ensure all styling remains token-driven (`var(--...)`) with no hardcoded visual constants except Figma-documented structural exceptions (e.g., carousel inner gap `22px`).
 
-## Codegen Contract (blueprint summary)
+## Codegen Contract (Framework-Agnostic Blueprint)
 
 - One **`Alert`** implementation with display branching; optional separate **`AlertGroup`** file for list + carousel.
-- **Icon:** canonical `shapeName` slugs resolved from `assets/icons/<slug>.svg`; use shared `Icon` with `variant="img"` where multi-hue glyphs or chevron filters apply; no inline `<svg>` factories.
+- **Icon:** canonical `shapeName` slugs resolved from `assets/icons/<slug>.svg`; always compose through the shared `Icon` component (`variant="img"` where multi-hue icons or chevron filters apply); no inline `<svg>` factories.
 - **Action control reuse:** compose IDS Button spec (`components/ids/button/design-spec.mdx`) for action controls; do not create alert-specific button geometry.
 - **Inline action:** Figma uses **outlined** button (brand border + brand-strong label), not link-only text.
 - **Accessibility:** `role="alert"`; carousel buttons labeled “Previous alert” / “Next alert”; dismiss “Dismiss alert”.

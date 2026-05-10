@@ -266,6 +266,127 @@ For machine-consumable handoff between agents:
 - contract doc: `data/agent-generation-contract.md`
 - contract schema: `data/agent-generation-contract.schema.json`
 
+## Strict Spec-to-Storybook Zero-Drift Gate
+
+To enforce spec-first generation and prevent Storybook drift:
+
+- `design-spec.mdx` (plus layered root/theme specs) is the only source of truth.
+- Generated Storybook artifacts are written to a separate root (`generated_storybook_dir`) and **must not** overwrite legacy `storybook/`.
+- Story files include a spec-layer hash marker and are validated for freshness.
+
+### Generated output location
+
+Configure per design system in `config/design_systems/*.yaml`:
+
+- `generated_storybook_dir` (for example `storybook-generated/ids`)
+- `strict_storybook_gate` (`true` to enforce stale-hash failures in CI)
+
+### Gate command
+
+Run strict gate for one component:
+
+```bash
+python scripts/strict_spec_storybook_gate.py --component button --framework React --style-mode css-module
+```
+
+Run in spec-only mode (no RAG/retrieval dependency):
+
+```bash
+python scripts/strict_spec_storybook_gate.py --component button --spec-only
+```
+
+Run for all components in the baseline components directory:
+
+```bash
+python scripts/strict_spec_storybook_gate.py --all --framework React --style-mode css-module
+```
+
+Run with Storybook build check:
+
+```bash
+python scripts/strict_spec_storybook_gate.py --all --build-storybook
+```
+
+### Step-by-step: generate code from design-spec (with scripts/actions)
+
+Use this workflow when you want deterministic, repeatable generation from `design-spec.mdx` + layered root/theme contracts.
+
+1. **Select design system context**
+   - IDS baseline:
+     - `export DESIGN_SYSTEM=ids`
+   - Program-over-IDS (example DAP):
+     - `export DESIGN_SYSTEM=dap`
+
+2. **Confirm source-of-truth files are present**
+   - Baseline component spec: `components/ids/<slug>/design-spec.mdx`
+   - Baseline root spec: `components/ids/root-spec.mdx`
+   - Baseline theme: `components/ids-theme.css`
+   - Program root delta (optional/program mode): `components/<program>/root-spec.mdx`
+   - Program theme delta (optional/program mode): `components/<program>-theme.css`
+   - Program component delta (optional): `components/<program>/<slug>/design-spec.mdx`
+
+3. **Generate deterministic Storybook from layered specs**
+   - Single component:
+     - `python scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story`
+   - Example:
+     - `python scripts/strict_spec_storybook_gate.py --component button --spec-only --deterministic-story`
+
+4. **(Optional) run all baseline components**
+   - `python scripts/strict_spec_storybook_gate.py --all --spec-only --deterministic-story`
+
+5. **Validate generated output artifacts**
+   - Stories:
+     - `storybook-generated/<design-system>/src/components/<Component>.stories.tsx`
+   - Spec hash contract:
+     - `storybook-generated/<design-system>/src/spec-contracts/<slug>.spec-layer-hash.json`
+   - Generated stories now include a **TokenInspector** section (token name + live resolved preview) for designer-friendly review.
+
+6. **Build Storybook as final gate**
+   - `cd storybook && pnpm build`
+   - or from root via gate:
+     - `python scripts/strict_spec_storybook_gate.py --all --spec-only --deterministic-story --build-storybook`
+
+7. **Generate framework code (agent-driven) using same layered inputs**
+   - Use:
+     - `data/agent-generation-contract.md`
+     - `data/agent-generation-contract.schema.json`
+   - Instruct agent to ingest (in order):
+     1) component `design-spec.mdx`
+     2) root-spec layer(s)
+     3) theme file layer(s)
+     4) asset contracts (icons/images)
+   - Enforce outputs through validation (`validation/spec_contract_parser.py`, `validation/spec_storybook_validators.py`, `validation/design_validator.py`).
+
+8. **When specs change**
+   - Re-run the same `strict_spec_storybook_gate.py` command for impacted components.
+   - Spec hash drift + validators ensure story updates remain zero-drift with contracts.
+
+### Design Team Mode (recommended for external consumers)
+
+If your goal is to publish design contracts that other teams/agents consume in their own stacks, use this interpretation:
+
+- **Source of truth remains the layered specs**
+  - `design-spec.mdx` + `root-spec.mdx` + theme CSS layers are canonical.
+- **Deterministic Storybook is a validation harness**
+  - Continue generating `storybook-generated/...` stories to validate contract completeness and visual/state coverage.
+- **Current generated stories still render existing Storybook components**
+  - This is expected today and does not invalidate spec-driven story generation.
+  - It means story scenarios are spec-driven, while rendered implementation may still come from `storybook/src/components/...`.
+- **Publishing guidance for downstream teams**
+  - Treat `design-spec.mdx` as the normative design contract.
+  - Treat interaction/runtime implementation details as consumer-owned unless explicitly marked mandatory in spec.
+  - Share spec hash artifacts (`storybook-generated/<design-system>/src/spec-contracts/*.spec-layer-hash.json`) so consumers can track drift.
+
+### What the gate validates automatically (per component)
+
+- required spec sections exist and are parseable
+- story coverage includes required variant/state references
+- strict token hygiene (no hardcoded color literals in generated CSS)
+- behavior scenario coverage (for scenario-driven components such as overflow `Beginning|Middle|End`)
+- story freshness via `spec_hash` marker against current layered spec inputs
+- idempotent regeneration (stable generated output)
+- legacy isolation (no writes to `storybook/`)
+
 ### Prompt example: IDS baseline only
 
 ```text

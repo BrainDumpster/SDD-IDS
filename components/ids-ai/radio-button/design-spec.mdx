@@ -1,0 +1,185 @@
+<!-- ds:inherits root-spec -->
+
+# Radio Button Design Spec
+
+## Metadata
+- Component: Radio Button
+- Category: Formelements
+- Design System: IDS-AI
+- Primary Figma: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=8505-14225&m=dev`
+- Primary node ID: `8505:14225`
+- Scenario Figma: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42077-26770&m=dev`
+- Scenario node ID: `42077:26770`
+- Figma file key: `rr8F0NGA6RNY9Z0cNeh3jh`
+- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
+- Verified at: 2026-05-10
+- Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
+- Storybook harness: state matrix uses **single-option** `RadioGroup` instances (one row per cell) with unique `name` per cell; **Hover** column uses live pointer hover; **Focus** column may use per-option `simulatedState: "focus-visible"` for static screenshots (docs-only).
+
+## Anatomy
+- **groupRoot** (optional): semantic grouping wrapper for radio collections.
+- **root**: one radio row item (control + label).
+- **input**: native `input[type="radio"]`.
+- **controlOuter**: circular visual ring (16x16).
+- **controlInnerDot**: selected indicator dot (centered).
+- **label**: associated text.
+- **assistiveText** (optional): helper/error copy.
+
+## Layout & Measurements
+- Outer control size: `16px x 16px`.
+- Outer shape: circle (`border-radius: 50%`).
+- Selected dot size: `8px x 8px`, centered.
+- Dot-to-ring inset: `4px` (computed from 16 outer and 8 inner).
+- Label gap from control: `var(--spacing-space-8)`.
+- Min hit area: `44px` height (control can be visually smaller than hit target).
+- Focus-visible ring:
+  - 1px outline with `var(--color-border-brand-base)`,
+  - 3px offset from the outer control.
+
+## Tokens
+- Borders:
+  - `var(--border-width-border-default)`
+  - `var(--border-width-border-thick)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-strong)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-border-disabled)`
+- Backgrounds:
+  - `var(--color-background-component)`
+  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-background-gray-light)`
+  - `var(--color-background-gray-base)`
+- Text/Icon:
+  - `var(--color-text-neutral)` (default option label)
+  - `var(--color-text-neutral-strong)` (optional stronger label emphasis)
+  - `var(--color-text-disabled)`
+  - `var(--color-text-critical)` (error mode)
+  - `var(--color-icon-white)`
+  - `var(--color-icon-inverse)`
+  - `var(--color-icon-brand-strong)` (selected dot hover)
+  - `var(--color-icon-disabled)` (disabled selected dot)
+- Typography:
+  - `var(--font-size-body-2)`
+  - `var(--font-line-height-line-height-20)`
+
+## States (Light Theme)
+| Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
+|---|---|---|---|---|---|
+| Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
+
+## States (Dark Theme)
+Same semantic matrix as light theme; dark values are resolved by token mappings. Do not hardcode dark hex values.
+
+| Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
+|---|---|---|---|---|---|
+| Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
+
+## Interactions
+- Click on a radio selects it and deselects sibling radios with the same `name`.
+- Radio is single-select in group; one selected value at a time.
+- Hover trigger area is the full radio row hit target (control + label), not only the 16x16 control:
+  - Unselected hover: border shifts to `var(--color-border-strong)` while background remains `var(--color-background-component)`.
+  - Selected hover: border/icon shift to hover tokens while fill stays `var(--color-background-component)`.
+- Keyboard:
+  - `Tab`: enters/leaves group,
+  - `Arrow` keys: move selection among enabled radios in group,
+  - `Space`: select focused radio.
+- Disabled radios are skipped by selection changes and cannot be activated.
+
+## Composition & API (runtime)
+
+### Aggregate component (`RadioButton` — matches `storybook/src/components/RadioButton.tsx`)
+| Prop | Required | Behavior |
+|---|---|---|
+| `name` | Yes | Shared group id for single-selection behavior. |
+| `options` | Yes | Array of option objects (see below). |
+| `value` | No | Controlled selected value (string matching one option `value`). |
+| `defaultValue` | No | Initial selected value when uncontrolled. |
+| `onChange(value)` | No | Fires with the new value when selection changes. |
+| `disabled` | No | When true, disables the entire group (merged with per-option `disabled`). |
+| `orientation` | No | `vertical` (default) or `horizontal` layout of option rows. |
+| `id` | No | Optional id prefix for assistive text ids. |
+
+### Option object (`options[]` items)
+| Field | Required | Behavior |
+|---|---|---|
+| `value` | Yes | Unique value within the group. |
+| `label` | Yes | Visible label for the option row. |
+| `disabled` | No | Disables this option only. |
+| `error` | No | Error border/label styling for this option. |
+| `helperText` | No | Helper or error line under the option row. |
+| `simulatedState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` to pin visuals for matrices; must not replace real `:hover` / `:focus-visible` in production defaults. |
+
+### Low-level per-radio mapping (for codegen from options)
+Each option maps to one radio row: `value`, `label`, `disabled`, `error`, `helperText`, and optional `simulatedState` as above. Controlled selection is expressed at the group level via `value` / `defaultValue`, not per-option `checked`.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+- `groupRoot` (optional)
+  - `radioItem[]`
+    - `input`
+    - `controlOuter`
+      - optional `controlInnerDot`
+    - `label`
+    - optional `assistiveText`
+
+### Supported matrix
+- Selection: unselected | selected.
+- Interaction: default | hover | focus-visible | disabled.
+- Validation: default | error.
+- Mode: controlled | uncontrolled.
+- Group behavior: standalone | grouped single-select.
+
+### Style contract
+- Control stays circular and 16x16 across states.
+- Dot appears only when selected; default dot fill `var(--color-background-controls-brand-base)`; hover selected dot uses `var(--color-icon-brand-strong)` per state table.
+- Label spacing stays `var(--spacing-space-8)`.
+- Focus-visible ring uses 1px brand outline with 3px offset.
+- Optional `data-simulated-state` (or equivalent) on the control root may apply harness-only hover/focus visuals; strip or no-op in production unless used for documented fixtures.
+- No hardcoded values for color/border/typography.
+
+### Behavior + accessibility contract
+- Native radio semantics preferred.
+- Group semantics:
+  - radios share `name`,
+  - optionally wrapped in `fieldset` + `legend`.
+- ARIA/semantic expectations:
+  - input `type="radio"` handles role/checked state,
+  - `aria-disabled` when disabled,
+  - helper/error text associated with `aria-describedby` when present.
+
+### Fallback/error rules
+- If multiple radios are `checked=true` in controlled data, first checked wins; warn.
+- If no radio selected in required group, generator should support explicit validation state.
+- Missing `label` on any option is invalid for accessibility; generator must warn.
+- `simulatedState` must not be emitted as the only focus/hover implementation for end users; it is for Storybook/state matrices only.
+
+### Validation checklist
+- [ ] Single-selection group behavior is deterministic.
+- [ ] Full state matrix is token-mapped.
+- [ ] Focus-visible and keyboard navigation work for grouped radios.
+- [ ] Disabled radios are non-interactive and correctly styled.
+- [ ] Label/input association passes accessibility checks.
+- [ ] Dark theme values resolve through semantic tokens only.
+
+## Source Mapping
+- Component map entry: IDS-AI override input supplied directly by product links
+- Primary extraction source: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=8505-14225&m=dev`
+- Scenario source: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42077-26770&m=dev`
+- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
+- Verified at: 2026-05-10

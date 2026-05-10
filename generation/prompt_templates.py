@@ -81,6 +81,9 @@ React component code
 
 === CSS ===
 CSS Module styles
+
+=== STORYBOOK ===
+Storybook CSF story file
 """
 
 
@@ -98,6 +101,9 @@ Output structure:
 
 === COMPONENT ===
 Complete React component with styled-components
+
+=== STORYBOOK ===
+Storybook CSF story file
 """
 
 
@@ -122,6 +128,9 @@ HTML template
 
 === COMPONENT_SCSS ===
 SCSS styles
+
+=== STORYBOOK ===
+Storybook story file
 """
 
 BASE_UI_CSS_RULES = """
@@ -143,6 +152,9 @@ React component using Base UI compound components + CSS Modules
 
 === CSS ===
 CSS Module with data-attribute selectors and Synapse tokens
+
+=== STORYBOOK ===
+Storybook CSF story file
 """
 
 
@@ -185,6 +197,20 @@ COMPONENT STRUCTURE REQUIREMENTS:
 """
 
 # ---------------------------------------------------------
+# ICON LIBRARY (spec-driven codegen — React reference in repo)
+# ---------------------------------------------------------
+
+ICON_COMPONENT_CODEGEN_RULES = """
+ICON PRIMITIVE (READ SPECS FIRST — FRAMEWORK-AGNOSTIC CONTRACT):
+
+• **Design specs** (`design-spec.mdx` + inherited root-spec) define the *logical* API only: `shapeName` (asset slug), optional `color` as `var(--…)`, optional `variant` for monochrome vs fixed multi-color glyphs. They do **not** name Storybook paths or framework imports.
+• **Concrete module path** for the icon primitive (e.g. React `Icon`) comes from **design-system tooling config**: for IDS-AI in this repo, `config/design_systems/ids-ai.yaml` → `codegen.react.icon_component_module` when generating React. If absent, infer from the project’s existing components.
+• When emitting **React** and the YAML mapping points to `storybook/src/components/Icon`, use that file’s export and props: `shapeName`, `color`, `className`, `style`, `variant` (`mask` | `img` | `inline`). Use `variant="inline"` when the spec requires a real `<svg>` in the DOM and the slug is in the implementation’s inline registry; otherwise default `mask`.
+• Rules: `shapeName` matches `assets/icons/<shapeName>.svg`; `color` from spec token tables; omit `color` when the parent host must drive state via inherited `currentColor`; do not hand-roll mask markup when the project’s icon primitive exists.
+• For **Angular / Vue / Lit**, emit an equivalent primitive honoring the same logical contract.
+"""
+
+# ---------------------------------------------------------
 # OUTPUT TEMPLATES
 # ---------------------------------------------------------
 
@@ -194,11 +220,17 @@ REACT_CSS_MODULE_OUTPUT = """
 
 === CSS ===
 [CSS Module stylesheet]
+
+=== STORYBOOK ===
+[Storybook CSF stories]
 """
 
 REACT_CSS_IN_JS_OUTPUT = """
 === COMPONENT ===
 [React functional component with CSS-in-JS]
+
+=== STORYBOOK ===
+[Storybook CSF stories]
 """
 
 ANGULAR_SCSS_OUTPUT = """
@@ -210,6 +242,9 @@ ANGULAR_SCSS_OUTPUT = """
 
 === COMPONENT_SCSS ===
 [Angular SCSS stylesheet]
+
+=== STORYBOOK ===
+[Storybook stories]
 """
 
 # ---------------------------------------------------------
@@ -339,6 +374,8 @@ Apply layer precedence strictly:
 
 ================ THEME CSS (LAYERED) ================
 {context.get("theme_css", "")}
+
+{ICON_COMPONENT_CODEGEN_RULES}
 
 ================ SPEC VALIDATION ================
 {validation_summary}

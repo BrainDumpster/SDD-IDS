@@ -1,0 +1,732 @@
+<!-- auto:generated:start -->
+# IDS-AI Design System — Root Spec
+
+> Global **IDS-AI** specification for spec-driven, framework-agnostic component generation.
+> Every `components/ids-ai/<slug>/design-spec.mdx` **inherits this root-spec** (use `<!-- ds:inherits root-spec -->` at the top of each component spec). Component files only override **component-specific** anatomy, variants, states, and interactions; **global token and alias rules below apply to all of them.**
+
+<!-- ds:section id=identity -->
+## Design System Identity
+
+| Property | Value |
+|---|---|
+| Name | IDS-AI |
+| Framework Layer | framework-agnostic |
+| Figma File Key | `rr8F0NGA6RNY9Z0cNeh3jh` |
+| Component map | `data/component-figma-map.json` |
+| Components directory | `components/ids-ai/` |
+| Theme mechanism | CSS custom properties + theme mode selection |
+
+### Supported Generation Targets
+- React
+- Angular
+- Vue
+- Lit
+- Other frameworks that can consume CSS variables and semantic state contracts
+
+<!-- ds:section id=color-system -->
+## Color System
+
+All component styling must use semantic tokens (`var(--...)`), not hardcoded color values.
+Semantic color tokens resolve to different values in **Light** vs **Dark** themes. **Primitive** palette tokens are static across themes (foundation values referenced by semantic tokens or rare direct use in specs).
+
+### IDS-AI baseline: canonical names vs Figma `codeSyntax` exports
+
+**Applies to:** All IDS-AI component design specs under `components/ids-ai/**/design-spec.mdx` (Button, Alert, Checkbox, Masthead, etc.). Token tables and codegen contracts in those files MUST use **canonical** semantic CSS names (the vocabulary this root-spec and Figma semantics agree on—not ad hoc numbered names unless you are documenting the raw Figma export in **Metadata / Source mapping** only).
+
+**Design specs** use **canonical semantic CSS names** (for example `--color-background-alerting-info`, `--color-icon-alerting-success`). The Figma → `components/ids-ai-theme.css` sync may emit **only numbered or split exports** (for example `--color-background-alerting-info-1`) and omit the bare canonical variable.
+
+**Policy:** `components/ids-ai-theme.css` is the single place that closes that gap for the whole design system. After each variable sync, the build injects **semantic alias lines** in the default (light) selector block so canonical names resolve with `var(--…-1)` (or the appropriate export) when Figma did not define the bare name. Dark mode continues to override the underlying numbered tokens; aliases are not duplicated in the dark block because they reference `var()` of those tokens. The authoritative list of alias pairs lives in `scripts/sync_ids_ai_theme_from_figma.py` (`_ids_ai_semantic_alias_declarations`). **Do not** treat scattered per-component CSS fallbacks as the primary baseline fix—extend the theme aliases when new canonical names are missing from exports.
+
+**Per-component specs:** Do not copy this alias policy into every `design-spec.mdx`. For one-off clarifications (e.g. a component that first exposed a gap), you may add a one-line pointer: “Canonical tokens; IDS-AI theme semantic aliases per `components/ids-ai/root-spec.mdx`.” Optional `var(--canonical, var(--numbered))` in implementation is only for **legacy IDS** (`ids-theme.css`) compatibility, not the primary IDS-AI contract.
+
+The **Core semantic** tables below are a curated shortcut; the authoritative Light/Dark matrix is the **Color Mode** section (synced from Figma collection `41837:5099`) and `components/ids-ai-theme.css`. Primitive palette tables align with the IDS-AI file `Primitive` collection (`GET /v1/files/rr8F0NGA6RNY9Z0cNeh3jh/variables/local`).
+
+### Core Semantic Background Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-background-component` | `#ffffff` | `#111619` |
+| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
+| `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-background-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-background-brand-lighter` | `#ebf4fb` | `#1e262c` |
+| `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
+| `--color-background-controls-brand-strong` | `#0062ab` | `#0062ab` |
+| `--color-background-controls-brand-light` | `#d9eaf8` | `#002642` |
+| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#003a65` |
+| `--color-background-gray-light` | `#eaeaea` | `#393939` |
+| `--color-background-gray-base` | `#757575` | `#9e9e9e` |
+| `--color-background-gray-neutral-light` | `#eaeaea` | `#8898a5` |
+| `--color-background-gray-neutral-dark` | `#616161` | `#616161` |
+| `--color-background-masthead-brand-base` | `#0076ce` | mode-specific |
+| `--color-background-masthead-brand-strong` | `#0062ab` | mode-specific |
+| `--color-background-masthead-brand-stronger` | `#06528a` | mode-specific |
+
+### Core Border Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-border-accessible` | `#757575` | `#8898a5` |
+| `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-border-brand-dark` | `#0062ab` | `#94c5ea` |
+| `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-border-strong` | `#252525` | `#b8c1c9` |
+| `--color-border-disabled` | `#757575` | `#9e9e9e` |
+| `--color-border-light` | `#c5c5c5` | mode-specific |
+| `--color-border-transparent-brand` | `#ffffff00` | `#4c9fdd` (mode contract may differ by component) |
+| `--color-border-transparent-neutral` | `#ffffff00` | mode-specific |
+
+### Core Text Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-text-white` | `#ffffff` | `#ffffff` |
+| `--color-text-black` | `#252525` | `#252525` |
+| `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
+| `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-text-disabled` | `#757575` | `#c5c5c5` |
+
+### Core Icon Tokens
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-icon-white` | `#ffffff` | `#ffffff` |
+| `--color-icon-inverse` | `#ffffff` | `#252525` |
+| `--color-icon-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-icon-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-icon-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-icon-disabled` | `#757575` | `#c5c5c5` |
+| `--color-icon-alerting-info` | `#005ece` | mode-specific |
+| `--color-icon-alerting-major` | `#ed6400` | mode-specific |
+| `--color-icon-alerting-minor` | `#ffc700` | mode-specific |
+| `--color-icon-alerting-critical` | `#af0000` | mode-specific |
+
+### Alerting Semantic Tokens (Common IDS)
+
+| Token | Light | Dark |
+|---|---|---|
+| `--color-background-alerting-critical` | `#af0000` | mode-specific |
+| `--color-background-alerting-critical-strong` | mode-specific | `#910000` |
+| `--color-background-alerting-critical-stronger` | mode-specific | `#730000` |
+| `--color-background-alerting-minor` | `#ffc700` | mode-specific |
+| `--color-background-alerting-success` | `#1b8500` | mode-specific |
+| `--color-border-alerting-transparent-critical` | `#af000000` | `#dd9494` |
+| `--color-border-alerting-critical-white` | `#af0000` | mode-specific |
+| `--color-border-alerting-major-white` | `#ed6400` | mode-specific |
+| `--color-border-alerting-minor-transparent` | `#9c622e` | mode-specific |
+| `--color-border-alerting-info-white` | `#005ece` | mode-specific |
+| `--color-text-black` | `#252525` | `#252525` |
+
+<!-- ds:section id=primitive-static -->
+### Primitive palette (Figma — `Primitive` collection, COLOR)
+
+> Auto-synced from Figma `GET /v1/files/rr8F0NGA6RNY9Z0cNeh3jh/variables/local`. Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.
+
+#### Single-mode (same value in all modes)
+
+| Token | Value |
+|---|---|
+| `--ai-blue` | `#1495ff` |
+| `--ai-pink` | `#e6609b` |
+| `--ai-purple` | `#8d60e7` |
+| `--alert-blue-100` | `#ebf2fb` |
+| `--alert-blue-200` | `#d9e7f8` |
+| `--alert-blue-300` | `#94bbea` |
+| `--alert-blue-400` | `#4c8edd` |
+| `--alert-blue-500` | `#005ece` |
+| `--alert-blue-600` | `#004eab` |
+| `--alert-blue-700` | `#003e88` |
+| `--alert-blue-800` | `#002e65` |
+| `--alert-blue-900` | `#001e42` |
+| `--alert-green-100` | `#edf5eb` |
+| `--alert-green-200` | `#ddedd9` |
+| `--alert-green-300` | `#9fcc94` |
+| `--alert-green-400` | `#5faa4c` |
+| `--alert-green-500` | `#1b8500` |
+| `--alert-green-600` | `#166e00` |
+| `--alert-green-700` | `#125800` |
+| `--alert-green-800` | `#0d4100` |
+| `--alert-green-900` | `#092b00` |
+| `--alert-orange-100` | `#fef3eb` |
+| `--alert-orange-200` | `#fce8d9` |
+| `--alert-orange-300` | `#f7be94` |
+| `--alert-orange-400` | `#f2934c` |
+| `--alert-orange-500` | `#ed6400` |
+| `--alert-orange-600` | `#c55300` |
+| `--alert-orange-700` | `#9c4200` |
+| `--alert-orange-800` | `#743100` |
+| `--alert-orange-900` | `#4c2000` |
+| `--alert-red-100` | `#f9ebeb` |
+| `--alert-red-200` | `#f3d9d9` |
+| `--alert-red-300` | `#dd9494` |
+| `--alert-red-400` | `#c74c4c` |
+| `--alert-red-500` | `#af0000` |
+| `--alert-red-600` | `#910000` |
+| `--alert-red-700` | `#730000` |
+| `--alert-red-800` | `#560000` |
+| `--alert-red-900` | `#380000` |
+| `--alert-yellow-100` | `#fffbeb` |
+| `--alert-yellow-200` | `#fff7d9` |
+| `--alert-yellow-300` | `#ffe794` |
+| `--alert-yellow-400` | `#ffd84c` |
+| `--alert-yellow-500` | `#ffc700` |
+| `--alert-yellow-600` | `#e5a51a` |
+| `--alert-yellow-700` | `#c48429` |
+| `--alert-yellow-800` | `#9c622e` |
+| `--alert-yellow-900` | `#6d4028` |
+| `--secondary-palette-berry-100` | `#f7ebf2` |
+| `--secondary-palette-berry-200` | `#f1d9e7` |
+| `--secondary-palette-berry-300` | `#d894bd` |
+| `--secondary-palette-berry-400` | `#bd4c90` |
+| `--secondary-palette-berry-500` | `#a10061` |
+| `--secondary-palette-berry-600` | `#860051` |
+| `--secondary-palette-berry-700` | `#6a0040` |
+| `--secondary-palette-berry-800` | `#4f0030` |
+| `--secondary-palette-berry-900` | `#34001f` |
+| `--secondary-palette-teal-100` | `#ebf5f7` |
+| `--secondary-palette-teal-200` | `#d9ecf0` |
+| `--secondary-palette-teal-300` | `#94cad6` |
+| `--secondary-palette-teal-400` | `#4ca7bb` |
+| `--secondary-palette-teal-500` | `#00819e` |
+| `--secondary-palette-teal-600` | `#006b83` |
+| `--secondary-palette-teal-700` | `#005568` |
+| `--secondary-palette-teal-800` | `#003f4d` |
+| `--secondary-palette-teal-900` | `#002933` |
+| `--secondary-palette-violet-100` | `#f5ebf9` |
+| `--secondary-palette-violet-200` | `#ebd9f4` |
+| `--secondary-palette-violet-300` | `#c894e1` |
+| `--secondary-palette-violet-400` | `#a34dcd` |
+| `--secondary-palette-violet-500` | `#7c01b7` |
+| `--secondary-palette-violet-600` | `#670198` |
+| `--secondary-palette-violet-700` | `#520179` |
+| `--secondary-palette-violet-800` | `#3d005a` |
+| `--secondary-palette-violet-900` | `#28003b` |
+| `--ui-palette-brand-100` | `#ebf4fb` |
+| `--ui-palette-brand-200` | `#d9eaf8` |
+| `--ui-palette-brand-300` | `#94c5ea` |
+| `--ui-palette-brand-400` | `#4c9fdd` |
+| `--ui-palette-brand-500` | `#0076ce` |
+| `--ui-palette-brand-600` | `#0062ab` |
+| `--ui-palette-brand-700` | `#06528a` |
+| `--ui-palette-brand-800` | `#003a65` |
+| `--ui-palette-brand-900` | `#002642` |
+| `--ui-palette-gray-100` | `#f4f4f4` |
+| `--ui-palette-gray-200` | `#eaeaea` |
+| `--ui-palette-gray-300` | `#c5c5c5` |
+| `--ui-palette-gray-400` | `#9e9e9e` |
+| `--ui-palette-gray-500` | `#757575` |
+| `--ui-palette-gray-600` | `#616161` |
+| `--ui-palette-gray-700` | `#4d4d4d` |
+| `--ui-palette-gray-800` | `#393939` |
+| `--ui-palette-gray-900` | `#252525` |
+| `--ui-palette-slate-100` | `#f2f3f5` |
+| `--ui-palette-slate-200` | `#e6e9ec` |
+| `--ui-palette-slate-300` | `#b8c1c9` |
+| `--ui-palette-slate-400` | `#8898a5` |
+| `--ui-palette-slate-500` | `#566c7f` |
+| `--ui-palette-slate-600` | `#455666` |
+| `--ui-palette-slate-700` | `#34414c` |
+| `--ui-palette-slate-800` | `#1e262c` |
+| `--ui-palette-slate-900` | `#111619` |
+| `--white` | `#ffffff` |
+
+<!-- ds:section id=tokens-color -->
+### Color Mode — COLOR (Figma — `Color Mode`, collection `41837:5099`)
+
+> IDS-AI semantic Light/Dark colors from the **Color Mode** variable set (same source prioritized in `scripts/sync_ids_ai_theme_from_figma.py`). Full `--token` matrix for codegen; `Tokens` rows with the same name often alias unpublished libraries and resolve as `—` here.
+
+| Token | Light | Dark |
+|---|---|---|
+| `--annotation` | `#e8178a` | `#f174b9` |
+| `--color-annotation` | `#e8178a` | `#f389c3` |
+| `--color-background-alerting-critical` | `#af0000` | `#c74c4c` |
+| `--color-background-alerting-critical-light` | `#f3d9d9` | `#f3d9d9` |
+| `--color-background-alerting-critical-slate` | `#f3d9d9` | `#1e262c` |
+| `--color-background-alerting-critical-strong` | `#910000` | `#af0000` |
+| `--color-background-alerting-critical-stronger` | `#730000` | `#910000` |
+| `--color-background-alerting-info-1` | `#005ece` | `#4c8edd` |
+| `--color-background-alerting-info-2` | `#005ece` | `#005ece` |
+| `--color-background-alerting-info-light` | `#d9e7f8` | `#d9e7f8` |
+| `--color-background-alerting-info-slate` | `#d9e7f8` | `#1e262c` |
+| `--color-background-alerting-info-strong` | `#004eab` | `#005ece` |
+| `--color-background-alerting-info-stronger` | `#003e88` | `#004eab` |
+| `--color-background-alerting-major` | `#ed6400` | `#ed6400` |
+| `--color-background-alerting-major-light` | `#fce8d9` | `#fce8d9` |
+| `--color-background-alerting-major-slate` | `#fce8d9` | `#1e262c` |
+| `--color-background-alerting-major-strong` | `#c55300` | `#c55300` |
+| `--color-background-alerting-major-stronger` | `#9c4200` | `#9c4200` |
+| `--color-background-alerting-minor` | `#ffc700` | `#ffc700` |
+| `--color-background-alerting-minor-light` | `#fff7d9` | `#fff7d9` |
+| `--color-background-alerting-minor-slate` | `#fff7d9` | `#1e262c` |
+| `--color-background-alerting-minor-strong` | `#e5a51a` | `#e5a51a` |
+| `--color-background-alerting-minor-stronger` | `#c48429` | `#c48429` |
+| `--color-background-alerting-success-1` | `#1b8500` | `#5faa4c` |
+| `--color-background-alerting-success-2` | `#1b8500` | `#1b8500` |
+| `--color-background-alerting-success-light` | `#ddedd9` | `#ddedd9` |
+| `--color-background-alerting-success-slate` | `#ddedd9` | `#1e262c` |
+| `--color-background-alerting-success-strong` | `#166e00` | `#1b8500` |
+| `--color-background-alerting-success-stronger` | `#125800` | `#166e00` |
+| `--color-background-black` | `#252525` | `#252525` |
+| `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-background-brand-light` | `#d9eaf8` | `#34414c` |
+| `--color-background-brand-lighter` | `#ebf4fb` | `#1e262c` |
+| `--color-background-brand-lighter-alt` | `#ebf4fb` | `#002642` |
+| `--color-background-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-background-brand-stronger` | `#06528a` | `#d9eaf8` |
+| `--color-background-component` | `#ffffff` | `#111619` |
+| `--color-background-component-light` | `#f4f4f4` | `#1e262c` |
+| `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
+| `--color-background-controls-brand-light` | `#d9eaf8` | `#002642` |
+| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#003a65` |
+| `--color-background-controls-brand-strong` | `#0062ab` | `#0062ab` |
+| `--color-background-controls-brand-stronger` | `#06528a` | `#06528a` |
+| `--color-background-gradient-chat-button-end-violet` | `#7c01b7` | `#520179` |
+| `--color-background-gradient-chat-end` | `#f4f4f4` | `rgba(86,108,127,0.20)` |
+| `--color-background-gradient-chat-start` | `#f4f4f4` | `rgba(19,21,25,0.10)` |
+| `--color-background-gradient-left-nav-end` | `#ffffff` | `rgba(19,21,25,0.10)` |
+| `--color-background-gradient-left-nav-start` | `#ffffff` | `rgba(0,118,206,0.20)` |
+| `--color-background-gradient-masthead-end` | `#0076ce` | `rgba(19,21,25,0.10)` |
+| `--color-background-gradient-masthead-start` | `#003e88` | `rgba(0,118,206,0.50)` |
+| `--color-background-gray-base` | `#757575` | `#9e9e9e` |
+| `--color-background-gray-light` | `#eaeaea` | `#393939` |
+| `--color-background-gray-lighter` | `#f4f4f4` | `#393939` |
+| `--color-background-gray-neutral-alt` | `#eaeaea` | `#1e262c` |
+| `--color-background-gray-neutral-dark` | `#616161` | `#8898a5` |
+| `--color-background-gray-neutral-darker` | `#252525` | `#b8c1c9` |
+| `--color-background-gray-neutral-light` | `#eaeaea` | `#34414c` |
+| `--color-background-gray-neutral-lighter` | `#f4f4f4` | `#1e262c` |
+| `--color-background-gray-strong` | `#616161` | `#ffffff` |
+| `--color-background-gray-stronger` | `#252525` | `#ffffff` |
+| `--color-background-masthead-brand-base` | `#0076ce` | `#1e262c` |
+| `--color-background-masthead-brand-strong` | `#0062ab` | `#34414c` |
+| `--color-background-masthead-brand-stronger` | `#06528a` | `#455666` |
+| `--color-background-n-tabs-x-hover` | `#d9eaf8` | `#455666` |
+| `--color-background-overlay` | `rgba(37,37,37,0.65)` | `rgba(17,22,25,0.75)` |
+| `--color-background-overlay-1` | `rgba(37,37,37,0.65)` | `rgba(37,37,37,0.75)` |
+| `--color-background-power-filter` | `#34414c` | `#455666` |
+| `--color-background-secondary-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-background-secondary-berry-light` | `#f1d9e7` | `#6a0040` |
+| `--color-background-secondary-berry-lighter` | `#f7ebf2` | `#4f0030` |
+| `--color-background-secondary-berry-strong` | `#860051` | `#d894bd` |
+| `--color-background-secondary-berry-stronger` | `#6a0040` | `#f1d9e7` |
+| `--color-background-secondary-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-background-secondary-teal-light` | `#d9ecf0` | `#005568` |
+| `--color-background-secondary-teal-lighter` | `#ebf5f7` | `#003f4d` |
+| `--color-background-secondary-teal-strong` | `#006b83` | `#94cad6` |
+| `--color-background-secondary-teal-stronger` | `#005568` | `#d9ecf0` |
+| `--color-background-secondary-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-background-secondary-violet-light` | `#ebd9f4` | `#520179` |
+| `--color-background-secondary-violet-lighter` | `#f5ebf9` | `#28003b` |
+| `--color-background-secondary-violet-strong` | `#670198` | `#c894e1` |
+| `--color-background-secondary-violet-stronger` | `#520179` | `#ebd9f4` |
+| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
+| `--color-background-surface-2` | `#ffffff` | `#1e262c` |
+| `--color-background-white` | `#ffffff` | `#ffffff` |
+| `--color-background-white-transparant-blue` | `#ffffff` | `rgba(0,38,66,0.50)` |
+| `--color-border-accessible` | `#757575` | `#8898a5` |
+| `--color-border-alerting-critical-base` | `#af0000` | `#dd9494` |
+| `--color-border-alerting-critical-critical` | `#af0000` | `#af0000` |
+| `--color-border-alerting-critical-transparent` | `#af0000` | `rgba(221,148,148,0.00)` |
+| `--color-border-alerting-critical-white` | `#af0000` | `#ffffff` |
+| `--color-border-alerting-info-base` | `#005ece` | `#94bbea` |
+| `--color-border-alerting-info-info` | `#005ece` | `#4c8edd` |
+| `--color-border-alerting-info-transparent` | `#005ece` | `rgba(148,187,234,0.00)` |
+| `--color-border-alerting-info-white` | `#005ece` | `#ffffff` |
+| `--color-border-alerting-major-base` | `#ed6400` | `#f7be94` |
+| `--color-border-alerting-major-major` | `#ed6400` | `#ed6400` |
+| `--color-border-alerting-major-transparent` | `#ed6400` | `rgba(247,190,148,0.00)` |
+| `--color-border-alerting-major-white` | `#ed6400` | `#ffffff` |
+| `--color-border-alerting-minor-dark` | `#9c622e` | `#9c622e` |
+| `--color-border-alerting-minor-minor` | `#9c622e` | `#9c622e` |
+| `--color-border-alerting-minor-transparent` | `#9c622e` | `rgba(255,255,255,0.00)` |
+| `--color-border-alerting-minor-white` | `#9c622e` | `#ffffff` |
+| `--color-border-alerting-success-base` | `#1b8500` | `#9fcc94` |
+| `--color-border-alerting-success-transparent` | `#1b8500` | `rgba(159,204,148,0.00)` |
+| `--color-border-alerting-success-white` | `#1b8500` | `#ffffff` |
+| `--color-border-alerting-transparent-critical` | `rgba(175,0,0,0.00)` | `#dd9494` |
+| `--color-border-alerting-transparent-info` | `rgba(0,94,206,0.00)` | `#94bbea` |
+| `--color-border-alerting-transparent-major` | `rgba(237,100,0,0.00)` | `#f7be94` |
+| `--color-border-alerting-transparent-minor` | `rgba(255,199,0,0.00)` | `#ffffff` |
+| `--color-border-alerting-transparent-success` | `rgba(27,133,0,0.00)` | `#9fcc94` |
+| `--color-border-alerting-transparent-white` | `#ffffff` | `#ffffff` |
+| `--color-border-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-border-berry-light` | `#bd4c90` | `#6a0040` |
+| `--color-border-berry-strong` | `#4f0030` | `#f1d9e7` |
+| `--color-border-black` | `#252525` | `#252525` |
+| `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-border-brand-dark` | `#0062ab` | `#94c5ea` |
+| `--color-border-brand-neutral` | `#0076ce` | `#8898a5` |
+| `--color-border-disabled` | `#757575` | `#9e9e9e` |
+| `--color-border-light` | `#c5c5c5` | `#34414c` |
+| `--color-border-lighter` | `#eaeaea` | `#1e262c` |
+| `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-border-neutral-light` | `#757575` | `#34414c` |
+| `--color-border-strong` | `#252525` | `#b8c1c9` |
+| `--color-border-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-border-teal-light` | `#4ca7bb` | `#005568` |
+| `--color-border-teal-strong` | `#003f4d` | `#d9ecf0` |
+| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#4c9fdd` |
+| `--color-border-transparent-neutral` | `rgba(255,255,255,0.00)` | `#8898a5` |
+| `--color-border-transparent-neutral-light` | `rgba(255,255,255,0.00)` | `#34414c` |
+| `--color-border-user-chat-input` | `#eaeaea` | `#06528a` |
+| `--color-border-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-border-violet-light` | `#a34dcd` | `#a34dcd` |
+| `--color-border-violet-strong` | `#670198` | `#c894e1` |
+| `--color-border-white` | `#ffffff` | `#ffffff` |
+| `--color-gradient-ai-gradient-gradient-end` | `#1495ff` | `#1495ff` |
+| `--color-gradient-ai-gradient-gradient-middle` | `#8d60e7` | `#8d60e7` |
+| `--color-gradient-ai-gradient-gradient-start` | `#e6609b` | `#e6609b` |
+| `--color-gradient-overflow-horizontal-end` | `rgba(244,244,244,0.00)` | `rgba(17,22,25,0.00)` |
+| `--color-gradient-overflow-horizontal-inverse-end` | `rgba(255,255,255,0.00)` | `rgba(17,22,25,0.00)` |
+| `--color-gradient-overflow-horizontal-inverse-start` | `#ffffff` | `#111619` |
+| `--color-gradient-overflow-horizontal-middle` | `rgba(244,244,244,0.90)` | `rgba(17,22,25,0.90)` |
+| `--color-gradient-overflow-horizontal-start` | `#f4f4f4` | `#111619` |
+| `--color-gradient-overflow-vertical---scrollbar-end` | `rgba(17,22,25,0.00)` | `rgba(17,22,25,0.00)` |
+| `--color-gradient-overflow-vertical---scrollbar-middle` | `rgba(182,182,182,0.30)` | `rgba(17,22,25,0.40)` |
+| `--color-gradient-overflow-vertical---scrollbar-start` | `rgba(117,117,117,0.60)` | `#111619` |
+| `--color-gradient-overflow-vertical-end` | `rgba(255,255,255,0.00)` | `rgba(17,22,25,0.40)` |
+| `--color-gradient-overflow-vertical-start` | `rgba(182,182,182,0.40)` | `#111619` |
+| `--color-icon-accessible` | `#757575` | `#8898a5` |
+| `--color-icon-alerting-critical` | `#af0000` | `#c74c4c` |
+| `--color-icon-alerting-info-1` | `#005ece` | `#4c8edd` |
+| `--color-icon-alerting-info-2` | `#005ece` | `#005ece` |
+| `--color-icon-alerting-major` | `#ed6400` | `#f2934c` |
+| `--color-icon-alerting-minor-1` | `#ffc700` | `#ffc700` |
+| `--color-icon-alerting-minor-2` | `#6d4028` | `#6d4028` |
+| `--color-icon-alerting-minor-3` | `#ffc700` | `#ffc700` |
+| `--color-icon-alerting-minor-4` | `#6d4028` | `#6d4028` |
+| `--color-icon-alerting-success-1` | `#1b8500` | `#5faa4c` |
+| `--color-icon-alerting-success-2` | `#1b8500` | `#1b8500` |
+| `--color-icon-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-icon-berry-strong` | `#6a0040` | `#d894bd` |
+| `--color-icon-berry-stronger` | `#4f0030` | `#f1d9e7` |
+| `--color-icon-black` | `#252525` | `#252525` |
+| `--color-icon-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-icon-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-icon-brand-stronger` | `#06528a` | `#d9eaf8` |
+| `--color-icon-disabled` | `#757575` | `#c5c5c5` |
+| `--color-icon-inverse` | `#ffffff` | `#252525` |
+| `--color-icon-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-icon-neutral-light` | `#b8c1c9` | `#b8c1c9` |
+| `--color-icon-neutral-strong` | `#252525` | `#f2f3f5` |
+| `--color-icon-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-icon-teal-strong` | `#005568` | `#94cad6` |
+| `--color-icon-teal-strong-2` | `#003f4d` | `#d9ecf0` |
+| `--color-icon-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-icon-violet-strong` | `#670198` | `#c894e1` |
+| `--color-icon-violet-stronger` | `#3d005a` | `#ebd9f4` |
+| `--color-icon-white` | `#ffffff` | `#ffffff` |
+| `--color-static-brand-100` | `#ebf4fb` | `#ebf4fb` |
+| `--color-static-brand-200` | `#d9eaf8` | `#d9eaf8` |
+| `--color-static-brand-300` | `#94c5ea` | `#94c5ea` |
+| `--color-static-brand-400` | `#4c9fdd` | `#4c9fdd` |
+| `--color-static-brand-500` | `#0076ce` | `#0076ce` |
+| `--color-static-brand-600` | `#0062ab` | `#0062ab` |
+| `--color-static-brand-700` | `#06528a` | `#06528a` |
+| `--color-static-brand-800` | `#003a65` | `#003a65` |
+| `--color-static-brand-900` | `#002642` | `#002642` |
+| `--color-static-gray-100` | `#f4f4f4` | `#f4f4f4` |
+| `--color-static-gray-200` | `#eaeaea` | `#eaeaea` |
+| `--color-static-gray-300` | `#c5c5c5` | `#c5c5c5` |
+| `--color-static-gray-400` | `#9e9e9e` | `#9e9e9e` |
+| `--color-static-gray-500` | `#757575` | `#757575` |
+| `--color-static-gray-600` | `#616161` | `#616161` |
+| `--color-static-gray-700` | `#4d4d4d` | `#4d4d4d` |
+| `--color-static-gray-800` | `#393939` | `#393939` |
+| `--color-static-gray-900` | `#252525` | `#252525` |
+| `--color-static-gray-white` | `#ffffff` | `#ffffff` |
+| `--color-text-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-text-berry-strong` | `#6a0040` | `#d894bd` |
+| `--color-text-berry-stronger` | `#34001f` | `#f1d9e7` |
+| `--color-text-black` | `#252525` | `#252525` |
+| `--color-text-brand-base` | `#0076ce` | `#4c9fdd` |
+| `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-text-critical` | `#af0000` | `#dd9494` |
+| `--color-text-disabled` | `#757575` | `#9e9e9e` |
+| `--color-text-inverse` | `#ffffff` | `#252525` |
+| `--color-text-link-brand-base` | `#0062ab` | `#4c9fdd` |
+| `--color-text-link-brand-light` | `#d9eaf8` | `#d9eaf8` |
+| `--color-text-link-brand-lighter` | `#ebf4fb` | `#ebf4fb` |
+| `--color-text-link-brand-strong` | `#06528a` | `#94c5ea` |
+| `--color-text-link-brand-stronger` | `#003a65` | `#d9eaf8` |
+| `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
+| `--color-text-tag-critical` | `#af0000` | `#dd9494` |
+| `--color-text-tag-info` | `#0062ab` | `#94bbea` |
+| `--color-text-tag-major` | `#9c4200` | `#f2934c` |
+| `--color-text-tag-powerfilter` | `#f2f3f5` | `#f2f3f5` |
+| `--color-text-tag-success` | `#125800` | `#5faa4c` |
+| `--color-text-tag-warning` | `#6d4028` | `#ffe794` |
+| `--color-text-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-text-teal-strong` | `#005568` | `#94cad6` |
+| `--color-text-teal-stronger` | `#002933` | `#d9ecf0` |
+| `--color-text-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-text-violet-strong` | `#520179` | `#c894e1` |
+| `--color-text-violet-stronger` | `#28003b` | `#ebd9f4` |
+| `--color-text-warning` | `#6d4028` | `#6d4028` |
+| `--color-text-white` | `#ffffff` | `#ffffff` |
+| `--shadow-drop-shadow-16-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-2-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-32-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-4-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-8-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+
+<!-- ds:section id=tokens-float -->
+### Tokens collection — FLOAT (Figma — `Tokens`, e.g. shadow geometry)
+
+| Token | Value |
+|---|---|
+
+<!-- ds:section id=density-primitive -->
+### Density Primitive (Figma — `Density Primitive`, FLOAT)
+
+> Vertical padding tokens for table density modes. These are not `--scale-*` names; use as documented in component specs.
+
+| Figma variable name | Value |
+|---|---|
+
+*Primitive FLOAT (non-color) in `Primitive` collection:*
+
+| Figma variable name | Value |
+|---|---|
+| Opacity/0% | `0` |
+| Opacity/10% | `10` |
+| Opacity/100% | `100` |
+| Opacity/20% | `20` |
+| Opacity/30% | `30` |
+| Opacity/40% | `40` |
+| Opacity/50% | `50` |
+| Opacity/60% | `60` |
+| Opacity/70% | `70` |
+| Opacity/80% | `80` |
+| Opacity/90% | `90` |
+| Scale/-1 | `-1` |
+| Scale/0 | `0` |
+| Scale/1 | `1` |
+| Scale/10 | `10` |
+| Scale/12 | `12` |
+| Scale/128 | `128` |
+| Scale/14 | `14` |
+| Scale/16 | `16` |
+| Scale/18 | `18` |
+| Scale/2 | `2` |
+| Scale/20 | `20` |
+| Scale/22 | `22` |
+| Scale/24 | `24` |
+| Scale/256 | `256` |
+| Scale/26 | `26` |
+| Scale/28 | `28` |
+| Scale/30 | `30` |
+| Scale/32 | `32` |
+| Scale/34 | `34` |
+| Scale/36 | `36` |
+| Scale/4 | `4` |
+| Scale/40 | `40` |
+| Scale/44 | `44` |
+| Scale/48 | `48` |
+| Scale/512 | `512` |
+| Scale/52 | `52` |
+| Scale/56 | `56` |
+| Scale/58 | `58` |
+| Scale/6 | `6` |
+| Scale/60 | `60` |
+| Scale/64 | `64` |
+| Scale/72 | `72` |
+| Scale/8 | `8` |
+| Scale/80 | `80` |
+| Scale/96 | `96` |
+
+<!-- ds:section id=typography -->
+## Typography Scale
+
+- Primary family: **Roboto**
+- Common text styles used across IDS nodes:
+  - `Body 1`: 16 / 24
+  - `Body 2`: 14 / 20
+  - `Body 2 Medium`: 14 / 20, weight 500
+  - `Body 3`: 12 / 18
+  - `Header 6`: 18 / 25
+  - `Header 5`: 24 / 32
+  - `Header 4`: 28 / 34
+  - `Display 1`: 72 / 88, light
+
+<!-- ds:section id=spacing -->
+## Spacing & Sizing
+
+Use semantic scale tokens throughout generated output.
+
+- Spacing examples used in IDS specs:
+  - `--spacing-space-2`, `--spacing-space-4`, `--spacing-space-8`, `--spacing-space-12`, `--spacing-space-16`
+- Padding examples used in IDS specs:
+  - `--padding-padding-4`, `--padding-padding-8`, `--padding-padding-10`, `--padding-padding-16`
+- Sizing examples used in IDS specs:
+  - `--sizing-size-32`, `--sizing-size-40`
+
+### Figma-derived layout tokens
+
+> The previous `--scale-*` table was a generic placeholder. This file’s Figma **local variables** export uses **Density Primitive** FLOAT rows (above, under Density Primitive) and **Tokens** FLOAT rows for shadow geometry. For `--scale-*` / `--opacity-*` in CSS, regenerate `components/ids-ai-theme.css` via `scripts/sync_ids_ai_theme_from_figma.py`.
+
+<!-- ds:section id=border -->
+## Border Width
+
+| Token | Value |
+|---|---|
+| `--border-width-border-1` | `1px` |
+| `--border-width-border-2` | `2px` |
+
+<!-- ds:section id=corner-radius -->
+## Corner Radius
+
+| Token | Value |
+|---|---|
+| `--corner-radius-radius-2` | `2px` |
+| `--corner-radius-radius-4` | `4px` |
+| `--corner-radius-radius-8` | `8px` |
+| `--corner-radius-radius-12` | `12px` |
+
+<!-- ds:section id=elevation -->
+## Elevation System
+
+| Level | Shadow Contract | Use Cases |
+|---|---|---|
+| 0 | none | flat controls, lists, layout containers |
+| 1 | subtle drop shadow | cards, hover-raised surfaces |
+| 2 | medium drop shadow | popovers, tooltips |
+| 3 | strong drop shadow | overlay emphasis |
+| 4 | multi-layer modal shadow | dialogs, modals, high-elevation overlays |
+
+- IDS dialog-level references include layered drop shadows equivalent to Level 4.
+
+<!-- ds:section id=opacity -->
+## Opacity Scale
+
+Use opacity tokens when a component requires translucent overlays or states. *(Keep aligned with `components/ids-ai-theme.css` after each Figma sync.)*
+
+| Token | Value |
+|---|---|
+| `--opacity-0` | `0` |
+| `--opacity-10` | `0.1` |
+| `--opacity-20` | `0.2` |
+| `--opacity-30` | `0.3` |
+| `--opacity-40` | `0.4` |
+| `--opacity-50` | `0.5` |
+| `--opacity-60` | `0.6` |
+| `--opacity-70` | `0.7` |
+| `--opacity-80` | `0.8` |
+| `--opacity-90` | `0.9` |
+| `--opacity-100` | `1` |
+
+<!-- ds:section id=breakpoints -->
+## Responsive Breakpoints
+
+From IDS-AI config (`config/design_systems/ids-ai.yaml`):
+
+| Name | Min Width |
+|---|---|
+| sm | `576px` |
+| md | `768px` |
+| lg | `992px` |
+| xl | `1200px` |
+
+<!-- ds:section id=interactions-baseline -->
+## Interaction Baseline
+
+All IDS-AI components inherit these baseline rules unless component specs override:
+
+- Focus indicators must be visible and use brand focus token (`--color-border-brand-base`) with tokenized border widths.
+- Keyboard support:
+  - `Tab` for focus traversal
+  - `Enter` / `Space` for activation where applicable
+  - `Escape` for dismissible overlays
+- Hover and press states must be token-driven and not required for core task completion.
+- Disabled state must block interaction and use disabled token set for border/background/text/icon.
+
+### Icon Resolution Baseline (Framework-Agnostic)
+
+Use this contract for every IDS component spec and for any framework target that consumes IDS design tokens.
+
+- When a component requires an icon, generators must **first** look for an existing framework or library `Icon` component in the target codebase.
+- Generators must **inspect** that `Icon` component’s public API and bind the design-spec icon using the **real** shape or name input prop (for example `name`, `icon`, `shape`, or `glyph`) rather than assuming a fixed prop key.
+- Icon lookup must prefer **canonical** icon names from the component `design-spec.mdx` first, then any **declared fallback** icon names in that same spec.
+- Raw SVG or image fallback is allowed **only** when no compatible icon component or named icon asset is available in the target project.
+
+**Asset path baseline (when specs reference files, not only names):** resolve icons from `assets/icons/<slug>.svg` unless the component spec documents a different stable slug-to-path mapping.
+
+<!-- ds:section id=accessibility-baseline -->
+## Accessibility Baseline
+
+- WCAG AA contrast targets (4.5:1 normal text, 3:1 large text/non-text UI where applicable).
+- All interactive controls are keyboard operable.
+- Semantic HTML first; ARIA only when semantic primitives are insufficient.
+- Visible focus state required for keyboard users.
+- State changes must be perceivable to assistive technologies.
+
+<!-- ds:section id=theming -->
+## Theming Mechanism
+
+- IDS-AI tokens are semantic CSS custom properties resolved per theme mode (`data-design-system="ids-ai"` / `dap`, default Light; `data-theme="dark"` for Dark overrides).
+- Component implementations must avoid hardcoded values when a semantic token exists.
+- Global IDS-AI token stylesheet:
+  - `components/ids-ai-theme.css`
+- Regenerate from Figma with `python3 scripts/sync_ids_ai_theme_from_figma.py` (`FIGMA_TOKEN` required). After sync, refresh **Color Mode** tables via `python3 scripts/sync_ids_ai_root_spec_from_figma.py --write`.
+
+<!-- ds:section id=variable-collections -->
+## Variable Collections (Figma)
+
+The IDS-AI library file (`rr8F0NGA6RNY9Z0cNeh3jh`) exposes variables including:
+
+- **Color Mode** (`41837:5099`) — primary theme-aware semantic colors (Light / Dark). Same collection prioritized when building `components/ids-ai-theme.css` (over duplicate names in **Tokens** whose WEB aliases target unpublished libraries).
+- **Tokens** — additional semantic tokens, shadows (FLOAT), and legacy WEB aliases; use **Color Mode** for authoritative `--color-*` when both define the same name.
+- **Primitive** — base palette values (often single-mode). Feeds `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, AI accents, scales, and opacity raw FLOAT rows before CSS normalization.
+- **Density Primitive** — density / layout FLOAT tokens used with semantic padding and spacing names in specs.
+- Typography and effect styles bound on component frames (see Figma MCP context per node).
+
+## Icon primitive (codegen — framework-agnostic)
+
+Monochrome glyphs MUST be rendered through a single design-system **icon primitive** (component name and import path are **implementation details** chosen by the target app and codegen config). The **contract** below is normative for IDS-AI specs; it does not reference Storybook, React, or any demo app.
+
+| Concept | Contract |
+|---|---|
+| **Asset slug** | Maps one-to-one to a file **`{slug}.svg`** in the design system’s agreed icon bundle (IDS-AI: under the repo’s `assets/icons/` tree unless a spec overrides the bundle root in **Source mapping**). Slug pattern: lowercase letters, digits, hyphens (e.g. `shield-encrypt-alt`, `grid-square-9-16`). |
+| **`shapeName` (logical)** | The slug string passed to the icon primitive so it resolves the correct SVG asset. |
+| **`color` (logical)** | Optional semantic **CSS color** for the glyph, expressed as `var(--…)` from token tables in this root-spec or the component spec. **Omit** when the **parent interactive host** already sets `color` and state transitions must drive the glyph via inheritance (e.g. `currentColor` on press/active). |
+| **`variant` (logical)** | **Monochrome:** `mask` (CSS mask + `currentColor`) vs **`inline`** (inline `<svg>` from asset, still token-colored via `currentColor` in artwork) when the implementation maintains an allowlist for bundle control. **Fixed palette:** `img` or equivalent for severity / multi-color artwork. Specs say which applies; prop names may differ by framework. |
+| **Generators** | Resolve the concrete module/class for the active design system + target framework from **tooling config** (e.g. design-system YAML), not from `design-spec.mdx`. Emit the logical `shapeName`, `color`, and `variant` per spec; do not hand-roll low-level mask markup when the project’s icon primitive is available. |
+
+**Repository tooling (non-normative):** In SDD-IDS, optional mappings for codegen (e.g. React import path) live under `config/design_systems/ids-ai.yaml` (`codegen` keys). They are **not** part of the Figma design contract.
+
+## Codegen Baseline Contract
+
+- All `components/ids-ai/<slug>/design-spec.mdx` files inherit this root contract (plus `<!-- ds:inherits root-spec -->` on each file).
+- Component spec can override only component-specific anatomy, variant matrix, and interaction nuances.
+- Generators must:
+  - Preserve semantic token names from specs.
+  - Keep Light/Dark state tables structurally parallel.
+  - Use deterministic state naming (`default`, `hover`, `press`, `focus-visible`, `disabled`).
+  - Emit validation errors for missing required tokens/props/accessibility labels.
+  - Use the **Icon primitive** contract above for all bundled icon slugs unless the spec explicitly requires a different pattern.
+
+## Source Mapping
+
+| Source | Location |
+|---|---|
+| IDS-AI entries in component map | `data/component-figma-map.json` |
+| IDS-AI config | `config/design_systems/ids-ai.yaml` |
+| IDS-AI component specs | `components/ids-ai/<slug>/design-spec.mdx` |
+| Figma variables → root-spec tables (auto block) | `scripts/sync_ids_ai_root_spec_from_figma.py --write` (`FIGMA_TOKEN`) |
+| Figma variables → `ids-ai-theme.css` | `scripts/sync_ids_ai_theme_from_figma.py` (`FIGMA_TOKEN`) |
+
+### Live Figma verification (IDS-AI — official MCP)
+
+| Evidence | Detail |
+|---|---|
+| Verification method | Figma MCP (`get_variable_defs`, `get_design_context`) |
+| Session context | 2026-05-10 |
+| File key | `rr8F0NGA6RNY9Z0cNeh3jh` |
+| Color Mode variable set | `41837:5099` — [Open variables](https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42266-95109&view=variables&var-set-id=41837-5099&m=dev) |
+| Sample variable | `VariableID:41864:7617` — `Color/Background/Controls/Brand-Light` — [Direct link](https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42266-95109&view=variables&var-id=41864-7617&var-set-id=41837-5099&m=dev) |
+| Composition node | `42266:95109` — App Launcher main frame (variable bindings cross-checked via MCP) |
+
+Legacy IDS library (`0bHk3XhrjFhowgFkz9yLr4`) remains useful for migration comparisons only; IDS-AI codegen and specs must follow this file and `components/ids-ai-theme.css`.
+<!-- auto:generated:end -->

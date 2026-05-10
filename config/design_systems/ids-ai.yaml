@@ -1,0 +1,42 @@
+# IDS-AI Design System Configuration
+
+name: ids-ai
+display_name: IDS-AI
+token_transform: ids
+
+figma_file_key: "rr8F0NGA6RNY9Z0cNeh3jh"
+
+figma_map_path: data/component-figma-map.json
+rules_path: rules.json
+allowed_tokens_path: allowed_tokens.json
+component_registry_path: component_registry.json
+theme_css_path: components/ids-ai-theme.css
+base_ui_mapping_path: ""
+
+components_dir: components/ids-ai
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.mdx
+baseline_theme_css_path: components/ids-theme.css
+program_components_dir: components/ids-ai
+program_root_spec_path: components/ids-ai/root-spec.mdx
+program_theme_css_path: components/ids-ai-theme.css
+
+qdrant_collection: design_knowledge
+
+framework_layer: ""
+root_spec_path: components/ids-ai/root-spec.mdx
+generated_storybook_dir: storybook-generated/ids-ai
+strict_storybook_gate: false
+
+# Optional: concrete paths for codegen / agents in this repository only (not part of Figma contract).
+codegen:
+  react:
+    icon_component_module: "storybook/src/components/Icon"
+
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+
+elevation_levels: {}

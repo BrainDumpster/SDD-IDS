@@ -87,6 +87,39 @@
 - Indeterminate state shows continuous animation
 - Step indicators show current progress step
 
+## Composition & API (runtime)
+- `type: "inline" | "with-label" | "indeterminate"` (default `"inline"`)
+- `thickness: "thin" | "medium" | "thick"` (default `"medium"`)
+- `state: "in-progress" | "completed-success" | "completed-warning" | "failed-error"` (default `"in-progress"`)
+- `value?: number` (0-100 for determinate modes)
+- `label?: string`
+- `helperText?: string`
+- `showHelperText?: boolean` (default `false`)
+- `ariaLabel?: string`
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic slot order:
+  1. `ProgressRoot`
+  2. `ProgressTrack`
+  3. `ProgressFill`
+  4. `ProgressLabel?`
+  5. `ProgressHelperRow?`
+- Variant matrix:
+  - `type`: `inline | with-label | indeterminate`
+  - `thickness`: `thin | medium | thick`
+  - `state`: `in-progress | completed-success | completed-warning | failed-error`
+- Behavior contract:
+  - determinate modes clamp value between `0` and `100`
+  - indeterminate mode ignores value and renders animated fill
+  - status state controls fill/border/icon tokens per state table
+- Accessibility contract:
+  - use `role="progressbar"` for determinate variants with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
+  - provide readable text label for status/progress context
+- Fallback/error rules:
+  - unknown `type` -> `inline`
+  - unknown `thickness` -> `medium`
+  - unknown `state` -> `in-progress`
+
 ## Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Tab to progress bar when focusable

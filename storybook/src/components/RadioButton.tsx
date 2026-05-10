@@ -8,12 +8,14 @@ interface RadioOption {
   disabled?: boolean;
   error?: boolean;
   helperText?: string;
+  simulatedState?: "default" | "hover" | "focus-visible";
 }
 
 interface RadioButtonProps {
   id?: string;
   name: string;
   options: RadioOption[];
+  disabled?: boolean;
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
@@ -24,6 +26,7 @@ export function RadioButton({
   id,
   name,
   options,
+  disabled = false,
   value,
   defaultValue,
   onChange,
@@ -39,16 +42,18 @@ export function RadioButton({
     >
       {options.map((option) => {
         const assistiveId = option.helperText ? `${id ?? name}-${option.value}-assistive` : undefined;
+        const isDisabled = disabled || Boolean(option.disabled);
         return (
           <div key={option.value} className={styles.field}>
-            <label className={styles.wrapper} data-disabled={option.disabled || undefined}>
+            <label className={styles.wrapper} data-disabled={isDisabled || undefined}>
               <Radio.Root
                 className={styles.root}
                 value={option.value}
-                disabled={option.disabled}
+                disabled={isDisabled}
                 aria-invalid={option.error || undefined}
                 aria-describedby={assistiveId}
                 data-error={option.error ? "true" : undefined}
+                data-simulated-state={option.simulatedState}
               >
                 <Radio.Indicator className={styles.indicator} />
               </Radio.Root>
@@ -62,7 +67,7 @@ export function RadioButton({
                 className={[
                   styles.assistiveText,
                   option.error ? styles.assistiveTextError : "",
-                  option.disabled ? styles.assistiveTextDisabled : "",
+                  isDisabled ? styles.assistiveTextDisabled : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}

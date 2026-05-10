@@ -25,6 +25,8 @@ program_theme_css_path: components/synapse-theme.css
 qdrant_collection: synapse_design_knowledge
 
 framework_layer: base-ui
+generated_storybook_dir: storybook-generated/synapse
+strict_storybook_gate: false
 
 root_spec_path: components/synapse/root-spec.mdx
 alias_path: data/synapse-component-aliases.json

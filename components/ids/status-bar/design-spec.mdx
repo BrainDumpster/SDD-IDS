@@ -2,177 +2,214 @@
 
 ## Metadata
 - Component: Status Bar
+- Design System: IDS
 - Category: Patterns and Templates
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=15161-146685&m=dev
-- Node ID: 15161-146685
+- Canonical Figma file: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
+- Main node: `15412:10699` (`StatusBar-Main`)
+- Evidence nodes:
+  - elements (small): `15412:9261`
+  - elements (inventory category): `15405:9692`
+  - overflow arrows: `18544:13477` (`Left` `Right`)
+  - overflow container: `18544:13502`
+  - variations/state overview: `43206:189639`
+  - dark-mode overflow/state board: `43206:189637`
+- Last live verification: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in this session.
 
 ## Anatomy
-- Status bar container
-- Status indicators
-- System information
-- Progress indicators
-- Action buttons
-- Focus ring for keyboard navigation
-- Overflow handling
-- Optional resize handles
+1. `StatusBarRoot`
+2. optional `StatusBarTotalItem`
+3. `StatusBarContentViewport`
+4. repeated `StatusBarItem`
+5. `StatusBarItemIconSlot`
+6. `StatusBarItemValue`
+7. `StatusBarItemMeta` (`category` + `label`)
+8. `StatusBarItemDivider` (separate element)
+9. optional `StatusBarOverflowLayer` (must sit above text/icons)
+10. optional `StatusBarOverflowLeft`
+11. optional `StatusBarOverflowRight`
+
+Inventory-only nested anatomy:
+- `InventoryMainIcon` (default icon `docs-bundle`)
+- optional `InventoryStatusBadge` (severity icon overlay)
 
 ## Layout & Measurements
-- Standard height: 32px
-- Full width: 100% of container
-- Horizontal padding: 12px
-- Item spacing: 16px
-- Border radius: 0 (full-width bar)
-- Focus ring: 2px offset from element
-- Icon size: 16px × 16px
-- Button height: 24px
-- Minimum width: 200px
-
-## Typography
-- Header 2: Roboto Regular 36px/44px (large status headers)
-- Header 5: Roboto Regular 24px/32px (status headers)
-- Header 6: Roboto Regular 18px/25px (sub-headers)
-- Body 1: Roboto Regular 16px/24px (status text)
-- Body 2: Roboto Regular 14px/20px (secondary status)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized status)
-- Body 3: Roboto Regular 12px/18px (small status)
+- Primary variants:
+  - `Status Bar - Large`: total bar height `77px`
+  - `Status Bar - Small`: total bar height `57px`
+  - `Inventory Bar`: total bar height `78px`
+- Item paddings:
+  - large status item: `16px 24px`
+  - small status item: `12.5px 24px` (right padding may appear as 32px in specific element snapshots; runtime contract keeps 24px base spacing)
+  - inventory item: `13px 24px`
+- Gaps:
+  - icon-to-value gap: `8px`
+  - status bar total-to-content gap: `24px` when total is present.
+- Icon sizes:
+  - large status icon: `32x32`
+  - small status icon: `16x16`
+  - overflow arrow icon: `16x16`
+- Typography sizing:
+  - large numeric value uses `36px` with `44px` line-height (explicit fallback because `--font-size-heading-2` is not available in current token set)
+  - numeric value text behavior: `white-space: nowrap`, `overflow: hidden`, `text-overflow: ellipsis`
+  - small numeric value uses `24px` with `32px` line-height
+  - label uses `18px/25px` in large variant and `16px/24px` in small variant
+  - category text uses `14px/20px`
+- Borders and separators:
+  - container border: `1px` using `var(--color-border-disabled)`
+  - divider is a separate element (not a simple item border) to match design overlays.
+  - divider geometry: `1px` width, `56px` height, dashed stroke using `var(--color-border-disabled)`.
+  - divider placement: vertically centered, rendered at slot edges as needed (including total item edges).
+- Overflow layer:
+  - overlay controls width: `64px` each side
+  - must be above status items (`positioned layer over content`)
+  - layer frame follows content bounds using `inset: -1px` in implementation.
+  - gradient mask from `var(--color-gradient-overflow-horizontal-inverse-start)` to `var(--color-gradient-overflow-horizontal-inverse-end)`
+  - left arrow icon: `check-left-thick`
+  - right arrow icon: `chev-right-thick`
+  - overflow scenarios:
+    - `Beginning`: show right arrow only
+    - `Middle`: show both left and right arrows
+    - `End`: show left arrow only
+- Responsiveness rule:
+  - status bar horizontal responsiveness/overflow controls are enabled only when `total` item exists.
+  - when `total` is omitted, item strip stays static (no overflow arrows).
 
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Component light: `var(--color-background-component-light)` = #f4f4f4
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Black text: `var(--color-text-black)` = #252525
-- Brand text: `var(--color-text-brand-base)` = #0076ce
-- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Disabled text: `var(--color-text-disabled)` = #757575
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
-- Brand border: `var(--color-border-brand-base)` = #0076ce
-- Brand neutral border: `var(--color-border-brand-neutral)` = #0076ce
-- White border: `var(--color-border-white)` = #ffffff
-- Neutral border: `var(--color-border-neutral)` = #4d4d4d
+- Surfaces and borders:
+  - `var(--color-background-component)`
+  - `var(--color-background-component-light)`
+  - `var(--color-border-disabled)`
+  - `var(--color-border-accessible)`
+- Text:
+  - `var(--color-text-neutral)`
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-brand-base)`
+  - `var(--color-text-disabled)`
+- Icons:
+  - `var(--color-icon-brand-base)`
+  - `var(--color-icon-neutral)`
+  - `var(--color-icon-alerting-critical)`
+  - `var(--color-icon-alerting-minor)`
+  - `var(--color-icon-alerting-success)`
+  - `var(--color-icon-inverse)`
+- Interaction fills:
+  - `var(--color-background-brand-lighter)`
+  - `var(--color-background-brand-light)`
+  - `var(--color-background-brand-base)`
+- Overflow gradients:
+  - `var(--color-gradient-overflow-horizontal-inverse-start)`
+  - `var(--color-gradient-overflow-horizontal-inverse-end)`
 
-### Icons
-- Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Inverse icon: `var(--color-icon-inverse)` = #ffffff
-- White icon: `var(--color-icon-white)` = #ffffff
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-- Success icon: `var(--color-icon-alerting-success)` = #1b8500
-- White icon: `icon-white` = #FFFFFF
-
-### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
-- Brand light: `var(--color-background-brand-light)` = #d9eaf8
-- Brand base: `var(--color-background-brand-base)` = #0076ce
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 200: `UI Palettes/Gray/gray-200` = #EAEAEA
-- Gray 500: `UI Palettes/Gray/gray-500` = #757575
-- Gray 600: `UI Palettes/Gray/gray-600` = #616161
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Alert Colors
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
-- Minor border: `var(--color-border-alerting-minor-transparent)` = #9c622e
-- Critical border: `var(--color-border-alerting-critical-white)` = #af0000
-- Success border: `var(--color-border-alerting-success-white)` = #1b8500
-
-### Secondary Palettes
-- Teal 400: `Secondary Palettes/Teal/teal-400` = #4CA7BB
-
-### Gradients
-- Overflow Horizontal Inverse Start: `var(--color-gradient-overflow-horizontal-inverse-start)` = #ffffff
-- Overflow Horizontal Inverse End: `var(--color-gradient-overflow-horizontal-inverse-end)` = #ffffff00
-
-### Other Colors
-- Annotation: `Annotation` = #E8178A
+MCP variable evidence confirms:
+- light theme values for status bar nodes (`15412:10699`, `15412:9261`, `15405:9692`, `18544:13502`)
+- dark theme semantic substitutions on variation node (`43206:189639`) while token names remain unchanged.
 
 ## States (Light Theme)
-| Element | Background | Border | Text | Icon |
+| Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Status Bar Container | `UI Palettes/Gray/gray-200` (#EAEAEA) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Status Indicator (Default) | transparent | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Status Indicator (Success) | transparent | `var(--color-border-alerting-success-white)` (#1b8500) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-alerting-success)` (#1b8500) |
-| Status Indicator (Warning) | transparent | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-alerting-minor)` (#ffc700) |
-| Status Indicator (Error) | transparent | `var(--color-border-alerting-critical-white)` (#af0000) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-alerting-critical)` (#af0000) |
-| Action Button (Default) | `var(--color-background-component-light)` (#f4f4f4) | `var(--color-border-accessible)` (#757575) | `Body 2 - Medium` (Roboto Medium 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Action Button (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Progress Indicator | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| System Info | transparent | transparent | `Body 3` (Roboto Regular 12px/18px) | `var(--color-icon-neutral)` (#4d4d4d) |
+| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter)` | same divider | text preserved |
+| item | press | `var(--color-background-brand-light)` | same divider | text preserved |
+| item | selected | `var(--color-background-brand-light)` | same divider | text preserved |
+| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)`, icons use accessible/disabled tone |
+| overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
 
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Text and border colors remain consistent via semantic variables
-- Status bar container maintains visibility in dark theme
-- Status indicators adapt to dark theme
+| Slot | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter)` | same divider | semantic token resolution |
+| item | press | `var(--color-background-brand-light)` | same divider | semantic token resolution |
+| item | selected | `var(--color-background-brand-light)` | same divider | semantic token resolution |
+| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)` and accessible icons |
+| overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
 
 ## Interactions
-- Click status indicators for more information
-- Click action buttons to perform actions
-- Hover provides visual feedback on interactive elements
-- Focus ring uses brand color for keyboard navigation
-- Keyboard navigation: Tab to navigate, Enter to activate
-- Overflow menu for additional items (optional)
-- Resize functionality (optional)
+- Item interactions support `default | hover | press | selected | disabled`.
+- Overflow controls:
+  - appear only when total item exists and content overflows.
+  - left control enabled when scrolled past start.
+  - right control enabled when more content exists.
+  - layer sits on top of text/icons to preserve editable item content beneath.
+- Keyboard:
+  - overflow buttons are standard buttons (`Enter` / `Space` trigger scroll).
+  - disabled items are non-interactive.
 
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab, Enter
-- Screen reader support: Proper ARIA attributes for status
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use status element with proper landmarks
-- Focus management: Logical tab order through status items
-- Status announcements: Screen reader announces status changes
+## Composition & API (runtime)
+- `type: "status-large" | "status-small" | "inventory"` (default `"status-large"`).
+- `items: StatusBarItem[]` where each item supports:
+  - `id: string`
+  - `value: number | string`
+  - `category?: string`
+  - `label: string`
+  - `severity?: "critical" | "warning" | "success" | "in-progress" | "scheduled" | "canceling" | "canceled" | "skipped" | "unknown"`
+  - `state?: "default" | "hover" | "press" | "selected" | "disabled"`
+  - `iconShapeName?: string` (inventory mode user-defined; default `docs-bundle`)
+- `total?: number | string` (enables total cell and responsive overflow behavior)
+- `totalLabel?: string` (default `"Total"`)
+- `totalCategory?: string` (optional, e.g. `"Alerts"`)
 
-## Variants
-- **Default**: Standard status bar
-- **With Progress**: Status bar with progress indicators
-- **With Actions**: Status bar with action buttons
-- **Compact**: Reduced height for space-constrained interfaces
-- **Dark**: Dark themed status bar
-- **With Overflow**: Status bar with overflow menu
-- **Resizable**: Status bar that can be resized
-- **With System Info**: Status bar with system information
-
-## Behavior & Guidelines
-- Use status bar for system status and information
-- Provide clear visual indication of status states
-- Use consistent styling across status variants
-- Test with screen readers for proper status announcement
-- Consider keyboard navigation for accessibility
-- Use responsive design for different screen sizes
-- Provide visual feedback for all interactions
-- Consider overflow handling for many status items
-
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Status indicators use appropriate color psychology
-- Dark theme adaptation through semantic tokens
-- Status bar should be responsive and accessible
-
-## Deliverable Checklist
-- [ ] Implement status indicator functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Tab, Enter)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test hover and focus states
-- [ ] Implement progress indication
-- [ ] Add action button functionality
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test overflow handling
+## Codegen Contract (Framework-Agnostic Blueprint)
+- Deterministic structure:
+  - `StatusBarRoot`
+  - optional `StatusBarTotalItem`
+  - `StatusBarContentViewport`
+  - repeated `StatusBarItem`
+  - optional `StatusBarOverflowLayer` with `StatusBarOverflowLeft` + `StatusBarOverflowRight`
+- Variant matrix:
+  - type: `status-large | status-small | inventory`
+  - item state: `default | hover | press | selected | disabled`
+  - content density: `less | more` (from Figma `# items`)
+  - total presence: `with-total | no-total`
+  - overflow mode: `none | beginning | middle | end`
+- Icon mapping contract:
+  - critical -> `status-critical-square-solid`
+  - warning -> `status-warn-tri-solid`
+  - success -> `status-ok-circ-solid`
+  - in-progress -> `state-progress-circle`
+  - scheduled -> `state-standby-clock-solid`
+  - inventory default -> `docs-bundle` (override allowed)
+  - overflow left -> `check-left-thick`
+  - overflow right -> `chev-right-thick`
+- Per-slot style contract:
+  - all colors/spacing/typography must resolve via semantic tokens.
+  - no hardcoded visual literals except documented measurement samples above.
+- Behavior contract:
+  - overflow layer must be rendered above item content.
+  - overflow behavior is active only when `total` exists.
+  - overflow scenario mapping must match Figma (`Beginning | Middle | End`) based on scroll position.
+  - demo/testing may force overflow scenario explicitly (`beginning | middle | end`) to validate visual states.
+- Accessibility contract:
+  - root uses section/landmark semantics with label.
+  - overflow controls are buttons with descriptive `aria-label`.
+  - disabled items must be non-interactive and visually distinct.
+- Fallback/error rules:
+  - missing `items` -> generate mode-specific defaults.
+  - missing inventory `iconShapeName` -> use `docs-bundle`.
+  - unknown severity -> do not crash; render without severity icon and use provided `label`.
+- Validation checklist:
+  - [ ] All three variants render with correct heights.
+  - [ ] Item states match tokenized backgrounds.
+  - [ ] Total item shows dashed dividers on both left and right edges even with full border.
+  - [ ] Content group shows first-item left divider and last-item right divider.
+  - [ ] Overflow arrows appear only with total + overflow.
+  - [ ] Overflow scenario visuals match:
+    - Beginning => right arrow only
+    - Middle => both arrows
+    - End => left arrow only
+  - [ ] Left/right arrows use required icon slugs.
+  - [ ] Inventory supports default and user-defined icon.
+  - [ ] Light/dark both render via semantic tokens.
 
 ## Source Mapping
-- Figma component: Status Bar (15161-146685)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Status Bar" (category "Patterns and Templates"; node "15161-146685")
+- Component map source: `data/component-figma-map.json` (`Status Bar`)
+- Figma nodes used:
+  - `15412:10699` main status bar set
+  - `15412:9261` small status item states
+  - `15405:9692` inventory item states
+  - `18544:13477` overflow arrows
+  - `18544:13502` overflow container
+  - `43206:189639` variation/state showcase and overflow behavior notes
+  - `43206:189637` dark-mode overflow board with Beginning/Middle/End references
+- Live verification method: Figma MCP tools `get_metadata`, `get_design_context`, `get_variable_defs`.

@@ -26,6 +26,8 @@ qdrant_collection: design_knowledge
 
 framework_layer: ""
 root_spec_path: components/ids/root-spec.mdx
+generated_storybook_dir: storybook-generated/ids
+strict_storybook_gate: false
 
 breakpoints:
   sm: "576px"

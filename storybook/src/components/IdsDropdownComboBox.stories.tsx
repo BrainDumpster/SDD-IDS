@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
 import { DropdownMenu } from "./DropdownMenu";
-import arrowDropTriCaretIcon from "../../../assets/icons/arrow-drop-tri-caret.svg";
+import { Icon } from "./Icon";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 
 type Size = "small" | "large";
@@ -48,23 +48,9 @@ function ComboTrigger({
       }}
     >
       <span>{value ?? placeholder}</span>
-      <span
-        aria-hidden="true"
-        style={{
-          width: 10,
-          height: 10,
-          display: "inline-block",
-          backgroundColor: "var(--color-icon-accessible)",
-          WebkitMaskImage: `url('${arrowDropTriCaretIcon}')`,
-          WebkitMaskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-          WebkitMaskPosition: "center",
-          maskImage: `url('${arrowDropTriCaretIcon}')`,
-          maskRepeat: "no-repeat",
-          maskSize: "contain",
-          maskPosition: "center",
-        }}
-      />
+      <span style={{ color: "var(--color-icon-accessible)", lineHeight: 0 }}>
+        <Icon shapeName="arrow-drop-tri-caret" style={{ width: 10, height: 10 }} />
+      </span>
     </div>
   );
 }
