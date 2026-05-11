@@ -26,7 +26,7 @@
 - Min hit area: `44px` height (control can be visually smaller than hit target).
 - Focus-visible ring:
   - 1px outline with `var(--color-border-brand-base)`,
-  - 4px offset from the outer control.
+  - 2px offset from the outer control.
 
 ## Tokens
 - Borders:
@@ -153,6 +153,7 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 **CSS updates required:**
 1. **Unselected hover state**: Change background from `var(--color-background-gray-light)` to `var(--color-background-component)` (lines 59, 74 in spec).
 2. **Selected indicator fill**: Change from `var(--color-background-controls-brand-base)` to `var(--color-background-brand-base)` (lines 62-65, 77-80 in spec).
+3. **Focus offset**: Change from `3px` to `2px` (line 29 in spec).
 
 ## Source Mapping
 - Figma component (map): Radio Button (`8505:14225`)
