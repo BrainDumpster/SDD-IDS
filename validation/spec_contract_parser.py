@@ -83,6 +83,18 @@ class SpecContractParser:
             if quoted:
                 variants.extend(quoted)
 
+        # Fallback: `type` prop bullet (e.g. Toast: `info | critical | ...`).
+        type_bullet = re.search(r"^\s*-\s*`type`\s*:\s*`([^`]+)`", spec_text, re.MULTILINE)
+        if type_bullet:
+            variants.extend(
+                [p.strip() for p in type_bullet.group(1).split("|") if p.strip()]
+            )
+
+        # Fallback: "Supported types: `a`, `b`, ..." in variant matrix (common in IDS-AI specs).
+        for line in spec_text.splitlines():
+            if re.search(r"supported types\s*:", line, re.I):
+                variants.extend(re.findall(r"`([^`]+)`", line))
+
         return list(dict.fromkeys(variants))
 
     @staticmethod

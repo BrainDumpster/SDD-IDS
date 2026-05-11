@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
 import { DropdownMenu } from "./DropdownMenu";
-import { Icon } from "./Icon";
+import { IdsDropdownTriggerShell } from "./IdsDropdownTriggerShell";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 
 type Size = "small" | "large";
@@ -13,46 +13,30 @@ function SingleSelectTrigger({
   size = "large",
   disabled = false,
   error = false,
+  hover = false,
+  focusVisible = false,
 }: {
   value?: string;
   placeholder?: string;
   size?: Size;
   disabled?: boolean;
   error?: boolean;
+  hover?: boolean;
+  focusVisible?: boolean;
 }) {
-  const verticalPadding = size === "large" ? "10px" : "6px";
-  const borderColor = error
-    ? "var(--color-border-alerting-critical-base)"
-    : "var(--color-border-accessible)";
-  const textColor = disabled
-    ? "var(--color-text-disabled)"
-    : "var(--color-text-neutral)";
-  const background = disabled
-    ? "var(--color-background-gray-light)"
-    : "var(--color-background-component)";
-
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: 300,
-        border: `1px solid ${borderColor}`,
-        background,
-        padding: `${verticalPadding} var(--padding-padding-16)`,
-        fontSize: "var(--font-size-body-2)",
-        lineHeight: "var(--font-line-height-line-height-20)",
-        color: textColor,
-        cursor: disabled ? "not-allowed" : "pointer",
-        boxSizing: "border-box",
-      }}
-    >
-      <span>{value ?? placeholder}</span>
-      <span style={{ color: "var(--color-icon-accessible)", lineHeight: 0 }}>
-        <Icon shapeName="arrow-drop-tri-caret" style={{ width: 10, height: 10 }} />
-      </span>
-    </div>
+    <IdsDropdownTriggerShell
+      size={size}
+      disabled={disabled}
+      error={error}
+      hover={hover}
+      focusVisible={focusVisible}
+      left={
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {value ?? placeholder}
+        </span>
+      }
+    />
   );
 }
 
@@ -223,15 +207,15 @@ export const StatesAndSizes: Story = {
 
     return (
       <div style={{ width: 700, display: "grid", gap: 16 }}>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
           <DropdownMenu
-            trigger={<SingleSelectTrigger placeholder="Select" size="large" />}
+            trigger={<SingleSelectTrigger placeholder="Select" size="large" hover />}
             items={emptyItems}
             selectionMode="single"
             showSingleSelectRadio={showSingleSelectRadio}
           />
           <DropdownMenu
-            trigger={<SingleSelectTrigger value="Option 2" size="small" />}
+            trigger={<SingleSelectTrigger value="Option 2" size="small" focusVisible />}
             items={emptyItems}
             selectionMode="single"
             selectedValues={["Option 2"]}

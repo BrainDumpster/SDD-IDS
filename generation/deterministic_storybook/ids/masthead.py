@@ -26,6 +26,7 @@ import {{ IdsMasthead as {component_name}, IdsMastheadActionButtonContainer, Ids
 import {{ AppLauncher }} from "{app_launcher_import_path}";
 import {{ Icon }} from "{icon_import_path}";
 import userIcon from "../../../../assets/icons/user-single-16.svg";
+import "../../../../components/ids-ai-theme.css";
 
 const helpIconEl = <Icon shapeName="help-circ-16" style={{{{ width: 16, height: 16 }}}} />;
 

@@ -12,7 +12,7 @@ export interface IdsTooltipProps {
   align?: "start" | "center" | "end";
   showArrow?: boolean;
   closable?: boolean;
-  onClose?: (reason: "close-click") => void;
+  onClose?: (reason: "close-click" | "escape") => void;
 }
 
 export function IdsTooltip({
@@ -58,6 +58,12 @@ export function IdsTooltip({
     onClose?.("close-click");
   }, [onClose]);
 
+  const dismissTooltipWithEscape = useCallback(() => {
+    setManuallyDismissed(true);
+    setOpen(false);
+    onClose?.("escape");
+  }, [onClose]);
+
   const popupClassName = useMemo(
     () =>
       [
@@ -78,7 +84,14 @@ export function IdsTooltip({
         </BaseTooltip.Trigger>
         <BaseTooltip.Portal>
           <BaseTooltip.Positioner side={side} align={align} sideOffset={16}>
-            <BaseTooltip.Popup className={popupClassName}>
+            <BaseTooltip.Popup
+              className={popupClassName}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && closable) {
+                  dismissTooltipWithEscape();
+                }
+              }}
+            >
               {showArrow ? (
                 <BaseTooltip.Arrow className={styles.arrow}>
                   <svg className={styles.arrowSvg} viewBox="0 0 10 6" aria-hidden="true">
@@ -98,7 +111,7 @@ export function IdsTooltip({
                         aria-label="Close tooltip"
                         onClick={dismissTooltip}
                       >
-                        <Icon shapeName="shape-x" variant="img" className={styles.closeIcon} />
+                        <Icon shapeName="shape-x" className={styles.closeIcon} />
                       </button>
                     ) : null}
                   </div>

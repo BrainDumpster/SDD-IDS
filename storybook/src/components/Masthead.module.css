@@ -3,13 +3,9 @@
   align-items: center;
   justify-content: space-between;
   height: var(--scale-56);
-  padding: 0 var(--padding-padding-16);
-  background:
-    linear-gradient(
-      90deg,
-      var(--color-background-gradient-masthead-start) 0%,
-      var(--color-background-gradient-masthead-end) 100%
-    );
+  padding: 0 var(--padding-padding-8) 0 var(--padding-padding-16);
+  background: var(--color-background-masthead-brand-base);
+  border-bottom: var(--border-width-border-default) solid var(--color-border-transparent-neutral);
   font-family: inherit;
   box-sizing: border-box;
 }
@@ -17,7 +13,7 @@
 .left {
   display: flex;
   align-items: center;
-  gap: var(--spacing-space-24);
+  gap: var(--spacing-space-8);
   min-width: 0;
 }
 
@@ -35,7 +31,7 @@
   display: flex;
   align-items: center;
   color: var(--color-text-white);
-  font-size: var(--font-size-body-2);
+  font-size: var(--font-size-header-6);
   line-height: var(--font-line-height-line-height-32);
   font-weight: 400;
   white-space: nowrap;
@@ -87,12 +83,12 @@
 }
 
 .iconButton:hover {
-  background-color: rgba(255, 255, 255, 0.14);
+  background-color: var(--color-background-masthead-brand-strong);
 }
 
 .iconButton:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-text-white);
-  outline-offset: 1px;
+  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline-offset: -1px;
 }
 
 .actionButtonContainer {
@@ -119,16 +115,17 @@
 }
 
 .actionIconButton:hover {
-  background-color: var(--color-background-controls-brand-strong);
+  background-color: var(--color-background-masthead-brand-strong);
 }
 
+.actionIconButton:active:not(:disabled),
 .actionIconButton[aria-pressed="true"] {
   background-color: var(--color-background-masthead-brand-stronger);
 }
 
 .actionIconButton:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-text-white);
-  outline-offset: 1px;
+  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline-offset: -1px;
 }
 
 .actionIconGlyph {
@@ -155,12 +152,17 @@
 }
 
 .avatarAction:hover {
-  background-color: var(--color-background-controls-brand-strong);
+  background-color: var(--color-background-masthead-brand-strong);
+}
+
+.avatarAction:active:not(:disabled),
+.avatarAction[aria-pressed="true"] {
+  background-color: var(--color-background-masthead-brand-stronger);
 }
 
 .avatarAction:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-text-white);
-  outline-offset: 1px;
+  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline-offset: -1px;
 }
 
 .avatarChip {
@@ -170,7 +172,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: var(--border-width-border-1) solid rgba(255, 255, 255, 0.6);
+  border: var(--border-width-border-1) solid var(--color-border-white);
   color: var(--color-text-white);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);

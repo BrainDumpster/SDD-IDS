@@ -6,12 +6,13 @@
 - **Component:** Segmented Button
 - **Category:** Formelements
 - **Design System:** IDS-AI
+- **Component map (canonical):** `data/ids-ai-component-figma-map.json` → entry `slug` **`segmented-button`** (`fileKey` **`rr8F0NGA6RNY9Z0cNeh3jh`**).
 - **Figma documentation board (Light / Dark / matrices / elements):** `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42113-67341&m=dev`
 - **Node ID (documentation frame):** `42113:67341` — contains **Light** / **Dark** scenario wrappers, **SegmentedButton-Main** component set, and **Elements** (nested symbols).
-- **Main component set:** `8218:13149` — **`SegmentedButton-Main`** (30 variants: `Type` × `# Options` × `Option 2 State`).
+- **Main component set:** `8218:13149` — **`SegmentedButton-Main`** — **24** published symbols: `(Type=Text × # Options ∈ {2,3,4,5} × Option 2 State) ∪ (Type=Icon × # Options ∈ {2,3} × Option 2 State)` with **four** states each (**Inactive**, **Hover**, **Press**, **Focus**) on **Option 2** only while **Option 1** stays selected (verified via Figma MCP `get_metadata` on `8218:13149`, 2026-05-10).
 - **Figma file key:** `rr8F0NGA6RNY9Z0cNeh3jh`
 - **Light scenario content (instances):** `42113:67348` (child of **Light** on the documentation board)
-- **Dark scenario content (instances):** `42113:67351` (child of **Dark** on the documentation board)
+- **Dark scenario content (instances):** `42113:67351` (same as **scenarios** node in `ids-ai-component-figma-map.json`)
 - **Text option component node:** `9015:20992` (`.Segemented Button Text` — Figma spelling)
 - **Icon option component node:** `10148:29576` (`.SegementedButton-Element-OptionIcon`)
 - **Additional icon element node:** `10148:29563` (`.SegementedButton-Element-Icons` — list / tree / grid artwork; **Blue** vs **White** tints)
@@ -22,12 +23,13 @@
   - Dark scenarios: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42113-67351&m=dev`
   - Text option component: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=9015-20992&m=dev`
   - Icon option component: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=10148-29576&m=dev`
-- **Variant axes (from Figma component set):**
+  - Icon list / tints: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=10148-29563&m=dev`
+- **Variant axes (from Figma component set — `get_design_context` on `8218:13149`):**
   - **Type:** `Text` | `Icon`
-  - **# Options:** `2`–`5` when `Type=Text`; `2`–`3` when `Type=Icon`
-  - **Option 2 State (documentation variants):** `Inactive` | `Hover` | `Press` | `Focus` — Figma uses this axis to demonstrate interaction styling on a *non-selected* segment (selected segment remains `Option 1` in those examples).
-  - **Low res:** `No` in source set (treat as standard-density reference).
+  - **# Options:** `"2"` | `"3"` | `"4"` | `"5"` when `Type=Text`; `"2"` | `"3"` when `Type=Icon`
+  - **Option 2 State:** `Inactive` | `Hover` | `Press` | `Focus` — only the **second** segment’s interaction is varied; **Option 1** remains the selected segment in the matrix.
 - **Usage (from Figma description):** Segmented control / view switcher; mutually exclusive selection.
+- **Last live verification (2026-05-10):** Figma MCP `get_design_context` + `get_metadata` on `8218:13149`; `get_variable_defs` on `8218:13149` — confirms root `padding-2`, `spacing/space-2` gap, `radius-2`, `border-default` + `Color/Border/Accessible`, text cells `padding-8` / `padding-4`, selected segment `Color/Background/Controls/Brand-Base` + `Color/Border/Brand-Base`, icon cells `size-32`, glyph lane `16×14`, `Body 2`, hover/press surfaces `brand-lighter` / `brand-light`.
 
 ## Anatomy
 - **root:** outer grouping container with border, inner padding, horizontal flex layout, and gap between segment cells.
@@ -45,14 +47,15 @@
   - Gap between segment cells: `var(--spacing-space-2)` (Figma: `2px` — separates rounded segment rectangles).
   - Layout: horizontal `flex`; **Text** segments use equal flex distribution (`flex: 1 1 0%` / min-width rules as needed for truncation).
 - **Text segment (standard density)**
-  - Row frame height (Figma sample): `32px` total for the Text examples.
-  - Cell padding: vertical `var(--padding-padding-4)`, horizontal `var(--padding-padding-8)` (matches Figma `4px` / `8px`).
+  - Row frame height: **`32px`** per published **Text** symbols on `8218:13149` (e.g. `8218:13150`, `9015:22161`).
+  - Cell padding: vertical `var(--padding-padding-4)`, horizontal `var(--padding-padding-8)` (Figma export: `padding-4` / `padding-8`).
   - Typography: `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`.
   - Label: no wrap in reference layout (`whitespace: nowrap`); overflow behavior is runtime-defined (ellipsis + `title`/`aria-label` recommended for long strings).
+  - **Sample-only frame widths** (Figma matrix instances — runtime width is container-driven): Text `# Options=2` → `260px`, `3` → `370px`, `4` → `500px`, `5` → `600px` (from `get_design_context` export on `8218:13149`).
 - **Icon segment**
-  - **Segment surface:** **`32px` × `32px`** square (`var(--sizing-size-32)`), centered in the row (Figma: `10148:29576` / composed `8218:13156`).
-  - **Root + icon row height:** outer container uses the same **`2px`** inset padding as Text; **`32px`** cells + vertical inset → **~`36px`** total height for Icon-type `SegmentedButton-Main` (not 37px).
-  - **Glyph frame inside the cell:** **`16px` × `14px`** artwork bounds (Figma export); center within the `32px` square.
+  - **Segment surface:** **`32px` × `32px`** square (`var(--sizing-size-32)`), `rounded-[var(--corner-radius-radius-2)]` (Figma: `10148:29576` / composed e.g. `8218:13156`).
+  - **Published symbol bounds (sample):** **`70×36`** for `Type=Icon, # Options=2`, **`104×36`** for `# Options=3` — height **`36px`** includes root **`2px`** top/bottom padding plus **`32px`** cell row (`get_metadata` on `8218:13149`).
+  - **Glyph frame inside the cell:** **`16px` × `14px`** artwork bounds (`Sizing/size-16` × `14` in variable defs); center within the `32px` square.
   - **Inner layout:** no extra horizontal padding token on the icon cell — the **`32px`** box is the hit target; root still supplies **`2px`** padding and **`2px`** gap between cells.
 - **Focus-visible**
   - Non-selected segment in **Focus** uses a **`1px`** focus border: `var(--border-width-border-1)` solid `var(--color-border-brand-base)` on the segment cell (Figma: brand border on the focused segment).
@@ -276,9 +279,11 @@ Bundle rule: any slug used at runtime MUST exist in the app bundle under `assets
 - [ ] Disabled extension still meets contrast or documents exception.
 
 ## Source Mapping
+- **Component map:** `data/ids-ai-component-figma-map.json` → **`segmented-button`** (`nodeId` **`8218-13149`**, `scenariosNodeId` **`42113-67351`**, text/icon/icon-list element URLs as in that file).
 - **Documentation board:** `42113:67341`
-- **Main component set:** `8218:13149` (`SegmentedButton-Main`)
+- **Main component set:** `8218:13149` (`SegmentedButton-Main`) — **24** variant symbols (`get_metadata` child `symbol` list, 2026-05-10).
 - **Light scenario content:** `42113:67348` · **Dark scenario content:** `42113:67351`
 - **Element frames:** `9015:20992`, `10148:29576`, `10148:29563`
-- **Component map:** `data/component-figma-map.json` → **Segmented Button (IDS-AI)**
-- **Live verification (Figma MCP):** `get_metadata` / `get_design_context` on `42113:67341`, `8218:13150` (text 2-option default), `8218:13156` (icon 2-option default), `10148:29585` (icon selected), `10148:29597` (icon unselected), `9015:20991` (text active cell); `get_variable_defs` on `42113:67341` — **2026-05-10**.
+- **Live verification (Figma MCP, 2026-05-10):**
+  - `get_metadata` + `get_design_context` on `8218:13149` — variant axes, layout tokens, sample widths, icon `70×36` / `104×36` symbol frames.
+  - `get_variable_defs` on `8218:13149` — semantic color/spacing/radius/typography bindings listed in **Tokens** / state tables.

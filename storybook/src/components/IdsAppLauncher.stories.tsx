@@ -1,13 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { AppLauncher } from "./AppLauncher";
+import "../../../components/ids-ai-theme.css";
 
 const meta: Meta<typeof AppLauncher> = {
-  title: "IDS/App Launcher",
+  title: "IDS-AI/App Launcher",
   component: AppLauncher,
   args: {
     triggerVariant: "masthead",
     sideOffset: 0,
     columns: 2,
+  },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "IDS-AI App Launcher per `components/ids-ai/app-launcher/design-spec.mdx` and Figma nodes `13231:123761`, `42266:95085`, `13231:109521`, `12579:19717` (see `data/ids-ai-component-figma-map.json`).",
+      },
+    },
   },
 };
 

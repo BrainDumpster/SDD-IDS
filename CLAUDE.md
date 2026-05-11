@@ -95,6 +95,7 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 
 ### Important Data Files
 - `data/component-figma-map.json` — IDS component → Figma URL + node ID. **Read this first** when working with any IDS component's Figma data.
+- `data/ids-ai-component-figma-map.json` — IDS-AI program components → Figma URLs + node IDs (used when `DESIGN_SYSTEM=ids-ai` via `config/design_systems/ids-ai.yaml`).
 - `data/synapse-component-figma-map.json` — Synapse component → Figma node IDs (~80 entries).
 - `data/synapse-baseui-mapping.json` — maps each Synapse component to its Base UI implementation strategy.
 - `data/synapse-component-registry.json` — Synapse component anatomy, states, variants, tokens.

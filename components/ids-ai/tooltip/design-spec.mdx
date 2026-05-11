@@ -1,5 +1,5 @@
 <!-- ds:inherits root-spec -->
-# Tooltip (IDS)
+# Tooltip (IDS-AI)
 
 ## Metadata
 - Component: Tooltip
@@ -16,6 +16,7 @@
   - `38201:109623..109643` (`Arrow Pointing=Up`, `Arrow Positioned=Start|Center|End`)
   - `38201:109653..109673` (`Arrow Pointing=Right`, `Arrow Positioned=Start|Center|End`)
   - `38201:109683..109703` (`Arrow Pointing=Left`, `Arrow Positioned=Start|Center|End`)
+- **Last live verification (2026-05-11):** Figma MCP `get_metadata` + `get_design_context` on `38201:109592` (`Tooltip-Main` matrix), `42636:14698` (scenarios), `38201:109497` (elements templates); `get_variable_defs` on `38201:109592` for token bindings (`radius-8`, `border-default`, `surface-2`, typography, spacing).
 
 ## Anatomy
 - `TriggerAnchor`: element that owns tooltip visibility.
@@ -28,11 +29,11 @@
 
 ## Layout & Measurements
 - Top/bottom arrow variants:
-  - outer sample size: `244x143`
+  - outer sample size: `244x163`
   - content panel width: `240`
   - arrow lane height: `12`
 - Left/right arrow variants:
-  - outer sample size: `255x132`
+  - outer sample size: `255x152`
   - content panel width: `240`
   - arrow lane width: `12`
 - Panel content padding: `12px`.
@@ -74,7 +75,7 @@ Typography contract:
 |---|---|---|---|
 | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-text-neutral)` |
 | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` |
-| Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close icon uses semantic neutral icon token |
+| Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close icon uses semantic neutral-strong token |
 | Any arrow side/align | same as panel | same as panel | n/a |
 
 ## States (Dark Theme)
@@ -82,7 +83,7 @@ Typography contract:
 |---|---|---|---|
 | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | body `var(--color-text-neutral)` (dark-resolved) |
 | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` (dark-resolved) |
-| Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | close icon uses semantic neutral icon token (dark-resolved) |
+| Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | close icon uses semantic neutral-strong token (dark-resolved) |
 | Any arrow side/align | same as panel | same as panel | n/a |
 
 ## Interactions
@@ -177,5 +178,5 @@ Validation checklist (pass/fail):
   - Up: `38201:109623`, `38201:109633`, `38201:109643`
   - Right: `38201:109653`, `38201:109663`, `38201:109673`
   - Left: `38201:109683`, `38201:109693`, `38201:109703`
-- Verification method: Figma MCP (`get_variable_defs`)
-- Verified at: 2026-05-09
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Verified at: 2026-05-11

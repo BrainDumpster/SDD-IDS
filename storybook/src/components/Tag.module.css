@@ -2,8 +2,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: 24px;
+  border: var(--border-width-border-default) solid var(--color-border-accessible);
+  border-radius: var(--corner-radius-radius-24);
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   white-space: nowrap;
@@ -60,13 +60,10 @@
   border-color: var(--color-border-alerting-critical-base);
 }
 
-.tag[data-hover] {
-  filter: brightness(0.98);
-}
-
 .tag[data-focus] {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 3px;
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  /* Figma focus layer `inset-[-4px]` on `42065:39233` — outer ring gap ≈ 4px */
+  outline-offset: 4px;
 }
 
 /* Tone + emphasis */
@@ -76,15 +73,16 @@
   color: var(--color-text-neutral);
 }
 
+/* Read-only alerting: Figma `38910:51200` / `AlertingTags` — border uses *-white tokens (same hue in light, ring in dark). */
 .tone_info.emphasis_light {
   background: var(--color-background-alerting-info);
-  border-color: var(--color-background-alerting-info);
+  border-color: var(--color-border-alerting-info-white);
   color: var(--color-text-white);
 }
 
 .tone_success.emphasis_light {
   background: var(--color-background-alerting-success);
-  border-color: var(--color-background-alerting-success);
+  border-color: var(--color-border-alerting-success-white);
   color: var(--color-text-white);
 }
 
@@ -96,13 +94,13 @@
 
 .tone_major.emphasis_light {
   background: var(--color-background-alerting-major);
-  border-color: var(--color-background-alerting-major);
+  border-color: var(--color-border-alerting-major-white);
   color: var(--color-text-white);
 }
 
 .tone_critical.emphasis_light {
   background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-white);
   color: var(--color-text-white);
 }
 
@@ -142,8 +140,26 @@
   color: var(--color-text-white);
 }
 
+.clickable.tone_non-alerting:not(.selected) {
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+}
+
 .clickable:not(.selected) {
   border-color: var(--color-border-brand-base);
+}
+
+/* Figma `42065:39258` / `42065:39261` — clickable hover on neutral outline + selected fill */
+.clickable.tone_non-alerting:not(.selected):hover:not([data-disabled]),
+.clickable.tone_non-alerting:not(.selected)[data-hover]:not([data-disabled]) {
+  background: var(--color-background-controls-brand-lighter);
+  border-color: var(--color-border-brand-base);
+}
+
+.clickable.selected:hover:not([data-disabled]),
+.clickable.selected[data-hover]:not([data-disabled]) {
+  background: var(--color-background-controls-brand-strong);
+  border-color: var(--color-border-transparent-brand);
 }
 
 .tag[data-disabled] {
@@ -152,13 +168,13 @@
   color: var(--color-text-disabled);
 }
 
+.tag[data-disabled].editable {
+  background: var(--color-background-gray-lighter);
+}
+
 .tag[data-disabled] .label,
 .tag[data-disabled] .prefix {
   color: var(--color-text-disabled);
-}
-
-.tag[data-disabled] .badge {
-  opacity: 0.8;
 }
 
 .label,
@@ -175,7 +191,7 @@
   gap: 0;
   min-height: 20px;
   padding: 0 var(--padding-padding-2);
-  border: var(--border-width-border-1) solid transparent;
+  border: var(--border-width-border-default) solid transparent;
   border-radius: var(--corner-radius-radius-2);
   outline: none;
 }
@@ -193,17 +209,36 @@
 }
 
 .badge {
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
+  box-sizing: border-box;
+  min-width: var(--sizing-size-18);
+  height: var(--sizing-size-18);
+  padding: 0 var(--padding-padding-4);
   border-radius: 999px;
-  background: var(--color-background-controls-brand-base);
+  border: var(--border-width-border-default) solid var(--color-border-white);
+  background: var(--color-background-alerting-info-1);
   color: var(--color-text-white);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-body-3);
   line-height: 1;
+}
+
+.tag[data-disabled] .badge {
+  background: var(--color-static-gray-500);
+  border-color: var(--color-border-white);
+}
+
+.menuCaret {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
+}
+
+.editable .prefix,
+.typeBadge .prefix {
+  font-weight: 500;
 }
 
 .dismiss {

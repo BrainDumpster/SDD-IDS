@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { IdsBadge } from "./IdsBadge";
 import { DropdownMenu } from "./DropdownMenu";
 import { IdsTooltip } from "./IdsTooltip";
-import { Icon } from "./Icon";
+import { IdsDropdownTriggerShell } from "./IdsDropdownTriggerShell";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 
 type Size = "small" | "large";
@@ -17,6 +17,8 @@ function MultiSelectTrigger({
   error = false,
   hideSelectionList = false,
   showSelectedBadge = true,
+  hover = false,
+  focusVisible = false,
 }: {
   placeholder?: string;
   selectedLabels?: string[];
@@ -25,18 +27,9 @@ function MultiSelectTrigger({
   error?: boolean;
   hideSelectionList?: boolean;
   showSelectedBadge?: boolean;
+  hover?: boolean;
+  focusVisible?: boolean;
 }) {
-  const verticalPadding = size === "large" ? "10px" : "6px";
-  const borderColor = error
-    ? "var(--color-border-alerting-critical-base)"
-    : "var(--color-border-accessible)";
-  const textColor = disabled
-    ? "var(--color-text-disabled)"
-    : "var(--color-text-neutral)";
-  const background = disabled
-    ? "var(--color-background-gray-light)"
-    : "var(--color-background-component)";
-
   const selectedCount = selectedLabels.length;
   const showBadge = showSelectedBadge && selectedCount > 0;
   const listText = selectedCount === 0
@@ -46,65 +39,41 @@ function MultiSelectTrigger({
       : selectedLabels.join(", ");
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: 300,
-        border: `1px solid ${borderColor}`,
-        background,
-        padding: `${verticalPadding} var(--padding-padding-16)`,
-        fontSize: "var(--font-size-body-2)",
-        lineHeight: "var(--font-line-height-line-height-20)",
-        color: textColor,
-        cursor: disabled ? "not-allowed" : "pointer",
-        boxSizing: "border-box",
-      }}
-    >
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          minWidth: 0,
-          flex: "1 1 auto",
-        }}
-      >
-        {showBadge ? (
-          <IdsTooltip
-            side="top"
-            align="start"
-            title={`${selectedCount} Items`}
-            content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
-            showArrow
+    <IdsDropdownTriggerShell
+      size={size}
+      disabled={disabled}
+      error={error}
+      hover={hover}
+      focusVisible={focusVisible}
+      left={
+        <>
+          {showBadge ? (
+            <IdsTooltip
+              side="top"
+              align="start"
+              title={`${selectedCount} Items`}
+              content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
+              showArrow
+            >
+              <span style={{ display: "inline-flex" }}>
+                <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
+              </span>
+            </IdsTooltip>
+          ) : null}
+          <span
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              flex: "1 1 auto",
+              minWidth: 0,
+            }}
           >
-            <span style={{ display: "inline-flex" }}>
-              <IdsBadge value={selectedCount} type={disabled ? "disabled" : "default"} />
-            </span>
-          </IdsTooltip>
-        ) : null}
-        <span
-          style={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {listText}
-        </span>
-      </span>
-      <span
-        style={{
-          color: "var(--color-icon-accessible)",
-          marginLeft: 8,
-          lineHeight: 0,
-          flexShrink: 0,
-        }}
-      >
-        <Icon shapeName="arrow-drop-tri-caret" style={{ width: 10, height: 10 }} />
-      </span>
-    </div>
+            {listText}
+          </span>
+        </>
+      }
+    />
   );
 }
 
@@ -312,9 +281,9 @@ export const StatesAndDetails: Story = {
 
     return (
       <div style={{ width: 980, display: "grid", gap: 16 }}>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
           <DropdownMenu
-            trigger={<MultiSelectTrigger selectedLabels={[]} size="large" />}
+            trigger={<MultiSelectTrigger selectedLabels={[]} size="large" hover />}
             items={useMultiItems(options, selected, setSelected)}
             selectionMode="multi"
             selectedValues={selected}
@@ -326,7 +295,7 @@ export const StatesAndDetails: Story = {
             clearAllDisabled={selected.length === 0}
           />
           <DropdownMenu
-            trigger={<MultiSelectTrigger selectedLabels={selected} size="small" />}
+            trigger={<MultiSelectTrigger selectedLabels={selected} size="small" focusVisible />}
             items={useMultiItems(options, selected, setSelected)}
             selectionMode="multi"
             selectedValues={selected}

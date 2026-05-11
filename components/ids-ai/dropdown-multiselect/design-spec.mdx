@@ -3,247 +3,116 @@
 # Dropdown: Multiselect Design Spec
 
 ## Metadata
-- Component: Dropdown: Multiselect
-- Category: Formelements
-- Design System: IDS-AI
-- Figma component: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=12730-157002&m=dev`
-- Figma scenarios: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=43415-176792&m=dev`
-- Figma menu elements: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=29393-143195&m=dev`
-- Figma option states: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=29392-48763&m=dev`
-- Figma selected badge + tooltip refs: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=29716-46779&m=dev`, `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=12730-120316&m=dev`
-- File key: `rr8F0NGA6RNY9Z0cNeh3jh`
+- **Component:** Dropdown: Multiselect
+- **Category:** Formelements
+- **Design system:** IDS-AI
+- **Spec path:** `components/ids-ai/dropdown-multiselect/design-spec.mdx`
+- **Component map:** `data/ids-ai-component-figma-map.json` → parent slug **`dropdown-combo-box`** (this spec is the **multi-select** variant contract).
+- **IDS-AI Figma file key:** `rr8F0NGA6RNY9Z0cNeh3jh`
+- **Multi-select main component:** `12730:157002` — `Dropdown-ComboBox-MultiSelect-Main`  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=12730-157002&m=dev
+- **Scenarios:** `43415:176792`  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=43415-176792&m=dev
+- **Menu elements:** `29393:143195`  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=29393-143195&m=dev
+- **Option state matrix:** `29392:48763`  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=29392-48763&m=dev
+- **Count badge reference:** `29716:46779`  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=29716-46779&m=dev
+- **“Show Selected” row:** `12730:120316` (`.Dropdown-Element-Selection1`)  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=12730-120316&m=dev
+- **Verification method:** Figma MCP (`get_design_context`, `get_metadata`, `get_variable_defs`)
+- **Last live verification (2026-05-10):** `get_design_context` on **`12730:157002`** (badge, disabled badge, select-all row, search, list, focus ring); `get_variable_defs` on **`12730:157002`**; `get_metadata` on **`29393:143195`**.
 
 ## Anatomy
 1. `DropdownMultiSelectRoot`
-2. optional `Label`
-3. `FieldContainer`
-4. `ValueSlot` (placeholder or selected summary)
-5. `IndicatorSlot` (caret)
-6. optional `HelperText`
-7. optional `ValidationError` (critical icon + text)
-8. optional `MenuPopup`
-9. optional `SearchRow`
-10. optional `SelectAllClearAllRow`
-11. `OptionList`
-12. optional `SectionHeaderRow[]`
-13. optional `ActionRow`
-14. optional `SelectedCountBadge` (IDS Badge)
-15. optional `SelectedCountTooltip` (IDS Tooltip)
+2. optional `Label` (same label treatment as single-select / combo)
+3. `FieldContainer` (`var(--corner-radius-radius-4)`)
+4. `ValueSlot` — optional **`SelectedCountBadge`** + truncated label summary; inner gap **`var(--spacing-space-4)`**
+5. `IndicatorSlot` — caret **`10×10`**, caret padding tokens (`var(--padding-padding-1)` × `var(--padding-component-padding-dropdown-caret)`); outer value–caret gap **`var(--spacing-space-10)`**
+6. optional `HelperText` / `ValidationError`
+7. optional `MenuPopup` (radius-4, neutral-light border, shadow)
+8. optional `SearchRow` (Search-Main: **radius-6** inner field)
+9. `SelectAllClearAllRow` (fixed; bottom border **`var(--color-border-neutral-light)`**)
+10. `OptionList` (checkbox **`16×16`** per `12730:157002` export)
+11. optional `ShowSelected` filter row (`12730:120316` — “Show Selected” text `var(--color-text-brand-strong)` + caret + dismiss `shape-x-thick` **10×10**)
+12. optional `ActionRow`
+13. optional `SelectedCountTooltip`
 
 ## Layout & Measurements
-- Field sizes:
-  - `Large`: `40px`
-  - `Small`: `32px`
-- Field horizontal padding: `var(--padding-padding-16)`.
-- Field vertical padding:
-  - Large: `var(--padding-padding-10)`
-  - Small: `var(--padding-padding-6)`
-- Checkbox geometry (must follow IDS checkbox spec):
-  - outer `16x16`
-  - checkmark glyph inside selected control
-  - optional indeterminate dash for mixed state.
-- Option rows:
-  - tokenized visual rhythm (`10px` vertical, `16px` horizontal)
-  - minimum hit area: `44px`.
-- Menu width:
-  - sample `300px`
-  - runtime contract: matches trigger width unless host overrides.
-- `SelectAllClearAllRow`:
-  - fixed/stable row above options
-  - not scrollable with options list
-  - clear top/bottom border separation.
-- Options list:
-  - scrollable region for long sets (overflow menu variants).
-- Selected count badge:
-  - uses IDS Badge size/shape contract (`18px` pill).
+- **Field:** Large **40px** / Small **32px**; **`var(--padding-padding-16)`** horizontal; vertical **10** / **6**; **focus ring 5px** offset (`12730:157002`).
+- **Badge:** **`var(--sizing-size-18)`** tall pill; horizontal padding sample **~5.5px** → **`var(--padding-padding-4)`** or nearest; typography **`var(--font-size-body-3)`**; fill **`var(--color-background-controls-brand-base)`**; stroke **`var(--color-border-white)`**. **Disabled field + selections:** badge fill **`var(--color-static-gray-500)`** (same white stroke).
+- **Option rows:** padding **10 / 16**; min target **44px**; checkbox **16×16**.
+- **Select-all row:** padding **`8`** vertical, **`16`** horizontal; divider **`neutral-light`** bottom.
+- **Show Selected row:** padding structure per `12730:120316` (horizontal **`16`** on control, **`8`** on trailing area samples in export).
 
 ## Tokens
-- Field/menu tokens:
-  - `var(--color-background-component)`
-  - `var(--color-border-accessible)`
-  - `var(--color-border-strong)`
-  - `var(--color-border-brand-base)`
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-text-disabled)`
-  - `var(--color-background-gray-light)`
-  - `var(--color-background-gray-lighter)`
-- Selection tokens:
-  - `var(--color-background-controls-brand-lighter)`
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-background-controls-brand-strong)`
-  - `var(--color-text-brand-strong)`
-  - `var(--color-border-transparent-brand)`
-  - `var(--color-icon-white)`
-  - `var(--color-icon-inverse)`
-- Error tokens:
-  - `var(--color-border-alerting-critical-base)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-text-critical)`
-- Geometry/spacing:
-  - `var(--corner-radius-radius-2)`
-  - `var(--corner-radius-radius-4)`
-  - `var(--spacing-space-8)`
-  - `var(--padding-padding-8)`
-  - `var(--padding-padding-10)`
-  - `var(--padding-padding-16)`
+- Field/menu: `var(--color-background-component)`, `var(--color-border-accessible)`, `var(--color-border-strong)`, `var(--color-border-neutral-light)`, `var(--color-border-brand-base)`, `var(--color-text-neutral)`, `var(--color-text-neutral-strong)`, `var(--color-text-disabled)`, `var(--color-text-brand-strong)`, `var(--color-background-gray-light)`
+- Selection / controls: `var(--color-background-controls-brand-base)`, `var(--color-border-white)`, `var(--color-text-white)`, `var(--color-static-gray-500)` (disabled count badge fill), `var(--color-icon-brand-base)`, `var(--color-icon-accessible)`
+- List hover: `var(--color-background-brand-lighter)` + inset **`var(--color-border-brand-base)`** hairlines
+- Error: `var(--color-border-alerting-critical-base)`, `var(--color-icon-alerting-critical)`, `var(--color-text-critical)`
+- Geometry: `var(--corner-radius-radius-2)`, `var(--corner-radius-radius-4)`, `var(--corner-radius-radius-6)`, `var(--spacing-space-4)`, `var(--spacing-space-8)`, `var(--spacing-space-10)`, `var(--spacing-space-16)`, `var(--padding-padding-1)`, `var(--padding-padding-6)`, `var(--padding-padding-8)`, `var(--padding-padding-10)`, `var(--padding-padding-16)`, `var(--padding-component-padding-dropdown-caret)`, `var(--font-size-body-2)`, `var(--font-size-body-3)`
 
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Field container | default | component | accessible border | neutral text + accessible icon |
-| Field container | hover | component | strong border | neutral text |
-| Field container | show-dropdown | component | accessible border | neutral text |
-| Field container | focus-visible | component | brand border + focus ring | neutral text |
-| Field container | disabled | gray-light | disabled border | disabled text/icon |
-| Field container | error | component | critical border | critical helper/icon |
-| Option row | default | component | none | neutral/strong text per checkbox spec |
-| Option row | hover | brand-lighter | tokenized hover stroke | neutral text |
-| Option row | selected (multi) | component | none | checkbox selected + neutral text |
-| Option row | indeterminate | component | none | checkbox dash token state |
-| Option row | disabled | component/gray-light per checkbox matrix | disabled border | disabled text |
-| SelectAll row | default | component | accessible divider | neutral text + checkbox |
-| ClearAll action | default | transparent | none | brand-strong |
-| ClearAll action | disabled | transparent | none | disabled text |
+| Field | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral + caret accessible |
+| Field | hover | `var(--color-background-component)` | `var(--color-border-strong)` | neutral |
+| Field | show-dropdown | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral |
+| Field | focus-visible | `var(--color-background-component)` | accessible + brand ring (**5px** offset) | neutral |
+| Field | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | disabled text; caret **disabled** color |
+| Field | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | critical helper |
+| Count badge | default | `var(--color-background-controls-brand-base)` | `var(--color-border-white)` | `var(--color-text-white)` / body-3 |
+| Count badge | disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Option row | default | `var(--color-background-component)` | none | neutral / strong per column |
+| Option row | hover | `var(--color-background-brand-lighter)` | inset brand hairlines | neutral |
+| Option row | selected | component + filled checkbox | none | neutral |
+| Option row | indeterminate (select-all) | component / brand rules per checkbox | `var(--color-border-brand-base)` dash cell | per `29392:48763` |
+| Clear All | disabled (zero selection) | transparent | none | `var(--color-text-disabled)` |
+| Clear All | default | transparent | none | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
-Dark theme must preserve the same state matrix and resolve values through semantic IDS tokens only.
-
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/selected/indeterminate/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
-| SelectAll / ClearAll | default/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+| Field | default / hover / open / focus / disabled / error | same roles as Light using semantic vars | same | same |
+| Count badge | default / disabled | `var(--color-background-controls-brand-base)` / `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Option row | default / hover / selected / indeterminate / disabled | per Light structure | per Light structure | per Light structure |
+| Clear All | default / disabled | transparent | none | `var(--color-text-brand-strong)` / `var(--color-text-disabled)` |
 
 ## Interactions
-- Trigger:
-  - click/`Enter`/`Space` toggles menu.
-  - `Escape` closes menu and restores trigger focus.
-- Option selection:
-  - clicking option toggles inclusion in selected set.
-  - disabled options cannot be toggled.
-- `Select All`:
-  - selects all currently visible and enabled options (post-filter semantics).
-  - checkbox state:
-    - checked when all visible enabled options selected
-    - indeterminate when partial
-    - unchecked when none.
-- `Clear All`:
-  - clears entire selected set
-  - disabled when selected count is zero.
-- Search:
-  - filters visible options in real time; source options remain unchanged.
-- Badge + tooltip:
-  - selected count badge updates with selected length.
-  - tooltip content shows selected summary/details when enabled.
-- Optional action row:
-  - user-defined label
-  - emits explicit action event.
+- Same as prior multi contract: toggle options, select all visible enabled, clear all, search filter, show-selected row when enabled.
 
 ## Composition & API (runtime)
+(Unchanged prop table semantics; badge shows **controls** brand styling, not informational alerting blue.)
+
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
-| `size` | No | `"small" \| "large"` | Default `large`. |
-| `label` | No | `string` | Optional label. |
-| `placeholder` | No | `string` | User-defined placeholder. |
-| `helperText` | No | `string` | User-defined helper text. |
-| `errorText` | No | `string` | User-defined error text. |
-| `disabled` | No | `boolean` | Blocks trigger/menu interactions. |
-| `searchable` | No | `boolean` | Enables search row. |
-| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical options. |
-| `value` | No | `string[]` | Controlled selected values. |
-| `onChange` | No | `(values: string[] \| optionObject[]) => void` | Payload strategy app-defined. |
-| `showSelectAllClearAll` | No | `boolean` | Enables top controls row. |
-| `selectAllLabel` | No | `string` | Default `"Select All"`. |
-| `clearAllLabel` | No | `string` | Default `"Clear All"`. |
-| `onSelectAll` | No | `() => void` | Select all callback. |
-| `onClearAll` | No | `() => void` | Clear callback. |
-| `clearAllDisabled` | No | `boolean` | Disabled state for clear action. |
-| `showSelectedBadge` | No | `boolean` | Enables selected-count badge. |
-| `showSelectedTooltip` | No | `boolean` | Enables selected summary tooltip. |
-| `actionLabel` | No | `string` | Optional action row label. |
-| `onAction` | No | `() => void` | Optional action row event. |
-| `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
-| `onSearch` | No | `(query: string) => void` | Search callback. |
+| `size` | No | `"small" \| "large"` | |
+| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | |
+| `value` | No | `string[]` | |
+| `showSelectAllClearAll` | No | `boolean` | |
+| `clearAllDisabled` | No | `boolean` | When no selection. |
+| Other props | | | As in prior revision (`searchable`, `actionLabel`, tooltips, etc.). |
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic slot schema
-1. `DropdownMultiSelectRoot`
-2. optional `Label`
-3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
-4. optional `HelperText` or `ValidationError`
-5. optional `MenuPopup`
-6. optional `SearchRow`
-7. optional `SelectAllClearAllRow`
-8. `OptionList` -> `OptionRow[]`
-9. optional `SectionHeaderRow[]`
-10. optional `ActionRow`
-11. optional `SelectedCountBadge`
-12. optional `SelectedCountTooltip`
-
-### Supported matrix
-- `size`: `small | large`
-- `content`: `empty | selected-visible | selected-hidden`
-- `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
-- `option-state`: `default | hover | selected | indeterminate | focus-visible | disabled`
-- `menu-variant`: `small | overflowing | sectioned | with-action`
-- `controls-row`: `enabled | disabled`
-- `search`: `enabled | disabled`
-- `badge-tooltip`: `badge-off | badge-on-tooltip-off | badge-on-tooltip-on`
+`Root` → optional `Label` → `Field` (`Badge?` + `Summary` + `Caret`) → helper/error → `Popup` → `Search?` → `SelectAllClearAll` → `Options` → optional `ShowSelected` → optional `Action`
 
 ### Per-slot style contract
-- Field/menu/option styling must be token-only.
-- Checkbox visuals must match IDS checkbox design-spec (including indeterminate).
-- `SelectAllClearAllRow` must be fixed and outside scroll region.
-- `Clear All` disabled style uses disabled token.
-- Badge and tooltip must use IDS badge/tooltip specs respectively.
-
-### Behavior contract
-- Multi-select list is deterministic ordered selection set.
-- `Select All` and `Clear All` semantics are deterministic and filter-aware.
-- Indeterminate state reflects partial selection.
-- Disabled options are excluded from `Select All`.
-- Disabled field blocks open and mutation events.
-- Action row emits only `onAction` when present.
-
-### Accessibility contract
-- Trigger exposes combobox semantics.
-- Option rows expose checkbox semantics (`aria-checked=true|false|mixed`).
-- Validation text linked via `aria-describedby`.
-- `Select All` and `Clear All` are keyboard-activatable controls.
-
-### Asset resolution + bundling contract
-- Caret icon: `arrow-drop-tri-caret`.
-- Error icon: `status-critical-square-solid`.
-- Checkbox glyphs: `shape-check-checkbox`, `shape-dash-thick`.
-- Badge + tooltip are component dependencies, not duplicated custom visuals.
-
-### Fallback/error rules
-- Unknown `size` -> `large`.
-- Missing/empty options -> empty option list, no crash.
-- Unknown selected ids -> ignore and render remaining valid selections.
-- `clearAllDisabled` defaults true when no selection.
-- Unknown labels/events fallback to defaults/no-op callbacks.
+- **Badge** on field: **controls brand** fill + **white** border + **body-3** count; **disabled** fill **`var(--color-static-gray-500)`** — distinct from generic “info” badge palette.
+- **Checkbox** in list and select-all: **16×16** outer, **`var(--corner-radius-radius-2)`**, tokens per IDS-AI checkbox spec.
 
 ### Validation checklist
-- [ ] Main multi-select examples match `43406:39370`.
-- [ ] Component matrix matches `12608:93872`.
-- [ ] Menu structure matches `12579:19725`.
-- [ ] Option state matrix matches `12363:13866`.
-- [ ] `Select All` checked/unchecked/indeterminate and `Clear All` disabled states are correct.
-- [ ] `SelectAllClearAllRow` remains fixed while options scroll.
-- [ ] Badge uses IDS Badge spec and tooltip uses IDS Tooltip spec.
-- [ ] Light/dark outputs remain semantic-token driven.
+- [ ] Field + badge match **`12730:157002`** (including disabled gray badge).
+- [ ] Caret slot uses **`padding-dropdown-caret`** + **`padding-1`**; value–caret gap **`space-10`**.
+- [ ] Focus ring **5px** offset.
+- [ ] Menu + search + select-all row match **`29393:143195`** / **`12730:157002`** exports (**radius-6** search field).
+- [ ] Select-all row bottom border **`var(--color-border-neutral-light)`**.
+- [ ] Show Selected row matches **`12730:120316`**.
+- [ ] Checkbox column **`16×16`** in menu list (`12730:157002`).
 
 ## Source Mapping
-- Figma component: `12730:157002`
-- Figma scenarios: `43415:176792`
-- Figma menu elements: `29393:143195`
-- Figma option state elements: `29392:48763`
-- Figma badge + tooltip references: `29716:46779`, `12730:120316`
-- Badge dependency spec: `components/ids/badge/design-spec.mdx`
-- Tooltip dependency spec: `components/ids/tooltip/design-spec.mdx`
-- Checkbox dependency spec: `components/ids/checkbox/design-spec.mdx`
-- Component map: IDS-AI override input supplied directly by product links
-- Verification method: Figma MCP (`get_variable_defs`)
-- Verified at: 2026-05-09
+- **Canonical map:** `data/ids-ai-component-figma-map.json` → **`dropdown-combo-box`** (this **multiselect** spec).
+- **Nodes:** `12730:157002`, `43415:176792`, `29393:143195`, `29392:48763`, `29716:46779`, `12730:120316`.
+- **Dependencies:** `components/ids-ai/checkbox/design-spec.mdx`, `components/ids-ai/tooltip/design-spec.mdx`; badge geometry cross-check **`29716:46779`**.
+- **Live verification (2026-05-10):** Figma MCP as listed in Metadata.

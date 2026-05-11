@@ -6,7 +6,7 @@ token_transform: ids
 
 figma_file_key: "rr8F0NGA6RNY9Z0cNeh3jh"
 
-figma_map_path: data/component-figma-map.json
+figma_map_path: data/ids-ai-component-figma-map.json
 rules_path: rules.json
 allowed_tokens_path: allowed_tokens.json
 component_registry_path: component_registry.json

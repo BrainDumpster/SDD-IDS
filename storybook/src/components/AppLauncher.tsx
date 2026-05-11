@@ -6,8 +6,8 @@ import styles from "./AppLauncher.module.css";
 export interface AppLauncherProduct {
   id?: string;
   name: string;
-  /** Omit to use default `shield-encrypt-alt` asset (Figma sample). */
-  icon?: ReactNode;
+  /** Omit to use default `shield-encrypt-alt` (Figma). Pass `null` for no-icon tile (`13231:109521`). */
+  icon?: ReactNode | null;
   href?: string;
   onSelect?: () => void;
 }
@@ -31,17 +31,19 @@ export function AppLauncherProductTile({
   tileClassName,
 }: AppLauncherProductTileProps) {
   const graphic =
-    icon ?? (
+    icon === undefined ? (
       <Icon
         shapeName="shield-encrypt-alt"
         className={styles.defaultProductIcon}
         variant="inline"
       />
+    ) : (
+      icon
     );
 
   const inner = (
-    <div className={styles.labelStack}>
-      <div className={styles.iconSlot}>{graphic}</div>
+    <div className={[styles.labelStack, graphic ? "" : styles.labelStackNoIcon].filter(Boolean).join(" ")}>
+      {graphic ? <div className={styles.iconSlot}>{graphic}</div> : null}
       <span className={styles.appName}>{name}</span>
     </div>
   );
@@ -130,7 +132,10 @@ export interface AppLauncherProps {
   columns?: number;
   /** Trigger visual mode. Use `masthead` for white icon on masthead bar. */
   triggerVariant?: "default" | "masthead";
-  /** Popover vertical offset from trigger. Use `0` for attached masthead behavior. */
+  /**
+   * Popover vertical offset from trigger (px).
+   * For `masthead`, values below 1 are treated as 1 so the panel clears the masthead bottom border.
+   */
   sideOffset?: number;
 }
 
@@ -156,6 +161,8 @@ export function AppLauncher({
   const showOptions =
     (options && options.length > 0) || footerAction != null;
   const useTwoProductSeparator = list.length === 2 && !showOptions;
+  const positionerSideOffset =
+    triggerVariant === "masthead" ? Math.max(sideOffset, 1) : sideOffset;
 
   return (
     <Popover.Root>
@@ -180,7 +187,7 @@ export function AppLauncher({
         />
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Positioner sideOffset={sideOffset} align="end">
+        <Popover.Positioner sideOffset={positionerSideOffset} align="end">
           <Popover.Popup
             className={[
               styles.launcherSurface,

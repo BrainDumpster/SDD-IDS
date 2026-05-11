@@ -1,8 +1,17 @@
-import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentProps,
+} from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsPagination.module.css";
 
-export type IdsPaginationDropdownState = "collapsed" | "expanded-below" | "expanded-above";
+export type IdsPaginationDropdownState =
+  | "collapsed"
+  | "expanded-below"
+  | "expanded-above";
 export type IdsPaginationBackground = "none" | "gray";
 
 export interface IdsPaginationProps extends ComponentProps<"nav"> {
@@ -27,7 +36,9 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function normalizePageSizeOptions(options: number[]): number[] {
-  const uniquePositive = Array.from(new Set(options.filter((value) => Number.isFinite(value) && value > 0)));
+  const uniquePositive = Array.from(
+    new Set(options.filter((value) => Number.isFinite(value) && value > 0)),
+  );
   return uniquePositive.length > 0 ? uniquePositive : [25, 50, 75, 100];
 }
 
@@ -53,20 +64,30 @@ export function IdsPagination({
   const safeTotalPages = Math.max(1, totalPages);
   const controlledCurrentPage = clamp(currentPage, 1, safeTotalPages);
   const safePageSizeOptions = normalizePageSizeOptions(pageSizeOptions);
-  const safePageSize = safePageSizeOptions.includes(pageSize) ? pageSize : safePageSizeOptions[0];
+  const safePageSize = safePageSizeOptions.includes(pageSize)
+    ? pageSize
+    : safePageSizeOptions[0];
   const offsetOptions = useMemo(
     () =>
       pageOffsetOptions && pageOffsetOptions.length > 0
-        ? normalizePageSizeOptions(pageOffsetOptions).map((value) => clamp(value, 1, safeTotalPages))
+        ? normalizePageSizeOptions(pageOffsetOptions).map((value) =>
+            clamp(value, 1, safeTotalPages),
+          )
         : Array.from({ length: safeTotalPages }, (_, index) => index + 1),
-    [pageOffsetOptions, safeTotalPages]
+    [pageOffsetOptions, safeTotalPages],
   );
   const [internalPage, setInternalPage] = useState(controlledCurrentPage);
-  const [pageInputValue, setPageInputValue] = useState(String(controlledCurrentPage));
+  const [pageInputValue, setPageInputValue] = useState(
+    String(controlledCurrentPage),
+  );
   const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
   const [pageOffsetMenuOpen, setPageOffsetMenuOpen] = useState(false);
   const resolvedPerPageDropdownState =
-    dropdownState !== "collapsed" ? dropdownState : perPageMenuOpen ? "expanded-below" : "collapsed";
+    dropdownState !== "collapsed"
+      ? dropdownState
+      : perPageMenuOpen
+        ? "expanded-below"
+        : "collapsed";
   const safeCurrentPage = onPageChange ? controlledCurrentPage : internalPage;
   const resolvedPageOffsetDropdownState =
     pageOffsetDropdownState !== "collapsed"
@@ -150,12 +171,19 @@ export function IdsPagination({
               onClick={togglePerPageMenu}
               onBlur={(event) => {
                 const nextTarget = event.relatedTarget as Node | null;
-                if (nextTarget && event.currentTarget.parentElement?.contains(nextTarget)) return;
+                if (
+                  nextTarget &&
+                  event.currentTarget.parentElement?.contains(nextTarget)
+                )
+                  return;
                 closePerPageMenu();
               }}
             >
               <span>{safePageSize}</span>
-              <Icon shapeName="arrow-drop-tri-caret" className={styles.caretIcon} />
+              <Icon
+                shapeName="arrow-drop-tri-caret"
+                className={styles.caretIcon}
+              />
             </button>
             {resolvedPerPageDropdownState !== "collapsed" ? (
               <ul
@@ -178,7 +206,10 @@ export function IdsPagination({
                         type="button"
                         role="option"
                         aria-selected={selected}
-                        className={[styles.dropdownOption, selected ? styles.dropdownOptionSelected : ""]
+                        className={[
+                          styles.dropdownOption,
+                          selected ? styles.dropdownOptionSelected : "",
+                        ]
                           .filter(Boolean)
                           .join(" ")}
                         onClick={() => {
@@ -201,121 +232,149 @@ export function IdsPagination({
       )}
 
       <div className={styles.pageNavGroup}>
-        {showFirstLast ? (
-          <button
-            className={styles.iconButton}
-            type="button"
-            onClick={() => goToPage(1)}
-            disabled={disabled || atFirstPage}
-            aria-label="First page"
-          >
-            <Icon shapeName="double-chev-left" className={styles.navIcon} />
-          </button>
-        ) : null}
-        <button
-          className={styles.iconButton}
-          type="button"
-          onClick={() => goToPage(safeCurrentPage - 1)}
-          disabled={disabled || atFirstPage}
-          aria-label="Previous page"
-        >
-          <Icon shapeName="chev-left" className={styles.navIcon} />
-        </button>
-        {showPageOffset ? (
-          <div className={styles.pageOffsetWrap}>
-            <button
-              ref={pageOffsetRef}
-              className={styles.pageOffsetTrigger}
-              type="button"
-              disabled={disabled}
-              aria-haspopup="listbox"
-              aria-expanded={resolvedPageOffsetDropdownState !== "collapsed"}
-              aria-label="Page offset"
-              onClick={togglePageOffsetMenu}
-              onBlur={(event) => {
-                const nextTarget = event.relatedTarget as Node | null;
-                if (nextTarget && pageOffsetRef.current?.parentElement?.contains(nextTarget)) return;
-                closePageOffsetMenu();
-              }}
-            >
-              <span>{safeCurrentPage}</span>
-              <Icon shapeName="arrow-drop-tri-caret" className={styles.pageOffsetCaretIcon} />
-            </button>
-            {resolvedPageOffsetDropdownState !== "collapsed" ? (
-              <ul
-                className={[
-                  styles.pageOffsetMenu,
-                  resolvedPageOffsetDropdownState === "expanded-above"
-                    ? styles.pageOffsetMenuAbove
-                    : styles.pageOffsetMenuBelow,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                role="listbox"
-                aria-label="Page offsets"
-              >
-                {offsetOptions.map((pageOffset) => {
-                  const selected = pageOffset === safeCurrentPage;
-                  return (
-                    <li key={pageOffset} className={styles.pageOffsetOptionWrap}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selected}
-                        className={[styles.pageOffsetOption, selected ? styles.pageOffsetOptionSelected : ""]
-                          .filter(Boolean)
-                          .join(" ")}
-                        onClick={() => {
-                          goToPage(pageOffset);
-                          closePageOffsetMenu();
-                        }}
-                      >
-                        {pageOffset}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : null}
-          </div>
+        {safeTotalPages <= 1 ? (
+          <span className={styles.countText}>1 page</span>
         ) : (
-          <div className={styles.pageInputWrap}>
-            <input
-              className={styles.pageInput}
-              value={pageInputValue}
-              onChange={(event) => setPageInputValue(event.target.value.replace(/[^\d]/g, ""))}
-              onBlur={commitPageInput}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  commitPageInput();
-                  event.currentTarget.blur();
-                }
-              }}
-              aria-label="Current page"
-            />
-          </div>
+          <>
+            {showFirstLast ? (
+              <button
+                className={styles.iconButton}
+                type="button"
+                onClick={() => goToPage(1)}
+                disabled={disabled || atFirstPage}
+                aria-label="First page"
+              >
+                <Icon shapeName="double-chev-left" className={styles.navIcon} />
+              </button>
+            ) : null}
+            {!(showFirstLast && atFirstPage) ? (
+              <button
+                className={styles.iconButton}
+                type="button"
+                onClick={() => goToPage(safeCurrentPage - 1)}
+                disabled={disabled || atFirstPage}
+                aria-label="Previous page"
+              >
+                <Icon shapeName="chev-left" className={styles.navIcon} />
+              </button>
+            ) : null}
+            {showPageOffset ? (
+              <div className={styles.pageOffsetWrap}>
+                <button
+                  ref={pageOffsetRef}
+                  className={styles.pageOffsetTrigger}
+                  type="button"
+                  disabled={disabled}
+                  aria-haspopup="listbox"
+                  aria-expanded={
+                    resolvedPageOffsetDropdownState !== "collapsed"
+                  }
+                  aria-label="Page offset"
+                  onClick={togglePageOffsetMenu}
+                  onBlur={(event) => {
+                    const nextTarget = event.relatedTarget as Node | null;
+                    if (
+                      nextTarget &&
+                      pageOffsetRef.current?.parentElement?.contains(nextTarget)
+                    )
+                      return;
+                    closePageOffsetMenu();
+                  }}
+                >
+                  <span>{safeCurrentPage}</span>
+                  <Icon
+                    shapeName="arrow-drop-tri-caret"
+                    className={styles.pageOffsetCaretIcon}
+                  />
+                </button>
+                {resolvedPageOffsetDropdownState !== "collapsed" ? (
+                  <ul
+                    className={[
+                      styles.pageOffsetMenu,
+                      resolvedPageOffsetDropdownState === "expanded-above"
+                        ? styles.pageOffsetMenuAbove
+                        : styles.pageOffsetMenuBelow,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    role="listbox"
+                    aria-label="Page offsets"
+                  >
+                    {offsetOptions.map((pageOffset) => {
+                      const selected = pageOffset === safeCurrentPage;
+                      return (
+                        <li
+                          key={pageOffset}
+                          className={styles.pageOffsetOptionWrap}
+                        >
+                          <button
+                            type="button"
+                            role="option"
+                            aria-selected={selected}
+                            className={[
+                              styles.pageOffsetOption,
+                              selected ? styles.pageOffsetOptionSelected : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" ")}
+                            onClick={() => {
+                              goToPage(pageOffset);
+                              closePageOffsetMenu();
+                            }}
+                          >
+                            {pageOffset}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : null}
+              </div>
+            ) : (
+              <div className={styles.pageInputWrap}>
+                <input
+                  className={styles.pageInput}
+                  value={pageInputValue}
+                  onChange={(event) =>
+                    setPageInputValue(event.target.value.replace(/[^\d]/g, ""))
+                  }
+                  onBlur={commitPageInput}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      commitPageInput();
+                      event.currentTarget.blur();
+                    }
+                  }}
+                  aria-label="Current page"
+                />
+              </div>
+            )}
+            <span className={styles.countText}>of {safeTotalPages}</span>
+            <button
+              className={styles.iconButton}
+              type="button"
+              onClick={() => goToPage(safeCurrentPage + 1)}
+              disabled={disabled || atLastPage}
+              aria-label="Next page"
+            >
+              <Icon shapeName="chev-right" className={styles.navIcon} />
+            </button>
+            {showFirstLast ? (
+              <button
+                className={styles.iconButton}
+                type="button"
+                onClick={() => goToPage(safeTotalPages)}
+                disabled={disabled || atLastPage}
+                aria-label="Last page"
+              >
+                <Icon
+                  shapeName="double-chev-right"
+                  className={styles.navIcon}
+                />
+              </button>
+            ) : null}
+          </>
         )}
-        <span className={styles.countText}>of {safeTotalPages}</span>
-        <button
-          className={styles.iconButton}
-          type="button"
-          onClick={() => goToPage(safeCurrentPage + 1)}
-          disabled={disabled || atLastPage}
-          aria-label="Next page"
-        >
-          <Icon shapeName="chev-right" className={styles.navIcon} />
-        </button>
-        {showFirstLast ? (
-          <button
-            className={styles.iconButton}
-            type="button"
-            onClick={() => goToPage(safeTotalPages)}
-            disabled={disabled || atLastPage}
-            aria-label="Last page"
-          >
-            <Icon shapeName="double-chev-right" className={styles.navIcon} />
-          </button>
-        ) : null}
       </div>
     </nav>
   );

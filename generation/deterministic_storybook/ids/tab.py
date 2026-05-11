@@ -42,7 +42,7 @@ const overflowItems = [
 const meta: Meta<typeof {component_name}> = {{
   title: "{options.title_prefix}/Tab",
   component: {component_name},
-  args: {{ items: baseItems, variant: "secondary", showAddTab: false, addTabLabel: "Add Tab", minTabWidth: 80, maxTabWidth: 250, moreLabel: "More" }},
+  args: {{ items: baseItems, variant: "secondary", surface: "elevated", showAddTab: false, addTabLabel: "Add Tab", minTabWidth: 80, maxTabWidth: 250, moreLabel: "More" }},
 }};
 
 export default meta;
@@ -50,6 +50,15 @@ type Story = StoryObj<typeof {component_name}>;
 
 export const SecondaryDefault: Story = {{ args: {{ variant: "secondary", items: baseItems }} }};
 export const PrimaryVariant: Story = {{ args: {{ variant: "primary", items: baseItems }} }};
+
+export const TransparentOnGray: Story = {{
+  args: {{ variant: "secondary", surface: "transparent", items: baseItems }},
+  render: (args) => (
+    <div style={{{{ maxWidth: 720, padding: 16, background: "var(--color-background-gray-light)" }}}}>
+      <{component_name} {{...args}} />
+    </div>
+  ),
+}};
 
 export const OverflowResponsive: Story = {{
   args: {{ items: overflowItems, variant: "secondary", showAddTab: false }},

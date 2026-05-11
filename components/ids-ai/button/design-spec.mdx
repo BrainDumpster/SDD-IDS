@@ -1,12 +1,12 @@
 <!-- ds:inherits root-spec -->
 
-# IDS Button Design Spec
+# IDS-AI Button Design Spec
 
 ## Metadata
 - Component: Button
 - Design system: IDS-AI
 - Category: Formelements
-- Spec path: `components/ids/button/design-spec.mdx`
+- Spec path: `components/ids-ai/button/design-spec.mdx`
 - Primary Figma URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=9662-25120&m=dev
 - Primary node id: `9662:25120`
 - Documentation frame URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=41894-116123&m=dev
@@ -16,8 +16,9 @@
 - States matrix URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=9662-25120&m=dev
 - States matrix node id: `9662:25120`
 - Figma file key: `rr8F0NGA6RNY9Z0cNeh3jh`
-- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-05-09
+- Verification method: Figma MCP (`get_design_context` on `9662:25120`, `get_variable_defs` on same node)
+- Verified at: 2026-05-10
+- Figma variant axes (component set): `Style` = Primary | Secondary | Tertiary | Destructive; `State` = Default | Hover | Press | Disabled | Focus; `Size` = Large | Medium | Small; optional leading icon and icon-only modes (`Icon`, `Icon Only`).
 
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
@@ -44,10 +45,10 @@ Deterministic order:
   - `medium`: height `32px`, vertical padding `8px`
   - `large`: height `40px`, vertical padding `12px`
 - Icon glyph size: `16px x 16px`.
-- Focus ring geometry (focus-visible):
-  - outer ring stroke: `1px` (`var(--border-width-border-default)`)
-  - ring offset from control edge: `3px`
-  - ring corner radius: `4px` (outer ring only; button container `4px` to match Figma)
+- Focus ring geometry (focus-visible / `State=Focus` in Figma):
+  - Focus is a separate absolute layer: **`1px`** solid outline (`var(--color-border-brand-base)`), **`inset: -4px`** relative to the button box (i.e. **4px** gap between control edge and focus outline), matching exported layout on nodes such as `9662:25565`.
+  - Ring corner radius: `var(--corner-radius-radius-4)` (same as button radius).
+  - Control surface keeps its variant/state fill and border; the focus ring sits outside the filled area (double-ring read: page background + gap + outline).
 
 ## Tokens
 - Typography:
@@ -128,8 +129,8 @@ Deterministic order:
 ## Interactions
 - Trigger: pointer click, `Enter`, and `Space`.
 - `hover` appears on pointer hover for interactive buttons.
-- `press` appears while pointer or keyboard activation is held.
-- `focus-visible` appears for keyboard modality with an outer brand focus outline.
+- `press` appears while pointer or keyboard activation is held (Figma property name **`Press`**).
+- `focus-visible` appears for keyboard modality with the brand focus outline geometry defined in **Layout & Measurements** (Figma **`Focus`** state uses the same outline treatment across variants, including Destructive).
 - Disabled state blocks all interaction and event emission.
 - Runtime default must remain interactive.
 - Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
@@ -172,9 +173,10 @@ Outputs / events:
   - icon modes: `iconSlug omitted` / `iconSlug present with label` / `iconOnly with iconSlug`
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
-  - `ButtonRoot`: height, padding, border, background, and typography from tokens and size contract; corner radius **`var(--corner-radius-radius-4)`** (Figma component instances, e.g. `9662:25504`).
-  - `ButtonLeadingIcon`: `16x16`, color token follows variant/state.
-  - `ButtonLabel`: `Body 2`.
+  - `ButtonRoot`: height, padding, border, background, and typography from tokens and size contract; corner radius **`var(--corner-radius-radius-4)`** (Figma variable `Corner Radius/radius-4`; instances e.g. `9662:25504`).
+  - `ButtonLeadingIcon`: `16x16` (`Sizing/size-16`), color token follows variant/state; gap **`var(--spacing-space-8)`** when icon + label (Figma `gap` uses `Spacing/space-8`; text-only rows may use `0` gap in matrix cells).
+  - `ButtonLabel`: `Body 2` (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`).
+  - `FocusRing` (focus-visible only): `1px` `var(--color-border-brand-base)`, outset **`4px`** from control bounds, radius `var(--corner-radius-radius-4)`.
 - Behavior contract:
   - `disabled || loading` blocks activation and output events.
   - `iconOnly=true` requires accessible label.
@@ -203,11 +205,10 @@ Outputs / events:
   - [ ] Light/Dark tables remain structurally parallel.
 
 ## Source Mapping
-- Component map entry: IDS-AI override input supplied directly by product links.
-- Primary node: `9662:25120` (IDS-AI button component + states).
+- Component map entry: align with IDS-AI Design Library file; primary validation node **`9662:25120`** (`Button` component description in Figma).
+- Primary node: `9662:25120` (IDS-AI button component set + states matrix).
+- Documentation frame: `41894:116123`.
 - Scenarios node: `41894:116319` (IDS-AI scenario evidence).
-- States matrix node: `9662:25120` (style x state x size matrix evidence).
-- Figma MCP calls used:
-  - `get_design_context(fileKey=rr8F0NGA6RNY9Z0cNeh3jh,nodeId=9662:25120)`
-  - `get_design_context(fileKey=rr8F0NGA6RNY9Z0cNeh3jh,nodeId=41894:116319)`
-  - `get_variable_defs(fileKey=rr8F0NGA6RNY9Z0cNeh3jh,nodeId=9662:25120)`
+- Last live verification (2026-05-10): Figma MCP
+  - `get_design_context(fileKey=rr8F0NGA6RNY9Z0cNeh3jh, nodeId=9662:25120)` — variant axes, padding tokens (`padding-16`, `padding-2` / `6` / `10`, icon `padding-8` / `12`), focus layer `inset -4px`, destructive focus uses brand-base outline.
+  - `get_variable_defs(fileKey=rr8F0NGA6RNY9Z0cNeh3jh, nodeId=9662:25120)` — semantic color/spacing/radius bindings as listed in **Tokens** / tables above.

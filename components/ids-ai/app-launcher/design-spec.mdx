@@ -1,185 +1,99 @@
 <!-- ds:inherits root-spec -->
+
 # App Launcher Design Spec
 
 ## Metadata
 - **Component:** App Launcher
 - **Category:** Navigation
 - **Design system:** IDS-AI
-- **Figma (scenarios / usage):** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42266-95085&m=dev
-- **Figma (component / layout matrix):** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=13231-123761&m=dev
-- **Figma (elements & states):** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=13231-109521&m=dev
+- **Spec path:** `components/ids-ai/app-launcher/design-spec.mdx`
+- **Canonical map:** `data/ids-ai-component-figma-map.json` → **`app-launcher`**
+- **Primary (layout matrix — `AppLauncher-Main`):** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=13231-123761&m=dev — node **`13231:123761`**
+- **Scenarios / usage:** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42266-95085&m=dev — node **`42266:95085`**
+- **IDS Library parity (spacing / matrix sample):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42266-95081&m=dev — node **`42266:95081`**
+- **Product tile / states (`.AppLauncher-Element`):** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=13231-109521&m=dev — node **`13231:109521`**
+- **Options list chrome (`Dropdown-SingleSelect-Elements-Menu` reference in matrix):** https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=12579-19717&m=dev — node **`12579:19717`**
 - **Figma file key:** `rr8F0NGA6RNY9Z0cNeh3jh`
-- **Validated nodes:** `42266:95085` (scenarios), `13231:123761` (component), `13231:109521` (elements / states)
-- **Theme:** `components/ids-ai-theme.css` (canonical names per `components/ids-ai/root-spec.mdx`)
-- **Last live verification:** 2026-05-09 — Figma MCP `get_metadata` on `42266:95085`, `13231:123761`, `13231:109521`; Figma MCP `get_variable_defs` on default tile `13231:109520` (bindings include `Color/Background/Surface 2`, `Color/Border/Accessible`, `Border Width/border-default`, `Color/Text/Neutral-Strong`, `Color/Icon/Neutral-Strong`, `Body 2`).
+- **Verification method:** Figma MCP `get_design_context` on **`13231:123761`**, **`13231:109521`**, **`42266:95081`** (file `0bHk3XhrjFhowgFkz9yLr4`); `get_variable_defs` on **`13231:123761`**
+- **Verified at:** 2026-05-09 (includes `42266:95081` product→options spacing)
+
+## Anatomy
+- `AppLauncherRoot` (popover host)
+- `AppLauncherTrigger` (`grid-square-9-16`; **`masthead`** vs **`default`** visual modes)
+- `AppLauncherSurface` (menu panel)
+  - optional `ProductRegion` — rows of **`ProductTile`** (`.AppLauncher-Element`), **148×125** cells
+  - optional **column / row dividers** (dotted; **solid** vertical divider only for **2 products, no options** scenario per implementation parity with Figma sample)
+  - optional `OptionsRegion` — list rows below products (or options-only)
+  - optional `FooterAction`
 
 ## Layout & Measurements
-- Launcher surface outer size (from `AppLauncher-Main` component-set variants, node `13231:123761`):
-  - **1 product:** `150px` × `127px` (compact; matches scenario instance `42266:95088`).
-  - **2 products:** `298px` × `127px`.
-  - **3 or 4 products:** `298px` × `254px`.
-  - **8 products:** `298px` × `416px`.
-- Default multi-product menu body width: `298px` (scenarios `42266:95085` use this for 2+ product frames).
-- Product tile footprint: `148px x 125px` per `.AppLauncher-Element`.
-- Tile state fill behavior: hover/press fills the complete tile footprint (`148px x 125px`); divider remains a separate element and must not be merged into tile background.
-- Separator rule: dividers are rendered as separate row/column elements, so product tile occupancy remains full-size; any visual gap is only from outer edge/separator treatment, not from shrinking the tile content area.
-- Product icon slot: `32px x 32px`.
-- Product label box: `111px` max width with `Body 2` text.
-- Vertical product separators: dotted divider using `var(--color-border-accessible)` with fixed `93px` height, vertically centered between the two product panels; in 2-product no-options scenario, separator is solid and touches top/bottom of the launcher surface.
-- Between-row divider: dotted horizontal separator with fixed `262px` width, horizontally centered between product panels.
-- Options block width: `295px` in dropdown menu detail node.
-- Option row padding: `10px 16px 10px 16px`.
-- Surface stroke/shadow:
-  - Border width: `var(--border-width-border-default)` with `var(--color-border-accessible)`.
-  - Shadow stack represented by `Shadow 1` tokens (`drop-shadow` pair).
+- **Surface outer border (Figma `AppLauncher-Main` export):** `var(--border-width-border-default)` **`var(--color-border-neutral-light)`** — not the “accessible” token name in this frame’s binding (light theme hex matches legacy samples; dark resolves via theme).
+- **Surface padding shell:** `var(--padding-padding-1)` on the outer launcher chrome where Figma applies `p-[1px]` (`13231:123761`).
+- **Shadow (“Shadow 1”):** two drop layers in Figma order: **first** `var(--shadow-drop-shadow-2-{x,y,blur,spread,color})`, **then** `var(--shadow-drop-shadow-4-{x,y,blur,spread,color})` (see Tokens).
+- **Product count → surface size (from `13231:123761` variant set + scenarios `42266:95085`):**
+  - **1 product:** **150×127** compact surface.
+  - **2 products:** **298×127**.
+  - **3 or 4 products:** **298×254**.
+  - **8 products:** **298×416** (includes options block height in composed scenario).
+- **Product tile:** **148×125**; inner label stack **`var(--padding-padding-28)`** vertical padding sample, **`var(--spacing-space-12)`** between **32×32** icon slot and label when icon present.
+- **Label:** **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; **max width 111px**; ellipsis.
+- **No-icon tile (`13231:109521` “No Icon”):** vertical **`var(--padding-padding-52)`** on the label stack and **0** gap between missing icon and text (icon slot omitted).
+- **Dividers:** vertical dotted separator geometry **93px** tall centered in the **125px** row; horizontal dotted rule **262px** wide centered between rows (implementation uses CSS dashed borders with **`var(--color-border-neutral-light)`** aligned to the same visual role as Figma divider components).
+- **Product grid → options (`42266:95081` / `AppLauncher-Main`):** after the last horizontal row divider, **`var(--padding-padding-1)`** (frame `gap-px`) then **`var(--padding-padding-16)`** before the first option row (matches **`Dropdown-SingleSelect-Elements-Menu`** inner **`py-[16px]`** wrapper in Figma).
+- **Options row (`12579:19717` / embedded rows in `13231:123761`):** padding **`var(--padding-padding-10)`** vertical, **`var(--padding-padding-16)`** leading, **`var(--padding-padding-24)`** trailing; inner row gap **`var(--spacing-space-8)`**; typography Body 2 **`var(--color-text-neutral)`** default.
+- **Default trigger (non-masthead):** bordered control in Storybook uses **`var(--color-border-light)`** on the trigger chip (implementation); masthead trigger defers to **Masthead** action token set.
 
 ## Tokens
-- **Surface + borders**
-  - `var(--color-background-surface-2)`
-  - `var(--color-background-component)`
-  - `var(--color-border-accessible)`
-  - `var(--border-width-border-default)`
-- **Text/icon**
-  - `var(--color-text-neutral-strong)` (default tile label)
-  - `var(--color-text-neutral)` (option rows)
-  - `var(--color-text-brand-strong)` (press/selected tile label)
-  - `var(--color-icon-neutral-strong)` (default tile icon)
-  - `var(--color-icon-brand-strong)` (press/selected tile icon)
-- **Interactive backgrounds**
-  - `var(--color-background-brand-lighter)` (hover)
-  - `var(--color-background-brand-light)` (press/selected)
-- **Shadows**
-  - `var(--shadow-shadow-4-drop-shadow-4-x)`
-  - `var(--shadow-shadow-4-drop-shadow-4-y)`
-  - `var(--shadow-shadow-4-drop-shadow-4-blur)`
-  - `var(--shadow-shadow-4-drop-shadow-4-spread)`
-  - `var(--shadow-shadow-4-drop-shadow-4-color)`
+- **Surface / product:** `var(--color-background-surface-2)`, `var(--color-background-brand-lighter)`, `var(--color-background-brand-light)`, `var(--color-background-component)` (options block).
+- **Borders:** `var(--color-border-neutral-light)` (launcher shell + structural dividers per Figma export), `var(--color-border-brand-neutral)` (option row hover/press inset emphasis), `var(--border-width-border-default)`.
+- **Text / icon:** `var(--color-text-neutral-strong)`, `var(--color-text-neutral)`, `var(--color-text-brand-strong)`; `var(--color-icon-neutral-strong)`, `var(--color-icon-brand-strong)` (press/selected tile glyph).
+- **Trigger (masthead):** `var(--color-background-masthead-brand-base)`, `var(--color-background-masthead-brand-strong)`, `var(--color-background-masthead-brand-stronger)`, `var(--color-text-white)` for `grid-square-9-16` when `triggerVariant === "masthead"`.
+- **Elevation:** composite `box-shadow` in this order:
+  1. `var(--shadow-drop-shadow-2-x)` `var(--shadow-drop-shadow-2-y)` `var(--shadow-drop-shadow-2-blur)` `var(--shadow-drop-shadow-2-spread)` `var(--shadow-drop-shadow-2-color)`
+  2. `var(--shadow-drop-shadow-4-x)` `var(--shadow-drop-shadow-4-y)` `var(--shadow-drop-shadow-4-blur)` `var(--shadow-drop-shadow-4-spread)` `var(--shadow-drop-shadow-4-color)`
+- **Radius (options menu reference in Figma):** `var(--corner-radius-radius-4)` on the detached menu component; launcher surface in matrix uses **0** corner radius on the outer panel.
 
 ## States (Light Theme)
-| Element | State | Background | Border | Text/Icon |
+| Element | State | Background | Border / chrome | Text / icon |
 |---|---|---|---|---|
-| Launcher surface | default | `var(--color-background-surface-2)` | `var(--border-width-border-default) solid var(--color-border-accessible)` | n/a |
-| Product tile | default | `var(--color-background-surface-2)` | row/column dividers use `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
-| Product tile | hover | `var(--color-background-brand-lighter)` (fills entire tile footprint) | divider unchanged and rendered as separate element | neutral strong text/icon |
-| Product tile | press/selected | `var(--color-background-brand-light)` | divider unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
-| Product tile | no-icon variant | `var(--color-background-surface-2)` | divider unchanged | neutral strong text only |
-| Options row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Options row | hover | `var(--color-background-brand-lighter)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| Options row | press | `var(--color-background-brand-light)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Launcher surface | default | `var(--color-background-surface-2)` | `var(--border-width-border-default) solid var(--color-border-neutral-light)` | n/a |
+| Product tile | default | `var(--color-background-surface-2)` | dividers: dashed `var(--color-border-neutral-light)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
+| Product tile | hover | `var(--color-background-brand-lighter)` (label cluster) | dividers unchanged | `var(--color-text-neutral-strong)` / default icon color |
+| Product tile | press / active | `var(--color-background-brand-light)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
+| Product tile | no icon | `var(--color-background-surface-2)` | dividers unchanged | `var(--color-text-neutral-strong)` (label only, vertically centered via padding token) |
+| Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| Option row | hover | `var(--color-background-brand-lighter)` | inset **`1px`** **`var(--color-border-brand-neutral)`** top + bottom | `var(--color-text-neutral)` |
+| Option row | press | `var(--color-background-brand-light)` | same inset borders | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
-Dark theme follows the same slot/state matrix as Light Theme, resolved exclusively via semantic tokens in `components/ids-ai-theme.css`. No hardcoded colors are permitted in implementation.
-
-| Element | State | Background | Border | Text/Icon |
+| Element | State | Background | Border / chrome | Text / icon |
 |---|---|---|---|---|
-| Launcher surface | default | semantic token resolved | semantic token resolved | n/a |
-| Product tile | default | semantic token resolved | semantic token resolved | semantic token resolved |
-| Product tile | hover | semantic token resolved | semantic token resolved | semantic token resolved |
-| Product tile | press/selected | semantic token resolved | semantic token resolved | semantic token resolved |
-| Options row | default/hover | semantic token resolved | semantic token resolved | semantic token resolved |
+| Launcher surface | default | `var(--color-background-surface-2)` | `var(--border-width-border-default) solid var(--color-border-neutral-light)` | n/a |
+| Product tile | default | `var(--color-background-surface-2)` | dashed `var(--color-border-neutral-light)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
+| Product tile | hover | `var(--color-background-brand-lighter)` | dividers unchanged | `var(--color-text-neutral-strong)` / default icon |
+| Product tile | press / active | `var(--color-background-brand-light)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
+| Product tile | no icon | `var(--color-background-surface-2)` | dividers unchanged | `var(--color-text-neutral-strong)` |
+| Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| Option row | hover | `var(--color-background-brand-lighter)` | inset **`1px`** **`var(--color-border-brand-neutral)`** top + bottom | `var(--color-text-neutral)` |
+| Option row | press | `var(--color-background-brand-light)` | same inset borders | `var(--color-text-brand-strong)` |
 
 ## Interactions
-- Trigger opens launcher dropdown anchored to masthead app-launcher action.
-- Product tile click selects product and emits product-selection event.
-- Tile hover and press states follow the state table exactly.
-- Options rows are selectable actions; each emits option-selection event.
-- When product count increases (`1`, `2`, `3`, `4`, `8`), layout expands deterministically with divider rules preserved.
-- Keyboard:
-  - `Enter` / `Space` activates focused tile/option.
-  - `Escape` closes launcher.
-  - `Tab` traverses trigger -> tiles -> options in visible order.
+- Trigger opens/closes popover; **`sideOffset`** controls vertical gap (px). With **`triggerVariant="masthead"`**, **`0`** still resolves to a **1px** offset so the surface clears the masthead bottom border; larger values are unchanged.
+- Product tile activates link or `onSelect`; options call `onSelect`.
+- Keyboard: **Tab** through trigger, tiles, options; **Escape** closes (Base UI `Popover` behavior).
 
 ## Composition & API (runtime)
-| Slot/Prop | Required | Behavior |
-|---|---|---|
-| `products` | No | Product items: `{ id, name, iconSlug?, href?, onSelect? }[]`. |
-| `apps` | No | Backward-compatible alias for `products`. |
-| `options` | No | Lower list actions: `{ id, label, onSelect? }[]`. |
-| `footerAction` | No | Optional footer CTA: `{ label, onClick }`. |
-| `columns` | No | Product columns; samples use `2`. |
-| `triggerVariant` | No | `"default"` or `"masthead"` trigger styling. |
-| `sideOffset` | No | Popup vertical offset. |
-| `open` | No | Controlled open state. |
-| `defaultOpen` | No | Uncontrolled initial state. |
-| `onOpenChange(open)` | No | Open-state callback. |
-| `onProductSelect(payload)` | No | Emits `{ id, name }` on product selection. |
-| `onOptionSelect(payload)` | No | Emits `{ id, label }` on option selection. |
+`AppLauncher` / `AppLauncherProductTile` / `AppLauncherOptionsList` in Storybook:
+- **`products` / `apps`:** `{ id?, name, icon?, href?, onSelect? }[]` — pass **`icon={null}`** to render **no-icon** tile (default shield only when **`icon` is `undefined`**).
+- **`options`**, **`footerAction`**, **`columns`**, **`triggerVariant`**, **`sideOffset`**.
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
-1. `AppLauncherRoot`
-2. `AppLauncherTrigger`
-3. `AppLauncherSurface`
-4. optional `ProductRegion`
-5. `ProductRow[]`
-6. `ProductTile[]`
-7. optional `OptionsRegion`
-8. `OptionRow[]`
-9. optional `FooterAction`
-
-### Supported matrix
-- `productCount`: `0 | 1 | 2 | 3 | 4 | 8` (surface dimensions follow the variant table in Layout & Measurements; `1` uses the `150×127` compact surface)
-- tile state: `default | hover | press | selected | no-icon`
-- `triggerVariant`: `default | masthead`
-- options mode: `none | options-only | products+options | products+options+footer`
-
-### Per-slot style contract
-- `ProductTile`: `148x125`, icon `32x32`, label width clamp `111px`.
-- `ProductRegion`: dotted row/column dividers from accessible border token; dividers are independent elements (not part of tile fill layer).
-  - vertical dotted divider: fixed `93px`, centered in `125px` tile block.
-  - horizontal dotted divider: fixed `262px`, centered across the panel seam.
-- Product content container must span the tile (`width: 100%`, `height: 100%`) so hover/press states use the full tile area.
-- `OptionsRegion`: simple stacked rows, no custom radius.
-- `OptionRow`: mirrors IDS dropdown option contract for default/hover/press token behavior.
-- `AppLauncherSurface`: `var(--border-width-border-default)` accessible border + Shadow 1 token stack.
-
-### Behavior contract
-- Opening launcher does not mutate product order.
-- Product selection emits exactly one `onProductSelect({ id, name })`.
-- Option row selection emits exactly one `onOptionSelect({ id, label })`.
-- If `products` empty, options-only layout renders safely.
-
-### Accessibility contract
-- Trigger is semantic `button` with `aria-expanded` and popup relationship (`aria-controls`/equivalent).
-- Popup exposes menu/list semantics appropriate for framework primitives.
-- Tiles/rows are keyboard reachable and activation parity exists for pointer and keyboard.
-
-### Asset resolution + bundling contract
-- Default product icon slug: `shield-encrypt-alt`.
-- Trigger icon slug: `grid-square-9-16`.
-- Unknown `iconSlug` fallback: use `shield-encrypt-alt`.
-
-### Icon primitive (codegen — logical API)
-Framework-agnostic; concrete component name and import come from **codegen / design-system config**, not this spec.
-
-| Slot | `shapeName` | `color` (logical) | `variant` (logical) | Notes |
-|---|---|---|---|---|
-| Launcher trigger | `grid-square-9-16` | `var(--color-text-white)` if `triggerVariant === masthead`, else `var(--color-text-neutral-strong)` | `inline` when implementation supports curated inline SVG for this slug (real `<svg>` in DOM); else `mask`. | Explicit token per trigger context. |
-| Default product tile | `shield-encrypt-alt` | *(omit)* | `inline` when supported for this slug; else `mask`. | Tile host sets `color` so default vs press/selected icon tokens follow the state table via inheritance. |
-| Custom product row | `iconSlug` from data | Omit unless spec pins icon color independent of tile state | Usually `mask` unless slug is on implementation allowlist | Fallback slug: `shield-encrypt-alt`. |
-
-### Fallback/error rules
-- If both `products` and `apps` supplied, `products` wins.
-- Unknown `columns` fallback to `2`.
-- Missing product `id` uses stable generated key but should fail strict validation mode.
-- Missing callbacks do not break interaction; component remains purely presentational.
-
-### Validation checklist
-- [ ] Surface, tile, divider, and option row metrics match validated nodes.
-- [ ] Tile states (`default/hover/press/no-icon`) match state node `13231:109521`.
-- [ ] Product count layouts (`1/2/3/4/8`) match component node `13231:123761`.
-- [ ] Usage-level masthead anchor/open behavior aligns with scenario node `42266:95085`.
-- [ ] Product and option selection callbacks emit deterministic payloads.
-- [ ] Light/Dark styles remain semantic-token driven (`ids-ai-theme.css`).
+- **Slot order:** Root → Trigger → Surface → `ProductRegion?` → `OptionsRegion?` → `FooterAction?`.
+- **Matrix:** product counts **0 | 1 | 2 | 3 | 4 | 8**; **`triggerVariant`** `default | masthead`; **with / without** options; **2 products + no options** → solid inter-column divider.
+- **Assets:** trigger **`grid-square-9-16`**; default product **`shield-encrypt-alt`** when `icon` omitted.
+- **Validation:** surface border token, shadow order, tile dimensions, product→options **`padding-padding-1` + `padding-padding-16`** under top separator, option padding, **`icon === null`** no-icon path, light/dark semantic parity.
 
 ## Source Mapping
-| Source | Location |
-|---|---|
-| Codegen icon primitive mapping (SDD-IDS tooling) | `config/design_systems/ids-ai.yaml` → `codegen` (optional; not Figma-sourced) |
-| IDS-AI root spec | `components/ids-ai/root-spec.mdx` |
-| IDS baseline reference (anatomy parity) | `components/ids/app-launcher/design-spec.mdx` |
-| Component map | `data/component-figma-map.json` → **App Launcher (IDS-AI)** |
-| Scenarios / usage | https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42266-95085&m=dev (`42266:95085`) |
-| Component details | https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=13231-123761&m=dev (`13231:123761`) |
-| Element states | https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=13231-109521&m=dev (`13231:109521`) |
-| Live evidence (2026-05-09) | File `rr8F0NGA6RNY9Z0cNeh3jh`; nodes `42266:95085`, `13231:123761`, `13231:109521`, `13231:109520`; method **Figma MCP** (`get_metadata`, `get_variable_defs`) |
+- **Map:** `data/ids-ai-component-figma-map.json` → **`app-launcher`**.
+- **Figma nodes:** **`13231:123761`**, **`42266:95085`**, **`42266:95081`**, **`13231:109521`**, **`12579:19717`**.
+- **Evidence:** Figma MCP session noted in Metadata.

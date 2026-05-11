@@ -3,6 +3,19 @@
   box-sizing: border-box;
 }
 
+.root[data-surface="transparent"] .tab,
+.root[data-surface="transparent"] .moreTrigger,
+.root[data-surface="transparent"] .addButton {
+  background: transparent;
+}
+
+.root[data-surface="transparent"] .tab.selected,
+.root[data-surface="transparent"] .moreTriggerSelected,
+.root[data-surface="transparent"] .moreTrigger[data-popup-open],
+.root[data-surface="transparent"] .moreTrigger[data-popup-open]:hover {
+  background: transparent;
+}
+
 .listWrap {
   width: 100%;
   overflow: hidden;
@@ -18,8 +31,9 @@
 
 .tab {
   height: 38px;
-  padding: 9px 24px;
+  padding: 9px var(--padding-padding-24);
   font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
   color: var(--color-text-neutral);
   background: var(--color-background-surface-2);
@@ -32,11 +46,19 @@
   font-family: inherit;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-space-8);
+  gap: var(--spacing-space-24);
   flex: 0 1 auto;
   min-width: 80px;
   max-width: 250px;
   position: relative;
+}
+
+.tabInner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .tab::after {
@@ -60,9 +82,44 @@
 }
 
 .tab:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
-  border-radius: var(--corner-radius-radius-2);
+  outline: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+/* Primary: Figma leading accessible rail (full height when selected, 24px centered when not). */
+.tabPrimary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  background: var(--color-border-accessible);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tabPrimary:not(.selected)::before {
+  top: 50%;
+  height: var(--sizing-size-24);
+  transform: translateY(-50%);
+}
+
+.tabPrimary.selected::before {
+  top: 0;
+  height: 100%;
+  transform: none;
+}
+
+/* Primary selected: top brand-dark segment (inside 38px row — inset shadow, not border). */
+.tabPrimary.selected {
+  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
+}
+
+.tabPrimary.selected:focus-visible {
+  border-radius: var(--corner-radius-radius-4);
+  box-shadow:
+    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark),
+    inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
 }
 
 .selected {
@@ -78,30 +135,18 @@
   transform: none;
 }
 
-.tabPrimary.selected {
-  border-top: 0;
-}
-
 .tabSecondary.selected {
   border-bottom: 0;
 }
 
-.tabPrimary.selected::before,
 .tabSecondary.selected::before {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  height: var(--border-width-border-2);
-  background: var(--color-text-brand-strong);
+  height: var(--border-width-border-thick);
+  background: var(--color-border-brand-dark);
   pointer-events: none;
-}
-
-.tabPrimary.selected::before {
-  top: 0;
-}
-
-.tabSecondary.selected::before {
   bottom: 0;
 }
 
@@ -127,7 +172,6 @@
 
 .tabLabel {
   min-width: 0;
-  flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -192,28 +236,25 @@
   color: var(--color-text-brand-strong);
 }
 
+.root[data-surface="transparent"] .moreTrigger[data-popup-open],
+.root[data-surface="transparent"] .moreTrigger[data-popup-open]:hover {
+  background: transparent;
+}
+
 .moreTriggerSelected {
   color: var(--color-text-brand-strong);
   border-bottom-color: transparent;
   z-index: 1;
 }
 
-.moreTriggerPrimary.moreTriggerSelected::before,
 .moreTriggerSecondary.moreTriggerSelected::before {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  height: var(--border-width-border-2);
-  background: var(--color-text-brand-strong);
+  height: var(--border-width-border-thick);
+  background: var(--color-border-brand-dark);
   pointer-events: none;
-}
-
-.moreTriggerPrimary.moreTriggerSelected::before {
-  top: 0;
-}
-
-.moreTriggerSecondary.moreTriggerSelected::before {
   bottom: 0;
 }
 
@@ -258,13 +299,59 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 9px 24px;
+  gap: var(--spacing-space-8);
+  padding: 9px var(--padding-padding-24);
   cursor: pointer;
   color: var(--color-text-brand-strong);
   flex-shrink: 0;
   border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
   position: relative;
+}
+
+.addButton:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.moreTrigger:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+/* Primary overflow trigger: same leading rail + top selected segment as tab cells. */
+.moreTriggerPrimary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  background: var(--color-border-accessible);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.moreTriggerPrimary:not(.moreTriggerSelected)::before {
+  top: 50%;
+  height: var(--sizing-size-24);
+  transform: translateY(-50%);
+}
+
+.moreTriggerPrimary.moreTriggerSelected::before {
+  top: 0;
+  height: 100%;
+  transform: none;
+}
+
+.moreTriggerPrimary.moreTriggerSelected {
+  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
+}
+
+.moreTriggerPrimary.moreTriggerSelected:focus-visible {
+  box-shadow:
+    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark),
+    inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .addButton::before {

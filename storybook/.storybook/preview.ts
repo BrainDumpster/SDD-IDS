@@ -9,13 +9,9 @@ const preview: Preview = {
     theme: "light",
   },
   parameters: {
-    backgrounds: {
-      default: "light",
-      values: [
-        { name: "light", value: "#f4f4f4" },
-        { name: "dark", value: "#111619" },
-      ],
-    },
+    // Let html/body use design-system tokens; the backgrounds addon used fixed hex
+    // values that did not follow the Theme toolbar or IDS / IDS-AI / DAP variable sets.
+    backgrounds: { disable: true },
   },
   globalTypes: {
     theme: {
@@ -54,7 +50,9 @@ const preview: Preview = {
       document.documentElement.setAttribute("data-design-system", designSystem);
       document.body.setAttribute("data-design-system", designSystem);
 
-      document.body.style.backgroundColor = "var(--color-background-surface-1)";
+      const surface = "var(--color-background-surface-1)";
+      document.documentElement.style.backgroundColor = surface;
+      document.body.style.backgroundColor = surface;
       return Story();
     },
   ],

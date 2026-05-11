@@ -12,7 +12,7 @@
   font-size: var(--font-size-body-2);
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
-  min-height: 18px;
+  min-height: 44px;
 }
 
 .root {
@@ -86,11 +86,11 @@
   border-color: var(--color-border-disabled);
 }
 
-/* Checked + disabled: Figma `8505:14361` — gray fill only, no visible stroke (keep 1px transparent for footprint). */
-.root[data-disabled][data-checked],
-.root[data-disabled][data-checked="true"] {
+/* Checked + disabled: Figma `8505:14361` / `8505:14371` — gray fill only, no visible stroke (1px border stays for 18×18 footprint). */
+.root[data-disabled][data-checked] {
   background: var(--color-background-gray-base);
-  border-color: var(--color-border-transparent-brand);
+  /* Spec: no visible stroke; `transparent` avoids dark theme `--color-border-transparent-brand` resolving to opaque brand. */
+  border-color: transparent;
 }
 
 .root[data-disabled][data-indeterminate],
@@ -181,12 +181,12 @@
 }
 
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]) {
-  border-color: var(--color-text-critical);
+  border-color: var(--color-border-alerting-critical-base);
 }
 
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):hover:not([data-disabled]),
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):active:not([data-disabled]) {
-  border-color: var(--color-text-critical);
+  border-color: var(--color-border-alerting-critical-base);
 }
 
 .labelError {

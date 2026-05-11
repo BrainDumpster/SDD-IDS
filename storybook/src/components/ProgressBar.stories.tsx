@@ -55,7 +55,7 @@ export const ThicknessReference: Story = {
         thickness="thin"
         state="in-progress"
         showHelperText
-        helperText="4px track + 1px border"
+        helperText="Track height var(--sizing-size-4) + var(--border-width-border-default) stroke"
       />
       <IdsProgressBar
         value={30}
@@ -64,7 +64,7 @@ export const ThicknessReference: Story = {
         thickness="medium"
         state="in-progress"
         showHelperText
-        helperText="8px track + 1px border"
+        helperText="Track height var(--sizing-size-8) + var(--border-width-border-default) stroke"
       />
       <IdsProgressBar
         value={30}
@@ -73,7 +73,7 @@ export const ThicknessReference: Story = {
         thickness="thick"
         state="in-progress"
         showHelperText
-        helperText="16px track + 1px border"
+        helperText="Track height var(--sizing-size-16) + var(--border-width-border-default) stroke"
       />
     </div>
   ),

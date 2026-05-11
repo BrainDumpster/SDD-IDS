@@ -21,6 +21,7 @@ def generate_ids_app_launcher_story(
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ AppLauncher as {component_name} }} from "{import_path}";
+import "../../../../components/ids-ai-theme.css";
 
 const products = [
   {{ id: "p1", name: "Product Name 1", href: "#" }},

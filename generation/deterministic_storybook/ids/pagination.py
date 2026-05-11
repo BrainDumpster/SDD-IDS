@@ -36,7 +36,7 @@ const defaults = {{
   pageSizeOptions: [10, 25, 50, 100],
   showPerPage: true,
   showFirstLast: true,
-  showPageOffset: true,
+  showPageOffset: false,
   background: "none" as const,
 }};
 
@@ -79,5 +79,25 @@ export const PageNavigationStates: Story = {{
       <{component_name} {{...defaults}} currentPage={{1}} totalPages={{1}} />
     </div>
   ),
+}};
+
+/** Optional `showPageOffset`: page control as listbox dropdown (not the Figma default `PageInput` text field). */
+export const WithPageOffsetDropdown: Story = {{
+  render: (args) => {{
+    const [page, setPage] = useState(args.currentPage ?? 1);
+    const [pageSize, setPageSize] = useState(args.pageSize ?? 25);
+    return (
+      <div style={{{{ padding: 20, maxWidth: 960 }}}}>
+        <{component_name}
+          {{...args}}
+          showPageOffset={{true}}
+          currentPage={{page}}
+          pageSize={{pageSize}}
+          onPageChange={{setPage}}
+          onPageSizeChange={{setPageSize}}
+        />
+      </div>
+    );
+  }},
 }};
 """

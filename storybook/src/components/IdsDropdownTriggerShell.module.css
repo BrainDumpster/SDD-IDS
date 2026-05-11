@@ -1,0 +1,65 @@
+/* IDS-AI Dropdown / Combobox trigger shell — tokens from Figma `12730:157002` + matrix `12608:95982`. */
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 300px;
+  max-width: 700px;
+  min-width: 186px;
+  box-sizing: border-box;
+  border: var(--border-width-border-1) solid var(--trigger-border, var(--color-border-accessible));
+  background: var(--trigger-bg, var(--color-background-component));
+  color: var(--trigger-fg, var(--color-text-neutral));
+  border-radius: var(--corner-radius-radius-4);
+  padding: var(--trigger-py, var(--padding-padding-10)) var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+  gap: var(--spacing-space-10);
+}
+
+.field[data-size="small"] {
+  --trigger-py: var(--padding-padding-6);
+}
+
+.field[data-disabled="true"] {
+  cursor: not-allowed;
+  background: var(--color-background-gray-light);
+  --trigger-border: var(--color-border-accessible);
+  color: var(--color-text-disabled);
+}
+
+.field[data-error="true"]:not([data-disabled="true"]) {
+  --trigger-border: var(--color-border-alerting-critical-base);
+}
+
+.field[data-hover="true"]:not([data-disabled="true"]):not([data-error="true"]) {
+  --trigger-border: var(--color-border-strong);
+}
+
+.field[data-focus="true"]:not([data-disabled="true"]) {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 5px;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--spacing-space-4);
+}
+
+.caretWrap {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: flex-start;
+  padding: var(--padding-component-padding-dropdown-caret) var(--padding-padding-1);
+  color: var(--color-icon-accessible);
+  line-height: 0;
+}
+
+.field[data-disabled="true"] .caretWrap {
+  color: var(--color-text-disabled);
+}

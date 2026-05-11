@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { IdsPagination } from "./IdsPagination";
-import "../../../components/ids-theme.css";
+import "../../../components/ids-ai-theme.css";
 import {
   IDS_PAGINATION_DESIGN_SPEC_PATH,
   PAGINATION_API_DEFAULTS,
@@ -18,7 +18,7 @@ const meta: Meta<typeof IdsPagination> = {
   parameters: {
     docs: {
       description: {
-        component: `Spec-driven IDS Pagination aligned to \`${IDS_PAGINATION_DESIGN_SPEC_PATH}\` and Figma nodes \`11677:157840\`, \`37721:115839\`, \`11677:157817\`.`,
+        component: `Spec-driven IDS-AI Pagination aligned to \`${IDS_PAGINATION_DESIGN_SPEC_PATH}\` and Figma nodes \`48815:220984\`, \`48815:221000\`, \`48815:220976\`, \`48815:220952\` (see \`data/ids-ai-component-figma-map.json\`).`,
       },
     },
   },

@@ -25,6 +25,7 @@
   font-size: var(--font-size-body-2);
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
+  min-height: 44px;
 }
 
 .wrapper[data-disabled] {
@@ -145,12 +146,12 @@
 }
 
 .root[data-error="true"]:not([data-checked]) {
-  border-color: var(--color-text-critical);
+  border-color: var(--color-border-alerting-critical-base);
 }
 
 .root[data-error="true"]:not([data-checked]):hover:not([data-disabled]),
 .root[data-error="true"]:not([data-checked]):active:not([data-disabled]) {
-  border-color: var(--color-text-critical);
+  border-color: var(--color-border-alerting-critical-base);
 }
 
 .labelError {

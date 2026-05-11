@@ -271,13 +271,32 @@ def main() -> int:
             component_prefix = cfg.display_name if is_program_core else "Ids"
             story_title_system = "IDS" if design_system.lower() == "ids" else cfg.display_name
 
+            spec_body = context.get("spec", "")
             det_options = DeterministicStorybookOptions(
                 title_prefix=f"Spec Generated/{story_title_system}",
                 include_state_harness=True,
                 component_prefix=component_prefix,
                 design_system_slug=design_system.lower(),
                 apply_program_deltas=has_program_delta,
+                spec_text=spec_body,
             )
+
+            # IDS-AI toast: Layout/Tokens in program spec drive shared `Toast.module.css` (single source).
+            # Baseline IDS toast keeps hand-authored CSS until its spec uses the same structured layout tokens.
+            if (
+                component.lower() == "toast"
+                and spec_body.strip()
+                and design_system.lower() == "ids-ai"
+            ):
+                from generation.spec_derived.toast import parse_toast_spec, render_toast_module_css
+
+                toast_css_path = (project_root / "storybook" / "src" / "components" / "Toast.module.css").resolve()
+                try:
+                    model = parse_toast_spec(spec_body)
+                    toast_css_path.write_text(render_toast_module_css(model), encoding="utf-8")
+                except Exception as exc:
+                    failures.append(f"{component}: spec-derived Toast.module.css failed ({exc})")
+                    continue
 
             storybook_text = generate_story_for_component(
                 design_system=design_system,
@@ -347,9 +366,15 @@ def main() -> int:
         if old_hash and old_hash != new_hash and cfg.strict_storybook_gate:
             failures.append(f"{component}: stale story hash detected ({old_hash} != {new_hash})")
 
+        css_for_gate = generated.get("css", "") if isinstance(generated, dict) else ""
+        if args.deterministic_story and component.lower() == "toast":
+            toast_css = (project_root / "storybook" / "src" / "components" / "Toast.module.css").resolve()
+            if toast_css.is_file():
+                css_for_gate = toast_css.read_text(encoding="utf-8")
+
         gate = validator.validate_spec_storybook(
             spec_text=context.get("spec", ""),
-            css_text=generated.get("css", "") if isinstance(generated, dict) else "",
+            css_text=css_for_gate,
             storybook_text=storybook_text,
         )
         if not gate.passed:

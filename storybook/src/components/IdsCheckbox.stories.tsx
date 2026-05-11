@@ -33,6 +33,39 @@ export const SelectionStates: Story = {
   ),
 };
 
+/** Mirrors Figma `8505:14296` main matrix: selection × (default | focus-visible | disabled). */
+export const FigmaMainMatrix: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "120px repeat(3, minmax(140px, 1fr))",
+        gap: "12px 16px",
+        alignItems: "center",
+        fontSize: 12,
+        color: "var(--color-text-neutral-strong)",
+      }}
+    >
+      <div />
+      <div>Unselected</div>
+      <div>Selected</div>
+      <div>Indeterminate</div>
+      <div>Default</div>
+      <Checkbox label="Option" />
+      <Checkbox label="Option" checked />
+      <Checkbox label="Option" indeterminate />
+      <div>Focus-visible (simulated)</div>
+      <Checkbox label="Option" simulateFocusVisible />
+      <Checkbox label="Option" checked simulateFocusVisible />
+      <Checkbox label="Option" indeterminate simulateFocusVisible />
+      <div>Disabled</div>
+      <Checkbox label="Option" disabled />
+      <Checkbox label="Option" checked disabled />
+      <Checkbox label="Option" indeterminate disabled />
+    </div>
+  ),
+};
+
 export const DisabledStates: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>

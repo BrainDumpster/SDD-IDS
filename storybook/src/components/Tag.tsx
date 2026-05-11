@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import type { MouseEvent } from "react";
+import { Icon } from "./Icon";
 import styles from "./Tag.module.css";
 
 type Tone = "info" | "success" | "minor" | "major" | "critical" | "non-alerting";
@@ -50,7 +51,8 @@ export function Tag({
   const disabled = visualState === "disabled";
   const clickable = type === "clickable";
   const editable = type === "editable";
-  const hasBadge = type === "badge" && badgeCount != null;
+  const isBadgeType = type === "badge";
+  const hasBadge = isBadgeType && badgeCount != null;
   const isSelectedControlled = selected !== undefined;
   const [internalSelected, setInternalSelected] = useState(defaultSelected);
   const textFocusRef = useRef<HTMLSpanElement>(null);
@@ -147,6 +149,13 @@ export function Tag({
           <span className={styles.label}>{label}</span>
         </>
       )}
+      {isBadgeType && hasBadge ? (
+        <Icon
+          shapeName="arrow-drop-tri-caret"
+          className={styles.menuCaret}
+          color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+        />
+      ) : null}
       {(closable || editable) && (
         <button
           className={styles.dismiss}

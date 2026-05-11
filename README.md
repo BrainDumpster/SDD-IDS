@@ -12,6 +12,7 @@ A RAG-powered platform that extracts design system knowledge from Figma, generat
 
 Supports multiple design systems via `DESIGN_SYSTEM` env var:
 - **IDS** (default): Original IDS design system
+- **IDS-AI**: IDS baseline + `components/ids-ai/` deltas (`root-spec.mdx`, per-component `design-spec.mdx`, `ids-ai-theme.css`)
 - **Synapse**: Synapse design system with Base UI (`@base-ui-components/react`) as the React implementation layer
 - **DAP**: Program-specific deltas layered on top of IDS baseline specs and tokens
 
@@ -314,6 +315,8 @@ Use this workflow when you want deterministic, repeatable generation from `desig
 1. **Select design system context**
    - IDS baseline:
      - `export DESIGN_SYSTEM=ids`
+   - IDS-AI (layered on IDS):
+     - `export DESIGN_SYSTEM=ids-ai`
    - Program-over-IDS (example DAP):
      - `export DESIGN_SYSTEM=dap`
 
@@ -360,6 +363,21 @@ Use this workflow when you want deterministic, repeatable generation from `desig
 8. **When specs change**
    - Re-run the same `strict_spec_storybook_gate.py` command for impacted components.
    - Spec hash drift + validators ensure story updates remain zero-drift with contracts.
+
+### IDS-AI: authoring specs vs regenerating Storybook/CSS
+
+Use this when you maintain **IDS-AI** (`components/ids-ai/`) and want spec-aligned deterministic stories and component CSS.
+
+1. **Edit the contract** (source of truth): `components/ids-ai/root-spec.mdx`, `components/ids-ai/<slug>/design-spec.mdx`, and token values in `components/ids-ai-theme.css` as needed.
+2. **Optional — align tokens or root copy from Figma** (requires `FIGMA_TOKEN` and any vars documented in those scripts):
+   - `python scripts/sync_ids_ai_theme_from_figma.py`
+   - `python scripts/sync_ids_ai_root_spec_from_figma.py`
+3. **Regenerate** deterministic stories + strict-gate CSS for a component (example: toast):
+   - `DESIGN_SYSTEM=ids-ai python scripts/strict_spec_storybook_gate.py --component toast --spec-only --deterministic-story`
+   - Add `--build-storybook` if you want the gate to run `pnpm build` under `storybook/`.
+4. **Do not hand-edit** gate-regenerated files under `storybook/src/components/` (for example `*.module.css`) for components covered by the strict gate — change the spec or generator and re-run the command above.
+
+The Storybook **Theme** toolbar (`storybook/.storybook/preview.ts`) sets `data-theme` and `data-design-system` so canvas chrome uses each system’s `var(--color-background-surface-1)` for light/dark.
 
 ### Design Team Mode (recommended for external consumers)
 
@@ -482,6 +500,7 @@ python scripts/figma_layout_enricher.py --skeleton
 
 | File | Purpose |
 |---|---|
+| `data/ids-ai-component-figma-map.json` | IDS-AI components → Figma URLs and node IDs (primary map when `DESIGN_SYSTEM=ids-ai`) |
 | `data/synapse-component-figma-map.json` | Figma node IDs for ~80 components across all pages |
 | `data/synapse-component-registry.json` | Component anatomy, states, variants, tokens (46 entries) |
 | `data/synapse-component-aliases.json` | Figma display name to CSS slug mapping + developer aliases |

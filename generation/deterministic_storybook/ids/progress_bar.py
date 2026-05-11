@@ -56,9 +56,9 @@ export const WithLabelThinHelperInProgress: Story = {{
 export const ThicknessReference: Story = {{
   render: () => (
     <div style={{{{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 420 }}}}>
-      <{component_name} value={{30}} label="Thin" type="with-label" thickness="thin" state="in-progress" showHelperText helperText="4px track + 1px border" />
-      <{component_name} value={{30}} label="Medium" type="with-label" thickness="medium" state="in-progress" showHelperText helperText="8px track + 1px border" />
-      <{component_name} value={{30}} label="Thick" type="with-label" thickness="thick" state="in-progress" showHelperText helperText="16px track + 1px border" />
+      <{component_name} value={{30}} label="Thin" type="with-label" thickness="thin" state="in-progress" showHelperText helperText="Track height var(--sizing-size-4) + var(--border-width-border-default) stroke" />
+      <{component_name} value={{30}} label="Medium" type="with-label" thickness="medium" state="in-progress" showHelperText helperText="Track height var(--sizing-size-8) + var(--border-width-border-default) stroke" />
+      <{component_name} value={{30}} label="Thick" type="with-label" thickness="thick" state="in-progress" showHelperText helperText="Track height var(--sizing-size-16) + var(--border-width-border-default) stroke" />
     </div>
   ),
 }};

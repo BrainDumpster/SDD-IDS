@@ -8,14 +8,21 @@ import {
 import { AppLauncher } from "./AppLauncher";
 import { Icon } from "./Icon";
 import userIcon from "../../../assets/icons/user-single-16.svg";
+import "../../../components/ids-ai-theme.css";
 
 const helpIconEl = <Icon shapeName="help-circ-16" style={{ width: 16, height: 16 }} />;
 
 const meta: Meta<typeof IdsMasthead> = {
-  title: "IDS/Masthead",
+  title: "IDS-AI/Masthead",
   component: IdsMasthead,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "IDS-AI Masthead per `components/ids-ai/masthead/design-spec.mdx` and Figma nodes `10130:29493`, `10130:29367`, `10130:29944`, scenarios `42155:68316` (see `data/ids-ai-component-figma-map.json`).",
+      },
+    },
   },
 };
 

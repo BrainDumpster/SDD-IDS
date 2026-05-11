@@ -1,6 +1,6 @@
 import styles from "./Badge.module.css";
 
-type BadgeType = "default" | "critical" | "warning" | "disabled" | "success";
+type BadgeType = "default" | "controls" | "critical" | "warning" | "disabled" | "success";
 
 interface BadgeProps {
   value: string | number;

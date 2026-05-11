@@ -41,6 +41,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-space-10);
   width: 90px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
@@ -53,20 +54,13 @@
   cursor: pointer;
 }
 
-.dropdownTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-brand-base);
-}
-
-.dropdownTrigger:active:not(:disabled) {
-  border-color: var(--color-border-brand-base);
-}
-
 .dropdownTrigger:focus-visible,
 .iconButton:focus-visible,
 .dropdownOption:focus-visible,
+.pageInput:focus-visible,
 .pageOffsetTrigger:focus-visible,
 .pageOffsetOption:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-thick) solid var(--color-border-brand-base);
   outline-offset: 2px;
 }
 
@@ -93,14 +87,18 @@
   position: absolute;
   left: 0;
   width: 90px;
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-radius: 0;
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
   overflow: clip;
-  box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
+  box-shadow:
+    var(--shadow-drop-shadow-4-x) var(--shadow-drop-shadow-4-y) var(--shadow-drop-shadow-4-blur)
+      var(--shadow-drop-shadow-4-spread) var(--shadow-drop-shadow-4-color),
+    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
+      var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color);
   z-index: 2;
 }
 
@@ -135,24 +133,24 @@
 }
 
 .dropdownOption:hover {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .dropdownOption:active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-brand-light);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .dropdownOptionSelected {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .pageNavGroup {
@@ -220,6 +218,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-space-10);
   width: 40px;
   height: 32px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
@@ -230,14 +229,6 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
-}
-
-.pageOffsetTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-brand-base);
-}
-
-.pageOffsetTrigger:active:not(:disabled) {
-  border-color: var(--color-border-brand-base);
 }
 
 .pageOffsetTrigger:disabled {
@@ -259,14 +250,18 @@
   width: 40px;
   max-height: 160px;
   overflow-y: auto;
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-radius: 0;
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
   overflow-x: clip;
-  box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
+  box-shadow:
+    var(--shadow-drop-shadow-4-x) var(--shadow-drop-shadow-4-y) var(--shadow-drop-shadow-4-blur)
+      var(--shadow-drop-shadow-4-spread) var(--shadow-drop-shadow-4-color),
+    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
+      var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color);
   z-index: 2;
 }
 
@@ -301,24 +296,24 @@
 }
 
 .pageOffsetOption:hover {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .pageOffsetOption:active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-brand-light);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .pageOffsetOptionSelected {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-brand-lighter);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-neutral);
 }
 
 .countText {

@@ -15,6 +15,8 @@ interface TabItem {
   disabled?: boolean;
 }
 
+export type TabsSurface = "elevated" | "transparent";
+
 interface TabsProps {
   items: TabItem[];
   defaultActiveTabId?: string;
@@ -24,6 +26,8 @@ interface TabsProps {
   minTabWidth?: number;
   maxTabWidth?: number;
   variant?: "primary" | "secondary";
+  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-2)`. */
+  surface?: TabsSurface;
   moreLabel?: string;
 }
 
@@ -36,6 +40,7 @@ export function Tabs({
   minTabWidth = 80,
   maxTabWidth = 250,
   variant = "secondary",
+  surface = "elevated",
   moreLabel = "More",
 }: TabsProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -116,7 +121,7 @@ export function Tabs({
   };
 
   return (
-    <div ref={rootRef} className={styles.root}>
+    <div ref={rootRef} className={styles.root} data-surface={surface}>
       <div ref={listRef} className={styles.listWrap}>
         <div className={styles.list} role="tablist" aria-label="Tabs">
           {visibleTabs.map((item) => (
@@ -136,8 +141,10 @@ export function Tabs({
               style={{ minWidth: `${minTabWidth}px`, maxWidth: `${maxTabWidth}px` }}
               onClick={() => handleVisibleTabSelect(item.id)}
             >
-              {item.icon ? <span className={styles.tabIcon}>{item.icon}</span> : null}
-              <span className={styles.tabLabel}>{item.label}</span>
+              <span className={styles.tabInner}>
+                {item.icon ? <span className={styles.tabIcon}>{item.icon}</span> : null}
+                <span className={styles.tabLabel}>{item.label}</span>
+              </span>
               {item.closable ? (
                 <span
                   className={styles.close}

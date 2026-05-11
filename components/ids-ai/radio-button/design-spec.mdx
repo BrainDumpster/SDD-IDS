@@ -3,18 +3,20 @@
 # Radio Button Design Spec
 
 ## Metadata
-- Component: Radio Button
-- Category: Formelements
-- Design System: IDS-AI
-- Primary Figma: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=8505-14225&m=dev`
-- Primary node ID: `8505:14225`
-- Scenario Figma: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42077-26770&m=dev`
-- Scenario node ID: `42077:26770`
-- Figma file key: `rr8F0NGA6RNY9Z0cNeh3jh`
-- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-05-10
-- Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
-- Storybook harness: state matrix uses **single-option** `RadioGroup` instances (one row per cell) with unique `name` per cell; **Hover** column uses live pointer hover; **Focus** column may use per-option `simulatedState: "focus-visible"` for static screenshots (docs-only).
+- **Component:** Radio Button
+- **Category:** Formelements
+- **Design system:** IDS-AI
+- **Spec path:** `components/ids-ai/radio-button/design-spec.mdx`
+- **Component map:** `data/ids-ai-component-figma-map.json` → slug **`radio-button`**
+- **IDS-AI Figma file key:** `rr8F0NGA6RNY9Z0cNeh3jh`
+- **Main component set:** `8505:14225` — `RadioButton` (selection × default / hover / disabled / focus matrix)  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=8505-14225&m=dev
+- **Scenarios board:** `42077:26770`  
+  - URL: https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42077-26770&m=dev
+- **Verification method:** Figma MCP (`get_design_context`, `get_variable_defs`)
+- **Last live verification (2026-05-10):** `get_design_context` on **`8505:14225`** (focus ring geometry: **`22×22`** px absolute ring, **`1px`** `var(--color-border-brand-base)`, positioned **`3px`** out from the **16×16** control); `get_variable_defs` on **`8505:14225`** — `Sizing/size-16`, `Sizing/size-8`, `Corner Radius/radius-20` (focus ring uses rounded rect at **20** radius token), `Spacing/space-8`, `Body 2`, `Color/Border/Accessible` / `Strong` / `Brand-Base` / `Disabled`, `Color/Icon/Brand-Strong`, `Color/Icon/Disabled`.
+- **Variant axes:** selection (`unselected | selected`) × interaction (`default | hover | disabled | focus-visible`) × optional validation (`error` on unselected control)
+- **Storybook harness:** matrix uses unique `name` per mini-group; **Hover** uses live `:hover`; **Focus** uses per-option `simulatedState: "focus-visible"` (docs-only; production must use real `:focus-visible`).
 
 ## Anatomy
 - **groupRoot** (optional): semantic grouping wrapper for radio collections.
@@ -26,23 +28,21 @@
 - **assistiveText** (optional): helper/error copy.
 
 ## Layout & Measurements
-- Outer control size: `16px x 16px`.
-- Outer shape: circle (`border-radius: 50%`).
-- Selected dot size: `8px x 8px`, centered.
-- Dot-to-ring inset: `4px` (computed from 16 outer and 8 inner).
-- Label gap from control: `var(--spacing-space-8)`.
-- Min hit area: `44px` height (control can be visually smaller than hit target).
-- Focus-visible ring:
-  - 1px outline with `var(--color-border-brand-base)`,
-  - 3px offset from the outer control.
+- **Outer control:** **`16px × 16px`** (`8505:14225` + `get_variable_defs`).
+- **Shape:** circle — **`border-radius: 50%`** (Figma variable **`Corner Radius/radius-20`** applies to the **focus** affordance ring geometry, not a square control).
+- **Selected dot:** **`8px × 8px`** (`Sizing/size-8`), centered (**4px** inset from outer ring to dot center).
+- **Label gap:** **`var(--spacing-space-8)`** between control and label.
+- **Min hit area:** **`44px`** min-height on the full radio **row** (wrapper); control stays **16×16** (Storybook: `.wrapper { min-height: 44px; }`).
+- **Focus-visible ring (Figma `8505:14225` export):** **`1px`** border **`var(--color-border-brand-base)`** on a **`22×22`** px ring centered around the **16×16** control (**≈3px** inset from ring outer edge to control outer edge). CSS parity: **`outline: var(--border-width-border-1) solid var(--color-border-brand-base)`** + **`outline-offset: 3px`** on the **16×16** `Radio.Root`.
 
 ## Tokens
 - Borders:
-  - `var(--border-width-border-default)`
+  - `var(--border-width-border-default)` / `var(--border-width-border-1)`
   - `var(--border-width-border-thick)`
   - `var(--color-border-accessible)`
   - `var(--color-border-strong)`
   - `var(--color-border-brand-base)`
+  - `var(--color-border-alerting-critical-base)` (error / invalid unselected control)
   - `var(--color-border-disabled)`
 - Backgrounds:
   - `var(--color-background-component)`
@@ -73,6 +73,7 @@
 | Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
 | Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
 | Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Unselected | Error (invalid) | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | none | `var(--color-text-critical)` |
 | Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
 
 ## States (Dark Theme)
@@ -87,6 +88,7 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 | Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
 | Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
 | Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
+| Unselected | Error (invalid) | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | none | `var(--color-text-critical)` |
 | Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
 
 ## Interactions
@@ -146,10 +148,11 @@ Each option maps to one radio row: `value`, `label`, `disabled`, `error`, `helpe
 - Group behavior: standalone | grouped single-select.
 
 ### Style contract
-- Control stays circular and 16x16 across states.
-- Dot appears only when selected; default dot fill `var(--color-background-controls-brand-base)`; hover selected dot uses `var(--color-icon-brand-strong)` per state table.
-- Label spacing stays `var(--spacing-space-8)`.
-- Focus-visible ring uses 1px brand outline with 3px offset.
+- Control stays circular and **16×16** across states.
+- Dot appears only when selected; default dot fill **`var(--color-background-controls-brand-base)`**; selected **hover** dot uses **`var(--color-icon-brand-strong)`** per **`8505:14225`** export.
+- Label spacing stays **`var(--spacing-space-8)`**; row **`min-height: 44px`** for hit target.
+- Focus-visible ring: **`1px`** **`var(--color-border-brand-base)`** + **`outline-offset: 3px`** (Figma **`22×22`** ring around **16×16** control).
+- Error (unselected): border **`var(--color-border-alerting-critical-base)`** (Storybook parity with checkbox invalid control).
 - Optional `data-simulated-state` (or equivalent) on the control root may apply harness-only hover/focus visuals; strip or no-op in production unless used for documented fixtures.
 - No hardcoded values for color/border/typography.
 
@@ -171,15 +174,15 @@ Each option maps to one radio row: `value`, `label`, `disabled`, `error`, `helpe
 
 ### Validation checklist
 - [ ] Single-selection group behavior is deterministic.
-- [ ] Full state matrix is token-mapped.
+- [ ] Full state matrix is token-mapped to **`8505:14225`** (including **error** unselected border).
+- [ ] Focus ring matches Figma (**`22×22`** ring ≈ **`outline-offset: 3px`** on **16×16** control).
+- [ ] **44px** row min-height on interactive wrapper.
 - [ ] Focus-visible and keyboard navigation work for grouped radios.
 - [ ] Disabled radios are non-interactive and correctly styled.
 - [ ] Label/input association passes accessibility checks.
 - [ ] Dark theme values resolve through semantic tokens only.
 
 ## Source Mapping
-- Component map entry: IDS-AI override input supplied directly by product links
-- Primary extraction source: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=8505-14225&m=dev`
-- Scenario source: `https://www.figma.com/design/rr8F0NGA6RNY9Z0cNeh3jh/IDS-AI-Design-Library--Test-?node-id=42077-26770&m=dev`
-- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-05-10
+- **Canonical map:** `data/ids-ai-component-figma-map.json` → **`radio-button`** (`fileKey` **`rr8F0NGA6RNY9Z0cNeh3jh`**).
+- **Primary nodes:** **`8505:14225`**, **`42077:26770`** (scenarios).
+- **Live verification (2026-05-10):** Figma MCP `get_design_context` + `get_variable_defs` on **`8505:14225`** (see Metadata).

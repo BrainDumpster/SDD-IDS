@@ -15,8 +15,7 @@
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
-  border-top: none;
-  border-radius: 0;
+  border-radius: var(--corner-radius-radius-4);
   box-shadow:
     0 2px 2px 0 var(--shadow-drop-shadow-2-color),
     0 4px 4px 0 var(--shadow-drop-shadow-4-color);
@@ -43,6 +42,7 @@
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   background: var(--color-background-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-6);
 }
 
 .searchIcon {
@@ -95,7 +95,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
   background: var(--color-background-component);
 }
 
@@ -284,6 +284,16 @@
   justify-content: center;
   background: var(--color-background-component);
   position: relative;
+}
+
+.selectAllCheckbox {
+  width: 16px;
+  height: 16px;
+}
+
+.item[data-selection-mode="multi"] .checkboxOuter {
+  width: 16px;
+  height: 16px;
 }
 
 .checkboxTick {
