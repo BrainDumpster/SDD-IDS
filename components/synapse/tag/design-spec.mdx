@@ -107,7 +107,17 @@ Use semantic tokens from `components/synapse-theme.css`; do not hardcode values 
 ### Tags with badge (`38910:57339`)
 - Axes: `State=Default|Error|Disabled`, `Focus=True|False`, `Show Label` boolean.
 - Container spacing contract: padding `4px 12px 4px 12px` with `8px` gap between badge and label/value content.
-- Badge remains inverse text on badge fill while tag body follows state border/background rules.
+- Badge styling:
+  - Size: `18x18px`
+  - Background: `var(--color-background-alerting-info-1)`
+  - Border: `1px solid var(--color-border-white)` (inside border)
+  - Text: `var(--color-text-white)`
+  - Border radius: `999px`
+  - Padding: `0 4px`
+- Badge states:
+  - Default: `var(--color-background-alerting-info-1)` background
+  - Disabled: `var(--color-static-gray-500)` background with `0.8` opacity
+  - Badge remains inverse text on badge fill while tag body follows state border/background rules.
 
 ## States (Dark Theme)
 
@@ -191,6 +201,11 @@ This section is normative for generation and validation.
 - [ ] Editable focus-on-text behavior and ring match spec.
 - [ ] Badge layout spacing remains valid in all states.
 - [ ] Accessibility semantics pass.
+
+### Implementation Notes
+**Items requiring CSS updates:**
+1. **Badge styling** (lines 110-119): Update badge size to 18x18px, background to `var(--color-background-alerting-info-1)`, border to `1px solid var(--color-border-white)`, and disabled state to use `var(--color-static-gray-500)` background.
+2. **Strong variant tokens** (lines 62-72): Ensure strong variants use correct tokens as specified in the state table (e.g., Info Strong should use `--color-background-alerting-info-1` and `--color-border-alerting-info-white`, not the light variant tokens).
 
 ## Source Mapping
 
