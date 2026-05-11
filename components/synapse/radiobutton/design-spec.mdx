@@ -56,13 +56,13 @@
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
 | Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Press | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
-| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Press | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Press | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
 | Any | Disabled | `var(--color-background-gray-light)` for unselected; `var(--color-background-component)` for selected | `var(--color-border-disabled)` | selected dot in `var(--color-border-disabled)`; unselected none | `var(--color-text-disabled)` |
 
 ## States (Dark Theme)
@@ -71,13 +71,13 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
 | Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
+| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Press | `var(--color-background-gray-light)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
-| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Press | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Press | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-brand-base)` | `var(--color-text-neutral)` |
 | Any | Disabled | `var(--color-background-gray-light)` for unselected; `var(--color-background-component)` for selected | `var(--color-border-disabled)` | selected dot in `var(--color-border-disabled)`; unselected none | `var(--color-text-disabled)` |
 
 ## Interactions
@@ -148,6 +148,11 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 - [ ] Disabled radios are non-interactive and correctly styled.
 - [ ] Label/input association passes accessibility checks.
 - [ ] Dark theme values resolve through semantic tokens only.
+
+### Implementation Notes
+**CSS updates required:**
+1. **Unselected hover state**: Change background from `var(--color-background-gray-light)` to `var(--color-background-component)` (lines 59, 74 in spec).
+2. **Selected indicator fill**: Change from `var(--color-background-controls-brand-base)` to `var(--color-background-brand-base)` (lines 62-65, 77-80 in spec).
 
 ## Source Mapping
 - Figma component (map): Radio Button (`8505:14225`)
