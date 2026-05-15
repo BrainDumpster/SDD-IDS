@@ -1,6 +1,6 @@
-# DAP Storybook Group
+# DAP Storybook components
 
-This folder contains DAP-specific IDS Storybook components and stories.
+This folder contains DAP-specific IDS components used by demos and **Spec Generated/DAP/** stories (see `storybook/.storybook/main.ts` globs). Inline `DAP/*` root stories were removed to keep the manual Storybook tree slimmer; use generated stories for DAP coverage.
 
 ## Included components
 - `IdsMastheadDap`
@@ -10,5 +10,5 @@ This folder contains DAP-specific IDS Storybook components and stories.
 
 ## Grouping rules
 - Keep DAP components under this folder.
-- Keep Storybook titles under `DAP/*` so they appear as a top-level group parallel to `IDS/*`.
+- Generated Storybook titles use **`Spec Generated/DAP/*`** (see `storybook-generated/dap/`).
 - Keep design-spec references in contracts pointed to `components/DAP/*/design-spec.mdx`.

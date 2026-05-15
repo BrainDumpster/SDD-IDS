@@ -47,6 +47,16 @@ components/synapse/
 - Remaining 24 components inherit root baseline
 - All specs include `<!-- ds:inherits root-spec -->` marker
 
+## Component implementation guides
+
+Per-component README files document regeneration, reference implementations, and implementation pitfalls. Start from the design spec, then use the component README for hands-on work.
+
+| Component | README | Design spec |
+|---|---|---|
+| **Datagrid** (IDS) | [`components/ids/datagrid/README.md`](components/ids/datagrid/README.md) | [`components/ids/datagrid/design-spec.mdx`](components/ids/datagrid/design-spec.mdx) |
+
+Add a row to this table when you introduce a `README.md` next to a component spec (same pattern as Datagrid).
+
 ## Using Design Specs As Source Of Truth
 
 Production-ready component specs under `components/synapse/<slug>/design-spec.mdx` are intended for spec-driven generation across frameworks (React, Angular, Vue, Lit, and others), provided generators follow the spec contract sections.

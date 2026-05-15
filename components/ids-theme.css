@@ -353,6 +353,9 @@ body[data-design-system="ids"] {
   --ui-palette-slate-880: #171d21;
   --ui-palette-slate-900: #111619;
   --white: #ffffff;
+  /* Datagrid selection column — Figma `selection/header`, `selection/cell` (`37721:113988`, `37721:114944`) */
+  --selection-header: 16px;
+  --selection-cell: 12px;
 }
 
 html[data-design-system="ids"][data-theme="dark"],
@@ -708,4 +711,6 @@ body[data-design-system="ids"][data-theme="dark"] {
   --ui-palette-slate-880: #171d21;
   --ui-palette-slate-900: #111619;
   --white: #ffffff;
+  --selection-header: 16px;
+  --selection-cell: 12px;
 }

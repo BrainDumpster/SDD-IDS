@@ -1,0 +1,25 @@
+/* Compact host for 48px selection column — Figma `8505:14304` 16×16 control */
+.host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--datagrid-chrome-icon-size, 16px);
+  height: var(--datagrid-chrome-icon-size, 16px);
+  max-width: var(--datagrid-chrome-icon-size, 16px);
+  max-height: var(--datagrid-chrome-icon-size, 16px);
+  line-height: 0;
+  overflow: hidden;
+}
+
+.host :global(.field) {
+  display: inline-flex;
+  gap: 0;
+}
+
+.host :global(.wrapper) {
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+}

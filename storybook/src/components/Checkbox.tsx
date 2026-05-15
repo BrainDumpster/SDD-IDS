@@ -17,6 +17,8 @@ interface CheckboxProps {
   name?: string;
   value?: string;
   onChange?: (checked: boolean) => void;
+  /** `datagrid`: 16×16 control only, no 44px label row height (selection column). */
+  density?: "default" | "datagrid";
 }
 
 export function Checkbox({
@@ -33,12 +35,13 @@ export function Checkbox({
   name,
   value,
   onChange,
+  density = "default",
 }: CheckboxProps) {
   const resolvedId = id ?? `checkbox-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const assistiveId = helperText ? `${resolvedId}-assistive` : undefined;
 
   return (
-    <div className={styles.field}>
+    <div className={styles.field} data-density={density}>
       <label className={styles.wrapper}>
         <BaseCheckbox.Root
           id={resolvedId}

@@ -15,6 +15,19 @@
   min-height: 44px;
 }
 
+.field[data-density="datagrid"] .wrapper {
+  min-height: 0;
+  gap: 0;
+}
+
+/* Figma datagrid checkbox `8505:14304` — 16×16 in 48px selection column */
+.field[data-density="datagrid"] .root {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
 .root {
   width: 18px;
   height: 18px;
