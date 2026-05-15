@@ -36,7 +36,7 @@ const preview: Preview = {
       const title = context.title || "";
       const upperTitle = title.toUpperCase();
       // Support legacy folders (IDS/, DAP/), IDS-AI (must run before IDS substring checks),
-      // and generated folders (Spec Generated/IDS/*, Spec Generated/IDS-AI/*).
+      // and generated folders (Spec Generated/IDS/*, Spec Generated/DAP/*).
       const designSystem =
         upperTitle.includes("/DAP/") || upperTitle.startsWith("DAP/")
           ? "dap"

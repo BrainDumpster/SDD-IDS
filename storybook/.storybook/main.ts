@@ -14,7 +14,9 @@ const repoRoot = path.resolve(storybookPackageRoot, "..");
 const config: StorybookConfig = {
   stories: [
     path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/**/src/**/*.stories.@(ts|tsx)"),
+    // Spec-generated: IDS + DAP only (exclude IDS-AI generated duplicates from sidebar).
+    path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {
