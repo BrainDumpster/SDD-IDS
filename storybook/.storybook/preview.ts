@@ -1,8 +1,7 @@
 import type { Preview } from "@storybook/react";
-import "../src/synapse-theme.css";
-import "../../components/ids-ai-theme.css";
 import "../../components/ids-theme.css";
 import "../../components/dap-theme.css";
+import "../src/synapse-theme.css";
 
 const preview: Preview = {
   initialGlobals: {
@@ -10,7 +9,7 @@ const preview: Preview = {
   },
   parameters: {
     // Let html/body use design-system tokens; the backgrounds addon used fixed hex
-    // values that did not follow the Theme toolbar or IDS / IDS-AI / DAP variable sets.
+    // values that did not follow the Theme toolbar or IDS / DAP / Synapse variable sets.
     backgrounds: { disable: true },
   },
   globalTypes: {
@@ -35,16 +34,13 @@ const preview: Preview = {
       const resolvedTheme = theme === "dark" ? "dark" : "light";
       const title = context.title || "";
       const upperTitle = title.toUpperCase();
-      // Support legacy folders (IDS/, DAP/), IDS-AI (must run before IDS substring checks),
-      // and generated folders (Spec Generated/IDS/*, Spec Generated/DAP/*).
+      // Legacy folders (IDS/, DAP/), Spec Generated (IDS + DAP), Synapse defaults.
       const designSystem =
         upperTitle.includes("/DAP/") || upperTitle.startsWith("DAP/")
           ? "dap"
-          : upperTitle.includes("IDS-AI")
-            ? "ids-ai"
-            : upperTitle.includes("/IDS/") || upperTitle.startsWith("IDS/")
-              ? "ids"
-              : "synapse";
+          : upperTitle.includes("/IDS/") || upperTitle.startsWith("IDS/")
+            ? "ids"
+            : "synapse";
       document.documentElement.setAttribute("data-theme", resolvedTheme);
       document.body.setAttribute("data-theme", resolvedTheme);
       document.documentElement.setAttribute("data-design-system", designSystem);

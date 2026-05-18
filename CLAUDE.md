@@ -13,6 +13,7 @@ Design Intelligence System — a RAG-powered platform that indexes design system
 
 Supports multiple design systems via `DESIGN_SYSTEM` env var:
 - **IDS** (default): Original IDS design system
+- **DAP**: Program deltas layered on IDS (`components/DAP`, `components/dap-theme.css`)
 - **Synapse**: Synapse design system with Base UI (`@base-ui-components/react`) as the React implementation layer
 
 ## Commands
@@ -94,8 +95,7 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 | MCP Streamable | 8080 | `mcp_tools/streamable_mcp_server.py` |
 
 ### Important Data Files
-- `data/component-figma-map.json` — IDS component → Figma URL + node ID. **Read this first** when working with any IDS component's Figma data.
-- `data/ids-ai-component-figma-map.json` — IDS-AI program components → Figma URLs + node IDs (used when `DESIGN_SYSTEM=ids-ai` via `config/design_systems/ids-ai.yaml`).
+- `data/component-figma-map.json` — IDS / DAP component → Figma URL + node ID. **Read this first** when working with any IDS component's Figma data.
 - `data/synapse-component-figma-map.json` — Synapse component → Figma node IDs (~80 entries).
 - `data/synapse-baseui-mapping.json` — maps each Synapse component to its Base UI implementation strategy.
 - `data/synapse-component-registry.json` — Synapse component anatomy, states, variants, tokens.
@@ -104,12 +104,12 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 - `rules.json` — IDS design system rules (accessibility, layout) with severity levels.
 - `components/ids/<slug>/design-spec.mdx` — IDS Figma-aligned component specifications.
 - `components/synapse/<slug>/design-spec.mdx` — Synapse component specifications.
-- `components/theme.css` — IDS global CSS variables from Figma token collections.
+- `components/ids-theme.css` — IDS global CSS variables (light + dark; `data-design-system="ids"`).
 - `components/synapse-theme.css` — Synapse global CSS variables (light + dark themes).
 
 ### Design System Abstraction
 - `config/design_system_config.py` — `DesignSystemConfig` dataclass + `load_design_system()` factory.
-- `config/design_systems/ids.yaml` / `synapse.yaml` — per-design-system YAML configs.
+- `config/design_systems/ids.yaml` / `dap.yaml` / `synapse.yaml` — per-design-system YAML configs.
 - All pipeline modules accept config-driven paths (rules, tokens, registry, collection name).
 - `generation/framework_adapters/` — `BaseUIAdapter`, `ReactCSSAdapter`, `AngularAdapter`.
 - `validation/baseui_validator.py` — Base UI compliance checks for Synapse React generation.
@@ -124,7 +124,7 @@ The primary workflow is creating/maintaining `components/ids/<slug>/design-spec.
 3. Required spec sections: Metadata, Layout & Measurements, Tokens, States (Light Theme), States (Dark Theme), Interactions.
 4. Never hardcode colors/spacing/typography — always reference CSS variables/design tokens.
 5. Light and Dark state tables must be structurally parallel.
-6. Global token CSS is built from Figma collections (priority: `Tokens` > `Primitive` > `Density Primitive`) and stored in `components/theme.css` — shared across all components, not per-component.
+6. Global token CSS is built from Figma collections (priority: `Tokens` > `Primitive` > `Density Primitive`) and stored in `components/ids-theme.css` — shared across IDS components, not per-component.
 
 ## Environment
 

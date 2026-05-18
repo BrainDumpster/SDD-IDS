@@ -65,7 +65,7 @@ def _first_var_in_line(line: str) -> str | None:
 
 
 def _parse_layout(spec_text: str) -> dict[str, str]:
-    """Scan the full layered spec so IDS-AI program lines win over baseline IDS Toast (last match)."""
+    """Scan the full layered spec so program root lines win over baseline IDS Toast (last match)."""
     out: dict[str, str] = {}
     for raw in spec_text.splitlines():
         line = raw.strip()
@@ -100,7 +100,7 @@ def _parse_layout(spec_text: str) -> dict[str, str]:
         if "617px" in line and "with link" in line:
             out["viewport_max_px"] = "617"
 
-    # Defaults aligned with IDS-AI theme when spec uses bare px in a bullet
+    # Defaults aligned with IDS theme when spec uses bare px in a bullet
     out.setdefault("root_row_gap", "--spacing-space-32")
     out.setdefault("content_gap", "--spacing-space-8")
     out.setdefault("action_gap", "--spacing-space-24")
@@ -144,7 +144,7 @@ def _parse_core_tokens(spec_text: str) -> dict[str, str]:
 
 
 def _parse_variant_icon_map(spec_text: str) -> dict[str, str]:
-    """Parse status table(s); last complete table wins (IDS-AI over baseline IDS)."""
+    """Parse status table(s); last complete table wins (program layer over baseline IDS)."""
     out: dict[str, str] = {}
     in_table = False
     for raw in spec_text.splitlines():

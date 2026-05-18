@@ -11,10 +11,9 @@ A RAG-powered platform that extracts design system knowledge from Figma, generat
 - **Answers** design system questions via chat agent and semantic search API
 
 Supports multiple design systems via `DESIGN_SYSTEM` env var:
-- **IDS** (default): Original IDS design system
-- **IDS-AI**: IDS baseline + `components/ids-ai/` deltas (`root-spec.mdx`, per-component `design-spec.mdx`, `ids-ai-theme.css`)
+- **IDS** (default): Original IDS design system (`components/ids`, `components/ids-theme.css`)
 - **Synapse**: Synapse design system with Base UI (`@base-ui-components/react`) as the React implementation layer
-- **DAP**: Program-specific deltas layered on top of IDS baseline specs and tokens
+- **DAP**: Program-specific deltas layered on IDS baseline specs and tokens (`components/DAP`, `components/dap-theme.css`)
 
 ## Spec Pipeline
 
@@ -325,8 +324,6 @@ Use this workflow when you want deterministic, repeatable generation from `desig
 1. **Select design system context**
    - IDS baseline:
      - `export DESIGN_SYSTEM=ids`
-   - IDS-AI (layered on IDS):
-     - `export DESIGN_SYSTEM=ids-ai`
    - Program-over-IDS (example DAP):
      - `export DESIGN_SYSTEM=dap`
 
@@ -338,18 +335,19 @@ Use this workflow when you want deterministic, repeatable generation from `desig
    - Program theme delta (optional/program mode): `components/<program>-theme.css`
    - Program component delta (optional): `components/<program>/<slug>/design-spec.mdx`
 
-3. **Generate deterministic Storybook from layered specs**
+3. **Generate deterministic Storybook from layered specs** (root Storybook **Spec Generated** is **IDS** and **DAP** only; each story imports **`components/ids-theme.css`** or **`components/dap-theme.css`**. Running the gate for **`DESIGN_SYSTEM=ids`** on **`toast`** also syncs `Toast.module.css` from the IDS toast spec.)
    - Single component:
-     - `python scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story`
+     - `DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story`
+     - DAP: `DESIGN_SYSTEM=dap python scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story`
    - Example:
-     - `python scripts/strict_spec_storybook_gate.py --component button --spec-only --deterministic-story`
+     - `DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component button --spec-only --deterministic-story`
 
 4. **(Optional) run all baseline components**
    - `python scripts/strict_spec_storybook_gate.py --all --spec-only --deterministic-story`
 
 5. **Validate generated output artifacts**
    - Stories:
-     - `storybook-generated/<design-system>/src/components/<Component>.stories.tsx`
+     - `storybook-generated/ids/...` or `storybook-generated/dap/...` (see `generated_storybook_dir` in `config/design_systems/*.yaml`)
    - Spec hash contract:
      - `storybook-generated/<design-system>/src/spec-contracts/<slug>.spec-layer-hash.json`
    - Generated stories now include a **TokenInspector** section (token name + live resolved preview) for designer-friendly review.
@@ -374,20 +372,15 @@ Use this workflow when you want deterministic, repeatable generation from `desig
    - Re-run the same `strict_spec_storybook_gate.py` command for impacted components.
    - Spec hash drift + validators ensure story updates remain zero-drift with contracts.
 
-### IDS-AI: authoring specs vs regenerating Storybook/CSS
+The Storybook **Theme** toolbar (`storybook/.storybook/preview.ts`) sets `data-theme` and `data-design-system` so canvas chrome uses each system’s `var(--color-background-surface-1)` for light/dark. **Spec Generated** stories each import **one** program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP). Global preview loads **ids-theme**, **dap-theme**, and **synapse-theme** for legacy/manual stories.
 
-Use this when you maintain **IDS-AI** (`components/ids-ai/`) and want spec-aligned deterministic stories and component CSS.
+### Toast `Toast.module.css` (spec-driven)
 
-1. **Edit the contract** (source of truth): `components/ids-ai/root-spec.mdx`, `components/ids-ai/<slug>/design-spec.mdx`, and token values in `components/ids-ai-theme.css` as needed.
-2. **Optional — align tokens or root copy from Figma** (requires `FIGMA_TOKEN` and any vars documented in those scripts):
-   - `python scripts/sync_ids_ai_theme_from_figma.py`
-   - `python scripts/sync_ids_ai_root_spec_from_figma.py`
-3. **Regenerate** deterministic stories + strict-gate CSS for a component (example: toast):
-   - `DESIGN_SYSTEM=ids-ai python scripts/strict_spec_storybook_gate.py --component toast --spec-only --deterministic-story`
-   - Add `--build-storybook` if you want the gate to run `pnpm build` under `storybook/`.
-4. **Do not hand-edit** gate-regenerated files under `storybook/src/components/` (for example `*.module.css`) for components covered by the strict gate — change the spec or generator and re-run the command above.
+When you change `components/ids/toast/design-spec.mdx`, regenerate the shared Storybook implementation CSS:
 
-The Storybook **Theme** toolbar (`storybook/.storybook/preview.ts`) sets `data-theme` and `data-design-system` so canvas chrome uses each system’s `var(--color-background-surface-1)` for light/dark.
+```bash
+DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component toast --spec-only --deterministic-story
+```
 
 ### Design Team Mode (recommended for external consumers)
 
@@ -395,8 +388,7 @@ If your goal is to publish design contracts that other teams/agents consume in t
 
 - **Source of truth remains the layered specs**
   - `design-spec.mdx` + `root-spec.mdx` + theme CSS layers are canonical.
-- **Deterministic Storybook is a validation harness**
-  - Continue generating `storybook-generated/...` stories to validate contract completeness and visual/state coverage.
+- **Deterministic Storybook is a validation harness** for **IDS** and **DAP** contracts (`storybook-generated/ids`, `storybook-generated/dap`). Stories prove `design-spec.mdx` is consumable for accurate codegen when paired with the matching program theme CSS only.
 - **Current generated stories still render existing Storybook components**
   - This is expected today and does not invalidate spec-driven story generation.
   - It means story scenarios are spec-driven, while rendered implementation may still come from `storybook/src/components/...`.
@@ -510,7 +502,7 @@ python scripts/figma_layout_enricher.py --skeleton
 
 | File | Purpose |
 |---|---|
-| `data/ids-ai-component-figma-map.json` | IDS-AI components → Figma URLs and node IDs (primary map when `DESIGN_SYSTEM=ids-ai`) |
+| `data/component-figma-map.json` | IDS / DAP component → Figma URLs and node IDs (primary map for `DESIGN_SYSTEM=ids` / `dap`) |
 | `data/synapse-component-figma-map.json` | Figma node IDs for ~80 components across all pages |
 | `data/synapse-component-registry.json` | Component anatomy, states, variants, tokens (46 entries) |
 | `data/synapse-component-aliases.json` | Figma display name to CSS slug mapping + developer aliases |

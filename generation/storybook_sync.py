@@ -75,6 +75,48 @@ def prepend_generated_header(storybook_code: str, header: str) -> str:
     return f"{header}{storybook_code.lstrip()}"
 
 
+def ensure_storybook_theme_import(storybook_code: str, design_system_slug: str) -> str:
+    """
+  Spec Generated stories must import exactly one program theme file.
+  IDS → components/ids-theme.css; DAP → components/dap-theme.css.
+  """
+    from generation.deterministic_storybook.helpers import (
+        THEME_CSS_BY_DESIGN_SYSTEM,
+        storybook_theme_import_line,
+    )
+
+    canonical = storybook_theme_import_line(design_system_slug)
+    text = storybook_code or ""
+
+    for path in THEME_CSS_BY_DESIGN_SYSTEM.values():
+        legacy = f'import "../../../../{path}";'
+        if legacy != canonical:
+            text = text.replace(legacy + "\n", "")
+    text = re.sub(
+        r'import "\.\./\.\./\.\./\.\./components/theme\.css";\n?',
+        "",
+        text,
+    )
+
+    if canonical in text:
+        return text
+
+    lines = text.splitlines(keepends=True)
+    insert_at = 0
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith("import "):
+            insert_at = i
+            break
+    else:
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if stripped and not stripped.startswith("/*"):
+                insert_at = i
+                break
+    lines.insert(insert_at, canonical + "\n")
+    return "".join(lines)
+
+
 def idempotent_drift(before: str, after: str) -> bool:
     return before != after
 

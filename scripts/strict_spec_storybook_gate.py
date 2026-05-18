@@ -215,6 +215,7 @@ def main() -> int:
     from generation.deterministic_storybook.engine import generate_story_for_component
     from generation.storybook_sync import (
         compute_spec_layer_hash,
+        ensure_storybook_theme_import,
         extract_existing_spec_hash,
         get_story_path,
         idempotent_drift,
@@ -281,12 +282,11 @@ def main() -> int:
                 spec_text=spec_body,
             )
 
-            # IDS-AI toast: Layout/Tokens in program spec drive shared `Toast.module.css` (single source).
-            # Baseline IDS toast keeps hand-authored CSS until its spec uses the same structured layout tokens.
+            # Spec-derived Toast layout CSS: IDS layered spec → shared Toast.module.css (before story emission).
             if (
-                component.lower() == "toast"
+                design_system.lower() == "ids"
+                and component.lower() == "toast"
                 and spec_body.strip()
-                and design_system.lower() == "ids-ai"
             ):
                 from generation.spec_derived.toast import parse_toast_spec, render_toast_module_css
 
@@ -294,9 +294,9 @@ def main() -> int:
                 try:
                     model = parse_toast_spec(spec_body)
                     toast_css_path.write_text(render_toast_module_css(model), encoding="utf-8")
+                    print("✅ toast: Toast.module.css synced from IDS toast spec")
                 except Exception as exc:
                     failures.append(f"{component}: spec-derived Toast.module.css failed ({exc})")
-                    continue
 
             storybook_text = generate_story_for_component(
                 design_system=design_system,
@@ -326,6 +326,9 @@ def main() -> int:
         storybook_text = _append_token_inspector_story(
             storybook_text=storybook_text,
             spec_text=context.get("spec", ""),
+        )
+        storybook_text = ensure_storybook_theme_import(
+            storybook_text, design_system.lower()
         )
 
         spec_hash = compute_spec_layer_hash(context)

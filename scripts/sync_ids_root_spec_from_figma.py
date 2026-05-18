@@ -65,7 +65,7 @@ def _path_name_to_token(name: str) -> str:
 
 
 def _sanitize_css_token(token: str) -> str:
-    """Match ids-ai-theme.css sync: valid custom properties, Figma path quirks."""
+    """Match ids-theme.css sync: valid custom properties, Figma path quirks."""
     t = token.replace("m<ajor", "major")
     t = re.sub(r"(\d+)%", r"\1", t)
     if "%" in t:
@@ -364,7 +364,7 @@ def build_markdown(
             rows3.append((t, lt or "—", dk or "—"))
         parts.append(_md_table_color_ld("| Token | Light | Dark |", rows3))
 
-    # Theme-aware semantic COLOR appendix (IDS: `Tokens`; IDS-AI: `Color Mode`)
+    # Theme-aware semantic COLOR appendix (IDS: `Tokens`; layered programs may use `Color Mode`)
     tok_c = _variable_rows(
         variables,
         vars_by_id,

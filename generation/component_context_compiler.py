@@ -56,7 +56,7 @@ class ComponentContextCompiler:
             self._resolve_optional_path(config.program_root_spec_path) if config else None
         )
         self._baseline_theme_css_path = (
-            self._resolve_optional_path(config.baseline_theme_css_path) if config else Path("components/theme.css")
+            self._resolve_optional_path(config.baseline_theme_css_path) if config else Path("components/ids-theme.css")
         )
         self._program_theme_css_path = (
             self._resolve_optional_path(config.program_theme_css_path)
@@ -94,7 +94,7 @@ class ComponentContextCompiler:
         program_component_path = self._program_components_dir / component / "design-spec.mdx"
         baseline_spec_exists = baseline_component_path.is_file()
         program_spec_exists = program_component_path.is_file()
-        # Program-only slugs (e.g. DAP `settings-menu`) may have no baseline copy under ids/ids-ai.
+        # Program-only slugs (e.g. DAP `settings-menu`) may have no baseline copy under `components/ids`.
         ids_component_required = baseline_spec_exists or not program_spec_exists
 
         layers = [

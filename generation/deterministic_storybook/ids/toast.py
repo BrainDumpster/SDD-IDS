@@ -8,7 +8,7 @@ from generation.deterministic_storybook.models import DeterministicStorybookOpti
 from generation.spec_derived.toast import parse_toast_spec
 from validation.spec_contract_parser import SpecContract
 
-# IDS-AI: `strict_spec_storybook_gate --deterministic-story` regenerates `Toast.module.css` from `design-spec.mdx`
+# IDS: `strict_spec_storybook_gate --deterministic-story` can sync `Toast.module.css` from the layered IDS toast spec
 # via `generation.spec_derived.toast`. Stories embed a layout snapshot for QA (see `LayoutFromSpec`).
 
 _DEFAULT_TOAST_VARIANTS = ["info", "critical", "major-warning", "minor-warning", "success"]

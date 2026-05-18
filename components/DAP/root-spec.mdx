@@ -9,7 +9,7 @@
 | Property | Value |
 |---|---|
 | Name | DAP |
-| Parent Design System | IDS-AI (variable baseline) + IDS-compatible anatomy |
+| Parent Design System | IDS (baseline specs + `components/ids-theme.css`) + DAP token overrides |
 | Framework Layer | framework-agnostic |
 | Figma URL | https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=46810-208360&p=f&view=variables&var-set-id=41837-5094&m=dev |
 | Figma File Key | `HIbl2AgqTSdR9STZueMvTH` |
@@ -205,9 +205,9 @@ Delta source:
 #### Variable/token deltas
 - Corner token override in practice: `--corner-radius-radius-4`.
 - All remaining color/spacing/border/text/icon tokens resolve through:
-  1. IDS-AI baseline theme (`components/ids-ai-theme.css`, also scoped to `data-design-system="dap"`)
+  1. IDS baseline theme (`components/ids-theme.css`)
   2. DAP override theme (`components/dap-theme.css`)
-- Component anatomy/state contract for Button follows `components/ids-ai/button/design-spec.mdx`; DAP deltas in this register apply on top.
+- Component anatomy/state contract for Button follows `components/ids/button/design-spec.mdx`; DAP deltas in this register apply on top.
 
 #### Component delta spec pointer
 - Button deltas are recorded directly in this root spec under `## Program Delta Register`.

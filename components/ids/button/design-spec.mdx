@@ -196,6 +196,16 @@ Outputs / events:
   - [ ] Keyboard and pointer activation parity is preserved.
   - [ ] Light/Dark tables remain structurally parallel.
 
+## Storybook proof & codegen consumers
+
+**Spec Generated** stories in this repo prove that `design-spec.mdx` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
+
+1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
+2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
+3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
+
+Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
+
 ## Source Mapping
 - Component map entry: `data/component-figma-map.json` -> `Button`.
 - Primary node: `41894:116183` (IDS library button board).

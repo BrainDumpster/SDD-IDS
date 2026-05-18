@@ -204,7 +204,7 @@ ICON_COMPONENT_CODEGEN_RULES = """
 ICON PRIMITIVE (READ SPECS FIRST — FRAMEWORK-AGNOSTIC CONTRACT):
 
 • **Design specs** (`design-spec.mdx` + inherited root-spec) define the *logical* API only: `shapeName` (asset slug), optional `color` as `var(--…)`, optional `variant` for monochrome vs fixed multi-color glyphs. They do **not** name Storybook paths or framework imports.
-• **Concrete module path** for the icon primitive (e.g. React `Icon`) comes from **design-system tooling config**: for IDS-AI in this repo, `config/design_systems/ids-ai.yaml` → `codegen.react.icon_component_module` when generating React. If absent, infer from the project’s existing components.
+• **Concrete module path** for the icon primitive (e.g. React `Icon`) comes from **design-system tooling config**: for IDS in this repo, `config/design_systems/ids.yaml` → `codegen.react.icon_component_module` when present. If absent, infer from the project’s existing components.
 • When emitting **React** and the YAML mapping points to `storybook/src/components/Icon`, use that file’s export and props: `shapeName`, `color`, `className`, `style`, `variant` (`mask` | `img` | `inline`). Use `variant="inline"` when the spec requires a real `<svg>` in the DOM and the slug is in the implementation’s inline registry; otherwise default `mask`.
 • Rules: `shapeName` matches `assets/icons/<shapeName>.svg`; `color` from spec token tables; omit `color` when the parent host must drive state via inherited `currentColor`; do not hand-roll mask markup when the project’s icon primitive exists.
 • For **Angular / Vue / Lit**, emit an equivalent primitive honoring the same logical contract.

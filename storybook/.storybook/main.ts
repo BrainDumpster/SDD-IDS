@@ -14,7 +14,7 @@ const repoRoot = path.resolve(storybookPackageRoot, "..");
 const config: StorybookConfig = {
   stories: [
     path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-    // Spec-generated: IDS + DAP only (exclude IDS-AI generated duplicates from sidebar).
+    // Spec-generated: IDS + DAP only.
     path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
     path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
   ],
@@ -29,6 +29,9 @@ const config: StorybookConfig = {
         fs: {
           allow: [storybookPackageRoot, repoRoot],
         },
+        // If 6006 is taken, fail fast instead of silently picking another port
+        // (a mismatched URL often yields non-JSON /index.json responses).
+        strictPort: true,
       },
       build: {
         assetsInlineLimit: 0,

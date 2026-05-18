@@ -15,10 +15,10 @@ theme_css_path: components/dap-theme.css
 base_ui_mapping_path: ""
 
 components_dir: components/DAP
-# DAP component specs layer on IDS-AI (token + variable usage baseline), not legacy IDS.
-baseline_components_dir: components/ids-ai
-baseline_root_spec_path: components/ids-ai/root-spec.mdx
-baseline_theme_css_path: components/ids-ai-theme.css
+# DAP layers on IDS baseline + DAP root/theme deltas.
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.mdx
+baseline_theme_css_path: components/ids-theme.css
 program_components_dir: components/DAP
 program_root_spec_path: components/DAP/root-spec.mdx
 program_theme_css_path: components/dap-theme.css

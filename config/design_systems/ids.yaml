@@ -29,6 +29,11 @@ root_spec_path: components/ids/root-spec.mdx
 generated_storybook_dir: storybook-generated/ids
 strict_storybook_gate: false
 
+# Optional: concrete paths for codegen / agents in this repository only (not part of Figma contract).
+codegen:
+  react:
+    icon_component_module: storybook/src/components/Icon
+
 breakpoints:
   sm: "576px"
   md: "768px"

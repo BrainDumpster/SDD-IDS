@@ -1,6 +1,6 @@
 .root {
-  /* DAP delta: button corners are 4px instead of IDS 2px. */
-  --corner-radius-radius-2: var(--corner-radius-radius-4);
+  /* DAP delta: button corners are 4px (IDS baseline spec: 2px). Applied on same node as Button.module.css `.button`. */
+  border-radius: var(--corner-radius-radius-4);
   /* DAP delta: secondary default button surface is transparent. */
   --color-background-gray-neutral-lighter: transparent;
 }

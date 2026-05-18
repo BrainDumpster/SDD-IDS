@@ -3,7 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from generation.deterministic_storybook.helpers import prefixed_component_export_name
+from generation.deterministic_storybook.helpers import (
+    prefixed_component_export_name,
+    storybook_theme_import_line,
+)
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from validation.spec_contract_parser import SpecContract
 
@@ -19,9 +22,10 @@ def generate_ids_app_launcher_story(
     component_name = prefixed_component_export_name("app-launcher", options.component_prefix)
     import_path = "../../../../storybook/src/components/AppLauncher"
 
+    theme_import = storybook_theme_import_line(options.design_system_slug)
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ AppLauncher as {component_name} }} from "{import_path}";
-import "../../../../components/ids-ai-theme.css";
+{theme_import}
 
 const products = [
   {{ id: "p1", name: "Product Name 1", href: "#" }},

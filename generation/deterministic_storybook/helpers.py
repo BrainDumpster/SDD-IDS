@@ -21,3 +21,21 @@ def prefixed_component_export_name(component_slug: str, prefix: str) -> str:
 
 def ts_array(items: list[str]) -> str:
     return "[" + ", ".join(json.dumps(item) for item in items) + "]"
+
+
+# Canonical theme CSS for Spec Generated stories (root Storybook: IDS + DAP only).
+THEME_CSS_BY_DESIGN_SYSTEM: dict[str, str] = {
+    "ids": "components/ids-theme.css",
+    "dap": "components/dap-theme.css",
+}
+
+
+def theme_css_path_for_design_system(design_system_slug: str) -> str:
+    slug = (design_system_slug or "ids").strip().lower()
+    return THEME_CSS_BY_DESIGN_SYSTEM.get(slug, THEME_CSS_BY_DESIGN_SYSTEM["ids"])
+
+
+def storybook_theme_import_line(design_system_slug: str) -> str:
+    """Relative import from storybook-generated/<ds>/src/components/*.stories.tsx."""
+    path = theme_css_path_for_design_system(design_system_slug)
+    return f'import "../../../../{path}";'

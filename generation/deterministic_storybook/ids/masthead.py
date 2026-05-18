@@ -3,7 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-from generation.deterministic_storybook.helpers import prefixed_component_export_name
+from generation.deterministic_storybook.helpers import (
+    prefixed_component_export_name,
+    storybook_theme_import_line,
+)
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from validation.spec_contract_parser import SpecContract
 
@@ -21,12 +24,13 @@ def generate_ids_masthead_story(
     app_launcher_import_path = "../../../../storybook/src/components/AppLauncher"
     icon_import_path = "../../../../storybook/src/components/Icon"
 
+    theme_import = storybook_theme_import_line(options.design_system_slug)
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ IdsMasthead as {component_name}, IdsMastheadActionButtonContainer, IdsMastheadActionIconButton, IdsMastheadAvatar }} from "{masthead_import_path}";
 import {{ AppLauncher }} from "{app_launcher_import_path}";
 import {{ Icon }} from "{icon_import_path}";
 import userIcon from "../../../../assets/icons/user-single-16.svg";
-import "../../../../components/ids-ai-theme.css";
+{theme_import}
 
 const helpIconEl = <Icon shapeName="help-circ-16" style={{{{ width: 16, height: 16 }}}} />;
 
