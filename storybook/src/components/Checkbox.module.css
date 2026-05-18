@@ -10,10 +10,12 @@
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-size: var(--font-size-body-2);
+  font-weight: 500;
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
-  min-height: 44px;
+  min-height: 20px;
 }
+
 
 .field[data-density="datagrid"] .wrapper {
   min-height: 0;
@@ -29,8 +31,8 @@
 }
 
 .root {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-radius: var(--corner-radius-radius-2);
   background: var(--color-background-component);
@@ -57,13 +59,13 @@
 
 .root:focus-visible {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 /* Storybook / static demos: match focus-visible ring without keyboard focus */
 .rootSimulatedFocus {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 .root[data-checked] {
@@ -145,7 +147,6 @@
   width: 8px;
   height: 2px;
   background: currentColor;
-  border-radius: 2px;
   transform: translate(-50%, -50%);
 }
 
@@ -162,11 +163,11 @@
 }
 
 .root[data-disabled][data-indeterminate] .indicator {
-  color: var(--color-border-disabled);
+  color: var(--color-icon-disabled);
 }
 
 .root[data-disabled][data-checked="mixed"] .indicator {
-  color: var(--color-border-disabled);
+  color: var(--color-icon-disabled);
 }
 
 .label {

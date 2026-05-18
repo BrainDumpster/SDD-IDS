@@ -10,7 +10,7 @@ const HARNESS_OPTION_LABEL = "Option";
 const sharedCheckboxStoryStyles = `
   .sbCheckboxRow {
     display: flex;
-    gap: 32px;
+    gap: 16px;
     flex-wrap: wrap;
     align-items: flex-start;
   }
@@ -95,7 +95,11 @@ export default meta;
 type Story = StoryObj<typeof IdsCheckbox>;
 
 export const Playground: Story = {
-  render: (args) => <IdsCheckbox {...args} />,
+  args: {
+    showLabel: true
+  },
+
+  render: (args) => <IdsCheckbox {...args} />
 };
 
 export const SelectionStates: Story = {
