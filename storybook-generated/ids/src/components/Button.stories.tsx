@@ -4,6 +4,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ComponentProps } from "react";
 import "../../../../components/ids-theme.css";
+import { Icon } from "../../../../storybook/src/components/Icon";
 import { IdsButton as IdsButton } from "../../../../storybook/src/components/IdsButton";
 
 type Variant = "primary" | "secondary" | "tertiary" | "destructive";
@@ -203,27 +204,6 @@ export const IconOnly: Story = {
     </div>
   ),
 };
-
-      {(["md", "lg"] as const).map((size) => (
-        <div key={size} className="sbIconOnlyRow">
-          {(["primary", "secondary", "tertiary", "destructive"] as const).map((variant) => (
-            <IdsButton
-              key={`${variant}-${size}`}
-              iconOnly
-              size={size}
-              variant={variant}
-              iconSlug="settings-gear-detailed"
-              aria-label={`${variant} icon button ${size}`}
-            />
-          ))}
-        </div>
-      ))}
-
-      </div>
-    </div>
-  ),
-};
-
 
 export const StateHarness: Story = {
   render: () => (
