@@ -43,7 +43,7 @@ const sharedRadioStoryStyles = `
   }
   .sbHarness {
     display: grid;
-    grid-template-columns: 118px repeat(5, minmax(132px, max-content));
+    grid-template-columns: 118px repeat(4, minmax(132px, max-content));
     gap: 16px 22px;
     align-items: start;
   }
@@ -188,30 +188,6 @@ export const SelectedDisabled: Story = {
   ),
 };
 
-export const ErrorAndHelperText: Story = {
-  render: () => (
-    <div className="sbRadioCol">
-      <IdsRadioButton
-        name="ids-radio-helper"
-        options={[
-          { value: "option1", label: "Option 1", helperText: "Recommended option." },
-          { value: "option2", label: "Option 2" },
-          { value: "option3", label: "Option 3" },
-        ]}
-        defaultValue="option1"
-      />
-      <IdsRadioButton
-        name="ids-radio-error"
-        options={[
-          { value: "option1", label: "Option 1", error: true, helperText: "Error message" },
-          { value: "option2", label: "Option 2" },
-          { value: "option3", label: "Option 3" },
-        ]}
-        defaultValue="option1"
-      />
-    </div>
-  ),
-};
 
 export const ControlledExample: Story = {
   render: () => {
@@ -234,7 +210,7 @@ export const StateHarness: Story = {
   render: () => (
     <div className="sbHarness">
       <div className="sbHarnessLegend">
-        Each cell is a single-option group. Columns: Default, Hover (pointer), Focus (<code>simulatedState</code>), Disabled, Error.
+        Each cell is a single-option group. Columns: Default, Hover (pointer), Focus (<code>simulatedState</code>), Disabled.
       </div>
 
       <div className="sbHarnessCorner" />
@@ -242,7 +218,6 @@ export const StateHarness: Story = {
       <div className="sbHarnessHeader">Hover</div>
       <div className="sbHarnessHeader">Focus</div>
       <div className="sbHarnessHeader">Disabled</div>
-      <div className="sbHarnessHeader">Error</div>
 
       <div className="sbHarnessTitle">Unselected</div>
       <div className="sbHarnessControl">
@@ -264,13 +239,6 @@ export const StateHarness: Story = {
           options={[{ value: MATRIX_VALUE, label: FIGMA_OPTION_LABEL, disabled: true }]}
         />
       </div>
-      <div className="sbHarnessControl">
-        <IdsRadioButton
-          name="ids-rh-u-err"
-          options={[{ value: MATRIX_VALUE, label: FIGMA_OPTION_LABEL, error: true }]}
-        />
-      </div>
-
       <div className="sbHarnessTitle">Selected</div>
       <div className="sbHarnessControl">
         <IdsRadioButton
@@ -301,14 +269,6 @@ export const StateHarness: Story = {
           options={[{ value: MATRIX_VALUE, label: FIGMA_OPTION_LABEL, disabled: true }]}
         />
       </div>
-      <div className="sbHarnessControl">
-        <IdsRadioButton
-          name="ids-rh-s-err"
-          defaultValue={MATRIX_VALUE}
-          options={[{ value: MATRIX_VALUE, label: FIGMA_OPTION_LABEL, error: true }]}
-        />
-      </div>
-
       <div className="sbHarnessFull">
         <p className="sbHarnessFullTitle">Selected + disabled (single control)</p>
         <IdsRadioButton
@@ -318,25 +278,6 @@ export const StateHarness: Story = {
         />
       </div>
 
-      <div className="sbHarnessFull">
-        <p className="sbHarnessFullTitle">Error group (multi-option, first selected)</p>
-        <IdsRadioButton
-          name="ids-rh-err-grp"
-          defaultValue="a"
-          options={[
-            { value: "a", label: "Default", error: true, helperText: "Error message" },
-            { value: "b", label: "Hover", error: true, helperText: "Error message", simulatedState: "hover" },
-            {
-              value: "c",
-              label: "Focus",
-              error: true,
-              helperText: "Error message",
-              simulatedState: "focus-visible",
-            },
-            { value: "d", label: "Disabled", disabled: true, error: true, helperText: "Error message" },
-          ]}
-        />
-      </div>
     </div>
   ),
 };

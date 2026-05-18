@@ -6,8 +6,6 @@ interface RadioOption {
   value: string;
   label: string;
   disabled?: boolean;
-  error?: boolean;
-  helperText?: string;
   simulatedState?: "default" | "hover" | "focus-visible";
 }
 
@@ -41,7 +39,6 @@ export function RadioButton({
       onValueChange={onChange}
     >
       {options.map((option) => {
-        const assistiveId = option.helperText ? `${id ?? name}-${option.value}-assistive` : undefined;
         const isDisabled = disabled || Boolean(option.disabled);
         return (
           <div key={option.value} className={styles.field}>
@@ -50,31 +47,14 @@ export function RadioButton({
                 className={styles.root}
                 value={option.value}
                 disabled={isDisabled}
-                aria-invalid={option.error || undefined}
-                aria-describedby={assistiveId}
-                data-error={option.error ? "true" : undefined}
                 data-simulated-state={option.simulatedState}
               >
                 <Radio.Indicator className={styles.indicator} />
               </Radio.Root>
-              <span className={[styles.label, option.error ? styles.labelError : ""].filter(Boolean).join(" ")}>
+              <span className={styles.label}>
                 {option.label}
               </span>
             </label>
-            {option.helperText ? (
-              <div
-                id={assistiveId}
-                className={[
-                  styles.assistiveText,
-                  option.error ? styles.assistiveTextError : "",
-                  isDisabled ? styles.assistiveTextDisabled : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {option.helperText}
-              </div>
-            ) : null}
           </div>
         );
       })}
