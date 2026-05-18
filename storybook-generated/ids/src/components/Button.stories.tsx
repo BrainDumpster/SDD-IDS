@@ -84,40 +84,24 @@ export const Disabled: Story = {
 };
 
 export const IconWithLabel: Story = {
-  render: () => (
+  args: { size: "md", disabled: false },
+  render: (args) => (
     <div className="sbVariantGrid">
-      <IdsButton icon={<Icon shapeName="docs-bundle" variant="mask" />}>Primary</IdsButton>
-      <IdsButton variant="secondary" icon={<Icon shapeName="status-ok-circ-solid" variant="img" />}>
-        Secondary
-      </IdsButton>
-      <IdsButton variant="tertiary" icon={<Icon shapeName="state-progress-circle" variant="img" />}>
-        Tertiary
-      </IdsButton>
-      <IdsButton variant="destructive" icon={<Icon shapeName="status-critical-square-solid" variant="img" />}>
-        Destructive
-      </IdsButton>
+      <IdsButton size={args.size} disabled={args.disabled} icon={<Icon shapeName="docs-bundle" variant="mask" />}>Primary</IdsButton>
+      <IdsButton size={args.size} disabled={args.disabled} variant="secondary" icon={<Icon shapeName="status-ok-circ-solid" variant="img" />}>Secondary</IdsButton>
+      <IdsButton size={args.size} disabled={args.disabled} variant="tertiary" icon={<Icon shapeName="state-progress-circle" variant="img" />}>Tertiary</IdsButton>
     </div>
   ),
 };
 
 export const IconOnly: Story = {
-  render: () => (
+  args: { size: "md", disabled: false },
+  argTypes: { size: { control: "select", options: ["md", "lg"] } },
+  render: (args) => (
     <div className="sbIconOnlyGrid">
-      <IdsButton iconOnly size="md" aria-label="Primary icon button" icon={<Icon shapeName="docs-bundle" variant="mask" />} />
-      <IdsButton
-        iconOnly
-        size="md"
-        aria-label="Secondary icon button"
-        variant="secondary"
-        icon={<Icon shapeName="status-ok-circ-solid" variant="img" />}
-      />
-      <IdsButton
-        iconOnly
-        size="md"
-        aria-label="Tertiary icon button"
-        variant="tertiary"
-        icon={<Icon shapeName="state-progress-circle" variant="img" />}
-      />
+      <IdsButton iconOnly size={args.size} disabled={args.disabled} aria-label="Primary icon button" icon={<Icon shapeName="docs-bundle" variant="mask" />} />
+      <IdsButton iconOnly size={args.size} disabled={args.disabled} aria-label="Secondary icon button" variant="secondary" icon={<Icon shapeName="status-ok-circ-solid" variant="img" />} />
+      <IdsButton iconOnly size={args.size} disabled={args.disabled} aria-label="Tertiary icon button" variant="tertiary" icon={<Icon shapeName="state-progress-circle" variant="img" />} />
     </div>
   ),
 };
@@ -169,30 +153,30 @@ export const StateHarness: Story = {
           background: var(--color-background-controls-brand-stronger);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="secondary"]:not(:disabled) {
-          background: var(--color-background-brand-lighter);
+          background: var(--color-background-controls-brand-lighter);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {
-          background: var(--color-background-brand-light);
+          background: var(--color-background-controls-brand-light);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled),
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
           border-color: var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {
-          background: var(--color-background-brand-lighter);
+          background: var(--color-background-controls-brand-lighter);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
-          background: var(--color-background-brand-light);
+          background: var(--color-background-controls-brand-light);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {
-          background: var(--alert-red-600);
+          background: var(--color-background-alerting-critical-strong);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="destructive"]:not(:disabled) {
-          background: var(--alert-red-700);
+          background: var(--color-background-alerting-critical-stronger);
         }
         .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {
           outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-          outline-offset: 3px;
+          outline-offset: 2px;
         }
         `
       }</style>
