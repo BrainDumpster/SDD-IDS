@@ -169,30 +169,30 @@ export const StateHarness: Story = {
           background: var(--color-background-controls-brand-stronger);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="secondary"]:not(:disabled) {
-          background: var(--color-background-brand-lighter);
+          background: var(--color-background-controls-brand-lighter);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {
-          background: var(--color-background-brand-light);
+          background: var(--color-background-controls-brand-light);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled),
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
           border-color: var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {
-          background: var(--color-background-brand-lighter);
+          background: var(--color-background-controls-brand-lighter);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
-          background: var(--color-background-brand-light);
+          background: var(--color-background-controls-brand-light);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {
-          background: var(--alert-red-600);
+          background: var(--color-background-alerting-critical-strong);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="destructive"]:not(:disabled) {
-          background: var(--alert-red-700);
+          background: var(--color-background-alerting-critical-stronger);
         }
         .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {
           outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-          outline-offset: 3px;
+          outline-offset: 2px;
         }
         `
       }</style>
