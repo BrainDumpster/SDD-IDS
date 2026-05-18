@@ -196,7 +196,7 @@ Angular uses **declarative child components** with **content projection**. The m
   - **`colorAndBorder=true` (styled band):** header cell fill **`var(--color-background-gray-neutral-lighter)`**; **top** and **bottom** rules **`1px`** **`var(--color-border-light)`** across the cell; same **leading** **1px × 24px** centered **`var(--color-border-light)`** rail on data column headers.
   - **`Selection` / `Column Customization` with `colorAndBorder=true`:** nested **`.Header: Styling`** in Figma uses **`var(--color-background-gray-neutral-lighter)`** with **top** + **bottom** **`var(--color-border-light)`** and **leading** **1px** **24px** rail; Selection + styled also shows a **full-height** **1px** trailing edge rule in the export (`37721:114685`) — implementations may mirror for pixel parity with checkbox/settings headers.
 - **Header affordance icon sizes:** **`SortToggle`** **`Icon`** **12×12** (Figma **`.Sort for table`**); **`FilterToggle`** **14×14** inside **`38×38`** padded control (Figma **`37721:114677`** / **`37721:114635`**); **`settings-gear`** **`Icon`** **16×16** (Figma / product alignment).
-- Row height baseline: **`40px`** — Figma variable **`Grid height/Cell`** (numeric `40`). **`components/ids-theme.css`** does not currently emit **`--grid-height-cell`**; implementations should use **`40px`** until a theme sync adds that alias (IDS-AI theme already defines **`--grid-height-cell: 40px`** for cross-program parity).
+- Row height baseline: **`40px`** — Figma variable **`Grid height/Cell`** (numeric `40`). **`components/ids-theme.css`** does not currently emit **`--grid-height-cell`**; implementations should use **`40px`** until a theme sync adds that alias.
 - **Row / cell body chrome (Figma `.Row/Cell: States and styling`, `37721:114580`):**
   - **Purpose:** Defines **full-row background**, **bottom separator**, and optional **left selection accent** for body rows (read-only vs interactive tables share the same geometry; hover differs by state).
   - **Figma variant axes:**
@@ -750,6 +750,8 @@ div.filterMenuLayer [fixed, z-index 10000]
 
 ## Storybook Generation Contract
 
+**Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).
+
 Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven pipelines) must:
 
 1. **Read** `components/ids/datagrid/design-spec.mdx` as sole source of truth; emit `spec_hash` in `storybook-generated/ids/src/spec-contracts/datagrid.spec-layer-hash.json`.
@@ -769,7 +771,7 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 5. **Host wrapper:** `IdsDataGridDefaultStoryHost` for filter state (e.g. Type multiselect + `filterActive`); bounded **`100vh`** flex parent with **`minHeight: 0`**.
 6. **Do not** generate a separate spacer/fill column in stories — column set must match **Table layout algorithm** and **Chrome columns & table slack (codegen-critical)**.
 7. Generated components must implement **grow `auto`**, chrome **48**/**40** three-layer lock, and **`columnResizeEnabled`** grow pinning per **Table layout behavior contract (generators)**.
-8. **Theme:** document `components/theme.css` (or `components/ids-theme.css`) import in story docs description.
+8. **Theme:** Spec Generated stories import **`components/ids-theme.css` only** (not `theme.css`, not other program themes). Document that import in story `parameters.docs.description`.
 9. **Regenerate** when spec hash changes; visual QA against Figma nodes in **Source Mapping**.
 
 ## Source Mapping

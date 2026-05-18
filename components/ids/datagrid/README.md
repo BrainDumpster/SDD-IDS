@@ -9,7 +9,7 @@ Framework-agnostic design contract and React reference implementation for the ID
 | Design spec (codegen contract) | [`design-spec.mdx`](./design-spec.mdx) |
 | Figma — main matrix | [Data Grid - Main `37721:112482`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev) |
 | Figma — rows/columns layout | [Rows and Columns `37721:113987`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-113987&m=dev) |
-| Global theme | [`components/theme.css`](../../theme.css) (import in app shell) |
+| Global theme | [`components/ids-theme.css`](../../ids-theme.css) (import in app shell; Spec Generated stories use this file only) |
 | Nested specs | [`checkbox`](../checkbox/design-spec.mdx), pagination (footer), detail panel attach mode |
 
 ## Reference implementation (Storybook)
