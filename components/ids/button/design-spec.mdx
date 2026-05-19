@@ -206,6 +206,20 @@ Outputs / events:
 
 Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
+### Icon Implementation Details (Spec Generated Stories)
+
+The spec-generated Button stories (`storybook-generated/ids/src/components/Button.stories.tsx`) implement icons with the following configuration:
+
+- **Icon asset**: All icons use `assets/icons/settings-gear-detailed.svg`
+- **Icon variant**: All icons use `variant="mask"` (mask-based coloring)
+- **Color token mapping**:
+  - `primary` variant (default/hover/press states): `var(--color-icon-white)`
+  - `secondary` variant (default/hover/press states): `var(--color-icon-brand-base)`
+  - `tertiary` variant (default/hover/press states): `var(--color-icon-brand-base)`
+  - All variants (disabled state): `var(--color-icon-disabled)`
+
+This implementation aligns with the **States (Light Theme)** and **States (Dark Theme)** tables above, which specify icon colors per variant and state.
+
 ## Source Mapping
 - Component map entry: `data/component-figma-map.json` -> `Button`.
 - Primary node: `41894:116183` (IDS library button board).
