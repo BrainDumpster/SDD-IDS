@@ -2,12 +2,36 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { StorybookConfig } from "@storybook/react-vite";
+import type { Plugin } from "vite";
 import { mergeConfig } from "vite";
 
 // Story globs are resolved from `.storybook/` (not `storybook/`). Use `../../` to reach repo-root
 // `storybook-generated/` (a single `../` only searches under `storybook/storybook-generated`).
 const storybookConfigDir = path.dirname(fileURLToPath(import.meta.url));
 const storybookPackageRoot = path.resolve(storybookConfigDir, "..");
+
+/** New files under storybook-generated are not in the startup importers map until restart. */
+function warnOnNewSpecGeneratedStories(): Plugin {
+  return {
+    name: "warn-on-new-spec-generated-stories",
+    configureServer(server) {
+      server.watcher.on("add", (file) => {
+        const normalized = path.normalize(file);
+        if (
+          !normalized.includes(`${path.sep}storybook-generated${path.sep}`) ||
+          !/\.stories\.(tsx|ts|mdx)$/.test(normalized)
+        ) {
+          return;
+        }
+        server.config.logger.warn(
+          "\n[storybook] New spec-generated story file detected. Stop and restart Storybook " +
+            "(pnpm dev:clean) or you may see: importers[path] is not a function\n",
+        );
+      });
+    },
+  };
+}
+
 const repoRoot = path.resolve(storybookPackageRoot, "..");
 
 const config: StorybookConfig = {
@@ -23,6 +47,7 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
+      plugins: [warnOnNewSpecGeneratedStories()],
       server: {
         fs: {
           allow: [storybookPackageRoot, repoRoot],
