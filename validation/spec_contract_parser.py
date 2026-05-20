@@ -19,6 +19,7 @@ class SpecContract:
 class SpecContractParser:
     REQUIRED_SECTIONS = [
         "Metadata",
+        "Anatomy",
         "Layout & Measurements",
         "Tokens",
         "States (Light Theme)",

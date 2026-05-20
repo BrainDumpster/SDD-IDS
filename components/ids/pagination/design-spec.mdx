@@ -12,7 +12,6 @@
 - Validated nodes: `11677:157840`, `11677:157848`, `37721:115839`, `11677:157817`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Last verified: 2026-04-29 (current session)
-
 ## Anatomy
 - `PaginationRoot` (`nav` landmark)
 - `ResultsPerPageGroup`
@@ -27,7 +26,6 @@
   - `NextPageButton` (`chev-right`)
   - `LastPageButton` (`double-chev-right`)
 - `OptionalPageOffsetDropdown` (trigger + menu with `arrow-drop-tri-caret`)
-
 ## Layout & Measurements
 - Main row (`Pagination - Main`):
   - Height: `48px`
@@ -56,7 +54,21 @@
   - Border radius: `0` (square corners)
 - Optional page-offset dropdown (when replacing page input):
   - Trigger + menu border radius: `0` (square corners)
-
+### Responsiveness
+- Runtime width behavior:
+  - `PaginationRoot` is container-driven (`width: 100%`, `box-sizing: border-box`) and must not depend on the sample Figma width (`779px`).
+  - Horizontal overflow in the root container is not allowed.
+- Layout adaptation order (deterministic):
+  1. Keep both groups in a single row while space allows.
+  2. If insufficient width, hide `ResultsPerPageGroup` first when `showResultsPerPage` is optional in the host context.
+  3. Keep `PageNavigationGroup` visible as highest priority.
+  4. Preserve control heights (`32px`) and touch targets while adapting spacing.
+- Spacing adaptation:
+  - Group gaps may collapse from design values to the nearest lower spacing token before any control is removed.
+  - Do not change tokenized typography or icon sizes during responsive adaptation.
+- Dropdown/menu behavior on constrained width:
+  - Per-page and optional page-offset menus keep trigger-aligned width and square corners (`border-radius: 0`).
+  - Menu placement remains `open-above | open-below` based on available viewport space.
 ## Tokens
 - Surface/background:
   - `var(--color-background-component)`
@@ -83,7 +95,6 @@
     - `var(--shadow-shadow-4-drop-shadow-4-blur)`
     - `var(--shadow-shadow-4-drop-shadow-4-spread)`
     - `var(--shadow-shadow-4-drop-shadow-4-color)`
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -99,7 +110,6 @@
 | Dropdown option row | hover | `var(--color-background-brand-lighter)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
 | Dropdown option row | press | `var(--color-background-brand-light)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
 | Dropdown option row | selected | `var(--color-background-brand-lighter)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -109,7 +119,6 @@
 | Dropdown option row | default/hover/press/selected | semantic token-resolved | semantic token-resolved | semantic token-resolved |
 
 Dark table is structurally parallel to light; runtime must not hardcode literal colors.
-
 ## Interactions
 - First/previous/next/last controls navigate pages when available.
 - At first page:
@@ -124,23 +133,6 @@ Dark table is structurally parallel to light; runtime must not hardcode literal 
   - click or keyboard activation opens menu above or below depending on available space.
   - selecting an option updates page size/offset and closes menu.
 - Dropdown row behavior follows IDS dropdown-item interaction model (`default|hover|press|selected`).
-
-## Responsiveness
-- Runtime width behavior:
-  - `PaginationRoot` is container-driven (`width: 100%`, `box-sizing: border-box`) and must not depend on the sample Figma width (`779px`).
-  - Horizontal overflow in the root container is not allowed.
-- Layout adaptation order (deterministic):
-  1. Keep both groups in a single row while space allows.
-  2. If insufficient width, hide `ResultsPerPageGroup` first when `showResultsPerPage` is optional in the host context.
-  3. Keep `PageNavigationGroup` visible as highest priority.
-  4. Preserve control heights (`32px`) and touch targets while adapting spacing.
-- Spacing adaptation:
-  - Group gaps may collapse from design values to the nearest lower spacing token before any control is removed.
-  - Do not change tokenized typography or icon sizes during responsive adaptation.
-- Dropdown/menu behavior on constrained width:
-  - Per-page and optional page-offset menus keep trigger-aligned width and square corners (`border-radius: 0`).
-  - Menu placement remains `open-above | open-below` based on available viewport space.
-
 ## Composition & API (runtime)
 - Required props:
   - `currentPage: number`
@@ -156,14 +148,13 @@ Dark table is structurally parallel to light; runtime must not hardcode literal 
   - `summaryFormatter?: (currentPage: number, totalPages: number) => string`
   - `responsiveMode?: "auto" | "keep-inline"` (default `"auto"`)
   - `collapseOrder?: ("results-per-page" | "page-input" | "first-last-buttons")[]` (default `["results-per-page"]`)
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-- Deterministic slot schema:
+Deterministic structure:
   1. `PaginationRoot`
   2. optional `ResultsPerPageGroup`
   3. `PageNavigationGroup`
   4. optional `PageOffsetDropdownMenu`
-- Variant matrix:
+Variant matrix:
   - `backgroundMode`: `gray | none`
   - `pageNumberState`: `first | middle | last | single-page`
   - `offsetMenu`: `none | open-below | open-above`
@@ -201,8 +192,7 @@ Dark table is structurally parallel to light; runtime must not hardcode literal 
   - `totalPages < 1` -> normalize to `1`.
   - `currentPage` out of range -> clamp.
   - Empty/invalid `pageSizeOptions` -> fallback to `[25, 50, 75, 100]`.
-
-## Validation Checklist
+### Validation checklist
 - [ ] `Pagination - Main` layout from `11677:157840` is represented with both background modes.
 - [ ] Page-offset dropdown states/placements from `37721:115839` are represented.
 - [ ] Page-number states from `11677:157817` are represented (`1 of 16`, `2 of 16`, `Last page`, `1 page only`).
@@ -213,7 +203,6 @@ Dark table is structurally parallel to light; runtime must not hardcode literal 
 - [ ] Light/Dark states are structurally parallel and token-driven.
 - [ ] Spec defines deterministic responsive behavior for narrow containers (`width: 100%` container-driven runtime).
 - [ ] `PageNavigationGroup` remains visible at narrow widths; adaptation order is deterministic.
-
 ## Source Mapping
 - Baseline reference reused: `components/DAP/pagination/design-spec.mdx` (structure/behavior contract).
 - IDS authoritative nodes:

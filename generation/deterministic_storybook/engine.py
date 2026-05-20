@@ -17,6 +17,7 @@ from generation.deterministic_storybook.ids.dropdown_single_select import (
     generate_ids_dropdown_single_select_story,
 )
 from generation.deterministic_storybook.ids.link import generate_ids_link_story
+from generation.deterministic_storybook.ids.main_menu_left import generate_ids_main_menu_left_story
 from generation.deterministic_storybook.ids.masthead import generate_ids_masthead_story
 from generation.deterministic_storybook.ids.masthead_dap import generate_dap_masthead_story
 from generation.deterministic_storybook.ids.modal import generate_ids_modal_story
@@ -54,6 +55,7 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "dropdown-multiselect"): generate_ids_dropdown_multiselect_story,
     ("ids", "dropdown-single-select"): generate_ids_dropdown_single_select_story,
     ("ids", "link"): generate_ids_link_story,
+    ("ids", "main-menu-left"): generate_ids_main_menu_left_story,
     ("ids", "masthead"): generate_ids_masthead_story,
     ("ids", "modal"): generate_ids_modal_story,
     ("ids", "pagination"): generate_ids_pagination_story,

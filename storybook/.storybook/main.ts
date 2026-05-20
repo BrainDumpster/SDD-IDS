@@ -4,19 +4,17 @@ import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/react-vite";
 import { mergeConfig } from "vite";
 
-// Resolve story globs to absolute paths so Vite's story importer map matches runtime
-// `importFn(path)` keys (avoids "importers[path] is not a function" when .storybook lives
-// under storybook/ and stories live outside that package).
+// Story globs are resolved from `.storybook/` (not `storybook/`). Use `../../` to reach repo-root
+// `storybook-generated/` (a single `../` only searches under `storybook/storybook-generated`).
 const storybookConfigDir = path.dirname(fileURLToPath(import.meta.url));
 const storybookPackageRoot = path.resolve(storybookConfigDir, "..");
 const repoRoot = path.resolve(storybookPackageRoot, "..");
 
 const config: StorybookConfig = {
   stories: [
-    path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-    // Spec-generated: IDS + DAP only.
-    path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
+    "../src/**/*.stories.@(ts|tsx)",
+    "../../storybook-generated/ids/src/**/*.stories.@(ts|tsx)",
+    "../../storybook-generated/dap/src/**/*.stories.@(ts|tsx)",
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {

@@ -9,7 +9,6 @@
 - Figma menu elements: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12579-19717&m=dev`
 - Figma option states: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12380-16525&m=dev`
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-
 ## Anatomy
 1. `DropdownSingleSelectRoot`
 2. optional `Label`
@@ -23,7 +22,6 @@
 10. `OptionList`
 11. optional `SectionHeaderRow`
 12. optional `ActionRow` (footer action)
-
 ## Layout & Measurements
 - Field sizes:
   - `Large`: `40px` field height.
@@ -45,7 +43,6 @@
 - Section header row:
   - top border on section boundaries
   - first section header top border may be omitted.
-
 ## Tokens
 - Field and menu:
   - `var(--color-background-component)`
@@ -76,7 +73,6 @@
   - `var(--padding-padding-6)`
   - `var(--padding-padding-10)`
   - `var(--padding-padding-16)`
-
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -90,7 +86,6 @@
 | Option row | hover | `var(--color-background-controls-brand-lighter)` | brand emphasis rows | neutral text |
 | Option row | selected | brand-lighter or tokenized selected row style | tokenized | `var(--color-text-brand-strong)` |
 | Option row | disabled | component/gray-light (per option contract) | disabled token | disabled text |
-
 ## States (Dark Theme)
 Dark theme must remain structurally identical to Light Theme with values resolved via semantic IDS tokens only.
 
@@ -98,7 +93,6 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 |---|---|---|---|---|
 | Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
 | Option rows | default/hover/selected/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
-
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles open/close.
@@ -115,7 +109,6 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Optional action row:
   - user-defined label
   - emits action event on click.
-
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -134,9 +127,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | `onAction` | No | `() => void` | Optional action row event. |
 | `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
 | `onSearch` | No | `(query: string) => void` | Search callback. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
+### Deterministic structure
 1. `DropdownSingleSelectRoot`
 2. optional `Label`
 3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
@@ -147,7 +139,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 8. optional `SectionHeaderRow[]`
 9. optional `ActionRow`
 
-### Supported matrix
+### Variant matrix
 - `size`: `small | large`
 - `content`: `empty | filled`
 - `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
@@ -195,7 +187,6 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - [ ] Radio optional mode and behavior are deterministic.
 - [ ] Error and disabled states align to IDS tokens.
 - [ ] Output remains token-only in both light and dark themes.
-
 ## Source Mapping
 - Figma design frame: `43264:181428`
 - Figma component matrix: `11099:58099`

@@ -5,7 +5,6 @@
 - Category: Loading and Progress
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev
 - Node ID: 11067-54665
-
 ## Anatomy
 - Progress container (track)
 - Progress fill bar
@@ -13,7 +12,6 @@
 - Optional status text
 - Focus ring for keyboard navigation
 - Optional step indicators
-
 ## Layout & Measurements
 - Standard height: 8px
 - Large height: 12px
@@ -23,11 +21,6 @@
 - Minimum width: 200px
 - Label spacing: 8px from progress bar
 - Step indicator size: 12px × 12px
-
-## Typography
-- Header 5: Roboto Regular 24px/32px (large progress labels)
-- Body 2: Roboto Regular 14px/20px (progress labels and status)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -62,7 +55,17 @@
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
 - Gray 900: `UI Palettes/Gray/gray-900` = #252525
+### Typography
+- Header 5: Roboto Regular 24px/32px (large progress labels)
+- Body 2: Roboto Regular 14px/20px (progress labels and status)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Progress variants use appropriate color psychology
+- Dark theme adaptation through semantic tokens
+- Progress animations should be smooth and performant
 ## States (Light Theme)
 | Variant | Track Background | Fill Background | Border | Text |
 |---|---|---|---|---|
@@ -72,13 +75,11 @@
 | Error | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-white)` (#ffffff) |
 | Indeterminate | `var(--color-background-gray-neutral-alt)` (#eaeaea) | `var(--color-background-brand-base)` (#0076ce) | transparent | `var(--color-text-neutral)` (#4d4d4d) |
 | Disabled | `var(--color-background-gray-light)` (#eaeaea) | `var(--color-border-accessible)` (#757575) | transparent | `var(--color-text-disabled)` (#757575) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables
 - Progress fill colors maintain visibility in dark theme
 - Disabled state uses gray tokens for dark theme compatibility
-
 ## Interactions
 - Progress bar is typically non-interactive (display only)
 - Focus ring appears when progress bar is keyboard focusable
@@ -86,7 +87,24 @@
 - Progress value updates dynamically
 - Indeterminate state shows continuous animation
 - Step indicators show current progress step
+### Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Tab to progress bar when focusable
+- Screen reader support: Proper ARIA attributes for progress indication
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use progress element with proper attributes
+- Progress announcements: Screen reader announces current progress
+- Focus management: Clear focus indication when focusable
 
+### Behavior & guidelines
+- Use progress bars to show completion status
+- Provide clear labels when showing percentage
+- Use color variants to indicate status
+- Consider indeterminate state for unknown progress
+- Test with screen readers for proper progress announcement
+- Use appropriate animation speeds for indeterminate state
+- Ensure progress fills are clearly visible
+- Consider responsive behavior for different screen sizes
 ## Composition & API (runtime)
 - `type: "inline" | "with-label" | "indeterminate"` (default `"inline"`)
 - `thickness: "thin" | "medium" | "thick"` (default `"medium"`)
@@ -96,7 +114,15 @@
 - `helperText?: string`
 - `showHelperText?: boolean` (default `false`)
 - `ariaLabel?: string`
-
+### Variants
+- **Default**: Standard blue progress bar
+- **Success**: Green progress for successful completion
+- **Warning**: Yellow progress for caution states
+- **Error**: Red progress for error states
+- **Indeterminate**: Animated progress for unknown duration
+- **Disabled**: Non-interactive disabled state
+- **With Label**: Progress with percentage text
+- **Stepped**: Progress with step indicators
 ## Codegen Contract (Framework-Agnostic Blueprint)
 - Deterministic slot order:
   1. `ProgressRoot`
@@ -104,7 +130,7 @@
   3. `ProgressFill`
   4. `ProgressLabel?`
   5. `ProgressHelperRow?`
-- Variant matrix:
+Variant matrix:
   - `type`: `inline | with-label | indeterminate`
   - `thickness`: `thin | medium | thick`
   - `state`: `in-progress | completed-success | completed-warning | failed-error`
@@ -119,45 +145,7 @@
   - unknown `type` -> `inline`
   - unknown `thickness` -> `medium`
   - unknown `state` -> `in-progress`
-
-## Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab to progress bar when focusable
-- Screen reader support: Proper ARIA attributes for progress indication
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use progress element with proper attributes
-- Progress announcements: Screen reader announces current progress
-- Focus management: Clear focus indication when focusable
-
-## Variants
-- **Default**: Standard blue progress bar
-- **Success**: Green progress for successful completion
-- **Warning**: Yellow progress for caution states
-- **Error**: Red progress for error states
-- **Indeterminate**: Animated progress for unknown duration
-- **Disabled**: Non-interactive disabled state
-- **With Label**: Progress with percentage text
-- **Stepped**: Progress with step indicators
-
-## Behavior & Guidelines
-- Use progress bars to show completion status
-- Provide clear labels when showing percentage
-- Use color variants to indicate status
-- Consider indeterminate state for unknown progress
-- Test with screen readers for proper progress announcement
-- Use appropriate animation speeds for indeterminate state
-- Ensure progress fills are clearly visible
-- Consider responsive behavior for different screen sizes
-
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Progress variants use appropriate color psychology
-- Dark theme adaptation through semantic tokens
-- Progress animations should be smooth and performant
-
-## Deliverable Checklist
+### Validation checklist
 - [ ] Implement progress fill animation
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Tab)
@@ -168,7 +156,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test animation performance
-
 ## Source Mapping
 - Figma component: Progress Bar (11067-54665)
 - Variable collection: UI Palettes, Typography tokens

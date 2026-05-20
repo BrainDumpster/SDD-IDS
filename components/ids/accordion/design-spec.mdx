@@ -11,7 +11,6 @@
 - Related component-set nodes (same file): `.Accordion-Main` `10962:89111`; `.Accordion-Element-Left` `10962:89124`; `.Accordion-Element-Right` `10962:89134`; showcase `11067:54535`
 - **Canonical IDS Design Library (colors / published accordion examples):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42156-108639&m=dev — file key `0bHk3XhrjFhowgFkz9yLr4`, node `42156:108639` (`Content` frame: accordion states + Swap content).
 - Includes scenarios: all collapsed, one expanded, multi expanded, accordion with form
-
 ## Anatomy
 Main component:
 - `AccordionRoot`
@@ -26,7 +25,6 @@ Child components (deterministic order):
 Optional child sub-slots:
 - `AccordionFormSlot` (for "accordion with form" usage)
 - `AccordionMetaSlot` (optional helper text/metadata)
-
 ## Layout & Measurements
 - Root width is container-driven (`width: 100%`).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
@@ -44,23 +42,6 @@ Optional child sub-slots:
 - Group rows follow Figma contiguous model (1px overlap/no vertical gaps).
 - Expanded content container padding: `8px 24px 16px 40px` (implementations: `var(--padding-padding-40)` when present, otherwise `calc(var(--padding-padding-32) + var(--padding-padding-8))` so left inset is valid in Storybook themes).
 - Optional inner **content card** (“Swap content” in Figma): padding `24px`; background `var(--color-background-brand-lighter)`; stroke `var(--color-border-brand-dark)` on **left, right, and bottom** only (`border-top: none`) so the card does not draw an extra rule under the header.
-
-## IDS Design Library — color crosswalk (Light, node `42156:108639`)
-Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}/nodes`); pair with `components/ids-theme.css` **light** block.
-
-| Visual role (Figma) | Approx. hex | Semantic token (`theme.css`) |
-|---|---|---|
-| Artboard / frame backdrop | `#F4F4F4` | `var(--color-background-surface-1)` (or nearest doc backdrop token used in app shell) |
-| Accordion row / collapsed surface | `#FFFFFF` | `var(--color-background-component)` |
-| Expanded **Panel** row (header tint) | `#EBF4FB` | `var(--color-background-brand-lighter)` |
-| **Swap content** inner card fill | `#EBF4FB` (same tint as expanded panel in file) | `var(--color-background-brand-lighter)` |
-| Left **4px** selection rail (`Rectangle 1`) | `#0076CE` | `var(--color-border-brand-base)` |
-| Primary label / body text | `#252525` | `var(--color-text-neutral-strong)` |
-| Inline link (“Learn how…”) | `#0062AB` | `var(--color-text-link-brand-base)` |
-| Chevron (IDS library) | ~`#4D4D4D` / `#252525` in samples | `var(--color-icon-neutral)` default & expanded; `var(--color-icon-neutral-strong)` on hover |
-
-**Note:** Dark theme values come from the same semantic names in `components/ids-theme.css` dark block (e.g. brand base / link shift to lighter blues for contrast)—re-validate against dark variants in Figma when available.
-
 ## Tokens
 - Surface:
   - `var(--color-background-component)`
@@ -88,7 +69,21 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
   - `var(--padding-padding-40)` or `calc(var(--padding-padding-32) + var(--padding-padding-8))` for 40px inset when `40` token is absent
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
+### IDS Design Library color crosswalk (Light, node `42156:108639`)
+Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}/nodes`); pair with `components/ids-theme.css` **light** block.
 
+| Visual role (Figma) | Approx. hex | Semantic token (`theme.css`) |
+|---|---|---|
+| Artboard / frame backdrop | `#F4F4F4` | `var(--color-background-surface-1)` (or nearest doc backdrop token used in app shell) |
+| Accordion row / collapsed surface | `#FFFFFF` | `var(--color-background-component)` |
+| Expanded **Panel** row (header tint) | `#EBF4FB` | `var(--color-background-brand-lighter)` |
+| **Swap content** inner card fill | `#EBF4FB` (same tint as expanded panel in file) | `var(--color-background-brand-lighter)` |
+| Left **4px** selection rail (`Rectangle 1`) | `#0076CE` | `var(--color-border-brand-base)` |
+| Primary label / body text | `#252525` | `var(--color-text-neutral-strong)` |
+| Inline link (“Learn how…”) | `#0062AB` | `var(--color-text-link-brand-base)` |
+| Chevron (IDS library) | ~`#4D4D4D` / `#252525` in samples | `var(--color-icon-neutral)` default & expanded; `var(--color-icon-neutral-strong)` on hover |
+
+**Note:** Dark theme values come from the same semantic names in `components/ids-theme.css` dark block (e.g. brand base / link shift to lighter blues for contrast)—re-validate against dark variants in Figma when available.
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -100,18 +95,16 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 | trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
 | panel/content | expanded | `var(--color-background-component)` | item perimeter `var(--color-border-accessible)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-neutral)`, link `var(--color-text-link-brand-base)` |
 | content-card | expanded (optional) | `var(--color-background-brand-lighter)` | L/R/B `var(--color-border-brand-dark)`; **no** top stroke (`border-top: none`) | heading/body per content; link `var(--color-text-link-brand-base)` |
-
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| trigger | default (collapsed) | `var(--color-background-component)` | item divider `var(--color-border-accessible)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` |
-| trigger | hover (collapsed) | `var(--color-background-brand-lighter)` | unchanged divider | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
-| trigger | hover (expanded) | `var(--color-background-brand-light)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
-| trigger | expanded (open) | `var(--color-background-brand-lighter)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` (rotated) |
-| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | same as default |
-| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
-| panel/content | expanded | `var(--color-background-component)` | item perimeter `var(--color-border-accessible)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-neutral)`, link `var(--color-text-link-brand-base)` |
-| content-card | expanded (optional) | `var(--color-background-brand-lighter)` | L/R/B `var(--color-border-brand-dark)`; **no** top stroke (`border-top: none`) | heading/body per content; link `var(--color-text-link-brand-base)` |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Trigger activation toggles panel expansion.
@@ -122,27 +115,6 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 - Arrow key roving focus is supported between triggers.
 - Home/End move focus to first/last trigger.
 - Panel content participates in layout only when expanded.
-
-## Icon primitive & asset delivery (codegen)
-Use this section whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. Names vary by framework (`Icon`, `CdsIcon`, `mat-icon` + registry, `SpriteIcon`, etc.); the contract is the same.
-
-**When the target library exposes an Icon / glyph component**
-- **Prefer it** for `AccordionChevron` instead of hand-rolling `<img src>` or hard-coded file paths in the accordion module.
-- Pass a **stable asset slug** (here: `chev-down-thick`) via whatever prop the library uses (`shapeName`, `name`, `icon`, `glyph`, …). That slug must match the **asset contract** entry for this component (see below).
-- For **monochrome** chevrons, use the library’s **tintable** mode when offered (e.g. mask + semantic `color`, or SVG `currentColor`). Map states to tokens from this spec’s state tables (`var(--color-icon-neutral)`, `var(--color-icon-neutral-strong)` on hover, etc.).
-- For **multi-color** SVGs only, use the library’s **non-tinted / raster** mode if required; accordion chevron is **not** in that category.
-
-**When no Icon primitive exists**
-- Fallback is still slug-driven: inline SVG with `fill="currentColor"`, sprite id, or framework asset pipeline, but the **same slug** and **same token → color** mapping must apply. Do not rely on `color` CSS on `<img>` for fixed-fill SVG assets.
-
-**Asset contract (accordion chevron)**
-- Slug: `chev-down-thick`
-- File: `assets/icons/chev-down-thick.svg` (repo root; bundler resolves from app/storybook config)
-- Rotation: `180deg` when expanded (CSS transform on the chevron slot wrapper is acceptable)
-
-**IDS / Storybook reference implementation**
-- `Icon` in `storybook/src/components/Icon.tsx`: `import.meta.glob` over `assets/icons/*.svg`, default **`variant` `mask`**, optional `variant` `img` for full-color glyphs. Accordion uses **`Icon` + `shapeName="chev-down-thick"`** + mask tint pattern (`color` + `background-color: currentColor` on the slot class). See `IdsAccordion.tsx` / `IdsAccordion.module.css`.
-
 ## Composition & API (runtime)
 Canonical machine-readable mirror (Storybook + codegen QA; MDX is not executed by Storybook): `storybook/src/spec-contracts/ids-accordion.contract.tsx`.
 
@@ -163,7 +135,6 @@ Per-item inputs:
 
 Outputs:
 - `onValueChange?(openValues: string[])`
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
 - `AccordionRoot`
@@ -217,7 +188,25 @@ Validation checklist:
 - [ ] Expanded open item shows a visible left highlighter on trigger and body (aligned; not hidden under opaque fills); expanded body has **no** `border-top` under the header.
 - [ ] Optional inner content card uses `var(--color-background-brand-lighter)` and `var(--color-border-brand-dark)` on sides/bottom only (no top brand stroke under header).
 - [ ] `form` variant supports form slot without breaking structure.
+### Icon primitive and asset delivery
+Use this section whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. Names vary by framework (`Icon`, `CdsIcon`, `mat-icon` + registry, `SpriteIcon`, etc.); the contract is the same.
 
+**When the target library exposes an Icon / glyph component**
+- **Prefer it** for `AccordionChevron` instead of hand-rolling `<img src>` or hard-coded file paths in the accordion module.
+- Pass a **stable asset slug** (here: `chev-down-thick`) via whatever prop the library uses (`shapeName`, `name`, `icon`, `glyph`, …). That slug must match the **asset contract** entry for this component (see below).
+- For **monochrome** chevrons, use the library’s **tintable** mode when offered (e.g. mask + semantic `color`, or SVG `currentColor`). Map states to tokens from this spec’s state tables (`var(--color-icon-neutral)`, `var(--color-icon-neutral-strong)` on hover, etc.).
+- For **multi-color** SVGs only, use the library’s **non-tinted / raster** mode if required; accordion chevron is **not** in that category.
+
+**When no Icon primitive exists**
+- Fallback is still slug-driven: inline SVG with `fill="currentColor"`, sprite id, or framework asset pipeline, but the **same slug** and **same token → color** mapping must apply. Do not rely on `color` CSS on `<img>` for fixed-fill SVG assets.
+
+**Asset contract (accordion chevron)**
+- Slug: `chev-down-thick`
+- File: `assets/icons/chev-down-thick.svg` (repo root; bundler resolves from app/storybook config)
+- Rotation: `180deg` when expanded (CSS transform on the chevron slot wrapper is acceptable)
+
+**IDS / Storybook reference implementation**
+- `Icon` in `storybook/src/components/Icon.tsx`: `import.meta.glob` over `assets/icons/*.svg`, default **`variant` `mask`**, optional `variant` `img` for full-color glyphs. Accordion uses **`Icon` + `shapeName="chev-down-thick"`** + mask tint pattern (`color` + `background-color: currentColor` on the slot class). See `IdsAccordion.tsx` / `IdsAccordion.module.css`.
 ## Source Mapping
 | Source | Location |
 |---|---|

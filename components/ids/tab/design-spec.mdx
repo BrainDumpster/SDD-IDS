@@ -9,6 +9,8 @@
 - **Validated node id:** `30681:9530` (`text and annotation`)
 - **Variant axes observed in Figma:** `style` (`primary` | `secondary`), `state` (`selected` | `unselected-default` | `unselected-hover` | `unselected-press` | `selected-focus` | `unselected-focus`), `transparent` (`true` | `false`), `addTab` (`true` | `false`), `overflow` (`true` | `false`)
 - **Runtime scope:** Horizontal tabs with item-level content, optional add-tab, responsive overflow with `More` behavior, optional icon/badge indicators.
+## Anatomy
+Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
 
 ## Layout & Measurements
 - Root is container-driven: `width: 100%`, `box-sizing: border-box`.
@@ -26,7 +28,6 @@
 - Dividers/baseline use `1px` borders.
 - Label width is content-driven; short labels (1-3 words) are preferred.
 - Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
-
 ## Tokens
 - **Typography**
   - `Body 2` (`14/20`) for tab labels.
@@ -46,7 +47,6 @@
 - **Badges/alerts**
   - `var(--color-background-alerting-critical)` for alert badge background
   - `var(--color-text-white)` for badge text
-
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -60,7 +60,6 @@
 | Secondary | Unselected Hover | `var(--color-background-brand-lighter)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` |
 | Secondary | Unselected Press | `var(--color-background-brand-light)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
 | Secondary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
-
 ## States (Dark Theme)
 Dark mode follows the exact same structural matrix and interaction semantics as Light mode, with all visual values resolved via semantic tokens and no hardcoded hex values.
 
@@ -74,7 +73,6 @@ Dark mode follows the exact same structural matrix and interaction semantics as 
 | Secondary | Unselected Default | semantic token resolved | semantic token resolved | semantic token resolved |
 | Secondary | Unselected Hover | semantic token resolved | semantic token resolved | semantic token resolved |
 | Secondary | Unselected Press | semantic token resolved | semantic token resolved | semantic token resolved |
-
 ## Interactions
 - Clicking a tab activates exactly one `Tab Item` and displays its `Tab Item Content`.
 - Keyboard support:
@@ -97,7 +95,6 @@ Dark mode follows the exact same structural matrix and interaction semantics as 
   - Can be revealed via responsive overflow behavior (and optional drag/swipe patterns where host supports it).
 - Data handling:
   - Tab switches must not auto-save data; explicit save action is required.
-
 ## Composition & API (runtime)
 - **Hierarchy**
   - `Tab`
@@ -128,9 +125,8 @@ Runtime rules:
 - Avoid truncating labels where possible; if truncation is unavoidable, use deterministic clipping behavior.
 - Tabs are not page navigation and not progress indicators.
 - For vertical organization, use accordion instead of tabs.
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
+### Deterministic structure
 1. `TabRoot`
 2. `TabList` (`role=tablist`)
 3. `TabItem[]` (visible items)
@@ -140,7 +136,7 @@ Runtime rules:
 7. `TabPanels`
 8. `ActiveTabPanel`
 
-### Supported matrix
+### Variant matrix
 - `type`: `primary | secondary` (`variant` accepted as compatibility alias)
 - `hostBackground`: `transparent | white`
 - `overflow`: `true | false`
@@ -200,7 +196,6 @@ Runtime rules:
 - [ ] Keyboard and ARIA behavior conforms to tabs pattern.
 - [ ] Labels and content follow usage rules (title case labels, related content, no autosave on tab switch).
 - [ ] Light and dark snapshots remain token-driven with no hardcoded visual values.
-
 ## Source Mapping
 - **Component map entry:** `data/component-figma-map.json` -> `Tab`.
 - **Validated Figma node:** `30681:9530` (IDS Design Library, text and annotation board for primary/secondary, overflow, add-tab, and state examples).

@@ -55,7 +55,8 @@ For each `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<s
 - Metadata is complete and points to validated source nodes.
 - Composition/API section has explicit prop/event contracts and defaults.
 - Codegen Contract exists and is internally consistent with other sections.
-- Light and Dark state tables are complete and structurally parallel.
+- **States (Light Theme)** holds the full state matrix when light and dark use the same semantic `var(--...)` names; **States (Dark Theme)** may use the standard pointer boilerplate (see Spec Authoring Rules) instead of duplicating identical tables.
+- When light and dark genuinely use different `var(--...)` per row, both sections must include parallel matrices.
 - No unresolved placeholders like "TBD", "sample only", or ambiguous behavior language.
 - Asset contracts include stable slug-to-file mapping and bundling rule (if assets are used).
 - Fallback/error behavior is defined for unknown variants and missing inputs.
@@ -69,7 +70,9 @@ For each `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<s
   - Background
   - Border
   - Text/Icon
-- Light and Dark state tables must remain structurally parallel.
+- **States dedupe (default for new specs):** When **States (Light Theme)** and **States (Dark Theme)** would list the same semantic `var(--...)` in every cell, document the matrix only under Light. Under Dark, use `DARK_STATES_BOILERPLATE` from `scripts/design_spec_template.py`: same tokens as Light; resolved dark values live in `components/ids-theme.css`, program theme CSS (for example `components/dap-theme.css`), and `[data-theme="dark"]` / `.ids-theme-dark`. Duplicate a full Dark table only when a dark row uses different `var(--...)` than the corresponding light row.
+- **Literal exception:** If state cells use authoritative hard-coded `#hex` / `rgb()` (tokens not yet in theme), keep both tables until migrated; do not auto-dedupe (`scripts/dedupe_states_dark_theme.py` skips them).
+- When both sections include tables, Light and Dark matrices must remain structurally parallel (same rows/columns).
 - Separate fixed values from sample/reference values.
   - If Figma frame width is sample-only, state runtime behavior explicitly (e.g., container-driven width).
 

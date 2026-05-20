@@ -10,6 +10,8 @@
 - Base icon node: `39484:7432`
 - Examples URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42903-139689&m=dev
 - Base URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=39484-7432&m=dev
+## Anatomy
+Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: 24px`, `padding-block: 14px`.
@@ -23,7 +25,6 @@
 - Vertical alignment: status icon and message must be center-aligned on the same row centerline (`align-items: center` in content group).
 - Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
 - Close icon slot: `12x12` using `shape-x`.
-
 ## Tokens
 
 ### Core surface/text tokens
@@ -41,17 +42,14 @@
 | `major-warning` | `status-error-diamond-solid` | `var(--color-icon-alerting-major)` | `var(--color-border-alerting-major-white)` | `var(--color-static-gray-white)` |
 | `minor-warning` | `status-warn-tri-solid` | `var(--color-icon-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-static-gray-white)` |
 | `success` | `status-ok-circ-solid` | `var(--color-icon-alerting-success)` | `var(--color-border-alerting-success-white)` | `var(--color-static-gray-white)` |
-
 ## States (Light Theme)
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
 | Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close `var(--color-icon-white)` |
 | Hover close | No root color change required | No change | Close affordance can use subtle focus-visible only (no color drift from tokens) |
 | Focus-visible action | No root color change | No change | Focus ring uses brand token from root-spec rules |
-
 ## States (Dark Theme)
 Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.
-
 ## Interactions
 - Toast appears with entrance motion and exits with dismissal motion.
 - `close` click removes toast item and emits dismissal event.
@@ -59,7 +57,6 @@ Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolve
 - Auto-dismiss timer runs per toast item when `duration > 0`.
 - Hover/focus pauses auto-dismiss timer for that item (recommended behavior contract).
 - `Escape` dismisses focused toast item.
-
 ## Composition & API (runtime)
 
 ### `ToastItem` (single notification)
@@ -83,8 +80,7 @@ Queue/stack behavior contract:
 3. When an item closes/expires, next queued item enters visible stack.
 4. In top positions, newest visible toast appears at bottom; older items move upward.
 5. In bottom positions, newest visible toast appears at top; older items move downward.
-
-## Link Contract (framework-agnostic)
+### Link contract
 `link` object shape:
 - `label: string` (required if link exists)
 - `href?: string`
@@ -97,10 +93,9 @@ Resolution rules:
 2. Else if `href` is present, render anchor navigation.
 3. Else render button-style link and emit `onClick`.
 4. If both `routerLink` and `href` are provided, prefer `routerLink`.
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
-### Deterministic anatomy
+### Deterministic structure
 - `ToastViewport` -> repeated `ToastItem` -> `Content` + `ActionContainer`.
 - `Content` always renders icon + message.
 - `ActionContainer` renders optional `LinkAction`, then optional `CloseAction`.
@@ -110,18 +105,18 @@ Resolution rules:
 - `link` optional for each type.
 - `duration` and `position` supported for all combinations.
 
-### Per-slot styling rules
+### Per-slot style contract
 - Root/background/border/text/close must use semantic tokens defined in this spec.
 - Status icon must use icon component with `shapeName` from mapping table.
 - Status icon slot and rendered glyph must both remain `16x16`; message alignment must remain vertically centered with icon.
 - Icon assets must resolve from `assets/icons`; no inline SVG or `data:image/svg+xml`.
 
-### Behavior rules
+### Behavior contract
 - Timer lifecycle: start on mount, pause on hover/focus, resume on unhover/blur, clear on unmount.
 - Dismissal reasons: `close-click | timeout | programmatic`.
 - Queue lifecycle: deterministic FIFO as defined above.
 
-### Accessibility rules
+### Accessibility contract
 - Viewport: `aria-live="polite"`, `aria-atomic="false"`.
 - Item role: `status` by default; allow severity-driven escalation to `alert` when product rules require.
 - Close action: accessible label ("Dismiss notification").
@@ -133,7 +128,7 @@ Resolution rules:
 - Invalid `position` -> fallback to `top-right`.
 - Invalid `duration` (<0 or NaN) -> fallback to `8000`.
 
-### Validation checklist (pass/fail)
+### Validation checklist
 - [ ] All required sections in this spec are complete and deterministic.
 - [ ] Variant to token/icon mapping matches table exactly.
 - [ ] Queue behavior is implemented at viewport level, not single item level.
@@ -141,7 +136,6 @@ Resolution rules:
 - [ ] Link routing contract supports `routerLink`, `href`, and event mode.
 - [ ] Close icon is `shape-x` at `12x12`.
 - [ ] No hardcoded style values in generated code where token exists.
-
 ## Source Mapping
 - Figma examples: `42903:139689` (toast variants with/without link).
 - Figma icon base: `39484:7432` (alerting icon family).

@@ -86,16 +86,15 @@ MCP-verified token evidence (`46812:246786` / `46812:246839`):
 | `SettingsMenuItem` | disabled | transparent | none | reduced emphasis (opacity 0.6) + non-interactive cursor |
 
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| `SettingsMenuPanel` | default | `var(--color-background-component)` | right divider `var(--color-border-light)` | title/item text use neutral tokens |
-| `SettingsMenuItem` | default | transparent | none | `var(--color-text-neutral-strong)` |
-| `SettingsMenuItem` | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-neutral-strong)` |
-| `SettingsMenuItem` | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` |
-| `SettingsMenuItem` | selected | `var(--color-background-brand-lighter)` | leading 4px active indicator `var(--color-text-brand-strong)` + right-edge overlay (`1px`) over panel divider | `var(--color-text-brand-strong)` |
-| `SettingsMenuItem` | default-focus | transparent | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` | `var(--color-text-neutral-strong)` |
-| `SettingsMenuItem` | selected-focus | `var(--color-background-brand-lighter)` | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)` + `var(--corner-radius-radius-4)` + `outline-offset: 0` + leading 4px active indicator `var(--color-text-brand-strong)` | `var(--color-text-brand-strong)` |
-| `SettingsMenuItem` | disabled | transparent | none | reduced emphasis (opacity 0.6) + non-interactive cursor |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Clicking an item sets selected state and active indicator on that row.

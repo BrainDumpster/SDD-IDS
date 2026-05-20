@@ -181,9 +181,9 @@ def compose_design_spec_mdx(
 
     states_dark = _merge_figma_github_vision([], docs, v, "States (Dark Theme)", max_figma=0)
     if states_dark == "- *(No automated extractions for this block.)*":
-        states_dark = (
-            "- Dark theme uses the same semantic tokens; verify contrast in Figma Dev Mode.\n"
-        )
+        from scripts.design_spec_template import DARK_STATES_BOILERPLATE
+
+        states_dark = DARK_STATES_BOILERPLATE
 
     interactions = _merge_figma_github_vision([], docs, v, "Interactions", max_figma=0)
     if interactions == "- *(No automated extractions for this block.)*":
@@ -254,17 +254,17 @@ def compose_design_spec_mdx(
 - Local-doc fallback lines: {local_fallback_count}
 
 {_section_marker("summary")}
-## Executive Summary
+### Executive summary
 
 {summary}
 
 {_section_marker("overview")}
-## Overview
+### Overview
 
 {overview_full}
 
 {_section_marker("purpose-usage")}
-## Purpose & Usage
+### Purpose and usage
 
 {purpose}
 
@@ -278,13 +278,12 @@ def compose_design_spec_mdx(
 
 {layout}
 
-{_section_marker("typography")}
-## Typography
-
-{typo}
-
 {_section_marker("tokens")}
 ## Tokens
+
+### Typography
+
+{typo}
 
 {tokens_body}
 
@@ -303,63 +302,80 @@ def compose_design_spec_mdx(
 
 {interactions}
 
-{_section_marker("accessibility")}
-## Accessibility
+### Accessibility
 
 {a11y}
 
-{_section_marker("variants")}
-## Variants
-
-{variants}
-
-{_section_marker("behavior-guidelines")}
-## Behavior & Guidelines
+### Behavior & guidelines
 
 {behavior}
 
 {_section_marker("api-contract")}
-## API & Contract
+## Composition & API (runtime)
+
+### Variants
+
+{variants}
+
+### Runtime API
 
 {api_contract}
 
-{_section_marker("implementation-notes")}
-## Implementation Notes
+{_section_marker("codegen-contract")}
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
+
+### Variant matrix
+See **Composition & API (runtime) → Variants**.
+
+### Per-slot style contract
+Resolve styling from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+Document icon slugs and bundling rules when assets apply; otherwise state N/A.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to documented default.
+- Missing required inputs → validation error at codegen boundary.
+
+### Implementation notes
 
 {implementation_notes}
 
-{_section_marker("troubleshooting")}
-## Troubleshooting
+### Troubleshooting
 
 {troubleshooting}
 
-{_section_marker("related-links")}
-## Related Links
-
-{related}
-
-{dynamic_block}{_section_marker("source-conflicts")}
-## Source Conflict Notes
-
-{conflict_notes}
-
-{_section_marker("token-gaps-notes")}
-## Token Gaps / Notes
-
-- Cross-check semantic CSS variables (`var(--...)`) against your theme build.
-- Re-run generation after Figma or documentation image updates.
-
-{_section_marker("deliverable-checklist")}
-## Deliverable Checklist
-
+### Validation checklist
 - [ ] Implement component API matching framework conventions (Angular / React / Vue / Lit)
 - [ ] Wire tokens from CSS variables
 - [ ] Cover keyboard + screen reader requirements
 - [ ] Verify light and dark themes
 - [ ] Match spacing / typography within tolerance of Figma
 
-{_section_marker("source-mapping")}
+{dynamic_block}{_section_marker("source-mapping")}
 ## Source Mapping
+
+### Related links
+
+{related}
+
+### Source conflict notes
+
+{conflict_notes}
+
+### Token gaps and notes
+
+- Cross-check semantic CSS variables (`var(--...)`) against your theme build.
+- Re-run generation after Figma or documentation image updates.
 
 - Figma REST: `GET /v1/files/{file_key}/nodes` and `GET /v1/files/{file_key}/variables`
 - Component map: `{map_path}`

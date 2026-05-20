@@ -47,6 +47,21 @@ def ensure_under_generated_root(path: Path, generated_root: Path) -> None:
         raise ValueError(f"Refusing to write outside generated storybook root: {path}")
 
 
+def ensure_react_import_for_jsx(storybook_code: str) -> str:
+    """Spec-generated stories live outside storybook/tsconfig `include`; ensure React is in scope for JSX."""
+    text = storybook_code or ""
+    if not re.search(r"<\s*[A-Za-z/]", text):
+        return text
+    if re.search(r"\bimport\s+React\b", text):
+        return text
+    lines = text.splitlines(keepends=True)
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith("import "):
+            lines.insert(i, 'import React from "react";\n')
+            return "".join(lines)
+    return 'import React from "react";\n' + text
+
+
 def write_generated_story(
     *,
     component_slug: str,
@@ -56,6 +71,8 @@ def write_generated_story(
 ) -> Path:
     if not storybook_code.strip():
         raise ValueError(f"Empty STORYBOOK output for component: {component_slug}")
+
+    storybook_code = ensure_react_import_for_jsx(storybook_code)
 
     output_path = get_story_path(component_slug=component_slug, generated_root=generated_root, subdir=subdir)
     output_path.parent.mkdir(parents=True, exist_ok=True)

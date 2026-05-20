@@ -5,7 +5,6 @@
 - Category: Navigation
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54498&m=dev
 - Node ID: 11067-54498
-
 ## Anatomy
 - Search input field with icon
 - Search results dropdown
@@ -15,7 +14,6 @@
 - Focus ring for keyboard navigation
 - Clear button
 - Search suggestions (optional)
-
 ## Layout & Measurements
 - Input field height: 40px
 - Dropdown width: 400px (minimum)
@@ -26,17 +24,6 @@
 - Focus ring: 2px offset from element
 - Icon size: 20px × 20px
 - Maximum dropdown height: 400px (with scroll)
-
-## Typography
-- Display 1/Default: Roboto Light 72px/88px (large search headers)
-- Header/Header 1: Roboto Regular 28px/64px (search section headers)
-- Header 4: Roboto Regular 28px/34px (result titles)
-- Body 1: Roboto Regular 16px/24px (result descriptions)
-- Body 1 - Medium: Roboto Medium 16px/24px (emphasized results)
-- Body 2: Roboto Regular 14px/20px (secondary text)
-- Body 2 - Medium: Roboto Medium 14px/20px (category headers)
-- Body 2 - Underline: Roboto Regular 14px/20px (link text)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -92,7 +79,23 @@
 
 ### Effects
 - Cards Drop Shadow: Drop shadow effect for dropdown
+### Typography
+- Display 1/Default: Roboto Light 72px/88px (large search headers)
+- Header/Header 1: Roboto Regular 28px/64px (search section headers)
+- Header 4: Roboto Regular 28px/34px (result titles)
+- Body 1: Roboto Regular 16px/24px (result descriptions)
+- Body 1 - Medium: Roboto Medium 16px/24px (emphasized results)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+- Body 2 - Medium: Roboto Medium 14px/20px (category headers)
+- Body 2 - Underline: Roboto Regular 14px/20px (link text)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Hover states provide clear visual feedback
+- Dark theme adaptation through semantic tokens
+- Search functionality should be responsive and accessible
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -106,14 +109,12 @@
 | Result Item (Focus) | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
 | Clear Button (Default) | transparent | transparent | `var(--color-icon-accessible)` (#757575) | `var(--color-icon-accessible)` (#757575) |
 | Clear Button (Hover) | transparent | transparent | `var(--color-icon-brand-base)` (#0076ce) | `var(--color-icon-brand-base)` (#0076ce) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
 - Text and border colors remain consistent via semantic variables
 - Search dropdown maintains visibility in dark theme
 - Result items adapt to dark theme
-
 ## Interactions
 - Type in search field to trigger search
 - Click results to navigate to respective content
@@ -123,8 +124,7 @@
 - Keyboard navigation: Arrow keys to navigate results, Enter to select
 - Escape to close dropdown
 - Auto-complete suggestions while typing
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Arrow keys, Enter, Escape, Tab
 - Screen reader support: Proper ARIA attributes for search
@@ -133,17 +133,7 @@
 - Focus management: Logical tab order through search elements
 - Result announcements: Screen reader announces search results
 
-## Variants
-- **Default**: Standard global search with dropdown
-- **Inline**: Search integrated into navigation
-- **Modal**: Search in modal overlay
-- **With Categories**: Results organized by category
-- **With Suggestions**: Auto-complete suggestions
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Filters**: Search with filter options
-- **With History**: Recent searches section
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use global search for application-wide content discovery
 - Provide clear search input with proper placeholder
 - Show relevant results with proper categorization
@@ -152,16 +142,40 @@
 - Consider performance for large datasets
 - Use consistent styling across the application
 - Provide visual feedback for all interactions
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard global search with dropdown
+- **Inline**: Search integrated into navigation
+- **Modal**: Search in modal overlay
+- **With Categories**: Results organized by category
+- **With Suggestions**: Auto-complete suggestions
+- **Compact**: Reduced size for space-constrained interfaces
+- **With Filters**: Search with filter options
+- **With History**: Recent searches section
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Hover states provide clear visual feedback
-- Dark theme adaptation through semantic tokens
-- Search functionality should be responsive and accessible
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
 
-## Deliverable Checklist
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
 - [ ] Implement search functionality
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Arrows, Enter, Escape, Tab)
@@ -172,7 +186,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test search performance
-
 ## Source Mapping
 - Figma component: Global Search (11067-54498)
 - Variable collection: UI Palettes, Typography tokens

@@ -13,7 +13,6 @@
 - Verified at: 2026-05-10
 - Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
 - Reference implementation: `storybook/src/components/RadioButton.tsx` (shared IDS baseline). Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
-
 ## Anatomy
 - **groupRoot** (optional): semantic grouping wrapper for radio collections.
 - **root**: one radio row item (control + label).
@@ -22,7 +21,6 @@
 - **controlInnerDot**: selected indicator dot (centered).
 - **label**: associated text.
 - **assistiveText** (optional): helper/error copy.
-
 ## Layout & Measurements
 - Outer control size: `16px x 16px`.
 - Outer shape: circle (`border-radius: 50%`).
@@ -33,7 +31,6 @@
 - Focus-visible ring:
   - 1px outline with `var(--color-border-brand-base)`,
   - 3px offset from the outer control.
-
 ## Tokens
 - Borders:
   - `var(--border-width-border-1)`
@@ -60,7 +57,6 @@
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
-
 ## States (Light Theme)
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
@@ -72,20 +68,16 @@
 | Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
 | Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
 | Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
-
 ## States (Dark Theme)
-Same semantic matrix as light theme; dark values are resolved by token mappings. Do not hardcode dark hex values.
 
-| Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
-|---|---|---|---|---|---|
-| Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
-| Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
-| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
-| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
-| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
-| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Click on a radio selects it and deselects sibling radios with the same `name`.
@@ -98,7 +90,6 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
   - `Arrow` keys: move selection among enabled radios in group,
   - `Space`: select focused radio.
 - Disabled radios are skipped by selection changes and cannot be activated.
-
 ## Composition & API (runtime)
 
 ### Aggregate component (`RadioButton` — `storybook/src/components/RadioButton.tsx`)
@@ -122,7 +113,6 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 | `error` | No | Error border/label styling for this option. |
 | `helperText` | No | Helper or error line under the option row. |
 | `simulatedState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` for static matrices; not a substitute for real `:hover` / `:focus-visible` in production. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 - `groupRoot` (optional)
@@ -133,14 +123,14 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
     - `label`
     - optional `assistiveText`
 
-### Supported matrix
+### Variant matrix
 - Selection: unselected | selected.
 - Interaction: default | hover | focus-visible | disabled.
 - Validation: default | error.
 - Mode: controlled | uncontrolled.
 - Group behavior: standalone | grouped single-select.
 
-### Style contract
+### Per-slot style contract
 - Control stays circular and 16x16 across states.
 - Dot appears only when selected; default dot fill `var(--color-background-controls-brand-base)`; selected hover dot `var(--color-icon-brand-strong)` per state table.
 - Label spacing stays `var(--spacing-space-8)`.
@@ -148,7 +138,7 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 - Harness-only simulated state (`data-simulated-state` or equivalent) is allowed for Storybook; omit in production defaults unless documenting fixtures.
 - No hardcoded values for color/border/typography.
 
-### Behavior + accessibility contract
+### Behavior and accessibility contract
 - Native radio semantics preferred.
 - Group semantics:
   - radios share `name`,
@@ -171,7 +161,6 @@ Same semantic matrix as light theme; dark values are resolved by token mappings.
 - [ ] Disabled radios are non-interactive and correctly styled.
 - [ ] Label/input association passes accessibility checks.
 - [ ] Dark theme values resolve through semantic tokens only.
-
 ## Source Mapping
 - Component map entry: `data/component-figma-map.json` → `Radio Button`
 - Primary extraction source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26737&m=dev`

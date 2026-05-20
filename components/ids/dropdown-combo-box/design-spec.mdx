@@ -15,7 +15,6 @@
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
 - **Validated nodes:** `29393:149209`, `12730:157002`, `29393:143195`, `43415:176785`, `29716:46779`, `12730:120316`
 - **Last live verification:** Figma MCP `get_design_context` and `get_variable_defs` on the nodes above.
-
 ## Anatomy
 1. `ComboBoxRoot`
 2. optional `Label` (`Label:*`)
@@ -28,7 +27,6 @@
 9. optional `SearchRow` in popup
 10. `OptionList` with option rows
 11. **Multi-select only:** `SelectAllRow`, `ClearAllAction`, `SelectionSummaryRow`, checkboxes, and optional `ShowSelectedToggle`
-
 ## Layout & Measurements
 - Field sizes:
   - `Large`: `40px` height, trigger padding `var(--padding-padding-10) var(--padding-padding-16)`.
@@ -49,7 +47,6 @@
 - Multi-select summary selection element:
   - chip/tag row uses compact vertical rhythm (`var(--padding-padding-8)` block).
   - selected-count badge follows IDS badge geometry (`18px` height, pill radius).
-
 ## Tokens
 - **Core field tokens**
   - `var(--color-background-component)`
@@ -81,7 +78,6 @@
   - `var(--corner-radius-radius-8)` (scroll thumb)
   - `var(--spacing-space-4)`, `var(--spacing-space-8)`, `var(--spacing-space-16)`
   - `var(--padding-padding-2)`, `var(--padding-padding-6)`, `var(--padding-padding-8)`, `var(--padding-padding-10)`, `var(--padding-padding-16)`
-
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -97,7 +93,6 @@
 | Option row | focus-visible | current-state fill | focus indicator tokenized with `var(--color-border-brand-base)` | text/icon unchanged |
 | Option row | selected (single) | `var(--color-background-brand-lighter)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
 | Option row | selected (multi) | component background with checked checkbox | none | neutral text + selected checkbox visuals |
-
 ## States (Dark Theme)
 Dark theme uses the same structural state matrix as Light Theme and resolves all visual values through semantic tokens. No hardcoded color literals are allowed in implementation contracts.
 
@@ -109,7 +104,6 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 | Field container | disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 | Field container | error | semantic token resolved | semantic token resolved | semantic token resolved |
 | Option rows | default/hover/press/focus-visible/selected | semantic token resolved | semantic token resolved | semantic token resolved |
-
 ## Interactions
 - Trigger interaction:
   - click/`Enter`/`Space` toggles popup open/close.
@@ -128,7 +122,6 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - collapsed field can show badge count + truncated selected labels.
 - Validation:
   - error state shows critical icon + "Error message" slot below field.
-
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -147,9 +140,8 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 | `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
 | `onSelectAll` | No | `() => void` | Multi-select only. |
 | `onClearAll` | No | `() => void` | Multi-select only. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
+### Deterministic structure
 1. `ComboBoxRoot`
 2. optional `Label`
 3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
@@ -157,7 +149,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 5. optional `Popup` -> optional `SearchRow` -> `ListRows`
 6. optional `MultiSelectControls` (`SelectAll`, `ClearAll`, `ShowSelected`)
 
-### Supported matrix
+### Variant matrix
 - `mode`: `combobox-single | combobox-multi`
 - `size`: `small | large`
 - `content`: `empty | filled`
@@ -206,7 +198,6 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - [ ] Multi-select selection row/tag behavior matches `29716:46779` and `12730:120316`.
 - [ ] Light and dark outputs remain semantic-token driven.
 - [ ] Accessibility semantics and keyboard behavior pass parity checks.
-
 ## Source Mapping
 - **Component map entry:** `data/component-figma-map.json` -> `Dropdown / Combo Box`.
 - **Primary nodes:** `29393:149209` (single), `12730:157002` (multi).

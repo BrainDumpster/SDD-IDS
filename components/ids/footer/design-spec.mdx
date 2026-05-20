@@ -5,7 +5,6 @@
 - Category: Navigation
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38732-114951&m=dev
 - Node ID: 38732-114951
-
 ## Anatomy
 - Footer container with background
 - Logo/brand section
@@ -15,7 +14,6 @@
 - Contact information
 - Back to top button (optional)
 - Focus ring for keyboard navigation
-
 ## Layout & Measurements
 - Standard height: 200px (varies with content)
 - Section padding: 24px
@@ -25,16 +23,6 @@
 - Focus ring: 2px offset from interactive elements
 - Minimum width: Full viewport width
 - Responsive breakpoints for mobile
-
-## Typography
-- Display 1/Default: Roboto Light 72px/88px (hero footer branding)
-- Header/Header 1: Roboto Regular 28px/64px (large section headers)
-- Header 4: Roboto Regular 28px/34px (section headers)
-- Header 6: Roboto Regular 18px/25px (sub-headers)
-- Body 1: Roboto Regular 16px/24px (main content)
-- Body 2: Roboto Regular 14px/20px (secondary content)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized links)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -79,7 +67,22 @@
 ### Effects
 - Cards Drop Shadow: Drop shadow effect for elevated elements
 - Tooltip Drop Shadow: Drop shadow for tooltips
+### Typography
+- Display 1/Default: Roboto Light 72px/88px (hero footer branding)
+- Header/Header 1: Roboto Regular 28px/64px (large section headers)
+- Header 4: Roboto Regular 28px/34px (section headers)
+- Header 6: Roboto Regular 18px/25px (sub-headers)
+- Body 1: Roboto Regular 16px/24px (main content)
+- Body 2: Roboto Regular 14px/20px (secondary content)
+- Body 2 - Medium: Roboto Medium 14px/20px (emphasized links)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Link states provide clear visual feedback
+- Dark theme adaptation through semantic tokens
+- Footer layout should be responsive and accessible
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -90,13 +93,11 @@
 | Links Focus | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
 | Copyright | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
 | Social Icons | transparent | transparent | `var(--color-icon-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
 - Text and border colors remain consistent via semantic variables
 - Links maintain brand colors for consistency
-
 ## Interactions
 - Click navigation links to navigate to respective pages
 - Hover provides visual feedback with background and text changes
@@ -104,8 +105,7 @@
 - Social media links open external sites
 - Back to top button scrolls to page top
 - Responsive behavior for mobile devices
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Tab through all interactive elements
 - Screen reader support: Proper ARIA landmarks and navigation structure
@@ -114,15 +114,7 @@
 - Link descriptions: Clear link text and descriptions
 - Focus management: Logical tab order through footer elements
 
-## Variants
-- **Default**: Standard footer with multiple sections
-- **Minimal**: Simple footer with copyright only
-- **Brand**: Footer with prominent branding
-- **Dark**: Dark themed footer
-- **Sticky**: Footer that stays at bottom of viewport
-- **Responsive**: Adaptive layout for different screen sizes
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use footer for site-wide navigation and information
 - Organize links logically by category
 - Include legal information and copyright
@@ -131,16 +123,38 @@
 - Ensure all links are accessible and properly labeled
 - Consider back to top functionality for long pages
 - Use semantic HTML for proper structure
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard footer with multiple sections
+- **Minimal**: Simple footer with copyright only
+- **Brand**: Footer with prominent branding
+- **Dark**: Dark themed footer
+- **Sticky**: Footer that stays at bottom of viewport
+- **Responsive**: Adaptive layout for different screen sizes
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Link states provide clear visual feedback
-- Dark theme adaptation through semantic tokens
-- Footer layout should be responsive and accessible
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
 
-## Deliverable Checklist
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
 - [ ] Implement responsive layout for all screen sizes
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Tab, Enter)
@@ -151,7 +165,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test mobile touch interactions
-
 ## Source Mapping
 - Figma component: Footer (38732-114951)
 - Variable collection: UI Palettes, Typography tokens

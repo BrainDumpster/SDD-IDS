@@ -25,7 +25,6 @@
 - Implementation guide: [`components/ids/datagrid/README.md`](./README.md) (regeneration, column `width`, Storybook, tips)
 - Generated Storybook output: `storybook-generated/ids/src/components/Datagrid.stories.tsx` (title **`Spec Generated/IDS/Datagrid`**, primary story **`Spec Accurate Design`**)
 - Component map baseline: `data/component-figma-map.json` includes Datagrid legacy entry; this spec upgrades to IDS Design Library nodes above.
-
 ## Anatomy
 - `DatagridRoot`
 - `DatagridHeader`
@@ -46,8 +45,7 @@
   - `DatagridPaginationSlot` (IDS Pagination)
 - Optional side attachment:
   - `DatagridDetailPanelSlot` (IDS Detail Panel datagrid variant)
-
-## Framework-Agnostic Component Tree
+### Framework-agnostic component tree
 
 Codegen must emit a **single logical table** (or framework table primitive) with **deterministic column order**. Child components / projection slots map to framework wrappers; **geometry, tokens, and interaction precedence** are defined only in this spec (not in framework adapters).
 
@@ -144,7 +142,7 @@ Angular uses **declarative child components** with **content projection**. The m
 - Keep **one** scroll viewport element and **one** `<table>` (or platform table) per grid instance.
 - Portals/overlays for **`FilterMenuLayer`** must attach to **`document.body`** (or app overlay root), not inside the scroll clip.
 
-## Column filter menu (L-frame baseline)
+### Column filter menu (L-frame baseline)
 
 ### Figma & scope
 - **Main:** Column filter chrome **`37721:114635`** (`.Filter for table` / **Column Filter-Main**); header control instance **`37721:114677`**.
@@ -180,7 +178,6 @@ Angular uses **declarative child components** with **content projection**. The m
 ### Behavior & accessibility
 - Open/close on **`FilterToggle`**; **Escape** and **pointer down outside** dismiss (when implemented).
 - **`aria-expanded`**, **`aria-haspopup="dialog"`** on **`FilterToggle`**; dialog **`aria-label`** from column title. Optional **`data-filter-active`** when **`filterActive`** is useful for tests.
-
 ## Layout & Measurements
 - Header height: `48px` (`Grid height/Header` / Figma **Standard Density** `48` on **`37721:114663`**).
 - **Column header (Figma `.Column Header`, `37721:114663`):**
@@ -259,8 +256,7 @@ Angular uses **declarative child components** with **content projection**. The m
 - View modes:
   - `table` view
   - `treeview` view (hierarchical indent/expand behavior for tree columns)
-
-## Table Layout Algorithm (codegen)
+### Table layout algorithm (codegen)
 
 Implement **exactly** this sequence so header/body columns stay aligned (verified against Figma **`37721:113987`** and `IdsDataGrid.tsx`):
 
@@ -386,7 +382,6 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `::before` leading rail on selection/settings chrome | Extra left divider misaligned with Figma |
 | **18×18** checkbox in selection column | Breaks **16+16+16=48** header math |
 | Spacer `<col>` before settings | Forbidden by **`37721:113987`** |
-
 ## Tokens
 - Background/surface:
   - `var(--color-background-component)`
@@ -416,7 +411,6 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
   - `Body 2 - Medium` (`14/20`, medium)
 - Layout (Figma variables on row chrome `37721:114580`):
   - **`Grid height/Cell`** → row height **40** (use **`40px`** in IDS until **`--grid-height-cell`** is added to `components/ids-theme.css`).
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -438,7 +432,6 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
 | `SettingsColumn` | default | header-aligned | `var(--color-border-light)` | **`Icon`** `settings-gear` in `var(--color-icon-neutral)` (`16x16`) |
-
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -462,7 +455,6 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `SettingsColumn` | default | header-aligned | `var(--color-border-light)` | **`Icon`** `settings-gear` in `var(--color-icon-neutral)` (`16x16`) |
 
 Use the same semantic token names in both themes; **do not** hardcode hex — light/dark resolved values come from `components/ids-theme.css` (`html[data-design-system="ids"]` default vs `data-theme="dark"`).
-
 ## Interactions
 - Sort:
   - clicking sort toggle cycles between ascending and descending for the active column (single-column sort contract).
@@ -499,7 +491,6 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - **`verticalBlueLine`:** when enabled, **only** **Selected** and **Selected and Press** render the **4px** **`var(--color-border-brand-base)`** leading indicator; other states omit it.
 - Footer:
   - pagination slot attaches IDS Pagination behavior/component.
-
 ## Composition & API (runtime)
 
 Framework-agnostic types (map to TypeScript / Angular inputs / Vue props):
@@ -572,10 +563,9 @@ Codegen and `Datagrid.stories.tsx` **Spec Accurate Design** must use:
 - `multiselect: true`, `withDetailPanel: true`, `headerColorAndBorder: true`, `rowVerticalIndicator: true`, `columnResizeEnabled: true`, `readOnly: false`, `pageSize: 6`, `viewMode: "table"`
 - Parent frame: **`height: 100vh`**, **`flex: 1`**, **`minHeight: 0`**, **`minWidth: 0`** (bounded container per **`37721:112482`**)
 - Columns: Name (sort+filter+search panel), Type/Status (sort+filter), Owner (sort), Region (filter only) — see generated story `specColumns`
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
-### Deterministic slot schema
+### Deterministic structure
 
 1. `DatagridRoot` (`DatagridShell` → `DatagridScrollViewport` → `<table>`)
 2. `DatagridHeader` (`<thead>` — includes portaled **`FilterMenuLayer`** per open filter)
@@ -639,7 +629,7 @@ div.filterMenuLayer [fixed, z-index 10000]
       {column.filterPanel}
 ```
 
-### Per-slot style contract (tokenized)
+### Per-slot style contract
 
 | Slot | Size / layout | Tokens (default) |
 |---|---|---|
@@ -654,7 +644,7 @@ div.filterMenuLayer [fixed, z-index 10000]
 | `SelectAllColumn` | **48px** fixed | header **16+16+16** padding+checkbox; body **12×16** padding |
 | `GrowColumn` (`growColumnKey`) | `<col width="auto">` only | absorbs `table width:100%` slack; never `width:0` |
 
-### Table layout behavior contract (generators)
+### Table layout behavior contract
 
 - Emit **`<table class="grid" style={{ width: '100%', minWidth: tableMinWidthPx }}">`** with **`table-layout: fixed`**, **`border-collapse: collapse`**, **`border-spacing: 0`**.
 - Emit **`<colgroup>`** before **`<thead>`** with column count = cell count per row; order per **Chrome columns & table slack**.
@@ -664,7 +654,7 @@ div.filterMenuLayer [fixed, z-index 10000]
 - Chrome CSS constants (emit as theme or component vars): `--datagrid-selection-col-width: 48px`, `--datagrid-settings-col-width: 40px`, `--selection-header: 16px`, `--selection-cell: 12px`.
 - **Validation target:** DevTools on selection **`th`** = **48px** wide; **`.selectionHeaderContent`** = **100%** of cell (no gap before first data divider); settings **`th`** = **40px**.
 
-- Variant matrix:
+Variant matrix:
   - `viewMode`: `table | treeview`
   - `multiselect`: `on | off`
   - `detailsPanel`: `attached | none`
@@ -747,8 +737,23 @@ div.filterMenuLayer [fixed, z-index 10000]
   - [ ] **Grow column:** `growColumnKey` = last data column; sole `<col width="auto">` before settings **`40px`**; selection/settings **`th`** = **48**/**40** (inner host `width:100%`, no gap before Name divider).
   - [ ] **Header ellipsis:** title `display: block` + `text-overflow: ellipsis`; `title` attribute on truncated labels.
   - [ ] **Body padding:** `10px 12px 10px 16px` on data cells; settings body **`12px 0`** (Figma `37721:114944`); selection body **`12px 16px`**.
-
-## Storybook Generation Contract
+## Source Mapping
+- Component map baseline:
+  - `data/component-figma-map.json` -> Datagrid legacy exploration entry.
+- IDS authoritative nodes used:
+  - Main use cases: `44398:164837`
+  - Column definitions: `37721:114734`
+  - Sort states/elements: **`37721:114646`** (`.Sort for table`; see also sort reference **`44551:229021`**)
+  - Filter states/popup base: `37721:114635`
+  - Column header structure: `37721:114663` (title row frame `37721:114673`, filter instance `37721:114677`)
+  - Select-all header: **`37721:114682`**; selection grid column: **`37721:113988`** (**48px**)
+  - Settings header variant: **`37721:114686`**; settings grid column: **`37721:114944`** / layout slot **`37721:113997`** (**40px** in **`37721:113987`**); column def **`37721:114887`**
+  - Rows and columns layout reference: **`37721:113987`** (column widths, no spacer before settings)
+  - Main variant sample: `37721:112483` (child of **`37721:112482`** *Data Grid - Main*)
+  - **Row/cell states & styling:** `37721:114580`
+- Live verification evidence:
+  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).
+### Storybook generation contract
 
 **Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).
 
@@ -774,19 +779,3 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 8. **Theme:** Spec Generated stories import **`components/ids-theme.css` only** (not `theme.css`, not other program themes). Document that import in story `parameters.docs.description`.
 9. **Regenerate** when spec hash changes; visual QA against Figma nodes in **Source Mapping**.
 
-## Source Mapping
-- Component map baseline:
-  - `data/component-figma-map.json` -> Datagrid legacy exploration entry.
-- IDS authoritative nodes used:
-  - Main use cases: `44398:164837`
-  - Column definitions: `37721:114734`
-  - Sort states/elements: **`37721:114646`** (`.Sort for table`; see also sort reference **`44551:229021`**)
-  - Filter states/popup base: `37721:114635`
-  - Column header structure: `37721:114663` (title row frame `37721:114673`, filter instance `37721:114677`)
-  - Select-all header: **`37721:114682`**; selection grid column: **`37721:113988`** (**48px**)
-  - Settings header variant: **`37721:114686`**; settings grid column: **`37721:114944`** / layout slot **`37721:113997`** (**40px** in **`37721:113987`**); column def **`37721:114887`**
-  - Rows and columns layout reference: **`37721:113987`** (column widths, no spacer before settings)
-  - Main variant sample: `37721:112483` (child of **`37721:112482`** *Data Grid - Main*)
-  - **Row/cell states & styling:** `37721:114580`
-- Live verification evidence:
-  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).

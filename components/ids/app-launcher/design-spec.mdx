@@ -11,6 +11,8 @@
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
 - **Validated nodes:** `42266:95085`, `42266:95081`, `13231:123761`, `13231:109521`
 - **Last live verification:** Figma MCP `get_design_context` + `get_variable_defs` on the nodes above.
+## Anatomy
+Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
 
 ## Layout & Measurements
 - Launcher surface width: `298px` (menu body width observed in usage/details).
@@ -26,7 +28,6 @@
 - Surface stroke/shadow:
   - `1px` border
   - Shadow stack represented by `Shadow 1` tokens (`drop-shadow` pair).
-
 ## Tokens
 - **Surface + borders**
   - `var(--color-background-surface-2)`
@@ -47,7 +48,6 @@
   - `var(--shadow-shadow-4-drop-shadow-4-blur)`
   - `var(--shadow-shadow-4-drop-shadow-4-spread)`
   - `var(--shadow-shadow-4-drop-shadow-4-color)`
-
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -59,7 +59,6 @@
 | Options row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
 | Options row | hover | `var(--color-background-brand-lighter)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
 | Options row | press | `var(--color-background-brand-light)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-
 ## States (Dark Theme)
 Dark theme follows the same slot/state matrix as Light Theme, resolved exclusively via semantic tokens. No hardcoded colors are permitted in implementation.
 
@@ -70,7 +69,6 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 | Product tile | hover | semantic token resolved | semantic token resolved | semantic token resolved |
 | Product tile | press/selected | semantic token resolved | semantic token resolved | semantic token resolved |
 | Options row | default/hover | semantic token resolved | semantic token resolved | semantic token resolved |
-
 ## Interactions
 - Trigger opens launcher dropdown anchored to masthead app-launcher action.
 - Product tile click selects product and emits product-selection event.
@@ -81,7 +79,6 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
   - `Enter` / `Space` activates focused tile/option.
   - `Escape` closes launcher.
   - `Tab` traverses trigger -> tiles -> options in visible order.
-
 ## Composition & API (runtime)
 | Slot/Prop | Required | Behavior |
 |---|---|---|
@@ -97,9 +94,8 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 | `onOpenChange(open)` | No | Open-state callback. |
 | `onProductSelect(payload)` | No | Emits `{ id, name }` on product selection. |
 | `onOptionSelect(payload)` | No | Emits `{ id, label }` on option selection. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
+### Deterministic structure
 1. `AppLauncherRoot`
 2. `AppLauncherTrigger`
 3. `AppLauncherSurface`
@@ -110,7 +106,7 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 8. `OptionRow[]`
 9. optional `FooterAction`
 
-### Supported matrix
+### Variant matrix
 - `productCount`: `0 | 1 | 2 | 3 | 4 | 8`
 - tile state: `default | hover | press | selected | no-icon`
 - `triggerVariant`: `default | masthead`
@@ -155,7 +151,6 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 - [ ] Usage-level masthead anchor/open behavior aligns with nodes `42266:95085` and `42266:95081`.
 - [ ] Product and option selection callbacks emit deterministic payloads.
 - [ ] Light/Dark styles remain semantic-token driven.
-
 ## Source Mapping
 - **Component map entry:** `data/component-figma-map.json` -> `App Launcher`.
 - **Primary usage node:** `42266:95085`.

@@ -5,7 +5,6 @@
 - Category: Modals and Wizards
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54621&m=dev
 - Node ID: 11067-54621
-
 ## Anatomy
 - Wizard container with overlay
 - Step indicator/progress bar
@@ -15,7 +14,6 @@
 - Focus ring for keyboard navigation
 - Backdrop overlay
 - Step validation indicators
-
 ## Layout & Measurements
 - Minimum width: 600px
 - Maximum width: 800px
@@ -27,19 +25,6 @@
 - Step indicator height: 40px
 - Overlay background: rgba(0, 0, 0, 0.5)
 - Centered on screen with proper margins
-
-## Typography
-- Display 1/Default: Roboto Light 72px/88px (hero wizard titles)
-- Header 1: Roboto Regular 48px/58px (main titles)
-- Header 4: Roboto Regular 28px/34px (large titles)
-- Header 5: Roboto Regular 24px/32px (standard titles)
-- Header 6: Roboto Regular 18px/25px (small titles)
-- Body 1: Roboto Regular 16px/24px (body text)
-- Body 2: Roboto Regular 14px/20px (secondary text)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized text)
-- Body 3: Roboto Regular 12px/18px (small text)
-- Base Styles/Data Header: Roboto Medium 14px/20px (data headers)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -136,7 +121,26 @@
 
 ### Effects
 - Level 4 shadow: Multi-layer drop shadow for elevation
+### Typography
+- Display 1/Default: Roboto Light 72px/88px (hero wizard titles)
+- Header 1: Roboto Regular 48px/58px (main titles)
+- Header 4: Roboto Regular 28px/34px (large titles)
+- Header 5: Roboto Regular 24px/32px (standard titles)
+- Header 6: Roboto Regular 18px/25px (small titles)
+- Body 1: Roboto Regular 16px/24px (body text)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+- Body 2 - Medium: Roboto Medium 14px/20px (emphasized text)
+- Body 3: Roboto Regular 12px/18px (small text)
+- Base Styles/Data Header: Roboto Medium 14px/20px (data headers)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Alert variants use appropriate color tokens
+- Shadow effects provide proper elevation and depth
+- Wizard positioning should be responsive to viewport size
+- Step indicators should be clearly distinguishable
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -148,13 +152,11 @@
 | Next/Finish Button | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Cancel Button | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
 | Overlay | `var(--color-background-overlay)` (#252525a6) | transparent | transparent | transparent |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables
 - Overlay maintains consistent opacity
 - Buttons adapt to dark theme automatically
-
 ## Interactions
 - Click overlay to cancel wizard (with confirmation)
 - Click Previous/Next/Finish buttons to navigate steps
@@ -163,8 +165,7 @@
 - Focus trap keeps focus within wizard
 - Step validation prevents navigation to invalid steps
 - Hover states on interactive elements
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Focus management: Trap focus within wizard when open
 - Keyboard navigation: Tab to navigate, Enter to confirm, Escape to cancel
@@ -174,15 +175,7 @@
 - Focus restoration: Return focus to trigger when closed
 - Step announcements: Screen reader announces current step
 
-## Variants
-- **Default**: Standard wizard with step indicators
-- **Linear**: Sequential steps, no skipping
-- **Non-linear**: Can jump between completed steps
-- **Validation**: With step validation indicators
-- **Progress**: With progress bar instead of steps
-- **Compact**: Reduced size for space-constrained interfaces
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use wizards for multi-step processes
 - Provide clear step descriptions and progress indication
 - Allow navigation between completed steps when appropriate
@@ -191,17 +184,38 @@
 - Test with screen readers for proper step announcements
 - Consider mobile responsiveness and touch interactions
 - Use consistent button ordering (Previous on left, Next/Finish on right)
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard wizard with step indicators
+- **Linear**: Sequential steps, no skipping
+- **Non-linear**: Can jump between completed steps
+- **Validation**: With step validation indicators
+- **Progress**: With progress bar instead of steps
+- **Compact**: Reduced size for space-constrained interfaces
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Alert variants use appropriate color tokens
-- Shadow effects provide proper elevation and depth
-- Wizard positioning should be responsive to viewport size
-- Step indicators should be clearly distinguishable
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
 
-## Deliverable Checklist
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
 - [ ] Implement step navigation (Previous/Next/Finish)
 - [ ] Add step validation and error handling
 - [ ] Test keyboard navigation (Tab, Enter, Escape)
@@ -212,7 +226,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test focus restoration on close
-
 ## Source Mapping
 - Figma component: Wizard - Modal (11067-54621)
 - Variable collection: UI Palettes, Alert Palettes, Typography tokens

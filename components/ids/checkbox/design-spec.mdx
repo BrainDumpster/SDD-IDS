@@ -10,7 +10,6 @@
 - State matrix node ID: `42151:53254`
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Variant axes covered: selection (`unselected | selected | partial`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
-
 ## Anatomy
 - **root**: clickable control row, aligns box + label.
 - **input**: native `input[type="checkbox"]` (visually hidden or visible depending on implementation).
@@ -18,7 +17,6 @@
 - **indicator**: checkmark or indeterminate dash glyph rendered only when selected state requires it.
 - **label**: text node associated to input (`for`/`id` or `aria-labelledby`).
 - **assistiveText** (optional): helper or error text below/next to root.
-
 ## Layout & Measurements
 - Control box visual size: `16px x 16px` with `1px` border outside (effective outer footprint `18px x 18px`).
 - Control border radius: `var(--corner-radius-radius-2)`.
@@ -31,7 +29,6 @@
 - Focus-visible ring:
   - 1px outline using `var(--color-border-brand-base)`,
   - ring offset outside control by 3px.
-
 ## Tokens
 Use semantic tokens only.
 
@@ -58,7 +55,6 @@ Use semantic tokens only.
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
-
 ## States (Light Theme)
 | Selection | Interaction | Box Background | Box Border | Indicator | Label |
 |---|---|---|---|---|---|
@@ -72,22 +68,16 @@ Use semantic tokens only.
 | Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Any | Disabled | `var(--color-background-gray-light)` for unselected/indeterminate; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; indeterminate dash uses `var(--color-border-disabled)`; unchecked none | `var(--color-text-disabled)` |
-
 ## States (Dark Theme)
-Same semantic matrix as light theme. Dark values must resolve from the active token map; do not hardcode hex.
 
-| Selection | Interaction | Box Background | Box Border | Indicator | Label |
-|---|---|---|---|---|---|
-| Unchecked | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral-strong)` |
-| Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral-strong)` |
-| Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | none | `var(--color-text-neutral-strong)` |
-| Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Hover | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 3px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` for unselected/indeterminate; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; indeterminate dash uses `var(--color-border-disabled)`; unchecked none | `var(--color-text-disabled)` |
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Click root/control toggles between checked and unchecked (unless disabled).
@@ -97,7 +87,6 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
   - next user toggle transitions to checked (recommended deterministic rule).
 - Hover affects border/icon emphasis only; background remains unchanged from each selection baseline. Label remains semantic text color except disabled/error modes.
 - Disabled blocks pointer + keyboard interactions.
-
 ## Composition & API (runtime)
 | Prop / Slot | Required | Behavior |
 |---|---|---|
@@ -110,7 +99,6 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
 | `onChange(checked)` | No | Emits resolved checked value after toggle. |
 | `error` | No | Optional validation styling/assistive text mode. |
 | `helperText` | No | Secondary descriptive text. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 - `root`
@@ -120,13 +108,13 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
   - `label`
   - optional `assistiveText`
 
-### Supported matrix
+### Variant matrix
 - Selection: unchecked | checked | indeterminate.
 - Interaction: default | hover | focus-visible | disabled.
 - Validation: default | error.
 - Mode: controlled | uncontrolled.
 
-### Style contract
+### Per-slot style contract
 - Control visual box remains 16x16 in all states, with 1px outer border (effective footprint 18x18).
 - Indicator appears only for checked or indeterminate.
 - Indicator implementation must be CSS-only (no image or inline SVG):
@@ -138,7 +126,7 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
 - Label gap from control remains `var(--spacing-space-8)`.
 - No hardcoded colors; token-only.
 
-### Behavior + accessibility contract
+### Behavior and accessibility contract
 - Native checkbox semantics preferred.
 - ARIA:
   - `aria-checked`: `true | false | mixed`,
@@ -162,7 +150,6 @@ Same semantic matrix as light theme. Dark values must resolve from the active to
 - [ ] Disabled blocks interaction and uses disabled tokens.
 - [ ] Label association is screen-reader valid.
 - [ ] Dark theme resolves only through semantic tokens.
-
 ## Source Mapping
 - Figma component: Checkbox (`41895:299528` representative instance in board `41895:299521`)
 - Component map: `data/component-figma-map.json` → `Checkbox`

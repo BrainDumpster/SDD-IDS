@@ -15,7 +15,6 @@
   - variations/state overview: `43206:189639`
   - dark-mode overflow/state board: `43206:189637`
 - Last live verification: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in this session.
-
 ## Anatomy
 1. `StatusBarRoot`
 2. optional `StatusBarTotalItem`
@@ -32,7 +31,6 @@
 Inventory-only nested anatomy:
 - `InventoryMainIcon` (default icon `docs-bundle`)
 - optional `InventoryStatusBadge` (severity icon overlay)
-
 ## Layout & Measurements
 - Primary variants:
   - `Status Bar - Large`: total bar height `77px`
@@ -74,7 +72,6 @@ Inventory-only nested anatomy:
 - Responsiveness rule:
   - status bar horizontal responsiveness/overflow controls are enabled only when `total` item exists.
   - when `total` is omitted, item strip stays static (no overflow arrows).
-
 ## Tokens
 - Surfaces and borders:
   - `var(--color-background-component)`
@@ -104,7 +101,6 @@ Inventory-only nested anatomy:
 MCP variable evidence confirms:
 - light theme values for status bar nodes (`15412:10699`, `15412:9261`, `15405:9692`, `18544:13502`)
 - dark theme semantic substitutions on variation node (`43206:189639`) while token names remain unchanged.
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -114,7 +110,6 @@ MCP variable evidence confirms:
 | item | selected | `var(--color-background-brand-light)` | same divider | text preserved |
 | item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)`, icons use accessible/disabled tone |
 | overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
-
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -124,7 +119,6 @@ MCP variable evidence confirms:
 | item | selected | `var(--color-background-brand-light)` | same divider | semantic token resolution |
 | item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)` and accessible icons |
 | overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
-
 ## Interactions
 - Item interactions support `default | hover | press | selected | disabled`.
 - Overflow controls:
@@ -135,7 +129,6 @@ MCP variable evidence confirms:
 - Keyboard:
   - overflow buttons are standard buttons (`Enter` / `Space` trigger scroll).
   - disabled items are non-interactive.
-
 ## Composition & API (runtime)
 - `type: "status-large" | "status-small" | "inventory"` (default `"status-large"`).
 - `items: StatusBarItem[]` where each item supports:
@@ -149,7 +142,6 @@ MCP variable evidence confirms:
 - `total?: number | string` (enables total cell and responsive overflow behavior)
 - `totalLabel?: string` (default `"Total"`)
 - `totalCategory?: string` (optional, e.g. `"Alerts"`)
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 - Deterministic structure:
   - `StatusBarRoot`
@@ -157,7 +149,7 @@ MCP variable evidence confirms:
   - `StatusBarContentViewport`
   - repeated `StatusBarItem`
   - optional `StatusBarOverflowLayer` with `StatusBarOverflowLeft` + `StatusBarOverflowRight`
-- Variant matrix:
+Variant matrix:
   - type: `status-large | status-small | inventory`
   - item state: `default | hover | press | selected | disabled`
   - content density: `less | more` (from Figma `# items`)
@@ -201,7 +193,6 @@ MCP variable evidence confirms:
   - [ ] Left/right arrows use required icon slugs.
   - [ ] Inventory supports default and user-defined icon.
   - [ ] Light/dark both render via semantic tokens.
-
 ## Source Mapping
 - Component map source: `data/component-figma-map.json` (`Status Bar`)
 - Figma nodes used:

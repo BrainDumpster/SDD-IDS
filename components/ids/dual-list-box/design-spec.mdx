@@ -5,7 +5,6 @@
 - Category: Formelements
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54563&m=dev
 - Node ID: 11067-54563
-
 ## Anatomy
 - Dual list container
 - Available items list
@@ -16,7 +15,6 @@
 - Focus ring for keyboard navigation
 - Item checkboxes for selection
 - Sort functionality (optional)
-
 ## Layout & Measurements
 - Container width: 600px (minimum)
 - List width: 250px each
@@ -29,14 +27,6 @@
 - Focus ring: 2px offset from element
 - Icon size: 16px × 16px
 - Spacing between lists: 40px
-
-## Typography
-- Header 4: Roboto Regular 28px/34px (dual list headers)
-- Header 5: Roboto Regular 24px/32px (section headers)
-- Header 6: Roboto Regular 18px/25px (list headers)
-- Body 1: Roboto Regular 16px/24px (list items)
-- Body 2: Roboto Regular 14px/20px (secondary text)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -87,7 +77,20 @@
 
 ### Effects
 - Tooltip Drop Shadow: Drop shadow effect for tooltips
+### Typography
+- Header 4: Roboto Regular 28px/34px (dual list headers)
+- Header 5: Roboto Regular 24px/32px (section headers)
+- Header 6: Roboto Regular 18px/25px (list headers)
+- Body 1: Roboto Regular 16px/24px (list items)
+- Body 2: Roboto Regular 14px/20px (secondary text)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Selected states use brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- Dual list box should be responsive and accessible
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -102,13 +105,11 @@
 | Transfer Button (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
 | Search Input | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
 | Validation Error | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-critical)` (#af0000) | `var(--color-icon-alerting-critical)` (#af0000) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables
 - List boxes maintain visibility in dark theme
 - Transfer buttons adapt to dark theme
-
 ## Interactions
 - Click items to select/deselect in lists
 - Click transfer buttons to move items between lists
@@ -118,8 +119,7 @@
 - Keyboard navigation: Arrow keys, Enter, Space, Tab
 - Search/filter to find items quickly
 - Select multiple items with Ctrl/Cmd+click
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Arrow keys, Enter, Space, Tab
 - Screen reader support: Proper ARIA attributes for lists
@@ -128,17 +128,7 @@
 - Focus management: Logical tab order through lists
 - Transfer announcements: Screen reader announces item transfers
 
-## Variants
-- **Default**: Standard dual list box
-- **With Search**: Lists with search/filter functionality
-- **With Sort**: Lists with sorting capabilities
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Counts**: Lists showing item counts
-- **With Checkboxes**: Items with checkboxes for selection
-- **Virtual**: Virtual scrolling for large lists
-- **Drag and Drop**: Drag items between lists
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use dual list box for moving items between two collections
 - Provide clear visual separation between lists
 - Use transfer buttons with clear icons and labels
@@ -147,16 +137,40 @@
 - Use responsive design for different screen sizes
 - Provide visual feedback for all interactions
 - Consider performance for large datasets
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard dual list box
+- **With Search**: Lists with search/filter functionality
+- **With Sort**: Lists with sorting capabilities
+- **Compact**: Reduced size for space-constrained interfaces
+- **With Counts**: Lists showing item counts
+- **With Checkboxes**: Items with checkboxes for selection
+- **Virtual**: Virtual scrolling for large lists
+- **Drag and Drop**: Drag items between lists
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Selected states use brand colors for clear indication
-- Dark theme adaptation through semantic tokens
-- Dual list box should be responsive and accessible
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
 
-## Deliverable Checklist
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
 - [ ] Implement item transfer functionality
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Arrows, Enter, Space, Tab)
@@ -167,7 +181,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test drag and drop functionality
-
 ## Source Mapping
 - Figma component: Dual List Box (11067-54563)
 - Variable collection: UI Palettes, Typography tokens

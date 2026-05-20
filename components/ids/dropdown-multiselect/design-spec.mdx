@@ -10,7 +10,6 @@
 - Figma option states: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12363-13866&m=dev`
 - Figma selected badge + tooltip: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12608-95848&m=dev`
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-
 ## Anatomy
 1. `DropdownMultiSelectRoot`
 2. optional `Label`
@@ -27,7 +26,6 @@
 13. optional `ActionRow`
 14. optional `SelectedCountBadge` (IDS Badge)
 15. optional `SelectedCountTooltip` (IDS Tooltip)
-
 ## Layout & Measurements
 - Field sizes:
   - `Large`: `40px`
@@ -54,7 +52,6 @@
   - scrollable region for long sets (overflow menu variants).
 - Selected count badge:
   - uses IDS Badge size/shape contract (`18px` pill).
-
 ## Tokens
 - Field/menu tokens:
   - `var(--color-background-component)`
@@ -85,7 +82,6 @@
   - `var(--padding-padding-8)`
   - `var(--padding-padding-10)`
   - `var(--padding-padding-16)`
-
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -103,7 +99,6 @@
 | SelectAll row | default | component | accessible divider | neutral text + checkbox |
 | ClearAll action | default | transparent | none | brand-strong |
 | ClearAll action | disabled | transparent | none | disabled text |
-
 ## States (Dark Theme)
 Dark theme must preserve the same state matrix and resolve values through semantic IDS tokens only.
 
@@ -112,7 +107,6 @@ Dark theme must preserve the same state matrix and resolve values through semant
 | Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
 | Option rows | default/hover/selected/indeterminate/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 | SelectAll / ClearAll | default/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
-
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles menu.
@@ -137,7 +131,6 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Optional action row:
   - user-defined label
   - emits explicit action event.
-
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -163,9 +156,8 @@ Dark theme must preserve the same state matrix and resolve values through semant
 | `onAction` | No | `() => void` | Optional action row event. |
 | `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
 | `onSearch` | No | `(query: string) => void` | Search callback. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
+### Deterministic structure
 1. `DropdownMultiSelectRoot`
 2. optional `Label`
 3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
@@ -179,7 +171,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
 11. optional `SelectedCountBadge`
 12. optional `SelectedCountTooltip`
 
-### Supported matrix
+### Variant matrix
 - `size`: `small | large`
 - `content`: `empty | selected-visible | selected-hidden`
 - `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
@@ -232,7 +224,6 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - [ ] `SelectAllClearAllRow` remains fixed while options scroll.
 - [ ] Badge uses IDS Badge spec and tooltip uses IDS Tooltip spec.
 - [ ] Light/dark outputs remain semantic-token driven.
-
 ## Source Mapping
 - Figma design frame: `43406:39370`
 - Figma component matrix: `12608:93872`

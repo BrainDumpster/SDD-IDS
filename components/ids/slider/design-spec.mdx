@@ -13,7 +13,6 @@
 - Component-map entry: `data/component-figma-map.json` -> `Slider` (legacy exploration link exists in map; this spec is validated against IDS Design Library nodes above).
 - Validated nodes: `22459:40319`, `22459:39022`, `22459:38985`, `22505:177044`, `42114:74026`
 - Last live verification: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in this session.
-
 ## Anatomy
 Deterministic slider slots:
 1. `SliderRoot`
@@ -35,7 +34,6 @@ Element-part references from Figma:
 - Track part (`4px` height) from `.Slider-Element-Parts`.
 - Range-selector part (two large markers + selected segment) from `.Slider-Element-Parts`.
 - Marker interaction states (`Default | Hover | Press | Focus | Disabled`) from `.Slider-Element-Marker`.
-
 ## Layout & Measurements
 - State-matrix cell size in showcase frame: `525px x 80px` (`22459:40319`).
 - Marker/track/shape part measurements (`22459:38985`):
@@ -49,7 +47,6 @@ Element-part references from Figma:
 - Value labels are rendered below the corresponding thumb centerline.
 - Optional value input boxes (single/range) follow IDS compact text-input geometry: `32px` height with horizontal padding `var(--padding-padding-16)`.
 - Range value input mode renders two `32px` text boxes with a centered separator slot (`"-"`) between them.
-
 ## Tokens
 Verified slider tokens from `22459:38985` and `22505:177044`:
 - `var(--color-icon-brand-base)` (selected marker/track)
@@ -66,7 +63,6 @@ Verified slider tokens from `22459:38985` and `22505:177044`:
 Supporting semantic tokens used by slider compositions:
 - `var(--color-background-component)`
 - `var(--color-border-accessible)`
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -88,7 +84,6 @@ Supporting semantic tokens used by slider compositions:
 | Endpoint label (`SliderMaxLabel`) | max-active | n/a | n/a | `var(--color-text-brand-base)` |
 | Value input (`32px`) | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` |
 | Value input (`32px`) | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
-
 ## States (Dark Theme)
 Dark theme uses the same structural state matrix and resolves all values through semantic tokens.
 
@@ -109,7 +104,6 @@ Dark theme uses the same structural state matrix and resolves all values through
 | Large marker (`16px`) | disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 | Endpoint label (`SliderMinLabel`/`SliderMaxLabel`) | default/min-active/max-active | semantic token resolved | n/a | semantic token resolved |
 | Value input (`32px`) | default/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
-
 ## Interactions
 - Pointer:
   - click rail jumps active thumb to nearest valid step.
@@ -137,7 +131,6 @@ Dark theme uses the same structural state matrix and resolves all values through
 - Disabled behavior:
   - blocks pointer and keyboard interaction.
   - uses disabled marker/rail/value text tokens.
-
 ## Composition & API (runtime)
 | Prop | Required | Type | Default | Notes |
 |---|---|---|---|---|
@@ -157,9 +150,8 @@ Dark theme uses the same structural state matrix and resolves all values through
 | `maxLabel` | No | `string` | — | Optional right label. |
 | `onValueChange` | No | `(value: number \| [number, number]) => void` | — | Fires on value updates. |
 | `onValueCommit` | No | `(value: number \| [number, number]) => void` | — | Fires on pointer/key commit. |
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-### Deterministic slot schema
+### Deterministic structure
 1. `SliderRoot`
 2. optional labels row (`SliderMinLabel`, `SliderMaxLabel`)
 3. `SliderRail`
@@ -169,7 +161,7 @@ Dark theme uses the same structural state matrix and resolves all values through
 7. optional value-label layer (`SliderValueLabelMin`, optional `SliderValueLabelMax`)
 8. optional input row (`SliderValueInputMin`, optional `SliderValueInputMax`)
 
-### Supported matrix
+### Variant matrix
 - `mode`: `single | range`
 - `state`: `default | hover | press | focus-visible | disabled`
 - `stepper`: `off | on`
@@ -203,7 +195,7 @@ Dark theme uses the same structural state matrix and resolves all values through
 - Focus indicator must remain visible in all themes.
 - Value input controls must remain programmatically associated with slider values (single or min/max in range).
 
-### Asset + bundling contract
+### Asset resolution + bundling contract
 - No external icon assets are required for slider rendering.
 - Marker shapes are tokenized vector/circle primitives.
 
@@ -223,7 +215,6 @@ Dark theme uses the same structural state matrix and resolves all values through
 - [ ] Main matrix behavior matches `22459:39022` (value variants, range, stepper on/off, default/disabled).
 - [ ] Light/dark outputs are semantic-token driven.
 - [ ] Range no-crossing and keyboard behavior are implemented.
-
 ## Source Mapping
 | Source | Location |
 |---|---|

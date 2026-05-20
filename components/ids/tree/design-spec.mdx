@@ -5,7 +5,6 @@
 - Category: Navigation
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54522&m=dev
 - Node ID: 11067-54522
-
 ## Anatomy
 - Tree container
 - Tree nodes with expand/collapse functionality
@@ -16,7 +15,6 @@
 - Focus ring for keyboard navigation
 - Optional checkboxes for multi-select
 - Drag and drop handles (optional)
-
 ## Layout & Measurements
 - Node height: 32px
 - Node indentation: 20px per level
@@ -27,13 +25,6 @@
 - Border radius: 4px (selection)
 - Focus ring: 2px offset from node
 - Spacing between nodes: 0
-
-## Typography
-- Display 1/Default: Roboto Light 72px/88px (large tree headers)
-- Header 5: Roboto Regular 24px/32px (tree section headers)
-- Body 1: Roboto Regular 16px/24px (tree node labels)
-- Body 2: Roboto Regular 14px/20px (secondary node text)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -70,7 +61,19 @@
 
 ### Other Colors
 - Slate 900: `UI Palettes/Slate/slate-900` = #111619
+### Typography
+- Display 1/Default: Roboto Light 72px/88px (large tree headers)
+- Header 5: Roboto Regular 24px/32px (tree section headers)
+- Body 1: Roboto Regular 16px/24px (tree node labels)
+- Body 2: Roboto Regular 14px/20px (secondary node text)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Selected states use brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- Tree layouts should be responsive and accessible
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -85,14 +88,12 @@
 | Checkbox (Checked) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | transparent | `var(--color-icon-white)` (#ffffff) |
 | Folder Icon (Expanded) | transparent | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
 | Folder Icon (Collapsed) | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | `icon-standard-gray` (#616161) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#111619)
 - Text and border colors remain consistent via semantic variables
 - Selected nodes use brand colors for clear indication
 - Expand/collapse icons adapt to dark theme
-
 ## Interactions
 - Click nodes to select/deselect
 - Click expand arrows to expand/collapse branches
@@ -102,8 +103,7 @@
 - Multi-select with checkboxes (optional)
 - Drag and drop to reorganize tree (optional)
 - Double-click to rename nodes (optional)
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Arrow keys, Enter, Space, Tab
 - Screen reader support: Proper ARIA attributes for tree structure
@@ -112,17 +112,7 @@
 - Focus management: Logical tab order through tree nodes
 - Expansion announcements: Screen reader announces expand/collapse
 
-## Variants
-- **Default**: Standard tree view
-- **Multi-select**: Tree with checkboxes for selection
-- **Draggable**: Tree with drag and drop functionality
-- **Editable**: Tree with inline editing
-- **Compact**: Reduced node height
-- **Large**: Increased node height and icons
-- **With Search**: Tree with search/filter functionality
-- **Virtual**: Virtual scrolling for large trees
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use tree view for hierarchical data display
 - Provide clear visual hierarchy with indentation
 - Use consistent icons for node types
@@ -131,16 +121,40 @@
 - Use responsive design for different screen sizes
 - Provide visual feedback for all interactions
 - Consider performance for large trees
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard tree view
+- **Multi-select**: Tree with checkboxes for selection
+- **Draggable**: Tree with drag and drop functionality
+- **Editable**: Tree with inline editing
+- **Compact**: Reduced node height
+- **Large**: Increased node height and icons
+- **With Search**: Tree with search/filter functionality
+- **Virtual**: Virtual scrolling for large trees
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Selected states use brand colors for clear indication
-- Dark theme adaptation through semantic tokens
-- Tree layouts should be responsive and accessible
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
 
-## Deliverable Checklist
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
 - [ ] Implement tree expansion/collapse functionality
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Arrows, Enter, Space, Tab)
@@ -151,7 +165,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test drag and drop functionality
-
 ## Source Mapping
 - Figma component: Tree (11067-54522)
 - Variable collection: UI Palettes, Typography tokens

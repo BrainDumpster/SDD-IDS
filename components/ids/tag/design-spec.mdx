@@ -10,7 +10,6 @@
 - Primary node id: `42012:26686`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
-
 ## Anatomy
 - `TagRoot`
 - `TagLabel`
@@ -18,7 +17,6 @@
 - `TagBadge?` (count or status chip)
 - `TagCloseButton?` (dismiss/edit mode)
 - `TagEditableField?` (text focus surface for editable mode)
-
 ## Layout & Measurements
 - Two size tracks verified:
   - `small`: height `20px` (read-only baseline)
@@ -31,7 +29,6 @@
 - Close icon element size: `10px x 10px`.
 - Tag shape remains pill-like with fully rounded ends.
 - Focus outline gap (outline offset from tag edge): `3px`.
-
 ## Tokens
 - Core neutral tokens:
   - `var(--color-background-component)`
@@ -64,7 +61,6 @@
 - Typography:
   - `Body 2` for tag labels
   - `Body 2 - Medium` for emphasized/clickable states
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -78,7 +74,6 @@
 | TagRoot (focus-visible) | focus | keep base state | outer focus outline brand (`var(--color-border-brand-base)`) with `3px` gap | content unchanged |
 | TagEditableField | focus-on-text=true | transparent | text field border `var(--color-border-brand-base)` | text neutral |
 | TagBadge | default | `var(--color-background-controls-brand-base)` | none | text `var(--color-text-white)` |
-
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -91,7 +86,6 @@
 | TagRoot (focus-visible) | focus | keep base state | outer focus outline brand (`var(--color-border-brand-base)`) with `3px` gap | content unchanged |
 | TagEditableField | focus-on-text=true | transparent | text field border `var(--color-border-brand-base)` | text semantic neutral-light |
 | TagBadge | default | `var(--color-background-controls-brand-base)` | none | text inverse |
-
 ## Interactions
 - `read-only`: non-interactive label chip.
 - `clickable`: toggles selection (`selected=true|false`).
@@ -100,7 +94,6 @@
 - Hover states apply where interaction is enabled (clickable and close button).
 - Focus-visible is keyboard-driven and uses outer ring.
 - Disabled suppresses click, close, and selection transitions.
-
 ## Composition & API (runtime)
 - `type: "read-only" | "clickable" | "editable" | "badge"`
 - `size: "small" | "large"` (defaults: read-only -> small, others -> large)
@@ -117,7 +110,6 @@
 - `onClick?: () => void` (clickable)
 - `onDismiss?: () => void` (editable/dismissible)
 - `onSelectionChange?: (selected: boolean) => void` (clickable)
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 - Deterministic slot order:
   1. `TagRoot`
@@ -166,7 +158,6 @@
   - [ ] focus-visible ring appears in keyboard path only
   - [ ] editable focus-on-text path shows field border token
   - [ ] badge variant handles icon + count + label layout
-
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Tag"`.
 - IDS design library nodes verified:

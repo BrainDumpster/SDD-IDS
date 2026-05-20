@@ -5,7 +5,6 @@
 - Category: Navigation
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24736&m=dev
 - Node ID: 9054-24736
-
 ## Anatomy
 - Masthead container with brand background
 - Logo/brand identity
@@ -16,7 +15,6 @@
 - Status indicators
 - Focus ring for keyboard navigation
 - Optional notification badges
-
 ## Layout & Measurements
 - Standard height: 64px
 - Logo width: 120px
@@ -28,15 +26,6 @@
 - Icon size: 24px × 24px
 - Status indicator size: 8px × 8px
 - Minimum width: Full viewport width
-
-## Typography
-- Display 1/Default: Roboto Light 72px/88px (large masthead titles)
-- Body 1: Roboto Regular 16px/24px (masthead content)
-- Body 1 - Medium: Roboto Medium 16px/24px (emphasized content)
-- Body 2: Roboto Regular 14px/20px (secondary content)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized secondary)
-- Body 2 - Underline: Roboto Regular 14px/20px (link text)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -99,7 +88,21 @@
 - White: `Neutral/White - #FFFFFF` = #FFFFFF
 - Gray 100: `Neutral/Gray-100 - #F7F7F7` = #F7F7F7
 - Gray 300: `Neutral/Gray-300 - #E4E4E4` = #E4E4E4
+### Typography
+- Display 1/Default: Roboto Light 72px/88px (large masthead titles)
+- Body 1: Roboto Regular 16px/24px (masthead content)
+- Body 1 - Medium: Roboto Medium 16px/24px (emphasized content)
+- Body 2: Roboto Regular 14px/20px (secondary content)
+- Body 2 - Medium: Roboto Medium 14px/20px (emphasized secondary)
+- Body 2 - Underline: Roboto Regular 14px/20px (link text)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Active states use brand colors for clear indication
+- Status indicators use appropriate color psychology
+- Dark theme adaptation through semantic tokens
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -113,14 +116,12 @@
 | User Section (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Status Indicator (Success) | `var(--color-background-alerting-success)` (#1b8500) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-green` (#1B8500) |
 | Status Indicator (Critical) | `var(--color-background-alerting-critical)` (#af0000) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-red` (#AF0000) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
 - Text and border colors remain consistent via semantic variables
 - Masthead maintains consistent branding
 - Status indicators maintain visibility
-
 ## Interactions
 - Click navigation items to navigate to respective pages
 - Hover provides visual feedback with background changes
@@ -129,8 +130,7 @@
 - Status indicators show system state
 - Keyboard navigation: Arrow keys, Enter, Tab, Escape
 - Search functionality within masthead (optional)
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Arrow keys, Enter, Tab, Escape
 - Screen reader support: Proper ARIA attributes for navigation
@@ -139,17 +139,7 @@
 - Focus management: Logical tab order through masthead items
 - Status announcements: Screen reader announces status changes
 
-## Variants
-- **Default**: Standard brand masthead
-- **With Search**: Masthead with integrated search
-- **With Notifications**: Masthead with notification badges
-- **With User Menu**: Masthead with user account section
-- **Sticky**: Masthead that stays visible on scroll
-- **Compact**: Reduced height for space-constrained interfaces
-- **Dark**: Dark themed masthead
-- **With Status**: Masthead with system status indicators
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use masthead for application branding and primary navigation
 - Maintain consistent branding across the application
 - Provide clear visual hierarchy with proper spacing
@@ -158,27 +148,6 @@
 - Consider sticky positioning for long pages
 - Provide visual feedback for all interactions
 - Use consistent styling across masthead variants
-
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Active states use brand colors for clear indication
-- Status indicators use appropriate color psychology
-- Dark theme adaptation through semantic tokens
-
-## Deliverable Checklist
-- [ ] Implement masthead navigation functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Arrows, Enter, Tab, Escape)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test hover and focus states
-- [ ] Implement user menu functionality
-- [ ] Add status indicators
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test responsive behavior
-
 ## Composition & API (runtime)
 - `productName: string` (required)
 - `logo?: RenderableNode`
@@ -186,7 +155,15 @@
 - `appLauncherSlot?: RenderableNode`
 - `avatarSlot?: RenderableNode`
 - `sticky?: boolean` (default `false`)
-
+### Variants
+- **Default**: Standard brand masthead
+- **With Search**: Masthead with integrated search
+- **With Notifications**: Masthead with notification badges
+- **With User Menu**: Masthead with user account section
+- **Sticky**: Masthead that stays visible on scroll
+- **Compact**: Reduced height for space-constrained interfaces
+- **Dark**: Dark themed masthead
+- **With Status**: Masthead with system status indicators
 ## Codegen Contract (Framework-Agnostic Blueprint)
 - Deterministic slot order:
   1. `MastheadRoot`
@@ -199,7 +176,17 @@
 - Fallback/error rules:
   - missing logo falls back to product name-only rendering
   - missing avatar falls back to initials/avatar placeholder
-
+### Validation checklist
+- [ ] Implement masthead navigation functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Tab, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test hover and focus states
+- [ ] Implement user menu functionality
+- [ ] Add status indicators
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test responsive behavior
 ## Source Mapping
 - Figma component: Masthead (9054-24736)
 - Variable collection: UI Palettes, Typography tokens

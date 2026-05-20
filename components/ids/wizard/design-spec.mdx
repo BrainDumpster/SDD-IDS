@@ -13,7 +13,6 @@
 - Runtime references used for API semantics:
   - https://clarity.design/documentation/wizard/api
   - https://clarity.design/documentation/wizard
-
 ## Anatomy
 Main component:
 - `WizardRoot`
@@ -38,7 +37,6 @@ Deterministic child structure (required order):
 17. `WizardCancelButton`
 18. `WizardPreviousButton`
 19. `WizardPrimaryButton` (`Next` or `Finish` or page-specific replacement)
-
 ## Layout & Measurements
 - Figma sample "one size" frame: `1594px x 843px` (sample only; runtime is token/prop driven).
 - Wizard body region is two columns (`steps pane` + `content pane`) with equal vertical span.
@@ -64,7 +62,6 @@ Deterministic child structure (required order):
   - `x-large`: `1152px`
   - `full-screen`: viewport-constrained (`100vw/100vh` in modal; container fill in inline)
 - Modal mode uses backdrop and centered shell; inline mode renders in normal document flow.
-
 ## Tokens
 - Container/surfaces:
   - `var(--color-background-component)`
@@ -102,7 +99,6 @@ MCP variable evidence (`12690:246134`):
 - `Header 5` = `Roboto 24/32`
 - `Body 1` = `Roboto 16/24`
 - `Body 2` = `Roboto 14/20`
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -116,20 +112,16 @@ MCP variable evidence (`12690:246134`):
 | footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 | footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
 | footer primary button | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| wizard root | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
-| step item | default | `var(--color-background-component)` | none (row-level) | `var(--color-text-disabled)` |
-| step item | active | `var(--color-background-brand-lighter)` | no row border + active leading accent | `var(--color-text-brand-strong)` |
-| step item | completed | `var(--color-background-component)` | none (row-level) | `var(--color-text-neutral-strong)` + success icon |
-| step item | warning | `var(--color-background-component)` | none (row-level) | neutral text + warning icon |
-| step item | error | `var(--color-background-component)` | none (row-level) | neutral text + error icon |
-| footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-accessible)` | neutral text |
-| footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-| footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
-| footer primary button | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Clicking step/substep navigates to that page when target is visible and enabled.
@@ -142,7 +134,6 @@ MCP variable evidence (`12690:246134`):
   - top-level step page: `Step 1 of 5`
   - substep page: `Step 2a of 5`
 - Button events are emitted for `Cancel`, `Previous`, `Next`, and `Finish`.
-
 ## Composition & API (runtime)
 Main inputs:
 - `mode?: "inline" | "modal"` (default `"inline"`)
@@ -182,9 +173,8 @@ Outputs/events:
 - `stepIndex` (top-level index)
 - `substepIndex?` (child index)
 - `stepCode` (e.g., `2`, `2a`)
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-Deterministic slot schema:
+Deterministic structure:
 - Always render `WizardHeader`, `WizardBody`, `WizardFooter`.
 - `WizardStepsPane` left, `WizardContentPane` right.
 - Parent nodes with children render as grouping rows; leaf nodes map to content pages.
@@ -242,7 +232,6 @@ Validation checklist:
 - [ ] Cancel/Previous/Next/Finish emit typed events.
 - [ ] Primary action disabled state is respected.
 - [ ] Modal and inline mode + all sizes render correctly.
-
 ## Source Mapping
 | Source | Location |
 |---|---|

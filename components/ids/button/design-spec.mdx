@@ -12,7 +12,6 @@
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-22
-
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
 - `ButtonLabel` (optional for icon-only mode)
@@ -22,7 +21,6 @@ Deterministic order:
 1. `ButtonRoot`
 2. optional `ButtonLeadingIcon`
 3. optional `ButtonLabel`
-
 ## Layout & Measurements
 - Border radius: `2px`.
 - Horizontal gap between icon and label: `8px`.
@@ -42,7 +40,6 @@ Deterministic order:
   - outer ring stroke: `1px` (`var(--border-width-border-1)`)
   - ring offset from control edge: `3px`
   - ring corner radius: `4px` (outer ring only; button container remains `2px`)
-
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, regular) for button text.
@@ -70,7 +67,6 @@ Deterministic order:
 - Icon tokens:
   - `var(--color-icon-brand-base)`
   - `var(--color-icon-white)`
-
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -94,7 +90,6 @@ Deterministic order:
 | destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
 | destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
 | destructive | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
-
 ## States (Dark Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -118,7 +113,6 @@ Deterministic order:
 | destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
 | destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
 | destructive | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
-
 ## Interactions
 - Trigger: pointer click, `Enter`, and `Space`.
 - `hover` appears on pointer hover for interactive buttons.
@@ -127,7 +121,6 @@ Deterministic order:
 - Disabled state blocks all interaction and event emission.
 - Runtime default must remain interactive.
 - Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
-
 ## Composition & API (runtime)
 - Suggested runtime component: `IdsButton`.
 
@@ -154,13 +147,12 @@ Outputs / events:
 - `onKeyUp(event)` — emitted on key release while focused.
 - `onPressStart(event)` — optional convenience event for press lifecycle.
 - `onPressEnd(event)` — optional convenience event for press lifecycle.
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-- Deterministic slot schema:
+Deterministic structure:
   1. `ButtonRoot`
   2. optional `ButtonLeadingIcon`
   3. optional `ButtonLabel`
-- Variant matrix:
+Variant matrix:
   - `variant`: `primary | secondary | tertiary | destructive`
   - `size`: `small | medium | large`
   - icon modes: `iconSlug omitted` / `iconSlug present with label` / `iconOnly with iconSlug`
@@ -229,3 +221,13 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+### Storybook proof and codegen consumers
+
+**Spec Generated** stories in this repo prove that `design-spec.mdx` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
+
+1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
+2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
+3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
+
+Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
+

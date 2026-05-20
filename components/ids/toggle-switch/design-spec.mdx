@@ -9,7 +9,6 @@
 - Source URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42848-100536&m=dev
 - Runtime role: Binary form control for boolean on/off values
 - Spec status: Production-ready blueprint for framework-agnostic codegen
-
 ## Anatomy
 Deterministic slot order:
 1. `root` (label wrapper / control container)
@@ -19,7 +18,6 @@ Deterministic slot order:
 5. `thumb` (movable knob)
 6. `label` (optional visible text)
 7. `assistiveText` (optional helper/description, if product uses it)
-
 ## Layout & Measurements
 - Track width: `32px` (fixed visual body size)
 - Track height: `16px` (fixed visual body size)
@@ -31,7 +29,6 @@ Deterministic slot order:
 - Focus ring geometry around switch body: `38px x 22px` (implemented as `inset: -3px` ring around `32x16` body).
 - Interactive target rule: visual switch remains `32x16`, but click target should be expanded by wrapper/label in runtime layouts.
 - Sample-only note: frame widths in Figma are showcase values; runtime width is container-driven when label text varies.
-
 ## Tokens
 Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` / symbol `8505:14390` — Off default rail reads as **neutral dark gray**; `get_variable_defs` may omit bound fills when the toggle is rasterized):
 
@@ -61,7 +58,6 @@ Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` /
 - `focus.ring`: `var(--color-border-brand-base)` on a ring **outside** the track (e.g. pseudo-element `inset: -3px` around the `32x16` body); track border tokens **do not** switch to brand on focus-only (Figma uses a separate focus frame).
 - `focus.outlineWidth`: `var(--border-width-border-1)`
 - `focus.outlineOffset`: implied by ring geometry (`inset: -3px` → ~`3px` gap outside track edge before ring stroke)
-
 ## States (Light Theme)
 | State | Track Background | Track Border | Thumb (fill + border) | Label |
 |---|---|---|---|---|
@@ -73,18 +69,16 @@ Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` /
 | On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
 | Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | fill `var(--color-background-component)`; border `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 | Disabled / on | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | fill `var(--color-background-component)`; border `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-
 ## States (Dark Theme)
-| State | Track Background | Track Border | Thumb (fill + border) | Label |
-|---|---|---|---|---|
-| Off / default | `var(--color-background-gray-neutral-dark)` | `var(--color-border-neutral)` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
-| Off / hover | `var(--color-background-gray-neutral-light)` | `var(--color-border-strong)` | fill `var(--color-background-component)`; border `var(--color-border-strong)` | `var(--color-text-neutral)` |
-| Off / focus-visible | `var(--color-background-gray-neutral-dark)` | `var(--color-border-neutral)` + outer `focus.ring` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
-| On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | fill `var(--color-background-component)`; border `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
-| On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-dark)` | fill `var(--color-background-component)`; border `var(--color-border-brand-dark)` | `var(--color-text-neutral)` |
-| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
-| Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | fill `var(--color-background-component)`; border `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-| Disabled / on | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | fill `var(--color-background-component)`; border `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Pointer click/tap on the switch or associated label toggles checked state when not disabled.
@@ -93,7 +87,6 @@ Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` /
 - Hover visuals apply only when `disabled=false`.
 - Press state can reuse default state visuals unless product introduces explicit press token overrides.
 - Thumb transition must animate position and rail color change with a short duration (suggested `120ms-200ms`, ease-out).
-
 ## Composition & API (runtime)
 Required props:
 - `checked?: boolean` (controlled value)
@@ -112,7 +105,6 @@ Behavioral requirements:
 - If `checked` is provided, runtime treats component as controlled and only mutates through `onCheckedChange`.
 - If `checked` is absent, internal state is allowed using `defaultChecked`.
 - Disabled state blocks pointer and keyboard toggles and emits no change events.
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic rendering contract:
 1. Render native checkbox input for accessibility and form interoperability.
@@ -165,7 +157,6 @@ Validation checklist (pass/fail):
 - [ ] Thumb moves via transform, no layout shift.
 - [ ] Disabled mode blocks toggles and emits no change event.
 - [ ] Generated output avoids hardcoded design values when semantic tokens exist.
-
 ## Source Mapping
 - Map file: `data/component-figma-map.json`
 - Map entry: component `Toggle Switch`, category `Formelements`, node `42848-100536`

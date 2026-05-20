@@ -19,14 +19,12 @@
   - **Option 2 State (documentation variants):** `Inactive` | `Hover` | `Press` | `Focus` — Figma uses this axis to demonstrate interaction styling on a *non-selected* segment (selected segment remains `Option 1` in those examples).
   - **Low res:** `No` in source set (treat as standard-density reference).
 - **Usage (from Figma description):** Segmented control / view switcher; mutually exclusive selection.
-
 ## Anatomy
 - **root:** outer grouping container with border, inner padding, horizontal flex layout, and gap between segment cells.
 - **segment** (one per option): interactive cell; exactly one segment is **selected** in the default single-select pattern.
 - **segmentLabel** (Text type): centered label text (`Body 2`).
 - **segmentIcon** (Icon type): centered icon **defined by the consumer** — either a **string slug** resolved against `assets/icons/<slug>.svg` or a **framework icon slot** (custom SVG/component/image). Figma’s list/tree/grid icons are **reference** implementations, not an exhaustive allowed list.
 - **segmentBorder (logical):** per-segment uses a **1px solid transparent** border in default, hover, press, and selected (non-focus) states so layout does not shift when focus applies `var(--color-border-brand-base)`. **Do not** use `var(--color-border-transparent-brand)` for this invisible edge in implementations that consume **Synapse/IDS dark** token maps: that token can resolve to a **visible** blue in dark mode; only **`:focus-visible`** (or equivalent) may switch the segment border color to `var(--color-border-brand-base)`.
-
 ## Layout & Measurements
 - **Root**
   - Background: `var(--color-background-component)`.
@@ -47,7 +45,6 @@
 - **Focus-visible**
   - Non-selected segment in **Focus** uses a **`1px`** focus border: `var(--border-width-border-1)` solid `var(--color-border-brand-base)` on the segment cell (Figma: brand border on the focused segment).
   - Focus outline must not be removed; z-index/stacking should keep the focus border visible against neighbors.
-
 ## Tokens
 Use semantic tokens only (no literals for color, border width, radius, typography).
 
@@ -57,7 +54,6 @@ Use semantic tokens only (no literals for color, border width, radius, typograph
 - **Text:** `var(--color-text-white)`, `var(--color-text-neutral)`, `var(--color-text-brand-strong)`.
 - **Icons:** `var(--color-icon-white)`, `var(--color-icon-brand-base)`.
 - **Disabled (runtime extension — see note in States):** `var(--color-text-disabled)`, `var(--color-border-disabled)`, `var(--color-background-gray-light)` (align with other IDS form controls when disabled is required).
-
 ## States (Light Theme)
 
 ### Text segments
@@ -83,7 +79,6 @@ Use semantic tokens only (no literals for color, border width, radius, typograph
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` (icon follows disabled foreground) |
 
 **Note:** The illustrated Figma matrix on `8218:13149` documents **Inactive / Hover / Press / Focus** for an **unselected** segment while keeping selection on **Option 1**. The **Disabled** row is **not** shown in that frame; it is specified here as a deterministic IDS-aligned extension for accessible products.
-
 ## States (Dark Theme)
 Structurally identical to **Light Theme**. All colors must resolve from the active semantic token theme (dark mode). Do not hardcode hex; validate contrast for selected vs unselected against WCAG requirements for text and icons.
 
@@ -96,7 +91,6 @@ Structurally identical to **Light Theme**. All colors must resolve from the acti
 | Unselected | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-
 ## Interactions
 - **Pointer:** click / tap selects a segment; only one selected value in single-select mode.
 - **Hover:** applies **only** to non-disabled unselected segments (selected segment may omit hover visual unless product adds a validated “selected hover” variant). **Figma (verified):** unselected hover segment background is `var(--color-background-brand-lighter)` (e.g. node `9015:22164` / `42869:141924`). Light and dark both use this **same semantic token**; ensure the dark theme maps it to a value visibly distinct from `var(--color-background-component)` so hover is perceptible.
@@ -104,7 +98,6 @@ Structurally identical to **Light Theme**. All colors must resolve from the acti
 - **Focus-visible:** keyboard focus shows **1px** `var(--color-border-brand-base)` on the focused segment; mouse-only focus must not steal keyboard focus styles (`:focus-visible` pattern).
 - **Disabled:** segments (or entire group) skip hover/press/focus styling and do not emit selection changes.
 - **Selection model:** default is **single-select** (like a coordinated radio group). Multi-select is **out of scope** unless a separate Figma component and matrix are provided.
-
 ## Composition & API (runtime)
 
 ### Segment definition (framework-agnostic)
@@ -195,7 +188,6 @@ type SegmentedButtonProps =
 ```
 
 Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` + `ariaLabel`.
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 ### Deterministic structure
@@ -204,7 +196,7 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
    - `segmentSurface` (hit target + visuals)
    - optional `segmentLabel` **or** `segmentIcon` (mutually exclusive by `type`)
 
-### Supported matrix
+### Variant matrix
 - **Type × count:** `(text × 2..5)` ∪ `(icon × 2..3)`.
 - **Per-segment interaction:** `default` | `hover` | `press` | `focus-visible` | `disabled` (extension).
 - **Selection:** exactly one segment `selected=true` in single-select mode.
@@ -229,7 +221,7 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
   - Root has visible label via `legend`, `aria-label`, or `aria-labelledby`.
 - Focus order: follows visual order, skipping disabled segments when roving.
 
-### Asset resolution + bundling contract (Icon type)
+### Asset resolution + bundling contract
 - **Slug mode:** `icon: "<slug>"` → load **`{iconsBasePath}/<slug>.svg`** (default `iconsBasePath = "assets/icons"`).
 - **Custom mode:** `icon: IconSlot` → render as provided; caller ensures sizing and accessibility; state colors may require `currentColor` / CSS filters / masks per stack.
 - **Reference slugs** (Figma demos, optional): `view-hamburger`, `nav-tree`, `view-sort-grid-solid` — same resolution rule as any other file in `assets/icons`.
@@ -252,7 +244,6 @@ Bundle rule: any slug used at runtime MUST exist in the app bundle under `assets
 - [ ] String `icon` slugs resolve via `assets/icons/<slug>.svg`; custom `IconSlot` renders without forced path mapping.
 - [ ] Dark theme resolves without literal colors.
 - [ ] Disabled extension still meets contrast or documents exception.
-
 ## Source Mapping
 - **Primary Figma frame:** `Content` — `42113:67348`
 - **Component map:** `data/component-figma-map.json` → **Segmented Button** (`figmaUrl`, `fileKey`, `nodeId`, `textOptionNodeId`, `iconOptionNodeId`)

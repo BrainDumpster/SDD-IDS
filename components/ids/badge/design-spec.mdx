@@ -12,7 +12,6 @@
 - Visual context observed in node (showcase-only, not runtime API axis):
   - `Background`: `Blue | White/Gray`
 - Content sample in Figma: numeric count (`"1"`)
-
 ## Anatomy
 Main component:
 - `BadgeRoot`
@@ -24,7 +23,6 @@ Deterministic slot order:
 Optional slots:
 - `BadgeLeadingIcon` (optional icon+text composition when required by consuming component)
 - `BadgeSrOnlyText` (assistive-only contextual label)
-
 ## Layout & Measurements
 - Geometry from Figma sample variants:
   - Height: `18px`
@@ -40,7 +38,6 @@ Optional slots:
   - weight: `400`
   - size: `12px`
   - line-height ratio in sample: `1.758`
-
 ## Tokens
 Required semantic tokens from Figma variable extraction:
 - `var(--color-text-white)` = `#ffffff`
@@ -54,7 +51,6 @@ Required semantic tokens from Figma variable extraction:
 - `var(--color-border-alerting-minor-transparent)` = `#9c622e`
 - Optional host-context token for warning border showcase parity:
   - `var(--ids-badge-warning-border-color)` -> defaults to `var(--color-border-white)`, can be overridden by host to `var(--color-border-alerting-minor-transparent)` in White/Gray showcase contexts.
-
 ## States (Light Theme)
 | Variant key (`Type`) | Background | Border | Text |
 |---|---|---|---|
@@ -63,23 +59,21 @@ Required semantic tokens from Figma variable extraction:
 | Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
 | Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
 | Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
-
 ## States (Dark Theme)
-| Variant key (`Type`) | Background | Border | Text |
-|---|---|---|---|
-| Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
-| Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
 
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 ## Interactions
 - Default Badge behavior is non-interactive (status/count indicator).
 - If consuming implementation opts into interactivity (clickable badge):
   - cursor and focus handling are controlled by host component, not Badge itself.
   - visual colors in this spec remain unchanged unless explicit interactive variant is introduced.
 - Badge content updates are data-driven; no internal state transitions are required.
-
 ## Composition & API (runtime)
 Main inputs:
 - `value: string | number` (required visual content)
@@ -89,7 +83,6 @@ Main inputs:
 
 Outputs:
 - none (presentational/status component)
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
 - `BadgeRoot`
@@ -140,7 +133,6 @@ Validation checklist:
 - [ ] Runtime output is deterministic for (`type`, `value`).
 - [ ] Badge remains single-line and pill-shaped.
 - [ ] No hardcoded non-token colors are introduced in generated code.
-
 ## Source Mapping
 | Source | Location |
 |---|---|

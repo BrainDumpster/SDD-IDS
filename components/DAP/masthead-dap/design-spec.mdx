@@ -119,22 +119,15 @@ MCP-verified variable evidence (`46812:251428`, `46812:248324`):
 | app launcher tile | hover | `var(--color-background-brand-lighter)` | unchanged separators | text/icon brand-strong |
 
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| masthead root | default | `var(--color-background-masthead-brand-base)` | bottom `var(--color-border-transparent-neutral)` | labels/icons `var(--color-text-white)` / `var(--color-icon-white)` |
-| settings/help/app-launcher action | default | `var(--color-background-masthead-brand-base)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | press/select | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | open + hover | `var(--color-background-masthead-brand-strong)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | open + press | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-icon-white)` |
-| settings/help/app-launcher action | focus | `var(--color-background-masthead-brand-base)` | dashed `var(--border-width-border-1)` `var(--color-border-white)` | icon unchanged |
-| user initials chip | default | transparent | `var(--color-border-white)` | `var(--color-text-white)` |
-| help menu row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| help menu row | hover | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
-| help menu row | press | `var(--color-background-controls-brand-light)` | top/bottom `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| help menu row | focus-visible | current-state fill | outer focus `var(--border-width-border-2)` `var(--color-border-brand-base)` | text unchanged |
-| app launcher tile | default | `var(--color-background-component)` | separators per launcher contract | icon/text neutral strong |
-| app launcher tile | hover | `var(--color-background-brand-lighter)` | unchanged separators | text/icon brand-strong |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Help action toggles `MastheadDapHelpMenu` (open/close on click; closes on outside click / selection).

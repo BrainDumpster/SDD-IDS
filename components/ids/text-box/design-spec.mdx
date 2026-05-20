@@ -10,7 +10,6 @@
 - Primary node id: `42065:39424`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
-
 ## Anatomy
 - `TextBoxRoot` (field wrapper)
 - `TextBoxControl` (input/textarea container)
@@ -21,7 +20,6 @@
 - `TextBoxHelperText`
 - `TextBoxErrorIcon` (critical icon `status-critical-square-solid`)
 - `TextBoxErrorText`
-
 ## Layout & Measurements
 - Runtime width is container-driven (`width: 100%`) with sample frame width `300px`.
 - Input size variants:
@@ -38,7 +36,6 @@
 - Text area padding aligns to sample: `9px` top and `10px` bottom.
 - Trailing icon size: `16px x 16px`.
 - Focus-visible ring is outside the control boundary and uses the brand border token.
-
 ## Tokens
 - Surface/background:
   - `var(--color-background-component)` (default)
@@ -60,7 +57,6 @@
   - `var(--color-icon-alerting-critical)` (error icon)
 - Typography:
   - input/helper/error text: Body 2 (`14/20`)
-
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -72,18 +68,16 @@
 | TextBoxControl | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, helper row icon/text critical |
 | TextBoxHelperRow | helper | transparent | none | `var(--color-text-neutral)` |
 | TextBoxHelperRow | error | transparent | none | icon `var(--color-icon-alerting-critical)`, text `var(--color-text-critical)` |
-
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| TextBoxControl | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | selected | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | focus-visible | `var(--color-background-component)` | control border `var(--color-border-accessible)` + outer outline `var(--color-border-brand-base)` (radius `4px`) | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
-| TextBoxControl | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, helper row icon/text critical |
-| TextBoxHelperRow | helper | transparent | none | `var(--color-text-neutral)` |
-| TextBoxHelperRow | error | transparent | none | icon `var(--color-icon-alerting-critical)`, text `var(--color-text-critical)` |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Default runtime mode is interactive and token-driven.
@@ -94,7 +88,6 @@
 - Disabled removes interaction and uses disabled text/icon/background tokens.
 - Error state keeps control interactive (unless separately disabled) and shows critical helper row.
 - Demo/testing mode may force visual states with `data-state`; this must not block runtime pointer/keyboard behavior.
-
 ## Composition & API (runtime)
 - `componentType: "text-input" | "text-area"` (default `"text-input"`)
 - `size: "large" | "small"` (default `"large"`; `small` valid for text-input)
@@ -112,7 +105,6 @@
 - `inputType?: string` (text-input only; default `"text"`)
 - `id?: string`, `name?: string`, `ariaLabel?: string`, `ariaDescribedBy?: string`
 - `onValueChange?: (value: string) => void`
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 - Deterministic slot order:
   1. `TextBoxRoot`
@@ -122,7 +114,7 @@
   5. `TextBoxHelperRow?`
   6. `TextBoxErrorIcon?`
   7. `TextBoxHelperText | TextBoxErrorText`
-- Variant matrix:
+Variant matrix:
   - componentType: `text-input | text-area`
   - size: `large | small` (small only for text-input)
   - content: `empty | filled`
@@ -160,7 +152,6 @@
   - [ ] focus-visible ring appears only when focused
   - [ ] dark theme uses same semantic tokens (no hardcoded literals)
   - [ ] unknown icon slug does not crash rendering
-
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Text Box"`.
 - IDS design library source:

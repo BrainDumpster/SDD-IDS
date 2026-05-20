@@ -97,16 +97,15 @@ MCP-verified variable evidence:
 | tag pill | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` |
 
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| side panel root | default | `var(--color-background-component)` | `var(--color-border-light)` | neutral-strong |
-| close action | default | transparent | none | icon `var(--color-icon-neutral)` |
-| close action | hover | `var(--color-background-surface-1)` | none | icon `var(--color-icon-neutral)` |
-| hero action button | default | `var(--color-background-controls-brand-base)` | transparent brand border | text `var(--color-text-white)` |
-| hero action button | hover | stronger brand shade (brand family) | same | text white |
-| description body | default | `var(--color-background-surface-1)` | `var(--color-border-light)` | body text neutral-strong |
-| property value (status) | healthy | transparent | none | success icon + neutral-strong label, font-weight 500 |
-| tag pill | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` |
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Side panel behaves as a right-side drawer.

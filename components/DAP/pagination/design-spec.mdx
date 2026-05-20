@@ -101,35 +101,15 @@ MCP-verified token bindings on pagination nodes:
 | `PaginationEllipsis` | static | transparent | none | text/icon `var(--color-text-neutral)` |
 
 ## States (Dark Theme)
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| `PaginationPageButton` | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| `PaginationPageButton` | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-accessible)` | text `var(--color-text-neutral-strong)`, icon `var(--color-icon-brand-base)` |
-| `PaginationPageButton` | press | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral-strong)`, icon `var(--color-icon-brand-base)` |
-| `PaginationPageButton` | focus-visible | current-state fill | outer focus `var(--border-width-border-2)` `var(--color-border-brand-base)` | text/icon unchanged |
-| `PaginationPageButton` | selected (`aria-current`) | `var(--color-background-controls-brand-base)` | `var(--color-background-controls-brand-base)` | text `var(--color-text-white)`, icon `var(--color-icon-white)` |
-| `PaginationPrev`/`PaginationNext` | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-accessible)` |
-| `PaginationPrev`/`PaginationNext` | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-accessible)` | text `var(--color-text-neutral-strong)`, icon `var(--color-icon-brand-base)` |
-| `PaginationPrev`/`PaginationNext` | disabled | `var(--color-background-surface-1)` | `var(--color-border-disabled)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
-| `PaginationPageSize` / `PaginationPageOffset` trigger | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
-| `PaginationPageSize` / `PaginationPageOffset` trigger | hover | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
-| `PaginationPageSize` / `PaginationPageOffset` trigger | press | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
-| `PaginationPageSize` / `PaginationPageOffset` trigger | focus-visible | `var(--color-background-component)` | trigger border + outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | text/icon unchanged |
-| `PaginationPageSize` / `PaginationPageOffset` trigger | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, caret `var(--color-icon-disabled)` |
-| Dropdown option row | hover | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-neutral)` |
-| Dropdown option row | press | `var(--color-background-controls-brand-light)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-brand-strong)` |
-| Dropdown option row | selected | `var(--color-background-controls-brand-lighter)` | top/bottom `var(--color-border-brand-base)` | text `var(--color-text-brand-strong)` |
-| Dropdown option row | default (layout stabilization) | `var(--color-background-component)` | top/bottom transparent reserved borders | text `var(--color-text-neutral)` |
-| `PaginationEllipsis` | static | transparent | none | text/icon `var(--color-text-neutral)` |
 
-Dark values verified from MCP node variables:
-- `var(--color-background-component)` = `#111619`
-- `var(--color-border-accessible)` = `#8898a5`
-- `var(--color-text-neutral)` = `#b8c1c9`
-- `var(--color-text-neutral-strong)` = `#e6e9ec`
-- `var(--color-icon-neutral)` = `#8898a5`
-- `var(--color-icon-brand-base)` = `#4c9fdd`
-- `var(--color-background-controls-brand-lighter)` = `#002642`
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - `PaginationPageButton` click/activation selects that page.

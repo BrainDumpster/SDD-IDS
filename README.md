@@ -71,16 +71,100 @@ For any component `<slug>`, parse in this order:
 
 ### Required sections in component specs
 
-- `Metadata`
-- `Anatomy`
-- `Layout & Measurements`
-- `Tokens`
-- `States (Light Theme)`
-- `States (Dark Theme)`
-- `Interactions`
-- `Composition & API (runtime)`
-- `Codegen Contract (Framework-Agnostic Blueprint)`
-- `Source Mapping`
+Top-level `##` sections (use this order):
+
+1. `Metadata`
+2. `Anatomy`
+3. `Layout & Measurements`
+4. `Tokens`
+5. `States (Light Theme)`
+6. `States (Dark Theme)`
+7. `Interactions`
+8. `Composition & API (runtime)`
+9. `Codegen Contract (Framework-Agnostic Blueprint)`
+10. `Source Mapping`
+
+Component-specific material (for example display modes, link contracts, typography tables) should live under the nearest parent as `###` subsections—not as extra top-level `##` headings.
+
+Under **Codegen Contract**, use these standard `###` titles when applicable:
+
+- `Deterministic structure`
+- `Variant matrix`
+- `Per-slot style contract`
+- `Behavior contract`
+- `Accessibility contract`
+- `Asset resolution + bundling contract`
+- `Fallback/error rules`
+- `Validation checklist`
+
+Reference: `components/ids/alert/design-spec.mdx` and `components/ids/accordion/design-spec.mdx`.
+
+### Design-spec tooling & generators
+
+Scripts and templates that create or maintain `components/ids/<slug>/design-spec.mdx` with the canonical section contract above.
+
+| Artifact | Path | Role |
+|---|---|---|
+| Canonical template & bootstrap blocks | `scripts/design_spec_template.py` | Shared `##` order, `NEW_SPEC_TEMPLATE` for map-driven scaffolds, `CODEGEN_BOOTSTRAP` / `COMPOSITION_STUB` used by the normalizer |
+| Heading normalizer | `scripts/normalize_design_spec_headings.py` | Reorder `##` sections, rename Codegen `###` titles, reparent stray `##` blocks; add Composition/Codegen stubs for legacy specs |
+| Map-driven scaffold | `scripts/generate_specs_from_map.py` | Create `design-spec.mdx` from `data/component-figma-map.json` (`--overwrite` to replace existing) |
+| Docs-first composer | `ingestion/design_spec_composer.py` | Compose specs from GitHub docs + Figma extraction (outputs canonical `##` / `###` layout) |
+| Figma → MDX extractor | `tokens/figma_spec_extractor.py` | `spec_to_mdx()` output uses canonical section names (extend for full blueprint depth) |
+| Spec contract validation | `validation/spec_contract_parser.py` | Checks required `##` sections (used by gates and QA) |
+| Authoring skill | `.cursor/skills/design-spec-blueprint/SKILL.md` | Agent workflow: Figma verification, required sections, production-ready gate |
+| States dark dedupe | `scripts/dedupe_states_dark_theme.py` | Replace duplicate **States (Dark Theme)** tables when identical token-only matrices exist under Light (dry-run by default; `--apply` to write) |
+
+**States (Light / Dark) — default for new specs**
+
+- Put the full state matrix in **States (Light Theme)** when light and dark share the same semantic `var(--...)` names.
+- Under **States (Dark Theme)**, use the standard pointer in `DARK_STATES_BOILERPLATE` (`scripts/design_spec_template.py`): dark resolved values come from `components/ids-theme.css`, program theme overlays, and `[data-theme="dark"]`.
+- Keep a full **States (Dark Theme)** table only when dark rows use different `var(--...)` than light.
+- Do not auto-dedupe specs whose state cells use authoritative `#hex` / `rgb()` literals without `var(--...)` (the dedupe script skips them).
+
+```bash
+# List specs with identical token-only Light/Dark state tables
+python3 scripts/dedupe_states_dark_theme.py
+
+# Apply standard Dark pointer section
+python3 scripts/dedupe_states_dark_theme.py --apply
+```
+
+**Spec Accurate Design examples (IDS)**
+
+Reference Storybook stories named **Spec Accurate Design** document the canonical spec → UI parity target for codegen and visual QA:
+
+| Component | Spec | Stories | Component README |
+|---|---|---|---|
+| Datagrid | [`components/ids/datagrid/design-spec.mdx`](components/ids/datagrid/design-spec.mdx) | `storybook-generated/ids/src/components/Datagrid.stories.tsx` | [`components/ids/datagrid/README.md`](components/ids/datagrid/README.md) |
+| Main Menu/Left | [`components/ids/main-menu-left/design-spec.mdx`](components/ids/main-menu-left/design-spec.mdx) | `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx` | [`components/ids/main-menu-left/README.md`](components/ids/main-menu-left/README.md) |
+
+Regenerate Main Menu/Left stories after spec changes:
+
+```bash
+export DESIGN_SYSTEM=ids
+python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --spec-only --deterministic-story
+```
+
+**Normalize headings** (from repository root). Does **not** delete body text—only moves sections and renames headings:
+
+```bash
+# All IDS component specs under components/ids/
+python3 scripts/normalize_design_spec_headings.py
+
+# Only specs that lacked Codegen Contract before this run
+python3 scripts/normalize_design_spec_headings.py --legacy-only
+```
+
+- **Blueprint specs** (already had Codegen): reorder, standardize Codegen `###` titles, reparent extras (e.g. `## Typography` → `### Typography` under **Tokens**).
+- **Legacy specs**: same pass, plus **Codegen bootstrap** (cross-refs to Anatomy / Interactions / Variants), **Composition & API** stub when missing, and **Deliverable Checklist** → **Codegen → Validation checklist**.
+
+**Scaffold new specs from the component map:**
+
+```bash
+python3 scripts/generate_specs_from_map.py --overwrite
+```
+
+Replace Codegen cross-refs with concrete contracts when hardening a spec for production (`Status: active`). See `.cursor/skills/design-spec-blueprint/SKILL.md`.
 
 ### Root spec vs component spec
 

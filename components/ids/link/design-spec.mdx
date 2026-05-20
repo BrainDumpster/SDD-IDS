@@ -15,13 +15,11 @@
   - With-icon matrix container: `43478:105167`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Last verified: 2026-04-29 (current session)
-
 ## Anatomy
 - `root` (required): inline-flex container for text and optional icon.
 - `label` (required): clickable text content.
 - `focusRing` (stateful): rectangular outline drawn only in keyboard focus-visible state.
 - `externalIcon` (optional): 16px external-link icon shown when requested by API.
-
 ## Layout & Measurements
 - Container:
   - Layout: `inline-flex`, horizontal arrangement.
@@ -41,7 +39,6 @@
   - Color follows same semantic intent as text state.
 - Touch target rule:
   - Runtime wrappers SHOULD provide at least 44x44 logical hit area without changing visual text metrics.
-
 ## Tokens
 ### Text and Border Tokens (from live node)
 - `var(--color-text-link-brand-base)` = `#0062ab`
@@ -72,7 +69,6 @@
   - Icon asset: `pop-up-square-corner-big` (Figma component `44484:963`).
   - Size: exactly `16px x 16px`.
   - Color is stateful and tokenized (see icon matrix).
-
 ## States (Light Theme)
 | Type | State | Label Color | Underline | Focus Ring |
 |---|---|---|---|---|
@@ -104,38 +100,16 @@
 | Dark Bg | hover | `var(--color-icon-white)` |
 | Dark Bg | press | `var(--color-icon-white)` |
 | Dark Bg | focus-visible | `var(--color-icon-white)` |
-
 ## States (Dark Theme)
-| Type | State | Label Color | Underline | Focus Ring |
-|---|---|---|---|---|
-| Standalone | default | `var(--color-text-link-brand-base)` | no | none |
-| Standalone | hover | `var(--color-text-link-brand-strong)` | yes | none |
-| Standalone | press | `var(--color-text-link-brand-stronger)` | yes | none |
-| Standalone | focus-visible | `var(--color-text-link-brand-base)` | no | `1px solid var(--color-border-brand-base)` |
-| Inline | default | `var(--color-text-link-brand-base)` | yes | none |
-| Inline | hover | `var(--color-text-link-brand-strong)` | yes | none |
-| Inline | press | `var(--color-text-link-brand-stronger)` | yes | none |
-| Inline | focus-visible | `var(--color-text-link-brand-base)` | yes | `1px solid var(--color-border-brand-base)` |
-| Dark Bg | default | `var(--color-text-white)` | yes | none |
-| Dark Bg | hover | `var(--color-text-link-brand-lighter)` | yes | none |
-| Dark Bg | press | `var(--color-text-link-brand-light)` | yes | none |
-| Dark Bg | focus-visible | `var(--color-text-white)` | yes | `1px solid var(--color-border-white)` |
 
-### Icon Color Matrix (`showExternalLinkIcon=true`, Dark Theme)
-| Type | State | Icon Color Token |
-|---|---|---|
-| Standalone | default | `var(--color-icon-brand-base)` |
-| Standalone | hover | `var(--color-icon-brand-strong)` |
-| Standalone | press | `var(--color-icon-brand-stronger)` |
-| Standalone | focus-visible | `var(--color-icon-brand-base)` |
-| Inline | default | `var(--color-icon-brand-base)` |
-| Inline | hover | `var(--color-icon-brand-strong)` |
-| Inline | press | `var(--color-icon-brand-stronger)` |
-| Inline | focus-visible | `var(--color-icon-brand-base)` |
-| Dark Bg | default | `var(--color-icon-white)` |
-| Dark Bg | hover | `var(--color-icon-white)` |
-| Dark Bg | press | `var(--color-icon-white)` |
-| Dark Bg | focus-visible | `var(--color-icon-white)` |
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 - Trigger:
@@ -148,7 +122,6 @@
 - Decoration behavior:
   - Standalone default/focus has no underline.
   - Inline and Dark Bg always render underline in all listed states.
-
 ## Composition & API (runtime)
 - Required props:
   - `type`: `"standalone" | "inline" | "dark-bg"` (default: `"standalone"`).
@@ -165,14 +138,13 @@
   - Action-like usage MUST use `<button>` semantics.
   - Focus-visible styling MUST be keyboard-triggered, not always-on focus.
   - External icon is decorative unless explicitly labeled; default `aria-hidden="true"`.
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
-- Deterministic slot schema:
+Deterministic structure:
   1. `root`
   2. `label`
   3. `externalIcon?`
   4. `focusRing?` (stateful presentation layer)
-- Variant matrix:
+Variant matrix:
   - `type`: standalone | inline | dark-bg
   - `state`: default | hover | press | focus-visible
   - `icon`: off | on
@@ -197,8 +169,7 @@
   - Empty `label` -> render fallback text `"Link"` and emit warning in development builds.
   - Unknown state in demo/testing controls -> fallback to `default`.
   - Missing icon asset -> render label-only link without layout collapse.
-
-## Validation Checklist
+### Validation checklist
 - [ ] All 12 state/type combinations from node `9628:25123` are represented.
 - [ ] Standalone default/focus have no underline; inline + dark-bg remain underlined.
 - [ ] Focus ring is `1px` / `4px` radius and token-correct (`brand` or `white` by type).
@@ -207,7 +178,6 @@
 - [ ] Icon colors for all 12 state/type cells match the icon color matrix from node `43478:105167`.
 - [ ] Keyboard focus-visible and activation semantics are present.
 - [ ] Generated code remains framework-agnostic and token-driven.
-
 ## Source Mapping
 - Component map entry found at `data/component-figma-map.json` for Link points to legacy exploratory node `11067-54506`.
 - This spec intentionally uses IDS Design Library authoritative node:

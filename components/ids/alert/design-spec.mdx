@@ -43,20 +43,10 @@ Unified specification for **Global** (application banner) and **Inline** (contex
 | Scenario intent | Detailed inline alert with `title` + description/message and optional trailing controls (`link`, outlined `action`, dismiss icon) using the same inline token model |
 | Verification method | `get_metadata` + `get_design_context` (Figma MCP) |
 | Last Figma re-fetch | 2026-05-06 |
+| Codegen blueprint verification | 2026-05-18 (Figma MCP `get_metadata` on global `11067:54641`, inline matrix `42903:139522`; structure aligned to `storybook/src/components/Alert.tsx`) |
+## Anatomy
 
-## Display modes
-
-| `display` | Role | Carousel | Typical container |
-|---|---|---|---|
-| `global` | Full-width application alert banner | Optional **carousel rail** when multiple items are active | Viewport / shell |
-| `inline` | Contextual alert in page content | **Not used** (one item per instance) | Form, card, panel |
-
-### Severity sets
-
-- **Global:** `critical | warning-major | warning-minor | informational` (Figma global matrix).
-- **Inline:** `critical | warning-major | warning-minor | informational | success` (success is **inline-only**; global codegen should reject or map `success` → validation error / fallback per product rules).
-
-## Component composition (fully component-based)
+### Component composition
 
 ### Single alert item (shared logical model)
 
@@ -89,43 +79,9 @@ When multiple alert items must share **one** banner chrome:
 
 **Do not** stack multiple `Alert` global roots for carousel mode; **one** root + **swapped** item content.
 
-### Deterministic slot order (codegen)
+### Deterministic render order
 
-**Global (`display="global"`):**
-
-1. `AlertRoot` (`role="alert"`, `aria-live` per accessibility contract)
-2. optional `CarouselRail` (only when `carousel` is provided / group mode)
-   - `CarouselPreviousButton`
-   - `CarouselCount` (`k of n`, **1-based** `k`)
-   - `CarouselNextButton`
-3. `ContentRow`
-   - `LeadingStatusIcon`
-   - `Message` (+ optional inline link in reading order)
-4. `ActionsRow`
-   - optional `ActionButton`
-   - optional `DismissButton`
-
-**Inline (`display="inline"`):**
-
-1. `AlertRoot` (`role="alert"`) — full-width row; **inset4px leading “rail”** via `box-shadow` (not a separate rail node in Figma export)
-2. `ContentRow` (`inlineMain`) — flex `1 1 auto`, horizontal `gap: var(--spacing-space-8)`
-- `LeadingIcon` — shared `Icon` component instance at `16×16` (`shapeName` by severity); icon container uses `4px` vertical nudge (detailed) or `2px` (compact) to align with first text line
-   - `ContentBlock` — column `gap: var(--spacing-space-4)`; optional `Title` (`density=detailed` only) + `Message` + optional inline link
-3. `TrailingControls` — `shrink-0`; horizontal `gap: var(--spacing-space-10)`; optional **outlined** `ActionButton` + optional `DismissButton`
-
-## Link contract (framework-agnostic, required for Angular `routerLink`)
-
-Do not pass a single ambiguous URL string as the only navigation input. Codegen should emit:
-
-| Field | Use |
-|---|---|
-| `link.label` | Visible text |
-| `link.href` | External / full URL / standard navigation URL |
-| `link.routerLink` | **Angular:** in-app route command (`string` or `any[]`); mutually exclusive with `href` in generated templates |
-| `onLinkClick` | Host handler; may `preventDefault` on anchor |
-
-**Rule:** If `routerLink` is set, render `RouterLink`; if `href` is set (and not `routerLink`), render `<a href>`. If only `label` + `onLinkClick`, render button-styled control.
-
+Framework-agnostic slot trees and optional branches are defined in **Codegen Contract → Deterministic structure** (do not duplicate ad-hoc hierarchies in generated code).
 ## Layout & Measurements
 
 ### Global
@@ -161,7 +117,6 @@ Do not pass a single ambiguous URL string as the only navigation input. Codegen 
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
 - Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) and optional dismiss icon button; link behavior/appearance follows inline link contract and does not change other visual attributes.
-
 ## Tokens
 
 ### Global — severity surfaces (banner)
@@ -185,7 +140,6 @@ Per-instance semantics from Figma variables (`get_variable_defs` on `42903:13952
 | critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `status-critical-square-solid` + `var(--color-icon-alerting-critical)` |
 
 Inline **message link** and **outlined action** use **static brand** tokens above, not legacy “slate” border/background pairs.
-
 ## States (Light Theme)
 
 ### Inline (`display: inline`)
@@ -207,20 +161,17 @@ Structural states follow **`density`** (compact vs detailed) and optional slots 
 ### Global (`display: global`)
 
 Root row + carousel rail row per severity (informational, warning-major, warning-minor, critical) — unchanged from global Figma mapping (`11067:54641`).
-
 ## States (Dark Theme)
 
 Use the same **semantic token names**; resolved values are defined per theme in `components/ids-theme.css` (and Storybook mirrors). **Inline** surfaces must stay structurally parallel to Light: background, border, inset rail, typography, link, and action tokens reference the same `var(--...)` names so theme switching does not fork component logic.
 
 **Global** carousel / banner tokens follow the global dark block in the same file.
-
 ## Interactions
 
 - **Dismiss**, **action**, **link**, **carousel prev/next** emit distinct events.
 - **Global carousel:** `Alert` does **not** own list state; `AlertGroup` (or app shell) does.
 - **Inline:** no carousel; one item per component instance.
 - Default dismissibility: global **`critical`** without action tends **non-dismissible** (per Figma); other defaults follow prior global spec.
-
 ## Composition & API (runtime)
 
 ### `Alert` (single surface)
@@ -252,8 +203,136 @@ Use the same **semantic token names**; resolved values are defined per theme in 
 - `items: AlertItem[]`
 - `activeIndex` (internal)
 - Renders **one** `Alert` with `display="global"` bound to `items[activeIndex]` and `carousel` counter + handlers.
+### Display modes
 
-## Reusable component generation contract
+| `display` | Role | Carousel | Typical container |
+|---|---|---|---|
+| `global` | Full-width application alert banner | Optional **carousel rail** when multiple items are active | Viewport / shell |
+| `inline` | Contextual alert in page content | **Not used** (one item per instance) | Form, card, panel |
+
+### Severity sets
+
+- **Global:** `critical | warning-major | warning-minor | informational` (Figma global matrix).
+- **Inline:** `critical | warning-major | warning-minor | informational | success` (success is **inline-only**; global codegen should reject or map `success` → validation error / fallback per product rules).
+
+### Link contract
+
+Do not pass a single ambiguous URL string as the only navigation input. Codegen should emit:
+
+| Field | Use |
+|---|---|
+| `link.label` | Visible text |
+| `link.href` | External / full URL / standard navigation URL |
+| `link.routerLink` | **Angular:** in-app route command (`string` or `any[]`); mutually exclusive with `href` in generated templates |
+| `onLinkClick` | Host handler; may `preventDefault` on anchor |
+
+**Rule:** If `routerLink` is set, render `RouterLink`; if `href` is set (and not `routerLink`), render `<a href>`. If only `label` + `onLinkClick`, render button-styled control.
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+Deterministic structure:
+
+**Optional host wrapper (global multi-item only):**
+
+- `AlertGroupRoot` (state owner: `items[]`, `activeIndex`; not a separate Figma chrome node)
+  - renders exactly one `Alert` with `display="global"` bound to the active item
+
+**`Alert` — global (`display="global"`):**
+
+1. `AlertRoot` (`role="alert"`, `aria-live="assertive"` when banner is dynamically updated)
+2. optional `CarouselRail` (only when `carousel` is provided / `AlertGroup` mode)
+   - `CarouselPreviousButton` (native `button`, chevron `12×12`)
+   - `CarouselCount` (text: **1-based** `currentItem` of `totalItems`)
+   - `CarouselNextButton` (native `button`, chevron `12×12`)
+3. `ContentRow`
+   - `LeadingStatusIcon` (shared `Icon`, `16×16`, severity → `shapeName` map in **Tokens**)
+   - `Message` (required copy)
+   - optional `InlineLink` (reading order after message when `link` is set)
+4. `ActionsRow`
+   - optional `ActionButton` (IDS Button **small** outlined; see Button spec)
+   - optional `DismissButton` (icon control, `12×12` glyph, `32×32` min hit target)
+
+**`Alert` — inline (`display="inline"`):**
+
+1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `box-shadow` (not a separate DOM rail node)
+2. `ContentRow` (`inlineMain`) — `flex: 1 1 auto`, `gap: var(--spacing-space-8)`
+   - `LeadingIcon` — shared `Icon` at `16×16`; vertical nudge `4px` (detailed) or `2px` (compact)
+   - `ContentBlock` — column `gap: var(--spacing-space-4)`
+     - optional `Title` (`density="detailed"` only)
+     - `Message` (required)
+     - optional `InlineLink`
+3. `TrailingControls` — `shrink: 0`, `gap: var(--spacing-space-10)`
+   - optional `ActionButton` (outlined IDS Button small)
+   - optional `DismissButton`
+
+Variant matrix:
+
+- `display`: `global | inline`
+- `severity`:
+  - global: `critical | warning-major | warning-minor | informational`
+  - inline: global set **plus** `success` (inline-only)
+- `density`: `compact | detailed` (**inline only**; default `compact` when omitted)
+- optional slots: `link` | `action` | `dismiss` (each independent; all may coexist on inline detailed rows per Figma `11946:230644`)
+- `carousel`: `absent | present` (**global only**; when present, `totalItems >= 1`, `currentItem` is **1-based** in API)
+- `AlertGroup`: `single-surface | multi-item-carousel` (host pattern; still one `AlertRoot` in DOM)
+
+Per-slot style contract:
+
+- All surfaces, borders, typography, icon tints, link, and action colors resolve via semantic tokens in **Tokens** and **States** tables (no hardcoded hex except documented structural samples).
+- `ActionButton` geometry and interaction come from `components/ids/button/design-spec.mdx` (small outlined); Alert only overrides semantic colors per severity/display.
+- `LeadingStatusIcon` / `LeadingIcon`: use canonical icon slugs from severity table; compose through shared `Icon` (`variant="img"` when required for multi-hue assets or carousel chevron filters on global rails).
+
+Asset resolution + bundling contract:
+
+- Resolve icons from `assets/icons/<shapeName>.svg` (or project bundler equivalent).
+- Global status icons and inline solid icons use the slug map in **Tokens**; carousel chevrons use `chev-left-thick` / `chev-right-thick` (or project equivalents documented in implementation header).
+- Do not embed inline `<svg>` factories in generated Alert modules.
+
+Behavior contract:
+
+- **Single surface:** one `Alert` instance renders one logical `AlertItem` at a time; inline never nests carousel.
+- **Carousel / group:** `Alert` does not own `items[]` or `activeIndex`; `AlertGroup` (or app shell) updates index and passes `carousel` + active fields into one global `Alert`.
+- **Events:** `onDismiss`, `onAction`, `onLinkClick`, `onPrevious`, `onNext` are distinct; generators must not collapse them into a single generic handler.
+- **Dismiss:** when `dismissible` is false, omit `DismissButton` and ignore `onDismiss`; when true, remove/hide the alert surface after dismiss (implementation may use local state).
+- **Default dismissibility (global):** `critical` without `actionLabel` tends **non-dismissible** per Figma; other severities follow product defaults unless `dismissible` is explicitly set.
+- **Carousel navigation:** prev/next update `activeIndex` on the host; at bounds, clamp or wrap per product policy (document choice in generated module header; Storybook uses clamp).
+- **Link navigation:** apply **Link contract** — `routerLink` vs `href` vs label-only + `onLinkClick`; never emit ambiguous single-string navigation API for Angular targets.
+
+Accessibility contract:
+
+- `AlertRoot`: `role="alert"`; global banners that update when carousel index changes use `aria-live="assertive"` on the root (or equivalent live region on the swapping content region).
+- **Carousel:** `CarouselPreviousButton` / `CarouselNextButton` are native `button` elements with `aria-label="Previous alert"` and `aria-label="Next alert"`; disable at bounds when using clamp semantics.
+- **Dismiss:** `DismissButton` is a native `button` with `aria-label="Dismiss alert"`; minimum **32×32** px hit target (`var(--scale-32)`) while glyph remains `12×12`.
+- **Action:** reuse Button accessibility from IDS Button spec (`button` type, visible focus ring, keyboard activation).
+- **Link:** when rendered as `<a>`, expose meaningful link text from `link.label`; when button-styled fallback, name matches label.
+- **Keyboard:** dismiss, action, link (when focusable), and carousel controls are tab-focusable and activatable with `Enter` / `Space` per native control semantics.
+- **Color/contrast:** severity palettes must use semantic tokens so light/dark themes stay parallel without forking structure.
+
+Fallback/error rules:
+
+- `display="global"` + `severity="success"` → **validation error** (or explicit product map to `informational` documented in app config; default is error).
+- Unknown `severity` for active `display` → fallback to `informational`.
+- Unknown `density` on inline → fallback to `compact`.
+- Missing or empty `message` → validation error.
+- `carousel` on inline → validation error.
+- `title` on global → validation error (or ignore with dev warning; prefer validation error).
+- Unknown icon slug → hide leading icon slot, continue rendering message (log in dev).
+- `iconOnly` / invalid Button props on action → defer to Button spec fallbacks.
+- Both `link.href` and `link.routerLink` set → prefer `routerLink` for Angular targets; for other frameworks, document precedence in adapter.
+
+Validation checklist:
+
+- [ ] `Deterministic structure` matches generated DOM for both `display` modes (no duplicate global roots for carousel).
+- [ ] Variant matrix: all valid `display` × `severity` × optional slot combinations documented; global rejects `success`.
+- [ ] Action controls reuse IDS Button small outlined contract, not alert-local button CSS.
+- [ ] Icons use shared `Icon` + canonical slugs; no inline SVG factories.
+- [ ] Link contract supports `href` and `routerLink` without ambiguity.
+- [ ] Global carousel uses **1-based** `currentItem` in API and labeled prev/next controls.
+- [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
+- [ ] Light/dark state tables remain parallel (same `var(--...)` names).
+- [ ] Dismiss hit target ≥ `32×32` on inline and global.
+- [ ] `role="alert"` and live-region behavior verified for dynamic global updates.
+- [ ] Fallback rules tested for invalid display/severity/density and missing icon slug.
+### Reusable component generation contract
 
 Code generator outputs should be reusable primitives, not one-off story/demo code:
 
@@ -264,16 +343,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - Keep framework adapters thin: Angular/React/Vue wrappers map framework events to the same conceptual API (`dismiss`, `action`, `link`, `previous`, `next`).
 - Ensure all styling remains token-driven (`var(--...)`) with no hardcoded visual constants except Figma-documented structural exceptions (e.g., carousel inner gap `22px`).
 
-## Codegen Contract (Framework-Agnostic Blueprint)
-
-- One **`Alert`** implementation with display branching; optional separate **`AlertGroup`** file for list + carousel.
-- **Icon:** canonical `shapeName` slugs resolved from `assets/icons/<slug>.svg`; always compose through the shared `Icon` component (`variant="img"` where multi-hue icons or chevron filters apply); no inline `<svg>` factories.
-- **Action control reuse:** compose IDS Button spec (`components/ids/button/design-spec.mdx`) for action controls; do not create alert-specific button geometry.
-- **Inline action:** Figma uses **outlined** button (brand border + brand-strong label), not link-only text.
-- **Accessibility:** `role="alert"`; carousel buttons labeled “Previous alert” / “Next alert”; dismiss “Dismiss alert”.
-- **Validation:** reject `display="global"` + `severity="success"` unless product explicitly maps success → informational.
-
-## Production-ready SDD gate
+### Production-ready SDD gate
 
 - [ ] Metadata includes both global and inline source nodes and canonical Figma URLs.
 - [ ] Deterministic anatomy/slot order is explicit for both `display` modes.
@@ -283,9 +353,11 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - [ ] Fallback/error behavior is defined for invalid `display`/severity combinations and missing optional slots.
 - [ ] Accessibility roles, labels, keyboard behavior, and live-region behavior are specified.
 - [ ] Asset contract uses canonical icon slugs and shared Icon primitive with no inline SVG fallback functions.
+## Source Mapping
 
-## Storybook reference
+### Storybook reference
 
 - `storybook/src/components/Alert.tsx` — unified implementation (`display` prop)
 - `storybook/src/components/Alert.stories.tsx` — **IDS/Alert** (single entry; global vs inline via `display`)
 - `storybook/src/components/GlobalAlert.tsx` / `InlineAlert.tsx` — optional thin re-exports for app code; not separate Storybook entries
+

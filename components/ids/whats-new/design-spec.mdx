@@ -5,7 +5,6 @@
 - Category: Patterns and Templates
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=27437-44064&m=dev
 - Node ID: 27437-44064
-
 ## Anatomy
 - What's New container
 - Header with title
@@ -16,7 +15,6 @@
 - Close button
 - Focus ring for keyboard navigation
 - Optional filtering
-
 ## Layout & Measurements
 - Container width: 500px (minimum)
 - Container height: Auto (based on content)
@@ -29,15 +27,6 @@
 - Item spacing: 8px
 - Icon size: 16px × 16px
 - Close button: 16px × 16px
-
-## Typography
-- Header 5: Roboto Regular 24px/32px (what's new title)
-- Header 6: Roboto Regular 18px/25px (item titles)
-- Body 1: Roboto Regular 16px/24px (item descriptions)
-- Body 2: Roboto Regular 14px/20px (secondary text)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized text)
-- Body 3: Roboto Regular 12px/18px (dates and metadata)
-
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -75,7 +64,21 @@
 
 ### Effects
 - Level 4 shadow: Multi-layer drop shadow for elevation
+### Typography
+- Header 5: Roboto Regular 24px/32px (what's new title)
+- Header 6: Roboto Regular 18px/25px (item titles)
+- Body 1: Roboto Regular 16px/24px (item descriptions)
+- Body 2: Roboto Regular 14px/20px (secondary text)
+- Body 2 - Medium: Roboto Medium 14px/20px (emphasized text)
+- Body 3: Roboto Regular 12px/18px (dates and metadata)
 
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Category badges use brand colors for visual distinction
+- Dark theme adaptation through semantic tokens
+- What's new should be responsive and accessible
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
@@ -91,13 +94,11 @@
 | Read More Link | transparent | transparent | `var(--color-text-brand-base)` (#0076ce) | `var(--color-icon-brand-base)` (#0076ce) |
 | Close Button (Default) | transparent | transparent | `icon-standard-gray` (#616161) | `icon-standard-gray` (#616161) |
 | Close Button (Hover) | transparent | transparent | `var(--color-icon-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables
 - What's New container maintains visibility in dark theme
 - Update items adapt to dark theme
-
 ## Interactions
 - Click update items to view details
 - Click read more links for extended information
@@ -106,8 +107,7 @@
 - Click close button to dismiss what's new
 - Keyboard navigation: Tab to navigate, Enter to activate, Escape to close
 - Optional filtering by category or date
-
-## Accessibility
+### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Tab, Enter, Escape
 - Screen reader support: Proper ARIA attributes for what's new content
@@ -116,17 +116,7 @@
 - Focus management: Logical tab order through what's new items
 - Content announcements: Screen reader announces update information
 
-## Variants
-- **Default**: Standard what's new dialog
-- **Inline**: What's new content inline in page
-- **Modal**: What's new as modal overlay
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Filtering**: What's new with category/date filtering
-- **With Search**: What's new with search functionality
-- **Auto-dismiss**: What's new that auto-dismisses after time
-- **With Pagination**: What's new with pagination for many updates
-
-## Behavior & Guidelines
+### Behavior & guidelines
 - Use what's new for application updates and announcements
 - Provide clear update titles and descriptions
 - Include dates and categorization for organization
@@ -135,16 +125,40 @@
 - Consider responsive behavior for different screen sizes
 - Use keyboard navigation for accessibility
 - Provide visual feedback for all interactions
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard what's new dialog
+- **Inline**: What's new content inline in page
+- **Modal**: What's new as modal overlay
+- **Compact**: Reduced size for space-constrained interfaces
+- **With Filtering**: What's new with category/date filtering
+- **With Search**: What's new with search functionality
+- **Auto-dismiss**: What's new that auto-dismisses after time
+- **With Pagination**: What's new with pagination for many updates
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
-## Token Gaps / Notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Category badges use brand colors for visual distinction
-- Dark theme adaptation through semantic tokens
-- What's new should be responsive and accessible
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
 
-## Deliverable Checklist
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
 - [ ] Implement update item functionality
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Tab, Enter, Escape)
@@ -155,7 +169,6 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
-
 ## Source Mapping
 - Figma component: Whats New (27437-44064)
 - Variable collection: UI Palettes, Typography tokens

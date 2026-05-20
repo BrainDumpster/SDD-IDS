@@ -25,7 +25,6 @@
   - `footerCheckbox`: `true` | `false`
   - `fullScreen`: `true` | `false`
   - `dialogType` (dialog scenario): `Critical` | `Destructive` | `Major` | `Warning` | `Informational` | `Non-Alerting`
-
 ## Anatomy
 - **overlay:** viewport backdrop behind modal surface.
 - **surface:** bordered container with elevation and fixed width behavior.
@@ -39,7 +38,6 @@
   - baseline modal usage: tertiary + primary actions.
   - dialog scenario keeps severity-specific action intent.
   - **all footer action labels are user-defined at runtime** (no hardcoded labels in component contract).
-
 ## Layout & Measurements
 - **Size matrix (from `11348:63064`):**
   - `large`: `1600 x 826`
@@ -60,7 +58,6 @@
 - **Typography:**
   - Title: `Header 5` (`24/32`, regular).
   - Body/content: `Body 2` (`14/20`, regular).
-
 ## Tokens
 - **Surface:** `var(--color-background-component)`, `var(--color-border-accessible)`
 - **Text:** `var(--color-text-neutral-strong)` (title), `var(--color-text-neutral)` (body), `var(--color-text-brand-strong)` (tertiary action)
@@ -80,7 +77,6 @@
 - `Major` -> `status-error-diamond-solid` (`1-Solid / status-error-diamond-solid`)
 - `Informational` -> `info-circ-solid` (`1-Solid / info-circ-solid`)
 - `Close` button icon -> `shape-x` (`Black/16` close glyph usage in dialog header)
-
 ## States (Light Theme)
 | Scenario | Surface | Header/Tabs | Content | Footer |
 |---|---|---|---|---|
@@ -88,7 +84,6 @@
 | Multi-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | Header + tabs (`active` top indicator + divider borders) | page panel changes by selected tab/page | footer actions, optional checkbox |
 | Dialog (non-alerting/informational) | same modal shell | title + optional severity icon | message + optional content | one-button or two-button by type |
 | Dialog (warning/major/critical/destructive) | same modal shell | title + severity icon | message + optional confirm input (destructive) | two-button footer; destructive primary for destructive |
-
 ## States (Dark Theme)
 Same structure and behavior as Light theme. All colors resolve via semantic modal tokens in dark mode (`43390:21759` matrix) with no hardcoded hex values in implementation.
 
@@ -97,7 +92,6 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 | Single-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | header only | single content panel | actions + optional checkbox |
 | Multi-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | header + tabs (tokenized active/inactive states) | page panel switched by navigation | actions + optional checkbox |
 | Dialog | tokenized dialog shell and severity icon mappings from dialog matrix | title/icon | message/content | type-based action model |
-
 ## Interactions
 - **Open:** by trigger or controlled `open=true`.
 - **Close:** close icon, escape key, optional backdrop click (runtime configurable).
@@ -107,7 +101,6 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - **Footer actions:** emit distinct events for tertiary and primary actions.
 - **Destructive flow:** includes confirm text input region before destructive action.
 - **Focus-visible:** close and action controls show brand focus ring in keyboard modality.
-
 ## Composition & API (runtime)
 - **Inputs**
   - `open?: boolean`
@@ -137,7 +130,6 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
   - `onTertiaryAction?(): void`
   - `onOpenChange?(open: boolean): void`
   - `onPageChange?(pageId: string): void`
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 1. `overlay`
@@ -147,7 +139,7 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 5. `content?`
 6. `footer` (`tertiaryButton?`, `primaryButton`)
 
-### Supported matrix
+### Variant matrix
 - `scenario` in `{single-page, multi-page, dialog, wizard, custom}`; this document concretely defines `single-page`, `multi-page`, and `dialog`.
 - `size` in `{x-small, small, medium, large}`.
 - `scrollBar` in `{true, false}`.
@@ -205,7 +197,6 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - [ ] Destructive type uses destructive primary action style and confirm content slot.
 - [ ] Keyboard focus trap and escape behavior function in modal mode.
 - [ ] Light and dark theme snapshots preserve tokenized contrast.
-
 ## Source Mapping
 - **Component map:** `data/component-figma-map.json` -> `Dialog` entry pointing to `components/ids/modal/design-spec.mdx`
 - **Figma nodes used:**

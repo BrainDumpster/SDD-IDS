@@ -384,7 +384,7 @@ class FigmaSpecExtractor:
         else:
             mdx_content += "- Basic component structure\n"
         
-        mdx_content += f"""
+        mdx_content += """
 ## Layout & Measurements
 """
         
@@ -398,8 +398,10 @@ class FigmaSpecExtractor:
         if spec.border_radius:
             mdx_content += f"- Border Radius: {spec.border_radius}px\n"
         
-        mdx_content += f"""
-## Typography
+        mdx_content += """
+## Tokens
+
+### Typography
 """
         
         # Add typography information
@@ -415,8 +417,8 @@ class FigmaSpecExtractor:
         if spec.line_height:
             mdx_content += f"- Line Height: {spec.line_height}\n"
         
-        mdx_content += f"""
-## Tokens & Colors
+        mdx_content += """
+### Colors
 """
         
         # Add color information
@@ -435,8 +437,8 @@ class FigmaSpecExtractor:
             for token in spec.design_tokens:
                 mdx_content += f"- {token['name']}: {token['value']}\n"
         
-        mdx_content += f"""
-## States
+        mdx_content += """
+## States (Light Theme)
 """
         
         # Add states information
@@ -444,9 +446,32 @@ class FigmaSpecExtractor:
             for state in spec.states:
                 mdx_content += f"- **{state['name']}**: {state['type']}\n"
         
+        from scripts.design_spec_template import DARK_STATES_BOILERPLATE
+
         mdx_content += """
-## Usage Guidelines
-Follow design system guidelines for proper implementation and usage of this component.
+## States (Dark Theme)
+
+""" + DARK_STATES_BOILERPLATE + """
+
+## Interactions
+- TODO: pointer/keyboard behaviors from Figma variants.
+
+## Composition & API (runtime)
+- TODO: props, events, variants.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+- TODO: slot tree from anatomy.
+
+### Variant matrix
+- TODO: variant axes from Figma.
+
+### Validation checklist
+- [ ] TODO: codegen QA items
+
+## Source Mapping
+- Figma: see Metadata
+- Node ID: see Metadata
 """
         
         return mdx_content

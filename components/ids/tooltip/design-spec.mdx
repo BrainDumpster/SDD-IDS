@@ -13,7 +13,6 @@
   - `38201:109623..109643` (`Arrow Pointing=Up`, `Arrow Positioned=Start|Center|End`)
   - `38201:109653..109673` (`Arrow Pointing=Right`, `Arrow Positioned=Start|Center|End`)
   - `38201:109683..109703` (`Arrow Pointing=Left`, `Arrow Positioned=Start|Center|End`)
-
 ## Anatomy
 - `TriggerAnchor`: element that owns tooltip visibility.
 - `TooltipRoot`: positioned wrapper for content and optional arrow.
@@ -22,7 +21,6 @@
 - `BodyContent` (required): free tooltip content region.
 - `CloseAction` (optional): close button using icon `shape-x` (`12x12`).
 - `Arrow` (optional): directional pointer; supports side and alignment matrix.
-
 ## Layout & Measurements
 - Top/bottom arrow variants:
   - outer sample size: `244x143`
@@ -53,7 +51,6 @@ Arrow geometry contract:
   - Arrow container offset: `left/right: -5px`
   - Border-notch masking offsets: `start: 7px`, `center: calc(50% - 6px)`, `end: calc(100% - 19px)`
 - Supported permutations: `4 sides x 3 alignments = 12`.
-
 ## Tokens
 - Panel background: `var(--color-background-surface-2)`.
 - Panel border + arrow stroke: `var(--color-border-accessible)`.
@@ -65,7 +62,6 @@ Arrow geometry contract:
 Typography contract:
 - Header (`optional`): Body 2 Medium, Roboto `14/20`, weight `500`.
 - Body: Body 2, Roboto `14/20`, weight `400`.
-
 ## States (Light Theme)
 | Variant | Background | Border | Text/Icon |
 |---|---|---|---|
@@ -73,7 +69,6 @@ Typography contract:
 | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` |
 | Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close icon uses semantic neutral icon token |
 | Any arrow side/align | same as panel | same as panel | n/a |
-
 ## States (Dark Theme)
 | Variant | Background | Border | Text/Icon |
 |---|---|---|---|
@@ -81,7 +76,6 @@ Typography contract:
 | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` (dark-resolved) |
 | Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | close icon uses semantic neutral icon token (dark-resolved) |
 | Any arrow side/align | same as panel | same as panel | n/a |
-
 ## Interactions
 - Standard tooltip (`closable=false`):
   - Opens on hover/focus of trigger.
@@ -92,7 +86,6 @@ Typography contract:
   - Emits close event on user dismissal.
 - Arrow follows chosen `placement` side and `arrowAlign`.
 - Tooltip content is consumer-supplied and may be text or structured markup.
-
 ## Composition & API (runtime)
 - `content: string | ReactNode | TemplateRef | SlotContent` (required, framework-adapted).
 - `title?: string` (optional header).
@@ -104,10 +97,9 @@ Typography contract:
 - `onOpenChange?: (open: boolean) => void`.
 - `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
 - `closeIconShapeName?: string` default `shape-x` (for icon component integration).
-
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
-Deterministic slot schema:
+Deterministic structure:
 1. `TriggerAnchor`
 2. `TooltipPortal` (if framework/library uses portaling)
 3. `TooltipRoot`
@@ -162,7 +154,6 @@ Validation checklist (pass/fail):
 - [ ] `shape-x` icon is used for close at `12x12`.
 - [ ] Body content supports arbitrary consumer-provided content.
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
-
 ## Source Mapping
 - IDS map file: `data/component-figma-map.json` (`Tooltip` entry).
 - Primary Figma frame: `38201:109592`.
