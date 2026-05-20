@@ -16,7 +16,7 @@
 - Standard height: 8px
 - Large height: 12px
 - Container width: 100% of available space
-- Border radius: 4px (standard), 6px (large)
+- Border radius: 0px
 - Focus ring: 2px offset from container
 - Minimum width: 200px
 - Label spacing: 8px from progress bar
@@ -48,9 +48,13 @@
 - Critical border white: `var(--color-border-alerting-critical-white)` = #af0000
 
 ### Icons
-- Success icon: `var(--color-icon-alerting-success)` = #1b8500
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+- Success icon: `assets/icons/status-ok-circ-solid.svg`
+- Warning icon: `assets/icons/status-warn-tri-solid.svg`
+- Critical icon: `assets/icons/status-critical-square-solid.svg`
+- Icon size: 16px
+- Success icon color: `var(--color-icon-alerting-success)` = #1b8500
+- Minor icon color: `var(--color-icon-alerting-minor)` = #ffc700
+- Critical icon color: `var(--color-icon-alerting-critical)` = #af0000
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -162,3 +166,13 @@ Variant matrix:
 - Semantic mapping: CSS custom properties with `var(--)` prefix
 - Design source: Figma URL above
 - Component map entry: data/component-figma-map.json → component "Progress Bar" (category "Loading and Progress"; node "11067-54665")
+
+## Implementation Notes
+- **Track border placement**: The track border is set to `box-sizing: border-box` to ensure the 1px border renders inside the container rather than outside. This maintains the specified height dimensions (8px standard, 12px large) without adding extra width/height from the border.
+- **Progress fill bar border thickness**: The indicator border is set to 1px using `var(--border-width-border-1)` to match the design specification.
+- **Corner radius**: Both the track (container) and indicator (progress fill bar) have `border-radius: 0px` to match the design specification for sharp corners.
+- **Icon implementation**: Status icons are rendered using the `Icon` component with `variant="img"` to load the correct SVG assets:
+  - Completed/success state uses `status-ok-circ-solid.svg`
+  - Completed/warning state uses `status-warn-tri-solid.svg`
+  - Failed/critical state uses `status-critical-square-solid.svg`
+  - Icons are sized to 16px and use the `helperIcon` CSS class for styling
