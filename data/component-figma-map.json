@@ -152,6 +152,8 @@
     "dragIconNodeId": "12114:230638",
     "contentNodeId": "12337:8368",
     "metricsNodeId": "12114:232041",
+    "specAccurateDesignNodeId": "12114:232557",
+    "titledAssemblyNodeId": "12114:232557",
     "elementNodeIds": [
       "12114:230814",
       "22468:33536",

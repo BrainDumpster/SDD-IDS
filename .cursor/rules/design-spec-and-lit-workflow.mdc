@@ -9,6 +9,12 @@ alwaysApply: true
 Primary goal: create and maintain `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<slug>/design-spec.mdx` (Synapse) with maximum fidelity to Figma.
 Implementation/code generation is optional and only done when explicitly requested by the user.
 
+## New spec intake (wizard-first)
+- For **new** design specs, prefer the intake wizard: user pastes the **base prompt** from `docs/design-spec-intake.md` or invokes **design-spec-intake-wizard** in Cursor.
+- Agent asks programme, component, Figma URLs (component required; elements/states optional), Storybook yes/no — **one question per turn** — then **confirm** before Figma or file writes.
+- Follow `docs/design-spec-authoring-contract.md` for paths, sections, and live verification.
+- Create `components/<programme-dir>/<slug>/` and update the figma map when absent (see programme config under `config/design_systems/`).
+
 ## Source of Truth
 - Always resolve the component from a design-system map file first (for example `data/component-figma-map.json` or `data/<design-system>-component-figma-map.json`).
 - Use mapped `figmaUrl` + `node-id` for the component when available.

@@ -15,6 +15,34 @@ Supports multiple design systems via `DESIGN_SYSTEM` env var:
 - **Synapse**: Synapse design system with Base UI (`@base-ui-components/react`) as the React implementation layer
 - **DAP**: Program-specific deltas layered on IDS baseline specs and tokens (`components/DAP`, `components/dap-theme.css`)
 
+## Create a new design-spec (intake wizard)
+
+Non-coders and developers can create production-ready `design-spec.mdx` files from Figma using a **chat wizard** — no YAML, no local form. Works in **Cursor**, **Windsurf Cascade**, and **Windsurf Devin** (see Devin notes in the doc).
+
+**Full guide:** [`docs/design-spec-intake.md`](docs/design-spec-intake.md)  
+**Authoring rules (IDE-agnostic):** [`docs/design-spec-authoring-contract.md`](docs/design-spec-authoring-contract.md)
+
+### Base prompt (paste into a new agent chat)
+
+Open the SDD-IDS repo as your workspace, start a new agent session, and paste:
+
+```text
+Run the design-spec intake wizard: ask me each required question one at a time, wait for my answer, then show a summary for confirmation. After I confirm, generate a production-ready framework-agnostic design-spec. Follow docs/design-spec-authoring-contract.md and docs/design-spec-intake.md (portable wizard rules). Do not call Figma or write files until I confirm the summary.
+```
+
+**Cursor:** you can also use `@design-spec-intake-wizard` and say “Start the design-spec intake wizard.”
+
+The agent will ask for **programme** (IDS / DAP / Synapse), **component name**, optional **category**, **Figma URLs** (component required; elements and states optional), and **Storybook examples** (`yes` / `no`). Reply **`yes`** on the summary to run. The agent creates `components/<programme>/<slug>/` if needed, updates the Figma map, fetches live Figma, and writes `design-spec.mdx` with **Status: draft**. If Storybook = **yes**, examples are generated under the **Spec Generated** group with a primary story named **Spec Accurate Design** (see [design-spec-intake.md](docs/design-spec-intake.md#storybook-examples-when-you-answer-yes)).
+
+| Artifact | Path |
+|----------|------|
+| Intake guide + Devin/Cascade steps | [`docs/design-spec-intake.md`](docs/design-spec-intake.md) |
+| Production-ready contract | [`docs/design-spec-authoring-contract.md`](docs/design-spec-authoring-contract.md) |
+| Wizard skill (Cursor) | [`.cursor/skills/design-spec-intake-wizard/SKILL.md`](.cursor/skills/design-spec-intake-wizard/SKILL.md) |
+| Blueprint / hardening | [`.cursor/skills/design-spec-blueprint/SKILL.md`](.cursor/skills/design-spec-blueprint/SKILL.md) |
+
+**Prerequisites:** Figma MCP in the IDE (recommended) or `FIGMA_TOKEN` in `.env` for REST fallback.
+
 ## Spec Pipeline
 
 The primary output is a hierarchy of design specs that downstream agents consume:
@@ -111,6 +139,7 @@ Scripts and templates that create or maintain `components/ids/<slug>/design-spec
 | Docs-first composer | `ingestion/design_spec_composer.py` | Compose specs from GitHub docs + Figma extraction (outputs canonical `##` / `###` layout) |
 | Figma → MDX extractor | `tokens/figma_spec_extractor.py` | `spec_to_mdx()` output uses canonical section names (extend for full blueprint depth) |
 | Spec contract validation | `validation/spec_contract_parser.py` | Checks required `##` sections (used by gates and QA) |
+| Intake wizard (new specs) | `.cursor/skills/design-spec-intake-wizard/SKILL.md` | Interactive Q&A → confirm → create `design-spec.mdx`; see `docs/design-spec-intake.md` |
 | Authoring skill | `.cursor/skills/design-spec-blueprint/SKILL.md` | Agent workflow: Figma verification, required sections, production-ready gate |
 | States dark dedupe | `scripts/dedupe_states_dark_theme.py` | Replace duplicate **States (Dark Theme)** tables when identical token-only matrices exist under Light (dry-run by default; `--apply` to write) |
 

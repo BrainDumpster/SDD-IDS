@@ -1,189 +1,328 @@
 # Dual List Box Design Spec
 
 ## Metadata
-- Component: Dual List Box
-- Category: Formelements
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54563&m=dev
-- Node ID: 11067-54563
+- **Component:** Dual List Box
+- **Design system:** IDS
+- **Category:** Form Elements
+- **Spec path:** `components/ids/dual-list-box/design-spec.mdx`
+- **Description:** Two-pane list builder for moving items between an available pool and a selected pool, with vertical transfer controls and optional counts.
+- **Version:** 3.4.0
+- **Status:** active
+- **Created:** 2026-05-20
+- **Updated:** 2026-05-20
+- **Last verified:** 2026-05-20 (Figma MCP `12114:232557`, `12114:230677`; reference: keyboard nav + transfer labels)
+- **Storybook examples requested:** yes
+- **Generated Storybook:** `storybook/src/components/IdsDualListBox.stories.tsx` (title **`Spec Generated/IDS/Dual List Box`**, primary story **`Spec Accurate Design`**)
+- **Implementation reference:** `storybook/src/components/IdsDualListBox.tsx`, `storybook/src/components/IdsDualListBox.module.css`
+- **Primary Figma URL:** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-31229&m=dev
+- **Primary node id:** `22468:31229` (library instance slot; element nodes below carry measurable UI)
+- **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
+- **Verification method:** Figma MCP (`get_design_context`, `get_metadata`)
+- **Verified at:** 2026-05-20
+
 ## Anatomy
-- Dual list container
-- Available items list
-- Selected items list
-- Transfer buttons (Add, Remove, Add All, Remove All)
-- List headers with counts
-- Search/filter functionality (optional)
-- Focus ring for keyboard navigation
-- Item checkboxes for selection
-- Sort functionality (optional)
+
+Deterministic slot order for **`DualListBoxRoot`**:
+
+0. **`ListsParent`** — responsive wrapper (`display: grid`; columns `1fr | transfer | 1fr`; rows `header | list`)
+1. **`AvailablePane`** — source list column (grid column 1)
+   - **`AvailablePaneHeader`** — user-defined title (left) + **`AvailableMetrics`** “Total: N” (right, same row)
+   - **`AvailableListGroup`** (`.DualListBox-Elements-ListItemGroup`) — items or **empty placeholder**
+       - repeat **`ListItem`** (`.DualListBox-Elements-ListItem`, `12114:230677`)
+       - **`DragHandle`** — icon slug **`arrow-arrange`** (16×16); sole drag affordance for DnD
+       - **`ItemContent`** — `name` (+ optional `description`)
+       - optional **`SelectionCheck`** — icon slug **`shape-check-thick`** (16×16) when row selected and not dragging
+2. **`TransferButtonGroup`** (grid column 2, row 2 — vertically centered on list height only; does not shift when panes resize)
+   - **`MoveAllRight`** (`double-chev-right`)
+   - **`MoveSelectedRight`** (`chev-right`)
+   - **`MoveSelectedLeft`** (`chev-left`)
+   - **`MoveAllLeft`** (`double-chev-left`)
+3. **`SelectedPane`** — target list column (same inner structure as Available)
+   - **`SelectedPaneHeader`** — user-defined title + “Total: N” on one row
+   - **`SelectedListGroup`** — items or **empty placeholder** when `item count=0`
+
 ## Layout & Measurements
-- Container width: 600px (minimum)
-- List width: 250px each
-- List height: 300px
-- Item height: 32px
-- Button width: 40px
-- Button spacing: 8px
-- Horizontal padding: 16px
-- Border radius: 4px
-- Focus ring: 2px offset from element
-- Icon size: 16px × 16px
-- Spacing between lists: 40px
+- **Runtime width:** container-driven (`width: 100%`, `box-sizing: border-box`); Figma sample assembly ~`724×459` (`12114:232557`, reference only).
+- **`ListsParent`:** CSS grid — `grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr)`; `grid-template-rows: auto minmax(384px, 1fr)`; `column-gap: var(--spacing-space-16)`; `row-gap: var(--spacing-space-8)`.
+- **Pane header:** full width of column; `justify-content: space-between`; title start-aligned; **Total** end-aligned flush with list panel right edge (no extra header inset).
+- **List panel (`.DualListBox-Elements-ListItemGroup`):** `width: 100%` of column (responsive); `min-height: 384px` (sample); padding `var(--padding-padding-24)` top, `var(--padding-padding-32)` bottom, inline `var(--padding-padding-24)`; vertical gap between items `var(--spacing-space-8)`.
+- **Pane header row:** `justify-content: space-between`; title **Body 1** medium (`var(--font-size-body-1)` / `var(--line-height-body-1, 24px)`, `var(--color-text-neutral-strong)`); metrics **Body 2** regular, right-aligned (`Total: N` only in default Figma sample `12114:232557`).
+- **Empty panel:** dashed border `var(--color-border-accessible)`; placeholder **Body 2** medium, centered, user-defined per pane (defaults below).
+- **List item row:** width `100%` of panel; padding `var(--padding-padding-8)` inline start, `var(--padding-padding-16)` inline end, `var(--padding-padding-14)` block; `border-radius: 2px`; `border-width: var(--border-width-border-default, 1px)` solid `var(--color-border-accessible)`.
+- **Item interior:** `gap: var(--spacing-space-8)` between drag handle and text; drag icon wrapper `16×16` with `var(--padding-padding-2)` block padding on icon rail.
+- **Item content block:** width `204px` (sample); **Body 2** medium (`var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`).
+- **Transfer column:** vertical `gap: var(--spacing-space-16)`; each button `padding: var(--padding-padding-12)` block, `var(--padding-padding-16)` inline; `border-radius: 2px`; icon `16×16`.
+- **Metrics (header):** `gap: var(--spacing-space-4)`; optional “Selected: N” (medium) + “Total: N” (regular 14/20) on the **pane header row** (not below the list). Figma `12114:232557` uses **Total only** in the header.
+- **Scrollbar (12-item variant):** track `var(--color-background-gray-lighter)`; thumb `var(--color-background-gray-base)`; width `10px`; optional overflow gradient `var(--color-gradient-overflow-vertical-start)` → `var(--color-gradient-overflow-vertical-end)`.
+- **Pane-to-transfer spacing:** product-defined; Figma assembly uses clear separation between `300px` list and button column (document host gap ≥ `var(--spacing-space-16)`).
+
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Critical text: `var(--color-text-critical)` = #af0000
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
-- Brand border: `var(--color-border-brand-base)` = #0076ce
-- Critical border: `var(--color-border-alerting-critical-base)` = #af0000
-- Disabled border: `var(--color-border-disabled)` = #757575
-- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
-
-### Icons
-- Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
-- Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
-- White icon: `var(--color-icon-white)` = #ffffff
-- Disabled icon: `var(--color-icon-disabled)` = #757575
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-
-### Background Colors
-- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
-- Brand light: `var(--color-background-controls-brand-light)` = #d9eaf8
-- Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
-- Gray light: `var(--color-background-gray-light)` = #eaeaea
-- Gray base: `var(--color-background-gray-base)` = #757575
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
-- Gray 400: `UI Palettes/Gray/gray-400` = #9E9E9E
-- Gray 600: `UI Palettes/Gray/gray-600` = #616161
-- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Other Colors
-- Annotation: `Annotation` = #E8178A
-- White icon: `icon-white` = #FFFFFF
-
-### Gradients
-- Overflow Vertical Start: `var(--color-gradient-overflow-vertical-start)` = #b6b6b666
-- Overflow Vertical End: `var(--color-gradient-overflow-vertical-end)` = #ffffff00
-
-### Effects
-- Tooltip Drop Shadow: Drop shadow effect for tooltips
 ### Typography
-- Header 4: Roboto Regular 28px/34px (dual list headers)
-- Header 5: Roboto Regular 24px/32px (section headers)
-- Header 6: Roboto Regular 18px/25px (list headers)
-- Body 1: Roboto Regular 16px/24px (list items)
-- Body 2: Roboto Regular 14px/20px (secondary text)
+- **List item label:** Body 2 medium — `var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`.
+- **List item description (optional):** Body 2 — same size/line-height under label.
+- **Empty placeholder:** Body 2 medium — `var(--color-text-neutral)`.
+- **Metrics “Selected”:** Body 2 medium — `var(--color-text-neutral)`.
+- **Metrics “Total”:** Body 2 regular — `var(--color-text-neutral)`.
 
-### Token gaps and notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Selected states use brand colors for clear indication
-- Dark theme adaptation through semantic tokens
-- Dual list box should be responsive and accessible
+### Surfaces, borders, icons
+- **List panel / item background:** `var(--color-background-component)`
+- **List item border:** `var(--color-border-accessible)`
+- **Empty panel border:** `var(--color-border-accessible)` (dashed in Figma)
+- **Selected list item background:** `var(--color-background-controls-brand-lighter)`
+- **Selected list item border:** `var(--color-border-brand-base)`
+- **Selected label text:** `var(--color-text-brand-strong)`
+- **Default label text:** `var(--color-text-neutral)`
+- **Drag handle icon:** `var(--color-icon-neutral)` (default/hover); press/active drag uses brand/neutral per **States**
+- **Transfer button Default (enabled):** `var(--color-background-controls-brand-base)`; `var(--color-border-transparent-brand)`; icon `var(--color-icon-white)`
+- **Transfer button Disabled:** `var(--color-background-gray-light)`; `var(--color-border-disabled)`; icon `var(--color-icon-disabled)`
+- **Scrollbar track/thumb:** `var(--color-background-gray-lighter)` / `var(--color-background-gray-base)`
+
 ## States (Light Theme)
-| Element | Background | Border | Text | Icon |
-|---|---|---|---|---|
-| Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
-| List Box | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| List Header | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Header 6` (Roboto Regular 18px/25px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| List Item (Default) | transparent | transparent | `Body 1` (Roboto Regular 16px/24px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| List Item (Hover) | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `Body 1` (Roboto Regular 16px/24px) | `var(--color-icon-neutral-strong)` (#252525) |
-| List Item (Selected) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Transfer Button (Default) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Transfer Button (Hover) | `var(--color-background-controls-brand-light)` (#d9eaf8) | `var(--color-background-controls-brand-light)` (#d9eaf8) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
-| Transfer Button (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
-| Search Input | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Validation Error | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-critical)` (#af0000) | `var(--color-icon-alerting-critical)` (#af0000) |
+| Element | State | Background | Border | Text | Icon |
+| --- | --- | --- | --- | --- | --- |
+| List panel | default | `var(--color-background-component)` | `var(--color-border-accessible)` solid | — | — |
+| List panel | empty | transparent | `var(--color-border-accessible)` dashed | `var(--color-text-neutral)` placeholder | — |
+| List item | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` | `arrow-arrange` `var(--color-icon-neutral)` |
+| List item | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-neutral)` | `arrow-arrange` neutral |
+| List item | selected | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand + **`shape-check-thick`** brand (trailing) |
+| List item | focus-visible | component | brand outline (+2px offset) | neutral | neutral |
+| List item | drag with selection | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand; **hide** check while dragging |
+| List item | drag without selection | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand |
+| List item | drop indicator | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | — | preview slot before/after target row |
+| Transfer btn | **Default** (enabled, clickable) | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | — | `var(--color-icon-white)` |
+| Transfer btn | **Disabled** (inactive) | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | — | `var(--color-icon-disabled)` |
+| Metrics | default | — | — | `var(--color-text-neutral)` | — |
+
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Text and border colors remain consistent via semantic variables
-- List boxes maintain visibility in dark theme
-- Transfer buttons adapt to dark theme
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+
 ## Interactions
-- Click items to select/deselect in lists
-- Click transfer buttons to move items between lists
-- Double-click items to transfer (optional)
-- Hover provides visual feedback on interactive elements
-- Focus ring uses brand color for keyboard navigation
-- Keyboard navigation: Arrow keys, Enter, Space, Tab
-- Search/filter to find items quickly
-- Select multiple items with Ctrl/Cmd+click
+- **List item click:** toggles selection in the active pane (single- or multi-select per product; default multi-select with Ctrl/Cmd documented at host).
+- **Transfer actions (top → bottom):** Move all right · Move selected right · Move selected left · Move all left. Each maps to moving items between `available` and `selected` collections; disable buttons when action would be no-op.
+- **Empty panes:** when a pane has zero items, render that pane’s **user-defined placeholder** inside the dashed list region (defaults: available → “Select items on the right to move”; selected → “Select items on the left to move”).
+- **Transfer button matrix** (Figma `.DualListBox-Elements-ButtonGroup` `12337:28658` — only two visuals: **Default** = brand + white icon; **Disabled** = gray + disabled icon):
+  1. **No list-item selection** in either pane:
+     - Selected pane **empty**, available has items → **Move all right** Default; others Disabled (`action=Move all to right`).
+     - Available pane **empty**, selected has items → **Move all left** Default; others Disabled (`action=Move all to left`).
+     - **Both panes have items** → **Move all right** and **Move all left** Default; singles Disabled (`action=move all to right or left`).
+  2. **List-item selection** in either pane → matching single-chevron Default; both move-all Disabled (`action=Move selected to right` or `Move selected to left`). If both panes have selection, both singles are Default.
+- **Drag-and-drop (reference implementation, `enableDragDrop` default `true`):**
+  - Drag starts from **`arrow-arrange`** handle only.
+  - Reorder within a pane or move across panes; drop position before/after target row (50% hit split).
+  - **Drag with selection** / **Drag without selection** use `var(--color-background-controls-brand-light)`; trailing **`shape-check-thick`** hidden while dragging.
+  - **Drop** preview row uses brand-light fill + brand border (Figma **Drop** / **Drag without selection** container).
+  - Emits `onDragDrop({ itemId, from, to, toIndex })` and `onItemsChange`.
+- **Tooltips (optional per item):** when `tooltipTitle` and/or `tooltipDescription` are set, render **`IdsTooltip`** per `components/ids/tooltip/design-spec.mdx` (reference: `storybook/src/components/IdsTooltip.tsx`, wrapper `storybook/src/components/dualListBoxItemTooltip.tsx`):
+  - Standard mode: `closable=false`, `showArrow=true`, `sideOffset=16` via positioner.
+  - Title + description → header (`title`) + body (`content`).
+  - Description only → body only (no empty header).
+  - Title only → body only (omit header slot per tooltip spec).
+  - Full-width row trigger: `triggerDisplay="block"`.
+- **Scroll:** when items exceed panel height (`12 Items` + scrollbar variant), list scrolls inside panel; overflow fade at bottom edge.
+- **Keyboard (reference implementation):**
+  - Tab into available or selected list (`tabIndex={0}` on scroll region) → roving focus on items (`tabIndex` 0 on focused row, `-1` on siblings).
+  - `ArrowUp` / `ArrowDown` — previous/next item in active pane; `Home` / `End` — first/last item.
+  - `Space` / `Enter` on focused item — toggle selection.
+  - `Escape` — clear selection in active pane.
+  - Tab to transfer `toolbar` → `Enter` / `Space` on enabled button runs transfer (same as click).
+
 ### Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Arrow keys, Enter, Space, Tab
-- Screen reader support: Proper ARIA attributes for lists
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use select elements with proper attributes
-- Focus management: Logical tab order through lists
-- Transfer announcements: Screen reader announces item transfers
+- Root: `role="group"` with `aria-label` describing dual list purpose.
+- Each pane list: `role="listbox"` with `aria-multiselectable="true"` when multi-select.
+- Items: `role="option"` + `aria-selected`.
+- Transfer buttons: `button` with `aria-label` per action (“Move selected to right”, etc.) and `disabled` when inactive.
+- Empty state: `aria-live="polite"` when selected list becomes non-empty.
+- Focus-visible: `var(--color-border-brand-base)` outline on items and buttons.
 
 ### Behavior & guidelines
-- Use dual list box for moving items between two collections
-- Provide clear visual separation between lists
-- Use transfer buttons with clear icons and labels
-- Test with screen readers for proper list announcement
-- Consider keyboard navigation for accessibility
-- Use responsive design for different screen sizes
-- Provide visual feedback for all interactions
-- Consider performance for large datasets
+- Use for assigning membership between two related collections (for example available vs assigned).
+- Keep transfer order consistent with Figma (all-right, selected-right, selected-left, all-left).
+- Do not hardcode hex literals in implementations — use tokens above.
+- Optional search/sort are host extensions; not in base Figma element set.
+
 ## Composition & API (runtime)
-Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
-### Variants
-- **Default**: Standard dual list box
-- **With Search**: Lists with search/filter functionality
-- **With Sort**: Lists with sorting capabilities
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Counts**: Lists showing item counts
-- **With Checkboxes**: Items with checkboxes for selection
-- **Virtual**: Virtual scrolling for large lists
-- **Drag and Drop**: Drag items between lists
+
+### Variants (Figma element sets)
+| Element | Variant axis | Values |
+| --- | --- | --- |
+| ListItemGroup | Item count | `0`, `6 Items`, `12 Items` |
+| ListItemGroup | Show Scrollbar | `true` / `false` (with 12 items) |
+| ListItem content | labelDescription | `false` (label only) · `true` (+ description line) |
+| Metrics | type | `Show Total` · `Show total and selected` |
+| ButtonGroup | action emphasis | which of four transfers is enabled (see matrix) |
+| Drag icon | property1 | `Default` · `Hover` · `Press` |
+
+### Data model
+
+```ts
+interface DualListBoxItem {
+  id: string;
+  name: string;
+  description?: string;
+  tooltipTitle?: string;
+  tooltipDescription?: string;
+}
+
+interface DualListBoxProps {
+  availableItems: DualListBoxItem[];
+  selectedItems: DualListBoxItem[];
+  /** Angular: `availableOptionsLabel` */
+  availableTitle?: string;
+  /** Angular: `selectedOptionsLabel` */
+  selectedTitle?: string;
+  availablePlaceholder?: string;
+  selectedPlaceholder?: string;
+  /** Angular: `moveRightButtonHoverTitle`. Default `Move right`. */
+  moveSelectedRightTitle?: string;
+  /** Angular: `moveLeftButtonHoverTitle`. Default `Move left`. */
+  moveSelectedLeftTitle?: string;
+  /** Angular: `addAllButtonHoverTitle`. Default `Add all from {availableTitle}`. */
+  moveAllRightTitle?: string;
+  /** Angular: `removeAllButtonHoverTitle`. Default `Remove all from {selectedTitle}`. */
+  moveAllLeftTitle?: string;
+  availableSelection?: string[];
+  selectedSelection?: string[];
+  showMetrics?: boolean;
+  metricsFormat?: "total" | "total-and-selected";
+  onAvailableSelectionChange?: (ids: string[]) => void;
+  onSelectedSelectionChange?: (ids: string[]) => void;
+  onItemsChange?: (detail: {
+    available: DualListBoxItem[];
+    selected: DualListBoxItem[];
+  }) => void;
+  enableDragDrop?: boolean;
+  onTransfer?: (detail: {
+    action: "moveAllRight" | "moveSelectedRight" | "moveSelectedLeft" | "moveAllLeft";
+    movedIds: string[];
+  }) => void;
+  onDragDrop?: (detail: {
+    itemId: string;
+    from: "available" | "selected";
+    to: "available" | "selected";
+    toIndex: number;
+  }) => void;
+  itemTooltipSide?: "top" | "bottom" | "left" | "right";
+  itemTooltipArrowAlign?: "start" | "center" | "end";
+}
+```
+
+Tooltip implementation MUST use the IDS Tooltip component contract in `components/ids/tooltip/design-spec.mdx` (not native `title` attribute or ad-hoc popovers).
+
+**Pane copy defaults (overridable):**
+
+| Prop | Default |
+| --- | --- |
+| `availableTitle` | `Available Items` |
+| `selectedTitle` | `Selected Items` |
+| `availablePlaceholder` | `Select items on the right to move` |
+| `selectedPlaceholder` | `Select items on the left to move` |
+
+**Transfer label defaults (overridable; used for `title` + `aria-label` on buttons):**
+
+| Prop | Default |
+| --- | --- |
+| `moveSelectedRightTitle` | `Move right` |
+| `moveSelectedLeftTitle` | `Move left` |
+| `moveAllRightTitle` | `Add all from {availableTitle}` |
+| `moveAllLeftTitle` | `Remove all from {selectedTitle}` |
+
+### Transfer enablement (default logic)
+| Priority | Condition | Move all right | Move selected right | Move selected left | Move all left |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Any pane has **list-item selection** | Disabled | Default if available selection | Default if selected selection | Disabled |
+| 2 | Selected pane **empty** | Default if available has items | Disabled | Disabled | Disabled |
+| 3 | Available pane **empty** | Disabled | Disabled | Disabled | Default if selected has items |
+| 4 | Both panes non-empty, no selection | Default | Disabled | Disabled | Default |
+
+### Spec Accurate Design story defaults (codegen parity)
+
+- **Figma reference:** `12114:232557` (`Type=Move all to right`, 724×459)
+- **Titles:** `availableTitle: "Available Items"`, `selectedTitle: "Selected Items"`
+- **Available pane:** six items, `name: "List Item"`, ids `avail-1` … `avail-6`; no pre-selection
+- **Selected pane:** empty — placeholder `Select items on the left to move`
+- **Transfer column:** **Move all right** Default (brand); other three Disabled (gray)
+- **Metrics:** header row `Total: 6` / `Total: 0` beside titles
+- Frame: horizontal layout, canvas `var(--color-background-surface-1)`, padding `16px`, max width ~`724px`
+- No per-item tooltips in primary story (strict Figma parity)
+- Theme: `components/ids-theme.css` only
+
 ## Codegen Contract (Framework-Agnostic Blueprint)
+
 ### Deterministic structure
-Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
+Emit **`DualListBoxRoot`** containing **`AvailablePane`**, **`TransferButtonGroup`**, **`SelectedPane`** in that order. Each pane contains **`ListGroup`** → `ListItem` slots as in **Anatomy**.
 
 ### Variant matrix
-See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
+| available count | selected count | Selected pane UI | Scrollbar |
+| --- | --- | --- | --- |
+| 6 | 0 | empty placeholder | off |
+| 6 | >0 | item rows | off |
+| 12 | any | item rows | on when overflow |
 
 ### Per-slot style contract
-Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+- Apply **Layout & Measurements** and **States** tokens only.
+- Transfer icons: `double-chev-right`, `chev-right`, `chev-left`, `double-chev-left` at `16×16` from `assets/icons/`.
+- Drag handle: **`arrow-arrange`** at `16×16` (required slug).
+- Selection check: **`shape-check-thick`** at `16×16` when selected and not dragging.
 
 ### Behavior contract
-See **Interactions** and **Interactions → Behavior & guidelines**.
+- Implement transfer table in **Composition → Transfer enablement**.
+- Empty panes must render the configured placeholder when that pane’s `items.length === 0`.
+- Updating collections emits `onItemsChange`; each button click emits `onTransfer` with action + `movedIds`.
 
 ### Accessibility contract
-See **Interactions → Accessibility**.
+- See **Interactions → Accessibility**; all four transfers must have discernible names.
 
 ### Asset resolution + bundling contract
-When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+- Icons via shared Icon primitive / `assets/icons/<slug>.svg`.
+- No inline hex in generated CSS.
 
 ### Fallback/error rules
-- Unknown variant or state → fall back to the documented default variant.
-- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+- Duplicate `id` in either list → validation error at boundary.
+- Unknown `metricsFormat` → `total`.
+- Missing `name` → use `id` as accessible name fallback.
+
 ### Validation checklist
-- [ ] Implement item transfer functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Arrows, Enter, Space, Tab)
-- [ ] Verify ARIA attributes and roles
-- [ ] Test hover and focus states
-- [ ] Implement search/filter functionality
-- [ ] Add multi-selection support
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test drag and drop functionality
+- [x] List panel 300×384 sample padding/gap matches Figma element nodes
+- [x] List item padding 8/16/14 and 8px icon–text gap
+- [x] Transfer stack order and 16px vertical gap
+- [x] Pane titles + header-row Total metrics (`12114:232557`)
+- [x] User-defined placeholders (available / selected defaults)
+- [x] Transfer Default/Disabled visuals match Figma `12337:28658` (brand vs gray only)
+- [x] Transfer button matrix (five Figma `action` variants)
+- [x] List item states `12114:230677` (selected check, drag, drop preview)
+- [x] DnD via `arrow-arrange` + `onDragDrop`
+- [x] Optional `tooltipTitle` / `tooltipDescription` via IDS Tooltip spec (`components/ids/tooltip/design-spec.mdx`)
+- [x] `DualListBoxItem` uses `id` + `name`
+- [x] Token-only colors (no hardcoded hex in reference implementation)
+- [x] **Spec Accurate Design** under `Spec Generated/IDS/Dual List Box` (Figma `12114:232557`)
+- [x] Keyboard roving focus + arrows/Home/End/Escape in reference `IdsDualListBox`
+- [x] Transfer button `title` / `aria-label` (Angular hover-title parity)
+- [x] Empty pane `aria-live="polite"` on placeholder
+
 ## Source Mapping
-- Figma component: Dual List Box (11067-54563)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Dual List Box" (category "Formelements"; node "11067-54563")
+| Role | Figma node | URL |
+| --- | --- | --- |
+| Full assembly (titled panes) | `12114:232557` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12114-232557&m=dev |
+| Library instance (primary) | `22468:31229` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-31229&m=dev |
+| List item (state matrix) | `12114:230677` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12114-230677&m=dev |
+| List item group set | `12114:230814` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12114-230814&m=dev |
+| List group — 6 items | `12114:230813` | (variant) |
+| List group — empty | `12114:232129` | (variant) |
+| List group — 12 items + scrollbar | `12114:230812` | (variant) |
+| Transfer button group | `12337:28658` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12337-28658&m=dev |
+| Drag icon | `12114:230638` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12114-230638&m=dev |
+| Item content | `12337:8368` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12337-8368&m=dev |
+| Metrics | `12114:232041` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12114-232041&m=dev |
+| Instance slot (secondary) | `22468:33536` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-33536&m=dev |
+
+- **Component map:** `data/component-figma-map.json` → `Dual List Box` (Form Elements)
+- **Intake session:** design-spec intake wizard, confirmed 2026-05-20
+- **Evidence:** Figma MCP `get_design_context` + `get_metadata` on `12114:232557` and element nodes (2026-05-20)
