@@ -3,6 +3,12 @@
   cursor: default;
 }
 
+.triggerBlock {
+  display: block;
+  width: 100%;
+  cursor: default;
+}
+
 .popup {
   position: relative;
   background: var(--color-background-surface-2);
