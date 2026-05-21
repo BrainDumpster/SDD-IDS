@@ -27,10 +27,10 @@
 - Selected dot size: `8px x 8px`, centered.
 - Dot-to-ring inset: `4px` (computed from 16 outer and 8 inner).
 - Label gap from control: `var(--spacing-space-8)`.
-- Min hit area: `44px` height (control can be visually smaller than hit target).
+- Min hit area: `20px` height.
 - Focus-visible ring:
   - 1px outline with `var(--color-border-brand-base)`,
-  - 3px offset from the outer control.
+  - 2px offset from the outer control.
 ## Tokens
 - Borders:
   - `var(--border-width-border-1)`
@@ -41,7 +41,6 @@
   - `var(--color-border-disabled)`
 - Backgrounds:
   - `var(--color-background-component)`
-  - `var(--color-background-controls-brand-base)`
   - `var(--color-background-controls-brand-strong)`
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-base)`
@@ -57,15 +56,16 @@
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
+  - `font-weight: 500`
 ## States (Light Theme)
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
 | Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
 | Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
-| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
-| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-background-controls-brand-base)` | `var(--color-text-neutral)` |
+| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
 | Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
 ## States (Dark Theme)
@@ -132,9 +132,9 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ### Per-slot style contract
 - Control stays circular and 16x16 across states.
-- Dot appears only when selected; default dot fill `var(--color-background-controls-brand-base)`; selected hover dot `var(--color-icon-brand-strong)` per state table.
+- Dot appears only when selected; default dot fill `var(--color-icon-brand-base)`; selected hover dot `var(--color-icon-brand-strong)` per state table.
 - Label spacing stays `var(--spacing-space-8)`.
-- Focus-visible ring uses 1px brand outline with 3px offset.
+- Focus-visible ring uses 1px brand outline with 2px offset.
 - Harness-only simulated state (`data-simulated-state` or equivalent) is allowed for Storybook; omit in production defaults unless documenting fixtures.
 - No hardcoded values for color/border/typography.
 
@@ -166,3 +166,18 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Primary extraction source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26737&m=dev`
 - Component/state matrix source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26730&m=dev`
 - Additional state validation board: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14225&m=dev`
+
+---
+
+## Implementation Notes
+
+**Layout & structure**
+- **Group gap**: use `var(--spacing-space-16)` between radio items, not `var(--spacing-space-12)`
+- **Wrapper min-height**: `20px` — matches the label line-height; do not set `44px` on the wrapper
+- **Label font-weight**: `500` — apply on `.wrapper` (the label row), not on the label element alone
+
+**Focus-visible ring**
+- **Outline offset**: `2px` — applies to both real `:focus-visible` and `data-simulated-state="focus-visible"`
+
+**Selected dot token**
+- **Dot fill (default + focus-visible)**: use `var(--color-icon-brand-base)`, not `var(--color-background-controls-brand-base)`. The `-controls-` background token is unused in this component
