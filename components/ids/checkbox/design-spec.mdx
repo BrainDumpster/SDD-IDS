@@ -21,14 +21,14 @@
 - Control box visual size: `16px x 16px` with `1px` border outside (effective outer footprint `18px x 18px`).
 - Control border radius: `var(--corner-radius-radius-2)`.
 - Root spacing between control and label: `var(--spacing-space-8)`.
-- Root min tap target: `44px` height (hit area may exceed visual box).
+- Root min tap target: `20px` height.
 - Label aligns vertically with control center.
 - Checked indicator geometry: CSS-drawn thick check mark in an `8px x 8px` lane with sharp corners/edges (no rounded stroke caps), center-aligned to match Figma placement with optical Y nudge `-0.5px`.
-- Indeterminate indicator geometry: CSS-drawn horizontal stroke centered within the control (`8px` width, `2px` height) with rounded ends.
+- Indeterminate indicator geometry: CSS-drawn horizontal stroke centered within the control (`8px` width, `2px` height), no rounded ends.
 - Assistive text indentation aligns to the full control footprint + label gap: `calc(18px + var(--spacing-space-8))`.
 - Focus-visible ring:
   - 1px outline using `var(--color-border-brand-base)`,
-  - ring offset outside control by 3px.
+  - ring offset outside control by 2px.
 ## Tokens
 Use semantic tokens only.
 
@@ -55,19 +55,20 @@ Use semantic tokens only.
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
+  - `font-weight: 500`
 ## States (Light Theme)
 | Selection | Interaction | Box Background | Box Border | Indicator | Label |
 |---|---|---|---|---|---|
 | Unchecked | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral-strong)` |
 | Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral-strong)` |
-| Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | none | `var(--color-text-neutral-strong)` |
+| Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | none | `var(--color-text-neutral-strong)` |
 | Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Checked | Hover | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 3px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
+| Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 2px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
 | Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 3px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` for unselected/indeterminate; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; indeterminate dash uses `var(--color-border-disabled)`; unchecked none | `var(--color-text-disabled)` |
+| Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Any | Disabled | `var(--color-background-gray-light)` for unselected/indeterminate; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; indeterminate dash uses `var(--color-icon-disabled)`; unchecked none | `var(--color-text-disabled)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -121,8 +122,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - checked: draw with sharp-corner CSS geometry in an `8x8` lane (no rounded caps), using deterministic polygon points:
     - `clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%)`
     - optical placement: `translateY(-0.5px)`
-  - indeterminate: draw a centered rounded horizontal stroke (`8x2`) with radius `2px`.
-- Focus-visible ring uses 1px brand outline with 3px offset outside the box.
+  - indeterminate: draw a centered horizontal stroke (`8x2`), no border-radius.
+- Focus-visible ring uses 1px brand outline with 2px offset outside the box.
 - Label gap from control remains `var(--spacing-space-8)`.
 - No hardcoded colors; token-only.
 
@@ -155,3 +156,20 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Component map: `data/component-figma-map.json` → `Checkbox`
 - Figma link used for extraction: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41895-299521&m=dev`
 - State annotation source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42151-53254&m=dev`
+
+---
+
+## Implementation Notes
+
+**Layout & structure**
+- **Wrapper min-height**: `20px` — matches the label line-height; do not set `44px` on the wrapper
+- **Label font-weight**: `500` — apply on the wrapper label row
+
+**Focus-visible ring**
+- **Outline offset**: `2px` — applies to both real `:focus-visible` and `.rootSimulatedFocus` (Storybook static demos)
+
+**Indeterminate indicator**
+- **No border-radius**: the horizontal dash (`8x2`) uses no `border-radius`; do not add rounded ends
+
+**Disabled indicator token**
+- **Indeterminate and mixed disabled**: use `var(--color-icon-disabled)` for the dash color, not `var(--color-border-disabled)`
