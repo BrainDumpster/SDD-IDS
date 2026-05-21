@@ -4,15 +4,26 @@ import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsTooltip.module.css";
 
+/** Reference: `components/ids/tooltip/design-spec.mdx` */
 export interface IdsTooltipProps {
+  /** BodyContent — required per IDS Tooltip spec. */
   content: ReactNode;
+  /** Optional header title (Body 2 Medium). Omitted when unset. */
   title?: string;
   children: ReactNode;
+  /** `side` in design spec. Default `top`. */
   side?: "top" | "bottom" | "left" | "right";
+  /** `arrowAlign` in design spec. Default `center`. */
+  arrowAlign?: "start" | "center" | "end";
+  /** @deprecated Use `arrowAlign`. */
   align?: "start" | "center" | "end";
   showArrow?: boolean;
+  /** Default `false` — hover/focus dismiss (standard tooltip). */
   closable?: boolean;
-  onClose?: (reason: "close-click" | "escape") => void;
+  /** Trigger layout; use `block` for full-width row triggers (e.g. Dual List Box items). */
+  triggerDisplay?: "inline" | "block";
+  onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: "close-click" | "escape" | "programmatic") => void;
 }
 
 export function IdsTooltip({
@@ -20,18 +31,24 @@ export function IdsTooltip({
   title,
   children,
   side = "top",
-  align = "center",
+  arrowAlign,
+  align,
   showArrow = true,
   closable = false,
+  triggerDisplay = "inline",
+  onOpenChange,
   onClose,
 }: IdsTooltipProps) {
+  const resolvedAlign = arrowAlign ?? align ?? "center";
   const [open, setOpen] = useState(false);
   const [manuallyDismissed, setManuallyDismissed] = useState(false);
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
+      onOpenChange?.(nextOpen);
+
       if (!closable) {
-        // Standard tooltip behavior: open/close follows trigger hover/focus lifecycle.
+        // Standard tooltip (`closable=false`): hover/focus lifecycle per IDS spec.
         setOpen(nextOpen);
         return;
       }
@@ -49,7 +66,7 @@ export function IdsTooltip({
 
       setOpen(false);
     },
-    [closable, manuallyDismissed]
+    [closable, manuallyDismissed, onOpenChange]
   );
 
   const dismissTooltip = useCallback(() => {
@@ -79,13 +96,23 @@ export function IdsTooltip({
   return (
     <BaseTooltip.Provider>
       <BaseTooltip.Root open={open} onOpenChange={handleOpenChange}>
-        <BaseTooltip.Trigger className={styles.trigger} render={<span />}>
+        <BaseTooltip.Trigger
+          className={
+            triggerDisplay === "block" ? styles.triggerBlock : styles.trigger
+          }
+          render={<span />}
+        >
           {children}
         </BaseTooltip.Trigger>
         <BaseTooltip.Portal>
-          <BaseTooltip.Positioner side={side} align={align} sideOffset={16}>
+          <BaseTooltip.Positioner
+            side={side}
+            align={resolvedAlign}
+            sideOffset={16}
+          >
             <BaseTooltip.Popup
               className={popupClassName}
+              role="tooltip"
               onKeyDown={(event) => {
                 if (event.key === "Escape" && closable) {
                   dismissTooltipWithEscape();

@@ -17,7 +17,7 @@ const meta: Meta<typeof IdsTooltip> = {
     title: "Tooltip Title",
     content: longContent,
     side: "top",
-    align: "start",
+    arrowAlign: "start",
     showArrow: true,
     closable: false,
     children: "Hover over me",
@@ -44,7 +44,7 @@ export const NormalNoHeader: Story = {
     closable: false,
     showArrow: true,
     side: "top",
-    align: "start",
+    arrowAlign: "start",
   },
 };
 
