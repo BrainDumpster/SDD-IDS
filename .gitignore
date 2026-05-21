@@ -19,4 +19,7 @@ storybook/storybook-static/
 # Temporary workspace artifacts
 .tmp_*
 **/.tmp_*
+# Design-spec intake wizard session logs (optional audit files)
+data/design-spec-intake/sessions/*
+!data/design-spec-intake/sessions/.gitkeep
 

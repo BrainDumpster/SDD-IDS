@@ -7,6 +7,10 @@ description: Build production-ready, framework-agnostic design-spec blueprints f
 
 Use this skill when creating or upgrading design specs for spec-driven code generation, for example **`components/ids/<component>/design-spec.mdx`** (IDS) or **`components/synapse/<component>/design-spec.mdx`** (Synapse).
 
+## New spec? Start with the intake wizard
+
+If the user wants a **new** `design-spec.mdx` and has not supplied programme, component name, and Figma URLs together, run **design-spec-intake-wizard** first (or point them to `docs/design-spec-intake.md` **base prompt**). Do not skip the interview and confirm step. After the file exists, use this blueprint skill for hardening and updates.
+
 ## Objective
 
 Produce deterministic, production-ready specs that can generate components across frameworks (React, Angular, Vue, Lit, etc.) without hidden assumptions.
@@ -96,6 +100,15 @@ Uses `scripts/design_spec_template.py` (`NEW_SPEC_TEMPLATE`) for canonical headi
   - booleans: `showX`, `isX`, `enableX`
   - events: `onX`
 
+## Storybook (Spec Generated / Spec Accurate Design)
+
+When generating or updating Storybook for a component with `Storybook examples requested: yes` in Metadata:
+
+- Meta `title`: `Spec Generated/IDS/<Name>` or `Spec Generated/DAP/<Name>` (not `Components/...`).
+- Primary story **name**: `Spec Accurate Design` — canonical spec → UI parity for codegen/QA.
+- Import one programme theme CSS; story args must match spec **Composition & API** and any **Spec Accurate Design story defaults** section.
+- See `docs/design-spec-authoring-contract.md` and `generation/deterministic_storybook/helpers.py`.
+
 ## Production-Ready Definition
 
 A spec is production-ready only when:
@@ -104,3 +117,4 @@ A spec is production-ready only when:
 - No unresolved TODO/TBD/placeholder text exists.
 - Codegen Contract is testable and internally consistent (concrete contracts, not only cross-refs).
 - Source mapping is explicit and reproducible.
+- When Storybook was requested: **Spec Accurate Design** exists under **Spec Generated/<programme>/...** and references this spec path.
