@@ -213,8 +213,16 @@
   {
     "category": "Navigation",
     "component": "Main Menu/Top",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54522&m=dev",
-    "nodeId": "11067-54522"
+    "designSpecPath": "components/ids/main-menu-top/design-spec.mdx",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=10189-30280&m=dev",
+    "nodeId": "10189-30280",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentNodeId": "10189:30280",
+    "primaryElementNodeId": "11099:56576",
+    "specAccurateDesignNodeId": "10189:30280",
+    "useCaseNodeId": "42136:57443",
+    "useCaseFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42136-57443&m=dev",
+    "elementNodeIds": ["11099:56576", "12579:19717", "12380:16525"]
   },
   {
     "category": "Navigation",
