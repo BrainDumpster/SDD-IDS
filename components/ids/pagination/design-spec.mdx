@@ -19,7 +19,7 @@
   - `PerPageDropdown` (trigger + menu with `arrow-drop-tri-caret`)
   - `ResultsSuffix` ("per page")
 - `PageNavigationGroup`
-  - `FirstPageButton` (`double-chev-left`)
+  - `FirstPageButton` (`double-chev-left`) (always shown when `showFirstLast` is true, disabled at first page with `var(--color-icon-disabled)`)
   - `PrevPageButton` (`chev-left`)
   - `PageInput` (textbox)
   - `PageCountText` (format is `"of {totalPages}"` with exactly one space after `of`; single-page fallback `"1 page"`)
@@ -28,16 +28,17 @@
 - `OptionalPageOffsetDropdown` (trigger + menu with `arrow-drop-tri-caret`)
 ## Layout & Measurements
 - Main row (`Pagination - Main`):
-  - Height: `48px`
+  - Height: `48px` (total height including border)
   - Horizontal padding: `24px` left, `32px` right
-  - Border: `1px solid var(--color-border-accessible)`
+  - Border: `1px solid var(--color-border-accessible)` (implementation note: uses `box-sizing: border-box` so border is inside container)
   - Supports `Background=Gray` and `Background=None`.
 - Results-per-page group gap: approximately `15.5px` in Figma; runtime may normalize to nearest spacing token.
 - Page-navigation group gap: `16px`.
 - Page input:
-  - Width: `52px`
+  - Width: `40px`
   - Height: `32px`
-  - Padding: `5px/6px` vertical + `16px` horizontal (visual equivalent).
+  - Padding: `5px/6px` vertical, `0px` horizontal
+  - Text alignment: `center`
 - Page count text:
   - Must render as `of {totalPages}` with one whitespace separator.
   - Example: `of 16`.
@@ -45,7 +46,7 @@
   - Width: `90px`
   - Height: `32px`
   - Horizontal padding: `16px`
-  - Caret slot: `10px`
+  - Caret slot: `10px` (implementation note: Icon component defaults to 16px, must override with `style={{ width: 10, height: 10 }}`)
   - **Border radius: `0` (square corners, per IDS nodes `11677:157848` and `37721:115839`)**
 - Results-per-page dropdown menu:
   - Width tracks trigger (`90px` in sample)
