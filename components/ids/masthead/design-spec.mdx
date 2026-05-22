@@ -16,15 +16,13 @@
 - Focus ring for keyboard navigation
 - Optional notification badges
 ## Layout & Measurements
-- Standard height: 64px
-- Logo width: 120px
-- Title spacing: 16px from logo
-- Navigation spacing: 32px between items
-- Horizontal padding: 16px
+- Standard height: 56px (`--scale-56`)
+- Horizontal padding: 16px left, 8px right
+- Bottom border: `var(--border-width-border-1)` solid `var(--color-border-transparent-neutral)`
 - Border radius: 0 (full-width masthead)
-- Focus ring: 2px offset from item
-- Icon size: 24px × 24px
-- Status indicator size: 8px × 8px
+- Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
+- Action icon button: 16px × 16px icon, padding 19px 16px
+- Avatar chip: 32px × 32px circle, padding 11px 8px
 - Minimum width: Full viewport width
 ## Tokens
 ### Colors
@@ -35,7 +33,6 @@
 - Surface 2: `var(--color-background-surface-2)` = #ffffff
 - Neutral strong: `var(--color-text-neutral-strong)` = #252525
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- White text: `var(--color-text-white)` = #ffffff
 - Accessible border: `var(--color-border-accessible)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
 - White border: `var(--color-border-white)` = #ffffff
@@ -99,21 +96,24 @@
 ### Token gaps and notes
 - All colors use semantic CSS custom properties for theme consistency
 - Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
 - Active states use brand colors for clear indication
 - Status indicators use appropriate color psychology
 - Dark theme adaptation through semantic tokens
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Masthead Container | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Logo Section | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Default) | transparent | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Masthead Container | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-transparent-neutral)` (#ffffff00) bottom only | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Logo Section | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Default) | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Navigation Item (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Focus) | `var(--color-background-masthead-brand-strong)` (#0062ab) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Active) | `var(--color-background-masthead-brand-stronger)` (#06528a) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| User Section (Default) | transparent | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Focus) | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) dashed inset | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Active / Pressed) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Open / aria-expanded) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Navigation Item (Open + Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| User Section (Default) | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | User Section (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| User Section (Open / aria-expanded) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| User Section (Open + Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Status Indicator (Success) | `var(--color-background-alerting-success)` (#1b8500) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-green` (#1B8500) |
 | Status Indicator (Critical) | `var(--color-background-alerting-critical)` (#af0000) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-red` (#AF0000) |
 ## States (Dark Theme)
@@ -125,13 +125,11 @@
 ## Interactions
 - Click navigation items to navigate to respective pages
 - Hover provides visual feedback with background changes
-- Focus ring uses brand color for keyboard navigation
 - User section shows account options on click
 - Status indicators show system state
-- Keyboard navigation: Arrow keys, Enter, Tab, Escape
 - Search functionality within masthead (optional)
 ### Accessibility
-- Focus ring: 2px brand color border
+- Focus ring: applies to action elements (icon buttons, avatar button) only — not the masthead container. Style: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset)
 - Keyboard navigation: Arrow keys, Enter, Tab, Escape
 - Screen reader support: Proper ARIA attributes for navigation
 - High contrast: Meets WCAG AA standards with provided colors
@@ -150,11 +148,26 @@
 - Use consistent styling across masthead variants
 ## Composition & API (runtime)
 - `productName: string` (required)
-- `logo?: RenderableNode`
 - `iconsSlot?: RenderableNode`
 - `appLauncherSlot?: RenderableNode`
-- `avatarSlot?: RenderableNode`
-- `sticky?: boolean` (default `false`)
+- `avatarSlot: RenderableNode` (required)
+
+### MastheadActionIconButton
+- `icon: ReactNode` (required) — use `Icon variant="mask"` (default) for SVG assets with hardcoded fills; use `variant="inline"` only for SVGs authored with `currentColor`
+- `aria-label: string` (required)
+- `aria-expanded?: boolean` — set when button controls an open panel/dropdown
+
+### MastheadAvatar
+- `initials?: string`
+- `icon?: ReactNode` — inline SVG icon (16×16, `color-icon-white`); use instead of `imageSrc` for design system icons
+- `imageSrc?: string` — photo URL (fills full chip)
+- `imageAlt?: string`
+
+### Avatar chip typography (initials)
+- `font-size: var(--font-size-body-2)`
+- `font-weight: 400`
+- `font-variation-settings: 'wdth' 100` (required for Roboto variable font to render correctly)
+- `line-height: var(--font-line-height-line-height-20)`
 ### Variants
 - **Default**: Standard brand masthead
 - **With Search**: Masthead with integrated search
@@ -187,6 +200,32 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
+## Implementation Notes
+
+### Icon color
+- All icons on the masthead must use `var(--color-icon-white)`, **not** `var(--color-text-white)`.
+- Icon buttons and avatar buttons set `color: var(--color-icon-white)` on the root element so `currentColor` resolves correctly for child icons.
+- SVG assets in `assets/icons/` (e.g. `user-single-16.svg`, `grid-square-9-16.svg`) contain hardcoded `fill` values — **do not use `variant="inline"`** for these. Use `variant="mask"` (default) so CSS masking with `background-color: currentColor` applies the correct white color.
+- Only use `Icon variant="inline"` for SVGs that are authored with `currentColor` strokes/fills (e.g. custom inline SVGs). Ensure SVG paths do not have explicit fill values.
+
+### Button background in default state
+- All interactive buttons on the masthead (icon buttons, avatar, app launcher trigger) use `background: var(--color-background-masthead-brand-base)` in the default state, **not `transparent`**.
+- Although visually identical to transparent (since the parent masthead shares the same color), Figma specifies an explicit `masthead-brand-base` token for the default state.
+
+### Open state (aria-expanded)
+- Set `aria-expanded="true"` on a button when it controls an open dropdown or panel.
+- `[aria-expanded="true"]` → `masthead-brand-stronger` background (same as active/pressed).
+- `[aria-expanded="true"]:hover` → `masthead-brand-strong` background (hover always wins over open state).
+
+### Avatar icon vs photo
+- Use the `icon` prop (inline SVG, 16×16, `color-icon-white`) for design system icons (e.g. `user-single-16`).
+- Use the `imageSrc` prop for actual user photos — fills the full 32×32 chip.
+- Do not use `<img src="*.svg">` for masthead icons; SVG served via `<img>` cannot be recolored through CSS.
+
+### AppLauncher integration
+- When using `AppLauncher` with `triggerVariant="masthead"`, the trigger button must set `color: var(--color-icon-white)` — not `var(--color-text-white)`.
+- The app launcher grid icon (`grid-square-9-16`) has a hardcoded `fill` in the SVG asset. Do not use `variant="inline"` — use `variant="mask"` (default) so the icon inherits `color-icon-white` via `currentColor`.
+
 ## Source Mapping
 - Figma component: Masthead (9054-24736)
 - Variable collection: UI Palettes, Typography tokens
