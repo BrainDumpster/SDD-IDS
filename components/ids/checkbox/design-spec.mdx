@@ -65,10 +65,10 @@ Use semantic tokens only.
 | Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Checked | Hover | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
 | Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 2px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Indeterminate | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Indeterminate | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Indeterminate | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` for unselected/indeterminate; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; indeterminate dash uses `var(--color-icon-disabled)`; unchecked none | `var(--color-text-disabled)` |
+| Partial | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Partial | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Partial | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
+| Any | Disabled | `var(--color-background-gray-light)` for unselected/partial; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; partial dash uses `var(--color-icon-disabled)`; unchecked none | `var(--color-text-disabled)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -110,14 +110,14 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - optional `assistiveText`
 
 ### Variant matrix
-- Selection: unchecked | checked | indeterminate.
+- Selection: unchecked | checked | partial.
 - Interaction: default | hover | focus-visible | disabled.
 - Validation: default | error.
 - Mode: controlled | uncontrolled.
 
 ### Per-slot style contract
 - Control visual box remains 16x16 in all states, with 1px outer border (effective footprint 18x18).
-- Indicator appears only for checked or indeterminate.
+- Indicator appears only for checked or partial.
 - Indicator implementation must be CSS-only (no image or inline SVG):
   - checked: draw with sharp-corner CSS geometry in an `8x8` lane (no rounded caps), using deterministic polygon points:
     - `clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%)`
@@ -144,9 +144,9 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ### Validation checklist
 - [ ] All 15 state combinations (selection x interaction, including disabled rows) map to tokens.
-- [ ] Indeterminate visuals and ARIA `mixed` are implemented.
+- [ ] Partial (indeterminate) visuals and ARIA `mixed` are implemented.
 - [ ] Checked indicator uses sharp-corner geometry (no rounded caps) and preserves the inner-left notch shape.
-- [ ] Checked and indeterminate indicators remain optically centered inside the control.
+- [ ] Checked and partial indicators remain optically centered inside the control.
 - [ ] Focus-visible ring appears only for keyboard focus.
 - [ ] Disabled blocks interaction and uses disabled tokens.
 - [ ] Label association is screen-reader valid.
@@ -167,6 +167,10 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 **Focus-visible ring**
 - **Outline offset**: `2px` — applies to both real `:focus-visible` and `.rootSimulatedFocus` (Storybook static demos)
+
+**Partial vs indeterminate naming**
+- **Figma variant** uses `partial` as the selection value (`unselected | selected | partial`); **code/ARIA** uses `indeterminate` (prop name `indeterminate`, `aria-checked="mixed"`). These refer to the same visual state — do not rename the prop or ARIA attribute.
+- **Storybook labels and column headers** must display `"Partial"` (not `"Indeterminate"`) to match Figma naming. The prop passed to the component remains `indeterminate={true}`.
 
 **Indeterminate indicator**
 - **No border-radius**: the horizontal dash (`8x2`) uses no `border-radius`; do not add rounded ends
