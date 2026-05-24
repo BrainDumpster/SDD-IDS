@@ -213,3 +213,6 @@ Variant matrix:
   - Page navigation states: `11677:157817`
 - Live verification evidence:
   - `get_metadata`, `get_design_context`, `get_variable_defs` run on all nodes above.
+
+## Implementation Notes
+- **Background mode fix (2026-05-24)**: Fixed `background="none"` to use `transparent` background instead of `var(--color-background-component)`. This ensures the pagination root has no background color when the "none" mode is selected, allowing it to blend with the parent container's background.
