@@ -1,173 +1,239 @@
 # Footer Design Spec
 
 ## Metadata
-- Component: Footer
-- Category: Navigation
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38732-114951&m=dev
-- Node ID: 38732-114951
+- **Component:** Footer
+- **Category:** Navigation
+- **Design System:** IDS
+- **Version:** 1.0.0
+- **Description:** Application status footer bar with optional host name, SWID (with copy), current date/time, and time-zone selector.
+- **Status:** active
+- **Created:** 2026-05-22
+- **Updated:** 2026-05-25
+- **Figma (validated):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38908-5818&m=dev
+- **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
+- **Primary node:** `38908:5818` (component instance `Footer`)
+- **Child nodes (same file):** `38908:5819` Left; `38908:5820` Host Name; `38908:5821` SWID; `38908:5823` copy; `38908:5825` Time; `38908:5826` time-clock; `38908:5829` Time Zone; `38908:5830` world-globe
+- **Figma variant axes (boolean toggles on component):** `hostname`, `currentDateAndTime`, `timeZone` (all default `true` in library sample)
+- **Storybook examples requested:** yes
+- **Storybook path:** `storybook/src/components/IdsFooter.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
+- **Storybook meta title:** `Spec Generated/IDS/Footer`
+- **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-05-22)
+
 ## Anatomy
-- Footer container with background
-- Logo/brand section
-- Navigation links (multiple columns)
-- Legal/copyright section
-- Social media links
-- Contact information
-- Back to top button (optional)
-- Focus ring for keyboard navigation
+Deterministic slot order (left → right):
+
+1. `FooterRoot` — full-width status bar container (`<footer>` or host-equivalent landmark)
+2. `FooterLeftRegion` — grows to fill remaining horizontal space (`flex: 1`)
+3. `FooterHostName` (optional) — label + value pair (`Host Name:` + hostname string)
+4. `FooterSwidGroup` (optional when SWID shown) — label + value + `FooterCopyControl`
+5. `FooterCopyControl` — icon-only control for SWID copy (`copy` icon, 14×14)
+6. `FooterTimeGroup` (optional) — `FooterTimeIcon` + `FooterDateTimeLabel`
+7. `FooterTimeZoneGroup` (optional) — `FooterTimeZoneIcon` + `FooterTimeZoneAction` (link-styled control)
+
 ## Layout & Measurements
-- Standard height: 200px (varies with content)
-- Section padding: 24px
-- Column spacing: 32px
-- Link spacing: 8px vertical
-- Border radius: 0 (footer typically spans full width)
-- Focus ring: 2px offset from interactive elements
-- Minimum width: Full viewport width
-- Responsive breakpoints for mobile
+- Root width is container-driven: `width: 100%`, `box-sizing: border-box`.
+- Root height: **32px** (fixed bar height in Figma sample `38908:5818`).
+- Root layout: horizontal flex, `align-items: center`, main axis packs optional right groups toward the **end** (`justify-content: flex-end`); left region still consumes free space on the start side.
+- Root border: `var(--border-width-border-1)` solid `var(--color-border-light)` on all sides (Figma frame uses full perimeter stroke).
+- Root padding: none on root; inner regions carry horizontal padding.
+- **Left region:** `padding-left` / `padding-right` `var(--padding-padding-16)`; gap between host and SWID groups `var(--spacing-space-24)`; items vertically centered.
+- **Host name block:** content-driven width; Figma sample text area ~277px — do not hardcode width at runtime unless product requires truncation.
+- **SWID group:** inline flex, gap `var(--spacing-space-8)`; copy control **14×14px** hit target (expand focus ring per a11y contract).
+- **Time group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom (Figma asymmetric), `var(--padding-padding-16)` left, `var(--padding-padding-8)` right; clock icon **16×16px**.
+- **Time zone group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom, `var(--padding-padding-8)` left, `var(--padding-padding-16)` right; globe icon **16×16px**.
+- Typography: **Body 2** medium — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular/medium per Figma pairing.
+- Sample frame width **1664px** in Figma is reference-only; runtime width follows application shell.
+
 ## Tokens
-### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Surface background: `var(--color-background-surface-1)` = #f4f4f4
-- Surface 2: `var(--color-background-surface-2)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Accessible border: `var(--color-border-accessible)` = #757575
-- Brand border: `var(--color-border-brand-base)` = #0076ce
-- Light border: `var(--color-border-light)` = #c5c5c5
-- White border: `var(--color-border-white)` = #ffffff
-- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
-
-### Icons
-- Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
-- Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
-- White icon: `var(--color-icon-white)` = #ffffff
-
-### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
-- Masthead brand: `var(--color-background-masthead-brand-base)` = #0076ce
-
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 500: `UI Palettes/Gray/gray-500` = #757575
-- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
-
-### Neutral Colors
-- White: `Neutral/White - #FFFFFF` = #FFFFFF
-- Gray 100: `Neutral/Gray-100 - #F7F7F7` = #F7F7F7
-- Gray 300: `Neutral/Gray-300 - #E4E4E4` = #E4E4E4
-
-### Other Colors
-- Annotation: `Annotation` = #E8178A
-
-### Effects
-- Cards Drop Shadow: Drop shadow effect for elevated elements
-- Tooltip Drop Shadow: Drop shadow for tooltips
 ### Typography
-- Display 1/Default: Roboto Light 72px/88px (hero footer branding)
-- Header/Header 1: Roboto Regular 28px/64px (large section headers)
-- Header 4: Roboto Regular 28px/34px (section headers)
-- Header 6: Roboto Regular 18px/25px (sub-headers)
-- Body 1: Roboto Regular 16px/24px (main content)
-- Body 2: Roboto Regular 14px/20px (secondary content)
-- Body 2 - Medium: Roboto Medium 14px/20px (emphasized links)
+- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral-strong)`
+- Host/SWID values: same size/line-height, `var(--color-text-neutral)`
+- Date/time label: Body 2 medium, `var(--color-text-neutral)`
+- Time zone action label: Body 2 medium, `var(--color-text-brand-strong)`
 
-### Token gaps and notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Link states provide clear visual feedback
-- Dark theme adaptation through semantic tokens
-- Footer layout should be responsive and accessible
+### Colors and surfaces
+- Bar background: `var(--color-background-surface-1)`
+- Bar border: `var(--color-border-light)`
+- Copy icon (default/interactive): `var(--color-icon-brand-base)`
+- Time clock icon: `var(--color-icon-neutral)`
+- World globe icon: `var(--color-icon-brand-base)` (matches brand treatment of time-zone group)
+
+### Spacing
+- `var(--spacing-space-24)` — gap between left-region groups
+- `var(--spacing-space-8)` — inline gaps in SWID, Time, Time Zone groups
+- `var(--spacing-space-4)` — time/time-zone vertical padding pairing with `3px` bottom inset from Figma
+
+### Padding
+- `var(--padding-padding-16)` — left region horizontal; time block left; time-zone block right
+- `var(--padding-padding-8)` — time block right; time-zone block left
+- `var(--padding-padding-4)` — time/time-zone top padding
+
 ## States (Light Theme)
-| Element | Background | Border | Text | Icon |
-|---|---|---|---|---|
-| Footer Container | `var(--color-background-surface-1)` (#f4f4f4) | transparent | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Brand Logo | transparent | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
-| Navigation Links | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Links Hover | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
-| Links Focus | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
-| Copyright | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
-| Social Icons | transparent | transparent | `var(--color-icon-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Slot | State | Background | Border | Text/Icon |
+| --- | --- | --- | --- | --- |
+| root | default | `var(--color-background-surface-1)` | `var(--border-width-border-1)` `var(--color-border-light)` | — |
+| host label | default | transparent | none | `var(--color-text-neutral-strong)` |
+| host value | default | transparent | none | `var(--color-text-neutral)` |
+| swid label | default | transparent | none | `var(--color-text-neutral-strong)` |
+| swid value | default | transparent | none | `var(--color-text-neutral)` |
+| copy control | default | transparent | none | `var(--color-icon-brand-base)` |
+| copy control | hover | transparent | none | `var(--color-icon-brand-base)` |
+| copy control | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
+| copy control | disabled | transparent | none | `var(--color-icon-disabled)` |
+| datetime label | default | transparent | none | `var(--color-text-neutral)` |
+| timezone action | default | transparent | none | `var(--color-text-brand-strong)` |
+| timezone action | hover | transparent | none | `var(--color-text-link-brand-base)` + underline |
+| timezone action | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits hover or default text token |
+| timezone action | disabled | transparent | none | `var(--color-text-disabled)` |
+
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
-- Text and border colors remain consistent via semantic variables
-- Links maintain brand colors for consistency
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+
 ## Interactions
-- Click navigation links to navigate to respective pages
-- Hover provides visual feedback with background and text changes
-- Focus ring uses brand color for keyboard navigation
-- Social media links open external sites
-- Back to top button scrolls to page top
-- Responsive behavior for mobile devices
+- **SWID copy:** activating `FooterCopyControl` copies the SWID string to the system clipboard (when API available) and emits `onCopySwid` with the current SWID value; provide non-blocking confirmation in host app if required.
+- **Time zone:** activating `FooterTimeZoneAction` opens the host time-zone picker or settings (`onTimeZoneClick`); control is a button styled as a link (not navigation away by default).
+- **Visibility toggles:** `showHostname`, `showCurrentDateAndTime`, and `showTimeZone` mirror Figma boolean props; when false, remove the corresponding group without shifting bar height.
+- Date/time string is **display-only** in the bar (no inline edit); host supplies formatted `currentDateTime` text.
+- Pointer: copy and time-zone controls use `cursor: pointer`; bar background is not clickable.
+- No drag, expand, or collapse behavior on the bar itself.
+
 ### Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Tab through all interactive elements
-- Screen reader support: Proper ARIA landmarks and navigation structure
-- High contrast: Meets WCAG AA standards with provided colors
-- Semantic HTML: Use footer element with proper landmarks
-- Link descriptions: Clear link text and descriptions
-- Focus management: Logical tab order through footer elements
+- `FooterRoot`: landmark `footer` with `aria-label="Application status"` (or product-localized equivalent).
+- `FooterCopyControl`: `type="button"`, `aria-label` includes SWID context (e.g. “Copy SWID”), `aria-disabled` when disabled.
+- `FooterTimeZoneAction`: `type="button"`, visible focus ring; label text is the time-zone string (e.g. `Eastern Time (US & Canada)`).
+- Keyboard: `Tab` order left → right (host → copy → time zone); `Enter` / `Space` activate copy and time-zone buttons.
+- Host name and SWID values should be plain text (not headings); screen readers read label + value in document order.
 
 ### Behavior & guidelines
-- Use footer for site-wide navigation and information
-- Organize links logically by category
-- Include legal information and copyright
-- Maintain consistent styling with site theme
-- Test responsive behavior on mobile devices
-- Ensure all links are accessible and properly labeled
-- Consider back to top functionality for long pages
-- Use semantic HTML for proper structure
+- Footer is a **persistent shell status strip**, not a marketing/site footer with link columns.
+- Keep one line at 32px height; truncate long host/SWID strings with ellipsis rather than growing bar height.
+- Time zone label should reflect the user’s active zone; update when host clock/zone changes.
+- Do not embed primary actions (Save, Submit) in this bar.
+
 ## Composition & API (runtime)
-Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants
-- **Default**: Standard footer with multiple sections
-- **Minimal**: Simple footer with copyright only
-- **Brand**: Footer with prominent branding
-- **Dark**: Dark themed footer
-- **Sticky**: Footer that stays at bottom of viewport
-- **Responsive**: Adaptive layout for different screen sizes
+Visibility axes (boolean, default `true` — matches Figma `Footer` instance):
+
+| Prop | Default | Effect |
+| --- | --- | --- |
+| `showHostname` | `true` | Renders `FooterHostName` |
+| `showCurrentDateAndTime` | `true` | Renders `FooterTimeGroup` |
+| `showTimeZone` | `true` | Renders `FooterTimeZoneGroup` |
+
+### Runtime API
+| Prop / event | Required | Notes |
+| --- | --- | --- |
+| `hostname` | No | Value after `Host Name:` label |
+| `swid` | No | SWID string; when omitted, SWID group may still render empty or be hidden by host |
+| `currentDateTime` | No | Pre-formatted date/time text (Figma sample: `Tue, 2023-04-23 12:30 AM`) |
+| `timeZoneLabel` | No | Display string for zone action |
+| `showHostname` | No | Default `true` |
+| `showCurrentDateAndTime` | No | Default `true` |
+| `showTimeZone` | No | Default `true` |
+| `copyDisabled` | No | Disables copy control |
+| `timeZoneDisabled` | No | Disables time-zone action |
+| `onCopySwid?(swid: string)` | No | Fired after copy attempt |
+| `onTimeZoneClick?()` | No | Fired when time-zone control activated |
+| `className` | No | Host layout hook on root |
+
+### Spec Accurate Design story defaults
+Reference sample aligned to Figma node `38908:5818`:
+
+```ts
+{
+  hostname: "short_name_first_domain_name",
+  swid: "ELMCR00222GBPB",
+  currentDateTime: "Tue, 2023-04-23 12:30 AM",
+  timeZoneLabel: "Eastern Time (US & Canada)",
+  showHostname: true,
+  showCurrentDateAndTime: true,
+  showTimeZone: true,
+}
+```
+
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
-Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
+```
+FooterRoot
+  FooterLeftRegion
+    [optional] FooterHostName → label + value text nodes
+    [optional] FooterSwidGroup
+      label + value text nodes
+      FooterCopyControl
+  [optional] FooterTimeGroup
+    FooterTimeIcon
+    FooterDateTimeLabel
+  [optional] FooterTimeZoneGroup
+    FooterTimeZoneIcon
+    FooterTimeZoneAction
+```
 
 ### Variant matrix
-See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
+- Visibility: `showHostname` × `showCurrentDateAndTime` × `showTimeZone` (each `true | false`; eight combinations; empty left region allowed when all left content off).
+- Interactive states apply only to `FooterCopyControl` and `FooterTimeZoneAction`.
+- Root height remains **32px** for all visibility combinations.
 
 ### Per-slot style contract
-Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+- `FooterRoot`: background `var(--color-background-surface-1)`; border `var(--border-width-border-1)` `var(--color-border-light)`; height 32px; flex end alignment; width 100%.
+- `FooterLeftRegion`: flex 1 0 0; gap `var(--spacing-space-24)`; horizontal padding `var(--padding-padding-16)`.
+- `FooterHostName` / SWID labels: `var(--color-text-neutral-strong)`; values `var(--color-text-neutral)`.
+- `FooterCopyControl`: 14px icon via Icon primitive slug `copy`, tint `var(--color-icon-brand-base)`.
+- `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-neutral)`.
+- `FooterDateTimeLabel`: `var(--color-text-neutral)`, Body 2 medium.
+- `FooterTimeZoneIcon`: slug `world-globe`, 16px, `var(--color-icon-brand-base)`.
+- `FooterTimeZoneAction`: `var(--color-text-brand-strong)`; hover `var(--color-text-link-brand-base)` with underline.
 
 ### Behavior contract
-See **Interactions** and **Interactions → Behavior & guidelines**.
+- Copy writes `swid` prop to clipboard when enabled; always call `onCopySwid` on successful activation.
+- Time zone button does not navigate by default; host handles picker via `onTimeZoneClick`.
+- Hiding a group removes it from layout and tab order without reserving space.
+- Long strings truncate with ellipsis; tooltips are host-defined (optional).
 
 ### Accessibility contract
-See **Interactions → Accessibility**.
+- See **Interactions → Accessibility**; codegen must emit native buttons for copy and time-zone actions.
+- Focus order follows visual left-to-right order among visible controls.
+- `aria-live` is not required on clock text (static display); host may refresh `currentDateTime` on interval outside component.
 
 ### Asset resolution + bundling contract
-When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+| Slug | File | Size | Slot |
+| --- | --- | --- | --- |
+| `copy` | `assets/icons/copy.svg` | 14×14 | `FooterCopyControl` |
+| `time-clock` | `assets/icons/time-clock.svg` | 16×16 | `FooterTimeIcon` |
+| `world-globe` | `assets/icons/world-globe.svg` | 16×16 | `FooterTimeZoneIcon` |
+
+Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + semantic `color`). Unknown slug → hide icon slot and log validation warning.
 
 ### Fallback/error rules
-- Unknown variant or state → fall back to the documented default variant.
-- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+- Unknown visibility prop values → treat as `true` if boolean coercion fails.
+- Missing `swid` with `showSwid` implied by copy control → disable copy and set `aria-disabled="true"`.
+- Missing `timeZoneLabel` with `showTimeZone=true` → render action with fallback label `"Time zone"` (localized by host).
+- Clipboard API failure → still fire `onCopySwid`; host shows error toast.
+- Unknown icon slug → omit icon; keep text/control usable.
+
 ### Validation checklist
-- [ ] Implement responsive layout for all screen sizes
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Tab, Enter)
-- [ ] Verify ARIA landmarks and roles
-- [ ] Test hover and focus states
-- [ ] Implement back to top functionality
-- [ ] Add social media links
-- [ ] Test dark theme compatibility
-- [ ] Verify screen reader announcements
-- [ ] Test mobile touch interactions
+- [ ] Bar height 32px and full-width container behavior match Figma `38908:5818`.
+- [ ] All colors/spacing/typography use semantic `var(--...)` tokens (no hardcoded hex in generated styles).
+- [ ] Three visibility toggles match Figma boolean axes.
+- [ ] Copy and time-zone controls are keyboard-activatable with visible focus rings.
+- [ ] Icon slugs `copy`, `time-clock`, `world-globe` resolve via Icon primitive.
+- [ ] Spec Accurate Design story uses story defaults above under `Spec Generated/IDS/Footer`.
+- [ ] Light state matrix complete; dark uses boilerplate (same semantic tokens).
+- [ ] Source mapping lists MCP verification evidence.
+
 ## Source Mapping
-- Figma component: Footer (38732-114951)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Footer" (category "Navigation"; node "38732-114951")
+| Source | Location |
+| --- | --- |
+| Component map | `data/component-figma-map.json` → `Footer` (`38908:5818`, file `0bHk3XhrjFhowgFkz9yLr4`) |
+| Theme CSS | `components/ids-theme.css` |
+| Root spec | `components/ids/root-spec.mdx` |
+| Figma MCP (2026-05-22) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
+| Storybook implementation | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
+| Spec Generated story | `storybook/src/components/IdsFooter.stories.tsx` |

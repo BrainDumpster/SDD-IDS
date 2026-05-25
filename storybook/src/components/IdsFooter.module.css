@@ -1,0 +1,127 @@
+.root {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--color-background-surface-1);
+  border: var(--border-width-border-1) solid var(--color-border-light);
+  font-family: inherit;
+}
+
+.left {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-24);
+  height: 100%;
+  padding-left: var(--padding-padding-16);
+  padding-right: var(--padding-padding-16);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  word-break: break-word;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--color-text-neutral-strong);
+}
+
+.value {
+  color: var(--color-text-neutral);
+}
+
+.swidGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.copyButton:disabled {
+  cursor: not-allowed;
+}
+
+.copyButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.timeGroup,
+.timeZoneGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex-shrink: 0;
+}
+
+.timeGroup {
+  padding: var(--padding-padding-4) var(--padding-padding-8) 3px var(--padding-padding-16);
+}
+
+.timeZoneGroup {
+  padding: var(--padding-padding-4) var(--padding-padding-16) 3px var(--padding-padding-8);
+}
+
+.dateTime {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+  color: var(--color-text-neutral);
+  white-space: nowrap;
+}
+
+.timeZoneButton {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+  color: var(--color-text-brand-strong);
+  white-space: nowrap;
+  cursor: pointer;
+  text-align: left;
+}
+
+.timeZoneButton:hover:not(:disabled) {
+  color: var(--color-text-link-brand-base);
+  text-decoration: underline;
+}
+
+.timeZoneButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.timeZoneButton:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  text-decoration: none;
+}
