@@ -136,6 +136,11 @@ Resolution rules:
 - [ ] Link routing contract supports `routerLink`, `href`, and event mode.
 - [ ] Close icon is `shape-x` at `12x12`.
 - [ ] No hardcoded style values in generated code where token exists.
+## Implementation Notes
+- **Close icon fix (2025-05-25)**: Changed close icon from `variant="img"` to `variant="mask"` to enable CSS color styling via `var(--color-icon-white)`. Removed hardcoded 16px width/height from Icon component's img variant to allow CSS class styles to control size (12px as per spec).
+- **Status icon border fix (2025-05-25)**: Added 1px solid #FFFFFF border to all status icons (info-circ-solid, status-critical-square-solid, status-error-diamond-solid, status-warn-tri-solid, status-ok-circ-solid) in the base layer as specified in design spec.
+- **Toast border inside container fix (2025-05-25)**: Changed toast root border from outer border to inner border using CSS pseudo-element (::before) to ensure border is inside the container width, not outside.
+
 ## Source Mapping
 - Figma examples: `42903:139689` (toast variants with/without link).
 - Figma icon base: `39484:7432` (alerting icon family).
