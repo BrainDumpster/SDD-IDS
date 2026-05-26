@@ -6,6 +6,7 @@ import "../../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
 import { DropdownMenu as IdsDropdownComboBox } from "../../../../storybook/src/components/DropdownMenu";
+import { IdsDropdownTriggerShell } from "../../../../storybook/src/components/IdsDropdownTriggerShell";
 
 const meta: Meta<typeof IdsDropdownComboBox> = {
   title: "Spec Generated/IDS/Dropdown Combo Box",
@@ -23,23 +24,17 @@ const options = [
   { id: "app-4", label: "Security" },
 ];
 
-function Trigger({ value, placeholder = "Select product" }: { value?: string; placeholder?: string }) {
+function Trigger({ value, placeholder = "Select product", disabled = false, error = false }: { value?: string; placeholder?: string; disabled?: boolean; error?: boolean }) {
   return (
-    <div
-      style={{
-        width: "100%",
-        padding: "10px 16px",
-        border: "1px solid var(--color-border-accessible)",
-        background: "var(--color-background-component)",
-        color: "var(--color-text-neutral)",
-        boxSizing: "border-box",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }}
-    >
-      {value ?? placeholder}
-    </div>
+    <IdsDropdownTriggerShell
+      disabled={disabled}
+      error={error}
+      left={
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {value ?? placeholder}
+        </span>
+      }
+    />
   );
 }
 

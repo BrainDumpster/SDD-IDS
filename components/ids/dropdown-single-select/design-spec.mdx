@@ -14,7 +14,7 @@
 2. optional `Label`
 3. `FieldContainer`
 4. `ValueSlot` (placeholder or selected label)
-5. `IndicatorSlot` (caret)
+5. `IndicatorSlot` (caret `arrow-drop-tri-caret` 10×10, container padding `1px` horizontal / `5px` vertical)
 6. optional `HelperText`
 7. optional `ValidationError` (critical icon + text)
 8. optional `MenuPopup`
@@ -52,8 +52,7 @@
   - `var(--color-text-neutral)`
   - `var(--color-text-neutral-strong)`
   - `var(--color-text-disabled)`
-  - `var(--color-background-gray-light)`
-  - `var(--color-background-gray-lighter)`
+  - `var(--color-background-gray-lighter)` (disabled field)
 - Selection/interaction:
   - `var(--color-background-controls-brand-lighter)`
   - `var(--color-background-controls-brand-base)`
@@ -62,30 +61,42 @@
   - `var(--color-border-transparent-brand)`
   - `var(--color-icon-white)`
   - `var(--color-icon-accessible)`
+  - `var(--color-icon-neutral)` (caret default)
+  - `var(--color-icon-disabled)` (caret disabled)
+  - `var(--color-border-disabled)` (field disabled)
 - Error:
   - `var(--color-border-alerting-critical-base)`
   - `var(--color-icon-alerting-critical)`
   - `var(--color-text-critical)`
+- Shadow (menu popup):
+  - `var(--shadow-shadow-4-drop-shadow-4-x)` (0)
+  - `var(--shadow-shadow-4-drop-shadow-4-y)` (4)
+  - `var(--shadow-shadow-4-drop-shadow-4-blur)` (4)
+  - `var(--shadow-shadow-4-drop-shadow-4-spread)` (0)
+  - `var(--shadow-shadow-4-drop-shadow-4-color)` (rgba(37,37,37,0.08))
 - Geometry:
+  - `var(--border-width-border-default)` (field + menu border width, 1px)
   - `var(--corner-radius-radius-2)`
-  - `var(--corner-radius-radius-4)`
+  - `var(--corner-radius-radius-4)` (focus ring radius)
   - `var(--spacing-space-8)`
-  - `var(--padding-padding-6)`
-  - `var(--padding-padding-10)`
-  - `var(--padding-padding-16)`
+  - `var(--padding-padding-1)` (caret horizontal padding)
+  - `var(--padding-padding-6)` (small field vertical padding)
+  - `var(--padding-padding-10)` (large field + option vertical padding)
+  - `var(--padding-padding-16)` (field + option horizontal padding)
+  - `var(--padding-padding-24)` (option right padding)
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Field container | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text + accessible icon |
-| Field container | hover | `var(--color-background-component)` | `var(--color-border-strong)` | neutral text |
-| Field container | show-dropdown | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
-| Field container | focus-visible | `var(--color-background-component)` | brand border + focus ring | neutral text |
-| Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | disabled text/icon |
-| Field container | error | `var(--color-background-component)` | critical border | neutral text + critical error icon/message |
+| Field container | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | show-dropdown | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | focus-visible | `var(--color-background-component)` | inner `var(--color-border-accessible)` + outer ring `var(--color-border-brand-base)` (`inset: -5px`, `border-radius: 4px`) | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | text `var(--color-text-disabled)`, caret `var(--color-icon-disabled)` |
+| Field container | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)`, error icon `var(--color-icon-alerting-critical)`, error text `var(--color-text-critical)` |
 | Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Option row | hover | `var(--color-background-controls-brand-lighter)` | brand emphasis rows | neutral text |
+| Option row | hover | `var(--color-background-controls-brand-lighter)` | brand emphasis rows | `var(--color-text-neutral)` |
 | Option row | selected | brand-lighter or tokenized selected row style | tokenized | `var(--color-text-brand-strong)` |
-| Option row | disabled | component/gray-light (per option contract) | disabled token | disabled text |
+| Option row | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 ## States (Dark Theme)
 Dark theme must remain structurally identical to Light Theme with values resolved via semantic IDS tokens only.
 
@@ -170,8 +181,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Error/helper is linked using `aria-describedby`.
 
 ### Asset resolution + bundling contract
-- Caret icon: `arrow-drop-tri-caret`.
-- Error icon: `status-critical-square-solid`.
+- Caret icon: `arrow-drop-tri-caret`, 10×10px, container padding `1px` horizontal / `5px` vertical. Color per state: `var(--color-icon-neutral)` (default/hover/focus/show-dropdown/error), `var(--color-icon-disabled)` (disabled). Resolve from `assets/icons/arrow-drop-tri-caret.svg` via shared Icon primitive.
+- Error icon: `status-critical-square-solid`, 16×16px, `var(--color-icon-alerting-critical)`. Resolve from `assets/icons/status-critical-square-solid.svg`.
 - Optional radio visuals must follow IDS radio design-spec; no hardcoded inline SVG data URIs.
 
 ### Fallback/error rules
@@ -192,5 +203,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Figma component matrix: `11099:58099`
 - Figma menu elements: `12579:19717`
 - Figma option state elements: `12380:16525`
+- Figma annotation frame: `43264:181450`
 - Radio dependency spec: `components/ids/radio-button/design-spec.mdx`
 - Component map: `data/component-figma-map.json` -> `Dropdown-Single-Select`
+- Verification method: Figma MCP (`get_design_context` + `get_variable_defs`)
+- Last live verification: 2026-05-25 (states audit: default, hover, show-dropdown, focus-visible, disabled, error; caret icon per-state; field tokens)

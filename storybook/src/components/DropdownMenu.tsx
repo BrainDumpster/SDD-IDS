@@ -41,6 +41,8 @@ interface DropdownMenuProps {
   searchValue?: string;
   searchPlaceholder?: string;
   onSearchValueChange?: (value: string) => void;
+  /** When true the trigger stretches to fill its parent container. */
+  fullWidth?: boolean;
 }
 
 export function DropdownMenu({
@@ -68,6 +70,7 @@ export function DropdownMenu({
   searchValue,
   searchPlaceholder = "Search",
   onSearchValueChange,
+  fullWidth = false,
 }: DropdownMenuProps) {
   const [open, setOpen] = useState(defaultOpen && !disabled);
   const triggerMeasureRef = useRef<HTMLSpanElement | null>(null);
@@ -120,7 +123,7 @@ export function DropdownMenu({
       }}
     >
       <Menu.Trigger
-        className={styles.triggerReset}
+        className={fullWidth ? `${styles.triggerReset} ${styles.triggerFull}` : styles.triggerReset}
         disabled={disabled}
         style={{ cursor: disabled ? "not-allowed" : "pointer" }}
       >

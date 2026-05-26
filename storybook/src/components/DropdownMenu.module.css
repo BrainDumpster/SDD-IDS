@@ -3,6 +3,10 @@
   display: inline-flex;
 }
 
+.triggerFull {
+  width: 100%;
+}
+
 .triggerMeasure {
   display: inline-flex;
   width: 100%;
@@ -10,21 +14,20 @@
 
 .popup {
   background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
   box-sizing: border-box;
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
-  border-radius: var(--corner-radius-radius-4);
   box-shadow:
-    0 2px 2px 0 var(--shadow-drop-shadow-2-color),
-    0 4px 4px 0 var(--shadow-drop-shadow-4-color);
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
   padding: 0;
   outline: none;
   font-family: inherit;
   z-index: 1060;
-  overflow: hidden;
-  overflow-x: hidden;
+  overflow: clip;
 }
 
 .searchRow {
@@ -194,7 +197,7 @@
 .item:disabled {
   color: var(--color-text-disabled);
   cursor: not-allowed;
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
   box-shadow: none;
 }
 
@@ -413,7 +416,7 @@
 .item[data-selectable="true"][data-disabled] .radioOuter,
 .item[data-selectable="true"]:disabled .radioOuter {
   border-color: var(--color-border-disabled);
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
 }
 
 .item[data-selectable="true"][data-disabled] .radioInner,
@@ -424,13 +427,13 @@
 .item[data-selectable="true"][data-disabled] .checkboxOuter,
 .item[data-selectable="true"]:disabled .checkboxOuter {
   border-color: var(--color-border-disabled);
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
   color: var(--color-icon-inverse);
 }
 
 .item[data-selectable="true"][data-disabled][data-indeterminate] .checkboxOuter,
 .item[data-selectable="true"]:disabled[data-indeterminate] .checkboxOuter {
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
   border-color: var(--color-border-disabled);
 }
 

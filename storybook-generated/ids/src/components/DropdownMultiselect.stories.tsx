@@ -6,6 +6,7 @@ import "../../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
 import { DropdownMenu as IdsDropdownMultiselect } from "../../../../storybook/src/components/DropdownMenu";
+import { IdsDropdownTriggerShell } from "../../../../storybook/src/components/IdsDropdownTriggerShell";
 
 type Option = { id: string; label: string; disabled?: boolean };
 
@@ -30,21 +31,14 @@ type Story = StoryObj<typeof IdsDropdownMultiselect>;
 function Trigger({ selected, disabled = false }: { selected: string[]; disabled?: boolean }) {
   const text = selected.length ? selected.join(", ") : "-Select-";
   return (
-    <div
-      style={{
-        width: 300,
-        padding: "10px 16px",
-        border: "1px solid var(--color-border-accessible)",
-        background: disabled ? "var(--color-background-gray-light)" : "var(--color-background-component)",
-        color: disabled ? "var(--color-text-disabled)" : "var(--color-text-neutral)",
-        boxSizing: "border-box",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }}
-    >
-      {text}
-    </div>
+    <IdsDropdownTriggerShell
+      disabled={disabled}
+      left={
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {text}
+        </span>
+      }
+    />
   );
 }
 

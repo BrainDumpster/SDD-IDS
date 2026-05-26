@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsDropdownTriggerShell.module.css";
 
@@ -13,6 +13,10 @@ export interface IdsDropdownTriggerShellProps {
   /** Demo-only: keyboard focus ring (`outline-offset: 5px`). */
   focusVisible?: boolean;
   left: ReactNode;
+  /** Optional className for the field wrapper (e.g. for width overrides). */
+  className?: string;
+  /** Optional inline style for the field wrapper. */
+  style?: CSSProperties;
 }
 
 export function IdsDropdownTriggerShell({
@@ -22,10 +26,13 @@ export function IdsDropdownTriggerShell({
   hover = false,
   focusVisible = false,
   left,
+  className,
+  style,
 }: IdsDropdownTriggerShellProps) {
   return (
     <div
-      className={styles.field}
+      className={className ? `${styles.field} ${className}` : styles.field}
+      style={style}
       data-size={size === "small" ? "small" : undefined}
       data-disabled={disabled || undefined}
       data-error={error || undefined}

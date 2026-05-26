@@ -57,6 +57,7 @@ body[data-design-system="ids"] {
   --font-line-height-line-height-20: 20px;
   --font-size-body-2: 14px;
   --padding-padding-8: 8px;
+  --padding-padding-16: 16px;
   --sizing-size-16: 16px;
   --sizing-size-4: 4px;
   --sizing-size-8: 8px;
@@ -422,6 +423,7 @@ body[data-design-system="ids"][data-theme="dark"] {
   --font-line-height-line-height-20: 20px;
   --font-size-body-2: 14px;
   --padding-padding-8: 8px;
+  --padding-padding-16: 16px;
   --sizing-size-16: 16px;
   --sizing-size-4: 4px;
   --sizing-size-8: 8px;

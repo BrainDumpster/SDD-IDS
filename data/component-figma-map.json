@@ -178,8 +178,10 @@
   {
     "category": "Navigation",
     "component": "Footer",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38732-114951&m=dev",
-    "nodeId": "38732-114951"
+    "designSpecPath": "components/ids/footer/design-spec.mdx",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38908-5818&m=dev",
+    "nodeId": "38908-5818",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4"
   },
   {
     "category": "Navigation",
