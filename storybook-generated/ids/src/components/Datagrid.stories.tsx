@@ -10,6 +10,7 @@ import {
   type IdsDataGridColumn,
 } from "../../../../storybook/src/components/IdsDataGrid";
 import { IdsDataGridDefaultStoryHost } from "../../../../storybook/src/components/IdsDataGridDefaultStoryHost";
+import { IdsDataGridNumericFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridNumericFilterStoryHost";
 
 const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.mdx";
 
@@ -26,7 +27,7 @@ const specColumns: IdsDataGridColumn[] = [
   },
   { key: "type", title: "Type", sortable: true, filterable: true, minWidth: 90, width: 140 },
   { key: "status", title: "Status", sortable: true, filterable: true, minWidth: 90, width: 120 },
-  { key: "owner", title: "Owner", sortable: true, filterable: false, minWidth: 90, width: 120 },
+  { key: "owner", title: "Owner", sortable: true, filterable: true, minWidth: 90, width: 120 },
   { key: "region", title: "Region", sortable: false, filterable: true, minWidth: 90, width: 100 },
 ];
 
@@ -207,6 +208,64 @@ export const WithoutVerticalSelectionIndicator: Story = {
 export const WithDetailPanel: Story = {
   render: (args) => <SpecAccurateFrame {...args} />,
   args: { ...specAccurateArgs, withDetailPanel: true, viewMode: "treeview" },
+};
+
+const numericFilterColumns: IdsDataGridColumn[] = [
+  { key: "name", title: "Name", sortable: true, minWidth: 90, width: 200 },
+  {
+    key: "amount",
+    title: "Amount",
+    sortable: true,
+    filterable: true,
+    minWidth: 90,
+    width: 120,
+  },
+  { key: "status", title: "Status", sortable: true, minWidth: 90, width: 120 },
+];
+
+const numericFilterRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
+  { id: "n-1", values: { name: "Alpha", amount: 1200, status: "Active" } },
+  { id: "n-2", values: { name: "Beta", amount: 450, status: "Active" } },
+  { id: "n-3", values: { name: "Gamma", amount: 8900, status: "Warning" } },
+  { id: "n-4", values: { name: "Delta", amount: 75, status: "Paused" } },
+  { id: "n-5", values: { name: "Epsilon", amount: 3200, status: "Active" } },
+];
+
+const DEMO_UNIT_OPTIONS = [
+  { value: "KB", label: "KB" },
+  { value: "MB", label: "MB" },
+  { value: "GB", label: "GB" },
+  { value: "TB", label: "TB" },
+];
+
+/** Figma numeric filter `44360:182265` — operator list + value fields (`44367:182637`, `44370:145919`); unit dropdown `44370:145922`. */
+export const NumericColumnFilter: Story = {
+  name: "Numeric Column Filter",
+  render: () => (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        padding: 16,
+        background: "var(--color-background-surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <IdsDataGridNumericFilterStoryHost
+          columns={numericFilterColumns}
+          rows={numericFilterRows}
+          multiselect={false}
+          withDetailPanel={false}
+          pageSize={10}
+          headerColorAndBorder
+          numericUnitOptions={DEMO_UNIT_OPTIONS}
+        />
+      </div>
+    </div>
+  ),
 };
 
 const specTokens = [

@@ -1,0 +1,271 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 300px;
+  box-sizing: border-box;
+  padding: var(--padding-padding-8) 0;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--padding-padding-8);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8)
+    var(--padding-padding-16);
+  background: var(--color-background-component);
+}
+
+.optionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  cursor: pointer;
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  min-height: 20px;
+}
+
+.radioRoot {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-radius: 50%;
+  background: var(--color-background-component);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  cursor: inherit;
+}
+
+.radioInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.radioInput:focus-visible + .radioIndicator {
+  box-shadow: 0 0 0 1px var(--color-border-brand-base);
+}
+
+.radioRoot:has(.radioInput:focus-visible) {
+  outline: 1px solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.radioRoot[data-checked] {
+  border-color: var(--color-border-brand-base);
+}
+
+.radioIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-icon-brand-base);
+  transform: scale(0);
+  transition: transform 100ms ease;
+}
+
+.radioIndicator[data-checked] {
+  transform: scale(1);
+}
+
+.radioRoot:hover {
+  border-color: var(--color-border-strong);
+}
+
+.radioRoot[data-checked]:hover .radioIndicator {
+  background: var(--color-icon-brand-strong);
+}
+
+.valueBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 var(--padding-padding-16) var(--padding-padding-8) 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.valueField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+  width: 242px;
+  max-width: 100%;
+}
+
+.valueRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.valueRow .valueInput {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.unitDropdownWrap {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* --- Native unit dropdown (IDS Dropdown: Single-select spec) --- */
+
+.unitDropdownRoot {
+  position: relative;
+  width: 100%;
+}
+
+.unitTriggerBtn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  gap: var(--spacing-space-10);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.unitTriggerBtn:hover {
+  border-color: var(--color-border-strong);
+}
+
+.unitTriggerBtn:focus-visible {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.unitTriggerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+}
+
+.unitTriggerCaret {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 5px var(--padding-padding-1);
+  color: var(--color-icon-neutral);
+  line-height: 0;
+}
+
+.unitPopup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1060;
+  background: var(--color-background-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
+  box-shadow:
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+  padding: 0;
+  overflow: clip;
+  box-sizing: border-box;
+}
+
+.unitOption {
+  all: unset;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  cursor: pointer;
+  background: var(--color-background-component);
+  min-height: 40px;
+}
+
+.unitOption:hover {
+  background: var(--color-background-brand-lighter);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
+}
+
+.unitOption[data-selected] {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
+.valueInput {
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-radius: 0;
+  background: var(--color-background-component);
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  outline: none;
+}
+
+.valueInput:hover {
+  border-color: var(--color-border-strong);
+}
+
+.valueInput:focus:not(:focus-visible) {
+  border-color: var(--color-border-brand-base);
+}
+
+.valueInput:focus-visible {
+  border-color: var(--color-border-accessible);
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.valueInput::placeholder {
+  color: var(--color-text-neutral);
+  opacity: 0.7;
+}
+
+.valueHelper {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+}

@@ -9,6 +9,13 @@
 - Column details: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114734&m=dev
 - Sort icon states reference: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44551-229021&m=dev
 - Filter icon + popup structure: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114635&m=dev
+- **Column filter types (Column Filter-Main):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-91069&m=dev — node id **`37822:91069`**
+- **Numeric column filter (`.Filter-Element-NumericFilter`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-182265&m=dev — node id **`44360:182265`** (operator matrix + value fields)
+- **Combobox-filter multiselect (`Dropdown Menu`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-147581&m=dev — node id **`44360:147581`** (search + Select All/Clear All + scrollable checkbox list)
+- **Combobox-filter single-select (`Single-select + Search`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179074&m=dev — node id **`44360:179074`** (search + scrollable text option list)
+- **Default text filter (`Column Search`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-91073&m=dev — node id **`37822:91073`**
+- **Dropdown-SingleSelect filter (`Single-select`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179200&m=dev — node id **`44360:179201`** (Dropdown Menu)
+- **Dropdown-MultiSelect filter (`Multi-select`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179347&m=dev — node id **`44360:179348`** (Dropdown Menu)
 - Sort icon (`.Sort for table`): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114646&m=dev — node id **`37721:114646`**
 - Filter / header annotations index (library page): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44551-229021&m=dev — node id **`44551:229021`**
 - **Column header chrome (`.Column Header`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114663&m=dev — node id **`37721:114663`**
@@ -16,9 +23,9 @@
 - **`.Filter for table` control (header filter hit target + icon frame):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114677&m=dev — instance **`37721:114677`** (main component **`37721:114635`**)
 - **Data Grid — main variants / density matrix (container-sized frames):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev — node id **`37721:112482`** (`Data Grid - Main`)
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (select-all header), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column)
+- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (select-all header), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter)
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`); row/cell frame re-verified with `get_design_context` (**`disableCodeConnect: true`**) on **`37721:114580`**; column header **`37721:114663`**, title row **`37721:114673`**, filter control **`37721:114677`** re-verified same way **2026-05-13**; rows/columns layout **`37721:113987`** **2026-05-14**
-- Last verified: **2026-05-14** (full spec + codegen contract alignment with reference implementation `IdsDataGrid.tsx`)
+- Last verified: **2026-05-25** (combobox-filter multiselect `44360:147581`, combobox-filter single-select `44360:179074`, dropdown-singleselect `44360:179201`, dropdown-multiselect `44360:179348`, column filter types `37822:91069`, numeric filter `44360:182265`, default text filter `37822:91073` via Figma MCP; prior grid chrome **2026-05-14**)
 - Nested specs (codegen must delegate, not reimplement): `components/ids/checkbox/design-spec.mdx`, `components/ids/pagination/design-spec.mdx` (footer), detail panel datagrid attach mode (see `IdsDetailPanel` / product `def-new-dg-detail`)
 - Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionCheckbox.tsx`
 - **Codegen-critical layout:** **Chrome columns & table slack (codegen-critical)** under **Layout & Measurements → Table Layout Algorithm** — required for generators (grow `auto`, chrome **48**/**40** three-layer lock, anti-patterns).
@@ -92,7 +99,14 @@ Angular uses **declarative child components** with **content projection**. The m
     <def-dg-column *ngFor="let col of columns" [field]="col.key" [sortable]="..." [freezable]="...">
       <ng-container defColumnTitle>{{ col.title }}</ng-container>
       <def-datagrid-filter *ngIf="col.filterable">
-        <!-- ONE of: def-dg-text-filter | def-combobox-filter | def-checkbox-list-filter | custom -->
+        <!-- ONE of (composed per column requirement):
+             def-dg-text-filter              — Default text search
+             def-dg-combobox-multiselect     — Combobox-Multiselect (search + checkboxes)
+             def-dg-combobox-singleselect    — Combobox-SingleSelect (search + option list)
+             def-dg-dropdown-singleselect    — Dropdown-SingleSelect (option list, no search)
+             def-dg-dropdown-multiselect     — Dropdown-MultiSelect (checkboxes, no search)
+             def-dg-numeric-filter           — Numeric (operator radio + value fields)
+             custom                          — any product-defined filter panel -->
         <def-dg-text-filter />
       </def-datagrid-filter>
     </def-dg-column>
@@ -133,6 +147,8 @@ Angular uses **declarative child components** with **content projection**. The m
 | `FilterPanelBody` | `column.filterPanel` prop | e.g. `IdsDataGridFilterSearchField` |
 | `DatagridDetailPanelSlot` | `IdsDetailPanel` `attachMode="datagrid"` | Sibling in `contentRow` flex |
 | Multiselect filter host | `IdsDataGridDefaultStoryHost` | Wires `filterActive` + Type checkbox filter |
+| Numeric filter host | `IdsDataGridNumericFilterStoryHost` | Wires `filterActive` + `IdsDataGridTypeNumericFilterPanel` |
+| Numeric filter panel | `IdsDataGridTypeNumericFilterPanel` | Figma `44360:182265`; model in `IdsDataGridNumericFilter.ts` |
 | Selection | `IdsDataGridSelectionCheckbox` | `Checkbox` `density="datagrid"` |
 
 ### Vue / Lit / other frameworks
@@ -174,6 +190,296 @@ Angular uses **declarative child components** with **content projection**. The m
 - **Panel borders:** **left + bottom + right** **`1px`** **`var(--color-border-accessible)`**; elevation via stacked **`shadow-drop-shadow-*`** semantic tokens.
 - **`FilterPanelBody`:** horizontal + vertical padding for inner widgets (Storybook: **`6px`** **`16px`**); keeps the **::before** top rule aligned to the **outer** top edge of **`FilterPanel`**.
 - **`FilterPanelBody` slot:** **`column.filterPanel`**. Search is **optional**. Checkbox lists must follow **`components/ids/checkbox/design-spec.mdx`**.
+
+### Column filter composition contract
+
+Filters are **not** built into the datagrid itself. They are **composing elements** attached to individual columns based on product requirements. The datagrid owns only the outer L-frame chrome (toggle, icon tab, panel shell); the inner filter UI is supplied per column via the **`column.filterPanel`** slot.
+
+- **No default filter type.** A column with `filterable: true` but no `filterPanel` shows an empty L-frame (toggle only). The product must explicitly compose a filter panel for each filterable column.
+- **Any filter type may be attached to any column.** The datagrid does not restrict which filter type a column uses. A text column may use a multiselect filter; a numeric column may use a single-select; assignment is product-driven.
+- **Filter types are independent, reusable components.** Each filter type below is a self-contained panel that:
+  - Receives its **options** (user-defined data, not hardcoded).
+  - Manages its own **selection state** and **search state**.
+  - Exposes a callback to update the host's filter model.
+  - Renders entirely within the `FilterPanelBody` slot.
+- **Multiple filter types may coexist** in the same grid. Different columns can use different filter types simultaneously.
+- **Filter types delegate to IDS component specs** for their inner controls (checkboxes → `components/ids/checkbox/design-spec.mdx`, dropdowns → `components/ids/dropdown-single-select/design-spec.mdx`, radio buttons → `components/ids/radio-button/design-spec.mdx`, text fields → `components/ids/text-box/design-spec.mdx`). Codegen must use the IDS component for each control, not custom markup.
+- **`filterActive` is column-scoped.** Each column independently tracks whether its filter is in a non-default state; the datagrid reads this flag to render the `FilterToggle` selected icon.
+
+### Column filter types (`Column Filter-Main`, `37822:91069`)
+
+Figma documents one **L-frame** shell per column; inner UI varies by **`Type`**. The outer L-frame chrome is grid-owned and invariant. Each filter type defines only the **inner panel content** (`FilterPanelBody` slot).
+
+| Figma `Type` | Runtime filter kind | Status |
+|---|---|---|
+| `Column Search` | Default text search | Spec'd below |
+| `Multi-select + search` | Combobox-Multiselect (checkbox list + search) | Spec'd below |
+| `Single-select + Search` | Combobox-SingleSelect (option list + search) | Spec'd below |
+| `Single-select` | Dropdown-SingleSelect (option list, no search) | Spec'd below |
+| `Multi-select` | Dropdown-MultiSelect (checkbox list, no search) | Spec'd below |
+| `Date` | Date picker filter | Planned |
+| `Date and Time` | Date-time filter | Planned |
+| `Numeric` | Operator radio list + value field(s) | Spec'd below |
+
+Reference nodes: **`37822:91069`** (matrix), **`44386:290322`** (`Type=Numeric` instance).
+
+---
+
+### Filter type: Default text search (`Column Search`, `37822:91073`)
+
+Simple inline search field rendered directly inside `FilterPanelBody`.
+
+- **Anatomy:** `SearchIcon` (16×16) + `TextInput` in a horizontal row.
+- **Search icon:** slug `search-16`, `16×16`, color `var(--color-icon-brand-base)`.
+- **Text input:** `font-size: var(--font-size-body-2)`, `font-weight: 500`, `line-height: var(--font-line-height-line-height-20)`, color `var(--color-text-neutral)`.
+- **Placeholder:** `"Search"`, color `var(--color-text-neutral)`.
+- **Behavior:** typing filters column rows immediately (client-side); empty query shows all rows. No selection controls.
+- **Filter model:** `query: string`; `filterActive` when `query` is non-empty.
+
+---
+
+### Filter type: Combobox-Multiselect (`Multi-select + search`, `44360:147581`)
+
+Multiselect combobox filter with search, Select All / Clear All, and scrollable checkbox option list. Tokens and interaction states follow **`components/ids/dropdown-combo-box/design-spec.mdx`** (`mode: combobox-multi`).
+
+**Figma:** `44360:147581` (Dropdown Menu within `37822:91087`)
+
+#### Anatomy
+
+1. `SearchRow` — bordered search field
+2. `SelectAllClearAllRow` — checkbox + label left, Clear All action right, bottom border divider
+3. `OptionList` — scrollable checkbox option rows
+
+#### Layout
+
+- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`. Min-width `186px`, max-width `700px`.
+- **Search row:** `var(--padding-padding-8)` wrapper padding. Inner field: `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners per Figma `Search-Main`). Search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`). Text input left-padded `var(--padding-padding-8)`, `var(--padding-padding-4)` vertical.
+- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left padding; bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`.
+  - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.mdx`.
+  - "Select All" label: Body 2 Medium, `var(--color-text-neutral)`.
+  - "Clear All" action: Body 2 Medium, `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
+- **Option list:** scrollable, sample height `366px`, bottom padding `var(--padding-padding-4)`. Custom scrollbar (Figma decorative — use platform scrollbar).
+- **Option row:** `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.mdx`. Label: Body 2 Medium, `var(--color-text-neutral)`, overflow ellipsis.
+
+#### States (option row)
+
+| State | Background | Border | Text |
+|---|---|---|---|
+| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| hover | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
+| press | `var(--color-background-brand-light)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| selected (multi) | `var(--color-background-component)` + checked checkbox | none | `var(--color-text-neutral)` |
+
+#### Behavior
+
+- Search filters visible options without mutating source data.
+- Select All toggles all currently visible (filtered) options.
+- Clear All deselects all currently visible options.
+- Individual checkboxes toggle per-option selection.
+- `filterActive` when selected count < total option count (i.e. not all selected).
+
+#### Filter model
+
+- `options: { value: string; label: string }[]` — **user-defined** (product supplies the option list per column; Figma shows sample `"Option 1"…"Option N"` as placeholders only)
+- `selectedValues: string[]`
+- `searchQuery: string`
+- `filterActive` when `selectedValues.length < options.length`
+
+---
+
+### Filter type: Combobox-SingleSelect (`Single-select + Search`, `44360:179074`)
+
+Single-select combobox filter with search and scrollable option list (text-only rows, no radio or checkbox controls). Tokens and interaction states follow **`components/ids/dropdown-combo-box/design-spec.mdx`** (`mode: combobox-single`).
+
+**Figma:** `44360:179074` (Dropdown Menu within `44360:179070`)
+
+#### Anatomy
+
+1. `SearchRow` — bordered search field (identical to Combobox-Multiselect search)
+2. `OptionList` — scrollable plain-text option rows
+
+No Select All / Clear All row (single-select has no batch action).
+
+#### Layout
+
+- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; min-width `186px`, max-width `700px`, min-height `212px`.
+- **Search row:** identical to Combobox-Multiselect — `var(--padding-padding-8)` wrapper, bordered inner field with **no border-radius** (sharp corners per Figma `Search-Main`), search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`).
+- **Option list:** scrollable, sample height `406px`, bottom padding `var(--padding-padding-4)`.
+- **Option row:** `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right padding, `var(--spacing-space-8)` gap. Min-height `40px`. Label: Body 2 Medium, `var(--color-text-neutral)`, overflow ellipsis.
+
+#### States (option row)
+
+| State | Background | Border | Text |
+|---|---|---|---|
+| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| hover | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
+| press | `var(--color-background-brand-light)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| selected | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+
+#### Behavior
+
+- Search filters visible options without mutating source data.
+- Selecting an option sets exactly one selected value (replaces any previous selection).
+- Selecting an already-selected option is a no-op (remains selected).
+- After selection, the panel may close or remain open depending on product configuration.
+- `filterActive` when a non-default value is selected.
+
+#### Filter model
+
+- `options: { value: string; label: string }[]` — **user-defined** (product supplies the option list per column; Figma shows sample `"Option 1"…"Option N"` as placeholders only)
+- `selectedValue: string | null`
+- `searchQuery: string`
+- `filterActive` when `selectedValue` is non-null
+
+#### Accessibility
+
+- Option list exposes `role="listbox"`; each option exposes `role="option"` with `aria-selected`.
+- Search input has `aria-label` describing its purpose.
+- Keyboard: `ArrowUp`/`ArrowDown` navigates options, `Enter` commits selection.
+
+---
+
+### Filter type: Dropdown-SingleSelect (`Single-select`, `44360:179201`)
+
+Simple single-select filter with a scrollable plain-text option list — no search row. Structurally identical to Combobox-SingleSelect minus the `SearchRow`. Codegen must delegate option row tokens and interaction states to **`components/ids/dropdown-single-select/design-spec.mdx`**.
+
+**Figma:** `44360:179201` (Dropdown Menu within `44360:179197`; uses `.Dropdown-SingleSelect-Elements-Options`)
+
+#### Anatomy
+
+1. `OptionList` — scrollable plain-text option rows (direct child of `FilterPanelBody`)
+
+No search row. No Select All / Clear All row. Single-select semantics.
+
+#### Layout
+
+- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, Shadow 1 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`.
+- **Options wrapper:** `var(--padding-padding-1)` horizontal padding.
+- **Option row** (`.Dropdown-SingleSelect-Elements-Options`): `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right, `var(--spacing-space-8)` gap. Label: Body 2 Medium, `var(--color-text-neutral)`, overflow ellipsis.
+
+#### States (option row)
+
+Delegate to **`components/ids/dropdown-single-select/design-spec.mdx`** States tables:
+
+| State | Background | Border | Text |
+|---|---|---|---|
+| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| hover | `var(--color-background-controls-brand-lighter)` | brand emphasis rows | `var(--color-text-neutral)` |
+| selected | brand-lighter or tokenized selected row style | tokenized | `var(--color-text-brand-strong)` |
+| disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+
+#### Behavior
+
+- Clicking an option sets exactly one selected value (replaces previous).
+- `filterActive` when a non-default value is selected.
+- Options are **user-defined** (product supplies the option list per column).
+
+#### Filter model
+
+- `options: { value: string; label: string }[]` — **user-defined**
+- `selectedValue: string | null`
+- `filterActive` when `selectedValue` is non-null
+
+#### Codegen note
+
+Implementations must use the IDS Dropdown Single-Select component (`components/ids/dropdown-single-select/design-spec.mdx`) for option row rendering, tokens, and interaction states — not custom markup.
+
+---
+
+### Filter type: Dropdown-MultiSelect (`Multi-select`, `44360:179348`)
+
+Multiselect filter with Select All / Clear All row and scrollable checkbox option list — no search row. Structurally identical to Combobox-Multiselect minus the `SearchRow`. Codegen must delegate checkbox rendering to **`components/ids/checkbox/design-spec.mdx`** and option row patterns to IDS dropdown multi-select conventions.
+
+**Figma:** `44360:179348` (Dropdown Menu within `44360:179344`; uses `.Dropdown-Elements-MultiSelect-Options`)
+
+#### Anatomy
+
+1. `SelectAllClearAllRow` — checkbox + label left, Clear All action right, bottom border divider
+2. `OptionList` — scrollable checkbox option rows
+
+No search row.
+
+#### Layout
+
+- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 1 elevation, `overflow: clip`. Sample width `269px`.
+- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left padding; bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`.
+  - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.mdx`.
+  - "Select All" label: Body 2 Medium, `var(--color-text-neutral)`.
+  - "Clear All" action: Body 2 Medium, `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
+- **Option row** (`.Dropdown-Elements-MultiSelect-Options`): `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.mdx`. Label: Body 2 Medium, `var(--color-text-neutral)`, overflow ellipsis, `white-space: nowrap`.
+
+#### States (option row)
+
+| State | Background | Border | Text |
+|---|---|---|---|
+| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| hover | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
+| press | `var(--color-background-brand-light)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| selected (multi) | `var(--color-background-component)` + checked checkbox | none | `var(--color-text-neutral)` |
+
+#### Behavior
+
+- Select All toggles all options.
+- Clear All deselects all options.
+- Individual checkboxes toggle per-option selection.
+- `filterActive` when selected count < total option count.
+- Options are **user-defined** (product supplies the option list per column).
+
+#### Filter model
+
+- `options: { value: string; label: string }[]` — **user-defined**
+- `selectedValues: string[]`
+- `filterActive` when `selectedValues.length < options.length`
+
+#### Codegen note
+
+Implementations must use the IDS Checkbox component (`components/ids/checkbox/design-spec.mdx`) for option row checkboxes. Option row layout and tokens follow IDS dropdown multi-select conventions.
+
+---
+
+### Filter type: Numeric (`.Filter-Element-NumericFilter`, `44360:182265`)
+
+Operator-based numeric filter with radio group, value field(s), and optional unit dropdown. Uses IDS Radio Button and TextBox spec tokens.
+
+**Figma:** `44360:182265` (within `44386:290322`)
+
+#### Anatomy
+
+1. `OperatorRadioGroup` — vertical list of operator radio rows
+2. `ValueBlock` — conditional value input(s) shown when operator requires a value
+3. optional `UnitDropdown` — single-select dropdown beside each value field
+
+#### Layout
+
+- **Panel width:** `300px` minimum sample; content-driven within L-frame `max-width` rules.
+- **Operator rows** (`.DataGrid-Elements-Filter-Numeric`, `44367:182693`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `gap: var(--spacing-space-8)` between `16×16` radio and label. Label: Body 2 Medium, `var(--color-text-neutral)`.
+- **Operators** (single-select radio group, labels from Figma):
+  1. `All` — no value inputs; clears numeric constraint.
+  2. `Equals` / `Does not equal` / `Greater than` / `Greater than equal to` / `Less than` / `Less than equal to` — show one value block: `padding-left: 40px`, `padding-right: var(--padding-padding-16)`, `padding-bottom: var(--padding-padding-8)`, gap `16px` between rows.
+     - **Text field:** height `40px`, border `var(--border-width-border-default)` solid `var(--color-border-accessible)`, horizontal padding `var(--padding-padding-16)`, vertical padding `var(--padding-padding-8)`. Width: `242px` sample, flex `1` when unit dropdown present. Delegate states to `components/ids/text-box/design-spec.mdx`.
+     - **Helper text:** Body 2 Medium, `var(--color-text-neutral)`, value `"Numeric value"`.
+  3. `Between` — two value blocks with helpers `"Starting value"` and `"Ending value"` (Figma `44370:145919` / `44370:145922`), gap `16px` between rows.
+- **Value + Unit row** (when `unitOptions` provided): flex row, `gap: 16px`, both children `flex: 1`. Text field and unit dropdown share the `242px` container width equally.
+- **Unit dropdown (optional):** delegate to `components/ids/dropdown-single-select/design-spec.mdx` — field height `40px` (Large), padding `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, border/background/text tokens per that spec. Caret icon `arrow-drop-tri-caret`. Placeholder `"-Select-"`.
+
+#### Delegated specs
+
+- **Radio control:** `components/ids/radio-button/design-spec.mdx` — `16×16` control, dot `var(--color-icon-brand-base)`, selected border `var(--color-border-brand-base)`, hover border `var(--color-border-strong)`, focus-visible ring `1px var(--color-border-brand-base)` offset `2px`.
+- **Text field:** `components/ids/text-box/design-spec.mdx` — hover `var(--color-border-strong)`, focus `var(--color-border-brand-base)`, focus-visible outer ring `var(--color-border-brand-base)` offset `4px` with `border-radius: 4px`.
+- **Unit dropdown:** `components/ids/dropdown-single-select/design-spec.mdx` — all trigger and popup token contracts per that spec.
+
+#### Filter model
+
+- `operator`: `all` | `equals` | `not-equals` | `greater-than` | `greater-than-equal` | `less-than` | `less-than-equal` | `between`
+- `value?: string`, `valueEnd?: string` (for `between`)
+- `unit?: string`, `unitEnd?: string` (optional; when `unitOptions` provided)
+- `filterActive` when `operator !== 'all'` and required value(s) are non-empty
+
+#### Figma proof nodes
+
+- `44360:182266` (`Filter by=All`)
+- `44367:182637` (`Equals` + value)
+- `44370:145919` (`Between` + range)
 
 ### Behavior & accessibility
 - Open/close on **`FilterToggle`**; **Escape** and **pointer down outside** dismiss (when implemented).
@@ -751,8 +1057,15 @@ Variant matrix:
   - Rows and columns layout reference: **`37721:113987`** (column widths, no spacer before settings)
   - Main variant sample: `37721:112483` (child of **`37721:112482`** *Data Grid - Main*)
   - **Row/cell states & styling:** `37721:114580`
+  - **Column filter type matrix:** `37822:91069` (Column Filter-Main)
+  - **Default text filter (Column Search):** `37822:91073`
+  - **Combobox-Multiselect filter:** `44360:147581` (Dropdown Menu, search + Select All/Clear All + checkbox list)
+  - **Combobox-SingleSelect filter:** `44360:179074` (Dropdown Menu, search + plain text option list)
+  - **Dropdown-SingleSelect filter:** `44360:179201` (`.Dropdown-SingleSelect-Elements-Options`, no search)
+  - **Dropdown-MultiSelect filter:** `44360:179348` (`.Dropdown-Elements-MultiSelect-Options`, no search, Select All/Clear All)
+  - **Numeric filter:** `44360:182265` (`.Filter-Element-NumericFilter`); operator rows `44367:182693`; proof nodes `44360:182266`, `44367:182637`, `44370:145919`
 - Live verification evidence:
-  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).
+  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).
 ### Storybook generation contract
 
 **Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).

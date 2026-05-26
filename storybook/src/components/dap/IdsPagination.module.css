@@ -5,7 +5,7 @@
   justify-content: space-between;
   gap: var(--spacing-space-16);
   min-height: 48px;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   padding: var(--padding-padding-8) calc(var(--padding-padding-16) * 2) var(--padding-padding-8)
     var(--padding-padding-24);
   font-size: var(--font-size-body-2);
@@ -43,8 +43,7 @@
   justify-content: space-between;
   width: 90px;
   height: 32px;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   padding: 6px var(--padding-padding-16);
@@ -54,11 +53,7 @@
 }
 
 .dropdownTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-brand-base);
-}
-
-.dropdownTrigger:active:not(:disabled) {
-  border-color: var(--color-border-brand-base);
+  border-color: var(--color-border-strong);
 }
 
 .dropdownTrigger:focus-visible,
@@ -66,20 +61,24 @@
 .dropdownOption:focus-visible,
 .pageOffsetTrigger:focus-visible,
 .pageOffsetOption:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .dropdownTrigger:disabled,
 .iconButton:disabled {
-  color: var(--color-icon-disabled);
   cursor: not-allowed;
 }
 
 .dropdownTrigger:disabled {
-  background: var(--color-background-gray-light);
-  border-color: var(--color-border-accessible);
+  background: var(--color-background-gray-lighter);
+  border-color: var(--color-border-disabled);
   color: var(--color-text-disabled);
+}
+
+.dropdownTrigger:disabled .caretIcon {
+  color: var(--color-icon-disabled);
 }
 
 .caretIcon {
@@ -93,14 +92,16 @@
   position: absolute;
   left: 0;
   width: 90px;
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
   overflow: clip;
-  box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
+  box-shadow:
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
   z-index: 2;
 }
 
@@ -122,8 +123,8 @@
   width: 100%;
   box-sizing: border-box;
   border: 0;
-  border-top: var(--border-width-border-1) solid transparent;
-  border-bottom: var(--border-width-border-1) solid transparent;
+  border-top: var(--border-width-border-default, 1px) solid transparent;
+  border-bottom: var(--border-width-border-default, 1px) solid transparent;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   text-align: left;
@@ -137,22 +138,22 @@
 .dropdownOption:hover {
   background: var(--color-background-controls-brand-lighter);
   color: var(--color-text-neutral);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
 }
 
 .dropdownOption:active {
   background: var(--color-background-controls-brand-light);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
 }
 
 .dropdownOptionSelected {
   background: var(--color-background-controls-brand-lighter);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
 }
 
 .pageNavGroup {
@@ -191,8 +192,7 @@
   box-sizing: border-box;
   width: 52px;
   height: 32px;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   background: var(--color-background-component);
   padding: 5px var(--padding-padding-16) 6px var(--padding-padding-16);
 }
@@ -223,8 +223,7 @@
   justify-content: space-between;
   width: 40px;
   height: 32px;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   padding: 5px 6px;
@@ -234,17 +233,17 @@
 }
 
 .pageOffsetTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-brand-base);
-}
-
-.pageOffsetTrigger:active:not(:disabled) {
-  border-color: var(--color-border-brand-base);
+  border-color: var(--color-border-strong);
 }
 
 .pageOffsetTrigger:disabled {
-  background: var(--color-background-gray-light);
-  border-color: var(--color-border-accessible);
+  background: var(--color-background-gray-lighter);
+  border-color: var(--color-border-disabled);
   color: var(--color-text-disabled);
+}
+
+.pageOffsetTrigger:disabled .pageOffsetCaretIcon {
+  color: var(--color-icon-disabled);
 }
 
 .pageOffsetCaretIcon {
@@ -260,14 +259,16 @@
   width: 40px;
   max-height: 160px;
   overflow-y: auto;
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
   background: var(--color-background-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
   overflow-x: clip;
-  box-shadow: 0 4px 4px 0 rgb(37 37 37 / 8%), 0 2px 2px 0 rgb(37 37 37 / 8%);
+  box-shadow:
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
   z-index: 2;
 }
 
@@ -289,8 +290,8 @@
   width: 100%;
   box-sizing: border-box;
   border: 0;
-  border-top: var(--border-width-border-1) solid transparent;
-  border-bottom: var(--border-width-border-1) solid transparent;
+  border-top: var(--border-width-border-default, 1px) solid transparent;
+  border-bottom: var(--border-width-border-default, 1px) solid transparent;
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   text-align: right;
@@ -304,22 +305,22 @@
 .pageOffsetOption:hover {
   background: var(--color-background-controls-brand-lighter);
   color: var(--color-text-neutral);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
 }
 
 .pageOffsetOption:active {
   background: var(--color-background-controls-brand-light);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
 }
 
 .pageOffsetOptionSelected {
   background: var(--color-background-controls-brand-lighter);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
 }
 
 .countText {
