@@ -7,14 +7,17 @@
 - Node ID: 9054-24736
 ## Anatomy
 - Masthead container with brand background
-- Logo/brand identity
-- Application title
-- Navigation items
-- User account section
-- Search functionality
-- Status indicators
-- Focus ring for keyboard navigation
-- Optional notification badges
+- Logo/brand identity (product name, left-aligned)
+- Action slot (right-aligned), fixed order left → right:
+  1. Global Search icon button (`search-16`)
+  2. Alerts icon button (`alert-bell-16`) — supports critical badge
+  3. Jobs icon button (`jobs-queue-stack`) — supports success badge
+  4. System Settings icon button (`setting-gear-16`)
+  5. Help icon button (`help-circ-16`)
+  6. App Launcher slot (`grid-square-9-16`)
+  7. Avatar / User Settings slot
+- Focus ring for keyboard navigation (icon buttons + avatar button only)
+- Optional notification badges on Alerts and Jobs
 ## Layout & Measurements
 - Standard height: 56px (`--scale-56`)
 - Horizontal padding: 16px left, 8px right
@@ -24,6 +27,10 @@
 - Action icon button: 16px × 16px icon, padding 19px 16px
 - Avatar chip: 32px × 32px circle, padding 11px 8px
 - Minimum width: Full viewport width
+- Badge dimensions: `height: 18px`, `min-width: 18px`, `border-radius: 100px`
+- Badge padding (digit-based): 1 digit → fixed `width: 18px` (no padding); 2 digits → `padding: 0 4px`; 3+ digits → `padding: 0 5.5px`
+- Badge position: `position: absolute; top: 12px; left: 23px` (button container must be `position: relative`)
+- Badge overflow: renders `"99+"` when `badgeCount > 99`
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -61,6 +68,13 @@
 ### Alert Backgrounds
 - Success background: `var(--color-background-alerting-success)` = #1b8500
 - Critical background: `var(--color-background-alerting-critical)` = #af0000
+
+### Badge Tokens
+- Alerts badge background: `var(--color-background-alerting-critical)` = #af0000 (`badgeType="critical"`)
+- Jobs badge background: `var(--color-background-alerting-success)` = #1b8500 (`badgeType="success"`)
+- Badge border: `var(--color-border-white)` = #ffffff, `border-width: var(--border-width-border-1)`
+- Badge text color: `var(--color-text-white)` = #ffffff
+- Badge font size: `var(--font-size-body-3, 12px)`
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -156,6 +170,8 @@
 - `icon: ReactNode` (required) — use `Icon variant="mask"` (default) for SVG assets with hardcoded fills; use `variant="inline"` only for SVGs authored with `currentColor`
 - `aria-label: string` (required)
 - `aria-expanded?: boolean` — set when button controls an open panel/dropdown
+- `badgeCount?: number` — renders badge when > 0; displays `"99+"` when > 99
+- `badgeType?: "default" | "controls" | "critical" | "warning" | "disabled" | "success"` — defaults to `"critical"`. Use `"critical"` for Alerts, `"success"` for Jobs
 
 ### MastheadAvatar
 - `initials?: string`
@@ -182,6 +198,14 @@
   1. `MastheadRoot`
   2. `MastheadBrandSlot` (logo + product name)
   3. `MastheadActionsSlot` (icons, app launcher, avatar)
+- Icon action order within `MastheadActionsSlot` (left → right, enforced by Figma):
+  1. Global Search (`search-16`)
+  2. Alerts (`alert-bell-16`) — `badgeType="critical"` when badge shown
+  3. Jobs (`jobs-queue-stack`) — `badgeType="success"` when badge shown
+  4. System Settings (`setting-gear-16`)
+  5. Help (`help-circ-16`)
+  6. App Launcher (`grid-square-9-16`)
+  7. Avatar / User Settings
 - Behavior contract:
   - brand area remains left-aligned and actions right-aligned
   - action buttons maintain 16x16 icon contract and tokenized hover/active states
@@ -207,6 +231,20 @@
 - Icon buttons and avatar buttons set `color: var(--color-icon-white)` on the root element so `currentColor` resolves correctly for child icons.
 - SVG assets in `assets/icons/` (e.g. `user-single-16.svg`, `grid-square-9-16.svg`) contain hardcoded `fill` values — **do not use `variant="inline"`** for these. Use `variant="mask"` (default) so CSS masking with `background-color: currentColor` applies the correct white color.
 - Only use `Icon variant="inline"` for SVGs that are authored with `currentColor` strokes/fills (e.g. custom inline SVGs). Ensure SVG paths do not have explicit fill values.
+
+### Action icons and badge rendering
+- Each action icon button uses a specific icon slug from `assets/icons/`. The correct slug per slot:
+  - Global Search: `shapeName="search-16"`
+  - Alerts: `shapeName="alert-bell-16"` — paired with `badgeType="critical"` (red)
+  - Jobs: `shapeName="jobs-queue-stack"` — paired with `badgeType="success"` (green)
+  - System Settings: `shapeName="setting-gear-16"`
+  - Help: `shapeName="help-circ-16"`
+- All action icons render at `16×16px` and must use `variant="mask"` (default) — these SVG assets contain hardcoded `fill` values and cannot be recolored via `variant="inline"`.
+- Use the shared `Badge` component (`Badge.tsx`) — do **not** hand-roll badge CSS.
+- `badgeCount > 0` renders the badge; `badgeCount` of 0 or `undefined` hides it entirely.
+- Values above 99 are capped and displayed as `"99+"`.
+- `badgeType` controls the badge color variant (defaults to `"critical"`). Always pass `badgeType="success"` for the Jobs icon and `badgeType="critical"` for the Alerts icon.
+- The `.badgeWrapper` span uses `position: absolute; top: 12px; left: 23px; pointer-events: none` to float the badge over the icon. The parent `actionIconButton` must be `position: relative` — this is already set in `Masthead.module.css`.
 
 ### Button background in default state
 - All interactive buttons on the masthead (icon buttons, avatar, app launcher trigger) use `background: var(--color-background-masthead-brand-base)` in the default state, **not `transparent`**.
