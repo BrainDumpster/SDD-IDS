@@ -184,7 +184,7 @@
   top: 100%;
   right: 0;
   z-index: 100;
-  margin-top: var(--spacing-space-4, 4px);
+  margin-top: -1px;
   background: var(--color-background-surface-2, #fff);
   border: var(--border-width-border-default, 1px) solid var(--color-border-accessible, #757575);
   box-shadow:

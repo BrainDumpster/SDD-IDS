@@ -76,7 +76,7 @@
 
 ### Calendar popup
 - Calendar popup: absolutely positioned below the input field, right-aligned with the input's right edge (`right: 0`)
-- Calendar is a standalone bordered box — full border on all 4 sides (including top), separated from the input by `var(--spacing-space-4)` (4px) gap
+- Calendar popup is a bordered box attached to the input: `margin-top: -1px` (1px overlap) so the input bottom border and popup top border read as one continuous edge; full border on all 4 sides of the popup panel
 - When input is open, input border changes to `var(--color-border-brand-base)` (blue) — the calendar border stays `var(--color-border-accessible)` (gray)
 - Calendar container padding: `var(--padding-padding-16)` (16px all sides)
 - Calendar header width: `248px`
@@ -250,7 +250,7 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 | Keyboard-focused on text field | `var(--color-background-component)` | `var(--color-border-accessible)` (unchanged) | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Outer focus ring 3px outside container border: `1px solid var(--color-border-brand-base)` (inside stroke), `border-radius: 4px` (`:focus-visible`) |
 | Focused on icon | `var(--color-background-component)` | `var(--color-border-accessible)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Focus ring on **icon button only**: `inset: -3px`, `1px solid var(--color-border-brand-base)` (inside stroke), `border-radius: 4px`, `box-sizing: border-box` |
 | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-icon-disabled)` | Non-interactive; hover on icon must NOT apply; hover on field must NOT change border |
-| Selected with dropdown | `var(--color-background-component)` | `var(--color-border-brand-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Calendar popup open; input keeps its own blue border, popup is a separate panel with full `var(--color-border-accessible)` border and `4px` gap below input; format hint remains below the field |
+| Selected with dropdown | `var(--color-background-component)` | `var(--color-border-brand-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Calendar popup open; popup `margin-top: -1px` attaches to input; format hint remains below the field |
 | Selected | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Date chosen, popup closed |
 | Error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-alerting-critical)` | Error icon + message shown |
 
@@ -470,8 +470,8 @@ DatePickerRoot
 | `CalendarIconTrigger:hover:not(:disabled)` | bg: `var(--color-background-controls-brand-lighter)`, border-color: `var(--color-border-brand-base)` |
 | `CalendarIconTrigger:disabled` | color: `var(--color-icon-disabled)`, cursor: not-allowed, hover must NOT apply |
 | `FormatHint` | color: `var(--color-text-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
-| `FieldContainer.open` | border-color: `var(--color-border-brand-base)`, border-bottom: transparent, border-bottom-left-radius: 0, border-bottom-right-radius: 0 |
-| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-brand-base)` 1px (no top border), shadow: Shadow 4 stack, padding: `var(--padding-padding-16)`, right-aligned, no top border-radius, margin-top: 0; format hint rendered as first child inside popup when open |
+| `FieldContainer.open` | border-color: `var(--color-border-brand-base)` |
+| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input) |
 | `MonthDropdownButton` / `YearDropdownButton` | color: `var(--color-text-brand-strong)`, font: `var(--font-size-body-2)` Medium, `position: relative` (for overlay centering) |
 | `MonthDropdownOverlay` / `YearDropdownOverlay` | centered on trigger (`left: 50%; transform: translateX(-50%)`), min-width: 114px, max-height: 200px, border: `var(--color-border-accessible)` 1px, radius: `var(--corner-radius-radius-2)`, option padding: 10px/16px/24px, min-height: 44px, follows IDS Dropdown Single-Select spec |
 | `WeekDayLabel` | color: `var(--color-text-neutral)`, font: 12px Regular, tracking: 0.36px |
