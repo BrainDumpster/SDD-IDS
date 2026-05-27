@@ -509,5 +509,20 @@
       "calendarMonthDropdown": "42159-132514",
       "calendarYearDropdown": "42159-132470"
     }
+  },
+  {
+    "category": "Form Elements",
+    "component": "Time Picker",
+    "designSpecPath": "components/ids/time-picker/design-spec.mdx",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132203&m=dev",
+    "nodeId": "42159-132203",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentNodeId": "42159:132203",
+    "elementNodes": {
+      "timeDropdown": "42159-132108"
+    },
+    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132203&m=dev",
+    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryNodeId": "42159-132203"
   }
 ]

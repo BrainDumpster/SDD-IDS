@@ -24,9 +24,10 @@ function warnOnNewSpecGeneratedStories(): Plugin {
           return;
         }
         server.config.logger.warn(
-          "\n[storybook] New spec-generated story file detected. Stop and restart Storybook " +
-            "(pnpm dev:clean) or you may see: importers[path] is not a function\n",
+          "\n[storybook] New spec-generated story file detected. Reloading Storybook " +
+            "(if errors persist, stop and run: pnpm dev:clean)\n",
         );
+        server.ws.send({ type: "full-reload" });
       });
     },
   };
