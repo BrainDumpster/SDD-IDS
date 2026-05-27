@@ -1,0 +1,583 @@
+/* IDS Date Picker – spec-accurate styles */
+
+/* ── Input field ── */
+.root {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4, 4px);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+}
+
+.label {
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.fieldContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--color-background-component, #fff);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible, #757575);
+  gap: var(--spacing-space-none, 0px);
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  padding-left: var(--padding-padding-16, 16px);
+  padding-right: 0;
+}
+
+.fieldContainer.sizeLarge {
+  height: 40px;
+}
+
+.fieldContainer.sizeSmall {
+  height: 32px;
+}
+
+.fieldContainer:hover:not(.disabled):not(.error):not(.open) {
+  border-color: var(--color-border-strong, #252525);
+}
+
+.fieldContainer:has(.calendarIconBtn:hover):not(.disabled):not(.error):not(.open) {
+  border-color: var(--color-border-accessible, #757575);
+}
+
+/* Pointer/click focus — blue border, no ring */
+.fieldContainer:focus-within:not(.open):not(.disabled):not(.error) {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+/* Keyboard focus-visible only — outer ring (suppressed when mouse-activated) */
+.fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated) {
+  border-color: var(--color-border-accessible, #757575);
+  outline: 1px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Always suppress ring when mouse-activated */
+.fieldContainer.mouseActivated {
+  outline: none;
+}
+
+/* Mouse-activated focus must override hover border rules */
+.fieldContainer.mouseActivated:focus-within:not(.open):not(.disabled):not(.error) {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.fieldContainer.disabled {
+  background: var(--color-background-gray-light, #eaeaea);
+  border-color: var(--color-border-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.fieldContainer.disabled:hover {
+  border-color: var(--color-border-disabled, #757575);
+}
+
+.fieldContainer.error {
+  border-color: var(--color-border-alerting-critical-base, #c41616);
+}
+
+/* When calendar is open — brand-base border */
+.fieldContainer.open {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.textInput {
+  flex: 1 0 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--color-text-neutral-strong, #252525);
+  padding: 0;
+  min-width: 1px;
+}
+
+.textInput::placeholder {
+  color: var(--color-text-disabled, #757575);
+  font-weight: 400;
+}
+
+/* Hide placeholder on click/focus so it doesn't sit behind the cursor */
+.textInput:focus::placeholder {
+  color: transparent;
+}
+
+.textInput:disabled {
+  color: var(--color-text-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.calendarIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8, 0px);
+  background: none;
+  border: var(--border-width-border-default, 1px) solid transparent;
+  cursor: pointer;
+  padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  color: var(--color-icon-brand-base, #0076ce);
+  flex-shrink: 0;
+  align-self: stretch;
+  box-sizing: border-box;
+  position: relative;
+  outline: none;
+}
+
+.calendarIconBtn:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0076ce);
+  color: var(--color-icon-brand-base, #0076ce);
+}
+
+.calendarIconBtn:focus-visible {
+  outline-style: outset;
+  outline-width: thin;
+  outline-offset: 3px;
+  outline-color: var(--color-border-brand-base, #0076ce);
+  border-radius: 3px;
+}
+
+.calendarIconBtn:disabled {
+  color: var(--color-icon-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.calendarIconBtn.error {
+  color: var(--color-icon-alerting-critical, #c41616);
+}
+
+.formatHint {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  width: 100%;
+}
+
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-critical, #c41616);
+}
+
+/* ── Calendar popup ── */
+.calendarPopup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+  margin-top: var(--spacing-space-4, 4px);
+  background: var(--color-background-surface-2, #fff);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible, #757575);
+  box-shadow:
+    var(--shadow-shadow-4-drop-shadow-4-x, 0px) var(--shadow-shadow-4-drop-shadow-4-y, 4px) var(--shadow-shadow-4-drop-shadow-4-blur, 4px) var(--shadow-shadow-4-drop-shadow-4-spread, 0px) var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-8-x, 0px) var(--shadow-shadow-4-drop-shadow-8-y, 8px) var(--shadow-shadow-4-drop-shadow-8-blur, 8px) var(--shadow-shadow-4-drop-shadow-8-spread, 0px) var(--shadow-shadow-4-drop-shadow-8-color, rgba(37, 37, 37, 0.08));
+  padding: var(--padding-padding-16, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16, 16px);
+}
+
+/* ── Calendar header ── */
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 248px;
+}
+
+.headerDropdowns {
+  display: flex;
+  gap: var(--spacing-space-none, 0px);
+  align-items: center;
+}
+
+.dropdownButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8, 8px);
+  padding: var(--padding-padding-2, 2px) var(--padding-padding-8, 8px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  border: none;
+  background: none;
+  position: relative;
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.dropdownButton.yearBtn {
+  padding-left: var(--padding-padding-16, 16px);
+  padding-right: var(--padding-padding-16, 16px);
+}
+
+.caretIcon {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+  flex-shrink: 0;
+  display: block;
+}
+
+.navButtons {
+  display: flex;
+  gap: var(--spacing-space-20, 20px);
+  align-items: center;
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-padding-4, 4px);
+  border: none;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.navIcon {
+  width: 12px;
+  height: 12px;
+  color: var(--color-icon-neutral, #4d4d4d);
+  flex-shrink: 0;
+}
+
+/* ── Weekday row ── */
+.weekDayRow {
+  display: flex;
+  gap: var(--spacing-space-4, 4px);
+  align-items: center;
+  width: 248px;
+}
+
+.weekDayLabel {
+  width: 32px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0.36px;
+  color: var(--color-text-neutral, #4d4d4d);
+  padding: 0 5px;
+  box-sizing: border-box;
+}
+
+/* ── Date section (wraps dateContent + todayLink) ── */
+.dateSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8, 8px);
+  align-items: center;
+}
+
+/* ── Date content (wraps weekDayRow + dateGrid) ── */
+.dateContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16, 16px);
+  align-items: center;
+}
+
+/* ── Date grid (date rows only) ── */
+.dateGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4, 4px);
+  align-items: center;
+}
+
+.dateRow {
+  display: flex;
+  gap: var(--spacing-space-4, 4px);
+  align-items: center;
+  position: relative;
+}
+
+/* ── Range bar ── */
+.rangeBar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 30px;
+  background: var(--color-background-brand-light, #d9eaf8);
+  border-radius: 2px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.rangeBar.forward {
+  left: 0;
+}
+
+.rangeBar.reverse {
+  right: 1px;
+}
+
+.rangeBar.fullRow {
+  left: 0;
+}
+
+.dateCell.rangeStart:not(.unavailable) .dateCellContainer,
+.dateCell.rangeEnd:not(.unavailable) .dateCellContainer {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
+}
+
+.dateCell.rangeStart:not(.unavailable) .dateLabel,
+.dateCell.rangeEnd:not(.unavailable) .dateLabel {
+  color: var(--color-text-white, #fff);
+}
+
+/* ── Date cell ── */
+.dateCell {
+  width: 32px;
+  height: 32px;
+  padding: var(--padding-padding-1, 1px);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.dateCellContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  min-height: 1px;
+  border-radius: 2px;
+  padding: var(--padding-padding-8, 8px) var(--padding-padding-12, 12px);
+  box-sizing: border-box;
+}
+
+.dateCellContainer.todayType {
+  padding: var(--padding-padding-6, 6px);
+}
+
+/* Date cell states */
+.dateCell:hover:not(.unavailable) .dateCellContainer {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  cursor: pointer;
+}
+
+.dateCell:active:not(.unavailable) .dateCellContainer {
+  background: var(--color-background-controls-brand-light, #d9eaf8);
+}
+
+.dateCell.selected .dateCellContainer {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
+}
+
+.dateCell:focus-visible .focusRing {
+  display: block;
+}
+
+.dateCell:focus-visible .dateCellContainer {
+  padding: 7px 11px;
+}
+
+.dateCell:focus-visible .dateCellContainer.todayType {
+  padding: 7px 11px;
+}
+
+/* Unavailable — per Figma 42159:132767 (.DatePicker-Element-Date, state=Unavailable) */
+.dateCell.unavailable {
+  cursor: not-allowed;
+}
+
+/* Default / Adjacent Month — border on inner container */
+.dateCell.unavailable:not(:has(.todayType)) .dateCellContainer {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-disabled, #757575);
+}
+
+/* Today — border on outer cell, inner bg only */
+.dateCell.unavailable:has(.todayType) {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-disabled, #757575);
+}
+
+.dateCell.unavailable:has(.todayType) .dateCellContainer {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+  border: none;
+  padding: var(--padding-padding-6, 6px);
+}
+
+.dateCell.unavailable:hover .dateCellContainer,
+.dateCell.unavailable:hover:has(.todayType) {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+}
+
+.dateCell.unavailable:focus-visible .focusRing {
+  display: none;
+}
+
+.dateLabel {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+  text-align: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dateLabel.adjacentMonth {
+  color: var(--color-text-disabled, #757575);
+}
+
+.dateCell:active:not(.unavailable) .dateLabel.adjacentMonth {
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.dateCell.selected .dateLabel {
+  color: var(--color-text-white, #fff);
+}
+
+.dateCell.unavailable .dateLabel {
+  color: var(--color-text-disabled, #757575);
+  text-decoration: line-through;
+  text-decoration-skip-ink: none;
+  text-underline-position: from-font;
+}
+
+/* Today indicator */
+.todayIndicator {
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-border-strong, #252525);
+  flex-shrink: 0;
+}
+
+.dateCell.selected .todayIndicator {
+  background: var(--color-border-white, #fff);
+}
+
+.dateCell.unavailable .todayIndicator {
+  background: var(--color-border-disabled, #757575);
+}
+
+/* Focus ring (date cell) */
+.focusRing {
+  display: none;
+  position: absolute;
+  inset: -3px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
+  border-radius: 4px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+/* ── Today link ── */
+.todayLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-brand-strong, #0062ab);
+  padding: var(--padding-padding-4, 4px) var(--padding-padding-8, 8px);
+}
+
+.todayLink:hover {
+  text-decoration: underline;
+}
+
+/* ── Month / Year dropdown overlay (per Figma 42159:132520) ── */
+.overlayDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 114px;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: white;
+  border: var(--border-width-border-default, 1px) solid var(--color-background-gray-light, #eaeaea);
+  box-shadow: 0px 2px 5px 0px rgba(37, 37, 37, 0.08);
+  z-index: 10;
+  padding: var(--padding-padding-4, 4px) var(--padding-padding-1, 1px);
+}
+
+.overlayOption {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-6, 6px) var(--padding-padding-16, 16px);
+  box-sizing: border-box;
+  background: white;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  text-align: left;
+  margin: 0;
+}
+
+.overlayOption:hover {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+}
+
+.overlayOption:focus,
+.overlayOption:focus-visible {
+  outline: none;
+}
+
+.overlayOption.selectedOption {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  color: var(--color-text-neutral-strong, #252525);
+  font-weight: 400;
+}
+
+/* ── Wrapper for positioning ── */
+.positionWrapper {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+}

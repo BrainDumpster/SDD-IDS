@@ -492,5 +492,22 @@
     "component": "Whats New",
     "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=27437-44064&m=dev",
     "nodeId": "27437-44064"
+  },
+  {
+    "category": "Form Elements",
+    "component": "Date Picker",
+    "designSpecPath": "components/ids/date-picker/design-spec.mdx",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132058&m=dev",
+    "nodeId": "42159-132058",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "elementNodes": {
+      "date": "42159-132767",
+      "range": "42159-132639",
+      "calendarDefault": "42159-132612",
+      "calendarSelected": "42159-132585",
+      "calendarRange": "42159-132558",
+      "calendarMonthDropdown": "42159-132514",
+      "calendarYearDropdown": "42159-132470"
+    }
   }
 ]
