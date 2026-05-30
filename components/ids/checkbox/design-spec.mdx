@@ -25,7 +25,7 @@
 - Label aligns vertically with control center.
 - Checked indicator geometry: CSS-drawn thick check mark in an `8px x 8px` lane with sharp corners/edges (no rounded stroke caps), center-aligned to match Figma placement with optical Y nudge `-0.5px`.
 - Indeterminate indicator geometry: CSS-drawn horizontal stroke centered within the control (`8px` width, `2px` height), no rounded ends.
-- Assistive text indentation aligns to the full control footprint + label gap: `calc(18px + var(--spacing-space-8))`.
+- Assistive text row aligns to the left edge of the control (no `margin-left` offset); it occupies the full field width.
 - Focus-visible ring:
   - 1px outline using `var(--color-border-brand-base)`,
   - ring offset outside control by 2px.
@@ -48,7 +48,7 @@ Use semantic tokens only.
 - Text/Icon:
   - `var(--color-text-neutral-strong)`
   - `var(--color-text-disabled)`
-  - `var(--color-text-critical)` (error state)
+  - `var(--color-text-critical)` (error assistive text only — label color does NOT change in error state)
   - `var(--color-icon-white)`
   - `var(--color-icon-inverse)`
   - `var(--color-icon-brand-base)` (focus/semantic emphasis when needed)
@@ -86,7 +86,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Indeterminate behavior:
   - programmatic state (`aria-checked="mixed"`),
   - next user toggle transitions to checked (recommended deterministic rule).
-- Hover affects border/icon emphasis only; background remains unchanged from each selection baseline. Label remains semantic text color except disabled/error modes.
+- Hover affects border/icon emphasis only; background remains unchanged from each selection baseline. Label color remains `var(--color-text-neutral)` in error state (only `assistiveText` turns critical).
 - Disabled blocks pointer + keyboard interactions.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Behavior |
@@ -164,6 +164,13 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 **Layout & structure**
 - **Wrapper min-height**: `20px` — matches the label line-height; do not set `44px` on the wrapper
 - **Label font-weight**: `500` — apply on the wrapper label row
+
+**Error state**
+- **Box border in error**: unchecked box uses `var(--color-border-strong)` (same as hover), NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level via `ValidationErrorMessage`, not by a red border on the individual checkbox.
+- **Label color in error**: label stays `var(--color-text-neutral)` — do NOT apply `var(--color-text-critical)` to the label.
+- **Error assistive text icon**: prepend `status-critical-square-solid` icon (16×16, `variant="img"` to preserve the red fill + white × from the SVG) inline before the helper text. Gap between icon and text: `var(--spacing-space-8)`. Icon hidden when `disabled`.
+- **Assistive text alignment**: the assistive text row aligns to the left edge of the control (no left offset). Use `display: flex; align-items: center; gap: var(--spacing-space-8)` on the assistive text container.
+- **Assistive text spacing from options**: `var(--spacing-space-8)` (8px) when options are laid out horizontally (short list, single row); `var(--spacing-space-16)` (16px) between the last option and the error message when options are stacked vertically (long list).
 
 **Focus-visible ring**
 - **Outline offset**: `2px` — applies to both real `:focus-visible` and `.rootSimulatedFocus` (Storybook static demos)
