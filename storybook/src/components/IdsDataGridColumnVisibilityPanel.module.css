@@ -1,0 +1,96 @@
+/* Column visibility popup — checkbox rows per `components/ids/checkbox/design-spec.mdx`. */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 200px;
+  max-width: 320px;
+  box-sizing: border-box;
+  background: var(--color-background-component);
+}
+
+.validation {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  margin: 0;
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-light);
+  box-sizing: border-box;
+}
+
+.validationIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.validationText {
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-critical);
+}
+
+.optionList {
+  list-style: none;
+  margin: 0;
+  padding: var(--padding-padding-4) 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 366px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  background: var(--color-background-component);
+  min-height: 40px;
+  box-sizing: border-box;
+  transition: background 80ms ease;
+}
+
+.optionItem:hover {
+  background: var(--color-background-brand-lighter);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
+.optionItem:active {
+  background: var(--color-background-brand-light);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
+/* IDS Checkbox field — full width label row (spec: 8px gap, min-height 20px on wrapper). */
+.checkboxHost {
+  width: 100%;
+  min-width: 0;
+}
+
+.checkboxHost > div {
+  width: 100%;
+  min-width: 0;
+}
+
+.checkboxHost label {
+  display: inline-flex;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.checkboxHost label > span:last-child {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -43,10 +43,12 @@ export function IdsDataGridNumericFilterStoryHost({
     (): IdsDataGridColumn[] =>
       props.columns.map((col) => {
         if (col.key !== numericColumnKey) return col;
+        const filterActive = isIdsDataGridNumericFilterActive(numericFilter);
         return {
           ...col,
           filterable: true,
-          filterActive: isIdsDataGridNumericFilterActive(numericFilter),
+          filterActive,
+          numericFilterState: filterActive ? numericFilter : undefined,
           filterPanel: (
             <IdsDataGridTypeNumericFilterPanel
               state={numericFilter}

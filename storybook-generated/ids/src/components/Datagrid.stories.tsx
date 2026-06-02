@@ -10,6 +10,8 @@ import {
   type IdsDataGridColumn,
 } from "../../../../storybook/src/components/IdsDataGrid";
 import { IdsDataGridDefaultStoryHost } from "../../../../storybook/src/components/IdsDataGridDefaultStoryHost";
+import { IdsDataGridDateAndTimeFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateAndTimeFilterStoryHost";
+import { IdsDataGridDateFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateFilterStoryHost";
 import { IdsDataGridNumericFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridNumericFilterStoryHost";
 
 const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.mdx";
@@ -25,10 +27,76 @@ const specColumns: IdsDataGridColumn[] = [
     width: 200,
     filterPanel: <IdsDataGridFilterSearchField aria-label="Search name column" />,
   },
-  { key: "type", title: "Type", sortable: true, filterable: true, minWidth: 90, width: 140 },
-  { key: "status", title: "Status", sortable: true, filterable: true, minWidth: 90, width: 120 },
-  { key: "owner", title: "Owner", sortable: true, filterable: true, minWidth: 90, width: 120 },
-  { key: "region", title: "Region", sortable: false, filterable: true, minWidth: 90, width: 100 },
+  {
+    key: "type",
+    title: "Type",
+    sortable: true,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 90,
+    width: 140,
+  },
+  {
+    key: "status",
+    title: "Status",
+    sortable: true,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 90,
+    width: 120,
+  },
+  {
+    key: "amount",
+    title: "Amount",
+    sortable: true,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 90,
+    width: 120,
+  },
+  {
+    key: "dueDate",
+    title: "Due Date",
+    sortable: true,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 120,
+    width: 160,
+  },
+  {
+    key: "updatedAt",
+    title: "Updated",
+    sortable: true,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 120,
+    width: 180,
+  },
+  {
+    key: "owner",
+    title: "Owner",
+    sortable: true,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 90,
+    width: 120,
+  },
+  {
+    key: "region",
+    title: "Region",
+    sortable: false,
+    filterable: true,
+    columnHideable: true,
+    minWidth: 90,
+    width: 100,
+  },
+];
+
+const DEMO_UNIT_OPTIONS = [
+  { value: "KB", label: "KB" },
+  { value: "MB", label: "MB" },
+  { value: "GB", label: "GB" },
+  { value: "TB", label: "TB" },
 ];
 
 const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
@@ -38,6 +106,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "North America Control Plane",
       type: "Service",
       status: "Active",
+      amount: 3200,
+      dueDate: "2026-05-30T14:00:00",
+      updatedAt: "2026-05-31T11:15:00",
       owner: "Platform",
       region: "NA",
     },
@@ -48,6 +119,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Europe Billing Processor",
       type: "Job",
       status: "Warning",
+      amount: 450,
+      dueDate: "2026-05-28T09:30:00",
+      updatedAt: "2026-05-28T09:30:00",
       owner: "Finance",
       region: "EU",
     },
@@ -58,6 +132,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Asia Analytics Stream",
       type: "Pipeline",
       status: "Active",
+      amount: 8900,
+      dueDate: "2026-04-15T16:45:00",
+      updatedAt: "2026-04-20T08:00:00",
       owner: "Data Ops",
       region: "APAC",
     },
@@ -68,6 +145,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Archive Worker",
       type: "Worker",
       status: "Paused",
+      amount: 75,
+      dueDate: "2025-06-01T08:00:00",
+      updatedAt: "2025-06-01T08:00:00",
       owner: "Storage",
       region: "NA",
     },
@@ -78,6 +158,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Policy Service",
       type: "Service",
       status: "Active",
+      amount: 1200,
+      dueDate: "2026-06-15T10:00:00",
+      updatedAt: "2026-05-29T16:00:00",
       owner: "Security",
       region: "Global",
     },
@@ -88,6 +171,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Realtime Gateway",
       type: "Gateway",
       status: "Critical",
+      amount: 5400,
+      dueDate: "2026-05-25T18:30:00",
+      updatedAt: "2026-05-30T14:00:00",
       owner: "Edge",
       region: "EU",
     },
@@ -98,6 +184,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Ingestion Adapter",
       type: "Adapter",
       status: "Active",
+      amount: 2100,
+      dueDate: "2026-05-31T11:15:00",
+      updatedAt: "2026-05-27T12:45:00",
       owner: "Data Ops",
       region: "APAC",
     },
@@ -108,6 +197,9 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
       name: "Partner Connector",
       type: "Connector",
       status: "Warning",
+      amount: 980,
+      dueDate: "2026-03-10T09:00:00",
+      updatedAt: "2026-05-15T09:30:00",
       owner: "Integrations",
       region: "NA",
     },
@@ -121,7 +213,9 @@ const specAccurateArgs: ComponentProps<typeof IdsDataGrid> = {
   columns: specColumns,
   rows: specRows,
   viewMode: "table",
-  multiselect: true,
+  rowSelection: true,
+  selectionMode: "single",
+  showSingleSelectionRadio: true,
   withDetailPanel: true,
   pageSize: 6,
   readOnly: false,
@@ -139,13 +233,32 @@ const meta: Meta<typeof IdsDataGrid> = {
       description: {
         component: [
           `Spec-driven IDS Datagrid. Source of truth: \`${DESIGN_SPEC_PATH}\`.`,
-          "Primary story uses spec defaults: `headerColorAndBorder` (Figma `colorAndBorder`), `rowVerticalIndicator` (`verticalBlueLine`), multiselect + IDS Pagination footer, `columnResizeEnabled`, portaled L-frame filters (`37721:114635`), header `48px` / row `40px`, `Icon` + `shapeName` for sort/filter/settings.",
-          "Type column uses checkbox multiselect filter per `components/ids/checkbox/design-spec.mdx`. Row click toggles the attached detail panel; selection uses IDS Checkbox (`IdsDataGridSelectionCheckbox`).",
+          "Primary story uses spec defaults: `headerColorAndBorder` (Figma `colorAndBorder`), `rowVerticalIndicator` (`verticalBlueLine`), `rowSelection` + `selectionMode` + optional `showSingleSelectionRadio` (single mode only) + IDS Pagination footer, `columnResizeEnabled`, portaled L-frame filters (`37721:114635`), header `48px` / row `40px`, `Icon` + `shapeName` for sort/filter/settings.",
+          "Use Storybook controls: **Selection mode** (`single` | `multiple`); in **single**, **Show single selection radio** toggles the 48px radio column. Row click activates the row / detail panel only — it does not toggle selection controls.",
         ].join(" "),
       },
     },
   },
   args: specAccurateArgs,
+  argTypes: {
+    rowSelection: {
+      control: "boolean",
+      description: "Show the 48px leading selection column.",
+    },
+    selectionMode: {
+      control: "radio",
+      options: ["single", "multiple"],
+      description:
+        "single = optional row radios; multiple = row checkbox + header select-all (current page). Row click does not toggle controls.",
+      if: { arg: "rowSelection", truthy: true },
+    },
+    showSingleSelectionRadio: {
+      control: "boolean",
+      description:
+        "When selectionMode is single: show the 48px column with per-row radios. When false, no selection column (row click / detail panel only).",
+      if: { arg: "selectionMode", eq: "single" },
+    },
+  },
 };
 
 export default meta;
@@ -173,7 +286,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
           flexDirection: "column",
         }}
       >
-        <IdsDataGridDefaultStoryHost {...props} />
+        <IdsDataGridDefaultStoryHost {...props} numericUnitOptions={DEMO_UNIT_OPTIONS} />
       </div>
     </div>
   );
@@ -231,12 +344,135 @@ const numericFilterRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
   { id: "n-5", values: { name: "Epsilon", amount: 3200, status: "Active" } },
 ];
 
-const DEMO_UNIT_OPTIONS = [
-  { value: "KB", label: "KB" },
-  { value: "MB", label: "MB" },
-  { value: "GB", label: "GB" },
-  { value: "TB", label: "TB" },
+const dateTimeFilterColumns: IdsDataGridColumn[] = [
+  { key: "name", title: "Name", sortable: true, minWidth: 90, width: 200 },
+  {
+    key: "updatedAt",
+    title: "Updated",
+    sortable: true,
+    filterable: true,
+    minWidth: 120,
+    width: 180,
+  },
+  { key: "status", title: "Status", sortable: true, minWidth: 90, width: 120 },
 ];
+
+const dateTimeFilterRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
+  {
+    id: "dt-1",
+    values: { name: "Alpha", updatedAt: "2026-05-30T14:00:00", status: "Active" },
+  },
+  {
+    id: "dt-2",
+    values: { name: "Beta", updatedAt: "2026-05-28T09:30:00", status: "Active" },
+  },
+  {
+    id: "dt-3",
+    values: { name: "Gamma", updatedAt: "2026-04-15T16:45:00", status: "Warning" },
+  },
+  {
+    id: "dt-4",
+    values: { name: "Delta", updatedAt: "2025-06-01T08:00:00", status: "Paused" },
+  },
+  {
+    id: "dt-5",
+    values: { name: "Epsilon", updatedAt: "2026-05-31T11:15:00", status: "Active" },
+  },
+];
+
+const dateFilterColumns: IdsDataGridColumn[] = [
+  { key: "name", title: "Name", sortable: true, minWidth: 90, width: 200 },
+  {
+    key: "dueDate",
+    title: "Due Date",
+    sortable: true,
+    filterable: true,
+    minWidth: 120,
+    width: 160,
+  },
+  { key: "status", title: "Status", sortable: true, minWidth: 90, width: 120 },
+];
+
+const dateFilterRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
+  {
+    id: "df-1",
+    values: { name: "Alpha", dueDate: "2026-05-30T14:00:00", status: "Active" },
+  },
+  {
+    id: "df-2",
+    values: { name: "Beta", dueDate: "2026-05-28T09:30:00", status: "Active" },
+  },
+  {
+    id: "df-3",
+    values: { name: "Gamma", dueDate: "2026-04-15T16:45:00", status: "Warning" },
+  },
+  {
+    id: "df-4",
+    values: { name: "Delta", dueDate: "2025-06-01T08:00:00", status: "Paused" },
+  },
+  {
+    id: "df-5",
+    values: { name: "Epsilon", dueDate: "2026-05-31T11:15:00", status: "Active" },
+  },
+];
+
+/** Figma date filter `37822:90838` — preset radios + DatePicker only (`37822:90904`, `37822:90922`). */
+export const DateColumnFilter: Story = {
+  name: "Date Column Filter",
+  render: () => (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        padding: 16,
+        background: "var(--color-background-surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <IdsDataGridDateFilterStoryHost
+          columns={dateFilterColumns}
+          rows={dateFilterRows}
+          rowSelection={false}
+          withDetailPanel={false}
+          pageSize={10}
+          headerColorAndBorder
+        />
+      </div>
+    </div>
+  ),
+};
+
+/** Figma date-time filter `44360:181306` — preset radios + DatePicker/TimePicker (`44360:181372`, `44360:181390`). */
+export const DateAndTimeColumnFilter: Story = {
+  name: "Date and Time Column Filter",
+  render: () => (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        padding: 16,
+        background: "var(--color-background-surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <IdsDataGridDateAndTimeFilterStoryHost
+          columns={dateTimeFilterColumns}
+          rows={dateTimeFilterRows}
+          rowSelection={false}
+          withDetailPanel={false}
+          pageSize={10}
+          headerColorAndBorder
+        />
+      </div>
+    </div>
+  ),
+};
 
 /** Figma numeric filter `44360:182265` — operator list + value fields (`44367:182637`, `44370:145919`); unit dropdown `44370:145922`. */
 export const NumericColumnFilter: Story = {
@@ -257,7 +493,7 @@ export const NumericColumnFilter: Story = {
         <IdsDataGridNumericFilterStoryHost
           columns={numericFilterColumns}
           rows={numericFilterRows}
-          multiselect={false}
+          rowSelection={false}
           withDetailPanel={false}
           pageSize={10}
           headerColorAndBorder

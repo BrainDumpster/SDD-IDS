@@ -1,4 +1,5 @@
 import {
+  defaultIdsDataGridNumericFilterState,
   IDS_DATAGRID_NUMERIC_OPERATOR_LABELS,
   type IdsDataGridNumericFilterState,
   type IdsDataGridNumericOperator,
@@ -195,6 +196,10 @@ export function IdsDataGridTypeNumericFilterPanel({
   const groupName = `${slug}-numeric-filter`;
 
   const setOperator = (operator: IdsDataGridNumericOperator) => {
+    if (operator === "all") {
+      onStateChange(defaultIdsDataGridNumericFilterState());
+      return;
+    }
     onStateChange({ ...state, operator });
   };
 
@@ -216,7 +221,11 @@ export function IdsDataGridTypeNumericFilterPanel({
         return (
           <div key={operator}>
             <div className={styles.optionRow}>
-              <label className={styles.optionLabel} htmlFor={inputId}>
+              <label
+                className={styles.optionLabel}
+                htmlFor={inputId}
+                onClick={operator === "all" ? () => setOperator("all") : undefined}
+              >
                 <span
                   className={styles.radioRoot}
                   data-checked={checked ? "" : undefined}

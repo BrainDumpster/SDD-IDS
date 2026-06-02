@@ -1,6 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
 import styles from "./IdsDatePicker.module.css";
+
+/** Above DataGrid column filter shell (`filterMenuLayer` z-index 10000). */
+const CALENDAR_PORTAL_Z_INDEX = 10050;
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -62,6 +74,11 @@ export interface IdsDatePickerProps {
   forceOpen?: boolean;
   /** Force selected-with-dropdown visual (demo only) */
   forceState?: string;
+  /**
+   * Render the calendar in `document.body` with fixed positioning so it is not clipped
+   * by overflow/stacking contexts (e.g. DataGrid filter panels). Default: true.
+   */
+  popupPortal?: boolean;
 }
 
 export function IdsDatePicker({
@@ -84,6 +101,7 @@ export function IdsDatePicker({
   onRangeChange,
   forceOpen,
   forceState,
+  popupPortal = true,
 }: IdsDatePickerProps) {
   const today = useMemo(() => new Date(), []);
   const [internalValue, setInternalValue] = useState<Date | null>(value);
@@ -102,6 +120,9 @@ export function IdsDatePicker({
   const rangeEnd = controlledRangeEnd !== undefined ? controlledRangeEnd : internalRangeEnd;
 
   const rootRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const calendarPopupRef = useRef<HTMLDivElement>(null);
+  const [calendarPos, setCalendarPos] = useState<{ top: number; left: number } | null>(null);
   const [mouseActivated, setMouseActivated] = useState(false);
 
   useEffect(() => {
@@ -281,14 +302,63 @@ export function IdsDatePicker({
     }
   };
 
+  const updateCalendarPosition = useCallback(() => {
+    const anchor = anchorRef.current;
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const popup = calendarPopupRef.current;
+    const popupWidth = popup?.offsetWidth ?? 280;
+    const popupHeight = popup?.offsetHeight ?? 340;
+    const margin = 8;
+    let top = rect.bottom - 1;
+    let left = rect.right - popupWidth;
+    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+    if (top + popupHeight > window.innerHeight - margin) {
+      const above = rect.top - popupHeight + 1;
+      if (above >= margin) top = above;
+    }
+    setCalendarPos({ top, left });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open || !popupPortal) {
+      setCalendarPos(null);
+      return;
+    }
+
+    let cancelled = false;
+    const run = () => {
+      if (cancelled) return;
+      updateCalendarPosition();
+    };
+
+    run();
+    const raf = requestAnimationFrame(() => {
+      run();
+      requestAnimationFrame(run);
+    });
+
+    const onWin = () => run();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("scroll", onWin, true);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("scroll", onWin, true);
+    };
+  }, [open, popupPortal, updateCalendarPosition, viewMonth, viewYear, monthDropdownOpen, yearDropdownOpen]);
+
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setMonthDropdownOpen(false);
-        setYearDropdownOpen(false);
-      }
+      const target = e.target as Node;
+      if (rootRef.current?.contains(target)) return;
+      if (calendarPopupRef.current?.contains(target)) return;
+      setOpen(false);
+      setMonthDropdownOpen(false);
+      setYearDropdownOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -318,10 +388,247 @@ export function IdsDatePicker({
     return Array.from({ length: 7 }, (_, i) => start + i);
   }, [viewYear]);
 
+  const calendarPopupClasses = [
+    styles.calendarPopup,
+    popupPortal ? styles.calendarPopupPortaled : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const calendarPopupStyle: CSSProperties | undefined =
+    popupPortal && calendarPos
+      ? { top: calendarPos.top, left: calendarPos.left, zIndex: CALENDAR_PORTAL_Z_INDEX }
+      : popupPortal
+        ? { visibility: "hidden" as const }
+        : undefined;
+
+  const calendarPopup = open && !disabled && (
+    <div
+      ref={calendarPopupRef}
+      className={calendarPopupClasses}
+      style={calendarPopupStyle}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choose date"
+    >
+      <div className={styles.calendarHeader}>
+        <div className={styles.headerDropdowns}>
+          <button
+            type="button"
+            className={styles.dropdownButton}
+            onClick={() => {
+              setMonthDropdownOpen((v) => !v);
+              setYearDropdownOpen(false);
+            }}
+          >
+            {MONTH_NAMES[viewMonth]}
+            <svg className={styles.caretIcon} viewBox="0 0 10 10">
+              <path d="M2 3.5L5 7L8 3.5" fill="currentColor" />
+            </svg>
+            {monthDropdownOpen && (
+              <div className={styles.overlayDropdown}>
+                {MONTH_NAMES.map((name, i) => (
+                  <button
+                    key={name}
+                    type="button"
+                    className={`${styles.overlayOption} ${i === viewMonth ? styles.selectedOption : ""}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setViewMonth(i);
+                      setMonthDropdownOpen(false);
+                    }}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </button>
+          <button
+            type="button"
+            className={`${styles.dropdownButton} ${styles.yearBtn}`}
+            onClick={() => {
+              setYearDropdownOpen((v) => !v);
+              setMonthDropdownOpen(false);
+            }}
+          >
+            {viewYear}
+            <svg className={styles.caretIcon} viewBox="0 0 10 10">
+              <path d="M2 3.5L5 7L8 3.5" fill="currentColor" />
+            </svg>
+            {yearDropdownOpen && (
+              <div className={styles.overlayDropdown}>
+                {yearRange.map((yr) => (
+                  <button
+                    key={yr}
+                    type="button"
+                    className={`${styles.overlayOption} ${yr === viewYear ? styles.selectedOption : ""}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setViewYear(yr);
+                      setYearDropdownOpen(false);
+                    }}
+                  >
+                    {yr}
+                  </button>
+                ))}
+              </div>
+            )}
+          </button>
+        </div>
+
+        <div className={styles.navButtons}>
+          <button
+            type="button"
+            className={styles.navBtn}
+            onClick={() => {
+              if (viewMonth === 0) {
+                setViewMonth(11);
+                setViewYear((y) => y - 1);
+              } else {
+                setViewMonth((m) => m - 1);
+              }
+            }}
+            aria-label="Previous month"
+          >
+            <Icon shapeName="chev-left-thick" className={styles.navIcon} style={{ width: 12, height: 12 }} />
+          </button>
+          <button
+            type="button"
+            className={styles.navBtn}
+            onClick={() => {
+              if (viewMonth === 11) {
+                setViewMonth(0);
+                setViewYear((y) => y + 1);
+              } else {
+                setViewMonth((m) => m + 1);
+              }
+            }}
+            aria-label="Next month"
+          >
+            <Icon shapeName="chev-right-thick" className={styles.navIcon} style={{ width: 12, height: 12 }} />
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.dateSection}>
+        <div className={styles.dateContent} role="grid" aria-label="Calendar">
+          <div className={styles.weekDayRow}>
+            {WEEKDAYS.map((d) => (
+              <span key={d} className={styles.weekDayLabel}>
+                {d}
+              </span>
+            ))}
+          </div>
+          <div className={styles.dateGrid}>
+            {calendarGrid.map((row, ri) => {
+              const bar = computeRangeBar(row);
+              return (
+                <div key={ri} className={styles.dateRow} role="row">
+                  {bar && (
+                    <div
+                      className={`${styles.rangeBar} ${bar.isFullRow ? styles.fullRow : bar.isForward ? styles.forward : styles.reverse}`}
+                      style={{ left: bar.left, width: bar.width }}
+                    />
+                  )}
+                  {row.map((cell, ci) => {
+                    const cellDate = new Date(cell.year, cell.month, cell.day);
+                    const isUnavailable = isDateDisabled(cellDate);
+                    const isSelected =
+                      !isUnavailable &&
+                      (rangeMode
+                        ? isRangeEndpoint(cellDate, "start") || isRangeEndpoint(cellDate, "end")
+                        : isSameDay(cellDate, selectedDate));
+                    const isToday = isSameDay(cellDate, today);
+                    const isAdjacentMonth = cell.type !== "current";
+                    const inRange = !isUnavailable && isInRange(cellDate);
+                    const cellClasses = [
+                      styles.dateCell,
+                      isSelected ? styles.selected : "",
+                      isUnavailable ? styles.unavailable : "",
+                      rangeMode && !isUnavailable && isRangeEndpoint(cellDate, "start")
+                        ? styles.rangeStart
+                        : "",
+                      rangeMode && !isUnavailable && isRangeEndpoint(cellDate, "end")
+                        ? styles.rangeEnd
+                        : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ");
+
+                    return (
+                      <div
+                        key={ci}
+                        className={cellClasses}
+                        role="gridcell"
+                        aria-selected={isSelected || inRange}
+                        aria-disabled={isUnavailable}
+                        tabIndex={isUnavailable ? -1 : 0}
+                        onClick={() => {
+                          if (isUnavailable) return;
+                          if (isAdjacentMonth) {
+                            setViewMonth(cell.month);
+                            setViewYear(cell.year);
+                          }
+                          selectDate(cellDate);
+                        }}
+                        onMouseEnter={() => {
+                          if (rangeMode && rangeStart && !rangeEnd && !isUnavailable) {
+                            setHoverDate(cellDate);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (rangeMode) setHoverDate(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if ((e.key === "Enter" || e.key === " ") && !isUnavailable) {
+                            e.preventDefault();
+                            if (isAdjacentMonth) {
+                              setViewMonth(cell.month);
+                              setViewYear(cell.year);
+                            }
+                            selectDate(cellDate);
+                          }
+                        }}
+                      >
+                        <div
+                          className={`${styles.dateCellContainer} ${isToday ? styles.todayType : ""}`}
+                        >
+                          <span
+                            className={`${styles.dateLabel} ${isAdjacentMonth ? styles.adjacentMonth : ""}`}
+                          >
+                            {cell.day}
+                          </span>
+                          {isToday && <div className={styles.todayIndicator} />}
+                        </div>
+                        <div className={styles.focusRing} />
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <button
+          type="button"
+          className={styles.todayLink}
+          onClick={() => {
+            setViewMonth(today.getMonth());
+            setViewYear(today.getFullYear());
+            selectDate(today);
+          }}
+        >
+          Today
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.root} ref={rootRef} onKeyDown={handleKeyDown}>
       {label && <span className={styles.label}>{label}</span>}
-      <div className={styles.positionWrapper}>
+      <div className={styles.positionWrapper} ref={anchorRef}>
         <div className={fieldClasses}>
           <input
             type="text"
@@ -348,229 +655,13 @@ export function IdsDatePicker({
           </button>
         </div>
 
-        {open && !disabled && (
-          <div className={styles.calendarPopup} role="dialog" aria-modal="true" aria-label="Choose date">
-            <div className={styles.calendarHeader}>
-              <div className={styles.headerDropdowns}>
-                <button
-                  type="button"
-                  className={styles.dropdownButton}
-                  onClick={() => {
-                    setMonthDropdownOpen((v) => !v);
-                    setYearDropdownOpen(false);
-                  }}
-                >
-                  {MONTH_NAMES[viewMonth]}
-                  <svg className={styles.caretIcon} viewBox="0 0 10 10">
-                    <path d="M2 3.5L5 7L8 3.5" fill="currentColor" />
-                  </svg>
-                  {monthDropdownOpen && (
-                    <div className={styles.overlayDropdown}>
-                      {MONTH_NAMES.map((name, i) => (
-                        <button
-                          key={name}
-                          type="button"
-                          className={`${styles.overlayOption} ${i === viewMonth ? styles.selectedOption : ""}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setViewMonth(i);
-                            setMonthDropdownOpen(false);
-                          }}
-                        >
-                          {name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.dropdownButton} ${styles.yearBtn}`}
-                  onClick={() => {
-                    setYearDropdownOpen((v) => !v);
-                    setMonthDropdownOpen(false);
-                  }}
-                >
-                  {viewYear}
-                  <svg className={styles.caretIcon} viewBox="0 0 10 10">
-                    <path d="M2 3.5L5 7L8 3.5" fill="currentColor" />
-                  </svg>
-                  {yearDropdownOpen && (
-                    <div className={styles.overlayDropdown}>
-                      {yearRange.map((yr) => (
-                        <button
-                          key={yr}
-                          type="button"
-                          className={`${styles.overlayOption} ${yr === viewYear ? styles.selectedOption : ""}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setViewYear(yr);
-                            setYearDropdownOpen(false);
-                          }}
-                        >
-                          {yr}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </button>
-              </div>
-
-              <div className={styles.navButtons}>
-                <button
-                  type="button"
-                  className={styles.navBtn}
-                  onClick={() => {
-                    if (viewMonth === 0) {
-                      setViewMonth(11);
-                      setViewYear((y) => y - 1);
-                    } else {
-                      setViewMonth((m) => m - 1);
-                    }
-                  }}
-                  aria-label="Previous month"
-                >
-                  <Icon
-                    shapeName="chev-left-thick"
-                    className={styles.navIcon}
-                    style={{ width: 12, height: 12 }}
-                  />
-                </button>
-                <button
-                  type="button"
-                  className={styles.navBtn}
-                  onClick={() => {
-                    if (viewMonth === 11) {
-                      setViewMonth(0);
-                      setViewYear((y) => y + 1);
-                    } else {
-                      setViewMonth((m) => m + 1);
-                    }
-                  }}
-                  aria-label="Next month"
-                >
-                  <Icon
-                    shapeName="chev-right-thick"
-                    className={styles.navIcon}
-                    style={{ width: 12, height: 12 }}
-                  />
-                </button>
-              </div>
-            </div>
-
-            <div className={styles.dateSection}>
-              <div className={styles.dateContent} role="grid" aria-label="Calendar">
-                <div className={styles.weekDayRow}>
-                  {WEEKDAYS.map((d) => (
-                    <span key={d} className={styles.weekDayLabel}>
-                      {d}
-                    </span>
-                  ))}
-                </div>
-                <div className={styles.dateGrid}>
-                  {calendarGrid.map((row, ri) => {
-                    const bar = computeRangeBar(row);
-                    return (
-                      <div key={ri} className={styles.dateRow} role="row">
-                        {bar && (
-                          <div
-                            className={`${styles.rangeBar} ${bar.isFullRow ? styles.fullRow : bar.isForward ? styles.forward : styles.reverse}`}
-                            style={{ left: bar.left, width: bar.width }}
-                          />
-                        )}
-                        {row.map((cell, ci) => {
-                          const cellDate = new Date(cell.year, cell.month, cell.day);
-                          const isUnavailable = isDateDisabled(cellDate);
-                          const isSelected =
-                            !isUnavailable &&
-                            (rangeMode
-                              ? isRangeEndpoint(cellDate, "start") || isRangeEndpoint(cellDate, "end")
-                              : isSameDay(cellDate, selectedDate));
-                          const isToday = isSameDay(cellDate, today);
-                          const isAdjacentMonth = cell.type !== "current";
-                          const inRange = !isUnavailable && isInRange(cellDate);
-                          const cellClasses = [
-                            styles.dateCell,
-                            isSelected ? styles.selected : "",
-                            isUnavailable ? styles.unavailable : "",
-                            rangeMode && !isUnavailable && isRangeEndpoint(cellDate, "start")
-                              ? styles.rangeStart
-                              : "",
-                            rangeMode && !isUnavailable && isRangeEndpoint(cellDate, "end")
-                              ? styles.rangeEnd
-                              : "",
-                          ]
-                            .filter(Boolean)
-                            .join(" ");
-
-                          return (
-                            <div
-                              key={ci}
-                              className={cellClasses}
-                              role="gridcell"
-                              aria-selected={isSelected || inRange}
-                              aria-disabled={isUnavailable}
-                              tabIndex={isUnavailable ? -1 : 0}
-                              onClick={() => {
-                                if (isUnavailable) return;
-                                if (isAdjacentMonth) {
-                                  setViewMonth(cell.month);
-                                  setViewYear(cell.year);
-                                }
-                                selectDate(cellDate);
-                              }}
-                              onMouseEnter={() => {
-                                if (rangeMode && rangeStart && !rangeEnd && !isUnavailable) {
-                                  setHoverDate(cellDate);
-                                }
-                              }}
-                              onMouseLeave={() => {
-                                if (rangeMode) setHoverDate(null);
-                              }}
-                              onKeyDown={(e) => {
-                                if ((e.key === "Enter" || e.key === " ") && !isUnavailable) {
-                                  e.preventDefault();
-                                  if (isAdjacentMonth) {
-                                    setViewMonth(cell.month);
-                                    setViewYear(cell.year);
-                                  }
-                                  selectDate(cellDate);
-                                }
-                              }}
-                            >
-                              <div
-                                className={`${styles.dateCellContainer} ${isToday ? styles.todayType : ""}`}
-                              >
-                                <span
-                                  className={`${styles.dateLabel} ${isAdjacentMonth ? styles.adjacentMonth : ""}`}
-                                >
-                                  {cell.day}
-                                </span>
-                                {isToday && <div className={styles.todayIndicator} />}
-                              </div>
-                              <div className={styles.focusRing} />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <button
-                type="button"
-                className={styles.todayLink}
-                onClick={() => {
-                  setViewMonth(today.getMonth());
-                  setViewYear(today.getFullYear());
-                  selectDate(today);
-                }}
-              >
-                Today
-              </button>
-            </div>
-          </div>
-        )}
+        {!popupPortal && calendarPopup}
+        {popupPortal &&
+          open &&
+          !disabled &&
+          typeof document !== "undefined" &&
+          calendarPopup &&
+          createPortal(calendarPopup, document.body)}
       </div>
       {formatHint && <span className={styles.formatHint}>{formatHint}</span>}
       {error && errorMessage && (

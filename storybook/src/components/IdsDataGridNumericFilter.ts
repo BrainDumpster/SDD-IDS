@@ -28,7 +28,13 @@ export const IDS_DATAGRID_NUMERIC_OPERATOR_LABELS: Record<IdsDataGridNumericOper
 };
 
 export function defaultIdsDataGridNumericFilterState(): IdsDataGridNumericFilterState {
-  return { operator: "all", value: "", valueEnd: "" };
+  return {
+    operator: "all",
+    value: "",
+    valueEnd: "",
+    unit: undefined,
+    unitEnd: undefined,
+  };
 }
 
 export function isIdsDataGridNumericFilterActive(

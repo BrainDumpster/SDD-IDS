@@ -1,9 +1,30 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { RadioGroup } from "@base-ui-components/react/radio-group";
 import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
 import { IdsDetailPanel } from "./IdsDetailPanel";
 import { IdsPagination } from "./IdsPagination";
 import { IdsDataGridSelectionCheckbox } from "./IdsDataGridSelectionCheckbox";
+import { IdsDataGridSelectionRadio } from "./IdsDataGridSelectionRadio";
+import {
+  isIdsDataGridDateFilterActive,
+  type IdsDataGridDateFilterState,
+} from "./IdsDataGridDateFilter";
+import {
+  isIdsDataGridDateTimeFilterActive,
+  type IdsDataGridDateTimeFilterState,
+} from "./IdsDataGridDateAndTimeFilter";
+import {
+  isIdsDataGridNumericFilterActive,
+  type IdsDataGridNumericFilterState,
+} from "./IdsDataGridNumericFilter";
+import {
+  canHideIdsDataGridColumn,
+  getIdsDataGridHideableColumns,
+  IDS_DATAGRID_COLUMN_VISIBILITY_MIN_ERROR,
+  isIdsDataGridColumnVisible,
+} from "./IdsDataGridColumnVisibility";
+import { IdsDataGridColumnVisibilityPanel } from "./IdsDataGridColumnVisibilityPanel";
 import styles from "./IdsDataGrid.module.css";
 
 export type IdsDataGridView = "table" | "treeview";
@@ -23,10 +44,38 @@ export interface IdsDataGridColumn {
   defaultWidth?: number;
   sortable?: boolean;
   filterable?: boolean;
-  /** When true and the menu is closed, show “filter applied” icon (solid + brand); from app filter model. */
+  /**
+   * When true and the menu is closed, show “filter applied” icon (solid + brand).
+   * Ignored when `numericFilterState`, `dateFilterState`, or `dateTimeFilterState` is set (grid derives active from model).
+   */
   filterActive?: boolean;
+  /** Numeric filter model; `operator === 'all'` → header filter not active. */
+  numericFilterState?: IdsDataGridNumericFilterState;
+  /** Date-only filter model; `mode === 'all'` → header filter not active. */
+  dateFilterState?: IdsDataGridDateFilterState;
+  /** Date-time filter model; `mode === 'all'` → header filter not active. */
+  dateTimeFilterState?: IdsDataGridDateTimeFilterState;
   /** Content inside the L-shaped filter shell; omit for chrome-only filters (no search row by default). */
   filterPanel?: ReactNode;
+  /**
+   * When true, column appears in the settings (gear) popup and may be hidden by the user.
+   * Columns without this flag are always visible and omitted from the popup.
+   */
+  columnHideable?: boolean;
+}
+
+/** Header filter icon “applied” state — false when numeric/date-time model is on “All”. */
+export function resolveIdsDataGridColumnFilterActive(column: IdsDataGridColumn): boolean {
+  if (column.numericFilterState !== undefined) {
+    return isIdsDataGridNumericFilterActive(column.numericFilterState);
+  }
+  if (column.dateFilterState !== undefined) {
+    return isIdsDataGridDateFilterActive(column.dateFilterState);
+  }
+  if (column.dateTimeFilterState !== undefined) {
+    return isIdsDataGridDateTimeFilterActive(column.dateTimeFilterState);
+  }
+  return Boolean(column.filterActive);
 }
 
 export interface IdsDataGridFilterSearchFieldProps {
@@ -57,11 +106,25 @@ export interface IdsDataGridRow {
   values: Record<string, ReactNode>;
 }
 
+export type IdsDataGridSelectionMode = "single" | "multiple";
+
 export interface IdsDataGridProps {
   columns: IdsDataGridColumn[];
   rows: IdsDataGridRow[];
   viewMode?: IdsDataGridView;
-  multiselect?: boolean;
+  /** When true, shows the 48px leading selection column (no select-all header). */
+  rowSelection?: boolean;
+  /**
+   * `single` = per-row radio, empty header; `multiple` = per-row checkbox + header select-all (current page).
+   * Ignored when `rowSelection` is false. Row body click does not toggle controls — only the control does.
+   */
+  selectionMode?: IdsDataGridSelectionMode;
+  /**
+   * When `selectionMode` is `single`, show the 48px selection column with per-row radios.
+   * When `false`, single-select has no selection column (row activation / detail panel only).
+   * Ignored for `multiple` (checkbox column always shown when `rowSelection` is true).
+   */
+  showSingleSelectionRadio?: boolean;
   withDetailPanel?: boolean;
   pageSize?: number;
   /** When true, row hover uses `surface-1` (Figma "Hover on read only table"); otherwise brand-lighter. */
@@ -72,6 +135,12 @@ export interface IdsDataGridProps {
   headerColorAndBorder?: boolean;
   /** Data columns: trailing-edge drag resize + `<col>` widths (Storybook Default). */
   columnResizeEnabled?: boolean;
+  /** Fired when a hideable column is shown or hidden via the settings popup. */
+  onColumnVisibilityChange?: (columnKey: string, visible: boolean) => void;
+  /** Fired when the user changes single-select radio (`selectionMode: "single"`). */
+  onRowSelectionChange?: (rowId: string | null) => void;
+  /** Fired when the user toggles multiselect checkboxes (`selectionMode: "multiple"`). */
+  onSelectedRowsChange?: (rowIds: string[]) => void;
 }
 
 const DEFAULT_MIN_WIDTH = 90;
@@ -92,22 +161,34 @@ export function IdsDataGrid({
   columns,
   rows,
   viewMode = "table",
-  multiselect = true,
+  rowSelection = true,
+  selectionMode = "single",
+  showSingleSelectionRadio = true,
   withDetailPanel = false,
   pageSize = 6,
   readOnly = false,
   rowVerticalIndicator = false,
   headerColorAndBorder = true,
   columnResizeEnabled = false,
+  onColumnVisibilityChange,
+  onRowSelectionChange,
+  onSelectedRowsChange,
 }: IdsDataGridProps) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [openFilterColumn, setOpenFilterColumn] = useState<string | null>(null);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+  const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(() => new Set());
   const [filterMenuPos, setFilterMenuPos] = useState<FilterMenuPos | null>(null);
   const [filterHoverKey, setFilterHoverKey] = useState<string | null>(null);
   const [filterFocusKey, setFilterFocusKey] = useState<string | null>(null);
   const [filterPressKey, setFilterPressKey] = useState<string | null>(null);
+  const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
+  const [settingsMenuPos, setSettingsMenuPos] = useState<FilterMenuPos | null>(null);
+  const [hiddenColumnKeys, setHiddenColumnKeys] = useState<Set<string>>(() => new Set());
+  const [columnVisibilityValidation, setColumnVisibilityValidation] = useState<string | null>(
+    null,
+  );
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
   const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState(columns.map((column) => column.key));
@@ -119,6 +200,22 @@ export function IdsDataGrid({
         )
       : {},
   );
+
+  const showSelectionColumn =
+    rowSelection &&
+    (selectionMode === "multiple" ||
+      (selectionMode === "single" && showSingleSelectionRadio));
+
+  useEffect(() => {
+    setSelectedRowId(null);
+    setSelectedRowIds(new Set());
+  }, [selectionMode]);
+
+  useEffect(() => {
+    if (selectionMode === "single" && !showSingleSelectionRadio) {
+      setSelectedRowId(null);
+    }
+  }, [selectionMode, showSingleSelectionRadio]);
 
   useEffect(() => {
     const declared = columns.map((c) => c.key);
@@ -134,6 +231,7 @@ export function IdsDataGrid({
 
   const tableViewportRef = useRef<HTMLDivElement | null>(null);
   const filterAnchorRefs = useRef(new Map<string, HTMLDivElement>());
+  const settingsAnchorRef = useRef<HTMLDivElement | null>(null);
   const resizeActiveRef = useRef(false);
   /** When set, grow column uses explicit px (user resize); otherwise `<col width="0">` absorbs table remainder. */
   const [growColPinnedWidthPx, setGrowColPinnedWidthPx] = useState<number | null>(null);
@@ -156,7 +254,12 @@ export function IdsDataGrid({
   }, [columnResizeEnabled, columns]);
 
   useEffect(() => {
-    if (!openFilterColumn) return;
+    if (!openFilterColumn) {
+      setFilterHoverKey(null);
+      setFilterFocusKey(null);
+      setFilterPressKey(null);
+      return;
+    }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpenFilterColumn(null);
     };
@@ -177,6 +280,81 @@ export function IdsDataGrid({
     };
   }, [openFilterColumn]);
 
+  useEffect(() => {
+    if (!settingsMenuOpen) {
+      setSettingsMenuPos(null);
+      setColumnVisibilityValidation(null);
+      return;
+    }
+    setOpenFilterColumn(null);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSettingsMenuOpen(false);
+    };
+    const onDocMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      const roots = document.querySelectorAll("[data-ids-datagrid-settings-menu]");
+      for (const root of roots) {
+        if (root.contains(target)) return;
+      }
+      if (settingsAnchorRef.current?.contains(target)) return;
+      setSettingsMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onDocMouseDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("mousedown", onDocMouseDown);
+    };
+  }, [settingsMenuOpen]);
+
+  useLayoutEffect(() => {
+    if (!settingsMenuOpen) {
+      setSettingsMenuPos(null);
+      return;
+    }
+
+    let cancelled = false;
+    const update = () => {
+      if (cancelled) return;
+      const anchor = settingsAnchorRef.current;
+      if (!anchor) return;
+      const r = anchor.getBoundingClientRect();
+      setSettingsMenuPos({
+        top: r.bottom,
+        right: document.documentElement.clientWidth - r.right,
+      });
+    };
+
+    update();
+    const raf = requestAnimationFrame(update);
+    const onWin = () => update();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("scroll", onWin, true);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("scroll", onWin, true);
+    };
+  }, [settingsMenuOpen]);
+
+  useEffect(() => {
+    setHiddenColumnKeys((prev) => {
+      const allowed = new Set(columns.filter((c) => c.columnHideable).map((c) => c.key));
+      const next = new Set([...prev].filter((k) => allowed.has(k)));
+      return next.size === prev.size ? prev : next;
+    });
+  }, [columns]);
+
+  useEffect(() => {
+    if (!openFilterColumn) return;
+    const col = columns.find((c) => c.key === openFilterColumn);
+    if (col && !isIdsDataGridColumnVisible(col, hiddenColumnKeys)) {
+      setOpenFilterColumn(null);
+    }
+  }, [openFilterColumn, columns, hiddenColumnKeys]);
+
   /** Clear press if pointer released outside the originating control (e.g. over portaled menu). */
   useEffect(() => {
     if (!filterPressKey) return;
@@ -194,13 +372,35 @@ export function IdsDataGrid({
     return columnOrder.map((key) => columnsByKey.get(key)).filter(Boolean) as IdsDataGridColumn[];
   }, [columnOrder, columns]);
 
+  const hideableColumns = useMemo(() => getIdsDataGridHideableColumns(columns), [columns]);
+
+  const visibleOrderedColumns = useMemo(
+    () => orderedColumns.filter((column) => isIdsDataGridColumnVisible(column, hiddenColumnKeys)),
+    [orderedColumns, hiddenColumnKeys],
+  );
+
   const openFilterColumnMeta = useMemo(
     () =>
       openFilterColumn != null
-        ? orderedColumns.find((c) => c.key === openFilterColumn && c.filterable)
+        ? visibleOrderedColumns.find((c) => c.key === openFilterColumn && c.filterable)
         : undefined,
-    [openFilterColumn, orderedColumns],
+    [openFilterColumn, visibleOrderedColumns],
   );
+
+  const handleColumnVisibilityChange = (columnKey: string, visible: boolean) => {
+    if (!visible && !canHideIdsDataGridColumn(columnKey, columns, hiddenColumnKeys)) {
+      setColumnVisibilityValidation(IDS_DATAGRID_COLUMN_VISIBILITY_MIN_ERROR);
+      return;
+    }
+    setColumnVisibilityValidation(null);
+    setHiddenColumnKeys((prev) => {
+      const next = new Set(prev);
+      if (visible) next.delete(columnKey);
+      else next.add(columnKey);
+      return next;
+    });
+    onColumnVisibilityChange?.(columnKey, visible);
+  };
 
   useLayoutEffect(() => {
     if (!openFilterColumn) {
@@ -267,17 +467,53 @@ export function IdsDataGrid({
 
   const totalPages = Math.max(1, Math.ceil(sortedRows.length / pageSize));
   const visibleRows = sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-  const allVisibleSelected =
-    visibleRows.length > 0 && visibleRows.every((row) => selectedRows.includes(row.id));
-  const someVisibleSelected =
-    visibleRows.length > 0 && visibleRows.some((row) => selectedRows.includes(row.id));
-  const selectAllIndeterminate = someVisibleSelected && !allVisibleSelected;
+  const visibleRowIds = useMemo(() => visibleRows.map((row) => row.id), [visibleRows]);
 
   const activeRow = useMemo(
     () => (activeRowId != null ? rows.find((row) => row.id === activeRowId) : undefined),
     [activeRowId, rows],
   );
+
+  const setSingleRowSelection = (rowId: string | null) => {
+    setSelectedRowId(rowId);
+    onRowSelectionChange?.(rowId);
+  };
+
+  const setMultiselectRow = (rowId: string, checked: boolean) => {
+    setSelectedRowIds((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(rowId);
+      else next.delete(rowId);
+      onSelectedRowsChange?.([...next]);
+      return next;
+    });
+  };
+
+  const isRowSelectionChecked = (rowId: string) =>
+    selectionMode === "single"
+      ? showSingleSelectionRadio && selectedRowId === rowId
+      : selectedRowIds.has(rowId);
+
+  const selectedVisibleCount = useMemo(
+    () => visibleRowIds.filter((id) => selectedRowIds.has(id)).length,
+    [visibleRowIds, selectedRowIds],
+  );
+  const allVisibleRowsSelected =
+    visibleRowIds.length > 0 && selectedVisibleCount === visibleRowIds.length;
+  const someVisibleRowsSelected =
+    selectedVisibleCount > 0 && selectedVisibleCount < visibleRowIds.length;
+
+  const toggleSelectAllVisible = (checked: boolean) => {
+    setSelectedRowIds((prev) => {
+      const next = new Set(prev);
+      for (const id of visibleRowIds) {
+        if (checked) next.add(id);
+        else next.delete(id);
+      }
+      onSelectedRowsChange?.([...next]);
+      return next;
+    });
+  };
 
   const handleRowClick = (rowId: string) => {
     if (withDetailPanel) {
@@ -300,24 +536,6 @@ export function IdsDataGrid({
       return;
     }
     setSortDirection((current) => (current === "asc" ? "desc" : "asc"));
-  };
-
-  const toggleSelectAllVisible = () => {
-    if (allVisibleSelected) {
-      setSelectedRows((current) => current.filter((id) => !visibleRows.some((row) => row.id === id)));
-      return;
-    }
-    setSelectedRows((current) => {
-      const merged = new Set(current);
-      visibleRows.forEach((row) => merged.add(row.id));
-      return Array.from(merged);
-    });
-  };
-
-  const toggleRowSelection = (rowId: string) => {
-    setSelectedRows((current) =>
-      current.includes(rowId) ? current.filter((id) => id !== rowId) : [...current, rowId],
-    );
   };
 
   const onHeaderDragStart = (event: React.DragEvent<HTMLTableCellElement>, columnKey: string) => {
@@ -357,7 +575,9 @@ export function IdsDataGrid({
     if (filterHoverKey === columnKey || filterFocusKey === columnKey) {
       return { shape: "filter-solid", iconState: "hover" };
     }
-    if (column.filterActive) return { shape: "filter-solid", iconState: "selected" };
+    if (resolveIdsDataGridColumnFilterActive(column)) {
+      return { shape: "filter-solid", iconState: "selected" };
+    }
     return { shape: "filter", iconState: "default" };
   };
 
@@ -371,31 +591,33 @@ export function IdsDataGrid({
   };
 
   const growColumnKey =
-    orderedColumns.length > 0 ? orderedColumns[orderedColumns.length - 1].key : null;
+    visibleOrderedColumns.length > 0
+      ? visibleOrderedColumns[visibleOrderedColumns.length - 1].key
+      : null;
 
   useEffect(() => {
     setGrowColPinnedWidthPx(null);
     growResizeLatestWidthRef.current = null;
-  }, [growColumnKey, orderedColumns.length]);
+  }, [growColumnKey, visibleOrderedColumns.length]);
 
   const growColumn = useMemo(
     () =>
       growColumnKey != null
-        ? orderedColumns.find((column) => column.key === growColumnKey)
+        ? visibleOrderedColumns.find((column) => column.key === growColumnKey)
         : undefined,
-    [growColumnKey, orderedColumns],
+    [growColumnKey, visibleOrderedColumns],
   );
 
   /** All columns except the grow column (settings is always included). */
   const fixedColumnsWidthPx = useMemo(() => {
     let total = SETTINGS_COL_WIDTH;
-    if (multiselect) total += SELECTION_COL_WIDTH;
-    for (const col of orderedColumns) {
+    if (showSelectionColumn) total += SELECTION_COL_WIDTH;
+    for (const col of visibleOrderedColumns) {
       if (col.key === growColumnKey) continue;
       total += columnWidthPx(col);
     }
     return total;
-  }, [orderedColumns, columnWidths, columnResizeEnabled, multiselect, growColumnKey]);
+  }, [visibleOrderedColumns, columnWidths, columnResizeEnabled, showSelectionColumn, growColumnKey]);
 
   const tableMinWidthPx = useMemo(() => {
     const growFloor = growColumn
@@ -457,30 +679,21 @@ export function IdsDataGrid({
     window.addEventListener("pointercancel", onUp);
   };
 
-  return (
-    <div
-      className={styles.shell}
-      data-with-detail-panel={withDetailPanel ? "true" : undefined}
-    >
-      <div className={styles.topBar}>
-        <span className={styles.modeLabel}>View: {viewMode}</span>
-      </div>
-      <div className={styles.contentRow}>
-        <div className={styles.gridWrap}>
-          <div className={styles.tableViewport} ref={tableViewportRef}>
+  const tableViewport = (
+    <div className={styles.tableViewport} ref={tableViewportRef}>
             <table
               className={styles.grid}
               data-header-styled={headerColorAndBorder ? "true" : "false"}
               style={{ width: "100%", minWidth: tableMinWidthPx }}
             >
               <colgroup>
-                {multiselect ? (
+                {showSelectionColumn ? (
                   <col
                     className={styles.colSelection}
                     style={{ width: `${SELECTION_COL_WIDTH}px` }}
                   />
                 ) : null}
-                {orderedColumns.map((column) => (
+                {visibleOrderedColumns.map((column) => (
                   <col
                     key={column.key}
                     className={
@@ -498,23 +711,32 @@ export function IdsDataGrid({
               </colgroup>
               <thead>
                 <tr>
-                  {multiselect ? (
+                  {showSelectionColumn ? (
                     <th
                       className={`${styles.headerCell} ${styles.selectionColumn} ${styles.headerSelectionColumn}`}
                       scope="col"
+                      aria-label={
+                        selectionMode === "multiple" ? "Select all rows on this page" : "Selection"
+                      }
                     >
-                      <div className={styles.selectionHeaderContent}>
-                        <IdsDataGridSelectionCheckbox
-                          id="ids-datagrid-select-all"
-                          label="Select all rows"
-                          checked={allVisibleSelected}
-                          indeterminate={selectAllIndeterminate}
-                          onChange={() => toggleSelectAllVisible()}
-                        />
+                      <div
+                        className={styles.selectionHeaderContent}
+                        aria-hidden={selectionMode === "single" ? true : undefined}
+                      >
+                        {selectionMode === "multiple" ? (
+                          <IdsDataGridSelectionCheckbox
+                            id="ids-dg-select-all"
+                            label="Select all rows on this page"
+                            checked={allVisibleRowsSelected}
+                            indeterminate={someVisibleRowsSelected}
+                            onChange={toggleSelectAllVisible}
+                            onClick={(event) => event.stopPropagation()}
+                          />
+                        ) : null}
                       </div>
                     </th>
                   ) : null}
-                  {orderedColumns.map((column) => {
+                  {visibleOrderedColumns.map((column) => {
                     const isSorted = sortKey === column.key;
                     const filterToggleVis = resolveFilterToggleVisual(column, column.key);
                     return (
@@ -568,11 +790,14 @@ export function IdsDataGrid({
                                   aria-label={`Filter ${column.title}`}
                                   aria-expanded={openFilterColumn === column.key}
                                   aria-haspopup="dialog"
-                                  data-filter-active={column.filterActive ? "true" : undefined}
+                                  data-filter-active={
+                                    resolveIdsDataGridColumnFilterActive(column) ? "true" : undefined
+                                  }
                                   onClick={(event) => {
                                     event.stopPropagation();
                                     setFilterHoverKey(null);
                                     setFilterPressKey(null);
+                                    setSettingsMenuOpen(false);
                                     setOpenFilterColumn(column.key);
                                   }}
                                   onPointerEnter={() => setFilterHoverKey(column.key)}
@@ -612,17 +837,35 @@ export function IdsDataGrid({
                     className={`${styles.headerCell} ${styles.settingsColumn}`}
                     scope="col"
                   >
-                    <div className={styles.settingsHeaderInner}>
-                      <Icon shapeName="settings-gear" className={styles.settingsIcon} style={{ width: 16, height: 16 }} />
+                    <div className={styles.settingsHeaderInner} ref={settingsAnchorRef}>
+                      <button
+                        type="button"
+                        className={styles.settingsToggleButton}
+                        aria-label="Column settings"
+                        aria-haspopup="dialog"
+                        aria-expanded={settingsMenuOpen}
+                        disabled={hideableColumns.length === 0}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setOpenFilterColumn(null);
+                          setSettingsMenuOpen((open) => !open);
+                        }}
+                      >
+                        <Icon
+                          shapeName="settings-gear"
+                          className={`${styles.settingsIcon} ${settingsMenuOpen ? styles.settingsIconActive : ""}`}
+                          style={{ width: 16, height: 16 }}
+                        />
+                      </button>
                     </div>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {visibleRows.map((row) => {
+                  const isRowActive = activeRowId === row.id;
                   const isRowSelected =
-                    selectedRows.includes(row.id) ||
-                    (withDetailPanel && detailPanelOpen && activeRowId === row.id);
+                    isRowSelectionChecked(row.id) || isRowActive;
                   return (
                   <tr
                     key={row.id}
@@ -632,22 +875,30 @@ export function IdsDataGrid({
                     data-vertical-indicator={rowVerticalIndicator ? "true" : undefined}
                     onClick={() => handleRowClick(row.id)}
                   >
-                    {multiselect ? (
+                    {showSelectionColumn ? (
                       <td
                         className={`${styles.bodyCell} ${styles.selectionColumn} ${styles.rowSelectionCell}`}
                       >
                         <div className={styles.selectionRowContent}>
-                          <IdsDataGridSelectionCheckbox
-                            id={`ids-datagrid-row-${row.id}`}
-                            label={`Select row ${row.id}`}
-                            checked={selectedRows.includes(row.id)}
-                            onChange={() => toggleRowSelection(row.id)}
-                            onClick={(event) => event.stopPropagation()}
-                          />
+                          {selectionMode === "single" ? (
+                            <IdsDataGridSelectionRadio
+                              value={row.id}
+                              label={`Select row ${row.id}`}
+                              onClick={(event) => event.stopPropagation()}
+                            />
+                          ) : (
+                            <IdsDataGridSelectionCheckbox
+                              id={`ids-dg-row-${row.id}`}
+                              label={`Select row ${row.id}`}
+                              checked={selectedRowIds.has(row.id)}
+                              onChange={(checked) => setMultiselectRow(row.id, checked)}
+                              onClick={(event) => event.stopPropagation()}
+                            />
+                          )}
                         </div>
                       </td>
                     ) : null}
-                    {orderedColumns.map((column) => {
+                    {visibleOrderedColumns.map((column) => {
                       return (
                       <td
                         key={column.key}
@@ -663,7 +914,33 @@ export function IdsDataGrid({
                 })}
               </tbody>
             </table>
-          </div>
+    </div>
+  );
+
+  return (
+    <div
+      className={styles.shell}
+      data-with-detail-panel={withDetailPanel ? "true" : undefined}
+    >
+      <div className={styles.topBar}>
+        <span className={styles.modeLabel}>View: {viewMode}</span>
+      </div>
+      <div className={styles.contentRow}>
+        <div className={styles.gridWrap}>
+          {showSelectionColumn && selectionMode === "single" ? (
+            <RadioGroup
+              className={styles.rowSelectionGroup}
+              value={selectedRowId ?? ""}
+              onValueChange={(value) =>
+                setSingleRowSelection(typeof value === "string" && value ? value : null)
+              }
+              aria-label="Row selection"
+            >
+              {tableViewport}
+            </RadioGroup>
+          ) : (
+            tableViewport
+          )}
           <div className={styles.footer}>
             <IdsPagination
               currentPage={currentPage}
@@ -685,7 +962,7 @@ export function IdsDataGrid({
             body={
               activeRow ? (
                 <div className={styles.detailBody}>
-                  {orderedColumns.map((column) => (
+                  {visibleOrderedColumns.map((column) => (
                     <p key={column.key}>
                       <b>{column.title}:</b> {String(activeRow.values[column.key] ?? "")}
                     </p>
@@ -719,14 +996,25 @@ export function IdsDataGrid({
             aria-label={`Filter ${openFilterColumnMeta.title}`}
             aria-expanded
             aria-haspopup="dialog"
+            data-filter-active={
+              resolveIdsDataGridColumnFilterActive(openFilterColumnMeta) ? "true" : undefined
+            }
             onClick={(event) => {
               event.stopPropagation();
               setOpenFilterColumn(null);
             }}
           >
             <Icon
-              shapeName="filter"
-              className={`${styles.filterIcon} ${styles["filter-default"]}`}
+              shapeName={
+                resolveIdsDataGridColumnFilterActive(openFilterColumnMeta)
+                  ? "filter-solid"
+                  : "filter"
+              }
+              className={`${styles.filterIcon} ${
+                resolveIdsDataGridColumnFilterActive(openFilterColumnMeta)
+                  ? styles["filter-selected"]
+                  : styles["filter-default"]
+              }`}
               style={{ width: 14, height: 14 }}
             />
           </button>
@@ -736,6 +1024,35 @@ export function IdsDataGrid({
             aria-label={`${openFilterColumnMeta.title} filter`}
           >
             <div className={styles.filterPopupPanelBody}>{openFilterColumnMeta.filterPanel}</div>
+          </div>
+        </div>,
+        document.body,
+      )}
+      {typeof document !== "undefined" &&
+      settingsMenuOpen &&
+      hideableColumns.length > 0 &&
+      createPortal(
+        <div
+          className={styles.settingsMenuLayer}
+          data-ids-datagrid-settings-menu
+          style={{
+            position: "fixed",
+            top: settingsMenuPos?.top ?? 0,
+            right: settingsMenuPos?.right ?? 0,
+            visibility: settingsMenuPos ? "visible" : "hidden",
+            pointerEvents: settingsMenuPos ? "auto" : "none",
+          }}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className={styles.settingsPopupPanel} role="dialog" aria-label="Column visibility">
+            <div className={styles.settingsPopupPanelBody}>
+              <IdsDataGridColumnVisibilityPanel
+                hideableColumns={hideableColumns}
+                hiddenColumnKeys={hiddenColumnKeys}
+                onColumnVisibilityChange={handleColumnVisibilityChange}
+                validationMessage={columnVisibilityValidation}
+              />
+            </div>
           </div>
         </div>,
         document.body,

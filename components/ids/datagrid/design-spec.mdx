@@ -11,6 +11,10 @@
 - Filter icon + popup structure: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114635&m=dev
 - **Column filter types (Column Filter-Main):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-91069&m=dev — node id **`37822:91069`**
 - **Numeric column filter (`.Filter-Element-NumericFilter`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-182265&m=dev — node id **`44360:182265`** (operator matrix + value fields)
+- **Column filter library page (`Column Filter`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44370-173173&m=dev — node id **`44370:173173`** (Date / Numeric / Date and Time filter families)
+- **Date column filter (`.Filter-Element-DateFilter`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-90838&m=dev — node id **`37822:90838`** (preset radios + date-only pickers; `Column Filter-Main` **`Type=Date`** **`37822:91078`**)
+- **Date and Time column filter (`.Filter-Element-DateAndTimeFilter`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-181306&m=dev — node id **`44360:181306`** (preset radios + date/time pickers)
+- **Date-time filter preset panel (`Multi-select Droddown`, Last 24 hours sample):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-181713&m=dev — node id **`44360:181713`** (inner list chrome: border, Shadow 1, **480px** width, **8px** vertical / **1px** horizontal padding)
 - **Combobox-filter multiselect (`Dropdown Menu`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-147581&m=dev — node id **`44360:147581`** (search + Select All/Clear All + scrollable checkbox list)
 - **Combobox-filter single-select (`Single-select + Search`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179074&m=dev — node id **`44360:179074`** (search + scrollable text option list)
 - **Default text filter (`Column Search`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-91073&m=dev — node id **`37822:91073`**
@@ -23,11 +27,11 @@
 - **`.Filter for table` control (header filter hit target + icon frame):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114677&m=dev — instance **`37721:114677`** (main component **`37721:114635`**)
 - **Data Grid — main variants / density matrix (container-sized frames):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev — node id **`37721:112482`** (`Data Grid - Main`)
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (select-all header), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter)
+- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time)
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`); row/cell frame re-verified with `get_design_context` (**`disableCodeConnect: true`**) on **`37721:114580`**; column header **`37721:114663`**, title row **`37721:114673`**, filter control **`37721:114677`** re-verified same way **2026-05-13**; rows/columns layout **`37721:113987`** **2026-05-14**
-- Last verified: **2026-05-25** (combobox-filter multiselect `44360:147581`, combobox-filter single-select `44360:179074`, dropdown-singleselect `44360:179201`, dropdown-multiselect `44360:179348`, column filter types `37822:91069`, numeric filter `44360:182265`, default text filter `37822:91073` via Figma MCP; prior grid chrome **2026-05-14**)
-- Nested specs (codegen must delegate, not reimplement): `components/ids/checkbox/design-spec.mdx`, `components/ids/pagination/design-spec.mdx` (footer), detail panel datagrid attach mode (see `IdsDetailPanel` / product `def-new-dg-detail`)
-- Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionCheckbox.tsx`
+- Last verified: **2026-05-31** (date filter `37822:90838` variants `37822:90839`–`37822:90922`, library page `44370:173173`; date-time filter `44360:181306`; filter row `37822:90943` via Figma MCP); prior **2026-05-25** (combobox/multiselect, numeric `44360:182265`, column filter types `37822:91069`, default text filter `37822:91073`)
+- Nested specs (codegen must delegate, not reimplement): `components/ids/checkbox/design-spec.mdx`, `components/ids/date-picker/design-spec.mdx`, `components/ids/time-picker/design-spec.mdx`, `components/ids/radio-button/design-spec.mdx`, `components/ids/pagination/design-spec.mdx` (footer), detail panel datagrid attach mode (see `IdsDetailPanel` / product `def-new-dg-detail`)
+- Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionRadio.tsx`, `IdsDataGridSelectionCheckbox.tsx`
 - **Codegen-critical layout:** **Chrome columns & table slack (codegen-critical)** under **Layout & Measurements → Table Layout Algorithm** — required for generators (grow `auto`, chrome **48**/**40** three-layer lock, anti-patterns).
 - Implementation guide: [`components/ids/datagrid/README.md`](./README.md) (regeneration, column `width`, Storybook, tips)
 - Generated Storybook output: `storybook-generated/ids/src/components/Datagrid.stories.tsx` (title **`Spec Generated/IDS/Datagrid`**, primary story **`Spec Accurate Design`**)
@@ -35,7 +39,7 @@
 ## Anatomy
 - `DatagridRoot`
 - `DatagridHeader`
-  - `SelectAllColumn` (optional; checkbox column when multiselect is enabled)
+  - `SelectionColumn` (optional **48px** leading column — shown when `rowSelection` and (`selectionMode: multiple` or `selectionMode: single` with `showSingleSelectionRadio: true`); header select-all only when `multiple`)
   - repeated `DatagridColumnHeader`
     - `DatagridColumnHeaderContent` (horizontal host: Figma **`37721:114663`** Text variant — **`pl-[16px]`**, **`items-center`**, **no extra vertical padding** on the host; **cell height is exactly `48px`**)
       - `DatagridColumnHeaderTitleRow` (Figma frame **`37721:114673`**: **`flex: 1`**, **`min-width: 0`**, **`gap: 12px`**, **`padding: 0 8px 0 0`** — **8px** right; **`align-items: center`** on the **48px** header track so **title + sort** match Figma’s **9+20+9** optical band without stacking extra host **`py`**; title line **20px** / **Body 2 - Medium**; optional **`SortToggle`**)
@@ -64,13 +68,14 @@ Codegen must emit a **single logical table** (or framework table primitive) with
 | **Column metadata** | `DatagridColumn` config | `key`, `title`, `sortable`, `filterable`, `filterActive`, `minWidth`, **`width`** (fixed px for header/body), `defaultWidth`, optional **`filterPanel`** (inner UI only) |
 | **Cell content** | App / `DatagridRow.values` | Per-cell renderables (text, badges, custom components) inside `DatagridCell` padding box |
 | **Filter inner UI** | App / `column.filterPanel` | Search fields, checkbox lists, comboboxes — **never** redraw L-frame borders |
-| **Selection** | IDS Checkbox spec | All checkboxes (header + rows) via `components/ids/checkbox/design-spec.mdx` |
+| **Row selection** | IDS Radio / Checkbox spec | `single` + `showSingleSelectionRadio` → optional row radios; `multiple` → row checkboxes + header **select-all** |
+| **Filter value lists** | IDS Checkbox spec | Multiselect filter checkboxes via `components/ids/checkbox/design-spec.mdx` (unchanged) |
 | **Footer** | IDS Pagination spec | Page controls below scroll clip |
 | **Detail panel** | IDS Detail Panel | Sibling of grid host; not a `<col>` |
 
 ### Deterministic slot order (left → right)
 
-1. `SelectAllColumn?` (**`48px`**, when `multiselect: on`)
+1. `SelectionColumn?` (**`48px`**, when `rowSelection` and selection chrome is shown — see `showSingleSelectionRadio` for `single`)
 2. `DatagridColumnHeader` × N (data columns, each ≥ **`90px`** base width)
 3. `SettingsColumn` (**`40px`**, when `showSettingsColumn: on` — default **on**)
 
@@ -91,9 +96,9 @@ Angular uses **declarative child components** with **content projection**. The m
 ```html
 <def-new-dg-detail> <!-- optional; when detailsPanel attached -->
   <def-dg
-    [multiselect]="..."
+    [rowSelection]="..."
     [headerColorAndBorder]="..."
-    (selectionChange)="..."
+    (rowSelectionChange)="..."
   >
     <!-- optional action bar / refresh — projected above grid -->
     <def-dg-column *ngFor="let col of columns" [field]="col.key" [sortable]="..." [freezable]="...">
@@ -132,7 +137,7 @@ Angular uses **declarative child components** with **content projection**. The m
 | `FilterPanelBody` | child of `<def-datagrid-filter>` | Projected filter UI only (`def-dg-text-filter`, etc.) |
 | `DatagridRow` | `<def-datagrid-row>` | Row click, hover/selected state host |
 | `DatagridCell` | `<def-dg-cell>` | Cell projection; ellipsis on text |
-| `SelectAllColumn` / `RowSelectionCell` | checkbox column templates | **IDS Checkbox** — indeterminate select-all |
+| `SelectionColumn` / `RowSelectionCell` | selection column templates | **single:** row radio, empty header; **multiple:** row checkbox + header select-all (IDS Checkbox **16×16**, indeterminate) |
 | `SettingsColumn` | grid-owned (not `def-dg-column`) | **40px** gear column; settings visibility popup from gear |
 | `DatagridFooter` | `<def-datagrid-footer>` + `<def-dg-pagination>` | Pagination below body scroll |
 | `DatagridDetailPanelSlot` | `<def-new-dg-detail>` + `<def-new-dg-detail-pane>` | Row click toggle; not a table column |
@@ -147,9 +152,14 @@ Angular uses **declarative child components** with **content projection**. The m
 | `FilterPanelBody` | `column.filterPanel` prop | e.g. `IdsDataGridFilterSearchField` |
 | `DatagridDetailPanelSlot` | `IdsDetailPanel` `attachMode="datagrid"` | Sibling in `contentRow` flex |
 | Multiselect filter host | `IdsDataGridDefaultStoryHost` | Wires `filterActive` + Type checkbox filter |
-| Numeric filter host | `IdsDataGridNumericFilterStoryHost` | Wires `filterActive` + `IdsDataGridTypeNumericFilterPanel` |
+| Numeric filter host | `IdsDataGridNumericFilterStoryHost` | Wires `numericFilterState` + `IdsDataGridTypeNumericFilterPanel` |
 | Numeric filter panel | `IdsDataGridTypeNumericFilterPanel` | Figma `44360:182265`; model in `IdsDataGridNumericFilter.ts` |
-| Selection | `IdsDataGridSelectionCheckbox` | `Checkbox` `density="datagrid"` |
+| Date filter host | `IdsDataGridDateFilterStoryHost` | Wires `dateFilterState` + `IdsDataGridTypeDateFilterPanel` |
+| Date filter panel | `IdsDataGridTypeDateFilterPanel` | Figma `37822:90838`; model in `IdsDataGridDateFilter.ts` |
+| Date-time filter host | `IdsDataGridDateAndTimeFilterStoryHost` | Wires `dateTimeFilterState` + `IdsDataGridTypeDateAndTimeFilterPanel` |
+| Date-time filter panel | `IdsDataGridTypeDateAndTimeFilterPanel` | Figma `44360:181306`; model in `IdsDataGridDateAndTimeFilter.ts` |
+| Column visibility popup | `IdsDataGridColumnVisibilityPanel` | Gear menu; only `columnHideable` columns; min one visible |
+| Row selection | `IdsDataGridSelectionRadio` / `IdsDataGridSelectionCheckbox` | `single`: radio + `RadioGroup`; `multiple`: row + header select-all checkboxes |
 
 ### Vue / Lit / other frameworks
 
@@ -187,7 +197,7 @@ Angular uses **declarative child components** with **content projection**. The m
   - **`min-width`:** product choice; Storybook uses **`200px`** minimum; dense search-only UIs may match Figma sample **~300px** by setting content min-width inside **`filterPanel`**.
   - **`max-width`:** cap to viewport (e.g. **`min(480px, calc(100vw - 24px))`**) for portaled/fixed menus.
 - **L top seam:** **No** full-width top border on the panel. Draw **only** the horizontal segment **`width: calc(100% - TAB)`** from **`left: 0`**, where **`TAB = 38px`** (must match **`FilterIconTab`** width). This leaves the strip under the tab **open** so the outer outline is one continuous **L**.
-- **Panel borders:** **left + bottom + right** **`1px`** **`var(--color-border-accessible)`**; elevation via stacked **`shadow-drop-shadow-*`** semantic tokens.
+- **Panel borders:** **left + bottom + right** **`1px`** **`var(--color-border-accessible)`**. **`overflow: clip`** on **`FilterPanelBody`** (inner slot), not on the shadow host. **Elevation — Shadow 1** (Figma **`44360:181713`**): `box-shadow: 0 2px 2px 0 <color>, 0 4px 4px 0 <color>` — geometry is **literal px**; colors from `--shadow-shadow-1-drop-shadow-2-color` and `--shadow-shadow-1-drop-shadow-4-color` (FLOAT y/blur tokens in theme are unitless and must not be passed directly to `box-shadow`).
 - **`FilterPanelBody`:** horizontal + vertical padding for inner widgets (Storybook: **`6px`** **`16px`**); keeps the **::before** top rule aligned to the **outer** top edge of **`FilterPanel`**.
 - **`FilterPanelBody` slot:** **`column.filterPanel`**. Search is **optional**. Checkbox lists must follow **`components/ids/checkbox/design-spec.mdx`**.
 
@@ -217,11 +227,94 @@ Figma documents one **L-frame** shell per column; inner UI varies by **`Type`**.
 | `Single-select + Search` | Combobox-SingleSelect (option list + search) | Spec'd below |
 | `Single-select` | Dropdown-SingleSelect (option list, no search) | Spec'd below |
 | `Multi-select` | Dropdown-MultiSelect (checkbox list, no search) | Spec'd below |
-| `Date` | Date picker filter | Planned |
-| `Date and Time` | Date-time filter | Planned |
+| `Date` | Date-only preset radios + optional DatePicker | Spec'd below |
+| `Date and Time` | Date-time preset radios + optional DatePicker/TimePicker | Spec'd below |
 | `Numeric` | Operator radio list + value field(s) | Spec'd below |
 
-Reference nodes: **`37822:91069`** (matrix), **`44386:290322`** (`Type=Numeric` instance).
+Reference nodes: **`37822:91069`** (matrix), **`37822:91078`** (`Type=Date`), **`44386:290322`** (`Type=Numeric` instance).
+
+---
+
+### Filter type: Date (`.Filter-Element-DateFilter`, `37822:90838`)
+
+Date-only column filter: same preset radio matrix as **Date and Time**, but summaries and expanded fields use **dates only** (no time pickers). Documented on Figma library page **`44370:173173`** (“Date Filter”).
+
+**Figma:** `37822:90838` (`Column Filter-Main` **`Type=Date`**, `37822:91078`)
+
+#### Anatomy
+
+1. `PresetRadioGroup` — vertical list of preset radio rows (reuses `.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`)
+2. `PresetSummary` — optional right-aligned **date-only** summary on the selected preset row (relative presets)
+3. `SpecificDateBlock` — when **Specific date** selected: single **Date:** `DatePicker-Main` (no time field)
+4. `CustomRangeBlock` — when **Custom date range** selected: two stacked date rows — **Start:** + picker, **End:** + picker
+
+#### Layout
+
+- **Inner panel (`Multi-select Droddown`):** same chrome as date-time — **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot**; L-frame **`FilterPanel`** **`min-width` / `max-width` 480px** (content-driven; sample rows **`382px`** inner list width in Figma); **Shadow 1** on shell (`0 2px 2px` + `0 4px 4px` @ 8%, see L-frame baseline).
+- **Preset rows** (`37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`. Left: `16×16` radio + label (`gap: var(--spacing-space-8)`). Label: Body 2 Medium, `var(--color-text-neutral)`.
+- **Preset summary:** Body 3 Medium — `12px` / line-height `18px`, `var(--color-text-neutral)`, **date-only** strings, single line, no ellipsis.
+- **Expanded blocks:** `padding-left: 40px`, `padding-right: var(--padding-padding-16)`, `padding-bottom: var(--padding-padding-8)`; custom range uses vertical `gap: var(--spacing-space-16)` between **Start** and **End** rows.
+- **Date picker row:** horizontal flex, `gap: var(--spacing-space-16)`; form label + `DatePicker-Main` (`flex: 1`). Sample inner width **`326px`** for specific-date block (`44370:145354`).
+
+#### Presets (single-select radio group)
+
+| Preset | Figma variant | Summary sample (when selected) | Expanded UI |
+|---|---|---|---|
+| `All` | `37822:90839` | `Jan 12 2020 - Now` | none |
+| `Last 24 hours` | `37822:90852` | `Jan 12 - Jan 13` | none |
+| `Last week` | `37822:90865` | computed date range (product) | none |
+| `Last month` | `37822:90878` | computed date range (product) | none |
+| `Last year` | `37822:90891` | computed date range (product) | none |
+| `Specific date` | `37822:90904` | none on preset row | **Date:** + `DatePicker-Main`, hint `MM-DD-YYYY` |
+| `Custom date range` | `37822:90922` | none on preset row | **Start:** + picker, **End:** + picker (stacked) |
+
+Label copy differs from **Date and Time**: Figma uses **`Custom date range`** (not “Custom date and time range”) and **`Start:`** / **`End:`** (not “Start Date:”).
+
+#### Delegated specs
+
+- **Radio control:** `components/ids/radio-button/design-spec.mdx` — same as numeric/date-time filters; keyboard-only focus ring.
+- **Date field:** `components/ids/date-picker/design-spec.mdx` — `40px` field height, `calendar-simple-16`, format hint `MM-DD-YYYY`.
+- **No time picker** in this filter type (contrast with `.Filter-Element-DateAndTimeFilter`).
+
+#### Filter model
+
+- `mode`: `all` | `last-24-hours` | `last-week` | `last-month` | `last-year` | `specific-date` | `custom-range` (same enum family as date-time; implementation may share `IdsDataGridDateFilterState` without time fields)
+- `specificDate?: Date | null`
+- `rangeStartDate?`, `rangeEndDate?` (custom range)
+- Header **`filterActive` / `dateFilterState`:** **`false`** when `mode === 'all'`; **`true`** for relative presets or when `specificDate` / `rangeStartDate` / `rangeEndDate` is set. Selecting **All** resets the model.
+
+#### Relationship to Date and Time filter
+
+| Aspect | Date (`37822:90838`) | Date and Time (`44360:181306`) |
+|---|---|---|
+| Preset list | Same seven presets | Same seven presets |
+| Summary | Date-only (`Jan 12 - Jan 13`) | May include times (`Jan 12, 09:00 AM - …`) |
+| Specific date | **Date:** picker only | **Date:** + **Time (optional):** |
+| Custom range | **Start:** / **End:** date pickers | **Start Date:** / **End Date:** + optional time per row |
+| Row component | `37822:90943` | `37822:90943` |
+
+#### Codegen Contract (framework-agnostic)
+
+- **Slot order:** `PresetRadioGroup` → conditional `SpecificDateBlock` | `CustomRangeBlock` (same pattern as date-time, omit all `TimePicker` slots).
+- **Variant matrix:** seven `mode` values; expanded UI only for `specific-date` and `custom-range`.
+- **Per-slot tokens:** preset row padding/summary typography per above; date picker per `date-picker` spec.
+- **Behavior:** single-select radios; selecting `all` clears `filterActive`; relative presets apply date-only range to column values (midnight-to-midnight or product rules).
+- **Accessibility:** one `radiogroup`; expanded pickers keep labels **Date:** / **Start:** / **End:** associated with inputs.
+- **Validation checklist:** [ ] No time fields rendered; [ ] Summary strings date-only; [ ] `all` → header filter outline icon; [ ] Shadow 1 + 480px panel chrome; [ ] Labels match Figma (`Custom date range`, `Start:`/`End:`).
+
+#### Figma proof nodes
+
+- `44370:173173` (Column Filter library page — “Date Filter” section)
+- `37822:90838` (component set)
+- `37822:90839` (`Filter by=All`)
+- `37822:90852` (`Last 24 hours`)
+- `37822:90865` (`Last week`)
+- `37822:90878` (`Last month`)
+- `37822:90891` (`Last year`)
+- `37822:90904` (`Specific Date` + date picker)
+- `37822:90922` (`Custom Date Range` + Start/End pickers)
+- `37822:91078` (`Column Filter-Main` `Type=Date`)
+- `37822:90943` (shared preset row component)
 
 ---
 
@@ -473,13 +566,67 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
 - `operator`: `all` | `equals` | `not-equals` | `greater-than` | `greater-than-equal` | `less-than` | `less-than-equal` | `between`
 - `value?: string`, `valueEnd?: string` (for `between`)
 - `unit?: string`, `unitEnd?: string` (optional; when `unitOptions` provided)
-- `filterActive` when `operator !== 'all'` and required value(s) are non-empty
+- Header **`filterActive` / `numericFilterState`:** **`false`** when `operator === 'all'` (outline filter icon); **`true`** when another operator is selected and required value(s) are non-empty. Selecting **All** resets the model to default.
 
 #### Figma proof nodes
 
 - `44360:182266` (`Filter by=All`)
 - `44367:182637` (`Equals` + value)
 - `44370:145919` (`Between` + range)
+
+---
+
+### Filter type: Date and Time (`.Filter-Element-DateAndTimeFilter`, `44360:181306`)
+
+Preset-based date-time filter — extends **Date** filter (`37822:90838`) with **TimePicker** fields and time-inclusive summaries. Same preset radio matrix; label **Custom date and time range** and **Start Date:** / **End Date:** copy.
+
+**Figma:** `44360:181306` (`Column Filter-Main` **`Type=Date and Time`**, `44360:182218`; library page **`44370:173173`**)
+
+#### Anatomy
+
+1. `PresetRadioGroup` — vertical list of preset radio rows (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`)
+2. `PresetSummary` — optional right-aligned summary text on the same row as the selected preset (relative presets only)
+3. `SpecificDateBlock` — when **Specific date** selected: one row with **Date:** + **Time (optional):** pickers
+4. `CustomRangeBlock` — when **Custom date and time range** selected: two rows (**Start Date** + **Time (optional)**, **End Date** + **Time (optional)**)
+
+#### Layout
+
+- **Inner panel (`44360:181713` / `Multi-select Droddown`):** **`480px`** sample width (L-frame **`FilterPanel`** `min-width` / `max-width` **480px** for date-time columns); **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot** (not extra Storybook body padding); **`overflow: clip`**; full **`1px`** **`var(--color-border-accessible)`** on panel host + **Shadow 1** on L-frame shell (see L-frame baseline). Preset summaries and labels: **no ellipsis** — single line, panel width accommodates copy.
+- **Preset rows** (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`. Left cluster: `16×16` radio + label, `gap: var(--spacing-space-8)`. Label: Body 2 Medium, `var(--color-text-neutral)`.
+- **Preset summary** (right column, visible when preset selected and not in expanded-only modes): Body 3 Medium — `font-size: var(--font-size-body-3)` / `12px`, `line-height: 18px`, `font-weight: 500`, `var(--color-text-neutral)`, **single line, no ellipsis** (panel width expands).
+- **Expanded blocks** (**Specific date** / **Custom range**): `padding-left: 40px`, `padding-right: var(--padding-padding-16)`, `padding-bottom: var(--padding-padding-8)`, vertical `gap: var(--spacing-space-16)` between rows.
+- **Date + Time row:** horizontal flex, `gap: var(--spacing-space-16)`, `align-items: flex-start`. Date field `flex: 1` (`min-width: 0`). Time field fixed **`177px`** width sample (Figma `TimePicker-Main` in filter context).
+- **Presets** (single-select radio group, labels from Figma):
+  1. `All` — summary sample `Jan 12 2020 - Now` (product may bind column min/max or app epoch).
+  2. `Last 24 hours` — summary shows computed start/end with time (sample `Jan 12, 09:00 AM - Jan 13, 9:00 AM`).
+  3. `Last week` / `Last month` / `Last year` — summary shows computed date range endpoints.
+  4. `Specific date` — expands **Date:** (`DatePicker-Main`) + **Time (optional):** (`TimePicker-Main`); date alone is sufficient for `filterActive`; no right summary on the preset row while expanded.
+  5. `Custom date and time range` — expands two date-time rows: **Start Date:** + **Time (optional):**, **End Date:** + **Time (optional):**; at least one date required for `filterActive`.
+
+#### Delegated specs
+
+- **Radio control:** `components/ids/radio-button/design-spec.mdx` — same contracts as numeric filter (`16×16`, brand dot). **Focus ring:** keyboard (`:focus-visible`) only; pointer selection must not show focus outline.
+- **Date field:** `components/ids/date-picker/design-spec.mdx` — `40px` field height, `calendar-simple-16`, format hint `MM-DD-YYYY`.
+- **Time field:** `components/ids/time-picker/design-spec.mdx` — `40px` field height, `time-clock-16`, format hint `HH:MM AM/PM`, 12h clock in filter context.
+
+#### Filter model
+
+- `mode`: `all` | `last-24-hours` | `last-week` | `last-month` | `last-year` | `specific-date` | `custom-range`
+- `specificDate?: Date | null`, `specificTime?: string | null` (optional 12h display string)
+- `rangeStartDate?`, `rangeStartTime?`, `rangeEndDate?`, `rangeEndTime?` (custom range; times optional)
+- Header **`filterActive` / `dateTimeFilterState`:** **`false`** when `mode === 'all'` (outline filter icon); **`true`** for relative presets or when specific/custom dates are set. Selecting **All** resets the model to default.
+
+#### Figma proof nodes
+
+- `44360:181307` (`Filter by=All`)
+- `44360:181320` (`Last 24 hours`)
+- `44360:181333` (`Last week`)
+- `44360:181346` (`Last month`)
+- `44360:181359` (`Last year`)
+- `44360:181372` (`Specific date` + pickers)
+- `44360:181390` (`Custom date and time range` + start/end pickers)
+- `37822:90943` (`.DataGrid-Elements-Filter-DateAndTimeItem` row component)
+- `44360:181713` (inner preset list / `Multi-select Droddown`, Last 24 hours — Shadow 1 + **480px** chrome)
 
 ### Behavior & accessibility
 - Open/close on **`FilterToggle`**; **Escape** and **pointer down outside** dismiss (when implemented).
@@ -517,11 +664,13 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
   - **Auto-layout note:** Figma dev export wraps overlays in **`flex-direction: column`** with **`gap: 10px`** between internal slots; preserve **visual** stacking (fill → overlay → rules → accent). Do **not** replace semantic row height with the gap value.
   - minimum data column width: `90px` (includes optional sort/filter affordances when present).
   - settings column width: `40px` fixed.
-  - select-all/row-selection column width follows checkbox-column pattern from IDS column definitions (`48px` sample family).
-  - **Select-all column (`37721:114682` header variant, `37721:113988` grid column):**
+  - row-selection column width follows the IDS selection-column pattern (`48px` sample family).
+  - **Selection column (`37721:114682` header variant, `37721:113988` grid column):**
     - **Column width:** **`48px`** (`<colgroup>` only; Figma `37721:113988` width **48**).
-    - **Header (`37721:114682`, `colorAndBorder=true`, `type=Selection`):** **`48px`** total column width; **`padding: 16px`** horizontal + **`padding-block: var(--selection-header, 16px)`**; centered **16×16** checkbox (`8505:14304`); **`.Header: Styling`**: **`var(--color-background-gray-neutral-lighter)`**, **1px** top + bottom **`var(--color-border-light)`** — **no** extra leading vertical rule on this column (first data column owns the **1×24px** rail).
-    - **Body cell (`37721:113988` `.Cell Item`):** **`48px`** wide, **`40px`** row height, **`padding: 12px 16px`**, **16×16** checkbox — **no** leading full-height edge on the selection column in Storybook parity.
+    - **Header (`37721:114682`, `colorAndBorder=true`, `type=Selection`):** **`48px`** total column width; **`padding: 16px`** horizontal + **`padding-block: var(--selection-header, 16px)`**; centered **16×16** control host:
+      - **`selectionMode: multiple`:** **select-all** IDS Checkbox (`8505:14304` in Figma); **`aria-label`** e.g. “Select all rows on this page”; **checked** when every row on the **current page** is selected; **indeterminate** when some but not all page rows are selected (per `components/ids/checkbox/design-spec.mdx` indeterminate → checked rule).
+      - **`selectionMode: single`:** **empty** header chrome (`aria-label="Selection"`); no select-all.
+    - **Body cell (`37721:113988` `.Cell Item`):** **`48px`** wide, **`40px`** row height, **`padding: 12px 16px`**, centered **16×16** **radio** (single) or **checkbox** (multiple) — **no** leading full-height edge on the selection column in Storybook parity.
   - **Settings column (`37721:114686` header variant, `37721:113997` / `37721:114944` grid column):**
     - **Column width:** **`40px`** (`<colgroup>` only; Figma **`37721:113997`** *Padding* slot width **40**, **`37721:114887`**).
     - **Header (`37721:114686` / `37721:114945`, `type=Column Customization`):** **`40px`** total column width; host height **`48px`**; **`padding-block: var(--selection-header, 16px)`**; **16×16** **`settings-gear`** (`37721:114688`) centered horizontally; same **`.Header: Styling`** top/bottom fill — **no** leading **`::before`** rail on this column.
@@ -530,7 +679,7 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
 - Horizontal scrolling:
   - scrollable region: data columns between leading pinned columns and trailing settings column.
   - non-scrollable pinned regions:
-    - select-all column (when present)
+    - selection column (when present)
     - settings column (always)
     - optional freeze range (`freezeUntilColumnKey`, inclusive)
 - **Viewport / scroll behavior (implementation):**
@@ -546,7 +695,7 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
   - Use **`width: 100%`**, **`border-collapse: collapse`**, and **`border-spacing: 0`** on the `<table>` so the grid spans the scroll viewport edge-to-edge unless product padding intentionally insets it.
   - **Full-width vs. horizontal scroll contract (Figma `37721:113987` *Rows and Columns*):**
     - Column stack is **selection (optional `48px`) → data columns → settings (`40px` / Figma *Padding* slot)** — **no empty spacer column** between data and settings.
-    - Set table **`min-width`** to the sum of **pinned + data column widths** (selection **`48px`** when `multiselect`, each data column at least **`90px`** or its declared/default width, settings **`40px`**).
+    - Set table **`min-width`** to the sum of **pinned + data column widths** (selection **`48px`** when `rowSelection`, each data column at least **`90px`** or its declared/default width, settings **`40px`**).
     - When the viewport is **wider** than `min-width`, the table is **`width: 100%`** and the **last data column** (trailing column before settings) **absorbs** the extra width so headers/body stay aligned edge-to-edge.
     - When the viewport is **narrower**, **`.tableViewport`** shows a **horizontal scrollbar**; **selection** (when present) and **settings** use **`position: sticky`** (`left: 0` / `right: 0`) so they remain visible while data columns scroll.
 - Column title overflow (`ColumnTitle` in header):
@@ -573,7 +722,7 @@ Implement **exactly** this sequence so header/body columns stay aligned (verifie
 5. **`fixedColumnsWidthPx`:** `SETTINGS` + `SELECTION?` + sum of **`columnWidthPx`** for every column except **`growColumnKey`** (used for **`tableMinWidthPx`** only).
 6. **Grow column `<col>`:** **`width: auto`** (class **`.tableGrowCol`**) on **`growColumnKey`** — the **only** non-fixed column; it absorbs slack when **`table { width: 100% }`**. **Never** use **`width: 0`** on the grow col (browsers then **expand** fixed chrome **48**/**40** cols instead). **Never** put the grow column’s seeded resize width in `<colgroup>` unless the user finished a resize gesture (`growColPinnedWidthPx`). Chrome `<col>` + **`th`/`td`** use **`!important`** **48**/**40** to block stretch.
 7. **`<colgroup>`:** explicit **`48px`** / **`40px`** on selection and settings; fixed **`Npx`** on other data columns; grow = **`auto`** (or explicit **`Npx`** after user resize).
-8. **Chrome cells (`SelectAll`, `SettingsColumn`):** `<colgroup>` + matching **`th`/`td`** **`width` / `min-width` / `max-width`** (**`48px`** / **`40px`** only — same constants). Inner hosts use fixed column width + **`overflow: hidden`**. **No** leading **`::before`** divider on selection/settings chrome (divider before **Name** comes from the first **data** header rail only). Datagrid checkbox control **16×16** (`field[data-density="datagrid"]`).
+8. **Chrome cells (`SelectionColumn`, `SettingsColumn`):** `<colgroup>` + matching **`th`/`td`** **`width` / `min-width` / `max-width`** (**`48px`** / **`40px`** only — same constants). Inner hosts use fixed column width + **`overflow: hidden`**. **No** leading **`::before`** divider on selection/settings chrome. **First data column** leading **1×24px** rail (`.headerDataCell::before`) applies **only when** the selection column is visible; when `showSingleSelectionRadio: false` or `rowSelection: off`, the leftmost data header is **first-child** and **must not** render that rail (CSS: `.headerDataCell:first-child::before { display: none }`). Selection controls **16×16** (radio or checkbox per `selectionMode`; header select-all when `multiple`).
 9. **`<table>`:** `width: 100%`, `minWidth: tableMinWidthPx`, `table-layout: fixed`, `border-collapse: collapse`, `border-spacing: 0`.
 10. **Data cell widths:** do **not** set `width` / `max-width` on individual **data** `<th>` / `<td>` — **`<colgroup>`** owns data column tracks.
 11. **`box-sizing: border-box`** on **all** header/body cells; data body padding **`10px 12px 10px 16px`**; settings body **`padding-block: 12px`**, **`padding-inline: 0`**.
@@ -588,7 +737,7 @@ Generators **must** implement this block verbatim. It documents production bugs 
 
 | Slot | Grid column node | Header variant | Column track width |
 |---|---|---|---|
-| Select-all | **`37721:113988`** | **`37721:114682`** | **48px** |
+| Selection (row radio) | **`37721:113988`** | **`37721:114682`** (empty header) | **48px** |
 | Settings | **`37721:113997`** / **`37721:114944`** | **`37721:114686`** | **40px** (not 48 — component-set tile may show 48×48; grid *Padding* slot is **40**) |
 
 #### Table slack invariant (`table-layout: fixed` + `width: 100%`)
@@ -615,17 +764,20 @@ Apply **the same three layers** (values must match):
 
 #### Chrome header/body padding & controls (no assumptions)
 
-**Select-all (`37721:114682` / `37721:113988`):**
+**Selection column (`37721:114682` / `37721:113988`):**
 
 | Part | Value |
 |---|---|
 | Header cell height | **48px** |
 | Header padding | **`padding-block: var(--selection-header, 16px)`** + **`padding-inline: 16px`** |
 | Header layout | flex row, `justify-content: center`, `align-items: center` |
-| Checkbox | **16×16** — IDS Checkbox `density="datagrid"` (`field[data-density="datagrid"] .root { width: 16px; height: 16px }`) |
+| Header control (`single`) | **None** — empty chrome |
+| Header control (`multiple`) | **16×16** select-all IDS Checkbox (`density="datagrid"`); indeterminate when partial page selection |
 | Body row height | **40px** |
 | Body padding | **`12px 16px`** (`var(--selection-cell, 12px)` vertical) |
-| Leading chrome divider | **None** on selection column — divider before **Name** is the **first data** header leading **1×24px** rail only |
+| Body control (`single`) | **16×16** IDS Radio Button per row (`components/ids/radio-button/design-spec.mdx`) |
+| Body control (`multiple`) | **16×16** IDS Checkbox per row (`components/ids/checkbox/design-spec.mdx`) |
+| Leading chrome divider | **None** on selection column; **first data** header leading **1×24px** rail only when selection column is shown (omit when leftmost data column) |
 
 **Settings (`37721:114686` / `37721:114945` / `37721:113997`):**
 
@@ -643,7 +795,7 @@ Theme tokens: **`--selection-header: 16px`**, **`--selection-cell: 12px`** (`com
 #### `<colgroup>` order (must match `<thead>` / `<tbody>` cell order)
 
 ```
-[SelectAllColumn? 48px] → [DataColumn × N fixed Npx] → [GrowColumn auto] → [SettingsColumn 40px]
+[SelectionColumn? 48px] → [DataColumn × N fixed Npx] → [GrowColumn auto] → [SettingsColumn 40px]
 ```
 
 - **Settings** is always the **last** `<col>` / cell — **no** spacer column before it (Figma **`37721:113987`**).
@@ -664,7 +816,7 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 }
 
 // colgroup:
-// multiselect ? <col width="48px" /> : null
+// rowSelection ? <col width="48px" /> : null
 // data cols → colWidthStyle (grow → auto unless pinned)
 // <col width="40px" />  // settings always last
 ```
@@ -771,15 +923,18 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - **`column.filterPanel`** supplies **inner** UI only; **outer** L-chrome is **datagrid-owned** across filter types.
   - **`column.filterActive`** (or equivalent) should reflect **non-default** filter criteria while the menu is **closed** so the **selected** icon state can render without keeping the menu open.
   - When a filter uses **checkboxes** (e.g. multiselect value list), controls **must** follow **`components/ids/checkbox/design-spec.mdx`** (anatomy, tokens, states, focus-visible, indeterminate → checked rule).
-- Selection:
-  - when `multiselect` is enabled, first header column includes select-all checkbox.
-  - row checkboxes reflect and control row selection state.
-  - **All** selection checkboxes (header select-all + per-row) **must** render through the IDS **Checkbox** component contract (`components/ids/checkbox/design-spec.mdx`): **16×16** control box, semantic tokens, focus-visible ring, **indeterminate** on select-all when partially selected; **no** native `<input type="checkbox">` in production implementations.
-  - checkbox hit target may use compact density in **48px** selection column (control remains **16×16**).
+- Row selection:
+  - when `rowSelection` is enabled, the leading **48px** column shows a per-row control; header chrome depends on **`selectionMode`**.
+  - **`selectionMode: single`:** optional per-row **radio** column controlled by **`showSingleSelectionRadio`** (default **`true`**). When **`true`**, one radio per row inside a **`RadioGroup`**; header is **empty** (no select-all). When **`false`**, the **48px** selection column is **omitted** — single-select is row activation / detail panel only (no radio UI); row click does not set `selectedRowId`.
+  - **`selectionMode: multiple`:** **checkbox** per row (IDS Checkbox `density="datagrid"`) **and** a header **select-all** checkbox (**`37721:114682`**).
+  - **Select-all scope (paginated grid):** toggles selection for all rows on the **current page** only (`visibleRows` / client page slice). Selection on other pages is preserved. Header is **checked** when every row on the current page is selected; **indeterminate** when at least one but not all page rows are selected; **unchecked** when none on the page are selected.
+  - **Row body click does not toggle** the radio/checkbox or select-all — only those controls change selection state. Row click activates the row (highlight / detail panel) via **`activeRowId`**.
+  - radios follow **`components/ids/radio-button/design-spec.mdx`**; all checkboxes (header + rows) follow **`components/ids/checkbox/design-spec.mdx`** (**16×16**, indeterminate on select-all when applicable).
+  - control **`click`** uses **`stopPropagation`** so row-click / detail-panel handlers are not double-fired.
 - Detail panel (when `withDetailPanel` / `detailsPanel: attached`):
   - **Row click** sets the active row and **opens** the attached detail panel if closed.
   - **Row click** on the **same** active row again **closes** the panel (toggle); clearing active row clears detail content.
-  - checkbox / sort / filter / resize controls use **`stopPropagation`** so they do not toggle the panel.
+  - selection radio / sort / filter / resize controls use **`stopPropagation`** so they do not toggle the panel.
   - panel collapse via detail chrome still clears active row (parity with Angular `selectedRow` + `show` flag).
 - Column resize (optional — Storybook **`columnResizeEnabled`**):
   - align the **pointer hit target** with the **trailing** header edge (same vertical band as the **1×24px** **`var(--color-border-light)`** rail); hit target may be a **transparent** strip (**~10px**) with **`cursor: col-resize`** so Figma still shows a single rail.
@@ -814,6 +969,7 @@ interface DatagridColumn {
   filterable?: boolean;
   filterActive?: boolean;      // applied criteria while menu closed → FilterToggle selected icon
   filterPanel?: Renderable;    // inner FilterPanelBody only
+  columnHideable?: boolean;    // when true, column appears in settings (gear) popup and may be hidden
 }
 
 interface DatagridRow {
@@ -825,7 +981,9 @@ interface DatagridProps {
   columns: DatagridColumn[];
   rows: DatagridRow[];
   viewMode?: DatagridViewMode;              // default "table"
-  multiselect?: boolean;                    // default false (Storybook spec story: true)
+  rowSelection?: boolean;                   // default false (Storybook spec story: true)
+  selectionMode?: "single" | "multiple";  // default "single"
+  showSingleSelectionRadio?: boolean;   // default true; single only — false hides radio column
   withDetailPanel?: boolean;                // default false (spec story: true)
   pageSize?: number;                        // client page slice; default product-defined
   readOnly?: boolean;                       // default false → brand hover; true → surface-1 hover
@@ -852,7 +1010,8 @@ interface DatagridProps {
 | `onColumnOrderChange` | `(orderedColumnKeys: string[])` | Header reorder drop |
 | `onColumnVisibilityChange` | `(columnKey, visible: boolean)` | Settings popup |
 | `onRowClick` | `(rowKey: string)` | Row activation (also drives detail panel toggle) |
-| `onSelectionChange` | `(selectedRowKeys: string[])` | Checkbox / select-all |
+| `onRowSelectionChange` | `(rowId: string \| null)` | Single-select radio only |
+| `onSelectedRowsChange` | `(rowIds: string[])` | Row checkbox or select-all (current page) |
 
 ### Column width (header + body)
 
@@ -866,7 +1025,7 @@ interface DatagridProps {
 
 Codegen and `Datagrid.stories.tsx` **Spec Accurate Design** must use:
 
-- `multiselect: true`, `withDetailPanel: true`, `headerColorAndBorder: true`, `rowVerticalIndicator: true`, `columnResizeEnabled: true`, `readOnly: false`, `pageSize: 6`, `viewMode: "table"`
+- `rowSelection: true`, `selectionMode: "single"`, `showSingleSelectionRadio: true`, `withDetailPanel: true`, `headerColorAndBorder: true`, `rowVerticalIndicator: true`, `columnResizeEnabled: true`, `readOnly: false`, `pageSize: 6`, `viewMode: "table"`
 - Parent frame: **`height: 100vh`**, **`flex: 1`**, **`minHeight: 0`**, **`minWidth: 0`** (bounded container per **`37721:112482`**)
 - Columns: Name (sort+filter+search panel), Type/Status (sort+filter), Owner (sort), Region (filter only) — see generated story `specColumns`
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -903,16 +1062,15 @@ td.bodyCell [box-border, padding 10px 12px 10px 16px, h 40px]
   span.cellText [block, ellipsis]
 ```
 
-**`SelectAllColumn` / selection `<th>` / `<td>`** (chrome — keep `display: table-cell`):
+**`SelectionColumn` / selection `<th>` / `<td>`** (chrome — keep `display: table-cell`):
 
 ```
+// Selection column omitted when selectionMode single && showSingleSelectionRadio false
+RadioGroup [wraps table when single + showSingleSelectionRadio]
 col [width 48px]
-th|td.selectionColumn [width/min/max 48px, sticky left, padding 0, overflow hidden]
-  div.selectionHeaderContent [width 100%, h 48, padding 16px block + 16px inline, flex center]
-    IdsDataGridSelectionCheckbox → Checkbox density=datagrid 16x16
-td.rowSelectionCell
-  div.selectionRowContent [width 100%, h 40, padding 12px 16px, flex center]
-    Checkbox 16x16
+th|td.selectionColumn ...
+  single + showSingleSelectionRadio: empty header + IdsDataGridSelectionRadio per row
+  multiple: select-all header + IdsDataGridSelectionCheckbox per row
 ```
 
 **`SettingsColumn`:**
@@ -947,7 +1105,7 @@ div.filterMenuLayer [fixed, z-index 10000]
 | `DatagridRow` hover | full-cell overlay | brand-lighter or `surface-1` if readOnly |
 | `DatagridRow` selected | full-cell overlay + optional **4px** left bar | `brand-lighter` / `brand-light` press |
 | `SettingsColumn` | **40px** fixed | header band matches `headerColorAndBorder` |
-| `SelectAllColumn` | **48px** fixed | header **16+16+16** padding+checkbox; body **12×16** padding |
+| `SelectionColumn` | **48px** fixed | **single:** empty header + row radio; **multiple:** select-all header + row checkbox (**16×16**) |
 | `GrowColumn` (`growColumnKey`) | `<col width="auto">` only | absorbs `table width:100%` slack; never `width:0` |
 
 ### Table layout behavior contract
@@ -962,7 +1120,9 @@ div.filterMenuLayer [fixed, z-index 10000]
 
 Variant matrix:
   - `viewMode`: `table | treeview`
-  - `multiselect`: `on | off`
+  - `rowSelection`: `on | off`
+  - `selectionMode`: `single | multiple`
+  - `showSingleSelectionRadio`: `on | off` (single only; when `off`, no 48px selection column)
   - `detailsPanel`: `attached | none`
   - `filterPopup`: `closed | open` (open state shows **`FilterMenuLayer`**: **`FilterIconTab`** + **`FilterPanel`** + optional **`FilterPanelBody`** from **`column.filterPanel`**)
   - `sortState`: `asc | desc`
@@ -977,8 +1137,8 @@ Variant matrix:
   - **Body row chrome** (`DatagridRow` / body `td`): height **40px** (Figma **`Grid height/Cell`**); **idle** fill **`var(--color-background-component)`** on **each cell** (not `transparent` when `rowBackgroundLayer` is on); bottom divider **1px** **`var(--color-border-light)`** when `rowShowBottomBorder` is on; hover/selected/press fills and vertical accent per **States** tables and Figma **`37721:114580`**.
   - `SettingsColumn` width is fixed `40px` and pinned.
   - **Last data column** `<col>` uses **`width: auto`** (sole slack column); chrome **48**/**40** (Figma **`37721:113987`**).
-  - select-all column and settings column do not participate in horizontal scrolling.
-  - **Chrome + slack (codegen):** implement **Chrome columns & table slack (codegen-critical)** — grow **`auto`**, chrome **48**/**40** on `<colgroup>` + `th`/`td`, inner hosts **`width:100%`**, **16×16** checkbox, no **`width:0`**, no grow width in `<colgroup>` until user resize completes.
+  - selection column and settings column do not participate in horizontal scrolling.
+  - **Chrome + slack (codegen):** implement **Chrome columns & table slack (codegen-critical)** — grow **`auto`**, chrome **48**/**40** on `<colgroup>` + `th`/`td`, inner hosts **`width:100%`**, **16×16** row radio, no **`width:0`**, no grow width in `<colgroup>` until user resize completes.
   - title/value overflow uses ellipsis in constrained widths (see **Column title overflow** above).
   - **Sort** icons: **`Icon`** with **`shapeName`** **`col-sort-up-16`** / **`col-sort-down-16`** (files **`assets/icons/col-sort-up-16.svg`**, **`assets/icons/col-sort-down-16.svg`**); rendered box **12×12**; hit area may be larger (e.g. **20×20** button).
   - **FilterToggle** (`.Filter for table`, **`37721:114677`** / **`37721:114635`**): **38×38** control, **12px** padding, **14×14** **`Icon`**; state/**`shapeName`** mapping (see **States** tables):
@@ -998,8 +1158,8 @@ Variant matrix:
 - Accessibility contract:
   - use semantic table/treegrid roles as applicable to mode.
   - sortable headers expose `aria-sort`.
-  - select-all and row checkboxes expose correct checked/mixed states.
-  - checkbox semantics (`aria-checked`, mixed state, disabled rules, keyboard space toggle) are delegated to IDS Checkbox spec contract at `components/ids/checkbox/design-spec.mdx`.
+  - **single:** row radios expose correct selected state within `RadioGroup` (`aria-checked` on each radio); radio semantics delegated to `components/ids/radio-button/design-spec.mdx`.
+  - **multiple:** select-all and row checkboxes expose **checked** / **indeterminate** / **unchecked** per IDS Checkbox spec; select-all **`aria-label`** describes page scope.
   - filter and settings controls expose `aria-haspopup` + `aria-expanded` when popup is used.
 - Asset/bundling:
   - sort icons: **`assets/icons/col-sort-up-16.svg`**, **`assets/icons/col-sort-down-16.svg`** — **`Icon.shapeName`** slugs **`col-sort-up-16`**, **`col-sort-down-16`**; **12×12** rendered box (Figma **`37721:114646`**)
@@ -1021,13 +1181,16 @@ Variant matrix:
   - [ ] Body row selected: **`var(--color-background-brand-lighter)`**; selected+press: **`var(--color-background-brand-light)`**.
   - [ ] When `rowVerticalIndicator` on: **4px** leading **`var(--color-border-brand-base)`** only for **selected** / **selected-press**; never for default/hover/hover-readonly.
   - [ ] **Chrome + slack (codegen-critical):** grow sole **`<col width="auto">`**; never **`width:0`**; with **`columnResizeEnabled`**, grow not fixed **`Npx`** in `<colgroup>` until user resize completes.
-  - [ ] **Select-all** **`th`** = **48px** in DevTools; inner host **`width:100%`** (no gap before Name divider); **16×16** datagrid checkbox; body **`12px 16px`**.
+  - [ ] **Selection** **`th`** = **48px** in DevTools; inner host **`width:100%`** (no gap before Name divider); body **`12px 16px`** + **16×16** control.
+  - [ ] **`selectionMode: single` + `showSingleSelectionRadio: on`:** empty header; row radios in `RadioGroup` per `components/ids/radio-button/design-spec.mdx`.
+  - [ ] **`selectionMode: single` + `showSingleSelectionRadio: off`:** no selection column; row highlight from row click / detail panel only; **no** leading **1×24px** rail on first data header (**Name**).
+  - [ ] **`selectionMode: multiple`:** header **select-all** checkbox (**16×16**, indeterminate when partial current-page selection); row checkboxes per `components/ids/checkbox/design-spec.mdx`; select-all toggles **current page** rows only.
+  - [ ] Row body click does **not** toggle radio/checkbox/select-all; controls use **`stopPropagation`**.
   - [ ] **Settings** **`th`** = **40px**; **16×16** gear centered; **no** leading chrome `::before` divider; body **`padding-block: 12px`**.
-  - [ ] select-all and row checkboxes use IDS Checkbox (`components/ids/checkbox/design-spec.mdx`) — not native HTML checkboxes; select-all supports **indeterminate**.
   - [ ] Last data column absorbs extra width; no spacer column before `SettingsColumn`; no trailing white gutter when viewport is wider than sum of fixed columns (Figma **`37721:113987`**).
   - [ ] row click toggles detail panel open/closed when `detailsPanel: attached`; interactive controls do not bubble row click.
   - [ ] Column header: **`colorAndBorder=true`** uses **`var(--color-background-gray-neutral-lighter)`** + **top/bottom** **`var(--color-border-light)`**; **`false`** uses **`var(--color-background-component)`** without full-cell top/bottom on Text path; data columns show **leading** **1px × 24px** **`var(--color-border-light)`** rail.
-  - [ ] Column header: **cell height exactly `48px`**; host **`pl-16`** only (no stacked host **`py-5`** + title **`py-9`**); title row **`pr-8`**, **`align-items: center`** in **48px** row, title **20px** line box; **no** divider **between** sort and filter; **trailing** **1×24** **`var(--color-border-light)`** column rail; optional **transparent** resize strip when **`columnResizeEnabled`**; filter **`37721:114677`** **38×38** **`p-12`** **14×14** **`Icon`**; sort/filter/settings use **`Icon`** + **`shapeName`** from **`assets/icons`**; **checkbox** + **settings** use **inner** flex wrappers for centering (**`th`/`td`** stay **`table-cell`**).
+  - [ ] Column header: **cell height exactly `48px`**; host **`pl-16`** only (no stacked host **`py-5`** + title **`py-9`**); title row **`pr-8`**, **`align-items: center`** in **48px** row, title **20px** line box; **no** divider **between** sort and filter; **trailing** **1×24** **`var(--color-border-light)`** column rail; optional **transparent** resize strip when **`columnResizeEnabled`**; filter **`37721:114677`** **38×38** **`p-12`** **14×14** **`Icon`**; sort/filter/settings use **`Icon`** + **`shapeName`** from **`assets/icons`**; **selection radio** + **settings** use **inner** flex wrappers for centering (**`th`/`td`** stay **`table-cell`**).
   - [ ] **Scroll:** body rows scroll; **header** (and pinned chrome) **does not** leave the viewport — sticky header or split scroll regions.
   - [ ] **Height:** grid **fills container**; extra rows scroll — height **not** driven by row count (see Figma **`37721:112482`**).
   - [ ] **Header titles:** **`text-overflow: ellipsis`** on title text (**`display: block`** or equivalent — not **`display: flex`** on the title node); **`min-width: 0`** on flex title slot; sort/filter **`flex-shrink: 0`**; native **`title`** tooltip when truncated; no icon/title overlap at **`90px`** min width.
@@ -1036,7 +1199,7 @@ Variant matrix:
   - [ ] **Column filter (open):** **L-frame** matches **`37721:114635`** — **38×38** tab (**12px** padding, **14×14** **`Icon`**, **top/left/right** border only, **`margin-bottom: -1px`**), **`FilterPanel`** **content-driven width** (**`max-content`** + min/max), **partial** top border **`calc(100% - 38px)`** (no seam under tab), token borders + elevation; portal stays mounted with safe **pre-measure** visibility; **`filterPanel`** slot optional; **`FilterToggle`** hover / focus / **`filterActive`** / press states match **States** table + precedence rules.
   - [ ] **Column filter (checkbox lists):** options use IDS Checkbox spec (`components/ids/checkbox/design-spec.mdx`) without drift.
   - [ ] settings column remains fixed `40px` and non-scrollable.
-  - [ ] select-all/settings pinned behavior is preserved during horizontal scrolling.
+  - [ ] selection/settings pinned behavior is preserved during horizontal scrolling.
   - [ ] reorder/filter/sort/selection events are emitted; **`onColumnResize`** when **`columnResizeEnabled`** is on.
   - [ ] detail panel attaches and opens via row click when configured.
   - [ ] footer pagination integration uses IDS Pagination slot.
@@ -1052,7 +1215,7 @@ Variant matrix:
   - Sort states/elements: **`37721:114646`** (`.Sort for table`; see also sort reference **`44551:229021`**)
   - Filter states/popup base: `37721:114635`
   - Column header structure: `37721:114663` (title row frame `37721:114673`, filter instance `37721:114677`)
-  - Select-all header: **`37721:114682`**; selection grid column: **`37721:113988`** (**48px**)
+  - Selection header (select-all when `multiple`, empty when `single`): **`37721:114682`**; selection grid column: **`37721:113988`** (**48px**)
   - Settings header variant: **`37721:114686`**; settings grid column: **`37721:114944`** / layout slot **`37721:113997`** (**40px** in **`37721:113987`**); column def **`37721:114887`**
   - Rows and columns layout reference: **`37721:113987`** (column widths, no spacer before settings)
   - Main variant sample: `37721:112483` (child of **`37721:112482`** *Data Grid - Main*)
