@@ -19,7 +19,7 @@
 - `TooltipPanel`: bordered container with optional header and close action.
 - `Header` (optional): short title text.
 - `BodyContent` (required): free tooltip content region.
-- `CloseAction` (optional): close button using icon `shape-x` (`12x12`).
+- `CloseAction` (optional): close button using icon `ctrl-close-16` (`12x12` icon with `4px` padding, `20x20` frame).
 - `Arrow` (optional): directional pointer; supports side and alignment matrix.
 ## Layout & Measurements
 - Top/bottom arrow variants:
@@ -32,6 +32,8 @@
   - arrow lane width: `12`
 - Panel content padding: `12px`.
 - Panel internal gap (header/body): `4px`.
+- Header internal gap (title/close): `4px`.
+- Close button frame: `20x20` (icon `12x12` with `4px` padding).
 - Panel border: `1px solid`.
 - Border radius: none in inspected IDS frame (square panel corners).
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
@@ -56,7 +58,7 @@ Arrow geometry contract:
 - Panel border + arrow stroke: `var(--color-border-accessible)`.
 - Header text: `var(--color-text-neutral-strong)`.
 - Body text: `var(--color-text-neutral)`.
-- Close icon color: use IDS neutral-strong icon/text token (must remain semantic; no hex in implementation).
+- Close icon color: use IDS neutral-strong icon/text token in light mode; dark mode uses `#4D4D4D`.
 - Shadow tone reference: `rgba(37,37,37,0.25)` from Figma effect.
 
 Typography contract:
@@ -74,7 +76,7 @@ Typography contract:
 |---|---|---|---|
 | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | body `var(--color-text-neutral)` (dark-resolved) |
 | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` (dark-resolved) |
-| Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | close icon uses semantic neutral icon token (dark-resolved) |
+| Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | close icon uses `#4D4D4D` in dark mode |
 | Any arrow side/align | same as panel | same as panel | n/a |
 ## Interactions
 - Standard tooltip (`closable=false`):
@@ -82,7 +84,7 @@ Typography contract:
   - Closes when pointer leaves trigger/tooltip hover region or on blur.
 - Closable tooltip (`closable=true`):
   - Stays open after pointer leaves trigger.
-  - Closes only when user activates close icon (`shape-x`) or equivalent close command.
+  - Closes only when user activates close icon (`ctrl-close-16`) or equivalent close command.
   - Emits close event on user dismissal.
 - Arrow follows chosen `placement` side and `arrowAlign`.
 - Tooltip content is consumer-supplied and may be text or structured markup.
@@ -96,7 +98,7 @@ Typography contract:
 - `open?: boolean` / `defaultOpen?: boolean`.
 - `onOpenChange?: (open: boolean) => void`.
 - `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
-- `closeIconShapeName?: string` default `shape-x` (for icon component integration).
+- `closeIconShapeName?: string` default `ctrl-close-16` (for icon component integration).
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 Deterministic structure:
@@ -119,7 +121,7 @@ Per-slot style contract:
 - `TooltipPanel`: background/border/shadow/padding from tokens above.
 - `Header`: Body 2 Medium + strong text token.
 - `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots.
-- `CloseAction`: renders icon component with `shapeName="shape-x"` at `12x12`.
+- `CloseAction`: renders icon component with `shapeName="ctrl-close-16"` at `12x12` within `20x20` frame with `4px` padding.
 - `Arrow`: shares panel surface and border tokens; size/rotation depends on side and must apply the alignment/attachment calibration values above.
 
 Behavior contract:
@@ -136,7 +138,7 @@ Accessibility contract:
   - Closable: `Escape` may close if product enables global dismiss; close button must be keyboard-activatable.
 
 Asset resolution contract:
-- `shape-x` must resolve from `assets/icons/shape-x.svg` through shared icon component.
+- `ctrl-close-16` must resolve from `assets/icons/ctrl-close-16.svg` through shared icon component.
 - No inline SVG strings or `data:image/svg+xml` in generated output.
 
 Fallback/error rules:
@@ -151,7 +153,7 @@ Validation checklist (pass/fail):
 - [ ] `closable=false` auto-dismisses on leave/blur.
 - [ ] `closable=true` does not auto-dismiss on leave; closes on close action.
 - [ ] Close event emits with deterministic reason payload.
-- [ ] `shape-x` icon is used for close at `12x12`.
+- [ ] `ctrl-close-16` icon is used for close at `12x12` within `20x20` frame with `4px` padding.
 - [ ] Body content supports arbitrary consumer-provided content.
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
 ## Source Mapping
@@ -162,3 +164,10 @@ Validation checklist (pass/fail):
   - Up: `38201:109623`, `38201:109633`, `38201:109643`
   - Right: `38201:109653`, `38201:109663`, `38201:109673`
   - Left: `38201:109683`, `38201:109693`, `38201:109703`
+
+## Changelog
+- **2026-06-02**: Fixed tooltip close icon color in dark mode to `#4D4D4D`. Changed in `storybook/src/components/IdsTooltip.module.css` lines 238-242.
+- **2026-06-02**: Fixed tooltip header spacing to `4px` between content and close icon frame. Changed in `storybook/src/components/IdsTooltip.module.css` line 208.
+- **2026-06-02**: Fixed tooltip close icon from `shape-x` to `ctrl-close-16.svg` and updated sizing to `12px` icon with `4px` padding (`20px` frame). Changed in `storybook/src/components/IdsTooltip.tsx` line 141 and `storybook/src/components/IdsTooltip.module.css` lines 225-243.
+- **2026-06-02**: Fixed tooltip border position to be inside the container by adding `box-sizing: border-box` to `.popup` class. Changed in `storybook/src/components/IdsTooltip.module.css` line 21.
+- **2026-06-02**: Fixed tooltip border-radius from `var(--corner-radius-radius-8)` to `0px` to match design spec (square panel corners). Changed in `storybook/src/components/IdsTooltip.module.css` line 17.
