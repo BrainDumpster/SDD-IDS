@@ -14,7 +14,7 @@ import { IdsDataGridDateAndTimeFilterStoryHost } from "../../../../storybook/src
 import { IdsDataGridDateFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateFilterStoryHost";
 import { IdsDataGridNumericFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridNumericFilterStoryHost";
 
-const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.md";
 
 /** Columns aligned to spec anatomy: sort (`col-sort-*-16`), filter (L-frame + `filterPanel`), settings column is grid-owned. */
 const specColumns: IdsDataGridColumn[] = [
@@ -207,7 +207,7 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
 ];
 
 /**
- * Defaults from `components/ids/datagrid/design-spec.mdx` (Codegen variant matrix + Figma `37721:112482` container height).
+ * Defaults from `components/ids/datagrid/design-spec.md` (Codegen variant matrix + Figma `37721:112482` container height).
  */
 const specAccurateArgs: ComponentProps<typeof IdsDataGrid> = {
   columns: specColumns,

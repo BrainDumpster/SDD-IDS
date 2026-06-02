@@ -6,7 +6,7 @@ import { TextInput } from "./TextInput";
 import { Tabs } from "./Tabs";
 
 const meta: Meta<typeof Dialog> = {
-  title: "IDS/Modal/Dialog",
+  title: "Spec Generated/IDS/Modal/Dialog",
   component: Dialog,
 };
 

@@ -10,7 +10,7 @@ import {
 } from "../spec-contracts/ids-wizard.contract";
 
 const meta: Meta<typeof IdsWizard> = {
-  title: "IDS/Wizard",
+  title: "Spec Generated/IDS/Wizard",
   component: IdsWizard,
   parameters: {
     controls: { expanded: false },

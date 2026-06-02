@@ -3,7 +3,7 @@ import { useState } from "react";
 import { RadioButton } from "./RadioButton";
 
 const meta: Meta<typeof RadioButton> = {
-  title: "IDS/Radio Button",
+  title: "Spec Generated/IDS/Radio Button",
   component: RadioButton,
   argTypes: {
     orientation: { control: "select", options: ["vertical", "horizontal"] },
@@ -92,7 +92,7 @@ export const ErrorAndHelperText: Story = {
   ),
 };
 
-export const ControlledExample: Story = {
+export const ControlledExampleManual: Story = {
   render: () => {
     const [selected, setSelected] = useState("option1");
 

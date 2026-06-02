@@ -22,7 +22,7 @@ def discover_components(components_dir: Path) -> List[str]:
     if not components_dir.exists():
         return out
     for child in components_dir.iterdir():
-        if child.is_dir() and (child / "design-spec.mdx").exists():
+        if child.is_dir() and (child / "design-spec.md").exists():
             out.append(child.name)
     return sorted(out)
 
@@ -265,7 +265,7 @@ def main() -> int:
             contract = spec_parser.parse(context.get("spec", ""))
             story_path = get_story_path(component_slug=component, generated_root=generated_root)
 
-            program_spec = (project_root / cfg.program_components_dir / component / "design-spec.mdx").resolve()
+            program_spec = (project_root / cfg.program_components_dir / component / "design-spec.md").resolve()
             program_root_spec = (project_root / cfg.program_root_spec_path).resolve()
             has_program_delta = has_component_delta_in_root_spec(program_root_spec, component)
             is_program_core = design_system.lower() != "ids" and program_spec.exists()

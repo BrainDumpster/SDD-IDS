@@ -508,7 +508,7 @@ async def generate_all_specs(
     
     for spec in specs:
         mdx_content = extractor.spec_to_mdx(spec)
-        filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.mdx"
+        filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.md"
         file_path = output_path / filename
         
         with open(file_path, 'w') as f:

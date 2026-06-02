@@ -12,7 +12,7 @@ import {
   type MainMenuTopSelectDetail,
 } from "./MainMenuTop";
 
-const DESIGN_SPEC_PATH = "components/ids/main-menu-top/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/main-menu-top/design-spec.md";
 const FIGMA_SPEC_ACCURATE_NODE = "10189:30280";
 const FIGMA_USE_CASE_NODE = "42136:57443";
 

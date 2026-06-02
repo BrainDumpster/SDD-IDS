@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate consolidated `components/ids/{slug}/design-spec.mdx` from:
+Generate consolidated `components/ids/{slug}/design-spec.md` from:
   - Figma REST API (nodes + variables) using `figmaUrl` + `nodeId` from
     `data/component-figma-map.json` (file key is parsed from each URL, not from FIGMA_FILE_KEY).
   - Documentation MDX (local `components/ids/{slug}/` and/or GitHub `content/<slug>/` on branch `main` by default — see GITHUB_REF)
@@ -52,13 +52,13 @@ from ingestion.figma_spec_extract import (  # noqa: E402
 )
 from ingestion.figma_sync_client import FigmaSyncClient, extract_file_key_and_node_id  # noqa: E402
 from ingestion.github_loader import GithubLoader  # noqa: E402
-from ingestion.github_mdx_text import (  # noqa: E402
-    extract_prose_from_mdx_file,
+from ingestion.github_markdown_text import (  # noqa: E402
+    extract_prose_from_markdown_file,
     merge_github_doc_sections,
 )
-from ingestion.mdx_heading_context import extract_images_with_heading_context  # noqa: E402
+from ingestion.markdown_heading_context import extract_images_with_heading_context  # noqa: E402
 from ingestion.ollama_vision import describe_design_image  # noqa: E402
-from ingestion.path_resolve import resolve_relative_to_mdx  # noqa: E402
+from ingestion.path_resolve import resolve_relative_path  # noqa: E402
 from ingestion.section_routes import route_section  # noqa: E402
 
 
@@ -205,7 +205,7 @@ def _github_asset_candidates(mdx_repo_path: str, resolved_repo_rel: str) -> list
     add(resolved_repo_rel)
 
     parts = [p for p in resolved_repo_rel.strip("/").split("/") if p]
-    # Expected resolved path shape for relative assets from content/<x>/*.mdx:
+    # Expected resolved path shape for relative assets from content/<x>/*.md:
     # content/<x>/assets/images/...
     if len(parts) >= 4 and parts[0] == "content" and parts[2] == "assets":
         # content/<x>/assets/images/...
@@ -251,7 +251,7 @@ def _append_vision_from_mdx(
 ) -> None:
     images = extract_images_with_heading_context(mdx_text, rel_mdx_path)
     for img in images:
-        resolved = resolve_relative_to_mdx(rel_mdx_path, img.path)
+        resolved = resolve_relative_path(rel_mdx_path, img.path)
         if not resolved:
             continue
         resolved_display = (
@@ -355,14 +355,14 @@ def collect_vision_for_component(
     if docs_source in ("local", "both"):
         comp_dir = ids_component_dir(slug)
         if comp_dir.is_dir():
-            for mdx_path in sorted(comp_dir.glob("*.mdx")):
-                if mdx_path.name == "design-spec.mdx":
+            for mdx_path in sorted(comp_dir.glob("*.md")):
+                if mdx_path.name == "design-spec.md":
                     continue
                 text = mdx_path.read_text(encoding="utf-8")
                 rel = mdx_path.relative_to(ROOT).as_posix()
                 merge_github_doc_sections(
                     local_doc_by_section,
-                    extract_prose_from_mdx_file(text, rel),
+                    extract_prose_from_markdown_file(text, rel),
                 )
 
                 def fetch_local(repo_rel: str) -> bytes | None:
@@ -395,7 +395,7 @@ def collect_vision_for_component(
                 path = finfo.get("path", "")
                 if not path or path in seen_mdx:
                     return
-                if path.rstrip("/").split("/")[-1] == "design-spec.mdx":
+                if path.rstrip("/").split("/")[-1] == "design-spec.md":
                     return
                 seen_mdx.add(path)
                 text = loader.fetch_file(finfo.get("download_url", ""))
@@ -403,7 +403,7 @@ def collect_vision_for_component(
                     return
                 merge_github_doc_sections(
                     github_doc_by_section,
-                    extract_prose_from_mdx_file(text, path),
+                    extract_prose_from_markdown_file(text, path),
                 )
 
                 def fetch_github_for_mdx(repo_rel: str) -> bytes | None:
@@ -457,7 +457,7 @@ def collect_vision_for_component(
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Generate consolidated design-spec.mdx")
+    ap = argparse.ArgumentParser(description="Generate consolidated design-spec.md")
     ap.add_argument("--component", required=True, help='Name as in component-figma-map, e.g. "Accordion"')
     ap.add_argument("--map", type=Path, default=ROOT / "data" / "component-figma-map.json")
     ap.add_argument("--skip-figma", action="store_true", help="Do not call Figma API")
@@ -560,7 +560,7 @@ def main() -> int:
 
     out_dir = ids_spec_out_dir(slug)
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "design-spec.mdx"
+    out_path = out_dir / "design-spec.md"
     out_path.write_text(mdx, encoding="utf-8")
     print(f"✅ Wrote {out_path}")
     return 0

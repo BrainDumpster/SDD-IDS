@@ -1,6 +1,6 @@
 import type { IdsTextBoxProps } from "../components/IdsTextBox";
 
-export const IDS_TEXT_BOX_DESIGN_SPEC_PATH = "components/ids/text-box/design-spec.mdx";
+export const IDS_TEXT_BOX_DESIGN_SPEC_PATH = "components/ids/text-box/design-spec.md";
 
 export const IDS_TEXT_BOX_COMPONENT_TYPES = ["text-input", "text-area"] as const;
 export const IDS_TEXT_BOX_SIZE_OPTIONS = ["large", "small"] as const;

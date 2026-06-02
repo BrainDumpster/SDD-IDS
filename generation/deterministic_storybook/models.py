@@ -10,5 +10,5 @@ class DeterministicStorybookOptions:
     component_prefix: str = "Ids"
     design_system_slug: str = "ids"
     apply_program_deltas: bool = False
-    # Full layered design-spec.mdx text for spec-derived codegen (CSS, demo strings).
+    # Full layered design-spec.md text for spec-derived codegen (CSS, demo strings).
     spec_text: str = ""

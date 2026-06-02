@@ -149,12 +149,12 @@ async def generate_specification(request: SpecGenerationRequest):
             output_dir = Path("/home/muthu/projects/ids_design_knowledge/design-system-knowledge")
             output_dir.mkdir(exist_ok=True)
             
-            mdx_content = extractor.spec_to_mdx(spec)
-            filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.mdx"
+            md_content = extractor.spec_to_mdx(spec)
+            filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.md"
             file_path = str(output_dir / filename)
             
             with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(mdx_content)
+                f.write(md_content)
             
             logger.info(f"💾 Saved spec to {file_path}")
         
@@ -240,13 +240,13 @@ async def get_specification(component_name: str):
     try:
         # Look for existing spec file
         output_dir = Path("/home/muthu/projects/ids_design_knowledge/design-system-knowledge")
-        filename = f"{component_name.lower().replace(' ', '-').replace('/', '-')}-spec.mdx"
+        filename = f"{component_name.lower().replace(' ', '-').replace('/', '-')}-spec.md"
         file_path = output_dir / filename
         
         if not file_path.exists():
             raise HTTPException(status_code=404, detail=f"Specification not found for {component_name}")
         
-        # Read and parse MDX file
+        # Read and parse Markdown file
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
@@ -294,7 +294,7 @@ async def list_specifications():
             return {"specifications": []}
         
         specs = []
-        for file in output_dir.glob("*-spec.mdx"):
+        for file in output_dir.glob("*-spec.md"):
             component_name = file.stem.replace("-spec", "").replace("-", " ").title()
             
             # Extract metadata if available
@@ -391,7 +391,7 @@ async def delete_specification(component_name: str):
     
     try:
         output_dir = Path("/home/muthu/projects/ids_design_knowledge/design-system-knowledge")
-        filename = f"{component_name.lower().replace(' ', '-').replace('/', '-')}-spec.mdx"
+        filename = f"{component_name.lower().replace(' ', '-').replace('/', '-')}-spec.md"
         file_path = output_dir / filename
         
         if not file_path.exists():

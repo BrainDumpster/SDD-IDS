@@ -2,13 +2,13 @@
 
 Framework-agnostic design contract and React reference implementation for the IDS left navigation rail.
 
-Host apps supply a **user-defined** item tree (`items`, optional `children`), optional `logo`, discriminated **`link`** (or legacy `href` / `routeRef`), **`defaultSelectedItemId`** for initial primary selection, and listen for **`onNavigate`**, **`onSelected`**, and **`onExpandedChange`**. Details: [`design-spec.mdx`](./design-spec.mdx) → **Composition & API**.
+Host apps supply a **user-defined** item tree (`items`, optional `children`), optional `logo`, discriminated **`link`** (or legacy `href` / `routeRef`), **`defaultSelectedItemId`** for initial primary selection, and listen for **`onNavigate`**, **`onSelected`**, and **`onExpandedChange`**. Details: [`design-spec.md`](./design-spec.md) → **Composition & API**.
 
 ## Source of truth
 
 | Artifact | Path |
 |---|---|
-| Design spec (codegen contract) | [`design-spec.mdx`](./design-spec.mdx) |
+| Design spec (codegen contract) | [`design-spec.md`](./design-spec.md) |
 | Figma (IDS Design Library) | Expanded [`11099:56218`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-56218&m=dev) · Collapsed [`11099:56206`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-56206&m=dev) |
 | Global theme | [`components/ids-theme.css`](../../ids-theme.css) |
 
@@ -38,7 +38,7 @@ Storybook title: **`Spec Generated/IDS/Main Menu Left`**
 
 ## Regenerate Storybook from spec (strict gate)
 
-After you change **`design-spec.mdx`**, **`MainMenuLeft.tsx`** (API/types the spec describes), or **`MainMenuLeft.module.css`** in ways that affect the deterministic story contract, re-run the **strict spec Storybook gate** so generated artifacts stay aligned.
+After you change **`design-spec.md`**, **`MainMenuLeft.tsx`** (API/types the spec describes), or **`MainMenuLeft.module.css`** in ways that affect the deterministic story contract, re-run the **strict spec Storybook gate** so generated artifacts stay aligned.
 
 ### Command (repo root)
 

@@ -128,7 +128,7 @@ def verify_output():
     # Check Figma specs
     specs_dir = Path("design-system-knowledge")
     if specs_dir.exists():
-        spec_files = list(specs_dir.glob("*-spec.mdx"))
+        spec_files = list(specs_dir.glob("*-spec.md"))
         print(f"✅ Generated {len(spec_files)} Figma specification files")
         
         # Show a sample

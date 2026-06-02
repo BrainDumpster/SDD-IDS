@@ -295,7 +295,7 @@ export const LayoutFromSpec: Story = {{
         `
       }}</style>
       <p style={{{{ fontSize: 13, margin: "0 0 8px" }}}}>
-        Toast root chrome — token snapshot baked at codegen from <code>design-spec.mdx</code> (includes{" "}
+        Toast root chrome — token snapshot baked at codegen from <code>design-spec.md</code> (includes{" "}
         <strong>border radius</strong>).
       </p>
       <pre style={{{{ fontSize: 11, margin: "0 0 12px", whiteSpace: "pre-wrap" }}}}>

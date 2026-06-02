@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing design-spec.mdx files if present",
+        help="Overwrite existing design-spec.md files if present",
     )
     return parser.parse_args()
 
@@ -42,7 +42,7 @@ def main():
         slug = slugify(component)
         out_dir = components_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        out_file = out_dir / "design-spec.mdx"
+        out_file = out_dir / "design-spec.md"
 
         if out_file.exists() and not args.overwrite:
             print(f"⏭️ Skipping existing spec: {out_file}")

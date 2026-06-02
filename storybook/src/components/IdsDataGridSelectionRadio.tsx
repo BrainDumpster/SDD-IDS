@@ -11,7 +11,7 @@ export interface IdsDataGridSelectionRadioProps {
 }
 
 /**
- * Datagrid row selection control — IDS Radio Button (`components/ids/radio-button/design-spec.mdx`).
+ * Datagrid row selection control — IDS Radio Button (`components/ids/radio-button/design-spec.md`).
  * Must be a descendant of `RadioGroup` (see `IdsDataGrid`).
  */
 export function IdsDataGridSelectionRadio({

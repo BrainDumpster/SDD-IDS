@@ -182,7 +182,7 @@ function NumericValueField({
 /**
  * Numeric column filter (Figma `.Filter-Element-NumericFilter` / `44360:182265`).
  * Uses native radio inputs styled to match IDS RadioButton spec
- * (see `components/ids/radio-button/design-spec.mdx`).
+ * (see `components/ids/radio-button/design-spec.md`).
  * Native radios are used instead of Base UI Radio to avoid
  * event-chain issues inside the DataGrid's portal-based filter popup.
  */

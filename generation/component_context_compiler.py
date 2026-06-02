@@ -50,7 +50,7 @@ class ComponentContextCompiler:
             Path(config.program_components_dir) if config and config.program_components_dir else self._spec_dir
         )
         self._baseline_root_spec_path = (
-            self._resolve_optional_path(config.baseline_root_spec_path) if config else Path("components/ids/root-spec.mdx")
+            self._resolve_optional_path(config.baseline_root_spec_path) if config else Path("components/ids/root-spec.md")
         )
         self._program_root_spec_path = (
             self._resolve_optional_path(config.program_root_spec_path) if config else None
@@ -90,8 +90,8 @@ class ComponentContextCompiler:
         }
 
     def load_layered_specs(self, component: str) -> List[Dict[str, Any]]:
-        baseline_component_path = self._baseline_components_dir / component / "design-spec.mdx"
-        program_component_path = self._program_components_dir / component / "design-spec.mdx"
+        baseline_component_path = self._baseline_components_dir / component / "design-spec.md"
+        program_component_path = self._program_components_dir / component / "design-spec.md"
         baseline_spec_exists = baseline_component_path.is_file()
         program_spec_exists = program_component_path.is_file()
         # Program-only slugs (e.g. DAP `settings-menu`) may have no baseline copy under `components/ids`.
@@ -172,8 +172,8 @@ class ComponentContextCompiler:
         return path.read_text() if path.exists() else ""
 
     def load_spec(self, component):
-        # Try design-spec.mdx in the component dir first
-        spec_path = self._spec_dir / component / "design-spec.mdx"
+        # Try design-spec.md in the component dir first
+        spec_path = self._spec_dir / component / "design-spec.md"
         if spec_path.exists():
             return spec_path.read_text()
         # Fallback to legacy path

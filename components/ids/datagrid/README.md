@@ -6,11 +6,11 @@ Framework-agnostic design contract and React reference implementation for the ID
 
 | Artifact | Path |
 |---|---|
-| Design spec (codegen contract) | [`design-spec.mdx`](./design-spec.mdx) |
+| Design spec (codegen contract) | [`design-spec.md`](./design-spec.md) |
 | Figma — main matrix | [Data Grid - Main `37721:112482`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev) |
 | Figma — rows/columns layout | [Rows and Columns `37721:113987`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-113987&m=dev) |
 | Global theme | [`components/ids-theme.css`](../../ids-theme.css) (import in app shell; Spec Generated stories use this file only) |
-| Nested specs | [`checkbox`](../checkbox/design-spec.mdx), pagination (footer), detail panel attach mode |
+| Nested specs | [`checkbox`](../checkbox/design-spec.md), pagination (footer), detail panel attach mode |
 
 ## Reference implementation (Storybook)
 
@@ -42,7 +42,7 @@ python3 scripts/strict_spec_storybook_gate.py --component datagrid --spec-only -
 cd storybook && pnpm build
 ```
 
-After changing [`design-spec.mdx`](./design-spec.mdx), run the gate so `spec_hash` in generated stories matches the layered spec input.
+After changing [`design-spec.md`](./design-spec.md), run the gate so `spec_hash` in generated stories matches the layered spec input.
 
 ## Column width API
 
@@ -84,14 +84,14 @@ Angular mapping: set width on `<def-dg-column>` via the same logical field your 
 2. **No spacer column** — do not add a “fill” column before settings; only selection → data columns → **40px** settings.
 3. **Header ellipsis** — title uses `display: block`, `text-overflow: ellipsis`, `min-width: 0` on flex parents; set native `title` for full label tooltip.
 4. **Body padding** — data cells: **`10px 12px 10px 16px`**; settings cells: **`padding: 0`**.
-5. **Checkboxes** — use IDS Checkbox spec (`components/ids/checkbox/design-spec.mdx`), not native inputs.
+5. **Checkboxes** — use IDS Checkbox spec (`components/ids/checkbox/design-spec.md`), not native inputs.
 6. **Filter menu** — portaled L-frame (`37721:114635`); inner UI only in `column.filterPanel`; set `filterActive` when criteria apply while menu is closed.
 7. **Detail panel** — sibling of grid shell, not a table column; row click toggles open/close.
 8. **Icons** — `Icon` + `shapeName`: `col-sort-up-16`, `col-sort-down-16`, `filter` / `filter-solid`, `settings-gear`.
 
 ## Framework-agnostic codegen
 
-Read [`design-spec.mdx`](./design-spec.mdx) sections in order:
+Read [`design-spec.md`](./design-spec.md) sections in order:
 
 1. **Anatomy** + **Framework-Agnostic Component Tree** (slot order, Angular `def-dg` mapping)
 2. **Table Layout Algorithm (codegen)** — especially **Chrome columns & table slack (codegen-critical)**

@@ -6,7 +6,7 @@ alwaysApply: true
 # Design-Spec First Workflow (Figma-Aligned)
 
 ## Purpose
-Primary goal: create and maintain `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<slug>/design-spec.mdx` (Synapse) with maximum fidelity to Figma.
+Primary goal: create and maintain `components/ids/<slug>/design-spec.md` (IDS) or `components/synapse/<slug>/design-spec.md` (Synapse) with maximum fidelity to Figma.
 Implementation/code generation is optional and only done when explicitly requested by the user.
 
 ## New spec intake (wizard-first)
@@ -36,7 +36,7 @@ Implementation/code generation is optional and only done when explicitly request
 - Asset contracts (icons/illustrations) must be explicitly documented with stable slug-to-file mapping.
 
 ## Required Spec Sections
-For each `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<slug>/design-spec.mdx` (Synapse), ensure these are concrete and non-placeholder:
+For each `components/ids/<slug>/design-spec.md` (IDS) or `components/synapse/<slug>/design-spec.md` (Synapse), ensure these are concrete and non-placeholder:
 - `## Metadata`
 - `## Layout & Measurements`
 - `## Tokens`
@@ -97,7 +97,7 @@ Document and implement interaction behavior in spec:
 - Define explicit state transitions for each interactive state.
 - Define visual cues per state (icons, motion, outlines, indicators, cursor changes).
 - If multiple interaction modes/strategies exist, document each mode and transition rules.
-- Component-specific behavior takes precedence and must be declared in the component’s `design-spec.mdx` under the correct design-system folder (`components/ids/...` or `components/synapse/...`).
+- Component-specific behavior takes precedence and must be declared in the component’s `design-spec.md` under the correct design-system folder (`components/ids/...` or `components/synapse/...`).
 - Runtime default must stay interactive.
 - Forced state attributes (`data-state`) are demo/testing-only and must not block runtime interaction.
 

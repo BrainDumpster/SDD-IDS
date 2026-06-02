@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Sync variable tables in components/ids/root-spec.mdx from Figma local variables.
+Sync variable tables in components/ids/root-spec.md from Figma local variables.
 
 Requires FIGMA_TOKEN in the environment (e.g. `set -a && . ./.env && set +a`).
 
@@ -24,7 +24,7 @@ ROOT_SPEC = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
     "components",
     "ids",
-    "root-spec.mdx",
+    "root-spec.md",
 )
 
 

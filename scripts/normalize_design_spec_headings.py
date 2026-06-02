@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Normalize IDS design-spec.mdx section order and headings.
+Normalize IDS design-spec.md section order and headings.
 
 - Blueprint specs: reorder ## sections, rename Codegen ### titles, reparent extra ## blocks.
 - Legacy specs (no Codegen Contract): same normalization plus Composition stub and
@@ -229,7 +229,7 @@ def process_file(path: Path) -> bool:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Normalize IDS design-spec.mdx headings and section order.")
+    parser = argparse.ArgumentParser(description="Normalize IDS design-spec.md headings and section order.")
     parser.add_argument(
         "--legacy-only",
         action="store_true",
@@ -238,7 +238,7 @@ def main() -> int:
     args = parser.parse_args()
 
     changed: list[Path] = []
-    for path in sorted(IDS_DIR.glob("*/design-spec.mdx")):
+    for path in sorted(IDS_DIR.glob("*/design-spec.md")):
         if args.legacy_only:
             text = path.read_text(encoding="utf-8")
             if CODEGEN_TITLE in text:

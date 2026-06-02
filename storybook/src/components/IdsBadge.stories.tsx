@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsBadge } from "./IdsBadge";
 
 const meta: Meta<typeof IdsBadge> = {
-  title: "IDS/Badge",
+  title: "Spec Generated/IDS/Badge",
   component: IdsBadge,
   args: {
     value: 8,
@@ -34,7 +34,7 @@ export const States: Story = {
   ),
 };
 
-export const BackgroundShowcase: Story = {
+export const BackgroundShowcaseManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div

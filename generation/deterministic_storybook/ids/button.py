@@ -17,7 +17,7 @@ _DEMO_ICON_SLUG = "settings-gear-detailed"
 
 
 def _ids_state_harness_css(focus_outline_width: str) -> str:
-    """StateHarness overrides match components/ids/button/design-spec.mdx token tables."""
+    """StateHarness overrides match components/ids/button/design-spec.md token tables."""
     return f"""
         .sbSimButton[data-sim-state="hover"][data-sim-variant="primary"]:not(:disabled) {{
           background: var(--color-background-controls-brand-strong);
@@ -224,7 +224,7 @@ const meta: Meta<typeof {component_name}> = {{
     docs: {{
       description: {{
         component:
-          "IDS Button per components/ids/button/design-spec.mdx. Theme: components/ids-theme.css. Default size: large (lg). Icon slug resolves from assets/icons/<slug>.svg.",
+          "IDS Button per components/ids/button/design-spec.md. Theme: components/ids-theme.css. Default size: large (lg). Icon slug resolves from assets/icons/<slug>.svg.",
       }},
     }},
   }},

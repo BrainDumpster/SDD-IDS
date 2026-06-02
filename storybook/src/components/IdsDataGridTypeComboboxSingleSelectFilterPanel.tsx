@@ -15,7 +15,7 @@ export interface IdsDataGridTypeComboboxSingleSelectFilterPanelProps {
  * Single-select column filter — plain-text option list.
  * - With search: Combobox-SingleSelect (Figma `44360:179074`).
  * - Without search: Dropdown-SingleSelect (Figma `44360:179201`).
- * Tokens: components/ids/dropdown-single-select/design-spec.mdx.
+ * Tokens: components/ids/dropdown-single-select/design-spec.md.
  */
 export function IdsDataGridTypeComboboxSingleSelectFilterPanel({
   options,

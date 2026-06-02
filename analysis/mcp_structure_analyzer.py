@@ -167,10 +167,10 @@ class MCPStructureAnalyzer:
             self._start_mcp_server()
             
             sections = defaultdict(int)
-            mdx_files = []
+            doc_files = []
             
-            # Recursively find all .mdx files
-            def find_mdx_files(path: str):
+            # Recursively find all .md/.mdx files
+            def find_doc_files(path: str):
                 contents = self._list_directory_contents(path)
                 
                 for item in contents:
@@ -181,17 +181,17 @@ class MCPStructureAnalyzer:
                         
                         if item_type == 'dir' or name.endswith('/'):
                             # Recursively explore subdirectory
-                            find_mdx_files(item_path)
-                        elif name.endswith('.mdx'):
-                            mdx_files.append(item)
+                            find_doc_files(item_path)
+                        elif name.endswith('.md') or name.endswith('.mdx'):
+                            doc_files.append(item)
             
-            find_mdx_files(repo_path)
-            print(f"Found {len(mdx_files)} .mdx files using MCP")
+            find_doc_files(repo_path)
+            print(f"Found {len(doc_files)} .md/.mdx files using MCP")
             
-            # Analyze each .mdx file
-            for i, file_info in enumerate(mdx_files):
+            # Analyze each markdown file
+            for i, file_info in enumerate(doc_files):
                 if i % 10 == 0:
-                    print(f"Processing file {i+1}/{len(mdx_files)}: {file_info.get('name', 'unknown')}")
+                    print(f"Processing file {i+1}/{len(doc_files)}: {file_info.get('name', 'unknown')}")
                 
                 file_path = file_info.get('path', '')
                 if file_path:

@@ -41,7 +41,7 @@ function ComboTrigger({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "IDS/Dropdown/Combo Box",
+  title: "Spec Generated/IDS/Dropdown/Combo Box",
   component: DropdownMenu,
   parameters: {
     layout: "centered",
@@ -51,7 +51,7 @@ const meta: Meta<typeof DropdownMenu> = {
 export default meta;
 type Story = StoryObj<typeof DropdownMenu>;
 
-export const SingleSelectContract: Story = {
+export const SingleSelectContractManual: Story = {
   render: () => {
     const [selected, setSelected] = useState("Compute");
     const [selectionEvent, setSelectionEvent] = useState<{
@@ -105,7 +105,7 @@ export const SingleSelectContract: Story = {
   },
 };
 
-export const MultiSelectContract: Story = {
+export const MultiSelectContractManual: Story = {
   render: () => {
     const [selected, setSelected] = useState<string[]>(["Storage", "Compute"]);
     const options: UserOption[] = [

@@ -4,9 +4,9 @@ from __future__ import annotations
 from pathlib import PurePosixPath
 
 
-def resolve_relative_to_mdx(mdx_repo_path: str, ref: str) -> str:
+def resolve_relative_path(mdx_repo_path: str, ref: str) -> str:
     """
-    mdx_repo_path: path inside project, e.g. components/ids/accordion/documentation.mdx
+    mdx_repo_path: path inside project, e.g. components/ids/accordion/documentation.md
     ref: e.g. ./assets/x.svg, ../img/a.png
     Returns normalized path with forward slashes.
     """

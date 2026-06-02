@@ -13,7 +13,7 @@ const frameStyle = {
 } as const;
 
 const meta: Meta<typeof IdsPagination> = {
-  title: "IDS/Pagination",
+  title: "Spec Generated/IDS/Pagination",
   component: IdsPagination,
   parameters: {
     docs: {
@@ -41,7 +41,7 @@ const meta: Meta<typeof IdsPagination> = {
 export default meta;
 type Story = StoryObj<typeof IdsPagination>;
 
-export const Default: Story = {
+export const DefaultManual: Story = {
   render: (args) => {
     const [page, setPage] = useState(args.currentPage ?? 1);
     const [pageSize, setPageSize] = useState(args.pageSize ?? 25);
@@ -60,7 +60,7 @@ export const Default: Story = {
   },
 };
 
-export const BackgroundModes: Story = {
+export const BackgroundModesManual: Story = {
   render: () => (
     <div style={{ ...frameStyle, display: "grid", gap: 16 }}>
       <IdsPagination {...PAGINATION_API_DEFAULTS} currentPage={2} totalPages={16} background="none" />
@@ -69,7 +69,7 @@ export const BackgroundModes: Story = {
   ),
 };
 
-export const PageNavigationStates: Story = {
+export const PageNavigationStatesManual: Story = {
   render: () => (
     <div style={{ ...frameStyle, display: "grid", gap: 16 }}>
       <IdsPagination {...PAGINATION_API_DEFAULTS} currentPage={1} totalPages={16} />

@@ -33,7 +33,7 @@ const overflowItems = [
 ];
 
 const meta: Meta<typeof Tabs> = {
-  title: "IDS/Tabs",
+  title: "Spec Generated/IDS/Tabs",
   component: Tabs,
   args: {
     items: baseItems,

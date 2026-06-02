@@ -65,7 +65,7 @@ const meta: Meta<typeof IdsButton> = {
     docs: {
       description: {
         component:
-          "IDS Button per components/ids/button/design-spec.mdx. Theme: components/ids-theme.css. Default size: large (lg). Icon slug resolves from assets/icons/<slug>.svg.",
+          "IDS Button per components/ids/button/design-spec.md. Theme: components/ids-theme.css. Default size: large (lg). Icon slug resolves from assets/icons/<slug>.svg.",
       },
     },
   },

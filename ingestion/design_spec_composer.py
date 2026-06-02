@@ -1,4 +1,4 @@
-"""Compose canonical components/ids/{slug}/design-spec.mdx (docs-first, LLM-friendly)."""
+"""Compose canonical components/ids/{slug}/design-spec.md (docs-first, LLM-friendly)."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -134,11 +134,11 @@ def compose_design_spec_mdx(
     else:
         summary = (
             "- Canonical design-spec generated from available sources. "
-            "Regenerate with `--docs-source github` or `both` to ingest `overview.mdx` from ids-content."
+            "Regenerate with `--docs-source github` or `both` to ingest `overview.md` from ids-content."
         )
     if not overview_full:
         overview_full = (
-            "- *(No Overview extracted. Confirm GitHub docs are enabled and `content/<slug>/overview.mdx` "
+            "- *(No Overview extracted. Confirm GitHub docs are enabled and `content/<slug>/overview.md` "
             "uses markdown headings, e.g. `## Overview`.)*"
         )
     purpose = _render_docs_block(docs, "Purpose & Usage", max_lines=35)

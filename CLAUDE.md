@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Design Intelligence System — a RAG-powered platform that indexes design system documentation (MDX from GitHub Enterprise), stores it in Qdrant vectors, and uses it for:
 - Answering design system questions via chat agent
 - Generating UI component code (React CSS Modules/CSS-in-JS/Base UI, Angular SCSS)
-- Extracting component specs from Figma and producing `design-spec.mdx` files
+- Extracting component specs from Figma and producing `design-spec.md` files
 - Validating generated code against design system rules and tokens
 - Semantic search for a design system website
 
@@ -64,7 +64,7 @@ python test_api_formats.py
 GitHub Enterprise MDX → ingestion/ (fetch/parse/chunk) → embeddings/ (Ollama embeddinggemma 768d)
     → vectorstore/qdrant_store.py → Qdrant collection "design_knowledge"
 
-Figma → tokens/figma_spec_extractor.py → components/ids/<slug>/design-spec.mdx → vector store
+Figma → tokens/figma_spec_extractor.py → components/ids/<slug>/design-spec.md → vector store
      → tokens/figma_client.py (MCP) → token extraction/sync
 
 User query → rag/design_rag.py (component detection + retrieval) → Ollama llama3 → answer
@@ -102,8 +102,8 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 - `data/synapse-rules.json` — Synapse design system rules (31 rules).
 - `data/synapse-allowed-tokens.json` — flat list of valid Synapse CSS variable names (209 tokens).
 - `rules.json` — IDS design system rules (accessibility, layout) with severity levels.
-- `components/ids/<slug>/design-spec.mdx` — IDS Figma-aligned component specifications.
-- `components/synapse/<slug>/design-spec.mdx` — Synapse component specifications.
+- `components/ids/<slug>/design-spec.md` — IDS Figma-aligned component specifications.
+- `components/synapse/<slug>/design-spec.md` — Synapse component specifications.
 - `components/ids-theme.css` — IDS global CSS variables (light + dark; `data-design-system="ids"`).
 - `components/synapse-theme.css` — Synapse global CSS variables (light + dark themes).
 
@@ -117,7 +117,7 @@ User query → rag/design_rag.py (component detection + retrieval) → Ollama ll
 
 ## Design-Spec Workflow (from Cursor rules)
 
-The primary workflow is creating/maintaining `components/ids/<slug>/design-spec.mdx` with maximum Figma fidelity. Implementation/codegen is **optional** — only when explicitly requested.
+The primary workflow is creating/maintaining `components/ids/<slug>/design-spec.md` with maximum Figma fidelity. Implementation/codegen is **optional** — only when explicitly requested.
 
 1. Read `data/component-figma-map.json` to get the component's `figmaUrl` and `nodeId`.
 2. Figma semantic variables (`var(--...)`) are authoritative for token naming.

@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 from ingestion.figma_sync_client import extract_file_key_and_node_id
 from ingestion.figma_variables_rest import fetch_variables
 
-SPEC_PATH = ROOT / "components" / "ids" / "button" / "design-spec.mdx"
+SPEC_PATH = ROOT / "components" / "ids" / "button" / "design-spec.md"
 OUT_DIR = ROOT / "generated-components"
 OUT_COMPONENT = OUT_DIR / "button.js"
 OUT_DEMO = OUT_DIR / "button-demo.html"

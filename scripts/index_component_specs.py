@@ -68,20 +68,20 @@ class ComponentSpecIndexer:
             logger.error(f"Error creating collection: {e}")
             
     def _discover_design_spec_paths(self) -> List[Path]:
-        """Return paths to ``design-spec.mdx`` for IDS (``components/ids``) and Synapse."""
+        """Return paths to ``design-spec.md`` for IDS (``components/ids``) and Synapse."""
         found: List[Path] = []
         ids_root = ROOT / "components" / "ids"
         if ids_root.is_dir():
             for component_dir in sorted(ids_root.iterdir()):
                 if component_dir.is_dir():
-                    spec_file = component_dir / "design-spec.mdx"
+                    spec_file = component_dir / "design-spec.md"
                     if spec_file.is_file():
                         found.append(spec_file)
         syn_root = ROOT / "components" / "synapse"
         if syn_root.is_dir():
             for component_dir in sorted(syn_root.iterdir()):
                 if component_dir.is_dir():
-                    spec_file = component_dir / "design-spec.mdx"
+                    spec_file = component_dir / "design-spec.md"
                     if spec_file.is_file():
                         found.append(spec_file)
         # Legacy: flat ``components/<slug>/`` (excluding container dirs)
@@ -90,7 +90,7 @@ class ComponentSpecIndexer:
         if legacy_root.is_dir():
             for component_dir in sorted(legacy_root.iterdir()):
                 if component_dir.is_dir() and component_dir.name not in skip:
-                    spec_file = component_dir / "design-spec.mdx"
+                    spec_file = component_dir / "design-spec.md"
                     if spec_file.is_file():
                         found.append(spec_file)
         return found
@@ -100,7 +100,7 @@ class ComponentSpecIndexer:
         specs = []
         spec_paths = self._discover_design_spec_paths()
         if not spec_paths:
-            logger.warning("No design-spec.mdx files found under components/ids or components/synapse")
+            logger.warning("No design-spec.md files found under components/ids or components/synapse")
             return specs
 
         for spec_file in spec_paths:

@@ -1,6 +1,6 @@
 # Design-spec authoring contract (IDE-agnostic)
 
-Portable rules for creating or updating `design-spec.mdx` files. Used by the [design-spec intake wizard](design-spec-intake.md), Cursor skills, and any AI agent (Cursor, Windsurf Cascade, Devin).
+Portable rules for creating or updating `design-spec.md` files. Used by the [design-spec intake wizard](design-spec-intake.md), Cursor skills, and any AI agent (Cursor, Windsurf Cascade, Devin).
 
 ## Programmes and output paths
 
@@ -18,7 +18,7 @@ Resolve the programme from `config/design_systems/<name>.yaml`. Valid programmes
 2. `mkdir -p` `{components_dir}` if missing.
 3. Slugify component display name (lowercase, spaces/slashes → `-`, e.g. `Datagrid` → `datagrid`).
 4. `mkdir -p` `{components_dir}/{slug}/`.
-5. Output file: `{components_dir}/{slug}/design-spec.mdx`.
+5. Output file: `{components_dir}/{slug}/design-spec.md`.
 6. Update or add a map entry with `designSpecPath`, `figmaUrl`, `nodeId`, `fileKey`, and supplemental node IDs as needed.
 
 DAP components use `components/DAP/<slug>/`, not `components/ids/`, unless the component is IDS-only.
@@ -38,7 +38,7 @@ DAP components use `components/DAP/<slug>/`, not `components/ids/`, unless the c
 
 Do not add extra top-level `##` headings.
 
-Reference implementations: `components/ids/alert/design-spec.mdx`, `components/ids/accordion/design-spec.mdx`.
+Reference implementations: `components/ids/alert/design-spec.md`, `components/ids/accordion/design-spec.md`.
 
 ## Required `###` subsections under Codegen Contract
 
@@ -102,7 +102,7 @@ Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS)
 ### Spec Accurate Design (primary story)
 
 - **Story name:** `Spec Accurate Design` (required primary story)
-- Proves `design-spec.mdx` is machine-consumable: layout, tokens, states, and codegen contract without guessing
+- Proves `design-spec.md` is machine-consumable: layout, tokens, states, and codegen contract without guessing
 - Story `args` / sample data must align with **Composition & API (runtime)** and any spec subsection titled **Spec Accurate Design story defaults**
 - Styles use semantic tokens (`var(--...)`) only
 - Additional variant stories may exist under the same Meta title but must not replace Spec Accurate Design as the canonical reference

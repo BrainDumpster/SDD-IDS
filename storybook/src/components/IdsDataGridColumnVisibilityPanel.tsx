@@ -13,7 +13,7 @@ export interface IdsDataGridColumnVisibilityPanelProps {
 
 /**
  * Settings (gear) popup body — column show/hide checkboxes.
- * Checkbox + label per `components/ids/checkbox/design-spec.mdx` (16×16 control, 8px label gap, Body 2 label).
+ * Checkbox + label per `components/ids/checkbox/design-spec.md` (16×16 control, 8px label gap, Body 2 label).
  */
 export function IdsDataGridColumnVisibilityPanel({
   hideableColumns,

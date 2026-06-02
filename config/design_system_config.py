@@ -77,7 +77,7 @@ class DesignSystemConfig:
     # Root spec & aliases
     root_spec_path: str = ""
     baseline_components_dir: str = "components/ids"
-    baseline_root_spec_path: str = "components/ids/root-spec.mdx"
+    baseline_root_spec_path: str = "components/ids/root-spec.md"
     baseline_theme_css_path: str = "components/theme.css"
     program_components_dir: str = ""
     program_root_spec_path: str = ""
@@ -156,7 +156,7 @@ def load_design_system(name: str) -> DesignSystemConfig:
         framework_layer=data.get("framework_layer", ""),
         root_spec_path=data.get("root_spec_path", ""),
         baseline_components_dir=data.get("baseline_components_dir", "components/ids"),
-        baseline_root_spec_path=data.get("baseline_root_spec_path", "components/ids/root-spec.mdx"),
+        baseline_root_spec_path=data.get("baseline_root_spec_path", "components/ids/root-spec.md"),
         baseline_theme_css_path=data.get("baseline_theme_css_path", "components/theme.css"),
         program_components_dir=data.get("program_components_dir", ""),
         program_root_spec_path=data.get("program_root_spec_path", ""),

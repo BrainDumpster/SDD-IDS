@@ -1,6 +1,6 @@
 # Design-spec intake wizard
 
-Create production-ready, framework-agnostic `design-spec.mdx` files by pasting one **starter prompt** into your AI agent. The agent asks questions one at a time, you answer, confirm, then it runs (folders, map, live Figma, spec file).
+Create production-ready, framework-agnostic `design-spec.md` files by pasting one **starter prompt** into your AI agent. The agent asks questions one at a time, you answer, confirm, then it runs (folders, map, live Figma, spec file).
 
 Works in **Cursor**, **Windsurf Cascade**, and **Windsurf Devin** (see Devin notes below). Full rules: [design-spec-authoring-contract.md](design-spec-authoring-contract.md).
 
@@ -50,7 +50,7 @@ The agent will:
 - Create `components/<programme-dir>/<slug>/` if missing (see [authoring contract](design-spec-authoring-contract.md))
 - Update the Figma component map
 - Fetch **live Figma** (MCP or REST)
-- Write or update `design-spec.mdx` with **Status: draft**
+- Write or update `design-spec.md` with **Status: draft**
 - If Storybook = **yes**: add or update `storybook-generated/...` under **Spec Generated**, with primary story **Spec Accurate Design**
 
 Review the diff and iterate in chat if any checklist item is incomplete.
@@ -63,7 +63,7 @@ Review the diff and iterate in chat if any checklist item is incomplete.
 2. New Agent chat → paste **base prompt** (or `@design-spec-intake-wizard`).
 3. Answer each question; ensure **Figma MCP** is enabled for live verification.
 4. Reply `yes` on the summary.
-5. Review `components/.../<slug>/design-spec.mdx`.
+5. Review `components/.../<slug>/design-spec.md`.
 
 ### Windsurf Cascade
 
@@ -91,7 +91,7 @@ Confirm: yes
 2. In Devin, paste the confirmed summary plus:
 
 ```text
-Execute the design-spec intake RUN phase only: create dirs, update map, live Figma, write design-spec.mdx per docs/design-spec-authoring-contract.md. Output path: components/ids/spinner/design-spec.mdx
+Execute the design-spec intake RUN phase only: create dirs, update map, live Figma, write design-spec.md per docs/design-spec-authoring-contract.md. Output path: components/ids/spinner/design-spec.md
 ```
 
 ## Prerequisites
@@ -118,7 +118,7 @@ Examples must follow repo conventions (see [README — Spec Accurate Design](../
 |------|--------|
 | Sidebar group | **Spec Generated** — `Spec Generated/IDS/<Component>` or `Spec Generated/DAP/<Component>` |
 | Primary story name | **Spec Accurate Design** |
-| Source of truth | `design-spec.mdx` (tokens, layout, states, API defaults) |
+| Source of truth | `design-spec.md` (tokens, layout, states, API defaults) |
 | Theme CSS | One import: `components/ids-theme.css` or `components/dap-theme.css` |
 
 Do not publish spec-driven examples under generic Storybook folders. Optional extra stories (state matrix, collapsed, etc.) sit under the same **Spec Generated** title.
@@ -136,7 +136,7 @@ Generators: `generation/deterministic_storybook/`, `scripts/strict_spec_storyboo
 
 Hand-authored intake stories may live under `storybook/src/components/` (for example `IdsTree.stories.tsx`) so they share the main story glob; deterministic gate output still uses `storybook-generated/`.
 
-**IDS Tree** supports **Mode A** (`items: TreeNode[]`) and **Mode B** (nested `<tree-item>` / `<tree-item-label>`); root emits **`onTreeItemClick`** with `TreeItemClickDetail` (see `components/ids/tree/design-spec.mdx`).
+**IDS Tree** supports **Mode A** (`items: TreeNode[]`) and **Mode B** (nested `<tree-item>` / `<tree-item-label>`); root emits **`onTreeItemClick`** with `TreeItemClickDetail` (see `components/ids/tree/design-spec.md`).
 
 ## Optional session log
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Link } from "./Link";
 
 const meta: Meta<typeof Link> = {
-  title: "IDS/Link",
+  title: "Spec Generated/IDS/Link",
   component: Link,
   argTypes: {
     type: { control: "select", options: ["standalone", "inline", "dark-bg"] },
@@ -15,7 +15,7 @@ const meta: Meta<typeof Link> = {
 export default meta;
 type Story = StoryObj<typeof Link>;
 
-export const Default: Story = {
+export const DefaultManual: Story = {
   args: {
     href: "#",
     children: "This is a link",
@@ -24,7 +24,7 @@ export const Default: Story = {
   },
 };
 
-export const WithExternalIcon: Story = {
+export const WithExternalIconManual: Story = {
   args: {
     href: "https://example.com",
     children: "This is a link",
@@ -34,7 +34,7 @@ export const WithExternalIcon: Story = {
   },
 };
 
-export const DarkBackground: Story = {
+export const DarkBackgroundManual: Story = {
   args: {
     href: "#",
     children: "This is a link",
@@ -50,7 +50,7 @@ export const DarkBackground: Story = {
   ],
 };
 
-export const StateMatrixWithIcon: Story = {
+export const StateMatrixWithIconManual: Story = {
   render: () => (
     <div style={{ background: "var(--color-background-surface-1)", padding: 24 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", columnGap: 56 }}>

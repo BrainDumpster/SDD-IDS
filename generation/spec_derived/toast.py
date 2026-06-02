@@ -257,7 +257,7 @@ def _v(name: str) -> str:
 def render_toast_module_css(model: ToastSpecModel) -> str:
     """Emit Toast.module.css — single source is `parse_toast_spec` + this template."""
     lines = [
-        "/* Generated from design-spec.mdx (strict_spec_storybook_gate --deterministic-story). Do not edit by hand. */",
+        "/* Generated from design-spec.md (strict_spec_storybook_gate --deterministic-story). Do not edit by hand. */",
         "",
         ".viewport {",
         "  position: fixed;",

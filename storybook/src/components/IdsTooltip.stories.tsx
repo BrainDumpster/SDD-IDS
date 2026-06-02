@@ -6,7 +6,7 @@ const longContent =
   "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.";
 
 const meta: Meta<typeof IdsTooltip> = {
-  title: "IDS/Tooltip",
+  title: "Spec Generated/IDS/Tooltip",
   component: IdsTooltip,
   render: (args) => (
     <IdsTooltip {...args}>

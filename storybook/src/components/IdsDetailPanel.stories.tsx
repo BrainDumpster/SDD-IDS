@@ -4,7 +4,7 @@ import { IdsDetailPanel, type IdsDetailPanelAttachMode } from "./IdsDetailPanel"
 import "../../../components/ids-theme.css";
 
 const meta: Meta<typeof IdsDetailPanel> = {
-  title: "IDS/Detail Panel",
+  title: "Spec Generated/IDS/Detail Panel",
   component: IdsDetailPanel,
   parameters: {
     layout: "fullscreen",
@@ -73,11 +73,11 @@ function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPane
   );
 }
 
-export const DatagridAttached: Story = {
+export const DatagridAttachedManual: Story = {
   render: () => <PanelFrame attachMode="datagrid" initialExpanded={true} />,
 };
 
-export const PageAttached: Story = {
+export const PageAttachedManual: Story = {
   render: () => <PanelFrame attachMode="page" initialExpanded={true} />,
 };
 

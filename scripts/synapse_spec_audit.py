@@ -1,7 +1,7 @@
 """
 Synapse Design Spec Audit Agent (Persistent Watcher)
 =====================================================
-Watches Storybook CSS modules, theme CSS, and design-spec.mdx files for changes.
+Watches Storybook CSS modules, theme CSS, and design-spec.md files for changes.
 On any change it re-audits affected components and auto-regenerates specs.
 
 Modes:
@@ -17,8 +17,8 @@ The audit pipeline:
    b. Cross-reference against allowed tokens and theme CSS
    c. Detect hardcoded values that should be tokens
    d. Detect token names that don't exist in the theme
-   e. Compare state table in design-spec.mdx against actual CSS usage
-3. Output a gap report and optionally generate/update design-spec.mdx
+   e. Compare state table in design-spec.md against actual CSS usage
+3. Output a gap report and optionally generate/update design-spec.md
 """
 
 import json
@@ -217,7 +217,7 @@ def audit_component(name: str, theme_tokens: dict, registry: dict, figma_map: li
         "component": name,
         "slug": slug,
         "css_exists": css_path.exists(),
-        "spec_exists": (SYNAPSE_SPECS / slug / "design-spec.mdx").exists(),
+        "spec_exists": (SYNAPSE_SPECS / slug / "design-spec.md").exists(),
         "token_refs": [],
         "invalid_tokens": [],
         "hardcoded_values": [],
@@ -280,12 +280,12 @@ def run_audit(component_filter: str = None, fix: bool = False, quiet: bool = Fal
             spec_dir = SYNAPSE_SPECS / slug
             spec_dir.mkdir(parents=True, exist_ok=True)
             spec = _generate_spec_for_audit(name, slug, fig_entry, theme_tokens, css_path)
-            (spec_dir / "design-spec.mdx").write_text(spec)
+            (spec_dir / "design-spec.md").write_text(spec)
             result["spec_exists"] = True
             result["missing_spec"] = False
             specs_generated += 1
             if not quiet:
-                print(f"    -> Generated design-spec.mdx")
+                print(f"    -> Generated design-spec.md")
 
     total_issues = sum(len(r["invalid_tokens"]) + len(r["hardcoded_values"]) for r in results)
 
@@ -303,7 +303,7 @@ def run_audit(component_filter: str = None, fix: bool = False, quiet: bool = Fal
 def _spec_stale(name: str, result: dict) -> bool:
     """Check if spec needs regeneration (CSS has tokens the spec doesn't list)."""
     slug = slugify(name)
-    spec_path = SYNAPSE_SPECS / slug / "design-spec.mdx"
+    spec_path = SYNAPSE_SPECS / slug / "design-spec.md"
     if not spec_path.exists():
         return True
     spec_text = spec_path.read_text()

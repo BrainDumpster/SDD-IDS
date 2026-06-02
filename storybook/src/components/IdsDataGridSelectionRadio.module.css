@@ -1,4 +1,4 @@
-/* Compact host for 48px selection column — 16×16 radio per `components/ids/radio-button/design-spec.mdx` */
+/* Compact host for 48px selection column — 16×16 radio per `components/ids/radio-button/design-spec.md` */
 .host {
   display: inline-flex;
   flex-shrink: 0;

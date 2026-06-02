@@ -1,4 +1,4 @@
-"""Derive implementation artifacts from `design-spec.mdx` text (deterministic codegen)."""
+"""Derive implementation artifacts from `design-spec.md` text (deterministic codegen)."""
 
 from generation.spec_derived.toast import ToastSpecModel, parse_toast_spec, render_toast_module_css
 

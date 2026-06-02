@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Tag } from "./Tag";
 
 const meta: Meta<typeof Tag> = {
-  title: "IDS/Tag",
+  title: "Spec Generated/IDS/Tag",
   component: Tag,
   argTypes: {
     tone: {
@@ -22,7 +22,7 @@ const meta: Meta<typeof Tag> = {
 export default meta;
 type Story = StoryObj<typeof Tag>;
 
-export const MainComponent: Story = {
+export const MainComponentManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
       <Tag type="read-only" label="Tag" tone="non-alerting" size="sm" />
@@ -33,7 +33,7 @@ export const MainComponent: Story = {
   ),
 };
 
-export const ReadOnlyAndAlerting: Story = {
+export const ReadOnlyAndAlertingManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
       <Tag type="read-only" label="Tag" tone="non-alerting" size="sm" />
@@ -46,7 +46,7 @@ export const ReadOnlyAndAlerting: Story = {
   ),
 };
 
-export const ClickableStates: Story = {
+export const ClickableStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
       <Tag type="clickable" label="Tag" tone="non-alerting" size="lg" visualState="default" />
@@ -59,7 +59,7 @@ export const ClickableStates: Story = {
   ),
 };
 
-export const EditableAndBadgeStates: Story = {
+export const EditableAndBadgeStatesManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 16 }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

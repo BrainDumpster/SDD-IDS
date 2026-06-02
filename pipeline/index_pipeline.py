@@ -1,5 +1,5 @@
 from ingestion.github_loader import GithubLoader
-from ingestion.mdx_parser import parse_mdx
+from ingestion.markdown_parser import parse_markdown
 from ingestion.chunk_builder import build_chunks
 
 from embeddings.embedding_service import EmbeddingService
@@ -26,15 +26,15 @@ class IndexPipeline:
         files = loader.list_files(repo_path)
         print(f"📁 Found {len(files)} total files")
 
-        mdx_files = [f for f in files if f["name"].endswith(".mdx")]
-        print(f"📄 Found {len(mdx_files)} MDX files to process")
+        doc_files = [f for f in files if f["name"].endswith(".md") or f["name"].endswith(".mdx")]
+        print(f"📄 Found {len(doc_files)} MD/MDX files to process")
         
-        if len(mdx_files) == 0:
-            print("⚠️ No MDX files found! Check repository path and GitHub settings.")
+        if len(doc_files) == 0:
+            print("⚠️ No MD/MDX files found! Check repository path and GitHub settings.")
             return "No files to process"
 
         processed_count = 0
-        for i, f in enumerate(mdx_files):
+        for i, f in enumerate(doc_files):
 
             print(f"🔄 [{i+1}/{len(mdx_files)}] Processing: {f['path']}")
 
@@ -49,10 +49,10 @@ class IndexPipeline:
                     continue
 
                 print(f"🔍 Parsing MDX content...")
-                sections = parse_mdx(html)
+                sections = parse_markdown(html)
                 print(f"✅ Parsed {len(sections)} sections")
 
-                component = f["name"].replace(".mdx","")
+                component = f["name"].rsplit(".", 1)[0]
 
                 docs = build_chunks(component, sections, f["path"])
                 print(f"✅ Built {len(docs)} document chunks")
@@ -65,7 +65,7 @@ class IndexPipeline:
                 print(f"✅ Added {len(docs)} documents for {component}")
                 
                 processed_count += 1
-                print(f"📊 Progress: {processed_count}/{len(mdx_files)} files processed")
+                print(f"📊 Progress: {processed_count}/{len(doc_files)} files processed")
                 
             except Exception as e:
                 print(f"❌ Error processing {f['path']}: {e}")

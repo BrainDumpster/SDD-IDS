@@ -7,7 +7,7 @@ Usage:
 
 Notes:
 - Uses the existing FigmaMCPClient and TokenExtractor to pull variables.
-- Generates a per-component MDX spec at content/components/{component}/design-spec.mdx.
+- Generates a per-component MDX spec at content/components/{component}/design-spec.md.
 - Focuses on tokens + semantic CSS variable wiring; layout/spacing/etc. sections are included for future enrichment.
 """
 
@@ -102,7 +102,7 @@ async def extract_and_write(component: str, map_path: Path):
 
         out_dir = Path("content/components") / component
         out_dir.mkdir(parents=True, exist_ok=True)
-        out_path = out_dir / "design-spec.mdx"
+        out_path = out_dir / "design-spec.md"
         out_path.write_text(mdx, encoding="utf-8")
         print(f"✅ Wrote spec to {out_path}")
     finally:

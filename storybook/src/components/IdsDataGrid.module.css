@@ -674,7 +674,7 @@
   overflow: clip;
 }
 
-/* Body row chrome: components/ids/datagrid/design-spec.mdx + Figma 37721:114580
+/* Body row chrome: components/ids/datagrid/design-spec.md + Figma 37721:114580
    Paint per-cell: <tr> backgrounds are not reliable with border-collapse: collapse. */
 .bodyRow {
   height: 40px;

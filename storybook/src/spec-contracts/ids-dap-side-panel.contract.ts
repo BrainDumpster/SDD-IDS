@@ -1,4 +1,4 @@
-export const IDS_DAP_SIDE_PANEL_DESIGN_SPEC_PATH = "components/DAP/side-panel/design-spec.mdx";
+export const IDS_DAP_SIDE_PANEL_DESIGN_SPEC_PATH = "components/DAP/side-panel/design-spec.md";
 
 export const DAP_SIDE_PANEL_DEFAULTS = {
   title: "CurbsideGroceries-07-12-2024",

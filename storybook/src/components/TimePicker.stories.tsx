@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { useEffect, useState, type ComponentProps } from "react";
 import { IdsTimePicker } from "./IdsTimePicker";
 
-const DESIGN_SPEC_PATH = "components/ids/time-picker/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/time-picker/design-spec.md";
 
 function IdsThemeDecorator(Story: React.ComponentType) {
   useEffect(() => {
@@ -14,7 +14,7 @@ function IdsThemeDecorator(Story: React.ComponentType) {
   return <Story />;
 }
 
-/** Spec Accurate Design story defaults — see design-spec.mdx */
+/** Spec Accurate Design story defaults — see design-spec.md */
 const specAccurateArgs: ComponentProps<typeof IdsTimePicker> = {
   size: "large",
   label: "Time",

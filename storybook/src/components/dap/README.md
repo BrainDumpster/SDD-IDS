@@ -11,4 +11,4 @@ This folder contains DAP-specific IDS components used by demos and **Spec Genera
 ## Grouping rules
 - Keep DAP components under this folder.
 - Generated Storybook titles use **`Spec Generated/DAP/*`** (see `storybook-generated/dap/`).
-- Keep design-spec references in contracts pointed to `components/DAP/*/design-spec.mdx`.
+- Keep design-spec references in contracts pointed to `components/DAP/*/design-spec.md`.

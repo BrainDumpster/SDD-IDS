@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IdsToggleSwitch } from "./IdsToggleSwitch";
 
 const meta: Meta<typeof IdsToggleSwitch> = {
-  title: "IDS/Toggle Switch",
+  title: "Spec Generated/IDS/Toggle Switch",
   component: IdsToggleSwitch,
   argTypes: {
     disabled: { control: "boolean" },
@@ -13,14 +13,14 @@ const meta: Meta<typeof IdsToggleSwitch> = {
 export default meta;
 type Story = StoryObj<typeof IdsToggleSwitch>;
 
-export const Off: Story = {
+export const OffManual: Story = {
   args: {
     label: "Enable alerts",
     defaultChecked: false,
   },
 };
 
-export const On: Story = {
+export const OnManual: Story = {
   args: {
     label: "Enable alerts",
     defaultChecked: true,
@@ -50,7 +50,7 @@ export const WithoutVisibleLabel: Story = {
   },
 };
 
-export const Controlled: Story = {
+export const ControlledManual: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
     return (
@@ -84,7 +84,7 @@ export const StateMatrix: Story = {
 };
 
 /** Aligns with Figma matrix frame `42848:100536` (dark surface + tokens). */
-export const StateMatrixDark: Story = {
+export const StateMatrixDarkManual: Story = {
   parameters: {
     globals: { theme: "dark" },
     backgrounds: { default: "dark" },

@@ -81,7 +81,7 @@ class ComponentSpecIndexer:
             if not component_dir.is_dir():
                 continue
                 
-            design_spec_file = component_dir / "design-spec.mdx"
+            design_spec_file = component_dir / "design-spec.md"
             if not design_spec_file.exists():
                 continue
                 

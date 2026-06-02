@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import type { DualListBoxItem } from "./IdsDualListBox";
 import { IdsTooltip } from "./IdsTooltip";
 
-/** IDS Tooltip contract: `components/ids/tooltip/design-spec.mdx` */
-export const IDS_TOOLTIP_SPEC_PATH = "components/ids/tooltip/design-spec.mdx";
+/** IDS Tooltip contract: `components/ids/tooltip/design-spec.md` */
+export const IDS_TOOLTIP_SPEC_PATH = "components/ids/tooltip/design-spec.md";
 
 export type DualListBoxItemTooltipOptions = {
   side?: "top" | "bottom" | "left" | "right";

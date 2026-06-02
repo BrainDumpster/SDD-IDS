@@ -5,11 +5,11 @@ description: Build production-ready, framework-agnostic design-spec blueprints f
 
 # Design-Spec Blueprint Skill
 
-Use this skill when creating or upgrading design specs for spec-driven code generation, for example **`components/ids/<component>/design-spec.mdx`** (IDS) or **`components/synapse/<component>/design-spec.mdx`** (Synapse).
+Use this skill when creating or upgrading design specs for spec-driven code generation, for example **`components/ids/<component>/design-spec.md`** (IDS) or **`components/synapse/<component>/design-spec.md`** (Synapse).
 
 ## New spec? Start with the intake wizard
 
-If the user wants a **new** `design-spec.mdx` and has not supplied programme, component name, and Figma URLs together, run **design-spec-intake-wizard** first (or point them to `docs/design-spec-intake.md` **base prompt**). Do not skip the interview and confirm step. After the file exists, use this blueprint skill for hardening and updates.
+If the user wants a **new** `design-spec.md` and has not supplied programme, component name, and Figma URLs together, run **design-spec-intake-wizard** first (or point them to `docs/design-spec-intake.md` **base prompt**). Do not skip the interview and confirm step. After the file exists, use this blueprint skill for hardening and updates.
 
 ## Objective
 
@@ -30,7 +30,7 @@ Produce deterministic, production-ready specs that can generate components acros
 
 Do not add extra top-level `##` headings; use `###` under the nearest parent.
 
-Reference implementations: `components/ids/alert/design-spec.mdx`, `components/ids/accordion/design-spec.mdx`.
+Reference implementations: `components/ids/alert/design-spec.md`, `components/ids/accordion/design-spec.md`.
 
 ## Required `###` subsections under Codegen Contract
 

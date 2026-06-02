@@ -1,4 +1,4 @@
-"""Shared canonical section titles and bootstrap blocks for IDS design-spec.mdx files."""
+"""Shared canonical section titles and bootstrap blocks for IDS design-spec.md files."""
 
 from __future__ import annotations
 

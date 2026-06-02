@@ -4,7 +4,7 @@ import { Alert } from "./Alert";
 import type { AlertGlobalSeverity } from "./Alert";
 
 const meta = {
-  title: "IDS/Alert",
+  title: "Spec Generated/IDS/Alert",
   component: Alert,
   parameters: {
     docs: {
@@ -41,7 +41,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof Alert>;
 
-export const Playground: Story = {
+export const PlaygroundManual: Story = {
   args: {
     display: "global",
     severity: "informational",

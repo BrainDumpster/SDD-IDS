@@ -11,7 +11,7 @@ export interface IdsDataGridSelectionCheckboxProps {
 }
 
 /**
- * Datagrid row / select-all checkbox — delegates to IDS Checkbox (`components/ids/checkbox/design-spec.mdx`).
+ * Datagrid row / select-all checkbox — delegates to IDS Checkbox (`components/ids/checkbox/design-spec.md`).
  */
 export function IdsDataGridSelectionCheckbox({
   id,

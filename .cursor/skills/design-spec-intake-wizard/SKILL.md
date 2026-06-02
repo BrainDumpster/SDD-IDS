@@ -1,11 +1,11 @@
 ---
 name: design-spec-intake-wizard
-description: Interactive wizard — ask programme, component, and Figma URLs one at a time, confirm, then create production-ready design-spec.mdx (IDE-agnostic when used with docs/design-spec-intake.md).
+description: Interactive wizard — ask programme, component, and Figma URLs one at a time, confirm, then create production-ready design-spec.md (IDE-agnostic when used with docs/design-spec-intake.md).
 ---
 
 # Design-Spec Intake Wizard
 
-Use when the user wants to **create a new** `design-spec.mdx` and has not already provided programme, component name, and Figma URLs in one message.
+Use when the user wants to **create a new** `design-spec.md` and has not already provided programme, component name, and Figma URLs in one message.
 
 Pair with **`docs/design-spec-authoring-contract.md`** for full production-ready rules. For section depth after intake, follow **design-spec-blueprint** skill.
 
@@ -36,7 +36,7 @@ Execute in order:
 2. Slugify component name (lowercase, non-alphanumeric → `-`, collapse repeats).
 3. `mkdir -p` `{components_dir}` and `{components_dir}/{slug}/`.
 4. Merge or append map entry in the programme’s figma map JSON (`designSpecPath`, `figmaUrl`, `nodeId`, `fileKey`, supplemental `*NodeId` or structured nodes from element/state URLs).
-5. If `design-spec.mdx` missing, scaffold from `scripts/design_spec_template.py` (`NEW_SPEC_TEMPLATE`).
+5. If `design-spec.md` missing, scaffold from `scripts/design_spec_template.py` (`NEW_SPEC_TEMPLATE`).
 6. **Live Figma** for component + each element/state node (MCP preferred; REST if MCP unavailable — document method in spec).
 7. Fill all required `##` sections per authoring contract; prefer `var(--...)` tokens.
 8. Apply dark-states dedupe per contract when light/dark tokens match.
@@ -46,7 +46,7 @@ Execute in order:
 
 ## Storybook follow-up (when step 7 = yes)
 
-After `design-spec.mdx` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group.
+After `design-spec.md` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group.
 
 **Meta title (sidebar group):**
 
@@ -66,7 +66,7 @@ After `design-spec.mdx` is written, generate or update Storybook using the **Spe
 
 **Do not** place spec-driven examples under generic groups (e.g. `Components/...`) or omit the Spec Accurate Design story.
 
-**Implementation:** use `generation/deterministic_storybook/` patterns and `scripts/strict_spec_storybook_gate.py` when available; reference [`components/ids/main-menu-left/design-spec.mdx`](../components/ids/main-menu-left/design-spec.mdx) + [`storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`](../storybook-generated/ids/src/components/MainMenuLeft.stories.tsx).
+**Implementation:** use `generation/deterministic_storybook/` patterns and `scripts/strict_spec_storybook_gate.py` when available; reference [`components/ids/main-menu-left/design-spec.md`](../components/ids/main-menu-left/design-spec.md) + [`storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`](../storybook-generated/ids/src/components/MainMenuLeft.stories.tsx).
 
 Record generated story path in spec **Metadata**. Add validation checklist item for Spec Accurate Design under Spec Generated.
 

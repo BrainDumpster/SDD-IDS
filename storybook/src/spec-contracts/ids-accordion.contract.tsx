@@ -1,7 +1,7 @@
 /**
  * IDS Accordion — runtime contract mirrored from the design spec.
  *
- * Source: `components/ids/accordion/design-spec.mdx`
+ * Source: `components/ids/accordion/design-spec.md`
  * - § Composition & API (runtime)
  * - § Codegen Contract (Framework-Agnostic Blueprint)
  *
@@ -13,7 +13,7 @@ import type { IdsAccordionItem, IdsAccordionProps } from "../components/IdsAccor
 
 /** Repo-relative path to the MDX spec (for tooling / docs cross-links). */
 export const IDS_ACCORDION_DESIGN_SPEC_PATH =
-  "components/ids/accordion/design-spec.mdx" as const;
+  "components/ids/accordion/design-spec.md" as const;
 
 /** Root props named in design-spec § Composition & API (runtime). */
 export const ACCORDION_ROOT_PROP_KEYS = [

@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from embeddings.embedding_service import EmbeddingService
 from ingestion.chunk_builder import build_chunks
-from ingestion.mdx_parser import parse_mdx
+from ingestion.markdown_parser import parse_markdown
 from pipeline.index_pipeline import IndexPipeline
 from storage.document_registry import DocumentRegistry
 from utils.file_hash import compute_hash
@@ -25,25 +25,27 @@ if __name__ == "__main__":
     result = pipeline.run(repo_path)
     print(f"🎉 Indexing result: {result}")
 
-    # --- Temporary: index local accordion.mdx for component generation ---
-    local_mdx = Path("accordion.mdx")
-    if local_mdx.exists():
-        print("📎 Temporarily indexing local accordion.mdx...")
-        text = local_mdx.read_text(encoding="utf-8")
+    # --- Temporary: index local accordion markdown for component generation ---
+    local_doc = Path("accordion.md")
+    if not local_doc.exists():
+        local_doc = Path("accordion.mdx")
+    if local_doc.exists():
+        print(f"📎 Temporarily indexing local {local_doc.name}...")
+        text = local_doc.read_text(encoding="utf-8")
         file_hash = compute_hash(text)
 
-        if registry.is_changed(str(local_mdx), file_hash):
-            sections = parse_mdx(text)
-            component = local_mdx.stem
-            docs = build_chunks(component, sections, str(local_mdx))
+        if registry.is_changed(str(local_doc), file_hash):
+            sections = parse_markdown(text)
+            component = local_doc.stem
+            docs = build_chunks(component, sections, str(local_doc))
 
             vector_store = QdrantStore(EmbeddingService().get_embedder())
             vector_store.add_documents(docs)
-            registry.update(str(local_mdx), file_hash, len(docs))
+            registry.update(str(local_doc), file_hash, len(docs))
             registry.save()
             print(f"✅ Added {len(docs)} docs for accordion")
         else:
-            print("⏭️ Skipped accordion.mdx (unchanged)")
+            print(f"⏭️ Skipped {local_doc.name} (unchanged)")
     else:
-        print("⚠️ accordion.mdx not found locally; skipping temporary indexing")
+        print("⚠️ accordion.md/accordion.mdx not found locally; skipping temporary indexing")
     # --- End temporary block ---

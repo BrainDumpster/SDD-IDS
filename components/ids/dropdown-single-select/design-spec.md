@@ -1,0 +1,210 @@
+# Dropdown: Single-select Design Spec
+
+## Metadata
+- Component: Dropdown: Single-select
+- Category: Formelements
+- Design System: IDS
+- Figma design: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43264-181428&m=dev`
+- Figma component matrix: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-58099&m=dev`
+- Figma menu elements: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12579-19717&m=dev`
+- Figma option states: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12380-16525&m=dev`
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
+## Anatomy
+1. `DropdownSingleSelectRoot`
+2. optional `Label`
+3. `FieldContainer`
+4. `ValueSlot` (placeholder or selected label)
+5. `IndicatorSlot` (caret `arrow-drop-tri-caret` 10×10, container padding `1px` horizontal / `5px` vertical)
+6. optional `HelperText`
+7. optional `ValidationError` (critical icon + text)
+8. optional `MenuPopup`
+9. optional `SearchRow` (when searchable variant enabled)
+10. `OptionList`
+11. optional `SectionHeaderRow`
+12. optional `ActionRow` (footer action)
+## Layout & Measurements
+- Field sizes:
+  - `Large`: `40px` field height.
+  - `Small`: `32px` field height.
+- Field horizontal padding: `var(--padding-padding-16)`.
+- Vertical field padding:
+  - Large: `var(--padding-padding-10)`
+  - Small: `var(--padding-padding-6)`
+- Option row:
+  - visual row: tokenized `10px` vertical + `16px` horizontal padding
+  - minimum hit area: `44px`
+- Optional radio control:
+  - size `16x16`
+  - inner dot `8x8`
+- Menu width:
+  - matches trigger width in component examples (`300px` sample)
+  - runtime contract: container-driven with optional min/max constraints.
+- Menu elevation: IDS shadow token stack (Shadow 1 family).
+- Section header row:
+  - top border on section boundaries
+  - first section header top border may be omitted.
+## Tokens
+- Field and menu:
+  - `var(--color-background-component)`
+  - `var(--color-border-accessible)`
+  - `var(--color-border-strong)`
+  - `var(--color-border-brand-base)`
+  - `var(--color-text-neutral)`
+  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-disabled)`
+  - `var(--color-background-gray-lighter)` (disabled field)
+- Selection/interaction:
+  - `var(--color-background-controls-brand-lighter)`
+  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-text-brand-strong)`
+  - `var(--color-border-transparent-brand)`
+  - `var(--color-icon-white)`
+  - `var(--color-icon-accessible)`
+  - `var(--color-icon-neutral)` (caret default)
+  - `var(--color-icon-disabled)` (caret disabled)
+  - `var(--color-border-disabled)` (field disabled)
+- Error:
+  - `var(--color-border-alerting-critical-base)`
+  - `var(--color-icon-alerting-critical)`
+  - `var(--color-text-critical)`
+- Shadow (menu popup):
+  - `var(--shadow-shadow-4-drop-shadow-4-x)` (0)
+  - `var(--shadow-shadow-4-drop-shadow-4-y)` (4)
+  - `var(--shadow-shadow-4-drop-shadow-4-blur)` (4)
+  - `var(--shadow-shadow-4-drop-shadow-4-spread)` (0)
+  - `var(--shadow-shadow-4-drop-shadow-4-color)` (rgba(37,37,37,0.08))
+- Geometry:
+  - `var(--border-width-border-default)` (field + menu border width, 1px)
+  - `var(--corner-radius-radius-2)`
+  - `var(--corner-radius-radius-4)` (focus ring radius)
+  - `var(--spacing-space-8)`
+  - `var(--padding-padding-1)` (caret horizontal padding)
+  - `var(--padding-padding-6)` (small field vertical padding)
+  - `var(--padding-padding-10)` (large field + option vertical padding)
+  - `var(--padding-padding-16)` (field + option horizontal padding)
+  - `var(--padding-padding-24)` (option right padding)
+## States (Light Theme)
+| Element | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Field container | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | show-dropdown | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | focus-visible | `var(--color-background-component)` | inner `var(--color-border-accessible)` + outer ring `var(--color-border-brand-base)` (`inset: -5px`, `border-radius: 4px`) | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | text `var(--color-text-disabled)`, caret `var(--color-icon-disabled)` |
+| Field container | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)`, error icon `var(--color-icon-alerting-critical)`, error text `var(--color-text-critical)` |
+| Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
+| Option row | hover | `var(--color-background-controls-brand-lighter)` | brand emphasis rows | `var(--color-text-neutral)` |
+| Option row | selected | brand-lighter or tokenized selected row style | tokenized | `var(--color-text-brand-strong)` |
+| Option row | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+## States (Dark Theme)
+Dark theme must remain structurally identical to Light Theme with values resolved via semantic IDS tokens only.
+
+| Element | State | Background | Border | Text/Icon |
+|---|---|---|---|---|
+| Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
+| Option rows | default/hover/selected/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+## Interactions
+- Trigger:
+  - click/`Enter`/`Space` toggles open/close.
+  - `Escape` closes and returns focus to trigger.
+- Selection:
+  - selecting an option sets exactly one selected value.
+  - selecting a new option replaces previous selection.
+- Keyboard:
+  - `ArrowUp`/`ArrowDown` navigates options.
+  - `Enter` commits active option.
+- Optional radio mode:
+  - radio control visibility is input-driven.
+  - radio does not change single-select behavior semantics; it is visual control parity.
+- Optional action row:
+  - user-defined label
+  - emits action event on click.
+## Composition & API (runtime)
+| Prop / Slot | Required | Type | Notes |
+|---|---|---|---|
+| `size` | No | `"small" \| "large"` | Default `large`. |
+| `label` | No | `string` | Optional label slot. |
+| `placeholder` | No | `string` | User-defined placeholder. |
+| `helperText` | No | `string` | User-defined helper text. |
+| `errorText` | No | `string` | User-defined error text. |
+| `disabled` | No | `boolean` | Blocks interactions. |
+| `searchable` | No | `boolean` | Enables search row. |
+| `showRadio` | No | `boolean` | Optional radio visual in option rows. |
+| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option list. |
+| `value` | No | `string` | Controlled selected value. |
+| `onChange` | No | `(value: string \| optionObject) => void` | Selection event payload strategy is app-defined. |
+| `actionLabel` | No | `string` | Optional action row label. |
+| `onAction` | No | `() => void` | Optional action row event. |
+| `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
+| `onSearch` | No | `(query: string) => void` | Search callback. |
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+1. `DropdownSingleSelectRoot`
+2. optional `Label`
+3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
+4. optional `HelperText` or `ValidationError`
+5. optional `MenuPopup`
+6. optional `SearchRow`
+7. `OptionList` -> `OptionRow[]`
+8. optional `SectionHeaderRow[]`
+9. optional `ActionRow`
+
+### Variant matrix
+- `size`: `small | large`
+- `content`: `empty | filled`
+- `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
+- `option-state`: `default | hover | selected | focus-visible | disabled`
+- `radio-visibility`: `on | off`
+- `search`: `enabled | disabled`
+- `sections`: `none | enabled`
+- `action-row`: `none | enabled`
+
+### Per-slot style contract
+- Field/menu/option styles must be token-driven.
+- `OptionRow` minimum hit target `44px`.
+- Radio visual (if shown) must follow IDS radio design-spec geometry and token behavior.
+- Section headers use tokenized top border; first section may omit top border.
+- Action row uses brand-strong text token and section divider border.
+
+### Behavior contract
+- Single selection is deterministic and mutually exclusive.
+- Disabled option rows are non-interactive.
+- Disabled field blocks open/close and selection.
+- Search filters visible options without mutating source data.
+- Action row emits `onAction` only when enabled.
+
+### Accessibility contract
+- Trigger exposes combobox semantics (`role="combobox"`, `aria-expanded`, `aria-controls`).
+- Menu exposes listbox/menu semantics aligned with implementation library.
+- Active selected option has programmatic selected state.
+- Error/helper is linked using `aria-describedby`.
+
+### Asset resolution + bundling contract
+- Caret icon: `arrow-drop-tri-caret`, 10×10px, container padding `1px` horizontal / `5px` vertical. Color per state: `var(--color-icon-neutral)` (default/hover/focus/show-dropdown/error), `var(--color-icon-disabled)` (disabled). Resolve from `assets/icons/arrow-drop-tri-caret.svg` via shared Icon primitive.
+- Error icon: `status-critical-square-solid`, 16×16px, `var(--color-icon-alerting-critical)`. Resolve from `assets/icons/status-critical-square-solid.svg`.
+- Optional radio visuals must follow IDS radio design-spec; no hardcoded inline SVG data URIs.
+
+### Fallback/error rules
+- Unknown `size` -> `large`.
+- Missing `options` -> empty, non-crashing menu.
+- Unknown/invalid `value` -> display placeholder with no selected row.
+- Unknown action/radio flags -> disabled/off.
+
+### Validation checklist
+- [ ] Main state matrix matches `11099:58099`.
+- [ ] Menu scenarios match `43264:181428` (`small`, `overflow`, `section`, `action`).
+- [ ] Option states match `12380:16525`.
+- [ ] Radio optional mode and behavior are deterministic.
+- [ ] Error and disabled states align to IDS tokens.
+- [ ] Output remains token-only in both light and dark themes.
+## Source Mapping
+- Figma design frame: `43264:181428`
+- Figma component matrix: `11099:58099`
+- Figma menu elements: `12579:19717`
+- Figma option state elements: `12380:16525`
+- Figma annotation frame: `43264:181450`
+- Radio dependency spec: `components/ids/radio-button/design-spec.md`
+- Component map: `data/component-figma-map.json` -> `Dropdown-Single-Select`
+- Verification method: Figma MCP (`get_design_context` + `get_variable_defs`)
+- Last live verification: 2026-05-25 (states audit: default, hover, show-dropdown, focus-visible, disabled, error; caret icon per-state; field tokens)

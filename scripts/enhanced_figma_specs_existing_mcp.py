@@ -159,7 +159,7 @@ class ExistingMCPSpecPipeline:
         existing_specs = set()
         
         if output_path.exists():
-            for file in output_path.glob("*-spec.mdx"):
+            for file in output_path.glob("*-spec.md"):
                 # Extract component name from filename
                 component_name = file.stem.replace("-spec", "").replace("-", " ").title()
                 existing_specs.add(component_name)
@@ -299,7 +299,7 @@ class ExistingMCPSpecPipeline:
         mdx_content = spec_to_mdx(spec)
         
         # Create filename
-        filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.mdx"
+        filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.md"
         file_path = output_path / filename
         
         # Write file
@@ -312,15 +312,15 @@ class ExistingMCPSpecPipeline:
         """Index specification in vector store"""
         # Convert spec to document chunks
         from ingestion.chunk_builder import build_chunks
-        from ingestion.mdx_parser import parse_mdx
+        from ingestion.markdown_parser import parse_markdown
         
         # Parse the MDX content
         from tokens.figma_spec_extractor import spec_to_mdx
         mdx_content = spec_to_mdx(spec)
-        sections = parse_mdx(mdx_content)
+        sections = parse_markdown(mdx_content)
         
         # Build chunks
-        docs = build_chunks(spec.name, sections, f"figma-specs/{spec.name}.mdx")
+        docs = build_chunks(spec.name, sections, f"figma-specs/{spec.name}.md")
         
         # Add to vector store
         self.vector_store.add_documents(docs)

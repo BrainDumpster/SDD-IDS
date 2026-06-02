@@ -16,7 +16,7 @@ base_ui_mapping_path: ""
 
 components_dir: components/ids
 baseline_components_dir: components/ids
-baseline_root_spec_path: components/ids/root-spec.mdx
+baseline_root_spec_path: components/ids/root-spec.md
 baseline_theme_css_path: components/ids-theme.css
 program_components_dir: ""
 program_root_spec_path: ""
@@ -25,7 +25,7 @@ program_theme_css_path: ""
 qdrant_collection: design_knowledge
 
 framework_layer: ""
-root_spec_path: components/ids/root-spec.mdx
+root_spec_path: components/ids/root-spec.md
 generated_storybook_dir: storybook-generated/ids
 strict_storybook_gate: false
 

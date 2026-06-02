@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsTooltip.module.css";
 
-/** Reference: `components/ids/tooltip/design-spec.mdx` */
+/** Reference: `components/ids/tooltip/design-spec.md` */
 export interface IdsTooltipProps {
   /** BodyContent — required per IDS Tooltip spec. */
   content: ReactNode;

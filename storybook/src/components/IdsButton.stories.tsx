@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsButton } from "./IdsButton";
 
 const meta: Meta<typeof IdsButton> = {
-  title: "IDS/Button",
+  title: "Spec Generated/IDS/Button",
   component: IdsButton,
   args: {
     children: "Button",

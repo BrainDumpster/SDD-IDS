@@ -133,7 +133,7 @@ def main() -> int:
         root = ROOT / r
         if not root.is_dir():
             continue
-        for path in sorted(root.rglob("design-spec.mdx")):
+        for path in sorted(root.rglob("design-spec.md")):
             rel = _process_file(path, apply=args.apply)
             if rel:
                 hits.append(rel)

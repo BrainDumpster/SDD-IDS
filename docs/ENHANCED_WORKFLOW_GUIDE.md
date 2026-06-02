@@ -103,7 +103,7 @@ python scripts/index_repo.py
 
 **What happens:**
 1. Connects to GitHub Enterprise API
-2. Recursively discovers all `.mdx` files
+2. Recursively discovers all `.md` files
 3. Fetches content from each file
 4. Parses MDX and creates semantic chunks
 5. Generates embeddings using `embeddinggemma`
@@ -280,9 +280,9 @@ Query → Embedding → Semantic Search → Context Retrieval (GitHub + Figma) �
 #### Figma Specifications
 ```
 design-system-knowledge/
-├── accordion-spec.mdx
-├── button-spec.mdx
-├── checkbox-spec.mdx
+├── accordion-spec.md
+├── button-spec.md
+├── checkbox-spec.md
 └── ...
 ```
 

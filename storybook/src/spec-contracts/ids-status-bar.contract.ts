@@ -1,4 +1,4 @@
-export const IDS_STATUS_BAR_DESIGN_SPEC_PATH = "components/ids/status-bar/design-spec.mdx";
+export const IDS_STATUS_BAR_DESIGN_SPEC_PATH = "components/ids/status-bar/design-spec.md";
 
 export const IDS_STATUS_BAR_FIGMA_NODES = {
   main: "15412:10699",

@@ -4,9 +4,9 @@ import type { ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsFooter } from "./IdsFooter";
 
-const DESIGN_SPEC_PATH = "components/ids/footer/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/footer/design-spec.md";
 
-/** Defaults from design-spec.mdx — Spec Accurate Design story defaults (Figma `38908:5818`). */
+/** Defaults from design-spec.md — Spec Accurate Design story defaults (Figma `38908:5818`). */
 const specAccurateArgs: ComponentProps<typeof IdsFooter> = {
   hostname: "short_name_first_domain_name",
   swid: "ELMCR00222GBPB",

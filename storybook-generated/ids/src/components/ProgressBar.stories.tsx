@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { type ComponentProps } from "react";
 import { IdsProgressBar } from "../../../../storybook/src/components/IdsProgressBar";
 
-const DESIGN_SPEC_PATH = "components/ids/progress-bar/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/progress-bar/design-spec.md";
 
 /** Figma `11099:57210` — Determinate/regular, Thin, In Progress + helper. */
 const specAccurateArgs: ComponentProps<typeof IdsProgressBar> = {

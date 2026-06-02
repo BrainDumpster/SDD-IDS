@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsAnchorMenu } from "./IdsAnchorMenu";
 
 const meta: Meta<typeof IdsAnchorMenu> = {
-  title: "IDS/AnchorMenu",
+  title: "Spec Generated/IDS/AnchorMenu",
   component: IdsAnchorMenu,
 };
 

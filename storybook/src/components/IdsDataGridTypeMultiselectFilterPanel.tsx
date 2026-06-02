@@ -25,7 +25,7 @@ function optionId(groupLabel: string, value: string, index: number): string {
  * Multiselect column filter — checkbox list.
  * - With search: Combobox-Multiselect (Figma `44360:147581`).
  * - Without search: Dropdown-MultiSelect (Figma `44360:179348`).
- * Tokens: components/ids/checkbox/design-spec.mdx.
+ * Tokens: components/ids/checkbox/design-spec.md.
  */
 export function IdsDataGridTypeMultiselectFilterPanel({
   options,

@@ -1,7 +1,7 @@
 import type { IdsSettingsMenuItem, IdsSettingsMenuProps } from "../components/dap/IdsSettingsMenu";
 
 export const IDS_SETTINGS_MENU_DESIGN_SPEC_PATH =
-  "components/DAP/settings-menu/design-spec.mdx" as const;
+  "components/DAP/settings-menu/design-spec.md" as const;
 
 export const SETTINGS_MENU_ROOT_PROP_KEYS = [
   "title",

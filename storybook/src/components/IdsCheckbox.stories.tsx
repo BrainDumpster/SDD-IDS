@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Checkbox } from "./Checkbox";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "IDS/Checkbox",
+  title: "Spec Generated/IDS/Checkbox",
   component: Checkbox,
   argTypes: {
     disabled: { control: "boolean" },
@@ -23,7 +23,7 @@ export const Default: Story = {
   },
 };
 
-export const SelectionStates: Story = {
+export const SelectionStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" />
@@ -66,7 +66,7 @@ export const FigmaMainMatrix: Story = {
   ),
 };
 
-export const DisabledStates: Story = {
+export const DisabledStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" disabled />
@@ -76,7 +76,7 @@ export const DisabledStates: Story = {
   ),
 };
 
-export const ValidationAndHelperText: Story = {
+export const ValidationAndHelperTextManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 16 }}>
       <Checkbox label="Email notifications" helperText="Receive weekly summary updates." />
@@ -86,7 +86,7 @@ export const ValidationAndHelperText: Story = {
   ),
 };
 
-export const ControlledExample: Story = {
+export const ControlledExampleManual: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
 

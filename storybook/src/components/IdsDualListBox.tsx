@@ -78,7 +78,7 @@ export interface IdsDualListBoxProps {
   onItemsChange?: (detail: DualListBoxItemsChangeDetail) => void;
   onTransfer?: (detail: DualListBoxTransferDetail) => void;
   onDragDrop?: (detail: DualListBoxDragDropDetail) => void;
-  /** IDS Tooltip (`components/ids/tooltip/design-spec.mdx`) placement when item tooltips are enabled. */
+  /** IDS Tooltip (`components/ids/tooltip/design-spec.md`) placement when item tooltips are enabled. */
   itemTooltipSide?: "top" | "bottom" | "left" | "right";
   itemTooltipArrowAlign?: "start" | "center" | "end";
   ariaLabel?: string;

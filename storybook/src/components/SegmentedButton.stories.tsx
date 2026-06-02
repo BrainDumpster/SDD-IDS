@@ -6,7 +6,7 @@ import {
 } from "./SegmentedButton";
 
 const meta: Meta<typeof SegmentedButton> = {
-  title: "IDS/Segmented Button",
+  title: "Spec Generated/IDS/Segmented Button",
   component: SegmentedButton,
 };
 
@@ -14,7 +14,7 @@ export default meta;
 type Story = StoryObj<typeof SegmentedButton>;
 
 /** Two text segments (minimum). */
-export const TextTwoOptions: Story = {
+export const TextTwoOptionsManual: Story = {
   render: () => {
     const [value, setValue] = useState("daily");
     return (

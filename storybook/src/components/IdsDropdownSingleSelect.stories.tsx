@@ -42,7 +42,7 @@ function SingleSelectTrigger({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "IDS/Dropdown/Single Select",
+  title: "Spec Generated/IDS/Dropdown/Single Select",
   component: DropdownMenu,
   parameters: { layout: "centered" },
   argTypes: {

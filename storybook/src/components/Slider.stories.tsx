@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsSlider } from "./IdsSlider";
 
 const meta: Meta<typeof IdsSlider> = {
-  title: "IDS/Slider",
+  title: "Spec Generated/IDS/Slider",
   component: IdsSlider,
   argTypes: {
     min: { control: "number" },
@@ -17,7 +17,7 @@ const meta: Meta<typeof IdsSlider> = {
 export default meta;
 type Story = StoryObj<typeof IdsSlider>;
 
-export const DefaultNoStepper: Story = {
+export const DefaultNoStepperManual: Story = {
   args: {
     mode: "single",
     min: 0,
@@ -30,7 +30,7 @@ export const DefaultNoStepper: Story = {
   },
 };
 
-export const DefaultWithStepper: Story = {
+export const DefaultWithStepperManual: Story = {
   args: {
     mode: "single",
     min: 0,
@@ -112,7 +112,7 @@ export const WithLabels: Story = {
   },
 };
 
-export const RangeWithInputsAndSteppers: Story = {
+export const RangeWithInputsAndSteppersManual: Story = {
   args: {
     mode: "range",
     min: 0,

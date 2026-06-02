@@ -20,7 +20,7 @@ const longItems: IdsStatusBarItemContract[] = [
 ];
 
 const meta: Meta<typeof IdsStatusBar> = {
-  title: "IDS/Status Bar",
+  title: "Spec Generated/IDS/Status Bar",
   component: IdsStatusBar,
   parameters: {
     docs: {

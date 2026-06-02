@@ -10,7 +10,7 @@ import {
   type TreeItemClickDetail,
 } from "./IdsTree";
 
-const DESIGN_SPEC_PATH = "components/ids/tree/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/tree/design-spec.md";
 
 const onTreeItemClick = (detail: TreeItemClickDetail) => {
   console.log("onTreeItemClick", detail);

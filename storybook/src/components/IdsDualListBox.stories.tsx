@@ -9,7 +9,7 @@ import {
   type DualListBoxTransferDetail,
 } from "./IdsDualListBox";
 
-const DESIGN_SPEC_PATH = "components/ids/dual-list-box/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/dual-list-box/design-spec.md";
 const FIGMA_SPEC_ACCURATE_NODE = "12114:232557";
 
 const onTransfer = (detail: DualListBoxTransferDetail) => {

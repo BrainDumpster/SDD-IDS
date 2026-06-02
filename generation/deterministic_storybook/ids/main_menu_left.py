@@ -10,7 +10,7 @@ from generation.deterministic_storybook.helpers import (
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from validation.spec_contract_parser import SpecContract
 
-DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.mdx"
+DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.md"
 
 
 def generate_ids_main_menu_left_story(

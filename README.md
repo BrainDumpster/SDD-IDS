@@ -1,11 +1,11 @@
 # SDD-IDS — Spec-Driven Design Intelligence System
 
-A RAG-powered platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.mdx` files, and serves them to downstream AI coding agents and development teams.
+A RAG-powered platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.md` files, and serves them to downstream AI coding agents and development teams.
 
 ## What It Does
 
 - **Extracts** component specs from Figma via MCP tools (tokens, states, anatomy, measurements)
-- **Generates** framework-agnostic `design-spec.mdx` files — the canonical deliverable for any developer (React, Angular, Vue, native)
+- **Generates** framework-agnostic `design-spec.md` files — the canonical deliverable for any developer (React, Angular, Vue, native)
 - **Validates** generated code against design system rules and tokens
 - **Indexes** design system documentation (MDX from GitHub Enterprise) into Qdrant vectors for RAG
 - **Answers** design system questions via chat agent and semantic search API
@@ -17,7 +17,7 @@ Supports multiple design systems via `DESIGN_SYSTEM` env var:
 
 ## Create a new design-spec (intake wizard)
 
-Non-coders and developers can create production-ready `design-spec.mdx` files from Figma using a **chat wizard** — no YAML, no local form. Works in **Cursor**, **Windsurf Cascade**, and **Windsurf Devin** (see Devin notes in the doc).
+Non-coders and developers can create production-ready `design-spec.md` files from Figma using a **chat wizard** — no YAML, no local form. Works in **Cursor**, **Windsurf Cascade**, and **Windsurf Devin** (see Devin notes in the doc).
 
 **Full guide:** [`docs/design-spec-intake.md`](docs/design-spec-intake.md)  
 **Authoring rules (IDE-agnostic):** [`docs/design-spec-authoring-contract.md`](docs/design-spec-authoring-contract.md)
@@ -32,7 +32,7 @@ Run the design-spec intake wizard: ask me each required question one at a time, 
 
 **Cursor:** you can also use `@design-spec-intake-wizard` and say “Start the design-spec intake wizard.”
 
-The agent will ask for **programme** (IDS / DAP / Synapse), **component name**, optional **category**, **Figma URLs** (component required; elements and states optional), and **Storybook examples** (`yes` / `no`). Reply **`yes`** on the summary to run. The agent creates `components/<programme>/<slug>/` if needed, updates the Figma map, fetches live Figma, and writes `design-spec.mdx` with **Status: draft**. If Storybook = **yes**, examples are generated under the **Spec Generated** group with a primary story named **Spec Accurate Design** (see [design-spec-intake.md](docs/design-spec-intake.md#storybook-examples-when-you-answer-yes)).
+The agent will ask for **programme** (IDS / DAP / Synapse), **component name**, optional **category**, **Figma URLs** (component required; elements and states optional), and **Storybook examples** (`yes` / `no`). Reply **`yes`** on the summary to run. The agent creates `components/<programme>/<slug>/` if needed, updates the Figma map, fetches live Figma, and writes `design-spec.md` with **Status: draft**. If Storybook = **yes**, examples are generated under the **Spec Generated** group with a primary story named **Spec Accurate Design** (see [design-spec-intake.md](docs/design-spec-intake.md#storybook-examples-when-you-answer-yes)).
 
 | Artifact | Path |
 |----------|------|
@@ -49,14 +49,14 @@ The primary output is a hierarchy of design specs that downstream agents consume
 
 ```
 components/synapse/
-├── root-spec.mdx              # Global: tokens, typography, elevation, breakpoints, baselines
-├── button/design-spec.mdx     # Component override: anatomy, states, tokens, interactions
-├── dialog/design-spec.mdx
-├── table/design-spec.mdx
+├── root-spec.md              # Global: tokens, typography, elevation, breakpoints, baselines
+├── button/design-spec.md     # Component override: anatomy, states, tokens, interactions
+├── dialog/design-spec.md
+├── table/design-spec.md
 └── ... (46 components)
 ```
 
-**Root spec** (`root-spec.mdx`) centralizes everything shared across all components:
+**Root spec** (`root-spec.md`) centralizes everything shared across all components:
 - ~175 semantic color tokens (light/dark) grouped by role (background, border, text, icon, shadow, gradient)
 - ~146 primitive palette tokens (alert, UI palette, secondary palette)
 - Typography scale (Roboto, header-1 through body-3 with sizes + line heights)
@@ -80,21 +80,21 @@ Per-component README files document regeneration, reference implementations, and
 
 | Component | README | Design spec |
 |---|---|---|
-| **Datagrid** (IDS) | [`components/ids/datagrid/README.md`](components/ids/datagrid/README.md) | [`components/ids/datagrid/design-spec.mdx`](components/ids/datagrid/design-spec.mdx) |
+| **Datagrid** (IDS) | [`components/ids/datagrid/README.md`](components/ids/datagrid/README.md) | [`components/ids/datagrid/design-spec.md`](components/ids/datagrid/design-spec.md) |
 
 Add a row to this table when you introduce a `README.md` next to a component spec (same pattern as Datagrid).
 
 ## Using Design Specs As Source Of Truth
 
-Production-ready component specs under `components/synapse/<slug>/design-spec.mdx` are intended for spec-driven generation across frameworks (React, Angular, Vue, Lit, and others), provided generators follow the spec contract sections.
+Production-ready component specs under `components/synapse/<slug>/design-spec.md` are intended for spec-driven generation across frameworks (React, Angular, Vue, Lit, and others), provided generators follow the spec contract sections.
 
 ### Read order for generation
 
 For any component `<slug>`, parse in this order:
 
-1. `components/synapse/root-spec.mdx`
+1. `components/synapse/root-spec.md`
 2. `components/synapse-theme.css`
-3. `components/synapse/<slug>/design-spec.mdx`
+3. `components/synapse/<slug>/design-spec.md`
 4. Referenced assets (for example `assets/icons/*.svg`)
 
 ### Required sections in component specs
@@ -125,21 +125,21 @@ Under **Codegen Contract**, use these standard `###` titles when applicable:
 - `Fallback/error rules`
 - `Validation checklist`
 
-Reference: `components/ids/alert/design-spec.mdx` and `components/ids/accordion/design-spec.mdx`.
+Reference: `components/ids/alert/design-spec.md` and `components/ids/accordion/design-spec.md`.
 
 ### Design-spec tooling & generators
 
-Scripts and templates that create or maintain `components/ids/<slug>/design-spec.mdx` with the canonical section contract above.
+Scripts and templates that create or maintain `components/ids/<slug>/design-spec.md` with the canonical section contract above.
 
 | Artifact | Path | Role |
 |---|---|---|
 | Canonical template & bootstrap blocks | `scripts/design_spec_template.py` | Shared `##` order, `NEW_SPEC_TEMPLATE` for map-driven scaffolds, `CODEGEN_BOOTSTRAP` / `COMPOSITION_STUB` used by the normalizer |
 | Heading normalizer | `scripts/normalize_design_spec_headings.py` | Reorder `##` sections, rename Codegen `###` titles, reparent stray `##` blocks; add Composition/Codegen stubs for legacy specs |
-| Map-driven scaffold | `scripts/generate_specs_from_map.py` | Create `design-spec.mdx` from `data/component-figma-map.json` (`--overwrite` to replace existing) |
+| Map-driven scaffold | `scripts/generate_specs_from_map.py` | Create `design-spec.md` from `data/component-figma-map.json` (`--overwrite` to replace existing) |
 | Docs-first composer | `ingestion/design_spec_composer.py` | Compose specs from GitHub docs + Figma extraction (outputs canonical `##` / `###` layout) |
 | Figma → MDX extractor | `tokens/figma_spec_extractor.py` | `spec_to_mdx()` output uses canonical section names (extend for full blueprint depth) |
 | Spec contract validation | `validation/spec_contract_parser.py` | Checks required `##` sections (used by gates and QA) |
-| Intake wizard (new specs) | `.cursor/skills/design-spec-intake-wizard/SKILL.md` | Interactive Q&A → confirm → create `design-spec.mdx`; see `docs/design-spec-intake.md` |
+| Intake wizard (new specs) | `.cursor/skills/design-spec-intake-wizard/SKILL.md` | Interactive Q&A → confirm → create `design-spec.md`; see `docs/design-spec-intake.md` |
 | Authoring skill | `.cursor/skills/design-spec-blueprint/SKILL.md` | Agent workflow: Figma verification, required sections, production-ready gate |
 | States dark dedupe | `scripts/dedupe_states_dark_theme.py` | Replace duplicate **States (Dark Theme)** tables when identical token-only matrices exist under Light (dry-run by default; `--apply` to write) |
 
@@ -164,8 +164,8 @@ Reference Storybook stories named **Spec Accurate Design** document the canonica
 
 | Component | Spec | Stories | Component README |
 |---|---|---|---|
-| Datagrid | [`components/ids/datagrid/design-spec.mdx`](components/ids/datagrid/design-spec.mdx) | `storybook-generated/ids/src/components/Datagrid.stories.tsx` | [`components/ids/datagrid/README.md`](components/ids/datagrid/README.md) |
-| Main Menu/Left | [`components/ids/main-menu-left/design-spec.mdx`](components/ids/main-menu-left/design-spec.mdx) | `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx` | [`components/ids/main-menu-left/README.md`](components/ids/main-menu-left/README.md) |
+| Datagrid | [`components/ids/datagrid/design-spec.md`](components/ids/datagrid/design-spec.md) | `storybook-generated/ids/src/components/Datagrid.stories.tsx` | [`components/ids/datagrid/README.md`](components/ids/datagrid/README.md) |
+| Main Menu/Left | [`components/ids/main-menu-left/design-spec.md`](components/ids/main-menu-left/design-spec.md) | `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx` | [`components/ids/main-menu-left/README.md`](components/ids/main-menu-left/README.md) |
 
 Regenerate Main Menu/Left stories after spec changes:
 
@@ -197,8 +197,8 @@ Replace Codegen cross-refs with concrete contracts when hardening a spec for pro
 
 ### Root spec vs component spec
 
-- `root-spec.mdx`: shared design-system baseline (global tokens, typography, spacing, elevation, baseline interactions/accessibility).
-- component `design-spec.mdx`: deterministic per-component contract and overrides.
+- `root-spec.md`: shared design-system baseline (global tokens, typography, spacing, elevation, baseline interactions/accessibility).
+- component `design-spec.md`: deterministic per-component contract and overrides.
 - `synapse-theme.css`: concrete token values for light/dark resolution.
 
 Generator rule:
@@ -211,10 +211,10 @@ Generator rule:
 The generator now supports a layered model where IDS is always the base.
 
 Layer precedence used at runtime:
-1. program component delta (`components/<program>/<slug>/design-spec.mdx`) — optional
-2. program root delta (`components/<program>/root-spec.mdx`) — optional but recommended
-3. IDS component baseline (`components/ids/<slug>/design-spec.mdx`) — required
-4. IDS root baseline (`components/ids/root-spec.mdx`) — required
+1. program component delta (`components/<program>/<slug>/design-spec.md`) — optional
+2. program root delta (`components/<program>/root-spec.md`) — optional but recommended
+3. IDS component baseline (`components/ids/<slug>/design-spec.md`) — required
+4. IDS root baseline (`components/ids/root-spec.md`) — required
 
 Theme precedence used at runtime:
 1. `components/ids-theme.css`
@@ -222,19 +222,19 @@ Theme precedence used at runtime:
 
 ### What happens when a program has no separate component spec?
 
-If `components/<program>/<slug>/design-spec.mdx` does not exist, codegen still works by combining:
-- `components/ids/<slug>/design-spec.mdx` (baseline component behavior/contract)
-- `components/<program>/root-spec.mdx` (program-level visual/behavior deltas)
+If `components/<program>/<slug>/design-spec.md` does not exist, codegen still works by combining:
+- `components/ids/<slug>/design-spec.md` (baseline component behavior/contract)
+- `components/<program>/root-spec.md` (program-level visual/behavior deltas)
 - `components/ids-theme.css` + program theme file (token value overrides)
 
 This is the recommended mode when program deltas are centralized in root spec instead of per-component files.
 
 ### Concrete DAP example (no component delta file)
 
-For DAP Button, if there is no `components/DAP/button/design-spec.mdx`, generator still resolves:
-1. `components/ids/root-spec.mdx`
-2. `components/ids/button/design-spec.mdx`
-3. `components/DAP/root-spec.mdx` (button deltas in Program Delta Register)
+For DAP Button, if there is no `components/DAP/button/design-spec.md`, generator still resolves:
+1. `components/ids/root-spec.md`
+2. `components/ids/button/design-spec.md`
+3. `components/DAP/root-spec.md` (button deltas in Program Delta Register)
 4. `components/ids-theme.css`
 5. `components/dap-theme.css`
 
@@ -245,14 +245,14 @@ This allows DAP to inherit IDS behavior and override only visual/contract deltas
 For a new program `<program>`:
 1. Add config file `config/design_systems/<program>.yaml` with layered paths:
    - `baseline_components_dir: components/ids`
-   - `baseline_root_spec_path: components/ids/root-spec.mdx`
+   - `baseline_root_spec_path: components/ids/root-spec.md`
    - `baseline_theme_css_path: components/ids-theme.css`
    - `program_components_dir: components/<program>`
-   - `program_root_spec_path: components/<program>/root-spec.mdx`
+   - `program_root_spec_path: components/<program>/root-spec.md`
    - `program_theme_css_path: components/<program>-theme.css` (or equivalent)
-2. Put global deltas in `components/<program>/root-spec.mdx` (layout, typography, visual attributes, interaction deltas, variant constraints).
+2. Put global deltas in `components/<program>/root-spec.md` (layout, typography, visual attributes, interaction deltas, variant constraints).
 3. Put token value deltas in `components/<program>-theme.css`.
-4. Create `components/<program>/<slug>/design-spec.mdx` only when the component is truly program-specific or needs a dedicated per-component delta contract.
+4. Create `components/<program>/<slug>/design-spec.md` only when the component is truly program-specific or needs a dedicated per-component delta contract.
 5. Set `DESIGN_SYSTEM=<program>` before running generation.
 
 ## Generation Folder Roles
@@ -307,7 +307,7 @@ Framework syntax can vary, but generated output must preserve:
 
 ### For developers
 
-1. Open `components/synapse/<slug>/design-spec.mdx`.
+1. Open `components/synapse/<slug>/design-spec.md`.
 2. Implement from `Composition & API` + `Codegen Contract`.
 3. Use only semantic tokens (`var(--...)`) from `synapse-theme.css`.
 4. Validate against the component's checklist.
@@ -316,7 +316,7 @@ Framework syntax can vary, but generated output must preserve:
 
 Prompt guidance:
 
-- treat `root-spec.mdx`, `synapse-theme.css`, and component `design-spec.mdx` as canonical;
+- treat `root-spec.md`, `synapse-theme.css`, and component `design-spec.md` as canonical;
 - do not invent styles/behaviors not present in spec;
 - if information is missing, return explicit gaps instead of guessing.
 
@@ -343,9 +343,9 @@ You can copy these design specs to another repository and generate components (s
 
 ### Minimum files to copy
 
-- `components/synapse/root-spec.mdx`
+- `components/synapse/root-spec.md`
 - `components/synapse-theme.css` (or an equivalent token file with the same variables)
-- `components/synapse/<slug>/design-spec.mdx`
+- `components/synapse/<slug>/design-spec.md`
 - any referenced assets (for example `assets/icons/*.svg`)
 
 ### Portability requirements
@@ -362,9 +362,9 @@ Use this template in the target repository:
 Generate <framework> component(s) from the provided design spec.
 
 Source of truth (in order):
-1) root-spec.mdx
+1) root-spec.md
 2) theme CSS variables file
-3) component design-spec.mdx
+3) component design-spec.md
 4) referenced assets (icons/images)
 
 Requirements:
@@ -378,12 +378,12 @@ Requirements:
 ## Framework-Agnostic Component Generation Guide
 
 Use the following files as the minimum generation inputs:
-- component baseline spec: `components/ids/<slug>/design-spec.mdx`
-- IDS baseline root spec: `components/ids/root-spec.mdx`
+- component baseline spec: `components/ids/<slug>/design-spec.md`
+- IDS baseline root spec: `components/ids/root-spec.md`
 - IDS theme: `components/ids-theme.css`
-- optional program root delta: `components/<program>/root-spec.mdx`
+- optional program root delta: `components/<program>/root-spec.md`
 - optional program theme delta: `components/<program>-theme.css`
-- optional program component delta: `components/<program>/<slug>/design-spec.mdx`
+- optional program component delta: `components/<program>/<slug>/design-spec.md`
 
 For machine-consumable handoff between agents:
 - contract doc: `data/agent-generation-contract.md`
@@ -393,7 +393,7 @@ For machine-consumable handoff between agents:
 
 To enforce spec-first generation and prevent Storybook drift:
 
-- `design-spec.mdx` (plus layered root/theme specs) is the only source of truth.
+- `design-spec.md` (plus layered root/theme specs) is the only source of truth.
 - Generated Storybook artifacts are written to a separate root (`generated_storybook_dir`) and **must not** overwrite legacy `storybook/`.
 - Story files include a spec-layer hash marker and are validated for freshness.
 
@@ -432,7 +432,7 @@ python scripts/strict_spec_storybook_gate.py --all --build-storybook
 
 ### Step-by-step: generate code from design-spec (with scripts/actions)
 
-Use this workflow when you want deterministic, repeatable generation from `design-spec.mdx` + layered root/theme contracts.
+Use this workflow when you want deterministic, repeatable generation from `design-spec.md` + layered root/theme contracts.
 
 1. **Select design system context**
    - IDS baseline:
@@ -441,12 +441,12 @@ Use this workflow when you want deterministic, repeatable generation from `desig
      - `export DESIGN_SYSTEM=dap`
 
 2. **Confirm source-of-truth files are present**
-   - Baseline component spec: `components/ids/<slug>/design-spec.mdx`
-   - Baseline root spec: `components/ids/root-spec.mdx`
+   - Baseline component spec: `components/ids/<slug>/design-spec.md`
+   - Baseline root spec: `components/ids/root-spec.md`
    - Baseline theme: `components/ids-theme.css`
-   - Program root delta (optional/program mode): `components/<program>/root-spec.mdx`
+   - Program root delta (optional/program mode): `components/<program>/root-spec.md`
    - Program theme delta (optional/program mode): `components/<program>-theme.css`
-   - Program component delta (optional): `components/<program>/<slug>/design-spec.mdx`
+   - Program component delta (optional): `components/<program>/<slug>/design-spec.md`
 
 3. **Generate deterministic Storybook from layered specs** (root Storybook **Spec Generated** is **IDS** and **DAP** only; each story imports **`components/ids-theme.css`** or **`components/dap-theme.css`**. Running the gate for **`DESIGN_SYSTEM=ids`** on **`toast`** also syncs `Toast.module.css` from the IDS toast spec.)
    - Single component:
@@ -475,7 +475,7 @@ Use this workflow when you want deterministic, repeatable generation from `desig
      - `data/agent-generation-contract.md`
      - `data/agent-generation-contract.schema.json`
    - Instruct agent to ingest (in order):
-     1) component `design-spec.mdx`
+     1) component `design-spec.md`
      2) root-spec layer(s)
      3) theme file layer(s)
      4) asset contracts (icons/images)
@@ -489,7 +489,7 @@ The Storybook **Theme** toolbar (`storybook/.storybook/preview.ts`) sets `data-t
 
 ### Toast `Toast.module.css` (spec-driven)
 
-When you change `components/ids/toast/design-spec.mdx`, regenerate the shared Storybook implementation CSS:
+When you change `components/ids/toast/design-spec.md`, regenerate the shared Storybook implementation CSS:
 
 ```bash
 DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component toast --spec-only --deterministic-story
@@ -500,13 +500,13 @@ DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component toast
 If your goal is to publish design contracts that other teams/agents consume in their own stacks, use this interpretation:
 
 - **Source of truth remains the layered specs**
-  - `design-spec.mdx` + `root-spec.mdx` + theme CSS layers are canonical.
-- **Deterministic Storybook is a validation harness** for **IDS** and **DAP** contracts (`storybook-generated/ids`, `storybook-generated/dap`). Stories prove `design-spec.mdx` is consumable for accurate codegen when paired with the matching program theme CSS only.
+  - `design-spec.md` + `root-spec.md` + theme CSS layers are canonical.
+- **Deterministic Storybook is a validation harness** for **IDS** and **DAP** contracts (`storybook-generated/ids`, `storybook-generated/dap`). Stories prove `design-spec.md` is consumable for accurate codegen when paired with the matching program theme CSS only.
 - **Current generated stories still render existing Storybook components**
   - This is expected today and does not invalidate spec-driven story generation.
   - It means story scenarios are spec-driven, while rendered implementation may still come from `storybook/src/components/...`.
 - **Publishing guidance for downstream teams**
-  - Treat `design-spec.mdx` as the normative design contract.
+  - Treat `design-spec.md` as the normative design contract.
   - Treat interaction/runtime implementation details as consumer-owned unless explicitly marked mandatory in spec.
   - Share spec hash artifacts (`storybook-generated/<design-system>/src/spec-contracts/*.spec-layer-hash.json`) so consumers can track drift.
 
@@ -526,8 +526,8 @@ If your goal is to publish design contracts that other teams/agents consume in t
 Generate a framework-agnostic component implementation plan and then code for Button.
 
 Source-of-truth (highest to lowest):
-1) components/ids/button/design-spec.mdx
-2) components/ids/root-spec.mdx
+1) components/ids/button/design-spec.md
+2) components/ids/root-spec.md
 
 Theme:
 1) components/ids-theme.css
@@ -547,9 +547,9 @@ Requirements:
 Generate DAP Button from layered design specs.
 
 Layer precedence (highest to lowest):
-1) components/DAP/root-spec.mdx   # Program Delta Register contains Button deltas
-2) components/ids/button/design-spec.mdx
-3) components/ids/root-spec.mdx
+1) components/DAP/root-spec.md   # Program Delta Register contains Button deltas
+2) components/ids/button/design-spec.md
+3) components/ids/root-spec.md
 
 Theme precedence:
 1) components/ids-theme.css
@@ -570,10 +570,10 @@ Requirements:
 Generate <program> <component> using layered specs.
 
 Layer precedence:
-1) components/<program>/<slug>/design-spec.mdx
-2) components/<program>/root-spec.mdx
-3) components/ids/<slug>/design-spec.mdx
-4) components/ids/root-spec.mdx
+1) components/<program>/<slug>/design-spec.md
+2) components/<program>/root-spec.md
+3) components/ids/<slug>/design-spec.md
+4) components/ids/root-spec.md
 
 Theme precedence:
 1) components/ids-theme.css
@@ -688,8 +688,8 @@ Figma (MCP tools)
   │
   └──► scripts/rebuild_specs.py
          ├── parse_theme() ──► token categorization
-         ├── build_root_spec() ──► components/synapse/root-spec.mdx
-         └── build_component_spec() ──► components/synapse/<slug>/design-spec.mdx
+         ├── build_root_spec() ──► components/synapse/root-spec.md
+         └── build_component_spec() ──► components/synapse/<slug>/design-spec.md
               ├── CSS modules (storybook/src/components/*.module.css)
               ├── synapse-component-aliases.json (name resolution)
               ├── synapse-interaction-templates.json (keyboard/ARIA)
@@ -722,10 +722,10 @@ GitHub Enterprise MDX
 ├── components/
 │   ├── synapse-theme.css   # Global CSS variables (light + dark)
 │   ├── ids/
-│   │   └── <slug>/design-spec.mdx  # IDS component specs (from `data/component-figma-map.json`)
+│   │   └── <slug>/design-spec.md  # IDS component specs (from `data/component-figma-map.json`)
 │   └── synapse/
-│       ├── root-spec.mdx   # Global design system spec
-│       └── <slug>/design-spec.mdx  # 46 component override specs
+│       ├── root-spec.md   # Global design system spec
+│       └── <slug>/design-spec.md  # 46 component override specs
 ├── config/
 │   ├── design_system_config.py     # DesignSystemConfig dataclass
 │   ├── design_systems/             # Per-DS YAML configs

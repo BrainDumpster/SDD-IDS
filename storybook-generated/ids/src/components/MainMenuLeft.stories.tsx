@@ -9,7 +9,7 @@ import {
   type MainMenuLeftPrimaryItem,
 } from "../../../../storybook/src/components/MainMenuLeft";
 
-const DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.mdx";
+const DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.md";
 
 /** Canonical nav items for Storybook / codegen parity (expanded + one secondary group). */
 /** Sample nav from Figma MainMenu-Left-Main expanded (`11099:56218`). */
