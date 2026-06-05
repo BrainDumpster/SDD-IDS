@@ -42,7 +42,7 @@ Deterministic order:
   - ring corner radius: `4px` (outer ring only; button container remains `2px`)
 ## Tokens
 - Typography:
-  - `Body 2` (`14/20`, regular) for button text.
+  - `Body 2` (`14/20`, font-weight: `400`) for button text.
 - Core primary tokens:
   - `var(--color-background-controls-brand-base)`
   - `var(--color-background-controls-brand-strong)`
@@ -159,8 +159,8 @@ Variant matrix:
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
-  - `ButtonLeadingIcon`: `16x16`, color token follows variant/state.
-  - `ButtonLabel`: `Body 2`.
+  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-white)`; disabled (all variants) → `var(--color-icon-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
+  - `ButtonLabel`: `Body 2` (`14/20`, font-weight: `400`).
 - Behavior contract:
   - `disabled || loading` blocks activation and output events.
   - `iconOnly=true` requires accessible label.
@@ -231,3 +231,14 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
 
 Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
+## Implementation Notes
+
+**Typography**
+- **Label font-weight**: `400` — do NOT use `500`; `Body 2` spec is `14/20` at weight `400`.
+
+**Icon color**
+- **Primary button icon**: `var(--color-icon-white)` — do NOT use `var(--color-icon-brand-base)`.
+- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-white)`.
+
+**Icon rendering**
+- **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.
