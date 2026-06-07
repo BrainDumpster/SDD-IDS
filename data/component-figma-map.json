@@ -452,6 +452,19 @@
   },
   {
     "category": "Patterns and Templates",
+    "component": "Get Started",
+    "designSpecPath": "components/ids/get-started/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
+    "nodeId": "12189-233235",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "elementNodeIds": [
+      "12671-2567",
+      "12674-1881",
+      "12023-228883"
+    ]
+  },
+  {
+    "category": "Patterns and Templates",
     "component": "About",
     "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=30680-10863&m=dev",
     "nodeId": "30680-10863"
