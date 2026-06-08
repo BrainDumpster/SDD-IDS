@@ -30,6 +30,14 @@
   overflow: clip;
 }
 
+/* Detached menu (context menu, masthead help) — full border; not field-attached. */
+.popupStandalone {
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  width: auto !important;
+  min-width: 186px !important;
+  max-width: none !important;
+}
+
 .searchRow {
   padding: var(--padding-padding-8);
   width: 100%;

@@ -79,6 +79,24 @@
       "status": "draft"
     },
     {
+      "programme": "synapse",
+      "slug": "dropdown-combo-box",
+      "displayName": "Dropdown / Combo Box",
+      "registrySlug": "dropdown-combo-box",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "dropdown-combo-box",
+      "idsBaselineSpecPath": "components/ids/dropdown-combo-box/design-spec.md",
+      "programmeSpecPath": "components/synapse/dropdown-combo-box/design-spec.md",
+      "programmeFigmaNodeId": "11067:54551",
+      "idsFigmaNodeId": "29393:149209",
+      "sharedImplementation": "storybook/src/components/DropdownMenu.tsx",
+      "detachedMenuImplementation": "storybook/src/components/SynapseDropdownActionMenu.module.css",
+      "contextMenuImplementation": "storybook/src/components/LeftNavSecondaryContextMenu.tsx",
+      "programmeDetachedMenuNodeId": "53325:280088",
+      "lastVerified": "2026-06-05",
+      "status": "draft"
+    },
+    {
       "programme": "dap",
       "slug": "pagination",
       "displayName": "Pagination",

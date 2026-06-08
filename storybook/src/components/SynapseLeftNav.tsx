@@ -33,6 +33,7 @@ export function SynapseLeftNav({
 }
 
 export type {
+  MainMenuLeftContextMenuOption as SynapseLeftNavContextMenuOption,
   MainMenuLeftLink as SynapseLeftNavLink,
   MainMenuLeftLogo as SynapseLeftNavLogo,
   MainMenuLeftNavigationTarget as SynapseLeftNavNavigationTarget,

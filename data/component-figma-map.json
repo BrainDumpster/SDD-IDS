@@ -524,5 +524,30 @@
     "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132203&m=dev",
     "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
     "idsDesignLibraryNodeId": "42159-132203"
+  },
+  {
+    "category": "Patterns",
+    "component": "Get Started",
+    "designSpecPath": "components/ids/get-started/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
+    "nodeId": "12189-233235",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
+    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryNodeId": "12189-233235",
+    "elementCardStateNodeId": "12023-228883",
+    "elementNodes": {
+      "cardNotCompleted": "12023-228880",
+      "cardCompleted": "12023-228902",
+      "cardRequired": "12023-228939"
+    },
+    "variantNodes": {
+      "singlePage": "12189-233185",
+      "overflowPage1": "12189-233198",
+      "overflowPage2": "12189-233211",
+      "sequentialSinglePage": "12189-233218",
+      "sequentialOverflowPage1": "12189-233223",
+      "sequentialOverflowPage2": "12189-233228"
+    }
   }
 ]

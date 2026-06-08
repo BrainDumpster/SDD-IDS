@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import {
+  LeftNavSecondaryContextMenu,
+  type LeftNavSecondaryContextMenuOption,
+} from "./LeftNavSecondaryContextMenu";
 import styles from "./MainMenuLeft.module.css";
 import { Icon } from "./Icon";
+
+export type MainMenuLeftContextMenuOption = LeftNavSecondaryContextMenuOption;
 
 export type MainMenuLeftPrimaryState =
   | "default"
@@ -51,6 +57,13 @@ export interface MainMenuLeftSecondaryItem {
   href?: string;
   /** @deprecated Use `link: { type: 'routerLink', routerLink }`. */
   routeRef?: string;
+  /**
+   * User-defined overflow menu rows (Synapse `childrenContextMenu` parents).
+   * Popup chrome uses Synapse detached menu (`dropdown-combo-box` spec, Figma `53325:280088`).
+   */
+  contextMenuOptions?: MainMenuLeftContextMenuOption[];
+  /** Storybook / demo — open context menu on mount for this row. */
+  contextMenuDefaultOpen?: boolean;
 }
 
 export interface MainMenuLeftPrimaryItem {
@@ -137,6 +150,13 @@ export interface MainMenuLeftProps {
   onNavigate?: (target: MainMenuLeftNavigationTarget) => void;
   /** Overflow-menu trigger on a secondary row (Synapse `childrenContextMenu` parents). */
   onSecondaryContextMenu?: (detail: MainMenuLeftSecondaryContextMenuDetail) => void;
+  /**
+   * Supplies overflow menu options per secondary row when `contextMenuOptions` is omitted on the child.
+   * When options resolve to a non-empty list, the built-in popup is rendered (Synapse detached menu, Figma `53325:280088`).
+   */
+  getSecondaryContextMenuOptions?: (
+    detail: MainMenuLeftSecondaryContextMenuDetail,
+  ) => MainMenuLeftContextMenuOption[];
   /**
    * Emits when the active menu selection changes (primary or secondary row).
    * **Angular:** `@Output() selectedChange` or `selectionChange` mapping to this callback.
@@ -256,6 +276,7 @@ export function MainMenuLeft({
   forceStates = false,
   onNavigate,
   onSecondaryContextMenu,
+  getSecondaryContextMenuOptions,
   onSelected,
   ariaLabel = "Main menu left",
   programme = "ids",
@@ -475,6 +496,16 @@ export function MainMenuLeft({
                     };
 
                     if (secondaryContextMenuEnabled) {
+                      const contextMenuDetail: MainMenuLeftSecondaryContextMenuDetail = {
+                        parentItemId: itemId,
+                        childId,
+                        name: childLabel,
+                      };
+                      const resolvedContextMenuOptions =
+                        child.contextMenuOptions?.length
+                          ? child.contextMenuOptions
+                          : getSecondaryContextMenuOptions?.(contextMenuDetail) ?? [];
+
                       return (
                         <div
                           key={childId}
@@ -494,27 +525,36 @@ export function MainMenuLeft({
                           >
                             {childLabel}
                           </button>
-                          <button
-                            type="button"
-                            className={styles.secondaryContextButton}
-                            title="More actions"
-                            aria-label={`More actions for ${childLabel}`}
-                            aria-haspopup="menu"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              onSecondaryContextMenu?.({
-                                parentItemId: itemId,
-                                childId,
-                                name: childLabel,
-                              });
-                            }}
-                          >
-                            <Icon
-                              shapeName="overflow-menu-dots"
-                              className={styles.secondaryContextIcon}
-                              style={{ width: 16, height: 16 }}
+                          {resolvedContextMenuOptions.length > 0 ? (
+                            <LeftNavSecondaryContextMenu
+                              childLabel={childLabel}
+                              options={resolvedContextMenuOptions}
+                              defaultOpen={child.contextMenuDefaultOpen}
+                              onOpenChange={(nextOpen) => {
+                                if (nextOpen) {
+                                  onSecondaryContextMenu?.(contextMenuDetail);
+                                }
+                              }}
                             />
-                          </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className={styles.secondaryContextButton}
+                              title="More actions"
+                              aria-label={`More actions for ${childLabel}`}
+                              aria-haspopup="menu"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                onSecondaryContextMenu?.(contextMenuDetail);
+                              }}
+                            >
+                              <Icon
+                                shapeName="overflow-menu-dots"
+                                className={styles.secondaryContextIcon}
+                                style={{ width: 16, height: 16 }}
+                              />
+                            </button>
+                          )}
                         </div>
                       );
                     }

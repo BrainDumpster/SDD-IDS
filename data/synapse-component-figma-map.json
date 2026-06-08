@@ -53,7 +53,7 @@
   {"category": "Form Elements", "component": "Dual List Box", "designSystem": "synapse", "nodeId": "11067:54563", "page": "Form Elements"},
   {"category": "Form Elements", "component": "Dropdown/Single", "designSystem": "synapse", "nodeId": "11067:54559", "page": "Form Elements"},
   {"category": "Form Elements", "component": "Dropdown/Multi", "designSystem": "synapse", "nodeId": "11067:54555", "page": "Form Elements"},
-  {"category": "Form Elements", "component": "Dropdown/Combo", "designSystem": "synapse", "nodeId": "11067:54551", "page": "Form Elements"},
+  {"category": "Form Elements", "component": "Dropdown/Combo", "designSystem": "synapse", "nodeId": "11067:54551", "page": "Form Elements", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=11067-54551&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ", "designSpecPath": "components/synapse/dropdown-combo-box/design-spec.md", "specPattern": "ids-fork", "idsBaselineSpecPath": "components/ids/dropdown-combo-box/design-spec.md", "mainComponentSetNodeId": "11067:54551", "detachedMenuNodeId": "53325:280088", "detachedMenuFigmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53325-280088&m=dev"},
   {"category": "Form Elements", "component": "Date/Time Picker", "designSystem": "synapse", "nodeId": "11067:54547", "page": "Form Elements"},
   {"category": "Form Elements", "component": "Checkbox", "designSystem": "synapse", "nodeId": "11067:54543", "page": "Form Elements"},
   {"category": "Form Elements", "component": "Button", "designSystem": "synapse", "nodeId": "11067:54539", "page": "Form Elements"},

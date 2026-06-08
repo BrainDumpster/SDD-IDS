@@ -27,6 +27,8 @@ Synapse **Left Nav** is the same component family as IDS **Main Menu/Left**. Lay
 - Secondary **selected** usage: [50512:84338](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50512-84338&m=dev) — Recent chats expanded, one secondary row selected
 - Secondary **hover** usage: [50514:23038](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50514-23038&m=dev) — hovered secondary row
 - Secondary **context-menu** usage: [50514:23038](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50514-23038&m=dev) — hover row shows overflow trigger (`overflow-menu-dots`)
+- Secondary **context-menu** frame (Recent expanded): [53325:280087](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53325-280087&m=dev) — `MainMenu-Left-Main` with overflow trigger visible
+- Secondary **context-menu** popup: [53325:280088](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53325-280088&m=dev) — `Dropdown-SingleSelect-Elements-Menu` (185×120; sample: Open In a New Tab, Rename, Delete) per [`dropdown-combo-box`](../dropdown-combo-box/design-spec.md)
 - Overflow trigger (Left Nav Button): [50516:35461](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50516-35461&m=dev) — `State=Default|Hover|Press|Disabled|Focused`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Last verified: 2026-06-05 (includes `50512:84338`, `50514:23038`, `50516:35461` secondary + overflow evidence)
@@ -58,7 +60,7 @@ Synapse **Left Nav** is the same component family as IDS **Main Menu/Left**. Lay
 | Secondary hover/selected **text** | `var(--color-text-brand-strong)` | **`var(--color-text-neutral-strong)`** — Figma `50514:23038` (hover), `50512:84338` (selected) |
 | Secondary selected **inset** | IDS may use inset on focus | **No left inset** on secondary rows (primary only) |
 | Secondary row padding | `6px` block / `58px` inline | **`0` block** / `58px` left / `16px` right (`py-0`, `h=32px`) |
-| Secondary overflow menu | — | Parent `childrenContextMenu: true` → hover reveals **`overflow-menu-dots`** trigger (`50514:23038`); button states `50516:35461` |
+| Secondary overflow menu | — | Parent `childrenContextMenu: true` → hover reveals **`overflow-menu-dots`** trigger (`50514:23038`, `53325:280087`); button states `50516:35461`; popup = Synapse detached menu `53325:280088` ([`dropdown-combo-box`](../dropdown-combo-box/design-spec.md)) |
 
 Resolved hover/selected fills may map to Synapse theme aliases (e.g. controls tokens); **contract token names** in tables below match IDS (`--color-background-brand-lighter`, `--color-border-brand-dark` inset).
 
@@ -166,7 +168,7 @@ Icon: **`overflow-menu-dots`** (16×16). Hit area: padding `var(--padding-paddin
 | Disabled | `50516:35459` | transparent | `var(--color-icon-disabled)` |
 | Focused | `50516:35460` | transparent + outline `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 
-Trigger is **hidden** until the secondary row is hovered or focus is within the row (`50514:23038`). Click emits `onSecondaryContextMenu`; does not navigate the row.
+Trigger is **hidden** until the secondary row is hovered or focus is within the row (`50514:23038`, `53325:280087`). Click opens a **user-defined menu popup** when `contextMenuOptions` (per child) or `getSecondaryContextMenuOptions` (host) supply options; popup chrome matches Synapse detached menu Figma `53325:280088` ([`dropdown-combo-box`](../dropdown-combo-box/design-spec.md): `185px` min-width, `radius-4`, `border-neutral-light`). Figma sample labels: **Open In a New Tab**, **Rename**, **Delete**. `onSecondaryContextMenu` fires when the menu opens. Does not navigate the row.
 
 ### New Chat action (Synapse-only slot)
 
@@ -194,7 +196,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **New Chat (Synapse):** `newChat.onAction` or `newChat.link` → `onNavigate`. Expanded: label + icon. Collapsed: icon-only `shape-plus` with tooltip from `newChat.label` (Figma `47807:8168`).
 - Primary row click: emit navigation payload (see **Link contract**); toggle `children` list when `children` exist (expanded rail only).
 - Secondary row click: emit navigation; sets parent as selected context for inset.
-- **Secondary context menu (Synapse):** when a primary item has `childrenContextMenu: true`, each child row shows `SecondaryContextButton` on hover/focus-within. Button click calls `onSecondaryContextMenu({ parentItemId, childId, name })` and does **not** change selection or navigate. Host renders the actual menu/popover.
+- **Secondary context menu (Synapse):** when a primary item has `childrenContextMenu: true`, each child row shows `SecondaryContextButton` on hover/focus-within. When options are provided (`contextMenuOptions` on the child or `getSecondaryContextMenuOptions` on the root), the built-in popup renders user-defined rows using the Synapse-inherited IDS combobox menu contract ([`dropdown-combo-box`](../dropdown-combo-box/design-spec.md)). Opening the menu calls `onSecondaryContextMenu({ parentItemId, childId, name })`; selecting an option calls the option’s `onSelect`. Does **not** change nav selection or navigate the row label click target.
 - Collapsed rail: primary buttons use `title` / tooltip from `tooltip` when set, else visible `name`.
 - Collapse footer: toggles expanded (`250px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`.
 - Chevron reflects `children` list open (`chev-down-thick`) vs closed (`chev-right-thick`).
@@ -229,7 +231,8 @@ Types are **`MainMenuLeft*`** exports from `MainMenuLeft.tsx`. `SynapseLeftNav` 
 | `defaultSelectedItemId` | Input | `string?` | Initial primary selection. **Spec Accurate Design:** `"home"` |
 | `onSelected` | Output | `(MainMenuLeftSelectionDetail) => void` | Active row changed; **not** emitted solely from `defaultSelectedItemId` on mount |
 | `onNavigate` | Output | `(MainMenuLeftNavigationTarget) => void` | Primary, secondary, logo, or New Chat activation |
-| `onSecondaryContextMenu` | Output | `(MainMenuLeftSecondaryContextMenuDetail) => void` | Overflow trigger on secondary row (`childrenContextMenu` parent) |
+| `onSecondaryContextMenu` | Output | `(MainMenuLeftSecondaryContextMenuDetail) => void` | Fires when overflow menu opens (`childrenContextMenu` parent) |
+| `getSecondaryContextMenuOptions` | Input | `(detail) => MainMenuLeftContextMenuOption[]` | Host supplies menu rows when child omits `contextMenuOptions` |
 | `forceStates` | Input | `boolean?` | Storybook / QA only — freezes `item.state` |
 | `ariaLabel` | Input | `string?` | Default: `"Left navigation"` |
 | `programme` | Input | `"ids" \| "synapse"` | Set to **`synapse`** by `SynapseLeftNav` (do not override in hosts) |
@@ -254,6 +257,8 @@ Types are **`MainMenuLeft*`** exports from `MainMenuLeft.tsx`. `SynapseLeftNav` 
 **`MainMenuLeftSecondaryItem`**
 
 - `id?`, `name?` / `label?`, `tooltip?`, `link?`
+- `contextMenuOptions?` — `{ id?, label, disabled?, onSelect? }[]` for overflow popup (Synapse `childrenContextMenu` parents)
+- `contextMenuDefaultOpen?` — Storybook / demo only; opens menu on mount for that row
 
 ### Link contract (same pattern as IDS Main Menu/Left)
 
@@ -331,7 +336,8 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg`. Spec slugs: `shape-plus`, `
 
 ## Source Mapping
 - Design source: Synapse Hi-Fi `Td1bnsvRj1PCGs9RVJkIvJ`
-- Validated nodes: `47807:8153`, `47807:8154`, `47807:8166`, `47807:8058`, `47807:8043`, `47807:8028`, `50512:84338`, `50514:23038`, `50516:35461`
+- Validated nodes: `47807:8153`, `47807:8154`, `47807:8166`, `47807:8058`, `47807:8043`, `47807:8028`, `50512:84338`, `50514:23038`, `50516:35461`, `53325:280087`, `53325:280088`
+- Context menu popup contract: [`components/synapse/dropdown-combo-box/design-spec.md`](../dropdown-combo-box/design-spec.md) (IDS fork; Synapse detached menu verified `53325:280088`)
 - IDS parity reference: `components/ids/main-menu-left/design-spec.md` (`0bHk3XhrjFhowgFkz9yLr4`, nodes `11099:56218`, `11099:56244`, …)
 - Component map: `data/synapse-component-figma-map.json` → Left Nav / Main Menu/Left (`specPattern: ids-fork`)
 - Programme inheritance registry: `data/programme-inheritance-registry.json` → `left-nav`

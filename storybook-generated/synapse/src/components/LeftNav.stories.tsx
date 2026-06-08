@@ -7,6 +7,8 @@ import {
 } from "../../../../storybook/src/components/SynapseLeftNav";
 import styles from "../../../../storybook/src/components/MainMenuLeft.module.css";
 import {
+  SYNAPSE_LEFT_NAV_CONTEXT_MENU_FRAME_NODE_ID,
+  SYNAPSE_LEFT_NAV_CONTEXT_MENU_POPUP_NODE_ID,
   SYNAPSE_LEFT_NAV_OVERFLOW_BUTTON_NODE_ID,
   SYNAPSE_LEFT_NAV_SECONDARY_HOVER_NODE_ID,
   SYNAPSE_LEFT_NAV_SECONDARY_SELECTED_NODE_ID,
@@ -51,7 +53,7 @@ const meta: Meta<typeof SynapseLeftNav> = {
         component: [
           `Spec-driven Synapse Left Nav (IDS Main Menu/Left contract). Source: \`${DESIGN_SPEC_PATH}\`.`,
           "Primary story: expanded **250px** rail (Figma `47807:8153`); New Chat is the first row inside `MainMenuList`, then Home (selected), etc.",
-          "Stories: **Spec Accurate Design**, **Collapsed**, primary/secondary matrices, **SecondarySelectedRecent**, **SecondaryContextMenuRecent** (`50514:23038`), **SecondaryContextButtonStateMatrix** (`50516:35461`). Theme: `components/synapse-theme.css`.",
+          "Stories: **Spec Accurate Design**, **Collapsed**, primary/secondary matrices, **SecondarySelectedRecent**, **SecondaryContextMenuRecent** (`53325:280087` / `53325:280088`), **SecondaryContextButtonStateMatrix** (`50516:35461`). Context menu popup: Synapse detached dropdown (`components/synapse/dropdown-combo-box/design-spec.md`). Theme: `components/synapse-theme.css`.",
         ].join(" "),
       },
     },
@@ -142,11 +144,28 @@ export const CollapsedPrimaryStateSnapshotMatrix: Story = {
   ),
 };
 
-const recentChatChildren = Array.from({ length: 6 }, (_, index) => ({
+/** Figma `53325:280088` — Dropdown-SingleSelect-Elements-Menu sample labels. */
+const SAMPLE_CONTEXT_MENU_OPTIONS = [
+  { id: "open-new-tab", label: "Open In a New Tab" },
+  { id: "rename", label: "Rename" },
+  { id: "delete", label: "Delete" },
+] as const;
+
+const recentChatChildrenBase = Array.from({ length: 6 }, (_, index) => ({
   id: `recent-chat-${index + 1}`,
   name: "Recent chat item",
   routeRef: `/recent/${index + 1}`,
 }));
+
+const recentChatChildrenWithOpenMenu = recentChatChildrenBase.map((child, index) =>
+  index === 0
+    ? {
+        ...child,
+        contextMenuDefaultOpen: true,
+        contextMenuOptions: [...SAMPLE_CONTEXT_MENU_OPTIONS],
+      }
+    : child,
+);
 
 /** Figma `50512:84338` — Recent expanded; fifth secondary row selected (`controls-brand-lighter`, `neutral-strong` text, no inset). */
 export const SecondarySelectedRecent: Story = {
@@ -163,7 +182,7 @@ export const SecondarySelectedRecent: Story = {
           name: "Recent",
           iconName: "time-clock",
           routeRef: "/recent",
-          children: recentChatChildren,
+          children: recentChatChildrenBase,
         },
       ]}
       newChat={{ label: "New Chat", onAction: () => undefined }}
@@ -171,7 +190,7 @@ export const SecondarySelectedRecent: Story = {
   ),
 };
 
-/** Figma `50514:23038` — Recent expanded with `childrenContextMenu`; hover row shows overflow trigger. */
+/** Figma `53325:280087` / `53325:280088` — Recent expanded; overflow menu matches Synapse detached dropdown. */
 export const SecondaryContextMenuRecent: Story = {
   name: "Secondary Context Menu Recent",
   render: () => (
@@ -179,6 +198,7 @@ export const SecondaryContextMenuRecent: Story = {
       expanded
       defaultExpandedChildrenItemId="recent"
       defaultSelectedItemId="home"
+      getSecondaryContextMenuOptions={() => [...SAMPLE_CONTEXT_MENU_OPTIONS]}
       onSecondaryContextMenu={(detail) => {
         // eslint-disable-next-line no-console
         console.log("secondary context menu", detail);
@@ -191,12 +211,19 @@ export const SecondaryContextMenuRecent: Story = {
           iconName: "time-clock",
           routeRef: "/recent",
           childrenContextMenu: true,
-          children: recentChatChildren,
+          children: recentChatChildrenWithOpenMenu,
         },
       ]}
       newChat={{ label: "New Chat", onAction: () => undefined }}
     />
   ),
+  parameters: {
+    docs: {
+      description: {
+        story: `Figma \`${SYNAPSE_LEFT_NAV_CONTEXT_MENU_FRAME_NODE_ID}\` (rail) + \`${SYNAPSE_LEFT_NAV_CONTEXT_MENU_POPUP_NODE_ID}\` (menu: Open In a New Tab, Rename, Delete). First row opens menu by default; other rows use \`getSecondaryContextMenuOptions\`.`,
+      },
+    },
+  },
 };
 
 /** Figma `50516:35461` — `Left Nav Button` overflow trigger states. */
