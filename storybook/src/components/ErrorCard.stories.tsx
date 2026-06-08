@@ -1,8 +1,9 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ErrorCard } from "./ErrorCard";
 
 const meta: Meta<typeof ErrorCard> = {
-  title: "Synapse/ErrorCard",
+  title: "Spec Generated/Synapse/Error Card",
   component: ErrorCard,
 };
 

@@ -1,8 +1,9 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ChatSystemResponse } from "./ChatSystemResponse";
 
 const meta: Meta<typeof ChatSystemResponse> = {
-  title: "Synapse/ChatSystemResponse",
+  title: "Spec Generated/Synapse/Chat System Response",
   component: ChatSystemResponse,
 };
 

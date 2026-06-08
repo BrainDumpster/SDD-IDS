@@ -42,10 +42,10 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   background: var(--color-background-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
-  border-radius: var(--corner-radius-radius-6);
+  border-radius: 0;
 }
 
 .searchIcon {
@@ -78,11 +78,104 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-space-8);
   flex: 1 1 auto;
   min-width: 0;
   padding-left: var(--padding-padding-8);
   padding-top: var(--padding-padding-4);
   padding-bottom: var(--padding-padding-4);
+}
+
+.searchClearButton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.searchClearButton:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.searchClearIcon {
+  flex-shrink: 0;
+}
+
+.showSelectedPanel {
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: var(--border-width-border-default) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
+}
+
+.showSelectedPanel[data-expanded="true"] {
+  padding-bottom: var(--padding-padding-16);
+}
+
+.showSelectedHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: var(--padding-padding-8);
+}
+
+.showSelectedToggle {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.showSelectedCaret {
+  flex-shrink: 0;
+  transition: transform 150ms ease;
+}
+
+.showSelectedClear {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.showSelectedClear:focus-visible,
+.showSelectedToggle:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.showSelectedClearIcon {
+  flex-shrink: 0;
+}
+
+.showSelectedTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  align-content: flex-end;
+  gap: var(--spacing-space-4);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--spacing-space-8) var(--padding-padding-8) 0 var(--padding-padding-16);
 }
 
 .optionsScrollRegion {

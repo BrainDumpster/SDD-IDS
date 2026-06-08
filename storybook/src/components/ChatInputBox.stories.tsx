@@ -1,8 +1,9 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ChatInputBox } from "./ChatInputBox";
 
 const meta: Meta<typeof ChatInputBox> = {
-  title: "Synapse/ChatInputBox",
+  title: "Spec Generated/Synapse/Chat Input Box",
   component: ChatInputBox,
 };
 

@@ -268,13 +268,15 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
   return (
     <div
       style={{
-        height: "100vh",
+        width: "100%",
+        height: "100dvh",
         boxSizing: "border-box",
-        padding: 16,
+        padding: "clamp(8px, 2vw, 16px)",
         background: "var(--color-background-surface-1)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
+        minWidth: 0,
       }}
     >
       <div
@@ -282,6 +284,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
           flex: 1,
           minHeight: 0,
           minWidth: 0,
+          width: "100%",
           display: "flex",
           flexDirection: "column",
         }}
@@ -538,6 +541,204 @@ const specTokenRefs: Record<string, string[]> = {
   "--color-icon-neutral": ["States: SortToggle default; FilterToggle default/hover"],
   "--color-icon-brand-base": ["States: SortToggle selected; FilterToggle selected"],
   "--color-icon-brand-stronger": ["States: FilterToggle press"],
+};
+
+const columnFreezeColumns: IdsDataGridColumn[] = [
+  {
+    key: "dataHeader",
+    title: "Data Header",
+    sortable: true,
+    filterable: true,
+    minWidth: 90,
+    width: 140,
+    filterPanel: <IdsDataGridFilterSearchField aria-label="Search data header column" />,
+  },
+  {
+    key: "dateTimeEt",
+    title: "Date and Time [ET]",
+    sortable: true,
+    filterable: true,
+    minWidth: 120,
+    width: 200,
+  },
+  ...Array.from({ length: 12 }, (_, index) => ({
+    key: `metric${index + 1}`,
+    title: `Metric ${index + 1}`,
+    sortable: true,
+    minWidth: 90,
+    width: 140,
+    columnHideable: true,
+  })),
+];
+
+const columnFreezeRows: ComponentProps<typeof IdsDataGrid>["rows"] = specRows.map((row, index) => ({
+  ...row,
+  values: {
+    dataHeader: row.values.name,
+    dateTimeEt: row.values.updatedAt,
+    metric1: row.values.type,
+    metric2: row.values.status,
+    metric3: row.values.amount,
+    metric4: row.values.dueDate,
+    metric5: row.values.owner,
+    metric6: row.values.region,
+    metric7: `Value ${index + 1}-7`,
+    metric8: `Value ${index + 1}-8`,
+    metric9: `Value ${index + 1}-9`,
+    metric10: `Value ${index + 1}-10`,
+    metric11: `Value ${index + 1}-11`,
+    metric12: `Value ${index + 1}-12`,
+  },
+}));
+
+function ColumnFreezeStoryFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100dvh",
+        boxSizing: "border-box",
+        padding: "clamp(8px, 2vw, 16px)",
+        background: "var(--color-background-surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+        minWidth: 0,
+        gap: 8,
+      }}
+    >
+      <p
+        style={{
+          margin: 0,
+          width: "100%",
+          fontSize: 12,
+          lineHeight: "16px",
+          color: "var(--color-text-neutral)",
+        }}
+      >
+        Frozen columns stay pinned on the left; remaining columns scroll horizontally. Resize the
+        viewport to verify responsive width and scroll behavior.
+      </p>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          minWidth: 0,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+const twoSectionFreezeColumns: IdsDataGridColumn[] = [
+  {
+    key: "recordId",
+    title: "ID",
+    sortable: true,
+    minWidth: 90,
+    width: 96,
+  },
+  {
+    key: "name",
+    title: "Name",
+    sortable: true,
+    filterable: true,
+    minWidth: 90,
+    width: 180,
+    filterPanel: <IdsDataGridFilterSearchField aria-label="Search name column" />,
+  },
+  {
+    key: "status",
+    title: "Status",
+    sortable: true,
+    filterable: true,
+    minWidth: 90,
+    width: 120,
+    columnHideable: true,
+  },
+  ...Array.from({ length: 10 }, (_, index) => ({
+    key: `field${index + 1}`,
+    title: `Field ${index + 1}`,
+    sortable: true,
+    minWidth: 90,
+    width: 150,
+    columnHideable: true,
+  })),
+];
+
+const twoSectionFreezeRows: ComponentProps<typeof IdsDataGrid>["rows"] = specRows.map((row, index) => ({
+  id: row.id,
+  values: {
+    recordId: `R-${1000 + index}`,
+    name: row.values.name,
+    status: row.values.status,
+    field1: row.values.type,
+    field2: row.values.amount,
+    field3: row.values.owner,
+    field4: row.values.region,
+    field5: row.values.dueDate,
+    field6: row.values.updatedAt,
+    field7: `Extra ${index + 1}-7`,
+    field8: `Extra ${index + 1}-8`,
+    field9: `Extra ${index + 1}-9`,
+    field10: `Extra ${index + 1}-10`,
+  },
+}));
+
+/**
+ * Two-pane demo: frozen left section = selection + 3 data columns (`freezeUntilColumnKey: "status"`);
+ * scrollable right section = remaining columns + settings. Horizontal scrollbar only on the right pane.
+ */
+export const ColumnFreezeTwoSections: Story = {
+  name: "Column Freeze — Two Sections",
+  render: (args) => (
+    <ColumnFreezeStoryFrame>
+      <IdsDataGridDefaultStoryHost {...args} />
+    </ColumnFreezeStoryFrame>
+  ),
+  args: {
+    ...specAccurateArgs,
+    columns: twoSectionFreezeColumns,
+    rows: twoSectionFreezeRows,
+    selectionMode: "multiple",
+    withDetailPanel: false,
+    freezeUntilColumnKey: "status",
+    columnResizeEnabled: true,
+    rowVerticalIndicator: false,
+  },
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "Split freeze layout: **frozen section** (checkbox + ID + Name + Status) stays fixed; **scrollable section** (Field 1–10 + settings gear) scrolls horizontally. Boundary drop shadow (`37721:114144`) stays pinned on the frozen host edge.",
+      },
+    },
+  },
+};
+
+/** Figma column-freeze scenario (`37721:115949`): pinned data columns + boundary gradient shadow. */
+export const ColumnFreeze: Story = {
+  parameters: { layout: "fullscreen" },
+  render: (args) => (
+    <ColumnFreezeStoryFrame>
+      <IdsDataGridDefaultStoryHost {...args} />
+    </ColumnFreezeStoryFrame>
+  ),
+  args: {
+    ...specAccurateArgs,
+    columns: columnFreezeColumns,
+    rows: columnFreezeRows,
+    selectionMode: "multiple",
+    withDetailPanel: false,
+    freezeUntilColumnKey: "dateTimeEt",
+    columnResizeEnabled: true,
+  },
 };
 
 export const TokenInspector: Story = {

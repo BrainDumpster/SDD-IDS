@@ -54,13 +54,14 @@
   flex: 1 1 auto;
   min-width: 0;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
 }
 
 .searchInput::placeholder {
   color: var(--color-text-neutral);
+  font-weight: 400;
 }
 
 /* --- Select All / Clear All row --- */
@@ -71,8 +72,8 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: var(--padding-padding-8) var(--padding-padding-16);
-  padding-right: var(--padding-padding-8);
+  /* Figma `44360:179347` — pl-16, pr-0; Clear All supplies its own px-16 inset. */
+  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
   background: var(--color-background-component);
   border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
 }
@@ -83,18 +84,25 @@
   gap: var(--spacing-space-8);
 }
 
+/* Checkbox labels default to 500; filter options use Body 2 Regular (Figma multiselect filter). */
+.selectAllLeft label,
+.optionItem label {
+  font-weight: 400;
+}
+
 .clearAllBtn {
   all: unset;
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-brand-strong);
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--corner-radius-radius-2);
 }
 
 .clearAllBtn:disabled {

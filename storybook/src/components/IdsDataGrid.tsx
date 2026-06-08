@@ -141,6 +141,11 @@ export interface IdsDataGridProps {
   onRowSelectionChange?: (rowId: string | null) => void;
   /** Fired when the user toggles multiselect checkboxes (`selectionMode: "multiple"`). */
   onSelectedRowsChange?: (rowIds: string[]) => void;
+  /**
+   * When set, data columns from the start through this key (inclusive) stay pinned on horizontal scroll.
+   * Unknown keys are ignored (no freeze boundary).
+   */
+  freezeUntilColumnKey?: string | null;
 }
 
 const DEFAULT_MIN_WIDTH = 90;
@@ -156,6 +161,19 @@ function columnBaseWidthPx(column: IdsDataGridColumn): number {
 }
 
 type FilterMenuPos = { top: number; right: number };
+
+type GridSectionPart = "header" | "body";
+
+type GridSectionOptions = {
+  dataColumns: IdsDataGridColumn[];
+  includeSelection: boolean;
+  includeSettings: boolean;
+  sectionGrowColumnKey: string | null;
+  tableMinWidthPx: number;
+  stickySelection: boolean;
+  stickySettings: boolean;
+  sectionPart: GridSectionPart;
+};
 
 export function IdsDataGrid({
   columns,
@@ -173,6 +191,7 @@ export function IdsDataGrid({
   onColumnVisibilityChange,
   onRowSelectionChange,
   onSelectedRowsChange,
+  freezeUntilColumnKey = null,
 }: IdsDataGridProps) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -229,7 +248,12 @@ export function IdsDataGrid({
     });
   }, [columns]);
 
-  const tableViewportRef = useRef<HTMLDivElement | null>(null);
+  const bodyViewportRef = useRef<HTMLDivElement | null>(null);
+  const headerUnifiedTrackRef = useRef<HTMLDivElement | null>(null);
+  const headerFrozenTrackRef = useRef<HTMLDivElement | null>(null);
+  const headerScrollableTrackRef = useRef<HTMLDivElement | null>(null);
+  const frozenBodyPaneRef = useRef<HTMLDivElement | null>(null);
+  const scrollableBodyPaneRef = useRef<HTMLDivElement | null>(null);
   const filterAnchorRefs = useRef(new Map<string, HTMLDivElement>());
   const settingsAnchorRef = useRef<HTMLDivElement | null>(null);
   const resizeActiveRef = useRef(false);
@@ -434,13 +458,19 @@ export function IdsDataGrid({
     window.addEventListener("resize", onWin);
     window.addEventListener("scroll", onWin, true);
 
-    const tv = tableViewportRef.current;
-    tv?.addEventListener("scroll", onWin);
+    const bv = bodyViewportRef.current;
+    const sb = scrollableBodyPaneRef.current;
+    const fb = frozenBodyPaneRef.current;
+    bv?.addEventListener("scroll", onWin);
+    sb?.addEventListener("scroll", onWin);
+    fb?.addEventListener("scroll", onWin);
 
     let ro: ResizeObserver | undefined;
-    if (typeof ResizeObserver !== "undefined" && tv) {
+    if (typeof ResizeObserver !== "undefined") {
       ro = new ResizeObserver(() => update());
-      ro.observe(tv);
+      if (bv) ro.observe(bv);
+      if (sb) ro.observe(sb);
+      if (fb) ro.observe(fb);
     }
 
     return () => {
@@ -448,7 +478,9 @@ export function IdsDataGrid({
       cancelAnimationFrame(raf1);
       window.removeEventListener("resize", onWin);
       window.removeEventListener("scroll", onWin, true);
-      tv?.removeEventListener("scroll", onWin);
+      bv?.removeEventListener("scroll", onWin);
+      sb?.removeEventListener("scroll", onWin);
+      fb?.removeEventListener("scroll", onWin);
       ro?.disconnect();
     };
   }, [openFilterColumn]);
@@ -590,23 +622,39 @@ export function IdsDataGrid({
     return columnBaseWidthPx(column);
   };
 
-  const growColumnKey =
-    visibleOrderedColumns.length > 0
-      ? visibleOrderedColumns[visibleOrderedColumns.length - 1].key
-      : null;
+  const freezeIndex = useMemo(() => {
+    if (!freezeUntilColumnKey) return -1;
+    return visibleOrderedColumns.findIndex((column) => column.key === freezeUntilColumnKey);
+  }, [visibleOrderedColumns, freezeUntilColumnKey]);
+
+  const hasSplitFreeze = freezeIndex >= 0;
+
+  const frozenDataColumns = useMemo(
+    () => (hasSplitFreeze ? visibleOrderedColumns.slice(0, freezeIndex + 1) : []),
+    [hasSplitFreeze, freezeIndex, visibleOrderedColumns],
+  );
+
+  const scrollableDataColumns = useMemo(
+    () => (hasSplitFreeze ? visibleOrderedColumns.slice(freezeIndex + 1) : visibleOrderedColumns),
+    [hasSplitFreeze, freezeIndex, visibleOrderedColumns],
+  );
+
+  const growColumnKey = useMemo(() => {
+    const dataColumns = hasSplitFreeze ? scrollableDataColumns : visibleOrderedColumns;
+    if (dataColumns.length === 0) return null;
+    return dataColumns[dataColumns.length - 1].key;
+  }, [hasSplitFreeze, scrollableDataColumns, visibleOrderedColumns]);
 
   useEffect(() => {
     setGrowColPinnedWidthPx(null);
     growResizeLatestWidthRef.current = null;
   }, [growColumnKey, visibleOrderedColumns.length]);
 
-  const growColumn = useMemo(
-    () =>
-      growColumnKey != null
-        ? visibleOrderedColumns.find((column) => column.key === growColumnKey)
-        : undefined,
-    [growColumnKey, visibleOrderedColumns],
-  );
+  const growColumn = useMemo(() => {
+    if (growColumnKey == null) return undefined;
+    const lookup = hasSplitFreeze ? scrollableDataColumns : visibleOrderedColumns;
+    return lookup.find((column) => column.key === growColumnKey);
+  }, [growColumnKey, hasSplitFreeze, scrollableDataColumns, visibleOrderedColumns]);
 
   /** All columns except the grow column (settings is always included). */
   const fixedColumnsWidthPx = useMemo(() => {
@@ -626,12 +674,39 @@ export function IdsDataGrid({
     return fixedColumnsWidthPx + growFloor;
   }, [fixedColumnsWidthPx, growColumn]);
 
-  const colWidthStyle = (column: IdsDataGridColumn): React.CSSProperties => {
-    if (growColumnKey != null && column.key === growColumnKey) {
+  const frozenPaneWidthPx = useMemo(() => {
+    let total = showSelectionColumn ? SELECTION_COL_WIDTH : 0;
+    for (const column of frozenDataColumns) {
+      total += columnWidthPx(column);
+    }
+    return total;
+  }, [frozenDataColumns, showSelectionColumn, columnWidths, columnResizeEnabled]);
+
+  /** Scrollable data pane only (settings live in a separate pinned host when split-freeze). */
+  const scrollableFixedWidthPx = useMemo(() => {
+    let total = 0;
+    for (const column of scrollableDataColumns) {
+      if (column.key === growColumnKey) continue;
+      total += columnWidthPx(column);
+    }
+    return total;
+  }, [scrollableDataColumns, columnWidths, columnResizeEnabled, growColumnKey]);
+
+  const scrollableTableMinWidthPx = useMemo(() => {
+    const growFloor = growColumn
+      ? Math.max(DEFAULT_MIN_WIDTH, growColumn.minWidth ?? DEFAULT_MIN_WIDTH)
+      : 0;
+    return scrollableFixedWidthPx + growFloor;
+  }, [scrollableFixedWidthPx, growColumn]);
+
+  const colWidthStyle = (
+    column: IdsDataGridColumn,
+    sectionGrowColumnKey: string | null = growColumnKey,
+  ): React.CSSProperties => {
+    if (sectionGrowColumnKey != null && column.key === sectionGrowColumnKey) {
       if (growColPinnedWidthPx != null) {
         return { width: `${growColPinnedWidthPx}px` };
       }
-      /* Sole auto column — absorbs slack; never use width:0 (stretches fixed chrome cols). */
       return { width: "auto" };
     }
     return { width: `${columnWidthPx(column)}px` };
@@ -679,76 +754,151 @@ export function IdsDataGrid({
     window.addEventListener("pointercancel", onUp);
   };
 
-  const tableViewport = (
-    <div className={styles.tableViewport} ref={tableViewportRef}>
-            <table
-              className={styles.grid}
-              data-header-styled={headerColorAndBorder ? "true" : "false"}
-              style={{ width: "100%", minWidth: tableMinWidthPx }}
-            >
-              <colgroup>
-                {showSelectionColumn ? (
-                  <col
-                    className={styles.colSelection}
-                    style={{ width: `${SELECTION_COL_WIDTH}px` }}
-                  />
-                ) : null}
-                {visibleOrderedColumns.map((column) => (
-                  <col
-                    key={column.key}
-                    className={
-                      growColumnKey != null && column.key === growColumnKey
-                        ? styles.tableGrowCol
-                        : undefined
-                    }
-                    style={colWidthStyle(column)}
-                  />
-                ))}
-                <col
-                  className={styles.colSettings}
-                  style={{ width: `${SETTINGS_COL_WIDTH}px` }}
-                />
-              </colgroup>
-              <thead>
-                <tr>
-                  {showSelectionColumn ? (
-                    <th
-                      className={`${styles.headerCell} ${styles.selectionColumn} ${styles.headerSelectionColumn}`}
-                      scope="col"
-                      aria-label={
-                        selectionMode === "multiple" ? "Select all rows on this page" : "Selection"
-                      }
-                    >
-                      <div
-                        className={styles.selectionHeaderContent}
-                        aria-hidden={selectionMode === "single" ? true : undefined}
-                      >
-                        {selectionMode === "multiple" ? (
-                          <IdsDataGridSelectionCheckbox
-                            id="ids-dg-select-all"
-                            label="Select all rows on this page"
-                            checked={allVisibleRowsSelected}
-                            indeterminate={someVisibleRowsSelected}
-                            onChange={toggleSelectAllVisible}
-                            onClick={(event) => event.stopPropagation()}
-                          />
-                        ) : null}
-                      </div>
-                    </th>
+  useEffect(() => {
+    const bodyEl = bodyViewportRef.current;
+    const headerUnified = headerUnifiedTrackRef.current;
+    const headerFrozen = headerFrozenTrackRef.current;
+    const headerScrollable = headerScrollableTrackRef.current;
+    const frozenBody = frozenBodyPaneRef.current;
+    const scrollableBody = scrollableBodyPaneRef.current;
+    if (!bodyEl) return;
+
+    const syncUnified = () => {
+      if (headerUnified) headerUnified.scrollLeft = bodyEl.scrollLeft;
+    };
+    const syncFrozen = () => {
+      if (headerFrozen && frozenBody) headerFrozen.scrollLeft = frozenBody.scrollLeft;
+    };
+    const syncScrollable = () => {
+      if (headerScrollable && scrollableBody) {
+        headerScrollable.scrollLeft = scrollableBody.scrollLeft;
+      }
+    };
+
+    bodyEl.addEventListener("scroll", syncUnified);
+    frozenBody?.addEventListener("scroll", syncFrozen);
+    scrollableBody?.addEventListener("scroll", syncScrollable);
+
+    return () => {
+      bodyEl.removeEventListener("scroll", syncUnified);
+      frozenBody?.removeEventListener("scroll", syncFrozen);
+      scrollableBody?.removeEventListener("scroll", syncScrollable);
+    };
+  }, [hasSplitFreeze, visibleOrderedColumns.length, freezeUntilColumnKey]);
+
+  const renderGridSection = (sectionKey: string, options: GridSectionOptions) => {
+    const {
+      dataColumns,
+      includeSelection,
+      includeSettings,
+      sectionGrowColumnKey,
+      tableMinWidthPx: sectionMinWidthPx,
+      stickySelection,
+      stickySettings,
+      sectionPart,
+    } = options;
+
+    const selectionColumnClass = [
+      styles.selectionColumn,
+      stickySelection ? "" : styles.selectionColumnStatic,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    const settingsColumnClass = [
+      styles.settingsColumn,
+      stickySettings ? "" : styles.settingsColumnStatic,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    const sectionTableStyle: React.CSSProperties =
+      sectionGrowColumnKey != null
+        ? { width: "100%", minWidth: sectionMinWidthPx }
+        : { width: sectionMinWidthPx, minWidth: sectionMinWidthPx };
+
+    return (
+      <table
+        key={sectionKey}
+        className={styles.grid}
+        data-header-styled={headerColorAndBorder ? "true" : "false"}
+        style={sectionTableStyle}
+      >
+        <colgroup>
+          {includeSelection ? (
+            <col
+              className={styles.colSelection}
+              style={{ width: `${SELECTION_COL_WIDTH}px` }}
+            />
+          ) : null}
+          {dataColumns.map((column) => (
+            <col
+              key={column.key}
+              className={
+                sectionGrowColumnKey != null && column.key === sectionGrowColumnKey
+                  ? styles.tableGrowCol
+                  : undefined
+              }
+              style={colWidthStyle(column, sectionGrowColumnKey)}
+            />
+          ))}
+          {includeSettings ? (
+            <col
+              className={styles.colSettings}
+              style={{ width: `${SETTINGS_COL_WIDTH}px` }}
+            />
+          ) : null}
+        </colgroup>
+        {sectionPart === "header" ? (
+        <thead>
+          <tr>
+            {includeSelection ? (
+              <th
+                className={`${styles.headerCell} ${selectionColumnClass} ${styles.headerSelectionColumn}`}
+                scope="col"
+                aria-label={
+                  selectionMode === "multiple" ? "Select all rows on this page" : "Selection"
+                }
+              >
+                <div
+                  className={styles.selectionHeaderContent}
+                  aria-hidden={selectionMode === "single" ? true : undefined}
+                >
+                  {selectionMode === "multiple" ? (
+                    <IdsDataGridSelectionCheckbox
+                      id="ids-dg-select-all"
+                      label="Select all rows on this page"
+                      checked={allVisibleRowsSelected}
+                      indeterminate={someVisibleRowsSelected}
+                      onChange={toggleSelectAllVisible}
+                      onClick={(event) => event.stopPropagation()}
+                    />
                   ) : null}
-                  {visibleOrderedColumns.map((column) => {
-                    const isSorted = sortKey === column.key;
-                    const filterToggleVis = resolveFilterToggleVisual(column, column.key);
-                    return (
-                      <th
-                        key={column.key}
-                        className={`${styles.headerCell} ${styles.headerDataCell}`}
-                        scope="col"
-                        draggable
-                        onDragStart={(event) => onHeaderDragStart(event, column.key)}
-                        onDragOver={(event) => event.preventDefault()}
-                        onDrop={(event) => onHeaderDrop(event, column.key)}
-                      >
+                </div>
+              </th>
+            ) : null}
+            {dataColumns.map((column) => {
+              const isSorted = sortKey === column.key;
+              const filterToggleVis = resolveFilterToggleVisual(column, column.key);
+              return (
+                <th
+                  key={column.key}
+                  className={`${styles.headerCell} ${styles.headerDataCell}`}
+                  scope="col"
+                  aria-sort={
+                    column.sortable
+                      ? isSorted
+                        ? sortDirection === "asc"
+                          ? "ascending"
+                          : "descending"
+                        : "none"
+                      : undefined
+                  }
+                  draggable
+                  onDragStart={(event) => onHeaderDragStart(event, column.key)}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={(event) => onHeaderDrop(event, column.key)}
+                >
                         <div className={styles.headerCellRow}>
                           <div className={styles.headerTitleRow}>
                             <button
@@ -765,6 +915,7 @@ export function IdsDataGrid({
                                 type="button"
                                 className={styles.iconButton}
                                 aria-label={`Sort by ${column.title}`}
+                                data-sorted={isSorted ? "true" : undefined}
                                 onClick={() => toggleSort(column.key)}
                               >
                                 <Icon
@@ -833,11 +984,12 @@ export function IdsDataGrid({
                       </th>
                     );
                   })}
-                  <th
-                    className={`${styles.headerCell} ${styles.settingsColumn}`}
-                    scope="col"
-                  >
-                    <div className={styles.settingsHeaderInner} ref={settingsAnchorRef}>
+            {includeSettings ? (
+              <th
+                className={`${styles.headerCell} ${settingsColumnClass}`}
+                scope="col"
+              >
+                <div className={styles.settingsHeaderInner} ref={settingsAnchorRef}>
                       <button
                         type="button"
                         className={styles.settingsToggleButton}
@@ -857,28 +1009,29 @@ export function IdsDataGrid({
                           style={{ width: 16, height: 16 }}
                         />
                       </button>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {visibleRows.map((row) => {
-                  const isRowActive = activeRowId === row.id;
-                  const isRowSelected =
-                    isRowSelectionChecked(row.id) || isRowActive;
-                  return (
-                  <tr
-                    key={row.id}
-                    className={styles.bodyRow}
-                    data-selected={isRowSelected ? "true" : undefined}
-                    data-readonly={readOnly ? "true" : undefined}
-                    data-vertical-indicator={rowVerticalIndicator ? "true" : undefined}
-                    onClick={() => handleRowClick(row.id)}
+                </div>
+              </th>
+            ) : null}
+          </tr>
+        </thead>
+        ) : (
+        <tbody>
+          {visibleRows.map((row) => {
+            const isRowActive = activeRowId === row.id;
+            const isRowSelected = isRowSelectionChecked(row.id) || isRowActive;
+            return (
+              <tr
+                key={row.id}
+                className={styles.bodyRow}
+                data-selected={isRowSelected ? "true" : undefined}
+                data-readonly={readOnly ? "true" : undefined}
+                data-vertical-indicator={rowVerticalIndicator ? "true" : undefined}
+                onClick={() => handleRowClick(row.id)}
+              >
+                {includeSelection ? (
+                  <td
+                    className={`${styles.bodyCell} ${selectionColumnClass} ${styles.rowSelectionCell}`}
                   >
-                    {showSelectionColumn ? (
-                      <td
-                        className={`${styles.bodyCell} ${styles.selectionColumn} ${styles.rowSelectionCell}`}
-                      >
                         <div className={styles.selectionRowContent}>
                           {selectionMode === "single" ? (
                             <IdsDataGridSelectionRadio
@@ -897,23 +1050,154 @@ export function IdsDataGrid({
                           )}
                         </div>
                       </td>
-                    ) : null}
-                    {visibleOrderedColumns.map((column) => {
-                      return (
-                      <td
-                        key={column.key}
-                        className={styles.bodyCell}
-                      >
-                        <span className={styles.cellText}>{row.values[column.key]}</span>
-                      </td>
-                      );
-                    })}
-                    <td className={`${styles.bodyCell} ${styles.settingsColumn}`} />
-                  </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                ) : null}
+                {dataColumns.map((column) => (
+                  <td key={column.key} className={styles.bodyCell}>
+                    <span className={styles.cellText}>{row.values[column.key]}</span>
+                  </td>
+                ))}
+                {includeSettings ? (
+                  <td className={`${styles.bodyCell} ${settingsColumnClass}`} />
+                ) : null}
+              </tr>
+            );
+          })}
+        </tbody>
+        )}
+      </table>
+    );
+  };
+
+  const unifiedSectionOptions = {
+    dataColumns: visibleOrderedColumns,
+    includeSelection: showSelectionColumn,
+    includeSettings: true,
+    sectionGrowColumnKey: growColumnKey,
+    tableMinWidthPx,
+    stickySelection: true,
+    stickySettings: true,
+  } satisfies Omit<GridSectionOptions, "sectionPart">;
+
+  const tableViewport = hasSplitFreeze ? (
+    <div
+      className={styles.gridScrollHost}
+      data-split-freeze="true"
+      style={{ "--datagrid-frozen-pane-width": `${frozenPaneWidthPx}px` } as React.CSSProperties}
+    >
+      <div className={styles.headerBand}>
+        <div className={styles.tableSplitRow}>
+          <div
+            className={styles.frozenHeaderHost}
+            style={{ width: frozenPaneWidthPx, flexBasis: frozenPaneWidthPx }}
+          >
+            <div className={styles.headerBandTrack} ref={headerFrozenTrackRef}>
+              {renderGridSection("frozen-header", {
+                dataColumns: frozenDataColumns,
+                includeSelection: showSelectionColumn,
+                includeSettings: false,
+                sectionGrowColumnKey: null,
+                tableMinWidthPx: frozenPaneWidthPx,
+                stickySelection: false,
+                stickySettings: false,
+                sectionPart: "header",
+              })}
+            </div>
+          </div>
+          <div className={styles.scrollableHeaderHost}>
+            <div className={styles.headerBandTrack} ref={headerScrollableTrackRef}>
+              {renderGridSection("scrollable-header", {
+                dataColumns: scrollableDataColumns,
+                includeSelection: false,
+                includeSettings: false,
+                sectionGrowColumnKey: growColumnKey,
+                tableMinWidthPx: scrollableTableMinWidthPx,
+                stickySelection: false,
+                stickySettings: false,
+                sectionPart: "header",
+              })}
+            </div>
+          </div>
+          <div className={styles.settingsHeaderHost}>
+            {renderGridSection("settings-header", {
+              dataColumns: [],
+              includeSelection: false,
+              includeSettings: true,
+              sectionGrowColumnKey: null,
+              tableMinWidthPx: SETTINGS_COL_WIDTH,
+              stickySelection: false,
+              stickySettings: false,
+              sectionPart: "header",
+            })}
+          </div>
+        </div>
+      </div>
+      <div className={`${styles.bodyViewport} ${styles.bodyViewportSplit}`} ref={bodyViewportRef}>
+        <div className={styles.tableSplitRow}>
+          <div
+            className={styles.frozenPaneHost}
+            style={{ width: frozenPaneWidthPx, flexBasis: frozenPaneWidthPx }}
+          >
+            <div className={styles.frozenPane} ref={frozenBodyPaneRef}>
+              {renderGridSection("frozen-body", {
+                dataColumns: frozenDataColumns,
+                includeSelection: showSelectionColumn,
+                includeSettings: false,
+                sectionGrowColumnKey: null,
+                tableMinWidthPx: frozenPaneWidthPx,
+                stickySelection: false,
+                stickySettings: false,
+                sectionPart: "body",
+              })}
+            </div>
+          </div>
+          <div className={styles.scrollablePane} ref={scrollableBodyPaneRef}>
+            {renderGridSection("scrollable-body", {
+              dataColumns: scrollableDataColumns,
+              includeSelection: false,
+              includeSettings: false,
+              sectionGrowColumnKey: growColumnKey,
+              tableMinWidthPx: scrollableTableMinWidthPx,
+              stickySelection: false,
+              stickySettings: false,
+              sectionPart: "body",
+            })}
+          </div>
+          <div className={styles.settingsPaneHost}>
+            {renderGridSection("settings-body", {
+              dataColumns: [],
+              includeSelection: false,
+              includeSettings: true,
+              sectionGrowColumnKey: null,
+              tableMinWidthPx: SETTINGS_COL_WIDTH,
+              stickySelection: false,
+              stickySettings: false,
+              sectionPart: "body",
+            })}
+          </div>
+        </div>
+      </div>
+      <div className={styles.freezePaneEdge} aria-hidden="true" />
+    </div>
+  ) : (
+    <div className={styles.gridScrollHost}>
+      <div className={styles.headerBand}>
+        <div className={styles.headerBandTrack} ref={headerUnifiedTrackRef}>
+          {renderGridSection("unified-header", {
+            ...unifiedSectionOptions,
+            stickySelection: false,
+            stickySettings: true,
+            sectionPart: "header",
+          })}
+        </div>
+      </div>
+      <div className={styles.bodyViewport} ref={bodyViewportRef}>
+        <div className={styles.bodyContent}>
+          {renderGridSection("unified-body", {
+            ...unifiedSectionOptions,
+            sectionPart: "body",
+          })}
+        </div>
+      </div>
     </div>
   );
 

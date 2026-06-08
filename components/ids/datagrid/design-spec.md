@@ -27,9 +27,9 @@
 - **`.Filter for table` control (header filter hit target + icon frame):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114677&m=dev — instance **`37721:114677`** (main component **`37721:114635`**)
 - **Data Grid — main variants / density matrix (container-sized frames):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev — node id **`37721:112482`** (`Data Grid - Main`)
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time)
-- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`); row/cell frame re-verified with `get_design_context` (**`disableCodeConnect: true`**) on **`37721:114580`**; column header **`37721:114663`**, title row **`37721:114673`**, filter control **`37721:114677`** re-verified same way **2026-05-13**; rows/columns layout **`37721:113987`** **2026-05-14**
-- Last verified: **2026-05-31** (date filter `37822:90838` variants `37822:90839`–`37822:90922`, library page `44370:173173`; date-time filter `44360:181306`; filter row `37822:90943` via Figma MCP); prior **2026-05-25** (combobox/multiselect, numeric `44360:182265`, column filter types `37822:91069`, default text filter `37822:91073`)
+- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`37721:115949`** (column-freeze scenario), **`37721:114144`** (freeze boundary gradient/shadow), **`37721:114143`** (scrollable pane inset), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time)
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`); row/cell frame re-verified with `get_design_context` (**`disableCodeConnect: true`**) on **`37721:114580`**; column header **`37721:114663`**, title row **`37721:114673`**, filter control **`37721:114677`** re-verified same way **2026-05-13**; rows/columns layout **`37721:113987`** **2026-05-14**; column freeze **`37721:115949`**, boundary **`37721:114144`**, sort states **`37721:114646`** **2026-06-05**
+- Last verified: **2026-06-05** (scroll/freeze blueprint + sort icon states `37721:114646`; column-freeze `37721:115949`; freeze boundary `37721:114144`; implementation parity `IdsDataGrid.tsx`); prior **2026-05-31** (date filter `37822:90838`, date-time `44360:181306`)
 - Nested specs (codegen must delegate, not reimplement): `components/ids/checkbox/design-spec.md`, `components/ids/date-picker/design-spec.md`, `components/ids/time-picker/design-spec.md`, `components/ids/radio-button/design-spec.md`, `components/ids/pagination/design-spec.md` (footer), detail panel datagrid attach mode (see `IdsDetailPanel` / product `def-new-dg-detail`)
 - Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionRadio.tsx`, `IdsDataGridSelectionCheckbox.tsx`
 - **Codegen-critical layout:** **Chrome columns & table slack (codegen-critical)** under **Layout & Measurements → Table Layout Algorithm** — required for generators (grow `auto`, chrome **48**/**40** three-layer lock, anti-patterns).
@@ -58,7 +58,11 @@
   - `DatagridDetailPanelSlot` (IDS Detail Panel datagrid variant)
 ### Framework-agnostic component tree
 
-Codegen must emit a **single logical table** (or framework table primitive) with **deterministic column order**. Child components / projection slots map to framework wrappers; **geometry, tokens, and interaction precedence** are defined only in this spec (not in framework adapters).
+Codegen emits **one or more table primitives** with **deterministic column order** per layout mode:
+- **Unified** (no freeze): header-band table + body-viewport table sharing column tracks.
+- **Freeze** (`freezeUntilColumnKey`): up to **six** table sections (frozen / scrollable / settings × header / body) — still one logical column order across the grid.
+
+Child components / projection slots map to framework wrappers; **geometry, tokens, scroll ownership, and interaction precedence** are defined only in this spec (not in framework adapters). See **Codegen Contract → Scroll & viewport blueprint**.
 
 ### Ownership boundaries
 
@@ -165,7 +169,8 @@ Angular uses **declarative child components** with **content projection**. The m
 
 - Map **`DatagridColumnHeader`** to a **column definition object** + optional **scoped slot** for `filterPanel` and cell renderer.
 - Map **`DatagridRow`** to row model + **cell slot** per column key.
-- Keep **one** scroll viewport element and **one** `<table>` (or platform table) per grid instance.
+- **Unified layout** (no `freezeUntilColumnKey`): one logical table split into **header band** + **body viewport** (see **Codegen Contract → Scroll & viewport blueprint**); adapters may still emit one `<table>` per band.
+- **Freeze layout** (`freezeUntilColumnKey` set): **three horizontal panes** (frozen | scrollable data | settings) × **header + body** bands — not a single monolithic scrollport.
 - Portals/overlays for **`FilterMenuLayer`** must attach to **`document.body`** (or app overlay root), not inside the scroll clip.
 
 ### Column filter menu (L-frame baseline)
@@ -189,7 +194,7 @@ Angular uses **declarative child components** with **content projection**. The m
 ### `FilterMenuLayer` (open) — stacking & anchor
 - Prefer **`position: fixed`** + **portal to `document.body`** so the menu is **not** a child of **`overflow: auto`** on the grid viewport (avoids extra scroll height, column shift, and clipping). **`z-index`** high enough to sit **above** grid body and side panels (e.g. **10000** until a global z-index token exists).
 - **Position:** `top = anchor.getBoundingClientRect().top + 5px` (optical **38** in **48** header), `right = document.documentElement.clientWidth - anchorRect.right` (right-align to filter column). Recompute on **resize**, **window scroll (capture)**, **viewport scroll**, and **ResizeObserver** on the viewport.
-- **Scroll viewport:** **`scrollbar-gutter: stable`** on the grid body clip recommended **unless** a **detail panel** is attached (`withDetailPanel` / `detailsPanel: attached`) — then use **`scrollbar-gutter: auto`** so a reserved gutter does not appear as a white strip between **`SettingsColumn`** and the collapsed **40px** detail rail.
+- **Scroll viewport:** use **`scrollbar-gutter: auto`** on **`.bodyViewport`** (vertical scrollbar only when needed; avoid **`stable`** — it reserves a permanent right gutter). When a **detail panel** is attached, keep **`auto`** so no white strip appears beside **`SettingsColumn`**.
 
 ### L-frame geometry (invariant — all filter UIs)
 - **`FilterIconTab`:** width/height **38px** (same as header filter hit target). **Top + left + right** border **`1px`** **`var(--color-border-accessible)`**; **no** bottom border; **`margin-bottom: -1px`** overlap onto **`FilterPanel`**. Background **`var(--color-background-component)`**. Inner layout: **`display: inline-flex`**, **`align-items: center`**, **`justify-content: center`**. **Important — use `padding: 11px 11px 12px`** (not `12px`): the 3 visible borders (left 1px + right 1px + top 1px) consume space under `box-sizing: border-box`, so reducing side/top padding by 1px each restores the **14×14** icon content area (38 − 1 − 11 − 11 − 1 = 14px wide; 38 − 1 − 11 − 12 = 14px tall). Using `padding: 12px` leaves only a 12×13 content area and causes the icon to flex-shrink. **`Icon`** (**`shapeName="filter"`** or `"filter-solid"` when filter active; pass `style={{ maskSize: '14px 14px' }}` to prevent the SVG's 12:14 aspect ratio from rendering narrower than 14px under `mask-size: contain`).
@@ -355,7 +360,7 @@ Multiselect combobox filter with search, Select All / Clear All, and scrollable 
 - **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`. Min-width `186px`, max-width `700px`.
 - **Container width:** `269px` (`FilterPanel` `min-width` / `max-width`).
 - **Search row:** `var(--padding-padding-8)` wrapper padding. Inner field: `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners per Figma `Search-Main`). Search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`). Text input left-padded `var(--padding-padding-8)`, `var(--padding-padding-4)` vertical, `font-weight: 400`. **Dismiss button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-neutral)`, cursor pointer.
-- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left padding; bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`. No gap between Select All and Clear All (`justify-content: flex-start`, `gap: 0`).
+- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`. **Clear All** is right-aligned; row has no right padding — the button supplies `var(--padding-padding-16)` horizontal inset.
   - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.md`.
   - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
   - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
@@ -457,7 +462,7 @@ No search row. No Select All / Clear All row. Single-select semantics.
 
 - **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, Shadow 1 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`.
 - **Options wrapper:** `var(--padding-padding-1)` horizontal padding.
-- **Option row** (`.Dropdown-SingleSelect-Elements-Options`): `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right, `var(--spacing-space-8)` gap. Label: Body 2 Medium, `var(--color-text-neutral)`, overflow ellipsis.
+- **Option row** (`.Dropdown-SingleSelect-Elements-Options`): `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right, `var(--spacing-space-8)` gap. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis.
 
 #### States (option row)
 
@@ -504,11 +509,11 @@ No search row.
 #### Layout
 
 - **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 1 elevation, `overflow: clip`. Sample width `269px`.
-- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left padding; bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`.
+- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347` / `44360:179348`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`.
   - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.md`.
-  - "Select All" label: Body 2 Medium, `var(--color-text-neutral)`.
-  - "Clear All" action: Body 2 Medium, `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
-- **Option row** (`.Dropdown-Elements-MultiSelect-Options`): `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Medium, `var(--color-text-neutral)`, overflow ellipsis, `white-space: nowrap`.
+  - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
+  - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal; pinned to the **right** edge of the row.
+- **Option row** (`.Dropdown-Elements-MultiSelect-Options`): `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis, `white-space: nowrap`.
 
 #### States (option row)
 
@@ -701,7 +706,8 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
     - settings column (always)
     - optional freeze range (`freezeUntilColumnKey`, inclusive)
 - **Viewport / scroll behavior (implementation):**
-  - **Header stays stable:** the header row must **not** scroll away with body rows. Use **`position: sticky; top: 0`** on header cells (with a correctly layered `z-index` and opaque header backgrounds), **or** split markup into a **non-scrolling** header host and a **scrollable** body region (separate scroll containers). Only the **body** (rows) should move vertically when the grid scrolls.
+  - **Header stays stable:** the header row must **not** scroll away with body rows. Storybook uses a **split scroll model**: **`.headerBand`** (non-scrolling, `flex: 0 0 auto`) + **`.bodyViewport`** (`overflow-y: auto` — vertical scrollbar on body only). Horizontal scroll on the body syncs to hidden header tracks via `scrollLeft`. Alternative: **`position: sticky; top: 0`** on header cells inside a single scrollport (not used when split regions are active).
+  - **Body fills container height:** **`.gridScrollHost`** is **`flex: 1`** inside the shell; **`.bodyViewport`** / split panes use **`min-height: 100%`** so the body area occupies all space between header and footer even when row count is low. **Horizontal scrollbar** anchors to the **bottom of the body viewport** (above pagination), not immediately under the last row.
   - **Footer / pagination** (when shown): keep outside the vertical scroll clip of the row stack so it remains visible, or pin it below the scroll region in the same shell as Figma’s grid chrome.
 - **Height contract (container-driven, Figma `37721:112482`):**
   - The datagrid **fills its parent container** (`height: 100%`, flex child with `min-height: 0`, or equivalent). **Overall height does not grow with row count** — extra rows scroll inside the allotted body area. Figma’s **Data Grid - Main** matrix (`**37721:112482**`) expresses density as “# rows in view” **within a fixed frame**, not an infinitely tall table.
@@ -735,7 +741,7 @@ Implement **exactly** this sequence so header/body columns stay aligned (verifie
 
 1. **Constants:** `SELECTION_COL_WIDTH = 48`, `SETTINGS_COL_WIDTH = 40`, `DEFAULT_MIN_WIDTH = 90`, optional resize max **`640px`** (product).
 2. **Per-column base width:** `columnBaseWidthPx(col) = max(col.minWidth ?? 90, col.width ?? col.defaultWidth ?? 160)`; when `columnResizeEnabled`, use user-resized width clamped to `minWidth`.
-3. **`growColumnKey`:** last entry in `orderedColumns` (trailing **data** column before settings).
+3. **`growColumnKey`:** last entry in `orderedColumns` (trailing **data** column before settings). When **`freezeUntilColumnKey`** is set, use the last **scrollable** data column (first column after the freeze boundary), not the last column in the full ordered list.
 4. **`tableMinWidthPx`:** `SELECTION? + sum(fixed column widths) + max(minWidth, grow column floor) + SETTINGS` (grow column counts only its **minimum** in the sum, not its expanded auto width).
 5. **`fixedColumnsWidthPx`:** `SETTINGS` + `SELECTION?` + sum of **`columnWidthPx`** for every column except **`growColumnKey`** (used for **`tableMinWidthPx`** only).
 6. **Grow column `<col>`:** **`width: auto`** (class **`.tableGrowCol`**) on **`growColumnKey`** — the **only** non-fixed column; it absorbs slack when **`table { width: 100% }`**. **Never** use **`width: 0`** on the grow col (browsers then **expand** fixed chrome **48**/**40** cols instead). **Never** put the grow column’s seeded resize width in `<colgroup>` unless the user finished a resize gesture (`growColPinnedWidthPx`). Chrome `<col>` + **`th`/`td`** use **`!important`** **48**/**40** to block stretch.
@@ -881,6 +887,11 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
   - `var(--color-icon-brand-stronger)`
   - `var(--color-icon-accessible)`
   - `var(--color-icon-disabled)`
+- Column-freeze boundary bar (`37721:114144`, **`FreezePaneEdge`**):
+  - **Width:** **`20px`**; **`flex-shrink: 0`**; **`align-self: stretch`** (full header+body height in Figma auto-layout; runtime: **`position: absolute`**, **`top: 0`**, **`bottom: 0`** on scroll host).
+  - **`border-radius: 0`**
+  - **Background (authoritative):** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`
+  - **Tokens:** `var(--color-gradient-overflow-vertical-start)` (gray cast), `var(--color-gradient-overflow-vertical-end)` (fade to transparent at seam)
 - Typography:
   - `Base Styles/Data Header` (`14/20`, medium)
   - `Body 2` (`14/20`, regular)
@@ -899,10 +910,10 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-1)`** (distinct from brand hover) | bottom **1px** `var(--color-border-light)` when `showBorder=true` | unchanged unless product overrides |
 | `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter)`**; if `verticalBlueLine=true`, add **4px** leading bar **`var(--color-border-brand-base)`** full row height | bottom **1px** `var(--color-border-light)` when `showBorder=true` — **not** a full-width brand border | token-resolved |
 | `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light)`**; same optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-light)` when `showBorder=true` | token-resolved |
-| `SortToggle` (`col-sort-up-16` / `col-sort-down-16` slugs) | default | transparent | none | `var(--color-icon-neutral)`; **icon 12×12** |
-| `SortToggle` | hover | transparent | none | `var(--color-icon-brand-base)`; **12×12** |
-| `SortToggle` | selected | transparent | none | `var(--color-icon-brand-base)`; **12×12** |
-| `SortToggle` | selected-hover | transparent | none | `var(--color-icon-brand-stronger)`; **12×12** |
+| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-neutral)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
+| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
+| `SortToggle` | selected (sorted column) | transparent | none | `var(--color-icon-brand-base)` (**`37721:114649`** / **`37721:114659`**); **12×12**; direction = **`col-sort-up-16`** (asc) or **`col-sort-down-16`** (desc) |
+| `SortToggle` | selected + hover | transparent | none | `var(--color-icon-brand-stronger)` (**`37721:114653`** / **`37721:114661`**); **12×12** |
 | `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-neutral)`**; **icon 14×14** |
 | `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-neutral)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
@@ -921,10 +932,10 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-1)`** | bottom **1px** `var(--color-border-light)` when `showBorder=true` | unchanged unless product overrides |
 | `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter)`**; optional **4px** leading **`var(--color-border-brand-base)`** when `verticalBlueLine=true` | bottom **1px** `var(--color-border-light)` when `showBorder=true` | token-resolved |
 | `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light)`**; optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-light)` when `showBorder=true` | token-resolved |
-| `SortToggle` (`col-sort-up-16` / `col-sort-down-16` slugs) | default | transparent | none | `var(--color-icon-neutral)`; **icon 12×12** |
-| `SortToggle` | hover | transparent | none | `var(--color-icon-brand-base)`; **12×12** |
-| `SortToggle` | selected | transparent | none | `var(--color-icon-brand-base)`; **12×12** |
-| `SortToggle` | selected-hover | transparent | none | `var(--color-icon-brand-stronger)`; **12×12** |
+| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-neutral)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
+| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
+| `SortToggle` | selected (sorted column) | transparent | none | `var(--color-icon-brand-base)` (**`37721:114649`** / **`37721:114659`**); **12×12**; direction = **`col-sort-up-16`** (asc) or **`col-sort-down-16`** (desc) |
+| `SortToggle` | selected + hover | transparent | none | `var(--color-icon-brand-stronger)` (**`37721:114653`** / **`37721:114661`**); **12×12** |
 | `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-neutral)`**; **icon 14×14** |
 | `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-neutral)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
@@ -961,8 +972,18 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - clamp widths to **`minWidth`** (default **90px** per column) and a product max; emit **`onColumnResize`** when the gesture completes (or continuously if product requires live layout).
 - Column reorder:
   - drag-and-drop header columns to rearrange order; **do not** start a column drag from **sort**, **filter**, or **resize** controls (see **Codegen → behavior**).
-- Freeze columns:
-  - columns from start through `freezeUntilColumnKey` (inclusive) remain pinned and do not horizontally scroll.
+- Freeze columns (`freezeUntilColumnKey`, Figma column-freeze scenario **`37721:115949`**):
+  - **Split layout:** when freeze is active, render **three horizontal panes** (frozen | scrollable data | settings) in **both** header band and body viewport:
+    - **Frozen pane (left):** selection column (when present) + data columns from start through `freezeUntilColumnKey` (**inclusive**). Fixed-width host (`flex: 0 0 auto`); does **not** scroll with the scrollable pane.
+    - **Scrollable pane (middle):** remaining **data** columns only. Own **`overflow-x: auto`** region; horizontal scrollbar starts at the freeze boundary (Figma **`37721:114143`** `pl` inset aligns scrollbar with pane edge).
+    - **Settings pane (right, `40px`):** gear column only — **never** scrolls horizontally; pinned trailing chrome (same contract as unified **`position: sticky; right: 0`** on **`settingsColumn`**).
+    - **Viewport host (`tableViewportSplit`):** **`overflow-y: auto`** + **`overflow-x: hidden`** only — never horizontally scroll the combined row (that would drag frozen columns and the boundary shadow).
+    - **Boundary bar (`freezePaneEdge`, Figma `37721:114144`):** **`20px`** wide; pinned at frozen/scrollable seam (`left: calc(var(--datagrid-frozen-pane-width) - 20px)` on scroll host); **`z-index`** above scrollable cells. **Background:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`. Stays static while scrollable columns move underneath.
+  - **Grow column** when freeze is active: last **scrollable** data column only; frozen pane columns use fixed `<colgroup>` widths.
+  - **Header band:** mirrors the three-pane split; header horizontal scroll syncs from the **scrollable data** pane only (frozen + settings hosts do not scroll horizontally with middle content).
+  - **Vertical scroll:** only **`.bodyViewport`** scrolls body rows; header band stays fixed (see **Codegen Contract → Scroll & viewport blueprint**).
+  - If the frozen pane content is wider than its allocated width, the **frozen pane** may show its own horizontal scrollbar (`overflow-x: auto` on frozen pane).
+  - Unknown `freezeUntilColumnKey` → single-table layout (selection/settings sticky only).
 - Row click:
   - clicking row emits row click event and may open attached detail panel.
 - **Row hover / press (body, Figma `37721:114580`):**
@@ -1051,13 +1072,85 @@ Codegen and `Datagrid.stories.tsx` **Spec Accurate Design** must use:
 - Columns: Name (sort+filter+search panel), Type/Status (sort+filter), Owner (sort), Region (filter only) — see generated story `specColumns`
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
+### Scroll & viewport blueprint (codegen-critical)
+
+Generators **must** implement this block for **all** frameworks. Reference: `IdsDataGrid.tsx` + `IdsDataGrid.module.css`.
+
+#### Shell geometry (full container)
+
+| Element | Contract |
+|---|---|
+| `DatagridShell` (`.shell`) | **`width: 100%`**, **`height: 100%`**, **`min-height: 0`**, **`min-width: 0`** — fills parent container/page (**`37721:112482`**); height **not** driven by row count |
+| `DatagridGridWrap` (`.gridWrap`) | flex column, **`flex: 1`**, **`min-height: 0`**, **`width: 100%`** |
+| `DatagridFooter` | **`flex: 0 0 auto`** — outside vertical scroll clip; **`var(--color-background-surface-1)`** |
+| Storybook / demo host | **`width: 100%`**, **`height: 100dvh`** (or **`100%`** of app shell), **`minHeight: 0`** — **no** arbitrary **`max-width`** on the grid host |
+
+#### Header / body split (vertical scroll)
+
+| Element | Contract |
+|---|---|
+| `DatagridScrollHost` (`.gridScrollHost`) | flex column, **`flex: 1 1 0%`**, **`min-height: 0`**, **`width: 100%`** |
+| `DatagridHeaderBand` (`.headerBand`) | **`flex: 0 0 auto`** — **never** scrolls vertically; hosts **`<thead>`** only |
+| `DatagridBodyViewport` (`.bodyViewport`) | **`flex: 1 1 0%`**, **`overflow-y: auto`**, **`min-height: 100%`** on inner fill — **only** body rows scroll vertically |
+| `DatagridBodyContent` (`.bodyContent`) | **`min-height: 100%`** — body area fills space between header and footer when row count is low |
+| Header horizontal sync | Hidden header track (`.headerBandTrack`, **`scrollbar-width: none`**) mirrors **`scrollLeft`** of body viewport (unified) or scrollable data pane (freeze) |
+
+**Forbidden:** scrolling the **entire** table (header + body) in one vertical scrollport — header must remain stable.
+
+#### Horizontal scroll + pinned chrome
+
+| Layout | Horizontal scroll owner | Pinned chrome |
+|---|---|---|
+| **Unified** (no freeze) | **`.bodyViewport`** (`overflow: auto`) | **Selection** `sticky left: 0`; **Settings** `sticky right: 0` on body cells; header settings **`sticky right: 0`** (or equivalent pin in header band) |
+| **Freeze** (`freezeUntilColumnKey`) | **Middle pane only** (scrollable **data** columns) | **Frozen pane** fixed left; **Settings pane** fixed **`40px`** right — **never** inside horizontal scroll content |
+
+**Horizontal scrollbar position:** scroll containers (`.bodyViewport`, `.scrollablePane`, `.frozenPane`) use **`min-height: 100%`** so the bar anchors to the **bottom of the body viewport** (above footer), not immediately under the last row.
+
+**`scrollbar-gutter`:** **`auto`** on **`.bodyViewport`** (not **`stable`**).
+
+#### Freeze layout — three-pane model (`freezeUntilColumnKey`)
+
+When **`freezeUntilColumnKey`** resolves to a visible column index **`≥ 0`**:
+
+```
+DatagridScrollHost
+  DatagridHeaderBand
+    row: [ FrozenHeaderHost | ScrollableHeaderHost | SettingsHeaderHost (40px) ]
+  DatagridBodyViewport (overflow-y auto, overflow-x hidden)
+    row: [ FrozenPaneHost | ScrollablePane | SettingsPaneHost (40px) ]
+  FreezePaneEdge (absolute; spans header+body height; Figma 37721:114144)
+```
+
+| Pane | Contents | Horizontal scroll | Width |
+|---|---|---|---|
+| **Frozen** | Selection? + data cols **`[0 … freezeIndex]`** | Only if frozen block wider than host (`overflow-x: auto`) | sum of pinned col widths |
+| **Scrollable data** | data cols **`[freezeIndex+1 … end]`** | **`overflow-x: auto`** | **`flex: 1`** |
+| **Settings** | gear column only | **None** — **never** place settings inside scrollable pane | **`40px`** fixed |
+
+- **`growColumnKey`** = last column in **scrollable data** slice only.
+- **`freezePaneEdge`:** **`20px`** wide; **`flex-shrink: 0`**; **`align-self: stretch`**; **`border-radius: 0`**; **`left: calc(var(--datagrid-frozen-pane-width) - 20px)`** on scroll host (absolute pin). **Background:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`.
+- Unknown / missing **`freezeUntilColumnKey`** → fall back to **unified** layout (sticky selection/settings only).
+
+#### Sort toggle (codegen — Figma `37721:114646`)
+
+| State | `shapeName` | Token | Attribute / a11y |
+|---|---|---|---|
+| Default (unsorted or inactive col) | `col-sort-up-16` | `var(--color-icon-neutral)` | — |
+| Hover (not sorted) | unchanged shape | `var(--color-icon-neutral-strong)` | — |
+| Selected asc | `col-sort-up-16` | `var(--color-icon-brand-base)` | **`data-sorted="true"`** on button; **`aria-sort="ascending"`** on **`th`** |
+| Selected desc | `col-sort-down-16` | `var(--color-icon-brand-base)` | **`data-sorted="true"`**; **`aria-sort="descending"`** |
+| Selected + hover | per direction | `var(--color-icon-brand-stronger)` | — |
+
+- Rendered icon box: **12×12**; button hit area may be **20×20**.
+- **Visibility:** always shown (product decision; Figma default notes hide-on-header-hover — **do not** implement hide-on-default in codegen unless product overrides).
+
 ### Deterministic structure
 
-1. `DatagridRoot` (`DatagridShell` → `DatagridScrollViewport` → `<table>`)
-2. `DatagridHeader` (`<thead>` — includes portaled **`FilterMenuLayer`** per open filter)
-3. `DatagridBody` (`<tbody>` rows)
+1. `DatagridRoot` (`DatagridShell` → `DatagridGridWrap` → `DatagridScrollHost`)
+2. `DatagridHeaderBand` (`<thead>` tables / sections — portaled **`FilterMenuLayer`** per open filter)
+3. `DatagridBodyViewport` (`<tbody>` tables / sections — vertical scroll clip)
 4. optional `DatagridDetailPanelSlot` (sibling, not `<col>`)
-5. `DatagridFooter` (below viewport)
+5. `DatagridFooter` (below scroll host)
 
 ### DOM trees (HTML reference — adapters must preserve structure)
 
@@ -1114,13 +1207,38 @@ div.filterMenuLayer [fixed, z-index 10000]
       {column.filterPanel}
 ```
 
+**Freeze layout (`freezeUntilColumnKey` set) — header + body bands:**
+
+```
+div.gridScrollHost [flex column, position relative]
+  div.headerBand [flex 0 0 auto]
+    div.headerBandRow [flex row]
+      div.frozenHeaderHost [flex 0 0 auto, overflow hidden]
+        table > thead > frozen cols only
+      div.scrollableHeaderHost [flex 1, overflow hidden]
+        div.headerBandTrack [overflow-x auto, scrollbar hidden]
+          table > thead > scrollable data cols only
+      div.settingsHeaderHost [flex 0 0 40px]
+        table > thead > settings col only
+  div.bodyViewport [flex 1, overflow-y auto, overflow-x hidden]
+    div.bodyContent [min-height 100%]
+      div.bodyBandRow [flex row, min-height 100%]
+        div.frozenPane [flex 0 0 auto, overflow-x auto, min-height 100%]
+          table > tbody > frozen cols
+        div.scrollablePane [flex 1, overflow-x auto, min-height 100%]
+          table > tbody > scrollable data cols
+        div.settingsPane [flex 0 0 40px, overflow hidden]
+          table > tbody > settings col
+  div.freezePaneEdge [absolute, 20px wide, z-index above scrollable]
+```
+
 ### Per-slot style contract
 
 | Slot | Size / layout | Tokens (default) |
 |---|---|---|
 | `DatagridColumnHeader` host | **48px** height, `pl: 16px` | bg/border per `headerColorAndBorder`; leading **1×24** rail `var(--color-border-light)` |
 | `ColumnTitle` | **14/20** medium, ellipsis | `var(--color-text-neutral-strong)` |
-| `SortToggle` | **12×12** icon, **20×20** button ok | `var(--color-icon-neutral)` → brand on hover/selected |
+| `SortToggle` | **12×12** icon, **20×20** button ok | default **`var(--color-icon-neutral)`**; hover (unsorted) **`var(--color-icon-neutral-strong)`**; sorted **`var(--color-icon-brand-base)`** + **`data-sorted="true"`**; sorted+hover **`var(--color-icon-brand-stronger)`** (Figma **`37721:114646`**) |
 | `FilterToggle` | **38×38**, **14×14** icon | see **States** + precedence |
 | `DatagridCell` | **40px** row, padding **10/12/10/16** | text `var(--color-text-neutral)`; bottom `var(--color-border-light)` |
 | `DatagridRow` hover | full-cell overlay | brand-lighter or `surface-1` if readOnly |
@@ -1133,7 +1251,7 @@ div.filterMenuLayer [fixed, z-index 10000]
 
 - Emit **`<table class="grid" style={{ width: '100%', minWidth: tableMinWidthPx }}">`** with **`table-layout: fixed`**, **`border-collapse: collapse`**, **`border-spacing: 0`**.
 - Emit **`<colgroup>`** before **`<thead>`** with column count = cell count per row; order per **Chrome columns & table slack**.
-- Implement **`growColumnKey`** = `orderedColumns[orderedColumns.length - 1].key`.
+- Implement **`growColumnKey`** = last data column in the active slice: `orderedColumns[orderedColumns.length - 1].key` (unified), or last **scrollable** data column when **`freezeUntilColumnKey`** is set.
 - Implement **`colWidthStyle`** per reference pseudocode in **Table layout algorithm**.
 - When **`columnResizeEnabled`**, still emit grow as **`auto`** in `<colgroup>` until **`growColPinnedWidthPx`** is set by completed resize on grow column.
 - Chrome CSS constants (emit as theme or component vars): `--datagrid-selection-col-width: 48px`, `--datagrid-settings-col-width: 40px`, `--selection-header: 16px`, `--selection-cell: 12px`.
@@ -1153,6 +1271,7 @@ Variant matrix:
   - `rowBackgroundLayer` (Figma **`background`**): `on | off` (default **`on`**) — toggles default **`var(--color-background-component)`** base fill
   - `headerColorAndBorder` (Figma **`colorAndBorder`**): `on | off` (maps from boolean; default **`on`** / **`true`**)
   - `columnResizeEnabled` (product / Storybook): `on | off` (default **`off`**) — trailing-edge resize hit target + width state; Figma still shows only the **1×24** divider rail as visible chrome.
+  - `freezeUntilColumnKey`: `string | null` — when set, enables **three-pane** freeze layout (see **Scroll & viewport blueprint**); inclusive freeze through this column key.
   - **Column header chrome** (`DatagridColumnHeader` / `th`): **height `48px` total** (no **51px** drift); **host** **`padding-left: 16px`**, **`padding-top` / `bottom: 0`**; **title row** (**37721:114673**): **`padding: 0 8px 0 0`**, **`gap: 12px`**, **`align-items: center`** in **48px** row, title **20px** line box; **trailing column edge** draws the **1px × 24px** **`var(--color-border-light)`** rail (**decorative**); optional **transparent** resize strip when **`columnResizeEnabled`** (see **Layout → Resize**); **no** extra vertical rule **between** **sort** and **filter**; **filter** (**37721:114677**): **`38×38`**, **`padding: 12px`**, **14×14** **`Icon`**; **`colorAndBorder=true`**: fill **`var(--color-background-gray-neutral-lighter)`**, **1px** **`var(--color-border-light)`** **top** + **bottom**; **data** headers add **leading** **1px × 24px** **`var(--color-border-light)`** rail per **`37721:114663`**; **`colorAndBorder=false`**: fill **`var(--color-background-component)`**, same **leading** rail on data headers, **no** full-cell top/bottom on Text minimal path.
   - data columns honor min-width `90px`.
   - **Body row chrome** (`DatagridRow` / body `td`): height **40px** (Figma **`Grid height/Cell`**); **idle** fill **`var(--color-background-component)`** on **each cell** (not `transparent` when `rowBackgroundLayer` is on); bottom divider **1px** **`var(--color-border-light)`** when `rowShowBottomBorder` is on; hover/selected/press fills and vertical accent per **States** tables and Figma **`37721:114580`**.
@@ -1212,8 +1331,12 @@ Variant matrix:
   - [ ] row click toggles detail panel open/closed when `detailsPanel: attached`; interactive controls do not bubble row click.
   - [ ] Column header: **`colorAndBorder=true`** uses **`var(--color-background-gray-neutral-lighter)`** + **top/bottom** **`var(--color-border-light)`**; **`false`** uses **`var(--color-background-component)`** without full-cell top/bottom on Text path; data columns show **leading** **1px × 24px** **`var(--color-border-light)`** rail.
   - [ ] Column header: **cell height exactly `48px`**; host **`pl-16`** only (no stacked host **`py-5`** + title **`py-9`**); title row **`pr-8`**, **`align-items: center`** in **48px** row, title **20px** line box; **no** divider **between** sort and filter; **trailing** **1×24** **`var(--color-border-light)`** column rail; optional **transparent** resize strip when **`columnResizeEnabled`**; filter **`37721:114677`** **38×38** **`p-12`** **14×14** **`Icon`**; sort/filter/settings use **`Icon`** + **`shapeName`** from **`assets/icons`**; **selection radio** + **settings** use **inner** flex wrappers for centering (**`th`/`td`** stay **`table-cell`**).
-  - [ ] **Scroll:** body rows scroll; **header** (and pinned chrome) **does not** leave the viewport — sticky header or split scroll regions.
-  - [ ] **Height:** grid **fills container**; extra rows scroll — height **not** driven by row count (see Figma **`37721:112482`**).
+  - [ ] **Scroll (split):** **`.headerBand`** fixed — **no** vertical scroll; **`.bodyViewport`** owns **`overflow-y: auto`**; horizontal scroll on **`.bodyViewport`** (unified) or **`.scrollablePane`** only (freeze).
+  - [ ] **Horizontal scrollbar:** anchored to **bottom of body viewport** (above footer), not under last row — body panes use **`min-height: 100%`**.
+  - [ ] **`scrollbar-gutter: auto`** on body viewport — **no** permanent right gutter strip beside settings column.
+  - [ ] **Height / width:** grid shell **`width/height: 100%`**; fills container (**`37721:112482`**); demo host **`100dvh`** without arbitrary **`max-width`** cap.
+  - [ ] **Freeze (`freezeUntilColumnKey`):** three panes (frozen | scrollable data | settings **`40px`**); settings **never** in scrollable pane; **`freezePaneEdge`** **`20px`** with `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)` pinned at seam (**`37721:114144`**); **`growColumnKey`** = last scrollable data column only.
+  - [ ] **Sort (`37721:114646`):** unsorted hover **`neutral-strong`** (not brand); sorted **`brand-base`** + **`data-sorted="true"`**; sorted+hover **`brand-stronger`**; **`aria-sort`** on **`th`**; icons **12×12**.
   - [ ] **Header titles:** **`text-overflow: ellipsis`** on title text (**`display: block`** or equivalent — not **`display: flex`** on the title node); **`min-width: 0`** on flex title slot; sort/filter **`flex-shrink: 0`**; native **`title`** tooltip when truncated; no icon/title overlap at **`90px`** min width.
   - [ ] **Table layout:** **no** `display: flex` on **`th`/`td`**; `<table>` **`width: 100%`**, **`border-spacing: 0`** — **no** spurious side gutters from broken table-cell display.
   - [ ] column min-width (`90px`) and ellipsis behavior are enforced.
@@ -1224,7 +1347,7 @@ Variant matrix:
   - [ ] reorder/filter/sort/selection events are emitted; **`onColumnResize`** when **`columnResizeEnabled`** is on.
   - [ ] detail panel attaches and opens via row click when configured.
   - [ ] footer pagination integration uses IDS Pagination slot.
-  - [ ] **Grow column:** `growColumnKey` = last data column; sole `<col width="auto">` before settings **`40px`**; selection/settings **`th`** = **48**/**40** (inner host `width:100%`, no gap before Name divider).
+  - [ ] **Grow column:** `growColumnKey` = last data column (unified) or last **scrollable** data column (freeze); sole `<col width="auto">` in that slice; settings **`40px`** in dedicated pane (freeze) or trailing chrome (unified); selection/settings **`th`** = **48**/**40**.
   - [ ] **Header ellipsis:** title `display: block` + `text-overflow: ellipsis`; `title` attribute on truncated labels.
   - [ ] **Body padding:** `10px 12px 10px 16px` on data cells; settings body **`12px 0`** (Figma `37721:114944`); selection body **`12px 16px`**.
 ## Source Mapping
@@ -1241,6 +1364,7 @@ Variant matrix:
   - Rows and columns layout reference: **`37721:113987`** (column widths, no spacer before settings)
   - Main variant sample: `37721:112483` (child of **`37721:112482`** *Data Grid - Main*)
   - **Row/cell states & styling:** `37721:114580`
+  - **Column freeze (pinned data columns + boundary shadow):** **`37721:115949`** (horizontal scroll **`37721:114143`**, boundary gradient **`37721:114144`**)
   - **Column filter type matrix:** `37822:91069` (Column Filter-Main)
   - **Default text filter (Column Search):** `37822:91073`
   - **Combobox-Multiselect filter:** `44360:147581` (Dropdown Menu, search + Select All/Clear All + checkbox list)
@@ -1249,7 +1373,7 @@ Variant matrix:
   - **Dropdown-MultiSelect filter:** `44360:179348` (`.Dropdown-Elements-MultiSelect-Options`, no search, Select All/Clear All)
   - **Numeric filter:** `44360:182265` (`.Filter-Element-NumericFilter`); operator rows `44367:182693`; proof nodes `44360:182266`, `44367:182637`, `44370:145919`
 - Live verification evidence:
-  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).
+  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; sort icon matrix **`37721:114646`** (symbols **`37721:114647`**–**`37721:114661`**) re-checked **`2026-06-05`** (Figma MCP); column freeze scenario **`37721:115949`** re-checked **`2026-06-05`**; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).
 ### Storybook generation contract
 
 **Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).
@@ -1268,9 +1392,11 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 | `ReadOnlyTableHover` | Figma hover-readonly row | `readOnly: true` |
 | `WithoutVerticalSelectionIndicator` | `verticalBlueLine: false` | `rowVerticalIndicator: false` |
 | `WithDetailPanel` | Detail panel attached | `withDetailPanel: true` |
+| `ColumnFreeze` | Single frozen column through key | `freezeUntilColumnKey: "<key>"` (e.g. Name) |
+| `ColumnFreezeTwoSections` | Multiple frozen columns + scrollable section | `freezeUntilColumnKey` through second data column |
 | `TokenInspector` | Optional token swatches from spec | auto-appended by gate when tokens listed |
 
-5. **Host wrapper:** `IdsDataGridDefaultStoryHost` for filter state (e.g. Type multiselect + `filterActive`); bounded **`100vh`** flex parent with **`minHeight: 0`**.
+5. **Host wrapper:** `IdsDataGridDefaultStoryHost` for filter state (e.g. Type multiselect + `filterActive`); **`width: 100%`**, **`height: 100dvh`** flex parent with **`minHeight: 0`** (no **`maxWidth`** cap on grid host).
 6. **Do not** generate a separate spacer/fill column in stories — column set must match **Table layout algorithm** and **Chrome columns & table slack (codegen-critical)**.
 7. Generated components must implement **grow `auto`**, chrome **48**/**40** three-layer lock, and **`columnResizeEnabled`** grow pinning per **Table layout behavior contract (generators)**.
 8. **Theme:** Spec Generated stories import **`components/ids-theme.css` only** (not `theme.css`, not other program themes). Document that import in story `parameters.docs.description`.
@@ -1279,6 +1405,10 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 ---
 
 ## Implementation Notes
+
+**Column-freeze boundary bar (`freezePaneEdge`, `37721:114144`)**
+- **Width:** `20px`; **do NOT** substitute `box-shadow` or a reversed `to right` gradient — Figma uses a single **`linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`** fill on the bar.
+- **Pin:** `position: absolute; top: 0; bottom: 0; left: calc(var(--datagrid-frozen-pane-width) - 20px)` on `.gridScrollHost[data-split-freeze="true"]` so the bar spans header + body and stays fixed while scrollable columns move.
 
 **Sort icon**
 - **Wrapper size**: `12×12px` — do NOT use `20×20px`; a larger wrapper inflates the hit target and shifts layout
@@ -1312,7 +1442,7 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 
 **Multiselect / Single-select filters**
 - **Panel width**: `269px` (min-width/max-width)
-- **Select All / Clear All row**: no gap between Select All and Clear All (`gap: 0`, `justify-content: flex-start`)
+- **Select All / Clear All row**: `justify-content: space-between`; row padding `8px 0 8px 16px`; Clear All right-aligned with its own `16px` horizontal padding (Figma `44360:179347`)
 - **Option list padding**: no bottom padding (removed `padding-bottom`)
 
 **Numeric filter**

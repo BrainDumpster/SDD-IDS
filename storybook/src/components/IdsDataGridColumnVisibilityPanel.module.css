@@ -28,7 +28,7 @@
 
 .validationText {
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-critical);
 }
@@ -43,6 +43,10 @@
   max-height: 366px;
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+.optionItem label {
+  font-weight: 400;
 }
 
 .optionItem {

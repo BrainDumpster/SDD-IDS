@@ -1,10 +1,11 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Overlay } from "./Overlay";
 import { IdsButton } from "./IdsButton";
 import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof Overlay> = {
-  title: "Synapse/Overlay",
+  title: "Spec Generated/Synapse/Overlay",
   component: Overlay,
   argTypes: {
     width: { control: "text" },

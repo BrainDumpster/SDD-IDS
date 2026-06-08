@@ -25,7 +25,7 @@
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
   min-height: 20px;
@@ -165,7 +165,7 @@
   flex: 1 1 auto;
   min-width: 0;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
 }
@@ -204,7 +204,7 @@
   box-sizing: border-box;
   padding: var(--padding-padding-10) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
   cursor: pointer;
@@ -236,7 +236,7 @@
   border-radius: 0;
   background: var(--color-background-component);
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
   outline: none;
@@ -259,13 +259,14 @@
 
 .valueInput::placeholder {
   color: var(--color-text-neutral);
+  font-weight: 400;
   opacity: 0.7;
 }
 
 .valueHelper {
   margin: 0;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
 }

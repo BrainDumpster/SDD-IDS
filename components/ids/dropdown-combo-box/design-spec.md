@@ -8,12 +8,13 @@
   `Dropdown-Single-Select` and `Dropdown-Multi-select` are intentionally handled in their dedicated specs.
 - **Figma (Combobox Single-select):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=29393-149209&m=dev`
 - **Figma (Combobox Multi-select):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12730-157002&m=dev`
+- **Figma (Combobox Multi-select menu — Show Selected):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=29393-146761&m=dev`
 - **Figma (Combobox Menu Elements):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=29393-143195&m=dev`
 - **Figma (Combobox size/state matrix):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43415-176785&m=dev`
 - **Figma (Multi-select selection element):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=29716-46779&m=dev`
 - **Figma (Multi-select selected row element):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12730-120316&m=dev`
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
-- **Validated nodes:** `29393:149209`, `12730:157002`, `29393:143195`, `43415:176785`, `29716:46779`, `12730:120316`
+- **Validated nodes:** `29393:149209`, `12730:157002`, `29393:143195`, `43415:176785`, `29716:46779`, `12730:120316`, `12730:120314`, `12730:120315`
 - **Last live verification:** Figma MCP `get_design_context` and `get_variable_defs` on the nodes above.
 ## Anatomy
 1. `ComboBoxRoot`
@@ -43,10 +44,20 @@
   - popup opens attached below trigger (`top: fieldHeight - 1px` visual alignment).
   - border `1px`, drop shadow uses IDS shadow tokens.
   - search row wrapper padding: `var(--padding-padding-8)`.
+  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
   - option row padding: `var(--padding-padding-10) var(--padding-padding-16)`.
-- Multi-select summary selection element:
-  - chip/tag row uses compact vertical rhythm (`var(--padding-padding-8)` block).
+- Multi-select summary selection element (Figma `12730:120314` collapsed, `12730:120315` expanded):
+  - panel padding: `var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0`; expanded bottom `var(--padding-padding-16)`.
+  - header row: full width, `justify-content: space-between`, inner right inset `var(--padding-padding-8)`.
+  - toggle label (`Show Selected` / `Hide Selected`): `var(--color-text-brand-strong)`, toggle padding `var(--padding-padding-2) var(--padding-padding-16)`.
+  - caret (`arrow-drop-tri-caret`, Figma `9662:26612`): **10×10px** frame, `var(--color-icon-brand-base)`.
+  - row dismiss (`.Tag-Element-Close` / `shape-x-thick`, Figma `11666:90408`): **10×10px** frame, `var(--color-icon-accessible)`, **right-aligned** in header row.
+  - expanded tag wrap: `gap: var(--spacing-space-4)`, padding `var(--spacing-space-8) var(--padding-padding-8) 0 var(--padding-padding-16)`.
+  - dismissible tags use IDS Tag large editable geometry (`components/ids/tag/design-spec.md`).
   - selected-count badge follows IDS badge geometry (`18px` height, pill radius).
+- Search dismiss control:
+  - visible when query length `> 0`; right-aligned inside search field row.
+  - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-accessible)`.
 ## Tokens
 - **Core field tokens**
   - `var(--color-background-component)`
@@ -114,11 +125,14 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - `Space` toggles active option in multi-select mode.
 - Search behavior:
   - typing in search row filters option list immediately.
+  - when search query is non-empty, a right-aligned dismiss control (`shape-x-thick`, **10×10px** frame) clears the query.
   - empty-result state shows only search + empty content block where configured.
 - Multi-select behavior:
   - `Select All` toggles all currently visible filtered options.
   - `Clear All` clears all current selections.
-  - `Show Selected` filter limits rows to selected options.
+  - `Show Selected` / `Hide Selected` toggles the selection summary panel (Figma `12730:120316`, menu `29393:146761`).
+  - when expanded, selected values render as dismissible **Tag** chips per `components/ids/tag/design-spec.md` (`type=editable`, `closable`, large dismissible geometry).
+  - selection panel header includes row-level dismiss (`shape-x-thick`, `10px`, right-aligned) that clears all current selections.
   - collapsed field can show badge count + truncated selected labels.
 - Validation:
   - error state shows critical icon + "Error message" slot below field.
@@ -140,6 +154,11 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 | `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
 | `onSelectAll` | No | `() => void` | Multi-select only. |
 | `onClearAll` | No | `() => void` | Multi-select only. |
+| `showSelectedPanel` | No | `boolean` | Multi-select only; enables Show/Hide Selected row + tag chips. |
+| `showSelectedExpanded` | No | `boolean` | Controlled expanded state for selection tag panel. |
+| `onShowSelectedExpandedChange` | No | `(expanded: boolean) => void` | Toggle callback for Show/Hide Selected. |
+| `onRemoveSelectedTag` | No | `(value: string) => void` | Removes one selected value when a tag dismiss control is activated. |
+| `onShowSelectedPanelClear` | No | `() => void` | Clears all selections from panel header dismiss; defaults to `onClearAll`. |
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 1. `ComboBoxRoot`

@@ -40,6 +40,7 @@ const config: StorybookConfig = {
     "../src/**/*.stories.@(ts|tsx)",
     "../../storybook-generated/ids/src/**/*.stories.@(ts|tsx)",
     "../../storybook-generated/dap/src/**/*.stories.@(ts|tsx)",
+    "../../storybook-generated/synapse/src/**/*.stories.@(ts|tsx)",
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {
