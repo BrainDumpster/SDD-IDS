@@ -1,13 +1,21 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ChatInputBox } from "./ChatInputBox";
 
 const meta: Meta<typeof ChatInputBox> = {
-  title: "Synapse/ChatInputBox",
+  title: "Spec Generated/Synapse/ChatInputBox",
   component: ChatInputBox,
 };
 
 export default meta;
 type Story = StoryObj<typeof ChatInputBox>;
+
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    onSend: (msg: string) => alert(`Sent: ${msg}`),
+  },
+};
 
 export const Default: Story = {
   args: {

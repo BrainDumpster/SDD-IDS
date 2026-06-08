@@ -369,7 +369,7 @@ def build_root_spec(theme: dict, config: dict) -> str:
 | Name | Synapse |
 | Framework Layer | {config.get('framework_layer', 'base-ui')} |
 | Figma File | Synapse Hi Fi components |
-| Figma URL (reference) | `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=11067-54471` |
+| Figma URL (reference) | `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=9007-20353` |
 | Theme Mechanism | CSS Custom Properties + `data-theme` attribute |
 
 ### Supported Frameworks
@@ -539,7 +539,7 @@ All components must meet these requirements. Component specs only document addit
 | Source | Location |
 |---|---|
 | Figma variables | `GET /v1/files/Td1bnsvRj1PCGs9RVJkIvJ/variables/local` (Figma REST API); last sync timestamp in `components/synapse-theme.css` header |
-| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `11067:54471` (CANVAS `-- Form Elements` — page context for this sync) |
+| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `9007:20353` (CANVAS `-- Navigation` — file context; token values from variables/local) |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
 | Config | `config/design_systems/synapse.yaml` |

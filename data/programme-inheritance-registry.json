@@ -1,0 +1,94 @@
+{
+  "description": "Programme-layer design specs that inherit from IDS baseline. Used by intake, inheritance wizard, and codegen.",
+  "patterns": {
+    "ids-fork": "Same Figma component family as IDS; programme spec = IDS baseline pointer + programme deltas table + programme Figma evidence.",
+    "standalone": "Programme-native anatomy; full spec without IDS baseline section.",
+    "dap-style": "Mostly IDS with sparse inline DAP override notes (small diffs)."
+  },
+  "programmes": {
+    "synapse": {
+      "componentsDir": "components/synapse",
+      "figmaMapPath": "data/synapse-component-figma-map.json",
+      "themeCssPath": "components/synapse-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Synapse",
+      "baselineComponentsDir": "components/ids"
+    },
+    "dap": {
+      "componentsDir": "components/DAP",
+      "figmaMapPath": "data/component-figma-map.json",
+      "themeCssPath": "components/dap-theme.css",
+      "storybookTitlePrefix": "Spec Generated/DAP",
+      "baselineComponentsDir": "components/ids"
+    }
+  },
+  "components": [
+    {
+      "programme": "synapse",
+      "slug": "left-nav",
+      "displayName": "Left Nav",
+      "registrySlug": "leftnav",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "main-menu-left",
+      "idsBaselineSpecPath": "components/ids/main-menu-left/design-spec.md",
+      "programmeSpecPath": "components/synapse/left-nav/design-spec.md",
+      "programmeFigmaNodeId": "47807:8153",
+      "idsFigmaNodeId": "11099:56218",
+      "sharedImplementation": "storybook/src/components/MainMenuLeft.tsx",
+      "programmeWrapper": "storybook/src/components/SynapseLeftNav.tsx",
+      "programmeFlag": "programme=\"synapse\"",
+      "status": "active"
+    },
+    {
+      "programme": "synapse",
+      "slug": "modal",
+      "displayName": "Modal Dialog",
+      "registrySlug": "dialog",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "modal",
+      "idsBaselineSpecPath": "components/ids/modal/design-spec.md",
+      "programmeSpecPath": "components/synapse/modal/design-spec.md",
+      "programmeFigmaNodeId": "43461:175960",
+      "idsFigmaNodeId": "11348:63064",
+      "storybookPath": "storybook-generated/synapse/src/components/Modal.stories.tsx",
+      "lastVerified": "2026-06-05",
+      "status": "draft"
+    },
+    {
+      "programme": "synapse",
+      "slug": "masthead",
+      "displayName": "Masthead",
+      "registrySlug": "masthead",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/synapse/masthead/design-spec.md",
+      "programmeFigmaNodeId": "47807:7569",
+      "status": "active"
+    },
+    {
+      "programme": "synapse",
+      "slug": "button",
+      "displayName": "Button",
+      "registrySlug": "button",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "button",
+      "idsBaselineSpecPath": "components/ids/button/design-spec.md",
+      "programmeSpecPath": "components/synapse/button/design-spec.md",
+      "programmeFigmaNodeId": "47808:31665",
+      "documentationBoardNodeId": "47809:1805",
+      "storybookPath": "storybook-generated/synapse/src/components/Button.stories.tsx",
+      "lastVerified": "2026-06-05",
+      "status": "draft"
+    },
+    {
+      "programme": "dap",
+      "slug": "pagination",
+      "displayName": "Pagination",
+      "registrySlug": "pagination",
+      "pattern": "dap-style",
+      "idsBaselineSlug": "pagination",
+      "idsBaselineSpecPath": "components/ids/pagination/design-spec.md",
+      "programmeSpecPath": "components/DAP/pagination/design-spec.md",
+      "status": "active",
+      "notes": "DAP inline overrides in Layout; extend with explicit deltas table when hardening."
+    }
+  ]
+}

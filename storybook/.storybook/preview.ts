@@ -40,7 +40,7 @@ const preview: Preview = {
         }
 
         if (partsA[0] === "Spec Generated" && partsB[0] === "Spec Generated") {
-          const specGroupOrder = ["IDS", "DAP"];
+          const specGroupOrder = ["IDS", "DAP", "Synapse"];
           const groupA = specGroupOrder.indexOf(partsA[1] ?? "");
           const groupB = specGroupOrder.indexOf(partsB[1] ?? "");
           if (groupA !== groupB) {

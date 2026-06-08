@@ -1,13 +1,22 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ErrorCard } from "./ErrorCard";
 
 const meta: Meta<typeof ErrorCard> = {
-  title: "Synapse/ErrorCard",
+  title: "Spec Generated/Synapse/ErrorCard",
   component: ErrorCard,
 };
 
 export default meta;
 type Story = StoryObj<typeof ErrorCard>;
+
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    title: "404 — Page Not Found",
+    message: "The page you are looking for does not exist or has been moved.",
+  },
+};
 
 export const NotFound: Story = {
   args: {

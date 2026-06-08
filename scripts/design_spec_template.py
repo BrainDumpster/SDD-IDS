@@ -22,6 +22,15 @@ COMPOSITION_STUB = """Document runtime props, events, and variant axes. When **V
 
 """
 
+DARK_STATES_BOILERPLATE_SYNAPSE = """Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / Synapse dark scope live in theme CSS:
+
+- `components/synapse-theme.css`
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+"""
+
 DARK_STATES_BOILERPLATE = """Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
 
 - `components/ids-theme.css`
@@ -138,5 +147,86 @@ NEW_SPEC_TEMPLATE = (
 ## Source Mapping
 - Design source: Figma URL above
 - Component map entry: `data/component-figma-map.json` → component "{component}" (category "{category}"; node "{nodeId}")
+"""
+)
+
+SYNAPSE_IDS_FORK_TEMPLATE = (
+"""# {component} Design Spec
+
+## IDS baseline (layout, flow, contracts)
+
+Synapse **{component}** is the same component family as IDS **{idsComponent}**. Layout, interaction contracts, and shared slot geometry match the IDS spec unless noted in **Synapse programme deltas** below.
+
+- **IDS source of truth:** [`{idsSpecPath}`]({idsSpecPath})
+- **Shared implementation:** `{sharedImplementation}`
+- **Synapse wrapper (if any):** `{synapseWrapper}`
+
+## Metadata
+- Component: {component}
+- Design System: Synapse
+- Category: {category}
+- Spec pattern: ids-fork
+- IDS baseline slug: {idsSlug}
+- Figma file: {figmaUrl}
+- File key: `{fileKey}`
+- Main component set node: `{nodeId}`
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Last verified: TODO
+- Status: draft
+- Version: 1.0.0
+- Theme CSS: `components/synapse-theme.css`
+
+### Synapse programme deltas (vs IDS)
+
+| Topic | IDS | Synapse |
+|---|---|---|
+| TODO | TODO | TODO |
+
+## Anatomy
+(Same slot order as IDS [`{idsSlug}`]({idsSpecPath}) unless noted above.)
+
+## Layout & Measurements
+(Same flow as IDS except rows in **Synapse programme deltas**.)
+
+## Tokens
+### Surfaces and borders
+- TODO: Synapse-specific tokens only; inherit unchanged typography from IDS spec
+
+## States (Light Theme)
+(Document rows that differ from IDS; identical rows inherit IDS state matrix.)
+
+## States (Dark Theme)
+
+"""
+    + DARK_STATES_BOILERPLATE_SYNAPSE
+    + """
+
+## Interactions
+(Same as IDS unless noted in **Synapse programme deltas**.)
+
+### Accessibility
+- TODO
+
+### Behavior & guidelines
+- TODO
+
+## Composition & API (runtime)
+(Inherit IDS types from shared implementation; document Synapse-only props.)
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+"""
+    + CODEGEN_BOOTSTRAP
+    + """
+### Validation checklist
+- [ ] IDS contract referenced; programme deltas table complete
+- [ ] Live Figma MCP evidence on Synapse nodes
+- [ ] Storybook `Spec Generated/Synapse/{component}` with **Spec Accurate Design**
+
+## Source Mapping
+- Design source: Synapse Hi-Fi `{fileKey}`
+- Validated nodes: `{nodeId}`
+- IDS parity reference: `{idsSpecPath}`
+- Registry: `data/programme-inheritance-registry.json` → `{synapseSlug}`
+- Component map: `data/synapse-component-figma-map.json` → {component}
 """
 )

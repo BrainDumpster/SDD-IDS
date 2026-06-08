@@ -1,7 +1,7 @@
 <!-- auto:generated:start -->
 # Synapse Design System — Root Spec
 
-> Generated 2026-05-04T08:00:15Z. Global design system specification — framework-agnostic.
+> Generated 2026-06-04T08:03:38Z. Global design system specification — framework-agnostic.
 > All component specs inherit from this document. Component specs only override what is specific.
 
 <!-- ds:section id=identity -->
@@ -12,7 +12,7 @@
 | Name | Synapse |
 | Framework Layer | base-ui |
 | Figma File | Synapse Hi Fi components |
-| Figma URL (reference) | `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=11067-54471` |
+| Figma URL (reference) | `https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=9007-20353` |
 | Theme Mechanism | CSS Custom Properties + `data-theme` attribute |
 
 ### Supported Frameworks
@@ -120,11 +120,11 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-background-white` | #ffffff | #ffffff |
 | `--color-background-white-transparant-blue` | #ffffff | rgba(0,38,66,0.50) |
 
-### Border Tokens (51 tokens)
+### Border Tokens (52 tokens)
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-border-accessible` | #757575 | #757575 |
+| `--color-border-accessible` | #757575 | #8898a5 |
 | `--color-border-alerting-critical-base` | #af0000 | #dd9494 |
 | `--color-border-alerting-critical-critical` | #af0000 | #af0000 |
 | `--color-border-alerting-critical-transparent` | #af0000 | rgba(221,148,148,0.00) |
@@ -135,9 +135,10 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-border-alerting-info-white` | #005ece | #ffffff |
 | `--color-border-alerting-major-base` | #ed6400 | #f7be94 |
 | `--color-border-alerting-major-major` | #ed6400 | #ed6400 |
+| `--color-border-alerting-major-transparent` | #ed6400 | rgba(247,190,148,0.00) |
 | `--color-border-alerting-major-white` | #ed6400 | #ffffff |
 | `--color-border-alerting-minor-minor` | #9c622e | #9c622e |
-| `--color-border-alerting-minor-transparent` | None | rgba(255,255,255,0.00) |
+| `--color-border-alerting-minor-transparent` | #9c622e | rgba(255,255,255,0.00) |
 | `--color-border-alerting-minor-white` | #9c622e | #ffffff |
 | `--color-border-alerting-success-base` | #1b8500 | #9fcc94 |
 | `--color-border-alerting-success-transparent` | #1b8500 | rgba(159,204,148,0.00) |
@@ -156,7 +157,7 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-border-brand-dark` | #0062ab | #94c5ea |
 | `--color-border-brand-neutral` | #0076ce | #8898a5 |
 | `--color-border-disabled` | #757575 | #9e9e9e |
-| `--color-border-light` | #c5c5c5 | #c5c5c5 |
+| `--color-border-light` | #c5c5c5 | #34414c |
 | `--color-border-lighter` | #eaeaea | #1e262c |
 | `--color-border-neutral` | #4d4d4d | #8898a5 |
 | `--color-border-neutral-light` | #757575 | #34414c |
@@ -195,7 +196,7 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-text-link-brand-stronger` | #003a65 | #d9eaf8 |
 | `--color-text-neutral` | #4d4d4d | #b8c1c9 |
 | `--color-text-neutral-medium` | #4d4d4d | #8898a5 |
-| `--color-text-neutral-strong` | #252525 | #252525 |
+| `--color-text-neutral-strong` | #252525 | #e6e9ec |
 | `--color-text-tag-critical` | #af0000 | #dd9494 |
 | `--color-text-tag-info` | #0062ab | #94bbea |
 | `--color-text-tag-major` | #9c4200 | #f2934c |
@@ -215,7 +216,7 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-icon-accessible` | #757575 | #757575 |
+| `--color-icon-accessible` | #757575 | #8898a5 |
 | `--color-icon-alerting-critical` | #af0000 | #c74c4c |
 | `--color-icon-alerting-info-1` | #005ece | #4c8edd |
 | `--color-icon-alerting-info-2` | #005ece | #005ece |
@@ -231,11 +232,11 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-icon-brand-base` | #0076ce | #4c9fdd |
 | `--color-icon-brand-strong` | #0062ab | #94c5ea |
 | `--color-icon-brand-stronger` | #06528a | #d9eaf8 |
-| `--color-icon-disabled` | #757575 | #757575 |
+| `--color-icon-disabled` | #757575 | #c5c5c5 |
 | `--color-icon-inverse` | #ffffff | #252525 |
 | `--color-icon-neutral` | #4d4d4d | #b8c1c9 |
 | `--color-icon-neutral-light` | #4d4d4d | #e6e9ec |
-| `--color-icon-neutral-strong` | #252525 | #252525 |
+| `--color-icon-neutral-strong` | #252525 | #f2f3f5 |
 | `--color-icon-teal-base` | #00819e | #4ca7bb |
 | `--color-icon-teal-strong` | #005568 | #94cad6 |
 | `--color-icon-teal-strong-2` | #003f4d | #d9ecf0 |
@@ -280,7 +281,7 @@ These do not change between themes.
 | `--color-static-gray-900` | #252525 |
 | `--color-static-gray-white` | #ffffff |
 
-### Primitive Palette — Alert (45 tokens)
+### Primitive Palette — Alert (46 tokens)
 
 | Token | Value |
 |---|---|
@@ -311,6 +312,7 @@ These do not change between themes.
 | `--alert-orange-700` | #9c4200 |
 | `--alert-orange-800` | #743100 |
 | `--alert-orange-900` | #4c2000 |
+| `--alert-orange-transparent` | rgba(242,147,76,0.30) |
 | `--alert-red-100` | #f9ebeb |
 | `--alert-red-200` | #f3d9d9 |
 | `--alert-red-300` | #dd9494 |
@@ -477,6 +479,7 @@ These do not change between themes.
 | `--spacing-space-20` | 20px |
 | `--spacing-space-24` | 24px |
 | `--spacing-space-32` | 32px |
+| `--spacing-space-34` | 34px |
 | `--spacing-space-4` | 4px |
 | `--spacing-space-40` | 40px |
 | `--spacing-space-48` | 48px |
@@ -503,6 +506,7 @@ These do not change between themes.
 | `--sizing-size-40` | 40px |
 | `--sizing-size-44` | 44px |
 | `--sizing-size-48` | 48px |
+| `--sizing-size-52` | 52px |
 | `--sizing-size-56` | 56px |
 | `--sizing-size-6` | 6px |
 | `--sizing-size-8` | 8px |
@@ -586,7 +590,7 @@ These do not change between themes.
 | 3 | `--shadow-drop-shadow-16-*` | Selected states (dropdown, calendar) |
 | 4 | `--shadow-drop-shadow-32-*` | Modal, dialog, wizards |
 
-### Shadow Tokens (20 tokens)
+### Shadow Tokens (25 tokens)
 
 | Token | Light | Dark |
 |---|---|---|
@@ -605,6 +609,11 @@ These do not change between themes.
 | `--shadow-shadow-4-drop-shadow-32-spread` | 0px | 0px |
 | `--shadow-shadow-4-drop-shadow-32-x` | 0px | 0px |
 | `--shadow-shadow-4-drop-shadow-32-y` | 32px | 32px |
+| `--shadow-shadow-4-drop-shadow-4-blur` | var(--shadow-drop-shadow-4-blur) | var(--shadow-drop-shadow-4-blur) |
+| `--shadow-shadow-4-drop-shadow-4-color` | var(--shadow-drop-shadow-4-color) | var(--shadow-drop-shadow-4-color) |
+| `--shadow-shadow-4-drop-shadow-4-spread` | var(--shadow-drop-shadow-4-spread) | var(--shadow-drop-shadow-4-spread) |
+| `--shadow-shadow-4-drop-shadow-4-x` | var(--shadow-drop-shadow-4-x) | var(--shadow-drop-shadow-4-x) |
+| `--shadow-shadow-4-drop-shadow-4-y` | var(--shadow-drop-shadow-4-y) | var(--shadow-drop-shadow-4-y) |
 | `--shadow-shadow-4-drop-shadow-8-blur` | 8px | 8px |
 | `--shadow-shadow-4-drop-shadow-8-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
 | `--shadow-shadow-4-drop-shadow-8-spread` | 0px | 0px |
@@ -699,7 +708,7 @@ All components must meet these requirements. Component specs only document addit
 | Source | Location |
 |---|---|
 | Figma variables | `GET /v1/files/Td1bnsvRj1PCGs9RVJkIvJ/variables/local` (Figma REST API); last sync timestamp in `components/synapse-theme.css` header |
-| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `11067:54471` (CANVAS `-- Form Elements` — page context for this sync) |
+| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `9007:20353` (CANVAS `-- Navigation` — file context; token values from variables/local) |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
 | Config | `config/design_systems/synapse.yaml` |

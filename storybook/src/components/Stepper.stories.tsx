@@ -1,8 +1,9 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Stepper } from "./Stepper";
 
 const meta: Meta<typeof Stepper> = {
-  title: "Synapse/Stepper",
+  title: "Spec Generated/Synapse/Stepper",
   component: Stepper,
   argTypes: {
     orientation: {
@@ -14,6 +15,15 @@ const meta: Meta<typeof Stepper> = {
 
 export default meta;
 type Story = StoryObj<typeof Stepper>;
+
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    steps: ["Account", "Profile", "Preferences", "Review"],
+    activeStep: 1,
+    orientation: "horizontal",
+  },
+};
 
 export const AtStepTwo: Story = {
   args: {

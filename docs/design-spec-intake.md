@@ -4,6 +4,16 @@ Create production-ready, framework-agnostic `design-spec.md` files by pasting on
 
 Works in **Cursor**, **Windsurf Cascade**, and **Windsurf Devin** (see Devin notes below). Full rules: [design-spec-authoring-contract.md](design-spec-authoring-contract.md).
 
+## Programme inheritance (Synapse / DAP from IDS base)
+
+When the component **inherits IDS** but uses **programme Figma** (token/layout/chrome deltas), use the inheritance process instead of this wizard:
+
+- **Doc:** [design-spec-programme-inheritance.md](design-spec-programme-inheritance.md)
+- **Cursor:** `@design-spec-programme-inheritance` or paste the **inheritance base prompt** from that doc
+- **Figma URLs:** same three buckets as this wizard — **Main component** (one or many), **Elements**, **States**
+
+---
+
 ## Base prompt (copy this)
 
 Paste into a **new agent chat** with the SDD-IDS repository open:
@@ -116,10 +126,10 @@ Examples must follow repo conventions (see [README — Spec Accurate Design](../
 
 | Rule | Value |
 |------|--------|
-| Sidebar group | **Spec Generated** — `Spec Generated/IDS/<Component>` or `Spec Generated/DAP/<Component>` |
+| Sidebar group | **Spec Generated** — `Spec Generated/IDS/<Component>`, `Spec Generated/DAP/<Component>`, or `Spec Generated/Synapse/<Component>` |
 | Primary story name | **Spec Accurate Design** |
 | Source of truth | `design-spec.md` (tokens, layout, states, API defaults) |
-| Theme CSS | One import: `components/ids-theme.css` or `components/dap-theme.css` |
+| Theme CSS | One import: `components/ids-theme.css`, `components/dap-theme.css`, or `components/synapse-theme.css` |
 
 Do not publish spec-driven examples under generic Storybook folders. Optional extra stories (state matrix, collapsed, etc.) sit under the same **Spec Generated** title.
 
@@ -149,4 +159,5 @@ The agent may save `data/design-spec-intake/sessions/<slug>-<date>.yaml` for aud
 | Authoring contract | [design-spec-authoring-contract.md](design-spec-authoring-contract.md) |
 | Blueprint / hardening | [.cursor/skills/design-spec-blueprint/SKILL.md](../.cursor/skills/design-spec-blueprint/SKILL.md) |
 | Wizard skill (Cursor) | [.cursor/skills/design-spec-intake-wizard/SKILL.md](../.cursor/skills/design-spec-intake-wizard/SKILL.md) |
+| Programme inheritance | [design-spec-programme-inheritance.md](design-spec-programme-inheritance.md) · [.cursor/skills/design-spec-programme-inheritance/SKILL.md](../.cursor/skills/design-spec-programme-inheritance/SKILL.md) |
 | Spec template | `scripts/design_spec_template.py` |

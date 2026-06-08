@@ -9,6 +9,8 @@ Use when the user wants to **create a new** `design-spec.md` and has not already
 
 Pair with **`docs/design-spec-authoring-contract.md`** for full production-ready rules. For section depth after intake, follow **design-spec-blueprint** skill.
 
+**Synapse + IDS base:** when programme = Synapse and the component reuses an IDS Figma family, run **design-spec-synapse-ids-fork** after step 1 (do not blind-copy IDS spec). See `docs/design-spec-synapse-ids-fork.md`.
+
 ## Interview phase (strict)
 
 **Do not** call Figma tools, edit files, or update `data/*-figma-map.json` until the user confirms the summary in step 8.

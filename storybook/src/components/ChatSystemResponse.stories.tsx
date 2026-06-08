@@ -1,13 +1,22 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ChatSystemResponse } from "./ChatSystemResponse";
 
 const meta: Meta<typeof ChatSystemResponse> = {
-  title: "Synapse/ChatSystemResponse",
+  title: "Spec Generated/Synapse/ChatSystemResponse",
   component: ChatSystemResponse,
 };
 
 export default meta;
 type Story = StoryObj<typeof ChatSystemResponse>;
+
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    content: "Your request has been processed successfully.",
+    timestamp: "2:34 PM",
+  },
+};
 
 export const ShortMessage: Story = {
   args: {

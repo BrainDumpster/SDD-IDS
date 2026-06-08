@@ -192,10 +192,27 @@
   cursor: not-allowed;
 }
 
+.programmeSynapse {
+  border-radius: var(--corner-radius-radius-4);
+}
+
 /* Focus: outer ring 1px brand, 3px outside button (matches component-set Focus state) */
 .button:focus-visible:not(:disabled) {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 2px;
+}
+
+.programmeSynapse:focus-visible:not(:disabled) {
+  outline: none;
+}
+
+.programmeSynapse:focus-visible:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-6);
+  pointer-events: none;
 }
 
 .primary:focus-visible:not(:disabled) {

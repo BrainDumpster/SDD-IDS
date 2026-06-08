@@ -6,6 +6,8 @@ type Variant = "primary" | "secondary" | "tertiary" | "ghost" | "danger" | "dest
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ComponentProps<"button"> {
+  /** Programme chrome (`synapse`: 4px radius, 6px focus ring). */
+  programme?: "ids" | "synapse";
   variant?: Variant;
   size?: Size;
   loading?: boolean;
@@ -39,6 +41,7 @@ function resolveIconUrl(iconSlug: string): string | undefined {
 }
 
 export function Button({
+  programme = "ids",
   variant = "primary",
   size = "md",
   loading = false,
@@ -67,6 +70,7 @@ export function Button({
           styles.button,
           styles[variantClass],
           styles[size],
+          programme === "synapse" ? styles.programmeSynapse : "",
           resolvedIconOnly ? styles.iconOnly : "",
           loading ? styles.loading : "",
           className,
