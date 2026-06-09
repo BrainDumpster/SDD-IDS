@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import copyIcon from "../../../assets/icons/copy.svg";
 import { Dialog } from "./Dialog";
 import styles from "./About.module.css";
 
@@ -7,9 +8,13 @@ export interface AboutProps {
   trigger?: ReactNode;
   productTitle: string;
   versionLabel: string;
+  /** Figma `49962:52727` — optional serial row with copy affordance. */
+  showSerialNumber?: boolean;
+  serialNumber?: string;
+  onSerialCopy?: () => void;
   /** Optional logo URL (e.g. imported SVG). */
   logoSrc?: string;
-  /** Copyright / legal text; split paragraphs with a blank line (`\n\n`). Ignored if `copyrightContent` / `legalContent` is set. */
+  /** Copyright / legal copy — rendered as **one** centered paragraph. Ignored if `copyrightContent` / `legalContent` is set. */
   copyrightText?: string;
   copyrightContent?: ReactNode;
   /** Alias of `copyrightText` (design-spec naming). */
@@ -26,6 +31,9 @@ export function About({
   trigger,
   productTitle,
   versionLabel,
+  showSerialNumber = false,
+  serialNumber,
+  onSerialCopy,
   logoSrc,
   copyrightText,
   copyrightContent,
@@ -50,6 +58,7 @@ export function About({
 
   return (
     <Dialog
+      programme="synapse"
       variant="about"
       trigger={trigger}
       open={open}
@@ -64,6 +73,22 @@ export function About({
     >
       <div className={styles.contentColumn}>
         <p className={styles.versionLine}>{versionLabel}</p>
+        {showSerialNumber && serialNumber ? (
+          <div className={styles.serialRow}>
+            <span className={styles.serialLabel}>Serial Number: {serialNumber}</span>
+            <button
+              type="button"
+              className={styles.serialCopy}
+              aria-label={`Copy serial number ${serialNumber}`}
+              onClick={() => {
+                void navigator.clipboard?.writeText(serialNumber);
+                onSerialCopy?.();
+              }}
+            >
+              <img src={copyIcon} alt="" className={styles.serialCopyIcon} />
+            </button>
+          </div>
+        ) : null}
         {showBrandCluster ? (
           <div className={styles.brandBlock}>
             {logoSrc ? (
@@ -88,6 +113,10 @@ export function About({
   );
 }
 
+function normalizeCopyrightParagraph(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
 function CopyrightBlock({
   copyrightContent,
   copyrightText,
@@ -99,14 +128,7 @@ function CopyrightBlock({
     return <div className={styles.copyright}>{copyrightContent}</div>;
   }
   if (!copyrightText) return null;
-  const parts = copyrightText.split(/\n\n/).filter(Boolean);
   return (
-    <div className={styles.copyright}>
-      {parts.map((para, i) => (
-        <p key={i} className={styles.copyrightPara}>
-          {para}
-        </p>
-      ))}
-    </div>
+    <p className={styles.copyright}>{normalizeCopyrightParagraph(copyrightText)}</p>
   );
 }

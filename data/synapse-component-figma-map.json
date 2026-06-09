@@ -76,7 +76,7 @@
 
   {"category": "Patterns", "component": "Login", "designSystem": "synapse", "nodeId": "", "page": "Patterns"},
   {"category": "Patterns", "component": "Dashboard", "designSystem": "synapse", "nodeId": "", "page": "Patterns"},
-  {"category": "Patterns", "component": "About", "designSystem": "synapse", "nodeId": "49962:53917", "page": "Patterns", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=49962-53917&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ", "modalNodeId": "49962:53921"},
+  {"category": "Patterns", "component": "About", "designSystem": "synapse", "nodeId": "49962:52708", "mainComponentNodeId": "49962:52708", "page": "Patterns", "figmaUrl": "https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=49962-52708&m=dev", "fileKey": "Td1bnsvRj1PCGs9RVJkIvJ", "usageBoardNodeId": "49962:53917", "usageInstanceNodeId": "49962:53921", "designSpecPath": "components/synapse/about/design-spec.md"},
   {"category": "Patterns", "component": "Splash Screen", "designSystem": "synapse", "nodeId": "", "page": "Patterns"},
   {"category": "Patterns", "component": "Status Bar", "designSystem": "synapse", "nodeId": "", "page": "Patterns"},
   {"category": "Patterns", "component": "What's New", "designSystem": "synapse", "nodeId": "", "page": "Patterns"},
