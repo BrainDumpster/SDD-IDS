@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,38 +10,69 @@ import { mergeConfig } from "vite";
 // `storybook-generated/` (a single `../` only searches under `storybook/storybook-generated`).
 const storybookConfigDir = path.dirname(fileURLToPath(import.meta.url));
 const storybookPackageRoot = path.resolve(storybookConfigDir, "..");
+const repoRoot = path.resolve(storybookPackageRoot, "..");
 
-/** New files under storybook-generated are not in the startup importers map until restart. */
-function warnOnNewSpecGeneratedStories(): Plugin {
+/**
+ * Storybook builds a static story→importer map at startup. Hot-added `.stories.*`
+ * files are indexed in the sidebar but throw `importers[path] is not a function`
+ * until the dev server restarts (full-reload alone is not enough).
+ */
+function restartOnNewStoryFiles(): Plugin {
+  const storyRoots = [
+    path.join(storybookPackageRoot, "src"),
+    path.join(repoRoot, "storybook-generated"),
+  ];
+  const storybookCacheDir = path.join(storybookPackageRoot, "node_modules/.cache/storybook");
+
+  const clearStorybookCache = () => {
+    try {
+      fs.rmSync(storybookCacheDir, { recursive: true, force: true });
+    } catch {
+      // Cache may already be absent; ignore.
+    }
+  };
+
   return {
-    name: "warn-on-new-spec-generated-stories",
+    name: "restart-on-new-story-files",
     configureServer(server) {
-      server.watcher.on("add", (file) => {
+      let restartPending = false;
+
+      const scheduleRestart = (file: string, reason: "add" | "unlink") => {
         const normalized = path.normalize(file);
-        if (
-          !normalized.includes(`${path.sep}storybook-generated${path.sep}`) ||
-          !/\.stories\.(tsx|ts|mdx)$/.test(normalized)
-        ) {
-          return;
-        }
+        if (!/\.stories\.(tsx|ts|mdx)$/.test(normalized)) return;
+        if (!storyRoots.some((root) => normalized.startsWith(root + path.sep))) return;
+        if (restartPending) return;
+        restartPending = true;
+
         server.config.logger.warn(
-          "\n[storybook] New spec-generated story file detected. Reloading Storybook " +
-            "(if errors persist, stop and run: pnpm dev:clean)\n",
+          `\n[storybook] Story file ${reason === "add" ? "added" : "removed"}: ${path.basename(normalized)}\n` +
+            "Clearing Storybook cache and restarting dev server " +
+            "(fixes `importers[path] is not a function`).\n",
         );
-        server.ws.send({ type: "full-reload" });
-      });
+
+        // Defer so the file write finishes before Vite rescans globs.
+        setTimeout(() => {
+          clearStorybookCache();
+          void server.restart().finally(() => {
+            restartPending = false;
+          });
+        }, 200);
+      };
+
+      server.watcher.on("add", (file) => scheduleRestart(file, "add"));
+      server.watcher.on("unlink", (file) => scheduleRestart(file, "unlink"));
     },
   };
 }
 
-const repoRoot = path.resolve(storybookPackageRoot, "..");
-
 const config: StorybookConfig = {
+  // Absolute globs keep Vite importer keys aligned with the story index (avoids
+  // `importers[path] is not a function` for files under repo-root storybook-generated/).
   stories: [
-    "../src/**/*.stories.@(ts|tsx)",
-    "../../storybook-generated/ids/src/**/*.stories.@(ts|tsx)",
-    "../../storybook-generated/dap/src/**/*.stories.@(ts|tsx)",
-    "../../storybook-generated/synapse/src/**/*.stories.@(ts|tsx)",
+    path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/synapse/src/**/*.stories.@(ts|tsx)"),
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {
@@ -49,7 +81,7 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      plugins: [warnOnNewSpecGeneratedStories()],
+      plugins: [restartOnNewStoryFiles()],
       server: {
         fs: {
           allow: [storybookPackageRoot, repoRoot],

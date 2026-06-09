@@ -97,6 +97,25 @@
       "status": "draft"
     },
     {
+      "programme": "synapse",
+      "slug": "tab",
+      "displayName": "Tab / Nav Tabs",
+      "registrySlug": "tabs",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "tab",
+      "idsBaselineSpecPath": "components/ids/tab/design-spec.md",
+      "programmeSpecPath": "components/synapse/tab/design-spec.md",
+      "programmeFigmaNodeId": "47807:3185",
+      "idsFigmaNodeId": "30681:9530",
+      "specContract": "storybook/src/spec-contracts/synapse-tab.contract.ts",
+      "sharedImplementation": "storybook/src/components/Tabs.tsx",
+      "programmeWrapper": "storybook/src/components/SynapseTabs.tsx",
+      "programmeFlag": "programme=\"synapse\"",
+      "storybookPath": "storybook-generated/synapse/src/components/Tab.stories.tsx",
+      "lastVerified": "2026-06-05",
+      "status": "draft"
+    },
+    {
       "programme": "dap",
       "slug": "pagination",
       "displayName": "Pagination",

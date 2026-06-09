@@ -399,3 +399,122 @@
   color: var(--color-text-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
 }
+
+/* Synapse Nav Tab — Figma `47807:3185` / `Tab-Single` (`47804:189`). */
+.programmeSynapse .listWrap {
+  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  padding-bottom: var(--padding-padding-1);
+}
+
+.programmeSynapse .tab {
+  height: 32px;
+  padding: var(--padding-padding-6) var(--padding-padding-8) var(--padding-padding-6)
+    var(--padding-padding-16);
+  gap: var(--spacing-space-8);
+  background: var(--color-background-component);
+  border-bottom: none;
+  border-right: var(--border-width-border-1) solid var(--color-border-light);
+}
+
+.programmeSynapse .tab::after {
+  display: none;
+}
+
+.programmeSynapse .tab:hover:not([data-disabled]) {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+}
+
+.programmeSynapse .tab.selected {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  border-bottom: none;
+  /* Figma `47804:187` / `47806:371` — selected tab has no trailing divider. */
+  border-right: none;
+}
+
+.programmeSynapse .tab.selected::before,
+.programmeSynapse .tabSecondary.selected::before {
+  display: none;
+}
+
+.programmeSynapse .tabPrimary.selected {
+  box-shadow: none;
+}
+
+.programmeSynapse .tabInner {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.programmeSynapse .close {
+  width: auto;
+  height: auto;
+  padding: var(--padding-padding-4);
+  border-radius: 0;
+}
+
+.programmeSynapse .close:hover {
+  background: var(--color-background-n-tabs-x-hover);
+}
+
+.programmeSynapse .moreTrigger {
+  height: 32px;
+  padding: var(--padding-padding-6) var(--padding-padding-8) var(--padding-padding-6)
+    var(--padding-padding-16);
+  background: var(--color-background-component);
+  border-bottom: none;
+  border-right: var(--border-width-border-1) solid var(--color-border-light);
+}
+
+.programmeSynapse .moreTrigger::after {
+  display: none;
+}
+
+.programmeSynapse .moreTrigger:hover {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+}
+
+.programmeSynapse .moreTrigger.moreTriggerSelected,
+.programmeSynapse .moreTrigger[data-popup-open],
+.programmeSynapse .moreTrigger[data-popup-open]:hover {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  /* Figma `50736:251582` — selected overflow tab has no trailing divider. */
+  border-right: none;
+}
+
+.programmeSynapse .moreTrigger.moreTriggerSelected::before,
+.programmeSynapse .moreTriggerSecondary.moreTriggerSelected::before {
+  display: none;
+}
+
+.programmeSynapse .addButton {
+  width: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  height: 32px;
+  padding: var(--padding-padding-6) var(--padding-padding-8);
+  background: var(--color-background-component);
+  border-bottom: none;
+}
+
+.programmeSynapse .addButton::before {
+  display: none;
+}
+
+.programmeSynapse .addButton:hover {
+  background: var(--color-background-brand-lighter);
+}
+
+.programmeSynapse .addIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.programmeSynapse .panel {
+  border-top: none;
+  margin-top: 0;
+  padding: var(--padding-padding-16);
+}

@@ -16,7 +16,7 @@
 | Validated nodes | **`12189:233235`**, **`12189:233185`** (Overflow=False, Sequential=False, Single-Page), **`12189:233198`** (Overflow=True, Sequential=False, Page 1 of 2), **`12189:233211`** (Overflow=True, Sequential=False, Page 2 of 2), **`12189:233218`** (Overflow=False, Sequential=True, Single-Page), **`12189:233223`** (Overflow=True, Sequential=True, Page 1 of 2), **`12189:233228`** (Overflow=True, Sequential=True, Page 2 of 2), **`12023:228880`** (Not Completed), **`12023:228902`** (Completed), **`12023:228939`** (Required) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`, `disableCodeConnect: true`) — **2026-06-08** |
 | Reference implementation | `storybook/src/components/IdsGetStarted.tsx`, `IdsGetStarted.module.css` |
-| Generated Storybook | `storybook-generated/ids/src/components/GetStarted.stories.tsx` (title **`Spec Generated/IDS/Get Started`**) |
+| Storybook | `storybook/src/components/IdsGetStarted.stories.tsx` (title **`IDS/Get Started`** — main story glob; not under `storybook-generated/`) |
 | Nested specs | `components/ids/button/design-spec.md` (Configure / Skip buttons), `components/ids/masthead/design-spec.md` (optional embedded masthead) |
 
 ## Anatomy

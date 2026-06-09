@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import "../../components/ids-theme.css";
+import "../../../components/ids-theme.css";
 import {
   IdsGetStarted,
   type IdsGetStartedCard,
