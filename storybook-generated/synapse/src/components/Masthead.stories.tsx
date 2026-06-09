@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { AppLauncher } from "../../../../storybook/src/components/AppLauncher";
+import { SynapseAppLauncher } from "../../../../storybook/src/components/SynapseAppLauncher";
 import { Icon } from "../../../../storybook/src/components/Icon";
 import {
   SynapseMasthead,
@@ -26,7 +26,7 @@ const defaultHelpSlot = (
 );
 
 const defaultAppLauncher = (
-  <AppLauncher
+  <SynapseAppLauncher
     triggerVariant="masthead"
     sideOffset={0}
     products={[

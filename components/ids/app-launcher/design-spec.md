@@ -9,10 +9,17 @@
 - **Figma (component details):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-123761&m=dev`
 - **Figma (element states):** `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-109521&m=dev`
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
-- **Validated nodes:** `42266:95085`, `42266:95081`, `13231:123761`, `13231:109521`
-- **Last live verification:** Figma MCP `get_design_context` + `get_variable_defs` on the nodes above.
+- **Validated nodes:** `42266:95085`, `42266:95081`, `13231:123761`, `13231:109521`, `13231:124200` (2 products), `13231:124054` (3 products), `13231:123908` (4 products), `13231:123730` (8 products)
+- **Last live verification:** Figma MCP `get_design_context` on product-count variants (`13231:124200`, `13231:124054`, `13231:123908`, `42266:95081`) — 2026-06-05.
 ## Anatomy
-Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
+1. `AppLauncherRoot` — popover shell + trigger.
+2. `AppLauncherSurface` — `298px` panel (`13231:123761` variants).
+3. `ProductRegion` — stacked `ProductRow` groups.
+4. `ProductRow` — up to two `ProductTile` cells per row (`2 Across` frames: `14451:155638`, etc.).
+5. `AppLauncherColumnDivider` — **separate flex child between tiles** in the same row (not inside the tile control). Dotted `110px` stroke with `7px` inset top and bottom within the `125px` tile block. Solid full `125px` height (no top/bottom gap) for IDS 2-product / no-options (`13231:124200`). Synapse 2-product uses internal tile rails instead (see Synapse spec). Token: `var(--color-border-accessible)`.
+6. `AppLauncherRowDivider` — **separate flex child between rows**; dotted `262px` stroke with `var(--padding-padding-16)` inset left and right, horizontally centered in the parent (`13231:124057`, `13231:123911`). Token: `var(--color-border-accessible)`.
+7. `ProductTile` (`.AppLauncher-Element` `13231:109521`) — `148×125` interactive cell; hover/press fills full tile; dividers are siblings so fill does not cover separators.
+8. `OptionsRegion` — `Dropdown-SingleSelect-Elements-Menu` block (`42266:95081` when products + options).
 
 ## Layout & Measurements
 - Launcher surface width: `298px` (menu body width observed in usage/details).
@@ -21,8 +28,8 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Separator rule: dividers are rendered as separate row/column elements, so product tile occupancy remains full-size; any visual gap is only from outer edge/separator treatment, not from shrinking the tile content area.
 - Product icon slot: `32px x 32px`.
 - Product label box: `111px` max width with `Body 2` text.
-- Vertical product separators: dotted divider using `var(--color-border-accessible)` with fixed `93px` height, vertically centered between the two product panels; in 2-product no-options scenario, separator is solid and touches top/bottom of the launcher surface.
-- Between-row divider: dotted horizontal separator with fixed `262px` width, horizontally centered between product panels.
+- Vertical product separators: dotted divider using `var(--color-border-accessible)`; `110px` stroke with `7px` inset top and bottom within the `125px` tile block. In 2-product no-options scenario, separator is solid and spans the full `125px` tile height.
+- Between-row divider: dotted horizontal separator `262px` wide with `var(--padding-padding-16)` inset left and right, horizontally centered in the parent container.
 - Options block width: `295px` in dropdown menu detail node.
 - Option row padding: `10px 16px 10px 16px`.
 - Surface stroke/shadow:
@@ -115,8 +122,8 @@ Dark theme follows the same slot/state matrix as Light Theme, resolved exclusive
 ### Per-slot style contract
 - `ProductTile`: `148x125`, icon `32x32`, label width clamp `111px`.
 - `ProductRegion`: dotted row/column dividers from accessible border token; dividers are independent elements (not part of tile fill layer).
-  - vertical dotted divider: fixed `93px`, centered in `125px` tile block.
-  - horizontal dotted divider: fixed `262px`, centered across the panel seam.
+  - vertical dotted divider: `110px` stroke with `7px` inset top/bottom in `125px` tile block.
+  - horizontal dotted divider: `262px` stroke with `var(--padding-padding-16)` inset left/right, centered in parent.
 - Product content container must span the tile (`width: 100%`, `height: 100%`) so hover/press states use the full tile area.
 - `OptionsRegion`: simple stacked rows, no custom radius.
 - `OptionRow`: mirrors IDS dropdown-combo-box option contract for default/hover/press token behavior.
