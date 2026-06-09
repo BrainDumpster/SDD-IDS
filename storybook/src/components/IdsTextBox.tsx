@@ -38,6 +38,8 @@ export type IdsTextBoxState =
   | "error";
 
 export interface IdsTextBoxProps {
+  /** `synapse` → `radius-4` control + `radius-6` keyboard focus ring per Synapse Figma. */
+  programme?: "ids" | "synapse";
   componentType?: IdsTextBoxType;
   size?: IdsTextBoxSize;
   state?: IdsTextBoxState;
@@ -61,6 +63,7 @@ export interface IdsTextBoxProps {
 }
 
 export function IdsTextBox({
+  programme = "ids",
   componentType = "text-input",
   size = "large",
   state = "default",
@@ -113,7 +116,11 @@ export function IdsTextBox({
   };
 
   return (
-    <div className={styles.root}>
+    <div
+      className={[styles.root, programme === "synapse" ? styles.programmeSynapse : ""]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div
         className={[
           styles.control,

@@ -68,6 +68,19 @@
   content: none;
 }
 
+/* Synapse programme (`47833:47770`): rounded control + radius-6 focus ring. */
+.programmeSynapse .control {
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.programmeSynapse .control[data-state="focus"]::after,
+.programmeSynapse
+  .control[data-focus-modality="keyboard"]:has(.value:focus):not([data-state="disabled"]):not(
+    [data-state="error"]
+  )::after {
+  border-radius: var(--corner-radius-radius-6);
+}
+
 .control[data-state="disabled"] {
   background: var(--color-background-gray-light);
 }
