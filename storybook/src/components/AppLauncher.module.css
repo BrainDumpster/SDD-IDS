@@ -71,12 +71,23 @@
   outline-offset: -1px;
 }
 
+/* Base UI Popover.Popup shell — visual chrome lives on `.launcherSurface`. */
+.launcherPopup {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
 .launcherSurface {
   --app-launcher-divider-inset: var(--padding-padding-16);
   --app-launcher-row-divider-width: 262px;
   --app-launcher-tile-height: 125px;
   --app-launcher-column-divider-height: 110px;
   --app-launcher-column-divider-inset-block: 7px;
+  --app-launcher-column-divider-color: var(--color-border-accessible);
   --separator-inset: var(--app-launcher-divider-inset);
   box-sizing: border-box;
   background: var(--color-background-surface-2);
@@ -142,7 +153,8 @@
   inset-inline-start: 0;
   inset-block-start: var(--app-launcher-column-divider-inset-block);
   height: var(--app-launcher-column-divider-height);
-  border-inline-start: var(--border-width-border-1) dashed var(--color-border-accessible);
+  border-inline-start: var(--border-width-border-1) dashed
+    var(--app-launcher-column-divider-color);
 }
 
 .columnDividerSolid {
@@ -165,15 +177,8 @@
   inset-inline-start: 0;
   inset-block: 0;
   width: 0;
-  border-inline-start: var(--border-width-border-1) solid var(--color-border-accessible);
-}
-
-.columnDividerSynapse::before {
-  border-inline-start-color: var(--color-border-neutral-light);
-}
-
-.columnDividerSolid.columnDividerSynapse::before {
-  border-inline-start-color: var(--color-border-neutral-light);
+  border-inline-start: var(--border-width-border-1) solid
+    var(--app-launcher-column-divider-color);
 }
 
 /* Horizontal row separator: 262px stroke, 16px inset left/right, centered in parent. */
@@ -195,11 +200,7 @@
   width: var(--app-launcher-row-divider-width);
   height: 0;
   flex-shrink: 0;
-  border-top: var(--border-width-border-1) dashed var(--color-border-accessible);
-}
-
-.rowDividerSynapse::before {
-  border-top-color: var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) dashed var(--app-launcher-column-divider-color);
 }
 
 /* ---------- AppLauncherProductTile ---------- */
@@ -243,14 +244,14 @@
   outline-offset: -2px;
 }
 
-/* Synapse 2-product: row shell + internal full-height rail (`49927:272103`). */
-.appTileSynapse {
+/* 2-product: horizontal tile shell + internal dotted rail on leading tile (`13231:109518`). */
+.appTileTwoProduct {
   flex-direction: row;
   align-items: stretch;
   justify-content: flex-start;
 }
 
-.appTileSynapse .labelStack {
+.appTileTwoProduct .labelStack {
   flex: 1 1 auto;
   width: 147px;
   min-width: 0;
@@ -269,7 +270,8 @@
   position: absolute;
   inset-inline-start: 0;
   inset-block: 0;
-  border-inline-start: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-inline-start: var(--border-width-border-1) solid
+    var(--app-launcher-column-divider-color);
 }
 
 .tileDividerDotted::before {
@@ -278,7 +280,8 @@
   inset-inline-start: 0;
   inset-block-start: var(--app-launcher-column-divider-inset-block);
   height: var(--app-launcher-column-divider-height);
-  border-inline-start: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  border-inline-start: var(--border-width-border-1) dashed
+    var(--app-launcher-column-divider-color);
 }
 
 .labelStack {
@@ -360,7 +363,7 @@
   position: absolute;
   inset-inline: var(--separator-inset);
   inset-block-start: 0;
-  border-top: var(--border-width-border-1) dashed var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) dashed var(--app-launcher-column-divider-color);
   pointer-events: none;
 }
 
@@ -452,6 +455,7 @@
 }
 
 .programmeSynapse.launcherSurface {
+  --app-launcher-column-divider-color: var(--color-border-neutral-light);
   gap: var(--spacing-space-1);
   border-color: var(--color-border-neutral-light);
 }

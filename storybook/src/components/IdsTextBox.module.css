@@ -10,7 +10,7 @@
   align-items: center;
   background: var(--color-background-component);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: 0;
+  border-radius: var(--text-box-control-radius);
   display: flex;
   gap: var(--spacing-space-10);
   padding: 0 var(--padding-padding-16);
@@ -57,7 +57,7 @@
 .control[data-state="focus"]::after,
 .control[data-focus-modality="keyboard"]:has(.value:focus):not([data-state="disabled"]):not([data-state="error"])::after {
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: var(--text-box-focus-ring-radius);
   content: "";
   inset: -5px;
   pointer-events: none;
@@ -66,19 +66,6 @@
 
 .control[data-focus-modality="pointer"]:has(.value:focus):not([data-state="disabled"]):not([data-state="error"])::after {
   content: none;
-}
-
-/* Synapse programme (`47833:47770`): rounded control + radius-6 focus ring. */
-.programmeSynapse .control {
-  border-radius: var(--corner-radius-radius-4);
-}
-
-.programmeSynapse .control[data-state="focus"]::after,
-.programmeSynapse
-  .control[data-focus-modality="keyboard"]:has(.value:focus):not([data-state="disabled"]):not(
-    [data-state="error"]
-  )::after {
-  border-radius: var(--corner-radius-radius-6);
 }
 
 .control[data-state="disabled"] {

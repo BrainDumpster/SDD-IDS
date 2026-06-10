@@ -1,8 +1,9 @@
 /**
- * Synapse Modal (Modal Dialog) — IDS-fork spec contract.
+ * Synapse Modal (Modal Dialog) — thin IDS-fork; programme delta: `--modal-control-radius`.
  * Full contract: `components/synapse/modal/design-spec.md`
  * IDS baseline: `components/ids/modal/design-spec.md`
  */
+export const SYNAPSE_MODAL_CONTROL_RADIUS_ALIAS = "--modal-control-radius" as const;
 export const SYNAPSE_MODAL_DESIGN_SPEC_PATH =
   "components/synapse/modal/design-spec.md" as const;
 

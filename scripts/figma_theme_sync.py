@@ -69,21 +69,28 @@ SYNAPSE_CONFIG = ProgrammeThemeConfig(
     include_ids_shadow_aliases=True,
 )
 
+# Canonical variable definitions live in IDS Variables Library (not REST-exportable).
+# REST sync uses IDS Design Library, which subscribes to the published library.
+IDS_VARIABLE_LIBRARY_KEY = "r0Ex6TumqcR3HINamsfXCV"
+IDS_REST_EXPORT_FILE_KEY = "0bHk3XhrjFhowgFkz9yLr4"
+
 IDS_CONFIG = ProgrammeThemeConfig(
     programme="ids",
-    figma_file_key="VZJ48bbVYrIynw8DdSukWw",
+    figma_file_key=IDS_REST_EXPORT_FILE_KEY,
     output_paths=(PROJECT / "components" / "ids-theme.css",),
-    figma_label="IDS exploration with variables",
-    collection_notes="Semantic + Tokens (semantic + shadows), Primitive, Density Token / Shape floats",
-    semantic_base_collections=("Semantic",),
+    figma_label="IDS Variables Library",
+    collection_notes="Tokens (Light/Dark semantic + shadows), Primitive, Sizes",
+    semantic_base_collections=(),
     semantic_overlay_collections=("Tokens",),
-    sizes_collections=("Sizes", "Density Token", "Shape"),
-    primitive_collections=("Primitive", "Primitive color"),
+    sizes_collections=("Sizes",),
+    primitive_collections=("Primitive",),
     css_emit_mode="ids_scoped",
     design_system_slug="ids",
     include_ids_shadow_aliases=True,
     prefer_path_tokens=True,
     header_extra=(
+        f" * Canonical Figma file: IDS Variables Library ({IDS_VARIABLE_LIBRARY_KEY}).",
+        f" * REST export via IDS Design Library ({IDS_REST_EXPORT_FILE_KEY}).",
         " * Scoped: html/body[data-design-system=\"ids\"] (+ [data-theme=\"dark\"]).",
         " * Import in Storybook/apps with data-design-system=\"ids\" on html/body.",
     ),

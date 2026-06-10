@@ -53,12 +53,20 @@
 - **Header control icon size:** `16x16` (`Modal / ctrl-close-16`, optional full-screen icon).
 - **Close icon size:** `16x16`.
 - **Border:** `1px` solid `var(--color-border-accessible)`.
-- **Corner radius:** `0` (no rounded corners in Figma modal surface samples).
+- **Corner radius:** `var(--modal-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - **Elevation:** layered drop shadow (2/4/8/16 depth stack).
 - **Typography:**
   - Title: `Header 5` (`24/32`, regular).
   - Body/content: `Body 2` (`14/20`, regular).
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--modal-control-radius` | `var(--corner-radius-radius-none)` |
+
 - **Surface:** `var(--color-background-component)`, `var(--color-border-accessible)`
 - **Text:** `var(--color-text-neutral-strong)` (title), `var(--color-text-neutral)` (body), `var(--color-text-brand-strong)` (tertiary action)
 - **Icons:** `var(--color-icon-neutral)` (close), severity icons:
@@ -151,7 +159,7 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - `destructive` supports optional confirmation input inside `content`.
 
 ### Per-slot style contract
-- `surface`: `background + border + shadow` tokens from Modal table; no rounded corners in IDS dialog baseline.
+- `surface`: `background + border + shadow` tokens from Modal table; `border-radius: var(--modal-control-radius)`.
 - `header/title`: `Header 5` tokenized typography.
 - `description/content`: `Body 2`.
 - `footer`: right-aligned actions, `12px` inter-button gap.

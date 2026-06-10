@@ -24,9 +24,9 @@ const meta: Meta<typeof Dialog> = {
       description: {
         component: [
           `Spec-driven Synapse Modal Dialog (IDS Modal contract). Source: \`${SYNAPSE_MODAL_DESIGN_SPEC_PATH}\`.`,
-          `Primary story: **Non-Alerting** dialog at **640px**, \`radius-16\`, \`border-neutral-light\` (Figma \`${SYNAPSE_MODAL_MAIN_NODE_ID}\` / \`43461:175961\`).`,
+          `Primary story: **Non-Alerting** dialog at **640px**; Synapse delta: \`--modal-control-radius\` → \`radius-16\` (IDS: \`radius-none\`) via theme CSS.`,
           `Footer and trigger buttons: \`${SYNAPSE_BUTTON_DESIGN_SPEC_PATH}\` (\`programme=\"synapse\"\`, \`size=\"lg\"\`).`,
-          "Theme: `components/synapse-theme.css`. Programme chrome: `programme=\"synapse\"` on `Dialog` + `Button`.",
+          "Theme: `components/synapse-theme.css`. All other modal chrome inherits IDS.",
         ].join(" "),
       },
     },

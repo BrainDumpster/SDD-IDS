@@ -5,7 +5,7 @@
   box-sizing: border-box;
   background: var(--color-background-component);
   border: var(--border-width-border-1) solid var(--color-border-light);
-  border-radius: var(--corner-radius-radius-8);
+  border-radius: var(--card-control-radius);
   font-family: inherit;
   overflow: hidden;
 }

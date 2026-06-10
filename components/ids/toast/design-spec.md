@@ -16,7 +16,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: 24px`, `padding-block: 14px`.
 - Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
-- Root surface: `background: var(--color-static-gray-900)`, `border: 1px solid var(--color-border-white)`, `border-radius: 2px`.
+- Root surface: `background: var(--color-static-gray-900)`, `border: 1px solid var(--color-border-white)`, `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
   - `ContentGroup` (status icon + message)
   - `ActionGroup` (optional link + close)
@@ -26,6 +26,13 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
 - Close icon slot: `12x12` using `shape-x`.
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--toast-control-radius` | `var(--corner-radius-radius-2)` |
 
 ### Core surface/text tokens
 - Surface: `var(--color-static-gray-900)`
@@ -106,6 +113,7 @@ Resolution rules:
 - `duration` and `position` supported for all combinations.
 
 ### Per-slot style contract
+- `ToastItem` root: `border-radius: var(--toast-control-radius)`.
 - Root/background/border/text/close must use semantic tokens defined in this spec.
 - Status icon must use icon component with `shapeName` from mapping table.
 - Status icon slot and rendered glyph must both remain `16x16`; message alignment must remain vertically centered with icon.
@@ -135,6 +143,7 @@ Resolution rules:
 - [ ] `position` API supports all six values with default `top-right`.
 - [ ] Link routing contract supports `routerLink`, `href`, and event mode.
 - [ ] Close icon is `shape-x` at `12x12`.
+- [ ] Layout uses `var(--toast-control-radius)` on toast root, not hardcoded px.
 - [ ] No hardcoded style values in generated code where token exists.
 ## Implementation Notes
 - **Close icon fix (2025-05-25)**: Changed close icon from `variant="img"` to `variant="mask"` to enable CSS color styling via `var(--color-icon-white)`. Removed hardcoded 16px width/height from Icon component's img variant to allow CSS class styles to control size (12px as per spec).

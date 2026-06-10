@@ -79,6 +79,7 @@ Minimum checks per node: structure/dimensions, variable/token bindings, variant/
 
 - Prefer semantic tokens: `` `var(--token-name)` ``.
 - Never hardcode colors, spacing, typography, radius, border width, or motion in guidance.
+- **Component layout aliases:** When a layout value may differ by programme (radius, focus ring, etc.), IDS specs reference **component aliases** (e.g. `var(--button-control-radius)`). Define IDS defaults in `components/ids-theme.css`; programmes override the **same alias name** in programme theme CSS. Programme fork specs document alias deltas in the programme deltas table — not duplicate values in component CSS. Reference: [`components/ids/button/design-spec.md`](../components/ids/button/design-spec.md).
 - **States dedupe:** When Light and Dark use the same `var(--...)` in every cell, matrix only under **States (Light Theme)**; use `DARK_STATES_BOILERPLATE` from `scripts/design_spec_template.py` under Dark.
 - Full Dark table only when dark rows use different `var(--...)` than light (parallel row/column structure).
 - State names: `default | hover | press | focus-visible | disabled`.

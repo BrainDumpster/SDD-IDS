@@ -65,12 +65,12 @@ function LauncherCanvas({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Figma `13231:124200` — 2 products, internal dotted tile rails (`49927:272103`, 110px / 7px inset), `298×127`. */
+/** Figma `13231:124200` — 2 products, IDS internal dotted tile rail on leading tile (`13231:109518`, 110px / 7px inset), `298×127`. */
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
   render: (args) => (
     <LauncherCanvas>
-      <SynapseAppLauncher {...args} defaultOpen />
+      <SynapseAppLauncher {...args} panelOnly />
     </LauncherCanvas>
   ),
   args: twoProductArgs,
@@ -111,7 +111,7 @@ export const ProductCountMatrix: Story = {
                       : "eight"
             ]}
           </span>
-          <SynapseAppLauncher products={specProducts(count)} defaultOpen />
+          <SynapseAppLauncher products={specProducts(count)} panelOnly />
         </div>
       ))}
     </div>
@@ -152,7 +152,7 @@ export const TileStateMatrix: Story = {
           </p>
           <AppLauncherProductTile
             name={SYNAPSE_APP_LAUNCHER_SAMPLE_PRODUCT_NAME}
-            tileClassName={[tileStyles.programmeSynapseTile, tileStyles.appTileSynapse]
+            tileClassName={[tileStyles.programmeSynapseTile, tileStyles.appTileTwoProduct]
               .filter(Boolean)
               .join(" ")}
             tileDivider="dotted"

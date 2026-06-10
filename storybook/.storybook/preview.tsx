@@ -1,3 +1,4 @@
+import React from "react";
 import type { Preview } from "@storybook/react";
 import "../../components/ids-theme.css";
 import "../../components/dap-theme.css";
@@ -91,7 +92,7 @@ const preview: Preview = {
       const surface = "var(--color-background-surface-1)";
       document.documentElement.style.backgroundColor = surface;
       document.body.style.backgroundColor = surface;
-      return Story();
+      return <Story />;
     },
   ],
 };

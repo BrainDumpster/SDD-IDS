@@ -10,7 +10,7 @@ Synapse **App Launcher** inherits the IDS app-switcher contract (popover surface
 - **Base UI mapping:** `@base-ui-components/react/popover` (via shared `AppLauncher`)
 - **Codegen merge:** load IDS spec first, then apply **Synapse programme deltas** and **Programme override rules** in this file's Codegen Contract (programme rows win on conflict).
 
-**Scope of live Synapse verification:** `AppLauncher-Main` `13231:123761`; `AppLauncher-Element` `13231:109521`; product-count variants `13231:124278`–`13231:123730`; 2-product divider `49927:272103` / `13231:124200`.
+**Scope of live Synapse verification:** `AppLauncher-Main` `13231:123761`; `AppLauncher-Element` `13231:109521`; product-count variants `13231:124278`–`13231:123730`; 2-product divider `13231:109518` / `13231:124200`.
 
 ## Metadata
 
@@ -49,8 +49,8 @@ Synapse **App Launcher** inherits the IDS app-switcher contract (popover surface
 | Tile press label/icon | brand-strong on full tile | **brand-strong** on label + icon when `LabelCluster` has `brand-light` fill |
 | Tile focus | outline on tile (`outline-offset: -2px`) | **Inset ring** on tile: `inset 2px 2px 2px 3px`, `var(--corner-radius-radius-4)`, `var(--color-border-brand-base)` (`54003:292178`) |
 | 1-product surface width | `298px` (2-col grid) | **`150px`** (`13231:124278`) |
-| **2-product vertical divider** | **External** `AppLauncherColumnDivider` — **solid**, full **`125px`**, no top/bottom gap | **Internal** `TileDividerRail` (`49927:272103`) per tile — **dotted** **`110px`** stroke, **`7px`** inset top/bottom; **no** external column divider |
-| 3/4/8 products | external dotted column dividers | Same placement; **neutral-light** token |
+| **2-product vertical divider** | **Internal** `TileDividerRail` on **leading** tile (`13231:109518`) — **dotted** **`110px`** / **`7px`** inset; **no** external column divider | **Same placement as IDS**; token **`var(--color-border-neutral-light)`** |
+| 3/4/8 products | external dotted column dividers | Same placement as IDS; **neutral-light** token |
 | Options row contract | IDS dropdown option rows | Same structure/tokens as IDS; Synapse surface/divider tokens above |
 | Trigger (masthead) | IDS masthead action | Synapse masthead brand fill/hover (`masthead/design-spec.md`) |
 | Element `State` axis | default, hover, press, selected, no-icon | **default, hover, press, focus** (`13231:109521`; no separate `selected` symbol) |
@@ -61,7 +61,7 @@ Synapse **App Launcher** inherits the IDS app-switcher contract (popover surface
 |---|---|---|
 | Main set | `13231:123761` | `AppLauncher-Main` |
 | 1 product | `13231:124278` | `150×127` |
-| 2 products | `13231:124200` | `298×127`; internal dotted tile rails (`49927:272103`; `110px` / `7px` inset) |
+| 2 products | `13231:124200` | `298×127`; IDS internal dotted tile rail on leading tile (`13231:109518`; `110px` / `7px` inset) |
 | 3 products | `13231:124054` | `298×254` |
 | 4 products | `13231:123908` | `298×254` |
 | 8 products | `13231:123730` | `298×416` |
@@ -70,7 +70,7 @@ Synapse **App Launcher** inherits the IDS app-switcher contract (popover surface
 | Tile press | `14141:255626` | `label` → `brand-light`; brand-strong text |
 | Tile focus | `54003:292178` | inset brand ring; `label` `surface-2` |
 | Element set | `13231:109521` | State matrix |
-| Divider rail slot | `49927:272103` | Trailing `Div` inside `AppLauncher-Element` (2-product dotted) |
+| Divider rail slot | `13231:109518` | Trailing `Div` inside leading `.AppLauncher-Element` (2-product dotted; IDS parity) |
 
 ## Anatomy
 
@@ -83,10 +83,10 @@ Deterministic slot order. **Divider placement is programme- and count-dependent*
 5. `ProductRowGroup` — wraps optional row divider + product row (width `100%`)
 6. `AppLauncherRowDivider?` — between row groups when `productCount > 2` (or multi-row grid)
 7. `ProductRow` — up to two `ProductTile` cells (last row may be single, centered)
-8. `AppLauncherColumnDivider?` — **Synapse:** only when `productCount ≥ 3` (or multi-row). **IDS:** when `productCount ≥ 3` **or** `productCount === 2` (solid external). **Never** on Synapse 2-product.
-9. `ProductTile` (`TileShell`) — `148×125`; horizontal flex when internal rail present
+8. `AppLauncherColumnDivider?` — when `productCount ≥ 3` only (inherits IDS; **never** on 2-product)
+9. `ProductTile` (`TileShell`) — `148×125`; horizontal flex when 2-product internal rail present (inherits IDS)
 10. `LabelCluster` — icon + label stack (`147px` content width in Figma)
-11. `TileDividerRail?` — **Synapse 2-product only** — trailing internal `Div` (`49927:272103`)
+11. `TileDividerRail?` — **2-product only** — trailing internal `Div` on **leading** tile (`13231:109518`; inherits IDS)
 12. `ProductIcon?` — `32×32` (`shield-encrypt-alt` default)
 13. `ProductLabel` — Body 2, `111px` max, ellipsis
 14. `OptionsRegion?` — options menu block (`Dropdown-SingleSelect-Elements-Menu` pattern)
@@ -123,9 +123,8 @@ Deterministic slot order. **Divider placement is programme- and count-dependent*
 
 | Type | IDS | Synapse |
 |---|---|---|
-| Column dotted (3+) | External sibling; `110px` / `7px` inset; `border-accessible` | External sibling; `110px` / `7px` inset; `border-neutral-light` |
-| Column solid (2-product) | External sibling; full `125px`; no inset; `border-accessible` | **Not used** — see internal rail |
-| Tile rail (2-product) | **Not used** | Internal `TileDividerRail` per tile; dotted `110px` / `7px` inset; `border-neutral-light` |
+| Column dotted (3+) | External sibling; `110px` / `7px` inset; `border-accessible` | Same placement; `border-neutral-light` |
+| Tile rail (2-product) | Internal on **leading** tile; dotted `110px` / `7px` inset; `border-accessible` | **Same placement as IDS**; `border-neutral-light` |
 | Row dotted | `262px` stroke; `16px` parent inset; centered; `border-accessible` | Same geometry; `border-neutral-light` |
 
 ### Options region
@@ -254,7 +253,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 | Prop | Notes |
 |---|---|
-| `tileDivider` | **`"dotted"`** for Synapse 2-product internal rail; **`"none"`** otherwise |
+| `tileDivider` | **`"dotted"`** on **leading** tile when 2-product internal rail (inherits IDS); **`"none"`** otherwise |
 | `demoState` | **`"hover"` \| `"press"` \| `"focus"`** — Storybook/state matrix only; maps to `data-state` |
 
 ### Spec Accurate Design story defaults
@@ -286,8 +285,7 @@ Emit slots in **Anatomy** order. Conditional branches:
 
 | Condition | Emit |
 |---|---|
-| `programme=synapse` ∧ `productCount=2` ∧ `!options` | `ProductTile` + internal `TileDividerRail` (dotted); **no** `AppLauncherColumnDivider` |
-| `programme=ids` ∧ `productCount=2` ∧ `!options` | `AppLauncherColumnDivider` (solid) between tiles; **no** `TileDividerRail` |
+| `productCount=2` ∧ `!options` (any programme) | `ProductTile` horizontal flex + internal `TileDividerRail` (dotted) on **leading** tile only; **no** `AppLauncherColumnDivider` |
 | `productCount ≥ 3` (any programme) | `AppLauncherColumnDivider` (dotted) between tiles in row; `AppLauncherRowDivider` between row groups |
 | `options.length > 0` ∨ `footerAction` | `OptionsRegion` after `ProductRegion` |
 
@@ -305,7 +303,7 @@ Emit slots in **Anatomy** order. Conditional branches:
 
 | Rule | IDS | Synapse |
 |---|---|---|
-| 2-product vertical divider | External solid `125px` | Internal dotted `110px` / `7px` inset per tile |
+| 2-product vertical divider | Internal dotted `110px` / `7px` inset on leading tile | **Same as IDS**; token `border-neutral-light` |
 | 2-product surface padding | `padding-1` | `padding-1` (same) |
 | Tile hover/press target | Full `148×125` tile | `LabelCluster` only |
 | Tile focus | Outline on tile | Inset ring on tile shell |
@@ -318,7 +316,7 @@ Emit slots in **Anatomy** order. Conditional branches:
 |---|---|
 | `AppLauncherSurface` | `surface-2`, `border-neutral-light`, shadow 2+4; width `150` (1 product) or `298` (2+) |
 | `AppLauncherColumnDivider` | 3+ only: dotted `110px` / `7px` inset; `border-neutral-light` |
-| `TileDividerRail` | 2-product only: dotted `110px` / `7px` inset; `border-neutral-light`; inside `ProductTile` |
+| `TileDividerRail` | 2-product only: dotted `110px` / `7px` inset on **leading** tile; `border-neutral-light`; inside `ProductTile` (inherits IDS placement) |
 | `AppLauncherRowDivider` | dotted `262px` / `16px` parent inset; `border-neutral-light` |
 | `LabelCluster` | `space-12` gap, `padding-28`; hover/press backgrounds |
 | `ProductLabel` | body-2, `text-neutral-strong`, max `111px`, ellipsis |
@@ -332,8 +330,7 @@ Emit slots in **Anatomy** order. Conditional branches:
 - Product selection emits at most one `onProductSelect({ id, name })` per activation.
 - Option selection emits at most one `onOptionSelect({ id, label })` per activation.
 - Divider elements are non-interactive; never inherit hover/press fill.
-- **`programme=synapse` ∧ `productCount=2` ∧ `!options`:** render internal dotted `TileDividerRail` on each tile; **do not** render external `AppLauncherColumnDivider`.
-- **`programme=ids` ∧ `productCount=2` ∧ `!options`:** render external solid `AppLauncherColumnDivider`; **do not** render `TileDividerRail`.
+- **`productCount=2` ∧ `!options`:** render internal dotted `TileDividerRail` on **leading** tile only; **do not** render external `AppLauncherColumnDivider` (IDS + Synapse).
 - **`productCount=1` ∧ `!options`:** surface width **`150px`** when `programme=synapse`; IDS uses **`298px`** grid (see IDS spec).
 - If `products` empty, options-only layout renders safely.
 
@@ -361,17 +358,17 @@ Resolve via shared `Icon` / `assets/icons/<slug>.svg`. Unknown slug → `shield-
 ### Validation checklist
 
 - [x] IDS baseline linked; programme deltas table complete and internally consistent
-- [x] Live Figma MCP on `13231:123761`, `13231:124200`, `13231:109520`–`54003:292178`, `49927:272103`
+- [x] Live Figma MCP on `13231:123761`, `13231:124200`, `13231:109520`–`54003:292178`, `13231:109518`
 - [x] Synapse `border-neutral-light` on surface + dividers
 - [x] Label-cluster hover/press (not full tile) when `programme="synapse"`
 - [x] Inset focus ring on tile (`54003:292178`)
 - [x] Product counts `1/2/3/4/8` layouts match main set (`synapse-app-launcher.contract.ts` nodes)
-- [x] 2-product Synapse: internal dotted tile rails (`110px` / `7px`); **not** IDS solid external divider
+- [x] 2-product: internal dotted tile rail on leading tile (`110px` / `7px`); inherits IDS placement
 - [x] Masthead trigger story with `triggerVariant="masthead"`
 - [x] Storybook `Spec Generated/Synapse/App Launcher`
 - [x] Light/Dark via `synapse-theme.css` semantic tokens only
 - [x] Programme merge strategy documented for framework-agnostic codegen
-- [x] No contradictory behavior rules (IDS 2-product rules scoped to `programme=ids` only)
+- [x] No contradictory behavior rules between IDS baseline and Synapse programme deltas
 
 ## Source Mapping
 
@@ -380,7 +377,7 @@ Resolve via shared `Icon` / `assets/icons/<slug>.svg`. Unknown slug → `shield-
 | Design source | Synapse Hi-Fi `Td1bnsvRj1PCGs9RVJkIvJ` |
 | Main component | `13231:123761` |
 | Element states | `13231:109521` |
-| 2-product variant | `13231:124200` (dotted internal rails `49927:272103`) |
+| 2-product variant | `13231:124200` (internal dotted rail on leading tile `13231:109518`) |
 | IDS baseline | `components/ids/app-launcher/design-spec.md` |
 | IDS usage nodes (parity) | `42266:95085`, `42266:95081` (IDS file `0bHk3XhrjFhowgFkz9yLr4`) |
 | Component map | `data/synapse-component-figma-map.json` → App Launcher |

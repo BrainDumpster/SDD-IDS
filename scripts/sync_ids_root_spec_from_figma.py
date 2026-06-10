@@ -4,8 +4,11 @@ Sync variable tables in components/ids/root-spec.md from Figma local variables.
 
 Requires FIGMA_TOKEN in the environment (e.g. `set -a && . ./.env && set +a`).
 
-Figma file (IDS exploration with variables):
-https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables
+Canonical variable source (IDS Variables Library):
+https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library
+
+REST export uses IDS Design Library (subscribes to the published variable library):
+https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library
 """
 
 from __future__ import annotations
@@ -18,8 +21,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 
+from figma_theme_sync import IDS_REST_EXPORT_FILE_KEY, IDS_VARIABLE_LIBRARY_KEY
+
 BASE_URL = "https://api.figma.com/v1"
-IDS_FILE_KEY = "VZJ48bbVYrIynw8DdSukWw"
+IDS_FILE_KEY = IDS_REST_EXPORT_FILE_KEY
 ROOT_SPEC = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
     "components",
@@ -272,7 +277,8 @@ def build_markdown(
     parts.append(
         "<!-- ds:section id=primitive-static -->\n"
         "### Primitive palette (Figma — `Primitive` collection, COLOR)\n\n"
-        f"> Auto-synced from Figma `GET /v1/files/{banner_key}/variables/local`. "
+        f"> Auto-synced from Figma `GET /v1/files/{banner_key}/variables/local` "
+        f"(canonical source: [IDS Variables Library](https://www.figma.com/design/{IDS_VARIABLE_LIBRARY_KEY}/IDS-Variables-Library)). "
         "Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.\n\n"
     )
 
@@ -495,7 +501,7 @@ def main() -> int:
         replacement = (
             "### Figma-derived layout tokens\n\n"
             "> The previous `--scale-*` table was a generic placeholder. "
-            "This file’s Figma **local variables** export uses **Density Primitive** FLOAT rows (above, under Density Primitive) "
+            "This files Figma **local variables** export uses **Density Primitive** FLOAT rows (above, under Density Primitive) "
             "and **Tokens** FLOAT rows for shadow geometry. For `--scale-*` / `--opacity-*` in CSS, regenerate `components/theme.css` from Figma or extend extraction to the **Density Token** collection if needed.\n\n"
         )
         new_content = new_content[:si] + replacement + new_content[ei:]

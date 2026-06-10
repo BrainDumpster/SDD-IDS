@@ -11,7 +11,9 @@
 |---|---|
 | Name | IDS |
 | Framework Layer | framework-agnostic |
-| Figma File Key | `0bHk3XhrjFhowgFkz9yLr4` |
+| Figma Component Library Key | `0bHk3XhrjFhowgFkz9yLr4` |
+| Figma Variables Library Key | `r0Ex6TumqcR3HINamsfXCV` |
+| Variables Library URL | [IDS Variables Library](https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library) |
 | Component map | `data/component-figma-map.json` |
 | Components directory | `components/ids/` |
 | Theme mechanism | CSS custom properties + theme mode selection |
@@ -29,7 +31,7 @@
 All component styling must use semantic tokens (`var(--...)`), not hardcoded color values.
 Semantic color tokens resolve to different values in **Light** vs **Dark** themes. **Primitive** palette tokens are static across themes (foundation values referenced by semantic tokens or rare direct use in specs).
 
-The semantic tables below are confirmed from IDS Figma component nodes listed in Source Mapping. Primitive palette tables align with the IDS file `Primitive` collection (same naming pattern as shared exploration variables).
+Semantic and primitive tables below are auto-synced from the centralized **IDS Variables Library** (`r0Ex6TumqcR3HINamsfXCV`) via REST export on the IDS Design Library (`0bHk3XhrjFhowgFkz9yLr4`). Core semantic summaries in this section may lag the synced tables; prefer the Figma-derived sections when values differ.
 
 ### Core Semantic Background Tokens
 
@@ -37,33 +39,33 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 |---|---|---|
 | `--color-background-component` | `#ffffff` | `#111619` |
 | `--color-background-surface-1` | `#f4f4f4` | `#111619` |
-| `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
-| `--color-background-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-background-brand-base` | `#0672cb` | `#509cda` |
+| `--color-background-brand-strong` | `#055fa9` | `#97c4e9` |
 | `--color-background-brand-lighter` | `#ebf4fb` | `#1e262c` |
-| `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
-| `--color-background-controls-brand-strong` | `#0062ab` | `#0062ab` |
-| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#002642` |
+| `--color-background-controls-brand-base` | `#0672cb` | `#0672cb` |
+| `--color-background-controls-brand-strong` | `#055fa9` | `#055fa9` |
+| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#022541` |
 | `--color-background-gray-light` | `#eaeaea` | `#393939` |
 | `--color-background-gray-base` | `#757575` | `#9e9e9e` |
-| `--color-background-gray-neutral-light` | `#eaeaea` | `#8898a5` |
-| `--color-background-gray-neutral-dark` | `#616161` | `#616161` |
-| `--color-background-masthead-brand-base` | `#0076ce` | mode-specific |
-| `--color-background-masthead-brand-strong` | `#0062ab` | mode-specific |
-| `--color-background-masthead-brand-stronger` | `#06528a` | mode-specific |
+| `--color-background-gray-neutral-light` | `#eaeaea` | `#34414c` |
+| `--color-background-gray-neutral-dark` | `#616161` | `#8898a5` |
+| `--color-background-masthead-brand-base` | `#0672cb` | `#1e262c` |
+| `--color-background-masthead-brand-strong` | `#055fa9` | `#34414c` |
+| `--color-background-masthead-brand-stronger` | `#044b86` | `#455666` |
 
 ### Core Border Tokens
 
 | Token | Light | Dark |
 |---|---|---|
 | `--color-border-accessible` | `#757575` | `#8898a5` |
-| `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
-| `--color-border-brand-dark` | `#0062ab` | `#94c5ea` |
+| `--color-border-brand-base` | `#0672cb` | `#509cda` |
+| `--color-border-brand-dark` | `#055fa9` | `#97c4e9` |
 | `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
 | `--color-border-strong` | `#252525` | `#b8c1c9` |
 | `--color-border-disabled` | `#757575` | `#9e9e9e` |
-| `--color-border-light` | `#c5c5c5` | mode-specific |
-| `--color-border-transparent-brand` | `#ffffff00` | `#4c9fdd` (mode contract may differ by component) |
-| `--color-border-transparent-neutral` | `#ffffff00` | mode-specific |
+| `--color-border-light` | `#c5c5c5` | `#34414c` |
+| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#509cda` |
+| `--color-border-transparent-neutral` | `rgba(255,255,255,0.00)` | `#8898a5` |
 
 ### Core Text Tokens
 
@@ -73,7 +75,7 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--color-text-black` | `#252525` | `#252525` |
 | `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
 | `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
-| `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-text-brand-strong` | `#055fa9` | `#97c4e9` |
 | `--color-text-disabled` | `#757575` | `#c5c5c5` |
 
 ### Core Icon Tokens
@@ -83,8 +85,8 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--color-icon-white` | `#ffffff` | `#ffffff` |
 | `--color-icon-inverse` | `#ffffff` | mode-specific |
 | `--color-icon-neutral` | `#4d4d4d` | mode-specific |
-| `--color-icon-brand-base` | `#0076ce` | `#4c9fdd` |
-| `--color-icon-brand-strong` | `#0062ab` | mode-specific |
+| `--color-icon-brand-base` | `#0672cb` | `#509cda` |
+| `--color-icon-brand-strong` | `#055fa9` | `#97c4e9` |
 | `--color-icon-disabled` | `#757575` | `#c5c5c5` |
 | `--color-icon-alerting-info` | `#005ece` | mode-specific |
 | `--color-icon-alerting-major` | `#ed6400` | mode-specific |
@@ -110,7 +112,7 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 <!-- ds:section id=primitive-static -->
 ### Primitive palette (Figma — `Primitive` collection, COLOR)
 
-> Auto-synced from Figma `GET /v1/files/VZJ48bbVYrIynw8DdSukWw/variables/local`. Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.
+> Auto-synced from Figma `GET /v1/files/0bHk3XhrjFhowgFkz9yLr4/variables/local` (canonical source: [IDS Variables Library](https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library)). Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.
 
 #### Single-mode (same value in all modes)
 
@@ -161,29 +163,6 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--alert-yellow-700` | `#c48429` |
 | `--alert-yellow-800` | `#9c622e` |
 | `--alert-yellow-900` | `#6d4028` |
-| `--new-brand-100` | `#ebf4fb` |
-| `--new-brand-200` | `#d9eaf8` |
-| `--new-brand-300` | `#94c5ea` |
-| `--new-brand-400` | `#4c9fdd` |
-| `--new-brand-500` | `#0076ce` |
-| `--new-brand-600` | `#0062ab` |
-| `--new-brand-700` | `#06528a` |
-| `--new-brand-800` | `#003a65` |
-| `--new-brand-900` | `#002642` |
-| `--new-gray-100` | `#f4f4f4` |
-| `--new-gray-200` | `#eaeaea` |
-| `--new-gray-300` | `#c5c5c5` |
-| `--new-gray-400` | `#9e9e9e` |
-| `--new-gray-500` | `#757575` |
-| `--new-gray-700` | `#4d4d4d` |
-| `--new-gray-800` | `#393939` |
-| `--new-gray-900` | `#252525` |
-| `--new-slate-200` | `#e6e9ec` |
-| `--new-slate-300` | `#b8c1c9` |
-| `--new-slate-400` | `#8898a5` |
-| `--new-slate-500` | `#566c7f` |
-| `--new-slate-800` | `#1e262c` |
-| `--new-slate-900` | `#111619` |
 | `--secondary-palette-berry-100` | `#f7ebf2` |
 | `--secondary-palette-berry-200` | `#f1d9e7` |
 | `--secondary-palette-berry-300` | `#d894bd` |
@@ -212,15 +191,14 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--secondary-palette-violet-800` | `#3d005a` |
 | `--secondary-palette-violet-900` | `#28003b` |
 | `--ui-palette-brand-100` | `#ebf4fb` |
-| `--ui-palette-brand-200` | `#d9eaf8` |
-| `--ui-palette-brand-300` | `#94c5ea` |
-| `--ui-palette-brand-400` | `#4c9fdd` |
-| `--ui-palette-brand-500` | `#0076ce` |
-| `--ui-palette-brand-600` | `#0062ab` |
-| `--ui-palette-brand-700` | `#06528a` |
-| `--ui-palette-brand-800` | `#003a65` |
-| `--ui-palette-brand-900` | `#002642` |
-| `--ui-palette-brand-white` | `#ffffff` |
+| `--ui-palette-brand-200` | `#daeaf7` |
+| `--ui-palette-brand-300` | `#97c4e9` |
+| `--ui-palette-brand-400` | `#509cda` |
+| `--ui-palette-brand-500` | `#0672cb` |
+| `--ui-palette-brand-600` | `#055fa9` |
+| `--ui-palette-brand-700` | `#044b86` |
+| `--ui-palette-brand-800` | `#033864` |
+| `--ui-palette-brand-900` | `#022541` |
 | `--ui-palette-gray-100` | `#f4f4f4` |
 | `--ui-palette-gray-200` | `#eaeaea` |
 | `--ui-palette-gray-300` | `#c5c5c5` |
@@ -238,37 +216,8 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--ui-palette-slate-600` | `#455666` |
 | `--ui-palette-slate-700` | `#34414c` |
 | `--ui-palette-slate-800` | `#1e262c` |
-| `--ui-palette-slate-820` | `#2b3840` |
-| `--ui-palette-slate-840` | `#242f36` |
-| `--ui-palette-slate-860` | `#1a2226` |
-| `--ui-palette-slate-880` | `#171d21` |
 | `--ui-palette-slate-900` | `#111619` |
 | `--white` | `#ffffff` |
-
-<!-- ds:section id=primitive-color -->
-### Primitive color (Figma — `Primitive color` collection)
-
-| Token | Light | Dark |
-|---|---|---|
-| `--color-icon-alerting-info` | `#005ece` | `#005ece` |
-| `--color-icon-alerting-success` | `#1b8500` | `#1b8500` |
-| `--color-icon-inverse` | `#ffffff` | `#252525` |
-| `--color-icon-neutral` | `#4d4d4d` | `#8898a5` |
-
-<!-- ds:section id=semantic-color -->
-### Semantic (Figma — `Semantic` collection, COLOR)
-
-| Token | Light | Dark |
-|---|---|---|
-| `--background-brand-default` | `—` | `—` |
-| `--background-gray-muted` | `—` | `—` |
-| `--background-warning-darker` | `#c48429` | `#c48429` |
-| `--border-brand` | `—` | `—` |
-| `--icon-brand` | `—` | `—` |
-| `--text-blue` | `—` | `—` |
-| `--text-brand` | `—` | `—` |
-| `--text-content` | `—` | `—` |
-| `--text-link` | `—` | `—` |
 
 <!-- ds:section id=tokens-color -->
 ### Tokens collection — COLOR (Figma — `Tokens`)
@@ -279,74 +228,67 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 |---|---|---|
 | `--annotation` | `#e8178a` | `#f174b9` |
 | `--color-annotation` | `#e8178a` | `#f389c3` |
-| `--color-background-alerting-critical` | `#af0000` | `#af0000` |
+| `--color-background-alerting-critical` | `#af0000` | `#c74c4c` |
 | `--color-background-alerting-critical-light` | `#f3d9d9` | `#f3d9d9` |
-| `--color-background-alerting-critical-strong` | `#910000` | `#910000` |
-| `--color-background-alerting-critical-stronger` | `#730000` | `#730000` |
-| `--color-background-alerting-info` | `#005ece` | `#005ece` |
+| `--color-background-alerting-critical-strong` | `#910000` | `#af0000` |
+| `--color-background-alerting-critical-stronger` | `#730000` | `#910000` |
+| `--color-background-alerting-info` | `#005ece` | `#4c8edd` |
 | `--color-background-alerting-info-light` | `#d9e7f8` | `#d9e7f8` |
-| `--color-background-alerting-info-strong` | `#004eab` | `#004eab` |
-| `--color-background-alerting-info-stronger` | `#003e88` | `#003e88` |
+| `--color-background-alerting-info-strong` | `#004eab` | `#005ece` |
+| `--color-background-alerting-info-stronger` | `#003e88` | `#004eab` |
 | `--color-background-alerting-major` | `#ed6400` | `#ed6400` |
 | `--color-background-alerting-major-light` | `#fce8d9` | `#fce8d9` |
-| `--color-background-alerting-major-strong` | `#c55300` | `#c55300` |
+| `--color-background-alerting-major-strong` | `#ed6400` | `#c55300` |
 | `--color-background-alerting-major-stronger` | `#9c4200` | `#9c4200` |
 | `--color-background-alerting-minor` | `#ffc700` | `#ffc700` |
 | `--color-background-alerting-minor-light` | `#fff7d9` | `#fff7d9` |
 | `--color-background-alerting-minor-strong` | `#e5a51a` | `#e5a51a` |
 | `--color-background-alerting-minor-stronger` | `#c48429` | `#c48429` |
-| `--color-background-alerting-success` | `#1b8500` | `#1b8500` |
+| `--color-background-alerting-success` | `#1b8500` | `#5faa4c` |
 | `--color-background-alerting-success-light` | `#ddedd9` | `#ddedd9` |
-| `--color-background-alerting-success-strong` | `#166e00` | `#166e00` |
-| `--color-background-alerting-success-stronger` | `#125800` | `#125800` |
+| `--color-background-alerting-success-strong` | `#166e00` | `#1b8500` |
+| `--color-background-alerting-success-stronger` | `#125800` | `#166e00` |
 | `--color-background-black` | `#252525` | `#252525` |
-| `--color-background-brand-base` | `#0076ce` | `#4c9fdd` |
-| `--color-background-brand-light` | `#d9eaf8` | `#34414c` |
-| `--color-background-brand-lighter` | `#ebf4fb` | `#1e262c` |
-| `--color-background-brand-strong` | `#0062ab` | `#94c5ea` |
-| `--color-background-brand-stronger` | `#06528a` | `#d9eaf8` |
-| `--color-background-component` | `#ffffff` | `#111619` |
+| `--color-background-brand-base` | `#0672cb` | `#509cda` |
+| `--color-background-brand-light` | `—` | `—` |
+| `--color-background-brand-lighter` | `—` | `—` |
+| `--color-background-brand-strong` | `#055fa9` | `#97c4e9` |
+| `--color-background-brand-stronger` | `#044b86` | `#daeaf7` |
+| `--color-background-component` | `—` | `—` |
 | `--color-background-component-light` | `#f4f4f4` | `#1e262c` |
-| `--color-background-container-1` | `#ffffff` | `#171d21` |
-| `--color-background-container-2` | `#ffffff` | `#1a2226` |
-| `--color-background-container-3` | `#ffffff` | `#242f36` |
-| `--color-background-container-4` | `#ffffff` | `#2b3840` |
-| `--color-background-controls-brand-base` | `#0076ce` | `#0076ce` |
-| `--color-background-controls-brand-light` | `#d9eaf8` | `#003a65` |
-| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#002642` |
-| `--color-background-controls-brand-strong` | `#0062ab` | `#0062ab` |
-| `--color-background-controls-brand-stronger` | `#06528a` | `#06528a` |
-| `--color-background-gradient-chat-end` | `—` | `rgba(86,108,127,0.20)` |
-| `--color-background-gradient-chat-start` | `—` | `rgba(19,21,25,0.10)` |
+| `--color-background-controls-brand-base` | `#0672cb` | `#0672cb` |
+| `--color-background-controls-brand-light` | `#daeaf7` | `#033864` |
+| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#022541` |
+| `--color-background-controls-brand-strong` | `#055fa9` | `#055fa9` |
+| `--color-background-controls-brand-stronger` | `#044b86` | `#044b86` |
 | `--color-background-gray-base` | `#757575` | `#9e9e9e` |
 | `--color-background-gray-light` | `#eaeaea` | `#393939` |
 | `--color-background-gray-lighter` | `#f4f4f4` | `#393939` |
 | `--color-background-gray-neutral-alt` | `#eaeaea` | `#1e262c` |
-| `--color-background-gray-neutral-dark` | `#4d4d4d` | `#8898a5` |
+| `--color-background-gray-neutral-dark` | `#616161` | `#8898a5` |
 | `--color-background-gray-neutral-darker` | `#252525` | `#b8c1c9` |
 | `--color-background-gray-neutral-light` | `#eaeaea` | `#34414c` |
-| `--color-background-gray-neutral-light-2` | `#eaeaea` | `#34414c` |
 | `--color-background-gray-neutral-lighter` | `#f4f4f4` | `#1e262c` |
 | `--color-background-gray-strong` | `#616161` | `#ffffff` |
 | `--color-background-gray-stronger` | `#252525` | `#ffffff` |
-| `--color-background-masthead-brand-base` | `#0076ce` | `#1e262c` |
-| `--color-background-masthead-brand-strong` | `#0062ab` | `#34414c` |
-| `--color-background-masthead-brand-stronger` | `#06528a` | `#455666` |
-| `--color-background-overlay` | `rgba(37,37,37,0.65)` | `rgba(37,37,37,0.75)` |
-| `--color-background-overlay-2` | `rgba(37,37,37,0.60)` | `rgba(227,227,227,0.15)` |
-| `--color-background-surface-1` | `—` | `—` |
-| `--color-background-surface-2` | `—` | `—` |
+| `--color-background-masthead-brand-base` | `#0672cb` | `#1e262c` |
+| `--color-background-masthead-brand-strong` | `#055fa9` | `#34414c` |
+| `--color-background-masthead-brand-stronger` | `#044b86` | `#455666` |
+| `--color-background-overlay` | `rgba(37,37,37,0.65)` | `rgba(17,22,25,0.75)` |
+| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
+| `--color-background-surface-2` | `#ffffff` | `#1e262c` |
 | `--color-background-white` | `#ffffff` | `#ffffff` |
-| `--color-border-accessible` | `#757575` | `#8898a5` |
-| `--color-border-alerting-critical-base` | `#af0000` | `—` |
+| `--color-border-accessible` | `—` | `—` |
+| `--color-border-alerting-critical-base` | `#af0000` | `#dd9494` |
 | `--color-border-alerting-critical-transparent` | `#af0000` | `rgba(221,148,148,0.00)` |
 | `--color-border-alerting-critical-white` | `#af0000` | `#ffffff` |
 | `--color-border-alerting-info-base` | `#005ece` | `#94bbea` |
 | `--color-border-alerting-info-transparent` | `#005ece` | `rgba(148,187,234,0.00)` |
 | `--color-border-alerting-info-white` | `#005ece` | `#ffffff` |
-| `--color-border-alerting-major-base` | `#ed6400` | `—` |
+| `--color-border-alerting-major-base` | `#ed6400` | `#f7be94` |
 | `--color-border-alerting-major-transparent` | `#ed6400` | `rgba(247,190,148,0.00)` |
 | `--color-border-alerting-major-white` | `#ed6400` | `#ffffff` |
+| `--color-border-alerting-minor-dark` | `#9c622e` | `#9c622e` |
 | `--color-border-alerting-minor-transparent` | `#9c622e` | `rgba(255,255,255,0.00)` |
 | `--color-border-alerting-minor-white` | `#9c622e` | `#ffffff` |
 | `--color-border-alerting-success-base` | `#1b8500` | `#9fcc94` |
@@ -355,22 +297,18 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--color-border-alerting-transparent-critical` | `rgba(175,0,0,0.00)` | `#dd9494` |
 | `--color-border-alerting-transparent-info` | `rgba(0,94,206,0.00)` | `#94bbea` |
 | `--color-border-alerting-transparent-major` | `rgba(237,100,0,0.00)` | `#f7be94` |
-| `--color-border-alerting-transparent-success` | `rgba(27,133,0,0.00)` | `—` |
+| `--color-border-alerting-transparent-success` | `rgba(27,133,0,0.00)` | `#9fcc94` |
 | `--color-border-alerting-transparent-white` | `rgba(255,199,0,0.00)` | `#ffffff` |
-| `--color-border-alerting-warning-accessible` | `#9c622e` | `#9c622e` |
 | `--color-border-black` | `#252525` | `#252525` |
-| `--color-border-brand-base` | `#0076ce` | `#4c9fdd` |
-| `--color-border-brand-dark` | `#0062ab` | `#94c5ea` |
-| `--color-border-brand-neutral` | `#0076ce` | `#8898a5` |
+| `--color-border-brand-base` | `#0672cb` | `#509cda` |
+| `--color-border-brand-dark` | `#055fa9` | `#97c4e9` |
+| `--color-border-brand-neutral` | `#0672cb` | `#8898a5` |
 | `--color-border-disabled` | `#757575` | `#9e9e9e` |
-| `--color-border-light` | `—` | `—` |
+| `--color-border-light` | `#c5c5c5` | `#34414c` |
 | `--color-border-lighter` | `#eaeaea` | `#1e262c` |
 | `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
-| `--color-border-neutral-light` | `—` | `—` |
-| `--color-border-on-surface-1` | `#566c7f` | `#566c7f` |
-| `--color-border-on-surface-2` | `#8898a5` | `#8898a5` |
 | `--color-border-strong` | `#252525` | `#b8c1c9` |
-| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#4c9fdd` |
+| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#509cda` |
 | `--color-border-transparent-neutral` | `rgba(255,255,255,0.00)` | `#8898a5` |
 | `--color-border-white` | `#ffffff` | `#ffffff` |
 | `--color-gradient-overflow-horizontal-end` | `rgba(244,244,244,0.00)` | `rgba(17,22,25,0.00)` |
@@ -378,35 +316,44 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--color-gradient-overflow-horizontal-inverse-start` | `#ffffff` | `#111619` |
 | `--color-gradient-overflow-horizontal-middle` | `rgba(244,244,244,0.90)` | `rgba(17,22,25,0.90)` |
 | `--color-gradient-overflow-horizontal-start` | `#f4f4f4` | `#111619` |
+| `--color-gradient-overflow-vertical---scrollbar-end` | `rgba(255,255,255,0.00)` | `rgba(17,22,25,0.00)` |
+| `--color-gradient-overflow-vertical---scrollbar-middle` | `rgba(182,182,182,0.30)` | `rgba(17,22,25,0.40)` |
+| `--color-gradient-overflow-vertical---scrollbar-start` | `rgba(117,117,117,0.60)` | `#111619` |
 | `--color-gradient-overflow-vertical-end` | `rgba(255,255,255,0.00)` | `rgba(17,22,25,0.40)` |
 | `--color-gradient-overflow-vertical-start` | `rgba(182,182,182,0.40)` | `#111619` |
 | `--color-icon-accessible` | `#757575` | `#8898a5` |
-| `--color-icon-alerting-critical` | `#af0000` | `#af0000` |
-| `--color-icon-alerting-info` | `#005ece` | `#005ece` |
-| `--color-icon-alerting-info-2` | `—` | `—` |
+| `--color-icon-alerting-critical` | `#af0000` | `#c74c4c` |
+| `--color-icon-alerting-info` | `#005ece` | `#4c8edd` |
+| `--color-icon-alerting-info-2` | `#005ece` | `#005ece` |
 | `--color-icon-alerting-major` | `#ed6400` | `#ed6400` |
 | `--color-icon-alerting-minor` | `#ffc700` | `#ffc700` |
-| `--color-icon-alerting-minor-2` | `—` | `—` |
-| `--color-icon-alerting-success` | `#1b8500` | `#1b8500` |
-| `--color-icon-alerting-success-2` | `—` | `—` |
+| `--color-icon-alerting-minor-2` | `#6d4028` | `#ffc700` |
+| `--color-icon-alerting-minor-3` | `#c48429` | `#ffc700` |
+| `--color-icon-alerting-minor-4` | `#6d4028` | `#6d4028` |
+| `--color-icon-alerting-success` | `#1b8500` | `#5faa4c` |
+| `--color-icon-alerting-success-2` | `#1b8500` | `#1b8500` |
 | `--color-icon-black` | `#252525` | `#252525` |
-| `--color-icon-brand-base` | `—` | `—` |
-| `--color-icon-brand-strong` | `#0062ab` | `#94c5ea` |
-| `--color-icon-brand-stronger` | `#06528a` | `#d9eaf8` |
-| `--color-icon-disabled` | `#757575` | `#c5c5c5` |
+| `--color-icon-brand-base` | `#0672cb` | `#509cda` |
+| `--color-icon-brand-strong` | `#055fa9` | `#97c4e9` |
+| `--color-icon-brand-stronger` | `#044b86` | `#daeaf7` |
+| `--color-icon-disabled` | `#757575` | `#9e9e9e` |
 | `--color-icon-inverse` | `#ffffff` | `#252525` |
-| `--color-icon-neutral` | `—` | `—` |
-| `--color-icon-neutral-strong` | `#252525` | `—` |
+| `--color-icon-neutral` | `#4d4d4d` | `#8898a5` |
+| `--color-icon-neutral-light` | `#616161` | `#b8c1c9` |
+| `--color-icon-neutral-strong` | `#252525` | `#b8c1c9` |
+| `--color-icon-secondary-berry` | `#a10061` | `#bd4c90` |
+| `--color-icon-secondary-teal` | `#00819e` | `#4ca7bb` |
+| `--color-icon-secondary-violet` | `#7c01b7` | `#a34dcd` |
 | `--color-icon-white` | `#ffffff` | `#ffffff` |
 | `--color-static-brand-100` | `#ebf4fb` | `#ebf4fb` |
-| `--color-static-brand-200` | `#d9eaf8` | `#d9eaf8` |
-| `--color-static-brand-300` | `#94c5ea` | `#94c5ea` |
-| `--color-static-brand-400` | `#4c9fdd` | `#4c9fdd` |
-| `--color-static-brand-500` | `#0076ce` | `#0076ce` |
-| `--color-static-brand-600` | `#0062ab` | `#0062ab` |
-| `--color-static-brand-700` | `#06528a` | `#06528a` |
-| `--color-static-brand-800` | `#003a65` | `#003a65` |
-| `--color-static-brand-900` | `#002642` | `#002642` |
+| `--color-static-brand-200` | `#daeaf7` | `#daeaf7` |
+| `--color-static-brand-300` | `#97c4e9` | `#97c4e9` |
+| `--color-static-brand-400` | `#509cda` | `#509cda` |
+| `--color-static-brand-500` | `#0672cb` | `#0672cb` |
+| `--color-static-brand-600` | `#055fa9` | `#055fa9` |
+| `--color-static-brand-700` | `#044b86` | `#044b86` |
+| `--color-static-brand-800` | `#033864` | `#033864` |
+| `--color-static-brand-900` | `#022541` | `#022541` |
 | `--color-static-gray-100` | `#f4f4f4` | `#f4f4f4` |
 | `--color-static-gray-200` | `#eaeaea` | `#eaeaea` |
 | `--color-static-gray-300` | `#c5c5c5` | `#c5c5c5` |
@@ -418,81 +365,51 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 | `--color-static-gray-900` | `#252525` | `#252525` |
 | `--color-static-gray-white` | `#ffffff` | `#ffffff` |
 | `--color-text-black` | `#252525` | `#252525` |
-| `--color-text-brand-base` | `#0076ce` | `#4c9fdd` |
-| `--color-text-brand-strong` | `#0062ab` | `#94c5ea` |
+| `--color-text-brand-base` | `#0672cb` | `#509cda` |
+| `--color-text-brand-strong` | `#055fa9` | `#97c4e9` |
 | `--color-text-critical` | `#af0000` | `#dd9494` |
-| `--color-text-disabled` | `#757575` | `#c5c5c5` |
+| `--color-text-disabled` | `#757575` | `#9e9e9e` |
 | `--color-text-inverse` | `#ffffff` | `#252525` |
-| `--color-text-link-brand-base` | `#0062ab` | `#4c9fdd` |
-| `--color-text-link-brand-light` | `#d9eaf8` | `#d9eaf8` |
+| `--color-text-link-brand-base` | `—` | `—` |
+| `--color-text-link-brand-light` | `#daeaf7` | `#daeaf7` |
 | `--color-text-link-brand-lighter` | `#ebf4fb` | `#ebf4fb` |
-| `--color-text-link-brand-strong` | `#06528a` | `#94c5ea` |
-| `--color-text-link-brand-stronger` | `#003a65` | `#d9eaf8` |
-| `--color-text-neutral` | `—` | `—` |
-| `--color-text-neutral-strong` | `—` | `—` |
+| `--color-text-link-brand-strong` | `—` | `—` |
+| `--color-text-link-brand-stronger` | `—` | `—` |
+| `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
 | `--color-text-warning` | `#6d4028` | `#6d4028` |
 | `--color-text-white` | `#ffffff` | `#ffffff` |
-| `--shadow-shadow-1-drop-shadow-2-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-1-drop-shadow-4-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-2-drop-shadow-4-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-2-drop-shadow-8-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-3-drop-shadow-16-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-3-drop-shadow-4-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-3-drop-shadow-8-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-4-drop-shadow-16-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-4-drop-shadow-32-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-4-drop-shadow-4-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
-| `--shadow-shadow-4-drop-shadow-8-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-16-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-2-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-32-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-4-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
+| `--shadow-drop-shadow-8-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
 
 <!-- ds:section id=tokens-float -->
 ### Tokens collection — FLOAT (Figma — `Tokens`, e.g. shadow geometry)
 
 | Token | Value |
 |---|---|
-| `--shadow-shadow-1-drop-shadow-2-blur` | `2` |
-| `--shadow-shadow-1-drop-shadow-2-spread` | `0` |
-| `--shadow-shadow-1-drop-shadow-2-x` | `0` |
-| `--shadow-shadow-1-drop-shadow-2-y` | `2` |
-| `--shadow-shadow-1-drop-shadow-4-blur` | `4` |
-| `--shadow-shadow-1-drop-shadow-4-spread` | `0` |
-| `--shadow-shadow-1-drop-shadow-4-x` | `0` |
-| `--shadow-shadow-1-drop-shadow-4-y` | `4` |
-| `--shadow-shadow-2-drop-shadow-4-blur` | `4` |
-| `--shadow-shadow-2-drop-shadow-4-spread` | `0` |
-| `--shadow-shadow-2-drop-shadow-4-x` | `0` |
-| `--shadow-shadow-2-drop-shadow-4-y` | `4` |
-| `--shadow-shadow-2-drop-shadow-8-blur` | `8` |
-| `--shadow-shadow-2-drop-shadow-8-spread` | `0` |
-| `--shadow-shadow-2-drop-shadow-8-x` | `0` |
-| `--shadow-shadow-2-drop-shadow-8-y` | `8` |
-| `--shadow-shadow-3-drop-shadow-16-blur` | `16` |
-| `--shadow-shadow-3-drop-shadow-16-spread` | `0` |
-| `--shadow-shadow-3-drop-shadow-16-x` | `0` |
-| `--shadow-shadow-3-drop-shadow-16-y` | `16` |
-| `--shadow-shadow-3-drop-shadow-4-blur` | `4` |
-| `--shadow-shadow-3-drop-shadow-4-spread` | `0` |
-| `--shadow-shadow-3-drop-shadow-4-x` | `0` |
-| `--shadow-shadow-3-drop-shadow-4-y` | `4` |
-| `--shadow-shadow-3-drop-shadow-8-blur` | `8` |
-| `--shadow-shadow-3-drop-shadow-8-spread` | `0` |
-| `--shadow-shadow-3-drop-shadow-8-x` | `0` |
-| `--shadow-shadow-3-drop-shadow-8-y` | `8` |
-| `--shadow-shadow-4-drop-shadow-16-blur` | `16` |
-| `--shadow-shadow-4-drop-shadow-16-spread` | `0` |
-| `--shadow-shadow-4-drop-shadow-16-x` | `0` |
-| `--shadow-shadow-4-drop-shadow-16-y` | `16` |
-| `--shadow-shadow-4-drop-shadow-32-blur` | `32` |
-| `--shadow-shadow-4-drop-shadow-32-spread` | `0` |
-| `--shadow-shadow-4-drop-shadow-32-x` | `0` |
-| `--shadow-shadow-4-drop-shadow-32-y` | `32` |
-| `--shadow-shadow-4-drop-shadow-4-blur` | `4` |
-| `--shadow-shadow-4-drop-shadow-4-spread` | `0` |
-| `--shadow-shadow-4-drop-shadow-4-x` | `0` |
-| `--shadow-shadow-4-drop-shadow-4-y` | `4` |
-| `--shadow-shadow-4-drop-shadow-8-blur` | `8` |
-| `--shadow-shadow-4-drop-shadow-8-spread` | `0` |
-| `--shadow-shadow-4-drop-shadow-8-x` | `0` |
-| `--shadow-shadow-4-drop-shadow-8-y` | `8` |
+| `--shadow-drop-shadow-16-blur` | `16` |
+| `--shadow-drop-shadow-16-spread` | `0` |
+| `--shadow-drop-shadow-16-x` | `0` |
+| `--shadow-drop-shadow-16-y` | `16` |
+| `--shadow-drop-shadow-2-blur` | `2` |
+| `--shadow-drop-shadow-2-spread` | `0` |
+| `--shadow-drop-shadow-2-x` | `0` |
+| `--shadow-drop-shadow-2-y` | `2` |
+| `--shadow-drop-shadow-32-blur` | `32` |
+| `--shadow-drop-shadow-32-spread` | `0` |
+| `--shadow-drop-shadow-32-x` | `0` |
+| `--shadow-drop-shadow-32-y` | `32` |
+| `--shadow-drop-shadow-4-blur` | `4` |
+| `--shadow-drop-shadow-4-spread` | `0` |
+| `--shadow-drop-shadow-4-x` | `0` |
+| `--shadow-drop-shadow-4-y` | `4` |
+| `--shadow-drop-shadow-8-blur` | `8` |
+| `--shadow-drop-shadow-8-spread` | `0` |
+| `--shadow-drop-shadow-8-x` | `0` |
+| `--shadow-drop-shadow-8-y` | `8` |
 
 <!-- ds:section id=density-primitive -->
 ### Density Primitive (Figma — `Density Primitive`, FLOAT)
@@ -501,18 +418,11 @@ The semantic tables below are confirmed from IDS Figma component nodes listed in
 
 | Figma variable name | Value |
 |---|---|
-| Compact/Cell - Vertical padding | `8` |
-| Compact/Header - Vertical padding | `4` |
-| Loose/Cell - Vertical padding | `14` |
-| Loose/Header - Vertical padding | `12` |
-| Standard/Cell - Vertical padding | `10` |
-| Standard/Header - Vertical padding | `8` |
 
 *Primitive FLOAT (non-color) in `Primitive` collection:*
 
 | Figma variable name | Value |
 |---|---|
-| icon-lg | `32` |
 
 <!-- ds:section id=typography -->
 ## Typography Scale
@@ -644,17 +554,31 @@ Use this contract for every IDS component spec and for any framework target that
 
 - IDS tokens are semantic CSS custom properties resolved per theme mode.
 - Component implementations must avoid hardcoded values when a semantic token exists.
-- Global IDS token stylesheet target path remains:
-  - `components/theme.css`
-- When `components/theme.css` is regenerated from Figma, this root-spec remains the normative semantic contract for generators.
+- Global IDS token stylesheet:
+  - `components/ids-theme.css` (sync: `python3 scripts/sync_ids_theme_from_figma.py`)
+- When `components/ids-theme.css` is regenerated from Figma, this root-spec remains the normative semantic contract for generators.
+
+### Scale tokens vs component layout aliases
+
+| Layer | Responsibility | Example |
+|---|---|---|
+| **Scale tokens** | Figma/root-spec catalog of foundational layout values | `--corner-radius-radius-2`, `--padding-padding-16`, `--spacing-space-8` |
+| **Component layout aliases** | Stable per-component names in `ids-theme.css`; programmes override the **same alias** in programme theme CSS | `--button-control-radius`, `--card-control-radius`, `--modal-control-radius`, `--progress-bar-control-radius`, `--date-picker-control-radius`, `--time-picker-control-radius`, `--text-box-control-radius`, `--toast-control-radius`, `--tooltip-control-radius` |
+| **IDS component spec** | References component aliases in Layout & Measurements and Codegen Contract | `border-radius: var(--button-control-radius)` |
+| **Programme fork spec** | Programme deltas table: which aliases differ (resolved scale token in parentheses) | Synapse: `--button-control-radius` → `radius-4` |
+| **Programme theme CSS** | Redefines alias values (`components/synapse-theme.css`, `components/dap-theme.css`) | `--button-control-radius: var(--corner-radius-radius-4)` |
+
+Reference implementations: [`components/ids/button/design-spec.md`](button/design-spec.md), [`components/ids/card/design-spec.md`](card/design-spec.md), [`components/ids/date-picker/design-spec.md`](date-picker/design-spec.md), [`components/ids/time-picker/design-spec.md`](time-picker/design-spec.md).
 
 <!-- ds:section id=variable-collections -->
 ## Variable Collections (Figma)
 
-The IDS file (`0bHk3XhrjFhowgFkz9yLr4`) exposes variables from:
+Canonical definitions live in **[IDS Variables Library](https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library)** (`r0Ex6TumqcR3HINamsfXCV`). REST sync and component work use the IDS Design Library (`0bHk3XhrjFhowgFkz9yLr4`), which subscribes to the published library.
+
+Collections:
 - **Tokens** — semantic, theme-aware (Light / Dark). Maps primarily to `--color-*` semantic CSS variables used in component specs.
 - **Primitive** — base palette values (static across themes). Maps to `--color-static-*`, `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, `--opacity-*`, and foundational scales.
-- **Density Primitive** — density and layout scale (when present). Maps to `--scale-*` and related spacing contracts used with semantic padding/spacing tokens.
+- **Sizes** — layout/size FLOAT tokens (radius, spacing, typography sizes where defined).
 - Typography and effect styles used in IDS component frames.
 
 ## Codegen Baseline Contract
@@ -675,12 +599,14 @@ The IDS file (`0bHk3XhrjFhowgFkz9yLr4`) exposes variables from:
 | IDS config | `config/design_systems/ids.yaml` |
 | IDS component specs | `components/ids/<slug>/design-spec.md` |
 | Figma variables → root-spec tables | `scripts/sync_ids_root_spec_from_figma.py` (requires `FIGMA_TOKEN`) |
+| Figma variables → theme CSS | `scripts/sync_ids_theme_from_figma.py` (requires `FIGMA_TOKEN`) |
 
-### Figma extraction nodes used for this IDS root baseline
+### Figma variable source (last live REST sync)
 
-- IDS variables / library scope (Tag board): `42012:26676` — [Figma](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42012-26676)
-- Alerting minor tag sample: `38910:51190` — [Figma](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38910-51190)
-- Tag example cluster: `42012:26686`
+| Source | File key | URL |
+|---|---|---|
+| IDS Variables Library (canonical) | `r0Ex6TumqcR3HINamsfXCV` | [IDS Variables Library](https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library) |
+| IDS Design Library (REST export) | `0bHk3XhrjFhowgFkz9yLr4` | [IDS Design Library](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library) |
 
-These node-based variable snapshots were used to assemble and re-validate the IDS root token baseline above.
+Variable tables and `components/ids-theme.css` are synced via `GET /v1/files/0bHk3XhrjFhowgFkz9yLr4/variables/local` because the Variables Library file is not REST-exportable with the current token.
 <!-- auto:generated:end -->

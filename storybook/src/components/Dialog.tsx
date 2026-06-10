@@ -24,7 +24,7 @@ type DialogSize = "sm" | "lg" | "xl";
 export type DialogVariant = "default" | "about";
 
 interface DialogProps {
-  /** Programme chrome overrides (`synapse`: 16px radius, neutral-light border). */
+  /** Programme chrome for footer/trigger `Button` (`synapse` button aliases). Modal radius uses `--modal-control-radius` from theme CSS. */
   programme?: "ids" | "synapse";
   /** Use `about` for the Synapse About pattern (centered product line, optional slots in children). */
   variant?: DialogVariant;
@@ -92,13 +92,7 @@ export function Dialog({
   const popupClassName =
     variant === "about"
       ? `${styles.popup} ${styles.popupAbout}`
-      : [
-          styles.popup,
-          styles[dialogSize],
-          programme === "synapse" ? styles.programmeSynapse : "",
-        ]
-          .filter(Boolean)
-          .join(" ");
+      : [styles.popup, styles[dialogSize]].filter(Boolean).join(" ");
 
   const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
 
@@ -241,17 +235,11 @@ export function Dialog({
                 </div>
               ) : null}
 
-              {(programme !== "synapse" && !showBodyScrollShadow) ||
-              showBodyScrollShadow ? (
-                <div
-                  className={
-                    showBodyScrollShadow
-                      ? styles.contentScrollShadow
-                      : styles.contentSeparator
-                  }
-                  aria-hidden="true"
-                />
-              ) : null}
+              {showBodyScrollShadow ? (
+                <div className={styles.contentScrollShadow} aria-hidden="true" />
+              ) : (
+                <div className={styles.contentSeparator} aria-hidden="true" />
+              )}
 
               <div className={styles.footer}>
                 {showTertiary ? (

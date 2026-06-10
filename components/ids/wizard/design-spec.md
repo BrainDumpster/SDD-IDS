@@ -61,7 +61,7 @@ Deterministic child structure (required order):
   - `large`: `864px`
   - `x-large`: `1152px`
   - `full-screen`: viewport-constrained (`100vw/100vh` in modal; container fill in inline)
-- Modal mode uses backdrop and centered shell; inline mode renders in normal document flow.
+- Modal mode uses backdrop and centered shell; modal wizard root uses **`border-radius: var(--modal-control-radius)`** (IDS theme: `var(--corner-radius-radius-none)` / 0); inline mode renders in normal document flow.
 ## Tokens
 - Container/surfaces:
   - `var(--color-background-component)`

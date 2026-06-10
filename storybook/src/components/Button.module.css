@@ -4,7 +4,7 @@
   justify-content: center;
   gap: var(--spacing-space-8);
   border: var(--border-width-border-1) solid transparent;
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--button-control-radius);
   font-family: inherit;
   font-weight: 500;
   font-size: var(--font-size-body-2);
@@ -192,14 +192,10 @@
   cursor: not-allowed;
 }
 
-.programmeSynapse {
-  border-radius: var(--corner-radius-radius-4);
-}
-
-/* Focus: outer ring 1px brand, 3px outside button (matches component-set Focus state) */
+/* Focus: outer ring 1px brand, offset from --button-focus-ring-offset (IDS default outline) */
 .button:focus-visible:not(:disabled) {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+  outline-offset: var(--button-focus-ring-offset);
 }
 
 .programmeSynapse:focus-visible:not(:disabled) {
@@ -209,9 +205,9 @@
 .programmeSynapse:focus-visible:not(:disabled)::after {
   content: "";
   position: absolute;
-  inset: -3px;
+  inset: calc(-1 * var(--button-focus-ring-offset));
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-6);
+  border-radius: var(--button-focus-ring-radius);
   pointer-events: none;
 }
 

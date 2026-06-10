@@ -41,6 +41,15 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 *(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 """
 
+SYNAPSE_IDS_FORK_DARK_STATES_SECTION = (
+    "## States (Dark Theme)\n\n" + DARK_STATES_BOILERPLATE_SYNAPSE + "\n"
+)
+
+SYNAPSE_IDS_FORK_THEME_IMPORT_RULE = (
+    "Import **`components/synapse-theme.css`** for Synapse targets "
+    "(or equivalent `[data-design-system=\"synapse\"]` scope) so programme layout aliases resolve."
+)
+
 CODEGEN_BOOTSTRAP = """### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 

@@ -44,6 +44,7 @@
   box-sizing: border-box;
   padding-left: var(--padding-padding-16, 16px);
   padding-right: 0;
+  border-radius: var(--time-picker-control-radius);
 }
 
 .fieldContainer.sizeLarge {
@@ -77,7 +78,7 @@
   position: absolute;
   inset: -5px;
   border: 1px solid var(--color-border-brand-base, #0076ce);
-  border-radius: 4px;
+  border-radius: var(--time-picker-focus-ring-radius);
   pointer-events: none;
   z-index: 1;
 }
@@ -153,7 +154,7 @@
   border: var(--border-width-border-default, 1px) solid transparent;
   cursor: pointer;
   padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
-  border-radius: var(--corner-radius-radius-2, 2px);
+  border-radius: var(--time-picker-control-radius);
   color: var(--color-icon-brand-base, #0076ce);
   flex-shrink: 0;
   align-self: stretch;
@@ -180,7 +181,7 @@
   position: absolute;
   inset: -3px;
   border: 1px solid var(--color-border-brand-base, #0076ce);
-  border-radius: 4px;
+  border-radius: var(--time-picker-focus-ring-radius);
   pointer-events: none;
   box-sizing: border-box;
 }

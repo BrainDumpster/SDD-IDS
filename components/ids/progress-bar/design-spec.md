@@ -36,7 +36,7 @@ Deterministic slot order:
   - `thin`: `var(--sizing-size-4)` (4px) — Figma `Type=Determinate/Inline, Thickness=Thin`
   - `medium`: `var(--sizing-size-8)` (8px)
   - `thick`: `var(--sizing-size-16)` (16px)
-- Border radius: **0px** on track and fill (sharp corners; Figma `.base progress bar`).
+- Border radius: **`var(--progress-bar-control-radius)`** on track and fill (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Track border: `var(--border-width-border-1)` solid `var(--color-border-accessible)`.
 - Track shell (`ProgressTrack`): sizing only, no border. **`trackBg`** (`z-index: 0`) has accessible border + neutral background, clipped with `clip-path: inset(0 0 0 var(--progress-clip))` so it only paints the **unfilled** width (set from `value` on root). Track background uses `var(--color-background-gray-light)` (#393939 in dark theme).
 - **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored `border` on top/left/bottom; right border only at `100%`. No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
@@ -68,6 +68,14 @@ Deterministic slot order:
 | `Failed/Error` | `failed-error` |
 
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--progress-bar-control-radius` | `var(--corner-radius-radius-none)` |
+
 ### Typography
 - Label / percentage / helper: Body 2 — `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, regular.
 
@@ -174,7 +182,7 @@ Valid combinations:
 - `showHelperText` independent; icon slot only when `state` is success, warning, or error
 
 ### Per-slot style contract
-- `ProgressTrack`: height from thickness tokens; background `var(--color-background-gray-neutral-alt)`; border `var(--border-width-border-1)` `var(--color-border-accessible)`; `border-radius: 0`.
+- `ProgressTrack`: height from thickness tokens; background `var(--color-background-gray-neutral-alt)`; border `var(--border-width-border-1)` `var(--color-border-accessible)`; `border-radius: var(--progress-bar-control-radius)`.
 - `ProgressIndicator`: fill background and border tokens per **States (Light Theme)** row for `state`; width from value % or indeterminate animation.
 - `ProgressMetaRow` / inline value: Body 2 + `var(--color-text-neutral-strong)`.
 - `ProgressHelperRow` text: `var(--color-text-neutral)`; icon 16px per slug table.
@@ -203,7 +211,7 @@ See **Interactions → Accessibility**.
 - [x] `with-label` meta row + track + optional helper matches Figma `Determinate/regular`
 - [x] `inline` track + 36px percentage column with 8px gap
 - [x] Thickness 4 / 8 / 16px via sizing tokens
-- [x] Sharp corners (0px radius) on track and fill
+- [x] Track/fill radius via `var(--progress-bar-control-radius)` (IDS: 0)
 - [x] State fills and borders use semantic alerting/brand tokens only
 - [x] Helper icons use documented slugs via Icon primitive
 - [x] Indeterminate omits percentage and animates fill

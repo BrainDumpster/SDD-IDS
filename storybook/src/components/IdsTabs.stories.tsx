@@ -1,3 +1,4 @@
+import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import shieldEncryptAltIcon from "../../../assets/icons/shield-encrypt-alt.svg";

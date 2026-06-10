@@ -690,10 +690,33 @@ All components must meet these requirements. Component specs only document addit
 ## Theming Mechanism
 
 - All color tokens resolve to different values per theme (see Color System tables)
-- Spacing, typography, and radius tokens are theme-invariant
+- Spacing, typography, and radius scale tokens are theme-invariant
 - Shadow color tokens change between themes (slightly cooler in dark)
 - Theme is set via `data-theme` attribute on a parent element
 - Implementation must NOT use separate stylesheets per theme — use the same CSS custom properties
+
+### Component layout aliases (programme overrides)
+
+IDS defines component layout aliases in `components/ids-theme.css`. Synapse overrides the **same alias names** in `components/synapse-theme.css` (see header + Sizes block). Component specs reference aliases; programme fork specs document deltas.
+
+| Alias | IDS default | Synapse override |
+|---|---|---|
+| `--button-control-radius` | `var(--corner-radius-radius-2)` | `var(--corner-radius-radius-4)` |
+| `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` | `var(--corner-radius-radius-6)` |
+| `--button-focus-ring-offset` | `3px` | `3px` |
+| `--card-control-radius` | `var(--corner-radius-radius-8)` | **`var(--corner-radius-radius-10)`** (10px) |
+| `--modal-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-16)`** (16px) |
+| `--progress-bar-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-2)`** (2px) |
+| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--time-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--text-box-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--text-box-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--toast-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-8)`** (8px) |
+| `--tooltip-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-8)`** (8px) |
+
+Reference: [`components/synapse/card/design-spec.md`](../synapse/card/design-spec.md), [`components/synapse/button/design-spec.md`](../synapse/button/design-spec.md), [`components/synapse/modal/design-spec.md`](../synapse/modal/design-spec.md), [`components/synapse/wizard/design-spec.md`](../synapse/wizard/design-spec.md), [`components/synapse/progress-bar/design-spec.md`](../synapse/progress-bar/design-spec.md), [`components/synapse/date-picker/design-spec.md`](../synapse/date-picker/design-spec.md), [`components/synapse/time-picker/design-spec.md`](../synapse/time-picker/design-spec.md), [`components/synapse/text-input/design-spec.md`](../synapse/text-input/design-spec.md), [`components/synapse/toast/design-spec.md`](../synapse/toast/design-spec.md), [`components/synapse/tooltip/design-spec.md`](../synapse/tooltip/design-spec.md).
 
 <!-- ds:section id=variable-collections -->
 ## Variable Collections (Figma)

@@ -62,7 +62,15 @@
 
 .tag[data-focus] {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-  /* Figma focus layer `inset-[-4px]` on `42065:39233` — outer ring gap ≈ 4px */
+}
+
+/* IDS programme: 3px focus gap per IDS spec. */
+.programmeIds[data-focus] {
+  outline-offset: 3px;
+}
+
+/* Synapse programme (`12715:251521`): 4px focus gap. */
+.programmeSynapse[data-focus] {
   outline-offset: 4px;
 }
 
@@ -252,4 +260,16 @@
   color: inherit;
   padding: 0;
   cursor: pointer;
+}
+
+/* Synapse `11666:90413` — close icon hover. */
+.programmeSynapse .dismiss:hover:not(:disabled) {
+  color: var(--color-icon-neutral-strong);
+}
+
+/* Synapse Light critical (`50724:303493`). */
+.programmeSynapse.tone_critical.emphasis_light {
+  background: var(--color-background-alerting-critical-slate);
+  border-color: var(--color-border-alerting-critical-base);
+  color: var(--color-text-tag-critical);
 }

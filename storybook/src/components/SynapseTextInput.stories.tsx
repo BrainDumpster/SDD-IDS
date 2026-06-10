@@ -32,7 +32,7 @@ const meta: Meta<typeof SynapseTextInput> = {
         component: [
           `Spec-driven Synapse Text Input (IDS Text Box contract). Source: \`${SYNAPSE_TEXT_INPUT_DESIGN_SPEC_PATH}\`.`,
           `Primary story: **Large / filled / default** (Figma \`${SYNAPSE_TEXT_INPUT_SPEC_ACCURATE_SCENARIO_NODE_ID}\`).`,
-          "Theme: `components/synapse-theme.css`. Programme chrome: `radius-4` control + `radius-6` focus ring.",
+          "Theme: `components/synapse-theme.css` (`--text-box-control-radius` → 4px; focus ring inherits IDS `radius-4`).",
         ].join(" "),
       },
     },

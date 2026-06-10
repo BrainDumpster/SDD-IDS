@@ -1,9 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { StorybookConfig } from "@storybook/react-vite";
-import type { Plugin } from "vite";
 import { mergeConfig } from "vite";
 
 // Story globs are resolved from `.storybook/` (not `storybook/`). Use `../../` to reach repo-root
@@ -11,59 +9,8 @@ import { mergeConfig } from "vite";
 const storybookConfigDir = path.dirname(fileURLToPath(import.meta.url));
 const storybookPackageRoot = path.resolve(storybookConfigDir, "..");
 const repoRoot = path.resolve(storybookPackageRoot, "..");
-
-/**
- * Storybook builds a static story→importer map at startup. Hot-added `.stories.*`
- * files are indexed in the sidebar but throw `importers[path] is not a function`
- * until the dev server restarts (full-reload alone is not enough).
- */
-function restartOnNewStoryFiles(): Plugin {
-  const storyRoots = [
-    path.join(storybookPackageRoot, "src"),
-    path.join(repoRoot, "storybook-generated"),
-  ];
-  const storybookCacheDir = path.join(storybookPackageRoot, "node_modules/.cache/storybook");
-
-  const clearStorybookCache = () => {
-    try {
-      fs.rmSync(storybookCacheDir, { recursive: true, force: true });
-    } catch {
-      // Cache may already be absent; ignore.
-    }
-  };
-
-  return {
-    name: "restart-on-new-story-files",
-    configureServer(server) {
-      let restartPending = false;
-
-      const scheduleRestart = (file: string, reason: "add" | "unlink") => {
-        const normalized = path.normalize(file);
-        if (!/\.stories\.(tsx|ts|mdx)$/.test(normalized)) return;
-        if (!storyRoots.some((root) => normalized.startsWith(root + path.sep))) return;
-        if (restartPending) return;
-        restartPending = true;
-
-        server.config.logger.warn(
-          `\n[storybook] Story file ${reason === "add" ? "added" : "removed"}: ${path.basename(normalized)}\n` +
-            "Clearing Storybook cache and restarting dev server " +
-            "(fixes `importers[path] is not a function`).\n",
-        );
-
-        // Defer so the file write finishes before Vite rescans globs.
-        setTimeout(() => {
-          clearStorybookCache();
-          void server.restart().finally(() => {
-            restartPending = false;
-          });
-        }, 200);
-      };
-
-      server.watcher.on("add", (file) => scheduleRestart(file, "add"));
-      server.watcher.on("unlink", (file) => scheduleRestart(file, "unlink"));
-    },
-  };
-}
+const reactRoot = path.join(storybookPackageRoot, "node_modules/react");
+const reactDomRoot = path.join(storybookPackageRoot, "node_modules/react-dom");
 
 const config: StorybookConfig = {
   // Absolute globs keep Vite importer keys aligned with the story index (avoids
@@ -81,7 +28,24 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      plugins: [restartOnNewStoryFiles()],
+      resolve: {
+        dedupe: ["react", "react-dom", "@base-ui-components/utils"],
+        alias: {
+          react: reactRoot,
+          "react-dom": reactDomRoot,
+          "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),
+          "react/jsx-dev-runtime": path.join(reactRoot, "jsx-dev-runtime.js"),
+        },
+      },
+      optimizeDeps: {
+        include: [
+          "react",
+          "react-dom",
+          "react/jsx-runtime",
+          "react/jsx-dev-runtime",
+          "@base-ui-components/react/popover",
+        ],
+      },
       server: {
         fs: {
           allow: [storybookPackageRoot, repoRoot],

@@ -67,7 +67,9 @@
   - `Small`: `32px` height
 - Field container: `padding-left: var(--padding-padding-16)`, no right padding — trailing padding belongs to the icon button
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
-- Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--corner-radius-radius-2)`
+- Field container corner radius: `var(--date-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
+- Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--date-picker-control-radius)`
+- Field focus ring corner radius: `var(--date-picker-focus-ring-radius)` (`var(--corner-radius-radius-4)` in IDS theme)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
 - Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-disabled)` (#757575)
 - Format hint: always shown below the input, Roboto Medium (500), `var(--font-size-body-2)` (14px), `var(--font-line-height-line-height-20)` (20px), `color: var(--color-text-neutral)` (#4d4d4d), `width: 100%`
@@ -163,6 +165,13 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - Hover option: background `var(--color-background-controls-brand-lighter)` (#ebf4fb)
 
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` |
+| `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` |
 
 ### Input field
 - `var(--color-background-component)` — field background

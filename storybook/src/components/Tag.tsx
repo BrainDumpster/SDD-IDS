@@ -9,7 +9,9 @@ type Type = "read-only" | "clickable" | "editable" | "badge";
 type Size = "sm" | "lg";
 type VisualState = "default" | "hover" | "focus" | "error" | "disabled";
 
-interface TagProps {
+export interface TagProps {
+  /** `synapse` → 4px focus ring + critical Light slate tokens per Synapse Figma. */
+  programme?: "ids" | "synapse";
   label: string;
   tone?: Tone;
   emphasis?: Emphasis;
@@ -30,6 +32,7 @@ interface TagProps {
 }
 
 export function Tag({
+  programme = "ids",
   label,
   tone = "non-alerting",
   emphasis = "light",
@@ -113,6 +116,7 @@ export function Tag({
     <span
       className={[
         styles.tag,
+        programme === "synapse" ? styles.programmeSynapse : styles.programmeIds,
         styles[size],
         typeClassName,
         styles[`tone_${tone}`],

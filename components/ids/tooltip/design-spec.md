@@ -35,7 +35,7 @@
 - Header internal gap (title/close): `4px`.
 - Close button frame: `20x20` (icon `12x12` with `4px` padding).
 - Panel border: `1px solid`.
-- Border radius: none in inspected IDS frame (square panel corners).
+- Panel corner radius: `border-radius: var(--tooltip-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0 — square panel corners per Figma).
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
 
@@ -54,6 +54,15 @@ Arrow geometry contract:
   - Border-notch masking offsets: `start: 7px`, `center: calc(50% - 6px)`, `end: calc(100% - 19px)`
 - Supported permutations: `4 sides x 3 alignments = 12`.
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--tooltip-control-radius` | `var(--corner-radius-radius-none)` |
+
+### Core surface/text tokens
 - Panel background: `var(--color-background-surface-2)`.
 - Panel border + arrow stroke: `var(--color-border-accessible)`.
 - Header text: `var(--color-text-neutral-strong)`.
@@ -118,7 +127,7 @@ Variant/option matrix:
 - Arrow placement: `side x arrowAlign` -> 12 valid combinations.
 
 Per-slot style contract:
-- `TooltipPanel`: background/border/shadow/padding from tokens above.
+- `TooltipPanel`: background/border/shadow/padding from tokens above; `border-radius: var(--tooltip-control-radius)`.
 - `Header`: Body 2 Medium + strong text token.
 - `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots.
 - `CloseAction`: renders icon component with `shapeName="ctrl-close-16"` at `12x12` within `20x20` frame with `4px` padding.
@@ -156,6 +165,7 @@ Validation checklist (pass/fail):
 - [ ] `ctrl-close-16` icon is used for close at `12x12` within `20x20` frame with `4px` padding.
 - [ ] Body content supports arbitrary consumer-provided content.
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
+- [ ] Layout uses `var(--tooltip-control-radius)` on `TooltipPanel`, not hardcoded px.
 ## Source Mapping
 - IDS map file: `data/component-figma-map.json` (`Tooltip` entry).
 - Primary Figma frame: `38201:109592`.

@@ -34,7 +34,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Masthead usage | `42266:95085` | Launcher anchored to masthead app action |
 | Products + options usage | `42266:95081` | Grid + `Dropdown-SingleSelect-Elements-Menu` |
 | Main set | `13231:123761` | `AppLauncher-Main` variant axes |
-| 2 products (no options) | `13231:124200` | `298×127`; **solid** external column divider, full `125px` |
+| 2 products (no options) | `13231:124200` | `298×127`; **internal** dotted tile rail on **leading** tile (`13231:109518`; `110px` / `7px` inset) |
 | 3 products | `13231:124054` | `298×254`; dotted column + row dividers |
 | 4 products | `13231:123908` | `298×254` |
 | 8 products | `13231:123730` | `298×416` |
@@ -46,7 +46,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 
 ## Anatomy
 
-Deterministic slot order. **Dividers are separate flex siblings** — never inside the tile control — so hover/press fill does not cover separators.
+Deterministic slot order. **3+ products:** column dividers are **separate flex siblings** between tiles so hover/press fill does not cover separators. **2 products (no options):** vertical separator is an **internal** `TileDividerRail` on the **leading** tile in each row (`13231:109518`); **no** external `AppLauncherColumnDivider`.
 
 1. `AppLauncherRoot` — popover root + portal (`@base-ui-components/react/popover` in reference impl)
 2. `AppLauncherTrigger` — `grid-square-9-16` (`16×16`); `default` or `masthead` variant
@@ -55,15 +55,17 @@ Deterministic slot order. **Dividers are separate flex siblings** — never insi
 5. `ProductRowGroup` — wraps optional row divider + product row (`width: 100%`)
 6. `AppLauncherRowDivider?` — between row groups when `productCount > 2` (multi-row grid)
 7. `ProductRow` — up to two `ProductTile` cells per row (`2 Across` frames: `14451:155638`, etc.)
-8. `AppLauncherColumnDivider?` — **between tiles in the same row** when `productCount ≥ 3` **or** `productCount === 2` without options (IDS: **solid** `125px` for 2-product; **dotted** `110px` / `7px` inset for 3+)
-9. `ProductTile` (`.AppLauncher-Element` `13231:109521`) — `148×125` interactive cell; **IDS:** hover/press fills **entire tile footprint**
-10. `ProductIcon?` — `32×32` (`shield-encrypt-alt` default)
-11. `ProductLabel` — Body 2, `111px` max width, ellipsis
-12. `OptionsRegion?` — `Dropdown-SingleSelect-Elements-Menu` block (`42266:95081`)
-13. `OptionRow[]`
-14. `FooterAction?`
+8. `AppLauncherColumnDivider?` — **between tiles in the same row** when `productCount ≥ 3` only (**dotted** `110px` / `7px` inset)
+9. `ProductTile` (`.AppLauncher-Element` `13231:109521`) — `148×125` interactive cell; horizontal flex when 2-product internal rail present; **IDS:** hover/press fills **entire tile footprint**
+10. `LabelCluster` — icon + label stack (`147px` inner width in 2-product layout)
+11. `TileDividerRail?` — **2-product only** — trailing internal `Div` on **leading** tile (`13231:109518`); dotted `110px` / `7px` inset
+12. `ProductIcon?` — `32×32` (`shield-encrypt-alt` default)
+13. `ProductLabel` — Body 2, `111px` max width, ellipsis
+14. `OptionsRegion?` — `Dropdown-SingleSelect-Elements-Menu` block (`42266:95081`)
+15. `OptionRow[]`
+16. `FooterAction?`
 
-> **Programme note:** Synapse 2-product uses internal `TileDividerRail` instead of external `AppLauncherColumnDivider` — see Synapse fork spec; IDS codegen must **not** emit internal rails.
+> **Programme note:** Synapse inherits this 2-product divider placement and geometry; programme deltas are token chrome only (`border-neutral-light` vs `border-accessible`) — see Synapse fork spec.
 
 ## Layout & Measurements
 
@@ -87,14 +89,23 @@ Deterministic slot order. **Dividers are separate flex siblings** — never insi
 | Label max width | **`111px`**; Body 2; ellipsis |
 | Tile fill (hover/press) | **Full `148×125` footprint**; divider siblings unchanged |
 
-### `AppLauncherColumnDivider` (IDS)
+### `AppLauncherColumnDivider` (IDS, 3+ products)
 
 | Variant | When | Stroke | Inset |
 |---|---|---|---|
-| **solid** | `productCount === 2` ∧ no options | full **`125px`** height; `solid` `var(--color-border-accessible)` | none (edge-to-edge in tile block) |
 | **dotted** | `productCount ≥ 3` | **`110px`** dotted stroke | **`7px`** top and bottom within `125px` tile block |
 
 Token: `var(--color-border-accessible)`.
+
+### `TileDividerRail` (IDS, 2 products, no options)
+
+| Property | Value |
+|---|---|
+| Placement | Internal trailing slot on **leading** tile in each row (`13231:109518`) |
+| Stroke | **`110px`** dotted |
+| Inset | **`7px`** top and bottom within `125px` tile block |
+| Token | `var(--color-border-accessible)` |
+| External column divider | **Not emitted** between tiles when `productCount === 2` ∧ `!options` |
 
 ### `AppLauncherRowDivider`
 
@@ -230,11 +241,11 @@ Emit slots in **Anatomy** order. Conditional branches (IDS):
 
 | Condition | Emit |
 |---|---|
-| `productCount === 2` ∧ `!options` ∧ `programme=ids` | `AppLauncherColumnDivider` (**solid**) between tiles; **no** internal tile rail |
+| `productCount === 2` ∧ `!options` | `TileDividerRail` (**dotted**) on **leading** tile only; horizontal tile flex; **no** external `AppLauncherColumnDivider` |
 | `productCount ≥ 3` | `AppLauncherColumnDivider` (**dotted**) between tiles in row |
 | `rowIndex > 0` | `AppLauncherRowDivider` before product row |
 | `options.length > 0` ∨ `footerAction` | `OptionsRegion` after `ProductRegion` |
-| `programme=synapse` | defer divider/tile rules to Synapse fork spec |
+| `programme=synapse` | defer tile hover/focus chrome to Synapse fork spec; **divider placement inherits IDS** |
 
 Ordered slot list:
 
@@ -259,7 +270,8 @@ Ordered slot list:
 | `productCount` | `0` \| `1` \| `2` \| `3` \| `4` \| `8` |
 | `optionsMode` | `none` \| `options-only` \| `products+options` \| `products+options+footer` |
 | `triggerVariant` | `default` \| `masthead` |
-| column divider `variant` | `solid` (2-product IDS) \| `dotted` (3+) |
+| column divider `variant` | `dotted` (3+ external) |
+| tile rail `variant` | `dotted` (2-product internal, leading tile only) |
 | tile `state` | `default` \| `hover` \| `press` \| `selected` \| `focus` \| `no-icon` |
 
 ### Per-slot style contract
@@ -268,7 +280,8 @@ Ordered slot list:
 |---|---|
 | `AppLauncherSurface` | `surface-2`, `border-accessible`, shadow 4; width `150` (1 product) or `298` (2+) |
 | `ProductTile` | `148×125`; icon `32×32`; label clamp `111px`; **full-tile** hover/press fill |
-| `AppLauncherColumnDivider` | **solid:** full `125px`; **dotted:** `110px` stroke, `7px` inset; token `border-accessible` |
+| `AppLauncherColumnDivider` | **dotted:** `110px` stroke, `7px` inset; token `border-accessible` (3+ only) |
+| `TileDividerRail` | **dotted:** `110px` stroke, `7px` inset; token `border-accessible` (2-product leading tile) |
 | `AppLauncherRowDivider` | `262px` dotted; `padding-16` horizontal inset; centered |
 | `OptionRow` | IDS dropdown-combo-box option token contract |
 | `AppLauncherTrigger` | `grid-square-9-16`; masthead → white icon |
@@ -308,7 +321,7 @@ Resolve via shared `Icon` component (`import.meta.glob` on `assets/icons/*.svg` 
 - [x] Metadata complete with Figma file key + validated node IDs
 - [x] Live Figma MCP on `13231:124200`, `13231:124054`, `13231:123908`, `42266:95081` (2026-06-05)
 - [x] Surface `298px` / tile `148×125` / icon `32×32` / label `111px` match Figma
-- [x] IDS 2-product **solid** column divider full `125px` documented (`13231:124200`)
+- [x] IDS 2-product **internal dotted** tile rail `110px` / `7px` inset on leading tile documented (`13231:124200`, `13231:109518`)
 - [x] 3+ product **dotted** column divider `110px` / `7px` inset documented
 - [x] Row divider `262px` / `padding-16` inset documented
 - [x] Dividers as separate flex siblings in anatomy + codegen structure

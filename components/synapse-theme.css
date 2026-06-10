@@ -533,6 +533,21 @@ html, body {
   --spacing-space-8: 8px;
   --spacing-space-minus-1: -1px;
   --spacing-space-none: 0px;
+  /* --- Component layout aliases (Synapse overrides; repeat after Sizes for cascade) --- */
+  --button-control-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-radius: var(--corner-radius-radius-6);
+  --button-focus-ring-offset: 3px;
+  --card-control-radius: var(--corner-radius-radius-10);
+  --modal-control-radius: var(--corner-radius-radius-16);
+  --progress-bar-control-radius: var(--corner-radius-radius-2);
+  --date-picker-control-radius: var(--corner-radius-radius-4);
+  --date-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --time-picker-control-radius: var(--corner-radius-radius-4);
+  --time-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --text-box-control-radius: var(--corner-radius-radius-4);
+  --text-box-focus-ring-radius: var(--corner-radius-radius-4);
+  --toast-control-radius: var(--corner-radius-radius-8);
+  --tooltip-control-radius: var(--corner-radius-radius-8);
 }
 
 /* ========================================================

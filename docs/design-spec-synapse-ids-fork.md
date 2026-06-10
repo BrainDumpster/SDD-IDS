@@ -51,8 +51,10 @@ Scaffold: `scripts/design_spec_template.py` → `SYNAPSE_IDS_FORK_TEMPLATE`.
 
 | Layer | Responsibility |
 |-------|----------------|
-| Component spec | Semantic `var(--token-name)` per slot/state |
-| `components/synapse-theme.css` | Resolved Light/Dark values, Synapse aliases |
+| IDS component spec | Component layout alias names per slot (e.g. `var(--button-control-radius)`) |
+| `components/ids-theme.css` | Alias defaults → scale tokens |
+| Programme fork spec | Deltas table: which aliases differ (resolved scale token in parentheses) |
+| `components/synapse-theme.css` | Same alias names, programme values; semantic Light/Dark colors |
 | `components/synapse/root-spec.md` | Programme-wide token catalog |
 
 ## Storybook

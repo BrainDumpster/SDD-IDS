@@ -22,8 +22,8 @@ Deterministic order:
 2. optional `ButtonLeadingIcon`
 3. optional `ButtonLabel`
 ## Layout & Measurements
-- Border radius: `2px`.
-- Horizontal gap between icon and label: `8px`.
+- Control corner radius: `var(--button-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
+- Horizontal gap between icon and label: `var(--spacing-space-8)`.
 - Horizontal padding (all text and icon-text variants): `16px` left and right.
 - Width is content-driven with product-level guidance:
   - minimum width `56px`
@@ -37,12 +37,21 @@ Deterministic order:
   - `large`: height `40px`, vertical padding `12px`
 - Icon glyph size: `16px x 16px`.
 - Focus ring geometry (focus-visible):
-  - outer ring stroke: `1px` (`var(--border-width-border-1)`)
-  - ring offset from control edge: `3px`
-  - ring corner radius: `4px` (outer ring only; button container remains `2px`)
+  - outer ring stroke: `var(--border-width-border-1)`
+  - ring offset from control edge: `var(--button-focus-ring-offset)`
+  - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, regular) for button text.
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS (`components/synapse-theme.css`, `components/dap-theme.css`). Component specs and generated CSS reference aliases only — not programme-specific scale tokens.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--button-control-radius` | `var(--corner-radius-radius-2)` |
+| `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` |
+| `--button-focus-ring-offset` | `3px` |
+
 - Core primary tokens:
   - `var(--color-background-controls-brand-base)`
   - `var(--color-background-controls-brand-strong)`
@@ -161,6 +170,21 @@ Variant matrix:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
   - `ButtonLeadingIcon`: `16x16`, color token follows variant/state.
   - `ButtonLabel`: `Body 2`.
+### Theme & programme resolution
+- Generators **must** emit component layout aliases (`var(--button-control-radius)`, `var(--button-focus-ring-radius)`, `var(--button-focus-ring-offset)`), never raw `px` or programme-specific scale token names in component CSS.
+- Theme selection by programme:
+  - IDS → `components/ids-theme.css`
+  - Synapse → `components/synapse-theme.css`
+  - DAP → `components/dap-theme.css`
+- Layer precedence: `program_theme_delta` overrides `ids_theme` (see `generation/component_context_compiler.py`).
+- Programme fork specs document **which aliases differ** in the programme deltas table; implementations rely on programme theme CSS — not duplicate alias values in component CSS.
+- `ButtonRoot` layout bindings:
+
+| CSS property | Token |
+|---|---|
+| `border-radius` | `var(--button-control-radius)` |
+| focus ring `border-radius` | `var(--button-focus-ring-radius)` |
+| focus ring offset | `var(--button-focus-ring-offset)` |
 - Behavior contract:
   - `disabled || loading` blocks activation and output events.
   - `iconOnly=true` requires accessible label.
@@ -183,6 +207,9 @@ Variant matrix:
   - `iconOnly=true` with `size=small` -> validation error (or coerce to `medium` only if product explicitly enables coercion).
 - Validation checklist:
   - [ ] All variant x size x state combinations resolve tokenized styles.
+  - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
+  - [ ] Aliases defined in `components/ids-theme.css` and documented in Tokens.
+  - [ ] Programme fork deltas list alias overrides when values differ (Synapse/DAP).
   - [ ] Icon slug path resolution works and gracefully handles missing slugs.
   - [ ] Disabled/loading modes prevent output events.
   - [ ] Keyboard and pointer activation parity is preserved.
