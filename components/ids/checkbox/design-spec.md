@@ -55,7 +55,7 @@ Use semantic tokens only.
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
-  - `font-weight: 500`
+  - `font-weight: 400`
 ## States (Light Theme)
 | Selection | Interaction | Box Background | Box Border | Indicator | Label |
 |---|---|---|---|---|---|
@@ -163,7 +163,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 **Layout & structure**
 - **Wrapper min-height**: `20px` — matches the label line-height; do not set `44px` on the wrapper
-- **Label font-weight**: `500` — apply on the wrapper label row
+- **Label font-weight**: `400` — apply on the wrapper label row
 
 **Error state**
 - **Box border in error**: unchecked box uses `var(--color-border-strong)` (same as hover), NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level via `ValidationErrorMessage`, not by a red border on the individual checkbox.

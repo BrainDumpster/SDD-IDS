@@ -1,6 +1,8 @@
 import { Menu } from "@base-ui-components/react/menu";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { Icon } from "./Icon";
+import { Tag } from "./Tag";
 import styles from "./DropdownMenu.module.css";
 import search16Icon from "../../../assets/icons/search-16.svg";
 
@@ -41,6 +43,16 @@ interface DropdownMenuProps {
   searchValue?: string;
   searchPlaceholder?: string;
   onSearchValueChange?: (value: string) => void;
+  /** Multi-select: Show Selected / Hide Selected panel with dismissible tag chips (Figma `12730:120316`). */
+  showSelectedPanel?: boolean;
+  showSelectedExpanded?: boolean;
+  defaultShowSelectedExpanded?: boolean;
+  onShowSelectedExpandedChange?: (expanded: boolean) => void;
+  showSelectedLabel?: string;
+  hideSelectedLabel?: string;
+  onRemoveSelectedTag?: (value: string) => void;
+  /** Clears all selections from the selection panel row dismiss control. Defaults to `onClearAllClick`. */
+  onShowSelectedPanelClear?: () => void;
   /** When true the trigger stretches to fill its parent container. */
   fullWidth?: boolean;
 }
@@ -70,11 +82,43 @@ export function DropdownMenu({
   searchValue,
   searchPlaceholder = "Search",
   onSearchValueChange,
+  showSelectedPanel = false,
+  showSelectedExpanded,
+  defaultShowSelectedExpanded = false,
+  onShowSelectedExpandedChange,
+  showSelectedLabel = "Show Selected",
+  hideSelectedLabel = "Hide Selected",
+  onRemoveSelectedTag,
+  onShowSelectedPanelClear,
   fullWidth = false,
 }: DropdownMenuProps) {
   const [open, setOpen] = useState(defaultOpen && !disabled);
+  const [internalShowSelectedExpanded, setInternalShowSelectedExpanded] = useState(defaultShowSelectedExpanded);
   const triggerMeasureRef = useRef<HTMLSpanElement | null>(null);
   const [triggerWidth, setTriggerWidth] = useState<number>();
+
+  const isShowSelectedExpandedControlled = showSelectedExpanded !== undefined;
+  const isShowSelectedExpanded = isShowSelectedExpandedControlled
+    ? showSelectedExpanded
+    : internalShowSelectedExpanded;
+
+  const setShowSelectedExpanded = (next: boolean) => {
+    if (!isShowSelectedExpandedControlled) {
+      setInternalShowSelectedExpanded(next);
+    }
+    onShowSelectedExpandedChange?.(next);
+  };
+
+  const selectedTagItems = useMemo(
+    () =>
+      selectedValues.map((value) => {
+        const item = items.find((entry) => entry.value === value || entry.label === value);
+        return { value, label: item?.label ?? value };
+      }),
+    [items, selectedValues],
+  );
+
+  const showSearchClear = Boolean(searchValue && searchValue.length > 0);
 
   useLayoutEffect(() => {
     const el = triggerMeasureRef.current;
@@ -155,6 +199,21 @@ export function DropdownMenu({
                         onChange={(event) => onSearchValueChange?.(event.target.value)}
                         onKeyDown={(event) => event.stopPropagation()}
                       />
+                      {showSearchClear ? (
+                        <button
+                          type="button"
+                          className={styles.searchClearButton}
+                          aria-label="Clear search"
+                          onClick={() => onSearchValueChange?.("")}
+                        >
+                          <Icon
+                            shapeName="shape-x-thick"
+                            className={styles.searchClearIcon}
+                            color="var(--color-icon-accessible)"
+                            style={{ width: 10, height: 10 }}
+                          />
+                        </button>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -186,6 +245,60 @@ export function DropdownMenu({
                 >
                   {clearAllLabel}
                 </button>
+              </div>
+            ) : null}
+            {showSelectedPanel && selectionMode === "multi" && selectedValues.length > 0 ? (
+              <div
+                className={styles.showSelectedPanel}
+                data-expanded={isShowSelectedExpanded ? "true" : undefined}
+              >
+                <div className={styles.showSelectedHeader}>
+                  <button
+                    type="button"
+                    className={styles.showSelectedToggle}
+                    aria-expanded={isShowSelectedExpanded}
+                    onClick={() => setShowSelectedExpanded(!isShowSelectedExpanded)}
+                  >
+                    <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
+                    <Icon
+                      shapeName="arrow-drop-tri-caret"
+                      className={styles.showSelectedCaret}
+                      color="var(--color-icon-brand-base)"
+                      style={{
+                        width: 10,
+                        height: 10,
+                        transform: isShowSelectedExpanded ? "rotate(180deg)" : undefined,
+                      }}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.showSelectedClear}
+                    aria-label="Clear all selected items"
+                    onClick={() => (onShowSelectedPanelClear ?? onClearAllClick)?.()}
+                  >
+                    <Icon
+                      shapeName="shape-x-thick"
+                      className={styles.showSelectedClearIcon}
+                      color="var(--color-icon-accessible)"
+                      style={{ width: 10, height: 10 }}
+                    />
+                  </button>
+                </div>
+                {isShowSelectedExpanded ? (
+                  <div className={styles.showSelectedTags}>
+                    {selectedTagItems.map((tag) => (
+                      <Tag
+                        key={tag.value}
+                        label={tag.label}
+                        type="editable"
+                        size="lg"
+                        closable
+                        onDismiss={() => onRemoveSelectedTag?.(tag.value)}
+                      />
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ) : null}
             <div

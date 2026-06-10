@@ -108,6 +108,7 @@ export const SingleSelectContractManual: Story = {
 export const MultiSelectContractManual: Story = {
   render: () => {
     const [selected, setSelected] = useState<string[]>(["Storage", "Compute"]);
+    const [searchQuery, setSearchQuery] = useState("");
     const options: UserOption[] = [
       { id: "app-1", label: "Storage" },
       { id: "app-2", label: "Compute" },
@@ -150,6 +151,18 @@ export const MultiSelectContractManual: Story = {
           trigger={<ComboTrigger value={selected.join(", ")} placeholder="Select products" />}
           items={items}
           showSearch
+          searchValue={searchQuery}
+          onSearchValueChange={setSearchQuery}
+          showSelectAllClearAll
+          selectAllChecked={selected.length === options.length}
+          selectAllIndeterminate={selected.length > 0 && selected.length < options.length}
+          onSelectAllClick={() => setSelected(options.map((option) => option.label))}
+          onClearAllClick={() => setSelected([])}
+          clearAllDisabled={selected.length === 0}
+          showSelectedPanel
+          defaultShowSelectedExpanded
+          onRemoveSelectedTag={(value) => setSelected((prev) => prev.filter((entry) => entry !== value))}
+          onShowSelectedPanelClear={() => setSelected([])}
           defaultOpen
           maxHeight={220}
         />
@@ -218,6 +231,65 @@ export const ErrorState: Story = {
         >
           <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
           Error message
+        </div>
+      </div>
+    );
+  },
+};
+
+export const MultiSelectShowSelectedPanel: Story = {
+  render: () => {
+    const options = Array.from({ length: 8 }, (_, i) => ({
+      id: `opt-${i + 1}`,
+      label: `Option ${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string[]>(["Option 1", "Option 2", "Option 4", "Option 6"]);
+    const [searchQuery, setSearchQuery] = useState("opt");
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
+
+    const items = useMemo(
+      () =>
+        options.map((option) => ({
+          id: option.id,
+          value: option.label,
+          label: option.label,
+          selectable: true,
+          onClick: () =>
+            setSelected((prev) =>
+              prev.includes(option.label)
+                ? prev.filter((entry) => entry !== option.label)
+                : [...prev, option.label],
+            ),
+        })),
+      [],
+    );
+
+    return (
+      <div style={{ width: 300, display: "grid", gap: 8 }}>
+        <DropdownMenu
+          selectionMode="multi"
+          selectedValues={selected}
+          trigger={<ComboTrigger value={selected.join(", ")} placeholder="Select products" />}
+          items={items}
+          showSearch
+          searchValue={searchQuery}
+          onSearchValueChange={setSearchQuery}
+          showSelectAllClearAll
+          selectAllChecked={selected.length === options.length}
+          selectAllIndeterminate={selected.length > 0 && selected.length < options.length}
+          onSelectAllClick={() => setSelected(options.map((option) => option.label))}
+          onClearAllClick={() => setSelected([])}
+          clearAllDisabled={selected.length === 0}
+          showSelectedPanel
+          showSelectedExpanded={showSelectedExpanded}
+          onShowSelectedExpandedChange={setShowSelectedExpanded}
+          onRemoveSelectedTag={(value) => setSelected((prev) => prev.filter((entry) => entry !== value))}
+          onShowSelectedPanelClear={() => setSelected([])}
+          defaultOpen
+          maxHeight={220}
+        />
+        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+          Toggle Show/Hide Selected; dismiss tags individually; search clear appears when query is non-empty.
         </div>
       </div>
     );

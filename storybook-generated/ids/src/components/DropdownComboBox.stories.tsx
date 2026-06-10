@@ -9,7 +9,7 @@ import { DropdownMenu as IdsDropdownComboBox } from "../../../../storybook/src/c
 import { IdsDropdownTriggerShell } from "../../../../storybook/src/components/IdsDropdownTriggerShell";
 
 const meta: Meta<typeof IdsDropdownComboBox> = {
-  title: "Spec Generated/IDS/Dropdown Combo Box",
+  title: "Spec Generated/IDS/Dropdown/Combo Box",
   component: IdsDropdownComboBox,
   parameters: { layout: "centered" },
 };
@@ -72,6 +72,7 @@ export const SingleSelectContract: Story = {
 export const MultiSelectContract: Story = {
   render: () => {
     const [selected, setSelected] = useState<string[]>(["Storage", "Compute"]);
+    const [searchQuery, setSearchQuery] = useState("");
     const items = useMemo(
       () =>
         options.map((option) => ({
@@ -96,6 +97,18 @@ export const MultiSelectContract: Story = {
           trigger={<Trigger value={selected.join(", ")} placeholder="Select products" />}
           items={items}
           showSearch
+          searchValue={searchQuery}
+          onSearchValueChange={setSearchQuery}
+          showSelectAllClearAll
+          selectAllChecked={selected.length === options.length}
+          selectAllIndeterminate={selected.length > 0 && selected.length < options.length}
+          onSelectAllClick={() => setSelected(options.map((option) => option.label))}
+          onClearAllClick={() => setSelected([])}
+          clearAllDisabled={selected.length === 0}
+          showSelectedPanel
+          defaultShowSelectedExpanded
+          onRemoveSelectedTag={(value) => setSelected((prev) => prev.filter((entry) => entry !== value))}
+          onShowSelectedPanelClear={() => setSelected([])}
           matchTriggerWidth
           defaultOpen
           maxHeight={220}
