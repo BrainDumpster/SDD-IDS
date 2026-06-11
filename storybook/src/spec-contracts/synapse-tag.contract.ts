@@ -1,13 +1,22 @@
 /**
- * Synapse Tag — IDS-fork spec contract.
- * Full contract: `components/synapse/tag/design-spec.md`
- * IDS baseline: `components/ids/tag/design-spec.md`
+ * Synapse Tag — thin IDS-fork; programme deltas via `programme="synapse"` (no theme layout alias).
  */
 export const SYNAPSE_TAG_DESIGN_SPEC_PATH = "components/synapse/tag/design-spec.md" as const;
 
 export const SYNAPSE_TAG_IDS_BASELINE_SPEC_PATH = "components/ids/tag/design-spec.md" as const;
 
 export const SYNAPSE_TAG_SPEC_PATTERN = "ids-fork" as const;
+
+/** Programme focus ring outline-offset (px). */
+export const SYNAPSE_TAG_FOCUS_OUTLINE_OFFSET_PX = 4 as const;
+export const SYNAPSE_TAG_IDS_FOCUS_OUTLINE_OFFSET_PX = 3 as const;
+
+/** Synapse-only semantic tokens (critical Light). */
+export const SYNAPSE_TAG_CRITICAL_LIGHT_NODE_ID = "50724:303493" as const;
+export const SYNAPSE_TAG_FOCUS_RING_NODE_ID = "12715:251521" as const;
+export const SYNAPSE_TAG_CLOSE_HOVER_NODE_ID = "11666:90413" as const;
+
+export const SYNAPSE_TAG_IDS_MAIN_NODE_ID = "42012:26686" as const;
 
 export const SYNAPSE_TAG_MAIN_NODE_ID = "38910:57385" as const;
 export const SYNAPSE_TAG_CLOSE_ELEMENT_NODE_ID = "11666:90409" as const;

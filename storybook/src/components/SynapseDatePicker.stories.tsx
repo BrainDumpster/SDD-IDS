@@ -50,8 +50,8 @@ export const CornerRadiusOverride: Story = {
       }}
     >
       <p style={{ margin: "0 0 12px", fontSize: 12, color: "var(--color-text-neutral)" }}>
-        Synapse: <code>{SYNAPSE_DATE_PICKER_CONTROL_RADIUS_ALIAS}</code> resolves to 4px via
-        synapse-theme.css. IDS baseline is square (0px).
+        Synapse: <code>{SYNAPSE_DATE_PICKER_CONTROL_RADIUS_ALIAS}</code> resolves to 4px on field,
+        calendar popup, and month/year dropdowns via synapse-theme.css. IDS baseline is square (0px).
       </p>
       <SynapseDatePicker size="large" label="Date" placeholder="MM/DD/YYYY" />
     </div>

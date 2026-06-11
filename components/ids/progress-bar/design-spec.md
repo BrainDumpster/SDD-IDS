@@ -16,7 +16,7 @@
 - Inline reference node: `11099:57186` (Determinate/Inline, Medium, In Progress, 30%)
 - Figma file key: `VZJ48bbVYrIynw8DdSukWw`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
-- Verified at: 2026-05-22
+- Verified at: 2026-06-10
 - Storybook examples requested: yes
 - Storybook path: `storybook-generated/ids/src/components/ProgressBar.stories.tsx`
 - Storybook title: `Spec Generated/IDS/Progress Bar`
@@ -80,7 +80,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Label / percentage / helper: Body 2 — `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, regular.
 
 ### Colors and surfaces
-- Track background: `var(--color-background-gray-neutral-alt)`
+- Track background (unfilled segment): `var(--color-background-gray-light)` — Figma `.ProgressBar-Element-Amount` track (`42635:19947` / `11099:57042`)
 - Track border (remainder): `var(--color-border-accessible)`
 - In-progress fill: `var(--color-background-brand-base)`; fill border: `var(--color-border-brand-base)`; fill-border overlay token: `var(--color-background-controls-brand-base)` (matches fill edge in Figma)
 - Success fill: `var(--color-background-alerting-success)`; fill border: `var(--color-border-alerting-success-base)`
@@ -104,11 +104,11 @@ Programmes override these **same alias names** in programme theme CSS. Component
 ## States (Light Theme)
 | `state` | Track background | Fill background | Border (track remainder + fill edges) | Text |
 |---|---|---|---|---|
-| `in-progress` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-brand-base)` | Track: `var(--color-border-accessible)`; fill edges: same token as fill / `var(--color-border-brand-base)` on fill box | Meta/inline %: `var(--color-text-neutral-strong)`; helper: `var(--color-text-neutral)` |
-| `completed-success` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-alerting-success)` | Track: accessible; fill edges match success fill / `var(--color-border-alerting-success-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
-| `completed-warning` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-alerting-minor)` | Track: accessible; fill edges: `var(--color-border-alerting-minor-transparent)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
-| `failed-error` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-alerting-critical)` | Track: accessible; fill edges: `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
-| `indeterminate` + `in-progress` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-brand-base)` | same as in-progress | same as in-progress |
+| `in-progress` | `var(--color-background-gray-light)` | `var(--color-background-brand-base)` | Track: `var(--color-border-accessible)`; fill edges: same token as fill / `var(--color-border-brand-base)` on fill box | Meta/inline %: `var(--color-text-neutral-strong)`; helper: `var(--color-text-neutral)` |
+| `completed-success` | `var(--color-background-gray-light)` | `var(--color-background-alerting-success)` | Track: accessible; fill edges match success fill / `var(--color-border-alerting-success-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
+| `completed-warning` | `var(--color-background-gray-light)` | `var(--color-background-alerting-minor)` | Track: accessible; fill edges: `var(--color-border-alerting-minor-transparent)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
+| `failed-error` | `var(--color-background-gray-light)` | `var(--color-background-alerting-critical)` | Track: accessible; fill edges: `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
+| `indeterminate` + `in-progress` | `var(--color-background-gray-light)` | `var(--color-background-brand-base)` | same as in-progress | same as in-progress |
 
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -182,7 +182,7 @@ Valid combinations:
 - `showHelperText` independent; icon slot only when `state` is success, warning, or error
 
 ### Per-slot style contract
-- `ProgressTrack`: height from thickness tokens; background `var(--color-background-gray-neutral-alt)`; border `var(--border-width-border-1)` `var(--color-border-accessible)`; `border-radius: var(--progress-bar-control-radius)`.
+- `ProgressTrack` / `trackBg`: height from thickness tokens; unfilled background `var(--color-background-gray-light)`; border `var(--border-width-border-1)` `var(--color-border-accessible)`; `border-radius: var(--progress-bar-control-radius)`.
 - `ProgressIndicator`: fill background and border tokens per **States (Light Theme)** row for `state`; width from value % or indeterminate animation.
 - `ProgressMetaRow` / inline value: Body 2 + `var(--color-text-neutral-strong)`.
 - `ProgressHelperRow` text: `var(--color-text-neutral)`; icon 16px per slug table.
@@ -230,3 +230,5 @@ See **Interactions → Accessibility**.
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57210)` — with-label thin in-progress |
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57186)` — inline medium in-progress |
 | Figma MCP (2026-05-22) | `get_variable_defs(..., nodeId=11067:54665)` |
+| IDS Design Library track evidence | `0bHk3XhrjFhowgFkz9yLr4` → `42635:19947` (`.ProgressBar-Element-Amount` track `11099:57042` uses `var(--color-background-gray-light)`) |
+| Figma MCP (2026-06-10) | `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=42635:19947)` — track `gray-light` dark `#393939` |

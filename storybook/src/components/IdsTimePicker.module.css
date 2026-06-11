@@ -107,6 +107,8 @@
 
 .fieldContainer.open {
   border-color: var(--color-border-brand-base, #0076ce);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .fieldContainer.open .textInput.filled {
@@ -233,6 +235,9 @@
   flex-direction: row;
   gap: var(--spacing-space-16, 16px);
   align-items: center;
+  border-radius: var(--time-picker-control-radius);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .timePopup.widePadding {

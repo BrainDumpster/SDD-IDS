@@ -707,9 +707,9 @@ IDS defines component layout aliases in `components/ids-theme.css`. Synapse over
 | `--card-control-radius` | `var(--corner-radius-radius-8)` | **`var(--corner-radius-radius-10)`** (10px) |
 | `--modal-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-16)`** (16px) |
 | `--progress-bar-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-2)`** (2px) |
-| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px; field, calendar popup, month/year overlays) |
 | `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
-| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px; field, time popup) |
 | `--time-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--text-box-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--text-box-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |

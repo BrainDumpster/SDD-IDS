@@ -34,7 +34,9 @@ Synapse **Date Picker** is a **thin ids-fork** of the IDS **Date Picker**. Anato
 | Field container corner radius | `var(--date-picker-control-radius)` → `var(--corner-radius-radius-none)` (**0**) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) via `components/synapse-theme.css` |
 | Calendar icon trigger corner radius | `var(--date-picker-control-radius)` | **same alias** → **`var(--corner-radius-radius-4)`** |
 | Focus ring corner radius | `var(--date-picker-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **same alias** → **`var(--corner-radius-radius-4)`** (unchanged scale) |
-| Calendar popup / date cells / API | IDS contract | **Same** (inherit IDS) |
+| **Calendar popup** shell corner radius | `var(--date-picker-control-radius)` → **0** (square; attached to field) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px** on bottom corners when attached) |
+| **Month / year dropdown** overlay radius | `var(--date-picker-control-radius)` → **0** | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) |
+| Date cells / API | IDS contract | **Same** (inherit IDS) |
 
 ## Anatomy
 
@@ -46,8 +48,9 @@ Inherit IDS padding, field heights, calendar geometry, and cell sizes — see ID
 
 Synapse field chrome (alias-driven; resolved in theme CSS):
 
-- **`var(--date-picker-control-radius)`** → `var(--corner-radius-radius-4)` (4px) on `FieldContainer` and icon trigger
+- **`var(--date-picker-control-radius)`** → `var(--corner-radius-radius-4)` (4px) on `FieldContainer`, icon trigger, **`CalendarPopup`**, and month/year **dropdown overlays**
 - **`var(--date-picker-focus-ring-radius)`** → `var(--corner-radius-radius-4)` (4px) on focus-visible ring
+- When popup is open and attached: field **bottom** corners flatten (`0`); popup uses **4px** on bottom corners (top corners `0` for seam with field)
 
 ## Tokens
 
@@ -105,7 +108,9 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 | `FieldContainer` `border-radius` | `var(--date-picker-control-radius)` | **Same alias**; theme → `radius-4` (4px) |
 | Icon trigger `border-radius` | `var(--date-picker-control-radius)` | **Same alias**; theme → `radius-4` |
 | Focus ring `border-radius` | `var(--date-picker-focus-ring-radius)` | **Same alias** (`radius-4`; unchanged from IDS scale) |
-| Calendar popup / cells | IDS contract | **Inherit IDS** |
+| `CalendarPopup` `border-radius` | `var(--date-picker-control-radius)` | **Same alias**; theme → `radius-4` (bottom corners when attached) |
+| Month/year dropdown overlay | `var(--date-picker-control-radius)` | **Same alias**; theme → `radius-4` |
+| Date cells | IDS contract | **Inherit IDS** |
 
 ### Deterministic structure
 
@@ -122,6 +127,8 @@ Inherit IDS: `size` × field states (default/hover/focus/error/disabled/open) ×
 | `FieldContainer` | `border-radius` | `var(--date-picker-control-radius)` — Synapse theme → `var(--corner-radius-radius-4)` |
 | Calendar icon trigger | `border-radius` | `var(--date-picker-control-radius)` — Synapse theme → `var(--corner-radius-radius-4)` |
 | Focus ring wrapper | `border-radius` | `var(--date-picker-focus-ring-radius)` — `var(--corner-radius-radius-4)` |
+| `CalendarPopup` | `border-radius` | `var(--date-picker-control-radius)` — Synapse theme → `radius-4` |
+| Month/year overlay | `border-radius` | `var(--date-picker-control-radius)` — Synapse theme → `radius-4` |
 | All other slots | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** |
 
 ### Behavior contract
@@ -147,7 +154,7 @@ Inherit IDS invalid date and out-of-range handling. Programme additions:
 
 - [x] IDS baseline linked; programme deltas list **field layout aliases only**
 - [x] `--date-picker-control-radius` and `--date-picker-focus-ring-radius` in IDS + Synapse theme CSS
-- [x] `IdsDatePicker.module.css` uses aliases on field container, trigger, and focus ring
+- [x] `IdsDatePicker.module.css` uses aliases on field container, trigger, focus ring, calendar popup, and month/year overlays
 - [x] Codegen Contract subsections concrete (deterministic structure through fallback rules)
 - [x] Composition/API resolves via IDS baseline; no Synapse-only props
 - [x] Storybook `Spec Generated/Synapse/Date Picker` loads `components/synapse-theme.css`

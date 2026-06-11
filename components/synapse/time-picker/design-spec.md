@@ -34,6 +34,7 @@ Synapse **Time Picker** is a **thin ids-fork** of the IDS **Time Picker**. Anato
 | Field container corner radius | `var(--time-picker-control-radius)` → `var(--corner-radius-radius-none)` (**0**) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) via `components/synapse-theme.css` |
 | Clock icon trigger corner radius | `var(--time-picker-control-radius)` | **same alias** → **`var(--corner-radius-radius-4)`** |
 | Focus ring corner radius | `var(--time-picker-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **same alias** → **`var(--corner-radius-radius-4)`** (unchanged scale) |
+| **Time popup** shell corner radius | `var(--time-picker-control-radius)` → **0** (square; attached to field) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px** on bottom corners when attached) |
 | Time popup columns / API | IDS contract | **Same** (inherit IDS) |
 
 ## Anatomy
@@ -46,8 +47,9 @@ Inherit IDS field heights, popup layout, and value-cell geometry — see IDS **L
 
 Synapse field chrome (alias-driven; resolved in theme CSS):
 
-- **`var(--time-picker-control-radius)`** → `var(--corner-radius-radius-4)` (4px) on `FieldContainer` and clock trigger
+- **`var(--time-picker-control-radius)`** → `var(--corner-radius-radius-4)` (4px) on `FieldContainer`, clock trigger, and **`TimePopup`**
 - **`var(--time-picker-focus-ring-radius)`** → `var(--corner-radius-radius-4)` (4px) on focus-visible ring
+- When popup is open and attached: field **bottom** corners flatten (`0`); popup uses **4px** on bottom corners (top corners `0` for seam with field)
 
 ## Tokens
 
@@ -105,7 +107,8 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 | `FieldContainer` `border-radius` | `var(--time-picker-control-radius)` | **Same alias**; theme → `radius-4` (4px) |
 | Clock icon trigger `border-radius` | `var(--time-picker-control-radius)` | **Same alias**; theme → `radius-4` |
 | Focus ring `border-radius` | `var(--time-picker-focus-ring-radius)` | **Same alias** (`radius-4`; unchanged from IDS scale) |
-| Time popup columns / cells | IDS contract | **Inherit IDS** |
+| `TimePopup` `border-radius` | `var(--time-picker-control-radius)` | **Same alias**; theme → `radius-4` (bottom corners when attached) |
+| Time popup value cells | IDS contract | **Inherit IDS** |
 
 ### Deterministic structure
 
@@ -122,6 +125,7 @@ Inherit IDS: `size` × `clockType` (`12h` \| `24h`) × `showSeconds` × field/po
 | `FieldContainer` | `border-radius` | `var(--time-picker-control-radius)` — Synapse theme → `var(--corner-radius-radius-4)` |
 | Clock icon trigger | `border-radius` | `var(--time-picker-control-radius)` — Synapse theme → `var(--corner-radius-radius-4)` |
 | Focus ring wrapper | `border-radius` | `var(--time-picker-focus-ring-radius)` — `var(--corner-radius-radius-4)` |
+| `TimePopup` | `border-radius` | `var(--time-picker-control-radius)` — Synapse theme → `radius-4` |
 | All other slots | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** |
 
 ### Behavior contract
@@ -147,7 +151,7 @@ Inherit IDS invalid time and format fallbacks. Programme additions:
 
 - [x] IDS baseline linked; programme deltas list **field layout aliases only**
 - [x] `--time-picker-control-radius` and `--time-picker-focus-ring-radius` in IDS + Synapse theme CSS
-- [x] `IdsTimePicker.module.css` uses aliases on field container, trigger, and focus ring
+- [x] `IdsTimePicker.module.css` uses aliases on field container, trigger, focus ring, and time popup
 - [x] Codegen Contract subsections concrete (deterministic structure through fallback rules)
 - [x] Composition/API resolves via IDS baseline; no Synapse-only props
 - [x] Storybook `Spec Generated/Synapse/Time Picker` loads `components/synapse-theme.css`

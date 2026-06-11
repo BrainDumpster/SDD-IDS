@@ -83,7 +83,7 @@
   box-sizing: border-box;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-radius: var(--progress-bar-control-radius);
-  background: var(--color-background-gray-neutral-alt);
+  background: var(--color-background-gray-light);
   clip-path: inset(0 0 0 var(--progress-clip, 0%));
   pointer-events: none;
 }

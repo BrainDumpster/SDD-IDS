@@ -4,6 +4,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SynapseTag } from "./SynapseTag";
 import {
   SYNAPSE_TAG_DESIGN_SPEC_PATH,
+  SYNAPSE_TAG_IDS_BASELINE_SPEC_PATH,
+  SYNAPSE_TAG_IDS_MAIN_NODE_ID,
   SYNAPSE_TAG_SAMPLE_LABEL,
   SYNAPSE_TAG_SCENARIO_BOARDS,
   SYNAPSE_TAG_SPEC_ACCURATE_SCENARIO_NODE_ID,
@@ -25,9 +27,11 @@ const meta: Meta<typeof SynapseTag> = {
     docs: {
       description: {
         component: [
-          `Spec-driven Synapse Tag (IDS Tag contract). Source: \`${SYNAPSE_TAG_DESIGN_SPEC_PATH}\`.`,
+          `Spec-driven Synapse Tag (IDS-fork). Source: \`${SYNAPSE_TAG_DESIGN_SPEC_PATH}\`.`,
+          `IDS baseline: \`${SYNAPSE_TAG_IDS_BASELINE_SPEC_PATH}\` (Figma \`${SYNAPSE_TAG_IDS_MAIN_NODE_ID}\`).`,
           `Primary story: **Read-only** (Figma \`${SYNAPSE_TAG_SPEC_ACCURATE_SCENARIO_NODE_ID}\`).`,
-          "Theme: `components/synapse-theme.css`. Programme: 4px focus ring + critical Light slate tokens.",
+          "Programme deltas only: `programme=\"synapse\"` → 4px focus offset, critical Light slate tokens, close hover icon. All other chrome inherits IDS.",
+          "Theme: `components/synapse-theme.css`.",
         ].join(" "),
       },
     },
