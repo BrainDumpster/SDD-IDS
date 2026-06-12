@@ -54,13 +54,14 @@
   flex: 1 1 auto;
   min-width: 0;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
 }
 
 .searchInput::placeholder {
   color: var(--color-text-neutral);
+  font-weight: 400;
 }
 
 /* --- Scrollable option list --- */
@@ -128,6 +129,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
 }

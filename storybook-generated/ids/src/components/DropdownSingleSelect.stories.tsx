@@ -19,7 +19,7 @@ const options: Option[] = [
 ];
 
 const meta: Meta<typeof IdsDropdownSingleSelect> = {
-  title: "Spec Generated/IDS/Dropdown Single Select",
+  title: "Spec Generated/IDS/Dropdown/Single Select",
   component: IdsDropdownSingleSelect,
   parameters: { layout: "centered" },
   argTypes: {

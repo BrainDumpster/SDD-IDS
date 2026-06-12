@@ -2,7 +2,7 @@ import React from "react";
 import type { Preview } from "@storybook/react";
 import "../../components/ids-theme.css";
 import "../../components/dap-theme.css";
-import "../src/synapse-theme.css";
+import "../../components/synapse-theme.css";
 
 const preview: Preview = {
   initialGlobals: {
@@ -30,7 +30,7 @@ const preview: Preview = {
         const partsA = titleA.split("/");
         const partsB = titleB.split("/");
 
-        const rootOrder = ["Synapse", "Spec Generated"];
+        const rootOrder = ["Spec Generated"];
         const rootA = rootOrder.indexOf(partsA[0] ?? "");
         const rootB = rootOrder.indexOf(partsB[0] ?? "");
 
@@ -51,7 +51,17 @@ const preview: Preview = {
           }
         }
 
-        return titleA.localeCompare(titleB, undefined, { sensitivity: "base" });
+        // Compare path segments so `Dropdown/Combo Box` nests under `Dropdown`, not beside `Detail Panel`.
+        const maxLen = Math.max(partsA.length, partsB.length);
+        for (let i = 0; i < maxLen; i++) {
+          const segA = partsA[i] ?? "";
+          const segB = partsB[i] ?? "";
+          if (segA === segB) continue;
+          if (!segA) return -1;
+          if (!segB) return 1;
+          return segA.localeCompare(segB, undefined, { sensitivity: "base" });
+        }
+        return 0;
       },
     },
   },
@@ -81,9 +91,9 @@ const preview: Preview = {
       const designSystem =
         upperTitle.includes("/DAP/") || upperTitle.startsWith("DAP/")
           ? "dap"
-          : upperTitle.includes("/IDS/") || upperTitle.startsWith("IDS/")
-            ? "ids"
-            : "synapse";
+          : upperTitle.includes("/SYNAPSE/") || upperTitle.startsWith("SYNAPSE/")
+            ? "synapse"
+            : "ids";
       document.documentElement.setAttribute("data-theme", resolvedTheme);
       document.body.setAttribute("data-theme", resolvedTheme);
       document.documentElement.setAttribute("data-design-system", designSystem);

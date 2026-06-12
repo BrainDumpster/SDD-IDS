@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
   height: 100%;
   min-height: 0;
+  min-width: 0;
 }
 
 .topBar {
@@ -48,20 +50,169 @@
   width: 100%;
 }
 
-.tableViewport {
-  flex: 1 1 auto;
+/* Header band + body viewport: vertical scroll applies to body only (Figma header stable). */
+.gridScrollHost {
+  flex: 1 1 0%;
   min-height: 0;
   min-width: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.headerBand {
+  flex: 0 0 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.headerBandTrack {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.headerBandTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.bodyViewport {
+  flex: 1 1 0%;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
   overflow: auto;
-  /* Reserve gutter so toggling vertical scrollbar (e.g. when popups lived in-flow) does not shift column widths */
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
   border-bottom: 0;
 }
 
-/* With an attached detail panel, stable gutter reserves a strip before the 40px rail (visible gap). */
-.shell[data-with-detail-panel="true"] .tableViewport {
-  scrollbar-gutter: auto;
+/* Fills allocated body height so horizontal scrollbar sits at viewport bottom, not under last row. */
+.bodyContent {
+  flex: 1 1 auto;
+  min-height: 100%;
+  min-width: 0;
+}
+
+/* Split freeze: body scrolls vertically; horizontal scroll is per-pane at pane bottom. */
+.bodyViewportSplit {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.bodyViewportSplit > .tableSplitRow {
+  flex: 1 1 auto;
+  min-height: 100%;
+  align-items: stretch;
+}
+
+.frozenHeaderHost {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.scrollableHeaderHost {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Settings gear column — pinned trailing chrome (never in horizontal scroll pane). */
+.settingsHeaderHost,
+.settingsPaneHost {
+  flex: 0 0 auto;
+  width: var(--datagrid-settings-col-width);
+  min-width: var(--datagrid-settings-col-width);
+  max-width: var(--datagrid-settings-col-width);
+}
+
+.settingsPaneHost {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-height: 100%;
+  z-index: 3;
+  background: var(--color-background-component);
+}
+
+.tableSplitRow {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.frozenPaneHost {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-height: 100%;
+  z-index: 2;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.frozenPane {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--color-background-component);
+}
+
+.scrollablePane {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 100%;
+  align-self: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  z-index: 1;
+  background: var(--color-background-component);
+}
+
+/*
+ * Split-freeze section tables must keep their <colgroup> widths.
+ * Flex parents (.tableSplitRow / .scrollablePane) otherwise shrink tables to 0
+ * and table-layout:fixed collapses every column in the scrollable section.
+ */
+.gridScrollHost[data-split-freeze="true"] .frozenPane > .grid,
+.gridScrollHost[data-split-freeze="true"] .scrollablePane > .grid,
+.gridScrollHost[data-split-freeze="true"] .frozenHeaderHost .grid,
+.gridScrollHost[data-split-freeze="true"] .scrollableHeaderHost .grid,
+.gridScrollHost[data-split-freeze="true"] .settingsHeaderHost .grid,
+.gridScrollHost[data-split-freeze="true"] .settingsPaneHost .grid {
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/*
+ * Freeze boundary bar (Figma `37721:114144`, 20px) — pinned at frozen/scrollable seam;
+ * gradient casts onto scrollable columns while the bar stays fixed.
+ */
+.gridScrollHost[data-split-freeze="true"] .freezePaneEdge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--datagrid-frozen-pane-width, 0px) - 20px);
+  width: 20px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 0;
+  pointer-events: none;
+  z-index: 20;
+  background: linear-gradient(
+    270deg,
+    var(--color-gradient-overflow-vertical-end) 0%,
+    var(--color-gradient-overflow-vertical-start) 63.46%,
+    var(--color-gradient-overflow-vertical-start) 100%
+  );
 }
 
 .shell[data-with-detail-panel="true"] .detailPanel {
@@ -111,9 +262,17 @@
   padding: 0;
   text-align: left;
   vertical-align: middle;
-  position: sticky;
-  top: 0;
   z-index: 3;
+}
+
+/* Headers live outside the vertical scrollport — no sticky top/left/right required. */
+.headerBand .headerCell,
+.headerBand .headerSelectionColumn,
+.headerBand .settingsColumn {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
 }
 
 /* Figma `.Column Header` `37721:114663` — `colorAndBorder` */
@@ -309,7 +468,7 @@
   padding: 0;
   background: transparent;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
   color: var(--color-text-neutral-strong);
   outline: none;
@@ -317,6 +476,7 @@
 
 .filterPopupSearchInput::placeholder {
   color: var(--color-text-neutral);
+  font-weight: 400;
 }
 
 /* Holds header layout while the open filter menu is portaled above scroll/stacking contexts */
@@ -388,6 +548,7 @@
   cursor: pointer;
 }
 
+/* Figma `.Sort for table` `37721:114646` — 12×12 icon; four states per direction. */
 .sortIcon {
   display: inline-flex;
   align-items: center;
@@ -399,6 +560,14 @@
 
 .sortIconSelected {
   color: var(--color-icon-brand-base);
+}
+
+.iconButton:hover .sortIcon {
+  color: var(--color-icon-neutral-strong);
+}
+
+.iconButton[data-sorted="true"]:hover .sortIcon {
+  color: var(--color-icon-brand-stronger);
 }
 
 .filterIcon {
@@ -436,6 +605,18 @@
   background: var(--color-border-light);
   pointer-events: none;
   z-index: 2;
+}
+
+.selectionColumnStatic {
+  position: static;
+  left: auto;
+  z-index: auto;
+}
+
+.settingsColumnStatic {
+  position: static;
+  right: auto;
+  z-index: auto;
 }
 
 .columnResizeHandle {
@@ -703,11 +884,13 @@
 }
 
 /* 4px leading selection accent when vertical indicator is on */
-.bodyRow[data-selected="true"][data-vertical-indicator="true"] > td:first-child {
+.bodyViewport .bodyRow[data-selected="true"][data-vertical-indicator="true"] > td:first-child,
+.frozenPane .bodyRow[data-selected="true"][data-vertical-indicator="true"] > td:first-child {
   position: relative;
 }
 
-.bodyRow[data-selected="true"][data-vertical-indicator="true"] > td:first-child::before {
+.bodyViewport .bodyRow[data-selected="true"][data-vertical-indicator="true"] > td:first-child::before,
+.frozenPane .bodyRow[data-selected="true"][data-vertical-indicator="true"] > td:first-child::before {
   content: "";
   position: absolute;
   left: 0;

@@ -40,7 +40,7 @@
   - Label: no wrap in reference layout (`whitespace: nowrap`); overflow behavior is runtime-defined (ellipsis + `title`/`aria-label` recommended for long strings).
 - **Icon segment**
   - Row frame height (Figma sample): `37px` for Icon examples (denser padding than Text).
-  - Cell padding: horizontal `var(--padding-padding-8)`; vertical use the padding token pair that reproduces the `37px` row in QA (`var(--padding-padding-8)` or `var(--padding-padding-10)` per build), with Figma reference vertical `9.5px`.
+  - Cell padding: vertical `9.5px`, horizontal `8px` (Figma reference vertical `9.5px`, horizontal `8px`).
   - Icon bounding box: **16×16** with **14px** glyph height where applicable (centered).
 - **Focus-visible**
   - Non-selected segment in **Focus** uses a **`1px`** focus border: `var(--border-width-border-1)` solid `var(--color-border-brand-base)` on the segment cell (Figma: brand border on the focused segment).
@@ -49,11 +49,10 @@
 Use semantic tokens only (no literals for color, border width, radius, typography).
 
 - **Layout & shape:** `var(--corner-radius-radius-2)`, `var(--border-width-border-1)`, `var(--spacing-space-2)`, `var(--padding-padding-4)`, `var(--padding-padding-8)`, `var(--padding-padding-10)` (icon vertical QA only).
-- **Borders:** `var(--color-border-accessible)` (group outline only), `var(--color-border-brand-base)` (segment **focus-visible** only), `var(--color-border-disabled)`; segment “invisible” edges use the keyword **`transparent`** (see Anatomy — avoid `var(--color-border-transparent-brand)` for segment outlines in dark).
+- **Borders:** `var(--color-border-accessible)` (group outline only), `var(--color-border-brand-base)` (segment **focus-visible** only)`; segment “invisible” edges use the keyword **`transparent`** (see Anatomy — avoid `var(--color-border-transparent-brand)` for segment outlines in dark).
 - **Backgrounds:** `var(--color-background-component)`, `var(--color-background-controls-brand-base)`, `var(--color-background-brand-lighter)`, `var(--color-background-brand-light)`.
 - **Text:** `var(--color-text-white)`, `var(--color-text-neutral)`, `var(--color-text-brand-strong)`.
 - **Icons:** `var(--color-icon-white)`, `var(--color-icon-brand-base)`.
-- **Disabled (runtime extension — see note in States):** `var(--color-text-disabled)`, `var(--color-border-disabled)`, `var(--color-background-gray-light)` (align with other IDS form controls when disabled is required).
 ## States (Light Theme)
 
 ### Text segments
@@ -78,7 +77,7 @@ Use semantic tokens only (no literals for color, border width, radius, typograph
 | Unselected | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` (icon follows disabled foreground) |
 
-**Note:** The illustrated Figma matrix on `8218:13149` documents **Inactive / Hover / Press / Focus** for an **unselected** segment while keeping selection on **Option 1**. The **Disabled** row is **not** shown in that frame; it is specified here as a deterministic IDS-aligned extension for accessible products.
+**Note:** The illustrated Figma matrix on `8218:13149` documents **Inactive / Hover / Press / Focus** for an **unselected** segment while keeping selection on **Option 1**. The disabled state is not supported.
 ## States (Dark Theme)
 Structurally identical to **Light Theme**. All colors must resolve from the active semantic token theme (dark mode). Do not hardcode hex; validate contrast for selected vs unselected against WCAG requirements for text and icons.
 
@@ -93,10 +92,10 @@ Structurally identical to **Light Theme**. All colors must resolve from the acti
 | Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 ## Interactions
 - **Pointer:** click / tap selects a segment; only one selected value in single-select mode.
-- **Hover:** applies **only** to non-disabled unselected segments (selected segment may omit hover visual unless product adds a validated “selected hover” variant). **Figma (verified):** unselected hover segment background is `var(--color-background-brand-lighter)` (e.g. node `9015:22164` / `42869:141924`). Light and dark both use this **same semantic token**; ensure the dark theme maps it to a value visibly distinct from `var(--color-background-component)` so hover is perceptible.
-- **Press (active pointer down):** applies to non-disabled unselected segments; uses brand-light surface and stronger label color (Text) per Figma.
+- **Hover:** applies to unselected segments (selected segment may omit hover visual unless product adds a validated “selected hover” variant). **Figma (verified):** unselected hover segment background is `var(--color-background-brand-lighter)` (e.g. node `9015:22164` / `42869:141924`). Light and dark both use this **same semantic token**; ensure the dark theme maps it to a value visibly distinct from `var(--color-background-component)` so hover is perceptible.
+- **Press (active pointer down):** applies to unselected segments; uses brand-light surface and stronger label color (Text) per Figma.
 - **Focus-visible:** keyboard focus shows **1px** `var(--color-border-brand-base)` on the focused segment; mouse-only focus must not steal keyboard focus styles (`:focus-visible` pattern).
-- **Disabled:** segments (or entire group) skip hover/press/focus styling and do not emit selection changes.
+
 - **Selection model:** default is **single-select** (like a coordinated radio group). Multi-select is **out of scope** unless a separate Figma component and matrix are provided.
 ## Composition & API (runtime)
 
@@ -110,7 +109,7 @@ Each segment is a **`SegmentedButtonSegment`** object:
 | `label` | string | `type === "text"` | Visible label (`Body 2`). |
 | `icon` | string \| `IconSlot` | `type === "icon"` | **String:** icon **slug** resolved to `assets/icons/<slug>.svg` (see resolution rules). **`IconSlot`:** user-supplied icon UI (SVG element, component, image, etc.) — no path resolution. |
 | `ariaLabel` | string | `type === "icon"` | Accessible name for that segment (icon-only control). |
-| `disabled` | boolean | optional | Per-segment disabled; skipped for pointer/keyboard when true. |
+
 
 **`IconSlot`:** framework-specific opaque type (e.g. React `ReactNode`, Angular `TemplateRef` / component type, Lit `TemplateResult`). Spec treats it as “render this as the segment icon content inside the 16×16 box.”
 
@@ -123,7 +122,7 @@ Each segment is a **`SegmentedButtonSegment`** object:
 | `value` / `selectedValue` | controlled | Selected `value`; must match one of `items[].value` or be empty only before first mount (generator choice). |
 | `defaultValue` | No | Uncontrolled initial selection. |
 | `onChange(nextValue, meta)` | No | Fires after a successful change. **`nextValue`** is always `items[].value`. **`meta`** is `{ type: "text"; label: string }` \| `{ type: "icon"; ariaLabel: string }` so consumers get a stable id plus the visible name for analytics, routing, or persistence. Frameworks may emit a single event object (`detail`) with the same fields. |
-| `disabled` | No | If true, whole group disabled (overrides per-segment `disabled` for interaction). |
+ |
 | `ariaLabel` / `aria-labelledby` | Recommended | Root accessible name for the radiogroup. |
 | `iconsBasePath` | No | Optional override for slug resolution (default: `assets/icons`). Bundler/app must still include that folder when using string slugs. |
 
@@ -143,7 +142,7 @@ type IconSlot = unknown; // replace with ReactNode, etc.
 
 interface SegmentedButtonSegmentBase {
   value: string;
-  disabled?: boolean;
+
 }
 
 interface SegmentedButtonSegmentText extends SegmentedButtonSegmentBase {
@@ -166,7 +165,7 @@ type SegmentedButtonProps =
         value: string,
         meta: { type: "text"; label: string } | { type: "icon"; ariaLabel: string }
       ) => void;
-      disabled?: boolean;
+    
       ariaLabel?: string;
       aria-labelledby?: string;
     }
@@ -179,7 +178,7 @@ type SegmentedButtonProps =
         value: string,
         meta: { type: "text"; label: string } | { type: "icon"; ariaLabel: string }
       ) => void;
-      disabled?: boolean;
+    
       ariaLabel?: string;
       aria-labelledby?: string;
       /** Default `assets/icons` */
@@ -198,7 +197,7 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
 
 ### Variant matrix
 - **Type × count:** `(text × 2..5)` ∪ `(icon × 2..3)`.
-- **Per-segment interaction:** `default` | `hover` | `press` | `focus-visible` | `disabled` (extension).
+- **Per-segment interaction:** `default` | `hover` | `press` | `focus-visible`.
 - **Selection:** exactly one segment `selected=true` in single-select mode.
 - **Icon sources:** string slugs (bundled under `assets/icons`) OR user `IconSlot`; Figma shows `list` / `tree` / `grid` as **examples**, not a closed set.
 
@@ -211,15 +210,15 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
 ### Behavior contract
 - Selecting a segment updates `value` and emits **`onChange`** (or framework equivalent) with **`value`** plus **`meta`** (`label` for text segments, `ariaLabel` for icon segments).
 - Re-clicking the selected segment is a no-op (no deselect-all) unless product specifies toggle-off (out of default scope).
-- `disabled` root: no pointer or keyboard activation; all segments render disabled row.
-- Mixed disabled items (if enabled): disabled items are skipped in arrow-key roving and clicks.
+
+
 
 ### Accessibility contract
 - Expose **radiogroup semantics** (native `<input type="radio">` set with shared `name`, or `role="radiogroup"` with managed `aria-checked`):
   - Arrow keys move focus between enabled segments; `Space`/`Enter` selects focused segment (pattern may follow platform defaults).
   - Selected segment exposes `aria-checked="true"`; others `false`.
   - Root has visible label via `legend`, `aria-label`, or `aria-labelledby`.
-- Focus order: follows visual order, skipping disabled segments when roving.
+- Focus order: follows visual order.
 
 ### Asset resolution + bundling contract
 - **Slug mode:** `icon: "<slug>"` → load **`{iconsBasePath}/<slug>.svg`** (default `iconsBasePath = "assets/icons"`).
@@ -243,9 +242,12 @@ Bundle rule: any slug used at runtime MUST exist in the app bundle under `assets
 - [ ] Single selection updates state once per user action; keyboard and pointer agree.
 - [ ] String `icon` slugs resolve via `assets/icons/<slug>.svg`; custom `IconSlot` renders without forced path mapping.
 - [ ] Dark theme resolves without literal colors.
-- [ ] Disabled extension still meets contrast or documents exception.
+
 ## Source Mapping
 - **Primary Figma frame:** `Content` — `42113:67348`
 - **Component map:** `data/component-figma-map.json` → **Segmented Button** (`figmaUrl`, `fileKey`, `nodeId`, `textOptionNodeId`, `iconOptionNodeId`)
 - **Nested referenced in Dev Mode output:** `.Segemented Button Text` (`9015:20992`), `.SegementedButton-Element-OptionIcon` (`10148:29576`), `.SegementedButton-Element-Icons` (`10148:29563`)
 - **Extraction method:** Figma MCP `get_design_context` on `42113:67348`, `9015:20992`, `10148:29576` + `get_variable_defs` on `42113:67348` (validated 2026-04-20).
+
+
+

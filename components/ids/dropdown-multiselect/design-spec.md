@@ -44,6 +44,9 @@
 - Menu width:
   - sample `300px`
   - runtime contract: matches trigger width unless host overrides.
+- Search row (when `searchable`):
+  - wrapper padding: `var(--padding-padding-8)`.
+  - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
 - `SelectAllClearAllRow`:
   - fixed/stable row above options
   - not scrollable with options list

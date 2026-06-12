@@ -42,7 +42,7 @@ Deterministic order:
   - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
 ## Tokens
 - Typography:
-  - `Body 2` (`14/20`, regular) for button text.
+  - `Body 2` (`14/20`, font-weight: `400`) for button text.
 ### Layout aliases (theme-resolvable)
 Programmes override these **same alias names** in programme theme CSS (`components/synapse-theme.css`, `components/dap-theme.css`). Component specs and generated CSS reference aliases only — not programme-specific scale tokens.
 
@@ -168,8 +168,8 @@ Variant matrix:
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
-  - `ButtonLeadingIcon`: `16x16`, color token follows variant/state.
-  - `ButtonLabel`: `Body 2`.
+  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-white)`; disabled (all variants) → `var(--color-icon-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
+  - `ButtonLabel`: `Body 2` (`14/20`, font-weight: `400`).
 ### Theme & programme resolution
 - Generators **must** emit component layout aliases (`var(--button-control-radius)`, `var(--button-focus-ring-radius)`, `var(--button-focus-ring-offset)`), never raw `px` or programme-specific scale token names in component CSS.
 - Theme selection by programme:
@@ -258,3 +258,14 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
 
 Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
+## Implementation Notes
+
+**Typography**
+- **Label font-weight**: `400` — do NOT use `500`; `Body 2` spec is `14/20` at weight `400`.
+
+**Icon color**
+- **Primary button icon**: `var(--color-icon-white)` — do NOT use `var(--color-icon-brand-base)`.
+- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-white)`.
+
+**Icon rendering**
+- **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.

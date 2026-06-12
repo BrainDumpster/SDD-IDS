@@ -56,7 +56,7 @@
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
-  - `font-weight: 500`
+  - `font-weight: 400`
 ## States (Light Theme)
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
@@ -174,7 +174,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 **Layout & structure**
 - **Group gap**: use `var(--spacing-space-16)` between radio items, not `var(--spacing-space-12)`
 - **Wrapper min-height**: `20px` — matches the label line-height; do not set `44px` on the wrapper
-- **Label font-weight**: `500` — apply on `.wrapper` (the label row), not on the label element alone
+- **Label font-weight**: `400` — apply on `.wrapper` (the label row), not on the label element alone
 
 **Error state**
 - **Ring border in error**: unselected ring uses `var(--color-border-strong)`, NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level, not by a red border on the individual control.

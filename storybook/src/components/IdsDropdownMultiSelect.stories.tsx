@@ -129,6 +129,8 @@ export const MainScenarios: Story = {
     const [sectionSelected, setSectionSelected] = useState<string[]>(["Option 2"]);
     const [actionSelected, setActionSelected] = useState<string[]>(["Option 2"]);
     const [actionEvent, setActionEvent] = useState("None");
+    const [visibleSearch, setVisibleSearch] = useState("");
+    const [hiddenSearch, setHiddenSearch] = useState("");
 
     const smallOptions = Array.from({ length: 6 }, (_, i) => ({ id: `s-${i + 1}`, label: `Option ${i + 1}` }));
     const longOptions = Array.from({ length: 12 }, (_, i) => ({ id: `l-${i + 1}`, label: `Option ${i + 1}` }));
@@ -193,12 +195,21 @@ export const MainScenarios: Story = {
               items={useMultiItems(longOptions, visibleSelected, setVisibleSelected)}
               selectionMode="multi"
               selectedValues={visibleSelected}
+              showSearch
+              searchValue={visibleSearch}
+              onSearchValueChange={setVisibleSearch}
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(longOptions, visibleSelected).checked}
               selectAllIndeterminate={getSelectAllState(longOptions, visibleSelected).indeterminate}
               onSelectAllClick={() => setVisibleSelected(getAllEnabledLabels(longOptions))}
               onClearAllClick={() => setVisibleSelected([])}
               clearAllDisabled={visibleSelected.length === 0}
+              showSelectedPanel
+              defaultShowSelectedExpanded
+              onRemoveSelectedTag={(value) =>
+                setVisibleSelected((prev) => prev.filter((entry) => entry !== value))
+              }
+              onShowSelectedPanelClear={() => setVisibleSelected([])}
               defaultOpen
               maxHeight={220}
             />
@@ -211,12 +222,21 @@ export const MainScenarios: Story = {
               items={useMultiItems(longOptions, hiddenSelected, setHiddenSelected)}
               selectionMode="multi"
               selectedValues={hiddenSelected}
+              showSearch
+              searchValue={hiddenSearch}
+              onSearchValueChange={setHiddenSearch}
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(longOptions, hiddenSelected).checked}
               selectAllIndeterminate={getSelectAllState(longOptions, hiddenSelected).indeterminate}
               onSelectAllClick={() => setHiddenSelected(getAllEnabledLabels(longOptions))}
               onClearAllClick={() => setHiddenSelected([])}
               clearAllDisabled={hiddenSelected.length === 0}
+              showSelectedPanel
+              defaultShowSelectedExpanded={false}
+              onRemoveSelectedTag={(value) =>
+                setHiddenSelected((prev) => prev.filter((entry) => entry !== value))
+              }
+              onShowSelectedPanelClear={() => setHiddenSelected([])}
               defaultOpen
               maxHeight={220}
             />
