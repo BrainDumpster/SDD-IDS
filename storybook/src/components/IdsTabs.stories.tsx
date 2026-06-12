@@ -34,7 +34,7 @@ const overflowItems = [
 ];
 
 const meta: Meta<typeof Tabs> = {
-  title: "Spec Generated/IDS/Tabs",
+  title: "Spec Generated/IDS/Tab",
   component: Tabs,
   args: {
     items: baseItems,
@@ -58,7 +58,8 @@ const meta: Meta<typeof Tabs> = {
 export default meta;
 type Story = StoryObj<typeof Tabs>;
 
-export const SecondaryDefault: Story = {
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
   args: {
     variant: "secondary",
     items: baseItems,

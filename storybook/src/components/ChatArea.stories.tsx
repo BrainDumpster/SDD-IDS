@@ -3,8 +3,20 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ChatArea } from "./ChatArea";
 
 const meta: Meta<typeof ChatArea> = {
-  title: "Spec Generated/Synapse/ChatArea",
+  title: "Spec Generated/Synapse/Chat and Layout/Chat Area",
   component: ChatArea,
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component: [
+          "Spec-driven Synapse Chat Area. Source: `components/synapse/chatarea/design-spec.md`.",
+          "Primary story: Figma `47816:4025`.",
+          "Theme: `components/synapse-theme.css`.",
+        ].join(" "),
+      },
+    },
+  },
 };
 
 export default meta;

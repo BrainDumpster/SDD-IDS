@@ -8,7 +8,7 @@ import {
 } from "./IdsGetStarted";
 
 const meta: Meta<typeof IdsGetStarted> = {
-  title: "IDS/Get Started",
+  title: "Spec Generated/IDS/Get Started",
   component: IdsGetStarted,
   parameters: { layout: "fullscreen" },
 };
@@ -74,7 +74,8 @@ function StoryFrame(props: IdsGetStartedProps) {
 }
 
 /** Figma `Overflow=False, Sequential=False, Single-Page` — `12189:233185` */
-export const SinglePage: Story = {
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
   render: () => <StoryFrame cards={specCards} />,
 };
 

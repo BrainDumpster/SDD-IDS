@@ -1,167 +1,111 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
 # Tooltip Design Spec
 
-## IDS baseline (layout, flow, contracts)
+> Generated 2026-06-12T07:10:01Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
-Synapse **Tooltip** is a **thin ids-fork** of the IDS **Tooltip** overlay. Anatomy, arrow matrix, closable behavior, interaction contracts, and runtime API **inherit IDS** unless listed in **Synapse programme deltas** below.
-
-- **IDS source of truth:** [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md)
-- **Shared implementation:** `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`
-- **Theme CSS:** `components/synapse-theme.css` (overrides `--tooltip-control-radius`)
-- **Base UI mapping:** `data/synapse-baseui-mapping.json` → `tooltip` (`@base-ui-components/react/tooltip`)
-
-**Figma scope for this spec:** IDS Figma is authoritative for anatomy, states, and semantic tokens. Programme Figma (`11067:54657`) documents the **radius delta** only (8px vs IDS 0).
-
+<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
 |---|---|
 | Component | Tooltip |
-| Design system | Synapse |
-| Category | Alerts and Notifications |
-| Spec pattern | **ids-fork (override-only)** |
-| IDS baseline slug | `tooltip` |
-| Status | **active** |
-| Version | 1.0.0 |
-| Figma node | `11067:54657` |
-| Theme CSS | `components/synapse-theme.css` |
-| Verification method | IDS baseline spec + theme alias contract |
-| Last verified | 2026-06-10 |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 48625:111469 |
+| Design System | Synapse |
 
-### Synapse programme deltas (vs IDS)
-
-| Topic | IDS | Synapse |
-|---|---|---|
-| Panel corner radius | `var(--tooltip-control-radius)` → `var(--corner-radius-radius-none)` (**0**) | **same alias** → **`var(--corner-radius-radius-8)`** (**8px**) via `components/synapse-theme.css` |
-| Surface / border / arrow tokens | IDS contract | **Same** (inherit IDS) |
-| Arrow placement matrix | IDS contract | **Same** (inherit IDS) |
-| Closable / hover behavior | IDS contract | **Same** (inherit IDS) |
-| Runtime API | IDS contract | **Same** (inherit IDS) |
-
+<!-- ds:section id=anatomy -->
 ## Anatomy
 
-Inherit IDS **Anatomy** — see [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md).
+The component is composed of these structural parts:
 
+- **arrow**
+- **arrowFill**
+- **arrowStroke**
+- **arrowSvg**
+- **body**
+- **close**
+- **content**
+- **header**
+- **popup**
+- **popupDismissible**
+- **popupStandard**
+- **title**
+- **trigger**
+
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-Inherit IDS padding, arrow geometry, and panel dimensions — see IDS **Layout & Measurements**.
+<!-- ds:section id=tokens -->
+## Component Tokens
 
-Synapse-specific layout (alias-driven; resolved in theme CSS):
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
+> Below are tokens referenced by this component's CSS module.
 
-- Panel corner radius: **`var(--tooltip-control-radius)`** → `var(--corner-radius-radius-8)` in Synapse theme
+- `var(--border-width-border-1)` = var(--border-width-border-default)
+- `var(--color-background-surface-2)` = #ffffff (light) / #1e262c (dark)
+- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--corner-radius-radius-8)` = 8px
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--padding-padding-12)` = 12px
+- `var(--spacing-space-4)` = 4px
+- `var(--spacing-space-8)` = 8px
 
-## Tokens
-
-### Layout aliases (theme-resolvable)
-
-Same alias names as IDS; values overridden in `components/synapse-theme.css`:
-
-| Alias | Synapse resolved value |
-|---|---|
-| `--tooltip-control-radius` | `var(--corner-radius-radius-8)` |
-
-### Colors, typography, states
-
-Inherit IDS **Tokens** and **States** tables — same semantic `var(--...)` names.
-
+<!-- ds:section id=states-light -->
 ## States (Light Theme)
 
-Inherit IDS **States (Light Theme)** from [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md).
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-surface-2)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#757575) | `var(--color-icon-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-8)` |
 
-Synapse chrome applies only via `--tooltip-control-radius`; **Background / Border / Text/Icon cells are unchanged** from IDS.
-
+<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / Synapse dark scope live in `components/synapse-theme.css`.
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-surface-2)` (#1e262c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#8898a5) | `var(--color-icon-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-8)` |
 
-Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
 
-## Interactions
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.md.
+> This section documents additional or overriding behaviors for this component.
 
-Inherit IDS **Interactions** and **Accessibility** from [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md).
+**Pattern**: tooltip
 
-## Composition & API (runtime)
+### Behaviors
 
-### IDS inheritance resolution
+- Appears on hover (mouse) after ~200ms delay
+- Appears on focus (keyboard) without delay
+- Disappears on mouse leave or blur
+- Contains no interactive content (text only)
 
-Codegen **MUST** resolve props, events, and variant axes from IDS **Composition & API (runtime)** in [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md) (`content`, `title`, `closable`, `showArrow`, `side`, `arrowAlign`, `open` / `defaultOpen`, `onOpenChange`, `onClose`).
+### Keyboard
 
-### Synapse-only runtime flags
+| Key | Action |
+|---|---|
+| Escape | Dismiss the tooltip when trigger is focused |
 
-None. Programme chrome is applied exclusively via `components/synapse-theme.css` (`--tooltip-control-radius`).
+### ARIA
 
-### Storybook defaults
-
-Mirror IDS generated gate stories under **Spec Generated/Synapse/Tooltip** with `components/synapse-theme.css` imported. Primary story: **Spec Accurate Design** (Figma `38201:109592` layout).
-
-## Codegen Contract (Framework-Agnostic Blueprint)
-
-### IDS baseline resolution
-
-Generators **MUST** load and merge the IDS baseline contract from [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md) (`## Codegen Contract`) before applying Synapse programme overrides below.
-
-### Programme override rules
-
-| Rule | IDS | Synapse |
-|---|---|---|
-| `TooltipPanel` `border-radius` | `var(--tooltip-control-radius)` | **Same alias**; theme resolves to `radius-8` (8px) |
-| All other slots | IDS contract | **Inherit IDS** |
-
-### Deterministic structure
-
-Inherit IDS slot order: `TriggerAnchor` → `TooltipPortal` → `TooltipRoot` → optional `Arrow` → `TooltipPanel` → optional `Header` → `BodyContent` → optional `CloseAction`. Synapse adds **no** slots.
-
-### Variant matrix
-
-Inherit IDS: `header` on/off × `closable` × `showArrow` × `side` × `arrowAlign` (12 arrow permutations). See IDS **Codegen Contract → Variant matrix**.
-
-### Per-slot style contract
-
-| Slot | Property | Contract |
-|---|---|---|
-| `TooltipPanel` | `border-radius` | `var(--tooltip-control-radius)` — Synapse theme → `var(--corner-radius-radius-8)` |
-| All other slots | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** |
-
-### Behavior contract
-
-Inherit IDS closable vs standard hover/focus lifecycle, arrow placement, and `onClose` reason payloads. See IDS **Interactions** and IDS **Codegen Contract → Behavior contract**.
-
-### Accessibility contract
-
-Inherit IDS: `role="tooltip"`, `aria-describedby`, close button label (`Close tooltip`), keyboard focus lifecycle. See IDS **Codegen Contract → Accessibility contract**.
-
-### Asset resolution + bundling contract
-
-Inherit IDS: `ctrl-close-16` → `assets/icons/ctrl-close-16.svg` via shared Icon primitive. See IDS **Codegen Contract → Asset resolution**.
-
-### Fallback/error rules
-
-Inherit IDS rules (`unknown side` → `top`, `unknown arrowAlign` → `center`, missing `content` → validation error, etc.). Programme additions:
-
-- Emit `var(--tooltip-control-radius)` on `TooltipPanel`; never hardcode `0` or `8px` in component CSS.
-- Import **`components/synapse-theme.css`** for Synapse targets so `--tooltip-control-radius` resolves to `var(--corner-radius-radius-8)`.
-
-### Validation checklist
-
-- [x] IDS baseline linked; programme deltas list **panel radius alias only**
-- [x] `--tooltip-control-radius` documented in IDS + Synapse theme CSS
-- [x] `IdsTooltip.module.css` uses alias on `.popup` (`TooltipPanel`)
-- [x] Codegen Contract subsections concrete (deterministic structure through fallback rules)
-- [x] Composition/API resolves via IDS baseline; no Synapse-only props
-- [x] Storybook `Spec Generated/Synapse/Tooltip` loads `components/synapse-theme.css`
-- [x] Registry: `data/programme-inheritance-registry.json` → `synapse` / `tooltip`
+| Element | Attributes |
+|---|---|
+| tooltip | {'role': 'tooltip'} |
+| trigger | {'aria-describedby': 'ID of the tooltip element'} |
 
 ## Source Mapping
 
-| Property | Value |
+| Source | Location |
 |---|---|
-| IDS baseline | `components/ids/tooltip/design-spec.md` |
-| Programme spec | `components/synapse/tooltip/design-spec.md` |
-| Synapse Figma (radius evidence) | `11067:54657` |
-| IDS Figma (layout reference) | `38201:109592` |
-| Theme override | `components/synapse-theme.css` → `--tooltip-control-radius` |
-| Implementation | `storybook/src/components/IdsTooltip.tsx` |
-| Programme wrapper | `storybook/src/components/SynapseTooltip.tsx` |
-| Spec contract | `storybook/src/spec-contracts/synapse-tooltip.contract.ts` |
-| Registry | `data/programme-inheritance-registry.json` → `synapse` / `tooltip` |
-| Storybook | `storybook-generated/synapse/src/components/Tooltip.stories.tsx` |
-| Verification | IDS baseline + theme alias contract; Synapse Figma `11067:54657` (radius evidence) |
+| Root spec | `components/synapse/root-spec.md` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

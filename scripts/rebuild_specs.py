@@ -243,6 +243,7 @@ def _categorize_tokens(theme: dict) -> dict:
         "border-width": [],
         "font-size": [],
         "font-line-height": [],
+        "density": [],
         "primitive-alert": [],
         "primitive-palette": [],
         "primitive-opacity": [],
@@ -279,6 +280,15 @@ def _categorize_tokens(theme: dict) -> dict:
             categories["font-size"].append(token)
         elif token.startswith("--font-line-height"):
             categories["font-line-height"].append(token)
+        elif token.startswith("--typography-"):
+            categories["other"].append(token)
+        elif (
+            token.startswith("--grid-height-")
+            or token.startswith("--selection-")
+            or token.startswith("--text-header")
+            or token.startswith("--text-cell")
+        ):
+            categories["density"].append(token)
         elif token.startswith("--alert-"):
             categories["primitive-alert"].append(token)
         elif any(token.startswith(p) for p in ("--ui-palette-", "--secondary-palette-")):
@@ -318,10 +328,30 @@ def _invariant_token_table(tokens: list, theme: dict) -> str:
 # Root spec builder
 # ---------------------------------------------------------------------------
 
+def _figma_sizes_token_count(theme: dict) -> int:
+    """Count Sizes-collection tokens (excludes legacy var() alias rows)."""
+    prefixes = (
+        "--padding-",
+        "--spacing-",
+        "--sizing-",
+        "--corner-radius-",
+        "--border-width-border-",
+        "--font-size-",
+        "--font-line-height-",
+    )
+    return sum(
+        1
+        for token, vals in theme.items()
+        if token.startswith(prefixes)
+        and not str(vals.get("light", "")).startswith("var(")
+    )
+
+
 def build_root_spec(theme: dict, config: dict) -> str:
     """Generate the root-spec.md with all global design system content."""
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     cats = _categorize_tokens(theme)
+    sizes_count = _figma_sizes_token_count(theme)
 
     # Framework options
     fw_options = config.get("framework_options", [])
@@ -431,6 +461,13 @@ These do not change between themes.
 
 {_invariant_token_table(cats['font-line-height'], theme)}
 
+<!-- ds:section id=sizes -->
+## Sizes (Figma collection `50960:24167`)
+
+All **{sizes_count}** FLOAT variables from the Figma **Sizes** collection (`50960:24167`, [variables panel](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53259-126112&view=variables&var-set-id=50960-24167&m=dev)) are synced to `components/synapse-theme.css` under `/* --- Sizes --- */`.
+
+Token names follow Figma variable paths (e.g. `Border Width/border-default` → `--border-width-border-default`). Legacy numeric border aliases (`--border-width-border-1`, etc.) are emitted as `var(...)` references for IDS-fork Storybook compatibility.
+
 <!-- ds:section id=spacing -->
 ## Spacing & Sizing
 
@@ -449,6 +486,15 @@ These do not change between themes.
 ### Primitive Scale
 
 {_invariant_token_table(cats['primitive-scale'], theme)}
+
+<!-- ds:section id=density -->
+## Table Density
+
+Figma collection **Table density** (`48477:121244`) — Standard (base token), Loose (`-*-loose`), Compact (`-*-compact`).
+
+### Density Tokens ({len(cats['density'])} tokens)
+
+{_invariant_token_table(cats['density'], theme)}
 
 <!-- ds:section id=border -->
 ## Border Width
@@ -526,20 +572,59 @@ All components must meet these requirements. Component specs only document addit
 - Theme is set via `data-theme` attribute on a parent element
 - Implementation must NOT use separate stylesheets per theme — use the same CSS custom properties
 
+### Component layout aliases (programme overrides)
+
+IDS defines component layout aliases in `components/ids-theme.css`. Synapse overrides the **same alias names** in `components/synapse-theme.css` (appended after the Sizes block). Component specs reference aliases; programme fork specs document deltas.
+
+| Alias | IDS default | Synapse override |
+|---|---|---|
+| `--button-control-radius` | `var(--corner-radius-radius-2)` | `var(--corner-radius-radius-4)` |
+| `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` | `var(--corner-radius-radius-6)` |
+| `--dropdown-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--dropdown-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--dropdown-menu-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--button-focus-ring-offset` | `3px` | `3px` |
+| `--card-control-radius` | `var(--corner-radius-radius-8)` | **`var(--corner-radius-radius-10)`** (10px) |
+| `--modal-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-16)`** (16px) |
+| `--progress-bar-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-2)`** (2px) |
+| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--time-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--text-box-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--text-box-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--toast-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-8)`** (8px) |
+| `--tooltip-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-8)`** (8px) |
+| `--suggested-prompt-radius` | — | **`var(--corner-radius-radius-8)`** (Suggested Prompt) |
+| `--chat-input-shell-radius` | — | **`var(--corner-radius-radius-20)`** (Chat Input Box) |
+| `--chat-input-button-radius` | — | **`var(--corner-radius-radius-24)`** |
+| `--chat-input-prompt-radius` | — | **`var(--suggested-prompt-radius)`** |
+| `--chat-input-focus-ring-offset` | — | **`var(--scale-4)`** (4px) |
+| `--chat-input-focus-ring-radius` | — | **`var(--corner-radius-radius-24)`** |
+| `--chat-input-shell-min-height` | — | **92px** |
+| `--chat-input-shell-max-height` | — | **320px** |
+| `--chat-input-textarea-max-height` | — | **252px** |
+
+Reference: [`components/synapse/card/design-spec.md`](../synapse/card/design-spec.md), [`components/synapse/button/design-spec.md`](../synapse/button/design-spec.md), [`components/synapse/chatinputbox/design-spec.md`](../synapse/chatinputbox/design-spec.md), [`components/synapse/suggested-prompt/design-spec.md`](../synapse/suggested-prompt/design-spec.md).
+
 <!-- ds:section id=variable-collections -->
 ## Variable Collections (Figma)
 
-- **Color Mode** — primary semantic COLOR variables (Light / Dark). Maps to most `--color-*` tokens.
-- **Tokens** — supplemental semantic COLOR + shadow COLOR + shadow FLOAT geometry (Light / Dark where applicable). Maps to `--color-*`, `--shadow-drop-shadow-*`.
-- **Primitive** — base palette values (static across themes). Maps to `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, `--opacity-*`, `--scale-*`.
-- **Sizes** — spacing, padding, corner radius, font sizes, border widths. Maps to `--padding-*`, `--spacing-*`, `--sizing-*`, `--corner-radius-*`, `--border-width-*`, `--font-*`.
+- **Primitive** — full collection export (COLOR, FLOAT, STRING, BOOLEAN). Palette, opacity, scale, typography strings (`--typography-*`).
+- **Color Mode** — full Light/Dark export (semantic colors, shadow colors, shadow geometry floats).
+- **Tokens** — Light/Dark overlay on Color Mode (same variable types; merges per mode).
+- **Sizes** (`50960:24167`) — full single-mode export; Figma path → token name (e.g. `--border-width-border-default`).
+- **Table density** (`48477:121244`) — full multi-mode export (Standard / Loose / Compact).
+- **Sync strategy** — see `docs/theme-sync-from-figma.md`. New/renamed Figma variables flow through on the next `sync_programme_themes_from_figma.py` run.
+- **Not synced** — collections listed in `excluded_collection_names` (M3, legacy Semantic, remote unresolvable aliases, etc.).
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
 | Figma variables | `GET /v1/files/Td1bnsvRj1PCGs9RVJkIvJ/variables/local` (Figma REST API); last sync timestamp in `components/synapse-theme.css` header |
-| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `9007:20353` (CANVAS `-- Navigation` — file context; token values from variables/local) |
+| Figma variable set (Sizes) | Collection `50960:24167` — [variables panel](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53259-126112&view=variables&var-set-id=50960-24167&m=dev) |
+| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `53259:126112` (component context for live variable binding verification) |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
 | Config | `config/design_systems/synapse.yaml` |

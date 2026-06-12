@@ -76,8 +76,10 @@
   - `var(--color-icon-alerting-critical)`
   - `var(--color-text-critical)`
 - Geometry/spacing:
-  - `var(--corner-radius-radius-2)`
-  - `var(--corner-radius-radius-4)`
+  - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-2)`)
+  - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
+  - `var(--dropdown-menu-radius)` (detached menu; IDS → `0`)
+  - `var(--corner-radius-radius-2)` (checkbox corner)
   - `var(--spacing-space-8)`
   - `var(--padding-padding-8)`
   - `var(--padding-padding-10)`

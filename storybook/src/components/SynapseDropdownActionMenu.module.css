@@ -3,7 +3,7 @@
 .popup {
   background: var(--color-background-component);
   border: var(--border-width-border-default, 1px) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-4);
+  border-radius: var(--dropdown-menu-radius);
   box-sizing: border-box;
   min-width: 185px;
   box-shadow:

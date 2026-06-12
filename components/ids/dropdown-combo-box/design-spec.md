@@ -73,8 +73,10 @@
   - `var(--color-icon-brand-base)`
   - `var(--color-icon-white)`
 - **Shape/space tokens**
+  - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-2)`)
+  - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
+  - `var(--dropdown-menu-radius)` (detached menu; IDS → `0`)
   - `var(--corner-radius-radius-2)` (checkbox corner)
-  - `var(--corner-radius-radius-4)` (field/focus)
   - `var(--corner-radius-radius-8)` (scroll thumb)
   - `var(--spacing-space-4)`, `var(--spacing-space-8)`, `var(--spacing-space-16)`
   - `var(--padding-padding-2)`, `var(--padding-padding-6)`, `var(--padding-padding-8)`, `var(--padding-padding-10)`, `var(--padding-padding-16)`

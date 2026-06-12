@@ -86,7 +86,7 @@
   min-height: 24px;
   padding: 2px 16px;
   border: var(--border-width-border-1) solid currentColor;
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--alert-action-control-radius, var(--corner-radius-radius-2));
   background: transparent;
   color: inherit;
   font: inherit;
@@ -326,7 +326,8 @@
   flex-shrink: 0;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: var(--spacing-space-10);
+  /* Figma compact `11946:230538` / detailed `42903:139032`: 16px between action + dismiss */
+  gap: var(--spacing-space-16);
 }
 
 .inlineRoot[data-density="compact"] .inlineTrailing {
@@ -335,7 +336,6 @@
 }
 
 .inlineRoot[data-density="compact"] .inlineTrailing[data-has-action="true"] {
-  gap: var(--spacing-space-16);
   padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
 }
 
@@ -343,11 +343,16 @@
   padding: var(--padding-padding-16) 17px var(--padding-padding-16) var(--padding-padding-16);
 }
 
+.inlineRoot[data-density="detailed"] .inlineActionOutlined {
+  /* Align action top with content row padding-block (12px); close (x) stays at trailing 16px inset */
+  margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
+}
+
 .inlineActionOutlined {
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border: var(--border-width-border-1) solid var(--color-static-brand-500);
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--alert-action-control-radius, var(--corner-radius-radius-2));
   background: transparent;
   color: var(--color-static-brand-600);
   font: inherit;

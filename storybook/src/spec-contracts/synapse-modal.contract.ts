@@ -28,3 +28,9 @@ export const SYNAPSE_MODAL_ELEMENT_CONTENT_NODE_ID = "11348:62999" as const;
 /** Footer/trigger button contract (Synapse programme chrome). */
 export const SYNAPSE_MODAL_BUTTON_SPEC_PATH =
   "components/synapse/button/design-spec.md" as const;
+
+export const SYNAPSE_MODAL_STORYBOOK_PATH =
+  "storybook/src/components/SynapseModal.stories.tsx" as const;
+
+export const SYNAPSE_MODAL_DIALOG_STORYBOOK_PATH =
+  "storybook/src/components/SynapseModalDialog.stories.tsx" as const;

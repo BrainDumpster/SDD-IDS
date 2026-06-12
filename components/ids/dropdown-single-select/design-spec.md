@@ -39,6 +39,9 @@
 - Menu width:
   - matches trigger width in component examples (`300px` sample)
   - runtime contract: container-driven with optional min/max constraints.
+- Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-2)` / 2px).
+- Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
+- Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
 - Menu elevation: IDS shadow token stack (Shadow 1 family).
 - Section header row:
   - top border on section boundaries
@@ -76,8 +79,9 @@
   - `var(--shadow-shadow-4-drop-shadow-4-color)` (rgba(37,37,37,0.08))
 - Geometry:
   - `var(--border-width-border-default)` (field + menu border width, 1px)
-  - `var(--corner-radius-radius-2)`
-  - `var(--corner-radius-radius-4)` (focus ring radius)
+  - `var(--dropdown-control-radius)` (field shell; IDS theme → `var(--corner-radius-radius-2)`)
+  - `var(--dropdown-focus-ring-radius)` (focus ring; IDS theme → `var(--corner-radius-radius-4)`)
+  - `var(--dropdown-menu-radius)` (detached menu; IDS theme → `0`)
   - `var(--spacing-space-8)`
   - `var(--padding-padding-1)` (caret horizontal padding)
   - `var(--padding-padding-6)` (small field vertical padding)

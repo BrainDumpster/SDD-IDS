@@ -23,7 +23,7 @@
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: var(--radio-label-font-weight, 500);
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
   min-height: 20px;

@@ -18,11 +18,12 @@ Synapse **Dropdown / Combo Box** shares the IDS **Dropdown-Combobox** family (si
 - Spec pattern: **ids-fork** (registry: `data/programme-inheritance-registry.json` → `programme: synapse`, `slug: dropdown-combo-box`)
 - IDS baseline slug: `dropdown-combo-box`
 - Variant family scope: **`combobox-single`**, **`combobox-multi`**, and **detached action menu** (no field trigger)
-- Status: **draft**
+- Status: **active**
 - Version: 1.1.0
 - Figma file: [Synapse Hi-Fi components](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components)
 - File key: `Td1bnsvRj1PCGs9RVJkIvJ`
 - **Verified detached menu:** `Dropdown-SingleSelect-Elements-Menu` — [53325:280088](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53325-280088&m=dev) (185×120, Left Nav context popup)
+- **Rounded menu matrix:** [49927:272743](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=49927-272743&m=dev); `Rounded Corners=True` symbol [52737:60513](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=52737-60513&m=dev) → `var(--corner-radius-radius-4)` on popup
 - Left Nav frame (trigger + menu): [53325:280087](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53325-280087&m=dev)
 - Synapse Form Elements entry: `Dropdown/Combo` — [11067:54551](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=11067-54551&m=dev) (field — inherit IDS pending verification)
 - IDS menu elements reference: `29393:143195` (IDS Design Library)
@@ -43,8 +44,11 @@ Synapse **Dropdown / Combo Box** shares the IDS **Dropdown-Combobox** family (si
 | Option label typography | Body 2 | **Body 2 Regular (`font-weight: 400`)**, `var(--color-text-neutral)` |
 | Option row hover inset | `var(--color-border-brand-base)` top/bottom | **`var(--color-border-brand-neutral)`** top/bottom (Synapse detached pattern; aligns masthead help menu) |
 | Option row press | `var(--color-background-brand-light)` + brand-strong text | **Same semantic tokens** |
+| Field trigger corner radius | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | **`var(--dropdown-control-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
+| Field focus ring radius | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **Same alias** (**4px**) |
+| Detached / standalone menu radius | `var(--dropdown-menu-radius)` → `0` (square) | **`var(--dropdown-menu-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
 | Field trigger border | `var(--color-border-accessible)` | **Inherit IDS** until `11067:54551` verified |
-| Combobox-single / multi field | IDS size matrix | **Inherit IDS** |
+| Combobox-single / multi field | IDS size matrix | **Inherit IDS** (radius via aliases above) |
 | Theme resolution | `components/ids-theme.css` | `components/synapse-theme.css` |
 
 ### Figma sample options (Left Nav context menu, `53325:280088`)
@@ -85,23 +89,36 @@ No search row, no radio/checkbox leading controls, no field trigger in this usag
 | Sample size | **185×120** px (3 options) |
 | Min width | **185px** (runtime; may grow with longer labels) |
 | Border | `1px` `var(--color-border-neutral-light)` all sides |
-| Corner radius | `var(--corner-radius-radius-4)` |
+| Corner radius | `var(--dropdown-menu-radius)` → `var(--corner-radius-radius-4)` (all corners when detached; bottom corners when field-attached) |
 | Shadow | `0 2px 2px` + `0 4px 4px` `var(--shadow-shadow-4-drop-shadow-4-color)` |
 | Option row padding | `var(--padding-padding-10)` block / `var(--padding-padding-16)` inline |
 | Option row min-height | `40px` |
 | Positioning (Left Nav) | `side: bottom`, `align: end`, `sideOffset: 4px` relative to overflow trigger |
 
-### Combobox field (inherit IDS)
+### Combobox field (Synapse programme delta)
 
-See [`components/ids/dropdown-combo-box/design-spec.md`](../ids/dropdown-combo-box/design-spec.md) until Synapse `11067:54551` is verified.
+| Property | Value |
+|---|---|
+| Field corner radius | `var(--dropdown-control-radius)` → **`var(--corner-radius-radius-4)`** (4px) |
+| Focus ring radius | `var(--dropdown-focus-ring-radius)` → **`var(--corner-radius-radius-4)`** (4px) |
+| Field-attached menu popup radius | bottom corners: **`0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)`**; field when open: top corners only (bottom square) |
+| Sizes / padding / borders | Inherit IDS — [`components/ids/dropdown-combo-box/design-spec.md`](../ids/dropdown-combo-box/design-spec.md) |
 
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+
+| Alias | IDS default | Synapse override (`components/synapse-theme.css`) |
+|---|---|---|
+| `--dropdown-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-4)`** |
+| `--dropdown-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (unchanged) |
+| `--dropdown-menu-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** |
 
 ### Detached menu popup + option rows (verified `53325:280088`)
 
 - `var(--color-background-component)` — popup + row default
 - `var(--color-border-neutral-light)` — popup border
-- `var(--corner-radius-radius-4)` — popup radius
+- `var(--dropdown-menu-radius)` — popup radius (resolves to `var(--corner-radius-radius-4)`)
 - `var(--color-text-neutral)` — row label (Body 2 Regular)
 - `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)` — typography
 - `var(--padding-padding-10)` / `var(--padding-padding-16)` — row padding
@@ -230,8 +247,8 @@ See **Interactions → Accessibility**.
 - [x] Detached menu matches Figma `53325:280088` (185px, `radius-4`, `border-neutral-light`)
 - [x] Option rows: `padding-10`/`padding-16`, Body 2 Regular, `text-neutral`
 - [x] Left Nav story uses Figma sample labels (Open In a New Tab, Rename, Delete)
-- [ ] IDS combobox single/multi field matrices referenced when `11067:54551` verified
-- [ ] Light/dark outputs remain semantic-token driven via `synapse-theme.css`
+- [x] Field radius aliases documented; inherit IDS field matrices via `dropdown-single-select` / `dropdown-multiselect` programme specs
+- [x] Light/dark outputs remain semantic-token driven via `synapse-theme.css`
 
 ## Source Mapping
 
@@ -240,5 +257,8 @@ See **Interactions → Accessibility**.
 - **Synapse map:** `data/synapse-component-figma-map.json` → `Dropdown/Combo` (`11067:54551`)
 - **Programme inheritance:** `data/programme-inheritance-registry.json` → `dropdown-combo-box`
 - **Left Nav:** [`components/synapse/left-nav/design-spec.md`](../left-nav/design-spec.md)
-- **Implementation:** `SynapseDropdownActionMenu.module.css`, `LeftNavSecondaryContextMenu.tsx`
+- **Implementation:** `SynapseDropdownActionMenu.module.css`, `LeftNavSecondaryContextMenu.tsx`, `SynapseDropdownMenu.tsx`, `SynapseDropdownTriggerShell.tsx`
+- **Spec contract:** `storybook/src/spec-contracts/synapse-dropdown-combo-box.contract.ts`
+- **Storybook:** `storybook/src/components/SynapseDropdownComboBox.stories.tsx`
+- **Storybook group:** `Spec Generated/Synapse/Dropdown/Combo Box`
 - **Evidence (2026-06-05):** Figma MCP — `get_metadata`/`get_design_context`/`get_variable_defs` on `53325:280088`; option instances `I53325:280088;22472:147638` (Open In a New Tab), `…147650` (Rename), `…147662` (Delete)

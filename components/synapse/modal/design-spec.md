@@ -20,11 +20,11 @@ Synapse **Modal** is a **thin ids-fork** of the IDS **Modal** component family (
 | Category | Modals |
 | Spec pattern | **ids-fork (override-only)** |
 | IDS baseline slug | `modal` |
-| Status | **draft** |
+| Status | **active** |
 | Version | 1.1.0 |
 | Theme CSS | `components/synapse-theme.css` |
 | Verification method | IDS baseline spec + theme alias contract |
-| Last verified | 2026-06-10 |
+| Last verified | 2026-06-05 |
 
 ### Synapse programme deltas (vs IDS)
 
@@ -110,7 +110,8 @@ Generators **must** emit `border-radius: var(--modal-control-radius)` on the mod
 - [x] `--modal-control-radius` documented in IDS + Synapse theme CSS
 - [x] Implementation uses `var(--modal-control-radius)` on dialog surface (`Dialog.module.css`)
 - [x] All other modal chrome matches IDS (border, padding, shadow, divider)
-- [x] Storybook `Spec Generated/Synapse/Modal Dialog` loads `components/synapse-theme.css`
+- [x] Storybook `Spec Generated/Synapse/Modal` + `Spec Generated/Synapse/Modal/Dialog` load `components/synapse-theme.css`
+- [x] Dialog examples mirror IDS (`NonAlerting` … `Destructive`, single-page, multi-page)
 
 ## Source Mapping
 
@@ -120,4 +121,9 @@ Generators **must** emit `border-radius: var(--modal-control-radius)` on the mod
 | Programme spec | `components/synapse/modal/design-spec.md` |
 | Registry | `data/programme-inheritance-registry.json` → `synapse` / `modal` |
 | Synapse Figma (radius evidence) | `43461:175960`, `43461:175961` |
+| Implementation | `storybook/src/components/Dialog.tsx` |
+| Programme wrapper | `storybook/src/components/SynapseModal.tsx` |
+| Spec contract | `storybook/src/spec-contracts/synapse-modal.contract.ts` |
+| Storybook (overview) | `storybook/src/components/SynapseModal.stories.tsx` → `Spec Generated/Synapse/Modal` |
+| Storybook (dialog) | `storybook/src/components/SynapseModalDialog.stories.tsx` → `Spec Generated/Synapse/Modal/Dialog` |
 | Theme override | `components/synapse-theme.css` → `--modal-control-radius` |

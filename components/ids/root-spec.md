@@ -563,7 +563,7 @@ Use this contract for every IDS component spec and for any framework target that
 | Layer | Responsibility | Example |
 |---|---|---|
 | **Scale tokens** | Figma/root-spec catalog of foundational layout values | `--corner-radius-radius-2`, `--padding-padding-16`, `--spacing-space-8` |
-| **Component layout aliases** | Stable per-component names in `ids-theme.css`; programmes override the **same alias** in programme theme CSS | `--button-control-radius`, `--card-control-radius`, `--modal-control-radius`, `--progress-bar-control-radius`, `--date-picker-control-radius`, `--time-picker-control-radius`, `--text-box-control-radius`, `--toast-control-radius`, `--tooltip-control-radius` |
+| **Component layout aliases** | Stable per-component names in `ids-theme.css`; programmes override the **same alias** in programme theme CSS | `--button-control-radius`, `--dropdown-control-radius`, `--dropdown-menu-radius`, `--card-control-radius`, `--modal-control-radius`, `--progress-bar-control-radius`, `--date-picker-control-radius`, `--time-picker-control-radius`, `--text-box-control-radius`, `--toast-control-radius`, `--tooltip-control-radius` |
 | **IDS component spec** | References component aliases in Layout & Measurements and Codegen Contract | `border-radius: var(--button-control-radius)` |
 | **Programme fork spec** | Programme deltas table: which aliases differ (resolved scale token in parentheses) | Synapse: `--button-control-radius` → `radius-4` |
 | **Programme theme CSS** | Redefines alias values (`components/synapse-theme.css`, `components/dap-theme.css`) | `--button-control-radius: var(--corner-radius-radius-4)` |

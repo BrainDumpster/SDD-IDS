@@ -1,201 +1,151 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
 # Tag Design Spec
 
-## IDS baseline (layout, flow, contracts)
+> Generated 2026-06-12T07:10:01Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
-Synapse **Tag** is a **thin ids-fork** of the IDS **Tag** chip (read-only, clickable, editable/dismissible, badge variants; alerting tones; pill geometry). Anatomy, size tracks, variant matrix, interaction contracts, and runtime API **inherit IDS** unless listed in **Synapse programme deltas** below.
-
-- **IDS source of truth:** [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md)
-- **Shared implementation:** `storybook/src/components/Tag.tsx`, `Tag.module.css`
-- **Programme chrome:** `programme="synapse"` on shared `Tag` (no separate theme layout alias)
-- **Theme CSS:** `components/synapse-theme.css` (Synapse semantic tokens for programme-only rows, e.g. `--color-text-tag-critical`)
-- **Base UI mapping:** `data/synapse-baseui-mapping.json` → `tag` (custom chip)
-
-**Figma scope:** IDS Figma (`42012:26686`) is authoritative for anatomy, sizes, and semantic tokens. Synapse Hi-Fi (`38910:57385`) verifies the **same variant axes**; programme differences are limited to the rows in **Synapse programme deltas** (focus offset, critical Light tone, close hover).
-
+<!-- ds:section id=metadata -->
 ## Metadata
 
 | Property | Value |
 |---|---|
 | Component | Tag |
-| Design system | Synapse |
-| Category | Form elements |
-| Spec pattern | **ids-fork (override-only)** |
-| IDS baseline slug | `tag` |
-| Status | **active** |
-| Version | 2.0.0 |
-| Figma node (programme evidence) | `38910:57385` |
-| IDS Figma (layout reference) | `42012:26686` |
-| Theme CSS | `components/synapse-theme.css` |
-| Verification method | IDS baseline spec + `programme="synapse"` CSS contract |
-| Last verified | 2026-06-10 |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 38910:57385 |
+| Design System | Synapse |
 
-### Synapse programme deltas (vs IDS)
-
-**No layout theme alias** (no `--tag-control-radius` or similar). Synapse chrome is applied via **`programme="synapse"`** on the shared `Tag` component.
-
-| Topic | IDS | Synapse |
-|---|---|---|
-| Pill geometry / heights / padding | `radius-24`; small **20px**; large **28px** | **Same** (inherit IDS) |
-| Variant axes (`type`, `size`, `tone`, …) | IDS contract | **Same** (inherit IDS) |
-| Runtime API | IDS contract | **Same** (inherit IDS); emit `programme="synapse"` for Synapse targets |
-| Focus outer ring `outline-offset` | **`3px`** | **`4px`** (`12715:251521`; `Tag.module.css` `.programmeSynapse[data-focus]`) |
-| Alerting **Light** — **Critical** | `background-alerting-critical` + white text | **`background-alerting-critical-slate`** + **`text-tag-critical`** + `border-alerting-critical-base` (`50724:303493`) |
-| `TagCloseButton` hover icon | inherits tag text color | **`icon-neutral-strong`** (`11666:90413`) |
-
-All other state rows (clickable selected, editable, disabled, other alerting tones, badge anatomy) **inherit IDS** — see [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md).
-
+<!-- ds:section id=anatomy -->
 ## Anatomy
 
-Inherit IDS **Anatomy** — see [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md).
+The component is composed of these structural parts:
 
-Shared implementation slot order (`Tag.tsx`): `TagRoot` → optional count chip → label cluster / editable field → optional menu caret (`type=badge`) → optional close.
+- **badge**
+- **clickable**
+- **dismiss**
+- **editable**
+- **emphasis_light**
+- **emphasis_strong**
+- **menuCaret**
+- **prefix**
+- **programmeIds**
+- **programmeSynapse**
+- **selected**
+- **tag**
+- **textField**
+- **typeBadge**
 
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-Inherit IDS padding, heights, pill radius, and icon sizes — see IDS **Layout & Measurements**.
+<!-- ds:section id=tokens -->
+## Component Tokens
 
-Synapse-specific layout (programme-flag only):
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
+> Below are tokens referenced by this component's CSS module.
 
-- Keyboard focus ring: **`outline-offset: 4px`** when `programme="synapse"` (IDS: `3px`)
+- `var(--border-width-border-default)` = 1px
+- `var(--color-background-alerting-critical)` = #af0000 (light) / #c74c4c (dark)
+- `var(--color-background-alerting-critical-slate)` = #f3d9d9 (light) / #1e262c (dark)
+- `var(--color-background-alerting-info)` = ?
+- `var(--color-background-alerting-info-1)` = #005ece (light) / #4c8edd (dark)
+- `var(--color-background-alerting-major)` = #ed6400
+- `var(--color-background-alerting-minor)` = #ffc700
+- `var(--color-background-alerting-success)` = ?
+- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-controls-brand-base)` = #0076ce
+- `var(--color-background-controls-brand-lighter)` = #ebf4fb (light) / #003a65 (dark)
+- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-gray-light)` = #eaeaea (light) / #393939 (dark)
+- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
+- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-border-alerting-critical-base)` = #af0000 (light) / #dd9494 (dark)
+- `var(--color-border-alerting-critical-white)` = #af0000 (light) / #ffffff (dark)
+- `var(--color-border-alerting-info-white)` = #005ece (light) / #ffffff (dark)
+- `var(--color-border-alerting-major-white)` = #ed6400 (light) / #ffffff (dark)
+- `var(--color-border-alerting-minor-transparent)` = #9c622e (light) / rgba(255,255,255,0.00) (dark)
+- `var(--color-border-alerting-success-white)` = #1b8500 (light) / #ffffff (dark)
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
+- `var(--color-border-white)` = #ffffff
+- `var(--color-icon-neutral-strong)` = #252525 (light) / #f2f3f5 (dark)
+- `var(--color-static-gray-500)` = #757575
+- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-tag-critical)` = #af0000 (light) / #dd9494 (dark)
+- `var(--color-text-warning)` = #6d4028
+- `var(--color-text-white)` = #ffffff
+- `var(--corner-radius-radius-2)` = 2px
+- `var(--corner-radius-radius-24)` = 24px
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--font-size-body-3)` = 12px
+- `var(--padding-padding-12)` = 12px
+- `var(--padding-padding-2)` = 2px
+- `var(--padding-padding-4)` = 4px
+- `var(--padding-padding-8)` = 8px
+- `var(--sizing-size-10)` = 10px
+- `var(--sizing-size-18)` = 18px
+- `var(--spacing-space-8)` = 8px
 
-## Tokens
-
-### Programme modifiers (not theme aliases)
-
-Synapse deltas use existing semantic tokens; critical Light resolves via `components/synapse-theme.css`:
-
-| Token | Usage (Synapse only) |
-|---|---|
-| `--color-background-alerting-critical-slate` | Critical **Light** shell |
-| `--color-text-tag-critical` | Critical **Light** label |
-| `--color-border-alerting-critical-base` | Critical **Light** border |
-| `--color-icon-neutral-strong` | Close control hover |
-
-### All other tokens
-
-Inherit IDS **Tokens** — same `var(--...)` names; values from `components/synapse-theme.css` for Synapse targets.
-
+<!-- ds:section id=states-light -->
 ## States (Light Theme)
 
-Inherit IDS **States (Light Theme)** from [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md).
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-alerting-critical-slate)` (#f3d9d9) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-tag-critical)` (#af0000) | focus-ring: `var(--border-width-border-default)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
+| default | disabled | `var(--color-static-gray-500)` (#757575) | `var(--color-border-white)` (#ffffff) | `var(--color-text-disabled)` (#757575) |  |
+| default | focus |  | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-transparent-brand)` (rgba(255,255,255,0.00)) | `var(--color-icon-neutral-strong)` (#252525) |  |
 
-Apply **only** these Synapse overrides when `programme="synapse"`:
-
-| Slot | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| `TagRoot` | focus-visible | base state retained | outer ring `var(--color-border-brand-base)`; **`outline-offset: 4px`** | unchanged |
-| `TagRoot` read-only alerting **Light** — **Critical** | default | `var(--color-background-alerting-critical-slate)` | `var(--color-border-alerting-critical-base)` | `var(--color-text-tag-critical)` |
-| `TagCloseButton` | hover | transparent | none | `var(--color-icon-neutral-strong)` |
-
+<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / Synapse dark scope live in `components/synapse-theme.css`.
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-alerting-critical-slate)` (#1e262c) | `var(--color-border-alerting-critical-base)` (#dd9494) | `var(--color-text-tag-critical)` (#dd9494) | focus-ring: `var(--border-width-border-default)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
+| default | disabled | `var(--color-static-gray-500)` (#757575) | `var(--color-border-white)` (#ffffff) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| default | focus |  | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-transparent-brand)` (#4c9fdd) | `var(--color-icon-neutral-strong)` (#f2f3f5) |  |
 
-Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
 
-## Interactions
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.md.
+> This section documents additional or overriding behaviors for this component.
 
-Inherit IDS **Interactions** and **Accessibility** from [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md).
+**Pattern**: action
 
-## Composition & API (runtime)
+### Behaviors
 
-### IDS inheritance resolution
+- Displays a label with optional dismiss (remove) action
+- Click dismiss button to remove the tag
+- Variant colors indicate different categories or states
 
-Codegen **MUST** resolve props, events, and variant axes from IDS **Composition & API (runtime)** in [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md) (`type`, `size`, `tone`, `selected`, `disabled`, `error`, `focusOnText`, `label`, `badgeValue`, `onClick`, `onDismiss`, `onSelectionChange`, etc.).
+### Keyboard
 
-### Synapse-only runtime flags
+| Key | Action |
+|---|---|
+| Tab | Move focus to the tag or its dismiss button |
+| Enter | Remove the tag (if dismissible) |
+| Delete | Remove the tag (if dismissible) |
 
-| Prop | Type | Default | Synapse note |
-|---|---|---|---|
-| `programme` | `"ids" \| "synapse"` | `"ids"` | **`"synapse"`** applies focus **4px** offset, critical **Light** slate tokens, and close hover **`icon-neutral-strong`** per **Programme override rules** |
+### ARIA
 
-All other props: **inherit IDS** (no Synapse renames).
-
-### Storybook defaults
-
-**Spec Accurate Design**: `type="read-only"`, `label="Tag"`, `tone="non-alerting"`, `size="sm"` under **Spec Generated/Synapse/Tag** with `components/synapse-theme.css` and `SynapseTag` wrapper (`programme="synapse"`).
-
-## Codegen Contract (Framework-Agnostic Blueprint)
-
-### IDS baseline resolution
-
-Generators **MUST** load and merge the IDS baseline contract from [`components/ids/tag/design-spec.md`](../ids/tag/design-spec.md) (`## Codegen Contract`) before applying Synapse programme overrides below.
-
-### Programme override rules
-
-| Rule | IDS | Synapse |
-|---|---|---|
-| Focus `outline-offset` on `TagRoot` | `3px` (`.programmeIds`) | **`4px`** (`.programmeSynapse`) |
-| Critical **Light** `TagRoot` | alerting critical fill + white text | **slate** bg + **`text-tag-critical`** (`.programmeSynapse.tone_critical.emphasis_light`) |
-| `TagCloseButton` hover color | inherits | **`var(--color-icon-neutral-strong)`** |
-| `programme` prop | optional; default `ids` | **`synapse`** for Synapse targets |
-| Theme CSS | `components/ids-theme.css` | **`components/synapse-theme.css`** (+ IDS tokens as needed) |
-| All other slots / variants | IDS contract | **Inherit IDS** |
-
-### Deterministic structure
-
-Inherit IDS slot order — see IDS **Codegen Contract → Deterministic structure**. Synapse adds **no** slots.
-
-### Variant matrix
-
-Inherit IDS: `type` × `size` × `tone` × state × `selected` × `focusOnText`. Add codegen axis `programme: ids | synapse` for target selection only.
-
-### Per-slot style contract
-
-| Slot | Property | Synapse override (when `programme="synapse"`) |
-|---|---|---|
-| `TagRoot` | `outline-offset` on focus | **`4px`** |
-| `TagRoot` critical Light | bg / border / text | slate + `text-tag-critical` tokens |
-| `TagCloseButton` | hover icon color | **`icon-neutral-strong`** |
-| All other slots | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** |
-
-### Behavior contract
-
-Inherit IDS clickable toggle, editable focus-on-text, dismiss, and disabled blocking — see IDS **Codegen Contract → Behavior contract**.
-
-### Accessibility contract
-
-Inherit IDS button semantics, `aria-pressed`, close labels, and disabled handling — see IDS **Codegen Contract → Accessibility contract**.
-
-### Asset resolution + bundling contract
-
-Inherit IDS: `shape-x-thick` close, optional badge/alerting icons — see IDS **Codegen Contract → Asset resolution**.
-
-Shared `type=badge` also renders `arrow-drop-tri-caret` (`10×10`) per shared `Tag.tsx` (both programmes).
-
-### Fallback/error rules
-
-Inherit IDS fallbacks (`unknown type` → `read-only`, etc.). Programme additions:
-
-- Unknown `programme` → **`ids`** chrome (3px focus, IDS critical Light).
-- Synapse targets **must** set `programme="synapse"` and import **`components/synapse-theme.css`** for critical Light token resolution.
-- Do not introduce hardcoded `3px` / `4px` focus offsets outside `Tag.module.css` programme classes.
-
-### Validation checklist
-
-- [x] IDS baseline linked; programme deltas table lists **only verified Synapse differences**
-- [x] No false “Same / different” duplication of IDS layout tables
-- [x] `programme="synapse"` wired in `SynapseTag.tsx` wrapper
-- [x] `Tag.module.css` programme classes: 4px focus, critical Light, close hover
-- [x] Codegen Contract subsections concrete (IDS merge + programme overrides)
-- [x] Storybook `Spec Generated/Synapse/Tag` loads `components/synapse-theme.css`
-- [x] Registry: `data/programme-inheritance-registry.json` → `synapse` / `tag`
+| Element | Attributes |
+|---|---|
+| root | {'aria-label': 'Meaningful tag text content'} |
+| dismissButton | {'aria-label': 'Remove [tag name]'} |
 
 ## Source Mapping
 
-| Property | Value |
+| Source | Location |
 |---|---|
-| IDS baseline | `components/ids/tag/design-spec.md` |
-| Programme spec | `components/synapse/tag/design-spec.md` |
-| Registry | `data/programme-inheritance-registry.json` → `synapse` / `tag` |
-| Synapse Figma (main set) | `38910:57385` |
-| Synapse focus evidence | `12715:251521` |
-| Synapse critical Light | `50724:303493` |
-| Synapse close hover | `11666:90413` |
-| IDS Figma (layout reference) | `42012:26686` |
-| Theme CSS | `components/synapse-theme.css` (semantic tokens; **no** tag layout alias) |
-| Implementation | `storybook/src/components/Tag.tsx` |
-| Programme wrapper | `storybook/src/components/SynapseTag.tsx` |
-| Spec contract | `storybook/src/spec-contracts/synapse-tag.contract.ts` |
-| Storybook | `storybook/src/components/SynapseTag.stories.tsx` |
-| Verification | IDS baseline + programme CSS contract — 2026-06-10 |
+| Root spec | `components/synapse/root-spec.md` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

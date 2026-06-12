@@ -1,8 +1,10 @@
 /*
  * Synapse Design System — Global Theme Tokens
  * Auto-extracted from Figma "Synapse Hi-Fi components" variables.
- * Collections: Color Mode + Tokens (semantic + shadows), Primitive, Sizes.
- * Last REST sync: 2026-06-04T08:08:48Z
+ * Collections: Primitive, Color Mode, Tokens, Sizes, Table density.
+ * Synced variables: Color Mode=249, Tokens=16, Primitive=149, Sizes=92, Table density=18.
+ * Last REST sync: 2026-06-12T07:18:18Z
+ * Strategy: full collection export (COLOR/FLOAT/STRING/BOOLEAN); Figma path → token name.
  *
  * Sync: python3 scripts/sync_programme_themes_from_figma.py
  *        (or programme-specific sync_*.py)
@@ -29,7 +31,7 @@ html, body {
    ======================================================== */
 
 :root {
-  /* --- Primitive palette --- */
+  /* --- Primitive (Figma collection Primitive) --- */
   --alert-blue-100: #ebf2fb;
   --alert-blue-200: #d9e7f8;
   --alert-blue-300: #94bbea;
@@ -76,18 +78,6 @@ html, body {
   --alert-yellow-700: #c48429;
   --alert-yellow-800: #9c622e;
   --alert-yellow-900: #6d4028;
-  --new-brand-300: #94c5ea;
-  --new-gray-100: #f4f4f4;
-  --new-gray-200: #eaeaea;
-  --new-gray-500: #757575;
-  --new-gray-700: #4d4d4d;
-  --new-gray-900: #252525;
-  --new-slate-200: #e6e9ec;
-  --new-slate-300: #b8c1c9;
-  --new-slate-400: #8898a5;
-  --new-slate-500: #566c7f;
-  --new-slate-800: #1e262c;
-  --new-slate-900: #111619;
   --secondary-palette-berry-100: #f7ebf2;
   --secondary-palette-berry-200: #f1d9e7;
   --secondary-palette-berry-300: #d894bd;
@@ -187,7 +177,11 @@ html, body {
   --scale-8: 8px;
   --scale-80: 80px;
   --scale-96: 96px;
-  /* --- Semantic colors (light) --- */
+  --typography-font-style-lo-res: 'Comic Sans MS';
+  --typography-font-style-primary: 'Roboto';
+  --typography-font-weight-medium: 'Medium';
+  --typography-font-weight-regular: 'Regular';
+  /* --- Semantic (Figma Color Mode + Tokens, light) --- */
   --color-annotation: #e8178a;
   --color-background-alerting-critical: #af0000;
   --color-background-alerting-critical-light: #f3d9d9;
@@ -333,8 +327,11 @@ html, body {
   --color-gradient-overflow-horizontal-end: rgba(244,244,244,0.00);
   --color-gradient-overflow-horizontal-middle: rgba(244,244,244,0.90);
   --color-gradient-overflow-horizontal-start: #f4f4f4;
+  --color-gradient-overflow-vertical---scrollbar-end: rgba(255,255,255,0.00);
+  --color-gradient-overflow-vertical---scrollbar-middle: rgba(182,182,182,0.30);
+  --color-gradient-overflow-vertical---scrollbar-start: rgba(117,117,117,0.60);
   --color-gradient-overflow-vertical-end: rgba(255,255,255,0.00);
-  --color-gradient-overflow-vertical-start: rgba(182,182,182,0.30);
+  --color-gradient-overflow-vertical-start: rgba(182,182,182,0.40);
   --color-icon-accessible: #757575;
   --color-icon-alerting-critical: #af0000;
   --color-icon-alerting-info-1: #005ece;
@@ -414,38 +411,43 @@ html, body {
   --color-text-white: #ffffff;
   --icon-standard-gray: #616161;
   /* --- Shadows (geometry + color, light) --- */
+  --shadow-drop-shadow-16-blur: 16px;
+  --shadow-drop-shadow-16-spread: 0px;
+  --shadow-drop-shadow-16-x: 0px;
+  --shadow-drop-shadow-16-y: 16px;
+  --shadow-drop-shadow-2-blur: 2px;
+  --shadow-drop-shadow-2-spread: 0px;
+  --shadow-drop-shadow-2-x: 0px;
+  --shadow-drop-shadow-2-y: 2px;
+  --shadow-drop-shadow-32-blur: 32px;
+  --shadow-drop-shadow-32-spread: 0px;
+  --shadow-drop-shadow-32-x: 0px;
+  --shadow-drop-shadow-32-y: 32px;
   --shadow-drop-shadow-4-blur: 4px;
   --shadow-drop-shadow-4-spread: 0px;
   --shadow-drop-shadow-4-x: 0px;
   --shadow-drop-shadow-4-y: 4px;
-  --shadow-shadow-4-drop-shadow-16-blur: 16px;
-  --shadow-shadow-4-drop-shadow-16-spread: 0px;
-  --shadow-shadow-4-drop-shadow-16-x: 0px;
-  --shadow-shadow-4-drop-shadow-16-y: 16px;
-  --shadow-shadow-4-drop-shadow-32-blur: 32px;
-  --shadow-shadow-4-drop-shadow-32-spread: 0px;
-  --shadow-shadow-4-drop-shadow-32-x: 0px;
-  --shadow-shadow-4-drop-shadow-32-y: 32px;
-  --shadow-shadow-4-drop-shadow-8-blur: 8px;
-  --shadow-shadow-4-drop-shadow-8-spread: 0px;
-  --shadow-shadow-4-drop-shadow-8-x: 0px;
-  --shadow-shadow-4-drop-shadow-8-y: 8px;
+  --shadow-drop-shadow-8-blur: 8px;
+  --shadow-drop-shadow-8-spread: 0px;
+  --shadow-drop-shadow-8-x: 0px;
+  --shadow-drop-shadow-8-y: 8px;
+  --shadow-drop-shadow-16-color: rgba(37,37,37,0.08);
+  --shadow-drop-shadow-2-color: rgba(37,37,37,0.08);
+  --shadow-drop-shadow-32-color: rgba(37,37,37,0.08);
   --shadow-drop-shadow-4-color: rgba(37,37,37,0.08);
-  --shadow-shadow-4-drop-shadow-16-color: rgba(37,37,37,0.08);
-  --shadow-shadow-4-drop-shadow-32-color: rgba(37,37,37,0.08);
-  --shadow-shadow-4-drop-shadow-8-color: rgba(37,37,37,0.08);
+  --shadow-drop-shadow-8-color: rgba(37,37,37,0.08);
   /* --- IDS dropdown shadow aliases --- */
   --shadow-shadow-4-drop-shadow-4-blur: var(--shadow-drop-shadow-4-blur);
   --shadow-shadow-4-drop-shadow-4-color: var(--shadow-drop-shadow-4-color);
   --shadow-shadow-4-drop-shadow-4-spread: var(--shadow-drop-shadow-4-spread);
   --shadow-shadow-4-drop-shadow-4-x: var(--shadow-drop-shadow-4-x);
   --shadow-shadow-4-drop-shadow-4-y: var(--shadow-drop-shadow-4-y);
-  /* --- Sizes --- */
-  --border-width-border-1: 1px;
-  --border-width-border-2: 2px;
-  --border-width-border-4: 4px;
-  --border-width-border-6: 6px;
+  /* --- Sizes (Figma collection 50960:24167) --- */
+  --border-width-border-default: 1px;
+  --border-width-border-heavy: 6px;
   --border-width-border-none: 0px;
+  --border-width-border-strong: 4px;
+  --border-width-border-thick: 2px;
   --corner-radius-radius-10: 10px;
   --corner-radius-radius-12: 12px;
   --corner-radius-radius-16: 16px;
@@ -533,15 +535,62 @@ html, body {
   --spacing-space-8: 8px;
   --spacing-space-minus-1: -1px;
   --spacing-space-none: 0px;
-  /* --- Component layout aliases (Synapse overrides; repeat after Sizes for cascade) --- */
+  /* --- Sizes: legacy border-width numeric aliases (IDS-fork compat) --- */
+  --border-width-border-1: var(--border-width-border-default);
+  --border-width-border-2: var(--border-width-border-thick);
+  --border-width-border-4: var(--border-width-border-strong);
+  --border-width-border-6: var(--border-width-border-heavy);
+  /* --- Table density (Standard / Loose / Compact modes) --- */
+  --grid-height-cell: 40px;
+  --grid-height-cell-compact: 32px;
+  --grid-height-cell-loose: 48px;
+  --grid-height-header: 48px;
+  --grid-height-header-compact: 40px;
+  --grid-height-header-loose: 54px;
+  --selection-cell: 12px;
+  --selection-cell-compact: 8px;
+  --selection-cell-loose: 16px;
+  --selection-header: 16px;
+  --selection-header-compact: 12px;
+  --selection-header-loose: 19px;
+  --text-cell: 10px;
+  --text-cell-compact: 6px;
+  --text-cell-loose: 14px;
+  --text-header: 5px;
+  --text-header-compact: 1px;
+  --text-header-loose: 8px;
+  /* --- Programme layout aliases (ids-fork; reference Sizes tokens above) --- */
   --button-control-radius: var(--corner-radius-radius-4);
-  --button-focus-ring-radius: var(--corner-radius-radius-6);
   --button-focus-ring-offset: 3px;
+  --button-focus-ring-radius: var(--corner-radius-radius-6);
+  --dropdown-control-radius: var(--corner-radius-radius-4);
+  --dropdown-focus-ring-radius: var(--corner-radius-radius-4);
+  --dropdown-menu-radius: var(--corner-radius-radius-4);
+  --checkbox-control-radius: var(--corner-radius-radius-2);
+  --checkbox-label-font-weight: 400;
+  --radio-label-font-weight: 400;
+  --segmented-button-control-radius: var(--corner-radius-radius-2);
+  --alert-action-control-radius: var(--corner-radius-radius-2);
   --card-control-radius: var(--corner-radius-radius-10);
+  --chat-input-button-radius: var(--corner-radius-radius-24);
+  --chat-input-focus-ring-offset: var(--scale-4);
+  --chat-input-focus-ring-radius: var(--corner-radius-radius-24);
+  --chat-input-prompt-radius: var(--suggested-prompt-radius);
+  --chat-input-shell-max-height: 320px;
+  --chat-input-shell-min-height: 92px;
+  --chat-input-shell-radius: var(--corner-radius-radius-20);
+  --chat-input-textarea-max-height: 252px;
   --date-picker-control-radius: var(--corner-radius-radius-4);
   --date-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --modal-control-radius: var(--corner-radius-radius-16);
+  --progress-bar-control-radius: var(--corner-radius-radius-2);
+  --suggested-prompt-radius: var(--corner-radius-radius-8);
+  --text-box-control-radius: var(--corner-radius-radius-4);
+  --text-box-focus-ring-radius: var(--corner-radius-radius-4);
   --time-picker-control-radius: var(--corner-radius-radius-4);
   --time-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --toast-control-radius: var(--corner-radius-radius-8);
+  --tooltip-control-radius: var(--corner-radius-radius-8);
 }
 
 /* ========================================================
@@ -665,8 +714,11 @@ html, body {
   --color-gradient-overflow-horizontal-end: rgba(17,22,25,0.00);
   --color-gradient-overflow-horizontal-middle: rgba(17,22,25,0.90);
   --color-gradient-overflow-horizontal-start: #111619;
-  --color-gradient-overflow-vertical-end: rgba(17,22,25,0.00);
-  --color-gradient-overflow-vertical-start: rgba(17,22,25,0.40);
+  --color-gradient-overflow-vertical---scrollbar-end: rgba(17,22,25,0.00);
+  --color-gradient-overflow-vertical---scrollbar-middle: rgba(17,22,25,0.40);
+  --color-gradient-overflow-vertical---scrollbar-start: #111619;
+  --color-gradient-overflow-vertical-end: rgba(17,22,25,0.40);
+  --color-gradient-overflow-vertical-start: #111619;
   --color-icon-accessible: #8898a5;
   --color-icon-alerting-critical: #c74c4c;
   --color-icon-alerting-info-1: #4c8edd;
@@ -713,10 +765,11 @@ html, body {
   --color-text-violet-base: #a34dcd;
   --color-text-violet-strong: #c894e1;
   --color-text-violet-stronger: #ebd9f4;
+  --shadow-drop-shadow-16-color: rgba(17,22,25,0.08);
+  --shadow-drop-shadow-2-color: rgba(17,22,25,0.08);
+  --shadow-drop-shadow-32-color: rgba(17,22,25,0.08);
   --shadow-drop-shadow-4-color: rgba(17,22,25,0.08);
-  --shadow-shadow-4-drop-shadow-16-color: rgba(17,22,25,0.08);
-  --shadow-shadow-4-drop-shadow-32-color: rgba(17,22,25,0.08);
-  --shadow-shadow-4-drop-shadow-8-color: rgba(17,22,25,0.08);
+  --shadow-drop-shadow-8-color: rgba(17,22,25,0.08);
   /* --- IDS dropdown shadow aliases (dark) --- */
   --shadow-shadow-4-drop-shadow-4-blur: var(--shadow-drop-shadow-4-blur);
   --shadow-shadow-4-drop-shadow-4-color: var(--shadow-drop-shadow-4-color);

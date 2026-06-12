@@ -20,6 +20,8 @@
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
+  /* Field-attached: bottom corners only (Figma Rounded Corners=True → radius-4). IDS menu radius = 0. */
+  border-radius: 0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius);
   box-shadow:
     0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
     0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
@@ -33,6 +35,7 @@
 /* Detached menu (context menu, masthead help) — full border; not field-attached. */
 .popupStandalone {
   border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-radius: var(--dropdown-menu-radius);
   width: auto !important;
   min-width: 186px !important;
   max-width: none !important;

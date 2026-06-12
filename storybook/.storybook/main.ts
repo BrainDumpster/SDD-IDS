@@ -44,6 +44,7 @@ const config: StorybookConfig = {
           "react/jsx-runtime",
           "react/jsx-dev-runtime",
           "@base-ui-components/react/popover",
+          "@base-ui-components/react/progress",
         ],
       },
       server: {

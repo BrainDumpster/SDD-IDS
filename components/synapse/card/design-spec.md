@@ -1,105 +1,89 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
 # Card Design Spec
 
-## IDS baseline (layout, flow, contracts)
+> Generated 2026-06-12T07:10:00Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
-Synapse **Card** shares the IDS **Card** component family (`CardRoot`, optional header, body, footer). Anatomy, padding signatures, state tokens, and runtime API match the IDS spec unless noted in **Synapse programme deltas** below.
-
-- **IDS source of truth:** [`components/ids/card/design-spec.md`](../ids/card/design-spec.md)
-- **Shared implementation:** `storybook/src/components/Card.tsx`, `Card.module.css`
-- **Theme CSS:** `components/synapse-theme.css` (overrides `--card-control-radius`)
-
+<!-- ds:section id=metadata -->
 ## Metadata
-- Component: Card
-- Design System: Synapse
-- Category: Components
-- Spec pattern: **ids-fork**
-- IDS baseline slug: `card`
-- Status: **draft**
-- Version: 1.0.0
-- Figma file: [Synapse Hi-Fi components](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components)
-- File key: `Td1bnsvRj1PCGs9RVJkIvJ`
-- Main component: [50419:259141](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=50419-259141&m=dev)
-- Verification method: Figma map + theme alias contract (radius `10px` / `--corner-radius-radius-10`)
-- Theme CSS: `components/synapse-theme.css`
 
-### Synapse programme deltas (vs IDS)
+| Property | Value |
+|---|---|
+| Component | Card |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 50419:259141 |
+| Design System | Synapse |
 
-| Topic | IDS | Synapse |
-|---|---|---|
-| Control corner radius | `var(--card-control-radius)` → `var(--corner-radius-radius-8)` | **same alias** → **`var(--corner-radius-radius-10)`** (10px) via `components/synapse-theme.css` |
-| Header / body / footer padding | IDS signatures | **Same** (inherit IDS) |
-| Variant / state color tokens | IDS semantic tokens | **Same semantic `var(--...)` names** |
-
+<!-- ds:section id=anatomy -->
 ## Anatomy
 
-Deterministic slot order (IDS-aligned):
+The component is composed of these structural parts:
 
-1. `CardRoot` — shell with `border-radius: var(--card-control-radius)`
-2. optional `CardHeader` — title row and/or overflow menu
-3. `CardBody` — primary content
-4. optional `CardFooter` — actions or metadata
+- **body**
+- **card**
+- **footer**
+- **header**
+- **headerDivider**
+- **headerIcon**
+- **headerIconImage**
+- **headerRow**
+- **headerTitleCluster**
+- **title**
 
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-- **Corner radius:** **`var(--card-control-radius)`** (Synapse theme resolves to `var(--corner-radius-radius-10)` / 10px)
-- Header padding: `var(--padding-padding-16)` / `var(--padding-padding-8)` (inherit IDS)
-- Body padding: `var(--padding-padding-8)` `var(--padding-padding-16)` (inherit IDS)
-- Footer padding: inherit IDS contract
-- Minimum height: `120px` (inherit IDS)
+<!-- ds:section id=tokens -->
+## Component Tokens
 
-## Tokens
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
+> Below are tokens referenced by this component's CSS module.
 
-### Layout aliases (theme-resolvable)
+- `var(--border-width-border-1)` = var(--border-width-border-default)
+- `var(--card-control-radius)` = var(--corner-radius-radius-10)
+- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
+- `var(--color-icon-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--font-line-height-line-height-24)` = 24px
+- `var(--font-line-height-line-height-25)` = 25px
+- `var(--font-size-body-1)` = 16px
+- `var(--font-size-header-6)` = 18px
+- `var(--padding-padding-16)` = 16px
+- `var(--padding-padding-8)` = 8px
+- `var(--shadow-drop-shadow-4-blur)` = 4px
+- `var(--shadow-drop-shadow-4-color)` = rgba(37,37,37,0.08) (light) / rgba(17,22,25,0.08) (dark)
+- `var(--shadow-drop-shadow-4-x)` = 0px
+- `var(--shadow-drop-shadow-4-y)` = 4px
 
-Same alias names as IDS; resolved values overridden in `components/synapse-theme.css`:
-
-- `--card-control-radius` → `var(--corner-radius-radius-10)`
-
-### Colors (inherit IDS)
-
-See IDS [`card`](../ids/card/design-spec.md) **Tokens** and **States** tables.
-
+<!-- ds:section id=states-light -->
 ## States (Light Theme)
 
-Same semantic token mapping as IDS — see IDS spec. Resolved values come from `components/synapse-theme.css`.
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-light)` (#c5c5c5) | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--card-control-radius)` |
+| elevated | default |  |  |  | shadow: `var(--shadow-drop-shadow-4-x)` `var(--shadow-drop-shadow-4-y)` `var(--shadow-drop-shadow-4-blur)` `var(--shadow-drop-shadow-4-color)` |
+| outlined | default |  | `var(--color-border-light)` (#c5c5c5) |  |  |
 
+<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Same semantic token mapping as IDS — see IDS spec.
-
-## Interactions
-
-Inherit IDS **Interactions** and **Accessibility** from [`components/ids/card/design-spec.md`](../ids/card/design-spec.md).
-
-## Composition & API (runtime)
-
-Inherit IDS **Composition & API (runtime)** — `title`, `header`, `children`, `footer`, `menuOptions`, `elevated`, `outlined`, etc.
-
-## Codegen Contract (Framework-Agnostic Blueprint)
-
-### Deterministic structure
-
-1. `CardRoot` (`border-radius: var(--card-control-radius)`; Synapse theme → 10px)
-2. optional `CardHeader`
-3. `CardBody`
-4. optional `CardFooter`
-
-### Theme & programme resolution
-
-- Emit **`var(--card-control-radius)`** in component CSS; import **`components/synapse-theme.css`** for Synapse targets.
-- Do **not** hardcode `10px` or `var(--corner-radius-radius-10)` in component stylesheets.
-
-### Validation checklist
-
-- [ ] `border-radius` uses `var(--card-control-radius)`
-- [ ] Synapse theme defines alias override to `var(--corner-radius-radius-10)`
-- [ ] IDS baseline padding and color tokens preserved
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-light)` (#34414c) | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--card-control-radius)` |
+| elevated | default |  |  |  | shadow: `var(--shadow-drop-shadow-4-x)` `var(--shadow-drop-shadow-4-y)` `var(--shadow-drop-shadow-4-blur)` `var(--shadow-drop-shadow-4-color)` |
+| outlined | default |  | `var(--color-border-light)` (#34414c) |  |  |
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
-| IDS baseline | `components/ids/card/design-spec.md` |
-| Synapse Figma node | `50419:259141` — `data/synapse-component-figma-map.json` |
-| Theme alias | `components/synapse-theme.css` → `--card-control-radius` |
-| Implementation | `storybook/src/components/Card.tsx` |
+| Root spec | `components/synapse/root-spec.md` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->

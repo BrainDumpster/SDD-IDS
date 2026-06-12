@@ -1,7 +1,7 @@
 <!-- auto:generated:start -->
 # Synapse Design System — Root Spec
 
-> Generated 2026-06-04T08:03:38Z. Global design system specification — framework-agnostic.
+> Generated 2026-06-12T07:18:18Z. Global design system specification — framework-agnostic.
 > All component specs inherit from this document. Component specs only override what is specific.
 
 <!-- ds:section id=identity -->
@@ -245,15 +245,18 @@ All colors are expressed as CSS custom properties. Semantic tokens resolve to di
 | `--color-icon-violet-stronger` | #3d005a | #ebd9f4 |
 | `--color-icon-white` | #ffffff | #ffffff |
 
-### Gradient Tokens (5 tokens)
+### Gradient Tokens (8 tokens)
 
 | Token | Light | Dark |
 |---|---|---|
 | `--color-gradient-overflow-horizontal-end` | rgba(244,244,244,0.00) | rgba(17,22,25,0.00) |
 | `--color-gradient-overflow-horizontal-middle` | rgba(244,244,244,0.90) | rgba(17,22,25,0.90) |
 | `--color-gradient-overflow-horizontal-start` | #f4f4f4 | #111619 |
-| `--color-gradient-overflow-vertical-end` | rgba(255,255,255,0.00) | rgba(17,22,25,0.00) |
-| `--color-gradient-overflow-vertical-start` | rgba(182,182,182,0.30) | rgba(17,22,25,0.40) |
+| `--color-gradient-overflow-vertical---scrollbar-end` | rgba(255,255,255,0.00) | rgba(17,22,25,0.00) |
+| `--color-gradient-overflow-vertical---scrollbar-middle` | rgba(182,182,182,0.30) | rgba(17,22,25,0.40) |
+| `--color-gradient-overflow-vertical---scrollbar-start` | rgba(117,117,117,0.60) | #111619 |
+| `--color-gradient-overflow-vertical-end` | rgba(255,255,255,0.00) | rgba(17,22,25,0.40) |
+| `--color-gradient-overflow-vertical-start` | rgba(182,182,182,0.40) | #111619 |
 
 ### Static Color Tokens (19 tokens)
 
@@ -438,6 +441,13 @@ These do not change between themes.
 | `--font-line-height-line-height-58` | 58px |
 | `--font-line-height-line-height-8` | 8px |
 
+<!-- ds:section id=sizes -->
+## Sizes (Figma collection `50960:24167`)
+
+All **92** FLOAT variables from the Figma **Sizes** collection (`50960:24167`, [variables panel](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53259-126112&view=variables&var-set-id=50960-24167&m=dev)) are synced to `components/synapse-theme.css` under `/* --- Sizes --- */`.
+
+Token names follow Figma variable paths (e.g. `Border Width/border-default` → `--border-width-border-default`). Legacy numeric border aliases (`--border-width-border-1`, etc.) are emitted as `var(...)` references for IDS-fork Storybook compatibility.
+
 <!-- ds:section id=spacing -->
 ## Spacing & Sizing
 
@@ -549,16 +559,48 @@ These do not change between themes.
 | `--scale-80` | 80px |
 | `--scale-96` | 96px |
 
+<!-- ds:section id=density -->
+## Table Density
+
+Figma collection **Table density** (`48477:121244`) — Standard (base token), Loose (`-*-loose`), Compact (`-*-compact`).
+
+### Density Tokens (18 tokens)
+
+| Token | Value |
+|---|---|
+| `--grid-height-cell` | 40px |
+| `--grid-height-cell-compact` | 32px |
+| `--grid-height-cell-loose` | 48px |
+| `--grid-height-header` | 48px |
+| `--grid-height-header-compact` | 40px |
+| `--grid-height-header-loose` | 54px |
+| `--selection-cell` | 12px |
+| `--selection-cell-compact` | 8px |
+| `--selection-cell-loose` | 16px |
+| `--selection-header` | 16px |
+| `--selection-header-compact` | 12px |
+| `--selection-header-loose` | 19px |
+| `--text-cell` | 10px |
+| `--text-cell-compact` | 6px |
+| `--text-cell-loose` | 14px |
+| `--text-header` | 5px |
+| `--text-header-compact` | 1px |
+| `--text-header-loose` | 8px |
+
 <!-- ds:section id=border -->
 ## Border Width
 
 | Token | Value |
 |---|---|
-| `--border-width-border-1` | 1px |
-| `--border-width-border-2` | 2px |
-| `--border-width-border-4` | 4px |
-| `--border-width-border-6` | 6px |
+| `--border-width-border-1` | var(--border-width-border-default) |
+| `--border-width-border-2` | var(--border-width-border-thick) |
+| `--border-width-border-4` | var(--border-width-border-strong) |
+| `--border-width-border-6` | var(--border-width-border-heavy) |
+| `--border-width-border-default` | 1px |
+| `--border-width-border-heavy` | 6px |
 | `--border-width-border-none` | 0px |
+| `--border-width-border-strong` | 4px |
+| `--border-width-border-thick` | 2px |
 
 <!-- ds:section id=corner-radius -->
 ## Corner Radius
@@ -590,35 +632,40 @@ These do not change between themes.
 | 3 | `--shadow-drop-shadow-16-*` | Selected states (dropdown, calendar) |
 | 4 | `--shadow-drop-shadow-32-*` | Modal, dialog, wizards |
 
-### Shadow Tokens (25 tokens)
+### Shadow Tokens (30 tokens)
 
 | Token | Light | Dark |
 |---|---|---|
+| `--shadow-drop-shadow-16-blur` | 16px | 16px |
+| `--shadow-drop-shadow-16-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
+| `--shadow-drop-shadow-16-spread` | 0px | 0px |
+| `--shadow-drop-shadow-16-x` | 0px | 0px |
+| `--shadow-drop-shadow-16-y` | 16px | 16px |
+| `--shadow-drop-shadow-2-blur` | 2px | 2px |
+| `--shadow-drop-shadow-2-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
+| `--shadow-drop-shadow-2-spread` | 0px | 0px |
+| `--shadow-drop-shadow-2-x` | 0px | 0px |
+| `--shadow-drop-shadow-2-y` | 2px | 2px |
+| `--shadow-drop-shadow-32-blur` | 32px | 32px |
+| `--shadow-drop-shadow-32-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
+| `--shadow-drop-shadow-32-spread` | 0px | 0px |
+| `--shadow-drop-shadow-32-x` | 0px | 0px |
+| `--shadow-drop-shadow-32-y` | 32px | 32px |
 | `--shadow-drop-shadow-4-blur` | 4px | 4px |
 | `--shadow-drop-shadow-4-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
 | `--shadow-drop-shadow-4-spread` | 0px | 0px |
 | `--shadow-drop-shadow-4-x` | 0px | 0px |
 | `--shadow-drop-shadow-4-y` | 4px | 4px |
-| `--shadow-shadow-4-drop-shadow-16-blur` | 16px | 16px |
-| `--shadow-shadow-4-drop-shadow-16-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
-| `--shadow-shadow-4-drop-shadow-16-spread` | 0px | 0px |
-| `--shadow-shadow-4-drop-shadow-16-x` | 0px | 0px |
-| `--shadow-shadow-4-drop-shadow-16-y` | 16px | 16px |
-| `--shadow-shadow-4-drop-shadow-32-blur` | 32px | 32px |
-| `--shadow-shadow-4-drop-shadow-32-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
-| `--shadow-shadow-4-drop-shadow-32-spread` | 0px | 0px |
-| `--shadow-shadow-4-drop-shadow-32-x` | 0px | 0px |
-| `--shadow-shadow-4-drop-shadow-32-y` | 32px | 32px |
+| `--shadow-drop-shadow-8-blur` | 8px | 8px |
+| `--shadow-drop-shadow-8-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
+| `--shadow-drop-shadow-8-spread` | 0px | 0px |
+| `--shadow-drop-shadow-8-x` | 0px | 0px |
+| `--shadow-drop-shadow-8-y` | 8px | 8px |
 | `--shadow-shadow-4-drop-shadow-4-blur` | var(--shadow-drop-shadow-4-blur) | var(--shadow-drop-shadow-4-blur) |
 | `--shadow-shadow-4-drop-shadow-4-color` | var(--shadow-drop-shadow-4-color) | var(--shadow-drop-shadow-4-color) |
 | `--shadow-shadow-4-drop-shadow-4-spread` | var(--shadow-drop-shadow-4-spread) | var(--shadow-drop-shadow-4-spread) |
 | `--shadow-shadow-4-drop-shadow-4-x` | var(--shadow-drop-shadow-4-x) | var(--shadow-drop-shadow-4-x) |
 | `--shadow-shadow-4-drop-shadow-4-y` | var(--shadow-drop-shadow-4-y) | var(--shadow-drop-shadow-4-y) |
-| `--shadow-shadow-4-drop-shadow-8-blur` | 8px | 8px |
-| `--shadow-shadow-4-drop-shadow-8-color` | rgba(37,37,37,0.08) | rgba(17,22,25,0.08) |
-| `--shadow-shadow-4-drop-shadow-8-spread` | 0px | 0px |
-| `--shadow-shadow-4-drop-shadow-8-x` | 0px | 0px |
-| `--shadow-shadow-4-drop-shadow-8-y` | 8px | 8px |
 
 <!-- ds:section id=opacity -->
 ## Opacity Scale
@@ -690,48 +737,69 @@ All components must meet these requirements. Component specs only document addit
 ## Theming Mechanism
 
 - All color tokens resolve to different values per theme (see Color System tables)
-- Spacing, typography, and radius scale tokens are theme-invariant
+- Spacing, typography, and radius tokens are theme-invariant
 - Shadow color tokens change between themes (slightly cooler in dark)
 - Theme is set via `data-theme` attribute on a parent element
 - Implementation must NOT use separate stylesheets per theme — use the same CSS custom properties
 
 ### Component layout aliases (programme overrides)
 
-IDS defines component layout aliases in `components/ids-theme.css`. Synapse overrides the **same alias names** in `components/synapse-theme.css` (see header + Sizes block). Component specs reference aliases; programme fork specs document deltas.
+IDS defines component layout aliases in `components/ids-theme.css`. Synapse overrides the **same alias names** in `components/synapse-theme.css` (appended after the Sizes block). Component specs reference aliases; programme fork specs document deltas.
 
 | Alias | IDS default | Synapse override |
 |---|---|---|
 | `--button-control-radius` | `var(--corner-radius-radius-2)` | `var(--corner-radius-radius-4)` |
 | `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` | `var(--corner-radius-radius-6)` |
+| `--dropdown-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--dropdown-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--dropdown-menu-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--checkbox-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-2)`** (2px; same as IDS) |
+| `--checkbox-label-font-weight` | `500` | **`400`** (Body 2 Regular) |
+| `--radio-label-font-weight` | `500` | **`400`** (Body 2 Regular) |
+| `--segmented-button-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-2)`** (2px; same as IDS) |
+| `--alert-action-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-2)`** (2px; alert actions — not `--button-control-radius`) |
 | `--button-focus-ring-offset` | `3px` | `3px` |
 | `--card-control-radius` | `var(--corner-radius-radius-8)` | **`var(--corner-radius-radius-10)`** (10px) |
 | `--modal-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-16)`** (16px) |
 | `--progress-bar-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-2)`** (2px) |
-| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px; field, calendar popup, month/year overlays) |
+| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
-| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px; field, time popup) |
+| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--time-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--text-box-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--text-box-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--toast-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-8)`** (8px) |
 | `--tooltip-control-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-8)`** (8px) |
+| `--suggested-prompt-radius` | — | **`var(--corner-radius-radius-8)`** (Suggested Prompt) |
+| `--chat-input-shell-radius` | — | **`var(--corner-radius-radius-20)`** (Chat Input Box) |
+| `--chat-input-button-radius` | — | **`var(--corner-radius-radius-24)`** |
+| `--chat-input-prompt-radius` | — | **`var(--suggested-prompt-radius)`** |
+| `--chat-input-focus-ring-offset` | — | **`var(--scale-4)`** (4px) |
+| `--chat-input-focus-ring-radius` | — | **`var(--corner-radius-radius-24)`** |
+| `--chat-input-shell-min-height` | — | **92px** |
+| `--chat-input-shell-max-height` | — | **320px** |
+| `--chat-input-textarea-max-height` | — | **252px** |
 
-Reference: [`components/synapse/card/design-spec.md`](../synapse/card/design-spec.md), [`components/synapse/button/design-spec.md`](../synapse/button/design-spec.md), [`components/synapse/modal/design-spec.md`](../synapse/modal/design-spec.md), [`components/synapse/wizard/design-spec.md`](../synapse/wizard/design-spec.md), [`components/synapse/progress-bar/design-spec.md`](../synapse/progress-bar/design-spec.md), [`components/synapse/date-picker/design-spec.md`](../synapse/date-picker/design-spec.md), [`components/synapse/time-picker/design-spec.md`](../synapse/time-picker/design-spec.md), [`components/synapse/text-input/design-spec.md`](../synapse/text-input/design-spec.md), [`components/synapse/toast/design-spec.md`](../synapse/toast/design-spec.md), [`components/synapse/tooltip/design-spec.md`](../synapse/tooltip/design-spec.md).
+Reference: [`components/synapse/card/design-spec.md`](../synapse/card/design-spec.md), [`components/synapse/button/design-spec.md`](../synapse/button/design-spec.md), [`components/synapse/chatinputbox/design-spec.md`](../synapse/chatinputbox/design-spec.md), [`components/synapse/suggested-prompt/design-spec.md`](../synapse/suggested-prompt/design-spec.md).
 
 <!-- ds:section id=variable-collections -->
 ## Variable Collections (Figma)
 
-- **Color Mode** — primary semantic COLOR variables (Light / Dark). Maps to most `--color-*` tokens.
-- **Tokens** — supplemental semantic COLOR + shadow COLOR + shadow FLOAT geometry (Light / Dark where applicable). Maps to `--color-*`, `--shadow-drop-shadow-*`.
-- **Primitive** — base palette values (static across themes). Maps to `--alert-*`, `--ui-palette-*`, `--secondary-palette-*`, `--opacity-*`, `--scale-*`.
-- **Sizes** — spacing, padding, corner radius, font sizes, border widths. Maps to `--padding-*`, `--spacing-*`, `--sizing-*`, `--corner-radius-*`, `--border-width-*`, `--font-*`.
+- **Primitive** — full collection export (COLOR, FLOAT, STRING, BOOLEAN). Palette, opacity, scale, typography strings (`--typography-*`).
+- **Color Mode** — full Light/Dark export (semantic colors, shadow colors, shadow geometry floats).
+- **Tokens** — Light/Dark overlay on Color Mode (same variable types; merges per mode).
+- **Sizes** (`50960:24167`) — full single-mode export; Figma path → token name (e.g. `--border-width-border-default`).
+- **Table density** (`48477:121244`) — full multi-mode export (Standard / Loose / Compact).
+- **Sync strategy** — see `docs/theme-sync-from-figma.md`. New/renamed Figma variables flow through on the next `sync_programme_themes_from_figma.py` run.
+- **Not synced** — collections listed in `excluded_collection_names` (M3, legacy Semantic, remote unresolvable aliases, etc.).
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
 | Figma variables | `GET /v1/files/Td1bnsvRj1PCGs9RVJkIvJ/variables/local` (Figma REST API); last sync timestamp in `components/synapse-theme.css` header |
-| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `9007:20353` (CANVAS `-- Navigation` — file context; token values from variables/local) |
+| Figma variable set (Sizes) | Collection `50960:24167` — [variables panel](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=53259-126112&view=variables&var-set-id=50960-24167&m=dev) |
+| Figma reference node | File `Td1bnsvRj1PCGs9RVJkIvJ`, node `53259:126112` (component context for live variable binding verification) |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
 | Config | `config/design_systems/synapse.yaml` |

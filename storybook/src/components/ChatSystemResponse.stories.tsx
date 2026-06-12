@@ -3,8 +3,21 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ChatSystemResponse } from "./ChatSystemResponse";
 
 const meta: Meta<typeof ChatSystemResponse> = {
-  title: "Spec Generated/Synapse/ChatSystemResponse",
+  title: "Spec Generated/Synapse/Chat and Layout/Chat System Response",
   component: ChatSystemResponse,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: [
+          "Spec-driven Synapse Chat System Response. Source: `components/synapse/chatsystemresponse/design-spec.md`.",
+          "Primary story: Figma `50756:226212`.",
+          "Examples board (Thinking, Recommendation Feedback): `53259:126090`.",
+          "Theme: `components/synapse-theme.css`.",
+        ].join(" "),
+      },
+    },
+  },
 };
 
 export default meta;

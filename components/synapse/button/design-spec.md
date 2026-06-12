@@ -1,146 +1,178 @@
+<!-- auto:generated:start -->
+<!-- ds:inherits root-spec -->
 # Button Design Spec
 
-## IDS baseline (layout, flow, contracts)
+> Generated 2026-06-12T07:10:00Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
-Synapse **Button** is a **thin ids-fork** of the IDS **Button** component. Anatomy, variant matrix, size signatures, state token bindings, interaction contracts, and runtime API **inherit IDS** unless listed in **Synapse programme deltas** below.
-
-- **IDS source of truth:** [`components/ids/button/design-spec.md`](../ids/button/design-spec.md)
-- **Shared implementation:** `storybook/src/components/Button.tsx`, `Button.module.css`
-- **Theme CSS:** `components/synapse-theme.css` (layout alias overrides)
-- **Base UI mapping:** `data/synapse-baseui-mapping.json` → `button` (`@base-ui-components/react/button`)
-
-**Figma scope for this spec:** IDS Figma is authoritative for anatomy, states, and semantic tokens. Programme Figma evidence is required **only for non-alias deltas** (focus ring geometry below). Do not re-verify the full IDS variant × state × size matrix in Synapse Figma unless a delta row claims a difference.
-
+<!-- ds:section id=metadata -->
 ## Metadata
-- Component: Button
-- Design System: Synapse
-- Category: Components / Form Elements
-- Spec pattern: **ids-fork (override-only)**
-- IDS baseline slug: `button`
-- Status: **draft**
-- Version: 1.1.0
-- Theme CSS: `components/synapse-theme.css`
-- Verification method: IDS baseline spec + theme alias contract; Figma MCP on focus delta node only
-- Last verified: 2026-06-09
 
-### Synapse programme deltas (vs IDS)
+| Property | Value |
+|---|---|
+| Component | Button |
+| Category | Components |
+| Figma Page | Components |
+| Node ID | 47808:31665 |
+| Design System | Synapse |
 
-| Topic | IDS | Synapse |
-|---|---|---|
-| Control corner radius | `var(--button-control-radius)` → `var(--corner-radius-radius-2)` | **same alias** → `var(--corner-radius-radius-4)` via `components/synapse-theme.css` |
-| Focus ring corner radius | `var(--button-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **same alias** → `var(--corner-radius-radius-6)` via `components/synapse-theme.css` |
-| Focus ring offset | `var(--button-focus-ring-offset)` (**3px**) | **same alias** (**3px**) |
-| Focus ring rendering | `outline` + `outline-offset` (IDS) | **`::after` inset ring** when `programme="synapse"` — evidence node `47808:32113` |
-| Size / padding signatures | IDS contract | **Same** (inherit IDS) |
-| Icon–label gap | `var(--spacing-space-8)` | **Same** |
-| Variant / state color tokens | IDS semantic tokens | **Same semantic `var(--...)` names** (inherit IDS) |
-| Runtime API / variant matrix | IDS contract | **Same** (inherit IDS) |
-
+<!-- ds:section id=anatomy -->
 ## Anatomy
 
-Inherit IDS **Anatomy** — see [`components/ids/button/design-spec.md`](../ids/button/design-spec.md).
+The component is composed of these structural parts:
 
-Deterministic slot order: `ButtonRoot` → optional `ButtonLeadingIcon` → optional `ButtonLabel`.
+- **button**
+- **iconImage**
+- **iconSlot**
+- **labelHidden**
+- **loading**
+- **programmeSynapse**
+- **spinner**
+- **visuallyHidden**
 
+Implementations must render these parts in order. Each part maps to a single DOM element (or equivalent in the target framework). Parts can be omitted if marked optional.
+
+<!-- ds:section id=layout -->
 ## Layout & Measurements
 
-Inherit IDS padding, height, width, and icon geometry — see IDS **Layout & Measurements**.
+<!-- ds:section id=tokens -->
+## Component Tokens
 
-Synapse-specific layout (alias-driven; resolved in theme CSS):
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
+> Below are tokens referenced by this component's CSS module.
 
-- Control corner radius: **`var(--button-control-radius)`** → `var(--corner-radius-radius-4)` in Synapse theme
-- Focus ring corner radius: **`var(--button-focus-ring-radius)`** → `var(--corner-radius-radius-6)` in Synapse theme
-- Focus ring offset: **`var(--button-focus-ring-offset)`** (**3px**)
+- `var(--border-width-border-1)` = var(--border-width-border-default)
+- `var(--button-control-radius)` = var(--corner-radius-radius-4)
+- `var(--button-focus-ring-offset)` = 3px
+- `var(--button-focus-ring-radius)` = var(--corner-radius-radius-6)
+- `var(--color-background-alerting-critical)` = #af0000 (light) / #c74c4c (dark)
+- `var(--color-background-alerting-critical-strong)` = #910000 (light) / #af0000 (dark)
+- `var(--color-background-alerting-critical-stronger)` = #730000 (light) / #910000 (dark)
+- `var(--color-background-controls-brand-base)` = #0076ce
+- `var(--color-background-controls-brand-light)` = #d9eaf8 (light) / #002642 (dark)
+- `var(--color-background-controls-brand-lighter)` = #ebf4fb (light) / #003a65 (dark)
+- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-controls-brand-stronger)` = #06528a
+- `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
+- `var(--color-border-alerting-transparent-critical)` = rgba(175,0,0,0.00) (light) / #dd9494 (dark)
+- `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
+- `var(--color-icon-brand-base)` = #0076ce (light) / #4c9fdd (dark)
+- `var(--color-icon-disabled)` = #757575 (light) / #c5c5c5 (dark)
+- `var(--color-icon-white)` = #ffffff
+- `var(--color-text-brand-strong)` = #0062ab (light) / #94c5ea (dark)
+- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-white)` = #ffffff
+- `var(--font-line-height-line-height-20)` = 20px
+- `var(--font-size-body-2)` = 14px
+- `var(--padding-padding-10)` = 10px
+- `var(--padding-padding-12)` = 12px
+- `var(--padding-padding-16)` = 16px
+- `var(--padding-padding-2)` = 2px
+- `var(--padding-padding-4)` = 4px
+- `var(--padding-padding-6)` = 6px
+- `var(--padding-padding-8)` = 8px
+- `var(--scale-24)` = 24px
+- `var(--scale-32)` = 32px
+- `var(--scale-40)` = 40px
+- `var(--spacing-space-8)` = 8px
 
-## Tokens
-
-### Layout aliases (theme-resolvable)
-
-Same alias names as IDS; values overridden in `components/synapse-theme.css`:
-
-| Alias | Synapse resolved value |
-|---|---|
-| `--button-control-radius` | `var(--corner-radius-radius-4)` |
-| `--button-focus-ring-radius` | `var(--corner-radius-radius-6)` |
-| `--button-focus-ring-offset` | `3px` |
-
-### Colors, typography, states
-
-Inherit IDS **Tokens** and **States** tables — same semantic `var(--...)` names. Color resolution uses `components/synapse-theme.css` for Light/Dark values.
-
+<!-- ds:section id=states-light -->
 ## States (Light Theme)
 
-Inherit IDS **States (Light Theme)** from [`components/ids/button/design-spec.md`](../ids/button/design-spec.md).
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| danger | active | `var(--color-background-alerting-critical-stronger)` (#730000) |  |  |  |
+| danger | default | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-alerting-transparent-critical)` (rgba(175,0,0,0.00)) | `var(--color-text-white)` (#ffffff) |  |
+| danger | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |  |
+| danger | focus |  | `var(--color-border-alerting-transparent-critical)` (rgba(175,0,0,0.00)) |  |  |
+| danger | hover | `var(--color-background-alerting-critical-strong)` (#910000) |  |  |  |
+| default | default |  | `var(--border-width-border-1)` (var(--border-width-border-default)) |  | radius: `var(--button-control-radius)` |
+| default | disabled |  |  | `var(--color-icon-disabled)` (#757575) |  |
+| default | focus |  | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-brand-base)` (#0076ce) |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)`; radius: `var(--button-focus-ring-radius)` |
+| ghost | default |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
+| ghost | disabled |  |  | `var(--color-text-disabled)` (#757575) |  |
+| ghost | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
+| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
+| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-transparent-brand)` (rgba(255,255,255,0.00)) | `var(--color-text-white)` (#ffffff) |  |
+| primary | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |  |
+| primary | focus |  | `var(--color-border-transparent-brand)` (rgba(255,255,255,0.00)) |  |  |
+| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
+| secondary | active | `var(--color-background-controls-brand-light)` (#d9eaf8) |  |  |  |
+| secondary | default |  | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) |  |
+| secondary | disabled |  | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |  |
+| secondary | focus |  | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| secondary | hover | `var(--color-background-controls-brand-lighter)` (#ebf4fb) |  |  |  |
+| tertiary | active | `var(--color-background-controls-brand-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| tertiary | default |  |  | `var(--color-text-brand-strong)` (#0062ab) |  |
+| tertiary | disabled |  |  | `var(--color-text-disabled)` (#757575) |  |
+| tertiary | hover | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) |  |  |
 
-Synapse chrome applies only via layout aliases and focus ring technique above; **Background / Border / Text/Icon cells are unchanged** from IDS.
-
+<!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Inherit IDS **States (Dark Theme)**. Use standard dark-theme boilerplate: same semantic tokens as Light; resolved dark values live in `components/synapse-theme.css`.
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| danger | active | `var(--color-background-alerting-critical-stronger)` (#910000) |  |  |  |
+| danger | default | `var(--color-background-alerting-critical)` (#c74c4c) | `var(--color-border-alerting-transparent-critical)` (#dd9494) | `var(--color-text-white)` (#ffffff) |  |
+| danger | disabled | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| danger | focus |  | `var(--color-border-alerting-transparent-critical)` (#dd9494) |  |  |
+| danger | hover | `var(--color-background-alerting-critical-strong)` (#af0000) |  |  |  |
+| default | default |  | `var(--border-width-border-1)` (var(--border-width-border-default)) |  | radius: `var(--button-control-radius)` |
+| default | disabled |  |  | `var(--color-icon-disabled)` (#c5c5c5) |  |
+| default | focus |  | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-brand-base)` (#4c9fdd) |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)`; radius: `var(--button-focus-ring-radius)` |
+| ghost | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| ghost | disabled |  |  | `var(--color-text-disabled)` (#9e9e9e) |  |
+| ghost | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
+| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
+| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-transparent-brand)` (#4c9fdd) | `var(--color-text-white)` (#ffffff) |  |
+| primary | disabled | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| primary | focus |  | `var(--color-border-transparent-brand)` (#4c9fdd) |  |  |
+| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
+| secondary | active | `var(--color-background-controls-brand-light)` (#002642) |  |  |  |
+| secondary | default |  | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-brand-strong)` (#94c5ea) |  |
+| secondary | disabled |  | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| secondary | focus |  | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| secondary | hover | `var(--color-background-controls-brand-lighter)` (#003a65) |  |  |  |
+| tertiary | active | `var(--color-background-controls-brand-light)` (#002642) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| tertiary | default |  |  | `var(--color-text-brand-strong)` (#94c5ea) |  |
+| tertiary | disabled |  |  | `var(--color-text-disabled)` (#9e9e9e) |  |
+| tertiary | hover | `var(--color-background-controls-brand-lighter)` (#003a65) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
 
-## Interactions
+<!-- ds:section id=interactions -->
+## Interactions (Component-Specific)
 
-Inherit IDS **Interactions**, **Accessibility**, and **Behavior & guidelines** from [`components/ids/button/design-spec.md`](../ids/button/design-spec.md).
+> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.md.
+> This section documents additional or overriding behaviors for this component.
 
-Synapse addition:
+**Pattern**: action
 
-- Import **`components/synapse-theme.css`** (not `ids-theme.css`) for Synapse Button targets.
-- Use **`programme="synapse"`** on the shared `Button` only for the **`::after` focus ring** rendering path; corner radius comes from theme aliases without a per-component radius override.
+### Behaviors
 
-## Composition & API (runtime)
+- Triggers action on click
+- Shows loading state when async operation in progress
+- Disabled state prevents interaction and removes from tab order
 
-Inherit IDS **Composition & API (runtime)** — see IDS spec for full prop/event contract.
+### Keyboard
 
-| Prop | Synapse note |
+| Key | Action |
 |---|---|
-| `programme` | `"synapse"` — enables `::after` focus ring; radius from theme |
-| `variant` / `size` / `iconSlug` / `iconOnly` / etc. | Same as IDS defaults and validation rules |
+| Enter | Activate the button |
+| Space | Activate the button |
 
-### Spec Accurate Design story defaults
+### ARIA
 
-- `programme: "synapse"`
-- `variant: "primary"`; `size: "lg"`
-- `children: "Button"`
-- Theme: `components/synapse-theme.css`
-
-## Codegen Contract (Framework-Agnostic Blueprint)
-
-### Deterministic structure
-
-Inherit IDS structure — see IDS **Codegen Contract**.
-
-### Theme & programme resolution
-
-- Emit **`var(--button-control-radius)`**, **`var(--button-focus-ring-radius)`**, **`var(--button-focus-ring-offset)`** in component CSS — never hardcoded `px` or programme-specific scale token names.
-- Import **`components/synapse-theme.css`** for Synapse targets.
-- Do **not** duplicate IDS variant/state tables in generated code paths; read IDS spec layer + this deltas table.
-
-| CSS property | Token |
+| Element | Attributes |
 |---|---|
-| `border-radius` | `var(--button-control-radius)` |
-| focus ring `border-radius` | `var(--button-focus-ring-radius)` |
-| focus ring offset | `var(--button-focus-ring-offset)` |
-
-### Behavior / accessibility / assets / fallbacks
-
-Inherit IDS **Codegen Contract** subsections from [`components/ids/button/design-spec.md`](../ids/button/design-spec.md).
-
-### Validation checklist
-
-- [x] IDS baseline referenced; programme deltas table lists all Synapse differences
-- [x] Layout aliases documented and defined in `components/synapse-theme.css`
-- [ ] Shared `Button` uses aliases for radius; `programme="synapse"` applies focus `::after` ring only
-- [ ] No duplicated IDS state matrix in this spec (inherit by reference)
-- [ ] Storybook Synapse Button story imports `components/synapse-theme.css`
+| root | {'element': '<button>', 'aria-disabled': 'true when disabled (prefer over HTML disabled for focusability)', 'aria-busy': 'true when in loading state'} |
 
 ## Source Mapping
 
 | Source | Location |
 |---|---|
-| IDS baseline (authoritative) | `components/ids/button/design-spec.md` |
-| IDS Figma | `data/component-figma-map.json` → Button (`41894:116183`, `9662:25120`) |
-| Theme aliases | `components/synapse-theme.css` → `--button-control-radius`, `--button-focus-ring-radius`, `--button-focus-ring-offset` |
-| Programme delta evidence (focus ring only) | Synapse Hi-Fi `47808:32113` — [Figma](https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/Synapse-Hi-Fi-components?node-id=47808-32113&m=dev) |
-| Implementation | `storybook/src/components/Button.tsx`, `Button.module.css` |
-| Component map | `data/synapse-component-figma-map.json` → Button |
-| Programme registry | `data/programme-inheritance-registry.json` → `button` |
+| Root spec | `components/synapse/root-spec.md` |
+| Figma variables | Extracted via `figma_get_local_variables` MCP tool |
+| Theme CSS | `components/synapse-theme.css` |
+| Component map | `data/synapse-component-figma-map.json` |
+<!-- auto:generated:end -->
