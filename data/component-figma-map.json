@@ -427,10 +427,11 @@
   {
     "category": "Alerts and Notifications",
     "component": "Tooltip",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38201-109592&m=dev",
-    "nodeId": "38201-109592",
-    "fileKey": "VZJ48bbVYrIynw8DdSukWw",
-    "mainShowcaseNodeId": "38201:109592"
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42636-14688&m=dev",
+    "nodeId": "42636-14688",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainShowcaseNodeId": "42636:14688",
+    "componentSetNodeId": "38201:109592"
   },
   {
     "category": "Loading and Progress",

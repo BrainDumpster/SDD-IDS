@@ -39,7 +39,7 @@ Deterministic slot order:
 - Border radius: **0px** on track and fill (sharp corners; Figma `.base progress bar`).
 - Track border: `var(--border-width-border-1)` solid `var(--color-border-accessible)`.
 - Track shell (`ProgressTrack`): sizing only, no border. **`trackBg`** (`z-index: 0`) has accessible border + neutral background, clipped with `clip-path: inset(0 0 0 var(--progress-clip))` so it only paints the **unfilled** width (set from `value` on root). Track background uses `var(--color-background-gray-light)` (#393939 in dark theme).
-- **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored `border` on all sides (top/left/bottom/right). No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
+- **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored border on top, left, and bottom always. **Right border on the fill** only when determinate `value` is `100` (`data-value-full="true"` on root); for partial progress, the fill omits its right edge and the **far-right** accessible border is painted by `trackBg` on the unfilled segment. No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
 - `with-label` (`Determinate/regular` in Figma):
   - Meta row: label left, percentage right, `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`.
   - Gap between meta row and track: `var(--padding-padding-8)` (8px).

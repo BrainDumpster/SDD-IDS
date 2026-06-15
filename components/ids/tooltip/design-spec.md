@@ -5,9 +5,10 @@
 - Component: Tooltip
 - Category: Alerts and Notifications
 - Design system: IDS
-- Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38201-109592&m=dev
-- File key: `VZJ48bbVYrIynw8DdSukWw`
-- Primary frame: `38201:109592` (`Tooltip-Main`)
+- Figma URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42636-14688&m=dev
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
+- Showcase frame: `42636:14688` (`Tooltip`)
+- Component set: `38201:109592` (`Tooltip-Main`)
 - Variant symbols reviewed:
   - `38201:109593..109613` (`Arrow Pointing=Down`, `Arrow Positioned=Start|Center|End`)
   - `38201:109623..109643` (`Arrow Pointing=Up`, `Arrow Positioned=Start|Center|End`)
@@ -42,16 +43,19 @@
 Arrow geometry contract:
 - Up/down pointer triangle: `10x6`.
 - Left/right pointer triangle: `6x10`.
+- Arrow lane (Figma): `12px` on the attachment axis (`h-[12px]` top/bottom, `w-[12px]` left/right).
+- Arrow alignment inset on lane axis: `8px` (`padding-8`) for `start`/`end`.
+- Panel-to-arrow overlap (Figma): `1px` negative margin (`mb-[-1px]` / `mr-[-1px]`) so the pointer tucks under the panel border segment.
+- Arrow vector bleed (Figma): pointer asset extends beyond its `10x6` frame (`inset: -50% -50% -83.33% -30%`) to meet the panel stroke without a gap.
 - Arrow position axis: `start | center | end` for each side.
 - Trigger-to-tooltip spacing (with arrow): `16px` (runtime positioner side offset).
-- Storybook-calibrated arrow alignment insets:
+- Storybook arrow alignment insets:
   - Top/Bottom `start`: `left: 8px`
   - Top/Bottom `end`: `left: calc(100% - 18px)`
   - Left/Right `start`: `top: 8px`
   - Left/Right `end`: `top: calc(100% - 18px)`
-- Left/Right arrow attachment calibration:
-  - Arrow container offset: `left/right: -5px`
-  - Border-notch masking offsets: `start: 7px`, `center: calc(50% - 6px)`, `end: calc(100% - 19px)`
+- Arrow attachment overlap: `4px` outside offset on a `6px`/`10px` pointer (`-4px` container inset) so `2px` of fill tucks over the bordered panel edge (Figma `1px` negative-margin equivalent).
+- Runtime structure (Storybook): border and shadow live on inner `panel`; arrow is a sibling that overlaps the panel edge (no border-notch pseudo-elements).
 - Supported permutations: `4 sides x 3 alignments = 12`.
 ## Tokens
 - Panel background: `var(--color-background-surface-2)`.
@@ -156,14 +160,17 @@ Validation checklist (pass/fail):
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
 ## Source Mapping
 - IDS map file: `data/component-figma-map.json` (`Tooltip` entry).
-- Primary Figma frame: `38201:109592`.
+- Showcase frame: `42636:14688` (`Tooltip`, IDS Design Library).
+- Component set: `38201:109592` (`Tooltip-Main`).
 - Arrow matrix source symbols:
   - Down: `38201:109593`, `38201:109603`, `38201:109613`
   - Up: `38201:109623`, `38201:109633`, `38201:109643`
   - Right: `38201:109653`, `38201:109663`, `38201:109673`
   - Left: `38201:109683`, `38201:109693`, `38201:109703`
+- Last live verification: Figma MCP, file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593`, `38201:109653`, session 2026-06-15.
 
 ## Changelog
+- **2026-06-15**: Refactored Storybook tooltip to match Figma layering — border/shadow on inner `panel`, arrow overlaps panel edge (removed `::before`/`::after` border masks that caused visible gaps).
 - **2026-06-05**: Removed `showArrow` from runtime API; IDS tooltip always renders the directional arrow per Figma (12 placement variants).
 - **2026-06-02**: Fixed tooltip close icon color in dark mode to `#4D4D4D`. Changed in `storybook/src/components/IdsTooltip.module.css` lines 238-242.
 - **2026-06-02**: Fixed tooltip header spacing to `4px` between content and close icon frame. Changed in `storybook/src/components/IdsTooltip.module.css` line 208.
