@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "storybook dev -p 6006",
+    "dev": "rm -rf node_modules/.cache/storybook && storybook dev -p 6006",
     "dev:clean": "rm -rf node_modules/.cache/storybook && storybook dev -p 6006",
     "build": "storybook build",
     "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",
+    "@base-ui-components/utils": "0.2.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

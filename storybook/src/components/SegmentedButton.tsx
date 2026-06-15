@@ -2,21 +2,8 @@ import * as React from "react";
 import type { ReactNode } from "react";
 import { ToggleGroup } from "@base-ui-components/react/toggle-group";
 import { Toggle } from "@base-ui-components/react/toggle";
+import { Icon } from "./Icon";
 import styles from "./SegmentedButton.module.css";
-
-/** Slug keys match filenames in `assets/icons` (without `.svg`). */
-const iconUrlBySlug: Record<string, string> = (() => {
-  const modules = import.meta.glob<string>("../../../assets/icons/*.svg", {
-    eager: true,
-    import: "default",
-  });
-  const out: Record<string, string> = {};
-  for (const path of Object.keys(modules)) {
-    const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
-    if (file && modules[path] != null) out[file] = modules[path] as string;
-  }
-  return out;
-})();
 
 export type SegmentedIconSource = string | ReactNode;
 
@@ -24,6 +11,8 @@ export interface SegmentedButtonItemText {
   value: string;
   label: string;
   disabled?: boolean;
+  /** Storybook / visual QA only — pins hover, press, or focus-visible styling. */
+  simulatedState?: "hover" | "press" | "focus-visible";
 }
 
 export interface SegmentedButtonItemIcon {
@@ -32,6 +21,8 @@ export interface SegmentedButtonItemIcon {
   icon: SegmentedIconSource;
   ariaLabel: string;
   disabled?: boolean;
+  /** Storybook / visual QA only — pins hover, press, or focus-visible styling. */
+  simulatedState?: "hover" | "press" | "focus-visible";
 }
 
 /** Second argument to `onChange` — stable id plus human-facing name for the segment. */
@@ -66,33 +57,16 @@ export type SegmentedButtonProps =
       iconsBasePath?: string;
     });
 
-function resolveIconSrc(slug: string): string | undefined {
-  if (!/^[a-z0-9-]+$/.test(slug)) return undefined;
-  return iconUrlBySlug[slug];
-}
-
 function SegmentIcon({ icon }: { icon: SegmentedIconSource }) {
   if (typeof icon !== "string") {
     return <span className={styles.customIcon}>{icon}</span>;
   }
 
-  const src = resolveIconSrc(icon);
-  if (!src) {
-    return (
-      <span className={styles.iconMissing} title={`Missing icon: ${icon}`}>
-        ?
-      </span>
-    );
-  }
-
   return (
-    <span
-      className={styles.iconMask}
-      style={{
-        WebkitMaskImage: `url("${src}")`,
-        maskImage: `url("${src}")`,
-      }}
-      aria-hidden
+    <Icon
+      shapeName={icon}
+      className={styles.segmentIconGlyph}
+      style={{ width: 16, height: 14 }}
     />
   );
 }
@@ -166,6 +140,7 @@ export function SegmentedButton(props: SegmentedButtonProps) {
             key={item.value}
             value={item.value}
             disabled={groupDisabled || item.disabled}
+            data-simulated-state={item.simulatedState}
             className={(state) =>
               [
                 styles.segment,
@@ -191,6 +166,7 @@ export function SegmentedButton(props: SegmentedButtonProps) {
           value={item.value}
           disabled={groupDisabled || item.disabled}
           aria-label={item.ariaLabel}
+          data-simulated-state={item.simulatedState}
           className={(state) =>
             [
               styles.segment,

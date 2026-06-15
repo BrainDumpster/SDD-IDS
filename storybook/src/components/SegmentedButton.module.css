@@ -5,7 +5,7 @@
   gap: var(--spacing-space-2);
   /* Figma SegmentedButton-Main: padding token is Padding/padding-2 (2px inset). */
   padding: var(--padding-padding-2);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-default) solid var(--color-border-accessible);
   border-radius: var(--corner-radius-radius-2);
   background: var(--color-background-component);
 }
@@ -13,6 +13,22 @@
 .root[data-type="text"] .segmentText {
   flex: 1 1 0;
   min-width: 0;
+}
+
+/* Text variant shell — Figma `8218:13150`: 34px total (1px border + 2px pad + 28px row + 2px pad + 1px border). */
+.root[data-type="text"] {
+  box-sizing: border-box;
+  height: 34px;
+  min-height: 34px;
+  align-items: stretch;
+}
+
+/* Icon variant shell — Figma `8218:13156`: 37px total (1px border + 2px pad + 33px row + 2px pad + 1px border). */
+.root[data-type="icon"] {
+  box-sizing: border-box;
+  height: 37px;
+  min-height: 37px;
+  align-items: stretch;
 }
 
 .segment {
@@ -27,100 +43,142 @@
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   outline: none;
-  /* Invisible edge between segments: use CSS transparent. Do not use
-     --color-border-transparent-brand in dark theme — it resolves to a visible blue (#4c9fdd). */
-  border: var(--border-width-border-1) solid transparent;
+  /* Invisible edge between segments — inset shadow avoids layout shift (preserves 34px text / 37px icon shells). */
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   border-radius: var(--corner-radius-radius-2);
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   transition:
     background-color 120ms ease,
     color 120ms ease,
-    border-color 120ms ease;
+    box-shadow 120ms ease;
 }
 
 .segmentText {
-  min-height: 32px;
+  box-sizing: border-box;
+  height: 28px;
+  min-height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-8);
   white-space: nowrap;
 }
 
 .segmentIcon {
   box-sizing: border-box;
-  width: var(--sizing-size-32);
-  height: var(--sizing-size-32);
-  min-width: var(--sizing-size-32);
-  min-height: var(--sizing-size-32);
   flex-shrink: 0;
-  padding: 0;
+  min-width: var(--sizing-size-32);
+  height: 33px;
+  min-height: 33px;
+  padding: 0 var(--padding-padding-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .segment:disabled {
   cursor: not-allowed;
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-disabled);
   color: var(--color-text-disabled);
 }
 
-.segment:disabled .iconMask {
-  background: var(--color-text-disabled) !important;
+/* Icon segments: tint via segment `color` → Icon `currentColor` (not text tokens). */
+.root[data-type="icon"] .segment:not(:disabled):not(.selected),
+.root[data-type="icon"] .segment:not(:disabled):not(.selected):hover,
+.root[data-type="icon"] .segment:not(:disabled):not(.selected):active,
+.root[data-type="icon"] .segment[data-simulated-state="hover"]:not(:disabled):not(.selected),
+.root[data-type="icon"] .segment[data-simulated-state="press"]:not(:disabled):not(.selected) {
+  color: var(--color-icon-brand-base);
 }
 
-/* Unselected interactions — hover matches Figma: controls-brand-lighter on Option 2 (Hover). */
+/* Unselected interactions — Figma: brand-lighter / brand-light on inactive segments (9015:20990 / 9015:20988). */
 .segment:not(:disabled):not(.selected):hover {
   background: var(--color-background-brand-lighter);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   color: var(--color-text-neutral);
 }
 
 .segment:not(:disabled):not(.selected):active {
   background: var(--color-background-brand-light);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   color: var(--color-text-brand-strong);
 }
 
 .segment:not(:disabled):not(.selected):focus-visible {
   background: var(--color-background-component);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base);
+  outline: none;
+}
+
+/* Storybook / visual QA — pin interaction styling (see StateMatrix stories). */
+.segment[data-simulated-state="hover"]:not(:disabled):not(.selected) {
+  background: var(--color-background-brand-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
+  color: var(--color-text-neutral);
+}
+
+.segment.selected[data-simulated-state="hover"]:not(:disabled) {
+  background: var(--color-background-controls-brand-strong) !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
+  color: var(--color-text-white) !important;
+}
+
+.segment[data-simulated-state="press"]:not(:disabled):not(.selected) {
+  background: var(--color-background-brand-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
+  color: var(--color-text-brand-strong);
+}
+
+.segment.selected[data-simulated-state="press"]:not(:disabled) {
+  background: var(--color-background-controls-brand-stronger) !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
+  color: var(--color-text-white) !important;
+}
+
+.segment[data-simulated-state="focus-visible"]:not(:disabled):not(.selected) {
+  background: var(--color-background-component);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base);
+  outline: none;
+}
+
+.segment.selected[data-simulated-state="focus-visible"]:not(:disabled) {
+  background: var(--color-background-controls-brand-base) !important;
+  box-shadow: none !important;
+  outline: var(--border-width-border-default) dashed var(--color-border-white) !important;
+  outline-offset: calc(-1 * var(--border-width-border-default));
+  color: var(--color-text-white) !important;
 }
 
 /* Selected — Figma uses brand border on segment surface (matches fill; required for icon cells). */
 .selected {
   background: var(--color-background-controls-brand-base) !important;
-  border-color: var(--color-border-brand-base) !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
+  color: var(--color-text-white) !important;
+}
+
+.segment.selected:not(:disabled):hover {
+  background: var(--color-background-controls-brand-strong) !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
+  color: var(--color-text-white) !important;
+}
+
+.segment.selected:not(:disabled):active {
+  background: var(--color-background-controls-brand-stronger) !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
   color: var(--color-text-white) !important;
 }
 
 .segment.selected:not(:disabled):focus-visible {
-  border-color: var(--color-border-brand-base) !important;
+  background: var(--color-background-controls-brand-base) !important;
+  box-shadow: none !important;
+  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline-offset: calc(-1 * var(--border-width-border-default));
+  color: var(--color-text-white) !important;
 }
 
-.segment.selected:not(:disabled):hover {
-  background: var(--color-background-controls-brand-base);
-  color: var(--color-text-white);
-}
-
-/* Icon mask (slug assets) — Figma glyph frame 16×14 inside 32×32 cell */
-.iconMask {
-  display: block;
-  width: 16px;
-  height: 14px;
+/* Figma glyph frame 16×14 inside 33px segment row; sizing also set on Icon `style`. */
+.segmentIconGlyph {
   flex-shrink: 0;
-  background-color: var(--color-icon-brand-base);
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-}
-
-.selected:not(:disabled) .iconMask {
-  background-color: var(--color-icon-white);
-}
-
-.segment:not(:disabled):not(.selected):active .iconMask {
-  background-color: var(--color-icon-brand-base);
 }
 
 .customIcon {
@@ -130,20 +188,4 @@
   width: 16px;
   height: 14px;
   flex-shrink: 0;
-  color: var(--color-icon-brand-base);
-}
-
-.selected:not(:disabled) .customIcon {
-  color: var(--color-icon-white);
-}
-
-.iconMissing {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-critical);
 }

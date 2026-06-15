@@ -50,6 +50,20 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     return mergeConfig(config, {
       plugins: [warnOnNewSpecGeneratedStories()],
+      resolve: {
+        dedupe: ["react", "react-dom"],
+      },
+      optimizeDeps: {
+        // Toggle / ToggleGroup pull CJS subpaths from @base-ui-components/utils; prebundle
+        // avoids intermittent dev "Missing \".\" specifier" resolution failures (Vite 6).
+        include: [
+          "@base-ui-components/react/toggle-group",
+          "@base-ui-components/react/toggle",
+          "@base-ui-components/utils/useStableCallback",
+          "@base-ui-components/utils/useControlled",
+          "@base-ui-components/utils/formatErrorMessage",
+        ],
+      },
       server: {
         fs: {
           allow: [storybookPackageRoot, repoRoot],
