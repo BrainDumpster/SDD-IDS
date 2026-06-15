@@ -17,7 +17,6 @@ export interface IdsTooltipProps {
   arrowAlign?: "start" | "center" | "end";
   /** @deprecated Use `arrowAlign`. */
   align?: "start" | "center" | "end";
-  showArrow?: boolean;
   /** Default `false` — hover/focus dismiss (standard tooltip). */
   closable?: boolean;
   /** Trigger layout; use `block` for full-width row triggers (e.g. Dual List Box items). */
@@ -33,7 +32,6 @@ export function IdsTooltip({
   side = "top",
   arrowAlign,
   align,
-  showArrow = true,
   closable = false,
   triggerDisplay = "inline",
   onOpenChange,
@@ -119,14 +117,12 @@ export function IdsTooltip({
                 }
               }}
             >
-              {showArrow ? (
-                <BaseTooltip.Arrow className={styles.arrow}>
-                  <svg className={styles.arrowSvg} viewBox="0 0 10 6" aria-hidden="true">
-                    <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5H0.5Z" />
-                    <path className={styles.arrowStroke} d="M0.5 5.5L5 0.5L9.5 5.5" />
-                  </svg>
-                </BaseTooltip.Arrow>
-              ) : null}
+              <BaseTooltip.Arrow className={styles.arrow}>
+                <svg className={styles.arrowSvg} viewBox="0 0 10 6" aria-hidden="true">
+                  <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5H0.5Z" />
+                  <path className={styles.arrowStroke} d="M0.5 5.5L5 0.5L9.5 5.5" />
+                </svg>
+              </BaseTooltip.Arrow>
               <div className={styles.content}>
                 {(title || closable) && (
                   <div className={styles.header}>

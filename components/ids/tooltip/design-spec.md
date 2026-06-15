@@ -15,12 +15,12 @@
   - `38201:109683..109703` (`Arrow Pointing=Left`, `Arrow Positioned=Start|Center|End`)
 ## Anatomy
 - `TriggerAnchor`: element that owns tooltip visibility.
-- `TooltipRoot`: positioned wrapper for content and optional arrow.
+- `TooltipRoot`: positioned wrapper for content and arrow.
 - `TooltipPanel`: bordered container with optional header and close action.
 - `Header` (optional): short title text.
 - `BodyContent` (required): free tooltip content region.
 - `CloseAction` (optional): close button using icon `ctrl-close-16` (`12x12` icon with `4px` padding, `20x20` frame).
-- `Arrow` (optional): directional pointer; supports side and alignment matrix.
+- `Arrow` (required): directional pointer; supports side and alignment matrix.
 ## Layout & Measurements
 - Top/bottom arrow variants:
   - outer sample size: `244x143`
@@ -92,7 +92,6 @@ Typography contract:
 - `content: string | ReactNode | TemplateRef | SlotContent` (required, framework-adapted).
 - `title?: string` (optional header).
 - `closable?: boolean` (default `false`).
-- `showArrow?: boolean` (default `true`).
 - `side?: "top" | "bottom" | "left" | "right"` (default `top`).
 - `arrowAlign?: "start" | "center" | "end"` (default `center`).
 - `open?: boolean` / `defaultOpen?: boolean`.
@@ -105,7 +104,7 @@ Deterministic structure:
 1. `TriggerAnchor`
 2. `TooltipPortal` (if framework/library uses portaling)
 3. `TooltipRoot`
-4. optional `Arrow`
+4. `Arrow` (always rendered)
 5. `TooltipPanel`
 6. optional `Header`
 7. `BodyContent`
@@ -114,8 +113,7 @@ Deterministic structure:
 Variant/option matrix:
 - Content mode: `header=false|true`.
 - Close mode: `closable=false|true`.
-- Arrow visibility: `showArrow=false|true`.
-- Arrow placement: `side x arrowAlign` -> 12 valid combinations.
+- Arrow placement: `side x arrowAlign` -> 12 valid combinations (arrow always rendered).
 
 Per-slot style contract:
 - `TooltipPanel`: background/border/shadow/padding from tokens above.
@@ -166,6 +164,7 @@ Validation checklist (pass/fail):
   - Left: `38201:109683`, `38201:109693`, `38201:109703`
 
 ## Changelog
+- **2026-06-05**: Removed `showArrow` from runtime API; IDS tooltip always renders the directional arrow per Figma (12 placement variants).
 - **2026-06-02**: Fixed tooltip close icon color in dark mode to `#4D4D4D`. Changed in `storybook/src/components/IdsTooltip.module.css` lines 238-242.
 - **2026-06-02**: Fixed tooltip header spacing to `4px` between content and close icon frame. Changed in `storybook/src/components/IdsTooltip.module.css` line 208.
 - **2026-06-02**: Fixed tooltip close icon from `shape-x` to `ctrl-close-16.svg` and updated sizing to `12px` icon with `4px` padding (`20px` frame). Changed in `storybook/src/components/IdsTooltip.tsx` line 141 and `storybook/src/components/IdsTooltip.module.css` lines 225-243.

@@ -53,7 +53,6 @@ function MultiSelectTrigger({
               align="start"
               title={`${selectedCount} Items`}
               content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
-              showArrow
             >
               <span style={{ display: "inline-flex" }}>
                 <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />

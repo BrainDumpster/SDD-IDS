@@ -9,7 +9,7 @@
 - Description: Determinate and indeterminate progress with optional label, inline percentage, helper row, and status-colored fills.
 - Status: active
 - Created: 2026-05-22
-- Updated: 2026-05-22
+- Updated: 2026-06-05
 - Primary Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev
 - Primary node id: `11067:54665`
 - Spec-accurate reference node: `11099:57210` (Determinate/regular, Thin, In Progress + helper)
@@ -32,7 +32,7 @@ Deterministic slot order:
 
 ## Layout & Measurements
 - Container width: `100%` of available space (`box-sizing: border-box` on root).
-- Track heights (inner bar height; track border is `var(--border-width-border-1)` outside this height via `box-sizing: content-box` on track):
+- Track heights (`ProgressTrack`, `trackBg`, and `ProgressIndicator` share height; `box-sizing: border-box` so the 1px border renders inside the container and thickness tokens are not inflated):
   - `thin`: `var(--sizing-size-4)` (4px) — Figma `Type=Determinate/Inline, Thickness=Thin`
   - `medium`: `var(--sizing-size-8)` (8px)
   - `thick`: `var(--sizing-size-16)` (16px)
@@ -222,3 +222,17 @@ See **Interactions → Accessibility**.
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57210)` — with-label thin in-progress |
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57186)` — inline medium in-progress |
 | Figma MCP (2026-05-22) | `get_variable_defs(..., nodeId=11067:54665)` |
+
+## Implementation Notes
+
+**Track and fill geometry**
+- **Track border placement**: Set `box-sizing: border-box` on the track shell (`ProgressTrack`), unfilled segment (`trackBg`), and fill (`ProgressIndicator`) so the `var(--border-width-border-1)` border renders inside the container. This preserves thickness dimensions (`thin` 4px, `medium` 8px, `thick` 16px) without adding extra width/height from the border.
+- **Progress fill bar border thickness**: The indicator border is `var(--border-width-border-1)` on all painted edges (right edge added when `data-value-full="true"`).
+- **Corner radius**: Both the track (container) and indicator (progress fill bar) use `border-radius: 0` for sharp corners per Figma.
+
+**Helper status icons**
+- **Icon implementation**: Status icons render via the shared `Icon` component with `variant="img"` (full-color SVG assets, not mask tinting):
+  - `completed-success` → `status-ok-circ-solid.svg`
+  - `completed-warning` → `status-warn-tri-solid.svg`
+  - `failed-error` → `status-critical-square-solid.svg`
+- Icons are **16px** and styled with the `helperIcon` class in the reference implementation (`ProgressBar.module.css`).
