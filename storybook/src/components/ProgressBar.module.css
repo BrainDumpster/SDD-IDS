@@ -102,7 +102,7 @@
   box-sizing: border-box;
   border-style: solid;
   border-width: var(--border-width-border-1);
-  border-right: none;
+  border-right-width: 0;
   border-radius: 0;
   transition: width 300ms ease;
 }
@@ -129,6 +129,7 @@
 
 .root[data-value-full="true"] .indicator {
   border-right-width: var(--border-width-border-1);
+  border-right-style: solid;
 }
 
 .root[data-value-full="true"].in-progress .indicator {
