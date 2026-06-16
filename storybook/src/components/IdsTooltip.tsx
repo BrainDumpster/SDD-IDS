@@ -118,12 +118,15 @@ export function IdsTooltip({
               }}
             >
               <BaseTooltip.Arrow className={styles.arrow}>
-                <svg className={styles.arrowSvg} viewBox="0 0 10 6" aria-hidden="true">
-                  <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5H0.5Z" />
-                  <path className={styles.arrowStroke} d="M0.5 5.5L5 0.5L9.5 5.5" />
-                </svg>
+                <span className={styles.arrowGraphic} aria-hidden="true">
+                  <svg className={styles.arrowSvg} viewBox="0 0 10 6">
+                    <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5L9.5 6.5L0.5 6.5Z" />
+                    <path className={styles.arrowStroke} d="M0.5 5.5L5 0.5L9.5 5.5" />
+                  </svg>
+                </span>
               </BaseTooltip.Arrow>
-              <div className={styles.content}>
+              <div className={styles.panel}>
+                <div className={styles.content}>
                 {(title || closable) && (
                   <div className={styles.header}>
                     {title ? <div className={styles.title}>{title}</div> : <span />}
@@ -140,6 +143,7 @@ export function IdsTooltip({
                   </div>
                 )}
                 <div className={styles.body}>{content}</div>
+                </div>
               </div>
             </BaseTooltip.Popup>
           </BaseTooltip.Positioner>
