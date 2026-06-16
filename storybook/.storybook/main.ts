@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { StorybookConfig } from "@storybook/react-vite";
+import type { Plugin } from "vite";
 import { mergeConfig } from "vite";
 
 // Story globs are resolved from `.storybook/` (not `storybook/`). Use `../../` to reach repo-root
@@ -11,6 +12,29 @@ const storybookPackageRoot = path.resolve(storybookConfigDir, "..");
 const repoRoot = path.resolve(storybookPackageRoot, "..");
 const reactRoot = path.join(storybookPackageRoot, "node_modules/react");
 const reactDomRoot = path.join(storybookPackageRoot, "node_modules/react-dom");
+
+/** New files under storybook-generated are not in the startup importers map until restart. */
+function warnOnNewSpecGeneratedStories(): Plugin {
+  return {
+    name: "warn-on-new-spec-generated-stories",
+    configureServer(server) {
+      server.watcher.on("add", (file) => {
+        const normalized = path.normalize(file);
+        if (
+          !normalized.includes(`${path.sep}storybook-generated${path.sep}`) ||
+          !/\.stories\.(tsx|ts|mdx)$/.test(normalized)
+        ) {
+          return;
+        }
+        server.config.logger.warn(
+          "\n[storybook] New spec-generated story file detected. Reloading Storybook " +
+            "(if errors persist, stop and run: pnpm dev:clean)\n",
+        );
+        server.ws.send({ type: "full-reload" });
+      });
+    },
+  };
+}
 
 const config: StorybookConfig = {
   // Absolute globs keep Vite importer keys aligned with the story index (avoids
@@ -28,6 +52,7 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
+      plugins: [warnOnNewSpecGeneratedStories()],
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {
@@ -38,6 +63,8 @@ const config: StorybookConfig = {
         },
       },
       optimizeDeps: {
+        // Toggle / ToggleGroup pull CJS subpaths from @base-ui-components/utils; prebundle
+        // avoids intermittent dev "Missing \".\" specifier" resolution failures (Vite 6).
         include: [
           "react",
           "react-dom",
@@ -45,6 +72,11 @@ const config: StorybookConfig = {
           "react/jsx-dev-runtime",
           "@base-ui-components/react/popover",
           "@base-ui-components/react/progress",
+          "@base-ui-components/react/toggle-group",
+          "@base-ui-components/react/toggle",
+          "@base-ui-components/utils/useStableCallback",
+          "@base-ui-components/utils/useControlled",
+          "@base-ui-components/utils/formatErrorMessage",
         ],
       },
       server: {

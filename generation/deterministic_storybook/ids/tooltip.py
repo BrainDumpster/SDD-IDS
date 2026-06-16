@@ -31,7 +31,6 @@ const meta: Meta<typeof {component_name}> = {{
     title: "Tooltip title",
     side: "top",
     align: "center",
-    showArrow: true,
     closable: false,
   }},
   argTypes: {{
@@ -39,7 +38,6 @@ const meta: Meta<typeof {component_name}> = {{
     content: {{ control: "text" }},
     side: {{ control: "select", options: ["top", "bottom", "left", "right"] }},
     align: {{ control: "select", options: ["start", "center", "end"] }},
-    showArrow: {{ control: "boolean" }},
     closable: {{ control: "boolean" }},
   }},
 }};

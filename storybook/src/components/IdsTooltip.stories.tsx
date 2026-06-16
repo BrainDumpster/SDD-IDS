@@ -19,14 +19,12 @@ const meta: Meta<typeof IdsTooltip> = {
     content: longContent,
     side: "top",
     arrowAlign: "start",
-    showArrow: true,
     closable: false,
     children: "Hover over me",
   },
   argTypes: {
     side: { control: "select", options: ["top", "bottom", "left", "right"] },
     align: { control: "select", options: ["start", "center", "end"] },
-    showArrow: { control: "boolean" },
     closable: { control: "boolean" },
     title: { control: "text" },
     content: { control: "text" },
@@ -43,7 +41,6 @@ export const NormalNoHeader: Story = {
     title: "",
     content: longContent,
     closable: false,
-    showArrow: true,
     side: "top",
     arrowAlign: "start",
   },
@@ -54,7 +51,6 @@ export const WithHeader: Story = {
     title: "Tooltip Title",
     content: longContent,
     closable: false,
-    showArrow: true,
     side: "top",
     align: "center",
   },
@@ -65,7 +61,6 @@ export const Closable: Story = {
     title: "Tooltip Title",
     content: "This tooltip stays open until the user clicks the close icon.",
     closable: true,
-    showArrow: true,
     side: "top",
     align: "end",
     onClose: () => undefined,
@@ -76,7 +71,6 @@ export const RichContent: Story = {
   args: {
     title: "Custom Content",
     closable: false,
-    showArrow: true,
     side: "right",
     align: "center",
     content: (
@@ -114,7 +108,6 @@ export const ArrowMatrix: Story = {
               content={`${side} - ${align}`}
               side={side}
               align={align}
-              showArrow
             >
               <Button variant="secondary">{`${side}-${align}`}</Button>
             </IdsTooltip>

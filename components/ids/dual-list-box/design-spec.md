@@ -121,7 +121,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - **Drop** preview row uses brand-light fill + brand border (Figma **Drop** / **Drag without selection** container).
   - Emits `onDragDrop({ itemId, from, to, toIndex })` and `onItemsChange`.
 - **Tooltips (optional per item):** when `tooltipTitle` and/or `tooltipDescription` are set, render **`IdsTooltip`** per `components/ids/tooltip/design-spec.md` (reference: `storybook/src/components/IdsTooltip.tsx`, wrapper `storybook/src/components/dualListBoxItemTooltip.tsx`):
-  - Standard mode: `closable=false`, `showArrow=true`, `sideOffset=16` via positioner.
+  - Standard mode: `closable=false`, arrow always rendered, `sideOffset=16` via positioner.
   - Title + description → header (`title`) + body (`content`).
   - Description only → body only (no empty header).
   - Title only → body only (omit header slot per tooltip spec).

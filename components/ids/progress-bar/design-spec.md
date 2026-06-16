@@ -9,7 +9,7 @@
 - Description: Determinate and indeterminate progress with optional label, inline percentage, helper row, and status-colored fills.
 - Status: active
 - Created: 2026-05-22
-- Updated: 2026-05-22
+- Updated: 2026-06-05
 - Primary Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev
 - Primary node id: `11067:54665`
 - Spec-accurate reference node: `11099:57210` (Determinate/regular, Thin, In Progress + helper)
@@ -32,14 +32,14 @@ Deterministic slot order:
 
 ## Layout & Measurements
 - Container width: `100%` of available space (`box-sizing: border-box` on root).
-- Track heights (inner bar height; track border is `var(--border-width-border-1)` outside this height via `box-sizing: content-box` on track):
+- Track heights (`ProgressTrack`, `trackBg`, and `ProgressIndicator` share height; `box-sizing: border-box` so the 1px border renders inside the container and thickness tokens are not inflated):
   - `thin`: `var(--sizing-size-4)` (4px) — Figma `Type=Determinate/Inline, Thickness=Thin`
   - `medium`: `var(--sizing-size-8)` (8px)
   - `thick`: `var(--sizing-size-16)` (16px)
 - Border radius: **`var(--progress-bar-control-radius)`** on track and fill (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Track border: `var(--border-width-border-1)` solid `var(--color-border-accessible)`.
 - Track shell (`ProgressTrack`): sizing only, no border. **`trackBg`** (`z-index: 0`) has accessible border + neutral background, clipped with `clip-path: inset(0 0 0 var(--progress-clip))` so it only paints the **unfilled** width (set from `value` on root). Track background uses `var(--color-background-gray-light)` (#393939 in dark theme).
-- **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored `border` on all sides (top/left/bottom/right). No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
+- **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored border on top, left, and bottom always. **Right border on the fill** only when determinate `value` is `100` (`data-value-full="true"` on root); for partial progress, the fill omits its right edge and the **far-right** accessible border is painted by `trackBg` on the unfilled segment. No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
 - `with-label` (`Determinate/regular` in Figma):
   - Meta row: label left, percentage right, `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`.
   - Gap between meta row and track: `var(--padding-padding-8)` (8px).
@@ -232,3 +232,17 @@ See **Interactions → Accessibility**.
 | Figma MCP (2026-05-22) | `get_variable_defs(..., nodeId=11067:54665)` |
 | IDS Design Library track evidence | `0bHk3XhrjFhowgFkz9yLr4` → `42635:19947` (`.ProgressBar-Element-Amount` track `11099:57042` uses `var(--color-background-gray-light)`) |
 | Figma MCP (2026-06-10) | `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=42635:19947)` — track `gray-light` dark `#393939` |
+
+## Implementation Notes
+
+**Track and fill geometry**
+- **Track border placement**: Set `box-sizing: border-box` on the track shell (`ProgressTrack`), unfilled segment (`trackBg`), and fill (`ProgressIndicator`) so the `var(--border-width-border-1)` border renders inside the container. This preserves thickness dimensions (`thin` 4px, `medium` 8px, `thick` 16px) without adding extra width/height from the border.
+- **Progress fill bar border thickness**: The indicator border is `var(--border-width-border-1)` on all painted edges (right edge added when `data-value-full="true"`).
+- **Corner radius**: Both the track (container) and indicator (progress fill bar) use `border-radius: var(--progress-bar-control-radius)` (IDS resolves to `var(--corner-radius-radius-none)` / 0 — sharp corners per Figma).
+
+**Helper status icons**
+- **Icon implementation**: Status icons render via the shared `Icon` component with `variant="img"` (full-color SVG assets, not mask tinting):
+  - `completed-success` → `status-ok-circ-solid.svg`
+  - `completed-warning` → `status-warn-tri-solid.svg`
+  - `failed-error` → `status-critical-square-solid.svg`
+- Icons are **16px** and styled with the `helperIcon` class in the reference implementation (`ProgressBar.module.css`).

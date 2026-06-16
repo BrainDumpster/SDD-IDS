@@ -149,6 +149,10 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --color-background-brand-stronger: #044b86;
   --color-background-component: #ffffff;
   --color-background-component-light: #f4f4f4;
+  --color-background-container-1: #ffffff;
+  --color-background-container-2: #ffffff;
+  --color-background-container-3: #ffffff;
+  --color-background-container-4: #ffffff;
   --color-background-controls-brand-base: #0672cb;
   --color-background-controls-brand-light: #daeaf7;
   --color-background-controls-brand-lighter: #ebf4fb;
@@ -308,6 +312,7 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   /* --- Sizes (manual seed — align with root-spec; Figma Sizes export is partial) --- */
   --border-width-border-1: 1px;
   --border-width-border-2: 2px;
+  --border-width-border-default: 1px;
   --corner-radius-radius-2: 2px;
   --corner-radius-radius-4: 4px;
   --corner-radius-radius-6: 6px;
@@ -326,6 +331,7 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --padding-padding-10: 10px;
   --padding-padding-12: 12px;
   --padding-padding-16: 16px;
+  --spacing-space-2: 2px;
   --spacing-space-8: 8px;
   --scale-24: 24px;
   --scale-32: 32px;
@@ -492,6 +498,10 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --color-background-brand-stronger: #daeaf7;
   --color-background-component: #111619;
   --color-background-component-light: #1e262c;
+  --color-background-container-1: #171d21;
+  --color-background-container-2: #1a2226;
+  --color-background-container-3: #242f36;
+  --color-background-container-4: #2b3840;
   --color-background-controls-brand-base: #0672cb;
   --color-background-controls-brand-light: #033864;
   --color-background-controls-brand-lighter: #022541;
@@ -624,6 +634,7 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   /* --- Sizes (unchanged) --- */
   --border-width-border-1: 1px;
   --border-width-border-2: 2px;
+  --border-width-border-default: 1px;
   --corner-radius-radius-2: 2px;
   --corner-radius-radius-4: 4px;
   --corner-radius-radius-6: 6px;
@@ -642,6 +653,7 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --padding-padding-10: 10px;
   --padding-padding-12: 12px;
   --padding-padding-16: 16px;
+  --spacing-space-2: 2px;
   --spacing-space-8: 8px;
   --scale-24: 24px;
   --scale-32: 32px;

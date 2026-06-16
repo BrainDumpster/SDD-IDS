@@ -17,7 +17,6 @@ export interface IdsTooltipProps {
   arrowAlign?: "start" | "center" | "end";
   /** @deprecated Use `arrowAlign`. */
   align?: "start" | "center" | "end";
-  showArrow?: boolean;
   /** Default `false` — hover/focus dismiss (standard tooltip). */
   closable?: boolean;
   /** Trigger layout; use `block` for full-width row triggers (e.g. Dual List Box items). */
@@ -33,7 +32,6 @@ export function IdsTooltip({
   side = "top",
   arrowAlign,
   align,
-  showArrow = true,
   closable = false,
   triggerDisplay = "inline",
   onOpenChange,
@@ -119,15 +117,16 @@ export function IdsTooltip({
                 }
               }}
             >
-              {showArrow ? (
-                <BaseTooltip.Arrow className={styles.arrow}>
-                  <svg className={styles.arrowSvg} viewBox="0 0 10 6" aria-hidden="true">
-                    <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5H0.5Z" />
+              <BaseTooltip.Arrow className={styles.arrow}>
+                <span className={styles.arrowGraphic} aria-hidden="true">
+                  <svg className={styles.arrowSvg} viewBox="0 0 10 6">
+                    <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5L9.5 6.5L0.5 6.5Z" />
                     <path className={styles.arrowStroke} d="M0.5 5.5L5 0.5L9.5 5.5" />
                   </svg>
-                </BaseTooltip.Arrow>
-              ) : null}
-              <div className={styles.content}>
+                </span>
+              </BaseTooltip.Arrow>
+              <div className={styles.panel}>
+                <div className={styles.content}>
                 {(title || closable) && (
                   <div className={styles.header}>
                     {title ? <div className={styles.title}>{title}</div> : <span />}
@@ -144,6 +143,7 @@ export function IdsTooltip({
                   </div>
                 )}
                 <div className={styles.body}>{content}</div>
+                </div>
               </div>
             </BaseTooltip.Popup>
           </BaseTooltip.Positioner>

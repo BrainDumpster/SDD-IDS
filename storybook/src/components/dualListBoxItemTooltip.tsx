@@ -8,7 +8,6 @@ export const IDS_TOOLTIP_SPEC_PATH = "components/ids/tooltip/design-spec.md";
 export type DualListBoxItemTooltipOptions = {
   side?: "top" | "bottom" | "left" | "right";
   arrowAlign?: "start" | "center" | "end";
-  showArrow?: boolean;
 };
 
 export function hasDualListBoxItemTooltip(item: DualListBoxItem): boolean {
@@ -17,7 +16,7 @@ export function hasDualListBoxItemTooltip(item: DualListBoxItem): boolean {
 
 /**
  * Wraps a list row with {@link IdsTooltip} when `tooltipTitle` and/or `tooltipDescription` are set.
- * Mapping follows IDS Tooltip spec (standard mode: `closable=false`, `showArrow=true`, `sideOffset=16`).
+ * Mapping follows IDS Tooltip spec (standard mode: `closable=false`, arrow always rendered, `sideOffset=16`).
  */
 export function wrapDualListBoxItemWithIdsTooltip(
   item: DualListBoxItem,
@@ -32,7 +31,6 @@ export function wrapDualListBoxItemWithIdsTooltip(
   const description = item.tooltipDescription?.trim();
   const side = options.side ?? "top";
   const arrowAlign = options.arrowAlign ?? "center";
-  const showArrow = options.showArrow ?? true;
 
   // Title + description → header + body (With header variant).
   if (title && description) {
@@ -42,7 +40,6 @@ export function wrapDualListBoxItemWithIdsTooltip(
         content={description}
         side={side}
         arrowAlign={arrowAlign}
-        showArrow={showArrow}
         closable={false}
         triggerDisplay="block"
       >
@@ -58,7 +55,6 @@ export function wrapDualListBoxItemWithIdsTooltip(
         content={description}
         side={side}
         arrowAlign={arrowAlign}
-        showArrow={showArrow}
         closable={false}
         triggerDisplay="block"
       >
@@ -73,7 +69,6 @@ export function wrapDualListBoxItemWithIdsTooltip(
       content={title}
       side={side}
       arrowAlign={arrowAlign}
-      showArrow={showArrow}
       closable={false}
       triggerDisplay="block"
     >
