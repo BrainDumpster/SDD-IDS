@@ -28,6 +28,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Dividers/baseline use `1px` borders.
 - Label width is content-driven; short labels (1-3 words) are preferred.
 - Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
+- Overflow trigger caret icon: `10px` height and `10px` width.
 ## Tokens
 - **Typography**
   - `Body 2` (`14/20`) for tab labels.
