@@ -47,6 +47,8 @@ export interface TreeItemClickDetail {
 }
 
 export interface IdsTreeProps {
+  /** Synapse programme: subtler selected row (no brand rail / fill). */
+  programme?: "ids" | "synapse";
   /** Mode A: hierarchical data. Mutually exclusive with compositional `children`. */
   items?: IdsTreeNode[];
   /** Mode B: nested `IdsTreeItem` / `IdsTreeItemLabel` (no `items`). */
@@ -75,6 +77,7 @@ type FlatRow = {
 };
 
 export function IdsTree({
+  programme = "ids",
   items: itemsProp,
   children,
   selectedId: selectedIdProp,
@@ -106,6 +109,7 @@ export function IdsTree({
   const rowRefs = useRef<Map<string, HTMLLIElement>>(new Map());
 
   const selectedId = selectedIdProp ?? selectedIdUncontrolled;
+  const isSynapse = programme === "synapse";
 
   const rows = useMemo(
     () => enrichRowsWithAria(flattenVisibleRows(items, expandedIds)),
@@ -228,9 +232,12 @@ export function IdsTree({
 
   return (
     <ul
-      className={styles.root}
+      className={[styles.root, isSynapse ? styles.programmeSynapse : ""]
+        .filter(Boolean)
+        .join(" ")}
       role="tree"
       aria-label="Tree"
+      data-programme={programme}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onFocus={(e) => {
@@ -247,6 +254,7 @@ export function IdsTree({
           isFocused={focusedId === row.node.id}
           treeShowIcon={treeShowIcon}
           treeShowBadge={treeShowBadge}
+          programme={programme}
           rowRef={(el) => {
             if (el) rowRefs.current.set(row.node.id, el);
             else rowRefs.current.delete(row.node.id);
@@ -390,6 +398,7 @@ function TreeRow({
   isFocused,
   treeShowIcon,
   treeShowBadge,
+  programme,
   rowRef,
   onActivate,
   onToggleExpand,
@@ -400,6 +409,7 @@ function TreeRow({
   isFocused: boolean;
   treeShowIcon: boolean;
   treeShowBadge: boolean;
+  programme: "ids" | "synapse";
   rowRef: (el: HTMLLIElement | null) => void;
   onActivate: () => void;
   onToggleExpand: () => void;
@@ -410,6 +420,10 @@ function TreeRow({
   const showIcon = resolveShowIcon(node, treeShowIcon);
   const showBadge = resolveShowBadge(node, treeShowBadge);
   const iconShape = node.iconShape ?? DEFAULT_ICON_SHAPE;
+  const iconColor =
+    programme === "synapse" || !isSelected
+      ? "var(--color-icon-neutral)"
+      : "var(--color-icon-brand-base)";
 
   return (
     <li
@@ -453,7 +467,7 @@ function TreeRow({
               .filter(Boolean)
               .join(" ")}
             style={{ width: 12, height: 12 }}
-            color={isSelected ? "var(--color-icon-brand-base)" : "var(--color-icon-neutral)"}
+            color={iconColor}
           />
         </button>
       ) : (
@@ -476,7 +490,7 @@ function TreeRow({
             shapeName={iconShape}
             className={styles.folderIcon}
             style={{ width: 12, height: 12 }}
-            color={isSelected ? "var(--color-icon-brand-base)" : "var(--color-icon-neutral)"}
+            color={iconColor}
           />
         </button>
       ) : null}

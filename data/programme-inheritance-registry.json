@@ -24,6 +24,28 @@
   "components": [
     {
       "programme": "synapse",
+      "slug": "main-menu-top",
+      "displayName": "Main Menu Top",
+      "registrySlug": "mainmenutop",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "main-menu-top",
+      "idsBaselineSpecPath": "components/ids/main-menu-top/design-spec.md",
+      "programmeSpecPath": "components/synapse/main-menu-top/design-spec.md",
+      "programmeFigmaNodeId": "11067:54522",
+      "idsFigmaNodeId": "10189:30280",
+      "mainComponentSetNodeId": "10189:30280",
+      "elementPrimaryNodeId": "11099:56576",
+      "specAccurateNodeId": "10189:30280",
+      "mastheadUsageNodeId": "42820:100757",
+      "dropdownMenuSampleNodeId": "43603:179106",
+      "sharedImplementation": "storybook/src/components/MainMenuTop.tsx",
+      "specContract": "storybook/src/spec-contracts/synapse-main-menu-top.contract.ts",
+      "storybookPath": "storybook/src/components/SynapseMainMenuTop.stories.tsx",
+      "lastVerified": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "programme": "synapse",
       "slug": "left-nav",
       "displayName": "Left Nav",
       "registrySlug": "leftnav",
@@ -537,7 +559,7 @@
       "sharedImplementation": "storybook/src/components/IdsTooltip.tsx",
       "programmeWrapper": "storybook/src/components/SynapseTooltip.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-tooltip.contract.ts",
-      "storybookPath": "storybook-generated/synapse/src/components/Tooltip.stories.tsx",
+      "storybookPath": "storybook/src/components/SynapseTooltip.stories.tsx",
       "themeAlias": "--tooltip-control-radius",
       "lastVerified": "2026-06-10",
       "status": "active"

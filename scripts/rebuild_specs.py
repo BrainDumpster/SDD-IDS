@@ -9,6 +9,10 @@ Sources of truth:
 - synapse-theme.css (Figma-extracted token values)
 - *.module.css files (which tokens are used, in which states)
 - synapse-component-figma-map.json (Figma node IDs)
+
+Discovery rules:
+- Skip ``Ids*`` Storybook implementation mirrors (canonical specs use Figma slugs, e.g. ``tree/`` not ``idstree/``).
+- Never overwrite hand-authored specs (files without ``<!-- auto:generated:start -->``).
 - synapse.yaml (breakpoints, elevation, typography, framework options)
 - synapse-component-aliases.json (name mapping)
 - synapse-interaction-templates.json (component-specific interactions)
@@ -215,6 +219,39 @@ def resolve_figma_entry(slug: str, figma_map: list, aliases: dict) -> dict:
 
 def slugify(name: str) -> str:
     return re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
+
+
+AUTO_GENERATED_MARKER = "<!-- auto:generated:start -->"
+
+# Storybook implementation names covered by a hand-authored programme spec at another slug.
+CANONICAL_HAND_AUTHORED_SPECS: dict[str, str] = {
+    "MainMenuTop": "main-menu-top",
+    "SuggestedPrompt": "suggested-prompt",
+}
+
+# Internal sub-components documented inside a parent programme spec (no separate folder).
+SKIP_IMPLEMENTATION_COMPONENTS = frozenset({
+    "MainMenuTopMenu",
+})
+
+
+def is_ids_implementation_mirror(name: str) -> bool:
+    """True for shared IDS reference implementations (IdsTree, IdsAccordion, …)."""
+    return name.startswith("Ids")
+
+
+def is_auto_generated_spec(spec_path: Path) -> bool:
+    if not spec_path.is_file():
+        return False
+    return AUTO_GENERATED_MARKER in spec_path.read_text(encoding="utf-8")
+
+
+def has_hand_authored_canonical_spec(implementation_name: str) -> bool:
+    canonical_slug = CANONICAL_HAND_AUTHORED_SPECS.get(implementation_name)
+    if not canonical_slug:
+        return False
+    canonical_path = SPECS_DIR / canonical_slug / "design-spec.md"
+    return canonical_path.is_file() and not is_auto_generated_spec(canonical_path)
 
 
 def _load_config() -> dict:
@@ -1066,10 +1103,22 @@ def main():
 
     # --- Discover components ---
     components = {}
+    skipped_ids = 0
+    skipped_canonical = 0
+    skipped_subcomponent = 0
     for css_file in sorted(CSS_DIR.glob("*.module.css")):
         name = css_file.stem.replace(".module", "")
         tsx_file = CSS_DIR / f"{name}.tsx"
         if not tsx_file.exists():
+            continue
+        if is_ids_implementation_mirror(name):
+            skipped_ids += 1
+            continue
+        if name in SKIP_IMPLEMENTATION_COMPONENTS:
+            skipped_subcomponent += 1
+            continue
+        if has_hand_authored_canonical_spec(name):
+            skipped_canonical += 1
             continue
 
         anatomy = extract_anatomy(css_file)
@@ -1083,7 +1132,14 @@ def main():
             "states": design_states,
         }
 
-    print(f"Discovered {len(components)} components\n")
+    print(f"Discovered {len(components)} components")
+    if skipped_ids:
+        print(f"Skipped {skipped_ids} Ids* implementation mirrors")
+    if skipped_subcomponent:
+        print(f"Skipped {skipped_subcomponent} parent-covered sub-components")
+    if skipped_canonical:
+        print(f"Skipped {skipped_canonical} components with hand-authored canonical specs")
+    print()
 
     # --- Rebuild registry ---
     registry = rebuild_registry(components, theme, figma_map, aliases)
@@ -1094,10 +1150,16 @@ def main():
 
     # --- Generate component specs ---
     specs_written = 0
+    specs_skipped_hand_authored = 0
     for name, data in sorted(components.items()):
         slug = slugify(name)
 
         if args.component and slug != slugify(args.component):
+            continue
+
+        spec_path = SPECS_DIR / slug / "design-spec.md"
+        if spec_path.exists() and not is_auto_generated_spec(spec_path):
+            specs_skipped_hand_authored += 1
             continue
 
         fig = resolve_figma_entry(slug, figma_map, aliases)
@@ -1116,10 +1178,12 @@ def main():
 
         spec_dir = SPECS_DIR / slug
         spec_dir.mkdir(parents=True, exist_ok=True)
-        (spec_dir / "design-spec.md").write_text(spec)
+        spec_path.write_text(spec, encoding="utf-8")
         specs_written += 1
 
     print(f"Specs generated: {specs_written} -> {SPECS_DIR}/*/design-spec.md")
+    if specs_skipped_hand_authored:
+        print(f"Specs preserved (hand-authored): {specs_skipped_hand_authored}")
 
     # --- Summary ---
     total_tokens = sum(len(d["tokens"]) for d in components.values())

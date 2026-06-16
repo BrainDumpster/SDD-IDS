@@ -41,21 +41,40 @@
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
 
 Arrow geometry contract:
-- Up/down pointer triangle: `10x6`.
-- Left/right pointer triangle: `6x10`.
+- Up/down pointer triangle: `10x6` (layout box).
+- Left/right pointer triangle: `6x10` (layout box); **same `10x6` SVG** rotated inside `.arrowGraphic` (do not scale SVG to `6x10`).
 - Arrow lane (Figma): `12px` on the attachment axis (`h-[12px]` top/bottom, `w-[12px]` left/right).
 - Arrow alignment inset on lane axis: `8px` (`padding-8`) for `start`/`end`.
 - Panel-to-arrow overlap (Figma): `1px` negative margin (`mb-[-1px]` / `mr-[-1px]`) so the pointer tucks under the panel border segment.
-- Arrow vector bleed (Figma): pointer asset extends beyond its `10x6` frame (`inset: -50% -50% -83.33% -30%`) to meet the panel stroke without a gap.
+- Arrow fill bleed: SVG fill extends `0.5px` past triangle base (`L9.5 6.5L0.5 6.5Z`) to cover the panel border line.
+- Arrow stroke: `stroke-linecap: butt`, `stroke-linejoin: miter`; open path on the two sloped edges only.
 - Arrow position axis: `start | center | end` for each side.
-- Trigger-to-tooltip spacing (with arrow): `16px` (runtime positioner side offset).
-- Storybook arrow alignment insets:
-  - Top/Bottom `start`: `left: 8px`
-  - Top/Bottom `end`: `left: calc(100% - 18px)`
-  - Left/Right `start`: `top: 8px`
-  - Left/Right `end`: `top: calc(100% - 18px)`
-- Arrow attachment overlap: `4px` outside offset on a `6px`/`10px` pointer (`-4px` container inset) so `2px` of fill tucks over the bordered panel edge (Figma `1px` negative-margin equivalent).
-- Runtime structure (Storybook): border and shadow live on inner `panel`; arrow is a sibling that overlaps the panel edge (no border-notch pseudo-elements).
+- Trigger-to-tooltip spacing (with arrow): `16px` (runtime positioner `sideOffset`).
+
+Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`):
+- `TooltipRoot` / `.popup`: transparent positioning shell (`overflow: visible`; no border/shadow).
+- `TooltipPanel` / `.panel`: bordered content surface (background, border, shadow, `box-sizing: border-box`).
+- `Arrow` / `.arrow`: absolute sibling above `.panel`; overlaps panel edge (no `::before`/`::after` border-notch masks).
+
+Storybook alignment insets (cross-axis; applies to all sides on that axis):
+- Top/Bottom tooltips — `start`: `left: 8px`; `center`: `left: calc(50% - 5px)`; `end`: `left: calc(100% - 18px)`.
+- Left/Right tooltips — `start`: `top: 8px`; `center`: `top: calc(50% - 5px)`; `end`: `top: calc(100% - 18px)`.
+
+Storybook attachment-axis calibration (Base UI `data-side` on arrow; tuned against IDS Design Library `38201:109592`):
+
+| Runtime `side` | `arrowAlign` | Base UI arrow `data-side` | Attachment offset | Notes |
+|---|---|---|---|---|
+| `bottom` | `start` / `center` / `end` | `bottom` | `top: -5px` | `1px` up from default `-4px` |
+| `top` | `start` / `center` / `end` | `top` | `bottom: -5px` | `1px` down from default `-4px` |
+| `left` | `start` | `left` | `right: -5px` | `1px` right from default `-4px` |
+| `left` | `center` | `left` | `right: -5px` | `1px` right from default `-4px` |
+| `left` | `end` | `left` | `right: -5px` | `1px` right from default `-4px` |
+| `right` | `start` | `right` | `left: -5px` | `1px` left from default `-4px` |
+| `right` | `center` | `right` | `left: -5px` | `1px` left from default `-4px` |
+| `right` | `end` | `right` | `left: -3px` | `1px` right from default `-4px` |
+
+Default attachment offset before per-placement tuning: `-4px` on the attachment axis (`top`/`bottom`/`left`/`right` as appropriate).
+
 - Supported permutations: `4 sides x 3 alignments = 12`.
 ## Tokens
 
@@ -133,7 +152,7 @@ Per-slot style contract:
 - `Header`: Body 2 Medium + strong text token.
 - `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots.
 - `CloseAction`: renders icon component with `shapeName="ctrl-close-16"` at `12x12` within `20x20` frame with `4px` padding.
-- `Arrow`: shares panel surface and border tokens; size/rotation depends on side and must apply the alignment/attachment calibration values above.
+- `Arrow`: shares panel surface and border tokens; always renders `10x6` SVG inside `.arrowGraphic` (rotate per side; never resize SVG to `6x10`); apply cross-axis insets and per-placement attachment offsets from the calibration table above.
 
 Behavior contract:
 - `closable=false`: hover/focus transient pattern (auto closes on leave/blur).
@@ -180,6 +199,7 @@ Validation checklist (pass/fail):
 - Last live verification: Figma MCP, file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593`, `38201:109653`, session 2026-06-15.
 
 ## Changelog
+- **2026-06-15**: Documented Storybook arrow calibration matrix (12 placements), `.arrowGraphic`/`10x6` SVG sizing rule, and panel/arrow layering in Layout & Measurements; values synced from `IdsTooltip.module.css`.
 - **2026-06-15**: Refactored Storybook tooltip to match Figma layering — border/shadow on inner `panel`, arrow overlaps panel edge (removed `::before`/`::after` border masks that caused visible gaps).
 - **2026-06-05**: Removed `showArrow` from runtime API; IDS tooltip always renders the directional arrow per Figma (12 placement variants).
 - **2026-06-02**: Fixed tooltip close icon color in dark mode to `#4D4D4D`. Changed in `storybook/src/components/IdsTooltip.module.css` lines 238-242.
