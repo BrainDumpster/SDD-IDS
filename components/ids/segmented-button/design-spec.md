@@ -51,14 +51,14 @@
   - Row height: **28px** per segment (`4px + 20px + 4px` padding/line box).
   - Padding: `var(--padding-padding-4)` vertical, `var(--padding-padding-8)` horizontal.
   - Label: no wrap in reference layout (`whitespace: nowrap`); overflow behavior is runtime-defined (ellipsis + `title`/`aria-label` recommended for long strings).
-- **Icon variant total height (Figma `8218:13156`, verified 2026-06-05):** **37px** outer frame (`Type=Icon, # Options=2`).
+- **Icon variant total height (Figma `8218:13156`, verified 2026-06-05):** **39px** outer frame (`Type=Icon, # Options=2`).
   - **Root outline:** `var(--border-width-border-default)` = **1px** solid `var(--color-border-accessible)` (`Border Width/border-default`).
   - **Root inset:** `var(--padding-padding-2)` = **2px** on all sides.
   - **Segment row:** **33px** tall option cells (Figma instance `11925:235931` / component `10148:29585`: **32×33**).
   - **Segment horizontal padding:** `var(--padding-padding-8)` = **8px** (`8 + 16 + 8 = 32px` min cell width).
   - **Segment vertical padding (Figma auto-layout):** **9.5px** top/bottom around the glyph (effective **~8.5px** when reserving **1px** inset edge in CSS `border-box` — reference implementation uses **33px** row height + flex center for the **14px** glyph).
   - **Icon glyph:** **16×14** (`w-[16px] h-[14px]` in Figma dev output).
-  - **Height budget:** `1px + 2px + 33px + 2px + 1px = 37px` (`border-box` on root).
+  - **Height budget:** `1px + 2px + 33px + 2px + 1px = 39px` (`border-box` on root).
 - **Icon segment (implementation)**
   - Row height: **33px** per segment cell (not `32×32`).
   - Horizontal padding: `var(--padding-padding-8)`.
