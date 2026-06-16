@@ -1,12 +1,15 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import chevDownIcon from "../../../assets/icons/chev-down.svg";
+import shapePlusIcon from "../../../assets/icons/shape-plus.svg";
 import stateAddCircSolidIcon from "../../../assets/icons/state-add-circ-solid.svg";
 import arrowTriDownSolidIcon from "../../../assets/icons/arrow-tri-down-solid.svg";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
+import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
 
-interface TabItem {
+export interface TabItem {
   id: string;
   label: string;
   panel: ReactNode;
@@ -29,6 +32,8 @@ interface TabsProps {
   /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-2)`. */
   surface?: TabsSurface;
   moreLabel?: string;
+  /** `synapse` → Nav Tab chrome (32px, closable defaults, `shape-plus` add). */
+  programme?: "ids" | "synapse";
 }
 
 export function Tabs({
@@ -42,7 +47,9 @@ export function Tabs({
   variant = "secondary",
   surface = "elevated",
   moreLabel = "More",
+  programme = "ids",
 }: TabsProps) {
+  const isSynapse = programme === "synapse";
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const [tabs, setTabs] = useState<TabItem[]>(items);
@@ -65,9 +72,7 @@ export function Tabs({
     const recomputeVisibleCount = () => {
       const available = list.clientWidth;
       const moreWidth = 84;
-      const addWidth = showAddTab
-        ? Math.min(220, Math.max(56, 36 + addTabLabel.length * 8))
-        : 0;
+      const addWidth = showAddTab ? (isSynapse ? 36 : Math.min(220, Math.max(56, 36 + addTabLabel.length * 8))) : 0;
       const perTab = Math.max(minTabWidth, 80);
       const maxVisible = Math.max(
         1,
@@ -80,7 +85,7 @@ export function Tabs({
     const ro = new ResizeObserver(recomputeVisibleCount);
     ro.observe(list);
     return () => ro.disconnect();
-  }, [tabs.length, showAddTab, minTabWidth, addTabLabel]);
+  }, [tabs.length, showAddTab, minTabWidth, addTabLabel, isSynapse]);
 
   const { visibleTabs, hiddenTabs } = useMemo(() => {
     if (tabs.length <= visibleCount) return { visibleTabs: tabs, hiddenTabs: [] };
@@ -121,7 +126,12 @@ export function Tabs({
   };
 
   return (
-    <div ref={rootRef} className={styles.root} data-surface={surface}>
+    <div
+      ref={rootRef}
+      className={[styles.root, isSynapse ? styles.programmeSynapse : ""].filter(Boolean).join(" ")}
+      data-surface={surface}
+      data-programme={programme}
+    >
       <div ref={listRef} className={styles.listWrap}>
         <div className={styles.list} role="tablist" aria-label="Tabs">
           {visibleTabs.map((item) => (
@@ -145,7 +155,7 @@ export function Tabs({
                 {item.icon ? <span className={styles.tabIcon}>{item.icon}</span> : null}
                 <span className={styles.tabLabel}>{item.label}</span>
               </span>
-              {item.closable ? (
+              {(item.closable ?? isSynapse) ? (
                 <span
                   className={styles.close}
                   role="button"
@@ -184,15 +194,21 @@ export function Tabs({
                 aria-label="More tabs"
               >
                 {overflowLabel ?? moreLabel}
-                <img src={arrowTriDownSolidIcon} alt="" className={styles.moreIcon} />
+                <img
+                  src={isSynapse ? chevDownIcon : arrowTriDownSolidIcon}
+                  alt=""
+                  className={styles.moreIcon}
+                />
               </Menu.Trigger>
               <Menu.Portal>
                 <Menu.Positioner side="bottom" align="end" sideOffset={4}>
-                  <Menu.Popup className={styles.moreMenu}>
+                  <Menu.Popup
+                    className={isSynapse ? synapseMenuStyles.popup : styles.moreMenu}
+                  >
                     {hiddenTabs.map((tab) => (
                       <Menu.Item
                         key={tab.id}
-                        className={styles.moreItem}
+                        className={isSynapse ? synapseMenuStyles.optionRow : styles.moreItem}
                         onClick={() => handleHiddenTabSelect(tab.id, tab.label)}
                       >
                         {tab.label}
@@ -214,8 +230,12 @@ export function Tabs({
               aria-label={addTabLabel}
               onClick={onAddTab}
             >
-              <img src={stateAddCircSolidIcon} alt="" className={styles.addIcon} />
-              <span className={styles.addLabel}>{addTabLabel}</span>
+              <img
+                src={isSynapse ? shapePlusIcon : stateAddCircSolidIcon}
+                alt=""
+                className={styles.addIcon}
+              />
+              {isSynapse ? null : <span className={styles.addLabel}>{addTabLabel}</span>}
             </button>
           ) : null}
         </div>

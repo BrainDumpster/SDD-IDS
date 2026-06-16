@@ -104,8 +104,9 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
   - Detailed row references: `631px` (`42903:139032` family), runtime still container-driven.
 - **Accent rail treatment:** default is `box-shadow: inset 4px 0 0 0 var(--inline-rail)` where `--inline-rail` is the severity solid alerting background token.  
   `warning-minor` uses a dedicated `::before` pseudo-element with the same solid minor fill plus warning-accessible edge stroke token.
-- **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`; with action: `gap: var(--spacing-space-16)`.
-- **Detailed** (`density: detailed`): height is content-driven (no `min-height`); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `height: 44px; align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; action button renders inline with title (`gap: 4px`) inside the title row, not in the trailing column.
+- **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
+- **Detailed** (`density: detailed`): height is content-driven (no `min-height`); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
+- **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
 - **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message compact = **Body 2** `font-weight: 400`; message detailed = **Body 2** `font-weight: 500`; text color `var(--color-static-gray-900)`.
 - **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
 - **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, label `var(--color-text-brand-strong)`, `font-weight: 500`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
@@ -118,7 +119,7 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 - Inset rail: `box-shadow: inset 4px 0 0 0 var(--color-background-alerting-critical)`.
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
-- Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) and optional dismiss icon button; link behavior/appearance follows inline link contract and does not change other visual attributes.
+- Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) aligned to content row top (`12px` via action-only negative margin); dismiss icon at trailing cluster `16px` top inset (unchanged); **gap between action and dismiss: `var(--spacing-space-16)`** when both are in the trailing cluster; link behavior/appearance follows inline link contract and does not change other visual attributes.
 ## Tokens
 
 ### Global — severity surfaces (banner)
@@ -287,7 +288,7 @@ Deterministic structure:
      - optional `Title` only (detailed, no action)
      - `Message` (required)
      - optional `InlineLink`
-3. `TrailingControls` — `shrink: 0`; compact: `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`; detailed: `height: 44px; align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`
+3. `TrailingControls` — `shrink: 0`; `gap: var(--spacing-space-16)` between `ActionButton` and `DismissButton` when both present; compact: `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`; detailed: `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; detailed `ActionButton` only: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` to align with content `padding-block` without moving dismiss
    - optional `ActionButton` (outlined IDS Button small) — compact only; detailed action is in `TitleRow`
    - optional `DismissButton`
 
@@ -357,6 +358,8 @@ Validation checklist:
 - [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
 - [ ] Light/dark state tables remain parallel (same `var(--...)` names).
 - [ ] Dismiss hit target ≥ `32×32` on inline and global.
+- [ ] Inline trailing cluster: `var(--spacing-space-16)` gap between outlined action and dismiss when both present (compact + detailed).
+- [ ] Detailed inline action top aligns with content `padding-block` (`12px`); dismiss (x) remains at trailing `16px` top inset.
 - [ ] `role="alert"` and live-region behavior verified for dynamic global updates.
 - [ ] Fallback rules tested for invalid display/severity/density and missing icon slug.
 ### Reusable component generation contract
@@ -429,8 +432,10 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Root**: `gap: var(--spacing-space-12)` between `.inlineMain` and `.inlineTrailing`
 - **`.inlineText`**: `padding-right: var(--padding-padding-16)`; no `gap` between children
 - **`.inlineTitleRow`** (detailed with title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title uses `flex: 1 1 auto; min-width: 0`; action button uses `flex-shrink: 0`
-- **Compact `.inlineTrailing`**: `align-items: center; height: 40px; padding: var(--padding-padding-8) var(--padding-padding-16)`. With action: `gap: var(--spacing-space-16)`
-- **Detailed `.inlineTrailing`**: `align-items: flex-start; height: 44px; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`
+- **`.inlineTrailing`**: `gap: var(--spacing-space-16)` between outlined action and dismiss when both render in trailing (compact + detailed)
+- **Compact `.inlineTrailing`**: `align-items: center; height: 40px; padding: var(--padding-padding-8) var(--padding-padding-16)` (with action: `padding-block: var(--padding-padding-8)`)
+- **Detailed `.inlineTrailing`**: `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`
+- **Detailed `.inlineActionOutlined`**: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — action only; dismiss position unchanged
 - **Action button placement**: compact → inside `.inlineTrailing`; detailed with title → inside `.inlineTitleRow` alongside the title. Use `showTitle && showAction` to determine placement
 - **`showTrailing`**: `(!showTitle && showAction) || showDismiss`
 

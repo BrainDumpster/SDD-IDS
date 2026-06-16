@@ -43,6 +43,198 @@ The agent will ask for **programme** (IDS / DAP / Synapse), **component name**, 
 
 **Prerequisites:** Figma MCP in the IDE (recommended) or `FIGMA_TOKEN` in `.env` for REST fallback.
 
+### Which wizard?
+
+| Situation | Wizard |
+|-----------|--------|
+| New **IDS-only** component (no programme fork) | Intake wizard above → [`docs/design-spec-intake.md`](docs/design-spec-intake.md) |
+| **Synapse / DAP** component inherits IDS anatomy + API | Programme inheritance wizard below → [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md) |
+| Programme-native UI with no IDS counterpart | Intake wizard → **standalone** spec |
+
+## Generate UI code with an AI agent (non-developer guide)
+
+After a `design-spec.md` exists, you can ask an AI agent to **turn the spec into real UI code** (for example a React component and its styles). The agent reads the spec files — it should not guess colours, spacing, or behaviour.
+
+Works in **Cursor**, **Windsurf Cascade**, and similar IDEs. You do **not** need to run Python scripts or APIs for a basic chat-based workflow.
+
+### Two ways to work
+
+| Approach | Best for | What you need |
+|----------|----------|----------------|
+| **A. Full SDD-IDS repo open** | Teams maintaining specs inside this project | Clone/open SDD-IDS; agent reads files from `components/…` automatically |
+| **B. Portable spec bundle only** | Teams generating in **their own app repo** without cloning SDD-IDS | Copy only the files listed in [Portable bundle](#portable-spec-bundle-generate-without-cloning-sdd-ids) into their project |
+
+### What you tell the agent (inputs)
+
+You only need to decide these in plain language:
+
+| Input | What it means | Example |
+|-------|----------------|---------|
+| **Programme** | Design system flavour | IDS, Synapse, or DAP |
+| **Component** | Which UI piece to build | Button, Card, App Launcher |
+| **Target framework** | Where the code will run | React, Angular, Vue, Lit |
+| **Style approach** (optional) | How styles are written | CSS Modules, SCSS, Base UI + CSS |
+
+You **do not** paste Figma URLs again if the design spec was already created and verified. Figma is for **creating** specs; **code generation** uses the spec + theme files.
+
+**Optional:** say whether you want a **Storybook preview story** (visual check only — separate from production app code).
+
+### Step by step (full repo — approach A)
+
+1. Open the **SDD-IDS** workspace in your AI IDE.
+2. Confirm the component has a `design-spec.md` (use the [intake wizard](#create-a-new-design-spec-intake-wizard) first if not).
+3. Start a **new agent chat**.
+4. Paste a [generation prompt](#copy-paste-prompts) below.
+5. Review the output; ask the agent to fix anything that does not match the spec.
+
+### What the agent reads (you do not paste these manually)
+
+When SDD-IDS is open, the agent loads layers **in order** (most specific wins):
+
+1. Programme component spec — e.g. `components/synapse/button/design-spec.md` (if it exists)
+2. Programme root rules — e.g. `components/synapse/root-spec.md` (if it exists)
+3. IDS component spec — e.g. `components/ids/button/design-spec.md`
+4. IDS root rules — `components/ids/root-spec.md`
+5. Theme CSS — `components/ids-theme.css`, then programme theme (e.g. `components/synapse-theme.css`)
+
+### Portable spec bundle (generate without cloning SDD-IDS)
+
+If your team works in **another repository**, copy only the **design contract files** for the component(s) you need. You do **not** need Qdrant, Ollama, Figma MCP, or the rest of SDD-IDS to generate code from specs.
+
+**Suggested folder in your app repo** (keep the same relative paths so prompts stay simple):
+
+```text
+design-contract/
+├── ids/
+│   ├── root-spec.md
+│   └── <slug>/design-spec.md
+├── ids-theme.css
+├── synapse/                    # only if programme = Synapse
+│   ├── root-spec.md            # if your programme has one
+│   └── <slug>/design-spec.md   # programme fork or full spec
+├── synapse-theme.css           # only if programme = Synapse
+├── dap/                        # only if programme = DAP
+│   └── root-spec.md
+├── dap-theme.css               # only if programme = DAP
+└── assets/icons/               # only icons referenced in the spec
+```
+
+**Minimum files by programme**
+
+| Programme | Always copy | Also copy when… |
+|-----------|-------------|-----------------|
+| **IDS** | `components/ids/root-spec.md`, `components/ids-theme.css`, `components/ids/<slug>/design-spec.md`, any `assets/icons/…` referenced in the spec | — |
+| **Synapse (IDS fork)** | IDS files above **plus** `components/synapse/<slug>/design-spec.md`, `components/synapse-theme.css` | Synapse overrides IDS — both layers are required |
+| **Synapse (standalone)** | `components/synapse/root-spec.md` (if present), `components/synapse-theme.css`, `components/synapse/<slug>/design-spec.md`, assets | No IDS baseline |
+| **DAP** | IDS baseline files **plus** `components/DAP/root-spec.md`, `components/dap-theme.css` | Optional `components/DAP/<slug>/design-spec.md` only if that component has a dedicated delta spec |
+
+**Optional but helpful:** `data/agent-generation-contract.md` — short rules agents can follow for layered precedence and validation.
+
+**In your app repo**
+
+1. Paste the [portable bundle prompt](#copy-paste-prompts) into a new agent chat (your **app** workspace, not SDD-IDS).
+2. Point the agent at your `design-contract/` folder paths.
+3. Ensure your app loads the theme CSS (or maps the same `var(--…)` tokens in your build).
+4. Copy any referenced icons into your app’s asset pipeline.
+
+**What you do *not* need to copy:** `storybook/`, `generation/`, `rag/`, vector DB, `.env` Figma tokens, or full `data/` maps — unless you want Storybook parity inside SDD-IDS itself.
+
+### Copy-paste prompts
+
+**Full repo (SDD-IDS open):**
+
+```text
+Generate a <React | Angular | Vue | Lit> implementation for <Component Name> using our design specs in this repo.
+
+Programme: <IDS | Synapse | DAP>
+Use the layered spec files and theme CSS for this programme. The design spec is the single source of truth.
+Use only semantic tokens (var(--...)); do not hardcode colours, spacing, or typography.
+Implement all states, interactions, and accessibility rules from the spec.
+If anything is missing, list gaps — do not guess.
+```
+
+**Portable bundle (your app repo only):**
+
+```text
+Generate a <React | Angular | Vue | Lit> component for <Component Name> from the design contract in ./design-contract/.
+
+Read in this order (highest priority first):
+1) design-contract/<programme>/<slug>/design-spec.md  (if present)
+2) design-contract/<programme>/root-spec.md            (if present)
+3) design-contract/ids/<slug>/design-spec.md
+4) design-contract/ids/root-spec.md
+
+Theme CSS (load in this order):
+1) design-contract/ids-theme.css
+2) design-contract/<programme>-theme.css               (if present)
+
+Requirements:
+- Follow Composition & API and Codegen Contract sections exactly.
+- Use var(--...) only; no hardcoded visual values.
+- Include icons from design-contract/assets/icons/ per the spec asset table.
+- If a token or asset is missing, return a gap list and stop.
+```
+
+### Storybook vs production code
+
+| Output | Purpose |
+|--------|---------|
+| **Spec Accurate Design** story (in SDD-IDS `storybook-generated/`) | Visual proof that the spec is complete — created when intake Storybook = **yes** |
+| **Component in your app** | Separate agent step — use the prompts above in your product repository |
+
+### When to create a spec first
+
+| Situation | First step | Then generate code |
+|-----------|------------|-------------------|
+| No spec yet | [Intake wizard](#create-a-new-design-spec-intake-wizard) or [programme inheritance](#programme-inheritance-design-spec-synapse--dap-from-ids) | Prompts above |
+| Spec already in SDD-IDS | Copy portable bundle **or** open full repo | Prompts above |
+
+Machine-readable handoff for tooling: [`data/agent-generation-contract.md`](data/agent-generation-contract.md).
+
+## Programme inheritance design-spec (Synapse / DAP from IDS)
+
+Use when a programme layer (**Synapse**, **DAP**, …) reuses an IDS component family in Figma but has programme-specific token, layout, radius, border, or slot changes.
+
+**Output:** a full `components/<programme>/<slug>/design-spec.md` with an **IDS baseline pointer** + **programme deltas table** (not a deltas-only file).
+
+**Full guide:** [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md)
+
+### Base prompt — wizard mode (one question at a time)
+
+```text
+Run the programme inheritance design-spec process.
+
+Follow docs/design-spec-programme-inheritance.md and docs/design-spec-authoring-contract.md.
+Load the design-spec-programme-inheritance skill.
+
+Ask me ONE question per message until you have:
+  programme, component name, IDS baseline (if known),
+  Main component URL(s), Element URL(s), State URL(s),
+  Storybook yes/no.
+
+For Elements and States: repeat “paste another URL or reply done” until I say done for each bucket.
+Show a summary (all parsed node IDs by bucket) and wait for my yes before Figma calls or file writes.
+```
+
+**Cursor shortcut:**
+
+```text
+@design-spec-programme-inheritance Generate a programme inheritance design-spec. Ask one question at a time, confirm before run.
+```
+
+The agent asks for **programme** (Synapse / DAP), **component name**, **IDS baseline** (e.g. `Modal` → `components/ids/modal/design-spec.md`), then Figma URLs in three buckets — **Main component**, **Elements**, **States** (multiple URLs per bucket; reply **`done`** when finished with each), and **Storybook** (`yes` / `no`). Reply **`yes`** on the summary to run live Figma MCP and write the spec.
+
+If you already have all URLs, use the **expert one-shot** template in [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md#expert-one-shot--paste-all-urls-in-three-blocks-recommended-for-you).
+
+| Artifact | Path |
+|----------|------|
+| Programme inheritance guide + one-shot prompts | [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md) |
+| Synapse IDS-fork detail (examples) | [`docs/design-spec-synapse-ids-fork.md`](docs/design-spec-synapse-ids-fork.md) |
+| Wizard skill (Cursor) | [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](.cursor/skills/design-spec-programme-inheritance/SKILL.md) |
+| Fork registry | [`data/programme-inheritance-registry.json`](data/programme-inheritance-registry.json) |
+| Example spec (active) | [`components/synapse/left-nav/design-spec.md`](components/synapse/left-nav/design-spec.md) |
+| Example spec (draft) | [`components/synapse/modal/design-spec.md`](components/synapse/modal/design-spec.md) |
+
 ## Spec Pipeline
 
 The primary output is a hierarchy of design specs that downstream agents consume:
@@ -140,6 +332,7 @@ Scripts and templates that create or maintain `components/ids/<slug>/design-spec
 | Figma → MDX extractor | `tokens/figma_spec_extractor.py` | `spec_to_mdx()` output uses canonical section names (extend for full blueprint depth) |
 | Spec contract validation | `validation/spec_contract_parser.py` | Checks required `##` sections (used by gates and QA) |
 | Intake wizard (new specs) | `.cursor/skills/design-spec-intake-wizard/SKILL.md` | Interactive Q&A → confirm → create `design-spec.md`; see `docs/design-spec-intake.md` |
+| Programme inheritance wizard | `.cursor/skills/design-spec-programme-inheritance/SKILL.md` | Synapse/DAP specs from IDS baseline + programme deltas; see `docs/design-spec-programme-inheritance.md` |
 | Authoring skill | `.cursor/skills/design-spec-blueprint/SKILL.md` | Agent workflow: Figma verification, required sections, production-ready gate |
 | States dark dedupe | `scripts/dedupe_states_dark_theme.py` | Replace duplicate **States (Dark Theme)** tables when identical token-only matrices exist under Light (dry-run by default; `--apply` to write) |
 
@@ -339,41 +532,13 @@ Before auto-generation, verify:
 
 ## Reusing Specs In Another Repository
 
-You can copy these design specs to another repository and generate components (styles + interactions + accessibility), as long as the target repository includes the required dependencies of the spec.
+See **[Generate UI code with an AI agent → Portable spec bundle](#portable-spec-bundle-generate-without-cloning-sdd-ids)** for the full file checklist, folder layout, and copy-paste agent prompt.
 
-### Minimum files to copy
+**Portability requirements (summary):**
 
-- `components/synapse/root-spec.md`
-- `components/synapse-theme.css` (or an equivalent token file with the same variables)
-- `components/synapse/<slug>/design-spec.md`
-- any referenced assets (for example `assets/icons/*.svg`)
-
-### Portability requirements
-
-- Token variables referenced by the spec must exist in the target repo.
-- Asset slug-to-file mapping must be preserved.
-- The generator/agent must treat spec contracts as canonical and not invent missing values.
-
-### Copy-paste prompt template for AI agents
-
-Use this template in the target repository:
-
-```
-Generate <framework> component(s) from the provided design spec.
-
-Source of truth (in order):
-1) root-spec.md
-2) theme CSS variables file
-3) component design-spec.md
-4) referenced assets (icons/images)
-
-Requirements:
-- Implement full Composition/API and Codegen Contract.
-- Include styles, interactions, states (light/dark), and accessibility behavior.
-- Use semantic tokens (var(--...)) only; do not hardcode drift-prone values.
-- Preserve slot/anatomy order and variant matrix exactly.
-- If any token/asset/contract data is missing, return a gap list and stop guessing.
-```
+- Token variables referenced by the spec must exist in the target repo (via copied theme CSS or equivalent).
+- Asset slug-to-file mapping must be preserved (`assets/icons/…`).
+- The agent must treat spec contracts as canonical and not invent missing values.
 
 ## Framework-Agnostic Component Generation Guide
 
@@ -485,7 +650,7 @@ Use this workflow when you want deterministic, repeatable generation from `desig
    - Re-run the same `strict_spec_storybook_gate.py` command for impacted components.
    - Spec hash drift + validators ensure story updates remain zero-drift with contracts.
 
-The Storybook **Theme** toolbar (`storybook/.storybook/preview.ts`) sets `data-theme` and `data-design-system` so canvas chrome uses each system’s `var(--color-background-surface-1)` for light/dark. **Spec Generated** stories each import **one** program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP). Global preview loads **ids-theme**, **dap-theme**, and **synapse-theme** for legacy/manual stories.
+The Storybook **Theme** toolbar (`storybook/.storybook/preview.tsx`) sets `data-theme` and `data-design-system` so canvas chrome uses each system’s `var(--color-background-surface-1)` for light/dark. **Spec Generated** stories each import **one** program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP). Global preview loads **ids-theme**, **dap-theme**, and **synapse-theme** for legacy/manual stories.
 
 ### Toast `Toast.module.css` (spec-driven)
 
@@ -594,6 +759,11 @@ When the above inputs are present, generated components should be framework-agno
 
 ```bash
 # Full regeneration (root + 46 components + registry + verification)
+# Programme theme CSS from Figma variables (FIGMA_TOKEN)
+set -a && . ./.env && set +a
+python3 scripts/sync_programme_themes_from_figma.py --with-root-spec
+# See docs/theme-sync-from-figma.md
+
 python scripts/rebuild_specs.py --verify
 
 # Root spec only

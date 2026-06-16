@@ -2,7 +2,7 @@
 <!-- ds:inherits root-spec -->
 # ChatSystemResponse Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
+> Generated 2026-06-12T07:10:00Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
 <!-- ds:section id=metadata -->
 ## Metadata
@@ -61,14 +61,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
-
-- `components/ids-theme.css`
-- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
-
-Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
-
-*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-surface-1)` (#111619) |  | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
 
 ## Source Mapping
 

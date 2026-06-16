@@ -16,7 +16,7 @@
 - Inline reference node: `11099:57186` (Determinate/Inline, Medium, In Progress, 30%)
 - Figma file key: `VZJ48bbVYrIynw8DdSukWw`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
-- Verified at: 2026-05-22
+- Verified at: 2026-06-10
 - Storybook examples requested: yes
 - Storybook path: `storybook-generated/ids/src/components/ProgressBar.stories.tsx`
 - Storybook title: `Spec Generated/IDS/Progress Bar`
@@ -36,7 +36,7 @@ Deterministic slot order:
   - `thin`: `var(--sizing-size-4)` (4px) — Figma `Type=Determinate/Inline, Thickness=Thin`
   - `medium`: `var(--sizing-size-8)` (8px)
   - `thick`: `var(--sizing-size-16)` (16px)
-- Border radius: **0px** on track and fill (sharp corners; Figma `.base progress bar`).
+- Border radius: **`var(--progress-bar-control-radius)`** on track and fill (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Track border: `var(--border-width-border-1)` solid `var(--color-border-accessible)`.
 - Track shell (`ProgressTrack`): sizing only, no border. **`trackBg`** (`z-index: 0`) has accessible border + neutral background, clipped with `clip-path: inset(0 0 0 var(--progress-clip))` so it only paints the **unfilled** width (set from `value` on root). Track background uses `var(--color-background-gray-light)` (#393939 in dark theme).
 - **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored border on top, left, and bottom always. **Right border on the fill** only when determinate `value` is `100` (`data-value-full="true"` on root); for partial progress, the fill omits its right edge and the **far-right** accessible border is painted by `trackBg` on the unfilled segment. No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
@@ -68,11 +68,19 @@ Deterministic slot order:
 | `Failed/Error` | `failed-error` |
 
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--progress-bar-control-radius` | `var(--corner-radius-radius-none)` |
+
 ### Typography
 - Label / percentage / helper: Body 2 — `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, regular.
 
 ### Colors and surfaces
-- Track background: `var(--color-background-gray-neutral-alt)`
+- Track background (unfilled segment): `var(--color-background-gray-light)` — Figma `.ProgressBar-Element-Amount` track (`42635:19947` / `11099:57042`)
 - Track border (remainder): `var(--color-border-accessible)`
 - In-progress fill: `var(--color-background-brand-base)`; fill border: `var(--color-border-brand-base)`; fill-border overlay token: `var(--color-background-controls-brand-base)` (matches fill edge in Figma)
 - Success fill: `var(--color-background-alerting-success)`; fill border: `var(--color-border-alerting-success-base)`
@@ -96,11 +104,11 @@ Deterministic slot order:
 ## States (Light Theme)
 | `state` | Track background | Fill background | Border (track remainder + fill edges) | Text |
 |---|---|---|---|---|
-| `in-progress` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-brand-base)` | Track: `var(--color-border-accessible)`; fill edges: same token as fill / `var(--color-border-brand-base)` on fill box | Meta/inline %: `var(--color-text-neutral-strong)`; helper: `var(--color-text-neutral)` |
-| `completed-success` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-alerting-success)` | Track: accessible; fill edges match success fill / `var(--color-border-alerting-success-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
-| `completed-warning` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-alerting-minor)` | Track: accessible; fill edges: `var(--color-border-alerting-minor-transparent)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
-| `failed-error` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-alerting-critical)` | Track: accessible; fill edges: `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
-| `indeterminate` + `in-progress` | `var(--color-background-gray-neutral-alt)` | `var(--color-background-brand-base)` | same as in-progress | same as in-progress |
+| `in-progress` | `var(--color-background-gray-light)` | `var(--color-background-brand-base)` | Track: `var(--color-border-accessible)`; fill edges: same token as fill / `var(--color-border-brand-base)` on fill box | Meta/inline %: `var(--color-text-neutral-strong)`; helper: `var(--color-text-neutral)` |
+| `completed-success` | `var(--color-background-gray-light)` | `var(--color-background-alerting-success)` | Track: accessible; fill edges match success fill / `var(--color-border-alerting-success-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
+| `completed-warning` | `var(--color-background-gray-light)` | `var(--color-background-alerting-minor)` | Track: accessible; fill edges: `var(--color-border-alerting-minor-transparent)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
+| `failed-error` | `var(--color-background-gray-light)` | `var(--color-background-alerting-critical)` | Track: accessible; fill edges: `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` / helper `var(--color-text-neutral)` |
+| `indeterminate` + `in-progress` | `var(--color-background-gray-light)` | `var(--color-background-brand-base)` | same as in-progress | same as in-progress |
 
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -174,7 +182,7 @@ Valid combinations:
 - `showHelperText` independent; icon slot only when `state` is success, warning, or error
 
 ### Per-slot style contract
-- `ProgressTrack`: height from thickness tokens; background `var(--color-background-gray-neutral-alt)`; border `var(--border-width-border-1)` `var(--color-border-accessible)`; `border-radius: 0`.
+- `ProgressTrack` / `trackBg`: height from thickness tokens; unfilled background `var(--color-background-gray-light)`; border `var(--border-width-border-1)` `var(--color-border-accessible)`; `border-radius: var(--progress-bar-control-radius)`.
 - `ProgressIndicator`: fill background and border tokens per **States (Light Theme)** row for `state`; width from value % or indeterminate animation.
 - `ProgressMetaRow` / inline value: Body 2 + `var(--color-text-neutral-strong)`.
 - `ProgressHelperRow` text: `var(--color-text-neutral)`; icon 16px per slug table.
@@ -203,7 +211,7 @@ See **Interactions → Accessibility**.
 - [x] `with-label` meta row + track + optional helper matches Figma `Determinate/regular`
 - [x] `inline` track + 36px percentage column with 8px gap
 - [x] Thickness 4 / 8 / 16px via sizing tokens
-- [x] Sharp corners (0px radius) on track and fill
+- [x] Track/fill radius via `var(--progress-bar-control-radius)` (IDS: 0)
 - [x] State fills and borders use semantic alerting/brand tokens only
 - [x] Helper icons use documented slugs via Icon primitive
 - [x] Indeterminate omits percentage and animates fill
@@ -222,13 +230,15 @@ See **Interactions → Accessibility**.
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57210)` — with-label thin in-progress |
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57186)` — inline medium in-progress |
 | Figma MCP (2026-05-22) | `get_variable_defs(..., nodeId=11067:54665)` |
+| IDS Design Library track evidence | `0bHk3XhrjFhowgFkz9yLr4` → `42635:19947` (`.ProgressBar-Element-Amount` track `11099:57042` uses `var(--color-background-gray-light)`) |
+| Figma MCP (2026-06-10) | `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=42635:19947)` — track `gray-light` dark `#393939` |
 
 ## Implementation Notes
 
 **Track and fill geometry**
 - **Track border placement**: Set `box-sizing: border-box` on the track shell (`ProgressTrack`), unfilled segment (`trackBg`), and fill (`ProgressIndicator`) so the `var(--border-width-border-1)` border renders inside the container. This preserves thickness dimensions (`thin` 4px, `medium` 8px, `thick` 16px) without adding extra width/height from the border.
 - **Progress fill bar border thickness**: The indicator border is `var(--border-width-border-1)` on all painted edges (right edge added when `data-value-full="true"`).
-- **Corner radius**: Both the track (container) and indicator (progress fill bar) use `border-radius: 0` for sharp corners per Figma.
+- **Corner radius**: Both the track (container) and indicator (progress fill bar) use `border-radius: var(--progress-bar-control-radius)` (IDS resolves to `var(--corner-radius-radius-none)` / 0 — sharp corners per Figma).
 
 **Helper status icons**
 - **Icon implementation**: Status icons render via the shared `Icon` component with `variant="img"` (full-color SVG assets, not mask tinting):

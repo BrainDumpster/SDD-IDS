@@ -28,7 +28,7 @@
   background: var(--color-background-surface-2);
   color: var(--color-text-neutral);
   border: var(--border-width-border-default) solid var(--color-border-accessible);
-  border-radius: 0;
+  border-radius: var(--tooltip-control-radius);
   box-shadow: 1px 1px 3px rgba(37, 37, 37, 0.25);
 }
 

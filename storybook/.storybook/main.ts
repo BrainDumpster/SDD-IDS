@@ -9,6 +9,9 @@ import { mergeConfig } from "vite";
 // `storybook-generated/` (a single `../` only searches under `storybook/storybook-generated`).
 const storybookConfigDir = path.dirname(fileURLToPath(import.meta.url));
 const storybookPackageRoot = path.resolve(storybookConfigDir, "..");
+const repoRoot = path.resolve(storybookPackageRoot, "..");
+const reactRoot = path.join(storybookPackageRoot, "node_modules/react");
+const reactDomRoot = path.join(storybookPackageRoot, "node_modules/react-dom");
 
 /** New files under storybook-generated are not in the startup importers map until restart. */
 function warnOnNewSpecGeneratedStories(): Plugin {
@@ -33,14 +36,14 @@ function warnOnNewSpecGeneratedStories(): Plugin {
   };
 }
 
-const repoRoot = path.resolve(storybookPackageRoot, "..");
-
 const config: StorybookConfig = {
+  // Absolute globs keep Vite importer keys aligned with the story index (avoids
+  // `importers[path] is not a function` for files under repo-root storybook-generated/).
   stories: [
-    "../src/**/*.stories.@(ts|tsx)",
-    "../../storybook-generated/ids/src/**/*.stories.@(ts|tsx)",
-    "../../storybook-generated/dap/src/**/*.stories.@(ts|tsx)",
-    "../../storybook-generated/synapse/src/**/*.stories.@(ts|tsx)",
+    path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/synapse/src/**/*.stories.@(ts|tsx)"),
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {
@@ -51,12 +54,24 @@ const config: StorybookConfig = {
     return mergeConfig(config, {
       plugins: [warnOnNewSpecGeneratedStories()],
       resolve: {
-        dedupe: ["react", "react-dom"],
+        dedupe: ["react", "react-dom", "@base-ui-components/utils"],
+        alias: {
+          react: reactRoot,
+          "react-dom": reactDomRoot,
+          "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),
+          "react/jsx-dev-runtime": path.join(reactRoot, "jsx-dev-runtime.js"),
+        },
       },
       optimizeDeps: {
         // Toggle / ToggleGroup pull CJS subpaths from @base-ui-components/utils; prebundle
         // avoids intermittent dev "Missing \".\" specifier" resolution failures (Vite 6).
         include: [
+          "react",
+          "react-dom",
+          "react/jsx-runtime",
+          "react/jsx-dev-runtime",
+          "@base-ui-components/react/popover",
+          "@base-ui-components/react/progress",
           "@base-ui-components/react/toggle-group",
           "@base-ui-components/react/toggle",
           "@base-ui-components/utils/useStableCallback",

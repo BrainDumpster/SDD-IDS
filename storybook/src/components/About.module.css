@@ -16,6 +16,42 @@
   color: var(--color-text-neutral-strong);
 }
 
+.serialRow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8);
+  margin-top: var(--spacing-space-4);
+}
+
+.serialLabel {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+  white-space: nowrap;
+}
+
+.serialCopy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.serialCopy:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.serialCopyIcon {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
 .brandBlock {
   margin-top: var(--spacing-space-56);
   display: flex;
@@ -34,15 +70,9 @@
 
 .copyright {
   width: 100%;
+  margin: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
-}
-
-.copyrightPara {
-  margin: 0;
-}
-
-.copyrightPara + .copyrightPara {
-  margin-top: var(--spacing-space-16);
+  text-align: center;
 }

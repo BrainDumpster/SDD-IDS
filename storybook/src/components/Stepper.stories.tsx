@@ -16,6 +16,15 @@ const meta: Meta<typeof Stepper> = {
 export default meta;
 type Story = StoryObj<typeof Stepper>;
 
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    steps: ["Account", "Profile", "Preferences", "Review"],
+    activeStep: 1,
+    orientation: "horizontal",
+  },
+};
+
 export const AtStepTwo: Story = {
   args: {
     steps: ["Account", "Profile", "Preferences", "Review"],

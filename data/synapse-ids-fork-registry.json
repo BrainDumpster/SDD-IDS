@@ -1,0 +1,4 @@
+{
+  "description": "DEPRECATED — use data/programme-inheritance-registry.json (filter programme=synapse). Kept for backward compatibility.",
+  "redirect": "data/programme-inheritance-registry.json"
+}

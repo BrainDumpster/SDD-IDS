@@ -1,3 +1,4 @@
+import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import shieldEncryptAltIcon from "../../../assets/icons/shield-encrypt-alt.svg";
@@ -33,7 +34,7 @@ const overflowItems = [
 ];
 
 const meta: Meta<typeof Tabs> = {
-  title: "Spec Generated/IDS/Tabs",
+  title: "Spec Generated/IDS/Tab",
   component: Tabs,
   args: {
     items: baseItems,
@@ -57,7 +58,8 @@ const meta: Meta<typeof Tabs> = {
 export default meta;
 type Story = StoryObj<typeof Tabs>;
 
-export const SecondaryDefault: Story = {
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
   args: {
     variant: "secondary",
     items: baseItems,

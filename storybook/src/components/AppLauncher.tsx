@@ -18,17 +18,76 @@ export interface AppLauncherOption {
   onSelect?: () => void;
 }
 
-export interface AppLauncherProductTileProps extends AppLauncherProduct {
-  tileClassName?: string;
+export type AppLauncherDividerVariant = "solid" | "dotted";
+
+export interface AppLauncherColumnDividerProps {
+  variant?: AppLauncherDividerVariant;
+  programme?: "ids" | "synapse";
 }
 
-/** Single product cell: 148×125, 32×32 icon slot, body-2 label (Figma `AppLauncher-Element`). */
+export interface AppLauncherRowDividerProps {
+  programme?: "ids" | "synapse";
+}
+
+/**
+ * Vertical separator between product tiles in the same row.
+ * Separate from the tile so hover/press fill does not cover the divider (IDS + Synapse).
+ */
+export function AppLauncherColumnDivider({
+  variant = "dotted",
+  programme = "ids",
+}: AppLauncherColumnDividerProps) {
+  return (
+    <div
+      className={
+        variant === "solid" ? styles.columnDividerSolid : styles.columnDivider
+      }
+      aria-hidden="true"
+    />
+  );
+}
+
+/** Horizontal separator between product rows (262px stroke, 16px inset left/right). */
+export function AppLauncherRowDivider({ programme = "ids" }: AppLauncherRowDividerProps) {
+  return (
+    <div
+      className={styles.rowDivider}
+      aria-hidden="true"
+    />
+  );
+}
+
+export type AppLauncherTileDivider = "solid" | "dotted" | "none";
+
+export interface AppLauncherProductTileProps extends AppLauncherProduct {
+  tileClassName?: string;
+  /** 2-product internal dotted rail (`13231:109518`, 110px / 7px inset) on leading tile in each row. */
+  tileDivider?: AppLauncherTileDivider;
+  /** Demo/spec matrix only — maps to `data-state` on the tile control. */
+  demoState?: "hover" | "press" | "focus";
+}
+
+function TileDividerRail({ variant }: { variant: AppLauncherTileDivider }) {
+  if (variant === "none") return null;
+  return (
+    <span
+      className={[
+        styles.tileDivider,
+        variant === "solid" ? styles.tileDividerSolid : styles.tileDividerDotted,
+      ].join(" ")}
+      aria-hidden="true"
+    />
+  );
+}
+
 export function AppLauncherProductTile({
   name,
   icon,
   href,
   onSelect,
   tileClassName,
+  tileDivider = "none",
+  demoState,
 }: AppLauncherProductTileProps) {
   const graphic =
     icon === undefined ? (
@@ -57,13 +116,20 @@ export function AppLauncherProductTile({
         rel="noopener noreferrer"
       >
         {inner}
+        <TileDividerRail variant={tileDivider} />
       </a>
     );
   }
 
   return (
-    <button type="button" className={[styles.appTile, tileClassName].filter(Boolean).join(" ")} onClick={onSelect}>
+    <button
+      type="button"
+      className={[styles.appTile, tileClassName].filter(Boolean).join(" ")}
+      onClick={onSelect}
+      {...(demoState ? { "data-state": demoState } : {})}
+    >
       {inner}
+      <TileDividerRail variant={tileDivider} />
     </button>
   );
 }
@@ -122,6 +188,8 @@ export function AppLauncherOptionsList({
 }
 
 export interface AppLauncherProps {
+  /** `synapse` → label-cluster hover/press + inset focus ring per Synapse Figma. */
+  programme?: "ids" | "synapse";
   /** Product tiles (2-column rows with column dividers per Figma). */
   products?: AppLauncherProduct[];
   /** @deprecated Use `products` */
@@ -137,6 +205,115 @@ export interface AppLauncherProps {
    * For `masthead`, values below 1 are treated as 1 so the panel clears the masthead bottom border.
    */
   sideOffset?: number;
+  defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * Render launcher surface only (no Base UI Popover).
+   * Use in spec/layout matrix stories to avoid Popover hook issues in Storybook.
+   */
+  panelOnly?: boolean;
+}
+
+interface AppLauncherSurfaceProps {
+  programme: "ids" | "synapse";
+  list: AppLauncherProduct[];
+  rows: AppLauncherProduct[][];
+  columns: number;
+  options?: AppLauncherOption[];
+  footerAction?: { label: string; onClick: () => void };
+  showOptions: boolean;
+  isSynapse: boolean;
+  useTwoProductLayout: boolean;
+  useSingleProductWidth: boolean;
+  useTwoProductInternalRail: boolean;
+  columnDividerVariant: AppLauncherDividerVariant;
+}
+
+function AppLauncherSurface({
+  programme,
+  list,
+  rows,
+  columns,
+  options,
+  footerAction,
+  showOptions,
+  isSynapse,
+  useTwoProductLayout,
+  useSingleProductWidth,
+  useTwoProductInternalRail,
+  columnDividerVariant,
+}: AppLauncherSurfaceProps) {
+  return (
+    <div
+      className={[
+        styles.launcherSurface,
+        isSynapse ? styles.programmeSynapse : "",
+        useTwoProductLayout ? styles.launcherSurfaceTwoProduct : "",
+        useSingleProductWidth ? styles.launcherSurfaceSingleProduct : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {list.length > 0 ? (
+        <div className={styles.productRegion}>
+          {rows.map((row, rowIndex) => (
+            <div key={rowIndex} className={styles.productRowGroup}>
+              {rowIndex > 0 ? (
+                <AppLauncherRowDivider programme={programme} />
+              ) : null}
+              <div
+                className={[
+                  styles.productRow,
+                  row.length === 1 && columns === 2 ? styles.productRowSingle : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {row.flatMap((product, cellIndex) => {
+                  const key = product.id ?? `${rowIndex}-${cellIndex}`;
+                  const showColumnDivider =
+                    cellIndex > 0 && !useTwoProductInternalRail;
+                  const divider = showColumnDivider ? (
+                    <AppLauncherColumnDivider
+                      key={`${key}-divider`}
+                      variant={columnDividerVariant}
+                      programme={programme}
+                    />
+                  ) : null;
+                  const tile = (
+                    <AppLauncherProductTile
+                      key={key}
+                      {...product}
+                      tileClassName={[
+                        isSynapse ? styles.programmeSynapseTile : "",
+                        useTwoProductInternalRail ? styles.appTileTwoProduct : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      tileDivider={
+                        useTwoProductInternalRail && cellIndex < row.length - 1
+                          ? "dotted"
+                          : "none"
+                      }
+                    />
+                  );
+                  return divider ? [divider, tile] : [tile];
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      {showOptions ? (
+        <AppLauncherOptionsList
+          options={options ?? []}
+          footerAction={footerAction}
+          showTopSeparator={list.length > 0}
+        />
+      ) : null}
+    </div>
+  );
 }
 
 function chunkRows<T>(items: T[], columns: number): T[][] {
@@ -148,6 +325,7 @@ function chunkRows<T>(items: T[], columns: number): T[][] {
 }
 
 export function AppLauncher({
+  programme = "ids",
   products,
   apps,
   options,
@@ -155,17 +333,49 @@ export function AppLauncher({
   columns = 2,
   triggerVariant = "default",
   sideOffset = 8,
+  defaultOpen = false,
+  open,
+  onOpenChange,
+  panelOnly = false,
 }: AppLauncherProps) {
+  const isSynapse = programme === "synapse";
   const list = products ?? apps ?? [];
   const rows = chunkRows(list, Math.max(1, columns));
   const showOptions =
     (options && options.length > 0) || footerAction != null;
-  const useTwoProductSeparator = list.length === 2 && !showOptions;
+  const useTwoProductLayout = list.length === 2 && !showOptions;
+  const useSingleProductWidth = list.length === 1 && !showOptions;
+  const useTwoProductInternalRail = useTwoProductLayout;
+  const columnDividerVariant: AppLauncherDividerVariant = "dotted";
   const positionerSideOffset =
     triggerVariant === "masthead" ? Math.max(sideOffset, 1) : sideOffset;
 
+  const controlledOpen = open !== undefined;
+  const surfaceProps: AppLauncherSurfaceProps = {
+    programme,
+    list,
+    rows,
+    columns,
+    options,
+    footerAction,
+    showOptions,
+    isSynapse,
+    useTwoProductLayout,
+    useSingleProductWidth,
+    useTwoProductInternalRail,
+    columnDividerVariant,
+  };
+
+  if (panelOnly) {
+    return <AppLauncherSurface {...surfaceProps} />;
+  }
+
   return (
-    <Popover.Root>
+    <Popover.Root
+      open={controlledOpen ? open : undefined}
+      defaultOpen={controlledOpen ? undefined : defaultOpen}
+      onOpenChange={onOpenChange}
+    >
       <Popover.Trigger
         className={[
           styles.trigger,
@@ -188,57 +398,8 @@ export function AppLauncher({
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={positionerSideOffset} align="end">
-          <Popover.Popup
-            className={[
-              styles.launcherSurface,
-              useTwoProductSeparator ? styles.launcherSurfaceTwoProduct : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            {list.length > 0 ? (
-              <div className={styles.productRegion}>
-                {rows.map((row, rowIndex) => (
-                  <div key={rowIndex}>
-                    {rowIndex > 0 ? <div className={styles.rowDivider} aria-hidden="true" /> : null}
-                    <div
-                      className={[
-                        styles.productRow,
-                        row.length === 1 && columns === 2 ? styles.productRowSingle : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                    >
-                      {row.map((product, cellIndex) => (
-                        <div key={product.id ?? `${rowIndex}-${cellIndex}`} style={{ display: "contents" }}>
-                          {cellIndex > 0 ? (
-                            <div
-                              className={
-                                useTwoProductSeparator
-                                  ? styles.columnDividerSolid
-                                  : styles.columnDivider
-                              }
-                              aria-hidden="true"
-                            />
-                          ) : null}
-                          <AppLauncherProductTile
-                            {...product}
-                            tileClassName={undefined}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-            {showOptions ? (
-              <AppLauncherOptionsList
-                options={options ?? []}
-                footerAction={footerAction}
-                showTopSeparator={list.length > 0}
-              />
-            ) : null}
+          <Popover.Popup className={styles.launcherPopup}>
+            <AppLauncherSurface {...surfaceProps} />
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

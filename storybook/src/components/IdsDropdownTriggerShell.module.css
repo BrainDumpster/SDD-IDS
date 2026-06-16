@@ -16,6 +16,7 @@
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
   gap: var(--spacing-space-10);
+  border-radius: var(--dropdown-control-radius);
 }
 
 .field[data-size="small"] {
@@ -40,7 +41,13 @@
 .field[data-focus="true"]:not([data-disabled="true"]) {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
   outline-offset: 4px;
-  border-radius: 4px;
+  border-radius: var(--dropdown-focus-ring-radius);
+}
+
+/* Menu open: square bottom edge so popup bottom radius meets field (Figma attached dropdown). */
+:global([data-popup-open]) .field {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .main {

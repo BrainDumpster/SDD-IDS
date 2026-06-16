@@ -2,7 +2,7 @@
 <!-- ds:inherits root-spec -->
 # ErrorCard Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
+> Generated 2026-06-12T07:10:00Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
 <!-- ds:section id=metadata -->
 ## Metadata
@@ -43,8 +43,8 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--alert-red-500)` = #af0000
-- `var(--border-width-border-1)` = 1px
-- `var(--border-width-border-2)` = 2px
+- `var(--border-width-border-1)` = var(--border-width-border-default)
+- `var(--border-width-border-2)` = var(--border-width-border-thick)
 - `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-controls-brand-strong)` = #0062ab
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
@@ -69,21 +69,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-brand-base)` (#0076ce) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-brand-base)` (#0076ce) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
 | default | hover |  |  | `var(--color-background-controls-brand-strong)` (#0062ab) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
-
-- `components/ids-theme.css`
-- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
-
-Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
-
-*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#1e262c) | `var(--color-text-brand-base)` (#4c9fdd) | radius: `var(--corner-radius-radius-4)` |
+| default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
+| default | hover |  |  | `var(--color-background-controls-brand-strong)` (#0062ab) |  |
 
 ## Source Mapping
 

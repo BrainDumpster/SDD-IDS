@@ -133,3 +133,21 @@
   outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
   outline-offset: -2px;
 }
+
+/* Synapse programme (`11067:54609`): neutral-strong selected label, 2px row radius, no brand rail. */
+.programmeSynapse .row {
+  border-radius: var(--corner-radius-radius-2);
+}
+
+.programmeSynapse .rowSelected {
+  background: transparent;
+  box-shadow: none;
+}
+
+.programmeSynapse .rowSelected .label {
+  color: var(--color-text-neutral-strong);
+}
+
+.programmeSynapse .rowSelected:hover {
+  background: var(--color-background-gray-lighter);
+}

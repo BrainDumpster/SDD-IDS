@@ -1,24 +1,69 @@
 {
+  "about": {
+    "name": "About",
+    "slug": "about",
+    "category": "Patterns",
+    "figmaPage": "Patterns",
+    "nodeId": "49962:52708",
+    "anatomy": [
+      "brandBlock",
+      "contentColumn",
+      "copyright",
+      "logo",
+      "serialCopy",
+      "serialCopyIcon",
+      "serialLabel",
+      "serialRow",
+      "versionLine"
+    ],
+    "states": [
+      "default",
+      "focus"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-border-brand-base",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--spacing-space-4",
+      "--spacing-space-56",
+      "--spacing-space-8"
+    ]
+  },
   "accordion": {
     "name": "Accordion",
     "slug": "accordion",
     "category": "Form Elements",
     "figmaPage": "Form Elements",
-    "nodeId": "11067:54535",
+    "nodeId": "16551:26036",
     "anatomy": [
       "content",
+      "formSlot",
       "header",
       "icon",
       "item",
+      "meta",
       "panel",
       "root",
-      "trigger"
+      "rootForm",
+      "trigger",
+      "triggerLeft",
+      "triggerRight"
     ],
     "states": [
       "default",
       "disabled",
       "focus",
-      "hover"
+      "hover",
+      "open"
     ],
     "variants": [
       "default"
@@ -29,18 +74,132 @@
     "tokens": [
       "--border-width-border-1",
       "--border-width-border-2",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
       "--color-background-component",
-      "--color-background-surface-1",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-border-lighter",
+      "--color-border-strong",
       "--color-icon-neutral",
       "--color-text-neutral",
       "--color-text-neutral-strong",
-      "--corner-radius-radius-4",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
       "--padding-padding-12",
-      "--padding-padding-16"
+      "--padding-padding-16",
+      "--spacing-space-8"
+    ]
+  },
+  "alert": {
+    "name": "Alert",
+    "slug": "alert",
+    "category": "",
+    "figmaPage": "",
+    "nodeId": "",
+    "anatomy": [
+      "globalActionButton",
+      "globalActions",
+      "globalCarouselButton",
+      "globalCarouselChevron",
+      "globalCarouselCount",
+      "globalCarouselRail",
+      "globalContent",
+      "globalDismissButton",
+      "globalDismissIcon",
+      "globalIcon",
+      "globalIconWrap",
+      "globalLink",
+      "globalLinkButton",
+      "globalMessage",
+      "globalRoot",
+      "inlineActionOutlined",
+      "inlineClose",
+      "inlineCloseIcon",
+      "inlineDensityCompact",
+      "inlineDensityDetailed",
+      "inlineIcon",
+      "inlineIconWrap",
+      "inlineLink",
+      "inlineLinkButton",
+      "inlineMain",
+      "inlineMessage",
+      "inlineRoot",
+      "inlineText",
+      "inlineTitle",
+      "inlineTrailing"
+    ],
+    "states": [
+      "default",
+      "focus"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-alerting-critical",
+      "--color-background-alerting-critical-light",
+      "--color-background-alerting-critical-strong",
+      "--color-background-alerting-info",
+      "--color-background-alerting-info-1",
+      "--color-background-alerting-info-light",
+      "--color-background-alerting-info-strong",
+      "--color-background-alerting-major",
+      "--color-background-alerting-major-light",
+      "--color-background-alerting-major-strong",
+      "--color-background-alerting-minor",
+      "--color-background-alerting-minor-light",
+      "--color-background-alerting-minor-strong",
+      "--color-background-alerting-success-1",
+      "--color-background-alerting-success-light",
+      "--color-border-alerting-critical-transparent",
+      "--color-border-alerting-info-transparent",
+      "--color-border-alerting-major-transparent",
+      "--color-border-alerting-minor-minor",
+      "--color-border-alerting-minor-transparent",
+      "--color-border-alerting-success-transparent",
+      "--color-border-alerting-transparent-critical",
+      "--color-border-alerting-transparent-info",
+      "--color-border-alerting-transparent-major",
+      "--color-border-brand-base",
+      "--color-icon-alerting-critical",
+      "--color-icon-alerting-info",
+      "--color-icon-alerting-info-1",
+      "--color-icon-alerting-major",
+      "--color-icon-alerting-minor",
+      "--color-icon-alerting-success-1",
+      "--color-icon-black",
+      "--color-icon-white",
+      "--color-static-brand-500",
+      "--color-static-brand-600",
+      "--color-static-gray-900",
+      "--color-text-black",
+      "--color-text-white",
+      "--corner-radius-radius-2",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-24",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--inline-alert-icon",
+      "--padding-padding-10",
+      "--padding-padding-12",
+      "--padding-padding-14",
+      "--padding-padding-16",
+      "--padding-padding-2",
+      "--padding-padding-20",
+      "--padding-padding-4",
+      "--padding-padding-8",
+      "--scale-12",
+      "--scale-16",
+      "--scale-40",
+      "--spacing-space-10",
+      "--spacing-space-16",
+      "--spacing-space-4",
+      "--spacing-space-8"
     ]
   },
   "anchormenu": {
@@ -69,20 +228,18 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-1",
       "--border-width-border-2",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-border-lighter",
-      "--color-text-brand-base",
+      "--color-text-brand-strong",
       "--color-text-neutral",
       "--color-text-neutral-strong",
       "--corner-radius-radius-2",
       "--font-line-height-line-height-24",
-      "--font-size-body-2",
-      "--font-size-body-3",
+      "--font-size-body-1",
       "--padding-padding-12",
-      "--padding-padding-4",
-      "--spacing-space-4"
+      "--padding-padding-24",
+      "--padding-padding-8"
     ]
   },
   "applauncher": {
@@ -90,16 +247,43 @@
     "slug": "applauncher",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "49927:29663",
+    "nodeId": "13231:123761",
     "anatomy": [
-      "appIcon",
       "appName",
       "appTile",
-      "grid",
-      "popup",
-      "trigger"
+      "appTileTwoProduct",
+      "columnDivider",
+      "columnDividerSolid",
+      "defaultProductIcon",
+      "footerAction",
+      "iconSlot",
+      "labelStack",
+      "labelStackNoIcon",
+      "launcherPopup",
+      "launcherSurface",
+      "launcherSurfaceSingleProduct",
+      "launcherSurfaceTwoProduct",
+      "optionItem",
+      "optionsFooter",
+      "optionsList",
+      "optionsRegion",
+      "optionsRegionWithSeparator",
+      "productIconImg",
+      "productRegion",
+      "productRow",
+      "productRowGroup",
+      "productRowSingle",
+      "programmeSynapseTile",
+      "rowDivider",
+      "tileDivider",
+      "tileDividerDotted",
+      "tileDividerSolid",
+      "trigger",
+      "triggerIcon",
+      "triggerMasthead"
     ],
     "states": [
+      "active",
       "default",
       "focus",
       "hover"
@@ -111,25 +295,58 @@
       "md"
     ],
     "tokens": [
+      "--app-launcher-column-divider-color",
+      "--app-launcher-column-divider-height",
+      "--app-launcher-column-divider-inset-block",
+      "--app-launcher-divider-inset",
+      "--app-launcher-row-divider-width",
+      "--app-launcher-tile-height",
       "--border-width-border-1",
       "--border-width-border-2",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
       "--color-background-component",
-      "--color-background-controls-brand-base",
       "--color-background-gray-lighter",
-      "--color-background-surface-1",
+      "--color-background-masthead-brand-base",
+      "--color-background-masthead-brand-strong",
+      "--color-background-masthead-brand-stronger",
+      "--color-background-surface-2",
+      "--color-border-accessible",
       "--color-border-brand-base",
+      "--color-border-brand-neutral",
       "--color-border-light",
-      "--color-border-lighter",
+      "--color-border-neutral-light",
+      "--color-border-white",
+      "--color-icon-brand-strong",
+      "--color-icon-neutral",
+      "--color-text-brand-strong",
+      "--color-text-neutral",
       "--color-text-neutral-strong",
+      "--color-text-white",
       "--corner-radius-radius-4",
-      "--font-size-body-3",
-      "--padding-padding-12",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-1",
+      "--padding-padding-10",
       "--padding-padding-16",
+      "--padding-padding-2",
+      "--padding-padding-24",
+      "--padding-padding-28",
+      "--padding-padding-52",
+      "--padding-padding-8",
+      "--separator-inset",
       "--shadow-drop-shadow-2-blur",
       "--shadow-drop-shadow-2-color",
+      "--shadow-drop-shadow-2-spread",
       "--shadow-drop-shadow-2-x",
       "--shadow-drop-shadow-2-y",
-      "--spacing-space-8"
+      "--shadow-drop-shadow-4-blur",
+      "--shadow-drop-shadow-4-color",
+      "--shadow-drop-shadow-4-spread",
+      "--shadow-drop-shadow-4-x",
+      "--shadow-drop-shadow-4-y",
+      "--spacing-space-1",
+      "--spacing-space-12"
     ]
   },
   "badge": {
@@ -140,23 +357,37 @@
     "nodeId": "11067:54637",
     "anatomy": [
       "badge",
-      "count",
-      "wrapper"
+      "content",
+      "controls",
+      "critical",
+      "disabled",
+      "singleDigit",
+      "threePlusDigits",
+      "twoDigits"
     ],
     "states": [
-      "default"
+      "default",
+      "focus"
     ],
     "variants": [
-      "default"
+      "success",
+      "warning"
     ],
     "sizes": [
       "md"
     ],
     "tokens": [
-      "--alert-red-500",
-      "--color-text-white",
-      "--corner-radius-radius-24",
-      "--padding-padding-4"
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-alerting-critical",
+      "--color-background-alerting-minor",
+      "--color-background-alerting-success",
+      "--color-background-controls-brand-base",
+      "--color-border-brand-base",
+      "--color-border-white",
+      "--color-static-gray-500",
+      "--color-text-black",
+      "--color-text-white"
     ]
   },
   "breadcrumb": {
@@ -204,12 +435,16 @@
     "slug": "button",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "47808:31410",
+    "nodeId": "47808:31665",
     "anatomy": [
       "button",
+      "iconImage",
+      "iconSlot",
       "labelHidden",
       "loading",
-      "spinner"
+      "programmeSynapse",
+      "spinner",
+      "visuallyHidden"
     ],
     "states": [
       "active",
@@ -231,30 +466,42 @@
       "sm"
     ],
     "tokens": [
-      "--alert-red-500",
-      "--alert-red-600",
       "--border-width-border-1",
-      "--border-width-border-2",
-      "--color-background-brand-lighter",
+      "--button-control-radius",
+      "--button-focus-ring-offset",
+      "--button-focus-ring-radius",
+      "--color-background-alerting-critical",
+      "--color-background-alerting-critical-strong",
+      "--color-background-alerting-critical-stronger",
       "--color-background-controls-brand-base",
+      "--color-background-controls-brand-light",
+      "--color-background-controls-brand-lighter",
       "--color-background-controls-brand-strong",
       "--color-background-controls-brand-stronger",
       "--color-background-gray-lighter",
+      "--color-border-alerting-transparent-critical",
       "--color-border-brand-base",
-      "--color-text-brand-base",
+      "--color-border-disabled",
+      "--color-border-transparent-brand",
+      "--color-icon-brand-base",
+      "--color-icon-disabled",
+      "--color-icon-white",
+      "--color-text-brand-strong",
+      "--color-text-disabled",
       "--color-text-neutral-strong",
       "--color-text-white",
-      "--corner-radius-radius-4",
       "--font-line-height-line-height-20",
-      "--font-size-body-1",
       "--font-size-body-2",
-      "--font-size-body-3",
+      "--padding-padding-10",
       "--padding-padding-12",
       "--padding-padding-16",
+      "--padding-padding-2",
+      "--padding-padding-4",
+      "--padding-padding-6",
       "--padding-padding-8",
-      "--scale-28",
-      "--scale-36",
-      "--scale-44",
+      "--scale-24",
+      "--scale-32",
+      "--scale-40",
       "--spacing-space-8"
     ]
   },
@@ -269,6 +516,11 @@
       "card",
       "footer",
       "header",
+      "headerDivider",
+      "headerIcon",
+      "headerIconImage",
+      "headerRow",
+      "headerTitleCluster",
       "title"
     ],
     "states": [
@@ -283,22 +535,55 @@
     ],
     "tokens": [
       "--border-width-border-1",
+      "--card-control-radius",
       "--color-background-component",
-      "--color-border-lighter",
+      "--color-border-light",
+      "--color-icon-accessible",
       "--color-text-neutral",
       "--color-text-neutral-strong",
-      "--corner-radius-radius-8",
-      "--font-line-height-line-height-20",
       "--font-line-height-line-height-24",
-      "--font-size-body-2",
+      "--font-line-height-line-height-25",
+      "--font-size-body-1",
       "--font-size-header-6",
-      "--padding-padding-12",
       "--padding-padding-16",
-      "--padding-padding-24",
+      "--padding-padding-8",
       "--shadow-drop-shadow-4-blur",
       "--shadow-drop-shadow-4-color",
       "--shadow-drop-shadow-4-x",
       "--shadow-drop-shadow-4-y"
+    ]
+  },
+  "cardheadermenu": {
+    "name": "CardHeaderMenu",
+    "slug": "cardheadermenu",
+    "category": "",
+    "figmaPage": "",
+    "nodeId": "",
+    "anatomy": [
+      "kebabIcon",
+      "kebabTrigger"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-2",
+      "--color-background-brand-lighter",
+      "--color-border-brand-base",
+      "--color-icon-brand-base",
+      "--color-icon-neutral",
+      "--corner-radius-radius-4",
+      "--icon-standard-gray",
+      "--padding-padding-32",
+      "--padding-padding-4"
     ]
   },
   "chatarea": {
@@ -348,18 +633,48 @@
     "slug": "chatinputbox",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "50756:224054",
+    "nodeId": "48467:26816",
     "anatomy": [
+      "actions",
+      "actionsInline",
+      "characterCount",
+      "content",
+      "contentComposing",
+      "contentCustomView",
+      "contentHover",
+      "contentLimit",
+      "contentSelected",
       "disabled",
+      "element",
+      "elementComposing",
+      "elementCustomView",
+      "footer",
+      "footerCount",
+      "footerMeta",
+      "footerText",
+      "limitContent",
+      "limitCountdown",
+      "limitIconWrap",
+      "limitMessage",
+      "newChatButton",
+      "newChatLabel",
+      "placeholderReadonly",
       "root",
-      "send",
-      "textarea"
+      "rootNewChat",
+      "rootWithPromptsV",
+      "sendButton",
+      "sendButtonSelected",
+      "shellCharacterCount",
+      "stopButton",
+      "stopIconWrap",
+      "textarea",
+      "textareaField",
+      "textareaSelected",
+      "tryAskingLabel"
     ],
     "states": [
       "default",
-      "disabled",
-      "focus",
-      "hover"
+      "disabled"
     ],
     "variants": [
       "default"
@@ -369,21 +684,41 @@
     ],
     "tokens": [
       "--border-width-border-1",
-      "--border-width-border-2",
-      "--color-background-component",
+      "--chat-input-button-radius",
+      "--chat-input-focus-ring-offset",
+      "--chat-input-focus-ring-radius",
+      "--chat-input-shell-max-height",
+      "--chat-input-shell-min-height",
+      "--chat-input-shell-radius",
+      "--chat-input-textarea-max-height",
       "--color-background-controls-brand-base",
-      "--color-background-controls-brand-strong",
+      "--color-background-gray-light",
+      "--color-background-surface-2",
       "--color-border-brand-base",
-      "--color-border-light",
+      "--color-border-disabled",
+      "--color-border-neutral-light",
+      "--color-border-strong",
+      "--color-border-transparent-brand",
+      "--color-icon-brand-base",
+      "--color-icon-disabled",
+      "--color-icon-white",
+      "--color-text-brand-strong",
       "--color-text-disabled",
+      "--color-text-neutral",
       "--color-text-neutral-strong",
-      "--color-text-white",
-      "--corner-radius-radius-4",
       "--font-line-height-line-height-20",
+      "--font-line-height-line-height-24",
+      "--font-line-height-line-height-32",
+      "--font-size-body-1",
       "--font-size-body-2",
+      "--font-size-header-5",
       "--padding-padding-12",
-      "--padding-padding-4",
+      "--padding-padding-16",
+      "--padding-padding-2",
+      "--padding-padding-6",
       "--padding-padding-8",
+      "--spacing-space-16",
+      "--spacing-space-24",
       "--spacing-space-8"
     ]
   },
@@ -430,17 +765,26 @@
     "figmaPage": "Form Elements",
     "nodeId": "11067:54543",
     "anatomy": [
+      "assistiveText",
+      "assistiveTextDisabled",
+      "assistiveTextError",
+      "field",
       "indicator",
       "label",
+      "labelError",
       "root",
+      "rootSimulatedFocus",
+      "visuallyHidden",
       "wrapper"
     ],
     "states": [
+      "active",
       "checked",
       "default",
       "disabled",
       "focus",
-      "hover"
+      "hover",
+      "indeterminate"
     ],
     "variants": [
       "default"
@@ -449,16 +793,29 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-2",
+      "--border-width-border-1",
       "--color-background-component",
       "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-background-gray-base",
+      "--color-background-gray-light",
+      "--color-border-accessible",
+      "--color-border-alerting-critical-base",
       "--color-border-brand-base",
-      "--color-border-neutral-light",
-      "--color-text-neutral-strong",
-      "--color-text-white",
+      "--color-border-disabled",
+      "--color-border-strong",
+      "--color-border-transparent-brand",
+      "--color-icon-brand-base",
+      "--color-icon-disabled",
+      "--color-icon-inverse",
+      "--color-icon-white",
+      "--color-text-critical",
+      "--color-text-disabled",
+      "--color-text-neutral",
       "--corner-radius-radius-2",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
+      "--spacing-space-4",
       "--spacing-space-8"
     ]
   },
@@ -513,21 +870,37 @@
     "slug": "dialog",
     "category": "Modals",
     "figmaPage": "Modals",
-    "nodeId": "50276:239953",
+    "nodeId": "43461:175960",
     "anatomy": [
+      "aboutBody",
+      "aboutFooter",
+      "aboutHeader",
+      "aboutHeaderSpacer",
+      "aboutProductTitle",
+      "alertIcon",
       "backdrop",
+      "backdropAbout",
       "body",
+      "bodyScrollable",
       "close",
+      "closeIcon",
+      "contentScrollShadow",
+      "contentSeparator",
       "description",
+      "footer",
       "header",
+      "headerLeft",
+      "modalMainAbout",
       "popup",
+      "popupAbout",
       "title",
-      "triggerReset"
+      "triggerReset",
+      "typeIcon",
+      "typeIconImage"
     ],
     "states": [
       "default",
-      "focus",
-      "hover"
+      "focus"
     ],
     "variants": [
       "default"
@@ -539,26 +912,54 @@
       "--border-width-border-1",
       "--border-width-border-2",
       "--color-background-component",
-      "--color-background-gray-lighter",
       "--color-background-overlay-1",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-border-lighter",
+      "--color-border-neutral-light",
+      "--color-icon-brand-base",
       "--color-icon-neutral",
       "--color-text-neutral",
       "--color-text-neutral-strong",
+      "--corner-radius-radius-16",
       "--corner-radius-radius-4",
-      "--corner-radius-radius-8",
       "--font-line-height-line-height-20",
+      "--font-line-height-line-height-32",
+      "--font-line-height-line-height-58",
       "--font-size-body-2",
-      "--font-size-header-6",
+      "--font-size-header-1",
+      "--font-size-header-5",
+      "--modal-control-radius",
       "--padding-padding-12",
       "--padding-padding-16",
       "--padding-padding-24",
+      "--padding-padding-8",
       "--scale-32",
+      "--scale-80",
+      "--shadow-drop-shadow-16-blur",
+      "--shadow-drop-shadow-16-color",
+      "--shadow-drop-shadow-16-spread",
+      "--shadow-drop-shadow-16-x",
+      "--shadow-drop-shadow-16-y",
+      "--shadow-drop-shadow-2-blur",
+      "--shadow-drop-shadow-2-color",
+      "--shadow-drop-shadow-2-spread",
+      "--shadow-drop-shadow-2-x",
+      "--shadow-drop-shadow-2-y",
       "--shadow-drop-shadow-32-blur",
       "--shadow-drop-shadow-32-color",
       "--shadow-drop-shadow-32-x",
-      "--shadow-drop-shadow-32-y"
+      "--shadow-drop-shadow-32-y",
+      "--shadow-drop-shadow-4-blur",
+      "--shadow-drop-shadow-4-color",
+      "--shadow-drop-shadow-4-spread",
+      "--shadow-drop-shadow-4-x",
+      "--shadow-drop-shadow-4-y",
+      "--shadow-drop-shadow-8-blur",
+      "--shadow-drop-shadow-8-color",
+      "--shadow-drop-shadow-8-spread",
+      "--shadow-drop-shadow-8-x",
+      "--shadow-drop-shadow-8-y",
+      "--spacing-space-16"
     ]
   },
   "dropdownmenu": {
@@ -566,18 +967,43 @@
     "slug": "dropdownmenu",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "49927:272743",
+    "nodeId": "49971:54127",
     "anatomy": [
+      "checkboxDash",
+      "checkboxOuter",
+      "checkboxTick",
+      "clearAllButton",
+      "footerAction",
       "item",
+      "leadingControl",
+      "optionsScrollRegion",
       "popup",
-      "separator",
+      "popupStandalone",
+      "radioInner",
+      "radioOuter",
+      "searchField",
+      "searchIcon",
+      "searchInput",
+      "searchInputWrap",
+      "searchRow",
+      "sectionDivider",
+      "sectionHeader",
+      "selectAllButton",
+      "selectAllCheckbox",
+      "selectAllClearAllRow",
+      "triggerFull",
+      "triggerMeasure",
       "triggerReset"
     ],
     "states": [
+      "active",
       "default",
       "disabled",
       "focus",
-      "highlighted"
+      "highlighted",
+      "hover",
+      "indeterminate",
+      "selected"
     ],
     "variants": [
       "default"
@@ -587,26 +1013,40 @@
     ],
     "tokens": [
       "--border-width-border-1",
-      "--border-width-border-2",
+      "--color-background-brand-light",
       "--color-background-brand-lighter",
       "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-strong",
+      "--color-background-gray-base",
+      "--color-background-gray-lighter",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-border-lighter",
-      "--color-text-brand-base",
+      "--color-border-brand-neutral",
+      "--color-border-disabled",
+      "--color-border-neutral-light",
+      "--color-border-strong",
+      "--color-border-transparent-brand",
+      "--color-icon-brand-base",
+      "--color-icon-disabled",
+      "--color-icon-inverse",
+      "--color-icon-white",
+      "--color-text-brand-strong",
       "--color-text-disabled",
+      "--color-text-neutral",
       "--color-text-neutral-strong",
       "--corner-radius-radius-2",
       "--corner-radius-radius-6",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
-      "--padding-padding-12",
+      "--padding-padding-10",
+      "--padding-padding-16",
+      "--padding-padding-2",
       "--padding-padding-4",
+      "--padding-padding-6",
       "--padding-padding-8",
-      "--shadow-drop-shadow-8-blur",
-      "--shadow-drop-shadow-8-color",
-      "--shadow-drop-shadow-8-x",
-      "--shadow-drop-shadow-8-y",
-      "--spacing-space-4"
+      "--spacing-space-16",
+      "--spacing-space-8"
     ]
   },
   "emptystate": {
@@ -753,67 +1193,6 @@
       "--spacing-space-8"
     ]
   },
-  "globalalert": {
-    "name": "GlobalAlert",
-    "slug": "globalalert",
-    "category": "Alerts",
-    "figmaPage": "Alerts",
-    "nodeId": "11067:54641",
-    "anatomy": [
-      "banner",
-      "close",
-      "description",
-      "icon",
-      "inner",
-      "text",
-      "title"
-    ],
-    "states": [
-      "default",
-      "focus",
-      "hover"
-    ],
-    "variants": [
-      "error",
-      "info",
-      "success",
-      "warning"
-    ],
-    "sizes": [
-      "md"
-    ],
-    "tokens": [
-      "--alert-blue-500",
-      "--alert-green-500",
-      "--alert-red-500",
-      "--alert-yellow-200",
-      "--alert-yellow-600",
-      "--alert-yellow-800",
-      "--border-width-border-2",
-      "--color-background-alerting-critical-slate",
-      "--color-background-alerting-info-slate",
-      "--color-background-alerting-success-slate",
-      "--color-background-gray-lighter",
-      "--color-border-alerting-critical-critical",
-      "--color-border-alerting-info-info",
-      "--color-border-alerting-success-white",
-      "--color-border-brand-base",
-      "--color-icon-neutral",
-      "--color-text-neutral",
-      "--color-text-neutral-strong",
-      "--corner-radius-radius-4",
-      "--font-line-height-line-height-18",
-      "--font-line-height-line-height-20",
-      "--font-size-body-2",
-      "--font-size-body-3",
-      "--padding-padding-1",
-      "--padding-padding-12",
-      "--padding-padding-24",
-      "--scale-24",
-      "--spacing-space-12",
-      "--spacing-space-2"
-    ]
-  },
   "globalsearch": {
     "name": "GlobalSearch",
     "slug": "globalsearch",
@@ -865,74 +1244,30 @@
       "--spacing-space-8"
     ]
   },
-  "inlinealert": {
-    "name": "InlineAlert",
-    "slug": "inlinealert",
-    "category": "Alerts",
-    "figmaPage": "Alerts",
-    "nodeId": "11067:54645",
+  "icon": {
+    "name": "Icon",
+    "slug": "icon",
+    "category": "",
+    "figmaPage": "",
+    "nodeId": "",
     "anatomy": [
-      "alert",
-      "close",
-      "description",
-      "icon",
-      "text",
-      "title"
+      "inlineWrap"
     ],
-    "states": [
-      "default",
-      "focus",
-      "hover"
-    ],
+    "states": [],
     "variants": [
-      "error",
-      "info",
-      "success",
-      "warning"
+      "default"
     ],
     "sizes": [
       "md"
     ],
-    "tokens": [
-      "--alert-blue-500",
-      "--alert-green-500",
-      "--alert-red-500",
-      "--alert-yellow-200",
-      "--alert-yellow-600",
-      "--alert-yellow-800",
-      "--border-width-border-1",
-      "--border-width-border-2",
-      "--color-background-alerting-critical-slate",
-      "--color-background-alerting-info-slate",
-      "--color-background-alerting-success-slate",
-      "--color-background-gray-lighter",
-      "--color-border-alerting-critical-critical",
-      "--color-border-alerting-info-info",
-      "--color-border-alerting-success-white",
-      "--color-border-brand-base",
-      "--color-icon-neutral",
-      "--color-text-neutral",
-      "--color-text-neutral-strong",
-      "--corner-radius-radius-4",
-      "--corner-radius-radius-6",
-      "--font-line-height-line-height-18",
-      "--font-line-height-line-height-20",
-      "--font-size-body-2",
-      "--font-size-body-3",
-      "--padding-padding-1",
-      "--padding-padding-12",
-      "--padding-padding-16",
-      "--scale-24",
-      "--spacing-space-12",
-      "--spacing-space-2"
-    ]
+    "tokens": []
   },
   "leftnav": {
     "name": "LeftNav",
     "slug": "leftnav",
-    "category": "Components",
+    "category": "Navigation",
     "figmaPage": "Components",
-    "nodeId": "47807:7906",
+    "nodeId": "47807:8153",
     "anatomy": [
       "collapsed",
       "expanded",
@@ -1012,35 +1347,149 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-2",
       "--color-border-brand-base",
+      "--color-border-white",
       "--color-text-link-brand-base",
+      "--color-text-link-brand-light",
+      "--color-text-link-brand-lighter",
       "--color-text-link-brand-strong",
       "--color-text-link-brand-stronger",
-      "--corner-radius-radius-2",
-      "--font-line-height-line-height-20",
-      "--font-size-body-2",
-      "--spacing-space-4"
+      "--color-text-white"
     ]
   },
-  "masthead": {
-    "name": "Masthead",
-    "slug": "masthead",
-    "category": "Components",
-    "figmaPage": "Components",
-    "nodeId": "47807:3591",
+  "mainmenuleft": {
+    "name": "MainMenuLeft",
+    "slug": "mainmenuleft",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "47807:8153",
     "anatomy": [
-      "actions",
-      "left",
-      "logo",
-      "masthead",
-      "nav",
-      "navItem",
-      "navLink",
-      "navLinkActive",
-      "navList"
+      "actionButton",
+      "actionIcon",
+      "bottomToggle",
+      "bottomToggleButton",
+      "bottomToggleIcon",
+      "chevronIcon",
+      "collapsed",
+      "content",
+      "expanded",
+      "focusRing",
+      "interactive",
+      "itemBlock",
+      "logoButton",
+      "logoIcon",
+      "logoImg",
+      "logoSlot",
+      "logoStatic",
+      "menuLeadBlock",
+      "menuLeadBlockCollapsed",
+      "menuLeadButton",
+      "menuLeadButtonCollapsed",
+      "menuLeadIcon",
+      "menuLeadLabel",
+      "primaryIcon",
+      "primaryLabel",
+      "primaryRow",
+      "programmeSynapse",
+      "programmeSynapseCollapsed",
+      "programmeSynapseExpanded",
+      "root",
+      "secondaryContextButton",
+      "secondaryContextButtonForceVisible",
+      "secondaryContextButtonStateDisabled",
+      "secondaryContextButtonStateFocus",
+      "secondaryContextButtonStateHover",
+      "secondaryContextButtonStatePress",
+      "secondaryContextIcon",
+      "secondaryInteractive",
+      "secondaryRow",
+      "secondaryRowLabel",
+      "secondaryRowSelected",
+      "secondaryRowSnapshotHover",
+      "secondaryRowWrap",
+      "secondaryRowWrapSnapshotHover",
+      "secondarySection",
+      "selectedInset",
+      "stateDefaultFocus",
+      "stateHover",
+      "statePress",
+      "stateSelected",
+      "stateSelectedFocus"
     ],
     "states": [
+      "active",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-default",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-background-controls-brand-light",
+      "--color-background-controls-brand-lighter",
+      "--color-border-accessible",
+      "--color-border-brand-base",
+      "--color-border-brand-dark",
+      "--color-border-neutral-light",
+      "--color-icon-brand-base",
+      "--color-icon-brand-strong",
+      "--color-icon-disabled",
+      "--color-text-brand-strong",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-24",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-24",
+      "--padding-padding-4",
+      "--padding-padding-58",
+      "--padding-padding-6",
+      "--padding-padding-8",
+      "--spacing-space-16",
+      "--spacing-space-8"
+    ]
+  },
+  "mainmenutop": {
+    "name": "MainMenuTop",
+    "slug": "mainmenutop",
+    "category": "Navigation",
+    "figmaPage": "Navigation",
+    "nodeId": "11067:54522",
+    "anatomy": [
+      "bar",
+      "barItem",
+      "chevronGlyph",
+      "chevronSlot",
+      "chevronSlotSmall",
+      "container",
+      "iconGlyph",
+      "iconSlot",
+      "item",
+      "itemCluster",
+      "itemClusterSmall",
+      "itemSelected",
+      "itemSmall",
+      "label",
+      "labelSmall",
+      "menuSubmenuPopup",
+      "root"
+    ],
+    "states": [
+      "active",
       "default",
       "focus",
       "hover"
@@ -1052,20 +1501,78 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-2",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-border-brand-dark",
+      "--color-icon-brand-strong",
+      "--color-icon-neutral-strong",
+      "--color-text-brand-strong",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-4",
+      "--padding-padding-12",
+      "--padding-padding-8",
+      "--spacing-space-16",
+      "--spacing-space-8"
+    ]
+  },
+  "masthead": {
+    "name": "Masthead",
+    "slug": "masthead",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "47807:7569",
+    "anatomy": [
+      "actionButtonContainer",
+      "actionIconButton",
+      "actionIconGlyph",
+      "actions",
+      "appLauncherSlot",
+      "avatarAction",
+      "avatarChip",
+      "avatarImage",
+      "avatarSlot",
+      "iconButton",
+      "iconsSlot",
+      "left",
+      "logo",
+      "masthead",
+      "productName"
+    ],
+    "states": [
+      "active",
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-default",
       "--color-background-masthead-brand-base",
       "--color-background-masthead-brand-strong",
       "--color-background-masthead-brand-stronger",
+      "--color-border-transparent-neutral",
+      "--color-border-white",
       "--color-text-white",
       "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-32",
       "--font-size-body-1",
       "--font-size-body-2",
+      "--font-size-header-6",
       "--padding-padding-16",
       "--padding-padding-8",
+      "--scale-16",
+      "--scale-24",
       "--scale-32",
-      "--scale-48",
-      "--spacing-space-24",
-      "--spacing-space-4",
+      "--scale-56",
       "--spacing-space-8"
     ]
   },
@@ -1206,11 +1713,21 @@
     "figmaPage": "Components",
     "nodeId": "50724:317216",
     "anatomy": [
+      "helperIcon",
+      "helperRow",
+      "helperText",
       "indicator",
+      "inlineRow",
+      "inlineValue",
       "label",
+      "labeledBlock",
+      "medium",
       "meta",
       "root",
+      "thick",
+      "thin",
       "track",
+      "trackBg",
       "value"
     ],
     "states": [
@@ -1223,13 +1740,26 @@
       "md"
     ],
     "tokens": [
-      "--alert-green-500",
-      "--color-background-controls-brand-base",
+      "--border-width-border-1",
+      "--color-background-alerting-critical",
+      "--color-background-alerting-minor",
+      "--color-background-alerting-success",
+      "--color-background-brand-base",
       "--color-background-gray-light",
+      "--color-border-accessible",
+      "--color-border-alerting-critical-base",
+      "--color-border-alerting-minor-transparent",
+      "--color-border-alerting-success-base",
+      "--color-border-brand-base",
       "--color-text-neutral",
       "--color-text-neutral-strong",
-      "--corner-radius-radius-24",
-      "--font-size-body-3",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-8",
+      "--progress-bar-control-radius",
+      "--sizing-size-16",
+      "--sizing-size-4",
+      "--sizing-size-8",
       "--spacing-space-4"
     ]
   },
@@ -1240,6 +1770,7 @@
     "figmaPage": "Form Elements",
     "nodeId": "11067:54579",
     "anatomy": [
+      "field",
       "group",
       "indicator",
       "label",
@@ -1247,6 +1778,7 @@
       "wrapper"
     ],
     "states": [
+      "active",
       "checked",
       "default",
       "disabled",
@@ -1260,14 +1792,64 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-2",
+      "--border-width-border-1",
       "--color-background-component",
-      "--color-background-controls-brand-base",
+      "--color-background-gray-light",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-border-neutral-light",
-      "--color-text-neutral-strong",
+      "--color-border-disabled",
+      "--color-border-strong",
+      "--color-icon-brand-base",
+      "--color-icon-brand-strong",
+      "--color-icon-disabled",
+      "--color-text-disabled",
+      "--color-text-neutral",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
+      "--spacing-space-16",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "recommendationfeedback": {
+    "name": "RecommendationFeedback",
+    "slug": "recommendationfeedback",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "53259:126112",
+    "anatomy": [
+      "actionButton",
+      "actions",
+      "prompt",
+      "root",
+      "timestamp"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-surface-1",
+      "--color-border-brand-base",
+      "--color-text-disabled",
+      "--color-text-neutral",
+      "--corner-radius-radius-4",
+      "--corner-radius-radius-6",
+      "--font-line-height-line-height-18",
+      "--font-line-height-line-height-24",
+      "--font-size-body-1",
+      "--font-size-body-3",
+      "--padding-padding-6",
+      "--padding-padding-8",
+      "--scale-2",
       "--spacing-space-12",
       "--spacing-space-8"
     ]
@@ -1317,6 +1899,47 @@
     ],
     "states": [
       "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--border-width-border-2",
+      "--color-background-component",
+      "--color-border-accessible",
+      "--color-border-brand-base",
+      "--color-border-strong",
+      "--color-text-disabled",
+      "--color-text-neutral",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2"
+    ]
+  },
+  "segmentedbutton": {
+    "name": "SegmentedButton",
+    "slug": "segmentedbutton",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "11067:54583",
+    "anatomy": [
+      "customIcon",
+      "iconMask",
+      "iconMissing",
+      "root",
+      "segment",
+      "segmentIcon",
+      "segmentText",
+      "selected"
+    ],
+    "states": [
+      "active",
+      "default",
       "disabled",
       "focus",
       "hover"
@@ -1329,62 +1952,29 @@
     ],
     "tokens": [
       "--border-width-border-1",
-      "--border-width-border-2",
-      "--color-background-component",
-      "--color-background-surface-1",
-      "--color-border-brand-base",
-      "--color-border-light",
-      "--color-border-neutral",
-      "--color-text-neutral",
-      "--color-text-neutral-strong",
-      "--corner-radius-radius-2",
-      "--corner-radius-radius-4",
-      "--font-line-height-line-height-20",
-      "--font-size-body-2",
-      "--padding-padding-12",
-      "--scale-36",
-      "--spacing-space-8"
-    ]
-  },
-  "segmentedbutton": {
-    "name": "SegmentedButton",
-    "slug": "segmentedbutton",
-    "category": "Form Elements",
-    "figmaPage": "Form Elements",
-    "nodeId": "11067:54583",
-    "anatomy": [
-      "button",
-      "root",
-      "selected"
-    ],
-    "states": [
-      "default",
-      "focus",
-      "hover"
-    ],
-    "variants": [
-      "default"
-    ],
-    "sizes": [
-      "md"
-    ],
-    "tokens": [
-      "--border-width-border-1",
-      "--border-width-border-2",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
       "--color-background-component",
       "--color-background-controls-brand-base",
-      "--color-background-controls-brand-strong",
-      "--color-background-gray-lighter",
+      "--color-background-gray-light",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-border-light",
+      "--color-border-disabled",
+      "--color-icon-brand-base",
+      "--color-icon-white",
+      "--color-text-brand-strong",
+      "--color-text-critical",
+      "--color-text-disabled",
       "--color-text-neutral",
-      "--color-text-neutral-strong",
       "--color-text-white",
       "--corner-radius-radius-2",
-      "--corner-radius-radius-4",
+      "--font-line-height-line-height-20",
       "--font-size-body-2",
-      "--padding-padding-16",
-      "--padding-padding-8"
+      "--padding-padding-2",
+      "--padding-padding-4",
+      "--padding-padding-8",
+      "--sizing-size-32",
+      "--spacing-space-2"
     ]
   },
   "select": {
@@ -1476,14 +2066,27 @@
     "nodeId": "21983:31228",
     "anatomy": [
       "control",
+      "edgeLabel",
+      "edgeLabelActive",
       "indicator",
-      "label",
+      "inputGroup",
+      "inputSeparator",
+      "rightMeta",
       "root",
+      "sliderRow",
+      "stepperDot",
+      "stepperDotSelected",
+      "stepperLayer",
       "thumb",
       "track",
+      "valueInput",
+      "valueLabelLayer",
+      "valueText",
+      "valueTextDisabled",
       "wrapper"
     ],
     "states": [
+      "active",
       "default",
       "disabled",
       "focus",
@@ -1496,17 +2099,24 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-2",
-      "--border-width-border-4",
+      "--border-width-border-1",
       "--color-background-component",
-      "--color-background-controls-brand-base",
-      "--color-background-controls-brand-light",
       "--color-background-gray-light",
+      "--color-border-accessible",
       "--color-border-brand-base",
-      "--color-text-neutral-strong",
-      "--corner-radius-radius-4",
+      "--color-border-disabled",
+      "--color-icon-brand-base",
+      "--color-icon-brand-strong",
+      "--color-icon-brand-stronger",
+      "--color-icon-disabled",
+      "--color-text-brand-base",
+      "--color-text-disabled",
+      "--color-text-neutral",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
+      "--padding-padding-16",
+      "--spacing-space-16",
+      "--spacing-space-4",
       "--spacing-space-8"
     ]
   },
@@ -1517,13 +2127,17 @@
     "figmaPage": "Loading",
     "nodeId": "11067:54673",
     "anatomy": [
-      "arc",
+      "labelBelow",
+      "labelInline",
+      "layoutInline",
+      "layoutStack",
+      "root",
       "spinner",
-      "srOnly",
-      "svg",
-      "track"
+      "srOnly"
     ],
-    "states": [],
+    "states": [
+      "default"
+    ],
     "variants": [
       "default"
     ],
@@ -1531,8 +2145,9 @@
       "md"
     ],
     "tokens": [
-      "--color-background-controls-brand-base",
-      "--color-border-light"
+      "--color-border-brand-base",
+      "--color-text-neutral-strong",
+      "--spinner-progress-size"
     ]
   },
   "stepper": {
@@ -1542,12 +2157,22 @@
     "figmaPage": "Components",
     "nodeId": "48160:11907",
     "anatomy": [
+      "activeDot",
+      "circleActive",
+      "circleCompleted",
       "connector",
-      "connectorActive",
+      "connectorCompleted",
+      "connectorTerminal",
+      "connectorVertical",
       "label",
+      "labelRow",
       "number",
       "root",
-      "step"
+      "rootVertical",
+      "step",
+      "stepVertical",
+      "topRow",
+      "topRowVertical"
     ],
     "states": [
       "default"
@@ -1559,15 +2184,22 @@
       "md"
     ],
     "tokens": [
-      "--alert-green-500",
       "--border-width-border-2",
+      "--color-background-brand-base",
       "--color-background-component",
-      "--color-background-controls-brand-base",
-      "--color-border-lighter",
-      "--color-text-neutral",
+      "--color-background-gray-neutral-dark",
+      "--color-background-gray-neutral-light",
+      "--color-border-accessible",
+      "--color-border-brand-base",
+      "--color-icon-inverse",
       "--color-text-neutral-strong",
       "--color-text-white",
-      "--font-size-body-3",
+      "--corner-radius-radius-6",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-2",
+      "--padding-padding-8",
+      "--spacing-space-6",
       "--spacing-space-8"
     ]
   },
@@ -1576,10 +2208,13 @@
     "slug": "switch",
     "category": "Form Elements",
     "figmaPage": "Form Elements",
-    "nodeId": "11067:54591",
+    "nodeId": "52721:273164",
     "anatomy": [
-      "label",
+      "formLabel",
+      "required",
       "root",
+      "stateText",
+      "stateTextDisabled",
       "thumb",
       "wrapper"
     ],
@@ -1597,20 +2232,164 @@
       "md"
     ],
     "tokens": [
-      "--border-width-border-2",
-      "--color-background-controls-brand-base",
-      "--color-background-gray-base",
+      "--border-width-border-1",
+      "--color-background-brand-base",
+      "--color-background-brand-strong",
+      "--color-background-component",
       "--color-background-gray-light",
-      "--color-background-white",
+      "--color-background-gray-neutral-dark",
+      "--color-background-gray-neutral-darker",
+      "--color-border-accessible",
       "--color-border-brand-base",
+      "--color-border-brand-dark",
+      "--color-border-disabled",
+      "--color-border-strong",
+      "--color-text-disabled",
+      "--color-text-neutral",
       "--color-text-neutral-strong",
-      "--corner-radius-radius-24",
+      "--font-line-height-line-height-20",
       "--font-size-body-2",
-      "--shadow-drop-shadow-2-blur",
-      "--shadow-drop-shadow-2-color",
-      "--shadow-drop-shadow-2-x",
-      "--shadow-drop-shadow-2-y",
       "--spacing-space-8"
+    ]
+  },
+  "synapsemasthead": {
+    "name": "SynapseMasthead",
+    "slug": "synapsemasthead",
+    "category": "",
+    "figmaPage": "",
+    "nodeId": "",
+    "anatomy": [
+      "actionButtonContainer",
+      "actionIconButton",
+      "actionIconGlyph",
+      "actions",
+      "avatarAction",
+      "avatarChip",
+      "avatarImage",
+      "avatarSlot",
+      "badgeWrapper",
+      "left",
+      "logo",
+      "masthead",
+      "productName"
+    ],
+    "states": [
+      "active",
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-controls-brand-strong",
+      "--color-background-gradient-masthead-end",
+      "--color-background-gradient-masthead-start",
+      "--color-background-masthead-brand-base",
+      "--color-background-masthead-brand-strong",
+      "--color-background-masthead-brand-stronger",
+      "--color-background-surface-1",
+      "--color-border-transparent-neutral-light",
+      "--color-border-white",
+      "--color-icon-white",
+      "--color-text-white",
+      "--font-line-height-line-height-20",
+      "--font-line-height-line-height-32",
+      "--font-size-body-1",
+      "--font-size-body-2",
+      "--font-size-header-6",
+      "--padding-padding-12",
+      "--padding-padding-16",
+      "--padding-padding-20",
+      "--padding-padding-8",
+      "--scale-56",
+      "--sizing-size-16",
+      "--sizing-size-32",
+      "--sizing-size-48",
+      "--spacing-space-8"
+    ]
+  },
+  "synapsemastheadhelpmenu": {
+    "name": "SynapseMastheadHelpMenu",
+    "slug": "synapsemastheadhelpmenu",
+    "category": "",
+    "figmaPage": "",
+    "nodeId": "",
+    "anatomy": [
+      "optionRow",
+      "popup"
+    ],
+    "states": [
+      "default",
+      "disabled",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-background-gray-lighter",
+      "--color-border-brand-neutral",
+      "--color-border-neutral-light",
+      "--color-text-disabled",
+      "--color-text-neutral",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-10",
+      "--padding-padding-16"
+    ]
+  },
+  "synapsemastheadusermenu": {
+    "name": "SynapseMastheadUserMenu",
+    "slug": "synapsemastheadusermenu",
+    "category": "",
+    "figmaPage": "",
+    "nodeId": "",
+    "anatomy": [
+      "avatarIcon",
+      "emailRowHighlighted",
+      "emailRowPlain",
+      "footerAction",
+      "optionItem",
+      "optionsScrollRegion",
+      "popup",
+      "userNameRow"
+    ],
+    "states": [
+      "default",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-border-brand-base",
+      "--color-border-brand-neutral",
+      "--color-border-neutral-light",
+      "--color-text-brand-strong",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-10",
+      "--padding-padding-16",
+      "--padding-padding-8"
     ]
   },
   "table": {
@@ -1656,13 +2435,32 @@
     "slug": "tabs",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "47803:1704",
+    "nodeId": "47807:3185",
     "anatomy": [
+      "addButton",
+      "addButtonSecondary",
+      "addIcon",
+      "addLabel",
+      "close",
+      "closeIcon",
       "list",
+      "listWrap",
+      "moreIcon",
+      "moreItem",
+      "moreMenu",
+      "moreTrigger",
+      "moreTriggerPrimary",
+      "moreTriggerSecondary",
+      "moreTriggerSelected",
       "panel",
       "root",
       "selected",
-      "tab"
+      "tab",
+      "tabIcon",
+      "tabInner",
+      "tabLabel",
+      "tabPrimary",
+      "tabSecondary"
     ],
     "states": [
       "default",
@@ -1678,17 +2476,39 @@
     ],
     "tokens": [
       "--border-width-border-1",
-      "--border-width-border-2",
+      "--border-width-border-thick",
+      "--color-background-brand-light",
+      "--color-background-brand-lighter",
+      "--color-background-component",
+      "--color-background-n-tabs-x-hover",
+      "--color-background-surface-2",
+      "--color-border-accessible",
       "--color-border-brand-base",
+      "--color-border-brand-dark",
+      "--color-border-light",
       "--color-border-lighter",
-      "--color-text-brand-base",
+      "--color-border-neutral-light",
+      "--color-icon-neutral",
+      "--color-text-brand-strong",
       "--color-text-neutral",
       "--color-text-neutral-strong",
-      "--corner-radius-radius-2",
+      "--corner-radius-radius-4",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
+      "--padding-padding-1",
+      "--padding-padding-12",
       "--padding-padding-16",
-      "--padding-padding-8"
+      "--padding-padding-24",
+      "--padding-padding-4",
+      "--padding-padding-6",
+      "--padding-padding-8",
+      "--shadow-drop-shadow-8-blur",
+      "--shadow-drop-shadow-8-color",
+      "--shadow-drop-shadow-8-x",
+      "--shadow-drop-shadow-8-y",
+      "--sizing-size-24",
+      "--spacing-space-24",
+      "--spacing-space-8"
     ]
   },
   "tag": {
@@ -1696,11 +2516,22 @@
     "slug": "tag",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "50724:304757",
+    "nodeId": "38910:57385",
     "anatomy": [
+      "badge",
+      "clickable",
       "dismiss",
-      "label",
-      "tag"
+      "editable",
+      "emphasis_light",
+      "emphasis_strong",
+      "menuCaret",
+      "prefix",
+      "programmeIds",
+      "programmeSynapse",
+      "selected",
+      "tag",
+      "textField",
+      "typeBadge"
     ],
     "states": [
       "default",
@@ -1709,40 +2540,57 @@
       "hover"
     ],
     "variants": [
-      "error",
-      "info",
-      "success",
-      "warning"
+      "default"
     ],
     "sizes": [
-      "md"
+      "lg",
+      "sm"
     ],
     "tokens": [
-      "--alert-yellow-200",
-      "--alert-yellow-600",
-      "--border-width-border-1",
-      "--border-width-border-2",
+      "--border-width-border-default",
+      "--color-background-alerting-critical",
       "--color-background-alerting-critical-slate",
-      "--color-background-alerting-info-slate",
-      "--color-background-alerting-success-slate",
+      "--color-background-alerting-info",
+      "--color-background-alerting-info-1",
+      "--color-background-alerting-major",
+      "--color-background-alerting-minor",
+      "--color-background-alerting-success",
+      "--color-background-component",
+      "--color-background-controls-brand-base",
+      "--color-background-controls-brand-lighter",
+      "--color-background-controls-brand-strong",
+      "--color-background-gray-light",
       "--color-background-gray-lighter",
-      "--color-border-alerting-critical-critical",
-      "--color-border-alerting-info-info",
+      "--color-border-accessible",
+      "--color-border-alerting-critical-base",
+      "--color-border-alerting-critical-white",
+      "--color-border-alerting-info-white",
+      "--color-border-alerting-major-white",
+      "--color-border-alerting-minor-transparent",
       "--color-border-alerting-success-white",
       "--color-border-brand-base",
-      "--color-border-light",
-      "--color-text-neutral-strong",
+      "--color-border-disabled",
+      "--color-border-transparent-brand",
+      "--color-border-white",
+      "--color-icon-neutral-strong",
+      "--color-static-gray-500",
+      "--color-text-disabled",
+      "--color-text-neutral",
       "--color-text-tag-critical",
-      "--color-text-tag-info",
-      "--color-text-tag-success",
-      "--color-text-tag-warning",
+      "--color-text-warning",
+      "--color-text-white",
       "--corner-radius-radius-2",
-      "--corner-radius-radius-4",
-      "--font-line-height-line-height-18",
+      "--corner-radius-radius-24",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
       "--font-size-body-3",
+      "--padding-padding-12",
       "--padding-padding-2",
+      "--padding-padding-4",
       "--padding-padding-8",
-      "--spacing-space-4"
+      "--sizing-size-10",
+      "--sizing-size-18",
+      "--spacing-space-8"
     ]
   },
   "textinput": {
@@ -1750,52 +2598,87 @@
     "slug": "textinput",
     "category": "Components",
     "figmaPage": "Components",
-    "nodeId": "47833:47702",
+    "nodeId": "47833:48165",
     "anatomy": [
+      "control",
+      "errorIcon",
+      "errorText",
       "field",
-      "focused",
-      "helper",
-      "input",
-      "invalid",
-      "label"
+      "helperRow",
+      "helperText",
+      "label",
+      "large",
+      "required",
+      "root",
+      "small",
+      "suffixIcon",
+      "textAreaControl",
+      "value"
     ],
     "states": [
       "default",
-      "disabled",
-      "focus",
       "hover"
     ],
     "variants": [
-      "error"
+      "default"
     ],
     "sizes": [
-      "lg",
-      "md",
-      "sm"
+      "md"
     ],
     "tokens": [
-      "--alert-red-500",
       "--border-width-border-1",
       "--color-background-component",
-      "--color-background-surface-1",
+      "--color-background-gray-light",
+      "--color-border-accessible",
+      "--color-border-alerting-critical-base",
       "--color-border-brand-base",
-      "--color-border-light",
-      "--color-border-neutral",
+      "--color-border-strong",
+      "--color-icon-neutral",
       "--color-text-critical",
       "--color-text-disabled",
       "--color-text-neutral",
       "--color-text-neutral-strong",
       "--corner-radius-radius-4",
       "--font-line-height-line-height-20",
-      "--font-size-body-1",
       "--font-size-body-2",
-      "--font-size-body-3",
+      "--padding-padding-10",
+      "--padding-padding-16",
+      "--spacing-space-10",
+      "--spacing-space-4",
+      "--spacing-space-8"
+    ]
+  },
+  "thinking": {
+    "name": "Thinking",
+    "slug": "thinking",
+    "category": "Components",
+    "figmaPage": "Components",
+    "nodeId": "53259:126090",
+    "anatomy": [
+      "progressTrackWrap",
+      "progressVariant",
+      "root",
+      "spinnerRow",
+      "spinnerVariant",
+      "statusLabel"
+    ],
+    "states": [
+      "default"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--color-text-neutral",
+      "--font-line-height-line-height-24",
+      "--font-size-body-1",
       "--padding-padding-12",
       "--padding-padding-8",
-      "--scale-28",
-      "--scale-36",
-      "--scale-44",
-      "--spacing-space-4"
+      "--spacing-space-16",
+      "--spacing-space-8"
     ]
   },
   "toast": {
@@ -1805,60 +2688,104 @@
     "figmaPage": "Components",
     "nodeId": "48467:82945",
     "anatomy": [
+      "actionsGroup",
       "close",
+      "closeIcon",
+      "closePlaceholder",
       "content",
+      "contentGroup",
+      "critical",
       "description",
       "iconWrap",
+      "link",
+      "major-warning",
+      "minor-warning",
       "root",
-      "title",
+      "variantIcon",
       "viewport"
     ],
     "states": [
       "default",
-      "focus",
-      "hover"
+      "focus"
     ],
     "variants": [
-      "error",
       "info",
-      "success",
-      "warning"
+      "success"
     ],
     "sizes": [
       "md"
     ],
     "tokens": [
-      "--alert-blue-500",
-      "--alert-green-500",
-      "--alert-red-500",
-      "--alert-yellow-500",
-      "--alert-yellow-800",
-      "--border-width-border-1",
-      "--border-width-border-2",
-      "--border-width-border-4",
-      "--color-background-component",
-      "--color-background-gray-lighter",
+      "--border-width-border-default",
+      "--border-width-border-thick",
       "--color-border-brand-base",
-      "--color-border-lighter",
-      "--color-icon-neutral",
-      "--color-text-neutral",
-      "--color-text-neutral-strong",
-      "--corner-radius-radius-4",
-      "--corner-radius-radius-8",
-      "--font-line-height-line-height-18",
+      "--color-border-white",
+      "--color-icon-alerting-critical",
+      "--color-icon-alerting-info",
+      "--color-icon-alerting-major",
+      "--color-icon-alerting-minor",
+      "--color-icon-alerting-success",
+      "--color-icon-white",
+      "--color-static-gray-900",
+      "--color-static-gray-white",
+      "--color-text-white",
+      "--corner-radius-radius-2",
       "--font-line-height-line-height-20",
       "--font-size-body-2",
-      "--font-size-body-3",
-      "--padding-padding-12",
+      "--padding-padding-14",
       "--padding-padding-16",
       "--padding-padding-2",
-      "--scale-24",
-      "--shadow-drop-shadow-8-blur",
-      "--shadow-drop-shadow-8-color",
-      "--shadow-drop-shadow-8-x",
-      "--shadow-drop-shadow-8-y",
-      "--spacing-space-12",
+      "--padding-padding-24",
+      "--scale-12",
+      "--scale-16",
       "--spacing-space-2",
+      "--spacing-space-24",
+      "--spacing-space-32",
+      "--spacing-space-8",
+      "--toast-control-radius",
+      "--typography-font-style-primary"
+    ]
+  },
+  "toggleswitch": {
+    "name": "ToggleSwitch",
+    "slug": "toggleswitch",
+    "category": "Form Elements",
+    "figmaPage": "Form Elements",
+    "nodeId": "52721:273164",
+    "anatomy": [
+      "label",
+      "root",
+      "switch",
+      "thumb"
+    ],
+    "states": [
+      "checked",
+      "default",
+      "disabled",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "default"
+    ],
+    "sizes": [
+      "md"
+    ],
+    "tokens": [
+      "--border-width-border-1",
+      "--color-background-brand-base",
+      "--color-background-brand-strong",
+      "--color-background-component",
+      "--color-background-gray-light",
+      "--color-background-gray-neutral-dark",
+      "--color-background-gray-neutral-light",
+      "--color-border-brand-base",
+      "--color-border-brand-dark",
+      "--color-border-disabled",
+      "--color-border-neutral",
+      "--color-border-strong",
+      "--color-text-disabled",
+      "--color-text-neutral",
       "--spacing-space-8"
     ]
   },
@@ -1870,7 +2797,17 @@
     "nodeId": "48625:111469",
     "anatomy": [
       "arrow",
+      "arrowFill",
+      "arrowStroke",
+      "arrowSvg",
+      "body",
+      "close",
+      "content",
+      "header",
       "popup",
+      "popupDismissible",
+      "popupStandard",
+      "title",
       "trigger"
     ],
     "states": [
@@ -1883,17 +2820,18 @@
       "md"
     ],
     "tokens": [
-      "--color-background-gray-stronger",
-      "--color-text-white",
-      "--corner-radius-radius-4",
-      "--font-line-height-line-height-18",
-      "--font-size-body-3",
-      "--padding-padding-10",
-      "--padding-padding-6",
-      "--shadow-drop-shadow-8-blur",
-      "--shadow-drop-shadow-8-color",
-      "--shadow-drop-shadow-8-x",
-      "--shadow-drop-shadow-8-y"
+      "--border-width-border-1",
+      "--color-background-surface-2",
+      "--color-border-accessible",
+      "--color-icon-neutral",
+      "--color-text-neutral",
+      "--color-text-neutral-strong",
+      "--corner-radius-radius-8",
+      "--font-line-height-line-height-20",
+      "--font-size-body-2",
+      "--padding-padding-12",
+      "--spacing-space-4",
+      "--spacing-space-8"
     ]
   },
   "tracker": {

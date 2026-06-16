@@ -32,11 +32,20 @@
 - Vertical spacing:
   - control to helper row: `4px`
   - helper row icon-to-text gap: `8px`
-- Control corner radius: `0` (square corners in verified sample)
+- Control corner radius: **`var(--text-box-control-radius)`** (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Text area padding aligns to sample: `9px` top and `10px` bottom.
 - Trailing icon size: `16px x 16px`.
 - Focus-visible ring is outside the control boundary and uses the brand border token.
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--text-box-control-radius` | `var(--corner-radius-radius-none)` |
+| `--text-box-focus-ring-radius` | `var(--corner-radius-radius-4)` |
+
 - Surface/background:
   - `var(--color-background-component)` (default)
   - `var(--color-background-gray-light)` (disabled)
@@ -63,7 +72,7 @@
 | TextBoxControl | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
 | TextBoxControl | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
 | TextBoxControl | selected | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | focus-visible | `var(--color-background-component)` | control border `var(--color-border-accessible)` + outer outline `var(--color-border-brand-base)` (radius `4px`) | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
+| TextBoxControl | focus-visible | `var(--color-background-component)` | control border `var(--color-border-accessible)` + outer outline `var(--color-border-brand-base)` (radius `var(--text-box-focus-ring-radius)`) | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
 | TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
 | TextBoxControl | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, helper row icon/text critical |
 | TextBoxHelperRow | helper | transparent | none | `var(--color-text-neutral)` |
@@ -84,7 +93,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Click/focus places caret in input/textarea.
 - Hover updates control border from accessible to strong.
 - Pointer focus (click inside input) is treated as active/selected visual: control border `var(--color-border-brand-base)` with no outline.
-- Keyboard focus-visible keeps control border `var(--color-border-accessible)` and draws an outer 1px `var(--color-border-brand-base)` ring with 4px radius.
+- Keyboard focus-visible keeps control border `var(--color-border-accessible)` and draws an outer 1px `var(--color-border-brand-base)` ring with `var(--text-box-focus-ring-radius)`.
 - Disabled removes interaction and uses disabled text/icon/background tokens.
 - Error state keeps control interactive (unless separately disabled) and shows critical helper row.
 - Demo/testing mode may force visual states with `data-state`; this must not block runtime pointer/keyboard behavior.
@@ -122,7 +131,7 @@ Variant matrix:
   - helperMode: `none | helper | error`
   - suffixIcon: `hidden | visible(mail or custom slug)`
 - Per-slot style contract:
-  - `TextBoxControl` owns all border/background state styling.
+  - `TextBoxControl` owns all border/background state styling; `border-radius: var(--text-box-control-radius)`; focus ring `border-radius: var(--text-box-focus-ring-radius)`.
   - text field slot is transparent, borderless, inherits typography/color tokens.
   - helper/error row is always outside control with 4px vertical gap.
 - Behavior contract:
@@ -131,7 +140,7 @@ Variant matrix:
   - `invalid || errorText` activates error helper row styling.
   - runtime focus semantics:
     - pointer focus (`:focus:not(:focus-visible)`) -> active border only (`var(--color-border-brand-base)`), no outline ring
-    - keyboard focus (`:focus-visible`) -> control border `var(--color-border-accessible)` + visible outer focus ring (4px radius)
+    - keyboard focus (`:focus-visible`) -> control border `var(--color-border-accessible)` + visible outer focus ring (`var(--text-box-focus-ring-radius)`)
 - Accessibility contract:
   - input/textarea must expose `aria-invalid` when invalid.
   - helper/error row must be linked via `aria-describedby`.
@@ -146,6 +155,7 @@ Variant matrix:
   - if `showHelperText=false`, suppress helper/error row.
   - if `componentType="text-area"` and `size="small"`, keep text-area height behavior and ignore small height constraint.
 - Validation checklist (pass/fail):
+  - [ ] layout uses component aliases (`--text-box-control-radius`, `--text-box-focus-ring-radius`), not hardcoded px
   - [ ] all visual states match tokenized border/background/text/icon model
   - [ ] helper and error rows are mutually exclusive in render output
   - [ ] disabled prevents editing and pointer interaction

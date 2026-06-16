@@ -62,11 +62,11 @@
   width: 100%;
   min-height: 48px;
   padding: var(--padding-padding-14) var(--padding-padding-24);
-  border-radius: var(--corner-radius-radius-2);
   border-width: var(--border-width-border-default);
   border-style: solid;
   border-color: var(--color-border-white);
   background: var(--color-static-gray-900);
+  border-radius: var(--toast-control-radius);
   font-family: inherit;
 }
 

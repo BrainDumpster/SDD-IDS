@@ -16,7 +16,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-background-component);
-  border-radius: 0;
+  border-radius: var(--modal-control-radius);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   box-shadow: var(--shadow-drop-shadow-32-x) var(--shadow-drop-shadow-32-y) var(--shadow-drop-shadow-32-blur) var(--shadow-drop-shadow-32-color);
   z-index: 1050;

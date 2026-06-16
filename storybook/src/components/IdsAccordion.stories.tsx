@@ -1,3 +1,4 @@
+import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsAccordion } from "./IdsAccordion";
 import {

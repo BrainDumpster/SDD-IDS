@@ -2,7 +2,7 @@
 <!-- ds:inherits root-spec -->
 # ChatArea Design Spec
 
-> Generated 2026-03-25T01:42:04Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
+> Generated 2026-06-12T07:10:00Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
 <!-- ds:section id=metadata -->
 ## Metadata
@@ -41,7 +41,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
 > Below are tokens referenced by this component's CSS module.
 
-- `var(--border-width-border-1)` = 1px
+- `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-controls-brand-base)` = #0076ce
 - `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
@@ -62,19 +62,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#f4f4f4) | `var(--border-width-border-1)` (1px) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-neutral-strong)` (#252525) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-1)` (#f4f4f4) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-neutral-strong)` (#252525) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
-
-- `components/ids-theme.css`
-- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
-
-Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
-
-*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+| Variant | State | Background | Border | Text / Icon | Other |
+|---|---|---|---|---|---|
+| default | default | `var(--color-background-surface-1)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#1e262c) | `var(--color-text-neutral-strong)` (#e6e9ec) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
 
 ## Source Mapping
 

@@ -6,7 +6,7 @@
   /* Figma SegmentedButton-Main: padding token is Padding/padding-2 (2px inset). */
   padding: var(--padding-padding-2);
   border: var(--border-width-border-default) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--segmented-button-control-radius, var(--corner-radius-radius-2));
   background: var(--color-background-component);
 }
 
@@ -46,7 +46,7 @@
   /* Invisible edge between segments — inset shadow avoids layout shift (preserves 34px text / 37px icon shells). */
   border: none;
   box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--segmented-button-control-radius, var(--corner-radius-radius-2));
   background: var(--color-background-component);
   color: var(--color-text-neutral);
   transition:

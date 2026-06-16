@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "rm -rf node_modules/.cache/storybook && storybook dev -p 6006",
-    "dev:clean": "rm -rf node_modules/.cache/storybook && storybook dev -p 6006",
+    "dev": "fuser -k 6006/tcp 2>/dev/null || true; rm -rf node_modules/.cache/storybook && storybook dev -p 6006 --ci",
+    "dev:clean": "fuser -k 6006/tcp 2>/dev/null || true; rm -rf node_modules/.cache/storybook && storybook dev -p 6006 --ci",
+    "dev:reset": "fuser -k 6006/tcp 2>/dev/null || true; npm run dev",
     "build": "storybook build",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006 --ci"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",

@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import {
+  LeftNavSecondaryContextMenu,
+  type LeftNavSecondaryContextMenuOption,
+} from "./LeftNavSecondaryContextMenu";
 import styles from "./MainMenuLeft.module.css";
 import { Icon } from "./Icon";
+
+export type MainMenuLeftContextMenuOption = LeftNavSecondaryContextMenuOption;
 
 export type MainMenuLeftPrimaryState =
   | "default"
@@ -51,6 +57,13 @@ export interface MainMenuLeftSecondaryItem {
   href?: string;
   /** @deprecated Use `link: { type: 'routerLink', routerLink }`. */
   routeRef?: string;
+  /**
+   * User-defined overflow menu rows (Synapse `childrenContextMenu` parents).
+   * Popup chrome uses Synapse detached menu (`dropdown-combo-box` spec, Figma `53325:280088`).
+   */
+  contextMenuOptions?: MainMenuLeftContextMenuOption[];
+  /** Storybook / demo — open context menu on mount for this row. */
+  contextMenuDefaultOpen?: boolean;
 }
 
 export interface MainMenuLeftPrimaryItem {
@@ -65,6 +78,11 @@ export interface MainMenuLeftPrimaryItem {
   link?: MainMenuLeftLink;
   /** Optional nested rows under this primary item. */
   children?: MainMenuLeftSecondaryItem[];
+  /**
+   * When true (Synapse), each secondary row under this primary shows an overflow-menu trigger on hover.
+   * Host handles menu content via `onSecondaryContextMenu`.
+   */
+  childrenContextMenu?: boolean;
   /** When `forceStates` is true: initial open state of `children` list in matrix stories. */
   childrenMenu?: "expanded" | "collapsed";
   state?: MainMenuLeftPrimaryState;
@@ -98,6 +116,13 @@ export interface MainMenuLeftSelectionDetail {
   routeRef?: string;
 }
 
+/** Overflow-menu activation on a secondary row (`childrenContextMenu` parent). */
+export interface MainMenuLeftSecondaryContextMenuDetail {
+  parentItemId: string;
+  childId: string;
+  name: string;
+}
+
 export interface MainMenuLeftProps {
   /** Optional branding block above `MainMenuList` (not in base Figma frame; product slot). */
   logo?: MainMenuLeftLogo;
@@ -115,10 +140,23 @@ export interface MainMenuLeftProps {
    * Spec Accurate Design: first row (Dashboard) uses `"dashboard"`.
    */
   defaultSelectedItemId?: string;
+  /** Pin a primary row’s `children` list open on mount (e.g. Synapse Recent expanded). */
+  defaultExpandedChildrenItemId?: string;
+  /** Initial secondary selection for demos / Figma parity stories. */
+  defaultSelectedSecondaryItemId?: { parentItemId: string; childId: string };
   /** When true, `item.state` fixes visual snapshot (Storybook matrix only). */
   forceStates?: boolean;
   /** Primary / secondary / logo activation (routing host handles `link`). */
   onNavigate?: (target: MainMenuLeftNavigationTarget) => void;
+  /** Overflow-menu trigger on a secondary row (Synapse `childrenContextMenu` parents). */
+  onSecondaryContextMenu?: (detail: MainMenuLeftSecondaryContextMenuDetail) => void;
+  /**
+   * Supplies overflow menu options per secondary row when `contextMenuOptions` is omitted on the child.
+   * When options resolve to a non-empty list, the built-in popup is rendered (Synapse detached menu, Figma `53325:280088`).
+   */
+  getSecondaryContextMenuOptions?: (
+    detail: MainMenuLeftSecondaryContextMenuDetail,
+  ) => MainMenuLeftContextMenuOption[];
   /**
    * Emits when the active menu selection changes (primary or secondary row).
    * **Angular:** `@Output() selectedChange` or `selectionChange` mapping to this callback.
@@ -127,6 +165,12 @@ export interface MainMenuLeftProps {
   onSelected?: (detail: MainMenuLeftSelectionDetail) => void;
   /** Overrides default `aria-label` on root `nav`. */
   ariaLabel?: string;
+  /** Programme layout tokens (`synapse` → 250px rail + neutral-light chrome). Default `ids`. */
+  programme?: "ids" | "synapse";
+  /**
+   * Optional lead row inside `MainMenuList` (Synapse “New Chat”; first in scroll stack, expanded only).
+   */
+  menuLead?: { label?: string; onAction?: () => void };
 }
 
 function slugify(value: string): string {
@@ -227,10 +271,16 @@ export function MainMenuLeft({
   onExpandedChange,
   items,
   defaultSelectedItemId,
+  defaultExpandedChildrenItemId,
+  defaultSelectedSecondaryItemId,
   forceStates = false,
   onNavigate,
+  onSecondaryContextMenu,
+  getSecondaryContextMenuOptions,
   onSelected,
   ariaLabel = "Main menu left",
+  programme = "ids",
+  menuLead,
 }: MainMenuLeftProps) {
   const controlled = onExpandedChange !== undefined;
   const [internalExpanded, setInternalExpanded] = useState(expanded);
@@ -252,13 +302,27 @@ export function MainMenuLeft({
   const [selectedKey, setSelectedKey] = useState<string | null>(() =>
     resolveInitialSelectedKey(items, defaultSelectedItemId),
   );
-  const [expandedChildrenKey, setExpandedChildrenKey] = useState<string | null>(null);
-  const [selectedSecondaryParentKey, setSelectedSecondaryParentKey] = useState<string | null>(null);
-  const [selectedSecondaryKey, setSelectedSecondaryKey] = useState<string | null>(null);
+  const [expandedChildrenKey, setExpandedChildrenKey] = useState<string | null>(
+    () => defaultExpandedChildrenItemId ?? null,
+  );
+  const [selectedSecondaryParentKey, setSelectedSecondaryParentKey] = useState<string | null>(
+    () => defaultSelectedSecondaryItemId?.parentItemId ?? null,
+  );
+  const [selectedSecondaryKey, setSelectedSecondaryKey] = useState<string | null>(
+    () => defaultSelectedSecondaryItemId?.childId ?? null,
+  );
 
   return (
     <nav
-      className={[styles.root, isExpanded ? styles.expanded : styles.collapsed].join(" ")}
+      className={[
+        styles.root,
+        isExpanded ? styles.expanded : styles.collapsed,
+        programme === "synapse" ? styles.programmeSynapse : "",
+        programme === "synapse" && isExpanded ? styles.programmeSynapseExpanded : "",
+        programme === "synapse" && !isExpanded ? styles.programmeSynapseCollapsed : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       aria-label={ariaLabel}
     >
       {logo ? (
@@ -286,6 +350,36 @@ export function MainMenuLeft({
       ) : null}
 
       <div className={styles.content}>
+        {menuLead && (isExpanded || programme === "synapse") ? (
+          <div
+            className={[
+              styles.menuLeadBlock,
+              !isExpanded ? styles.menuLeadBlockCollapsed : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <button
+              type="button"
+              className={[
+                styles.menuLeadButton,
+                !isExpanded ? styles.menuLeadButtonCollapsed : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              title={menuLead.label ?? "New Chat"}
+              aria-label={menuLead.label ?? "New Chat"}
+              onClick={() => menuLead.onAction?.()}
+            >
+              <span className={styles.menuLeadIcon} aria-hidden="true">
+                <Icon shapeName="shape-plus" style={{ width: 16, height: 16 }} />
+              </span>
+              {isExpanded ? (
+                <span className={styles.menuLeadLabel}>{menuLead.label ?? "New Chat"}</span>
+              ) : null}
+            </button>
+          </div>
+        ) : null}
         {items.map((item, itemIndex) => {
           const itemId = resolvePrimaryId(item, itemIndex);
           const hasForcedState = forceStates && Boolean(item.state);
@@ -312,6 +406,8 @@ export function MainMenuLeft({
               : selectedKey === itemId;
           const primaryLabel = primaryDisplayName(item);
           const primaryTitle = item.tooltip ?? primaryLabel;
+          const secondaryContextMenuEnabled =
+            programme === "synapse" && Boolean(item.childrenContextMenu);
 
           return (
             <div key={itemId} className={styles.itemBlock}>
@@ -379,6 +475,90 @@ export function MainMenuLeft({
                   {childList.map((child, childIndex) => {
                     const childId = resolveSecondaryId(child, itemId, childIndex);
                     const childLabel = secondaryDisplayName(child);
+                    const isSecondarySelected =
+                      selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId;
+
+                    const activateSecondary = () => {
+                      setSelectedSecondaryParentKey(itemId);
+                      setSelectedSecondaryKey(childId);
+                      onNavigate?.(
+                        buildNavigateTarget(childId, childLabel, itemId, child.link, {
+                          href: child.href,
+                          routeRef: child.routeRef,
+                        }),
+                      );
+                      onSelected?.(
+                        buildSelectionDetail("secondary", childId, itemId, childLabel, child.link, {
+                          href: child.href,
+                          routeRef: child.routeRef,
+                        }),
+                      );
+                    };
+
+                    if (secondaryContextMenuEnabled) {
+                      const contextMenuDetail: MainMenuLeftSecondaryContextMenuDetail = {
+                        parentItemId: itemId,
+                        childId,
+                        name: childLabel,
+                      };
+                      const resolvedContextMenuOptions =
+                        child.contextMenuOptions?.length
+                          ? child.contextMenuOptions
+                          : getSecondaryContextMenuOptions?.(contextMenuDetail) ?? [];
+
+                      return (
+                        <div
+                          key={childId}
+                          className={[
+                            styles.secondaryRowWrap,
+                            isSecondarySelected ? styles.secondaryRowSelected : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                        >
+                          <button
+                            type="button"
+                            title={child.tooltip ?? childLabel}
+                            className={styles.secondaryRowLabel}
+                            aria-current={isSecondarySelected ? "page" : undefined}
+                            onClick={activateSecondary}
+                          >
+                            {childLabel}
+                          </button>
+                          {resolvedContextMenuOptions.length > 0 ? (
+                            <LeftNavSecondaryContextMenu
+                              childLabel={childLabel}
+                              options={resolvedContextMenuOptions}
+                              defaultOpen={child.contextMenuDefaultOpen}
+                              onOpenChange={(nextOpen) => {
+                                if (nextOpen) {
+                                  onSecondaryContextMenu?.(contextMenuDetail);
+                                }
+                              }}
+                            />
+                          ) : (
+                            <button
+                              type="button"
+                              className={styles.secondaryContextButton}
+                              title="More actions"
+                              aria-label={`More actions for ${childLabel}`}
+                              aria-haspopup="menu"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                onSecondaryContextMenu?.(contextMenuDetail);
+                              }}
+                            >
+                              <Icon
+                                shapeName="overflow-menu-dots"
+                                className={styles.secondaryContextIcon}
+                                style={{ width: 16, height: 16 }}
+                              />
+                            </button>
+                          )}
+                        </div>
+                      );
+                    }
+
                     return (
                       <button
                         key={childId}
@@ -387,33 +567,12 @@ export function MainMenuLeft({
                         className={[
                           styles.secondaryRow,
                           styles.secondaryInteractive,
-                          selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId
-                            ? styles.secondaryRowSelected
-                            : "",
+                          isSecondarySelected ? styles.secondaryRowSelected : "",
                         ]
                           .filter(Boolean)
                           .join(" ")}
-                        aria-current={
-                          selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId
-                            ? "page"
-                            : undefined
-                        }
-                        onClick={() => {
-                          setSelectedSecondaryParentKey(itemId);
-                          setSelectedSecondaryKey(childId);
-                          onNavigate?.(
-                            buildNavigateTarget(childId, childLabel, itemId, child.link, {
-                              href: child.href,
-                              routeRef: child.routeRef,
-                            }),
-                          );
-                          onSelected?.(
-                            buildSelectionDetail("secondary", childId, itemId, childLabel, child.link, {
-                              href: child.href,
-                              routeRef: child.routeRef,
-                            }),
-                          );
-                        }}
+                        aria-current={isSecondarySelected ? "page" : undefined}
+                        onClick={activateSecondary}
                       >
                         {childLabel}
                       </button>

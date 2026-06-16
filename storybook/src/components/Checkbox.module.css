@@ -10,7 +10,7 @@
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-size: var(--font-size-body-2);
-  font-weight: 500;
+  font-weight: var(--checkbox-label-font-weight, 500);
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
   min-height: 20px;
@@ -34,7 +34,7 @@
   width: 16px;
   height: 16px;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-2);
+  border-radius: var(--checkbox-control-radius, var(--corner-radius-radius-2));
   background: var(--color-background-component);
   display: inline-flex;
   align-items: center;

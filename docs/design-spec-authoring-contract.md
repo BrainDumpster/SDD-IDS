@@ -23,6 +23,18 @@ Resolve the programme from `config/design_systems/<name>.yaml`. Valid programmes
 
 DAP components use `components/DAP/<slug>/`, not `components/ids/`, unless the component is IDS-only.
 
+## Synapse when IDS is the base (IDS-fork pattern)
+
+When Synapse Figma reuses the same component family as IDS (same anatomy / component-set name) with programme token or chrome changes:
+
+1. Create **`components/synapse/<slug>/design-spec.md`** (full spec — not deltas-only).
+2. Open with **`## IDS baseline (layout, flow, contracts)`** linking to `components/ids/<ids-slug>/design-spec.md`.
+3. Add **`### Synapse programme deltas (vs IDS)`** with every verified difference.
+4. Live-verify **Synapse** Figma nodes; record evidence in Metadata + Source Mapping.
+5. Register the component in [`data/programme-inheritance-registry.json`](../data/programme-inheritance-registry.json).
+
+**User process (all programmes):** [`design-spec-programme-inheritance.md`](design-spec-programme-inheritance.md). Registry: [`data/programme-inheritance-registry.json`](../data/programme-inheritance-registry.json). Synapse detail: [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md). Scaffold: `SYNAPSE_IDS_FORK_TEMPLATE`. References: [`left-nav`](../components/synapse/left-nav/design-spec.md), [`modal`](../components/synapse/modal/design-spec.md).
+
 ## Required `##` sections (fixed order)
 
 1. `## Metadata` — Version, Description, Status (`draft` | `active` | `deprecated`), Created, Updated, Figma verification evidence
@@ -67,6 +79,7 @@ Minimum checks per node: structure/dimensions, variable/token bindings, variant/
 
 - Prefer semantic tokens: `` `var(--token-name)` ``.
 - Never hardcode colors, spacing, typography, radius, border width, or motion in guidance.
+- **Component layout aliases:** When a layout value may differ by programme (radius, focus ring, etc.), IDS specs reference **component aliases** (e.g. `var(--button-control-radius)`). Define IDS defaults in `components/ids-theme.css`; programmes override the **same alias name** in programme theme CSS. Programme fork specs document alias deltas in the programme deltas table — not duplicate values in component CSS. Reference: [`components/ids/button/design-spec.md`](../components/ids/button/design-spec.md).
 - **States dedupe:** When Light and Dark use the same `var(--...)` in every cell, matrix only under **States (Light Theme)**; use `DARK_STATES_BOILERPLATE` from `scripts/design_spec_template.py` under Dark.
 - Full Dark table only when dark rows use different `var(--...)` than light (parallel row/column structure).
 - State names: `default | hover | press | focus-visible | disabled`.
@@ -94,10 +107,13 @@ When the user requests Storybook examples (intake wizard question 7 = `yes`), ge
 |-----------|----------------|
 | IDS | `Spec Generated/IDS/<Component Display Name>` |
 | DAP | `Spec Generated/DAP/<Component Display Name>` |
+| Synapse | `Spec Generated/Synapse/<Component Display Name>` |
 
 Output path pattern: `storybook-generated/<programme>/src/components/<Component>.stories.tsx`
 
-Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS) or `components/dap-theme.css` (DAP).
+Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS), `components/dap-theme.css` (DAP), or `components/synapse-theme.css` (Synapse).
+
+IDS-fork Synapse components use the Synapse story path and theme; see [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
 
 ### Spec Accurate Design (primary story)
 
@@ -107,7 +123,7 @@ Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS)
 - Styles use semantic tokens (`var(--...)`) only
 - Additional variant stories may exist under the same Meta title but must not replace Spec Accurate Design as the canonical reference
 
-Reference implementations: `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`, `generation/deterministic_storybook/ids/main_menu_left.py`
+Reference implementations: `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`, `generation/deterministic_storybook/ids/main_menu_left.py`, `storybook-generated/synapse/src/components/LeftNav.stories.tsx` (IDS-fork)
 
 ### Metadata
 

@@ -60,6 +60,22 @@ function SampleContent() {
   );
 }
 
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    masthead: <SampleMasthead />,
+    sidebar: <SampleSidebar />,
+    children: <SampleContent />,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ height: 480, border: "1px solid var(--color-border-neutral-light)", borderRadius: 4 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
 export const WithMastheadAndSidebar: Story = {
   args: {
     masthead: <SampleMasthead />,

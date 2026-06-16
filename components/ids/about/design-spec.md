@@ -11,7 +11,7 @@
 - Application name and version
 - Description text
 - System information
-- Legal/copyright information
+- `CopyrightText` — single centered legal/copyright paragraph (one `<p>`; line wraps naturally)
 - Links to resources
 - Close button
 - Focus ring for keyboard navigation
@@ -26,6 +26,7 @@
 - Focus ring: 2px offset from element
 - Section spacing: 16px
 - Close button: 16px × 16px
+- Copyright / legal copy: **one paragraph**, `text-align: center`; Body 2 or Body 3 per variant band; long copy wraps to multiple **lines** but must not split into multiple block paragraphs
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -118,7 +119,7 @@
 ### Behavior & guidelines
 - Use about dialog for application information
 - Provide clear application branding and version
-- Include relevant legal and copyright information
+- Include relevant legal and copyright information as **one centered paragraph** (not multiple `<p>` blocks)
 - Use consistent styling across about variants
 - Test with screen readers for proper content announcement
 - Consider responsive behavior for different screen sizes
@@ -126,6 +127,13 @@
 - Provide visual feedback for all interactions
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Runtime API (copyright)
+
+| Prop / slot | Contract |
+|---|---|
+| `copyrightText` / `legalText` | Single string → one centered paragraph; collapse extraneous whitespace |
+| `copyrightContent` / `legalContent` | Custom node; host should still render as one centered block |
+
 ### Variants
 - **Default**: Standard about dialog
 - **Modal**: About dialog as modal overlay
@@ -144,6 +152,8 @@ See **Composition & API (runtime) → Variants** when present; otherwise documen
 
 ### Per-slot style contract
 Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+- `CopyrightText`: one `<p>` (or host-equivalent), `text-align: center`, typography from legal band (Body 3 in gray legal section; Body 2 when inline with brand cluster in programme forks)
 
 ### Behavior contract
 See **Interactions** and **Interactions → Behavior & guidelines**.

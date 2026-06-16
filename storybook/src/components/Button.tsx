@@ -1,11 +1,13 @@
 import { Button as BaseButton } from "@base-ui-components/react/button";
-import type { ComponentProps, ReactNode } from "react";
+import { forwardRef, useMemo, type ComponentProps, type ReactNode } from "react";
 import styles from "./Button.module.css";
 
 type Variant = "primary" | "secondary" | "tertiary" | "ghost" | "danger" | "destructive";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ComponentProps<"button"> {
+  /** Programme chrome (`synapse`: ::after focus ring; radius from theme aliases). */
+  programme?: "ids" | "synapse";
   variant?: Variant;
   size?: Size;
   loading?: boolean;
@@ -38,19 +40,23 @@ function resolveIconUrl(iconSlug: string): string | undefined {
   return iconUrlBySlug[iconSlug];
 }
 
-export function Button({
-  variant = "primary",
-  size = "md",
-  loading = false,
-  icon,
-  iconSlug,
-  iconVariant = "mask",
-  iconOnly = false,
-  disabled,
-  children,
-  className,
-  ...rest
-}: ButtonProps) {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    programme = "ids",
+    variant = "primary",
+    size = "md",
+    loading = false,
+    icon,
+    iconSlug,
+    iconVariant = "mask",
+    iconOnly = false,
+    disabled,
+    children,
+    className,
+    ...rest
+  },
+  forwardedRef,
+) {
   const variantClass = variant === "destructive" ? "danger" : variant;
   const isDestructive = variant === "destructive" || variant === "danger";
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
@@ -59,21 +65,26 @@ export function Button({
   const resolvedIconOnly = isDestructive ? false : iconOnly;
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
+  const resolvedClassName = useMemo(
+    () =>
+      [
+        styles.button,
+        styles[variantClass],
+        styles[size],
+        programme === "synapse" ? styles.programmeSynapse : "",
+        resolvedIconOnly ? styles.iconOnly : "",
+        loading ? styles.loading : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" "),
+    [className, loading, programme, resolvedIconOnly, size, variantClass],
+  );
 
   return (
     <BaseButton
-      className={() =>
-        [
-          styles.button,
-          styles[variantClass],
-          styles[size],
-          resolvedIconOnly ? styles.iconOnly : "",
-          loading ? styles.loading : "",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")
-      }
+      ref={forwardedRef}
+      className={resolvedClassName}
       disabled={disabled || loading}
       {...rest}
     >
@@ -99,4 +110,6 @@ export function Button({
       )}
     </BaseButton>
   );
-}
+});
+
+Button.displayName = "Button";

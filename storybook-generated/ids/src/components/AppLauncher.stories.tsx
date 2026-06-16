@@ -36,12 +36,16 @@ export const UsageMastheadAttached: Story = {
 export const ComponentDetailMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
-      <IdsAppLauncher products={products.slice(0, 1)} />
-      <IdsAppLauncher products={products.slice(0, 2)} />
-      <IdsAppLauncher products={products.slice(0, 3)} />
-      <IdsAppLauncher products={products} />
+      <IdsAppLauncher products={products.slice(0, 1)} panelOnly />
+      <IdsAppLauncher products={products.slice(0, 2)} panelOnly />
+      <IdsAppLauncher products={products.slice(0, 3)} panelOnly />
+      <IdsAppLauncher products={products} panelOnly />
       <div style={{ gridColumn: "span 2" }}>
-        <IdsAppLauncher products={[...products, ...products].map((p, i) => ({ ...p, id: `${p.id}-${i}` }))} options={optionsList} />
+        <IdsAppLauncher
+          products={[...products, ...products].map((p, i) => ({ ...p, id: `${p.id}-${i}` }))}
+          options={optionsList}
+          panelOnly
+        />
       </div>
     </div>
   ),

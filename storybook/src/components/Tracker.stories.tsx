@@ -10,6 +10,19 @@ const meta: Meta<typeof Tracker> = {
 export default meta;
 type Story = StoryObj<typeof Tracker>;
 
+export const SpecAccurateDesign: Story = {
+  name: "Spec Accurate Design",
+  args: {
+    items: [
+      { label: "Planning", status: "complete" },
+      { label: "Design", status: "complete" },
+      { label: "Development", status: "active" },
+      { label: "Testing", status: "pending" },
+      { label: "Release", status: "pending" },
+    ],
+  },
+};
+
 export const MixedStatus: Story = {
   args: {
     items: [

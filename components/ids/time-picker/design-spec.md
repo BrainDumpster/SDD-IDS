@@ -49,8 +49,10 @@
   - `Small`: `32px` height
 - Field container: `padding-left: var(--padding-padding-16)`; no right padding (icon button provides trailing padding)
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
-- **No border-radius** on `FieldContainer` (square corners per Figma)
-- Clock icon button: `padding: var(--padding-padding-12) var(--padding-padding-16)` (large), `var(--padding-padding-8) var(--padding-padding-16)` (small), `border-radius: var(--corner-radius-radius-2)` on icon hit area only
+- Field container corner radius: `var(--time-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
+- Clock icon button: `padding: var(--padding-padding-12) var(--padding-padding-16)` (large), `var(--padding-padding-8) var(--padding-padding-16)` (small), `border-radius: var(--time-picker-control-radius)` on icon hit area
+- Time popup shell: `border-radius: var(--time-picker-control-radius)` (IDS theme: square); when attached below field, top corners `0` and field bottom corners flatten on open
+- Field focus ring corner radius: `var(--time-picker-focus-ring-radius)` (`var(--corner-radius-radius-4)` in IDS theme)
 - Input width: container-driven (`width: 100%`); text `flex: 1 0 0`, `min-width: 1px`
 - Placeholder: Roboto Regular (400), 14px/20px, `var(--color-text-disabled)`
 - Filled value: Roboto Medium (500), 14px/20px, `var(--color-text-neutral)` (#4d4d4d)
@@ -78,6 +80,13 @@
 | `24 hour` | `true` | Hour, Minute, Seconds |
 
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--time-picker-control-radius` | `var(--corner-radius-radius-none)` |
+| `--time-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` |
 
 ### Input field
 - `var(--color-background-component)` — field background
@@ -253,7 +262,7 @@ TimePickerRoot
 | `FieldContainer.error` | border `var(--color-border-alerting-critical-base)` |
 | `ClockIconTrigger` | icon `var(--color-icon-brand-base)`; transparent border default; hover brand-lighter + brand border |
 | `FormatHint` | `var(--color-text-neutral)` body-2 medium |
-| `TimePopup` | bg `var(--color-background-surface-2)`; border accessible; Shadow 2; padding 16px; right-aligned; `margin-top: -1px` |
+| `TimePopup` | bg `var(--color-background-surface-2)`; border accessible; Shadow 2; padding 16px; right-aligned; `margin-top: -1px`; `border-radius: var(--time-picker-control-radius)` (bottom corners when attached) |
 | `ValueCell` | 32×32; text `var(--color-text-neutral-strong)` 14px regular |
 
 ### Behavior contract

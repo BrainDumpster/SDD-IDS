@@ -53,6 +53,11 @@ body[data-design-system="dap"] {
   --sizing-size-32: 32px;
   --sizing-size-40: 40px;
 
+  /* --- Component layout aliases (DAP overrides) --- */
+  --button-control-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-offset: 3px;
+
   --opacity-0: 0;
   --opacity-10: 0.1;
   --opacity-20: 0.2;

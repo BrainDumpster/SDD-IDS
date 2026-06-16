@@ -51,6 +51,10 @@ python mcp_tools/streamable_mcp_server.py
 # Design chat agent (interactive CLI)
 python agent/design_chat.py
 
+# Sync programme theme CSS from Figma (FIGMA_TOKEN)
+set -a && . ./.env && set +a
+python3 scripts/sync_programme_themes_from_figma.py --with-root-spec
+
 # Run tests
 pytest tests/
 python test_search_api.py

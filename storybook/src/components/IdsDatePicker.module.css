@@ -27,6 +27,7 @@
   box-sizing: border-box;
   padding-left: var(--padding-padding-16, 16px);
   padding-right: 0;
+  border-radius: var(--date-picker-control-radius);
 }
 
 .fieldContainer.sizeLarge {
@@ -55,7 +56,7 @@
   border-color: var(--color-border-accessible, #757575);
   outline: 1px solid var(--color-border-brand-base, #0076ce);
   outline-offset: 3px;
-  border-radius: 3px;
+  border-radius: var(--date-picker-focus-ring-radius);
 }
 
 /* Always suppress ring when mouse-activated */
@@ -82,9 +83,11 @@
   border-color: var(--color-border-alerting-critical-base, #c41616);
 }
 
-/* When calendar is open — brand-base border */
+/* When calendar is open — brand-base border; flatten bottom radius so popup reads as one shell */
 .fieldContainer.open {
   border-color: var(--color-border-brand-base, #0076ce);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .textInput {
@@ -125,7 +128,7 @@
   border: var(--border-width-border-default, 1px) solid transparent;
   cursor: pointer;
   padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
-  border-radius: var(--corner-radius-radius-2, 2px);
+  border-radius: var(--date-picker-control-radius);
   color: var(--color-icon-brand-base, #0076ce);
   flex-shrink: 0;
   align-self: stretch;
@@ -145,7 +148,7 @@
   outline-width: thin;
   outline-offset: 3px;
   outline-color: var(--color-border-brand-base, #0076ce);
-  border-radius: 3px;
+  border-radius: var(--date-picker-focus-ring-radius);
 }
 
 .calendarIconBtn:disabled {
@@ -195,6 +198,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-16, 16px);
+  border-radius: var(--date-picker-control-radius);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 /* Portaled calendar — escapes overflow/stacking (e.g. DataGrid filter `overflow: clip`). */
@@ -204,6 +210,8 @@
   left: 0;
   margin-top: 0;
   right: auto;
+  border-top-left-radius: var(--date-picker-control-radius);
+  border-top-right-radius: var(--date-picker-control-radius);
 }
 
 /* ── Calendar header ── */
@@ -548,6 +556,7 @@
   box-shadow: 0px 2px 5px 0px rgba(37, 37, 37, 0.08);
   z-index: 10;
   padding: var(--padding-padding-4, 4px) var(--padding-padding-1, 1px);
+  border-radius: var(--date-picker-control-radius);
 }
 
 .overlayOption {

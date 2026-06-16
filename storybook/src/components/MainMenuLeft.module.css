@@ -27,6 +27,31 @@
   max-width: 64px;
 }
 
+/* Synapse Left Nav (`47807:8153`) — same flow as IDS; width + border chrome differ. */
+.programmeSynapse {
+  padding-top: var(--padding-padding-8);
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  border-right: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.programmeSynapseExpanded {
+  width: 250px;
+  min-width: 250px;
+  max-width: 500px;
+}
+
+.programmeSynapseCollapsed {
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+}
+
+.programmeSynapse .bottomToggle {
+  border-top-color: var(--color-border-neutral-light);
+}
+
 .logoSlot {
   flex-shrink: 0;
   width: 100%;
@@ -82,6 +107,67 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
+}
+
+/* Synapse “New Chat” — first row in `MainMenuList` (Figma above primaries, inside Menu). */
+.menuLeadBlock {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-8);
+}
+
+.menuLeadButton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-6) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-4);
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.menuLeadButton:hover {
+  background: var(--color-background-controls-brand-lighter);
+}
+
+.menuLeadButton:active {
+  background: var(--color-background-controls-brand-light);
+}
+
+.menuLeadButton:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+}
+
+.menuLeadIcon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--color-icon-brand-strong);
+}
+
+.menuLeadLabel {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.menuLeadBlockCollapsed {
+  padding: 0;
+}
+
+.menuLeadButtonCollapsed {
+  justify-content: center;
+  gap: 0;
+  padding: var(--padding-padding-12) var(--padding-padding-24);
+  border-radius: 0;
 }
 
 .itemBlock {
@@ -256,11 +342,20 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background: var(--color-border-brand-base);
+  background: var(--color-border-brand-dark);
 }
 
 .selected .selectedInset {
   display: block;
+}
+
+/* IDS default: selected + selected-focus use brand-dark inset. */
+.stateSelected .selectedInset {
+  background: var(--color-border-brand-dark);
+}
+
+.stateSelectedFocus .selectedInset {
+  background: var(--color-border-brand-dark);
 }
 
 .stateDefault,
@@ -300,10 +395,6 @@
   color: var(--color-icon-brand-base, #0076ce);
 }
 
-.stateSelectedFocus .selectedInset {
-  background: var(--color-border-brand-dark);
-}
-
 .collapsed .primaryRow {
   justify-content: center;
   padding: var(--padding-padding-12) var(--padding-padding-24);
@@ -312,6 +403,200 @@
 .collapsed .chevronIcon,
 .collapsed .actionButton {
   display: none;
+}
+
+/* Synapse Figma `47807:8058` / `47807:8043` — controls fills; expanded selected inset brand-base. */
+.programmeSynapse .stateHover,
+.programmeSynapse .interactive:hover {
+  background: var(--color-background-controls-brand-lighter);
+}
+
+.programmeSynapse .statePress,
+.programmeSynapse .interactive:active {
+  background: var(--color-background-controls-brand-light);
+}
+
+.programmeSynapse .stateSelected {
+  background: var(--color-background-controls-brand-lighter);
+}
+
+.programmeSynapse .stateSelectedFocus {
+  background: var(--color-background-brand-lighter);
+}
+
+.programmeSynapse.expanded .stateSelected .selectedInset {
+  background: var(--color-border-brand-base);
+}
+
+.programmeSynapse.collapsed .stateSelected .selectedInset,
+.programmeSynapse.collapsed .stateSelectedFocus .selectedInset {
+  background: var(--color-border-brand-dark);
+}
+
+.programmeSynapse .stateSelected .primaryIcon,
+.programmeSynapse .stateSelectedFocus .primaryIcon,
+.programmeSynapse .stateSelected .chevronIcon,
+.programmeSynapse .stateSelectedFocus .chevronIcon {
+  color: var(--color-icon-brand-strong);
+}
+
+.programmeSynapse .stateSelected .primaryLabel,
+.programmeSynapse .stateSelectedFocus .primaryLabel {
+  color: var(--color-text-brand-strong);
+}
+
+/* Synapse secondary — Figma `50512:84338` (selected), `50514:23038` (hover): no inset; neutral-strong label. */
+.programmeSynapse .secondaryRow {
+  padding: 0 var(--padding-padding-16) 0 var(--padding-padding-58);
+  color: var(--color-text-neutral-strong);
+  font-weight: 400;
+}
+
+.programmeSynapse .secondaryRowSelected,
+.programmeSynapse .secondaryInteractive:hover,
+.programmeSynapse .secondaryInteractive.secondaryRowSelected:hover {
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-neutral-strong);
+  font-weight: 400;
+}
+
+.programmeSynapse .secondaryInteractive:active,
+.programmeSynapse .secondaryInteractive.secondaryRowSelected:active {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-text-neutral-strong);
+}
+
+.programmeSynapse .secondaryInteractive.secondaryRowSelected:focus-visible {
+  box-shadow: none;
+}
+
+.programmeSynapse .secondaryRowSnapshotHover {
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-neutral-strong);
+}
+
+/* Secondary row with overflow trigger — Figma `50514:23038` composed usage. */
+.secondaryRowWrap {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: 0 var(--padding-padding-16) 0 var(--padding-padding-58);
+  background: transparent;
+}
+
+.secondaryRowLabel {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.secondaryContextButton {
+  flex-shrink: 0;
+  opacity: 0;
+  visibility: hidden;
+  padding: var(--padding-padding-4) var(--padding-padding-8);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-icon-brand-base);
+}
+
+.secondaryContextIcon {
+  display: block;
+}
+
+.secondaryRowWrap:hover .secondaryContextButton,
+.secondaryRowWrap:focus-within .secondaryContextButton,
+.secondaryContextButton:focus-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.programmeSynapse .secondaryRowWrap {
+  color: var(--color-text-neutral-strong);
+  font-weight: 400;
+}
+
+.programmeSynapse .secondaryRowWrap:hover,
+.programmeSynapse .secondaryRowWrap.secondaryRowSelected,
+.programmeSynapse .secondaryRowWrap.secondaryRowSelected:hover {
+  background: var(--color-background-controls-brand-lighter);
+  color: var(--color-text-neutral-strong);
+}
+
+.programmeSynapse .secondaryRowWrap:active,
+.programmeSynapse .secondaryRowWrap.secondaryRowSelected:active {
+  background: var(--color-background-controls-brand-light);
+}
+
+.programmeSynapse .secondaryContextButton:hover {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-icon-brand-strong);
+}
+
+.programmeSynapse .secondaryContextButton:active {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-icon-brand-strong);
+}
+
+.programmeSynapse .secondaryContextButton:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.programmeSynapse .secondaryContextButton:disabled {
+  background: transparent;
+  color: var(--color-icon-disabled);
+  cursor: not-allowed;
+}
+
+.programmeSynapse .secondaryRowWrapSnapshotHover {
+  background: var(--color-background-controls-brand-lighter);
+}
+
+.programmeSynapse .secondaryRowWrapSnapshotHover .secondaryContextButton,
+.secondaryContextButtonForceVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.secondaryContextButtonStateHover {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-icon-brand-strong);
+}
+
+.secondaryContextButtonStatePress {
+  background: var(--color-background-controls-brand-light);
+  color: var(--color-icon-brand-strong);
+}
+
+.secondaryContextButtonStateDisabled {
+  color: var(--color-icon-disabled);
+  cursor: not-allowed;
+}
+
+.secondaryContextButtonStateFocus {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 2px;
 }
 
 .interactive:hover {

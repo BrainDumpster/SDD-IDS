@@ -5,7 +5,10 @@ name: ids
 display_name: IDS
 token_transform: ids
 
-figma_file_key: "VZJ48bbVYrIynw8DdSukWw"
+# Component library (components + REST variable export via subscribed library)
+figma_file_key: "0bHk3XhrjFhowgFkz9yLr4"
+# Canonical centralized variable definitions (not REST-exportable; see sync scripts)
+figma_variables_library_key: "r0Ex6TumqcR3HINamsfXCV"
 
 figma_map_path: data/component-figma-map.json
 rules_path: rules.json

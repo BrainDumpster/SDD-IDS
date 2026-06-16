@@ -26,6 +26,11 @@
   min-height: 100%;
 }
 
+.modalRoot {
+  border-radius: var(--modal-control-radius);
+  overflow: hidden;
+}
+
 .modalRoot.full-screen {
   width: min(100vw, 1280px);
   min-height: min(100vh, 900px);

@@ -1,5 +1,6 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
 import { isValidElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "./Button";
 import { Icon } from "./Icon";
 import styles from "./IdsWizard.module.css";
 
@@ -39,6 +40,8 @@ export interface IdsWizardEventPayload {
 }
 
 export interface IdsWizardProps {
+  /** Synapse programme: modal shell radius via theme + Synapse `Button` chrome in footer. */
+  programme?: "ids" | "synapse";
   mode?: IdsWizardMode;
   size?: IdsWizardSize;
   title: string;
@@ -141,9 +144,10 @@ function resolveStatusIcon(step: IdsWizardStep, fallbackStatus: IdsWizardStepSta
 }
 
 export function IdsWizard({
+  programme = "ids",
   mode = "inline",
   size = "large",
-  title,
+  title = "Wizard",
   steps,
   initialStepId,
   showCloseButton = true,
@@ -157,36 +161,46 @@ export function IdsWizard({
 }: IdsWizardProps) {
   const [currentStepId, setCurrentStepId] = useState<string | undefined>(initialStepId);
   const lastStepChangeKeyRef = useRef<string>("");
+  const onStepChangeRef = useRef(onStepChange);
+  onStepChangeRef.current = onStepChange;
   const ctx = useMemo<IdsWizardContext>(() => ({ currentStepId }), [currentStepId]);
 
   const { display, leaves } = useMemo(() => flattenVisible(steps, ctx), [steps, ctx]);
+  const visibleLeafIds = useMemo(() => leaves.map((leaf) => leaf.node.id).join("\0"), [leaves]);
   const totalTopLevelSteps = display.length;
+
+  const notifyStepChange = (leaf: VisibleNode | undefined) => {
+    if (!leaf) return;
+    const payload = payloadFromNode(leaf);
+    const key = `${payload.stepId}|${payload.stepCode}`;
+    if (lastStepChangeKeyRef.current === key) return;
+    lastStepChangeKeyRef.current = key;
+    onStepChangeRef.current?.(payload);
+  };
 
   useEffect(() => {
     if (leaves.length === 0) {
-      setCurrentStepId(undefined);
+      if (currentStepId !== undefined) setCurrentStepId(undefined);
       return;
     }
     const hasCurrent = currentStepId != null && leaves.some((leaf) => leaf.node.id === currentStepId);
     if (hasCurrent) return;
 
-    const requested = initialStepId && leaves.find((leaf) => leaf.node.id === initialStepId);
-    setCurrentStepId(requested?.node.id ?? leaves[0].node.id);
-  }, [initialStepId, currentStepId, leaves]);
+    const requested = initialStepId ? leaves.find((leaf) => leaf.node.id === initialStepId) : undefined;
+    const nextLeaf = requested ?? leaves[0];
+    const nextId = nextLeaf.node.id;
+    if (nextId !== currentStepId) {
+      setCurrentStepId(nextId);
+      notifyStepChange(nextLeaf);
+    }
+    // `leaves` is read when `visibleLeafIds` changes; avoid depending on array identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- leaves aligned with visibleLeafIds
+  }, [initialStepId, currentStepId, visibleLeafIds]);
 
   const currentLeaf = leaves.find((leaf) => leaf.node.id === currentStepId);
   const currentIndex = currentLeaf ? leaves.findIndex((leaf) => leaf.node.id === currentLeaf.node.id) : -1;
   const isFirstLeaf = currentIndex <= 0;
   const isLastLeaf = currentIndex === leaves.length - 1 && currentIndex >= 0;
-
-  useEffect(() => {
-    if (!currentLeaf) return;
-    const payload = payloadFromNode(currentLeaf);
-    const key = `${payload.stepId}|${payload.stepCode}`;
-    if (lastStepChangeKeyRef.current === key) return;
-    lastStepChangeKeyRef.current = key;
-    onStepChange?.(payload);
-  }, [currentLeaf, onStepChange]);
 
   const resolvedPrimaryEnabled =
     typeof isPrimaryEnabled === "function"
@@ -204,9 +218,14 @@ export function IdsWizard({
       ? `Step ${toStepCode(currentLeaf.topLevelIndex, currentLeaf.childIndex)} of ${totalTopLevelSteps}`
       : `Step 0 of ${totalTopLevelSteps}`;
 
+  /** Synapse programme chrome on footer actions applies in modal mode only (inline inherits IDS footer). */
+  const useSynapseFooterButtons = programme === "synapse" && mode === "modal";
+
   const goToLeaf = (leaf: VisibleNode | undefined) => {
     if (!leaf) return;
+    if (leaf.node.id === currentStepId) return;
     setCurrentStepId(leaf.node.id);
+    notifyStepChange(leaf);
   };
 
   const shell = (
@@ -289,47 +308,97 @@ export function IdsWizard({
             <span className={styles.progress}>{progressLabel}</span>
             <div className={styles.footerActions}>
               {showCancel ? (
-                <button
-                  type="button"
-                  className={styles.secondaryButton}
-                  onClick={() => {
-                    if (currentLeaf) onCancel?.(payloadFromNode(currentLeaf));
-                  }}
-                >
-                  Cancel
-                </button>
+                useSynapseFooterButtons ? (
+                  <Button
+                    programme="synapse"
+                    size="lg"
+                    variant="secondary"
+                    onClick={() => {
+                      if (currentLeaf) onCancel?.(payloadFromNode(currentLeaf));
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={() => {
+                      if (currentLeaf) onCancel?.(payloadFromNode(currentLeaf));
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )
               ) : null}
               {showPrevious ? (
-                <button
-                  type="button"
-                  className={styles.secondaryButton}
-                  disabled={isFirstLeaf || !currentLeaf}
+                useSynapseFooterButtons ? (
+                  <Button
+                    programme="synapse"
+                    size="lg"
+                    variant="secondary"
+                    disabled={isFirstLeaf || !currentLeaf}
+                    onClick={() => {
+                      const prev = currentIndex > 0 ? leaves[currentIndex - 1] : undefined;
+                      goToLeaf(prev);
+                      if (prev) onPrevious?.(payloadFromNode(prev));
+                    }}
+                  >
+                    Previous
+                  </Button>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    disabled={isFirstLeaf || !currentLeaf}
+                    onClick={() => {
+                      const prev = currentIndex > 0 ? leaves[currentIndex - 1] : undefined;
+                      goToLeaf(prev);
+                      if (prev) onPrevious?.(payloadFromNode(prev));
+                    }}
+                  >
+                    Previous
+                  </button>
+                )
+              ) : null}
+              {useSynapseFooterButtons ? (
+                <Button
+                  programme="synapse"
+                  size="lg"
+                  variant="primary"
+                  disabled={!primaryEnabled || !currentLeaf}
                   onClick={() => {
-                    const prev = currentIndex > 0 ? leaves[currentIndex - 1] : undefined;
-                    goToLeaf(prev);
-                    if (prev) onPrevious?.(payloadFromNode(prev));
+                    if (!currentLeaf) return;
+                    if (isLastLeaf || primaryLabel.toLowerCase() === "finish") {
+                      onFinish?.(payloadFromNode(currentLeaf));
+                      return;
+                    }
+                    const next = currentIndex >= 0 ? leaves[currentIndex + 1] : undefined;
+                    goToLeaf(next);
+                    if (next) onNext?.(payloadFromNode(next));
                   }}
                 >
-                  Previous
+                  {primaryLabel}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.primaryButton}
+                  disabled={!primaryEnabled || !currentLeaf}
+                  onClick={() => {
+                    if (!currentLeaf) return;
+                    if (isLastLeaf || primaryLabel.toLowerCase() === "finish") {
+                      onFinish?.(payloadFromNode(currentLeaf));
+                      return;
+                    }
+                    const next = currentIndex >= 0 ? leaves[currentIndex + 1] : undefined;
+                    goToLeaf(next);
+                    if (next) onNext?.(payloadFromNode(next));
+                  }}
+                >
+                  {primaryLabel}
                 </button>
-              ) : null}
-              <button
-                type="button"
-                className={styles.primaryButton}
-                disabled={!primaryEnabled || !currentLeaf}
-                onClick={() => {
-                  if (!currentLeaf) return;
-                  if (isLastLeaf || primaryLabel.toLowerCase() === "finish") {
-                    onFinish?.(payloadFromNode(currentLeaf));
-                    return;
-                  }
-                  const next = currentIndex >= 0 ? leaves[currentIndex + 1] : undefined;
-                  goToLeaf(next);
-                  if (next) onNext?.(payloadFromNode(next));
-                }}
-              >
-                {primaryLabel}
-              </button>
+              )}
             </div>
           </footer>
         </section>

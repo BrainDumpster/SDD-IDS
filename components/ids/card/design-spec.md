@@ -18,11 +18,18 @@
 - Header padding: 16px 16px 8px 16px
 - Content padding: 8px 16px
 - Footer padding: 8px 16px 16px 16px
-- Border radius: 8px
+- Control corner radius: `var(--card-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-8)` / 8px)
 - Minimum height: 120px
 - Card spacing: 16px (grid layout)
 - Focus ring: 2px offset from card
 ## Tokens
+### Layout aliases (theme-resolvable)
+Programmes override these **same alias names** in programme theme CSS. Component specs and generated CSS reference aliases only.
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--card-control-radius` | `var(--corner-radius-radius-8)` |
+
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
 - Brand base: `var(--color-background-controls-brand-base)` = #0076ce
@@ -127,6 +134,15 @@ See **Composition & API (runtime) → Variants** when present; otherwise documen
 ### Per-slot style contract
 Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
 
+| Slot | CSS property | Token |
+|---|---|---|
+| `CardRoot` | `border-radius` | `var(--card-control-radius)` |
+
+### Theme & programme resolution
+- Generators **must** emit `var(--card-control-radius)`, never raw `px` or programme-specific scale tokens in component CSS.
+- Theme selection: IDS → `components/ids-theme.css`; Synapse → `components/synapse-theme.css`; DAP → `components/dap-theme.css`.
+- Programme forks document alias deltas in the programme deltas table; implementations rely on programme theme CSS.
+
 ### Behavior contract
 See **Interactions** and **Interactions → Behavior & guidelines**.
 
@@ -140,6 +156,9 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - Unknown variant or state → fall back to the documented default variant.
 - Missing required content → validation error at codegen boundary (do not silently omit required slots).
 ### Validation checklist
+- [ ] Layout uses `var(--card-control-radius)`, not hardcoded px
+- [ ] Alias defined in `components/ids-theme.css` and documented in Tokens
+- [ ] Programme fork deltas list alias override when radius differs (Synapse: 10px)
 - [ ] Implement interactive card behavior
 - [ ] Add proper focus management
 - [ ] Test keyboard navigation (Tab, Enter/Space)

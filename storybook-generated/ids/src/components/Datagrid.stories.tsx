@@ -8,8 +8,10 @@ import {
   IdsDataGrid,
   IdsDataGridFilterSearchField,
   type IdsDataGridColumn,
+  type IdsDataGridTreeNode,
 } from "../../../../storybook/src/components/IdsDataGrid";
 import { IdsDataGridDefaultStoryHost } from "../../../../storybook/src/components/IdsDataGridDefaultStoryHost";
+import { IdsDataGridViewModeStoryHost } from "../../../../storybook/src/components/IdsDataGridViewModeStoryHost";
 import { IdsDataGridDateAndTimeFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateAndTimeFilterStoryHost";
 import { IdsDataGridDateFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateFilterStoryHost";
 import { IdsDataGridNumericFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridNumericFilterStoryHost";
@@ -222,6 +224,7 @@ const specAccurateArgs: ComponentProps<typeof IdsDataGrid> = {
   rowVerticalIndicator: true,
   headerColorAndBorder: true,
   columnResizeEnabled: true,
+  expandableRows: false,
 };
 
 const meta: Meta<typeof IdsDataGrid> = {
@@ -257,6 +260,11 @@ const meta: Meta<typeof IdsDataGrid> = {
       description:
         "When selectionMode is single: show the 48px column with per-row radios. When false, no selection column (row click / detail panel only).",
       if: { arg: "selectionMode", eq: "single" },
+    },
+    expandableRows: {
+      control: "boolean",
+      description:
+        "Show accordion-style row expansion with leading arrow. Click arrow to expand/collapse inline row details.",
     },
   },
 };
@@ -323,7 +331,198 @@ export const WithoutVerticalSelectionIndicator: Story = {
 /** Optional `DatagridDetailPanelSlot` + row click selection (`detailsPanel: attached`). */
 export const WithDetailPanel: Story = {
   render: (args) => <SpecAccurateFrame {...args} />,
-  args: { ...specAccurateArgs, withDetailPanel: true, viewMode: "treeview" },
+  args: { ...specAccurateArgs, withDetailPanel: true },
+};
+
+/** Accordion-style expandable rows with inline detail content under each row. */
+export const ExpandableRows: Story = {
+  render: (args) => <SpecAccurateFrame {...args} />,
+  args: {
+    ...specAccurateArgs,
+    withDetailPanel: false,
+    expandableRows: true,
+  },
+};
+
+const treeDemoColumns: IdsDataGridColumn[] = [
+  { key: "name", title: "Tree", sortable: true, filterable: true, minWidth: 120, width: 220 },
+  { key: "type", title: "Type", sortable: true, minWidth: 90, width: 120 },
+  { key: "status", title: "Status", sortable: true, minWidth: 90, width: 120 },
+  { key: "amount", title: "Amount", sortable: true, minWidth: 90, width: 100 },
+];
+
+const treeDemoNodes: IdsDataGridTreeNode[] = [
+  {
+    id: "region-na",
+    label: "North America",
+    values: { type: "Region", status: "Active", amount: 3200 },
+    children: [
+      {
+        id: "na-cp",
+        label: "Control Plane",
+        values: { type: "Service", status: "Active", amount: 1200 },
+        children: [
+          {
+            id: "na-cp-a",
+            label: "Alpha worker",
+            values: { type: "Worker", status: "Active", amount: 400 },
+          },
+          {
+            id: "na-cp-b",
+            label: "Beta worker",
+            values: { type: "Worker", status: "Warning", amount: 380 },
+          },
+        ],
+      },
+      {
+        id: "na-bill",
+        label: "Billing Processor",
+        values: { type: "Job", status: "Warning", amount: 450 },
+      },
+    ],
+  },
+  {
+    id: "region-eu",
+    label: "Europe",
+    values: { type: "Region", status: "Active", amount: 5400 },
+    children: [
+      {
+        id: "eu-gw",
+        label: "Realtime Gateway",
+        values: { type: "Gateway", status: "Critical", amount: 5400 },
+      },
+    ],
+  },
+  {
+    id: "region-apac",
+    label: "Asia Pacific",
+    values: { type: "Region", status: "Active", amount: 8900 },
+    children: [
+      {
+        id: "apac-stream",
+        label: "Analytics Stream",
+        values: { type: "Pipeline", status: "Active", amount: 8900 },
+      },
+    ],
+  },
+];
+
+function TreeviewFrame(props: ComponentProps<typeof IdsDataGrid>) {
+  return (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        padding: 16,
+        background: "var(--color-background-surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <IdsDataGrid {...props} viewMode="treeview" treeNodes={treeDemoNodes} treeColumnKey="name" />
+      </div>
+    </div>
+  );
+}
+
+function ViewModeToggleFrame(
+  props: ComponentProps<typeof IdsDataGridViewModeStoryHost>,
+) {
+  return (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        padding: 16,
+        background: "var(--color-background-surface-1)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <IdsDataGridViewModeStoryHost {...props} />
+    </div>
+  );
+}
+
+const treeBaseArgs: ComponentProps<typeof IdsDataGrid> = {
+  columns: treeDemoColumns,
+  rows: [],
+  treeColumnKey: "name",
+  rowSelection: false,
+  withDetailPanel: false,
+  pageSize: 12,
+  headerColorAndBorder: true,
+  columnResizeEnabled: false,
+};
+
+/** IDS Segmented Button toggles Table vs Treeview (`37721:114734`). */
+export const TableAndTreeViewToggle: Story = {
+  name: "Table and Treeview Toggle",
+  render: () => (
+    <ViewModeToggleFrame
+      columns={specColumns}
+      rows={specRows}
+      treeNodes={treeDemoNodes}
+      treeColumnKey="name"
+      defaultViewMode="table"
+      rowSelection
+      selectionMode="single"
+      showSingleSelectionRadio
+      pageSize={8}
+      headerColorAndBorder
+      numericUnitOptions={DEMO_UNIT_OPTIONS}
+    />
+  ),
+};
+
+/** Figma `Data Type=Tree` (`37721:114783`) — chevron + label in first column. */
+export const TreeviewOnly: Story = {
+  name: "Treeview Only",
+  render: () => <TreeviewFrame {...treeBaseArgs} treeRowSelection="none" />,
+};
+
+/** Figma `Data Type=Tree + Checkbox` (`37721:114799`). */
+export const TreeviewWithCheckbox: Story = {
+  name: "Treeview With Checkbox",
+  render: () => (
+    <TreeviewFrame
+      {...treeBaseArgs}
+      rowSelection
+      selectionMode="multiple"
+      treeRowSelection="checkbox"
+    />
+  ),
+};
+
+/** Figma `Data Type=Tree + Checkbox + Icon` (`37721:114815`). */
+export const TreeviewWithCheckboxAndIcon: Story = {
+  name: "Treeview With Checkbox and Icon",
+  render: () => (
+    <TreeviewFrame
+      {...treeBaseArgs}
+      rowSelection
+      selectionMode="multiple"
+      treeRowSelection="checkbox"
+      treeShowRowIcon
+    />
+  ),
+};
+
+/** Figma `Data Type=Tree + Radio + Icon` (`37721:114823`). */
+export const TreeviewWithRadioAndIcon: Story = {
+  name: "Treeview With Radio and Icon",
+  render: () => (
+    <TreeviewFrame
+      {...treeBaseArgs}
+      rowSelection
+      selectionMode="single"
+      treeRowSelection="radio"
+      treeShowRowIcon
+    />
+  ),
 };
 
 const numericFilterColumns: IdsDataGridColumn[] = [

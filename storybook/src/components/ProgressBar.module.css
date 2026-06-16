@@ -82,8 +82,8 @@
   z-index: 0;
   box-sizing: border-box;
   border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: 0;
-  background: var(--color-background-gray-neutral-alt);
+  border-radius: var(--progress-bar-control-radius);
+  background: var(--color-background-gray-light);
   clip-path: inset(0 0 0 var(--progress-clip, 0%));
   pointer-events: none;
 }
@@ -103,7 +103,7 @@
   border-style: solid;
   border-width: var(--border-width-border-1);
   border-right-width: 0;
-  border-radius: 0;
+  border-radius: var(--progress-bar-control-radius);
   transition: width 300ms ease;
 }
 

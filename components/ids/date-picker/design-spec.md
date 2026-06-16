@@ -67,7 +67,10 @@
   - `Small`: `32px` height
 - Field container: `padding-left: var(--padding-padding-16)`, no right padding — trailing padding belongs to the icon button
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
-- Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--corner-radius-radius-2)`
+- Field container corner radius: `var(--date-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
+- Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--date-picker-control-radius)`
+- Calendar popup shell + month/year dropdown overlays: `border-radius: var(--date-picker-control-radius)` (IDS theme: square); when attached below field, top corners `0` and field bottom corners flatten on open
+- Field focus ring corner radius: `var(--date-picker-focus-ring-radius)` (`var(--corner-radius-radius-4)` in IDS theme)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
 - Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-disabled)` (#757575)
 - Format hint: always shown below the input, Roboto Medium (500), `var(--font-size-body-2)` (14px), `var(--font-line-height-line-height-20)` (20px), `color: var(--color-text-neutral)` (#4d4d4d), `width: 100%`
@@ -163,6 +166,13 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - Hover option: background `var(--color-background-controls-brand-lighter)` (#ebf4fb)
 
 ## Tokens
+
+### Layout aliases (theme-resolvable)
+
+| Alias | IDS default (`components/ids-theme.css`) |
+|---|---|
+| `--date-picker-control-radius` | `var(--corner-radius-radius-none)` |
+| `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` |
 
 ### Input field
 - `var(--color-background-component)` — field background
@@ -471,7 +481,7 @@ DatePickerRoot
 | `CalendarIconTrigger:disabled` | color: `var(--color-icon-disabled)`, cursor: not-allowed, hover must NOT apply |
 | `FormatHint` | color: `var(--color-text-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
 | `FieldContainer.open` | border-color: `var(--color-border-brand-base)` |
-| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input) |
+| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: var(--date-picker-control-radius)` (bottom corners when attached; portaled: all corners) |
 | `MonthDropdownButton` / `YearDropdownButton` | color: `var(--color-text-brand-strong)`, font: `var(--font-size-body-2)` Medium, `position: relative` (for overlay centering) |
 | `MonthDropdownOverlay` / `YearDropdownOverlay` | centered on trigger (`left: 50%; transform: translateX(-50%)`), min-width: 114px, max-height: 200px, border: `var(--color-border-accessible)` 1px, radius: `var(--corner-radius-radius-2)`, option padding: 10px/16px/24px, min-height: 44px, follows IDS Dropdown Single-Select spec |
 | `WeekDayLabel` | color: `var(--color-text-neutral)`, font: 12px Regular, tracking: 0.36px |
@@ -483,7 +493,7 @@ DatePickerRoot
 | `DateCell:unavailable` | bg: `var(--color-background-gray-lighter)`, border: `var(--color-border-disabled)`, text: strikethrough |
 | `TodayIndicator` | color: `var(--color-border-strong)` (default), `var(--color-border-white)` (selected) |
 | `RangeHighlightBar` | bg: `var(--color-background-brand-light)`, height: 30px, radius: 2px |
-| `MonthDropdownList` / `YearDropdownList` | bg: white, border: `var(--ui-palette-gray-200)` 1px, shadow: `0 2px 5px rgba(37,37,37,0.08)` |
+| `MonthDropdownList` / `YearDropdownList` | bg: white, border: `var(--ui-palette-gray-200)` 1px, shadow: `0 2px 5px rgba(37,37,37,0.08)`, `border-radius: var(--date-picker-control-radius)` |
 | `MonthOption` / `YearOption` | padding: 16px h / 6px v, selected bg: `var(--color-background-brand-lighter)` |
 | `TodayLink` | color: `var(--color-text-brand-strong)` |
 

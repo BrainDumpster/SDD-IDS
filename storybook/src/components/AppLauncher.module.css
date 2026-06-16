@@ -5,7 +5,7 @@
   width: 36px;
   height: 36px;
   padding: 0;
-  border: var(--border-width-border-default) solid var(--color-border-light);
+  border: var(--border-width-border-1) solid var(--color-border-light);
   border-radius: var(--corner-radius-radius-4);
   background: var(--color-background-component);
   color: var(--color-text-neutral-strong);
@@ -67,15 +67,31 @@
 }
 
 .triggerMasthead:focus-visible {
-  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline: var(--border-width-border-1) dashed var(--color-border-white);
   outline-offset: -1px;
 }
 
+/* Base UI Popover.Popup shell — visual chrome lives on `.launcherSurface`. */
+.launcherPopup {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
 .launcherSurface {
-  --separator-inset: var(--padding-padding-16);
+  --app-launcher-divider-inset: var(--padding-padding-16);
+  --app-launcher-row-divider-width: 262px;
+  --app-launcher-tile-height: 125px;
+  --app-launcher-column-divider-height: 110px;
+  --app-launcher-column-divider-inset-block: 7px;
+  --app-launcher-column-divider-color: var(--color-border-accessible);
+  --separator-inset: var(--app-launcher-divider-inset);
   box-sizing: border-box;
   background: var(--color-background-surface-2);
-  border: var(--border-width-border-default) solid var(--color-border-neutral-light);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-radius: 0;
   padding: var(--padding-padding-1);
   box-shadow:
@@ -90,7 +106,7 @@
 }
 
 .launcherSurfaceTwoProduct {
-  padding: 0;
+  padding: var(--padding-padding-1);
 }
 
 .productRegion {
@@ -98,6 +114,11 @@
   flex-direction: column;
   gap: 0;
   padding-block: 0;
+  width: 100%;
+}
+
+.productRowGroup {
+  width: 100%;
 }
 
 .productRow {
@@ -111,55 +132,75 @@
   justify-content: center;
 }
 
-/* Figma: hairline between adjacent cells in the same row (vertical column border). */
+/* Separate flex child between tiles — hover fill must not cover this track. */
 .columnDivider {
-  flex: 0 0 0;
-  width: 0;
+  flex: 0 0 1px;
+  width: 1px;
   align-self: stretch;
-  border: none;
+  min-height: var(--app-launcher-tile-height);
   margin: 0;
   padding: 0;
-  min-height: 125px;
+  border: none;
+  background: transparent;
   position: relative;
+  pointer-events: none;
 }
 
+/* Dotted vertical: 110px stroke, 7px inset top/bottom within 125px tile. */
 .columnDivider::before {
   content: "";
   position: absolute;
   inset-inline-start: 0;
-  inset-block-start: calc(50% - 46.5px);
-  height: 93px;
-  border-inline-start: var(--border-width-border-default) dashed var(--color-border-neutral-light);
+  inset-block-start: var(--app-launcher-column-divider-inset-block);
+  height: var(--app-launcher-column-divider-height);
+  border-inline-start: var(--border-width-border-1) dashed
+    var(--app-launcher-column-divider-color);
 }
 
 .columnDividerSolid {
-  flex: 0 0 0;
-  width: 0;
+  flex: 0 0 1px;
+  width: 1px;
   align-self: stretch;
-  border: none;
-  border-inline-start: var(--border-width-border-default) solid var(--color-border-neutral-light);
+  min-height: var(--app-launcher-tile-height);
   margin: 0;
   padding: 0;
-  min-height: 125px;
+  border: none;
+  background: transparent;
+  position: relative;
+  pointer-events: none;
 }
 
-/* Figma: horizontal separation between product rows (dotted / dashed). */
+/* Solid vertical (2-product): full 125px tile height, edge to edge. */
+.columnDividerSolid::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  width: 0;
+  border-inline-start: var(--border-width-border-1) solid
+    var(--app-launcher-column-divider-color);
+}
+
+/* Horizontal row separator: 262px stroke, 16px inset left/right, centered in parent. */
 .rowDivider {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-inline: var(--app-launcher-divider-inset);
   flex-shrink: 0;
-  height: 0;
   margin: 0;
   border: none;
-  position: relative;
+  pointer-events: none;
 }
 
 .rowDivider::before {
   content: "";
-  position: absolute;
-  width: 262px;
-  inset-inline-start: 50%;
-  inset-block-start: 0;
-  transform: translateX(-50%);
-  border-top: var(--border-width-border-default) dashed var(--color-border-neutral-light);
+  width: var(--app-launcher-row-divider-width);
+  height: 0;
+  flex-shrink: 0;
+  border-top: var(--border-width-border-1) dashed var(--app-launcher-column-divider-color);
 }
 
 /* ---------- AppLauncherProductTile ---------- */
@@ -182,6 +223,7 @@
   transition: background 150ms ease;
   font-family: inherit;
   color: var(--color-icon-neutral-strong, var(--color-icon-neutral));
+  position: relative;
 }
 
 .appTile:hover {
@@ -200,6 +242,46 @@
 .appTile:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: -2px;
+}
+
+/* 2-product: horizontal tile shell + internal dotted rail on leading tile (`13231:109518`). */
+.appTileTwoProduct {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.appTileTwoProduct .labelStack {
+  flex: 1 1 auto;
+  width: 147px;
+  min-width: 0;
+}
+
+.tileDivider {
+  flex: 0 0 1px;
+  width: 1px;
+  align-self: stretch;
+  position: relative;
+  pointer-events: none;
+}
+
+.tileDividerSolid::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  border-inline-start: var(--border-width-border-1) solid
+    var(--app-launcher-column-divider-color);
+}
+
+.tileDividerDotted::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: var(--app-launcher-column-divider-inset-block);
+  height: var(--app-launcher-column-divider-height);
+  border-inline-start: var(--border-width-border-1) dashed
+    var(--app-launcher-column-divider-color);
 }
 
 .labelStack {
@@ -281,7 +363,7 @@
   position: absolute;
   inset-inline: var(--separator-inset);
   inset-block-start: 0;
-  border-top: var(--border-width-border-default) dashed var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) dashed var(--app-launcher-column-divider-color);
   pointer-events: none;
 }
 
@@ -339,7 +421,7 @@
   display: flex;
   align-items: center;
   padding: var(--padding-padding-8) 0;
-  border-top: var(--border-width-border-default) solid var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
 }
 
 .footerAction {
@@ -364,4 +446,86 @@
 .footerAction:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: 2px;
+}
+
+/* ----- Synapse programme (`13231:123761`, `13231:109521`) ----- */
+
+.launcherSurfaceSingleProduct {
+  width: 150px;
+}
+
+.programmeSynapse.launcherSurface {
+  --app-launcher-column-divider-color: var(--color-border-neutral-light);
+  gap: var(--spacing-space-1);
+  border-color: var(--color-border-neutral-light);
+}
+
+.programmeSynapseTile {
+  position: relative;
+}
+
+.programmeSynapse .programmeSynapseTile:hover {
+  background: var(--color-background-surface-2);
+  color: var(--color-icon-neutral-strong, var(--color-icon-neutral));
+}
+
+.programmeSynapse .programmeSynapseTile:hover .labelStack {
+  background: var(--color-background-brand-lighter);
+}
+
+.programmeSynapse .programmeSynapseTile:active {
+  background: var(--color-background-surface-2);
+  color: var(--color-icon-brand-strong);
+}
+
+.programmeSynapse .programmeSynapseTile:active .labelStack {
+  background: var(--color-background-brand-light);
+}
+
+.programmeSynapse .programmeSynapseTile:active .appName {
+  color: var(--color-text-brand-strong);
+}
+
+.programmeSynapse .programmeSynapseTile:focus-visible {
+  outline: none;
+}
+
+.programmeSynapse .programmeSynapseTile:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 2px 2px 2px 3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+}
+
+/* Storybook / spec state matrix (demo-only forced states). */
+.programmeSynapseTile[data-state="hover"] .labelStack,
+.programmeSynapse .programmeSynapseTile[data-state="hover"] .labelStack {
+  background: var(--color-background-brand-lighter);
+}
+
+.programmeSynapseTile[data-state="press"] .labelStack,
+.programmeSynapse .programmeSynapseTile[data-state="press"] .labelStack {
+  background: var(--color-background-brand-light);
+}
+
+.programmeSynapseTile[data-state="press"] .appName,
+.programmeSynapse .programmeSynapseTile[data-state="press"] .appName {
+  color: var(--color-text-brand-strong);
+}
+
+.programmeSynapseTile[data-state="press"],
+.programmeSynapse .programmeSynapseTile[data-state="press"] {
+  color: var(--color-icon-brand-strong);
+}
+
+.programmeSynapseTile[data-state="focus"]::after,
+.programmeSynapse .programmeSynapseTile[data-state="focus"]::after {
+  content: "";
+  position: absolute;
+  inset: 2px 2px 2px 3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
