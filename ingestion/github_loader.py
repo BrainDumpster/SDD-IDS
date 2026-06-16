@@ -49,7 +49,7 @@ class GithubLoader:
                 all_files = []
                 
                 for item in items:
-                    if item['type'] == 'file' and item['name'].endswith('.mdx'):
+                    if item['type'] == 'file' and item['name'].endswith('.md'):
                         all_files.append(item)
                     elif item['type'] == 'dir':
                         # Recursively fetch files from subdirectory

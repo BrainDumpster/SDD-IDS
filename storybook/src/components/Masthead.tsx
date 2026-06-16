@@ -22,6 +22,12 @@ interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
   icon: ReactNode;
 }
 
+interface MastheadAvatarProps extends Omit<ComponentProps<"button">, "children"> {
+  initials?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+}
+
 export function MastheadActionButtonContainer({
   children,
   className,
@@ -51,6 +57,28 @@ export function MastheadActionIconButton({
     >
       <span className={styles.actionIconGlyph} aria-hidden="true">
         {icon}
+      </span>
+    </button>
+  );
+}
+
+export function MastheadAvatar({
+  initials,
+  imageSrc,
+  imageAlt = "User avatar",
+  className,
+  type = "button",
+  ...rest
+}: MastheadAvatarProps) {
+  return (
+    <button
+      type={type}
+      className={[styles.avatarAction, className].filter(Boolean).join(" ")}
+      aria-label={initials ? `User initials ${initials}` : imageAlt}
+      {...rest}
+    >
+      <span className={styles.avatarChip}>
+        {imageSrc ? <img className={styles.avatarImage} src={imageSrc} alt={imageAlt} /> : initials}
       </span>
     </button>
   );

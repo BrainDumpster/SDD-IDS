@@ -5,13 +5,14 @@
 
 .heading {
   display: block;
-  padding: var(--padding-padding-4) var(--padding-padding-12);
-  font-size: var(--font-size-body-3);
-  font-weight: 500;
-  color: var(--color-text-neutral);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--spacing-space-4);
+  padding: var(--padding-padding-12) 0;
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  font-weight: 400;
+  color: var(--color-text-neutral-strong);
+  text-transform: none;
+  letter-spacing: normal;
+  margin-bottom: 0;
 }
 
 .list {
@@ -20,7 +21,6 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  border-left: var(--border-width-border-1) solid var(--color-border-lighter);
 }
 
 .item {
@@ -30,18 +30,29 @@
 .link {
   display: block;
   width: 100%;
-  padding: var(--padding-padding-4) var(--padding-padding-12);
-  font-size: var(--font-size-body-2);
+  padding: var(--padding-padding-8) var(--padding-padding-24);
+  font-size: var(--font-size-body-1);
   color: var(--color-text-neutral);
   text-decoration: none;
-  border-left: var(--border-width-border-2) solid transparent;
-  margin-left: calc(-1 * var(--border-width-border-1));
+  position: relative;
+  border-left: 1.2px solid var(--color-border-accessible);
   transition: color 150ms ease, border-color 150ms ease;
   line-height: var(--font-line-height-line-height-24);
+  box-sizing: border-box;
 }
 
 .link:hover {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-neutral);
+}
+
+.link:hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 4px;
+  background: var(--color-border-brand-base);
 }
 
 .link:focus-visible {
@@ -51,7 +62,17 @@
 }
 
 .active {
-  color: var(--color-text-brand-base);
-  border-left-color: var(--color-border-brand-base);
-  font-weight: 500;
+  color: var(--color-text-brand-strong);
+  border-left-color: var(--color-border-accessible);
+  font-weight: 400;
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 4px;
+  background: var(--color-border-brand-base);
 }

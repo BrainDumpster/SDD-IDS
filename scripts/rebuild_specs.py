@@ -1,8 +1,8 @@
 """
 Rebuild Synapse Design Specs (Framework-Agnostic)
 ==================================================
-Generates a root-spec.mdx (global tokens, baselines, theming) plus per-component
-override design-spec.mdx files. Component specs inherit from root and only
+Generates a root-spec.md (global tokens, baselines, theming) plus per-component
+override design-spec.md files. Component specs inherit from root and only
 document what is specific to that component.
 
 Sources of truth:
@@ -319,7 +319,7 @@ def _invariant_token_table(tokens: list, theme: dict) -> str:
 # ---------------------------------------------------------------------------
 
 def build_root_spec(theme: dict, config: dict) -> str:
-    """Generate the root-spec.mdx with all global design system content."""
+    """Generate the root-spec.md with all global design system content."""
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     cats = _categorize_tokens(theme)
 
@@ -641,7 +641,7 @@ def build_interactions_section(slug: str, interaction_templates: dict) -> str:
         "<!-- ds:section id=interactions -->",
         "## Interactions (Component-Specific)",
         "",
-        "> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.mdx.",
+        "> Baseline interactions (focus management, Tab/Enter/Space/Escape, touch targets) are defined in root-spec.md.",
         "> This section documents additional or overriding behaviors for this component.",
         "",
         f"**Pattern**: {template.get('pattern', 'custom')}",
@@ -700,7 +700,7 @@ def build_component_spec(
     layout_cache: dict,
     interaction_templates: dict,
 ) -> str:
-    """Generate a per-component override spec that inherits from root-spec.mdx."""
+    """Generate a per-component override spec that inherits from root-spec.md."""
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     node_id = figma_entry.get("nodeId", "")
     category = figma_entry.get("category", "")
@@ -775,7 +775,7 @@ def build_component_spec(
 <!-- ds:inherits root-spec -->
 # {name} Design Spec
 
-> Generated {now}. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.mdx.
+> Generated {now}. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.
 
 <!-- ds:section id=metadata -->
 ## Metadata
@@ -805,7 +805,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
     sections.append(f"""<!-- ds:section id=tokens -->
 ## Component Tokens
 
-> Global tokens (colors, spacing, typography, elevation): see [root-spec.mdx](../root-spec.mdx).
+> Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
 > Below are tokens referenced by this component's CSS module.
 
 {chr(10).join(token_lines)}
@@ -830,7 +830,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Source | Location |
 |---|---|
-| Root spec | `components/synapse/root-spec.mdx` |
+| Root spec | `components/synapse/root-spec.md` |
 | Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
@@ -904,43 +904,43 @@ def verify(theme: dict, config: dict, registry: dict) -> list:
     issues = []
 
     # 1. Root spec exists and has required sections
-    root_path = SPECS_DIR / "root-spec.mdx"
+    root_path = SPECS_DIR / "root-spec.md"
     if not root_path.exists():
-        issues.append("FAIL: root-spec.mdx does not exist")
+        issues.append("FAIL: root-spec.md does not exist")
     else:
         root_text = root_path.read_text()
         for section in ["Color System", "Typography Scale", "Elevation System",
                         "Interaction Baseline", "Accessibility Baseline",
                         "Theming Mechanism", "Responsive Breakpoints"]:
             if section not in root_text:
-                issues.append(f"FAIL: root-spec.mdx missing section: {section}")
+                issues.append(f"FAIL: root-spec.md missing section: {section}")
 
     # 2. No component spec contains boilerplate
     for spec_dir in sorted(SPECS_DIR.iterdir()):
-        spec_file = spec_dir / "design-spec.mdx"
+        spec_file = spec_dir / "design-spec.md"
         if not spec_dir.is_dir() or not spec_file.exists():
             continue
         text = spec_file.read_text()
         for marker in BOILERPLATE_MARKERS:
             if marker in text:
-                issues.append(f"WARN: {spec_dir.name}/design-spec.mdx contains boilerplate: '{marker[:50]}...'")
+                issues.append(f"WARN: {spec_dir.name}/design-spec.md contains boilerplate: '{marker[:50]}...'")
                 break
 
     # 3. Every component spec has inherits marker
     for spec_dir in sorted(SPECS_DIR.iterdir()):
-        spec_file = spec_dir / "design-spec.mdx"
+        spec_file = spec_dir / "design-spec.md"
         if not spec_dir.is_dir() or not spec_file.exists():
             continue
         text = spec_file.read_text()
         if "<!-- ds:inherits root-spec -->" not in text:
-            issues.append(f"FAIL: {spec_dir.name}/design-spec.mdx missing inherits marker")
+            issues.append(f"FAIL: {spec_dir.name}/design-spec.md missing inherits marker")
 
     # 4. Framework layer in root spec matches config
     if root_path.exists():
         root_text = root_path.read_text()
         fw = config.get("framework_layer", "base-ui")
         if fw not in root_text:
-            issues.append(f"FAIL: root-spec.mdx doesn't mention framework_layer '{fw}'")
+            issues.append(f"FAIL: root-spec.md doesn't mention framework_layer '{fw}'")
 
     # 5. Registry has expected count
     if len(registry) < 40:
@@ -956,7 +956,7 @@ def verify(theme: dict, config: dict, registry: dict) -> list:
 def main():
     parser = argparse.ArgumentParser(description="Rebuild Synapse design specs")
     parser.add_argument("--verify", action="store_true", help="Run verification checks after generation")
-    parser.add_argument("--root-only", action="store_true", help="Only regenerate root-spec.mdx")
+    parser.add_argument("--root-only", action="store_true", help="Only regenerate root-spec.md")
     parser.add_argument("--component", help="Only regenerate a single component spec")
     args = parser.parse_args()
 
@@ -969,7 +969,7 @@ def main():
 
     # --- Generate root spec ---
     root_spec = build_root_spec(theme, config)
-    root_path = SPECS_DIR / "root-spec.mdx"
+    root_path = SPECS_DIR / "root-spec.md"
     root_path.parent.mkdir(parents=True, exist_ok=True)
     root_path.write_text(root_spec)
     print(f"Root spec generated: {root_path}")
@@ -1031,10 +1031,10 @@ def main():
 
         spec_dir = SPECS_DIR / slug
         spec_dir.mkdir(parents=True, exist_ok=True)
-        (spec_dir / "design-spec.mdx").write_text(spec)
+        (spec_dir / "design-spec.md").write_text(spec)
         specs_written += 1
 
-    print(f"Specs generated: {specs_written} -> {SPECS_DIR}/*/design-spec.mdx")
+    print(f"Specs generated: {specs_written} -> {SPECS_DIR}/*/design-spec.md")
 
     # --- Summary ---
     total_tokens = sum(len(d["tokens"]) for d in components.values())

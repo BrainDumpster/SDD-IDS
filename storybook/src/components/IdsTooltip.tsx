@@ -4,15 +4,25 @@ import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsTooltip.module.css";
 
+/** Reference: `components/ids/tooltip/design-spec.md` */
 export interface IdsTooltipProps {
+  /** BodyContent — required per IDS Tooltip spec. */
   content: ReactNode;
+  /** Optional header title (Body 2 Medium). Omitted when unset. */
   title?: string;
   children: ReactNode;
+  /** `side` in design spec. Default `top`. */
   side?: "top" | "bottom" | "left" | "right";
+  /** `arrowAlign` in design spec. Default `center`. */
+  arrowAlign?: "start" | "center" | "end";
+  /** @deprecated Use `arrowAlign`. */
   align?: "start" | "center" | "end";
-  showArrow?: boolean;
+  /** Default `false` — hover/focus dismiss (standard tooltip). */
   closable?: boolean;
-  onClose?: (reason: "close-click") => void;
+  /** Trigger layout; use `block` for full-width row triggers (e.g. Dual List Box items). */
+  triggerDisplay?: "inline" | "block";
+  onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: "close-click" | "escape" | "programmatic") => void;
 }
 
 export function IdsTooltip({
@@ -20,18 +30,23 @@ export function IdsTooltip({
   title,
   children,
   side = "top",
-  align = "center",
-  showArrow = true,
+  arrowAlign,
+  align,
   closable = false,
+  triggerDisplay = "inline",
+  onOpenChange,
   onClose,
 }: IdsTooltipProps) {
+  const resolvedAlign = arrowAlign ?? align ?? "center";
   const [open, setOpen] = useState(false);
   const [manuallyDismissed, setManuallyDismissed] = useState(false);
 
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
+      onOpenChange?.(nextOpen);
+
       if (!closable) {
-        // Standard tooltip behavior: open/close follows trigger hover/focus lifecycle.
+        // Standard tooltip (`closable=false`): hover/focus lifecycle per IDS spec.
         setOpen(nextOpen);
         return;
       }
@@ -49,13 +64,19 @@ export function IdsTooltip({
 
       setOpen(false);
     },
-    [closable, manuallyDismissed]
+    [closable, manuallyDismissed, onOpenChange]
   );
 
   const dismissTooltip = useCallback(() => {
     setManuallyDismissed(true);
     setOpen(false);
     onClose?.("close-click");
+  }, [onClose]);
+
+  const dismissTooltipWithEscape = useCallback(() => {
+    setManuallyDismissed(true);
+    setOpen(false);
+    onClose?.("escape");
   }, [onClose]);
 
   const popupClassName = useMemo(
@@ -73,21 +94,39 @@ export function IdsTooltip({
   return (
     <BaseTooltip.Provider>
       <BaseTooltip.Root open={open} onOpenChange={handleOpenChange}>
-        <BaseTooltip.Trigger className={styles.trigger} render={<span />}>
+        <BaseTooltip.Trigger
+          className={
+            triggerDisplay === "block" ? styles.triggerBlock : styles.trigger
+          }
+          render={<span />}
+        >
           {children}
         </BaseTooltip.Trigger>
         <BaseTooltip.Portal>
-          <BaseTooltip.Positioner side={side} align={align} sideOffset={8}>
-            <BaseTooltip.Popup className={popupClassName}>
-              {showArrow ? (
-                <BaseTooltip.Arrow className={styles.arrow}>
-                  <svg className={styles.arrowSvg} viewBox="0 0 10 6" aria-hidden="true">
-                    <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5H0.5Z" />
+          <BaseTooltip.Positioner
+            side={side}
+            align={resolvedAlign}
+            sideOffset={16}
+          >
+            <BaseTooltip.Popup
+              className={popupClassName}
+              role="tooltip"
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && closable) {
+                  dismissTooltipWithEscape();
+                }
+              }}
+            >
+              <BaseTooltip.Arrow className={styles.arrow}>
+                <span className={styles.arrowGraphic} aria-hidden="true">
+                  <svg className={styles.arrowSvg} viewBox="0 0 10 6">
+                    <path className={styles.arrowFill} d="M0.5 5.5L5 0.5L9.5 5.5L9.5 6.5L0.5 6.5Z" />
                     <path className={styles.arrowStroke} d="M0.5 5.5L5 0.5L9.5 5.5" />
                   </svg>
-                </BaseTooltip.Arrow>
-              ) : null}
-              <div className={styles.content}>
+                </span>
+              </BaseTooltip.Arrow>
+              <div className={styles.panel}>
+                <div className={styles.content}>
                 {(title || closable) && (
                   <div className={styles.header}>
                     {title ? <div className={styles.title}>{title}</div> : <span />}
@@ -98,12 +137,13 @@ export function IdsTooltip({
                         aria-label="Close tooltip"
                         onClick={dismissTooltip}
                       >
-                        <Icon shapeName="shape-x" variant="img" className={styles.closeIcon} />
+                        <Icon shapeName="shape-x" className={styles.closeIcon} />
                       </button>
                     ) : null}
                   </div>
                 )}
                 <div className={styles.body}>{content}</div>
+                </div>
               </div>
             </BaseTooltip.Popup>
           </BaseTooltip.Positioner>

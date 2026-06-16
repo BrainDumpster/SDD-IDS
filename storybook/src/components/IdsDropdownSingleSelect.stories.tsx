@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import type React from "react";
 import { useMemo, useState } from "react";
 import { DropdownMenu } from "./DropdownMenu";
-import arrowDropTriCaretIcon from "../../../assets/icons/arrow-drop-tri-caret.svg";
+import { IdsDropdownTriggerShell } from "./IdsDropdownTriggerShell";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 
 type Size = "small" | "large";
@@ -13,65 +14,35 @@ function SingleSelectTrigger({
   size = "large",
   disabled = false,
   error = false,
+  hover = false,
+  focusVisible = false,
 }: {
   value?: string;
   placeholder?: string;
   size?: Size;
   disabled?: boolean;
   error?: boolean;
+  hover?: boolean;
+  focusVisible?: boolean;
 }) {
-  const verticalPadding = size === "large" ? "10px" : "6px";
-  const borderColor = error
-    ? "var(--color-border-alerting-critical-base)"
-    : "var(--color-border-accessible)";
-  const textColor = disabled
-    ? "var(--color-text-disabled)"
-    : "var(--color-text-neutral)";
-  const background = disabled
-    ? "var(--color-background-gray-light)"
-    : "var(--color-background-component)";
-
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: 300,
-        border: `1px solid ${borderColor}`,
-        background,
-        padding: `${verticalPadding} var(--padding-padding-16)`,
-        fontSize: "var(--font-size-body-2)",
-        lineHeight: "var(--font-line-height-line-height-20)",
-        color: textColor,
-        cursor: disabled ? "not-allowed" : "pointer",
-        boxSizing: "border-box",
-      }}
-    >
-      <span>{value ?? placeholder}</span>
-      <span
-        aria-hidden="true"
-        style={{
-          width: 10,
-          height: 10,
-          display: "inline-block",
-          backgroundColor: "var(--color-icon-accessible)",
-          WebkitMaskImage: `url('${arrowDropTriCaretIcon}')`,
-          WebkitMaskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-          WebkitMaskPosition: "center",
-          maskImage: `url('${arrowDropTriCaretIcon}')`,
-          maskRepeat: "no-repeat",
-          maskSize: "contain",
-          maskPosition: "center",
-        }}
-      />
-    </div>
+    <IdsDropdownTriggerShell
+      size={size}
+      disabled={disabled}
+      error={error}
+      hover={hover}
+      focusVisible={focusVisible}
+      left={
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {value ?? placeholder}
+        </span>
+      }
+    />
   );
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "IDS/Dropdown/Single Select",
+  title: "Spec Generated/IDS/Dropdown/Single Select",
   component: DropdownMenu,
   parameters: { layout: "centered" },
   argTypes: {
@@ -100,8 +71,8 @@ function useSingleSelectItems(
 }
 
 export const MainScenarios: Story = {
-  args: { showSingleSelectRadio: false },
-  render: ({ showSingleSelectRadio = false }) => {
+  args: { showSingleSelectRadio: true },
+  render: ({ showSingleSelectRadio = true }) => {
     const [smallValue, setSmallValue] = useState("Option 2");
     const [overflowValue, setOverflowValue] = useState("Option 2");
     const [sectionValue, setSectionValue] = useState("Option 2");
@@ -227,58 +198,152 @@ export const MainScenarios: Story = {
   },
 };
 
-export const StatesAndSizes: Story = {
-  args: { showSingleSelectRadio: false },
-  render: ({ showSingleSelectRadio = false }) => {
-    const emptyItems = [
-      { id: "e1", value: "Option 1", label: "Option 1", selectable: true },
-      { id: "e2", value: "Option 2", label: "Option 2", selectable: true },
+/**
+ * Field States Matrix — matches Figma component matrix `11099:58099`.
+ * Columns: Size Large (Empty / Filled) × Size Small (Empty / Filled).
+ * Rows: Default, Hover, Show Selected, Focus, Disabled, Error.
+ */
+export const FieldStatesMatrix: Story = {
+  render: () => {
+    const annotationStyle: React.CSSProperties = {
+      fontSize: 14,
+      lineHeight: "20px",
+      color: "#e8178a",
+      whiteSpace: "nowrap",
+      textAlign: "right",
+      paddingRight: 8,
+      minWidth: 110,
+    };
+    const colHeaderStyle: React.CSSProperties = {
+      fontSize: 14,
+      lineHeight: "20px",
+      color: "#e8178a",
+      textAlign: "center",
+    };
+    const cellStyle: React.CSSProperties = { display: "grid", gap: 4, width: 240 };
+    const helperStyle: React.CSSProperties = {
+      fontSize: 14,
+      lineHeight: "20px",
+      color: "var(--color-text-neutral)",
+      fontWeight: 500,
+    };
+    const errorMsgStyle: React.CSSProperties = {
+      fontSize: 14,
+      lineHeight: "20px",
+      color: "var(--color-text-critical)",
+      fontWeight: 500,
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+    };
+
+    type CellDef = {
+      value?: string;
+      placeholder?: string;
+      size: Size;
+      disabled?: boolean;
+      error?: boolean;
+      hover?: boolean;
+      focusVisible?: boolean;
+      helperType?: "text" | "error";
+    };
+
+    const stateRows: { label: string; cells: CellDef[] }[] = [
+      {
+        label: "State: Default",
+        cells: [
+          { placeholder: "-Select-", size: "large" },
+          { value: "Option 2", size: "large" },
+          { placeholder: "-Select-", size: "small" },
+          { value: "Option 2", size: "small" },
+        ],
+      },
+      {
+        label: "State: Hover",
+        cells: [
+          { placeholder: "-Select-", size: "large", hover: true },
+          { value: "Option 2", size: "large", hover: true },
+          { placeholder: "-Select-", size: "small", hover: true },
+          { value: "Option 2", size: "small", hover: true },
+        ],
+      },
+      {
+        label: "State: Show Selected",
+        cells: [
+          { placeholder: "-Select-", size: "large" },
+          { value: "Option 2", size: "large" },
+          { placeholder: "-Select-", size: "small" },
+          { value: "Option 2", size: "small" },
+        ],
+      },
+      {
+        label: "State: Focus",
+        cells: [
+          { placeholder: "-Select-", size: "large", focusVisible: true },
+          { value: "Option 2", size: "large", focusVisible: true },
+          { placeholder: "-Select-", size: "small", focusVisible: true },
+          { value: "Option 2", size: "small", focusVisible: true },
+        ],
+      },
+      {
+        label: "State: Disabled",
+        cells: [
+          { placeholder: "-Select-", size: "large", disabled: true },
+          { value: "Option 2", size: "large", disabled: true },
+          { placeholder: "-Select-", size: "small", disabled: true },
+          { value: "Option 2", size: "small", disabled: true },
+        ],
+      },
+      {
+        label: "State: Error",
+        cells: [
+          { placeholder: "-Select-", size: "large", error: true, helperType: "error" },
+          { value: "Option 2", size: "large", error: true, helperType: "error" },
+          { placeholder: "-Select-", size: "small", error: true, helperType: "error" },
+          { value: "Option 2", size: "small", error: true, helperType: "error" },
+        ],
+      },
     ];
 
     return (
-      <div style={{ width: 700, display: "grid", gap: 16 }}>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <DropdownMenu
-            trigger={<SingleSelectTrigger placeholder="Select" size="large" />}
-            items={emptyItems}
-            selectionMode="single"
-            showSingleSelectRadio={showSingleSelectRadio}
-          />
-          <DropdownMenu
-            trigger={<SingleSelectTrigger value="Option 2" size="small" />}
-            items={emptyItems}
-            selectionMode="single"
-            selectedValues={["Option 2"]}
-            showSingleSelectRadio={showSingleSelectRadio}
-          />
+      <div style={{ display: "grid", gap: 24, padding: 24 }}>
+        {/* Column headers */}
+        <div style={{ display: "flex", gap: 12, paddingLeft: 118 }}>
+          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Large(40) — Empty</div>
+          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Large(40) — Filled</div>
+          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Small(32) — Empty</div>
+          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Small(32) — Filled</div>
         </div>
-        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ width: 300, display: "grid", gap: 4 }}>
-            <DropdownMenu
-              trigger={<SingleSelectTrigger value="Option 2" disabled />}
-              items={emptyItems}
-              selectionMode="single"
-              selectedValues={["Option 2"]}
-              showSingleSelectRadio={showSingleSelectRadio}
-              disabled
-            />
-            <span style={{ color: "var(--color-text-neutral)", fontSize: 14, lineHeight: "20px" }}>
-              Helper text
-            </span>
+
+        {stateRows.map((row) => (
+          <div key={row.label} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+            <div style={annotationStyle}>{row.label}</div>
+            {row.cells.map((cell, i) => (
+              <div key={i} style={cellStyle}>
+                <IdsDropdownTriggerShell
+                  size={cell.size}
+                  disabled={cell.disabled}
+                  error={cell.error}
+                  hover={cell.hover}
+                  focusVisible={cell.focusVisible}
+                  left={
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {cell.value ?? cell.placeholder ?? "-Select-"}
+                    </span>
+                  }
+                />
+                {cell.helperType === "error" ? (
+                  <span style={errorMsgStyle}>
+                    <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
+                    Error message
+                  </span>
+                ) : row.label !== "State: Error" ? (
+                  <span style={helperStyle}>Helper text</span>
+                ) : null}
+              </div>
+            ))}
           </div>
-          <div style={{ width: 300, display: "grid", gap: 4 }}>
-            <DropdownMenu
-              trigger={<SingleSelectTrigger placeholder="-Type or Select-" error />}
-              items={emptyItems}
-              selectionMode="single"
-              showSingleSelectRadio={showSingleSelectRadio}
-            />
-            <span style={{ color: "var(--color-text-critical)", fontSize: 14, lineHeight: "20px", display: "flex", alignItems: "center", gap: 8 }}>
-              <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
-              Error message
-            </span>
-          </div>
-        </div>
+        ))}
       </div>
     );
   },

@@ -1,0 +1,154 @@
+/* Combobox-filter multiselect — Figma `44360:147581`
+   Tokens aligned with components/ids/dropdown-combo-box/design-spec.md */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--color-background-component);
+}
+
+/* --- Search row (Figma `Search` frame) --- */
+
+.searchRow {
+  padding: var(--padding-padding-8);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-brand-base);
+}
+
+.searchInputWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: var(--padding-padding-8);
+  padding-top: var(--padding-padding-4);
+  padding-bottom: var(--padding-padding-4);
+}
+
+.searchInput {
+  all: unset;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-neutral);
+  font-weight: 400;
+}
+
+/* --- Select All / Clear All row --- */
+
+.selectAllRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  /* Figma `44360:179347` — pl-16, pr-0; Clear All supplies its own px-16 inset. */
+  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  background: var(--color-background-component);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+}
+
+.selectAllLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+}
+
+/* Checkbox labels default to 500; filter options use Body 2 Regular (Figma multiselect filter). */
+.selectAllLeft label,
+.optionItem label {
+  font-weight: 400;
+}
+
+.clearAllBtn {
+  all: unset;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-brand-strong);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2);
+}
+
+.clearAllBtn:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* --- Scrollable option list --- */
+
+.optionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: var(--padding-padding-4);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 366px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  min-height: 40px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background 80ms ease;
+}
+
+.optionItem:hover {
+  background: var(--color-background-brand-lighter);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
+.optionItem:active {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}

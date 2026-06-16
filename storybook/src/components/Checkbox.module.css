@@ -10,8 +10,24 @@
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-size: var(--font-size-body-2);
+  font-weight: 500;
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
+  min-height: 20px;
+}
+
+
+.field[data-density="datagrid"] .wrapper {
+  min-height: 0;
+  gap: 0;
+}
+
+/* Figma datagrid checkbox `8505:14304` — 16×16 in 48px selection column */
+.field[data-density="datagrid"] .root {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
 }
 
 .root {
@@ -27,6 +43,8 @@
   transition: all 100ms ease;
   cursor: inherit;
   outline: none;
+  position: relative;
+  vertical-align: middle;
 }
 
 .root:hover:not([data-disabled]) {
@@ -41,7 +59,13 @@
 
 .root:focus-visible {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 3px;
+  outline-offset: 2px;
+}
+
+/* Storybook / static demos: match focus-visible ring without keyboard focus */
+.rootSimulatedFocus {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
 }
 
 .root[data-checked] {
@@ -77,10 +101,11 @@
   border-color: var(--color-border-disabled);
 }
 
-.root[data-disabled][data-checked],
-.root[data-disabled][data-checked="true"] {
+/* Checked + disabled: Figma `8505:14361` / `8505:14371` — gray fill only, no visible stroke (1px border stays for 18×18 footprint). */
+.root[data-disabled][data-checked] {
   background: var(--color-background-gray-base);
-  border-color: var(--color-border-disabled);
+  /* Spec: no visible stroke; `transparent` avoids dark theme `--color-border-transparent-brand` resolving to opaque brand. */
+  border-color: transparent;
 }
 
 .root[data-disabled][data-indeterminate],
@@ -91,9 +116,38 @@
 
 .indicator {
   color: var(--color-icon-white);
-  display: flex;
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.indicator[data-indicator-type="check"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%);
+  transform: translate(-50%, calc(-50% - 0.5px));
+}
+
+.indicator[data-indicator-type="minus"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 2px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
 }
 
 .root[data-disabled] .indicator {
@@ -109,15 +163,27 @@
 }
 
 .root[data-disabled][data-indeterminate] .indicator {
-  color: var(--color-border-disabled);
+  color: var(--color-icon-disabled);
 }
 
 .root[data-disabled][data-checked="mixed"] .indicator {
-  color: var(--color-border-disabled);
+  color: var(--color-icon-disabled);
 }
 
 .label {
   user-select: none;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .wrapper:has(.root[data-disabled]) {
@@ -129,12 +195,12 @@
 }
 
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]) {
-  border-color: var(--color-text-critical);
+  border-color: var(--color-border-alerting-critical-base);
 }
 
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):hover:not([data-disabled]),
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):active:not([data-disabled]) {
-  border-color: var(--color-text-critical);
+  border-color: var(--color-border-alerting-critical-base);
 }
 
 .labelError {
@@ -145,7 +211,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
-  margin-left: calc(16px + var(--spacing-space-8));
+  margin-left: calc(18px + var(--spacing-space-8));
 }
 
 .assistiveTextError {

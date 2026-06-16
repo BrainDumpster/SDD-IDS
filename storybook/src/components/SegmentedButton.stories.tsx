@@ -1,38 +1,209 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   SegmentedButton,
   type SegmentedButtonChangeMeta,
+  type SegmentedButtonItemIcon,
+  type SegmentedButtonItemText,
 } from "./SegmentedButton";
 
 const meta: Meta<typeof SegmentedButton> = {
-  title: "IDS/Segmented Button",
+  title: "Spec Generated/IDS/Segmented Button",
   component: SegmentedButton,
+  parameters: { layout: "centered" },
 };
 
 export default meta;
 type Story = StoryObj<typeof SegmentedButton>;
 
-/** Two text segments (minimum). */
-export const TextTwoOptions: Story = {
+type SimulatedState = "hover" | "press" | "focus-visible";
+
+const matrixWrap: CSSProperties = {
+  display: "grid",
+  gap: 20,
+  maxWidth: 640,
+};
+
+const matrixRow: CSSProperties = {
+  display: "grid",
+  gap: 10,
+};
+
+const matrixHeading: CSSProperties = {
+  fontSize: 12,
+  fontWeight: 600,
+  color: "var(--color-text-neutral-strong)",
+  textTransform: "uppercase",
+  letterSpacing: "0.04em",
+};
+
+const matrixColumns: CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(4, minmax(140px, 1fr))",
+  gap: 12,
+  alignItems: "start",
+};
+
+const matrixCellLabel: CSSProperties = {
+  fontSize: 11,
+  color: "var(--color-text-neutral)",
+  marginBottom: 6,
+};
+
+function textStatePair(simulatedState?: SimulatedState): SegmentedButtonItemText[] {
+  return [
+    { value: "option1", label: "Option 1" },
+    {
+      value: "option2",
+      label: "Option Text",
+      ...(simulatedState ? { simulatedState } : {}),
+    },
+  ];
+}
+
+function iconStatePair(simulatedState?: SimulatedState): SegmentedButtonItemIcon[] {
+  return [
+    { value: "option1", icon: "view-hamburger", ariaLabel: "Option 1" },
+    {
+      value: "option2",
+      icon: "view-hamburger",
+      ariaLabel: "Option icon",
+      ...(simulatedState ? { simulatedState } : {}),
+    },
+  ];
+}
+
+const stateColumns: { label: string; simulatedState?: SimulatedState }[] = [
+  { label: "Default" },
+  { label: "Hover", simulatedState: "hover" },
+  { label: "Press", simulatedState: "press" },
+  { label: "Focus", simulatedState: "focus-visible" },
+];
+
+function StateMatrixTextDemo() {
+  return (
+    <div style={matrixWrap}>
+      <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        Figma text option component (node 9015:20992). Focus column uses{" "}
+        <code>simulatedState</code>; hover/press columns are pinned for QA.
+      </div>
+
+      <div style={matrixRow}>
+        <div style={matrixHeading}>Inactive (unselected segment)</div>
+        <div style={matrixColumns}>
+          {stateColumns.map(({ label, simulatedState }) => (
+            <div key={`inactive-${label}`}>
+              <div style={matrixCellLabel}>{label}</div>
+              <SegmentedButton
+                type="text"
+                ariaLabel={`Inactive ${label}`}
+                value="option1"
+                items={textStatePair(simulatedState)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={matrixRow}>
+        <div style={matrixHeading}>Active (selected segment)</div>
+        <div style={matrixColumns}>
+          {stateColumns.map(({ label, simulatedState }) => (
+            <div key={`active-${label}`}>
+              <div style={matrixCellLabel}>{label}</div>
+              <SegmentedButton
+                type="text"
+                ariaLabel={`Active ${label}`}
+                value="option2"
+                items={textStatePair(simulatedState)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Text option matrix — Figma `.Segemented Button Text` (`9015:20992`).
+ * Option 1 stays selected on Inactive row; Option 2 selected on Active row.
+ */
+export const StateMatrixText: Story = {
+  render: () => <StateMatrixTextDemo />,
+};
+
+/** Icon option matrix — Figma `.SegementedButton-Element-OptionIcon` (`10148:29576`). */
+export const StateMatrixIcon: Story = {
+  render: () => (
+    <div style={matrixWrap}>
+      <div style={matrixRow}>
+        <div style={matrixHeading}>Inactive (unselected segment)</div>
+        <div style={matrixColumns}>
+          {stateColumns.map(({ label, simulatedState }) => (
+            <div key={`icon-inactive-${label}`}>
+              <div style={matrixCellLabel}>{label}</div>
+              <SegmentedButton
+                type="icon"
+                ariaLabel={`Icon inactive ${label}`}
+                value="option1"
+                items={iconStatePair(simulatedState)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={matrixRow}>
+        <div style={matrixHeading}>Active (selected segment)</div>
+        <div style={matrixColumns}>
+          {stateColumns.map(({ label, simulatedState }) => (
+            <div key={`icon-active-${label}`}>
+              <div style={matrixCellLabel}>{label}</div>
+              <SegmentedButton
+                type="icon"
+                ariaLabel={`Icon active ${label}`}
+                value="option2"
+                items={iconStatePair(simulatedState)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const StateMatrixTextDark: Story = {
+  parameters: {
+    globals: { theme: "dark" },
+    backgrounds: { default: "dark" },
+  },
+  render: () => <StateMatrixTextDemo />,
+};
+
+/** Figma `SegmentedButton-Main` text × 2, Option 1 selected (`42113:67642`, width 260px). */
+export const SpecAccurateDesign: Story = {
   render: () => {
-    const [value, setValue] = useState("daily");
+    const [value, setValue] = useState("option1");
     return (
-      <SegmentedButton
-        type="text"
-        ariaLabel="Report period"
-        items={[
-          { value: "daily", label: "Daily" },
-          { value: "weekly", label: "Weekly" },
-        ]}
-        value={value}
-        onChange={setValue}
-      />
+      <div style={{ width: 260 }}>
+        <SegmentedButton
+          type="text"
+          ariaLabel="Segmented options"
+          items={[
+            { value: "option1", label: "Option 1" },
+            { value: "option2", label: "Option 2" },
+          ]}
+          value={value}
+          onChange={setValue}
+        />
+      </div>
     );
   },
 };
 
-/** Three text segments — matches common Figma “3 options” width behavior. */
+/** Three text segments — common Figma width behavior. */
 export const TextThreeOptions: Story = {
   render: () => {
     const [value, setValue] = useState("weekly");
@@ -52,28 +223,26 @@ export const TextThreeOptions: Story = {
   },
 };
 
-/** Four and five segments — validates counts allowed by spec. */
-export const TextFourAndFive: Story = {
+/** Validates text counts 2–5 per spec. */
+export const TextTwoAndFiveOptions: Story = {
   render: () => {
-    const [four, setFour] = useState("b");
+    const [two, setTwo] = useState("daily");
     const [five, setFive] = useState("c");
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div style={{ display: "grid", gap: 20 }}>
         <SegmentedButton
           type="text"
-          ariaLabel="Four-up"
+          ariaLabel="Two options"
           items={[
-            { value: "a", label: "Option 1" },
-            { value: "b", label: "Option 2" },
-            { value: "c", label: "Option 3" },
-            { value: "d", label: "Option 4" },
+            { value: "daily", label: "Daily" },
+            { value: "weekly", label: "Weekly" },
           ]}
-          value={four}
-          onChange={setFour}
+          value={two}
+          onChange={setTwo}
         />
         <SegmentedButton
           type="text"
-          ariaLabel="Five-up"
+          ariaLabel="Five options"
           items={[
             { value: "a", label: "Option 1" },
             { value: "b", label: "Option 2" },
@@ -89,38 +258,8 @@ export const TextFourAndFive: Story = {
   },
 };
 
-/**
- * Icon mode: `icon` string = slug under `assets/icons` (no `.svg`).
- * Resolves at build time via Vite `import.meta.glob`.
- */
-export const IconSlugListGrid: Story = {
-  render: () => {
-    const [value, setValue] = useState("list");
-    return (
-      <SegmentedButton
-        type="icon"
-        ariaLabel="View layout"
-        items={[
-          {
-            value: "list",
-            icon: "view-hamburger",
-            ariaLabel: "List view",
-          },
-          {
-            value: "grid",
-            icon: "view-sort-grid-solid",
-            ariaLabel: "Grid view",
-          },
-        ]}
-        value={value}
-        onChange={setValue}
-      />
-    );
-  },
-};
-
-/** Three icon segments — Figma allows 2–3 icon options. */
-export const IconSlugListTreeGrid: Story = {
+/** Icon mode: slug resolves to `assets/icons/<slug>.svg`. */
+export const IconListTreeGrid: Story = {
   render: () => {
     const [value, setValue] = useState("tree");
     return (
@@ -128,16 +267,8 @@ export const IconSlugListTreeGrid: Story = {
         type="icon"
         ariaLabel="Content view"
         items={[
-          {
-            value: "list",
-            icon: "view-hamburger",
-            ariaLabel: "List view",
-          },
-          {
-            value: "tree",
-            icon: "nav-tree",
-            ariaLabel: "Tree view",
-          },
+          { value: "list", icon: "view-hamburger", ariaLabel: "List view" },
+          { value: "tree", icon: "nav-tree", ariaLabel: "Tree view" },
           {
             value: "grid",
             icon: "view-sort-grid-solid",
@@ -151,7 +282,7 @@ export const IconSlugListTreeGrid: Story = {
   },
 };
 
-/** Custom icon slot: any `ReactNode`; slug resolution is skipped. */
+/** Custom icon slot — no slug resolution. */
 export const IconCustomSlot: Story = {
   render: () => {
     const [value, setValue] = useState("alpha");
@@ -200,18 +331,51 @@ export const IconCustomSlot: Story = {
   },
 };
 
-/** Mixed: one segment disabled; root not disabled. */
-export const TextWithDisabledSegment: Story = {
+export const DisabledStates: Story = {
   render: () => {
     const [value, setValue] = useState("a");
     return (
+      <div style={{ display: "grid", gap: 16 }}>
+        <SegmentedButton
+          type="text"
+          ariaLabel="Disabled segment"
+          items={[
+            { value: "a", label: "Available" },
+            { value: "b", label: "Locked", disabled: true },
+            { value: "c", label: "Available" },
+          ]}
+          value={value}
+          onChange={setValue}
+        />
+        <SegmentedButton
+          type="text"
+          ariaLabel="Root disabled"
+          items={[
+            { value: "x", label: "One" },
+            { value: "y", label: "Two" },
+          ]}
+          value="x"
+          disabled
+        />
+      </div>
+    );
+  },
+};
+
+/** Back-compat for Storybook deep links / HMR (`spec-generated-ids-segmented-button--icon-modes`). */
+export const IconModes: Story = IconListTreeGrid;
+
+/** Back-compat for removed generated story id `text-two-options`. */
+export const TextTwoOptions: Story = {
+  render: () => {
+    const [value, setValue] = useState("daily");
+    return (
       <SegmentedButton
         type="text"
-        ariaLabel="With disabled segment"
+        ariaLabel="Report period"
         items={[
-          { value: "a", label: "Available" },
-          { value: "b", label: "Locked", disabled: true },
-          { value: "c", label: "Also available" },
+          { value: "daily", label: "Daily" },
+          { value: "weekly", label: "Weekly" },
         ]}
         value={value}
         onChange={setValue}
@@ -220,38 +384,10 @@ export const TextWithDisabledSegment: Story = {
   },
 };
 
-/** Entire group disabled. */
-export const TextDisabledGroup: Story = {
-  render: () => (
-    <SegmentedButton
-      type="text"
-      ariaLabel="Disabled group"
-      items={[
-        { value: "x", label: "One" },
-        { value: "y", label: "Two" },
-      ]}
-      value="x"
-      disabled
-    />
-  ),
-};
+/** Back-compat for removed generated story id `text-three-to-five-options`. */
+export const TextThreeToFiveOptions: Story = TextTwoAndFiveOptions;
 
-export const UncontrolledDefault: Story = {
-  render: () => (
-    <SegmentedButton
-      type="text"
-      ariaLabel="Uncontrolled"
-      items={[
-        { value: "list", label: "List" },
-        { value: "grid", label: "Grid" },
-        { value: "kanban", label: "Kanban" },
-      ]}
-      defaultValue="grid"
-    />
-  ),
-};
-
-/** `onChange(value, meta)` — `value` is stable id; `meta` carries `label` (text) or `ariaLabel` (icon). */
+/** `onChange(value, meta)` — `meta` carries `label` (text) or `ariaLabel` (icon). */
 export const OnChangePayload: Story = {
   render: () => {
     const [value, setValue] = useState("a");
@@ -259,7 +395,7 @@ export const OnChangePayload: Story = {
       null,
     );
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "grid", gap: 12 }}>
         <SegmentedButton
           type="text"
           ariaLabel="Payload demo"
@@ -277,7 +413,7 @@ export const OnChangePayload: Story = {
           style={{
             margin: 0,
             padding: 12,
-            background: "var(--color-background-gray-neutral-lighter, #f4f4f4)",
+            background: "var(--color-background-gray-neutral-lighter)",
             borderRadius: 4,
             fontSize: 12,
           }}

@@ -1,4 +1,4 @@
-"""Map MDX heading paths to design-spec.mdx section titles."""
+"""Map MDX heading paths to design-spec.md section titles."""
 from __future__ import annotations
 
 import re

@@ -16,8 +16,11 @@ class GenerationPipeline:
 
         code = self.generator.generate(context)
 
-        final_component, report = self.repair_engine.repair(
-            component, code["component_code"], self.generator
-        )
+        final_component, report = self.repair_engine.repair(component, code.get("component", ""), self.generator)
 
-        return {"component": final_component, "css": code["css_code"], "validation": report}
+        return {
+            "component": final_component,
+            "css": code.get("css", ""),
+            "storybook": code.get("storybook", ""),
+            "validation": report,
+        }

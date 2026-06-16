@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Patch `components/ids/{slug}/design-spec.mdx` so:
+Patch `components/ids/{slug}/design-spec.md` so:
 
 - `## Tokens` contains Button state-related semantic CSS variables (`var(--...)`)
 - `## States (Light Theme)` and `## States (Dark Theme)` use the fixed row
@@ -384,10 +384,10 @@ def main() -> int:
     if args.spec_path:
         spec_path = args.spec_path
     else:
-        spec_path = Path("/home/muthu/projects/ids_design_knowledge") / "components" / "button" / "design-spec.mdx"
+        spec_path = Path("/home/muthu/projects/ids_design_knowledge") / "components" / "button" / "design-spec.md"
         if args.component.lower() != "button":
             # best-effort: allow other components but default path logic is repo-specific
-            spec_path = Path("/home/muthu/projects/ids_design_knowledge") / "components" / slug / "design-spec.mdx"
+            spec_path = Path("/home/muthu/projects/ids_design_knowledge") / "components" / slug / "design-spec.md"
 
     if not spec_path.exists():
         raise SystemExit(f"Spec not found: {spec_path}")

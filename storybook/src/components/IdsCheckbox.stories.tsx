@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Checkbox } from "./Checkbox";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "IDS/Checkbox",
+  title: "Spec Generated/IDS/Checkbox",
   component: Checkbox,
   argTypes: {
     disabled: { control: "boolean" },
@@ -23,7 +23,7 @@ export const Default: Story = {
   },
 };
 
-export const SelectionStates: Story = {
+export const SelectionStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" />
@@ -33,7 +33,40 @@ export const SelectionStates: Story = {
   ),
 };
 
-export const DisabledStates: Story = {
+/** Mirrors Figma `8505:14296` main matrix: selection × (default | focus-visible | disabled). */
+export const FigmaMainMatrix: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "120px repeat(3, minmax(140px, 1fr))",
+        gap: "12px 16px",
+        alignItems: "center",
+        fontSize: 12,
+        color: "var(--color-text-neutral-strong)",
+      }}
+    >
+      <div />
+      <div>Unselected</div>
+      <div>Selected</div>
+      <div>Indeterminate</div>
+      <div>Default</div>
+      <Checkbox label="Option" />
+      <Checkbox label="Option" checked />
+      <Checkbox label="Option" indeterminate />
+      <div>Focus-visible (simulated)</div>
+      <Checkbox label="Option" simulateFocusVisible />
+      <Checkbox label="Option" checked simulateFocusVisible />
+      <Checkbox label="Option" indeterminate simulateFocusVisible />
+      <div>Disabled</div>
+      <Checkbox label="Option" disabled />
+      <Checkbox label="Option" checked disabled />
+      <Checkbox label="Option" indeterminate disabled />
+    </div>
+  ),
+};
+
+export const DisabledStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" disabled />
@@ -43,7 +76,7 @@ export const DisabledStates: Story = {
   ),
 };
 
-export const ValidationAndHelperText: Story = {
+export const ValidationAndHelperTextManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 16 }}>
       <Checkbox label="Email notifications" helperText="Receive weekly summary updates." />
@@ -53,7 +86,7 @@ export const ValidationAndHelperText: Story = {
   ),
 };
 
-export const ControlledExample: Story = {
+export const ControlledExampleManual: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
 

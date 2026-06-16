@@ -77,7 +77,7 @@ def show_integration_example():
     print("    headers: { 'Content-Type': 'application/json' },")
     print("    body: JSON.stringify({ query: 'gutter spacing', top_k: 10 })")
     print("  });")
-    print("  // Returns: [{ name: '...', url: 'content/path/to/file.mdx' }]")
+    print("  // Returns: [{ name: '...', url: 'content/path/to/file.md' }]")
     
     print("\n✨ Benefits:")
     print("  - 🚀 Faster (local Qdrant vs GitHub API)")

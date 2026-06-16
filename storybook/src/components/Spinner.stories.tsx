@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Spinner } from "./Spinner";
+import { IdsSpinner } from "./IdsSpinner";
 
-const meta: Meta<typeof Spinner> = {
-  title: "IDS/Spinner",
-  component: Spinner,
+const meta: Meta<typeof IdsSpinner> = {
+  title: "Spec Generated/IDS/Spinner",
+  component: IdsSpinner,
   argTypes: {
     size: { control: "select", options: ["sm", "md", "lg"] },
     labelVisibility: { control: "select", options: ["sr-only", "inline", "below"] },
@@ -11,31 +11,31 @@ const meta: Meta<typeof Spinner> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Spinner>;
+type Story = StoryObj<typeof IdsSpinner>;
 
-export const Small: Story = {
+export const SmallManual: Story = {
   args: { size: "sm", labelVisibility: "inline", label: "Loading..." },
 };
 
-export const Medium: Story = {
+export const MediumManual: Story = {
   args: { size: "md", labelVisibility: "below", label: "Loading..." },
 };
 
-export const Large: Story = {
+export const LargeManual: Story = {
   args: { size: "lg", labelVisibility: "sr-only", label: "Loading..." },
 };
 
-export const FigmaUsageFrame: Story = {
+export const FigmaUsageFrameManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, alignItems: "center", padding: 16 }}>
       <div>
-        <Spinner size="sm" labelVisibility="inline" label="Loading..." />
+        <IdsSpinner size="sm" labelVisibility="inline" label="Loading..." />
       </div>
       <div>
-        <Spinner size="md" labelVisibility="below" label="Loading..." />
+        <IdsSpinner size="md" labelVisibility="below" label="Loading..." />
       </div>
       <div>
-        <Spinner size="lg" labelVisibility="sr-only" label="Loading..." />
+        <IdsSpinner size="lg" labelVisibility="sr-only" label="Loading..." />
       </div>
     </div>
   ),

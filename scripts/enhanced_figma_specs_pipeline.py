@@ -106,7 +106,7 @@ class EnhancedSpecPipeline:
         existing_specs = set()
         
         if output_path.exists():
-            for file in output_path.glob("*-spec.mdx"):
+            for file in output_path.glob("*-spec.md"):
                 # Extract component name from filename
                 component_name = file.stem.replace("-spec", "").replace("-", " ").title()
                 existing_specs.add(component_name)
@@ -171,7 +171,7 @@ class EnhancedSpecPipeline:
         mdx_content = self.extractor.spec_to_mdx(spec)
         
         # Create filename
-        filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.mdx"
+        filename = f"{spec.name.lower().replace(' ', '-').replace('/', '-')}-spec.md"
         file_path = output_path / filename
         
         # Add metadata header

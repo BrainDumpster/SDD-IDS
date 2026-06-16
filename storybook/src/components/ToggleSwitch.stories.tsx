@@ -1,26 +1,26 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { ToggleSwitch } from "./ToggleSwitch";
+import { IdsToggleSwitch } from "./IdsToggleSwitch";
 
-const meta: Meta<typeof ToggleSwitch> = {
-  title: "IDS/Toggle Switch",
-  component: ToggleSwitch,
+const meta: Meta<typeof IdsToggleSwitch> = {
+  title: "Spec Generated/IDS/Toggle Switch",
+  component: IdsToggleSwitch,
   argTypes: {
     disabled: { control: "boolean" },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ToggleSwitch>;
+type Story = StoryObj<typeof IdsToggleSwitch>;
 
-export const Off: Story = {
+export const OffManual: Story = {
   args: {
     label: "Enable alerts",
     defaultChecked: false,
   },
 };
 
-export const On: Story = {
+export const OnManual: Story = {
   args: {
     label: "Enable alerts",
     defaultChecked: true,
@@ -50,12 +50,12 @@ export const WithoutVisibleLabel: Story = {
   },
 };
 
-export const Controlled: Story = {
+export const ControlledManual: Story = {
   render: () => {
     const [checked, setChecked] = useState(false);
     return (
       <div style={{ display: "grid", gap: 8 }}>
-        <ToggleSwitch
+        <IdsToggleSwitch
           label="Enable alerts"
           checked={checked}
           onCheckedChange={setChecked}
@@ -72,19 +72,19 @@ export const StateMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Off" defaultChecked={false} />
-        <ToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch label="Off" defaultChecked={false} />
+        <IdsToggleSwitch label="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <ToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),
 };
 
 /** Aligns with Figma matrix frame `42848:100536` (dark surface + tokens). */
-export const StateMatrixDark: Story = {
+export const StateMatrixDarkManual: Story = {
   parameters: {
     globals: { theme: "dark" },
     backgrounds: { default: "dark" },
@@ -92,12 +92,12 @@ export const StateMatrixDark: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Off" defaultChecked={false} />
-        <ToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch label="Off" defaultChecked={false} />
+        <IdsToggleSwitch label="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <ToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <ToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),

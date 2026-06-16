@@ -1,6 +1,6 @@
 .group {
   display: flex;
-  gap: var(--spacing-space-12);
+  gap: var(--spacing-space-16);
 }
 
 .field {
@@ -23,8 +23,10 @@
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-size: var(--font-size-body-2);
+  font-weight: 500;
   color: var(--color-text-neutral);
   line-height: var(--font-line-height-line-height-20);
+  min-height: 20px;
 }
 
 .wrapper[data-disabled] {
@@ -48,18 +50,18 @@
 }
 
 .root:hover:not([data-disabled]) {
-  background: var(--color-background-gray-light);
+  background: var(--color-background-component);
   border-color: var(--color-border-strong);
 }
 
 .root:active:not([data-disabled]) {
-  background: var(--color-background-gray-light);
+  background: var(--color-background-component);
   border-color: var(--color-border-strong);
 }
 
 .root:focus-visible {
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 .root[data-checked] {
@@ -71,6 +73,21 @@
 .root[data-checked]:active:not([data-disabled]) {
   background: var(--color-background-component);
   border-color: var(--color-border-strong);
+}
+
+.wrapper:hover .root:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.wrapper:hover .root[data-checked]:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.root[data-checked]:hover:not([data-disabled]) .indicator,
+.root[data-checked]:active:not([data-disabled]) .indicator {
+  background: var(--color-icon-brand-strong);
 }
 
 .root[data-disabled] {
@@ -88,7 +105,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-background-controls-brand-base);
+  background: var(--color-icon-brand-base);
   transform: scale(0);
   transition: transform 100ms ease;
 }
@@ -101,6 +118,26 @@
   background: var(--color-icon-disabled);
 }
 
+/* Deterministic visual simulation for Storybook harnesses. */
+.root[data-simulated-state="hover"]:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.root[data-checked][data-simulated-state="hover"]:not([data-disabled]) {
+  background: var(--color-background-component);
+  border-color: var(--color-border-strong);
+}
+
+.root[data-checked][data-simulated-state="hover"]:not([data-disabled]) .indicator {
+  background: var(--color-icon-brand-strong);
+}
+
+.root[data-simulated-state="focus-visible"] {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
 .label {
   user-select: none;
 }
@@ -109,30 +146,3 @@
   color: var(--color-text-disabled);
 }
 
-.root[data-error="true"]:not([data-checked]) {
-  border-color: var(--color-text-critical);
-}
-
-.root[data-error="true"]:not([data-checked]):hover:not([data-disabled]),
-.root[data-error="true"]:not([data-checked]):active:not([data-disabled]) {
-  border-color: var(--color-text-critical);
-}
-
-.labelError {
-  color: var(--color-text-critical);
-}
-
-.assistiveText {
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
-  margin-left: calc(16px + var(--spacing-space-8));
-}
-
-.assistiveTextError {
-  color: var(--color-text-critical);
-}
-
-.assistiveTextDisabled {
-  color: var(--color-text-disabled);
-}

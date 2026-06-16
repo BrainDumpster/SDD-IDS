@@ -4,6 +4,10 @@ import styles from "./Checkbox.module.css";
 interface CheckboxProps {
   id?: string;
   label: string;
+  /** When false, label is sr-only (Figma “no label” column still needs a name for a11y). */
+  showLabel?: boolean;
+  /** Static demo only: draw the focus ring (e.g. Storybook matrix “Focus” row). */
+  simulateFocusVisible?: boolean;
   checked?: boolean;
   defaultChecked?: boolean;
   indeterminate?: boolean;
@@ -13,11 +17,15 @@ interface CheckboxProps {
   name?: string;
   value?: string;
   onChange?: (checked: boolean) => void;
+  /** `datagrid`: 16×16 control only, no 44px label row height (selection column). */
+  density?: "default" | "datagrid";
 }
 
 export function Checkbox({
   id,
   label,
+  showLabel = true,
+  simulateFocusVisible = false,
   checked,
   defaultChecked,
   indeterminate,
@@ -27,18 +35,19 @@ export function Checkbox({
   name,
   value,
   onChange,
+  density = "default",
 }: CheckboxProps) {
   const resolvedId = id ?? `checkbox-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const assistiveId = helperText ? `${resolvedId}-assistive` : undefined;
 
   return (
-    <div className={styles.field}>
+    <div className={styles.field} data-density={density}>
       <label className={styles.wrapper}>
         <BaseCheckbox.Root
           id={resolvedId}
           name={name}
           value={value}
-          className={styles.root}
+          className={[styles.root, simulateFocusVisible ? styles.rootSimulatedFocus : ""].filter(Boolean).join(" ")}
           checked={checked}
           defaultChecked={defaultChecked}
           indeterminate={indeterminate}
@@ -48,15 +57,21 @@ export function Checkbox({
           data-error={error ? "true" : undefined}
           onCheckedChange={(next) => onChange?.(next === true)}
         >
-          <BaseCheckbox.Indicator className={styles.indicator}>
-            {indeterminate ? (
-              <MinusIcon />
-            ) : (
-              <CheckIcon />
-            )}
-          </BaseCheckbox.Indicator>
+          <BaseCheckbox.Indicator
+            className={styles.indicator}
+            data-indicator-type={indeterminate ? "minus" : "check"}
+          />
         </BaseCheckbox.Root>
-        <span className={[styles.label, error ? styles.labelError : ""].filter(Boolean).join(" ")}>{label}</span>
+        <span
+          className={[
+            showLabel ? styles.label : styles.visuallyHidden,
+            error ? styles.labelError : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {label}
+        </span>
       </label>
       {helperText ? (
         <div
@@ -73,32 +88,5 @@ export function Checkbox({
         </div>
       ) : null}
     </div>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path
-        d="M10 3L4.5 8.5L2 6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function MinusIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path
-        d="M2.5 6H9.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }

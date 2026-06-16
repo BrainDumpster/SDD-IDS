@@ -103,19 +103,19 @@ export async function exampleUsage() {
 export const expectedResponse: RAGQueryResponse = {
     title: 'Design System: spacing',
     description: 'The gutter spacing for icons in masthead is 12px...',
-    url: 'content/product-icons/ui-icon-replacement.mdx',
+    url: 'content/product-icons/ui-icon-replacement.md',
     category: 'spacing',
     tags: ['spacing', 'ui-icon-replacement'],
-    source: 'content/product-icons/ui-icon-replacement.mdx',
+    source: 'content/product-icons/ui-icon-replacement.md',
     metadata: {
         detected_component: 'spacing',
-        sources: ['content/product-icons/ui-icon-replacement.mdx'],
+        sources: ['content/product-icons/ui-icon-replacement.md'],
         sections: ['Desktop Applications'],
         all_metadata: [
             {
                 component: 'ui-icon-replacement',
                 section: 'Desktop Applications',
-                source: 'content/product-icons/ui-icon-replacement.mdx'
+                source: 'content/product-icons/ui-icon-replacement.md'
             }
         ]
     }

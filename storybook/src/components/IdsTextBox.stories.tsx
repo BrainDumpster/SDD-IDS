@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof IdsTextBox> = {
-  title: "IDS/Text Box",
+  title: "Spec Generated/IDS/Text Box",
   component: IdsTextBox,
   argTypes: {
     componentType: { control: "select", options: ["text-input", "text-area"] },
@@ -57,7 +57,7 @@ export const TextArea: Story = {
   },
 };
 
-export const SizeScale: Story = {
+export const SizeScaleManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 16, maxWidth: 300 }}>
       <IdsTextBox size="large" placeholder="Large (40)" helperText="Helper text" />

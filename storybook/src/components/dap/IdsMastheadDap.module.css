@@ -79,6 +79,7 @@
   width: 138px;
   background: var(--color-background-component);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: 0;
   box-shadow: 1px 1px 5px 0 rgb(0 0 0 / 15%);
 }
 

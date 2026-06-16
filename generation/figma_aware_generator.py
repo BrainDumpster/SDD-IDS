@@ -274,6 +274,7 @@ class FigmaAwareGenerator:
                 return {
                     "component": extract("COMPONENT"),
                     "css": extract("CSS"),
+                    "storybook": extract("STORYBOOK"),
                     "framework": "react",
                     "style_mode": "css-module"
                 }
@@ -282,6 +283,7 @@ class FigmaAwareGenerator:
                 return {
                     "component": extract("COMPONENT"),
                     "css": "",
+                    "storybook": extract("STORYBOOK"),
                     "framework": "react",
                     "style_mode": "css-in-js"
                 }
@@ -290,6 +292,7 @@ class FigmaAwareGenerator:
                 return {
                     "component": extract("COMPONENT"),
                     "css": extract("CSS"),
+                    "storybook": extract("STORYBOOK"),
                     "framework": "react",
                     "style_mode": "base-ui-css"
                 }
@@ -301,6 +304,7 @@ class FigmaAwareGenerator:
                 "component_ts": extract("COMPONENT_TS"),
                 "component_html": extract("COMPONENT_HTML"),
                 "component_scss": extract("COMPONENT_SCSS"),
+                "storybook": extract("STORYBOOK"),
                 "framework": "angular",
                 "style_mode": "angular-scss"
             }

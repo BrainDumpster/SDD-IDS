@@ -1,58 +1,14 @@
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
-TEMPLATE = """# {component} Design Spec
+_SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
 
-## Metadata
-- Component: {component}
-- Category: {category}
-- Figma: {figmaUrl}
-- Node ID: {nodeId}
-
-## Anatomy
-- TODO: list slots/parts (e.g., header, body, icon)
-
-## Layout & Measurements
-- TODO: dimensions, padding, spacing, icon sizes, recommended widths/heights
-
-## Typography
-- TODO: headings, body text sizes/weights/line heights
-
-## Tokens
-- TODO: backgrounds, borders, text, icons, focus, links, shadows
-
-## States (Light Theme)
-| Area | State | Background | Border | Text/Icon |
-| --- | --- | --- | --- | --- |
-| TODO | TODO | TODO | TODO | TODO |
-
-## States (Dark Theme)
-- TODO: note token parity and any specific overrides
-
-## Interactions
-- TODO: pointer/keyboard behaviors, focus ring spec
-
-## Accessibility
-- TODO: roles, aria attributes, keyboard expectations
-
-## Variants
-- TODO: list supported variants; note token parity
-
-## Behavior & Guidelines
-- TODO: usage guidance and do/don't
-
-## Token Gaps / Notes
-- TODO: note missing tokens or fallback guidance
-
-## Deliverable Checklist
-- TODO: list key implementation checks
-
-## Source Mapping
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "{component}" (category "{category}"; node "{nodeId}")
-"""
+from design_spec_template import NEW_SPEC_TEMPLATE
 
 
 def slugify(name: str) -> str:
@@ -64,7 +20,7 @@ def parse_args():
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing design-spec.mdx files if present",
+        help="Overwrite existing design-spec.md files if present",
     )
     return parser.parse_args()
 
@@ -86,13 +42,13 @@ def main():
         slug = slugify(component)
         out_dir = components_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        out_file = out_dir / "design-spec.mdx"
+        out_file = out_dir / "design-spec.md"
 
         if out_file.exists() and not args.overwrite:
             print(f"⏭️ Skipping existing spec: {out_file}")
             continue
 
-        content = TEMPLATE.format(
+        content = NEW_SPEC_TEMPLATE.format(
             component=component,
             category=category,
             figmaUrl=figma_url,

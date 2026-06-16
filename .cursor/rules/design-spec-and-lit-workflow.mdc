@@ -6,8 +6,14 @@ alwaysApply: true
 # Design-Spec First Workflow (Figma-Aligned)
 
 ## Purpose
-Primary goal: create and maintain `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<slug>/design-spec.mdx` (Synapse) with maximum fidelity to Figma.
+Primary goal: create and maintain `components/ids/<slug>/design-spec.md` (IDS) or `components/synapse/<slug>/design-spec.md` (Synapse) with maximum fidelity to Figma.
 Implementation/code generation is optional and only done when explicitly requested by the user.
+
+## New spec intake (wizard-first)
+- For **new** design specs, prefer the intake wizard: user pastes the **base prompt** from `docs/design-spec-intake.md` or invokes **design-spec-intake-wizard** in Cursor.
+- Agent asks programme, component, Figma URLs (component required; elements/states optional), Storybook yes/no — **one question per turn** — then **confirm** before Figma or file writes.
+- Follow `docs/design-spec-authoring-contract.md` for paths, sections, and live verification.
+- Create `components/<programme-dir>/<slug>/` and update the figma map when absent (see programme config under `config/design_systems/`).
 
 ## Source of Truth
 - Always resolve the component from a design-system map file first (for example `data/component-figma-map.json` or `data/<design-system>-component-figma-map.json`).
@@ -30,7 +36,7 @@ Implementation/code generation is optional and only done when explicitly request
 - Asset contracts (icons/illustrations) must be explicitly documented with stable slug-to-file mapping.
 
 ## Required Spec Sections
-For each `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<slug>/design-spec.mdx` (Synapse), ensure these are concrete and non-placeholder:
+For each `components/ids/<slug>/design-spec.md` (IDS) or `components/synapse/<slug>/design-spec.md` (Synapse), ensure these are concrete and non-placeholder:
 - `## Metadata`
 - `## Layout & Measurements`
 - `## Tokens`
@@ -55,7 +61,8 @@ For each `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<s
 - Metadata is complete and points to validated source nodes.
 - Composition/API section has explicit prop/event contracts and defaults.
 - Codegen Contract exists and is internally consistent with other sections.
-- Light and Dark state tables are complete and structurally parallel.
+- **States (Light Theme)** holds the full state matrix when light and dark use the same semantic `var(--...)` names; **States (Dark Theme)** may use the standard pointer boilerplate (see Spec Authoring Rules) instead of duplicating identical tables.
+- When light and dark genuinely use different `var(--...)` per row, both sections must include parallel matrices.
 - No unresolved placeholders like "TBD", "sample only", or ambiguous behavior language.
 - Asset contracts include stable slug-to-file mapping and bundling rule (if assets are used).
 - Fallback/error behavior is defined for unknown variants and missing inputs.
@@ -69,7 +76,9 @@ For each `components/ids/<slug>/design-spec.mdx` (IDS) or `components/synapse/<s
   - Background
   - Border
   - Text/Icon
-- Light and Dark state tables must remain structurally parallel.
+- **States dedupe (default for new specs):** When **States (Light Theme)** and **States (Dark Theme)** would list the same semantic `var(--...)` in every cell, document the matrix only under Light. Under Dark, use `DARK_STATES_BOILERPLATE` from `scripts/design_spec_template.py`: same tokens as Light; resolved dark values live in `components/ids-theme.css`, program theme CSS (for example `components/dap-theme.css`), and `[data-theme="dark"]` / `.ids-theme-dark`. Duplicate a full Dark table only when a dark row uses different `var(--...)` than the corresponding light row.
+- **Literal exception:** If state cells use authoritative hard-coded `#hex` / `rgb()` (tokens not yet in theme), keep both tables until migrated; do not auto-dedupe (`scripts/dedupe_states_dark_theme.py` skips them).
+- When both sections include tables, Light and Dark matrices must remain structurally parallel (same rows/columns).
 - Separate fixed values from sample/reference values.
   - If Figma frame width is sample-only, state runtime behavior explicitly (e.g., container-driven width).
 
@@ -88,7 +97,7 @@ Document and implement interaction behavior in spec:
 - Define explicit state transitions for each interactive state.
 - Define visual cues per state (icons, motion, outlines, indicators, cursor changes).
 - If multiple interaction modes/strategies exist, document each mode and transition rules.
-- Component-specific behavior takes precedence and must be declared in the component’s `design-spec.mdx` under the correct design-system folder (`components/ids/...` or `components/synapse/...`).
+- Component-specific behavior takes precedence and must be declared in the component’s `design-spec.md` under the correct design-system folder (`components/ids/...` or `components/synapse/...`).
 - Runtime default must stay interactive.
 - Forced state attributes (`data-state`) are demo/testing-only and must not block runtime interaction.
 

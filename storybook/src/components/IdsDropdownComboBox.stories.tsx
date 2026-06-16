@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo, useState } from "react";
 import { DropdownMenu } from "./DropdownMenu";
-import arrowDropTriCaretIcon from "../../../assets/icons/arrow-drop-tri-caret.svg";
+import { IdsDropdownTriggerShell } from "./IdsDropdownTriggerShell";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 
 type Size = "small" | "large";
@@ -13,64 +13,35 @@ function ComboTrigger({
   size = "large",
   disabled = false,
   error = false,
+  hover = false,
+  focusVisible = false,
 }: {
   value?: string;
   placeholder?: string;
   size?: Size;
   disabled?: boolean;
   error?: boolean;
+  hover?: boolean;
+  focusVisible?: boolean;
 }) {
-  const verticalPadding = size === "large" ? "10px" : "6px";
-  const borderColor = error
-    ? "var(--color-border-alerting-critical-base)"
-    : "var(--color-border-accessible)";
-  const textColor = disabled
-    ? "var(--color-text-disabled)"
-    : "var(--color-text-neutral)";
-  const background = disabled
-    ? "var(--color-background-gray-light)"
-    : "var(--color-background-component)";
-
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: 300,
-        border: `1px solid ${borderColor}`,
-        background,
-        padding: `${verticalPadding} var(--padding-padding-16)`,
-        fontSize: "var(--font-size-body-2)",
-        lineHeight: "var(--font-line-height-line-height-20)",
-        color: textColor,
-        cursor: disabled ? "not-allowed" : "pointer",
-      }}
-    >
-      <span>{value ?? placeholder}</span>
-      <span
-        aria-hidden="true"
-        style={{
-          width: 10,
-          height: 10,
-          display: "inline-block",
-          backgroundColor: "var(--color-icon-accessible)",
-          WebkitMaskImage: `url('${arrowDropTriCaretIcon}')`,
-          WebkitMaskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-          WebkitMaskPosition: "center",
-          maskImage: `url('${arrowDropTriCaretIcon}')`,
-          maskRepeat: "no-repeat",
-          maskSize: "contain",
-          maskPosition: "center",
-        }}
-      />
-    </div>
+    <IdsDropdownTriggerShell
+      size={size}
+      disabled={disabled}
+      error={error}
+      hover={hover}
+      focusVisible={focusVisible}
+      left={
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {value ?? placeholder}
+        </span>
+      }
+    />
   );
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "IDS/Dropdown/Combo Box",
+  title: "Spec Generated/IDS/Dropdown/Combo Box",
   component: DropdownMenu,
   parameters: {
     layout: "centered",
@@ -80,7 +51,7 @@ const meta: Meta<typeof DropdownMenu> = {
 export default meta;
 type Story = StoryObj<typeof DropdownMenu>;
 
-export const SingleSelectContract: Story = {
+export const SingleSelectContractManual: Story = {
   render: () => {
     const [selected, setSelected] = useState("Compute");
     const [selectionEvent, setSelectionEvent] = useState<{
@@ -134,9 +105,10 @@ export const SingleSelectContract: Story = {
   },
 };
 
-export const MultiSelectContract: Story = {
+export const MultiSelectContractManual: Story = {
   render: () => {
     const [selected, setSelected] = useState<string[]>(["Storage", "Compute"]);
+    const [searchQuery, setSearchQuery] = useState("");
     const options: UserOption[] = [
       { id: "app-1", label: "Storage" },
       { id: "app-2", label: "Compute" },
@@ -179,6 +151,18 @@ export const MultiSelectContract: Story = {
           trigger={<ComboTrigger value={selected.join(", ")} placeholder="Select products" />}
           items={items}
           showSearch
+          searchValue={searchQuery}
+          onSearchValueChange={setSearchQuery}
+          showSelectAllClearAll
+          selectAllChecked={selected.length === options.length}
+          selectAllIndeterminate={selected.length > 0 && selected.length < options.length}
+          onSelectAllClick={() => setSelected(options.map((option) => option.label))}
+          onClearAllClick={() => setSelected([])}
+          clearAllDisabled={selected.length === 0}
+          showSelectedPanel
+          defaultShowSelectedExpanded
+          onRemoveSelectedTag={(value) => setSelected((prev) => prev.filter((entry) => entry !== value))}
+          onShowSelectedPanelClear={() => setSelected([])}
           defaultOpen
           maxHeight={220}
         />
@@ -253,6 +237,65 @@ export const ErrorState: Story = {
   },
 };
 
+export const MultiSelectShowSelectedPanel: Story = {
+  render: () => {
+    const options = Array.from({ length: 8 }, (_, i) => ({
+      id: `opt-${i + 1}`,
+      label: `Option ${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string[]>(["Option 1", "Option 2", "Option 4", "Option 6"]);
+    const [searchQuery, setSearchQuery] = useState("opt");
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
+
+    const items = useMemo(
+      () =>
+        options.map((option) => ({
+          id: option.id,
+          value: option.label,
+          label: option.label,
+          selectable: true,
+          onClick: () =>
+            setSelected((prev) =>
+              prev.includes(option.label)
+                ? prev.filter((entry) => entry !== option.label)
+                : [...prev, option.label],
+            ),
+        })),
+      [],
+    );
+
+    return (
+      <div style={{ width: 300, display: "grid", gap: 8 }}>
+        <DropdownMenu
+          selectionMode="multi"
+          selectedValues={selected}
+          trigger={<ComboTrigger value={selected.join(", ")} placeholder="Select products" />}
+          items={items}
+          showSearch
+          searchValue={searchQuery}
+          onSearchValueChange={setSearchQuery}
+          showSelectAllClearAll
+          selectAllChecked={selected.length === options.length}
+          selectAllIndeterminate={selected.length > 0 && selected.length < options.length}
+          onSelectAllClick={() => setSelected(options.map((option) => option.label))}
+          onClearAllClick={() => setSelected([])}
+          clearAllDisabled={selected.length === 0}
+          showSelectedPanel
+          showSelectedExpanded={showSelectedExpanded}
+          onShowSelectedExpandedChange={setShowSelectedExpanded}
+          onRemoveSelectedTag={(value) => setSelected((prev) => prev.filter((entry) => entry !== value))}
+          onShowSelectedPanelClear={() => setSelected([])}
+          defaultOpen
+          maxHeight={220}
+        />
+        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+          Toggle Show/Hide Selected; dismiss tags individually; search clear appears when query is non-empty.
+        </div>
+      </div>
+    );
+  },
+};
+
 export const SizeMatrix: Story = {
   render: () => {
     const items = Array.from({ length: 6 }, (_, i) => ({
@@ -263,9 +306,9 @@ export const SizeMatrix: Story = {
     }));
 
     return (
-      <div style={{ width: 760, display: "flex", gap: 20, flexWrap: "wrap" }}>
+      <div style={{ width: 760, display: "flex", gap: 20, flexWrap: "wrap", alignItems: "flex-start" }}>
         <DropdownMenu
-          trigger={<ComboTrigger size="large" placeholder="Large (40)" />}
+          trigger={<ComboTrigger size="large" placeholder="Large (40)" hover />}
           items={items}
           selectionMode="single"
           showSearch
@@ -273,7 +316,7 @@ export const SizeMatrix: Story = {
           maxHeight={220}
         />
         <DropdownMenu
-          trigger={<ComboTrigger size="small" placeholder="Small (32)" />}
+          trigger={<ComboTrigger size="small" placeholder="Small (32)" focusVisible />}
           items={items}
           selectionMode="single"
           showSearch

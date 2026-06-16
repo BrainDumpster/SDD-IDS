@@ -1,4 +1,4 @@
-export const IDS_MASTHEAD_DAP_DESIGN_SPEC_PATH = "components/DAP/masthead-dap/design-spec.mdx";
+export const IDS_MASTHEAD_DAP_DESIGN_SPEC_PATH = "components/DAP/masthead-dap/design-spec.md";
 
 export const MASTHEAD_DAP_CODEGEN_ANATOMY = [
   "MastheadDapRoot",
@@ -21,4 +21,9 @@ export const MASTHEAD_DAP_DEFAULTS = {
   productAreaLabel: "Portal",
   userInitials: "DT",
   helpItems: ["Help", "What's New", "Get Started", "About"],
+} as const;
+
+export const MASTHEAD_DAP_HELP_MENU_SURFACE = {
+  widthPx: 138,
+  borderRadiusPx: 0,
 } as const;

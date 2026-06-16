@@ -6,7 +6,7 @@ const longContent =
   "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.";
 
 const meta: Meta<typeof IdsTooltip> = {
-  title: "IDS/Tooltip",
+  title: "Spec Generated/IDS/Tooltip",
   component: IdsTooltip,
   render: (args) => (
     <IdsTooltip {...args}>
@@ -17,15 +17,13 @@ const meta: Meta<typeof IdsTooltip> = {
     title: "Tooltip Title",
     content: longContent,
     side: "top",
-    align: "start",
-    showArrow: true,
+    arrowAlign: "start",
     closable: false,
     children: "Hover over me",
   },
   argTypes: {
     side: { control: "select", options: ["top", "bottom", "left", "right"] },
     align: { control: "select", options: ["start", "center", "end"] },
-    showArrow: { control: "boolean" },
     closable: { control: "boolean" },
     title: { control: "text" },
     content: { control: "text" },
@@ -42,9 +40,8 @@ export const NormalNoHeader: Story = {
     title: "",
     content: longContent,
     closable: false,
-    showArrow: true,
     side: "top",
-    align: "start",
+    arrowAlign: "start",
   },
 };
 
@@ -53,7 +50,6 @@ export const WithHeader: Story = {
     title: "Tooltip Title",
     content: longContent,
     closable: false,
-    showArrow: true,
     side: "top",
     align: "center",
   },
@@ -64,7 +60,6 @@ export const Closable: Story = {
     title: "Tooltip Title",
     content: "This tooltip stays open until the user clicks the close icon.",
     closable: true,
-    showArrow: true,
     side: "top",
     align: "end",
     onClose: () => undefined,
@@ -75,7 +70,6 @@ export const RichContent: Story = {
   args: {
     title: "Custom Content",
     closable: false,
-    showArrow: true,
     side: "right",
     align: "center",
     content: (
@@ -92,6 +86,10 @@ export const RichContent: Story = {
 };
 
 export const ArrowMatrix: Story = {
+  args: {
+    closable: true
+  },
+
   render: () => (
     <div
       style={{
@@ -109,7 +107,6 @@ export const ArrowMatrix: Story = {
               content={`${side} - ${align}`}
               side={side}
               align={align}
-              showArrow
             >
               <Button variant="secondary">{`${side}-${align}`}</Button>
             </IdsTooltip>
@@ -117,5 +114,5 @@ export const ArrowMatrix: Story = {
         ))
       )}
     </div>
-  ),
+  )
 };

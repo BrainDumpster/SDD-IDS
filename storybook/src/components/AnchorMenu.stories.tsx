@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { AnchorMenu } from "./AnchorMenu";
+import { IdsAnchorMenu } from "./IdsAnchorMenu";
 
-const meta: Meta<typeof AnchorMenu> = {
-  title: "Synapse/AnchorMenu",
-  component: AnchorMenu,
+const meta: Meta<typeof IdsAnchorMenu> = {
+  title: "Spec Generated/IDS/AnchorMenu",
+  component: IdsAnchorMenu,
 };
 
 export default meta;
-type Story = StoryObj<typeof AnchorMenu>;
+type Story = StoryObj<typeof IdsAnchorMenu>;
 
 export const FiveSections: Story = {
   args: {
@@ -43,7 +43,7 @@ export const WithPageContent: Story = {
         <h2 id="api-reference" style={{ marginBottom: 120 }}>API Reference</h2>
         <h2 id="examples" style={{ marginBottom: 120 }}>Examples</h2>
       </div>
-      <AnchorMenu
+      <IdsAnchorMenu
         items={[
           { label: "Overview", href: "#overview", active: true },
           { label: "Installation", href: "#installation" },

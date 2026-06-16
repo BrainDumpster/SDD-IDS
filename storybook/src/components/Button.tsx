@@ -52,9 +52,11 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const variantClass = variant === "destructive" ? "danger" : variant;
+  const isDestructive = variant === "destructive" || variant === "danger";
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
   const slugIconNode = iconUrl ? <img src={iconUrl} alt="" aria-hidden="true" className={styles.iconImage} /> : undefined;
-  const resolvedIcon = icon ?? slugIconNode;
+  const resolvedIcon = isDestructive ? undefined : (icon ?? slugIconNode);
+  const resolvedIconOnly = isDestructive ? false : iconOnly;
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
 
@@ -65,7 +67,7 @@ export function Button({
           styles.button,
           styles[variantClass],
           styles[size],
-          iconOnly ? styles.iconOnly : "",
+          resolvedIconOnly ? styles.iconOnly : "",
           loading ? styles.loading : "",
           className,
         ]

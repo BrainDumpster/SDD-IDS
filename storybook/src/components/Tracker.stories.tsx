@@ -1,8 +1,9 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Tracker } from "./Tracker";
 
 const meta: Meta<typeof Tracker> = {
-  title: "Synapse/Tracker",
+  title: "Spec Generated/Synapse/Tracker",
   component: Tracker,
 };
 

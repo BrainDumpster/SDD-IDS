@@ -1,0 +1,39 @@
+# DAP Design System Configuration
+# DAP uses IDS as baseline with DAP-specific deltas.
+
+name: dap
+display_name: DAP
+token_transform: ids
+
+figma_file_key: ""
+
+figma_map_path: data/component-figma-map.json
+rules_path: rules.json
+allowed_tokens_path: allowed_tokens.json
+component_registry_path: component_registry.json
+theme_css_path: components/dap-theme.css
+base_ui_mapping_path: ""
+
+components_dir: components/DAP
+# DAP layers on IDS baseline + DAP root/theme deltas.
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.md
+baseline_theme_css_path: components/ids-theme.css
+program_components_dir: components/DAP
+program_root_spec_path: components/DAP/root-spec.md
+program_theme_css_path: components/dap-theme.css
+
+qdrant_collection: dap_design_knowledge
+
+framework_layer: ""
+root_spec_path: components/DAP/root-spec.md
+generated_storybook_dir: storybook-generated/dap
+strict_storybook_gate: false
+
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+
+elevation_levels: {}

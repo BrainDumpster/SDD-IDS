@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./MainMenuLeft.module.css";
 import { Icon } from "./Icon";
 
@@ -10,102 +10,337 @@ export type MainMenuLeftPrimaryState =
   | "default-focus"
   | "selected-focus";
 
+/** Discriminated navigation target (framework adapters map to `<a>`, `RouterLink`, `<Link>`, etc.). */
+export type MainMenuLeftLink =
+  | {
+      type: "href";
+      href: string;
+      target?: "_self" | "_blank";
+      rel?: string;
+    }
+  | {
+      type: "routerLink";
+      /** Angular: `string | any[]`; React Router: `string` — adapter-specific. */
+      routerLink: string | readonly string[];
+      queryParams?: Record<string, unknown>;
+      fragment?: string;
+    }
+  | { type: "action" };
+
+export interface MainMenuLeftLogo {
+  /** Accessible name (required). */
+  alt: string;
+  /** Raster / SVG URL for brand mark. */
+  src?: string;
+  /** Or IDS icon slug instead of `src`. */
+  iconName?: string;
+  tooltip?: string;
+  link?: MainMenuLeftLink;
+}
+
 export interface MainMenuLeftSecondaryItem {
-  id: string;
-  label: string;
+  /** Stable id; if omitted, runtime derives from `name`/`label` + parent id + index. */
+  id?: string;
+  /** Visible text (canonical). */
+  name?: string;
+  /** Legacy alias for `name` (at least one of `name` / `label` should be set). */
+  label?: string;
+  tooltip?: string;
+  link?: MainMenuLeftLink;
+  /** @deprecated Use `link: { type: 'href', href }`. */
   href?: string;
+  /** @deprecated Use `link: { type: 'routerLink', routerLink }`. */
   routeRef?: string;
 }
 
 export interface MainMenuLeftPrimaryItem {
-  id: string;
-  label: string;
-  /** Canonical icon slug used by the shared Icon component. */
+  id?: string;
+  /** Visible text (canonical). */
+  name?: string;
+  /** Legacy alias for `name` (at least one of `name` / `label` should be set). */
+  label?: string;
+  tooltip?: string;
+  /** Canonical icon slug (`assets/icons/<slug>.svg`). */
   iconName?: string;
-  href?: string;
-  routeRef?: string;
+  link?: MainMenuLeftLink;
+  /** Optional nested rows under this primary item. */
+  children?: MainMenuLeftSecondaryItem[];
+  /** When `forceStates` is true: initial open state of `children` list in matrix stories. */
+  childrenMenu?: "expanded" | "collapsed";
   state?: MainMenuLeftPrimaryState;
-  secondaryMenu?: "expanded" | "collapsed";
-  secondaryItems?: MainMenuLeftSecondaryItem[];
+  /** @deprecated Use `link: { type: 'href', href }`. */
+  href?: string;
+  /** @deprecated Use `link: { type: 'routerLink', routerLink }`. */
+  routeRef?: string;
 }
 
 export interface MainMenuLeftNavigationTarget {
   itemId: string;
   parentItemId?: string;
+  name: string;
+  link?: MainMenuLeftLink;
+  /** @deprecated Populated from legacy `href` when `link` omitted. */
   href?: string;
+  /** @deprecated Populated from legacy `routeRef` when `link` omitted. */
+  routeRef?: string;
+}
+
+/** Current rail selection (deepest active row: secondary beats primary parent). */
+export interface MainMenuLeftSelectionDetail {
+  level: "primary" | "secondary";
+  itemId: string;
+  parentItemId?: string;
+  name: string;
+  link?: MainMenuLeftLink;
+  /** @deprecated Mirrors legacy item fields when `link` was inferred. */
+  href?: string;
+  /** @deprecated Mirrors legacy item fields when `link` was inferred. */
   routeRef?: string;
 }
 
 export interface MainMenuLeftProps {
-  /** Initial render state for Storybook/demo runtime. */
+  /** Optional branding block above `MainMenuList` (not in base Figma frame; product slot). */
+  logo?: MainMenuLeftLogo;
+  /**
+   * Rail width mode: expanded `278px` vs collapsed `64px`.
+   * With `onExpandedChange`: **controlled** (parent must update this after toggle).
+   * Without: **uncontrolled** initial value only.
+   */
   expanded?: boolean;
+  /** Emits whenever the footer toggles expanded ↔ collapsed (Angular: `@Output()`). */
+  onExpandedChange?: (expanded: boolean) => void;
   items: MainMenuLeftPrimaryItem[];
-  /** When true, item.state is treated as fixed visual snapshots (no runtime interaction mutations). */
+  /**
+   * Initial primary selection (must match resolved `item.id` or generated id for that row).
+   * Spec Accurate Design: first row (Dashboard) uses `"dashboard"`.
+   */
+  defaultSelectedItemId?: string;
+  /** When true, `item.state` fixes visual snapshot (Storybook matrix only). */
   forceStates?: boolean;
-  /** Optional navigation hook with routing metadata from item interfaces. */
+  /** Primary / secondary / logo activation (routing host handles `link`). */
   onNavigate?: (target: MainMenuLeftNavigationTarget) => void;
+  /**
+   * Emits when the active menu selection changes (primary or secondary row).
+   * **Angular:** `@Output() selectedChange` or `selectionChange` mapping to this callback.
+   * Does not fire on mount for `defaultSelectedItemId` alone — only on user-driven updates (and logo is excluded).
+   */
+  onSelected?: (detail: MainMenuLeftSelectionDetail) => void;
+  /** Overrides default `aria-label` on root `nav`. */
+  ariaLabel?: string;
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function resolvePrimaryId(item: MainMenuLeftPrimaryItem, index: number): string {
+  if (item.id) return item.id;
+  const base = slugify(primaryDisplayName(item));
+  return base || `primary-${index}`;
+}
+
+function resolveSecondaryId(
+  child: MainMenuLeftSecondaryItem,
+  parentId: string,
+  index: number,
+): string {
+  if (child.id) return child.id;
+  const base = slugify(secondaryDisplayName(child));
+  return base ? `${parentId}-${base}` : `${parentId}-child-${index}`;
+}
+
+function primaryDisplayName(item: MainMenuLeftPrimaryItem): string {
+  return item.name ?? item.label ?? "";
+}
+
+function secondaryDisplayName(child: MainMenuLeftSecondaryItem): string {
+  return child.name ?? child.label ?? "";
+}
+
+function resolveLink(
+  link: MainMenuLeftLink | undefined,
+  legacy: { href?: string; routeRef?: string },
+): MainMenuLeftLink | undefined {
+  if (link) return link;
+  if (legacy.href) return { type: "href", href: legacy.href };
+  if (legacy.routeRef) return { type: "routerLink", routerLink: legacy.routeRef };
+  return undefined;
+}
+
+function buildNavigateTarget(
+  itemId: string,
+  name: string,
+  parentItemId: string | undefined,
+  link: MainMenuLeftLink | undefined,
+  legacy: { href?: string; routeRef?: string },
+): MainMenuLeftNavigationTarget {
+  const resolved = resolveLink(link, legacy);
+  return {
+    itemId,
+    parentItemId,
+    name,
+    link: resolved,
+    href: legacy.href,
+    routeRef: legacy.routeRef,
+  };
+}
+
+function buildSelectionDetail(
+  level: "primary" | "secondary",
+  itemId: string,
+  parentItemId: string | undefined,
+  name: string,
+  link: MainMenuLeftLink | undefined,
+  legacy: { href?: string; routeRef?: string },
+): MainMenuLeftSelectionDetail {
+  const resolved = resolveLink(link, legacy);
+  return {
+    level,
+    itemId,
+    parentItemId,
+    name,
+    link: resolved,
+    href: legacy.href,
+    routeRef: legacy.routeRef,
+  };
+}
+
+function resolveInitialSelectedKey(
+  list: MainMenuLeftPrimaryItem[],
+  defaultSelectedItemId?: string,
+): string | null {
+  if (!defaultSelectedItemId) return null;
+  for (let i = 0; i < list.length; i++) {
+    if (resolvePrimaryId(list[i], i) === defaultSelectedItemId) {
+      return defaultSelectedItemId;
+    }
+  }
+  return null;
 }
 
 export function MainMenuLeft({
+  logo,
   expanded = true,
+  onExpandedChange,
   items,
+  defaultSelectedItemId,
   forceStates = false,
   onNavigate,
+  onSelected,
+  ariaLabel = "Main menu left",
 }: MainMenuLeftProps) {
-  const [isExpanded, setIsExpanded] = useState(expanded);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [expandedSecondaryKey, setExpandedSecondaryKey] = useState<string | null>(null);
+  const controlled = onExpandedChange !== undefined;
+  const [internalExpanded, setInternalExpanded] = useState(expanded);
+  useEffect(() => {
+    if (!controlled) {
+      setInternalExpanded(expanded);
+    }
+  }, [expanded, controlled]);
+
+  const isExpanded = controlled ? (expanded ?? true) : internalExpanded;
+
+  const setRailExpanded = (next: boolean) => {
+    if (!controlled) {
+      setInternalExpanded(next);
+    }
+    onExpandedChange?.(next);
+  };
+
+  const [selectedKey, setSelectedKey] = useState<string | null>(() =>
+    resolveInitialSelectedKey(items, defaultSelectedItemId),
+  );
+  const [expandedChildrenKey, setExpandedChildrenKey] = useState<string | null>(null);
   const [selectedSecondaryParentKey, setSelectedSecondaryParentKey] = useState<string | null>(null);
   const [selectedSecondaryKey, setSelectedSecondaryKey] = useState<string | null>(null);
 
   return (
     <nav
       className={[styles.root, isExpanded ? styles.expanded : styles.collapsed].join(" ")}
-      aria-label="Main menu left"
+      aria-label={ariaLabel}
     >
+      {logo ? (
+        <div className={styles.logoSlot}>
+          {logo.link ? (
+            <button
+              type="button"
+              className={styles.logoButton}
+              title={logo.tooltip ?? logo.alt}
+              aria-label={logo.alt}
+              onClick={() =>
+                onNavigate?.(
+                  buildNavigateTarget("__logo__", logo.alt, undefined, logo.link, {}),
+                )
+              }
+            >
+              <LogoMark logo={logo} />
+            </button>
+          ) : (
+            <div className={styles.logoStatic} role="img" aria-label={logo.alt} title={logo.tooltip}>
+              <LogoMark logo={logo} />
+            </div>
+          )}
+        </div>
+      ) : null}
+
       <div className={styles.content}>
-        {items.map((item) => {
+        {items.map((item, itemIndex) => {
+          const itemId = resolvePrimaryId(item, itemIndex);
           const hasForcedState = forceStates && Boolean(item.state);
           const state = hasForcedState
             ? item.state!
-            : selectedKey === item.id
+            : selectedKey === itemId
               ? "selected"
               : "default";
           const isSelected = state === "selected" || state === "selected-focus";
           const isFocused = state === "default-focus" || state === "selected-focus";
-          const hasSecondaryItems = (item.secondaryItems?.length ?? 0) > 0;
-          const showSecondary = isExpanded && hasSecondaryItems && (hasForcedState
-            ? item.secondaryMenu === "expanded"
-            : expandedSecondaryKey === item.id);
-          const showChevron = isExpanded && hasSecondaryItems;
+          const childList = item.children ?? [];
+          const hasChildren = childList.length > 0;
+          const showChildrenList =
+            isExpanded &&
+            hasChildren &&
+            (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
+          const showChevron = isExpanded && hasChildren;
           const primaryIconName = item.iconName ?? "home";
-          const hasSelectedSecondary = selectedSecondaryParentKey === item.id;
+          const hasSelectedSecondary = selectedSecondaryParentKey === itemId;
           const showSelectedInset = hasForcedState
             ? state === "selected" || state === "selected-focus"
-            : hasSecondaryItems
+            : hasChildren
               ? hasSelectedSecondary
-              : selectedKey === item.id;
+              : selectedKey === itemId;
+          const primaryLabel = primaryDisplayName(item);
+          const primaryTitle = item.tooltip ?? primaryLabel;
 
           return (
-            <div key={item.id} className={styles.itemBlock}>
+            <div key={itemId} className={styles.itemBlock}>
               <button
                 type="button"
+                title={primaryTitle}
                 onClick={() => {
                   if (hasForcedState) return;
-                  setSelectedKey(item.id);
-                  onNavigate?.({
-                    itemId: item.id,
-                    href: item.href,
-                    routeRef: item.routeRef,
-                  });
-                  if (!hasSecondaryItems) {
+                  setSelectedKey(itemId);
+                  onNavigate?.(
+                    buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
+                      href: item.href,
+                      routeRef: item.routeRef,
+                    }),
+                  );
+                  onSelected?.(
+                    buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
+                      href: item.href,
+                      routeRef: item.routeRef,
+                    }),
+                  );
+                  if (!hasChildren) {
                     setSelectedSecondaryParentKey(null);
                     setSelectedSecondaryKey(null);
                     return;
                   }
                   if (!isExpanded) return;
-                  setExpandedSecondaryKey((prev) => {
-                    const next = prev === item.id ? null : item.id;
+                  setExpandedChildrenKey((prev) => {
+                    const next = prev === itemId ? null : itemId;
                     if (next === null) {
                       setSelectedSecondaryParentKey(null);
                       setSelectedSecondaryKey(null);
@@ -122,14 +357,16 @@ export function MainMenuLeft({
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                aria-current={isSelected ? "page" : undefined}
-                aria-expanded={showChevron ? showSecondary : undefined}
+                aria-current={
+                  isSelected && !(hasChildren && hasSelectedSecondary) ? "page" : undefined
+                }
+                aria-expanded={showChevron ? showChildrenList : undefined}
               >
                 <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
-                {isExpanded ? <span className={styles.primaryLabel}>{item.label}</span> : null}
+                {isExpanded ? <span className={styles.primaryLabel}>{primaryLabel}</span> : null}
                 {showChevron ? (
                   <Icon
-                    shapeName={showSecondary ? "chev-down-thick" : "chev-right-thick"}
+                    shapeName={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
                     className={styles.chevronIcon}
                   />
                 ) : null}
@@ -137,35 +374,51 @@ export function MainMenuLeft({
                 {showSelectedInset ? <span className={styles.selectedInset} aria-hidden="true" /> : null}
               </button>
 
-              {showSecondary ? (
+              {showChildrenList ? (
                 <div className={styles.secondarySection}>
-                  {(item.secondaryItems ?? []).map((secondary) => (
-                    <button
-                      key={secondary.id}
-                      type="button"
-                      className={[
-                        styles.secondaryRow,
-                        styles.secondaryInteractive,
-                        selectedSecondaryParentKey === item.id && selectedSecondaryKey === secondary.id
-                          ? styles.secondaryRowSelected
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() => {
-                        setSelectedSecondaryParentKey(item.id);
-                        setSelectedSecondaryKey(secondary.id);
-                        onNavigate?.({
-                          itemId: secondary.id,
-                          parentItemId: item.id,
-                          href: secondary.href,
-                          routeRef: secondary.routeRef,
-                        });
-                      }}
-                    >
-                      {secondary.label}
-                    </button>
-                  ))}
+                  {childList.map((child, childIndex) => {
+                    const childId = resolveSecondaryId(child, itemId, childIndex);
+                    const childLabel = secondaryDisplayName(child);
+                    return (
+                      <button
+                        key={childId}
+                        type="button"
+                        title={child.tooltip ?? childLabel}
+                        className={[
+                          styles.secondaryRow,
+                          styles.secondaryInteractive,
+                          selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId
+                            ? styles.secondaryRowSelected
+                            : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        aria-current={
+                          selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId
+                            ? "page"
+                            : undefined
+                        }
+                        onClick={() => {
+                          setSelectedSecondaryParentKey(itemId);
+                          setSelectedSecondaryKey(childId);
+                          onNavigate?.(
+                            buildNavigateTarget(childId, childLabel, itemId, child.link, {
+                              href: child.href,
+                              routeRef: child.routeRef,
+                            }),
+                          );
+                          onSelected?.(
+                            buildSelectionDetail("secondary", childId, itemId, childLabel, child.link, {
+                              href: child.href,
+                              routeRef: child.routeRef,
+                            }),
+                          );
+                        }}
+                      >
+                        {childLabel}
+                      </button>
+                    );
+                  })}
                 </div>
               ) : null}
             </div>
@@ -179,18 +432,29 @@ export function MainMenuLeft({
           className={styles.bottomToggleButton}
           aria-label={isExpanded ? "Collapse navigation" : "Expand navigation"}
           onClick={() => {
-            setIsExpanded((prev) => !prev);
-            setExpandedSecondaryKey(null);
+            setRailExpanded(!isExpanded);
+            setExpandedChildrenKey(null);
           }}
         >
           <Icon
             shapeName={isExpanded ? "double-chev-left" : "double-chev-right"}
             className={styles.bottomToggleIcon}
+            style={{ width: 16, height: 16, flexShrink: 0 }}
           />
         </button>
       </div>
     </nav>
   );
+}
+
+function LogoMark({ logo }: { logo: MainMenuLeftLogo }) {
+  if (logo.src) {
+    return <img src={logo.src} alt="" className={styles.logoImg} width={32} height={32} />;
+  }
+  if (logo.iconName) {
+    return <Icon shapeName={logo.iconName} className={styles.logoIcon} />;
+  }
+  return null;
 }
 
 function toPascal(value: MainMenuLeftPrimaryState): string {

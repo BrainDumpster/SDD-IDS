@@ -33,11 +33,12 @@ const overflowItems = [
 ];
 
 const meta: Meta<typeof Tabs> = {
-  title: "IDS/Tabs",
+  title: "Spec Generated/IDS/Tabs",
   component: Tabs,
   args: {
     items: baseItems,
     variant: "secondary",
+    surface: "elevated",
     showAddTab: false,
     addTabLabel: "Add Tab",
     minTabWidth: 80,
@@ -46,6 +47,7 @@ const meta: Meta<typeof Tabs> = {
   },
   argTypes: {
     variant: { control: "select", options: ["primary", "secondary"] },
+    surface: { control: "select", options: ["elevated", "transparent"] },
     showAddTab: { control: "boolean" },
     addTabLabel: { control: "text" },
     moreLabel: { control: "text" },
@@ -67,6 +69,25 @@ export const PrimaryVariant: Story = {
     variant: "primary",
     items: baseItems,
   },
+};
+
+export const TransparentOnGray: Story = {
+  args: {
+    variant: "secondary",
+    surface: "transparent",
+    items: baseItems,
+  },
+  render: (args) => (
+    <div
+      style={{
+        maxWidth: 720,
+        padding: 16,
+        background: "var(--color-background-gray-light)",
+      }}
+    >
+      <Tabs {...args} />
+    </div>
+  ),
 };
 
 export const OverflowResponsive: Story = {

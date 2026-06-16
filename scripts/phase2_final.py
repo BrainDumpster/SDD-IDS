@@ -19,7 +19,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from ingestion.github_loader import GithubLoader
-from ingestion.mdx_parser import parse_mdx
+from ingestion.markdown_parser import parse_markdown
 from ingestion.chunk_builder import build_chunks
 from embeddings.embedding_service import EmbeddingService
 from vectorstore.qdrant_store import QdrantStore
@@ -67,7 +67,7 @@ class FinalPhase2Pipeline:
             print(f"📁 Found {len(files)} files from GitHub")
             
             # Filter MDX files
-            mdx_files = [f for f in files if f["name"].endswith(".mdx")]
+            mdx_files = [f for f in files if f["name"].endswith(".md")]
             print(f"📄 Found {len(mdx_files)} MDX files to process")
             
             if len(mdx_files) == 0:
@@ -86,11 +86,11 @@ class FinalPhase2Pipeline:
                     print(f"✅ Fetched: {len(content)} characters")
                     
                     # Parse MDX
-                    sections = parse_mdx(content)
+                    sections = parse_markdown(content)
                     print(f"✅ Parsed: {len(sections)} sections")
                     
                     # Create chunks
-                    component = file_info["name"].replace(".mdx", "")
+                    component = file_info["name"].replace(".md", "")
                     docs = build_chunks(component, sections, file_info["path"])
                     print(f"✅ Built: {len(docs)} document chunks")
                     

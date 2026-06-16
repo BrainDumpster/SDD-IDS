@@ -1,0 +1,142 @@
+"""Shared canonical section titles and bootstrap blocks for IDS design-spec.md files."""
+
+from __future__ import annotations
+
+CODEGEN_TITLE = "Codegen Contract (Framework-Agnostic Blueprint)"
+COMPOSITION_TITLE = "Composition & API (runtime)"
+
+CANONICAL_H2_ORDER = [
+    "Metadata",
+    "Anatomy",
+    "Layout & Measurements",
+    "Tokens",
+    "States (Light Theme)",
+    "States (Dark Theme)",
+    "Interactions",
+    COMPOSITION_TITLE,
+    CODEGEN_TITLE,
+    "Source Mapping",
+]
+
+COMPOSITION_STUB = """Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+
+"""
+
+DARK_STATES_BOILERPLATE = """Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+"""
+
+CODEGEN_BOOTSTRAP = """### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
+
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
+
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+
+"""
+
+NEW_SPEC_TEMPLATE = (
+"""# {component} Design Spec
+
+## Metadata
+- Component: {component}
+- Category: {category}
+- Figma: {figmaUrl}
+- Node ID: {nodeId}
+- Version: 1.0.0
+- Description: TODO one-line summary of the component
+- Status: draft
+- Created: TODO
+- Updated: TODO
+
+## Anatomy
+- TODO: list slots/parts in deterministic order (e.g., root, label, icon)
+
+## Layout & Measurements
+- TODO: dimensions, padding, spacing, icon sizes, responsive width behavior
+
+## Tokens
+### Typography
+- TODO: headings, body text sizes/weights/line heights
+
+### Colors and surfaces
+- TODO: backgrounds, borders, text, icons, focus, links, shadows (`var(--...)` only)
+
+## States (Light Theme)
+| Area | State | Background | Border | Text/Icon |
+| --- | --- | --- | --- | --- |
+| TODO | default | TODO | TODO | TODO |
+
+## States (Dark Theme)
+
+"""
+    + DARK_STATES_BOILERPLATE
+    + """
+
+## Interactions
+- TODO: pointer/keyboard behaviors, focus ring spec
+
+### Accessibility
+- TODO: roles, aria attributes, keyboard expectations
+
+### Behavior & guidelines
+- TODO: usage guidance and do/don't
+
+## Composition & API (runtime)
+### Variants
+- TODO: list supported variants and option axes
+
+### Runtime API
+- TODO: props, events, defaults
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+- TODO: ordered slot tree for codegen
+
+### Variant matrix
+- TODO: all valid variant/option combinations
+
+### Per-slot style contract
+- TODO: token mapping per slot
+
+### Behavior contract
+- TODO: state transitions, triggers, timers
+
+### Accessibility contract
+- TODO: roles, keyboard, ARIA
+
+### Asset resolution + bundling contract
+- TODO: icon slugs and bundling rules, or N/A
+
+### Fallback/error rules
+- TODO: unknown variant/token/asset handling
+
+### Validation checklist
+- [ ] TODO: pass/fail items for codegen QA
+
+## Source Mapping
+- Design source: Figma URL above
+- Component map entry: `data/component-figma-map.json` → component "{component}" (category "{category}"; node "{nodeId}")
+"""
+)

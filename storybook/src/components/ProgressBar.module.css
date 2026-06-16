@@ -2,13 +2,21 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.labeledBlock {
+  display: flex;
+  flex-direction: column;
   gap: var(--padding-padding-8);
+  width: 100%;
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--padding-padding-8);
 }
 
 .label {
@@ -24,51 +32,124 @@
   color: var(--color-text-neutral-strong);
 }
 
-.track {
+.inlineRow {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-padding-8);
   width: 100%;
-  box-sizing: content-box;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-radius: var(--corner-radius-radius-2);
-  background: var(--color-background-gray-neutral-alt);
+}
+
+.inlineRow .track {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.inlineValue {
+  flex-shrink: 0;
+  width: 36px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+  text-align: left;
+}
+
+/* Shell: sizing only. Border lives on trackBg; fill stacks above it (Figma siblings). */
+.track {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
   overflow: hidden;
 }
 
-.thin { height: 4px; }    /* 4px track + 1px border (top/bottom) */
-.medium { height: 8px; }  /* 8px track + 1px border (top/bottom) */
-.thick { height: 16px; }  /* 16px track + 1px border (top/bottom) */
+.thin {
+  height: var(--sizing-size-4);
+}
+
+.medium {
+  height: var(--sizing-size-8);
+}
+
+.thick {
+  height: var(--sizing-size-16);
+}
+
+/* Only the unfilled segment shows accessible border + neutral track (clip from left by progress %) */
+.trackBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-radius: 0;
+  background: var(--color-background-gray-neutral-alt);
+  clip-path: inset(0 0 0 var(--progress-clip, 0%));
+  pointer-events: none;
+}
+
+.indeterminate .trackBg {
+  clip-path: none;
+}
 
 .indicator {
-  height: 100%;
-  border-radius: var(--corner-radius-radius-1);
-  background: var(--color-background-controls-brand-base);
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0;
+  z-index: 1;
+  height: auto !important;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: var(--border-width-border-1);
+  border-right-width: 0;
+  border-radius: 0;
   transition: width 300ms ease;
 }
 
 .in-progress .indicator {
-  background: var(--color-background-controls-brand-base);
+  background: var(--color-background-brand-base);
+  border-color: var(--color-border-brand-base);
 }
 
 .completed-success .indicator {
-  background: var(
-    --color-backtground-alerting-success-1,
-    var(--color-background-alerting-success)
-  );
+  background: var(--color-background-alerting-success);
+  border-color: var(--color-border-alerting-success-base);
 }
 
 .completed-warning .indicator {
   background: var(--color-background-alerting-minor);
-}
-
-.completed-warning .track {
   border-color: var(--color-border-alerting-minor-transparent);
 }
 
 .failed-error .indicator {
   background: var(--color-background-alerting-critical);
+  border-color: var(--color-border-alerting-critical-base);
+}
+
+.root[data-value-full="true"] .indicator {
+  border-right-width: var(--border-width-border-1);
+  border-right-style: solid;
+}
+
+.root[data-value-full="true"].in-progress .indicator {
+  border-right-color: var(--color-border-brand-base);
+}
+
+.root[data-value-full="true"].completed-success .indicator {
+  border-right-color: var(--color-border-alerting-success-base);
+}
+
+.root[data-value-full="true"].completed-warning .indicator {
+  border-right-color: var(--color-border-alerting-minor-transparent);
+}
+
+.root[data-value-full="true"].failed-error .indicator {
+  border-right-color: var(--color-border-alerting-critical-base);
 }
 
 .indeterminate .indicator {
-  width: 45% !important;
+  width: 60% !important;
   animation: progress-indeterminate 1.1s ease-in-out infinite;
 }
 
@@ -83,7 +164,7 @@
 .helperRow {
   display: flex;
   align-items: center;
-  gap: var(--padding-padding-4);
+  gap: var(--padding-padding-8);
 }
 
 .helperIcon {
@@ -92,34 +173,14 @@
   flex-shrink: 0;
 }
 
-.helperIconSuccess {
-  fill: var(--color-icon-alerting-success-1);
-}
-
-.helperIconWarning {
-  fill: var(--color-icon-alerting-minor-1);
-}
-
-.helperIconError {
-  fill: var(--color-icon-alerting-critical);
-}
-
-.helperIconStroke {
-  stroke: var(--color-text-white);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
-
 @keyframes progress-indeterminate {
   0% {
-    transform: translateX(-120%);
+    transform: translateX(-100%);
   }
   50% {
-    transform: translateX(40%);
+    transform: translateX(25%);
   }
   100% {
-    transform: translateX(240%);
+    transform: translateX(200%);
   }
 }

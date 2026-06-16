@@ -81,6 +81,9 @@ React component code
 
 === CSS ===
 CSS Module styles
+
+=== STORYBOOK ===
+Storybook CSF story file
 """
 
 
@@ -98,6 +101,9 @@ Output structure:
 
 === COMPONENT ===
 Complete React component with styled-components
+
+=== STORYBOOK ===
+Storybook CSF story file
 """
 
 
@@ -122,6 +128,9 @@ HTML template
 
 === COMPONENT_SCSS ===
 SCSS styles
+
+=== STORYBOOK ===
+Storybook story file
 """
 
 BASE_UI_CSS_RULES = """
@@ -143,6 +152,9 @@ React component using Base UI compound components + CSS Modules
 
 === CSS ===
 CSS Module with data-attribute selectors and Synapse tokens
+
+=== STORYBOOK ===
+Storybook CSF story file
 """
 
 
@@ -185,6 +197,22 @@ COMPONENT STRUCTURE REQUIREMENTS:
 """
 
 # ---------------------------------------------------------
+# ICON LIBRARY (spec-driven codegen — React reference in repo)
+# ---------------------------------------------------------
+
+ICON_COMPONENT_CODEGEN_RULES = """
+ICON PRIMITIVE (READ SPECS FIRST — FRAMEWORK-AGNOSTIC CONTRACT):
+
+• **Design specs** (`design-spec.md` + inherited root-spec) define the *logical* API only: `shapeName` (asset slug), optional `color` as `var(--…)`, optional `variant` for monochrome vs fixed multi-color glyphs. They do **not** name Storybook paths or framework imports.
+• **Concrete module path** for the icon primitive (e.g. React `Icon`) comes from **design-system tooling config**: for IDS in this repo, `config/design_systems/ids.yaml` → `codegen.react.icon_component_module` when present. If absent, infer from the project’s existing components.
+• When emitting **React** and the YAML mapping points to `storybook/src/components/Icon`, use that file’s export and props: `shapeName`, `color`, `className`, `style`, `variant` (`mask` | `img` | `inline`). Use `variant="inline"` when the spec requires a real `<svg>` in the DOM and the slug is in the implementation’s inline registry; otherwise default `mask`.
+• Rules: `shapeName` matches `assets/icons/<shapeName>.svg`; `color` from spec token tables; omit `color` when the parent host must drive state via inherited `currentColor`; do not hand-roll mask markup when the project’s icon primitive exists.
+• **Segmented Button (`type="text"`):** root shell **34px** tall (`8218:13150`); segment row **28px** (`padding-4` + `line-height-20` typography).
+• **Segmented Button (`type="icon"`):** string `items[].icon` slugs MUST render via the library **Icon** primitive (`shapeName` or equivalent) — never `<img>`, local `maskImage`, or per-component asset globs in SegmentedButton. Set `color` on the segment surface from the spec icon state table; glyph **16×14** inside **33px** segment row; icon-variant root **37px** tall (`8218:13156`). See component spec **Icon primitive and asset delivery (codegen)**.
+• For **Angular / Vue / Lit**, emit an equivalent primitive honoring the same logical contract.
+"""
+
+# ---------------------------------------------------------
 # OUTPUT TEMPLATES
 # ---------------------------------------------------------
 
@@ -194,11 +222,17 @@ REACT_CSS_MODULE_OUTPUT = """
 
 === CSS ===
 [CSS Module stylesheet]
+
+=== STORYBOOK ===
+[Storybook CSF stories]
 """
 
 REACT_CSS_IN_JS_OUTPUT = """
 === COMPONENT ===
 [React functional component with CSS-in-JS]
+
+=== STORYBOOK ===
+[Storybook CSF stories]
 """
 
 ANGULAR_SCSS_OUTPUT = """
@@ -210,6 +244,9 @@ ANGULAR_SCSS_OUTPUT = """
 
 === COMPONENT_SCSS ===
 [Angular SCSS stylesheet]
+
+=== STORYBOOK ===
+[Storybook stories]
 """
 
 # ---------------------------------------------------------
@@ -290,6 +327,25 @@ def inject_context(prompt: str, context: dict) -> str:
     Injects design intelligence context into the base prompt.
     """
 
+    spec_layers = context.get("spec_layers", [])
+    theme_layers = context.get("theme_layers", [])
+    validation_issues = context.get("validation_issues", [])
+    baseline_layer_summary = "\n".join(
+        f"- {layer.get('layer')}: {layer.get('path')} (exists={layer.get('exists')})"
+        for layer in spec_layers
+        if str(layer.get("layer", "")).startswith("ids_")
+    )
+    program_delta_summary = "\n".join(
+        f"- {layer.get('layer')}: {layer.get('path')} (exists={layer.get('exists')})"
+        for layer in spec_layers
+        if str(layer.get("layer", "")).startswith("program_")
+    )
+    theme_layer_summary = "\n".join(
+        f"- {layer.get('layer')}: {layer.get('path')} (exists={layer.get('exists')})"
+        for layer in theme_layers
+    )
+    validation_summary = "\n".join(f"- {issue}" for issue in validation_issues) or "- none"
+
     return f"""
 {prompt}
 
@@ -302,8 +358,29 @@ def inject_context(prompt: str, context: dict) -> str:
 ================ DESIGN TOKENS ================
 {context.get("tokens", "")}
 
-================ COMPONENT SPECIFICATION ================
+================ PRECEDENCE RULES ================
+Apply layer precedence strictly:
+{context.get("layer_precedence", "program_component_delta > program_root_delta > ids_component > ids_root")}
+
+================ IDS BASELINE ================
+{baseline_layer_summary or "- none"}
+
+================ PROGRAM DELTAS ================
+{program_delta_summary or "- none"}
+
+================ THEME LAYERS ================
+{theme_layer_summary or "- none"}
+
+================ COMPONENT SPECIFICATION (LAYERED) ================
 {context.get("spec", "")}
+
+================ THEME CSS (LAYERED) ================
+{context.get("theme_css", "")}
+
+{ICON_COMPONENT_CODEGEN_RULES}
+
+================ SPEC VALIDATION ================
+{validation_summary}
 
 ================ USER REQUEST ================
 {context.get("request", "")}

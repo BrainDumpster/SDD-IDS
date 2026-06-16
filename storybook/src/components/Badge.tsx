@@ -1,6 +1,6 @@
 import styles from "./Badge.module.css";
 
-type BadgeType = "default" | "critical" | "warning" | "disabled" | "success";
+type BadgeType = "default" | "controls" | "critical" | "warning" | "disabled" | "success";
 
 interface BadgeProps {
   value: string | number;
@@ -24,7 +24,11 @@ export function Badge({
 
   return (
     <span
-      className={[styles.badge, styles[type], sizeClass].join(" ")}
+      className={[
+        styles.badge,
+        styles[type],
+        sizeClass,
+      ].join(" ")}
       aria-label={ariaLabel}
     >
       <span className={styles.content}>{valueText}</span>

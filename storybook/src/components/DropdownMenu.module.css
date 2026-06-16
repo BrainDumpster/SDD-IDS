@@ -3,6 +3,10 @@
   display: inline-flex;
 }
 
+.triggerFull {
+  width: 100%;
+}
+
 .triggerMeasure {
   display: inline-flex;
   width: 100%;
@@ -10,22 +14,20 @@
 
 .popup {
   background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
   box-sizing: border-box;
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
-  border-top: none;
-  border-radius: 0;
   box-shadow:
-    0 2px 2px 0 var(--shadow-drop-shadow-2-color),
-    0 4px 4px 0 var(--shadow-drop-shadow-4-color);
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
   padding: 0;
   outline: none;
   font-family: inherit;
   z-index: 1060;
-  overflow: hidden;
-  overflow-x: hidden;
+  overflow: clip;
 }
 
 .searchRow {
@@ -40,9 +42,10 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   background: var(--color-background-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
+  border-radius: 0;
 }
 
 .searchIcon {
@@ -75,11 +78,104 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-space-8);
   flex: 1 1 auto;
   min-width: 0;
   padding-left: var(--padding-padding-8);
   padding-top: var(--padding-padding-4);
   padding-bottom: var(--padding-padding-4);
+}
+
+.searchClearButton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.searchClearButton:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.searchClearIcon {
+  flex-shrink: 0;
+}
+
+.showSelectedPanel {
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: var(--border-width-border-default) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
+}
+
+.showSelectedPanel[data-expanded="true"] {
+  padding-bottom: var(--padding-padding-16);
+}
+
+.showSelectedHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: var(--padding-padding-8);
+}
+
+.showSelectedToggle {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.showSelectedCaret {
+  flex-shrink: 0;
+  transition: transform 150ms ease;
+}
+
+.showSelectedClear {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.showSelectedClear:focus-visible,
+.showSelectedToggle:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.showSelectedClearIcon {
+  flex-shrink: 0;
+}
+
+.showSelectedTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  align-content: flex-end;
+  gap: var(--spacing-space-4);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--spacing-space-8) var(--padding-padding-8) 0 var(--padding-padding-16);
 }
 
 .optionsScrollRegion {
@@ -95,7 +191,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
   background: var(--color-background-component);
 }
 
@@ -194,7 +290,7 @@
 .item:disabled {
   color: var(--color-text-disabled);
   cursor: not-allowed;
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
   box-shadow: none;
 }
 
@@ -242,12 +338,17 @@
 
 .leadingControl {
   display: inline-flex;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   pointer-events: none;
+}
+
+.item[data-selection-mode="single"] .leadingControl {
+  width: 16px;
+  height: 16px;
 }
 
 .radioOuter {
@@ -270,8 +371,8 @@
 }
 
 .checkboxOuter {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--corner-radius-radius-2);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   display: inline-flex;
@@ -281,19 +382,29 @@
   position: relative;
 }
 
+.selectAllCheckbox {
+  width: 16px;
+  height: 16px;
+}
+
+.item[data-selection-mode="multi"] .checkboxOuter {
+  width: 16px;
+  height: 16px;
+}
+
 .checkboxTick {
-  width: 10px;
-  height: 6px;
-  border-left: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(-45deg) translateY(-1px);
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%);
+  transform: translateY(-0.5px);
 }
 
 .checkboxDash {
   width: 8px;
   height: 2px;
   background: var(--color-icon-brand-base);
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 .item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,
@@ -398,7 +509,7 @@
 .item[data-selectable="true"][data-disabled] .radioOuter,
 .item[data-selectable="true"]:disabled .radioOuter {
   border-color: var(--color-border-disabled);
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
 }
 
 .item[data-selectable="true"][data-disabled] .radioInner,
@@ -409,13 +520,13 @@
 .item[data-selectable="true"][data-disabled] .checkboxOuter,
 .item[data-selectable="true"]:disabled .checkboxOuter {
   border-color: var(--color-border-disabled);
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
   color: var(--color-icon-inverse);
 }
 
 .item[data-selectable="true"][data-disabled][data-indeterminate] .checkboxOuter,
 .item[data-selectable="true"]:disabled[data-indeterminate] .checkboxOuter {
-  background: var(--color-background-gray-light);
+  background: var(--color-background-gray-lighter);
   border-color: var(--color-border-disabled);
 }
 

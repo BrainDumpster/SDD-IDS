@@ -62,6 +62,9 @@ OUTPUT STRUCTURE:
 
 === COMPONENT ===
 Complete React component with styled-components
+
+=== STORYBOOK ===
+Storybook CSF stories file
 """
         return """
 OUTPUT STRUCTURE:
@@ -71,4 +74,7 @@ React functional component with CSS Modules
 
 === CSS ===
 CSS Module stylesheet
+
+=== STORYBOOK ===
+Storybook CSF stories file
 """

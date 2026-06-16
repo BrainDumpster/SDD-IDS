@@ -3,7 +3,7 @@ import { useState } from "react";
 import { RadioButton } from "./RadioButton";
 
 const meta: Meta<typeof RadioButton> = {
-  title: "IDS/Radio Button",
+  title: "Spec Generated/IDS/Radio Button",
   component: RadioButton,
   argTypes: {
     orientation: { control: "select", options: ["vertical", "horizontal"] },
@@ -30,13 +30,17 @@ export const Default: Story = {
 
 export const StateMatrix: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 16 }}>
-      <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+    <div style={{ display: "grid", gap: 20 }}>
+      <div style={{ fontSize: 12, color: "var(--color-text-neutral-strong)" }}>
+        Live groups: hover the Hover row for pointer parity. Focus column pins simulatedState focus-visible per Figma node 8505:14225.
+      </div>
+      <div style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "flex-start" }}>
         <RadioButton
           name="ids-radio-unselected"
           options={[
             { value: "default", label: "Default" },
             { value: "hover", label: "Hover" },
+            { value: "focus", label: "Focus", simulatedState: "focus-visible" },
             { value: "disabled", label: "Disabled", disabled: true },
           ]}
         />
@@ -45,6 +49,7 @@ export const StateMatrix: Story = {
           options={[
             { value: "default", label: "Default" },
             { value: "hover", label: "Hover" },
+            { value: "focus", label: "Focus", simulatedState: "focus-visible" },
             { value: "disabled", label: "Disabled", disabled: true },
           ]}
           defaultValue="default"
@@ -87,7 +92,7 @@ export const ErrorAndHelperText: Story = {
   ),
 };
 
-export const ControlledExample: Story = {
+export const ControlledExampleManual: Story = {
   render: () => {
     const [selected, setSelected] = useState("option1");
 

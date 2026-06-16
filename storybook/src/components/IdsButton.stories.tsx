@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
+import { IdsButton } from "./IdsButton";
 
-const meta: Meta<typeof Button> = {
-  title: "IDS/Button",
-  component: Button,
+const meta: Meta<typeof IdsButton> = {
+  title: "Spec Generated/IDS/Button",
+  component: IdsButton,
   args: {
     children: "Button",
     variant: "primary",
@@ -38,7 +38,7 @@ const meta: Meta<typeof Button> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof IdsButton>;
 
 export const Default: Story = {
   args: {
@@ -52,32 +52,32 @@ export const StatesMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <Button variant="primary" size="lg">
+        <IdsButton variant="primary" size="lg">
           Primary
-        </Button>
-        <Button variant="secondary" size="lg">
+        </IdsButton>
+        <IdsButton variant="secondary" size="lg">
           Secondary
-        </Button>
-        <Button variant="tertiary" size="lg">
+        </IdsButton>
+        <IdsButton variant="tertiary" size="lg">
           Tertiary
-        </Button>
-        <Button variant="danger" size="lg">
+        </IdsButton>
+        <IdsButton variant="danger" size="lg">
           Destructive
-        </Button>
+        </IdsButton>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <Button variant="primary" size="lg" disabled>
+        <IdsButton variant="primary" size="lg" disabled>
           Primary
-        </Button>
-        <Button variant="secondary" size="lg" disabled>
+        </IdsButton>
+        <IdsButton variant="secondary" size="lg" disabled>
           Secondary
-        </Button>
-        <Button variant="tertiary" size="lg" disabled>
+        </IdsButton>
+        <IdsButton variant="tertiary" size="lg" disabled>
           Tertiary
-        </Button>
-        <Button variant="danger" size="lg" disabled>
+        </IdsButton>
+        <IdsButton variant="danger" size="lg" disabled>
           Destructive
-        </Button>
+        </IdsButton>
       </div>
     </div>
   ),
@@ -87,30 +87,30 @@ export const SizeExamples: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <Button variant="primary" size="sm">
+        <IdsButton variant="primary" size="sm">
           Small
-        </Button>
-        <Button variant="primary" size="md">
+        </IdsButton>
+        <IdsButton variant="primary" size="md">
           Medium
-        </Button>
-        <Button variant="primary" size="lg">
+        </IdsButton>
+        <IdsButton variant="primary" size="lg">
           Large
-        </Button>
+        </IdsButton>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <Button variant="secondary" size="sm" iconSlug="settings-gear-detailed">
+        <IdsButton variant="secondary" size="sm" iconSlug="settings-gear-detailed">
           Small
-        </Button>
-        <Button variant="secondary" size="md" iconSlug="settings-gear-detailed">
+        </IdsButton>
+        <IdsButton variant="secondary" size="md" iconSlug="settings-gear-detailed">
           Medium
-        </Button>
-        <Button variant="secondary" size="lg" iconSlug="settings-gear-detailed">
+        </IdsButton>
+        <IdsButton variant="secondary" size="lg" iconSlug="settings-gear-detailed">
           Large
-        </Button>
+        </IdsButton>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <Button variant="tertiary" size="md" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings medium" />
-        <Button variant="tertiary" size="lg" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings large" />
+        <IdsButton variant="tertiary" size="md" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings medium" />
+        <IdsButton variant="tertiary" size="lg" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings large" />
       </div>
     </div>
   ),
@@ -119,16 +119,16 @@ export const SizeExamples: Story = {
 export const IconSlugExamples: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-      <Button variant="primary" size="lg" iconSlug="settings-gear-detailed">
+      <IdsButton variant="primary" size="lg" iconSlug="settings-gear-detailed">
         Button
-      </Button>
-      <Button variant="secondary" size="lg" iconSlug="settings-gear-detailed">
+      </IdsButton>
+      <IdsButton variant="secondary" size="lg" iconSlug="settings-gear-detailed">
         Button
-      </Button>
-      <Button variant="tertiary" size="lg" iconSlug="settings-gear-detailed">
+      </IdsButton>
+      <IdsButton variant="tertiary" size="lg" iconSlug="settings-gear-detailed">
         Button
-      </Button>
-      <Button variant="primary" size="lg" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings" />
+      </IdsButton>
+      <IdsButton variant="primary" size="lg" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings" />
     </div>
   ),
 };

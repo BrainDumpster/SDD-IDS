@@ -1,8 +1,9 @@
+import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Stepper } from "./Stepper";
 
 const meta: Meta<typeof Stepper> = {
-  title: "Synapse/Stepper",
+  title: "Spec Generated/Synapse/Stepper",
   component: Stepper,
   argTypes: {
     orientation: {
