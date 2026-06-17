@@ -395,6 +395,9 @@ export function IdsStatusBar({
       ) : null}
 
       <div className={styles.contentWrap}>
+        {showOverflowUi && showLeft ? (
+          <OverflowSide side="left" onClick={() => scrollByDirection("left")} />
+        ) : null}
         <div
           className={styles.content}
           ref={contentRef}
@@ -485,11 +488,8 @@ export function IdsStatusBar({
           })}
         </div>
 
-        {showOverflowUi ? (
-          <div className={styles.overflowLayer}>
-            {showLeft ? <OverflowSide side="left" onClick={() => scrollByDirection("left")} /> : null}
-            {showRight ? <OverflowSide side="right" onClick={() => scrollByDirection("right")} /> : null}
-          </div>
+        {showOverflowUi && showRight ? (
+          <OverflowSide side="right" onClick={() => scrollByDirection("right")} />
         ) : null}
       </div>
     </section>

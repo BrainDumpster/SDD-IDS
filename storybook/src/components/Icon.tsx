@@ -90,10 +90,9 @@ export function Icon({
         className={className}
         title={title}
         style={{
-          width: 16,
-          height: 16,
           display: "block",
           boxSizing: "border-box",
+          objectFit: "contain",
           ...colorStyle,
           ...styleProp,
         }}

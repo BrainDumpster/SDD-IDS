@@ -651,8 +651,15 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --corner-radius-radius-none: 0px;
   --corner-radius-radius-round: 999999px;
   --font-line-height-line-height-20: 20px;
+  --font-line-height-line-height-24: 24px;
   --font-line-height-line-height-25: 25px;
+  --font-line-height-line-height-32: 32px;
+  --font-line-height-line-height-44: 44px;
+  --font-size-body-1: 16px;
   --font-size-body-2: 14px;
+  --font-size-header-2: 36px;
+  --font-size-header-5: 24px;
+  --font-size-header-6: 18px;
   --padding-padding-2: 2px;
   --padding-padding-4: 4px;
   --padding-padding-6: 6px;

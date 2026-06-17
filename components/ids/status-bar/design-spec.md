@@ -53,8 +53,7 @@ Implement as **separate reusable primitives**; `StatusBar` orchestrates them but
 | `StatusBarItemValue` | Numeric or string count (severity + total only) | severity items, total |
 | `StatusBarItemMeta` | Text stack (severity/total category + label) | severity items, total |
 | `StatusBarItemDivider` | Vertical dashed separator element (not border-collapse) | per item edge |
-| `StatusBarOverflowLayer` | Absolute overlay above track (`inset: -1px`) | when overflow active |
-| `StatusBarOverflowControl` | Left or right chevron button + gradient fade | 0–2 per layer |
+| `StatusBarOverflowControl` | In-flow `64px` column (chevron + gradient) at edge of `StatusBarContent` group | 0–2 when overflow active |
 | `StatusBarSelectionCorner` | Frame 3466308: CSS triangle (`clip-path`) + `shape-check-thick` icon; absolute top-right on selected items | when `selected` |
 
 ### Deterministic render order (`StatusBar` convenience API)
@@ -76,9 +75,7 @@ StatusBarRoot
     │       ├── [when selected] StatusBarSelectionCorner
     │           ├── corner triangle (CSS clip-path)
     │           └── shape-check-thick icon (16×16)
-    └── [when overflow] StatusBarOverflowLayer
-        ├── [optional] StatusBarOverflowControl (left)
-        └── [optional] StatusBarOverflowControl (right)
+    └── [when overflow] StatusBarOverflowControl (left) + StatusBarOverflowControl (right) as in-flow siblings of StatusBarContentTrack inside StatusBarContent
 ```
 
 ### Slot content by family
@@ -179,10 +176,15 @@ Resolved light-theme values (reference only; theme CSS is authoritative): header
 
 ### Overflow layer
 
-- Width per side: `64px` total (`.StatusBar-Element-OverflowIcon` frame; Figma `18545:12350`)
-- Position: `absolute`, `inset: -1px` over `StatusBarContent`
-- `z-index` above items so controls sit on top of text/icons
-- Each side is a **horizontal flex row** inside the 64px zone (`18544:13494` left, `18544:13495` right):
+`StatusBarContent` (`contentWrap`) is a **single bordered group container** (`display: flex; flex-direction: row`) that in-flow composes:
+
+1. `[optional] StatusBarOverflowControl` (left) — `64px` flex column
+2. `StatusBarContentTrack` — `flex: 1; min-width: 0; overflow-x: auto`
+3. `[optional] StatusBarOverflowControl` (right) — `64px` flex column
+
+Overflow sides are **in-flow siblings** of the track (not an absolute overlay), so chevron cells share the same outer border as the item strip (Figma Content frame `15412:9751`).
+
+Width per side: `64px` total (`.StatusBar-Element-OverflowIcon` frame; Figma `18545:12350`)
 
 **Left side (`Beginning` / `Middle`):**
 1. Chevron button — `chev-left-thick` (`16×16`), `var(--color-background-component)`, padding `var(--padding-padding-10)` × `var(--padding-padding-16)`, `z-index: 2`
@@ -508,13 +510,13 @@ interface StatusBarProps {
 ```tsx
 <StatusBarRoot barType="inventory" showIcons>
   <StatusBarContent>
+    <StatusBarOverflowControl side="right" scenario="beginning" />
     <StatusBarContentTrack>
       <StatusBarItem state="default">
         <StatusBarInventoryIconStack iconShapeName="docs-bundle" status="warning" />
         <StatusBarInventoryCounter value={10} label="Category" />
       </StatusBarItem>
     </StatusBarContentTrack>
-    <StatusBarOverflowLayer scenario="beginning" />
   </StatusBarContent>
 </StatusBarRoot>
 ```
@@ -566,11 +568,12 @@ Emit stable PascalCase identifiers matching **Anatomy → Composable child compo
 
 1. `StatusBarRoot`
 2. `StatusBarTotal` (optional branch)
-3. `StatusBarContent`
-4. `StatusBarContentTrack`
-5. `StatusBarItem` × len(items)
-6. `StatusBarOverflowLayer` (optional branch)
-7. `StatusBarOverflowControl` × (0 | 1 | 2)
+3. `StatusBarContent` (bordered flex row group)
+4. `[optional] StatusBarOverflowControl` (left)
+5. `StatusBarContentTrack` + `StatusBarItem` × len(items)
+6. `[optional] StatusBarOverflowControl` (right)
+
+Steps 4–6 are **in-flow siblings** inside `StatusBarContent` (left overflow → track → right overflow).
 
 Nested inside each `StatusBarItem` (severity): `StatusBarItemDivider` (left) → `StatusBarSeverityIcon` → `StatusBarItemValue` → `StatusBarItemMeta`.
 
@@ -623,8 +626,9 @@ Figma evidence nodes per scenario:
 | `StatusBarItemMeta` | Category: `var(--font-size-body-2)`; alert-type label (large): `var(--font-size-header-6)`; alert-type label (small): body-1 |
 | `StatusBarInventoryCounter` | `flex-direction: column; align-items: flex-start; justify-content: center`; value: header-5 / line-height-32 / neutral; label: body-2 / line-height-20 / brand |
 | `StatusBarItemDivider` | 1px dashed `var(--color-border-disabled)`, height 56px, centered |
-| `StatusBarOverflowLayer` | absolute `inset: -1px`; above track content |
-| `StatusBarOverflowControl` | 64px side width; gradient + chevron tokens |
+| `StatusBarContent` | bordered flex row group: optional left overflow + track + optional right overflow |
+| `StatusBarOverflowLayer` | *deprecated overlay* — use in-flow overflow sides inside `StatusBarContent` |
+| `StatusBarOverflowControl` | `64px` in-flow column; chevron + gradient; `align-self: stretch` |
 
 ### Behavior contract
 

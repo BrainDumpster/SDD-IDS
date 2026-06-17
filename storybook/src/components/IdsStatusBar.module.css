@@ -43,24 +43,26 @@
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-direction: row;
   align-items: stretch;
   border: var(--border-width-border-1) solid var(--color-border-disabled);
   background: var(--color-background-component);
+  box-sizing: border-box;
+  /* Allow selection corner (Frame 3466308) to paint above the bordered box */
   overflow: visible;
 }
 
 .content {
+  order: 0;
   display: flex;
   align-items: stretch;
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
   min-height: 100%;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: clip;
+  overflow-clip-margin: 21px 0 0 0;
   scrollbar-width: none;
-  /* Room for selected corner (Frame 3466308) without clipping */
-  padding-top: 21px;
-  margin-top: -21px;
 }
 
 .content::-webkit-scrollbar {
@@ -371,32 +373,26 @@
   color: var(--color-text-neutral);
 }
 
-.overflowLayer {
-  position: absolute;
-  inset: -1px;
-  pointer-events: none;
-  z-index: 3;
-}
-
 .overflowSide {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  position: relative;
+  flex: 0 0 64px;
+  width: 64px;
   display: flex;
   align-items: stretch;
-  width: 64px;
+  align-self: stretch;
   gap: var(--spacing-space-minus-1);
   isolation: isolate;
   overflow: hidden;
-  pointer-events: none;
+  flex-shrink: 0;
+  background: var(--color-background-component);
 }
 
 .overflowSide[data-side="left"] {
-  left: 0;
+  order: -1;
 }
 
 .overflowSide[data-side="right"] {
-  right: 0;
+  order: 1;
 }
 
 .overflowChevronButton {
@@ -405,6 +401,7 @@
   justify-content: center;
   flex: 0 0 auto;
   align-self: stretch;
+  height: 100%;
   box-sizing: border-box;
   margin: 0;
   padding: var(--padding-padding-10) var(--padding-padding-16);
@@ -417,11 +414,11 @@
 
 .overflowSide[data-side="left"] .overflowChevronButton {
   margin-right: var(--spacing-space-minus-1);
-  border-right: var(--border-width-border-1) solid var(--color-border-disabled);
+  border-right: var(--border-width-border-default) solid var(--color-border-disabled);
 }
 
 .overflowSide[data-side="right"] .overflowChevronButton {
-  border-left: var(--border-width-border-1) solid var(--color-border-disabled);
+  border-left: var(--border-width-border-default) solid var(--color-border-disabled);
 }
 
 .overflowGradient,
