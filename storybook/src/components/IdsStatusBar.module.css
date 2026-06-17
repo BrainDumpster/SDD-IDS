@@ -9,6 +9,23 @@
   gap: var(--spacing-space-24);
 }
 
+.fitContent {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.fitContent .contentWrap {
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.fitContent .content {
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: 100%;
+}
+
 .large {
   min-height: 77px;
 }
@@ -17,20 +34,33 @@
   min-height: 57px;
 }
 
+.inventory {
+  min-height: 78px;
+}
+
 .contentWrap {
   position: relative;
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: stretch;
   border: var(--border-width-border-1) solid var(--color-border-disabled);
   background: var(--color-background-component);
+  overflow: visible;
 }
 
 .content {
   display: flex;
   align-items: stretch;
+  flex: 1;
+  min-width: 0;
+  min-height: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   scrollbar-width: none;
+  /* Room for selected corner (Frame 3466308) without clipping */
+  padding-top: 21px;
+  margin-top: -21px;
 }
 
 .content::-webkit-scrollbar {
@@ -44,15 +74,103 @@
   align-items: center;
   gap: var(--spacing-space-8);
   flex-shrink: 0;
-  background: var(--color-background-component);
+  box-sizing: border-box;
 }
 
 .item {
-  border-right: 0;
+  align-self: stretch;
+  cursor: pointer;
+  border: var(--border-width-border-1) solid transparent;
+  background: var(--color-background-component);
+  overflow: visible;
+}
+
+.item:focus {
+  outline: none;
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--color-border-brand-neutral);
+  outline-offset: -2px;
+}
+
+.item[data-state="default"] {
+  background: var(--color-background-component);
+}
+
+.item[data-state="hover"],
+.item:not([aria-disabled="true"]):not([data-force-state]):hover {
+  background: var(--color-background-brand-lighter);
+  border-color: var(--color-border-brand-neutral);
+}
+
+.item[data-state="press"],
+.item:not([aria-disabled="true"]):not([data-force-state]):active {
+  background: var(--color-background-brand-light);
+  border-color: var(--color-border-brand-neutral);
+}
+
+.item[data-state="selected"] {
+  background: var(--color-background-brand-lighter);
+  border-color: var(--color-border-brand-neutral);
+}
+
+.item[data-state="disabled"],
+.item[aria-disabled="true"] {
+  background: var(--color-background-component);
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+.item[data-state="selected"] {
+  z-index: 3;
+}
+
+.item[data-state="selected"] .label,
+.item[data-state="selected"] .inventoryLabel {
+  color: var(--color-text-neutral-strong);
+}
+
+.selectedMarker {
+  position: absolute;
+  top: -20.8px;
+  right: -21.33px;
+  width: 62.287px;
+  height: 62.287px;
+  pointer-events: none;
+  z-index: 4;
+  display: block;
+  flex-shrink: 0;
+}
+
+.selectedCornerTriangle {
+  position: absolute;
+  inset: 0;
+  background: var(--color-background-brand-base);
+  /* Figma Frame 3466308 polygon vertices in 62.287×62.287 viewBox */
+  clip-path: polygon(66.76% 33.38%, 66.76% 100%, 0% 33.38%);
+}
+
+.selectedCornerCheck {
+  position: absolute;
+  left: 21px;
+  top: 25px;
+  width: 16px;
+  height: 16px;
+}
+
+.large .selectedMarker {
+  right: -23.02px;
+}
+
+.itemOverlap {
+  margin-right: var(--spacing-space-minus-1);
 }
 
 .totalItem {
   border: var(--border-width-border-1) solid var(--color-border-disabled);
+  background: var(--color-background-component);
 }
 
 .divider {
@@ -81,27 +199,65 @@
 
 .small .item,
 .small .totalItem {
-  padding: 12.5px var(--padding-padding-24) 12.5px var(--padding-padding-24);
+  padding: 12.5px var(--padding-padding-24);
 }
 
-.iconStack {
-  position: relative;
-  width: 32px;
-  height: 32px;
+.inventory .item {
+  padding: 13px var(--padding-padding-24);
+}
+
+.severityIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-32);
+  height: var(--scale-32);
   flex-shrink: 0;
 }
 
-.small .iconStack {
+.small .severityIcon {
   width: 16px;
   height: 16px;
 }
 
+.severityIconGlyph {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.iconStack {
+  position: relative;
+  width: 40.356px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.inventoryDisc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color-background-component-light);
+}
+
 .mainIcon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  width: 16px;
+  height: 16px;
+}
+
+.inventoryMainIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-neutral);
+  background-color: currentColor;
 }
 
 .badgeIcon {
@@ -110,6 +266,13 @@
   top: -5px;
   width: 16px;
   height: 16px;
+}
+
+.badgeIconGlyph {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 .icon {
@@ -127,14 +290,42 @@
   text-overflow: ellipsis;
 }
 
-.large .value {
-  font-size: 36px;
+.large .value,
+.large .totalItem .value {
+  font-size: var(--font-size-header-2);
   line-height: var(--font-line-height-line-height-44);
 }
 
 .small .value {
-  font-size: var(--font-size-heading-5);
+  font-size: var(--font-size-header-5);
   line-height: var(--font-line-height-line-height-32);
+}
+
+.inventoryCounter {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.inventoryValue {
+  color: var(--color-text-neutral);
+  font-size: var(--font-size-header-5);
+  line-height: var(--font-line-height-line-height-32);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inventoryLabel {
+  color: var(--color-text-brand-base);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .meta {
@@ -155,7 +346,7 @@
 }
 
 .large .label {
-  font-size: 18px;
+  font-size: var(--font-size-header-6);
   line-height: var(--font-line-height-line-height-25);
 }
 
@@ -164,68 +355,85 @@
   line-height: var(--font-line-height-line-height-24);
 }
 
-.default {
-  background: var(--color-background-component);
-}
-
-.hover {
-  background: var(--color-background-brand-lighter);
-}
-
-.press,
-.selected {
-  background: var(--color-background-brand-light);
-}
-
-.disabled {
-  background: var(--color-background-component-light);
-}
-
-.disabled .value,
-.disabled .category,
-.disabled .label {
+.item[data-state="disabled"] .value,
+.item[data-state="disabled"] .inventoryValue,
+.item[aria-disabled="true"] .value,
+.item[aria-disabled="true"] .inventoryValue {
   color: var(--color-text-disabled);
 }
 
-.disabled .icon {
-  color: var(--color-icon-accessible);
+.item[data-state="disabled"] .category,
+.item[data-state="disabled"] .label,
+.item[data-state="disabled"] .inventoryLabel,
+.item[aria-disabled="true"] .category,
+.item[aria-disabled="true"] .label,
+.item[aria-disabled="true"] .inventoryLabel {
+  color: var(--color-text-neutral);
 }
 
 .overflowLayer {
   position: absolute;
-  inset: 0;
+  inset: -1px;
   pointer-events: none;
+  z-index: 3;
 }
 
-.overflowButton {
+.overflowSide {
   position: absolute;
   top: 0;
   bottom: 0;
+  display: flex;
+  align-items: stretch;
   width: 64px;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.overflowButton::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 48px;
+  gap: var(--spacing-space-minus-1);
+  isolation: isolate;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.left {
+.overflowSide[data-side="left"] {
   left: 0;
-  border-right: var(--border-width-border-1) solid var(--color-border-disabled);
-  background: var(--color-background-component);
 }
 
-.left::after {
-  right: -48px;
+.overflowSide[data-side="right"] {
+  right: 0;
+}
+
+.overflowChevronButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  align-self: stretch;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  border: 0;
+  background: var(--color-background-component);
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.overflowSide[data-side="left"] .overflowChevronButton {
+  margin-right: var(--spacing-space-minus-1);
+  border-right: var(--border-width-border-1) solid var(--color-border-disabled);
+}
+
+.overflowSide[data-side="right"] .overflowChevronButton {
+  border-left: var(--border-width-border-1) solid var(--color-border-disabled);
+}
+
+.overflowGradient,
+.overflowGradientWrap {
+  flex: 1 1 0;
+  min-width: 1px;
+  align-self: stretch;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.overflowSide[data-side="left"] .overflowGradient {
   background: linear-gradient(
     to right,
     var(--color-gradient-overflow-horizontal-inverse-start) 35%,
@@ -233,16 +441,18 @@
   );
 }
 
-.right {
-  right: 0;
-  border-left: var(--border-width-border-1) solid var(--color-border-disabled);
-  background: var(--color-background-component);
+.overflowSide[data-side="right"] .overflowGradientWrap {
+  margin-right: var(--spacing-space-minus-1);
+  display: flex;
+  overflow: hidden;
 }
 
-.right::after {
-  left: -48px;
+.overflowSide[data-side="right"] .overflowGradientFill {
+  width: 100%;
+  height: 100%;
+  transform: scaleY(-1) rotate(180deg);
   background: linear-gradient(
-    to left,
+    to right,
     var(--color-gradient-overflow-horizontal-inverse-start) 35%,
     var(--color-gradient-overflow-horizontal-inverse-end) 100%
   );
@@ -251,7 +461,7 @@
 .overflowIcon {
   width: 16px;
   height: 16px;
-  margin: auto;
+  flex-shrink: 0;
   color: var(--color-icon-brand-base);
   background-color: currentColor;
 }

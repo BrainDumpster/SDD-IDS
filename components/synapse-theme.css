@@ -326,6 +326,8 @@ html, body {
   --color-border-violet-strong: #670198;
   --color-border-white: #ffffff;
   --color-gradient-overflow-horizontal-end: rgba(244,244,244,0.00);
+  --color-gradient-overflow-horizontal-inverse-end: rgba(255,255,255,0.00);
+  --color-gradient-overflow-horizontal-inverse-start: #ffffff;
   --color-gradient-overflow-horizontal-middle: rgba(244,244,244,0.90);
   --color-gradient-overflow-horizontal-start: #f4f4f4;
   --color-gradient-overflow-vertical---scrollbar-end: rgba(255,255,255,0.00);
@@ -713,6 +715,8 @@ html, body {
   --color-border-violet-base-strong: #c894e1;
   --color-border-violet-strong: #c894e1;
   --color-gradient-overflow-horizontal-end: rgba(17,22,25,0.00);
+  --color-gradient-overflow-horizontal-inverse-end: rgba(17,22,25,0.00);
+  --color-gradient-overflow-horizontal-inverse-start: #111619;
   --color-gradient-overflow-horizontal-middle: rgba(17,22,25,0.90);
   --color-gradient-overflow-horizontal-start: #111619;
   --color-gradient-overflow-vertical---scrollbar-end: rgba(17,22,25,0.00);
