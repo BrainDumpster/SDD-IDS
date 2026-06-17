@@ -161,11 +161,17 @@
   width: min(1152px, calc(100vw - var(--padding-padding-24) * 2));
   height: 596px;
   max-height: 90vh;
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-16);
+  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  /* Match IDS Dialog: square corners via theme token (ids-theme → radius-none). */
+  border-radius: var(--modal-control-radius);
   overflow: hidden;
   box-shadow: none;
   background: transparent;
+}
+
+.popupAboutSynapse {
+  border-color: var(--color-border-neutral-light);
+  border-radius: var(--corner-radius-radius-16);
 }
 
 .modalMainAbout {
@@ -194,9 +200,71 @@
   padding: var(--padding-padding-24) var(--padding-padding-24) var(--padding-padding-16);
 }
 
+/* Tabbed About — Figma `30680:10949` Top-Content (dialog body): MODAL-TAB-BAR + Frame-Center. */
+.aboutTopContent {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.aboutTopContentIds {
+  /* 596px modal − ~90px footer ≈ 506px Top-Content (tab bar + tab panel). */
+}
+
+.aboutModalTabBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: var(--spacing-space-16, 16px);
+  padding: var(--padding-padding-24, 24px) var(--padding-padding-24, 24px) 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.aboutTabBarWrap {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.aboutTabContentViewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Figma `30680:10957` Frame-Center — fixed tab item content height; no scrollbar for default About. */
+.aboutTabContentViewportIds {
+  height: 446px;
+  max-height: 446px;
+  flex: 0 0 446px;
+}
+
+.aboutHeaderIds {
+  height: 60px;
+  padding: 0 var(--padding-padding-24, 24px);
+  box-sizing: border-box;
+}
+
 .aboutHeaderSpacer {
   flex: 0 0 var(--scale-80);
   min-height: 1px;
+}
+
+.aboutHeaderSpacerIds {
+  flex-basis: 78px;
+  width: 78px;
+}
+
+.closeIds {
+  border-radius: var(--corner-radius-radius-none, 0);
 }
 
 .aboutBody {
@@ -209,6 +277,22 @@
   align-items: center;
 }
 
+.aboutBodyIds {
+  flex: 1 1 auto;
+  height: 446px;
+  max-height: 446px;
+  padding: var(--spacing-space-48, 48px) var(--padding-padding-24, 24px);
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+.aboutLeading {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: var(--spacing-space-8, 8px);
+}
+
 .aboutProductTitle {
   margin: 0;
   max-width: 800px;
@@ -218,6 +302,11 @@
   font-weight: 400;
   color: var(--color-icon-brand-base);
   text-align: center;
+  word-break: break-word;
+}
+
+.aboutProductTitleIds {
+  color: var(--color-text-brand-base);
 }
 
 .aboutFooter {
@@ -228,4 +317,8 @@
   gap: var(--spacing-space-16);
   padding: var(--padding-padding-24);
   border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.aboutFooterIds {
+  border-top-color: var(--color-border-accessible);
 }

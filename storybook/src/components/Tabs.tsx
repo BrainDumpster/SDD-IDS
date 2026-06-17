@@ -23,6 +23,9 @@ export type TabsSurface = "elevated" | "transparent";
 interface TabsProps {
   items: TabItem[];
   defaultActiveTabId?: string;
+  /** Controlled active tab (pairs with `onActiveTabChange`). */
+  activeTabId?: string;
+  onActiveTabChange?: (id: string) => void;
   showAddTab?: boolean;
   onAddTab?: () => void;
   addTabLabel?: string;
@@ -31,14 +34,26 @@ interface TabsProps {
   variant?: "primary" | "secondary";
   /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-2)`. */
   surface?: TabsSurface;
+  /**
+   * `default` — standard list + panel chrome.
+   * `embedded` — flush panel (modal About body); list keeps IDS tab row + trailing baseline rail.
+   */
+  layout?: "default" | "embedded";
   moreLabel?: string;
   /** `synapse` → Nav Tab chrome (32px, closable defaults, `shape-plus` add). */
   programme?: "ids" | "synapse";
+  /** When false, render only the tab panel region (for split modal chrome). */
+  renderList?: boolean;
+  /** When false, render only the tab list region. */
+  renderPanel?: boolean;
+  className?: string;
 }
 
 export function Tabs({
   items,
   defaultActiveTabId,
+  activeTabId: activeTabIdProp,
+  onActiveTabChange,
   showAddTab = false,
   onAddTab,
   addTabLabel = "Add Tab",
@@ -46,25 +61,40 @@ export function Tabs({
   maxTabWidth = 250,
   variant = "secondary",
   surface = "elevated",
+  layout = "default",
   moreLabel = "More",
   programme = "ids",
+  renderList = true,
+  renderPanel = true,
+  className,
 }: TabsProps) {
   const isSynapse = programme === "synapse";
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const [tabs, setTabs] = useState<TabItem[]>(items);
-  const [activeTabId, setActiveTabId] = useState<string>(
+  const [internalActiveTabId, setInternalActiveTabId] = useState<string>(
     defaultActiveTabId ?? items[0]?.id ?? "",
   );
+  const activeTabId = activeTabIdProp ?? internalActiveTabId;
+  const setActiveTabId = (id: string) => {
+    if (activeTabIdProp === undefined) {
+      setInternalActiveTabId(id);
+    }
+    onActiveTabChange?.(id);
+  };
   const [visibleCount, setVisibleCount] = useState<number>(items.length);
   const [overflowLabel, setOverflowLabel] = useState<string | null>(null);
 
   useEffect(() => {
     setTabs(items);
     if (!items.some((t) => t.id === activeTabId)) {
-      setActiveTabId(defaultActiveTabId ?? items[0]?.id ?? "");
+      const next = defaultActiveTabId ?? items[0]?.id ?? "";
+      if (activeTabIdProp === undefined) {
+        setInternalActiveTabId(next);
+      }
+      if (next) onActiveTabChange?.(next);
     }
-  }, [items, activeTabId, defaultActiveTabId]);
+  }, [items, activeTabId, activeTabIdProp, defaultActiveTabId, onActiveTabChange]);
 
   useEffect(() => {
     const list = listRef.current;
@@ -128,10 +158,18 @@ export function Tabs({
   return (
     <div
       ref={rootRef}
-      className={[styles.root, isSynapse ? styles.programmeSynapse : ""].filter(Boolean).join(" ")}
+      className={[
+        styles.root,
+        isSynapse ? styles.programmeSynapse : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       data-surface={surface}
       data-programme={programme}
+      data-layout={layout}
     >
+      {renderList ? (
       <div ref={listRef} className={styles.listWrap}>
         <div className={styles.list} role="tablist" aria-label="Tabs">
           {visibleTabs.map((item) => (
@@ -240,8 +278,9 @@ export function Tabs({
           ) : null}
         </div>
       </div>
+      ) : null}
 
-      {activeTab ? (
+      {renderPanel && activeTab ? (
         <div
           id={`panel-${activeTab.id}`}
           role="tabpanel"

@@ -8,9 +8,24 @@
   text-align: center;
 }
 
+.contentColumnIds {
+  gap: 0;
+}
+
+.productIcon {
+  display: block;
+  width: 104px;
+  height: 104px;
+  flex-shrink: 0;
+}
+
+.versionLineIds {
+  margin-top: var(--spacing-space-4, 4px);
+}
+
 .versionLine {
   margin: 0;
-  margin-top: var(--spacing-space-4);
+  margin-top: var(--spacing-space-4, 4px);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral-strong);
@@ -20,8 +35,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-space-8);
-  margin-top: var(--spacing-space-4);
+  gap: var(--spacing-space-8, 8px);
+  margin-top: var(--spacing-space-4, 4px);
 }
 
 .serialLabel {
@@ -53,12 +68,16 @@
 }
 
 .brandBlock {
-  margin-top: var(--spacing-space-56);
+  margin-top: var(--spacing-space-56, 56px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-space-8);
+  gap: var(--spacing-space-8, 8px);
   width: 100%;
+}
+
+.brandBlockIds {
+  margin-top: var(--spacing-space-48, 48px);
 }
 
 .logo {
@@ -75,4 +94,128 @@
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-neutral);
   text-align: center;
+}
+
+.aboutPanel {
+  width: 100%;
+  max-width: 1056px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.aboutPanelIds {
+  padding: var(--spacing-space-48, 48px) var(--padding-padding-24, 24px);
+  box-sizing: border-box;
+}
+
+/* Tabbed About — Figma `30680:10957` Frame-Center → `30680:10958` .About-Element-Content. */
+.aboutTabFrameCenter {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  /* Same vertical inset as non-tabbed `.aboutBodyIds` (48px top/bottom). */
+  padding: var(--spacing-space-48, 48px) var(--padding-padding-24, 24px);
+}
+
+.aboutElementContent {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-16, 16px);
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.centerArea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-48, 48px);
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.productBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.productMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-4, 4px);
+  width: 100%;
+}
+
+.copyrightBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.copyrightBlock .brandBlock {
+  margin-top: 0;
+  width: 100%;
+}
+
+.aboutPanelLeading {
+  margin-bottom: var(--spacing-space-8, 8px);
+}
+
+.aboutPanelTitle {
+  margin: 0;
+  max-width: 800px;
+  font-size: var(--font-size-header-1);
+  line-height: var(--font-line-height-line-height-58);
+  font-weight: 400;
+  color: var(--color-icon-brand-base);
+  word-break: break-word;
+}
+
+.aboutPanelTitleIds {
+  color: var(--color-text-brand-base);
+}
+
+.aboutTabsPanelHost {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.aboutTabPlaceholder {
+  padding: var(--padding-padding-16, 16px) var(--padding-padding-40, 40px)
+    var(--padding-padding-16, 16px) var(--padding-padding-24, 24px);
+  text-align: left;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  box-sizing: border-box;
 }

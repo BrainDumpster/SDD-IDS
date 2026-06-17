@@ -479,8 +479,15 @@
   {
     "category": "Patterns and Templates",
     "component": "Login",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38428-117113&m=dev",
-    "nodeId": "38428-117113"
+    "designSpecPath": "components/ids/login/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11001-48750&m=dev",
+    "nodeId": "11001-48750",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "elementsNodeId": "11001-47829",
+    "credentialsFalseNodeId": "11001-47826",
+    "credentialsTrueNodeId": "15892-162210",
+    "notificationNodeId": "38428-119371",
+    "termsNodeId": "15896-177610"
   },
   {
     "category": "Patterns and Templates",

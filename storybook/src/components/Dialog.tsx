@@ -43,6 +43,12 @@ interface DialogProps {
   dialogClosable?: boolean;
   description?: string;
   children?: ReactNode;
+  /** Renders above the centered product title in `about` variant (e.g. IDS product icon). */
+  aboutLeadingContent?: ReactNode;
+  /** When true, body hosts Top-Content: MODAL-TAB-BAR (`aboutTabList`) + close, then tab panel (`aboutTabPanel`). */
+  aboutUseTabs?: boolean;
+  aboutTabList?: ReactNode;
+  aboutTabPanel?: ReactNode;
 
   // Footer buttons (labels are product/user-defined at runtime)
   primaryButtonName: string;
@@ -69,6 +75,10 @@ export function Dialog({
   dialogClosable = true,
   description,
   children,
+  aboutLeadingContent,
+  aboutUseTabs = false,
+  aboutTabList,
+  aboutTabPanel,
   primaryButtonName,
   enableActionButton = true,
   tertiaryButtonName,
@@ -91,7 +101,13 @@ export function Dialog({
 
   const popupClassName =
     variant === "about"
-      ? `${styles.popup} ${styles.popupAbout}`
+      ? [
+          styles.popup,
+          styles.popupAbout,
+          programme === "synapse" ? styles.popupAboutSynapse : "",
+        ]
+          .filter(Boolean)
+          .join(" ")
       : [styles.popup, styles[dialogSize]].filter(Boolean).join(" ");
 
   const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
@@ -149,27 +165,114 @@ export function Dialog({
           {variant === "about" ? (
             <>
               <div className={styles.modalMainAbout}>
-                <header className={styles.aboutHeader}>
-                  <div className={styles.aboutHeaderSpacer} aria-hidden="true" />
-                  {dialogClosable ? (
-                    <BaseDialog.Close
-                      className={styles.close}
-                      aria-label="Close"
-                      onClick={() => {
-                        onClose?.();
-                      }}
+                {aboutUseTabs ? (
+                  <div
+                    className={[
+                      styles.aboutTopContent,
+                      programme === "ids" ? styles.aboutTopContentIds : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    <div className={styles.aboutModalTabBar}>
+                      <div className={styles.aboutTabBarWrap}>{aboutTabList}</div>
+                      {dialogClosable ? (
+                        <BaseDialog.Close
+                          className={[
+                            styles.close,
+                            programme === "ids" ? styles.closeIds : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                          aria-label="Close"
+                          onClick={() => {
+                            onClose?.();
+                          }}
+                        >
+                          <DialogCloseGlyph />
+                        </BaseDialog.Close>
+                      ) : null}
+                    </div>
+                    <div
+                      className={[
+                        styles.aboutTabContentViewport,
+                        programme === "ids" ? styles.aboutTabContentViewportIds : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                     >
-                      <DialogCloseGlyph />
-                    </BaseDialog.Close>
-                  ) : null}
-                </header>
-                <div className={styles.aboutBody}>
-                  <BaseDialog.Title className={styles.aboutProductTitle}>
-                    {dialogTitle}
-                  </BaseDialog.Title>
-                  {children}
-                </div>
-                <footer className={styles.aboutFooter}>
+                      {aboutTabPanel}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <header
+                      className={[
+                        styles.aboutHeader,
+                        programme === "ids" ? styles.aboutHeaderIds : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      <div
+                        className={[
+                          styles.aboutHeaderSpacer,
+                          programme === "ids" ? styles.aboutHeaderSpacerIds : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        aria-hidden="true"
+                      />
+                      {dialogClosable ? (
+                        <BaseDialog.Close
+                          className={[
+                            styles.close,
+                            programme === "ids" ? styles.closeIds : "",
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
+                          aria-label="Close"
+                          onClick={() => {
+                            onClose?.();
+                          }}
+                        >
+                          <DialogCloseGlyph />
+                        </BaseDialog.Close>
+                      ) : null}
+                    </header>
+                    <div
+                      className={[
+                        styles.aboutBody,
+                        programme === "ids" ? styles.aboutBodyIds : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    >
+                      {aboutLeadingContent ? (
+                        <div className={styles.aboutLeading}>{aboutLeadingContent}</div>
+                      ) : null}
+                      <BaseDialog.Title
+                        className={[
+                          styles.aboutProductTitle,
+                          programme === "ids" ? styles.aboutProductTitleIds : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      >
+                        {dialogTitle}
+                      </BaseDialog.Title>
+                      {children}
+                    </div>
+                  </>
+                )}
+                <footer
+                  className={[
+                    styles.aboutFooter,
+                    programme === "ids" ? styles.aboutFooterIds : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   <BaseDialog.Close
                     className={[
                       buttonStyles.button,
