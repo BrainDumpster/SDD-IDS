@@ -41,6 +41,15 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 *(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 """
 
+DARK_STATES_BOILERPLATE_PROGRAMME = """Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / programme dark scope live in theme CSS:
+
+- `{themeCssPath}`
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+"""
+
 SYNAPSE_IDS_FORK_DARK_STATES_SECTION = (
     "## States (Dark Theme)\n\n" + DARK_STATES_BOILERPLATE_SYNAPSE + "\n"
 )
@@ -159,20 +168,20 @@ NEW_SPEC_TEMPLATE = (
 """
 )
 
-SYNAPSE_IDS_FORK_TEMPLATE = (
+PROGRAMME_IDS_FORK_TEMPLATE = (
 """# {component} Design Spec
 
 ## IDS baseline (layout, flow, contracts)
 
-Synapse **{component}** is the same component family as IDS **{idsComponent}**. Layout, interaction contracts, and shared slot geometry match the IDS spec unless noted in **Synapse programme deltas** below.
+{programmeDisplayName} **{component}** is the same component family as IDS **{idsComponent}**. Layout, interaction contracts, and shared slot geometry match the IDS spec unless noted in **{programmeDisplayName} programme deltas** below.
 
 - **IDS source of truth:** [`{idsSpecPath}`]({idsSpecPath})
 - **Shared implementation:** `{sharedImplementation}`
-- **Synapse wrapper (if any):** `{synapseWrapper}`
+- **Programme wrapper (if any):** `{programmeWrapper}`
 
 ## Metadata
 - Component: {component}
-- Design System: Synapse
+- Design System: {programmeDisplayName}
 - Category: {category}
 - Spec pattern: ids-fork
 - IDS baseline slug: {idsSlug}
@@ -183,11 +192,11 @@ Synapse **{component}** is the same component family as IDS **{idsComponent}**. 
 - Last verified: TODO
 - Status: draft
 - Version: 1.0.0
-- Theme CSS: `components/synapse-theme.css`
+- Theme CSS: `{themeCssPath}`
 
-### Synapse programme deltas (vs IDS)
+### {programmeDisplayName} programme deltas (vs IDS)
 
-| Topic | IDS | Synapse |
+| Topic | IDS | {programmeDisplayName} |
 |---|---|---|
 | TODO | TODO | TODO |
 
@@ -195,11 +204,11 @@ Synapse **{component}** is the same component family as IDS **{idsComponent}**. 
 (Same slot order as IDS [`{idsSlug}`]({idsSpecPath}) unless noted above.)
 
 ## Layout & Measurements
-(Same flow as IDS except rows in **Synapse programme deltas**.)
+(Same flow as IDS except rows in **{programmeDisplayName} programme deltas**.)
 
 ## Tokens
 ### Surfaces and borders
-- TODO: Synapse-specific tokens only; inherit unchanged typography from IDS spec
+- TODO: programme-specific tokens only; inherit unchanged typography from IDS spec
 
 ## States (Light Theme)
 (Document rows that differ from IDS; identical rows inherit IDS state matrix.)
@@ -207,11 +216,11 @@ Synapse **{component}** is the same component family as IDS **{idsComponent}**. 
 ## States (Dark Theme)
 
 """
-    + DARK_STATES_BOILERPLATE_SYNAPSE
+    + DARK_STATES_BOILERPLATE_PROGRAMME
     + """
 
 ## Interactions
-(Same as IDS unless noted in **Synapse programme deltas**.)
+(Same as IDS unless noted in **{programmeDisplayName} programme deltas**.)
 
 ### Accessibility
 - TODO
@@ -220,7 +229,7 @@ Synapse **{component}** is the same component family as IDS **{idsComponent}**. 
 - TODO
 
 ## Composition & API (runtime)
-(Inherit IDS types from shared implementation; document Synapse-only props.)
+(Inherit IDS types from shared implementation; document programme-only props.)
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 """
@@ -228,14 +237,92 @@ Synapse **{component}** is the same component family as IDS **{idsComponent}**. 
     + """
 ### Validation checklist
 - [ ] IDS contract referenced; programme deltas table complete
-- [ ] Live Figma MCP evidence on Synapse nodes
-- [ ] Storybook `Spec Generated/Synapse/{component}` with **Spec Accurate Design**
+- [ ] Live Figma MCP evidence on programme nodes
+- [ ] Storybook `{storybookTitlePrefix}/{component}` with **Spec Accurate Design**
 
 ## Source Mapping
-- Design source: Synapse Hi-Fi `{fileKey}`
+- Design source: programme Figma `{fileKey}`
 - Validated nodes: `{nodeId}`
 - IDS parity reference: `{idsSpecPath}`
-- Registry: `data/programme-inheritance-registry.json` → `{synapseSlug}`
-- Component map: `data/synapse-component-figma-map.json` → {component}
+- Registry: `data/programme-inheritance-registry.json` → `{programmeSlug}`
+- Component map: `{figmaMapPath}` → {component}
 """
 )
+
+PROGRAMME_STANDALONE_TEMPLATE = (
+"""# {component} Design Spec
+
+## Metadata
+- Component: {component}
+- Design System: {programmeDisplayName}
+- Category: {category}
+- Spec pattern: standalone
+- Figma: {figmaUrl}
+- File key: `{fileKey}`
+- Main component set node: `{nodeId}`
+- Theme CSS: `{themeCssPath}`
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Last verified: TODO
+- Status: draft
+- Version: 1.0.0
+- Description: TODO one-line summary (programme-native component; no IDS baseline)
+
+## Anatomy
+- TODO: deterministic slot order from programme Figma (no IDS inheritance)
+
+## Layout & Measurements
+- TODO: dimensions, padding, spacing; note sample-only Figma frame widths vs runtime behavior
+
+## Tokens
+### Typography
+- TODO: programme typography tokens (`var(--...)` only)
+
+### Colors and surfaces
+- TODO: backgrounds, borders, text, icons, focus, shadows from programme theme
+
+## States (Light Theme)
+| Area | State | Background | Border | Text/Icon |
+| --- | --- | --- | --- | --- |
+| TODO | default | TODO | TODO | TODO |
+
+## States (Dark Theme)
+
+"""
+    + DARK_STATES_BOILERPLATE_PROGRAMME
+    + """
+
+## Interactions
+- TODO: pointer/keyboard behaviors, focus ring spec
+
+### Accessibility
+- TODO: roles, aria attributes, keyboard expectations
+
+### Behavior & guidelines
+- TODO: usage guidance and do/don't
+
+## Composition & API (runtime)
+### Variants
+- TODO: variant axes from programme Figma component set
+
+### Runtime API
+- TODO: props, events, defaults (programme-native; do not inherit IDS API unless explicitly composed)
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+"""
+    + CODEGEN_BOOTSTRAP
+    + """
+### Validation checklist
+- [ ] Spec pattern: standalone; no IDS baseline section present
+- [ ] Live Figma MCP evidence on programme nodes only
+- [ ] Storybook `{storybookTitlePrefix}/{component}` with **Spec Accurate Design** (if requested)
+
+## Source Mapping
+- Design source: programme Figma `{fileKey}`
+- Validated nodes: `{nodeId}` (+ element/state nodes from intake buckets)
+- Component map: `{figmaMapPath}` → {component}
+- Registry (optional): `data/programme-inheritance-registry.json` → `{programmeSlug}` / pattern `standalone`
+"""
+)
+
+# Backward-compatible alias (Synapse was the first programme fork)
+SYNAPSE_IDS_FORK_TEMPLATE = PROGRAMME_IDS_FORK_TEMPLATE

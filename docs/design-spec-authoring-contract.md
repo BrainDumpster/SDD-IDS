@@ -33,7 +33,20 @@ When Synapse Figma reuses the same component family as IDS (same anatomy / compo
 4. Live-verify **Synapse** Figma nodes; record evidence in Metadata + Source Mapping.
 5. Register the component in [`data/programme-inheritance-registry.json`](../data/programme-inheritance-registry.json).
 
-**User process (all programmes):** [`design-spec-programme-inheritance.md`](design-spec-programme-inheritance.md). Registry: [`data/programme-inheritance-registry.json`](../data/programme-inheritance-registry.json). Synapse detail: [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md). Scaffold: `SYNAPSE_IDS_FORK_TEMPLATE`. References: [`left-nav`](../components/synapse/left-nav/design-spec.md), [`modal`](../components/synapse/modal/design-spec.md).
+**User process (all programmes):** [`design-spec-programme-inheritance.md`](design-spec-programme-inheritance.md) · skill: [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](../.cursor/skills/design-spec-programme-inheritance/SKILL.md). Registry: [`data/programme-inheritance-registry.json`](../data/programme-inheritance-registry.json). Scaffold: `PROGRAMME_IDS_FORK_TEMPLATE`. Synapse walkthrough: [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
+
+## Programme standalone (no IDS inheritance)
+
+When a component is **native to a programme** Figma file and has **no IDS counterpart** (e.g. Synapse Suggested Prompt, Chat Input Box, Thinking):
+
+1. Use the [design-spec intake wizard](design-spec-intake.md) with **`Inherits IDS: no`** — not programme inheritance.
+2. Create **`{components_dir}/<slug>/design-spec.md`** — full spec, **no** IDS baseline section.
+3. Metadata must include **`Spec pattern: standalone`**, programme `display_name`, and `{theme_css_path}`.
+4. Live-verify **programme** Figma nodes only; do not copy IDS specs.
+5. Figma map: `specPattern: standalone` (no `idsBaselineSpecPath`).
+6. Scaffold: `PROGRAMME_STANDALONE_TEMPLATE` in `scripts/design_spec_template.py`.
+
+**Reference:** [`components/synapse/suggested-prompt/design-spec.md`](../components/synapse/suggested-prompt/design-spec.md).
 
 ## Required `##` sections (fixed order)
 
@@ -113,7 +126,7 @@ Output path pattern: `storybook-generated/<programme>/src/components/<Component>
 
 Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS), `components/dap-theme.css` (DAP), or `components/synapse-theme.css` (Synapse).
 
-IDS-fork Synapse components use the Synapse story path and theme; see [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
+IDS-fork programme components use the programme story path and theme; see [`design-spec-programme-inheritance.md`](design-spec-programme-inheritance.md) and Synapse examples in [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
 
 ### Spec Accurate Design (primary story)
 

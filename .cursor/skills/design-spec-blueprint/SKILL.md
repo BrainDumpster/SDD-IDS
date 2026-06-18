@@ -11,7 +11,7 @@ Use this skill when creating or upgrading design specs for spec-driven code gene
 
 If the user wants a **new** `design-spec.md` and has not supplied programme, component name, and Figma URLs together, run **design-spec-intake-wizard** first (or point them to `docs/design-spec-intake.md` **base prompt**). Do not skip the interview and confirm step. After the file exists, use this blueprint skill for hardening and updates.
 
-**Synapse inheriting from IDS:** run **design-spec-synapse-ids-fork** (`SYNAPSE_IDS_FORK_TEMPLATE`, programme deltas table). Examples: `left-nav`, `modal`.
+**Programme inheriting from IDS (any programme):** run **design-spec-programme-inheritance** (`PROGRAMME_IDS_FORK_TEMPLATE`, programme deltas table).
 
 ## Objective
 
