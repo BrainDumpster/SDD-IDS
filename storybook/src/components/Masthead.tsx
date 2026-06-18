@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
+import { Badge } from "./Badge";
 import styles from "./Masthead.module.css";
 
 interface MastheadProps extends ComponentProps<"header"> {
@@ -18,8 +19,10 @@ interface MastheadActionButtonContainerProps extends ComponentProps<"div"> {
   children: ReactNode;
 }
 
-interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
+export interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
   icon: ReactNode;
+  badgeCount?: number;
+  badgeType?: "critical" | "success";
 }
 
 interface MastheadAvatarProps extends Omit<ComponentProps<"button">, "children"> {
@@ -45,10 +48,15 @@ export function MastheadActionButtonContainer({
 
 export function MastheadActionIconButton({
   icon,
+  badgeCount,
+  badgeType = "critical",
   className,
   type = "button",
   ...rest
 }: MastheadActionIconButtonProps) {
+  const showBadge = typeof badgeCount === "number" && badgeCount > 0;
+  const badgeLabel = badgeCount && badgeCount > 99 ? "99+" : String(badgeCount ?? "");
+
   return (
     <button
       type={type}
@@ -58,6 +66,14 @@ export function MastheadActionIconButton({
       <span className={styles.actionIconGlyph} aria-hidden="true">
         {icon}
       </span>
+      {showBadge ? (
+        <span className={styles.badgeWrapper} aria-hidden="true">
+          <Badge
+            value={badgeLabel}
+            type={badgeType === "success" ? "success" : "critical"}
+          />
+        </span>
+      ) : null}
     </button>
   );
 }

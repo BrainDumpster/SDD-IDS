@@ -1,5 +1,6 @@
 <!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
+<!-- **Superseded:** Production ids-fork spec → [`app-shell/design-spec.md`](../app-shell/design-spec.md) -->
 # PageLayout Design Spec
 
 > Generated 2026-06-12T07:10:00Z. Component-specific override spec — inherits global tokens, baselines, and theming from root-spec.md.

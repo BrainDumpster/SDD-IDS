@@ -50,7 +50,10 @@ export function SynapseMastheadActionIconButton({
       </span>
       {showBadge ? (
         <span className={styles.badgeWrapper} aria-hidden="true">
-          <Badge variant={badgeType === "success" ? "success" : "critical"}>{badgeLabel}</Badge>
+          <Badge
+            value={badgeLabel}
+            type={badgeType === "success" ? "success" : "critical"}
+          />
         </span>
       ) : null}
     </button>
