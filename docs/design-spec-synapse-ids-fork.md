@@ -1,5 +1,7 @@
 # Synapse design specs when IDS is the base
 
+**Reference doc (Synapse walkthrough + verified deltas).** Agent execution is programme-agnostic — use [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](../.cursor/skills/design-spec-programme-inheritance/SKILL.md) for any programme (Synapse, DAP, …).
+
 Portable workflow for Synapse components that reuse the same Figma component family as IDS with programme-specific token, layout, or chrome changes.
 
 **Canonical references:**
@@ -34,7 +36,7 @@ See the decision tree in the intake wizard skill and [`config/design_systems/syn
 4. **Remaining sections** — full values where Synapse differs; `(Same as IDS …)` references elsewhere.
 5. **`## Source Mapping`** — both IDS parity reference and Synapse validated nodes.
 
-Scaffold: `scripts/design_spec_template.py` → `SYNAPSE_IDS_FORK_TEMPLATE`.
+Scaffold: `scripts/design_spec_template.py` → `PROGRAMME_IDS_FORK_TEMPLATE` (`SYNAPSE_IDS_FORK_TEMPLATE` is a backward-compatible alias).
 
 ## Per-component workflow
 
@@ -67,7 +69,7 @@ Import `components/synapse-theme.css` in the story file.
 
 ## Agent skill
 
-For step-by-step execution in Cursor, load **design-spec-programme-inheritance** (`.cursor/skills/design-spec-programme-inheritance/SKILL.md`) or **design-spec-synapse-ids-fork** for Synapse-only detail.
+Use **design-spec-programme-inheritance** ([`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](../.cursor/skills/design-spec-programme-inheritance/SKILL.md)) — the single skill for any programme IDS-fork spec. This doc is Synapse examples and reference only.
 
 ## Walkthrough: Synapse Modal (IDS-fork)
 

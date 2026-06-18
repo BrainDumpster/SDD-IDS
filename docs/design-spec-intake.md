@@ -4,13 +4,23 @@ Create production-ready, framework-agnostic `design-spec.md` files by pasting on
 
 Works in **Cursor**, **Windsurf Cascade**, and **Windsurf Devin** (see Devin notes below). Full rules: [design-spec-authoring-contract.md](design-spec-authoring-contract.md).
 
-## Programme inheritance (Synapse / DAP from IDS base)
+## Three spec paths (pick one)
+
+| Path | When | Skill / doc | `specPattern` |
+|------|------|-------------|---------------|
+| **IDS-native** | New component in IDS Figma only | **This wizard** (`@design-spec-intake-wizard`) | (none / ids-native) |
+| **Programme fork** | Programme reuses IDS anatomy with token/layout/chrome deltas | [Programme inheritance](design-spec-programme-inheritance.md) (`@design-spec-programme-inheritance`) | `ids-fork` |
+| **Programme standalone** | Programme-only UI, no IDS counterpart | **This wizard** with **`Inherits IDS: no`** | `standalone` |
+
+## Routing: inheritance vs standalone
 
 When the component **inherits IDS** but uses **programme Figma** (token/layout/chrome deltas), use the inheritance process instead of this wizard:
 
 - **Doc:** [design-spec-programme-inheritance.md](design-spec-programme-inheritance.md)
 - **Cursor:** `@design-spec-programme-inheritance` or paste the **inheritance base prompt** from that doc
 - **Figma URLs:** same three buckets as this wizard — **Main component** (one or many), **Elements**, **States**
+
+When the component is **programme-native** (no IDS counterpart — e.g. Chat Input Box, Suggested Prompt), stay on **this wizard** and answer **`Inherits IDS: no`** → `specPattern: standalone`. See [Programme standalone (no IDS inheritance)](design-spec-authoring-contract.md#programme-standalone-no-ids-inheritance) in the authoring contract.
 
 ---
 
@@ -44,22 +54,24 @@ Run the design-spec intake wizard. I will provide programme, component name, and
 
 | # | Question |
 |---|----------|
-| 1 | Programme: **IDS**, **DAP**, or **Synapse** |
+| 1 | Programme / design system: **IDS** or any registered programme slug (`synapse`, `dap`, …) |
 | 2 | Component display name |
-| 3 | Category (optional — you can say `skip`) |
-| 4 | Figma **component** URL (required) |
-| 5 | Figma **element** URLs (optional — repeat until you say `done`) |
-| 6 | Figma **state** URLs (optional — until `done`) |
-| 7 | Storybook examples needed? (`yes` / `no`) — if `yes`, see [Storybook examples](#storybook-examples-when-you-answer-yes) |
-| 8 | Summary for confirm (`designSpecPath`, nodes, Storybook plan) — reply **`yes`** to proceed |
+| 3 | **Inherits IDS component?** (skip if programme = IDS) — `yes` / `no` / `unknown`. **`yes`** → [programme inheritance](design-spec-programme-inheritance.md). **`no`** → standalone programme spec. |
+| 4 | Category (optional — you can say `skip`) |
+| 5 | Figma **main component** URL(s) (required — at least one; repeat until `done`) |
+| 6 | Figma **element** URL(s) (optional — repeat until you say `done`) |
+| 7 | Figma **state** URL(s) (optional — until `done`) |
+| 8 | Storybook examples needed? (`yes` / `no`) — if `yes`, see [Storybook examples](#storybook-examples-when-you-answer-yes) |
+| 9 | Summary for confirm (`specPattern`, `designSpecPath`, node IDs grouped by Main / Elements / States, Storybook plan) — reply **`yes`** to proceed |
 
 ## After confirmation
 
 The agent will:
 
 - Create `components/<programme-dir>/<slug>/` if missing (see [authoring contract](design-spec-authoring-contract.md))
-- Update the Figma component map
-- Fetch **live Figma** (MCP or REST)
+- Set **`specPattern`** in the Figma map: omit for IDS-native; `standalone` when programme-native; use [programme inheritance](design-spec-programme-inheritance.md) for `ids-fork`
+- Update the Figma component map (primary `nodeId` from first main URL; supplemental nodes from extra main / element / state URLs)
+- Fetch **live Figma** (MCP or REST) on **every** URL in all three buckets
 - Write or update `design-spec.md` with **Status: draft**
 - If Storybook = **yes**: add or update `storybook-generated/...` under **Spec Generated**, with primary story **Spec Accurate Design**
 
@@ -85,16 +97,38 @@ Review the diff and iterate in chat if any checklist item is incomplete.
 
 Devin works best with **one task** after inputs are known:
 
-1. Run the interview in **Cascade or Cursor** through step 8, **or** paste all answers in one message:
+1. Run the interview in **Cascade or Cursor** through step 9, **or** paste all answers in one message:
 
 ```text
 Programme: IDS
 Component: Spinner
+Inherits IDS: n/a
 Category: skip
-Component Figma URL: https://www.figma.com/design/...
+Main component URL(s):
+- https://www.figma.com/design/...
+- done
 Element URLs: done
 State URLs: done
 Storybook: no
+Confirm: yes
+```
+
+Programme standalone example:
+
+```text
+Programme: synapse
+Component: Suggested Prompt
+Inherits IDS: no
+Category: Components
+Main component URL(s):
+- https://www.figma.com/design/Td1bnsvRj1PCGs9RVJkIvJ/...?node-id=48467-26158
+- done
+Element URLs: done
+State URLs:
+- …?node-id=48467-26157
+- …?node-id=53325-277102
+- done
+Storybook: yes
 Confirm: yes
 ```
 
@@ -116,9 +150,11 @@ When executing the wizard without the Cursor skill file:
 
 1. **One question per message** during the interview.
 2. **No Figma, no file writes** until the user confirms the summary with `yes`.
-3. Valid programmes: **IDS** → `components/ids`, **DAP** → `components/DAP`, **Synapse** → `components/synapse`.
-4. After confirm: mkdir programme + slug dirs → map entry → scaffold if needed → live Figma → all 10 `##` sections → evidence in Metadata + Source Mapping → Status `draft`.
-5. Storybook `yes` → after the spec: **Spec Generated** group + **Spec Accurate Design** primary story (see **Storybook examples**).
+3. **Route first:** programme = `ids` → IDS-native spec; programme ≠ `ids` and **inherits IDS** → [programme inheritance](design-spec-programme-inheritance.md); **does not inherit IDS** → `specPattern: standalone` (intake wizard continues).
+4. Valid programmes: resolve from `config/design_systems/*.yaml` (`ids`, `synapse`, `dap`, …).
+5. Figma URLs in three buckets — **Main component** (one or many), **Elements**, **States** — live-verify every URL.
+6. After confirm: mkdir programme + slug dirs → map entry (`specPattern` when programme) → scaffold (`NEW_SPEC_TEMPLATE` or `PROGRAMME_STANDALONE_TEMPLATE`) → live Figma → all 10 `##` sections → evidence in Metadata + Source Mapping → Status `draft`.
+7. Storybook `yes` → after the spec: **Spec Generated** group + **Spec Accurate Design** primary story (see **Storybook examples**).
 
 ## Storybook examples (when you answer `yes`)
 
@@ -160,4 +196,4 @@ The agent may save `data/design-spec-intake/sessions/<slug>-<date>.yaml` for aud
 | Blueprint / hardening | [.cursor/skills/design-spec-blueprint/SKILL.md](../.cursor/skills/design-spec-blueprint/SKILL.md) |
 | Wizard skill (Cursor) | [.cursor/skills/design-spec-intake-wizard/SKILL.md](../.cursor/skills/design-spec-intake-wizard/SKILL.md) |
 | Programme inheritance | [design-spec-programme-inheritance.md](design-spec-programme-inheritance.md) · [.cursor/skills/design-spec-programme-inheritance/SKILL.md](../.cursor/skills/design-spec-programme-inheritance/SKILL.md) |
-| Spec template | `scripts/design_spec_template.py` |
+| Spec templates | `scripts/design_spec_template.py` — `NEW_SPEC_TEMPLATE`, `PROGRAMME_STANDALONE_TEMPLATE`, `PROGRAMME_IDS_FORK_TEMPLATE` |

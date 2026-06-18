@@ -1,10 +1,12 @@
 # Programme inheritance design-spec process
 
-Use this when a **programme layer** (Synapse, DAP, …) reuses an **IDS** component family in Figma but designers changed tokens, spacing, radius, borders, or slots.
+Use when a **programme layer** reuses an **IDS** component family in Figma but designers changed tokens, spacing, radius, borders, or slots.
 
 **Output:** a **full** `components/<programme>/<slug>/design-spec.md` with a **baseline pointer + programme deltas table** — not a deltas-only file.
 
 Works in **Cursor** (invoke skill or paste prompt), **Windsurf**, and **Devin** (one-shot after inputs).
+
+**Not for programme-native components** (no IDS counterpart) — use the [intake wizard](design-spec-intake.md) with **`Inherits IDS: no`** → `specPattern: standalone`.
 
 ---
 
@@ -13,22 +15,25 @@ Works in **Cursor** (invoke skill or paste prompt), **Windsurf**, and **Devin** 
 | Situation | Use |
 |-----------|-----|
 | New IDS-only component, no programme fork | [design-spec-intake.md](design-spec-intake.md) |
-| **Synapse / DAP** component inherits IDS anatomy + API | **This process** |
+| **Any programme** component inherits IDS anatomy + API | **This process** |
 | Programme-native UI (no IDS counterpart) | Plain intake wizard → **standalone** spec |
 
 ---
 
-## Programmes supported today
+## Programmes (config-driven)
 
-Resolved from `config/design_systems/<programme>.yaml`:
+A **programme** is any design system yaml in `config/design_systems/` that layers on IDS (`baseline_components_dir` → `components/ids`, distinct `components_dir`). **IDS itself** is not a programme — use [design-spec-intake.md](design-spec-intake.md).
 
-| Programme | Spec folder | Figma map | Theme CSS | Storybook group | IDS baseline |
-|-----------|-------------|-----------|-----------|-----------------|--------------|
-| **Synapse** | `components/synapse` | `data/synapse-component-figma-map.json` | `components/synapse-theme.css` | `Spec Generated/Synapse/...` | `components/ids` |
-| **DAP** | `components/DAP` | `data/component-figma-map.json` | `components/dap-theme.css` | `Spec Generated/DAP/...` | `components/ids` |
-| **IDS** | `components/ids` | `data/component-figma-map.json` | `components/ids-theme.css` | `Spec Generated/IDS/...` | — (use plain intake) |
+Load paths via `config/design_system_config.py` → `load_design_system("<slug>")` or read `data/programme-inheritance-registry.json` → `programmes`.
 
-Registry of completed / pending forks: [`data/programme-inheritance-registry.json`](../data/programme-inheritance-registry.json).
+**Registered today** (examples — not an exhaustive allowlist):
+
+| Slug | Spec folder | Figma map | Theme CSS | Storybook group |
+|------|-------------|-----------|-----------|-----------------|
+| `synapse` | `components/synapse` | `data/synapse-component-figma-map.json` | `components/synapse-theme.css` | `Spec Generated/Synapse/...` |
+| `dap` | `components/DAP` | `data/component-figma-map.json` | `components/dap-theme.css` | `Spec Generated/DAP/...` |
+
+New programme: add `config/design_systems/<slug>.yaml`, register in `programme-inheritance-registry.json`, then run this process.
 
 ---
 
@@ -130,7 +135,7 @@ State URL(s):
 
 | # | Question |
 |---|----------|
-| 1 | Programme: **Synapse** or **DAP** |
+| 1 | Programme slug (any yaml in `config/design_systems/` except `ids`) |
 | 2 | Component display name |
 | 3 | IDS baseline component (or `unknown`) |
 | 4 | **Main component URL(s)** — one or many; reply `done` when finished |
@@ -166,7 +171,7 @@ flowchart TD
    - **Elements:** per-slot padding, typography, token bindings
    - **States:** state matrix rows; `get_variable_defs` per variant
 4. **Delta table** — compare MCP results to IDS spec (layout, chrome, tokens, states, anatomy, API)
-5. **Write spec** — all 10 `##` sections; scaffold from `SYNAPSE_IDS_FORK_TEMPLATE` (works for any programme; rename section to “Programme deltas”)
+5. **Write spec** — all 10 `##` sections; scaffold from `PROGRAMME_IDS_FORK_TEMPLATE` (substitute programme display name, paths, theme CSS from yaml)
 6. **Update map** — `designSpecPath`, `specPattern`, `idsBaselineSpecPath`, node IDs
 7. **Register** — `data/programme-inheritance-registry.json`
 8. **Storybook** (optional) — `Spec Accurate Design` under `Spec Generated/<Programme>/...`
@@ -181,11 +186,11 @@ flowchart TD
 
 ## Metadata
 - Spec pattern: ids-fork
-- Programme: Synapse | DAP
+- Design System: {display_name from programme yaml}
 - IDS baseline slug: …
 
-### <Programme> programme deltas (vs IDS)
-| Topic | IDS | Synapse/DAP |
+### {Display name} programme deltas (vs IDS)
+| Topic | IDS | {Programme} |
 …
 
 ## Anatomy … ## Source Mapping
@@ -200,19 +205,17 @@ flowchart TD
 
 ---
 
-## Programme-specific notes
+## Programme config notes (examples)
 
-### Synapse
+### synapse
 
-- Detail: [design-spec-synapse-ids-fork.md](design-spec-synapse-ids-fork.md)
-- Examples: Left Nav, Modal Dialog
-- Implementation: shared component + `programme="synapse"` when applicable
+- Walkthrough + verified deltas: [design-spec-synapse-ids-fork.md](design-spec-synapse-ids-fork.md)
+- Aliases: `data/synapse-component-aliases.json` (`alias_path` in yaml)
 
-### DAP
+### dap
 
-- Same inheritance rules; deltas may be fewer (inline “DAP override” in Layout is acceptable for small diffs).
-- Folder: `components/DAP/<slug>/`
-- Often shares IDS Figma file with DAP theme overlay — still verify live nodes if DAP has a separate frame.
+- Same inheritance rules; deltas may be fewer (`sparse-deltas` / registry `dap-style`).
+- Often shares IDS Figma file with DAP theme overlay — still verify live programme nodes when a separate frame exists.
 
 ---
 
@@ -222,8 +225,8 @@ flowchart TD
 |------|--------|
 | Review deltas | Open `### … programme deltas (vs IDS)` table |
 | Mark production-ready | Pass validation checklist → `Status: active` |
-| Implementation | Ask explicitly: “implement Synapse Modal with programme flag” |
-| Storybook | Ask: “add Spec Generated/Synapse/Modal story” |
+| Implementation | Ask explicitly: “implement {programme} {component} with programme flag” |
+| Storybook | Ask: “add Spec Generated/{Programme}/{Component} story” |
 | Drift check | Re-run Figma MCP after library token changes |
 
 ---
@@ -233,9 +236,8 @@ flowchart TD
 | Artifact | Path |
 |----------|------|
 | **This process** | `docs/design-spec-programme-inheritance.md` |
-| Agent skill | `.cursor/skills/design-spec-programme-inheritance/SKILL.md` |
-| Synapse detail | `docs/design-spec-synapse-ids-fork.md` |
+| Agent skill (any programme) | `.cursor/skills/design-spec-programme-inheritance/SKILL.md` |
+| Synapse walkthrough (examples) | `docs/design-spec-synapse-ids-fork.md` |
 | Authoring contract | `docs/design-spec-authoring-contract.md` |
 | Plain new-spec wizard | `docs/design-spec-intake.md` |
 | Registry | `data/programme-inheritance-registry.json` |
-| Template | `scripts/design_spec_template.py` → `SYNAPSE_IDS_FORK_TEMPLATE` |
