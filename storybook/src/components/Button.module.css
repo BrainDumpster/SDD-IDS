@@ -5,8 +5,8 @@
   gap: var(--spacing-space-8);
   border: var(--border-width-border-1) solid transparent;
   border-radius: var(--button-control-radius);
-  font-family: inherit;
-  font-weight: 500;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
