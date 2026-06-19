@@ -20,10 +20,9 @@
 .logo {
   display: flex;
   align-items: center;
-  color: var(--color-text-white);
-  font-size: var(--font-size-body-1);
-  font-weight: 500;
-  white-space: nowrap;
+  justify-content: center;
+  width: var(--scale-32);
+  height: var(--scale-32);
   flex-shrink: 0;
 }
 

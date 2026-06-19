@@ -20,6 +20,15 @@ const userIcon = (
   <Icon shapeName="user-single" color="var(--color-icon-white)" style={icon16} />
 );
 
+const productLogo = (
+  <Icon
+    shapeName="appic-dp-cloud-blue"
+    variant="img"
+    title="Product logo"
+    style={{ width: 32, height: 32 }}
+  />
+);
+
 const defaultHelpSlot = (
   <IdsMastheadActionButtonContainer>
     <IdsMastheadActionIconButton aria-label="Help" icon={helpIcon} />
@@ -58,6 +67,17 @@ export const Default: Story = {
 export const WithAppLauncherExample: Story = {
   args: {
     productName: "Synapse",
+    iconsSlot: defaultHelpSlot,
+    appLauncherSlot: defaultAppLauncher,
+    avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
+  },
+};
+
+/** Figma `Show Product Icon=Yes` (`10130:29512`) — optional 32×32 product logo via Icon. */
+export const WithProductLogo: Story = {
+  args: {
+    logo: productLogo,
+    productName: "Product Name",
     iconsSlot: defaultHelpSlot,
     appLauncherSlot: defaultAppLauncher,
     avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,

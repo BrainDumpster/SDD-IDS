@@ -7,7 +7,7 @@
 - Node ID: 9054-24736
 ## Anatomy
 - Masthead container with brand background
-- Logo/brand identity (product name, left-aligned)
+- Brand slot (left-aligned): optional **Product Logo** + **Product Name**
 - Action slot (right-aligned), fixed order left → right:
   1. Global Search icon button (`search-16`)
   2. Alerts icon button (`alert-bell-16`) — supports critical badge
@@ -20,6 +20,9 @@
 - Optional notification badges on Alerts and Jobs
 ## Layout & Measurements
 - Standard height: 56px (`--scale-56`)
+- Brand slot vertical alignment: product info block top offset ~12.5px from masthead top (Figma `10130:29520`)
+- Product logo (optional): **32×32px** (`var(--scale-32)`), **8px** gap (`var(--spacing-space-8)`) before product name when present
+- Product name: header-6 typography — `var(--font-size-header-6)` / `var(--font-line-height-line-height-32)`, `var(--color-text-white)`
 - Horizontal padding: 16px left, 8px right
 - Bottom border: `var(--border-width-border-1)` solid `var(--color-border-transparent-neutral)`
 - Border radius: 0 (full-width masthead)
@@ -119,6 +122,7 @@
 |---|---|---|---|---|
 | Masthead Container | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-transparent-neutral)` (#ffffff00) bottom only | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Logo Section | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Product Logo (optional) | transparent | none | — | product icon slug at **32×32** via **Icon** (`variant="img"` for full-color Product Icons) |
 | Navigation Item (Default) | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Navigation Item (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | Navigation Item (Focus) | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) dashed inset | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
@@ -165,6 +169,7 @@
 - Use consistent styling across masthead variants
 ## Composition & API (runtime)
 - `productName: string` (required)
+- `logo?: RenderableNode` (optional) — **Product Logo**; when provided, renders in the brand slot immediately before `productName`. When omitted, only the product name is shown (Figma `Show Product Icon=No`, node `10130:29494`). Must compose through the shared **Icon** primitive only — see **Product Logo (optional)** below.
 - `iconsSlot?: RenderableNode`
 - `appLauncherSlot?: RenderableNode`
 - `avatarSlot: RenderableNode` (required)
@@ -184,6 +189,31 @@
 - `imageSrc?: string` — photo URL (fills full chip, no ring)
 - `imageAlt?: string`
 
+### Product Logo (optional)
+- Figma: `Masthead-Main` variant **`Show Product Icon=Yes`** (`10130:29512`) vs **`Show Product Icon=No`** (`10130:29494`)
+- **Optional:** omit `logo` prop / slot content entirely when no product mark is needed
+- **When provided:** render **before** `productName` in the brand slot at **32×32px**
+- **Rendering contract:** compose **only** through the shared **Icon** component (`shapeName` + size) — no raw `<img>`, CSS `maskImage`, or inline asset paths in Masthead consumers
+- **Canonical Figma slug (sample):** `appic-dp-cloud-blue` — Product Icons / Data Protection Cloud (`44484:722`, node `10130:29521`)
+- **Asset file:** `assets/icons/appic-dp-cloud-blue.svg`
+- **Icon mode:** full-color / fixed-fill product glyphs use **`Icon` `variant="img"`**; monochrome marks may use default tintable mode when the asset supports `currentColor`
+- **Size:** `style={{ width: 32, height: 32 }}` (or equivalent 32×32 box on the Icon root)
+- Storybook reference example:
+  ```tsx
+  <IdsMasthead
+    logo={
+      <Icon
+        shapeName="appic-dp-cloud-blue"
+        variant="img"
+        title="Product logo"
+        style={{ width: 32, height: 32 }}
+      />
+    }
+    productName="Product Name"
+    /* … */
+  />
+  ```
+
 ### Avatar icon variant (`User Settings=Icon`)
 - **Icon slug:** `user-single` (`assets/icons/user-single.svg`; Figma component `user-single`, node `44484:604`)
 - **Render size:** 16×16px
@@ -196,7 +226,8 @@
 - `font-variation-settings: 'wdth' 100` (required for Roboto variable font to render correctly)
 - `line-height: var(--font-line-height-line-height-20)`
 ### Variants
-- **Default**: Standard brand masthead
+- **Default**: Standard brand masthead (product name only — no logo)
+- **With Product Logo**: Figma `Show Product Icon=Yes` — optional 32×32 product icon before product name
 - **With Search**: Masthead with integrated search
 - **With Notifications**: Masthead with notification badges
 - **With User Menu**: Masthead with user account section
@@ -222,7 +253,7 @@
   - action buttons maintain 16x16 icon contract and tokenized hover/active states
   - optional app launcher integrates in action row without breaking spacing
 - Fallback/error rules:
-  - missing logo falls back to product name-only rendering
+  - missing **product logo** (`logo` omitted) → product name-only brand slot (Figma `Show Product Icon=No`)
   - missing avatar falls back to initials/avatar placeholder
 
 ### Icon primitive and asset delivery (codegen)
@@ -249,8 +280,9 @@ Use whenever codegen targets a stack that already ships an **Icon** (or equivale
 | Help | `help-circ-16` | `assets/icons/help-circ-16.svg` |
 | App Launcher | `grid-square-9-16` | `assets/icons/grid-square-9-16.svg` |
 | Avatar (icon variant) | `user-single` | `assets/icons/user-single.svg` |
+| Product Logo (optional) | `appic-dp-cloud-blue` | `assets/icons/appic-dp-cloud-blue.svg` |
 
-Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the table is illustrative, not a closed set.
+Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the table is illustrative, not a closed set. Product-logo slugs come from the **Product Icons** Figma library; pass the programme-specific slug at runtime.
 
 **Codegen module resolution (this repository)**
 - React IDS: read `config/design_systems/ids.yaml` → `codegen.react.icon_component_module` (`storybook/src/components/Icon`).
@@ -277,6 +309,7 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - [ ] Test responsive behavior
 - [ ] Masthead monochrome icons resolve via shared Icon primitive (or documented slug fallback) — no ad-hoc `<img src>` for tintable SVGs in reference implementation
 - [ ] Avatar icon variant uses slug `user-single` at 16×16 with `var(--color-icon-white)`
+- [ ] Optional product logo renders only when `logo` is provided; uses shared **Icon** at 32×32 (no raw `<img>` in consumers)
 
 ## Storybook proof and codegen consumers
 
@@ -294,6 +327,7 @@ Masthead stories (`storybook-generated/ids/src/components/Masthead.stories.tsx`)
 |---|---|---|---|
 | Help (default story) | `help-circ-16` | 16×16 | inherited `var(--color-icon-white)` from `.avatarAction` / `.actionIconButton` |
 | Avatar icon variant | `user-single` | 16×16 | `var(--color-icon-white)` |
+| Product logo (optional) | `appic-dp-cloud-blue` | 32×32 | full-color glyph via `Icon variant="img"` |
 | App launcher trigger | `grid-square-9-16` | 16×16 | `var(--color-icon-white)` on masthead trigger |
 
 The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); stories and reference Masthead code only pass **`shapeName`**, **`color`**, and **size**. Do not copy `Icon.tsx` internals into consumer apps — honor the logical contract above.
@@ -336,7 +370,7 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 - Variable collection: UI Palettes, Typography tokens
 - Semantic mapping: CSS custom properties with `var(--)` prefix
 - Design source: Figma URL above + avatar node https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=10130-29944
-- Last live verification: Figma MCP — avatar initials/icon nodes `10130:29943`, `10130:29945`, `10130:29469` (2026-06-18)
+- Last live verification: Figma MCP — avatar initials/icon nodes `10130:29943`, `10130:29945`, `10130:29469`; product logo `10130:29512`, `10130:29521` (2026-06-19)
 - Component map entry: data/component-figma-map.json → component "Masthead" (category "Navigation"; node "9054-24736")
 - Storybook implementation: `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css`, `storybook-generated/ids/src/components/Masthead.stories.tsx`
 - Shared Icon primitive (Storybook / demo): `storybook/src/components/Icon.tsx` (`config/design_systems/ids.yaml` → `codegen.react.icon_component_module`)

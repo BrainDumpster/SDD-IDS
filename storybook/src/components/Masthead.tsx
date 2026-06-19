@@ -3,7 +3,7 @@ import { Badge } from "./Badge";
 import styles from "./Masthead.module.css";
 
 interface MastheadProps extends ComponentProps<"header"> {
-  /** Optional leading brand logo/icon. */
+  /** Optional product logo — render via shared Icon only (32×32); omitted when not supplied. */
   logo?: ReactNode;
   /** Required product title text/content, e.g. "Synapse". */
   productName: ReactNode;
