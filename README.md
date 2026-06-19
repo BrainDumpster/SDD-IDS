@@ -597,6 +597,7 @@ Prompt guidance:
 
 Before auto-generation, verify:
 
+- `### Slot geometry (Figma-verified)` table under Layout & Measurements (`python3 scripts/validate_spec_geometry_gate.py --component <slug>`).
 - `Codegen Contract` exists and is deterministic.
 - Light/Dark state structures are parallel.
 - Prop/event contract and defaults are explicit.

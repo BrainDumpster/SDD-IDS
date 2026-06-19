@@ -59,6 +59,27 @@ SYNAPSE_IDS_FORK_THEME_IMPORT_RULE = (
     "(or equivalent `[data-design-system=\"synapse\"]` scope) so programme layout aliases resolve."
 )
 
+SLOT_GEOMETRY_HEADING = "### Slot geometry (Figma-verified)"
+
+SLOT_GEOMETRY_TABLE_HEADER = (
+    "| Slot / layer | Property | Token / contract | Figma node | Live evidence |"
+)
+
+SLOT_GEOMETRY_BOILERPLATE = f"""{SLOT_GEOMETRY_HEADING}
+
+{SLOT_GEOMETRY_TABLE_HEADER}
+| --- | --- | --- | --- | --- |
+| TODO | border-radius | `var(--...)` | `nodeId` | `get_variable_defs` / `get_design_context` on that node |
+
+**Geometry authoring rules (mandatory):**
+- Document **each** interactive shell separately: field/control, focus ring, menu/panel, inner action wrappers.
+- Values must come from **live Figma** on the cited node (`get_variable_defs` preferred for radius bindings). Do **not** infer from `ids-theme.css`, sibling components (e.g. Button), or programme fork tables alone.
+- When Figma binds `Corner Radius/radius-none` (0px), record **0px / square** — absence of `border-radius` in `get_design_context` output is not sufficient proof; call `get_variable_defs` on the Container node.
+- Theme aliases (`--dropdown-control-radius`, etc.) document **implementation wiring** only after the Figma value is verified; alias resolved value must match the table.
+- Programme fork specs: verify **programme** nodes for overrides; IDS baseline geometry inherits from the IDS spec table unless a delta row exists.
+
+"""
+
 CODEGEN_BOOTSTRAP = """### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
 
@@ -103,6 +124,9 @@ NEW_SPEC_TEMPLATE = (
 ## Layout & Measurements
 - TODO: dimensions, padding, spacing, icon sizes, responsive width behavior
 
+"""
+    + SLOT_GEOMETRY_BOILERPLATE
+    + """
 ## Tokens
 ### Typography
 - TODO: headings, body text sizes/weights/line heights
@@ -160,6 +184,8 @@ NEW_SPEC_TEMPLATE = (
 - TODO: unknown variant/token/asset handling
 
 ### Validation checklist
+- [ ] **Slot geometry (Figma-verified)** table complete; every border-radius row cites a Figma node + MCP method
+- [ ] Theme aliases match geometry table (no alias-only documentation)
 - [ ] TODO: pass/fail items for codegen QA
 
 ## Source Mapping
@@ -206,6 +232,9 @@ PROGRAMME_IDS_FORK_TEMPLATE = (
 ## Layout & Measurements
 (Same flow as IDS except rows in **{programmeDisplayName} programme deltas**.)
 
+"""
+    + SLOT_GEOMETRY_BOILERPLATE
+    + """
 ## Tokens
 ### Surfaces and borders
 - TODO: programme-specific tokens only; inherit unchanged typography from IDS spec
@@ -237,6 +266,7 @@ PROGRAMME_IDS_FORK_TEMPLATE = (
     + """
 ### Validation checklist
 - [ ] IDS contract referenced; programme deltas table complete
+- [ ] **Slot geometry (Figma-verified)** table complete (inherit IDS rows + programme override rows)
 - [ ] Live Figma MCP evidence on programme nodes
 - [ ] Storybook `{storybookTitlePrefix}/{component}` with **Spec Accurate Design**
 
@@ -313,6 +343,7 @@ PROGRAMME_STANDALONE_TEMPLATE = (
     + """
 ### Validation checklist
 - [ ] Spec pattern: standalone; no IDS baseline section present
+- [ ] **Slot geometry (Figma-verified)** table complete; every border-radius row cites a Figma node + MCP method
 - [ ] Live Figma MCP evidence on programme nodes only
 - [ ] Storybook `{storybookTitlePrefix}/{component}` with **Spec Accurate Design** (if requested)
 

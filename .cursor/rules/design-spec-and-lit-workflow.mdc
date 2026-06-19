@@ -28,6 +28,7 @@ Implementation/code generation is optional and only done when explicitly request
   - node/frame metadata (structure + dimensions)
   - variable/token bindings for the target nodes
   - state/variant evidence from the referenced nodes or component sets
+  - **per-slot geometry** (`### Slot geometry (Figma-verified)` table under Layout & Measurements; radius rows require `get_variable_defs` on the cited Container/shell node)
 
 ## Design-System Agnostic Requirements
 - The workflow must not assume IDS/Synapse-only naming or folder structure.
@@ -59,6 +60,7 @@ For each `components/ids/<slug>/design-spec.md` (IDS) or `components/synapse/<sl
 
 ## Production-Ready Gate (must pass before marking spec ready)
 - Metadata is complete and points to validated source nodes.
+- **`### Slot geometry (Figma-verified)`** table exists under Layout & Measurements; every `border-radius` row cites a Figma node + `get_variable_defs` / `get_design_context` evidence (not theme-alias-only).
 - Composition/API section has explicit prop/event contracts and defaults.
 - Codegen Contract exists and is internally consistent with other sections.
 - **States (Light Theme)** holds the full state matrix when light and dark use the same semantic `var(--...)` names; **States (Dark Theme)** may use the standard pointer boilerplate (see Spec Authoring Rules) instead of duplicating identical tables.

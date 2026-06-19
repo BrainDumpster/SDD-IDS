@@ -77,16 +77,23 @@ Uses `scripts/design_spec_template.py` (`NEW_SPEC_TEMPLATE`) for canonical headi
    - variable/token bindings for those node(s)
    - variant/state evidence from main + elements/component-set nodes
 3. Validate Figma nodes/frames used for extraction.
-4. Extract variant axes, dimensions, spacing, typography, and token bindings.
-5. Document runtime behavior and accessibility requirements.
-6. Add deterministic fallback/error rules.
-7. Add pass/fail validation checklist.
+4. **Slot geometry gate:** Under Layout & Measurements, add `### Slot geometry (Figma-verified)` with one row per shell/layer (field, focus ring, menu, inner wrappers). For every `border-radius` row, call `get_variable_defs` on the cited Figma node — do not document radius from theme aliases or sibling components alone.
+5. Extract variant axes, dimensions, spacing, typography, and token bindings.
+6. Document runtime behavior and accessibility requirements.
+7. Add deterministic fallback/error rules.
+8. Add pass/fail validation checklist (include geometry gate items from template).
+
+Run geometry QA before marking **Status: active**:
+```bash
+python3 scripts/validate_spec_geometry_gate.py --component <slug>
+```
 
 ## Mandatory Live Verification Rule
 
 - For any "create design-spec", "update design-spec", or "verify design-spec" request, you MUST connect to Figma live (MCP/API) before finalizing.
 - Do not rely solely on existing repository spec text or user-provided URLs without fetching live node data.
 - Capture verification evidence in `Metadata` and `Source Mapping` (file key, node IDs, verification method).
+- Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements; radius rows require `get_variable_defs` on the cited node (see `docs/design-spec-authoring-contract.md`).
 
 ## Authoring Constraints
 

@@ -11,7 +11,7 @@ type Option = { id: string; label: string };
 
 function SingleSelectTrigger({
   value,
-  placeholder = "Select",
+  placeholder = "-Select-",
   size = "large",
   disabled = false,
   error = false,
@@ -199,10 +199,18 @@ export const MainScenarios: Story = {
   },
 };
 
+const MATRIX_MENU_ITEMS = Array.from({ length: 6 }, (_, i) => ({
+  id: `matrix-${i + 1}`,
+  value: "Option",
+  label: "Option",
+  selectable: true as const,
+  onClick: () => {},
+}));
+
 /**
  * Field States Matrix — matches Figma component matrix `11099:58099`.
  * Columns: Size Large (Empty / Filled) × Size Small (Empty / Filled).
- * Rows: Default, Hover, Show Selected, Focus, Disabled, Error.
+ * Rows: Default, Hover, Show Dropdown, Focus, Disabled, Error.
  */
 export const FieldStatesMatrix: Story = {
   render: () => {
@@ -221,18 +229,18 @@ export const FieldStatesMatrix: Story = {
       color: "#e8178a",
       textAlign: "center",
     };
-    const cellStyle: React.CSSProperties = { display: "grid", gap: 4, width: 240 };
+    const cellStyle: React.CSSProperties = { display: "grid", gap: 4, width: 332 };
     const helperStyle: React.CSSProperties = {
-      fontSize: 14,
-      lineHeight: "20px",
+      fontSize: "var(--font-size-body-2)",
+      lineHeight: "var(--font-line-height-line-height-20)",
       color: "var(--color-text-neutral)",
-      fontWeight: 500,
+      fontWeight: 400,
     };
     const errorMsgStyle: React.CSSProperties = {
-      fontSize: 14,
-      lineHeight: "20px",
+      fontSize: "var(--font-size-body-2)",
+      lineHeight: "var(--font-line-height-line-height-20)",
       color: "var(--color-text-critical)",
-      fontWeight: 500,
+      fontWeight: 400,
       display: "flex",
       alignItems: "center",
       gap: 8,
@@ -247,6 +255,7 @@ export const FieldStatesMatrix: Story = {
       hover?: boolean;
       focusVisible?: boolean;
       helperType?: "text" | "error";
+      showDropdown?: boolean;
     };
 
     const stateRows: { label: string; cells: CellDef[] }[] = [
@@ -269,12 +278,12 @@ export const FieldStatesMatrix: Story = {
         ],
       },
       {
-        label: "State: Show Selected",
+        label: "State: Show Dropdown",
         cells: [
-          { placeholder: "-Select-", size: "large" },
-          { value: "Option 2", size: "large" },
-          { placeholder: "-Select-", size: "small" },
-          { value: "Option 2", size: "small" },
+          { placeholder: "-Select-", size: "large", showDropdown: true },
+          { value: "Option 2", size: "large", showDropdown: true },
+          { placeholder: "-Select-", size: "small", showDropdown: true },
+          { value: "Option 2", size: "small", showDropdown: true },
         ],
       },
       {
@@ -306,43 +315,72 @@ export const FieldStatesMatrix: Story = {
       },
     ];
 
+    const renderCell = (cell: CellDef, rowLabel: string, key: number) => {
+      const trigger = (
+        <IdsDropdownTriggerShell
+          size={cell.size}
+          disabled={cell.disabled}
+          error={cell.error}
+          hover={cell.hover}
+          focusVisible={cell.focusVisible}
+          left={
+            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {cell.value ?? cell.placeholder ?? "-Select-"}
+            </span>
+          }
+        />
+      );
+
+      const helper =
+        cell.helperType === "error" ? (
+          <span style={errorMsgStyle}>
+            <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
+            Error message
+          </span>
+        ) : rowLabel !== "State: Error" && !cell.disabled ? (
+          <span style={helperStyle}>Helper text</span>
+        ) : null;
+
+      if (cell.showDropdown && !cell.disabled) {
+        return (
+          <div key={key} style={cellStyle}>
+            <DropdownMenu
+              trigger={trigger}
+              items={MATRIX_MENU_ITEMS}
+              selectionMode="single"
+              selectedValues={cell.value ? [cell.value] : []}
+              showSingleSelectRadio={false}
+              defaultOpen
+              maxHeight={280}
+              sideOffset={0}
+            />
+            {helper}
+          </div>
+        );
+      }
+
+      return (
+        <div key={key} style={cellStyle}>
+          {trigger}
+          {helper}
+        </div>
+      );
+    };
+
     return (
       <div style={{ display: "grid", gap: 24, padding: 24 }}>
         {/* Column headers */}
         <div style={{ display: "flex", gap: 12, paddingLeft: 118 }}>
-          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Large(40) — Empty</div>
-          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Large(40) — Filled</div>
-          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Small(32) — Empty</div>
-          <div style={{ ...colHeaderStyle, width: 240 }}>Size: Small(32) — Filled</div>
+          <div style={{ ...colHeaderStyle, width: 332 }}>Size: Large(40) — Empty</div>
+          <div style={{ ...colHeaderStyle, width: 332 }}>Size: Large(40) — Filled</div>
+          <div style={{ ...colHeaderStyle, width: 332 }}>Size: Small(32) — Empty</div>
+          <div style={{ ...colHeaderStyle, width: 332 }}>Size: Small(32) — Filled</div>
         </div>
 
         {stateRows.map((row) => (
           <div key={row.label} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
             <div style={annotationStyle}>{row.label}</div>
-            {row.cells.map((cell, i) => (
-              <div key={i} style={cellStyle}>
-                <IdsDropdownTriggerShell
-                  size={cell.size}
-                  disabled={cell.disabled}
-                  error={cell.error}
-                  hover={cell.hover}
-                  focusVisible={cell.focusVisible}
-                  left={
-                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {cell.value ?? cell.placeholder ?? "-Select-"}
-                    </span>
-                  }
-                />
-                {cell.helperType === "error" ? (
-                  <span style={errorMsgStyle}>
-                    <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
-                    Error message
-                  </span>
-                ) : row.label !== "State: Error" ? (
-                  <span style={helperStyle}>Helper text</span>
-                ) : null}
-              </div>
-            ))}
+            {row.cells.map((cell, i) => renderCell(cell, row.label, i))}
           </div>
         ))}
       </div>

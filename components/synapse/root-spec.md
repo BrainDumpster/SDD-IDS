@@ -750,7 +750,7 @@ IDS defines component layout aliases in `components/ids-theme.css`. Synapse over
 |---|---|---|
 | `--button-control-radius` | `var(--corner-radius-radius-2)` | `var(--corner-radius-radius-4)` |
 | `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` | `var(--corner-radius-radius-6)` |
-| `--dropdown-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-4)`** (4px) |
+| `--dropdown-control-radius` | `var(--corner-radius-radius-none)` (0px) | **`var(--corner-radius-radius-4)`** (4px) |
 | `--dropdown-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--dropdown-menu-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** (4px) |
 | `--checkbox-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-2)`** (2px; same as IDS) |
