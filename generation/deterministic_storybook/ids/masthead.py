@@ -24,6 +24,7 @@ def generate_ids_masthead_story(
     app_launcher_import_path = "../../../../storybook/src/components/AppLauncher"
     icon_import_path = "../../../../storybook/src/components/Icon"
 
+    design_spec_path = f"components/{options.design_system_slug}/masthead/design-spec.md"
     theme_import = storybook_theme_import_line(options.design_system_slug)
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ IdsMasthead as {component_name}, IdsMastheadActionButtonContainer, IdsMastheadActionIconButton, IdsMastheadAvatar }} from "{masthead_import_path}";
@@ -32,12 +33,24 @@ import {{ Icon }} from "{icon_import_path}";
 import userIcon from "../../../../assets/icons/user-single-16.svg";
 {theme_import}
 
+const DESIGN_SPEC_PATH = "{design_spec_path}";
 const helpIconEl = <Icon shapeName="help-circ-16" style={{{{ width: 16, height: 16 }}}} />;
 
 const meta: Meta<typeof {component_name}> = {{
   title: "{options.title_prefix}/Masthead",
   component: {component_name},
-  parameters: {{ layout: "fullscreen" }},
+  parameters: {{
+    layout: "fullscreen",
+    docs: {{
+      description: {{
+        component: [
+          `Spec-driven IDS masthead. Source: \\`${{DESIGN_SPEC_PATH}}\\`.`,
+          "Compose utility actions via `iconsSlot` — wire `onClick` on each child (no icon config array).",
+          "See **Developer usage** and **Composed icons slot** for code panels (hand-maintained in storybook/src).",
+        ].join(" "),
+      }},
+    }},
+  }},
 }};
 
 export default meta;
