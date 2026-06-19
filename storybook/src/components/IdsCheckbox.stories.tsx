@@ -29,7 +29,7 @@ export const SelectionStatesManual: Story = {
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" />
       <Checkbox label="Checked" checked />
-      <Checkbox label="Indeterminate" indeterminate />
+      <Checkbox label="Partial" indeterminate />
     </div>
   ),
 };
@@ -50,7 +50,7 @@ export const FigmaMainMatrix: Story = {
       <div />
       <div>Unselected</div>
       <div>Selected</div>
-      <div>Indeterminate</div>
+      <div>Partial</div>
       <div>Default</div>
       <Checkbox label="Option" />
       <Checkbox label="Option" checked />
@@ -72,7 +72,7 @@ export const DisabledStatesManual: Story = {
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" disabled />
       <Checkbox label="Checked" checked disabled />
-      <Checkbox label="Indeterminate" indeterminate disabled />
+      <Checkbox label="Partial" indeterminate disabled />
     </div>
   ),
 };
@@ -81,8 +81,18 @@ export const ValidationAndHelperTextManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 16 }}>
       <Checkbox label="Email notifications" helperText="Receive weekly summary updates." />
-      <Checkbox label="Required acknowledgement" error helperText="You must accept this option to continue." />
+      <Checkbox
+        label="Required acknowledgement"
+        error
+        helperText="You must accept this option to continue."
+      />
       <Checkbox label="Disabled option" disabled helperText="This option is unavailable for your role." />
+      <Checkbox
+        label="Checked with validation error"
+        checked
+        error
+        helperText="Error message only — control keeps selected styling."
+      />
     </div>
   ),
 };

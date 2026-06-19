@@ -191,6 +191,49 @@ export const SelectedDisabled: Story = {
 };
 
 
+export const ValidationAndHelperText: Story = {
+  render: () => (
+    <div className="sbRadioCol">
+      <IdsRadioButton
+        name="ids-radio-helper"
+        options={[
+          { value: "option1", label: "Option 1", helperText: "Recommended option." },
+          { value: "option2", label: "Option 2" },
+          { value: "option3", label: "Option 3" },
+        ]}
+        defaultValue="option1"
+      />
+      <IdsRadioButton
+        name="ids-radio-error-unselected"
+        options={[
+          {
+            value: "option1",
+            label: "Option 1",
+            error: true,
+            helperText: "Error message — ring stays strong border, not critical red.",
+          },
+          { value: "option2", label: "Option 2" },
+          { value: "option3", label: "Option 3" },
+        ]}
+      />
+      <IdsRadioButton
+        name="ids-radio-error-selected"
+        options={[
+          {
+            value: "option1",
+            label: "Option 1",
+            error: true,
+            helperText: "Error message only — selected dot keeps brand tokens.",
+          },
+          { value: "option2", label: "Option 2" },
+          { value: "option3", label: "Option 3" },
+        ]}
+        defaultValue="option1"
+      />
+    </div>
+  ),
+};
+
 export const ControlledExample: Story = {
   render: () => {
     const [selected, setSelected] = useState("option1");
