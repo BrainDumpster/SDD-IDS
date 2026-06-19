@@ -1,3 +1,37 @@
+## IDS baseline (layout, flow, contracts)
+
+Synapse **Tooltip** is an **ids-fork** of the IDS **Tooltip** family. Anatomy, arrow matrix (12 placements), closable content layout, interaction model, and runtime API **inherit IDS** unless listed in **Synapse programme deltas** below.
+
+| Property | Value |
+|---|---|
+| Pattern | `ids-fork` |
+| IDS baseline slug | `tooltip` |
+| IDS baseline spec | [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md) |
+| Storybook reference | `storybook/src/components/SynapseTooltip.tsx` (re-exports `IdsTooltip`) |
+| Verification method | IDS baseline + programme radius alias contract |
+
+### Synapse programme deltas (vs IDS)
+
+| Area | IDS | Synapse |
+|---|---|---|
+| Panel corner radius | `var(--tooltip-control-radius)` → `0` (square) | `var(--tooltip-control-radius)` → `var(--corner-radius-radius-8)` (`8px`) |
+| Theme CSS | `components/ids-theme.css` | `components/synapse-theme.css` |
+
+### Closable layout (inherited from IDS — no Synapse override)
+
+Generators **MUST** apply the IDS closable contract unchanged:
+
+- `closable=true` → horizontal `Content` row: `ContentColumn` (optional `Header` + `BodyContent`) + `CloseAction` sibling.
+- `ContentColumn`: `padding-right: var(--spacing-space-8)` so body/title wrap before the close icon column.
+- `CloseAction`: `12×12` button; shared `Icon` with `shapeName="ctrl-close-16"` at `12×12`.
+- `popupClosable` shell width `264px` (vs standard `240px`).
+
+See IDS spec **Closable content layout** and **Codegen Contract** for full deterministic structure.
+
+### IDS baseline resolution
+
+Generators **MUST** load and merge the IDS baseline contract from [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md) (`## Codegen Contract`) before applying Synapse programme overrides (panel radius only).
+
 <!-- auto:generated:start -->
 <!-- ds:inherits root-spec -->
 # Tooltip Design Spec
@@ -108,4 +142,8 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Figma variables | Extracted via `figma_get_local_variables` MCP tool |
 | Theme CSS | `components/synapse-theme.css` |
 | Component map | `data/synapse-component-figma-map.json` |
+
+## Changelog
+
+- **2026-06-19**: Added IDS baseline + closable layout inheritance (from IDS spec); documented Synapse programme delta (8px panel radius only).
 <!-- auto:generated:end -->

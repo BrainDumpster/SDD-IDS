@@ -2,6 +2,9 @@ import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SynapseTooltip } from "./SynapseTooltip";
 import {
+  SYNAPSE_TOOLTIP_CLOSE_CONTENT_GAP_TOKEN,
+  SYNAPSE_TOOLTIP_CLOSE_ICON_SHAPE,
+  SYNAPSE_TOOLTIP_CLOSE_ICON_SIZE_PX,
   SYNAPSE_TOOLTIP_CONTROL_RADIUS_ALIAS,
   SYNAPSE_TOOLTIP_DESIGN_SPEC_PATH,
   SYNAPSE_TOOLTIP_IDS_BASELINE_SPEC_PATH,
@@ -23,6 +26,7 @@ const meta: Meta<typeof SynapseTooltip> = {
           `Spec-driven Synapse Tooltip (IDS-fork). Source: \`${SYNAPSE_TOOLTIP_DESIGN_SPEC_PATH}\`.`,
           `IDS baseline layout/anatomy: \`${SYNAPSE_TOOLTIP_IDS_BASELINE_SPEC_PATH}\` (Figma \`${SYNAPSE_TOOLTIP_SPEC_ACCURATE_NODE_ID}\`).`,
           `Synapse programme delta: \`${SYNAPSE_TOOLTIP_CONTROL_RADIUS_ALIAS}\` → 8px panel radius (Figma \`${SYNAPSE_TOOLTIP_MAIN_NODE_ID}\`).`,
+          `Closable layout inherits IDS: \`${SYNAPSE_TOOLTIP_CLOSE_CONTENT_GAP_TOKEN}\` reserve + \`${SYNAPSE_TOOLTIP_CLOSE_ICON_SHAPE}\` at ${SYNAPSE_TOOLTIP_CLOSE_ICON_SIZE_PX}px via shared Icon.`,
           "Arrow geometry and 12-placement calibration inherit IDS; theme: `components/synapse-theme.css`.",
         ].join(" "),
       },
@@ -165,12 +169,32 @@ export const WithHeader: Story = {
 };
 
 export const Closable: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `Closable IDS-fork layout: body wraps before close column (\`${SYNAPSE_TOOLTIP_CLOSE_CONTENT_GAP_TOKEN}\` reserve); close uses \`${SYNAPSE_TOOLTIP_CLOSE_ICON_SHAPE}\` at ${SYNAPSE_TOOLTIP_CLOSE_ICON_SIZE_PX}px via Icon.`,
+      },
+    },
+  },
   args: {
     title: SYNAPSE_TOOLTIP_SAMPLE_TITLE,
-    content: "This tooltip stays open until the user clicks the close icon.",
+    content: SYNAPSE_TOOLTIP_SAMPLE_BODY,
     closable: true,
     side: "top",
     arrowAlign: "end",
+    children: "Hover over me",
+    onClose: () => undefined,
+  },
+};
+
+export const ClosableNoTitle: Story = {
+  name: "Closable / No Title",
+  args: {
+    title: "",
+    content: SYNAPSE_TOOLTIP_SAMPLE_BODY,
+    closable: true,
+    side: "top",
+    arrowAlign: "start",
     children: "Hover over me",
     onClose: () => undefined,
   },
