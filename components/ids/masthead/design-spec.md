@@ -15,7 +15,7 @@
   4. System Settings icon button (`setting-gear-16`)
   5. Help icon button (`help-circ-16`)
   6. App Launcher slot (`grid-square-9-16`)
-  7. Avatar / User Settings slot
+  7. Avatar / User Settings slot — initials (`User Settings=Initials`) or `user-single` icon at 16×16 (`User Settings=Icon`)
 - Focus ring for keyboard navigation (icon buttons + avatar button only)
 - Optional notification badges on Alerts and Jobs
 ## Layout & Measurements
@@ -25,7 +25,8 @@
 - Border radius: 0 (full-width masthead)
 - Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
 - Action icon button: 16px × 16px icon, padding 19px 16px
-- Avatar chip: 32px × 32px circle, padding 11px 8px
+- Avatar chip: 32px × 32px circle (`var(--scale-32)`), button padding `var(--padding-padding-12)` vertical / `var(--padding-padding-8)` horizontal
+- Avatar icon (icon variant): `user-single` slug, rendered at **16×16px** inside the 32×32 chip; color **`var(--color-icon-white)`** (#ffffff)
 - Minimum width: Full viewport width
 - Badge dimensions: `height: 18px`, `min-width: 18px`, `border-radius: 100px`
 - Badge padding (digit-based): 1 digit → fixed `width: 18px` (no padding); 2 digits → `padding: 0 4px`; 3+ digits → `padding: 0 5.5px`
@@ -128,6 +129,8 @@
 | User Section (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | User Section (Open / aria-expanded) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
 | User Section (Open + Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Avatar Chip (Initials) | transparent | `var(--color-border-white)` (#ffffff) 1px ring | `var(--color-text-white)` (#ffffff) | — |
+| Avatar Chip (Icon) | transparent | `var(--color-border-white)` (#ffffff) 1px ring | — | `user-single` at 16×16, `var(--color-icon-white)` (#ffffff) |
 | Status Indicator (Success) | `var(--color-background-alerting-success)` (#1b8500) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-green` (#1B8500) |
 | Status Indicator (Critical) | `var(--color-background-alerting-critical)` (#af0000) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-red` (#AF0000) |
 ## States (Dark Theme)
@@ -167,17 +170,25 @@
 - `avatarSlot: RenderableNode` (required)
 
 ### MastheadActionIconButton
-- `icon: ReactNode` (required) — use `Icon variant="mask"` (default) for SVG assets with hardcoded fills; use `variant="inline"` only for SVGs authored with `currentColor`
+- `icon: ReactNode` (required) — monochrome glyph: stable **slug**, **16×16px**, **`var(--color-icon-white)`** (see **Icon primitive and asset delivery**)
 - `aria-label: string` (required)
 - `aria-expanded?: boolean` — set when button controls an open panel/dropdown
 - `badgeCount?: number` — renders badge when > 0; displays `"99+"` when > 99
 - `badgeType?: "default" | "controls" | "critical" | "warning" | "disabled" | "success"` — defaults to `"critical"`. Use `"critical"` for Alerts, `"success"` for Jobs
 
 ### MastheadAvatar
-- `initials?: string`
-- `icon?: ReactNode` — inline SVG icon (16×16, `color-icon-white`); use instead of `imageSrc` for design system icons
-- `imageSrc?: string` — photo URL (fills full chip)
+- Figma source: `.Masthead-Element-UserInitials` (`10130:29944`) in IDS Design Library — variants `User Settings=Initials` (`10130:29943`) and `User Settings=Icon` (`10130:29945`)
+- Chip: 32×32 circle, `border: var(--border-width-border-1) solid var(--color-border-white)`, transparent fill on masthead brand background
+- `initials?: string` — centered in chip; Figma sample `"DT"`
+- `icon?: ReactNode` — icon variant; resolve **`user-single`** at **16×16** with **`var(--color-icon-white)`** via shared Icon primitive (see below)
+- `imageSrc?: string` — photo URL (fills full chip, no ring)
 - `imageAlt?: string`
+
+### Avatar icon variant (`User Settings=Icon`)
+- **Icon slug:** `user-single` (`assets/icons/user-single.svg`; Figma component `user-single`, node `44484:604`)
+- **Render size:** 16×16px
+- **Color token:** `var(--color-icon-white)` (#ffffff)
+- **Do not** use `user-single-16`, raw `<img src="*.svg">`, or `imageSrc` for design-system SVG glyphs
 
 ### Avatar chip typography (initials)
 - `font-size: var(--font-size-body-2)`
@@ -205,7 +216,7 @@
   4. System Settings (`setting-gear-16`)
   5. Help (`help-circ-16`)
   6. App Launcher (`grid-square-9-16`)
-  7. Avatar / User Settings
+  7. Avatar / User Settings — initials or `user-single` (16×16, `var(--color-icon-white)`)
 - Behavior contract:
   - brand area remains left-aligned and actions right-aligned
   - action buttons maintain 16x16 icon contract and tokenized hover/active states
@@ -213,6 +224,46 @@
 - Fallback/error rules:
   - missing logo falls back to product name-only rendering
   - missing avatar falls back to initials/avatar placeholder
+
+### Icon primitive and asset delivery (codegen)
+
+Use whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. The **logical contract** is slug + size + semantic color token — not a specific DOM technique (`mask`, `<img>`, inline SVG).
+
+**When the target library exposes an Icon / glyph component**
+- **Prefer it** for all masthead monochrome glyphs (action buttons, avatar icon variant, app launcher trigger) instead of hand-rolling asset paths or per-component asset globs in Masthead.
+- Pass a **stable asset slug** via whatever prop the library uses (`shapeName`, `name`, `icon`, …). Slugs must match the **asset contract** table below.
+- Map **color** from this spec's state tables (`var(--color-icon-white)` on masthead chrome). Set on the interactive host (button) and/or the icon primitive per library convention.
+- **Size:** action icons and avatar icon variant are **16×16px**; avatar chip ring remains **32×32px**.
+
+**When no Icon primitive exists**
+- Fallback remains slug-driven: inline SVG with `currentColor`, sprite, or framework asset pipeline — same slug, same **16×16** box, same token → color mapping. Do not rely on `color` CSS on `<img>` for fixed-fill SVG assets.
+
+**Asset contract (masthead icons — illustrative slugs)**
+
+| Slot | Slug | File |
+|---|---|---|
+| Global Search | `search-16` | `assets/icons/search-16.svg` |
+| Alerts | `alert-bell-16` | `assets/icons/alert-bell-16.svg` |
+| Jobs | `jobs-queue-stack` | `assets/icons/jobs-queue-stack.svg` |
+| System Settings | `setting-gear-16` | `assets/icons/setting-gear-16.svg` |
+| Help | `help-circ-16` | `assets/icons/help-circ-16.svg` |
+| App Launcher | `grid-square-9-16` | `assets/icons/grid-square-9-16.svg` |
+| Avatar (icon variant) | `user-single` | `assets/icons/user-single.svg` |
+
+Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the table is illustrative, not a closed set.
+
+**Codegen module resolution (this repository)**
+- React IDS: read `config/design_systems/ids.yaml` → `codegen.react.icon_component_module` (`storybook/src/components/Icon`).
+- Emit equivalent imports for Angular / Vue / Lit from that programme's design-system config when present; otherwise infer from existing project components.
+
+**IDS / Storybook reference implementation (demo + spec validation only)**
+- Shared **`Icon`** in `storybook/src/components/Icon.tsx` resolves `shapeName` → `assets/icons/*.svg` and applies tinting internally (default **`variant` `mask`** for monochrome assets; **`variant` `img`** only for fixed multi-color glyphs — not used on masthead).
+- **Spec Generated** stories and `storybook/src/components/Masthead.tsx` compose masthead icons **through `Icon`** for visual proof against this spec. That component choice validates slug/size/token contracts; downstream app codegen may use a different Icon implementation as long as the logical contract holds.
+- Example (Storybook reference only):
+  ```tsx
+  <Icon shapeName="user-single" color="var(--color-icon-white)" style={{ width: 16, height: 16 }} />
+  ```
+
 ### Validation checklist
 - [ ] Implement masthead navigation functionality
 - [ ] Add proper focus management
@@ -224,23 +275,39 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
+- [ ] Masthead monochrome icons resolve via shared Icon primitive (or documented slug fallback) — no ad-hoc `<img src>` for tintable SVGs in reference implementation
+- [ ] Avatar icon variant uses slug `user-single` at 16×16 with `var(--color-icon-white)`
+
+## Storybook proof and codegen consumers
+
+**Spec Generated** stories prove that `design-spec.md` is machine-consumable. Downstream codegen must:
+
+1. Read this spec (and `components/ids-theme.css`) as the single source of truth for slug, size, and token contracts.
+2. Emit styles **only** via semantic `var(--…)` from the theme file.
+3. Keep `storybook/src/components/Masthead.tsx` aligned with the spec when drift is found (stories validate the contract).
+
+### Icon usage in Spec Generated stories (demo + validation only)
+
+Masthead stories (`storybook-generated/ids/src/components/Masthead.stories.tsx`) render all glyphs through the shared **`Icon`** component (`storybook/src/components/Icon.tsx`) — not by inlining `maskImage` / `<img>` in story files:
+
+| Slot | `shapeName` | Size | Color token |
+|---|---|---|---|
+| Help (default story) | `help-circ-16` | 16×16 | inherited `var(--color-icon-white)` from `.avatarAction` / `.actionIconButton` |
+| Avatar icon variant | `user-single` | 16×16 | `var(--color-icon-white)` |
+| App launcher trigger | `grid-square-9-16` | 16×16 | `var(--color-icon-white)` on masthead trigger |
+
+The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); stories and reference Masthead code only pass **`shapeName`**, **`color`**, and **size**. Do not copy `Icon.tsx` internals into consumer apps — honor the logical contract above.
+
 ## Implementation Notes
 
-### Icon color
-- All icons on the masthead must use `var(--color-icon-white)`, **not** `var(--color-text-white)`.
-- Icon buttons and avatar buttons set `color: var(--color-icon-white)` on the root element so `currentColor` resolves correctly for child icons.
-- SVG assets in `assets/icons/` (e.g. `user-single-16.svg`, `grid-square-9-16.svg`) contain hardcoded `fill` values — **do not use `variant="inline"`** for these. Use `variant="mask"` (default) so CSS masking with `background-color: currentColor` applies the correct white color.
-- Only use `Icon variant="inline"` for SVGs that are authored with `currentColor` strokes/fills (e.g. custom inline SVGs). Ensure SVG paths do not have explicit fill values.
+### Icon color (framework-agnostic)
+- All masthead monochrome icons use **`var(--color-icon-white)`**, not `var(--color-text-white)`.
+- Interactive hosts (icon buttons, avatar button, app launcher masthead trigger) set `color: var(--color-icon-white)` so tintable glyphs inherit the correct token.
 
 ### Action icons and badge rendering
-- Each action icon button uses a specific icon slug from `assets/icons/`. The correct slug per slot:
-  - Global Search: `shapeName="search-16"`
-  - Alerts: `shapeName="alert-bell-16"` — paired with `badgeType="critical"` (red)
-  - Jobs: `shapeName="jobs-queue-stack"` — paired with `badgeType="success"` (green)
-  - System Settings: `shapeName="setting-gear-16"`
-  - Help: `shapeName="help-circ-16"`
-- All action icons render at `16×16px` and must use `variant="mask"` (default) — these SVG assets contain hardcoded `fill` values and cannot be recolored via `variant="inline"`.
-- Use the shared `Badge` component (`Badge.tsx`) — do **not** hand-roll badge CSS.
+- Slugs per slot: see **Icon primitive and asset delivery → Asset contract**.
+- All action icons render at **16×16px**.
+- Use the shared **`Badge`** component — do **not** hand-roll badge CSS.
 - `badgeCount > 0` renders the badge; `badgeCount` of 0 or `undefined` hides it entirely.
 - Values above 99 are capped and displayed as `"99+"`.
 - `badgeType` controls the badge color variant (defaults to `"critical"`). Always pass `badgeType="success"` for the Jobs icon and `badgeType="critical"` for the Alerts icon.
@@ -256,17 +323,20 @@
 - `[aria-expanded="true"]:hover` → `masthead-brand-strong` background (hover always wins over open state).
 
 ### Avatar icon vs photo
-- Use the `icon` prop (inline SVG, 16×16, `color-icon-white`) for design system icons (e.g. `user-single-16`).
-- Use the `imageSrc` prop for actual user photos — fills the full 32×32 chip.
-- Do not use `<img src="*.svg">` for masthead icons; SVG served via `<img>` cannot be recolored through CSS.
+- **Icon variant:** slug **`user-single`**, **16×16px**, **`var(--color-icon-white)`** via shared Icon primitive (Storybook: `Icon` + `shapeName`).
+- **Initials variant:** `initials` prop; text **`var(--color-text-white)`** inside 32×32 white ring.
+- **Photo variant:** `imageSrc` for user photos — fills 32×32 chip (no ring).
+- Do not use `<img src="*.svg">` or `imageSrc` for design-system SVG glyphs.
 
 ### AppLauncher integration
-- When using `AppLauncher` with `triggerVariant="masthead"`, the trigger button must set `color: var(--color-icon-white)` — not `var(--color-text-white)`.
-- The app launcher grid icon (`grid-square-9-16`) has a hardcoded `fill` in the SVG asset. Do not use `variant="inline"` — use `variant="mask"` (default) so the icon inherits `color-icon-white` via `currentColor`.
+- Masthead trigger: `color: var(--color-icon-white)`; glyph slug **`grid-square-9-16`**, **16×16** — compose via shared **`Icon`** in Storybook reference (`AppLauncher.tsx`).
 
 ## Source Mapping
-- Figma component: Masthead (9054-24736)
+- Figma component: Masthead (9054-24736) — exploration file; avatar element verified against IDS Design Library `.Masthead-Element-UserInitials` (`10130:29944`, file `0bHk3XhrjFhowgFkz9yLr4`)
 - Variable collection: UI Palettes, Typography tokens
 - Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
+- Design source: Figma URL above + avatar node https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=10130-29944
+- Last live verification: Figma MCP — avatar initials/icon nodes `10130:29943`, `10130:29945`, `10130:29469` (2026-06-18)
 - Component map entry: data/component-figma-map.json → component "Masthead" (category "Navigation"; node "9054-24736")
+- Storybook implementation: `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css`, `storybook-generated/ids/src/components/Masthead.stories.tsx`
+- Shared Icon primitive (Storybook / demo): `storybook/src/components/Icon.tsx` (`config/design_systems/ids.yaml` → `codegen.react.icon_component_module`)
