@@ -66,6 +66,8 @@ function isConfigureEnabled(
 }
 
 function DefaultMasthead({ productName }: { productName: string }) {
+  const icon16 = { width: 16, height: 16 } as const;
+
   return (
     <Masthead
       productName={productName}
@@ -73,11 +75,11 @@ function DefaultMasthead({ productName }: { productName: string }) {
         <MastheadActionButtonContainer>
           <MastheadActionIconButton
             aria-label="Alerts"
-            icon={<Icon shapeName="alert-bell-16" style={{ width: 16, height: 16 }} />}
+            icon={<Icon shapeName="alert-bell-16" style={icon16} />}
           />
           <MastheadActionIconButton
             aria-label="Help"
-            icon={<Icon shapeName="help-circ-16" style={{ width: 16, height: 16 }} />}
+            icon={<Icon shapeName="help-circ-16" style={icon16} />}
           />
         </MastheadActionButtonContainer>
       }

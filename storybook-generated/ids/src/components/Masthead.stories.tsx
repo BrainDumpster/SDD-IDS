@@ -4,12 +4,47 @@
 import React from "react";
 import "../../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { IdsMasthead as IdsMasthead, IdsMastheadActionButtonContainer, IdsMastheadActionIconButton, IdsMastheadAvatar } from "../../../../storybook/src/components/IdsMasthead";
+import {
+  IdsMasthead,
+  IdsMastheadActionButtonContainer,
+  IdsMastheadActionIconButton,
+  IdsMastheadAvatar,
+} from "../../../../storybook/src/components/IdsMasthead";
 import { AppLauncher } from "../../../../storybook/src/components/AppLauncher";
 import { Icon } from "../../../../storybook/src/components/Icon";
-import userIcon from "../../../../assets/icons/user-single-16.svg";
 
-const helpIconEl = <Icon shapeName="help-circ-16" style={{ width: 16, height: 16 }} />;
+const icon16 = { width: 16, height: 16 } as const;
+
+const helpIcon = <Icon shapeName="help-circ-16" style={icon16} />;
+const userIcon = (
+  <Icon shapeName="user-single" color="var(--color-icon-white)" style={icon16} />
+);
+
+const productLogo = (
+  <Icon
+    shapeName="appic-dp-cloud-blue"
+    variant="img"
+    title="Product logo"
+    style={{ width: 32, height: 32 }}
+  />
+);
+
+const defaultHelpSlot = (
+  <IdsMastheadActionButtonContainer>
+    <IdsMastheadActionIconButton aria-label="Help" icon={helpIcon} />
+  </IdsMastheadActionButtonContainer>
+);
+
+const defaultAppLauncher = (
+  <AppLauncher
+    triggerVariant="masthead"
+    sideOffset={0}
+    products={[
+      { id: "p1", name: "Product Name 1", href: "#" },
+      { id: "p2", name: "Product Name 2", href: "#" },
+    ]}
+  />
+);
 
 const meta: Meta<typeof IdsMasthead> = {
   title: "Spec Generated/IDS/Masthead",
@@ -20,28 +55,42 @@ const meta: Meta<typeof IdsMasthead> = {
 export default meta;
 type Story = StoryObj<typeof IdsMasthead>;
 
+/** Figma `User Settings=Initials` (`10130:29943`) — 32×32 white ring, body-2 initials. */
 export const Default: Story = {
   args: {
     productName: "Synapse",
-    iconsSlot: <IdsMastheadActionButtonContainer><IdsMastheadActionIconButton aria-label="Help" icon={helpIconEl} /></IdsMastheadActionButtonContainer>,
-    avatarSlot: <IdsMastheadAvatar initials="YK" />,
+    iconsSlot: defaultHelpSlot,
+    avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
   },
 };
 
 export const WithAppLauncherExample: Story = {
   args: {
     productName: "Synapse",
-    iconsSlot: <IdsMastheadActionButtonContainer><IdsMastheadActionIconButton aria-label="Help" icon={helpIconEl} /></IdsMastheadActionButtonContainer>,
-    appLauncherSlot: <AppLauncher triggerVariant="masthead" sideOffset={0} products={[{ id: "p1", name: "Product Name 1", href: "#" }, { id: "p2", name: "Product Name 2", href: "#" }]} />,
-    avatarSlot: <IdsMastheadAvatar initials="YK" />,
+    iconsSlot: defaultHelpSlot,
+    appLauncherSlot: defaultAppLauncher,
+    avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
   },
 };
 
+/** Figma `Show Product Icon=Yes` (`10130:29512`) — optional 32×32 product logo via Icon. */
+export const WithProductLogo: Story = {
+  args: {
+    logo: productLogo,
+    productName: "Product Name",
+    iconsSlot: defaultHelpSlot,
+    appLauncherSlot: defaultAppLauncher,
+    avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
+  },
+};
+
+/** Figma `User Settings=Icon` (`10130:29945`) — `user-single` 16×16, `var(--color-icon-white)`. */
 export const UserIconAvatar: Story = {
   args: {
     productName: "Synapse",
-    iconsSlot: <IdsMastheadActionButtonContainer><IdsMastheadActionIconButton aria-label="Help" icon={helpIconEl} /></IdsMastheadActionButtonContainer>,
-    avatarSlot: <IdsMastheadAvatar imageSrc={userIcon} imageAlt="User profile" />,
+    iconsSlot: defaultHelpSlot,
+    appLauncherSlot: defaultAppLauncher,
+    avatarSlot: <IdsMastheadAvatar icon={userIcon} aria-label="User settings" />,
   },
 };
 
@@ -124,4 +173,3 @@ export const TokenInspector: Story = {
     </div>
   ),
 };
-

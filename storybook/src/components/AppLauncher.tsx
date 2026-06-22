@@ -388,10 +388,10 @@ export function AppLauncher({
         <Icon
           shapeName="grid-square-9-16"
           className={styles.triggerIcon}
-          variant="inline"
+          variant={triggerVariant === "masthead" ? "mask" : "inline"}
           color={
             triggerVariant === "masthead"
-              ? "var(--color-text-white)"
+              ? undefined
               : "var(--color-text-neutral-strong)"
           }
         />
