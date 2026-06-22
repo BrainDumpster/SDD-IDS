@@ -1,12 +1,14 @@
 /* IDS Dropdown / Combobox trigger shell — tokens from Figma `12730:157002` + matrix `12608:95982`. */
 
 .field {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 300px;
   max-width: 700px;
   min-width: 186px;
+  min-height: 40px;
   box-sizing: border-box;
   border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-accessible));
   background: var(--trigger-bg, var(--color-background-component));
@@ -21,6 +23,7 @@
 
 .field[data-size="small"] {
   --trigger-py: var(--padding-padding-6);
+  min-height: 32px;
 }
 
 .field[data-disabled="true"] {
@@ -38,10 +41,13 @@
   --trigger-border: var(--color-border-strong);
 }
 
-.field[data-focus="true"]:not([data-disabled="true"]) {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-  outline-offset: 4px;
-  border-radius: var(--dropdown-focus-ring-radius);
+.field[data-focus="true"]:not([data-disabled="true"])::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 /* Menu open: square bottom edge so popup bottom radius meets field (Figma attached dropdown). */
@@ -68,5 +74,5 @@
 }
 
 .field[data-disabled="true"] .caretWrap {
-  color: var(--color-icon-disabled);
+  color: var(--color-border-disabled);
 }

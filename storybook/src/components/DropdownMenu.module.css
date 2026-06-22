@@ -273,6 +273,11 @@
   gap: var(--spacing-space-16);
 }
 
+.item[data-selection-mode="single"] {
+  padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10) var(--padding-padding-16);
+  min-height: 44px;
+}
+
 .item:hover:not([data-disabled]) {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral);
@@ -289,6 +294,14 @@
     inset 0 -1px 0 0 var(--color-border-brand-base);
 }
 
+.item[data-selection-mode="single"]:hover:not([data-disabled]),
+.item[data-selection-mode="single"][data-highlighted]:not([data-disabled]) {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-neutral);
+  outline: 1px solid var(--color-border-brand-neutral);
+  box-shadow: none;
+}
+
 .item[data-focus-visible] {
   outline: none;
 }
@@ -297,12 +310,34 @@
   outline: none;
 }
 
+.item[data-selection-mode="single"]:focus-visible {
+  outline: 1px solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.item[data-selection-mode="single"]:focus-visible .radioOuter::after {
+  content: none;
+}
+
 .item[data-disabled],
 .item:disabled {
   color: var(--color-text-disabled);
   cursor: not-allowed;
   background: var(--color-background-gray-lighter);
   box-shadow: none;
+}
+
+.item[data-selection-mode="single"]:has(.radioOuter)[data-disabled],
+.item[data-selection-mode="single"]:has(.radioOuter):disabled {
+  background: var(--color-background-component);
+  outline: none;
+}
+
+.item[data-selection-mode="single"]:not(:has(.radioOuter))[data-disabled],
+.item[data-selection-mode="single"]:not(:has(.radioOuter)):disabled {
+  background: var(--color-background-gray-lighter);
+  outline: 1px solid var(--color-border-disabled);
 }
 
 .item[data-selectable="false"][data-disabled],
@@ -317,8 +352,8 @@
   display: flex;
   align-items: center;
   padding: var(--padding-padding-6) var(--padding-padding-16);
-  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  color: var(--color-text-neutral-strong);
+  border-top: var(--border-width-border-default) solid var(--color-border-accessible);
+  color: var(--color-text-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
 }
@@ -339,12 +374,19 @@
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  padding: var(--padding-padding-8) 0;
+  border-top: var(--border-width-border-default) solid var(--color-border-accessible);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
+}
+
+.footerActionButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-2);
 }
 
 .leadingControl {
@@ -445,6 +487,20 @@
     inset 0 -1px 0 0 var(--color-border-brand-neutral);
 }
 
+.item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected] {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+  outline: 1px solid var(--color-border-brand-neutral);
+  box-shadow: none;
+}
+
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
+  background: var(--color-background-component);
+  color: var(--color-text-brand-strong);
+  outline: none;
+  box-shadow: none;
+}
+
 .item[data-selection-mode="multi"][data-selected] {
   background: var(--color-background-component);
   color: var(--color-text-neutral);
@@ -462,6 +518,13 @@
   box-shadow:
     inset 0 1px 0 0 var(--color-border-brand-neutral),
     inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
+.item[data-selection-mode="single"]:active:not([data-disabled]) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  outline: 1px solid var(--color-border-brand-neutral);
+  box-shadow: none;
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */
@@ -490,6 +553,11 @@
   inset: -4px;
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: 50%;
+}
+
+.item[data-selection-mode="single"][data-focus-visible] .radioOuter::after,
+.item[data-selection-mode="single"]:focus-visible .radioOuter::after {
+  content: none;
 }
 
 /* Selected hover/press: radio ring follows strong border state. */

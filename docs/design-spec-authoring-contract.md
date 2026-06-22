@@ -88,6 +88,30 @@ Before finalizing a new or updated spec:
 
 Minimum checks per node: structure/dimensions, variable/token bindings, variant/state evidence.
 
+### Slot geometry gate (mandatory — prevents radius / shell drift)
+
+Every spec **must** include `### Slot geometry (Figma-verified)` under **Layout & Measurements** (scaffold: `scripts/design_spec_template.py` → `SLOT_GEOMETRY_BOILERPLATE`).
+
+| Column | Requirement |
+|--------|-------------|
+| Slot / layer | Anatomy slot or Figma layer name (e.g. `FieldContainer`, `FocusRing`) |
+| Property | e.g. `border-radius`, `min-height`, `padding` when codegen-critical |
+| Token / contract | Semantic token or alias **after** Figma value is known |
+| Figma node | Concrete node id (e.g. `12579:77895`) |
+| Live evidence | MCP method used (`get_variable_defs` **required** for radius bindings) |
+
+**Forbidden:**
+- Documenting field/menu `border-radius` from `ids-theme.css`, Button convention, or programme fork tables **without** a Figma node row.
+- Treating missing `border-radius` in `get_design_context` code as proof of 0px — always call `get_variable_defs` on the Container node.
+
+**Enforcement:**
+```bash
+python3 scripts/validate_spec_geometry_gate.py --component dropdown-single-select
+python3 scripts/validate_spec_geometry_gate.py --all --warn-only   # audit repo
+```
+
+Production-ready specs must pass `SpecContractParser.validate_slot_geometry_gate()` with zero errors.
+
 ## Authoring constraints
 
 - Prefer semantic tokens: `` `var(--token-name)` ``.

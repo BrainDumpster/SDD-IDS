@@ -58,6 +58,23 @@
 - Search dismiss control:
   - visible when query length `> 0`; right-aligned inside search field row.
   - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-accessible)`.
+- Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
+- Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
+- Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
+
+### Slot geometry (Figma-verified)
+
+| Slot / layer | Property | Token / contract | Figma node | Live evidence |
+| --- | --- | --- | --- | --- |
+| `FieldContainer` (combobox single-select) | `border-radius` | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (0px) | `29393:149487` | Figma MCP `get_variable_defs`: `Corner Radius/radius-none` |
+| `FieldContainer` (combobox multi-select) | `border-radius` | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (0px) | `12730:157290` | Figma MCP `get_variable_defs`: `Corner Radius/radius-none` |
+| `FocusRing` (`::after`, single-select) | `border-radius` | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` (4px) | `29393:149470` | Figma MCP `get_design_context` on `29393:149462` |
+| `MenuPopup` (detached) | `border-radius` | `var(--dropdown-menu-radius)` → `0` | `29393:143195` | Figma MCP `get_metadata` (square menu shell) |
+| `SearchRow` inner field | `border-radius` | `0` (`radius-none`) | `29393:141946` | Figma MCP `get_variable_defs`: `Corner Radius/radius-none` |
+| `OptionRow` leading `checkboxOuter` (multi) | `border-radius` | `var(--checkbox-control-radius)` → `var(--corner-radius-radius-2)` (2px) | `29392:48749` | Figma MCP combobox option matrix `29392:48763` |
+
+**Anti-drift rule:** Combobox field shells are square (`radius-none`) for both single- and multi-select variants. Theme alias must match Figma Container nodes, not Button convention.
+
 ## Tokens
 - **Core field tokens**
   - `var(--color-background-component)`
@@ -84,7 +101,7 @@
   - `var(--color-icon-brand-base)`
   - `var(--color-icon-white)`
 - **Shape/space tokens**
-  - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-2)`)
+  - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
   - `var(--dropdown-menu-radius)` (detached menu; IDS → `0`)
   - `var(--corner-radius-radius-2)` (checkbox corner)
@@ -212,6 +229,8 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Empty `options` renders an empty-state list panel without runtime crash.
 
 ### Validation checklist
+- [x] **Slot geometry (Figma-verified)** table complete; field containers `29393:149487` + `12730:157290` use `radius-none`
+- [x] `--dropdown-control-radius` in `ids-theme.css` matches geometry table (`radius-none`)
 - [ ] Combobox single-select states match `29393:149209`.
 - [ ] Combobox multi-select states match `12730:157002`.
 - [ ] Size/state matrix parity for `Large (40)` and `Small (32)` matches `43415:176785`.
@@ -224,3 +243,4 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - **Primary nodes:** `29393:149209` (single), `12730:157002` (multi).
 - **Element nodes:** `29393:143195`, `29716:46779`, `12730:120316`.
 - **Figma MCP evidence:** `get_design_context` + `get_variable_defs` on all listed nodes.
+- **Last live verification:** 2026-06-19 (geometry audit: field `29393:149487`, `12730:157290` `radius-none`; focus `29393:149470`; search `29393:141946`).

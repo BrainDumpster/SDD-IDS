@@ -55,6 +55,23 @@
   - scrollable region for long sets (overflow menu variants).
 - Selected count badge:
   - uses IDS Badge size/shape contract (`18px` pill).
+- Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
+- Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
+- Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
+
+### Slot geometry (Figma-verified)
+
+| Slot / layer | Property | Token / contract | Figma node | Live evidence |
+| --- | --- | --- | --- | --- |
+| `FieldContainer` | `border-radius` | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (0px) | `12608:96588` | Figma MCP `get_variable_defs`: `Corner Radius/radius-none` |
+| `FocusRing` (`::after`) | `border-radius` | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` (4px) | `12608:96619` | Figma MCP `get_design_context` on `12608:94149`: focus child `radius-4` |
+| `MenuPopup` (detached) | `border-radius` | `var(--dropdown-menu-radius)` → `0` | `12579:19725` | Figma MCP `get_metadata` (square menu shell) |
+| `SearchRow` inner field | `border-radius` | `0` (`radius-none`) | `29393:141946` | Figma MCP `get_variable_defs`: `Corner Radius/radius-none` |
+| `OptionRow` leading `checkboxOuter` | `border-radius` | `var(--checkbox-control-radius)` → `var(--corner-radius-radius-2)` (2px) | `12363:13866` | Inherit IDS checkbox spec; Figma option matrix |
+| `FooterActionButton` (inner span) | `border-radius` | `var(--corner-radius-radius-2)` (2px) | `29392:48797` | Figma MCP `get_design_context` (shared menu action row) |
+
+**Anti-drift rule:** Field shell is square (`radius-none`). Do not document field radius from Button/`radius-2` convention or theme alias alone.
+
 ## Tokens
 - Field/menu tokens:
   - `var(--color-background-component)`
@@ -81,7 +98,7 @@
   - `var(--color-icon-alerting-critical)`
   - `var(--color-text-critical)`
 - Geometry/spacing:
-  - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-2)`)
+  - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
   - `var(--dropdown-menu-radius)` (detached menu; IDS → `0`)
   - `var(--corner-radius-radius-2)` (checkbox corner)
@@ -228,6 +245,8 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Unknown labels/events fallback to defaults/no-op callbacks.
 
 ### Validation checklist
+- [x] **Slot geometry (Figma-verified)** table complete; field `radius-none` on `12608:96588`
+- [x] `--dropdown-control-radius` in `ids-theme.css` matches geometry table (`radius-none`)
 - [ ] Main multi-select examples match `43406:39370`.
 - [ ] Component matrix matches `12608:93872`.
 - [ ] Menu structure matches `12579:19725`.
@@ -245,6 +264,8 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Badge dependency spec: `components/ids/badge/design-spec.md`
 - Tooltip dependency spec: `components/ids/tooltip/design-spec.md`
 - Checkbox dependency spec: `components/ids/checkbox/design-spec.md`
+- Verification method: Figma MCP (`get_design_context` + `get_variable_defs`)
+- Last live verification: 2026-06-19 (geometry audit: field `12608:96588` `radius-none`; focus `12608:96619`; search `29393:141946`)
 
 ---
 

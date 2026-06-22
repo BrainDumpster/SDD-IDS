@@ -379,7 +379,7 @@ export function DropdownMenu({
                 className={styles.footerAction}
                 onClick={() => onFooterActionClick?.()}
               >
-                {footerActionLabel}
+                <span className={styles.footerActionButton}>{footerActionLabel}</span>
               </button>
             ) : null}
           </Menu.Popup>

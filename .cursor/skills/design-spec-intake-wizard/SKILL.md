@@ -91,8 +91,9 @@ Execute in order:
 7. Fill all required `##` sections; prefer `var(--...)` tokens from programme theme / root-spec.
 8. Apply dark-states dedupe per authoring contract when light/dark tokens match.
 9. Record verification evidence in **Metadata** and **Source Mapping**.
-10. Set **Status: draft** until validation checklist passes; do not mark `active` with TBD.
-11. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (audit only).
+10. Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements (`get_variable_defs` on cited nodes for radius rows).
+11. Set **Status: draft** until validation checklist passes; do not mark `active` with TBD.
+12. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (audit only).
 
 ---
 
