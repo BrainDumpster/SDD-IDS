@@ -97,13 +97,13 @@
 .tone_minor.emphasis_light {
   background: var(--color-background-alerting-minor);
   border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-warning);
+  color: #252525;
 }
 
 .tone_major.emphasis_light {
   background: var(--color-background-alerting-major);
   border-color: var(--color-border-alerting-major-white);
-  color: var(--color-text-white);
+  color: #252525;
 }
 
 .tone_critical.emphasis_light {
@@ -127,13 +127,13 @@
 .tone_minor.emphasis_strong {
   background: var(--color-background-alerting-minor);
   border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-warning);
+  color: #252525;
 }
 
 .tone_major.emphasis_strong {
   background: var(--color-background-alerting-major);
   border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  color: #252525;
 }
 
 .tone_critical.emphasis_strong {
