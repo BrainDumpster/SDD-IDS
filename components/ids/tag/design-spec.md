@@ -19,7 +19,7 @@
 - `TagEditableField?` (text focus surface for editable mode)
 ## Layout & Measurements
 - Two size tracks verified:
-  - `small`: height `20px` (read-only baseline)
+  - `small`: height `20px` (read-only baseline) - border included in height using box-sizing: border-box
   - `large`: height `28px` (clickable/editable/badge patterns)
 - Read-only sample width: `40px`.
 - Clickable sample width: `48px`.

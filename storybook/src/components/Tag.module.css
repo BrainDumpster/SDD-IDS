@@ -18,6 +18,11 @@
   font-weight: 400;
 }
 
+.readOnly.sm {
+  box-sizing: border-box;
+  height: 20px;
+}
+
 .lg {
   height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
