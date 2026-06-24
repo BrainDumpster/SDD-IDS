@@ -37,7 +37,7 @@
 }
 
 .default {
-  background: var(--color-background-alerting-info, #005ece);
+  background: #0672CB;
   border-color: var(--color-border-white, #ffffff);
   color: var(--color-text-white, #ffffff);
 }

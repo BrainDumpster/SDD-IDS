@@ -42,7 +42,7 @@ Optional slots:
 Required semantic tokens from Figma variable extraction:
 - `var(--color-text-white)` = `#ffffff`
 - `var(--color-text-black)` = `#252525`
-- `var(--color-background-alerting-info)` = `#005ece`
+- `var(--color-background-alerting-info)` = `#0672CB` (updated for IDS spec)
 - `var(--color-background-alerting-critical)` = `#af0000`
 - `var(--color-background-alerting-minor)` = `#ffc700`
 - `var(--color-background-alerting-success)` = `#1b8500`
