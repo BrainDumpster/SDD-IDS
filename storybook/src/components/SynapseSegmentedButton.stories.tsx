@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SynapseSegmentedButton } from "./SynapseSegmentedButton";
 import {
   SYNAPSE_SEGMENTED_BUTTON_DESIGN_SPEC_PATH,
+  SYNAPSE_SEGMENTED_BUTTON_ICON_SPEC_ACCURATE_NODE_ID,
   SYNAPSE_SEGMENTED_BUTTON_SAMPLE_OPTIONS,
   SYNAPSE_SEGMENTED_BUTTON_SPEC_ACCURATE_NODE_ID,
   SYNAPSE_SEGMENTED_BUTTON_STATE_MATRIX_NODE_ID,
@@ -78,6 +79,37 @@ export const IconTwoOptions: Story = {
         items={[
           { value: "list", icon: "view-hamburger", ariaLabel: "List view" },
           { value: "grid", icon: "view-sort-grid-solid", ariaLabel: "Grid view" },
+        ]}
+        value={value}
+        onChange={setValue}
+      />
+    );
+  },
+};
+
+/** Figma icon × 3 (`42113:67622` / IDS Dev Mode **106×39px**). */
+export const IconThreeOptions: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `Icon variant with three options — Figma \`${SYNAPSE_SEGMENTED_BUTTON_ICON_SPEC_ACCURATE_NODE_ID}\` (inherits IDS geometry: **39px** shell, **33px** segment row, **16×14** glyph).`,
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState("tree");
+    return (
+      <SynapseSegmentedButton
+        type="icon"
+        ariaLabel="Content view"
+        items={[
+          { value: "list", icon: "view-hamburger", ariaLabel: "List view" },
+          { value: "tree", icon: "nav-tree", ariaLabel: "Tree view" },
+          {
+            value: "grid",
+            icon: "view-sort-grid-solid",
+            ariaLabel: "Grid view",
+          },
         ]}
         value={value}
         onChange={setValue}
