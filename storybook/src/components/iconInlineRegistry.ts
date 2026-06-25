@@ -9,6 +9,7 @@ import gridSquare9Raw from "../../../assets/icons/grid-square-9-16.svg?raw";
 import search16Raw from "../../../assets/icons/search-16.svg?raw";
 import settingsGearRaw from "../../../assets/icons/settings-gear.svg?raw";
 import shieldEncryptAltRaw from "../../../assets/icons/shield-encrypt-alt.svg?raw";
+import statusWarnTriSolidRaw from "../../../assets/icons/status-warn-tri-solid.svg?raw";
 
 export function stripXmlDeclaration(svg: string): string {
   return svg.replace(/<\?xml[^>]*>\s*/i, "").trim();
@@ -29,6 +30,28 @@ function monoIconFromAsset(raw: string): string {
   return s.trim();
 }
 
+/**
+ * Warning-minor alert icon: triangle with black fill, exclamation mark with white fill.
+ * - Removes <style> block to avoid CSS class collisions when multiple inline SVGs coexist.
+ * - Applies inline `style` fills instead: st0/st1 (triangle) → black, st2 (exclamation) → white.
+ * - Strips width/height from root <svg> only; child element dimensions are preserved.
+ */
+function warnMinorAlertIcon(): string {
+  let s = stripXmlDeclaration(statusWarnTriSolidRaw);
+  // Remove <style> block
+  s = s.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
+  // Strip width/height from root <svg> opening tag only (not child <rect> etc.)
+  s = s.replace(/(<svg\b[\s\S]*?>)/, (openTag) =>
+    openTag.replace(/\s+width="[^"]*"/, "").replace(/\s+height="[^"]*"/, "")
+  );
+  // st0, st1 = triangle → var(--color-icon-black)
+  s = s.replace(/class="st0"/g, 'class="st0" style="fill:var(--color-icon-black)"');
+  s = s.replace(/class="st1"/g, 'class="st1" style="fill:var(--color-icon-black)"');
+  // st2 = exclamation <rect> and <path> → var(--color-icon-white)
+  s = s.replace(/class="st2"/g, 'class="st2" style="fill:var(--color-icon-white)"');
+  return s.trim();
+}
+
 export const ICON_INLINE_SVG_RAW_BY_SLUG: Readonly<Record<string, string>> = {
   "grid-square-9-16": stripXmlDeclaration(gridSquare9Raw),
   "shield-encrypt-alt": stripXmlDeclaration(shieldEncryptAltRaw),
@@ -38,4 +61,5 @@ export const ICON_INLINE_SVG_RAW_BY_SLUG: Readonly<Record<string, string>> = {
   "filter-solid": monoIconFromAsset(filterSolidRaw),
   "search-16": monoIconFromAsset(search16Raw),
   "settings-gear": monoIconFromAsset(settingsGearRaw),
+  "status-warn-tri-solid": warnMinorAlertIcon(),
 };

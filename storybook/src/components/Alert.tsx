@@ -53,10 +53,21 @@ export type AlertProps =
     });
 
 const globalSeverityToIcon: Record<AlertGlobalSeverity, string> = {
-  critical: "status-critical-square",
-  "warning-major": "status-error-diamond",
-  "warning-minor": "status-warn-tri",
-  informational: "info-circ",
+  critical: "status-critical-square-solid-ko",
+  "warning-major": "status-error-diamond-solid-ko",
+  "warning-minor": "status-warn-tri-solid",
+  informational: "info-circ-solid-ko",
+};
+
+const globalSeverityToIconVariant: Record<AlertGlobalSeverity, "img" | "mask" | "inline"> = {
+  critical: "img",
+  "warning-major": "mask",
+  "warning-minor": "inline",
+  informational: "img",
+};
+
+const globalSeverityToIconColor: Partial<Record<AlertGlobalSeverity, string>> = {
+  "warning-major": "var(--color-icon-white)",
 };
 
 const inlineSeverityToIcon: Record<AlertInlineSeverity, string> = {
@@ -141,7 +152,8 @@ function AlertGlobalView(
         <div className={styles.globalIconWrap}>
           <Icon
             shapeName={globalSeverityToIcon[severity]}
-            variant="img"
+            variant={globalSeverityToIconVariant[severity]}
+            color={globalSeverityToIconColor[severity]}
             className={styles.globalIcon}
           />
         </div>

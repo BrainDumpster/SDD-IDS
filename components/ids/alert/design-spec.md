@@ -352,7 +352,7 @@ Validation checklist:
 - [ ] `Deterministic structure` matches generated DOM for both `display` modes (no duplicate global roots for carousel).
 - [ ] Variant matrix: all valid `display` × `severity` × optional slot combinations documented; global rejects `success`.
 - [ ] Action controls reuse IDS Button small outlined contract, not alert-local button CSS.
-- [ ] Icons use shared `Icon` + canonical slugs from **States → Global** table; no standalone inline SVG factories (warning-minor `variant="inline"` via `iconInlineRegistry.ts` is acceptable — it routes through the shared `Icon` primitive).
+- [x] Icons use shared `Icon` + canonical slugs from **States → Global** table; no standalone inline SVG factories (warning-minor `variant="inline"` via `iconInlineRegistry.ts` is acceptable — it routes through the shared `Icon` primitive).
 - [ ] Link contract supports `href` and `routerLink` without ambiguity.
 - [ ] Global carousel uses **1-based** `currentItem` in API and labeled prev/next controls.
 - [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
