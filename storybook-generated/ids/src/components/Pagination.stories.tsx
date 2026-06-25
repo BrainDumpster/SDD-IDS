@@ -12,15 +12,44 @@ const defaults = {
   totalPages: 16,
   pageSize: 25,
   pageSizeOptions: [10, 25, 50, 100],
-  showPageSizeSelector: true,
-  showPageOffsetSelector: true,
-  background: "none" as const,
+  showPerPage: true,
+  showFirstLast: true,
+  showPageOffset: false,
+  background: "gray" as const,
 };
+
+const frameStyle = { padding: 20, maxWidth: 960 } as const;
+const stackStyle = { ...frameStyle, display: "grid", gap: 20 } as const;
+const checkerboardStyle = {
+  backgroundImage:
+    "linear-gradient(45deg, #e8e8e8 25%, transparent 25%), linear-gradient(-45deg, #e8e8e8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e8e8e8 75%), linear-gradient(-45deg, transparent 75%, #e8e8e8 75%)",
+  backgroundSize: "12px 12px",
+  backgroundPosition: "0 0, 0 6px, 6px -6px, -6px 0",
+  padding: 12,
+  borderRadius: 4,
+} as const;
+
+function StoryCaption({ children }: { children: string }) {
+  return (
+    <div style={{ fontSize: 12, fontWeight: 600, lineHeight: "16px", color: "var(--color-text-neutral-strong)", marginBottom: 8 }}>
+      {children}
+    </div>
+  );
+}
+
+function StoryRow({ caption, children }: { caption: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <StoryCaption>{caption}</StoryCaption>
+      {children}
+    </div>
+  );
+}
 
 const meta: Meta<typeof IdsPagination> = {
   title: "Spec Generated/IDS/Pagination",
   component: IdsPagination,
-  args: { ...defaults, dropdownState: "collapsed", pageOffsetDropdownState: "collapsed", background: "none" },
+  args: { ...defaults, dropdownState: "collapsed", pageOffsetDropdownState: "collapsed", background: "gray", disabled: false },
 };
 
 export default meta;
@@ -28,10 +57,10 @@ type Story = StoryObj<typeof IdsPagination>;
 
 export const Default: Story = {
   render: (args) => {
-    const [page, setPage] = useState(args.currentPage ?? 1);
+    const [page, setPage] = useState(args.currentPage ?? 2);
     const [pageSize, setPageSize] = useState(args.pageSize ?? 25);
     return (
-      <div style={{ padding: 20, maxWidth: 960 }}>
+      <div style={frameStyle}>
         <IdsPagination {...args} currentPage={page} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
       </div>
     );
@@ -40,20 +69,61 @@ export const Default: Story = {
 
 export const BackgroundModes: Story = {
   render: () => (
-    <div style={{ padding: 20, maxWidth: 960, display: "grid", gap: 16 }}>
-      <IdsPagination {...defaults} currentPage={2} totalPages={16} background="none" />
-      <IdsPagination {...defaults} currentPage={2} totalPages={16} background="gray" />
+    <div style={stackStyle}>
+      <StoryRow caption='background="gray" (default)'>
+        <IdsPagination {...defaults} currentPage={2} totalPages={16} background="gray" />
+      </StoryRow>
+      <StoryRow caption='background="white"'>
+        <IdsPagination {...defaults} currentPage={2} totalPages={16} background="white" />
+      </StoryRow>
+      <StoryRow caption='background="none"'>
+        <div style={checkerboardStyle}>
+          <IdsPagination {...defaults} currentPage={2} totalPages={16} background="none" />
+        </div>
+      </StoryRow>
     </div>
   ),
 };
 
 export const PageNavigationStates: Story = {
   render: () => (
-    <div style={{ padding: 20, maxWidth: 960, display: "grid", gap: 16 }}>
-      <IdsPagination {...defaults} currentPage={1} totalPages={16} />
-      <IdsPagination {...defaults} currentPage={2} totalPages={16} />
-      <IdsPagination {...defaults} currentPage={16} totalPages={16} />
-      <IdsPagination {...defaults} currentPage={1} totalPages={1} />
+    <div style={stackStyle}>
+      <StoryRow caption="First page — first/prev disabled">
+        <IdsPagination {...defaults} currentPage={1} totalPages={16} />
+      </StoryRow>
+      <StoryRow caption="Middle page — all nav active">
+        <IdsPagination {...defaults} currentPage={2} totalPages={16} />
+      </StoryRow>
+      <StoryRow caption="Last page — next/last disabled">
+        <IdsPagination {...defaults} currentPage={16} totalPages={16} />
+      </StoryRow>
+      <StoryRow caption='Single page — "1 page"'>
+        <IdsPagination {...defaults} currentPage={1} totalPages={1} />
+      </StoryRow>
+    </div>
+  ),
+};
+
+export const PerPageDropdownOpen: Story = {
+  render: () => (
+    <div style={frameStyle}>
+      <IdsPagination {...defaults} currentPage={2} totalPages={16} dropdownState="expanded-below" />
+    </div>
+  ),
+};
+
+export const Disabled: Story = {
+  render: () => (
+    <div style={frameStyle}>
+      <IdsPagination {...defaults} currentPage={2} totalPages={16} disabled />
+    </div>
+  ),
+};
+
+export const WithoutFirstLast: Story = {
+  render: () => (
+    <div style={frameStyle}>
+      <IdsPagination {...defaults} currentPage={2} totalPages={16} showFirstLast={false} />
     </div>
   ),
 };

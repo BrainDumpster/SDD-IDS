@@ -36,7 +36,11 @@ export const PAGINATION_CODEGEN_ANATOMY = [
   "PaginationJumpToPage?",
 ] as const;
 
-export const PAGINATION_BACKGROUND_OPTIONS: IdsPaginationBackground[] = ["none", "gray"];
+export const PAGINATION_BACKGROUND_OPTIONS: IdsPaginationBackground[] = [
+  "gray",
+  "white",
+  "none",
+];
 export const PAGINATION_DROPDOWN_STATES: IdsPaginationDropdownState[] = [
   "collapsed",
   "expanded-below",
