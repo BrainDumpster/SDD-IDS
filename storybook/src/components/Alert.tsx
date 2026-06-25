@@ -101,7 +101,7 @@ function AlertGlobalView(
   const showAction = Boolean(actionLabel);
   const showLink = Boolean(linkLabel);
   const showCarousel = Boolean(carousel);
-  const showDismiss = dismissible ?? (severity !== "critical" || showAction);
+  const showDismiss = (dismissible ?? true) && (severity !== "critical" || (showCarousel && !showAction));
   const counterText =
     showCarousel && carousel
       ? `${Math.max(1, carousel.currentItem)} of ${Math.max(1, carousel.totalItems)}`

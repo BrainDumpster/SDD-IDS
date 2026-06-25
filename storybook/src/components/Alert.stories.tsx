@@ -114,7 +114,6 @@ export const GlobalWithCarousel: Story = {
     display: "global",
     severity: "critical",
     message: "This is an application-level alert that communicates a critical message.",
-    dismissible: false,
     carousel: {
       currentItem: 1,
       totalItems: 4,
@@ -142,7 +141,7 @@ function CarouselInteractiveHost({
         display="global"
         severity={severity}
         message={message}
-        dismissible={severity !== "critical"}
+        dismissible
         carousel={{
           currentItem: safeIndex + 1,
           totalItems: total,
