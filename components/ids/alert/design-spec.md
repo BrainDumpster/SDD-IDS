@@ -312,7 +312,7 @@ Per-slot style contract:
 Asset resolution + bundling contract:
 
 - Resolve icons from `assets/icons/<shapeName>.svg` (or project bundler equivalent).
-- Global status icons and inline solid icons use the slug map in **Tokens / States → Global**; carousel chevrons use `chev-left-thick` / `chev-right-thick` (or project equivalents documented in implementation header).
+- Global status icons and inline solid icons use the slug map in **Tokens / States → Global**; carousel chevrons use `chev-left-16` / `chev-right-16`.
 - **Do not embed standalone inline `<svg>` factories** in generated Alert modules. Exception: `warning-minor` global uses `variant="inline"` routed through the shared `Icon` component + `iconInlineRegistry.ts` — this is acceptable because it still composes through the system `Icon` primitive; the registry handles SVG injection and class-based tinting (`.st0`/`.st1` → `var(--color-icon-black)`, `.st2` → `var(--color-icon-white)`).
 
 Behavior contract:
@@ -357,7 +357,7 @@ Validation checklist:
 - [ ] Global carousel uses **1-based** `currentItem` in API and labeled prev/next controls.
 - [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
 - [ ] Light/dark state tables remain parallel (same `var(--...)` names).
-- [ ] Dismiss hit target ≥ `32×32` on inline and global.
+- [x] Dismiss hit target ≥ `32×32` on inline and global.
 - [ ] Inline trailing cluster: `var(--spacing-space-16)` gap between outlined action and dismiss when both present (compact + detailed).
 - [ ] Detailed inline action top aligns with content `padding-block` (`12px`); dismiss (x) remains at trailing `16px` top inset.
 - [ ] `role="alert"` and live-region behavior verified for dynamic global updates.
@@ -399,7 +399,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Global root**: no `min-height`; use `align-items: flex-start` and no `gap`
 - **Carousel rail**: use `position: absolute; top: -1px; bottom: -1px; left: -1px; width: 132px` so the rail overlaps the root border. Add a full 4-side border with `border-color: inherit` to match the root severity color. Offset `.globalContent` with `padding-left: 148px` when carousel is present
 - **Actions trailing area**: two states — dismiss-only uses `align-items: flex-start; padding-block: 14px`; with-action uses `align-items: center; padding-block: 8px`. Use `data-has-action` attribute to switch between them
-- **Dismiss button and carousel prev/next buttons**: use `width: auto; height: auto; padding: 0` so the button wrapper does not exceed the `12×12px` icon size
+- **Dismiss button and carousel prev/next buttons**: use `width: auto; height: auto; padding: 0` so the button wrapper does not exceed the `12×12px` icon size. Add `position: relative` and a `::before` pseudo-element with `inset: calc((var(--scale-32) - var(--scale-12)) / -2)` to reach the `32×32` minimum hit target without affecting surrounding layout
 
 **Colors**
 - **Informational background**: use `var(--color-background-alerting-info)` directly

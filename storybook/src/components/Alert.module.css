@@ -96,8 +96,8 @@
 
 .globalDismissButton,
 .globalCarouselButton {
-  width: 24px;
-  height: 24px;
+  width: auto;
+  height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -106,6 +106,14 @@
   color: inherit;
   padding: 0;
   cursor: pointer;
+  position: relative;
+}
+
+.globalDismissButton::before,
+.globalCarouselButton::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--scale-32) - var(--scale-12)) / -2);
 }
 
 .globalDismissIcon,
@@ -173,24 +181,14 @@
   --icon-contrast-color: var(--color-icon-white);
 }
 
-.globalRoot[data-severity="critical"] .globalDismissButton,
 .globalRoot[data-severity="warning-major"] .globalDismissButton,
 .globalRoot[data-severity="warning-minor"] .globalDismissButton {
   color: var(--color-icon-black);
 }
 
-.globalRoot[data-severity="critical"] .globalDismissIcon,
-.globalRoot[data-severity="warning-major"] .globalDismissIcon,
-.globalRoot[data-severity="warning-minor"] .globalDismissIcon {
-  filter: none;
-}
-
+.globalRoot[data-severity="critical"] .globalDismissButton,
 .globalRoot[data-severity="informational"] .globalDismissButton {
   color: var(--color-icon-white);
-}
-
-.globalRoot[data-severity="informational"] .globalDismissIcon {
-  filter: brightness(0) invert(1);
 }
 
 .globalRoot[data-severity="critical"] .globalCarouselRail {

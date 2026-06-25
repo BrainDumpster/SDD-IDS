@@ -123,7 +123,7 @@ function AlertGlobalView(
             aria-label="Previous alert"
             onClick={carousel.onPrevious}
           >
-            <Icon shapeName="chev-left-16" variant="img" className={styles.globalCarouselChevron} />
+            <Icon shapeName="chev-left-16" variant="img" className={styles.globalCarouselChevron} style={{ width: 12, height: 12 }} />
           </button>
           <span className={styles.globalCarouselCount}>{counterText}</span>
           <button
@@ -132,7 +132,7 @@ function AlertGlobalView(
             aria-label="Next alert"
             onClick={carousel.onNext}
           >
-            <Icon shapeName="chev-right-16" variant="img" className={styles.globalCarouselChevron} />
+            <Icon shapeName="chev-right-16" variant="img" className={styles.globalCarouselChevron} style={{ width: 12, height: 12 }} />
           </button>
         </div>
       ) : null}
@@ -178,7 +178,7 @@ function AlertGlobalView(
               onDismiss?.();
             }}
           >
-            <Icon shapeName="shape-x" variant="img" className={styles.globalDismissIcon} />
+            <Icon shapeName="shape-x" variant="mask" className={styles.globalDismissIcon} style={{ width: 12, height: 12 }} />
           </button>
         ) : null}
       </div>
