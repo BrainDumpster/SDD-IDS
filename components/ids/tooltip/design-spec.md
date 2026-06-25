@@ -20,7 +20,7 @@
 - `TooltipPanel`: bordered container with optional header and close action.
 - `Header` (optional): short title text.
 - `BodyContent` (required): free tooltip content region.
-- `CloseAction` (optional): close button using icon `ctrl-close-16` (`12x12` icon with `4px` padding, `20x20` frame).
+- `CloseAction` (optional): `12×12` close control; icon `ctrl-close-16` via shared `Icon` component at `12×12` (not inline SVG).
 - `Arrow` (required): directional pointer; supports side and alignment matrix.
 ## Layout & Measurements
 - Top/bottom arrow variants:
@@ -33,12 +33,21 @@
   - arrow lane width: `12`
 - Panel content padding: `12px`.
 - Panel internal gap (header/body): `4px`.
-- Header internal gap (title/close): `4px`.
-- Close button frame: `20x20` (icon `12x12` with `4px` padding).
+- Close control: `12×12` hit target (`CloseAction`); icon `ctrl-close-16` rendered through shared `Icon` at `12×12`.
 - Panel border: `1px solid`.
 - Panel corner radius: `border-radius: var(--tooltip-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0 — square panel corners per Figma).
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
+
+**Closable content layout** (`closable=true`; Storybook `.contentClosable` / `.contentColumn`):
+- Panel inner `.content` is a **horizontal flex row** (`flex-direction: row`; `align-items: flex-start`; no inter-column gap — spacing is column padding).
+- `ContentColumn` (`.contentColumn`): stacks optional `Header` + `BodyContent` vertically; `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--spacing-space-8)` (**8px empty space** before the close icon column so title/body wrap inside the remaining width).
+- `CloseAction` is a **sibling** of `ContentColumn`, top-aligned — **not** nested inside `Header`.
+- `CloseAction` dimensions: `12px × 12px` button (`padding: 0`).
+- Close icon: shared `Icon` component with `shapeName="ctrl-close-16"` at explicit `12px × 12px` (overrides `Icon` default `16×16` mask size).
+- Popup shell: `popupClosable` width `264px` (vs `popupStandard` `240px`); inner content box after panel padding remains `240px` (`264 − 24px`).
+- Inner width math: `240px` inner = `ContentColumn` flex area (`228px`) + `8px` column padding-right + `12px` close → body/title text wraps at ~`220px` (does not extend under the close icon).
+- Standard (`closable=false`): `.content` stays a vertical column; `BodyContent` uses full inner width (sample `216px` after padding on `240px` popup).
 
 Arrow geometry contract:
 - Up/down pointer triangle: `10x6` (layout box).
@@ -55,6 +64,7 @@ Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx
 - `TooltipRoot` / `.popup`: transparent positioning shell (`overflow: visible`; no border/shadow).
 - `TooltipPanel` / `.panel`: bordered content surface (background, border, shadow, `box-sizing: border-box`).
 - `Arrow` / `.arrow`: absolute sibling above `.panel`; overlaps panel edge (no `::before`/`::after` border-notch masks).
+- `closable=true`: `.content` + `.contentClosable` row wrapper; `.contentColumn` + `.close` siblings inside `.content`.
 
 Storybook alignment insets (cross-axis; applies to all sides on that axis):
 - Top/Bottom tooltips — `start`: `left: 8px`; `center`: `left: calc(50% - 5px)`; `end`: `left: calc(100% - 18px)`.
@@ -138,9 +148,9 @@ Deterministic structure:
 3. `TooltipRoot`
 4. `Arrow` (always rendered)
 5. `TooltipPanel`
-6. optional `Header`
-7. `BodyContent`
-8. optional `CloseAction`
+6. `Content` wrapper (`column` when `closable=false`; `row` when `closable=true`)
+7. When `closable=false`: optional `Header` → `BodyContent` (vertical stack inside `Content`)
+8. When `closable=true`: `ContentColumn` (optional `Header` → `BodyContent`, vertical stack, `padding-right: var(--spacing-space-8)`) + `CloseAction` (sibling, top-aligned)
 
 Variant/option matrix:
 - Content mode: `header=false|true`.
@@ -149,9 +159,10 @@ Variant/option matrix:
 
 Per-slot style contract:
 - `TooltipPanel`: background/border/shadow/padding from tokens above; `border-radius: var(--tooltip-control-radius)`.
-- `Header`: Body 2 Medium + strong text token.
-- `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots.
-- `CloseAction`: renders icon component with `shapeName="ctrl-close-16"` at `12x12` within `20x20` frame with `4px` padding.
+- `Header`: Body 2 Medium + strong text token; title only (no close control inside header when `closable=true`).
+- `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots; when `closable=true`, wraps within `ContentColumn` width (respects `8px` padding-right reserve).
+- `ContentColumn` (`closable=true` only): `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--spacing-space-8)`.
+- `CloseAction`: `12×12` transparent button; shared `Icon` with `shapeName="ctrl-close-16"` at `12×12`; light mode `var(--color-text-neutral-strong)`; dark mode `#4D4D4D`; sibling of `ContentColumn`, not inside `Header`.
 - `Arrow`: shares panel surface and border tokens; always renders `10x6` SVG inside `.arrowGraphic` (rotate per side; never resize SVG to `6x10`); apply cross-axis insets and per-placement attachment offsets from the calibration table above.
 
 Behavior contract:
@@ -175,7 +186,7 @@ Fallback/error rules:
 - Unknown `side` -> fallback `top`.
 - Unknown `arrowAlign` -> fallback `center`.
 - `closable=true` with hidden close control is invalid; generator must emit close control.
-- Missing title -> omit header slot; do not render empty heading element.
+- Missing title -> omit header slot; do not render empty heading element (including when `closable=true`).
 - Missing content -> render nothing and emit generation validation error.
 
 Validation checklist (pass/fail):
@@ -183,7 +194,8 @@ Validation checklist (pass/fail):
 - [ ] `closable=false` auto-dismisses on leave/blur.
 - [ ] `closable=true` does not auto-dismiss on leave; closes on close action.
 - [ ] Close event emits with deterministic reason payload.
-- [ ] `ctrl-close-16` icon is used for close at `12x12` within `20x20` frame with `4px` padding.
+- [ ] `ctrl-close-16` icon is rendered via shared `Icon` at `12×12` on a `12×12` close button (not inline SVG).
+- [ ] When `closable=true`, `CloseAction` is sibling of `ContentColumn` (not inside `Header`); body/title respect `8px` padding-right reserve and do not flow under close icon.
 - [ ] Body content supports arbitrary consumer-provided content.
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
 - [ ] Layout uses `var(--tooltip-control-radius)` on `TooltipPanel`, not hardcoded px.
@@ -199,6 +211,7 @@ Validation checklist (pass/fail):
 - Last live verification: Figma MCP, file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593`, `38201:109653`, session 2026-06-15.
 
 ## Changelog
+- **2026-06-19**: Documented closable layout for codegen — `ContentColumn` + `CloseAction` row, `8px` padding-right reserve before close icon column, `12×12` `ctrl-close-16` via shared `Icon`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-06-15**: Documented Storybook arrow calibration matrix (12 placements), `.arrowGraphic`/`10x6` SVG sizing rule, and panel/arrow layering in Layout & Measurements; values synced from `IdsTooltip.module.css`.
 - **2026-06-15**: Refactored Storybook tooltip to match Figma layering — border/shadow on inner `panel`, arrow overlaps panel edge (removed `::before`/`::after` border masks that caused visible gaps).
 - **2026-06-05**: Removed `showArrow` from runtime API; IDS tooltip always renders the directional arrow per Figma (12 placement variants).

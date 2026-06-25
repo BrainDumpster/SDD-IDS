@@ -59,10 +59,22 @@ export const WithHeader: Story = {
 export const Closable: Story = {
   args: {
     title: "Tooltip Title",
-    content: "This tooltip stays open until the user clicks the close icon.",
+    content: longContent,
     closable: true,
     side: "top",
-    align: "end",
+    arrowAlign: "end",
+    onClose: () => undefined,
+  },
+};
+
+export const ClosableNoTitle: Story = {
+  name: "Closable / No Title",
+  args: {
+    title: "",
+    content: longContent,
+    closable: true,
+    side: "top",
+    arrowAlign: "start",
     onClose: () => undefined,
   },
 };

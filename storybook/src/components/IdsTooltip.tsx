@@ -126,23 +126,46 @@ export function IdsTooltip({
                 </span>
               </BaseTooltip.Arrow>
               <div className={styles.panel}>
-                <div className={styles.content}>
-                {(title || closable) && (
-                  <div className={styles.header}>
-                    {title ? <div className={styles.title}>{title}</div> : <span />}
-                    {closable ? (
+                <div
+                  className={
+                    closable
+                      ? `${styles.content} ${styles.contentClosable}`
+                      : styles.content
+                  }
+                >
+                  {closable ? (
+                    <>
+                      <div className={styles.contentColumn}>
+                        {title ? (
+                          <div className={styles.header}>
+                            <div className={styles.title}>{title}</div>
+                          </div>
+                        ) : null}
+                        <div className={styles.body}>{content}</div>
+                      </div>
                       <button
                         className={styles.close}
                         type="button"
                         aria-label="Close tooltip"
                         onClick={dismissTooltip}
                       >
-                        <Icon shapeName="shape-x" className={styles.closeIcon} />
+                        <Icon
+                          shapeName="ctrl-close-16"
+                          className={styles.closeIcon}
+                          style={{ width: 12, height: 12 }}
+                        />
                       </button>
-                    ) : null}
-                  </div>
-                )}
-                <div className={styles.body}>{content}</div>
+                    </>
+                  ) : (
+                    <>
+                      {title ? (
+                        <div className={styles.header}>
+                          <div className={styles.title}>{title}</div>
+                        </div>
+                      ) : null}
+                      <div className={styles.body}>{content}</div>
+                    </>
+                  )}
                 </div>
               </div>
             </BaseTooltip.Popup>

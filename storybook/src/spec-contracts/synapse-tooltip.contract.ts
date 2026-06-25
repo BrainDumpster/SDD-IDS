@@ -24,3 +24,12 @@ export const SYNAPSE_TOOLTIP_SAMPLE_TITLE = "Tooltip Title" as const;
 
 export const SYNAPSE_TOOLTIP_SAMPLE_BODY =
   "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu." as const;
+
+/** Inherited from IDS closable contract — shared `Icon` slug. */
+export const SYNAPSE_TOOLTIP_CLOSE_ICON_SHAPE = "ctrl-close-16" as const;
+
+/** Inherited from IDS closable contract — close control + icon render size. */
+export const SYNAPSE_TOOLTIP_CLOSE_ICON_SIZE_PX = 12 as const;
+
+/** Inherited from IDS closable contract — `ContentColumn` padding-right before close column. */
+export const SYNAPSE_TOOLTIP_CLOSE_CONTENT_GAP_TOKEN = "--spacing-space-8" as const;
