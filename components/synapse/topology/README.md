@@ -21,7 +21,6 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
   --components Topology \
   --output-dir ./dist \
   --output-name topology-handoff-v1 \
-  --include-reference-deps \
   --include-icons
 ```
 
@@ -227,7 +226,6 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
   --components Topology \
   --output-dir ./dist \
   --output-name topology-handoff-v1 \
-  --include-reference-deps \
   --include-icons
 ```
 
@@ -424,7 +422,6 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
   --components Topology \
   --output-dir ./dist \
   --output-name topology-handoff-v1 \
-  --include-reference-deps \
   --include-icons
 ```
 
@@ -434,8 +431,8 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
 | `-c` / `--components` | Comma-separated names or slugs (`Topology`, `topology`, `Data Grid,Button`) |
 | `-o` / `--output-dir` | Directory for the output zip |
 | `-n` / `--output-name` | Zip base name **without** `.zip` |
-| `--include-reference-deps` | **Recommended** — Button, Search, Slider, Icon, Dropdown, DetailPanel reference sources |
-| `--include-icons` | **Recommended** — `assets/icons/*.svg` slugs used by topology |
+| `--skip-reference-deps` | Component reference only — omit transitive Button, Search, Slider, Icon, … |
+| `--include-icons` | **Recommended** — `assets/icons/*.svg` slugs referenced by packaged sources |
 | `--dry-run` | List resolved files without writing the zip |
 | `--skip-reference` | Omit Storybook `storybook/src/components/<slug>/` sources |
 | `--skip-tests` | Omit `*.test.ts` from reference sources |
@@ -444,8 +441,10 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
 
 | Flag combo | Use when |
 |---|---|
-| Default (specs + contracts + theme) | Blueprint-only handoff; recipient has own Synapse library |
-| `--include-reference-deps --include-icons` | **Standard parity handoff** — specs stay agnostic; reference examples in zip for porting |
+| Default (specs + contracts + theme + reference + deps) | **Standard parity handoff** for any component |
+| `--include-icons` | Adds icon SVG assets referenced by contracts/reference |
+| `--skip-reference` | Blueprint-only — specs and contracts, no Storybook sources |
+| `--skip-reference-deps` | Reference folder/files for target component only |
 | `+ reference/README.md` | Included in component folder — index of TS/CSS paths |
 
 Specs remain framework-agnostic. Reference React/CSS is **not** copied into `design-spec.md`.
@@ -456,7 +455,7 @@ The script collects:
 - Programme theme CSS (+ baseline theme when configured)
 - Spec contracts under `storybook/src/spec-contracts/<slug>/`
 - Embedded specs/contracts/assets referenced from those markdown files
-- Optional React reference implementation + shared Storybook deps (with `--include-reference-deps`)
+- Optional React reference implementation + shared Storybook deps (included by default; `--skip-reference-deps` to omit)
 - Icon SVGs (with `--include-icons`)
 - `AGENT_PROMPT.md` when present in component folder
 - `HANDOFF_MANIFEST.json` + figma-map excerpt inside the zip

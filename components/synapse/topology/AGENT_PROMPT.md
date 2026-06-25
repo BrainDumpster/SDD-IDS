@@ -17,7 +17,7 @@ Replace `{FRAMEWORK}` with your target (`Angular`, `React`, `Vue`, `Lit`, …).
 | **Contracts** | `storybook/src/spec-contracts/topology/*.ts` + slider/detail-panel contracts | Yes | **Import constants** — do not guess numbers |
 | **Theme** | `components/synapse-theme.css` | Yes | Load **globally** |
 | **Reference examples** | `storybook/src/components/topology/**` | No (React) | **Port** CSS/layout/behavior to target framework |
-| **Reference deps** | `Button`, `Search`, `Slider`, `Icon`, … (with `--include-reference-deps`) | No | Port toolbar/slider chrome |
+| **Reference deps** | `Button`, `Search`, `Slider`, `Icon`, … (default with reference) | No | Port toolbar/slider chrome |
 | **Reference index** | `components/synapse/topology/reference/README.md` | — | File manifest for parity porting |
 | **Icons** | `assets/icons/*.svg` (with `--include-icons`) | Yes (assets) | Wire Icon primitive |
 | **This prompt** | `AGENT_PROMPT.md` | — | Milestones + reading order |
@@ -30,7 +30,6 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
   --components Topology \
   --output-dir ./dist \
   --output-name topology-handoff-v1 \
-  --include-reference-deps \
   --include-icons
 ```
 

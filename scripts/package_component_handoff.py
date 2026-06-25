@@ -13,8 +13,14 @@ Usage:
     --output-name topology-handoff-v1
 
   python3 scripts/package_component_handoff.py \\
-    -p synapse -c Topology -o ./dist -n topology-handoff-v1 \\
-    --include-reference-deps --include-icons
+    -p synapse -c Topology -o ./dist -n topology-handoff-v1
+
+  # Blueprint-only (specs + contracts, no Storybook reference):
+  python3 scripts/package_component_handoff.py \\
+    -p synapse -c Button -o ./dist -n button-handoff-v1 --skip-reference
+
+Reference implementation deps (Button, Icon, Slider, …) are included by default when
+reference sources are bundled. Use --skip-reference-deps for the component folder only.
 """
 
 from __future__ import annotations
@@ -216,21 +222,66 @@ def _collect_contracts(slug: str, programme: str) -> set[Path]:
     return collected
 
 
-def _collect_reference_impl(slug: str, include_tests: bool) -> set[Path]:
-    collected: set[Path] = set()
-    impl_dir = COMPONENTS_ROOT / slug
-    if not impl_dir.is_dir():
-        return collected
+def _pascal_case_slug(slug: str) -> str:
+    return "".join(part.capitalize() for part in slug.split("-") if part)
 
+
+def _impl_name_candidates(slug: str, map_entry: dict[str, Any] | None) -> list[str]:
+    candidates: list[str] = []
+    if map_entry:
+        raw = str(map_entry.get("component", "")).strip()
+        if raw:
+            for token in re.split(r"[/\s]+", raw):
+                token = token.strip()
+                if token:
+                    candidates.append(token.replace(" ", ""))
+            compact = re.sub(r"[^a-zA-Z0-9]", "", raw)
+            if compact:
+                candidates.append(compact)
+    pascal = _pascal_case_slug(slug)
+    candidates.extend([pascal, f"Synapse{pascal}", f"Ids{pascal}"])
+
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for name in candidates:
+        if name and name not in seen:
+            seen.add(name)
+            ordered.append(name)
+    return ordered
+
+
+def _collect_reference_impl(
+    slug: str,
+    map_entry: dict[str, Any] | None,
+    include_tests: bool,
+) -> set[Path]:
+    collected: set[Path] = set()
     allowed_suffixes = {".ts", ".tsx", ".css", ".module.css"}
     if include_tests:
         allowed_suffixes.add(".test.ts")
 
-    for path in impl_dir.rglob("*"):
-        if not path.is_file():
-            continue
-        if path.suffix in allowed_suffixes or path.name.endswith(".module.css"):
-            collected.add(path)
+    def add_stem_files(stem: str) -> None:
+        for suffix in (".tsx", ".ts", ".module.css", ".css"):
+            path = COMPONENTS_ROOT / f"{stem}{suffix}"
+            if path.is_file() and (path.suffix in allowed_suffixes or path.name.endswith(".module.css")):
+                collected.add(path)
+        stories = COMPONENTS_ROOT / f"{stem}.stories.tsx"
+        if include_tests and stories.is_file():
+            collected.add(stories)
+
+    impl_dir = COMPONENTS_ROOT / slug
+    if impl_dir.is_dir():
+        for path in impl_dir.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.suffix in allowed_suffixes or path.name.endswith(".module.css"):
+                collected.add(path)
+
+    for name in _impl_name_candidates(slug, map_entry):
+        add_stem_files(name)
+
+    add_stem_files(f"{slug}-icons")
+
     return collected
 
 
@@ -285,43 +336,23 @@ def _collect_reference_deps(
     return collected
 
 
-def _topology_icon_slugs() -> set[str]:
-    slugs: set[str] = {
-        "arrow-reset",
-        "full-screen",
-        "save-disk",
-        "grid-square-9-16",
-        "arrow-drop-tri-caret",
-        "state-add-circ-solid",
-        "cluster-badge",
-        "info-circ",
-        "minimize",
-        "ctrl-minimize-16",
-        "shape-plus",
-        "topology-legend-connected-to",
-        "topology-legend-depends-on",
-    }
-    contract_paths = [
-        REPO_ROOT / "storybook/src/spec-contracts/topology/synapse-topology-element.contract.ts",
-        REPO_ROOT / "storybook/src/spec-contracts/topology/synapse-topology.contract.ts",
-    ]
-    for contract_path in contract_paths:
-        if not contract_path.is_file():
+def _collect_icon_slugs_from_paths(paths: Iterable[Path]) -> set[str]:
+    """Discover icon slugs from any packaged .ts/.tsx sources (component-agnostic)."""
+    slugs: set[str] = set()
+    contract_string_pattern = re.compile(r':\s*"([a-z0-9]+(?:-[a-z0-9]+)*)"')
+
+    for path in paths:
+        if not path.is_file() or path.suffix not in {".ts", ".tsx"}:
             continue
-        text = contract_path.read_text(encoding="utf-8", errors="replace")
-        for match in re.finditer(r':\s*"([a-z0-9]+(?:-[a-z0-9]+)*)"', text):
-            slug = match.group(1)
+        text = path.read_text(encoding="utf-8", errors="replace")
+        candidates = (
+            SHAPE_NAME_PATTERN.findall(text)
+            + ICON_SLUG_PATTERN.findall(text)
+            + contract_string_pattern.findall(text)
+        )
+        for slug in candidates:
             if (ICONS_ROOT / f"{slug}.svg").is_file():
                 slugs.add(slug)
-
-    topology_dir = COMPONENTS_ROOT / "topology"
-    if topology_dir.is_dir():
-        for path in topology_dir.rglob("*.tsx"):
-            text = path.read_text(encoding="utf-8", errors="replace")
-            for slug in SHAPE_NAME_PATTERN.findall(text) + ICON_SLUG_PATTERN.findall(text):
-                if (ICONS_ROOT / f"{slug}.svg").is_file():
-                    slugs.add(slug)
-
     return slugs
 
 
@@ -411,7 +442,7 @@ def build_package(
     component_queries: list[str],
     *,
     include_reference: bool = True,
-    include_reference_deps: bool = False,
+    include_reference_deps: bool = True,
     include_icons: bool = False,
     include_tests: bool = True,
     include_agent_contract: bool = True,
@@ -468,7 +499,9 @@ def build_package(
             result.files.add(contract_path.resolve())
 
         if include_reference:
-            for impl_path in _collect_reference_impl(resolution.slug, include_tests):
+            for impl_path in _collect_reference_impl(
+                resolution.slug, resolution.map_entry, include_tests
+            ):
                 result.files.add(impl_path.resolve())
 
     for prompt_path in _collect_agent_prompts(c.component_dir for c in result.components):
@@ -478,11 +511,6 @@ def build_package(
         seeds = {path for path in result.files if str(path).startswith(str(COMPONENTS_ROOT))}
         for dep_path in _collect_reference_deps(seeds):
             result.files.add(dep_path.resolve())
-
-    if include_icons:
-        icon_slugs = _topology_icon_slugs()
-        for icon_path in _collect_icon_assets(icon_slugs):
-            result.files.add(icon_path.resolve())
 
     # Parse collected markdown for cross-references (embedded specs, contracts, assets)
     for text in parsed_texts:
@@ -499,6 +527,11 @@ def build_package(
             result,
             programme=programme,
         )
+
+    if include_icons:
+        icon_slugs = _collect_icon_slugs_from_paths(result.files)
+        for icon_path in _collect_icon_assets(icon_slugs):
+            result.files.add(icon_path.resolve())
 
     result.missing = _filter_missing_paths(result.missing, result.files)
     result._map_entries = map_entries_for_zip  # type: ignore[attr-defined]
@@ -523,11 +556,11 @@ def write_zip(
         "programme": result.programme,
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "packageFlags": getattr(result, "_package_flags", {}),
-        "agentPrompt": "components/synapse/topology/AGENT_PROMPT.md"
-        if any(
-            (c.component_dir / "AGENT_PROMPT.md").is_file() for c in result.components
-        )
-        else None,
+        "agentPrompts": [
+            str((c.component_dir / "AGENT_PROMPT.md").relative_to(REPO_ROOT))
+            for c in result.components
+            if (c.component_dir / "AGENT_PROMPT.md").is_file()
+        ] or None,
         "components": [
             {
                 "query": c.query,
@@ -593,14 +626,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Output zip base name without extension (e.g. topology-handoff-v1).",
     )
     parser.add_argument(
-        "--include-reference-deps",
+        "--skip-reference-deps",
         action="store_true",
-        help="Include Storybook shared components imported by reference impl (Button, Search, Slider, Icon, …).",
+        help=(
+            "Omit transitive Storybook imports (Button, Icon, Slider, …). "
+            "Default: include shared reference deps when reference sources are bundled."
+        ),
     )
     parser.add_argument(
         "--include-icons",
         action="store_true",
-        help="Include assets/icons/*.svg slugs used by topology reference + contracts.",
+        help="Include assets/icons/*.svg slugs referenced by packaged sources.",
     )
     parser.add_argument(
         "--skip-reference",
@@ -637,7 +673,7 @@ def main(argv: list[str] | None = None) -> int:
             args.programme.strip().lower(),
             component_queries,
             include_reference=not args.skip_reference,
-            include_reference_deps=args.include_reference_deps,
+            include_reference_deps=not args.skip_reference_deps,
             include_icons=args.include_icons,
             include_tests=not args.skip_tests,
             include_agent_contract=not args.skip_agent_contract,

@@ -12,7 +12,7 @@ Design specs under `components/synapse/topology/` stay **framework-agnostic** (a
 | `storybook/src/spec-contracts/topology/*.ts` | Yes | Numbers, types, sample data |
 | `components/synapse-theme.css` | Yes | Tokens (`var(--...)`) |
 | `storybook/src/components/topology/**` | Yes (recommended) | Golden React reference |
-| Shared deps (`Button`, `Slider`, `Search`, …) | Yes with `--include-reference-deps` | Toolbar/slider parity |
+| Shared deps (`Button`, `Slider`, `Search`, …) | Yes by default (use `--skip-reference-deps` to omit) | Toolbar/slider parity |
 | `assets/icons/*.svg` | Yes with `--include-icons` | Icon slugs |
 | `AGENT_PROMPT.md` | Yes | Agent reading order + milestones |
 
@@ -26,7 +26,6 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
   --components Topology \
   --output-dir ./dist \
   --output-name topology-handoff-v1 \
-  --include-reference-deps \
   --include-icons
 ```
 
@@ -56,7 +55,7 @@ PYTHONPATH=. python3 scripts/package_component_handoff.py \
 | `utils/topologyNodeTooltipPlacement.ts` | Hover delay + placement |
 | `utils/topologyExpandGraph.ts` | Lazy expand / collapse |
 
-### Shared toolbar / slider (with `--include-reference-deps`)
+### Shared toolbar / slider (included by default with reference sources)
 
 | Role | TypeScript | Stylesheet |
 |------|------------|------------|
