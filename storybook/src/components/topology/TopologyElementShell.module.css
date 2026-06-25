@@ -1,0 +1,126 @@
+.frame {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.frame[data-shape="circle"],
+.frame[data-shape="roundedSquare"] {
+  width: var(--sizing-size-44, 44px);
+  height: var(--sizing-size-44, 44px);
+}
+
+.frame[data-shape="pentagon"] {
+  width: var(--sizing-size-48, 48px);
+  height: var(--sizing-size-48, 48px);
+}
+
+.frame[data-hovered="true"],
+.frame[data-selected="true"] {
+  filter: drop-shadow(0 3px 1.5px var(--color-background-controls-brand-light));
+}
+
+.hoverOutline {
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: var(--border-width-border-default) solid var(--color-border-brand-dark);
+  z-index: 0;
+}
+
+.frame[data-shape="circle"] .hoverOutline {
+  width: var(--sizing-size-52, 52px);
+  height: var(--sizing-size-52, 52px);
+  left: calc(-1 * var(--spacing-space-4, 4px));
+  top: calc(-1 * var(--spacing-space-4, 4px));
+  border-radius: var(--corner-radius-radius-round);
+}
+
+.frame[data-shape="roundedSquare"] .hoverOutline {
+  width: var(--sizing-size-52, 52px);
+  height: var(--sizing-size-52, 52px);
+  left: calc(-1 * var(--spacing-space-4, 4px));
+  top: calc(-1 * var(--spacing-space-4, 4px));
+  border-radius: var(--corner-radius-radius-12);
+}
+
+.frame[data-shape="pentagon"] .hoverOutline {
+  display: none;
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--sizing-size-44, 44px);
+  height: var(--sizing-size-44, 44px);
+  background: var(--color-background-surface-2);
+  border: var(--border-width-border-default) solid var(--color-icon-accessible);
+}
+
+.shell[data-shape="circle"] {
+  border-radius: var(--corner-radius-radius-round);
+}
+
+.shell[data-shape="roundedSquare"] {
+  border-radius: var(--corner-radius-radius-8);
+}
+
+.shell[data-accent="violet"] {
+  border-color: var(--color-border-violet-base-strong);
+}
+
+.shell[data-hovered="true"]:not([data-selected="true"]) {
+  border-color: var(--color-border-brand-dark);
+  border-width: var(--border-width-border-thick);
+}
+
+.shell[data-selected="true"] {
+  background: var(--color-background-controls-brand-light);
+  border-color: var(--color-border-brand-dark);
+  border-width: var(--border-width-border-thick);
+}
+
+.pentagonFrame {
+  position: relative;
+  z-index: 1;
+  width: var(--sizing-size-48, 48px);
+  height: var(--sizing-size-48, 48px);
+  overflow: visible;
+}
+
+.pentagonSvg {
+  display: block;
+  overflow: visible;
+}
+
+.pentagonHoverOutline {
+  pointer-events: none;
+}
+
+.pentagonShellShape {
+  pointer-events: none;
+}
+
+.pentagonIconSlot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sizing-size-20, 20px);
+  height: var(--sizing-size-20, 20px);
+  pointer-events: none;
+}
+
+.iconSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sizing-size-20, 20px);
+  height: var(--sizing-size-20, 20px);
+}

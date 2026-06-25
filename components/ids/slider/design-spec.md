@@ -45,7 +45,8 @@ Element-part references from Figma:
 - Runtime width: container-driven (`width: 100%`), sample widths are reference only.
 - Slider row height in examples: `80px`; runtime can exceed this when value labels and/or value input are enabled.
 - Value labels are rendered below the corresponding thumb centerline.
-- Optional value input boxes (single/range) follow IDS compact text-input geometry: `32px` height with horizontal padding `var(--padding-padding-16)`.
+- Optional value input boxes (single/range) follow IDS compact text-input geometry: `56px` width, `32px` height, horizontal padding `var(--padding-padding-16)`, vertical padding `var(--padding-padding-6)` (Figma Slider-Main `.TextBox`, node `22459:39145`).
+- Value inputs use `type="number"` without browser stepper chrome so `var(--color-border-accessible)` remains visible on all four sides.
 - Range value input mode renders two `32px` text boxes with a centered separator slot (`"-"`) between them.
 ## Tokens
 Verified slider tokens from `22459:38985` and `22505:177044`:
@@ -66,8 +67,8 @@ Supporting semantic tokens used by slider compositions:
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Rail (`SliderRail`) | default | `var(--color-background-gray-light)` | none | n/a |
-| Rail (`SliderRail`) | disabled | `var(--color-icon-disabled)` | none | n/a |
+| Rail (`SliderRail`) | default | `var(--color-background-gray-light)` | `var(--color-border-disabled)` on top, bottom, left, and right (closed frame) | n/a |
+| Rail (`SliderRail`) | disabled | `var(--color-icon-disabled)` fill | `var(--color-border-disabled)` on top, bottom, left, and right | n/a |
 | Progress/Range segment | selected | `var(--color-icon-brand-base)` | none | n/a |
 | Progress/Range segment | disabled | `var(--color-icon-disabled)` | none | n/a |
 | Small marker (`8px`) | selected | `var(--color-icon-brand-base)` | none | n/a |
@@ -171,7 +172,7 @@ Dark theme uses the same structural state matrix and resolves all values through
 - `markerShape`: `small-tick | large-thumb`
 
 ### Per-slot style contract
-- `SliderRail` height is `4px`, tokenized via rail tokens.
+- `SliderRail` height is `4px`, tokenized via rail tokens; unselected rail renders a closed `1px` frame on all four sides using `var(--color-border-disabled)` (implementation: inset box-shadow on track host).
 - `SliderThumb` size is `16px`; focus ring footprint extends to `22px`.
 - `SliderTick` (small marker) uses `8px` visual dot style.
 - `SliderTick` not-selected state is outline-only (transparent fill + tokenized border).
@@ -179,7 +180,8 @@ Dark theme uses the same structural state matrix and resolves all values through
 - Disabled rail/segment/ticks/thumbs use `var(--color-icon-disabled)`.
 - Value-under-thumb text maps to `var(--color-text-brand-base)` in enabled states and `var(--color-text-disabled)` when disabled.
 - Endpoint label color switches to `var(--color-text-brand-base)` when a thumb is exactly at that endpoint.
-- Range input mode uses two `32px` inputs and a centered separator slot (`"-"`).
+- Range input mode uses two `32px` × `56px` inputs and a centered separator slot (`"-"`).
+- `SliderValueInput` uses `var(--color-border-accessible)` on all sides; hide native number steppers so the right border is not obscured.
 
 ### Behavior contract
 - Clamp all values to `[min, max]`.

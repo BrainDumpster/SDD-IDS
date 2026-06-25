@@ -1,0 +1,97 @@
+.root {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  transform: translate(-50%, 0);
+  cursor: grab;
+  touch-action: none;
+}
+
+.root[data-embedded="true"] {
+  position: relative;
+  transform: none;
+  cursor: pointer;
+}
+
+.root[data-selected="true"] {
+  cursor: grabbing;
+}
+
+.root[data-hovered="true"] {
+  z-index: 10;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statusSlot {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+}
+
+.shapeRow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countBadgeWrap {
+  margin-top: -8px;
+  z-index: 2;
+}
+
+.countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5.5px;
+  border-radius: 100px;
+  border: var(--border-width-border-default) solid var(--color-border-white);
+  background: var(--color-background-alerting-info-2);
+  color: var(--color-text-white);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.countBadge:hover {
+  filter: brightness(1.05);
+}
+
+.countBadge:focus-visible {
+  outline: var(--border-width-border-thick) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.label {
+  margin-top: 8px;
+  min-width: 90px;
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-8);
+  background: var(--color-background-surface-1);
+  color: var(--color-text-neutral-strong);
+  font-size: var(--font-size-body-3, 12px);
+  line-height: 18px;
+  text-align: center;
+  word-break: break-word;
+}

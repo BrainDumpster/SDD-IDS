@@ -1,0 +1,29 @@
+/* Legend (`53993:290286` / doc `55459:151350`) */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-32);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-neutral);
+  white-space: nowrap;
+}
+
+.legendArrow {
+  display: block;
+  width: 48px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--color-border-accessible);
+}

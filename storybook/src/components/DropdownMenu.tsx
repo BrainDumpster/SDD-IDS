@@ -38,6 +38,8 @@ interface DropdownMenuProps {
   maxHeight?: number;
   sideOffset?: number;
   matchTriggerWidth?: boolean;
+  /** Detached trigger (pill chip, context menu) — full border + standalone radius. */
+  detached?: boolean;
   defaultOpen?: boolean;
   showSearch?: boolean;
   searchValue?: string;
@@ -77,6 +79,7 @@ export function DropdownMenu({
   maxHeight,
   sideOffset = 0,
   matchTriggerWidth = true,
+  detached = false,
   defaultOpen = false,
   showSearch = false,
   searchValue,
@@ -177,7 +180,10 @@ export function DropdownMenu({
       </Menu.Trigger>
       <Menu.Portal>
         <Menu.Positioner sideOffset={sideOffset} alignment="start" style={positionerStyle}>
-          <Menu.Popup className={styles.popup} style={popupStyle}>
+          <Menu.Popup
+            className={detached ? `${styles.popup} ${styles.popupStandalone}` : styles.popup}
+            style={popupStyle}
+          >
             {showSearch ? (
               <>
                 <div className={styles.searchRow}>

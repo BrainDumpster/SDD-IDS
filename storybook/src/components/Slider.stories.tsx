@@ -5,6 +5,13 @@ import { IdsSlider } from "./IdsSlider";
 const meta: Meta<typeof IdsSlider> = {
   title: "Spec Generated/IDS/Slider",
   component: IdsSlider,
+  decorators: [
+    (Story) => (
+      <div style={{ padding: 24, width: "100%", maxWidth: 520, boxSizing: "border-box" }}>
+        <Story />
+      </div>
+    ),
+  ],
   argTypes: {
     min: { control: "number" },
     max: { control: "number" },
@@ -130,7 +137,7 @@ export const RangeWithInputsAndSteppersManual: Story = {
 
 export const IDSStateMatrix: Story = {
   render: () => (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, maxWidth: 900 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, maxWidth: 1050, width: "100%" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <strong>Default</strong>
         <IdsSlider min={0} max={100} defaultValue={50} showStepper={false} />
@@ -145,7 +152,7 @@ export const IDSStateMatrix: Story = {
         <IdsSlider min={0} max={100} defaultValue={100} disabled showStepper={false} />
         <IdsSlider min={0} max={100} defaultValue={100} disabled showStepper />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 16, gridColumn: "1 / span 2" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, gridColumn: "1 / span 2", maxWidth: 520 }}>
         <strong>Range</strong>
         <IdsSlider
           mode="range"

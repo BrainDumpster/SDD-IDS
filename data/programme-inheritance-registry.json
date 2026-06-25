@@ -434,6 +434,9 @@
       "idsBaselineSpecPath": "components/ids/slider/design-spec.md",
       "programmeSpecPath": "components/synapse/slider/design-spec.md",
       "programmeFigmaNodeId": "21983:31228",
+      "topologyViewportBoardNodeId": "48306:5980",
+      "viewportSliderNodeId": "53932:151178",
+      "sliderWithButtonsNodeId": "53932:151198",
       "idsFigmaNodeId": "22459:39022",
       "mainComponentSetNodeId": "22459:39022",
       "stateMatrixNodeId": "22459:40319",
@@ -442,7 +445,7 @@
       "programmeWrapper": "storybook/src/components/SynapseSlider.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-slider.contract.ts",
       "storybookPath": "storybook/src/components/SynapseSlider.stories.tsx",
-      "lastVerified": "2026-06-05",
+      "lastVerified": "2026-06-23",
       "status": "active"
     },
     {

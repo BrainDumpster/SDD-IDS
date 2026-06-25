@@ -1,0 +1,41 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-4) var(--padding-padding-12);
+  border: var(--border-width-border-default) solid var(--color-border-accessible);
+  border-radius: var(--corner-radius-radius-24);
+  background: var(--color-background-surface-2);
+  color: var(--color-text-neutral);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--color-border-brand-base);
+}
+
+.chip:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 4px;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  min-height: 20px;
+}
+
+.fieldName {
+  font-weight: 500;
+}
+
+.caret {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}

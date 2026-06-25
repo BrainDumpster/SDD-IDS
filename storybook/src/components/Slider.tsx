@@ -14,10 +14,14 @@ interface SliderProps {
   disabled?: boolean;
   minLabel?: string;
   maxLabel?: string;
+  /** When false, hides numeric min/max endpoint labels (topology uses external −/+ icons). */
+  showEdgeLabels?: boolean;
   showStepper?: boolean;
   stepperFrequency?: number;
   showValueLabel?: boolean;
   showValueInput?: boolean;
+  /** `viewport` — compact 120×16 host for topology toolbar (`53932:151178`). */
+  density?: "default" | "viewport";
   value?: SliderValue;
   onValueChange?: (value: SliderValue) => void;
 }
@@ -65,10 +69,12 @@ export function Slider({
   disabled,
   minLabel,
   maxLabel,
+  showEdgeLabels = true,
   showStepper = false,
   stepperFrequency,
   showValueLabel = true,
   showValueInput = false,
+  density = "default",
   value,
   onValueChange,
 }: SliderProps) {
@@ -134,11 +140,13 @@ export function Slider({
   }, [currentValues, effectiveFrequency, max, min, mode, showStepper]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-density={density} data-hide-edge-labels={showEdgeLabels ? "false" : "true"}>
       <div className={styles.sliderRow}>
-        <span className={[styles.edgeLabel, minActive ? styles.edgeLabelActive : ""].filter(Boolean).join(" ")}>
-          {minLabel ?? ""}
-        </span>
+        {showEdgeLabels ? (
+          <span className={[styles.edgeLabel, minActive ? styles.edgeLabelActive : ""].filter(Boolean).join(" ")}>
+            {minLabel ?? ""}
+          </span>
+        ) : null}
         <BaseSlider.Root
           className={styles.root}
           min={min}
@@ -189,11 +197,14 @@ export function Slider({
             </BaseSlider.Track>
           </BaseSlider.Control>
         </BaseSlider.Root>
-        <div className={styles.rightMeta}>
-          <span className={[styles.edgeLabel, maxActive ? styles.edgeLabelActive : ""].filter(Boolean).join(" ")}>
-            {maxLabel ?? ""}
-          </span>
-          {showValueInput ? (
+        {showEdgeLabels || showValueInput ? (
+          <div className={styles.rightMeta}>
+            {showEdgeLabels ? (
+              <span className={[styles.edgeLabel, maxActive ? styles.edgeLabelActive : ""].filter(Boolean).join(" ")}>
+                {maxLabel ?? ""}
+              </span>
+            ) : null}
+            {showValueInput ? (
             <div className={styles.inputGroup}>
               <input
                 className={styles.valueInput}
@@ -220,7 +231,8 @@ export function Slider({
               ) : null}
             </div>
           ) : null}
-        </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

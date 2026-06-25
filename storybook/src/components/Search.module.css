@@ -101,3 +101,35 @@
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: 1px;
 }
+
+/* Search-Main (`53993:290152`) — topology / data-grid toolbar field */
+.wrapper[data-variant="main"] {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  width: 100%;
+  height: 32px;
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-4);
+  box-sizing: border-box;
+}
+
+.wrapper[data-variant="main"] .input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--padding-padding-4) 0 var(--padding-padding-4) var(--padding-padding-8);
+  color: var(--color-text-neutral);
+}
+
+.wrapper[data-variant="main"] .input::placeholder {
+  color: var(--color-text-neutral);
+}
+
+.wrapper[data-variant="main"]:focus-within {
+  border-color: var(--color-border-brand-base);
+}
+
+.wrapper[data-variant="main"]:focus-within::after {
+  border-radius: var(--corner-radius-radius-4);
+}

@@ -41,7 +41,7 @@ export function IdsDropdownTriggerShell({
     >
       <div className={styles.main}>{left}</div>
       <span className={styles.caretWrap} aria-hidden>
-        <Icon shapeName="arrow-drop-tri-caret" style={{ width: 10, height: 10 }} />
+        <Icon shapeName="arrow-drop-tri-caret" className={styles.caretIcon} />
       </span>
     </div>
   );

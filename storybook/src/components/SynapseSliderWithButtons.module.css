@@ -1,0 +1,44 @@
+/* Figma `53932:151198` — Slider with buttons (254×28 reference row) */
+.cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-12);
+  flex-shrink: 0;
+  height: 28px;
+}
+
+.iconButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: var(--padding-padding-6) var(--padding-padding-8) !important;
+  border-radius: var(--corner-radius-radius-4);
+  gap: 0;
+}
+
+/* Figma `53932:151179` — always-visible brand border */
+.iconButtonOutlined {
+  background: var(--color-background-component);
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+}
+
+/* Topology toolbar — tertiary chrome from Synapse Button spec */
+.iconButtonTertiary {
+  background: transparent;
+}
+
+.readout {
+  flex-shrink: 0;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+  white-space: nowrap;
+}

@@ -12,6 +12,14 @@ const preview: Preview = {
     // Let html/body use design-system tokens; the backgrounds addon used fixed hex
     // values that did not follow the Theme toolbar or IDS / DAP / Synapse variable sets.
     backgrounds: { disable: true },
+    docs: {
+      // SB 8: Docs pages only appear for stories/meta tagged `autodocs`.
+      autodocs: "tag",
+      canvas: {
+        // Show "Show code" on Canvas tab (addon-controls area) when docs source is set.
+        sourceState: "shown",
+      },
+    },
     options: {
       storySort: (a, b) => {
         const titleFrom = (entry) => {

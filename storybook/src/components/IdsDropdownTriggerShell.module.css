@@ -67,10 +67,17 @@
 .caretWrap {
   flex-shrink: 0;
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   padding: 5px var(--padding-padding-1);
   color: var(--color-icon-neutral);
   line-height: 0;
+}
+
+.caretIcon {
+  width: var(--sizing-size-10, 10px);
+  height: var(--sizing-size-10, 10px);
+  flex-shrink: 0;
 }
 
 .field[data-disabled="true"] .caretWrap {

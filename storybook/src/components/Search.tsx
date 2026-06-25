@@ -9,6 +9,8 @@ interface SearchProps extends Omit<ComponentProps<"input">, "onChange" | "type">
   onChange?: (value: string) => void;
   onClear?: () => void;
   size?: "large" | "small";
+  /** `main` — Search-Main field (Figma `53993:290152`, topology toolbar). */
+  variant?: "default" | "main";
 }
 
 export function Search({
@@ -18,6 +20,7 @@ export function Search({
   onChange,
   onClear,
   size = "large",
+  variant = "default",
   className,
   ...rest
 }: SearchProps) {
@@ -46,7 +49,8 @@ export function Search({
   return (
     <div
       className={`${styles.wrapper} ${className || ""}`}
-      data-size={size}
+      data-size={variant === "main" ? "small" : size}
+      data-variant={variant}
     >
       <SearchIcon />
       <input

@@ -1,0 +1,30 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-2) var(--padding-padding-8);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  color: var(--color-text-brand-strong);
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.root:hover {
+  text-decoration: underline;
+}
+
+.root:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 4px;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
