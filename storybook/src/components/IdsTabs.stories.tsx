@@ -161,3 +161,43 @@ export const AddLabelPrimary: Story = {
     </div>
   ),
 };
+
+export const IconAndBadge: Story = {
+  args: {
+    variant: "primary",
+    items: [
+      {
+        id: "overview",
+        label: "Overview",
+        panel: "Overview tab content area.",
+        icon: <img src={shieldEncryptAltIcon} alt="" width={16} height={16} />,
+        badgeCount: 5,
+        closable: true,
+      },
+      {
+        id: "security",
+        label: "Security",
+        panel: "Security tab content area.",
+        icon: <img src={shieldEncryptAltIcon} alt="" width={16} height={16} />,
+        badgeCount: 3,
+        closable: true,
+      },
+      {
+        id: "alerts",
+        label: "Alerts",
+        panel: "Alerts tab content area with related data.",
+        icon: <img src={shieldEncryptAltIcon} alt="" width={16} height={16} />,
+        badgeCount: 1,
+        closable: true,
+      },
+      {
+        id: "settings",
+        label: "Settings",
+        panel: "Settings content area.",
+        icon: <img src={shieldEncryptAltIcon} alt="" width={16} height={16} />,
+        badgeCount: 0,
+        closable: true,
+      },
+    ],
+  },
+};
