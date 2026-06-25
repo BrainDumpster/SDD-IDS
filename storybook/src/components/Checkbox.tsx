@@ -1,4 +1,5 @@
 import { Checkbox as BaseCheckbox } from "@base-ui-components/react/checkbox";
+import { Icon } from "./Icon";
 import styles from "./Checkbox.module.css";
 
 interface CheckboxProps {
@@ -62,16 +63,7 @@ export function Checkbox({
             data-indicator-type={indeterminate ? "minus" : "check"}
           />
         </BaseCheckbox.Root>
-        <span
-          className={[
-            showLabel ? styles.label : styles.visuallyHidden,
-            error ? styles.labelError : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {label}
-        </span>
+        <span className={showLabel ? styles.label : styles.visuallyHidden}>{label}</span>
       </label>
       {helperText ? (
         <div
@@ -84,6 +76,9 @@ export function Checkbox({
             .filter(Boolean)
             .join(" ")}
         >
+          {error && !disabled ? (
+            <Icon shapeName="status-critical-square-solid" variant="img" className={styles.errorIcon} />
+          ) : null}
           {helperText}
         </div>
       ) : null}

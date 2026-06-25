@@ -1,11 +1,14 @@
 import { RadioGroup } from "@base-ui-components/react/radio-group";
 import { Radio } from "@base-ui-components/react/radio";
+import { Icon } from "./Icon";
 import styles from "./RadioButton.module.css";
 
 interface RadioOption {
   value: string;
   label: string;
   disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
   simulatedState?: "default" | "hover" | "focus-visible";
 }
 
@@ -40,6 +43,9 @@ export function RadioButton({
     >
       {options.map((option) => {
         const isDisabled = disabled || Boolean(option.disabled);
+        const optionId = `${id ?? name}-${option.value}`;
+        const assistiveId = option.helperText ? `${optionId}-assistive` : undefined;
+
         return (
           <div key={option.value} className={styles.field}>
             <label className={styles.wrapper} data-disabled={isDisabled || undefined}>
@@ -48,13 +54,31 @@ export function RadioButton({
                 value={option.value}
                 disabled={isDisabled}
                 data-simulated-state={option.simulatedState}
+                data-error={option.error ? "true" : undefined}
+                aria-invalid={option.error || undefined}
+                aria-describedby={assistiveId}
               >
                 <Radio.Indicator className={styles.indicator} />
               </Radio.Root>
-              <span className={styles.label}>
-                {option.label}
-              </span>
+              <span className={styles.label}>{option.label}</span>
             </label>
+            {option.helperText ? (
+              <div
+                id={assistiveId}
+                className={[
+                  styles.assistiveText,
+                  option.error ? styles.assistiveTextError : "",
+                  isDisabled ? styles.assistiveTextDisabled : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {option.error && !isDisabled ? (
+                  <Icon shapeName="status-critical-square-solid" variant="img" className={styles.errorIcon} />
+                ) : null}
+                {option.helperText}
+              </div>
+            ) : null}
           </div>
         );
       })}

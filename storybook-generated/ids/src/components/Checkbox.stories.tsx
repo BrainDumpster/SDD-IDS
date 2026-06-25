@@ -109,7 +109,7 @@ export const SelectionStates: Story = {
     <div className="sbCheckboxRow">
       <IdsCheckbox label="Unchecked" />
       <IdsCheckbox label="Checked" checked />
-      <IdsCheckbox label="Indeterminate" indeterminate />
+      <IdsCheckbox label="Partial" indeterminate />
     </div>
   ),
 };
@@ -128,8 +128,18 @@ export const ValidationAndHelperText: Story = {
   render: () => (
     <div className="sbCheckboxCol">
       <IdsCheckbox label="Email notifications" helperText="Receive weekly summary updates." />
-      <IdsCheckbox label="Required acknowledgement" error helperText="You must accept this option to continue." />
+      <IdsCheckbox
+        label="Required acknowledgement"
+        error
+        helperText="You must accept this option to continue."
+      />
       <IdsCheckbox label="Disabled option" disabled helperText="This option is unavailable for your role." />
+      <IdsCheckbox
+        label="Checked with validation error"
+        checked
+        error
+        helperText="Error message only — control keeps selected styling."
+      />
     </div>
   ),
 };
@@ -154,7 +164,7 @@ export const StateHarness: Story = {
   render: () => (
     <div className="sbHarness">
       <div className="sbHarnessLegend">
-        Rows: Unchecked, Checked, Indeterminate. Columns: Default, Hover (pointer over the box), Focus (
+        Rows: Unchecked, Checked, Partial. Columns: Default, Hover (pointer over the box), Focus (
         <code>simulateFocusVisible</code>
         ), Disabled, Error.
       </div>
@@ -181,7 +191,7 @@ export const StateHarness: Story = {
         <IdsCheckbox label={HARNESS_OPTION_LABEL} disabled />
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} error />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} error helperText="Error message" />
       </div>
 
       <div className="sbHarnessTitle">Checked</div>
@@ -199,10 +209,10 @@ export const StateHarness: Story = {
         <IdsCheckbox label={HARNESS_OPTION_LABEL} checked disabled />
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} checked error />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} checked error helperText="Error message" />
       </div>
 
-      <div className="sbHarnessTitle">Indeterminate</div>
+      <div className="sbHarnessTitle">Partial</div>
       <div className="sbHarnessControl">
         <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate />
       </div>
@@ -217,7 +227,7 @@ export const StateHarness: Story = {
         <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate disabled />
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate error />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate error helperText="Error message" />
       </div>
     </div>
   ),

@@ -9,6 +9,8 @@
 - State matrix Figma: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42151-53254&m=dev`
 - State matrix node ID: `42151:53254`
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
+- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
+- Verified at: 2026-06-18
 - Variant axes covered: selection (`unselected | selected | partial`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
 ## Anatomy
 - **root**: clickable control row, aligns box + label.

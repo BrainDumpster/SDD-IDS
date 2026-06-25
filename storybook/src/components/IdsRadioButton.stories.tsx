@@ -81,9 +81,27 @@ export const ErrorAndHelperText: Story = {
         defaultValue="option1"
       />
       <RadioButton
-        name="ids-radio-error"
+        name="ids-radio-error-unselected"
         options={[
-          { value: "option1", label: "Option 1", error: true, helperText: "Error message" },
+          {
+            value: "option1",
+            label: "Option 1",
+            error: true,
+            helperText: "Error message — ring stays strong border, not critical red.",
+          },
+          { value: "option2", label: "Option 2" },
+          { value: "option3", label: "Option 3" },
+        ]}
+      />
+      <RadioButton
+        name="ids-radio-error-selected"
+        options={[
+          {
+            value: "option1",
+            label: "Option 1",
+            error: true,
+            helperText: "Error message only — selected dot keeps brand tokens.",
+          },
           { value: "option2", label: "Option 2" },
           { value: "option3", label: "Option 3" },
         ]}
