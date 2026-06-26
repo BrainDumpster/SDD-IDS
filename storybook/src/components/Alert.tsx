@@ -209,7 +209,7 @@ function AlertInlineView(
   const showTitle = density === "detailed" && Boolean(title);
   const showLink = Boolean(linkLabel);
   const showAction = Boolean(actionLabel);
-  const showDismiss = dismissible ?? (severity !== "critical" || !showAction);
+  const showDismiss = severity !== "critical" && (dismissible ?? true);
 
   const densityClass =
     density === "detailed" ? styles.inlineDensityDetailed : styles.inlineDensityCompact;
@@ -273,7 +273,7 @@ function AlertInlineView(
               }}
               aria-label="Dismiss alert"
             >
-              <Icon shapeName="shape-x" variant="img" className={styles.inlineCloseIcon} />
+              <Icon shapeName="shape-x" variant="img" className={styles.inlineCloseIcon} style={{ width: 12, height: 12 }} />
             </button>
           ) : null}
         </div>
