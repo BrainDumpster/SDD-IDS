@@ -46,6 +46,10 @@
   padding-block: var(--padding-padding-10);
 }
 
+.globalRoot[data-carousel="true"] .globalContent {
+  padding-left: 148px;
+}
+
 .globalActions {
   display: flex;
   align-items: center;
@@ -124,21 +128,25 @@
 }
 
 .globalCarouselRail {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  width: 132px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  align-self: stretch;
-  gap: 22px;
+  gap: 24px;
   padding: var(--padding-padding-10) var(--padding-padding-14);
-  margin-inline-end: var(--spacing-space-16);
-  border-right: var(--border-width-border-1) solid transparent;
+  border: var(--border-width-border-1) solid;
+  border-color: inherit;
 }
 
 .globalCarouselCount {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: inherit;
+  white-space: nowrap;
 }
 
 .globalRoot[data-severity="critical"] {

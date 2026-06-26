@@ -397,7 +397,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 
 **Layout & structure**
 - **Global root**: no `min-height`; use `align-items: flex-start` and no `gap`
-- **Carousel rail**: use `position: absolute; top: -1px; bottom: -1px; left: -1px; width: 132px` so the rail overlaps the root border. Add a full 4-side border with `border-color: inherit` to match the root severity color. Offset `.globalContent` with `padding-left: 148px` when carousel is present
+- **Carousel rail**: use `position: absolute; top: -1px; bottom: -1px; left: -1px; width: 132px` so the rail overlaps the root border. Add a full 4-side border with `border-color: inherit` to match the root severity color. Offset `.globalContent` with `padding-left: 148px` when carousel is present. Inner gap between chevron and count is `24px`. Set `white-space: nowrap` on `.globalCarouselCount` to prevent text wrapping inside the fixed-width rail
 - **Actions trailing area**: two states — dismiss-only uses `align-items: flex-start; padding-block: 14px`; with-action uses `align-items: center; padding-block: 8px`. Use `data-has-action` attribute to switch between them
 - **Dismiss button and carousel prev/next buttons**: use `width: auto; height: auto; padding: 0` so the button wrapper does not exceed the `12×12px` icon size
 
