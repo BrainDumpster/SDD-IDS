@@ -351,10 +351,10 @@
 .inlineActionOutlined {
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
-  border: var(--border-width-border-1) solid var(--color-static-brand-500);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--alert-action-control-radius, var(--corner-radius-radius-2));
   background: transparent;
-  color: var(--color-static-brand-600);
+  color: var(--color-text-brand-strong);
   font: inherit;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
