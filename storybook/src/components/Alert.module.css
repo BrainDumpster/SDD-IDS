@@ -94,6 +94,16 @@
   cursor: pointer;
 }
 
+.globalRoot[data-severity="warning-major"] .globalActionButton,
+.globalRoot[data-severity="warning-minor"] .globalActionButton {
+  border-color: var(--color-border-black);
+}
+
+.globalRoot[data-severity="critical"] .globalActionButton,
+.globalRoot[data-severity="informational"] .globalActionButton {
+  border-color: var(--color-border-white);
+}
+
 .globalDismissButton,
 .globalCarouselButton {
   width: 24px;
@@ -138,7 +148,11 @@
 .globalCarouselCount {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: inherit;
+  color: var(--color-text-white);
+}
+
+.globalRoot[data-severity="warning-minor"] .globalCarouselCount {
+  color: var(--color-text-black);
 }
 
 .globalRoot[data-severity="critical"] {
@@ -152,7 +166,7 @@
 .globalRoot[data-severity="warning-major"] {
   background: var(--color-background-alerting-major);
   border-color: var(--color-border-alerting-transparent-major);
-  color: var(--color-text-white);
+  color: var(--color-text-black);
   --alert-icon-color: var(--color-icon-alerting-major);
   --icon-contrast-color: var(--color-icon-white);
 }

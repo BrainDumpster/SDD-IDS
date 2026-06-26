@@ -405,7 +405,8 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Informational background**: use `var(--color-background-alerting-info)` directly
 - **Dismiss icon color**: critical and informational use `var(--color-icon-white)`; both warning severities use `var(--color-icon-black)`
 - **Warning-major message text**: use `var(--color-text-black)`
-- **Carousel count color**: always `var(--color-text-white)` on all severities — the count sits inside the carousel rail whose background is the strong token (e.g. `var(--color-background-alerting-major-strong)`), not the root background. Do **not** inherit from root; set `color: var(--color-text-white)` explicitly on `.globalCarouselCount`
+- **Action button border color**: `currentColor` inherits the root text token, not a border token — set `border-color` explicitly: `var(--color-border-black)` for warning-major and warning-minor; `var(--color-border-white)` for critical and informational
+- **Carousel count color**: since warning-major root text is `var(--color-text-black)`, set `color: var(--color-text-white)` explicitly on `.globalCarouselCount` — the count sits on the strong rail background, not the root. Override with `var(--color-text-black)` for warning-minor only
 
 **Icons**
 - **Critical**: use `status-critical-square-solid-ko` with `variant="img"`. The SVG fill is white; the X mark is a cutout that reveals the red background
