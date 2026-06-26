@@ -80,6 +80,14 @@ const config = {
         compiledRoot,
         "component-contracts/ids/alert.contract.js",
       ),
+      "@component-contracts/ids/checkbox.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/checkbox.contract.js",
+      ),
+      "@component-contracts/ids/radio-button.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/radio-button.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 

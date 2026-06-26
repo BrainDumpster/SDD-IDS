@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/synapse/checkbox.contract.ts";
+export * from "@component-contracts/synapse/checkbox.contract";

@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/synapse/left-nav.contract.ts";
+export * from "@component-contracts/synapse/left-nav.contract";

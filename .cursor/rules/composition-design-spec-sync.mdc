@@ -1,0 +1,44 @@
+---
+description: When adding composition APIs (group + children), update the matching design-spec.md in the same change
+globs: storybook-angular/**/*,component-contracts/**/*,storybook/src/components/**/*
+alwaysApply: false
+---
+
+# Composition → Design-Spec Sync
+
+Apply when creating or modifying **group + item** component APIs in Storybook or framework ports.
+
+## When this rule applies
+
+- New files under `storybook-angular/src/components/ids-*-group/` or `*-group.component.ts`
+- Splitting a monolithic component into `*-group` + item selectors
+- Adding `IDS_*_IMPORTS` arrays that include both group and item components
+- Changing `component-contracts/**/<slug>.contract.ts` to document group defaults or deprecate `options[]`
+
+## Required actions (same PR / session)
+
+1. Open `components/<programme>/<slug>/design-spec.md` (resolve programme from `config/design_systems/`).
+2. Update **Anatomy**, **Composition & API (runtime)**, **Codegen Contract → Deterministic structure**, **Source Mapping**, and **Implementation Notes** as needed.
+3. Follow the checklist in `.cursor/rules/design-spec-and-lit-workflow.mdc` → **Composition Pattern Sync**.
+4. Use **design-spec-blueprint** skill for section wording and production-ready gate.
+
+## Canonical pattern (document in spec)
+
+```
+Group [group-level props]
+  Item [item-level props]
+  Item …
+```
+
+Examples:
+- `ids-checkbox-group` → `ids-checkbox`
+- `ids-radio-button-group` → `ids-radio-button`
+- `ids-accordion` → `ids-accordion-item` (+ header/body children)
+
+**Synapse (IDS-fork):** inherit composition from `components/ids/<slug>/design-spec.md`; update `components/synapse/<slug>/design-spec.md` **Composition & API** and **Deterministic structure** in the same change (see `docs/design-spec-authoring-contract.md` → **Synapse (IDS-fork)**). **Storybook:** React only — no `storybook-angular/` Synapse ports unless explicitly requested.
+
+## Do not
+
+- Ship Storybook stories that use composition markup without updating the spec.
+- Leave aggregate `options[]` / `items[]` as the only documented API when composition is preferred.
+- Skip `component-contracts` updates when spec references a contract mirror path.

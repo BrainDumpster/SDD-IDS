@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/synapse/dropdown-single-select.contract.ts";
+export * from "@component-contracts/synapse/dropdown-single-select.contract";

@@ -999,8 +999,8 @@ Isolated Storybook packages per framework (separate `node_modules`, separate por
 
 | Framework | Package | Port | Generated stories |
 |-----------|---------|------|-------------------|
-| React | `storybook/` | 6006 | `storybook-generated/<programme>/` |
-| Angular | `storybook-angular/` | 6007 | `storybook-angular/src/generated/<programme>/` |
+| React | `storybook/` | 6006 | `storybook-generated/<programme>/` (IDS, DAP, **Synapse**) |
+| Angular | `storybook-angular/` | 6007 | `storybook-angular/src/generated/<programme>/` (**IDS, DAP only** — no Synapse unless explicitly requested) |
 
 Shared component API contracts: `component-contracts/` (types, defaults, sample data).
 

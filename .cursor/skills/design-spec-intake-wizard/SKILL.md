@@ -101,6 +101,13 @@ Execute in order:
 
 After `design-spec.md` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group.
 
+**Framework routing:**
+
+| Programme | Target Storybook package |
+|-----------|-------------------------|
+| IDS, DAP | React and/or Angular per user request |
+| **Synapse** | **React only** (`storybook/` / `storybook-generated/synapse/`) — do **not** create Synapse stories or components under `storybook-angular/` unless the user explicitly asks |
+
 **Meta title:** `Spec Generated/{DisplayName}/<Component Display Name>` — use programme `display_name` from yaml (e.g. `IDS`, `DAP`, `Synapse`).
 
 **Primary story (required):**
@@ -114,6 +121,8 @@ After `design-spec.md` is written, generate or update Storybook using the **Spec
 **Do not** place spec-driven examples under generic groups (e.g. `Components/...`) or omit the Spec Accurate Design story.
 
 **Implementation:** use `generation/deterministic_storybook/` patterns and `scripts/strict_spec_storybook_gate.py` when available.
+
+**Composition API:** if Storybook uses group + projected children (e.g. `ids-checkbox-group` / `ids-checkbox`), update **Anatomy**, **Composition & API**, **Codegen structure**, and **Source Mapping** in `design-spec.md` in the same session — see `docs/design-spec-authoring-contract.md` → **Composition pattern sync**.
 
 Record generated story path in spec **Metadata**. Add validation checklist item for Spec Accurate Design under Spec Generated.
 

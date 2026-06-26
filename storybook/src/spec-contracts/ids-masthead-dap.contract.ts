@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/ids/masthead-dap.contract.ts";
+export * from "@component-contracts/ids/masthead-dap.contract";

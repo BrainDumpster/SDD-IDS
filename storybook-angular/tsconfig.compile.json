@@ -12,10 +12,14 @@
     "src/components/ids-button/ids-button.component.ts",
     "src/components/ids-button/ids-button.imports.ts",
     "src/components/ids-badge/ids-badge.component.ts",
+    "src/components/ids-checkbox/**/*.ts",
+    "src/components/ids-radio-button/**/*.ts",
     "../component-contracts/common/story-meta.ts",
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",
     "../component-contracts/ids/button.contract.ts",
-    "../component-contracts/ids/badge.contract.ts"
+    "../component-contracts/ids/badge.contract.ts",
+    "../component-contracts/ids/checkbox.contract.ts",
+    "../component-contracts/ids/radio-button.contract.ts"
   ]
 }

@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/synapse/chat-input-box.contract.ts";
+export * from "@component-contracts/synapse/chat-input-box.contract";

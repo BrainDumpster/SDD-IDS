@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/synapse/segmented-button.contract.ts";
+export * from "@component-contracts/synapse/segmented-button.contract";

@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/ids/pagination.contract.ts";
+export * from "@component-contracts/ids/pagination.contract";

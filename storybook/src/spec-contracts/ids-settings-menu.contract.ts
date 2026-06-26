@@ -1,1 +1,1 @@
-export * from "../../../../component-contracts/ids/settings-menu.contract.ts";
+export * from "@component-contracts/ids/settings-menu.contract";
