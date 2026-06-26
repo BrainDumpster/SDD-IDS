@@ -56,6 +56,7 @@ const config: StorybookConfig = {
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {
+          "@component-contracts": path.join(repoRoot, "component-contracts"),
           react: reactRoot,
           "react-dom": reactDomRoot,
           "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),
@@ -70,6 +71,7 @@ const config: StorybookConfig = {
           "react-dom",
           "react/jsx-runtime",
           "react/jsx-dev-runtime",
+          "@base-ui-components/react/accordion",
           "@base-ui-components/react/popover",
           "@base-ui-components/react/progress",
           "@base-ui-components/react/toggle-group",

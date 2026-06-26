@@ -1,8 +1,10 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
+import { SPEC_ACCURATE_DESIGN_STORY } from "../../../component-contracts/common/story-meta";
 import { IdsAccordion } from "./IdsAccordion";
 import {
   ACCORDION_API_DEFAULTS,
+  ACCORDION_SPEC_ACCURATE_DEFAULTS,
   ACCORDION_SPEC_DEMO_ITEMS,
   ACCORDION_SPEC_DISABLED_ITEM,
   ACCORDION_SPEC_FORM_ITEMS,
@@ -32,6 +34,18 @@ const meta: Meta<typeof IdsAccordion> = {
 
 export default meta;
 type Story = StoryObj<typeof IdsAccordion>;
+
+/** Canonical spec defaults — lives in-package so Storybook can import this CSF reliably. */
+export const SpecAccurateDesign: Story = {
+  name: SPEC_ACCURATE_DESIGN_STORY,
+  args: {
+    items: ACCORDION_SPEC_DEMO_ITEMS,
+    multiple: ACCORDION_SPEC_ACCURATE_DEFAULTS.multiple,
+    defaultValue: [...ACCORDION_SPEC_ACCURATE_DEFAULTS.defaultValue],
+    chevronPosition: ACCORDION_SPEC_ACCURATE_DEFAULTS.chevronPosition,
+    variant: ACCORDION_SPEC_ACCURATE_DEFAULTS.variant,
+  },
+};
 
 export const Default: Story = {};
 

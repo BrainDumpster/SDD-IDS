@@ -62,28 +62,67 @@ def ensure_react_import_for_jsx(storybook_code: str) -> str:
     return 'import React from "react";\n' + text
 
 
+def get_story_path(
+    *,
+    component_slug: str,
+    generated_root: Path,
+    subdir: str = "src/components",
+    framework: str = "react",
+) -> Path:
+    extension = ".stories.ts" if framework.lower() == "angular" else ".stories.tsx"
+    story_filename = f"{_slug_to_pascal(component_slug)}{extension}"
+    return generated_root / subdir / story_filename
+
+
+# Angular pilot components: story CSF co-located with implementation (storybook-angular only).
+ANGULAR_COLOCATED_STORY_REL: dict[str, str] = {
+    "accordion": "src/components/ids-accordion/ids-accordion.stories.js",
+    "alert": "src/components/ids-alert/ids-alert.stories.js",
+    "button": "src/components/ids-button/ids-button.stories.js",
+}
+
+
+def get_angular_colocated_story_path(angular_package_root: Path, component_slug: str) -> Path | None:
+    rel = ANGULAR_COLOCATED_STORY_REL.get(component_slug.lower())
+    if not rel:
+        return None
+    return angular_package_root / rel
+
+
 def write_generated_story(
     *,
     component_slug: str,
     storybook_code: str,
     generated_root: Path,
     subdir: str = "src/components",
+    framework: str = "react",
+    angular_package_root: Path | None = None,
 ) -> Path:
     if not storybook_code.strip():
         raise ValueError(f"Empty STORYBOOK output for component: {component_slug}")
 
-    storybook_code = ensure_react_import_for_jsx(storybook_code)
+    if framework.lower() != "angular":
+        storybook_code = ensure_react_import_for_jsx(storybook_code)
 
-    output_path = get_story_path(component_slug=component_slug, generated_root=generated_root, subdir=subdir)
+    colocated = (
+        get_angular_colocated_story_path(angular_package_root, component_slug)
+        if framework.lower() == "angular" and angular_package_root is not None
+        else None
+    )
+    if colocated is not None:
+        output_path = colocated
+    else:
+        output_path = get_story_path(
+            component_slug=component_slug,
+            generated_root=generated_root,
+            subdir=subdir,
+            framework=framework,
+        )
+        ensure_under_generated_root(output_path, generated_root)
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    ensure_under_generated_root(output_path, generated_root)
     output_path.write_text(storybook_code, encoding="utf-8")
     return output_path
-
-
-def get_story_path(*, component_slug: str, generated_root: Path, subdir: str = "src/components") -> Path:
-    story_filename = f"{_slug_to_pascal(component_slug)}.stories.tsx"
-    return generated_root / subdir / story_filename
 
 
 def prepend_generated_header(storybook_code: str, header: str) -> str:
@@ -138,7 +177,8 @@ def idempotent_drift(before: str, after: str) -> bool:
     return before != after
 
 
-def list_story_files(root: Path) -> Iterable[Path]:
+def list_story_files(root: Path, *, framework: str = "react") -> Iterable[Path]:
     if not root.exists():
         return []
-    return root.rglob("*.stories.tsx")
+    pattern = "*.stories.ts" if framework.lower() == "angular" else "*.stories.tsx"
+    return root.rglob(pattern)

@@ -1,16 +1,18 @@
 import { Button as BaseButton } from "@base-ui-components/react/button";
 import { forwardRef, useMemo, type ComponentProps, type ReactNode } from "react";
+import {
+  BUTTON_SPEC_ACCURATE_DEFAULTS,
+  type ButtonSize,
+  type ButtonVariantExtended,
+} from "../../../../component-contracts/ids/button.contract";
 import { Icon } from "./Icon";
 import styles from "./Button.module.css";
-
-type Variant = "primary" | "secondary" | "tertiary" | "ghost" | "danger" | "destructive";
-type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ComponentProps<"button"> {
   /** Programme chrome (`synapse`: ::after focus ring; radius from theme aliases). */
   programme?: "ids" | "synapse";
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariantExtended;
+  size?: ButtonSize;
   loading?: boolean;
   /** Leading 16×16 icon (Figma: Icon=Yes, Icon Only=No). */
   icon?: ReactNode;
@@ -44,9 +46,9 @@ function resolveIconUrl(iconSlug: string): string | undefined {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     programme = "ids",
-    variant = "primary",
-    size = "lg",
-    loading = false,
+    variant = BUTTON_SPEC_ACCURATE_DEFAULTS.variant,
+    size = BUTTON_SPEC_ACCURATE_DEFAULTS.size,
+    loading = BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
     icon,
     iconSlug,
     iconVariant = "mask",

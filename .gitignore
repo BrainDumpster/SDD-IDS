@@ -13,6 +13,8 @@ design-system-knowledge
 node_modules/
 **/stoybook/node_modules/
 storybook/storybook-static/
+storybook-angular/storybook-static/
+storybook-angular/.angular/cache/
 .cache/
 **/.cache/
 

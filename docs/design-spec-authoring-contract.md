@@ -146,9 +146,13 @@ When the user requests Storybook examples (intake wizard question 7 = `yes`), ge
 | DAP | `Spec Generated/DAP/<Component Display Name>` |
 | Synapse | `Spec Generated/Synapse/<Component Display Name>` |
 
-Output path pattern: `storybook-generated/<programme>/src/components/<Component>.stories.tsx`
+Output path pattern (React): `storybook-generated/<programme>/src/components/<Component>.stories.tsx`
 
-Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS), `components/dap-theme.css` (DAP), or `components/synapse-theme.css` (Synapse).
+Output path pattern (Angular): `storybook-angular/src/generated/<programme>/src/components/<Component>.stories.ts`
+
+Shared API defaults and types live in `component-contracts/` (framework-agnostic). React and Angular stories import `BUTTON_SPEC_ACCURATE_DEFAULTS` (and per-component equivalents) from that folder.
+
+Import exactly one theme CSS in **React** story files: `components/ids-theme.css` (IDS), `components/dap-theme.css` (DAP), or `components/synapse-theme.css` (Synapse). **Angular** Storybook loads themes via `storybook-angular/.storybook/preview.js` (static `/components/*-theme.css` links).
 
 IDS-fork programme components use the programme story path and theme; see [`design-spec-programme-inheritance.md`](design-spec-programme-inheritance.md) and Synapse examples in [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
 

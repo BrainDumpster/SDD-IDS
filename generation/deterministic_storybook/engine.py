@@ -8,6 +8,9 @@ from generation.deterministic_storybook.ids.alert import generate_ids_alert_stor
 from generation.deterministic_storybook.ids.app_launcher import generate_ids_app_launcher_story
 from generation.deterministic_storybook.ids.badge import generate_ids_badge_story
 from generation.deterministic_storybook.ids.button import generate_ids_button_story
+from generation.deterministic_storybook.ids.accordion_angular import generate_ids_accordion_story_angular
+from generation.deterministic_storybook.ids.alert_angular import generate_ids_alert_story_angular
+from generation.deterministic_storybook.ids.button_angular import generate_ids_button_story_angular
 from generation.deterministic_storybook.ids.checkbox import generate_ids_checkbox_story
 from generation.deterministic_storybook.ids.detail_panel import generate_ids_detail_panel_story
 from generation.deterministic_storybook.ids.dropdown_combo_box import generate_ids_dropdown_combo_box_story
@@ -80,6 +83,12 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "side-panel"): generate_dap_side_panel_story,
 }
 
+ANGULAR_REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
+    ("ids", "accordion"): generate_ids_accordion_story_angular,
+    ("ids", "alert"): generate_ids_alert_story_angular,
+    ("ids", "button"): generate_ids_button_story_angular,
+}
+
 
 def generate_story_for_component(
     *,
@@ -89,17 +98,30 @@ def generate_story_for_component(
     story_path: Path,
     contract: SpecContract,
     options: DeterministicStorybookOptions | None = None,
+    framework: str = "react",
 ) -> str | None:
+    registry = ANGULAR_REGISTRY if framework.lower() == "angular" else REGISTRY
     key = (design_system.lower(), component.lower())
-    generator = REGISTRY.get(key)
+    generator = registry.get(key)
     if not generator:
         # Allow baseline IDS generator reuse in program contexts.
-        generator = REGISTRY.get(("ids", component.lower()))
+        generator = registry.get(("ids", component.lower()))
     if not generator:
         return None
+    merged_options = options or DeterministicStorybookOptions()
+    if framework.lower() == "angular":
+        merged_options = DeterministicStorybookOptions(
+            title_prefix=merged_options.title_prefix,
+            include_state_harness=merged_options.include_state_harness,
+            component_prefix=merged_options.component_prefix,
+            design_system_slug=merged_options.design_system_slug,
+            apply_program_deltas=merged_options.apply_program_deltas,
+            framework="angular",
+            spec_text=merged_options.spec_text,
+        )
     return generator(
         repo_root=repo_root,
         story_path=story_path,
         contract=contract,
-        options=options,
+        options=merged_options,
     )

@@ -1,8 +1,81 @@
 import "../../../components/ids-theme.css";
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Alert } from "./Alert";
-import type { AlertGlobalSeverity } from "./Alert";
+import { SPEC_ACCURATE_DESIGN_STORY } from "../../../component-contracts/common/story-meta";
+import {
+  ALERT_SPEC_ACCURATE_DEFAULTS,
+  IDS_ALERT_DESIGN_SPEC_PATH,
+} from "../spec-contracts/ids-alert.contract";
+import {
+  Alert,
+  AlertAction,
+  AlertLink,
+  AlertMessage,
+} from "./Alert";
+import { AlertGroup, AlertItem } from "./AlertGroup";
+import type { AlertGlobalSeverity, AlertInlineSeverity } from "./Alert";
+
+type AlertControlArgs = {
+  display: "global" | "inline";
+  severity?: string;
+  density?: "compact" | "detailed";
+  message?: string;
+  title?: string;
+  linkLabel?: string;
+  linkHref?: string;
+  actionLabel?: string;
+  dismissible?: boolean;
+};
+
+function renderAlertFromControls(args: AlertControlArgs) {
+  const messageSlot = args.message ? <AlertMessage>{args.message}</AlertMessage> : null;
+  const globalSeverity = (
+    args.severity === "success" ? "informational" : args.severity ?? "informational"
+  ) as AlertGlobalSeverity;
+  const inlineSeverity = (args.severity ?? "informational") as AlertInlineSeverity;
+
+  if (args.display === "global") {
+    return (
+      <Alert
+        display="global"
+        severity={globalSeverity}
+        dismissible={args.dismissible}
+        linkLabel={args.linkLabel || undefined}
+        linkHref={args.linkHref || undefined}
+        actionLabel={args.actionLabel || undefined}
+      >
+        {messageSlot}
+      </Alert>
+    );
+  }
+
+  return (
+    <Alert
+      display="inline"
+      severity={inlineSeverity}
+      density={args.density ?? "compact"}
+      title={args.title || undefined}
+      dismissible={args.dismissible}
+      linkLabel={args.linkLabel || undefined}
+      linkHref={args.linkHref || undefined}
+      actionLabel={args.actionLabel || undefined}
+    >
+      {messageSlot}
+    </Alert>
+  );
+}
+
+const specAccurateArgs: AlertControlArgs = {
+  display: "inline",
+  severity: "informational",
+  density: "compact",
+  message: ALERT_SPEC_ACCURATE_DEFAULTS.message,
+  dismissible: true,
+  title: "",
+  linkLabel: "",
+  linkHref: "",
+  actionLabel: "",
+};
 
 const meta = {
   title: "Spec Generated/IDS/Alert",
@@ -11,7 +84,10 @@ const meta = {
     docs: {
       description: {
         component:
-          "Unified IDS alert: set **display** to `global` (application banner) or `inline` (contextual slate). Only **inline** supports **success** severity. **Carousel** is only valid when `display=\"global\"`.",
+          "Unified IDS alert with **composition** (`AlertMessage`, `AlertLink`, `AlertAction`) or prop shorthand. " +
+          "`display`: `global` (banner) or `inline` (contextual). Inline adds **success** severity. " +
+          "Global multi-alert: use `AlertGroup` + `AlertItem` children (one banner + carousel). " +
+          `Contract: \`${IDS_ALERT_DESIGN_SPEC_PATH}\`.`,
       },
     },
   },
@@ -35,19 +111,71 @@ const meta = {
       control: "text",
       if: { arg: "display", eq: "inline" },
     },
+    message: { control: "text", name: "message (slot)" },
+    linkLabel: { control: "text" },
+    linkHref: { control: "text" },
+    actionLabel: { control: "text" },
     dismissible: { control: "boolean" },
   },
+  args: specAccurateArgs,
 } satisfies Meta<typeof Alert>;
 
 export default meta;
 type Story = StoryObj<typeof Alert>;
 
+/** Spec Accurate Design: inline · informational · compact · dismissible — composition markup. */
+export const SpecAccurateDesign: Story = {
+  name: SPEC_ACCURATE_DESIGN_STORY,
+  render: (args) => renderAlertFromControls(args as AlertControlArgs),
+  args: specAccurateArgs,
+};
+
+/** Global multi-alert composition — `AlertGroup` owns carousel; one internal `Alert` banner. */
+export const MultipleAlerts: Story = {
+  name: "Multiple Alerts (Global Carousel)",
+  parameters: { layout: "fullscreen" },
+  render: () => (
+    <AlertGroup defaultActiveIndex={1}>
+      <AlertItem severity="critical">
+        <AlertMessage>
+          Critical outage: immediate action required in region us-east-1.
+        </AlertMessage>
+        <AlertLink label="View status page" href="#" />
+        <AlertAction label="Retry" />
+      </AlertItem>
+      <AlertItem severity="warning-major">
+        <AlertMessage>Major degradation detected for alerting service.</AlertMessage>
+        <AlertLink label="Learn more" href="#" />
+      </AlertItem>
+      <AlertItem severity="warning-minor">
+        <AlertMessage>Minor warning: configuration drift found in workspace sync.</AlertMessage>
+      </AlertItem>
+      <AlertItem severity="informational">
+        <AlertMessage>
+          Multiple active alerts are available. Review the alert center.
+        </AlertMessage>
+        <AlertLink label="Open alert center" href="#" />
+        <AlertAction label="Acknowledge" />
+      </AlertItem>
+      <AlertItem severity="informational">
+        <AlertMessage>Scheduled maintenance window starts at 02:00 UTC.</AlertMessage>
+        <AlertLink label="Open schedule" href="#" />
+      </AlertItem>
+    </AlertGroup>
+  ),
+};
+
 export const PlaygroundManual: Story = {
+  render: (args) => renderAlertFromControls(args as AlertControlArgs),
   args: {
     display: "global",
     severity: "informational",
     message: "Alert message — use **display** to switch global vs inline.",
     dismissible: true,
+    title: "",
+    linkLabel: "",
+    linkHref: "",
+    actionLabel: "",
   },
 };
 

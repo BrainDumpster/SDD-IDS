@@ -96,8 +96,8 @@
 
 .globalDismissButton,
 .globalCarouselButton {
-  width: 24px;
-  height: 24px;
+  width: auto;
+  height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -110,10 +110,8 @@
 
 .globalDismissIcon,
 .globalCarouselChevron {
-  width: 12px;
-  height: 12px;
-  display: inline-block;
-  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
 }
 
 .globalDismissButton:focus-visible,
@@ -182,7 +180,7 @@
 .globalRoot[data-severity="critical"] .globalDismissIcon,
 .globalRoot[data-severity="warning-major"] .globalDismissIcon,
 .globalRoot[data-severity="warning-minor"] .globalDismissIcon {
-  filter: none;
+  filter: brightness(0);
 }
 
 .globalRoot[data-severity="informational"] .globalDismissButton {
@@ -332,11 +330,13 @@
 
 .inlineRoot[data-density="compact"] .inlineTrailing {
   align-items: center;
-  padding: var(--padding-padding-14) 17px var(--padding-padding-14) var(--padding-padding-16);
+  box-sizing: border-box;
+  height: var(--scale-40);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .inlineRoot[data-density="compact"] .inlineTrailing[data-has-action="true"] {
-  padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .inlineRoot[data-density="detailed"] .inlineTrailing {
@@ -365,20 +365,15 @@
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: var(--scale-12);
-  height: var(--scale-12);
+  justify-content: flex-end;
+  box-sizing: border-box;
   border: none;
   background: transparent;
   color: var(--color-icon-black);
   cursor: pointer;
-  padding: 0;
-}
-
-.inlineCloseIcon {
-  width: var(--scale-12);
-  height: var(--scale-12);
-  object-fit: contain;
+  padding: 10px 0 10px 20px;
+  min-width: var(--scale-32);
+  min-height: var(--scale-32);
 }
 
 .inlineClose:focus-visible,

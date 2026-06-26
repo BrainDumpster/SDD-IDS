@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "lib": ["ES2022", "dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@storybook/angular": ["node_modules/@storybook/angular"],
+      "@storybook/*": ["node_modules/@storybook/*"],
+      "@component-contracts/*": ["../component-contracts/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "../component-contracts/common/**/*.ts",
+    "../component-contracts/ids/button.contract.ts",
+    "../component-contracts/ids/accordion.contract.ts"
+  ]
+}

@@ -217,6 +217,7 @@ def main() -> int:
         compute_spec_layer_hash,
         ensure_storybook_theme_import,
         extract_existing_spec_hash,
+        get_angular_colocated_story_path,
         get_story_path,
         idempotent_drift,
         prepend_generated_header,
@@ -231,10 +232,19 @@ def main() -> int:
     design_system = os.getenv("DESIGN_SYSTEM", "ids")
     cfg = load_design_system(design_system)
     project_root = cfg.project_root
-    generated_root = (project_root / cfg.generated_storybook_dir).resolve()
+    framework_key = args.framework.lower()
+    is_angular = framework_key == "angular"
+    if is_angular:
+        generated_root = (project_root / cfg.generated_angular_storybook_dir).resolve()
+    else:
+        generated_root = (project_root / cfg.generated_storybook_dir).resolve()
     legacy_storybook_root = (project_root / "storybook").resolve()
+    angular_storybook_root = (project_root / cfg.angular_storybook_dir).resolve()
     if generated_root == legacy_storybook_root or legacy_storybook_root in generated_root.parents:
         print("generated_storybook_dir must not be inside legacy storybook/")
+        return 2
+    if is_angular and generated_root == angular_storybook_root:
+        print("generated_angular_storybook_dir must not equal storybook-angular package root")
         return 2
     generated_root.mkdir(parents=True, exist_ok=True)
 
@@ -263,7 +273,15 @@ def main() -> int:
         if args.deterministic_story:
             # Offline story generation: derive from spec contract only.
             contract = spec_parser.parse(context.get("spec", ""))
-            story_path = get_story_path(component_slug=component, generated_root=generated_root)
+            story_path = get_story_path(
+                component_slug=component,
+                generated_root=generated_root,
+                framework=args.framework,
+            )
+            if is_angular:
+                colocated = get_angular_colocated_story_path(angular_storybook_root, component)
+                if colocated is not None:
+                    story_path = colocated
 
             program_spec = (project_root / cfg.program_components_dir / component / "design-spec.md").resolve()
             program_root_spec = (project_root / cfg.program_root_spec_path).resolve()
@@ -279,6 +297,7 @@ def main() -> int:
                 component_prefix=component_prefix,
                 design_system_slug=design_system.lower(),
                 apply_program_deltas=has_program_delta,
+                framework=framework_key,
                 spec_text=spec_body,
             )
 
@@ -305,6 +324,7 @@ def main() -> int:
                 story_path=story_path,
                 contract=contract,
                 options=det_options,
+                framework=args.framework,
             ) or ""
             if not storybook_text:
                 failures.append(f"{component}: deterministic story generator not implemented yet")
@@ -323,13 +343,16 @@ def main() -> int:
             failures.append(f"{component}: generator did not return STORYBOOK section")
             continue
 
-        storybook_text = _append_token_inspector_story(
-            storybook_text=storybook_text,
-            spec_text=context.get("spec", ""),
-        )
-        storybook_text = ensure_storybook_theme_import(
-            storybook_text, design_system.lower()
-        )
+        if not is_angular:
+            storybook_text = _append_token_inspector_story(
+                storybook_text=storybook_text,
+                spec_text=context.get("spec", ""),
+            )
+
+        if not is_angular:
+            storybook_text = ensure_storybook_theme_import(
+                storybook_text, design_system.lower()
+            )
 
         spec_hash = compute_spec_layer_hash(context)
         header = story_header(component, spec_hash)
@@ -352,7 +375,15 @@ def main() -> int:
             if generated.get("css"):
                 (component_dir / f"{component_name}.generated.module.css").write_text(generated.get("css", ""), encoding="utf-8")
 
-        story_path = get_story_path(component_slug=component, generated_root=generated_root)
+        story_path = get_story_path(
+            component_slug=component,
+            generated_root=generated_root,
+            framework=args.framework,
+        )
+        if is_angular:
+            colocated = get_angular_colocated_story_path(angular_storybook_root, component)
+            if colocated is not None:
+                story_path = colocated
         old_hash = extract_existing_spec_hash(story_path)
 
         try:
@@ -360,7 +391,13 @@ def main() -> int:
                 component_slug=component,
                 storybook_code=storybook_text,
                 generated_root=generated_root,
+                framework=args.framework,
+                angular_package_root=angular_storybook_root if is_angular else None,
             )
+            if is_angular and component.lower() in ("accordion", "button"):
+                legacy = generated_root / "src/components" / f"{''.join(p.capitalize() for p in re.split(r'[^a-zA-Z0-9]+', component) if p)}.stories.ts"
+                if legacy.is_file() and legacy.resolve() != story_path.resolve():
+                    legacy.unlink()
         except Exception as exc:
             failures.append(f"{component}: failed to write story ({exc})")
             continue
@@ -379,6 +416,7 @@ def main() -> int:
             spec_text=context.get("spec", ""),
             css_text=css_for_gate,
             storybook_text=storybook_text,
+            framework=args.framework,
         )
         if not gate.passed:
             failures.extend(f"{component}: {err}" for err in gate.errors)
@@ -389,9 +427,9 @@ def main() -> int:
             failures.append(f"{component}: non-idempotent story serialization")
 
     if args.build_storybook:
-        storybook_dir = project_root / "storybook"
+        storybook_dir = angular_storybook_root if is_angular else legacy_storybook_root
         if (storybook_dir / "package.json").exists():
-            print("🏗️ Running Storybook build...")
+            print(f"🏗️ Running Storybook build ({storybook_dir.name})...")
             proc = subprocess.run(
                 ["npm", "run", "build"],
                 cwd=str(storybook_dir),

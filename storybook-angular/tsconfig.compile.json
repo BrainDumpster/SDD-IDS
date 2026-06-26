@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./compiled",
+    "declaration": false,
+    "noEmit": false
+  },
+  "include": [
+    "src/components/ids-accordion/**/*.ts",
+    "src/components/ids-alert/**/*.ts",
+    "src/components/ids-icon/**/*.ts",
+    "src/components/ids-button/ids-button.component.ts",
+    "../component-contracts/common/story-meta.ts",
+    "../component-contracts/ids/accordion.contract.ts",
+    "../component-contracts/ids/alert.contract.ts",
+    "../component-contracts/ids/button.contract.ts"
+  ]
+}
