@@ -14,8 +14,8 @@
 - Verified at: 2026-06-18
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
-- `ButtonLabel` (optional for icon-only mode)
-- `ButtonLeadingIcon` (optional; icon slug driven)
+- `ButtonLeadingIcon` (optional; projected icon child — see Composition & API)
+- `ButtonLabel` (optional for icon-only mode; default content slot)
 
 Deterministic order:
 1. `ButtonRoot`
@@ -131,14 +131,40 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 - Runtime default must remain interactive.
 - Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
 ## Composition & API (runtime)
-- Suggested runtime component: `IdsButton`.
+Suggested runtime component name: `Button` (programme prefixes such as `IdsButton` are implementation-specific).
 
-Inputs:
-- `label?: string` (required unless `iconOnly=true`)
+### Composition (canonical)
+
+Deterministic child order inside `ButtonRoot`:
+
+```
+ButtonRoot [variant, size, disabled, loading, iconOnly?, ariaLabel?, type?, …]
+  ButtonLeadingIcon?   ← optional; must precede label in DOM order
+  ButtonLabel          ← default content slot (text or inline markup)
+```
+
+**Example (pseudocode — adapt selectors to target framework):**
+
+```
+<Button variant="secondary" size="large">
+  <Icon shape="settings-gear-detailed" renderMode="mask" />
+  Settings
+</Button>
+```
+
+Icon-only (supported for `medium` and `large` only):
+
+```
+<Button variant="tertiary" size="large" iconOnly ariaLabel="Settings">
+  <Icon shape="settings-gear-detailed" renderMode="mask" />
+</Button>
+```
+
+### Root inputs
+
 - `variant?: "primary" | "secondary" | "tertiary" | "destructive"` (default `primary`)
 - `size?: "small" | "medium" | "large"` (default `large`)
-- `iconSlug?: string` (optional; user-defined icon slug from `/asset/icons/<slug>.svg`)
-- `iconOnly?: boolean` (default `false`)
+- `iconOnly?: boolean` (default `false`; `medium` and `large` only)
 - `disabled?: boolean` (default `false`)
 - `loading?: boolean` (default `false`; if true, interactions are blocked)
 - `type?: "button" | "submit" | "reset"` (default `button`)
@@ -147,6 +173,13 @@ Inputs:
 - `value?: string`
 - `autofocus?: boolean`
 - `dataState?: "default" | "hover" | "press" | "focus-visible" | "disabled"` (demo/testing override only)
+
+### Slots
+
+| Slot | Required | Notes |
+|------|----------|-------|
+| `ButtonLabel` | Yes unless `iconOnly=true` | Default projected content / primary text slot |
+| `ButtonLeadingIcon` | No | Compose through the programme **Icon** primitive when available; **mask/tintable** mode required so `var(--color-icon-*)` applies. **Not rendered** for `destructive` variant. |
 
 Outputs / events:
 - `onClick(event)` — emitted on successful activation.
@@ -164,7 +197,7 @@ Deterministic structure:
 Variant matrix:
   - `variant`: `primary | secondary | tertiary | destructive`
   - `size`: `small | medium | large`
-  - icon modes: `iconSlug omitted` / `iconSlug present with label` / `iconOnly with iconSlug`
+  - icon modes: no leading icon / leading icon with label / `iconOnly` with leading icon only
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
@@ -196,15 +229,16 @@ Variant matrix:
   - Keyboard parity: `Enter` and `Space` activate.
   - Visible `focus-visible` treatment required.
 - Asset resolution + bundling:
-  - Icon input uses slug: `iconSlug`.
-  - Resolve icon from `/asset/icons/<iconSlug>.svg`.
+  - `ButtonLeadingIcon` resolves by **stable icon slug** (e.g. demo slug `settings-gear-detailed` → `assets/icons/<slug>.svg`).
+  - When the target stack exposes an **Icon** (or equivalent) primitive, render the leading icon **through that component** in **mask / tintable** mode so semantic `color` tokens apply.
   - Unknown slug fallback: hide icon slot and continue rendering label.
 - Fallback/error rules:
   - Unknown `variant` -> `primary`.
   - Unknown `size` -> `large`.
   - `iconOnly=true` and missing `ariaLabel` -> validation error.
-  - `iconOnly=true` and missing `iconSlug` -> validation error.
+  - `iconOnly=true` and missing `ButtonLeadingIcon` content -> validation error.
   - `iconOnly=true` with `size=small` -> validation error (or coerce to `medium` only if product explicitly enables coercion).
+  - `destructive` variant: do not render `ButtonLeadingIcon` even when projected / passed.
 - Validation checklist:
   - [ ] All variant x size x state combinations resolve tokenized styles.
   - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
@@ -215,29 +249,22 @@ Variant matrix:
   - [ ] Keyboard and pointer activation parity is preserved.
   - [ ] Light/Dark tables remain structurally parallel.
 
-## Storybook proof & codegen consumers
+### Icon primitive & asset delivery
 
-**Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
+Use whenever codegen targets a stack that ships an **Icon** (or equivalent) layer.
 
-1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
-2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
-3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
+**When an Icon primitive exists**
+- Prefer it for `ButtonLeadingIcon` instead of ad-hoc `<img src>` paths in the button module.
+- Pass a **stable asset slug** via the library’s shape/name prop; slug must match the asset contract below.
+- Use **tintable / mask** rendering so `var(--color-icon-*)` from the state tables applies via `currentColor`.
+- Place the icon as the **first child** in composition order (before `ButtonLabel`).
 
-Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
+**When no Icon primitive exists**
+- Fallback remains slug-driven (inline SVG with `fill="currentColor"`, sprite, or bundler asset pipeline) with the same token → color mapping.
 
-### Icon Implementation Details (Spec Generated Stories)
-
-The spec-generated Button stories (`storybook-generated/ids/src/components/Button.stories.tsx`) implement icons with the following configuration:
-
-- **Icon asset**: All icons use `assets/icons/settings-gear-detailed.svg`
-- **Icon variant**: All icons use `variant="mask"` (mask-based coloring)
-- **Color token mapping**:
-  - `primary` variant (default/hover/press states): `var(--color-icon-white)`
-  - `secondary` variant (default/hover/press states): `var(--color-icon-brand-base)`
-  - `tertiary` variant (default/hover/press states): `var(--color-icon-brand-base)`
-  - All variants (disabled state): `var(--color-icon-disabled)`
-
-This implementation aligns with the **States (Light Theme)** and **States (Dark Theme)** tables above, which specify icon colors per variant and state.
+**Asset contract (demo / Storybook canonical slug)**
+- Slug: `settings-gear-detailed`
+- File: `assets/icons/settings-gear-detailed.svg`
 
 ## Source Mapping
 - Component map entry: `data/component-figma-map.json` -> `Button`.
@@ -248,15 +275,6 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
-### Storybook proof and codegen consumers
-
-**Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
-
-1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
-2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
-3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
-
-Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
 ## Implementation Notes
 
@@ -268,4 +286,4 @@ Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 - **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-white)`.
 
 **Icon rendering**
-- **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.
+- **Icon slot must use mask / tintable rendering** so CSS `color` tokens tint the glyph. Non-tintable `<img>` ignores `color` and breaks variant icon colors.

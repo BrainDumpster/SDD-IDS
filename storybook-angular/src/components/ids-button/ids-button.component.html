@@ -1,5 +1,6 @@
 <button
   [attr.type]="type"
+  [attr.aria-label]="resolvedIconOnly ? ariaLabel || null : null"
   [ngClass]="['ids-button', variantClass, size, resolvedIconOnly ? 'icon-only' : '', loading ? 'loading' : '']"
   [disabled]="disabled || loading"
   (click)="onClick($event)"
@@ -7,18 +8,18 @@
   @if (loading) {
     <span class="spinner" aria-hidden="true"></span>
   }
-  @if (resolvedIconOnly) {
-    @if (showIcon && iconUrl) {
-      <span class="icon-slot" [class.visually-hidden]="loading" aria-hidden="true">
-        <span class="icon-mask" [style.mask-image]="'url(' + iconUrl + ')'"></span>
-      </span>
-    }
-  } @else {
-    @if (showIcon && iconUrl) {
-      <span class="icon-slot" aria-hidden="true">
-        <span class="icon-mask" [style.mask-image]="'url(' + iconUrl + ')'"></span>
-      </span>
-    }
-    <span [class.label-hidden]="loading">{{ label }}</span>
+  @if (hasLeadingIcon) {
+    <span
+      class="icon-slot"
+      [class.visually-hidden]="loading && resolvedIconOnly"
+      aria-hidden="true"
+    >
+      <ng-content select="ids-icon" />
+    </span>
+  }
+  @if (!resolvedIconOnly) {
+    <span class="label" [class.label-hidden]="loading">
+      <ng-content />
+    </span>
   }
 </button>

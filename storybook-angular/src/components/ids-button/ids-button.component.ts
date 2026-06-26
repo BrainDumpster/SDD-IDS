@@ -1,10 +1,18 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  contentChild,
+  EventEmitter,
+  Input,
+  Output,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
   BUTTON_SPEC_ACCURATE_DEFAULTS,
   type ButtonSize,
   type ButtonVariant,
 } from "@component-contracts/ids/button.contract";
+import { IdsIconComponent } from "../ids-icon/ids-icon.component";
 
 @Component({
   selector: "ids-button",
@@ -15,13 +23,14 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IdsButtonComponent {
+  readonly leadingIcon = contentChild(IdsIconComponent);
+
   @Input() variant: ButtonVariant = BUTTON_SPEC_ACCURATE_DEFAULTS.variant;
   @Input() size: ButtonSize = BUTTON_SPEC_ACCURATE_DEFAULTS.size;
   @Input() disabled = BUTTON_SPEC_ACCURATE_DEFAULTS.disabled;
   @Input() loading = BUTTON_SPEC_ACCURATE_DEFAULTS.loading;
   @Input() iconOnly = BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly;
-  @Input() iconSlug = BUTTON_SPEC_ACCURATE_DEFAULTS.iconSlug;
-  @Input() label = BUTTON_SPEC_ACCURATE_DEFAULTS.children;
+  @Input() ariaLabel = "";
   @Input() type: "button" | "submit" | "reset" = "button";
 
   @Output() readonly clicked = new EventEmitter<MouseEvent>();
@@ -30,15 +39,8 @@ export class IdsButtonComponent {
     return this.variant === "destructive" ? "danger" : this.variant;
   }
 
-  get iconUrl(): string | null {
-    if (!this.iconSlug || this.variant === "destructive" || !/^[a-z0-9-]+$/.test(this.iconSlug)) {
-      return null;
-    }
-    return `/assets/icons/${this.iconSlug}.svg`;
-  }
-
-  get showIcon(): boolean {
-    return Boolean(this.iconUrl) && !this.loading && this.variant !== "destructive";
+  get hasLeadingIcon(): boolean {
+    return Boolean(this.leadingIcon()) && this.variant !== "destructive";
   }
 
   get resolvedIconOnly(): boolean {

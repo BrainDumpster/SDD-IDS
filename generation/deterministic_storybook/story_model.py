@@ -48,11 +48,10 @@ def build_button_story_model(
     angular_args = {
         "variant": "primary",
         "size": default_size,
-        "label": "Button",
         "disabled": False,
         "loading": False,
         "iconOnly": False,
-        "iconSlug": "settings-gear-detailed",
+        "ariaLabel": "",
     }
     react_args = {
         "variant": "primary",
@@ -82,11 +81,10 @@ def build_button_story_model(
         arg_types={
             "variant": {"control": "select", "options": variants},
             "size": {"control": "select", "options": size_options},
-            "iconSlug": {"control": "text"},
             "disabled": {"control": "boolean"},
             "loading": {"control": "boolean"},
             "iconOnly": {"control": "boolean"},
-            **({"label": {"control": "text"}} if is_angular else {"children": {"control": "text"}}),
+            **({"ariaLabel": {"control": "text"}} if is_angular else {}),
         },
         variant_matrix=variants,
         docs_description=(

@@ -5,6 +5,7 @@ import {
   type ButtonSize,
   type ButtonVariantExtended,
 } from "@component-contracts/ids/button.contract";
+import { splitButtonChildren } from "./buttonChildren";
 import { Icon } from "./Icon";
 import styles from "./Button.module.css";
 
@@ -14,13 +15,19 @@ interface ButtonProps extends ComponentProps<"button"> {
   variant?: ButtonVariantExtended;
   size?: ButtonSize;
   loading?: boolean;
-  /** Leading 16×16 icon (Figma: Icon=Yes, Icon Only=No). */
+  /**
+   * Leading icon node — prefer composition: `<Button><Icon … />Label</Button>`.
+   * @deprecated Use a leading `<Icon />` child instead.
+   */
   icon?: ReactNode;
-  /** Canonical icon slug from `assets/icons/<slug>.svg`. */
+  /**
+   * Canonical icon slug shorthand — prefer composition with `<Icon shapeName="…" />`.
+   * @deprecated Use a leading `<Icon />` child instead.
+   */
   iconSlug?: string;
-  /** Rendering mode for `iconSlug` path; default keeps IDS tintable behavior. */
+  /** Rendering mode for `iconSlug` shorthand only. */
   iconVariant?: "mask" | "img";
-  /** Icon only — use with `icon` and an accessible `aria-label` (Figma: Icon Only=Yes; Large/Medium in set). */
+  /** Icon only — use with leading `<Icon />` and an accessible `aria-label`. */
   iconOnly?: boolean;
 }
 
@@ -62,10 +69,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 ) {
   const variantClass = variant === "destructive" ? "danger" : variant;
   const isDestructive = variant === "destructive" || variant === "danger";
+  const { leadingIcon: composedIcon, label } = splitButtonChildren(children);
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
   const slugIconNode =
     iconSlug && iconUrl ? <Icon shapeName={iconSlug} variant={iconVariant} /> : undefined;
-  const resolvedIcon = isDestructive ? undefined : (icon ?? slugIconNode);
+  const resolvedIcon = isDestructive ? undefined : (icon ?? composedIcon ?? slugIconNode);
   const resolvedIconOnly = isDestructive ? false : iconOnly;
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
@@ -93,7 +101,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {loading && <span className={styles.spinner} aria-hidden="true" />}
-      {iconOnly ? (
+      {resolvedIconOnly ? (
         hasIcon && (
           <span
             className={[styles.iconSlot, loading ? styles.visuallyHidden : ""].filter(Boolean).join(" ")}
@@ -109,7 +117,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
               {resolvedIcon}
             </span>
           )}
-          <span className={loading ? styles.labelHidden : ""}>{children}</span>
+          <span className={loading ? styles.labelHidden : styles.label}>{label}</span>
         </>
       )}
     </BaseButton>

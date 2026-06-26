@@ -121,3 +121,5 @@ export function Icon({
 
   return <span className={className} style={style} aria-hidden="true" title={title} />;
 }
+
+Icon.displayName = "Icon";

@@ -17,10 +17,12 @@ export type ButtonSize = "sm" | "md" | "lg";
 export const BUTTON_SPEC_ACCURATE_DEFAULTS = {
   variant: "primary" as ButtonVariant,
   size: "lg" as ButtonSize,
+  /** React `children` / Angular default slot label for spec-accurate stories. */
   children: "Button",
   disabled: false,
   loading: false,
   iconOnly: false,
+  /** Demo leading icon slug — Angular: project `<ids-icon [shapeName]="…" variant="mask" />`. */
   iconSlug: BUTTON_DEMO_ICON_SLUG,
 } as const;
 

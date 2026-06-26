@@ -244,6 +244,11 @@
 .labelHidden {
   visibility: hidden;
 }
+
+.label {
+  display: inline-flex;
+  align-items: center;
+}
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

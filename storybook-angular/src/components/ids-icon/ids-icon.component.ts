@@ -12,13 +12,22 @@ export type IdsIconVariant = "img" | "mask";
   standalone: true,
   imports: [NgClass],
   template: `
-    <img
-      class="ids-icon__asset"
-      [ngClass]="className"
-      [src]="src"
-      alt=""
-      aria-hidden="true"
-    />
+    @if (variant === "mask") {
+      <span
+        class="ids-icon__mask"
+        [ngClass]="className"
+        [style.mask-image]="maskImage"
+        aria-hidden="true"
+      ></span>
+    } @else {
+      <img
+        class="ids-icon__asset"
+        [ngClass]="className"
+        [src]="src"
+        alt=""
+        aria-hidden="true"
+      />
+    }
   `,
   styles: [
     `
@@ -27,6 +36,7 @@ export type IdsIconVariant = "img" | "mask";
         flex-shrink: 0;
         line-height: 0;
         box-sizing: border-box;
+        color: inherit;
       }
 
       .ids-icon__asset {
@@ -34,6 +44,19 @@ export type IdsIconVariant = "img" | "mask";
         width: 100%;
         height: 100%;
         object-fit: contain;
+      }
+
+      .ids-icon__mask {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: currentColor;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: contain;
       }
     `,
   ],
@@ -51,5 +74,9 @@ export class IdsIconComponent {
 
   get src(): string {
     return `/assets/icons/${this.shapeName}.svg`;
+  }
+
+  get maskImage(): string {
+    return `url(${this.src})`;
   }
 }
