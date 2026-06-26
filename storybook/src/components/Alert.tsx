@@ -213,7 +213,7 @@ function AlertInlineView(
 
   const densityClass =
     density === "detailed" ? styles.inlineDensityDetailed : styles.inlineDensityCompact;
-  const showTrailing = showAction || showDismiss;
+  const showTrailing = (!showTitle && showAction) || showDismiss;
 
   return (
     <div
@@ -231,7 +231,16 @@ function AlertInlineView(
           />
         </span>
         <div className={styles.inlineText}>
-          {showTitle ? <p className={styles.inlineTitle}>{title}</p> : null}
+          {showTitle ? (
+            <div className={styles.inlineTitleRow}>
+              <p className={styles.inlineTitle}>{title}</p>
+              {showAction ? (
+                <button type="button" className={styles.inlineActionOutlined} onClick={onAction}>
+                  {actionLabel}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
           <p className={styles.inlineMessage}>
             {message}
             {showLink ? " " : null}
@@ -252,9 +261,9 @@ function AlertInlineView(
       {showTrailing ? (
         <div
           className={styles.inlineTrailing}
-          data-has-action={showAction ? "true" : "false"}
+          data-has-action={(showAction && !showTitle) ? "true" : "false"}
         >
-          {showAction ? (
+          {showAction && !showTitle ? (
             <button
               type="button"
               className={styles.inlineActionOutlined}

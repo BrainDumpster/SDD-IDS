@@ -225,6 +225,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: var(--spacing-space-12);
   width: 100%;
   box-sizing: border-box;
   min-height: var(--scale-40);
@@ -286,7 +287,23 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-space-4);
+  padding-right: var(--padding-padding-16);
+}
+
+.inlineTitleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+.inlineTitleRow .inlineTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.inlineTitleRow .inlineActionOutlined {
+  flex-shrink: 0;
 }
 
 .inlineTitle {
@@ -332,18 +349,16 @@
 
 .inlineRoot[data-density="compact"] .inlineTrailing {
   align-items: center;
-  padding: var(--padding-padding-14) 17px var(--padding-padding-14) var(--padding-padding-16);
-}
-
-.inlineRoot[data-density="compact"] .inlineTrailing[data-has-action="true"] {
+  height: 40px;
   padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .inlineRoot[data-density="detailed"] .inlineTrailing {
-  padding: var(--padding-padding-16) 17px var(--padding-padding-16) var(--padding-padding-16);
+  align-items: flex-start;
+  padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
 }
 
-.inlineRoot[data-density="detailed"] .inlineActionOutlined {
+.inlineRoot[data-density="detailed"] .inlineTrailing .inlineActionOutlined {
   /* Align action top with content row padding-block (12px); close (x) stays at trailing 16px inset */
   margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
 }
@@ -393,7 +408,7 @@
 
 .inlineDensityDetailed {
   /* Figma detailed row height (sample frame); width is container-driven */
-  min-height: 85px;
+  min-height: 68px;
 }
 
 .inlineRoot[data-severity="informational"] {
