@@ -10,9 +10,11 @@
     "src/components/ids-alert/**/*.ts",
     "src/components/ids-icon/**/*.ts",
     "src/components/ids-button/ids-button.component.ts",
+    "src/components/ids-badge/ids-badge.component.ts",
     "../component-contracts/common/story-meta.ts",
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",
-    "../component-contracts/ids/button.contract.ts"
+    "../component-contracts/ids/button.contract.ts",
+    "../component-contracts/ids/badge.contract.ts"
   ]
 }

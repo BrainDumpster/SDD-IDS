@@ -58,6 +58,12 @@ def emit_angular_csf(
     iconSlug: {defaults}.iconSlug,"""
         layout = "centered"
         imports_block = f"[{component_class_name}]"
+    elif defaults == "BADGE_SPEC_ACCURATE_DEFAULTS":
+        args_block = f"""    value: {defaults}.value,
+    type: {defaults}.type,
+    ariaLabel: {defaults}.ariaLabel,"""
+        layout = "centered"
+        imports_block = f"[{component_class_name}]"
     elif defaults == "ACCORDION_SPEC_ACCURATE_DEFAULTS":
         args_block = f"""    multiple: {defaults}.multiple,
     defaultValue: [...{defaults}.defaultValue],
@@ -113,7 +119,7 @@ import {
     title: "",
     linkLabel: "",
     linkHref: "",
-    actionLabel: "",""
+    actionLabel: "","""
         layout = "padded"
         developer_usage_import = """
 import { IDS_ALERT_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-alert/ids-alert.imports.js";

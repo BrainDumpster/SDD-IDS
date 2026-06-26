@@ -24,15 +24,30 @@ Optional slots:
 - `BadgeLeadingIcon` (optional icon+text composition when required by consuming component)
 - `BadgeSrOnlyText` (assistive-only contextual label)
 ## Layout & Measurements
-- Geometry from Figma sample variants:
-  - Height: `18px`
-  - Horizontal padding: `5.5px` per side (runtime may use nearest tokenized equivalent if sub-pixel values are unsupported)
-  - Border width: `1px`
+- Geometry from Figma sample variants (node `11446:99237` single-digit **Default**):
+  - **Content box (inner):** `18px` × `18px` minimum for single-digit counts (`box-sizing: content-box`)
+  - **Border:** `var(--border-width-border-1)` (`1px`) on all sides, drawn **outside** the `18px` content box
+  - **Total outer size (single digit):** `20px` × `20px` (`18px` content + `1px` border per edge)
+  - Horizontal padding (multi-digit, inside content box): `5.5px` per side (two-digit fallback `4px` per side)
   - Radius: `100px` (pill)
 - Content alignment:
   - center/center inside pill
   - single-line text only
-- Badge is shrink-to-content with minimum practical width defined by content + horizontal padding.
+- Badge is shrink-to-content with minimum **content** width/height `18px` for single-digit counts; grows with content + horizontal padding for multi-digit values.
+
+### Slot geometry (Figma-verified)
+| Slot | Property | Value | Figma evidence |
+|---|---|---|---|
+| `BadgeContainer` | `box-sizing` | `content-box` | `18px` inner + `1px` border per edge → `20px` outer (single digit) |
+| `BadgeContainer` | `height` (content) | `18px` | `11446:99237` inner fill target |
+| `BadgeContainer` | `min-width` (content, single digit) | `18px` | circular single-count pill |
+| `BadgeContainer` | `border-width` | `var(--border-width-border-1)` | `get_design_context` `border border-solid` |
+| `BadgeContainer` | total outer (single digit) | `20px` × `20px` | `18px` + `1px` border each side |
+| `BadgeContainer` | `border-radius` | `100px` | `rounded-[100px]` |
+| `BadgeContainer` | `padding-inline` (1 digit) | `0` | centered glyph in `18×18` frame |
+| `BadgeContainer` | `padding-inline` (2 digits) | `4px` per side | implementation parity with wider samples |
+| `BadgeContainer` | `padding-inline` (3+ digits) | `5.5px` per side | `px-[5.5px]` in `11446:99238` family |
+| `BadgeContent` | `font-size` | `var(--font-size-body-3)` (`12px`) | `text-[12px]` |
 - Typography for content:
   - font family: `Roboto`
   - weight: `400`
@@ -97,8 +112,10 @@ Per-slot style contract:
 - `BadgeContainer`
   - display: inline-flex
   - align-items / justify-content: center
-  - height: 18px
-  - border-width: 1px
+  - `box-sizing: content-box`
+  - height: `18px` (content box)
+  - min-width: `18px` (content box minimum for single-digit)
+  - border-width: `var(--border-width-border-1)` (outside content box)
   - border-style: solid
   - border-radius: 100px
   - warning border color should use `var(--ids-badge-warning-border-color, var(--color-border-white))` so host showcase context can override to `var(--color-border-alerting-minor-transparent)` without introducing a new runtime variant axis.

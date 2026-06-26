@@ -25,6 +25,8 @@
     "src/**/*.js",
     "../component-contracts/common/**/*.ts",
     "../component-contracts/ids/button.contract.ts",
-    "../component-contracts/ids/accordion.contract.ts"
+    "../component-contracts/ids/accordion.contract.ts",
+    "../component-contracts/ids/alert.contract.ts",
+    "../component-contracts/ids/badge.contract.ts"
   ]
 }

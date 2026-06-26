@@ -1,0 +1,14 @@
+<span
+  class="ids-badge"
+  [class.ids-badge--default]="type === 'default'"
+  [class.ids-badge--critical]="type === 'critical'"
+  [class.ids-badge--warning]="type === 'warning'"
+  [class.ids-badge--disabled]="type === 'disabled'"
+  [class.ids-badge--success]="type === 'success'"
+  [class.ids-badge--single-digit]="sizeClass === 'single-digit'"
+  [class.ids-badge--two-digits]="sizeClass === 'two-digits'"
+  [class.ids-badge--three-plus-digits]="sizeClass === 'three-plus-digits'"
+  [attr.aria-label]="ariaLabel || null"
+>
+  <span class="ids-badge__content">{{ valueText }}</span>
+</span>

@@ -1,4 +1,6 @@
-.badge {
+/* Ported from storybook/src/components/Badge.module.css */
+
+.ids-badge {
   --ids-badge-inner-size: 18px;
 
   display: inline-flex;
@@ -14,7 +16,7 @@
   white-space: nowrap;
 }
 
-.content {
+.ids-badge__content {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -25,39 +27,33 @@
   text-align: center;
 }
 
-.singleDigit {
+.ids-badge--single-digit {
   width: var(--ids-badge-inner-size);
   min-width: var(--ids-badge-inner-size);
   padding: 0;
 }
 
-.twoDigits {
+.ids-badge--two-digits {
   padding: 0 4px;
 }
 
-.threePlusDigits {
+.ids-badge--three-plus-digits {
   padding: 0 5.5px;
 }
 
-.default {
+.ids-badge--default {
   background: var(--color-background-alerting-info, #005ece);
   border-color: var(--color-border-white, #ffffff);
   color: var(--color-text-white, #ffffff);
 }
 
-.controls {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
-}
-
-.critical {
+.ids-badge--critical {
   background: var(--color-background-alerting-critical);
   border-color: var(--color-border-white);
   color: var(--color-text-white);
 }
 
-.warning {
+.ids-badge--warning {
   background: var(--color-background-alerting-minor);
   border-color: var(
     --ids-badge-warning-border-color,
@@ -66,19 +62,19 @@
   color: var(--color-text-black);
 }
 
-.disabled {
+.ids-badge--disabled {
   background: var(--color-static-gray-500);
   border-color: var(--color-border-white);
   color: var(--color-text-white);
 }
 
-.success {
+.ids-badge--success {
   background: var(--color-background-alerting-success);
   border-color: var(--color-border-white);
   color: var(--color-text-white);
 }
 
-.badge:focus-visible {
+.ids-badge:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: 2px;
 }

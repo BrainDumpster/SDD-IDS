@@ -4,7 +4,7 @@ import {
   BUTTON_SPEC_ACCURATE_DEFAULTS,
   type ButtonSize,
   type ButtonVariantExtended,
-} from "../../../../component-contracts/ids/button.contract";
+} from "@component-contracts/ids/button.contract";
 import { Icon } from "./Icon";
 import styles from "./Button.module.css";
 

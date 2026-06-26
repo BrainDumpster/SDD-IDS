@@ -193,3 +193,43 @@ def _component_story_title(
 ) -> str:
     """Same sidebar path in React and Angular Storybook packages (isolated servers, no id clash)."""
     return f"{options.title_prefix}/{component_display_name}"
+
+
+IDS_BADGE_DESIGN_SPEC_PATH = "components/ids/badge/design-spec.md"
+
+
+def build_badge_story_model(
+    *,
+    options: "DeterministicStorybookOptions",
+) -> StoryModel:
+    from generation.deterministic_storybook.models import DeterministicStorybookOptions
+
+    options = options or DeterministicStorybookOptions()
+    programme = options.title_prefix.split("/")[-1] if "/" in options.title_prefix else "IDS"
+
+    return StoryModel(
+        title=_component_story_title(options, "Badge"),
+        component_slug="badge",
+        component_display_name="Badge",
+        design_system_slug=options.design_system_slug,
+        contract_import_path="component-contracts/ids/badge.contract",
+        contract_defaults_symbol="BADGE_SPEC_ACCURATE_DEFAULTS",
+        args={
+            "value": 8,
+            "type": "default",
+            "ariaLabel": None,
+        },
+        arg_types={
+            "value": {"control": "text"},
+            "type": {
+                "control": "select",
+                "options": ["default", "critical", "warning", "disabled", "success"],
+            },
+            "ariaLabel": {"control": "text"},
+        },
+        variant_matrix=["default", "critical", "warning", "disabled", "success"],
+        docs_description=(
+            f"IDS Badge per {IDS_BADGE_DESIGN_SPEC_PATH}. "
+            f"Programme: {programme}. Spec Accurate Design: default type, value 8."
+        ),
+    )

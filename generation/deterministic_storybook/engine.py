@@ -10,7 +10,7 @@ from generation.deterministic_storybook.ids.badge import generate_ids_badge_stor
 from generation.deterministic_storybook.ids.button import generate_ids_button_story
 from generation.deterministic_storybook.ids.accordion_angular import generate_ids_accordion_story_angular
 from generation.deterministic_storybook.ids.alert_angular import generate_ids_alert_story_angular
-from generation.deterministic_storybook.ids.button_angular import generate_ids_button_story_angular
+from generation.deterministic_storybook.ids.badge_angular import generate_ids_badge_story_angular
 from generation.deterministic_storybook.ids.checkbox import generate_ids_checkbox_story
 from generation.deterministic_storybook.ids.detail_panel import generate_ids_detail_panel_story
 from generation.deterministic_storybook.ids.dropdown_combo_box import generate_ids_dropdown_combo_box_story
@@ -86,6 +86,7 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
 ANGULAR_REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "accordion"): generate_ids_accordion_story_angular,
     ("ids", "alert"): generate_ids_alert_story_angular,
+    ("ids", "badge"): generate_ids_badge_story_angular,
     ("ids", "button"): generate_ids_button_story_angular,
 }
 

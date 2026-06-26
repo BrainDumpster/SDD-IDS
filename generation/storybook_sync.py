@@ -78,6 +78,7 @@ def get_story_path(
 ANGULAR_COLOCATED_STORY_REL: dict[str, str] = {
     "accordion": "src/components/ids-accordion/ids-accordion.stories.js",
     "alert": "src/components/ids-alert/ids-alert.stories.js",
+    "badge": "src/components/ids-badge/ids-badge.stories.js",
     "button": "src/components/ids-button/ids-button.stories.js",
 }
 

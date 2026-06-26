@@ -72,6 +72,14 @@ const config = {
         compiledRoot,
         "component-contracts/ids/button.contract.js",
       ),
+      "@component-contracts/ids/badge.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/badge.contract.js",
+      ),
+      "@component-contracts/ids/alert.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/alert.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 
