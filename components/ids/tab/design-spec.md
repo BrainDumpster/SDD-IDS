@@ -26,6 +26,9 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
   - transparent host: bottom border.
   - white host: bottom border.
 - Dividers/baseline use `1px` borders.
+- Primary tab side divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
+- Primary tab right divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
+- Primary selected tab: bottom border removed.
 - Label width is content-driven; short labels (1-3 words) are preferred.
 - Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
 ## Tokens
