@@ -28,6 +28,10 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Dividers/baseline use `1px` borders.
 - Label width is content-driven; short labels (1-3 words) are preferred.
 - Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
+- Focus ring heights:
+  - Primary tabs: `36px` focus ring height (centered within 38px tab with 1px top/bottom margin)
+  - Secondary tabs: `34px` focus ring height (centered within 38px tab with 2px top/bottom margin)
+  - Focus ring uses `outline` (not box-shadow) with `2px` thickness using `var(--color-border-brand-base)`
 ## Tokens
 - **Typography**
   - `Body 2` (`14/20`) for tab labels.
