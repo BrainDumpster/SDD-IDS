@@ -76,7 +76,7 @@
   display: none;
 }
 
-.tab:hover:not([data-disabled]) {
+.tab:hover:not(.selected):not([data-disabled]) {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral-strong);
 }
