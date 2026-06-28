@@ -81,6 +81,11 @@
   color: var(--color-text-neutral-strong);
 }
 
+.tab:active:not(.selected):not([data-disabled]) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+}
+
 .tab:focus-visible {
   outline: none;
   box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
@@ -223,6 +228,11 @@
 
 .moreTriggerSecondary::after {
   display: none;
+}
+
+.moreTrigger:active:not(.moreTriggerSelected) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
 }
 
 .moreTrigger:hover {

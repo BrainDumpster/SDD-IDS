@@ -161,3 +161,33 @@ export const AddLabelPrimary: Story = {
     </div>
   ),
 };
+
+export const UnselectedPressStateSecondary: Story = {
+  name: "Unselected Press State (Secondary)",
+  args: {
+    variant: "secondary",
+    items: baseItems,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Click and hold on any unselected tab to see the press state. The press state uses `var(--color-background-brand-light)` background and `var(--color-text-brand-strong)` text color as specified in the design spec.",
+      },
+    },
+  },
+};
+
+export const UnselectedPressStatePrimary: Story = {
+  name: "Unselected Press State (Primary)",
+  args: {
+    variant: "primary",
+    items: baseItems,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "Click and hold on any unselected tab to see the press state. The press state uses `var(--color-background-brand-light)` background and `var(--color-text-brand-strong)` text color as specified in the design spec.",
+      },
+    },
+  },
+};
