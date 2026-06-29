@@ -15,6 +15,7 @@
     "src/components/ids-checkbox/**/*.ts",
     "src/components/ids-radio-button/**/*.ts",
     "src/components/ids-text-box/**/*.ts",
+    "src/components/ids-modal/**/*.ts",
     "../component-contracts/common/story-meta.ts",
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",
@@ -22,6 +23,7 @@
     "../component-contracts/ids/badge.contract.ts",
     "../component-contracts/ids/checkbox.contract.ts",
     "../component-contracts/ids/radio-button.contract.ts",
-    "../component-contracts/ids/text-box.contract.ts"
+    "../component-contracts/ids/text-box.contract.ts",
+    "../component-contracts/ids/modal.contract.ts"
   ]
 }

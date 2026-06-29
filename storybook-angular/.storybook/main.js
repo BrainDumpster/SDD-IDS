@@ -88,6 +88,10 @@ const config = {
         compiledRoot,
         "component-contracts/ids/radio-button.contract.js",
       ),
+      "@component-contracts/ids/modal.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/modal.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 

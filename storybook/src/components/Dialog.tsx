@@ -237,9 +237,7 @@ export function Dialog({
 
               {showBodyScrollShadow ? (
                 <div className={styles.contentScrollShadow} aria-hidden="true" />
-              ) : (
-                <div className={styles.contentSeparator} aria-hidden="true" />
-              )}
+              ) : null}
 
               <div className={styles.footer}>
                 {showTertiary ? (

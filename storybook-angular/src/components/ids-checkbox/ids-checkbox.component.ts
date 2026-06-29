@@ -35,7 +35,7 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
   private readonly group = inject(IDS_CHECKBOX_GROUP_CONTEXT, { optional: true });
 
   @Input() id?: string;
-  @Input({ required: true }) label = CHECKBOX_SPEC_ACCURATE_DEFAULTS.label;
+  @Input({ required: true }) label: string = CHECKBOX_SPEC_ACCURATE_DEFAULTS.label;
   @Input() showLabel = CHECKBOX_SPEC_ACCURATE_DEFAULTS.showLabel;
   /** Static demo only: draw the focus ring (Storybook matrix “Focus” row). */
   @Input() simulateFocusVisible = CHECKBOX_SPEC_ACCURATE_DEFAULTS.simulateFocusVisible;

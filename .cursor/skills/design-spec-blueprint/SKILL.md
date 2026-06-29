@@ -146,6 +146,10 @@ When generating or updating Storybook for a component with `Storybook examples r
 - **Synapse:** generate **React** stories only (`storybook-generated/synapse/`); do not add Synapse under `storybook-angular/` unless explicitly requested.
 - See `docs/design-spec-authoring-contract.md` and `generation/deterministic_storybook/helpers.py`.
 
+## User-facing completion (chat)
+
+When spec work or a design-check fix is **done**, close with a **compact summary** (3–6 lines): what shipped, key paths changed, how to verify. No detailed report, Figma dump, or full checklist in chat — see `.cursor/rules/compact-task-completion.mdc`.
+
 ## Production-Ready Definition
 
 A spec is production-ready only when:

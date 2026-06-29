@@ -1,0 +1,46 @@
+---
+description: Compact user-facing summaries when finishing design checks, bug fixes, or spec work
+alwaysApply: true
+---
+
+# Compact Task Completion
+
+When finishing a **design check**, **bug fix**, **spec generation/update**, **Storybook/codegen parity fix**, or similar bounded task, the final user message must be **short** — not a detailed report.
+
+## Default closing format (3–6 lines max)
+
+1. **Done** — one sentence: what was fixed or delivered.
+2. **Changed** — bullet list of paths or behaviors (max 5 bullets; paths only, no long prose).
+3. **Verify** — one line: how to confirm (command, Storybook path, or Figma node), if relevant.
+4. **Blockers** — only if something failed or was skipped; one line each.
+
+## Do not include unless the user asked
+
+- Step-by-step investigation narrative
+- Full Figma verification dumps or token tables
+- Repeated restatement of the original request
+- Long "what was added" architecture essays
+- Engagement prompts ("let me know if…", "say the word…")
+
+## When detail is allowed
+
+- User explicitly asks for a report, audit, or walkthrough
+- Unresolved blocker needs a decision (use `AskQuestion` or a minimal options list)
+- Security or breaking-change warnings (still keep under ~10 lines)
+
+## Examples
+
+**Good**
+
+> Fixed non-alerting dialog footer: no divider above footer in dialog scenario.  
+> - `ids-modal.component.html` / `.scss` / `.ts`  
+> - `components/ids/modal/design-spec.md` (footer border note)  
+> Run `cd storybook-angular && npm run dev` → **Spec Generated → IDS → Modal → Non-Alerting**.
+
+**Bad**
+
+> I investigated Figma node 40191:26351 and compared it with Modal-Main… [20 paragraphs] … Completion checklist: [12 items] …
+
+## Skills and workflows
+
+Design-spec intake, blueprint, programme-inheritance, and implementation tasks follow this rule for the **user-visible closing message**. Internal tool use, spec file content, and checklists in repo files stay full-fidelity; only the chat reply stays compact.

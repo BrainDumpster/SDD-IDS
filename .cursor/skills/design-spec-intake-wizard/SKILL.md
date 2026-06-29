@@ -143,3 +143,7 @@ Behavior is identical when the user pastes the **starter prompt** from `docs/des
 ## Delegation
 
 After the spec file exists, upgrades and hardening use **design-spec-blueprint** skill (normalizer, dedupe scripts, production-ready gate).
+
+## User-facing completion (chat)
+
+After intake, verification, or a fix in this flow, reply **compactly** (what was created/fixed, paths, one verify step). No long report — `.cursor/rules/compact-task-completion.mdc`.

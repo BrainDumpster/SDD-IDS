@@ -181,6 +181,9 @@ Only apply this section when user requests token drift validation.
   - verification method (`Figma MCP` or `Figma REST API`)
   - date/time (or session context) of last live verification
 
+## User-facing completion (chat)
+When the task is done, reply with a **compact summary** only (see `.cursor/rules/compact-task-completion.mdc`). Do not dump investigation steps, full checklists, or long Figma evidence in chat — that belongs in the spec/metadata, not the final message.
+
 ## Completion Checklist
 - [ ] Spec sections are concrete and Figma-aligned.
 - [ ] Codegen Contract is complete and deterministic.

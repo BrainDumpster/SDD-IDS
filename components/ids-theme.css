@@ -331,6 +331,9 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --padding-padding-10: 10px;
   --padding-padding-12: 12px;
   --padding-padding-16: 16px;
+  --padding-padding-20: 20px;
+  --padding-padding-24: 24px;
+  --padding-padding-48: 48px;
   --spacing-space-2: 2px;
   --spacing-space-8: 8px;
   --scale-12: 12px;
@@ -655,6 +658,9 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --padding-padding-10: 10px;
   --padding-padding-12: 12px;
   --padding-padding-16: 16px;
+  --padding-padding-20: 20px;
+  --padding-padding-24: 24px;
+  --padding-padding-48: 48px;
   --spacing-space-2: 2px;
   --spacing-space-8: 8px;
   --scale-12: 12px;
