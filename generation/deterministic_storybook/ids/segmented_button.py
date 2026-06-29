@@ -44,7 +44,6 @@ export {{
   TextTwoOptions,
   TextThreeToFiveOptions,
   IconCustomSlot,
-  DisabledStates,
   OnChangePayload,
 }} from "../../../../storybook/src/components/SegmentedButton.stories";
 """

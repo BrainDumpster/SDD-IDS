@@ -29,7 +29,7 @@ Synapse **Segmented Button** is an **ids-fork** of the IDS **Segmented Button** 
 | IDS Figma matrix | `42113:67348` (IDS Design Library `0bHk3XhrjFhowgFkz9yLr4`) |
 | Theme CSS | `components/synapse-theme.css` |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) + IDS baseline |
-| Last verified | 2026-06-12 |
+| Last verified | 2026-06-24 |
 
 ### Synapse programme deltas (vs IDS)
 
@@ -40,7 +40,7 @@ Synapse **Segmented Button** is an **ids-fork** of the IDS **Segmented Button** 
 | Segment label color (unselected) | `var(--color-text-neutral)` | **Same** |
 | Root border, gap, padding, states | IDS contract | **Same** (inherit IDS) |
 | Type × option count matrix | text 2–5, icon 2–3 | **Same** |
-| Runtime API | IDS contract | **Same** (inherit IDS) |
+| Runtime API | IDS contract | **Same** (inherit IDS; **disabled out of scope**) |
 
 ## Anatomy
 
@@ -48,7 +48,12 @@ Inherit IDS **Anatomy** — see [`components/ids/segmented-button/design-spec.md
 
 ## Layout & Measurements
 
-Inherit IDS root padding `var(--spacing-space-2)`, inter-segment gap, text row height `32px`, icon row height `37px`, and focus ring from IDS **Layout & Measurements**.
+Inherit IDS **Layout & Measurements** and **Slot geometry (Figma-verified)** from [`components/ids/segmented-button/design-spec.md`](../ids/segmented-button/design-spec.md):
+
+- Root inset: `var(--padding-padding-2)` (**2px**); inter-segment gap: `var(--spacing-space-2)` (**2px**)
+- Text variant outer shell: **34px** CSS `border-box`; segment row **28px**
+- Icon variant outer shell: **39px** CSS `border-box` (Figma layer **37px**); content row **33px**; cell min width **32px**; glyph **16×14**
+- Icon variant 3-option reference: IDS node `42113:67622` — content **100×33px**, Dev Mode total **106×39px**
 
 Synapse-specific layout (alias-driven):
 
@@ -70,7 +75,7 @@ Segment labels use Body 2 Regular (`font-weight: 400`) per Figma; unselected lab
 
 ## States (Light Theme)
 
-Inherit IDS **States (Light Theme)** from [`components/ids/segmented-button/design-spec.md`](../ids/segmented-button/design-spec.md) for **Text segments** and **Icon segments** tables.
+Inherit IDS **States (Light Theme)** from [`components/ids/segmented-button/design-spec.md`](../ids/segmented-button/design-spec.md) for **Text segments** and **Icon segments** tables. **Disabled** is out of scope (not in Figma).
 
 Synapse chrome applies only via `--segmented-button-control-radius`; **Background / Border / Label / Icon cells are unchanged** from IDS.
 
@@ -82,13 +87,13 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ## Interactions
 
-Inherit IDS **Interactions** — single-select, hover/press/focus on unselected segments, radiogroup keyboard model, disabled extension.
+Inherit IDS **Interactions** — single-select, hover/press/focus on unselected segments, radiogroup keyboard model.
 
 ## Composition & API (runtime)
 
 ### IDS inheritance resolution
 
-Codegen **MUST** resolve `type`, `items`, `value` / `defaultValue`, `onChange`, `disabled`, `ariaLabel`, icon slug resolution, and `SegmentedButtonSegment` shapes from IDS **Composition & API (runtime)** in [`components/ids/segmented-button/design-spec.md`](../ids/segmented-button/design-spec.md).
+Codegen **MUST** resolve `type`, `items`, `value` / `defaultValue`, `onChange`, `ariaLabel`, icon slug resolution, and `SegmentedButtonSegment` shapes from IDS **Composition & API (runtime)** in [`components/ids/segmented-button/design-spec.md`](../ids/segmented-button/design-spec.md).
 
 ### Synapse-only runtime flags
 
@@ -127,11 +132,11 @@ Inherit IDS: `(text × 2..5) ∪ (icon × 2..3)` × per-segment interaction × s
 | `root` | `border-radius` | `var(--segmented-button-control-radius)` |
 | `segmentSurface` | `border-radius` | `var(--segmented-button-control-radius)` |
 | `segmentLabel` | `font-weight` | `400` (Body 2 Regular) |
-| Borders / backgrounds / icons | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** |
+| Borders / backgrounds / icons | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** (segment `border` reserved **1px**; selected default `border-color` matches `var(--color-background-controls-brand-base)`; icon root **39px** CSS `border-box`) |
 
 ### Behavior contract
 
-Inherit IDS selection, `onChange` meta (`label` | `ariaLabel`), disabled skip, no deselect-all on re-click.
+Inherit IDS selection, `onChange` meta (`label` | `ariaLabel`), no deselect-all on re-click.
 
 ### Accessibility contract
 
@@ -152,6 +157,7 @@ Programme additions:
 
 ### Validation checklist
 
+- [x] Icon geometry matches IDS (`39px` icon shell / `33px` segment row / `16×14` glyph); no disabled state
 - [x] IDS baseline linked; programme deltas document radius alias + label weight evidence
 - [x] `--segmented-button-control-radius` in IDS + Synapse theme CSS
 - [x] `SegmentedButton.module.css` uses control radius alias on root and segments
@@ -175,4 +181,4 @@ Programme additions:
 | Programme wrapper | `storybook/src/components/SynapseSegmentedButton.tsx` |
 | Spec contract | `storybook/src/spec-contracts/synapse-segmented-button.contract.ts` |
 | Storybook | `storybook/src/components/SynapseSegmentedButton.stories.tsx` |
-| Verification | Figma MCP `get_design_context` on `8218:13150` (2026-06-12); `get_metadata` on `11067:54583` |
+| Verification | Figma MCP on `8218:13150`, `42113:67622` (icon geometry); IDS baseline sync 2026-06-24 |
