@@ -80,6 +80,7 @@ ANGULAR_COLOCATED_STORY_REL: dict[str, str] = {
     "alert": "src/components/ids-alert/ids-alert.stories.js",
     "badge": "src/components/ids-badge/ids-badge.stories.js",
     "button": "src/components/ids-button/ids-button.stories.js",
+    "text-box": "src/components/ids-text-box/ids-text-box.stories.js",
 }
 
 
