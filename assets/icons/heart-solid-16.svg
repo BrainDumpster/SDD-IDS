@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="heart-solid-16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.8.3, SVG Export Plug-In . SVG Version: 2.1.1 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #616161;
+      }
+    </style>
+  </defs>
+  <path id="base" class="st0" d="M15.97,5c-.23-2.57-2.05-4.44-4.33-4.44-1.52,0-2.91.82-3.69,2.12-.77-1.33-2.11-2.13-3.6-2.13C2.08.56.26,2.43.03,5c-.02.11-.09.71.14,1.69.33,1.41,1.1,2.68,2.22,3.7l5.57,5.06,5.67-5.06c1.12-1.01,1.88-2.29,2.22-3.7.23-.97.15-1.57.14-1.69"/>
+</svg>
