@@ -373,4 +373,6 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 - Last live verification: Figma MCP — avatar initials/icon nodes `10130:29943`, `10130:29945`, `10130:29469`; product logo `10130:29512`, `10130:29521` (2026-06-19)
 - Component map entry: data/component-figma-map.json → component "Masthead" (category "Navigation"; node "9054-24736")
 - Storybook implementation: `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css`, `storybook-generated/ids/src/components/Masthead.stories.tsx`
+- Angular Storybook (composition API): `storybook-angular/src/components/ids-masthead/` — `IDS_MASTHEAD_IMPORTS`, stories at `ids-masthead.stories.js`
+- Contract mirror: `component-contracts/ids/masthead.contract.ts`
 - Shared Icon primitive (Storybook / demo): `storybook/src/components/Icon.tsx` (`config/design_systems/ids.yaml` → `codegen.react.icon_component_module`)

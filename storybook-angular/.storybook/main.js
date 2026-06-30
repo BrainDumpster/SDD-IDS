@@ -92,6 +92,10 @@ const config = {
         compiledRoot,
         "component-contracts/ids/modal.contract.js",
       ),
+      "@component-contracts/ids/masthead.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/masthead.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 

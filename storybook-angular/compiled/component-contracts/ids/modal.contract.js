@@ -41,6 +41,29 @@ export const MODAL_COMPOSITION_SLOT_ORDER = [
     "modalBody",
     "modalFooter",
 ];
+/** Top-level modal DOM/codegen order (mirrors design-spec Codegen Contract). */
+export const MODAL_CODEGEN_ANATOMY = [
+    "overlay",
+    "surface",
+    "modalRoot",
+    "modalTitle",
+    "modalBody",
+    "modalFooter",
+];
+/**
+ * All main-area UI must render inside `modalBody` / `bodyContentShell`.
+ * Forbidden: projecting components on `surface` between header and footer.
+ */
+export const MODAL_BODY_CONTAINMENT_RULE = "All main-area components (Tabs, inputs, forms, panels, markup, etc.) must be descendants of modalBody / bodyContentShell — never direct children of surface or modalRoot.";
+/**
+ * Internal `modalBody` structure. `projectedContent` is the catch-all for any
+ * main-area component; multi-page tabStrip/pagePanel are included when tabs=true.
+ */
+export const MODAL_BODY_CODEGEN_ANATOMY = [
+    "description?",
+    "bodyContentShell",
+    "projectedContent*",
+];
 export const MODAL_FIGMA_BODY = "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.";
 /** Spec Accurate Design: dialog · non-alerting · medium · closable · single primary action. */
 export const MODAL_SPEC_ACCURATE_DEFAULTS = {
