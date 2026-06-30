@@ -15,7 +15,8 @@
 - **Child nodes (same file):** `38908:5819` Left; `38908:5820` Host Name; `38908:5821` SWID; `38908:5823` copy; `38908:5825` Time; `38908:5826` time-clock; `38908:5829` Time Zone; `38908:5830` world-globe
 - **Figma variant axes (boolean toggles on component):** `hostname`, `currentDateAndTime`, `timeZone` (all default `true` in library sample)
 - **Storybook examples requested:** yes
-- **Storybook path:** `storybook/src/components/IdsFooter.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
+- **Storybook path (React):** `storybook/src/components/IdsFooter.stories.tsx`
+- **Storybook path (Angular):** `storybook-angular/src/components/ids-footer/ids-footer.stories.js`
 - **Storybook meta title:** `Spec Generated/IDS/Footer`
 - **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-05-22)
 
@@ -235,5 +236,8 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 | Theme CSS | `components/ids-theme.css` |
 | Root spec | `components/ids/root-spec.md` |
 | Figma MCP (2026-05-22) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
-| Storybook implementation | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
-| Spec Generated story | `storybook/src/components/IdsFooter.stories.tsx` |
+| Storybook implementation (React) | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
+| Spec Generated story (React) | `storybook/src/components/IdsFooter.stories.tsx` |
+| Runtime contract | `component-contracts/ids/footer.contract.ts` |
+| Storybook implementation (Angular) | `storybook-angular/src/components/ids-footer/` |
+| Spec Generated story (Angular) | `storybook-angular/src/components/ids-footer/ids-footer.stories.js` |

@@ -1,0 +1,62 @@
+<footer class="ids-footer" aria-label="Application status">
+  <div class="ids-footer__left">
+    @if (showHostname) {
+      <div class="ids-footer__field">
+        <span class="ids-footer__label">Host Name: </span>
+        <span class="ids-footer__value">{{ hostname }}</span>
+      </div>
+    }
+    @if (showSwidGroup) {
+      <div class="ids-footer__swid-group">
+        <div class="ids-footer__field">
+          <span class="ids-footer__label">SWID: </span>
+          <span class="ids-footer__value">{{ swid }}</span>
+        </div>
+        <button
+          type="button"
+          class="ids-footer__copy-button"
+          aria-label="Copy SWID"
+          [disabled]="!canCopy"
+          [attr.aria-disabled]="!canCopy ? 'true' : null"
+          (click)="onCopyClick()"
+        >
+          <ids-icon
+            className="ids-footer__copy-icon"
+            shapeName="copy"
+            variant="mask"
+            [size]="14"
+          />
+        </button>
+      </div>
+    }
+  </div>
+  @if (showTimeGroup) {
+    <div class="ids-footer__time-group">
+      <ids-icon
+        className="ids-footer__time-icon"
+        shapeName="time-clock"
+        variant="mask"
+        [size]="16"
+      />
+      <span class="ids-footer__datetime">{{ currentDateTime }}</span>
+    </div>
+  }
+  @if (showTimeZone) {
+    <div class="ids-footer__timezone-group">
+      <ids-icon
+        className="ids-footer__globe-icon"
+        shapeName="world-globe"
+        variant="mask"
+        [size]="16"
+      />
+      <button
+        type="button"
+        class="ids-footer__timezone-button"
+        [disabled]="timeZoneDisabled"
+        (click)="onTimeZoneButtonClick()"
+      >
+        {{ resolvedTimeZoneLabel }}
+      </button>
+    </div>
+  }
+</footer>
