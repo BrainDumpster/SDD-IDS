@@ -194,6 +194,43 @@ def _component_story_title(
 
 
 IDS_BADGE_DESIGN_SPEC_PATH = "components/ids/badge/design-spec.md"
+IDS_MAIN_MENU_LEFT_DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.md"
+
+
+def build_main_menu_left_story_model(
+    *,
+    options: "DeterministicStorybookOptions",
+) -> StoryModel:
+    from generation.deterministic_storybook.models import DeterministicStorybookOptions
+
+    options = options or DeterministicStorybookOptions()
+    programme = options.title_prefix.split("/")[-1] if "/" in options.title_prefix else "IDS"
+
+    return StoryModel(
+        title=_component_story_title(options, "Main Menu Left"),
+        component_slug="main-menu-left",
+        component_display_name="Main Menu Left",
+        design_system_slug=options.design_system_slug,
+        contract_import_path="component-contracts/ids/main-menu-left.contract",
+        contract_defaults_symbol="MAIN_MENU_LEFT_SPEC_ACCURATE_DEFAULTS",
+        args={
+            "compositionMode": True,
+            "expanded": True,
+            "defaultSelectedItemId": "dashboard",
+            "forceStates": False,
+            "ariaLabel": "Main menu left",
+        },
+        arg_types={
+            "compositionMode": {"control": "boolean"},
+            "expanded": {"control": "boolean"},
+            "defaultSelectedItemId": {"control": "text"},
+            "forceStates": {"control": "boolean"},
+        },
+        docs_description=(
+            f"IDS Main Menu/Left per {IDS_MAIN_MENU_LEFT_DESIGN_SPEC_PATH}. "
+            f"Programme: {programme}. Composition API with deterministic Item | Group anatomy."
+        ),
+    )
 
 
 def build_badge_story_model(

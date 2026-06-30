@@ -17,6 +17,7 @@
     "src/components/ids-text-box/**/*.ts",
     "src/components/ids-modal/**/*.ts",
     "src/components/ids-masthead/**/*.ts",
+    "src/components/ids-main-menu-left/**/*.ts",
     "../component-contracts/common/story-meta.ts",
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",
@@ -26,6 +27,7 @@
     "../component-contracts/ids/radio-button.contract.ts",
     "../component-contracts/ids/text-box.contract.ts",
     "../component-contracts/ids/modal.contract.ts",
-    "../component-contracts/ids/masthead.contract.ts"
+    "../component-contracts/ids/masthead.contract.ts",
+    "../component-contracts/ids/main-menu-left.contract.ts"
   ]
 }

@@ -21,6 +21,9 @@ from generation.deterministic_storybook.ids.dropdown_single_select import (
 )
 from generation.deterministic_storybook.ids.link import generate_ids_link_story
 from generation.deterministic_storybook.ids.main_menu_left import generate_ids_main_menu_left_story
+from generation.deterministic_storybook.ids.main_menu_left_angular import (
+    generate_ids_main_menu_left_story_angular,
+)
 from generation.deterministic_storybook.ids.masthead import generate_ids_masthead_story
 from generation.deterministic_storybook.ids.masthead_dap import generate_dap_masthead_story
 from generation.deterministic_storybook.ids.modal import generate_ids_modal_story
@@ -89,6 +92,7 @@ ANGULAR_REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "alert"): generate_ids_alert_story_angular,
     ("ids", "badge"): generate_ids_badge_story_angular,
     ("ids", "button"): generate_ids_button_story_angular,
+    ("ids", "main-menu-left"): generate_ids_main_menu_left_story_angular,
 }
 
 
