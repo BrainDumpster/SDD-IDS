@@ -1,5 +1,5 @@
 ---
-description: When adding composition APIs (group + children), update the matching design-spec.md in the same change
+description: When adding composition APIs (group + children), update the matching design-spec.md in the same change (pair with design-spec-storybook-sync for spec → Storybook)
 globs: storybook-angular/**/*,component-contracts/**/*,storybook/src/components/**/*
 alwaysApply: false
 ---
@@ -7,6 +7,8 @@ alwaysApply: false
 # Composition → Design-Spec Sync
 
 Apply when creating or modifying **group + item** component APIs in Storybook or framework ports.
+
+**Bidirectional pair:** `.cursor/rules/design-spec-storybook-sync.mdc` (spec → Storybook across programmes). When the spec is updated first, follow that rule to refresh all programme examples.
 
 ## When this rule applies
 
