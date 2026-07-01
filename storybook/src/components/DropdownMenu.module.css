@@ -202,7 +202,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
   background: var(--color-background-component);
 }
 
@@ -245,6 +245,10 @@
 .selectAllButton[data-indeterminate="true"] .selectAllCheckbox {
   background: var(--color-background-component);
   border-color: var(--color-border-brand-base);
+}
+
+.selectAllButton:hover:not([data-checked="true"]) .selectAllCheckbox {
+  border-color: var(--color-border-strong);
 }
 
 .item {
@@ -469,7 +473,7 @@
   border-radius: var(--corner-radius-radius-2);
 }
 
-.item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]) {
+.item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) {
   color: var(--color-text-neutral-strong);
 }
 
@@ -599,13 +603,13 @@
 .item[data-selectable="true"][data-disabled] .checkboxOuter,
 .item[data-selectable="true"]:disabled .checkboxOuter {
   border-color: var(--color-border-disabled);
-  background: var(--color-background-gray-lighter);
+  background: var(--color-background-gray-light);
   color: var(--color-icon-inverse);
 }
 
 .item[data-selectable="true"][data-disabled][data-indeterminate] .checkboxOuter,
 .item[data-selectable="true"]:disabled[data-indeterminate] .checkboxOuter {
-  background: var(--color-background-gray-lighter);
+  background: var(--color-background-gray-light);
   border-color: var(--color-border-disabled);
 }
 
