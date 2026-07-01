@@ -211,7 +211,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Tab select:** click or keyboard activates one tab; emits `onActiveItemChange` / `onTabSelect({ id, label })`.
 - **Close tab:** `Close Tab` click removes tab from list; does not activate tab navigation on close button (`event.stopPropagation()`).
 - **Add tab:** `Add Tab` appends a new tab; host supplies default label/content via `onAddTab()`.
-- **Overflow:** when row width cannot fit all tabs, trailing tabs move to overflow collection; **`More`** trigger stays in row before **`Add Tab`** (`47835:4949`). Selecting hidden tab from menu activates it; overflow trigger label may reflect selection per IDS overflow rules.
+- **Overflow:** when row width cannot fit all tabs, trailing tabs move to overflow collection; **`More`** trigger stays in row before **`Add Tab`** (`47835:4949`). Selecting hidden tab from menu activates it; overflow trigger label becomes selected tab name; **active tab omitted from menu** (inherit IDS `computeTabOverflowMenuItems` in `component-contracts/ids/tab.contract.ts`).
 - **Truncation:** at `max-width: 250px`, label ellipsizes; show tooltip with full label on hover/focus when truncated (`50454:81963`).
 - **Keyboard:** `ArrowLeft` / `ArrowRight`, `Home` / `End`, `Enter` / `Space` — inherit IDS tablist pattern.
 - **No autosave** on tab switch (inherit IDS).
@@ -286,6 +286,7 @@ Inherit IDS tab API from [`components/ids/tab/design-spec.md`](../ids/tab/design
 - Exactly one tab active.
 - Close removes item; if closed tab was active, activate neighbor per host policy (default: previous tab).
 - Overflow menu uses [`dropdown-combo-box`](../dropdown-combo-box/design-spec.md) detached menu styling.
+- Overflow slot + menu rules: `component-contracts/ids/tab.contract.ts` (`computeTabOverflowVisibleCount`, `computeTabOverflowMenuItems`).
 - Add tab appends item and may auto-select new tab (product-defined; document in host).
 
 ### Accessibility contract
@@ -319,6 +320,7 @@ See **Interactions → Accessibility**.
 - [x] Close hover = `n-tabs-x-hover`
 - [x] Nav group bottom border `neutral-light`
 - [x] Overflow `More` + `chev-down`; selected overflow `brand-light`
+- [x] Active overflow-selected tab omitted from More menu (IDS baseline on `Tabs.tsx`)
 - [x] Add tab **36px** + `shape-plus`
 - [x] Optional `16×16` tab icon
 - [x] Ellipsis + tooltip at max width

@@ -99,7 +99,20 @@ export const OverflowResponsive: Story = {
     showAddTab: false,
   },
   render: (args) => (
-    <div style={{ maxWidth: 560 }}>
+    <div style={{ width: 560, maxWidth: 560 }}>
+      <Tabs {...args} />
+    </div>
+  ),
+};
+
+export const PrimaryOverflowResponsive: Story = {
+  args: {
+    items: overflowItems,
+    variant: "primary",
+    showAddTab: false,
+  },
+  render: (args) => (
+    <div style={{ width: 560, maxWidth: 560 }}>
       <Tabs {...args} />
     </div>
   ),

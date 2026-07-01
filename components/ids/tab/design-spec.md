@@ -9,31 +9,37 @@
 - **Validated node id:** `30681:9530` (`text and annotation`)
 - **Variant axes observed in Figma:** `style` (`primary` | `secondary`), `state` (`selected` | `unselected-default` | `unselected-hover` | `unselected-press` | `selected-focus` | `unselected-focus`), `transparent` (`true` | `false`), `addTab` (`true` | `false`), `overflow` (`true` | `false`)
 - **Runtime scope:** Horizontal tabs with item-level content, optional add-tab, responsive overflow with `More` behavior, optional icon/badge indicators.
+- **Runtime contract:** `component-contracts/ids/tab.contract.ts` (defaults, overflow math, spec-accurate demo data)
+
 ## Anatomy
-Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
+- **tabRoot** — horizontal tab group shell: tablist, optional overflow/add controls, active panel region.
+- **tabItem** — one tab entry (label metadata + projected panel content).
+- **tabPanel** — tab item content region (rendered in the active panel slot when parent item is selected).
+- **tabLabel** — visible title on tab trigger (from item `label`).
+- **tabIcon** (optional) — icon resolved from `iconSlug`.
+- **tabBadge** (optional) — alert/count badge on item.
+- **overflowTrigger** (optional) — `More` affordance when `overflow=true` and items exceed viewport.
+- **addTabTrigger** (optional) — add-tab affordance when `allowAddTab=true`.
 
 ## Layout & Measurements
 - Root is container-driven: `width: 100%`, `box-sizing: border-box`.
 - Tab row is horizontal and non-wrapping by default.
 - Tab item height: `38px`.
-- Tab item padding: `9px 24px`.
-- Internal content gap: `8px` between icon/label/badge.
-- Bottom indicator thickness for selected tabs: `2px`.
-- Primary selected indicator placement:
-  - transparent host: top border.
-  - white host: top border.
-- Secondary selected indicator placement:
-  - transparent host: bottom border.
-  - white host: bottom border.
-- Dividers/baseline use `1px` borders.
-- Label width is content-driven; short labels (1-3 words) are preferred.
-- Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
+- Tab item padding: `9px 24px` (`var(--padding-padding-24)` inline).
+- Internal content gap: `var(--spacing-space-8)` between icon/label/badge.
+- Bottom indicator thickness for selected tabs: `var(--border-width-border-thick)` (`2px`).
+- Primary selected indicator placement: top edge of tab cell.
+- Secondary selected indicator placement: bottom edge of tab cell.
+- Dividers/baseline use `var(--border-width-border-1)`.
+- Label width is content-driven; short labels (1–3 words) are preferred.
+- Secondary tabs are left-aligned; overflow behavior manages tabs that do not fit the viewport.
+
 ## Tokens
 - **Typography**
-  - `Body 2` (`14/20`) for tab labels.
-  - `Body 1` (`16/24`) for section headings/examples.
+  - `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)` for tab labels.
+  - Body 1 scale for section headings/examples only.
 - **Tab shell**
-  - `var(--color-background-surface-2)` (white host / tab background)
+  - `var(--color-background-surface-2)` (elevated / white host)
   - `var(--color-border-accessible)` (default divider/baseline)
   - `var(--color-border-brand-base)` (focus ring)
   - `var(--color-border-brand-dark)` (selected indicator)
@@ -47,6 +53,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - **Badges/alerts**
   - `var(--color-background-alerting-critical)` for alert badge background
   - `var(--color-text-white)` for badge text
+
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -60,21 +67,15 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 | Secondary | Unselected Hover | `var(--color-background-brand-lighter)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` |
 | Secondary | Unselected Press | `var(--color-background-brand-light)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
 | Secondary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
-## States (Dark Theme)
-Dark mode follows the exact same structural matrix and interaction semantics as Light mode, with all visual values resolved via semantic tokens and no hardcoded hex values.
 
-| Variant | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| Primary | Selected | semantic token resolved | semantic token resolved | semantic token resolved |
-| Primary | Unselected Default | semantic token resolved | semantic token resolved | semantic token resolved |
-| Primary | Unselected Hover | semantic token resolved | semantic token resolved | semantic token resolved |
-| Primary | Unselected Press | semantic token resolved | semantic token resolved | semantic token resolved |
-| Secondary | Selected | semantic token resolved | semantic token resolved | semantic token resolved |
-| Secondary | Unselected Default | semantic token resolved | semantic token resolved | semantic token resolved |
-| Secondary | Unselected Hover | semantic token resolved | semantic token resolved | semantic token resolved |
-| Secondary | Unselected Press | semantic token resolved | semantic token resolved | semantic token resolved |
+## States (Dark Theme)
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` live in `components/ids-theme.css`.
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
 ## Interactions
-- Clicking a tab activates exactly one `Tab Item` and displays its `Tab Item Content`.
+- Clicking a tab activates exactly one `tabItem` and displays its `tabPanel` content.
 - Keyboard support:
   - `ArrowLeft` / `ArrowRight` moves focus among visible tab items.
   - `Home` / `End` jumps to first/last visible tab.
@@ -84,119 +85,169 @@ Dark mode follows the exact same structural matrix and interaction semantics as 
   - Newly added tab can render as placeholder (product-defined default label/content).
   - Added tab is appended to ordered tab list and participates in overflow calculation.
 - Overflow (`More`) option:
-  - When tabs cannot fit container width, trailing non-active tabs move into `More` dropdown.
-  - Selecting a tab from dropdown makes it active.
-  - On selection from dropdown, `More` trigger label becomes selected tab name.
-  - If user later selects a visible in-viewport tab, trigger label returns to `More`.
-  - Overflow trigger remains last item in tab row.
+  - When tabs cannot fit container width, trailing tabs move into the overflow collection; a `More` trigger remains in the tab row.
+  - Selecting a tab from the overflow menu makes it active.
+  - On overflow selection, trigger label becomes the selected tab name; that tab is **omitted** from the menu until a visible tab is selected.
+  - If user later selects a visible in-viewport tab, trigger label returns to `moreLabel` (default `"More"`).
 - Secondary tabs:
-  - Should be default variant.
+  - Default variant (`type: secondary`).
   - Left-aligned.
-  - Can be revealed via responsive overflow behavior (and optional drag/swipe patterns where host supports it).
 - Data handling:
   - Tab switches must not auto-save data; explicit save action is required.
-## Composition & API (runtime)
-- **Hierarchy**
-  - `Tab`
-    - `Tab Item`
-      - `Tab Item Content`
 
-| Slot/Prop | Required | Behavior |
+## Composition & API (runtime)
+
+Canonical machine-readable mirror: `component-contracts/ids/tab.contract.ts`.
+
+**Canonical pattern:** projected `tabItem` children inside `tabRoot` — not an aggregate-only `items[]` prop.
+
+```
+TabRoot [type, surface, activeItemId?, defaultActiveItemId?, allowAddTab?, overflow?, …]
+  TabItem [id, label, iconSlug?, badgeCount?, disabled?]
+    TabPanel
+  TabItem …
+```
+
+### Root (`TabRoot`)
+| Prop | Required | Behavior |
 |---|---|---|
-| `items` | Yes | Ordered tab items. Each item: `{ id, label, content, iconSlug?, badgeCount?, hasAlert?, closable?, disabled? }`. |
-| `type` | No | `"secondary"` (default) or `"primary"` tab style. |
-| `variant` | No | Backward-compatible alias of `type`; if both are provided, `type` wins. |
-| `activeItemId` | Yes (controlled) | Active tab id. |
-| `defaultActiveItemId` | No | Initial tab id for uncontrolled mode. |
-| `onActiveItemChange(id)` | Yes | Fired on click/keyboard/overflow selection. |
-| `onTabSelect(payload)` | No | Emitted when user selects a tab. Payload: `{ id: string, label: string }` and must include selected tab name (`label`). |
-| `allowAddTab` | No | Enables dynamic add-tab entry. |
-| `onAddTab()` | No | Called when add-tab action is triggered. |
-| `addTabLabel` | No | User-defined label text for add-tab action (default `"Add Tab"`). |
-| `overflow` | No | Enables responsive overflow-to-`More`; default `true`. |
-| `moreLabel` | No | Localized fallback label (default `"More"`). |
-| `onOverflowSelection(id)` | No | Fired when item selected from overflow list. |
-| `onItemsChange(items)` | No | Optional callback when runtime adds/removes/reorders tabs. |
+| `type` | No | `"secondary"` (default) or `"primary"`. |
+| `variant` | No | Backward-compatible alias of `type`; `type` wins when both are set. |
+| `surface` | No | `"elevated"` (default) or `"transparent"` host background. |
+| `activeItemId` | No | Controlled active tab `id`. |
+| `defaultActiveItemId` | No | Initial tab `id` when uncontrolled (`TAB_SPEC_ACCURATE_DEFAULTS.defaultActiveItemId`). |
+| `allowAddTab` | No | Enables add-tab affordance. |
+| `addTabLabel` | No | Localized add action label (`TAB_API_DEFAULTS.addTabLabel`). |
+| `overflow` | No | Enables responsive overflow-to-`More` (`TAB_API_DEFAULTS.overflow`). |
+| `moreLabel` | No | Overflow trigger fallback label (`TAB_API_DEFAULTS.moreLabel`). |
+| `minTabWidth` / `maxTabWidth` | No | Tab cell width bounds (`TAB_API_DEFAULTS.minTabWidth` / `maxTabWidth`). |
+
+Outputs:
+- `onActiveItemChange(id)`
+- `onTabSelect({ id, label })` — `label` must be the selected tab name.
+- `onAddTab()`
+- `onOverflowSelection(id)`
+
+### Item (`TabItem`)
+| Prop | Required | Behavior |
+|---|---|---|
+| `id` | Yes | Stable tab id within the group. |
+| `label` | Yes | Visible tab label (title case, 1–3 words). |
+| `iconSlug` | No | Icon from `/assets/icons/<slug>.svg`. |
+| `badgeCount` | No | Alert badge count. |
+| `hasAlert` | No | Alert indicator flag. |
+| `disabled` | No | Disables tab selection. |
+| `simulatedState` | No | **Harness only:** `hover` \| `focus-visible` for static matrices. |
+
+### Panel (`TabPanel`)
+Projected content for the parent `tabItem`. Shown when that item is active.
+
+### Legacy aggregate (deprecated)
+Convenience wrappers that accept `items[]` may exist for demos only. New ports must implement the composition API above.
 
 Runtime rules:
-- At least two tabs are recommended in usage.
+- At least two tabs are recommended.
 - First tab should hold the most important content.
-- Labels should be title case and ideally 1-3 words.
-- Avoid truncating labels where possible; if truncation is unavoidable, use deterministic clipping behavior.
+- Labels should be title case and ideally 1–3 words.
+- Avoid truncating labels where possible; if unavoidable, use deterministic ellipsis at `maxTabWidth`.
 - Tabs are not page navigation and not progress indicators.
 - For vertical organization, use accordion instead of tabs.
+
 ## Codegen Contract (Framework-Agnostic Blueprint)
+
 ### Deterministic structure
 1. `TabRoot`
-2. `TabList` (`role=tablist`)
-3. `TabItem[]` (visible items)
-4. optional `OverflowTrigger` (last item)
-5. optional `OverflowMenu` (hidden items)
+2. `TabList` (`role="tablist"`)
+3. `TabItem[]` — visible tab triggers (first *N* items per overflow algorithm)
+4. optional `OverflowTrigger` (last control in row before add-tab when both present)
+5. optional `OverflowMenu` — lists `overflowMenuItems` only
 6. optional `AddTabTrigger`
-7. `TabPanels`
-8. `ActiveTabPanel`
+7. `TabPanels` region
+8. `ActiveTabPanel` — content from active `TabItem`
 
 ### Variant matrix
-- `type`: `primary | secondary` (`variant` accepted as compatibility alias)
-- `hostBackground`: `transparent | white`
+- `type`: `primary | secondary` (`variant` alias)
+- `surface`: `elevated | transparent`
 - `overflow`: `true | false`
-- `addTab`: `true | false`
+- `allowAddTab`: `true | false`
 - item decorations: `none | icon | badge | icon+badge | alert`
-- focus and pointer states per state table
+- interaction states per **States (Light Theme)**
 
 ### Per-slot style contract
-- `TabItem`: `38px` height, `9px 24px` padding, `8px` internal gap.
+- `TabItem`: `38px` height, `9px 24px` padding, `var(--spacing-space-8)` internal gap.
 - `TabLabel`: Body 2 tokenized typography.
-- `SelectedIndicator`: `2px`, placement depends on variant (`primary=top`, `secondary=bottom` in validated IDS examples).
-- `FocusRing`: `2px` brand border, tokenized.
-- `OverflowTrigger`: same sizing and tab affordance as peer tab items.
+- `SelectedIndicator`: `var(--border-width-border-thick)`; `primary` → top, `secondary` → bottom.
+- `FocusRing`: `var(--border-width-border-thick)` `var(--color-border-brand-base)`.
+- `OverflowTrigger`: same row height and affordance as peer tab items.
 - `AddTabTrigger`: visual parity with tab row controls.
 
 ### Behavior contract
-- Exactly one tab item is active.
-- Active tab always has one visible panel.
-- Selecting a tab must emit `onTabSelect({ id, label })` with selected tab name in `label`.
-- Overflow algorithm keeps visible tab slots stable and keeps hidden tabs inside overflow collection.
-- Selecting hidden item from overflow:
-  1. activates selected hidden item,
-  2. updates overflow trigger label to selected tab label,
-  3. does **not** replace visible tabs in the viewport row.
-- Selecting any visible tab after overflow selection resets overflow trigger label to `More`.
-- Add-tab creates deterministic default item payload and appends to list.
-- Add-tab label is runtime input (`addTabLabel`) and must not be hardcoded in component implementations.
+- Exactly one `tabItem` is active; exactly one `tabPanel` is visible.
+- Selecting a tab emits `onTabSelect({ id, label })`.
+- **Overflow visible-slot algorithm** (use `computeTabOverflowVisibleCount` in `component-contracts/ids/tab.contract.ts`):
+  - Input: container width, item count, `overflow`, `allowAddTab`, `addTabLabel`, `minTabWidth`.
+  - Reserve `TAB_OVERFLOW_MORE_TRIGGER_RESERVE_PX` (`84px`) for the More trigger when overflow is enabled and `itemCount` exceeds the naive fit.
+  - Reserve add-tab width via `estimateTabAddTabReservePx(addTabLabel)` when `allowAddTab` is true.
+  - `visibleCount = min(itemCount, max(TAB_OVERFLOW_MIN_VISIBLE_SLOTS, floor((containerWidth - reserves) / minTabWidth)))`.
+  - When `overflow` is false, `visibleCount = itemCount`.
+- **Overflow collections:**
+  - `hiddenItems` = ordered items after the first `visibleCount` slots.
+  - `overflowMenuItems` = `hiddenItems` excluding the active tab when the active tab is in `hiddenItems`.
+- **Overflow menu open rule:** open only when `overflowMenuItems.length > 0`.
+- **Overflow menu presentation:** must not be clipped by the tab row shell (`overflow: hidden` on the row container is invalid for the menu popup).
+- Selecting from overflow:
+  1. activate the hidden item,
+  2. set overflow trigger label to that item's `label`,
+  3. do **not** move visible in-row tabs,
+  4. omit active item from `overflowMenuItems` on subsequent opens.
+- Selecting any visible tab resets overflow trigger label to `moreLabel`.
+- Add-tab appends one item; `addTabLabel` is host-supplied (never hardcoded in generated components).
 
 ### Accessibility contract
-- `TabList` uses `role="tablist"`.
-- Each `TabItem` uses `role="tab"`, `aria-selected`, `aria-controls`, stable `id`.
-- Each panel uses `role="tabpanel"` and `aria-labelledby`.
-- Overflow trigger uses button semantics and `aria-expanded`.
-- Overflow menu uses consistent menu/listbox semantics per framework primitive.
-- Focus order includes visible tabs, overflow trigger, overflow menu items, add-tab trigger.
+- `TabList`: `role="tablist"`.
+- `TabItem` trigger: `role="tab"`, `aria-selected`, `aria-controls`, stable `id`.
+- `TabPanel`: `role="tabpanel"`, `aria-labelledby`.
+- `OverflowTrigger`: button semantics, `aria-expanded`, `aria-haspopup`.
+- `OverflowMenu`: menu/listbox semantics appropriate to the target platform.
+- Focus order: visible tabs → overflow trigger → overflow menu items → add-tab trigger.
 
 ### Asset resolution + bundling contract
-- Optional `iconSlug` resolves to `/assets/icons/<iconSlug>.svg`.
-- Alert indicators can be rendered as:
-  - appended alert icon slug from `/assets/icons/<slug>.svg`, and/or
-  - badge count tokenized with alert colors.
-- Unknown icon slug fallback: hide icon slot and keep text label/badge.
+- `iconSlug` → `/assets/icons/<iconSlug>.svg`.
+- Alert: optional icon slug and/or `badgeCount` with alert tokens.
+- Unknown `iconSlug`: hide icon slot; keep label/badge.
 
 ### Fallback/error rules
-- Unknown `type` (or `variant`) falls back to `secondary`.
-- Missing `activeItemId` falls back to first non-disabled item.
-- Invalid `activeItemId` falls back to first non-disabled item.
-- Empty `items` input must produce deterministic placeholder tab item and placeholder content.
-- If overflow is disabled and row cannot fit, horizontal scroll is allowed as fallback.
+- Unknown `type` / `variant` → `secondary`.
+- Missing / invalid `activeItemId` → first non-disabled item.
+- Empty item list → deterministic placeholder tab + content.
+- If `overflow` is false and row cannot fit → horizontal scroll permitted.
 
 ### Validation checklist
 - [ ] Primary and secondary variants follow state table and indicator placement.
-- [ ] `Tab -> Tab Item -> Tab Item Content` hierarchy is preserved.
-- [ ] Overflow selection updates trigger label to selected tab name without replacing visible tabs.
-- [ ] Selecting visible tab after overflow selection restores trigger label to `More`.
-- [ ] Add-tab dynamically appends one tab item and associated content.
+- [ ] `TabRoot → TabItem → TabPanel` hierarchy is preserved.
+- [ ] `computeTabOverflowVisibleCount` matches visible tab slots in overflow demos.
+- [ ] Overflow selection updates trigger label without replacing visible tabs.
+- [ ] Active overflow-selected tab is omitted from `overflowMenuItems`.
+- [ ] Selecting a visible tab restores trigger label to `moreLabel`.
+- [ ] More menu is not clipped; opens only when `overflowMenuItems.length > 0`.
+- [ ] Add-tab appends one item; `addTabLabel` is configurable.
 - [ ] Keyboard and ARIA behavior conforms to tabs pattern.
-- [ ] Labels and content follow usage rules (title case labels, related content, no autosave on tab switch).
-- [ ] Light and dark snapshots remain token-driven with no hardcoded visual values.
+- [ ] Labels follow usage rules; no autosave on tab switch.
+- [ ] Light and dark values resolve through semantic tokens only.
+
 ## Source Mapping
-- **Component map entry:** `data/component-figma-map.json` -> `Tab`.
-- **Validated Figma node:** `30681:9530` (IDS Design Library, text and annotation board for primary/secondary, overflow, add-tab, and state examples).
-- **Figma MCP evidence:** `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`, `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`.
+| Source | Location |
+|---|---|
+| Component map | `data/component-figma-map.json` → `Tab` |
+| Validated Figma node | `30681:9530` (primary/secondary, overflow, add-tab, states) |
+| Figma MCP evidence | `get_design_context` + `get_variable_defs` on `30681:9530` |
+| Theme CSS | `components/ids-theme.css` |
+| Runtime / codegen contract | `component-contracts/ids/tab.contract.ts` |
+| Programme inheritance | `data/programme-inheritance-registry.json` → `tab` (Synapse IDS-fork) |
+
+Reference implementations (verification only — not part of the codegen contract):
+| Port | Location |
+|---|---|
+| Angular composition | `storybook-angular/src/components/ids-tab/` |
+| React aggregate demo | `storybook/src/components/Tabs.tsx` |
+| Synapse Nav Tab | `components/synapse/tab/design-spec.md` |

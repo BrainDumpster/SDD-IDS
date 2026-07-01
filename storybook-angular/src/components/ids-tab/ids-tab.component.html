@@ -1,0 +1,105 @@
+<div
+  class="ids-tab"
+  [attr.data-surface]="surface"
+  [attr.data-type]="resolvedType"
+>
+  <div class="ids-tab__list-wrap" #listWrapRef>
+    <div class="ids-tab__list" role="tablist" aria-label="Tabs">
+      @for (item of visibleItems; track item.itemId) {
+        <button
+          type="button"
+          role="tab"
+          class="ids-tab__tab"
+          [class.ids-tab__tab--primary]="resolvedType === 'primary'"
+          [class.ids-tab__tab--secondary]="resolvedType === 'secondary'"
+          [class.ids-tab__tab--selected]="isActive(item)"
+          [attr.data-disabled]="item.disabled ? true : null"
+          [attr.data-simulated-state]="item.simulatedState ?? null"
+          [id]="tabId(item)"
+          [attr.aria-controls]="panelId(item)"
+          [attr.aria-selected]="isActive(item)"
+          [disabled]="item.disabled"
+          [tabIndex]="tabTabIndex(item)"
+          [style.min-width.px]="minTabWidth"
+          [style.max-width.px]="maxTabWidth"
+          (click)="selectVisible(item)"
+          (keydown)="onTabKeydown($event, item)"
+          (focus)="onTabFocus(item)"
+        >
+          <span class="ids-tab__tab-inner">
+            @if (item.iconSlug) {
+              <span class="ids-tab__tab-icon">
+                <ids-icon [shapeName]="item.iconSlug" [size]="16" />
+              </span>
+            }
+            <span class="ids-tab__tab-label">{{ item.label }}</span>
+            @if (item.badgeCount !== undefined && item.badgeCount > 0) {
+              <span class="ids-tab__badge">{{ item.badgeCount }}</span>
+            }
+          </span>
+        </button>
+      }
+
+      @if (hiddenItems.length > 0) {
+        <div class="ids-tab__more">
+          <button
+            type="button"
+            class="ids-tab__more-trigger"
+            [class.ids-tab__more-trigger--primary]="resolvedType === 'primary'"
+            [class.ids-tab__more-trigger--secondary]="resolvedType === 'secondary'"
+            [class.ids-tab__more-trigger--selected]="overflowTriggerSelected"
+            [attr.aria-expanded]="overflowOpen"
+            [attr.aria-haspopup]="true"
+            aria-label="More tabs"
+            (click)="toggleOverflowMenu($event)"
+          >
+            {{ overflowLabel ?? moreLabel }}
+            <ids-icon [shapeName]="moreIconSlug" [size]="12" className="ids-tab__more-icon" />
+          </button>
+          @if (overflowOpen && overflowMenuItems.length > 0) {
+            <div class="ids-tab__more-menu" role="menu">
+              @for (item of overflowMenuItems; track item.itemId) {
+                <button
+                  type="button"
+                  class="ids-tab__more-item"
+                  role="menuitem"
+                  [disabled]="item.disabled"
+                  (click)="selectHidden(item); $event.stopPropagation()"
+                >
+                  {{ item.label }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (allowAddTab) {
+        <button
+          type="button"
+          class="ids-tab__add"
+          [class.ids-tab__add--primary]="resolvedType === 'primary'"
+          [class.ids-tab__add--secondary]="resolvedType === 'secondary'"
+          [attr.aria-label]="addTabLabel"
+          (click)="onAddTabClick()"
+        >
+          <ids-icon [shapeName]="addIconSlug" [size]="16" className="ids-tab__add-icon" />
+          <span class="ids-tab__add-label">{{ addTabLabel }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (activeItem; as item) {
+    <div
+      class="ids-tab__panel"
+      role="tabpanel"
+      [id]="panelId(item)"
+      [attr.aria-labelledby]="tabId(item)"
+    >
+      <ng-container *ngTemplateOutlet="item.panelTpl" />
+    </div>
+  }
+
+  <ng-content />
+</div>

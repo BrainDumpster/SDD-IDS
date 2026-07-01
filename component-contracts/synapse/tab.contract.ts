@@ -32,3 +32,6 @@ export const SYNAPSE_NAV_TAB_GROUP_OVERFLOW_NODE_ID = "47835:4949" as const;
 export const SYNAPSE_TAB_MIN_WIDTH_PX = 80 as const;
 
 export const SYNAPSE_TAB_MAX_WIDTH_PX = 250 as const;
+
+/** Re-export IDS overflow demo width for Synapse overflow stories (shared `Tabs` resize logic). */
+export { TAB_OVERFLOW_DEMO_WIDTH as SYNAPSE_TAB_OVERFLOW_DEMO_WIDTH } from "../ids/tab.contract";

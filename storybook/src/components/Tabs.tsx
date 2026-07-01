@@ -8,6 +8,10 @@ import arrowTriDownSolidIcon from "../../../assets/icons/arrow-tri-down-solid.sv
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
+import {
+  computeTabOverflowMenuItems,
+  computeTabOverflowVisibleCount,
+} from "../../../component-contracts/ids/tab.contract";
 
 export interface TabItem {
   id: string;
@@ -71,14 +75,17 @@ export function Tabs({
     if (!list) return;
     const recomputeVisibleCount = () => {
       const available = list.clientWidth;
-      const moreWidth = 84;
-      const addWidth = showAddTab ? (isSynapse ? 36 : Math.min(220, Math.max(56, 36 + addTabLabel.length * 8))) : 0;
-      const perTab = Math.max(minTabWidth, 80);
-      const maxVisible = Math.max(
-        1,
-        Math.floor((available - addWidth - moreWidth) / perTab),
+      setVisibleCount(
+        computeTabOverflowVisibleCount({
+          containerWidth: available,
+          itemCount: tabs.length,
+          overflow: true,
+          allowAddTab: showAddTab,
+          addTabLabel,
+          minTabWidth,
+          addTabReservePx: showAddTab && isSynapse ? 36 : undefined,
+        }),
       );
-      setVisibleCount(Math.min(maxVisible, tabs.length));
     };
 
     recomputeVisibleCount();
@@ -94,6 +101,11 @@ export function Tabs({
       hiddenTabs: tabs.slice(visibleCount),
     };
   }, [tabs, visibleCount]);
+
+  const overflowMenuTabs = useMemo(
+    () => computeTabOverflowMenuItems(hiddenTabs, activeTabId),
+    [hiddenTabs, activeTabId],
+  );
 
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
 
@@ -205,7 +217,7 @@ export function Tabs({
                   <Menu.Popup
                     className={isSynapse ? synapseMenuStyles.popup : styles.moreMenu}
                   >
-                    {hiddenTabs.map((tab) => (
+                    {overflowMenuTabs.map((tab) => (
                       <Menu.Item
                         key={tab.id}
                         className={isSynapse ? synapseMenuStyles.optionRow : styles.moreItem}
