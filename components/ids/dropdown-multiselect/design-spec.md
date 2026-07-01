@@ -42,8 +42,9 @@
   - tokenized visual rhythm (`10px` vertical, `16px` horizontal)
   - minimum hit area: `44px`.
 - Menu width:
-  - sample `300px`
-  - runtime contract: matches trigger width unless host overrides.
+  - **Runtime contract:** popup width matches **measured field container** (`.field`); **minimum `186px`**; host `width: 100%` supported.
+  - **Horizontal fallback:** right-edge align when popup exceeds trigger width or viewport clips right edge.
+  - Sample `300px` in Storybook is illustrative only.
 - Search row (when `searchable`):
   - wrapper padding: `var(--padding-padding-8)`.
   - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
@@ -71,6 +72,10 @@
 | `FooterActionButton` (inner span) | `border-radius` | `var(--corner-radius-radius-2)` (2px) | `29392:48797` | Figma MCP `get_design_context` (shared menu action row) |
 
 **Anti-drift rule:** Field shell is square (`radius-none`). Do not document field radius from Button/`radius-2` convention or theme alias alone.
+
+### Menu popup placement & width (runtime)
+
+Inherit IDS single-select **Menu popup placement & width (runtime)** — below default, flip above with full border + corner pairing, width tracks `.field`, min `186px`, right-align fallback. See [`components/ids/dropdown-single-select/design-spec.md`](../ids/dropdown-single-select/design-spec.md).
 
 ## Tokens
 - Field/menu tokens:
@@ -129,13 +134,14 @@
 | ClearAll action | disabled | transparent | none | disabled text |
 | Option row (disabled) | checkbox control | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 ## States (Dark Theme)
-Dark theme must preserve the same state matrix and resolve values through semantic IDS tokens only.
 
-| Element | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/selected/indeterminate/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
-| SelectAll / ClearAll | default/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles menu.
@@ -161,44 +167,34 @@ Dark theme must preserve the same state matrix and resolve values through semant
   - user-defined label
   - emits explicit action event.
 ## Composition & API (runtime)
-| Prop / Slot | Required | Type | Notes |
+
+**Preferred API:** same composition tree as combobox with `ids-dropdown mode="multi-select"`. Synapse fork: `SynapseDropdown.tsx`. **Angular:** `IDS_DROPDOWN_IMPORTS`. **React:** `IdsDropdown.*` / `SynapseDropdown.*`.
+
+| Component | Notes |
+|---|---|
+| `ids-dropdown` | `mode="multi-select"`; `values` + `valuesChange`. |
+| `ids-dropdown-menu` | `showSelectAllClearAll`, `showSelectedPanel` (combobox multi only), section groups, footer action. |
+| `ids-dropdown-helper` / `ids-dropdown-error` | Inside root container. |
+
+| Prop / Slot (root / menu) | Required | Type | Notes |
 |---|---|---|---|
-| `size` | No | `"small" \| "large"` | Default `large`. |
-| `label` | No | `string` | Optional label. |
-| `placeholder` | No | `string` | User-defined placeholder. |
-| `helperText` | No | `string` | User-defined helper text. |
-| `errorText` | No | `string` | User-defined error text. |
-| `disabled` | No | `boolean` | Blocks trigger/menu interactions. |
-| `searchable` | No | `boolean` | Enables search row. |
-| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical options. |
-| `value` | No | `string[]` | Controlled selected values. |
-| `onChange` | No | `(values: string[] \| optionObject[]) => void` | Payload strategy app-defined. |
-| `showSelectAllClearAll` | No | `boolean` | Enables top controls row. |
-| `selectAllLabel` | No | `string` | Default `"Select All"`. |
-| `clearAllLabel` | No | `string` | Default `"Clear All"`. |
-| `onSelectAll` | No | `() => void` | Select all callback. |
-| `onClearAll` | No | `() => void` | Clear callback. |
-| `clearAllDisabled` | No | `boolean` | Disabled state for clear action. |
-| `showSelectedBadge` | No | `boolean` | Enables selected-count badge. |
-| `showSelectedTooltip` | No | `boolean` | Enables selected summary tooltip. |
-| `actionLabel` | No | `string` | Optional action row label. |
-| `onAction` | No | `() => void` | Optional action row event. |
-| `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
-| `onSearch` | No | `(query: string) => void` | Search callback. |
+| `size` | No | `"small" \| "large"` | On trigger shell. |
+| `disabled` | No | `boolean` | Blocks trigger/menu. |
+| `values` | No | `string[]` | Controlled selection. |
+| `onValuesChange` | No | `(values: string[]) => void` | Selection callback. |
+| `showSelectAllClearAll` | No | `boolean` | Menu input. |
+| `onSelectAll` / `onClearAll` | No | callbacks | Menu `selectAllClick` / `clearAllClick`. |
+| `actionLabel` | No | `string` | `ids-dropdown-menu-footer`. |
+| `onOpenChange` | No | `(open: boolean) => void` | Menu `openChange`. |
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
-1. `DropdownMultiSelectRoot`
-2. optional `Label`
-3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
-4. optional `HelperText` or `ValidationError`
-5. optional `MenuPopup`
-6. optional `SearchRow`
-7. optional `SelectAllClearAllRow`
-8. `OptionList` -> `OptionRow[]`
-9. optional `SectionHeaderRow[]`
-10. optional `ActionRow`
-11. optional `SelectedCountBadge`
-12. optional `SelectedCountTooltip`
+1. `DropdownMultiSelectRoot` (`ids-dropdown` `mode="multi-select"`)
+2. optional `Label` (app-level)
+3. `Menu` → projected `FieldContainer` (`ids-dropdown-trigger-shell`) with optional badge/tooltip in trigger content
+4. optional `MenuGroup` → `MenuItem` (repeated)
+5. optional `MenuFooter`
+6. optional `HelperText` / `ValidationError` inside root
+7. `Popup` → optional `SelectAllClearAllRow` → `OptionList` → optional `ActionRow`
 
 ### Variant matrix
 - `size`: `small | large`
@@ -224,11 +220,13 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Disabled options are excluded from `Select All`.
 - Disabled field blocks open and mutation events.
 - Action row emits only `onAction` when present.
+- Popup placement and width: inherit **Menu popup placement & width (runtime)** from single-select spec.
 
 ### Accessibility contract
 - Trigger exposes combobox semantics.
 - Option rows expose checkbox semantics (`aria-checked=true|false|mixed`).
 - Validation text linked via `aria-describedby`.
+- Helper/error slots register ids on root context for trigger `aria-describedby` merge.
 - `Select All` and `Clear All` are keyboard-activatable controls.
 
 ### Asset resolution + bundling contract
@@ -247,6 +245,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ### Validation checklist
 - [x] **Slot geometry (Figma-verified)** table complete; field `radius-none` on `12608:96588`
 - [x] `--dropdown-control-radius` in `ids-theme.css` matches geometry table (`radius-none`)
+- [x] Composition Storybook (Angular + React); popup width + above-flip parity
 - [ ] Main multi-select examples match `43406:39370`.
 - [ ] Component matrix matches `12608:93872`.
 - [ ] Menu structure matches `12579:19725`.
@@ -266,6 +265,8 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Checkbox dependency spec: `components/ids/checkbox/design-spec.md`
 - Verification method: Figma MCP (`get_design_context` + `get_variable_defs`)
 - Last live verification: 2026-06-19 (geometry audit: field `12608:96588` `radius-none`; focus `12608:96619`; search `29393:141946`)
+- **Reference implementation:** `storybook-angular/src/components/ids-dropdown/`, `storybook/src/components/IdsDropdown.tsx`, `storybook/src/components/SynapseDropdown.tsx`
+- **Composition + popup layout parity:** 2026-06-30
 
 ---
 

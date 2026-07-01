@@ -19,6 +19,7 @@
     "src/components/ids-masthead/**/*.ts",
     "src/components/ids-main-menu-left/**/*.ts",
     "src/components/ids-footer/**/*.ts",
+    "src/components/ids-dropdown/**/*.ts",
     "../component-contracts/common/story-meta.ts",
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",

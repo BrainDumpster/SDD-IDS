@@ -42,8 +42,9 @@
   - size `16x16`
   - inner dot `8x8`
 - Menu width:
-  - matches trigger width in component examples (`300px` sample)
-  - runtime contract: container-driven with optional min/max constraints.
+  - **Runtime contract:** popup width matches **measured field container** (`.field` / `FieldContainer`), not outer wrapper; **minimum `186px`**; host `width: 100%` supported.
+  - **Horizontal fallback:** right-edge align when popup effective width exceeds trigger or viewport clips right edge.
+  - Sample Storybook width `300px` is illustrative only.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px — square corners**; Figma Container `12579:77895` uses `Corner Radius/radius-none`).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -65,6 +66,14 @@
 | `OptionRow` (focus ring) | `border-radius` | `var(--corner-radius-radius-4)` on inset outline | `12380:16525` | Figma MCP `get_design_context` (option focus state) |
 
 **Anti-drift rule:** Do not set `--dropdown-control-radius` from Button/`radius-2` convention. Theme alias in `components/ids-theme.css` must match this table after every geometry audit.
+
+### Menu popup placement & width (runtime)
+
+- **Default:** below trigger, left-aligned, field-attached (no popup top border).
+- **Width:** tracks measured `.field` width; min **`186px`**; `matchTriggerWidth` default **true**.
+- **Flip above:** when insufficient viewport space below → full popup border, top-only radius on popup, square top corners on open field (`data-popup-side="above"`).
+- **Right-align:** when min-width or viewport requires.
+- **Implementation:** `DropdownMenu.tsx` (React), `ids-dropdown-menu.component.*` (Angular).
 
 ## Tokens
 - Field and menu:
@@ -129,12 +138,14 @@
 | Section header | — | `var(--color-background-component)` | `border-top: var(--color-border-accessible)` | `var(--color-text-neutral)` |
 | Footer action row | — | `var(--color-background-component)` | `border-top: var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
 ## States (Dark Theme)
-Dark theme must remain structurally identical to Light Theme with values resolved via semantic IDS tokens only.
 
-| Element | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/selected/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles open/close.
@@ -153,34 +164,37 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - user-defined label
   - emits action event on click.
 ## Composition & API (runtime)
-| Prop / Slot | Required | Type | Notes |
+
+**Preferred API:** same composition tree as `components/ids/dropdown-combo-box/design-spec.md` with `ids-dropdown mode="single-select"`. Synapse fork: `SynapseDropdown.tsx` (re-exports IDS compound API).
+
+**Angular:** `IDS_DROPDOWN_IMPORTS` from `ids-dropdown.imports.ts`. **React:** `IdsDropdown.*` compound exports + `SynapseDropdown.*` aliases.
+
+| Component | Notes |
+|---|---|
+| `ids-dropdown` | `mode="single-select"`; `value` + `valueChange` / `onValueChange`. |
+| `ids-dropdown-menu` | `showSingleSelectRadio` for optional radio leading control. |
+| `ids-dropdown-menu-group` | Section header rows (`groupName`). |
+| `ids-dropdown-menu-item` | Option rows (`value`, `label`, `disabled?`). |
+| `ids-dropdown-menu-footer` | Footer action row (`actionLabel`, `action`). |
+| `ids-dropdown-helper` / `ids-dropdown-error` | Projected inside root; linked via `aria-describedby`. |
+
+| Prop / Slot (root) | Required | Type | Notes |
 |---|---|---|---|
-| `size` | No | `"small" \| "large"` | Default `large`. |
-| `label` | No | `string` | Optional label slot. |
-| `placeholder` | No | `string` | User-defined placeholder. |
-| `helperText` | No | `string` | User-defined helper text. |
-| `errorText` | No | `string` | User-defined error text. |
+| `size` | No | `"small" \| "large"` | On trigger shell. Default `large`. |
 | `disabled` | No | `boolean` | Blocks interactions. |
-| `searchable` | No | `boolean` | Enables search row. |
-| `showRadio` | No | `boolean` | Optional radio visual in option rows. |
-| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option list. |
+| `showRadio` | No | `boolean` | `showSingleSelectRadio` on menu. |
 | `value` | No | `string` | Controlled selected value. |
-| `onChange` | No | `(value: string \| optionObject) => void` | Selection event payload strategy is app-defined. |
-| `actionLabel` | No | `string` | Optional action row label. |
-| `onAction` | No | `() => void` | Optional action row event. |
-| `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
-| `onSearch` | No | `(query: string) => void` | Search callback. |
+| `onValueChange` | No | `(value: string) => void` | Selection callback. |
+| `onOpenChange` | No | `(open: boolean) => void` | Menu `openChange`. |
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
-1. `DropdownSingleSelectRoot`
-2. optional `Label`
-3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
-4. optional `HelperText` or `ValidationError`
-5. optional `MenuPopup`
-6. optional `SearchRow`
-7. `OptionList` -> `OptionRow[]`
-8. optional `SectionHeaderRow[]`
-9. optional `ActionRow`
+1. `DropdownSingleSelectRoot` (`ids-dropdown` `mode="single-select"`)
+2. optional `Label` (app-level)
+3. `Menu` → projected `FieldContainer` (`ids-dropdown-trigger-shell`)
+4. optional `MenuGroup` → `MenuItem` (repeated)
+5. optional `MenuFooter`
+6. optional `HelperText` / `ValidationError` inside root
+7. `Popup` → `OptionList` → optional `SectionHeaderRow` → optional `ActionRow`
 
 ### Variant matrix
 - `size`: `small | large`
@@ -218,12 +232,14 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Disabled field blocks open/close and selection.
 - Search filters visible options without mutating source data.
 - Action row emits `onAction` only when enabled.
+- Popup placement and width follow **Menu popup placement & width (runtime)**.
 
 ### Accessibility contract
 - Trigger exposes combobox semantics (`role="combobox"`, `aria-expanded`, `aria-controls`).
 - Menu exposes listbox/menu semantics aligned with implementation library.
 - Active selected option has programmatic selected state.
 - Error/helper is linked using `aria-describedby`.
+- `ids-dropdown-helper` / `ids-dropdown-error` register ids on root context; trigger merges described-by ids.
 
 ### Asset resolution + bundling contract
 - Caret icon: `arrow-drop-tri-caret`, 10×10px, container padding `1px` horizontal / `5px` vertical. Color per state: `var(--color-icon-neutral)` (default/hover/focus/show-dropdown/error), `var(--color-border-disabled)` (disabled). Resolve from `assets/icons/arrow-drop-tri-caret.svg` via shared Icon primitive.
@@ -239,6 +255,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 ### Validation checklist
 - [x] **Slot geometry (Figma-verified)** table complete; field `radius-none` verified on `12579:77895`
 - [x] `--dropdown-control-radius` in `ids-theme.css` matches geometry table (`radius-none`, not `radius-2`)
+- [x] Composition Storybook (Angular + React) uses projected children; Docs tab enabled
+- [x] Popup width matches field; above-flip + right-align fallbacks implemented
 - [ ] Main state matrix matches `11099:58099`.
 - [ ] Menu scenarios match `43264:181428` (`small`, `overflow`, `section`, `action`).
 - [ ] Option states match `12380:16525`.
@@ -255,6 +273,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Component map: `data/component-figma-map.json` -> `Dropdown-Single-Select`
 - Verification method: Figma MCP (`get_design_context` + `get_variable_defs`)
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
+- **Reference implementation:** `storybook-angular/src/components/ids-dropdown/`, `storybook/src/components/IdsDropdown.tsx`, `storybook/src/components/SynapseDropdown.tsx`
+- **Composition + popup layout parity:** 2026-06-30 (Storybook; width from `.field`, above-flip, right-align)
 
 ## Implementation Notes
 > Last updated: 2026-06-07.
@@ -294,3 +314,6 @@ Outer row padding is `var(--padding-padding-8) 0` (no horizontal padding). The l
 
 **FieldStatesMatrix story: helper text and error message font weight was 500.**
 Spec is 400. Implementation: `IdsDropdownSingleSelect.stories.tsx` — `helperStyle.fontWeight: 400`, `errorMsgStyle.fontWeight: 400`.
+
+**Popup width must measure `.field`, not the trigger wrapper.**
+Host `width: 100%`; popup `min-width: 186px` tracks field `getBoundingClientRect`. Right-align when wider than trigger or viewport overflow. Above-flip restores top border and inverts corner pairing (`data-side="top"`). Implementation: `DropdownMenu.tsx` + `DropdownMenu.module.css`; Angular `ids-dropdown-menu.component.ts` `updatePopupLayout()`.

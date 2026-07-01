@@ -1,4 +1,10 @@
-/* IDS Dropdown / Combobox trigger shell — tokens from Figma `12730:157002` + matrix `12608:95982`. */
+/* Ported from storybook/src/components/IdsDropdownTriggerShell.module.css */
+
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
 
 .field {
   position: relative;
@@ -50,7 +56,16 @@
   pointer-events: none;
 }
 
-/* Open-state field corners are set on Menu.Trigger in DropdownMenu.module.css. */
+:host-context([data-popup-open][data-popup-side="below"]) .field,
+:host-context([data-popup-open]:not([data-popup-side])) .field {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+:host-context([data-popup-open][data-popup-side="above"]) .field {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 
 .main {
   display: flex;
@@ -60,7 +75,7 @@
   gap: var(--spacing-space-4);
 }
 
-.caretWrap {
+.caret-wrap {
   flex-shrink: 0;
   display: inline-flex;
   align-items: flex-start;
@@ -69,6 +84,6 @@
   line-height: 0;
 }
 
-.field[data-disabled="true"] .caretWrap {
+.field[data-disabled="true"] .caret-wrap {
   color: var(--color-border-disabled);
 }

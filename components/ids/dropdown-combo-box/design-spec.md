@@ -41,8 +41,7 @@
   - runtime rule: width is container-driven (`width: 100%` of host), with min/max optional per product context.
 - Caret icon slot: `10px`.
 - Menu popup:
-  - popup opens attached below trigger (`top: fieldHeight - 1px` visual alignment).
-  - border `1px`, drop shadow uses IDS shadow tokens.
+  - **Placement & width:** see **Menu popup placement & width (runtime)** below.
   - search row wrapper padding: `var(--padding-padding-8)`.
   - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
   - option row padding: `var(--padding-padding-10) var(--padding-padding-16)`.
@@ -74,6 +73,18 @@
 | `OptionRow` leading `checkboxOuter` (multi) | `border-radius` | `var(--checkbox-control-radius)` → `var(--corner-radius-radius-2)` (2px) | `29392:48749` | Figma MCP combobox option matrix `29392:48763` |
 
 **Anti-drift rule:** Combobox field shells are square (`radius-none`) for both single- and multi-select variants. Theme alias must match Figma Container nodes, not Button convention.
+
+### Menu popup placement & width (runtime)
+
+- **Default:** popup opens **below** the field trigger, **left-aligned** to `FieldContainer` (`.field`), field-attached (popup has **no top border**; side borders shared with field).
+- **Width:** popup width matches **measured field container width** (not the outer trigger wrapper). **Minimum `186px`** (same as field `min-width`). Host may be wider (`width: 100%`); popup tracks `.field` geometry.
+- **Horizontal align fallback:** when effective popup width exceeds trigger width (min-width clamp) or viewport would clip the right edge, anchor popup **right edge** to trigger **right edge**.
+- **Vertical flip fallback:** when insufficient space below (use `maxHeight` or ~`220px` estimate), open **above** trigger:
+  - restore **full popup border** (including top);
+  - radius **bottom-only** when below (`0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)`), **top-only** when above;
+  - open field: square **bottom** corners when below, square **top** corners when above (`data-popup-side="above"` / `data-side="top"`);
+  - invert shadow direction when above.
+- **Implementation:** `storybook/src/components/DropdownMenu.tsx` (React); `storybook-angular/src/components/ids-dropdown/ids-dropdown-menu.component.*` (Angular).
 
 ## Tokens
 - **Core field tokens**
@@ -123,17 +134,16 @@
 | Option row | focus-visible | current-state fill | focus indicator tokenized with `var(--color-border-brand-base)` | text/icon unchanged |
 | Option row | selected (single) | `var(--color-background-brand-lighter)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
 | Option row | selected (multi) | component background with checked checkbox | none | neutral text + selected checkbox visuals |
-## States (Dark Theme)
-Dark theme uses the same structural state matrix as Light Theme and resolves all visual values through semantic tokens. No hardcoded color literals are allowed in implementation contracts.
 
-| Element | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| Field container | default | semantic token resolved | semantic token resolved | semantic token resolved |
-| Field container | hover | semantic token resolved | semantic token resolved | semantic token resolved |
-| Field container | focus-visible | semantic token resolved | semantic token resolved | semantic token resolved |
-| Field container | disabled | semantic token resolved | semantic token resolved | semantic token resolved |
-| Field container | error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/press/focus-visible/selected | semantic token resolved | semantic token resolved | semantic token resolved |
+## States (Dark Theme)
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
 ## Interactions
 - Trigger interaction:
   - click/`Enter`/`Space` toggles popup open/close.
@@ -156,36 +166,58 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Validation:
   - error state shows critical icon + "Error message" slot below field.
 ## Composition & API (runtime)
-| Prop / Slot | Required | Type | Notes |
+
+**Preferred API:** parent–children composition (Storybook reference: `storybook-angular/src/components/ids-dropdown/`, `storybook/src/components/IdsDropdown.tsx`). Synapse re-exports: `storybook/src/components/SynapseDropdown.tsx`.
+
+```
+ids-dropdown [mode, value | values, disabled?]
+  ids-dropdown-menu [showSearch?, showSelectAllClearAll?, showSelectedPanel?, maxHeight?, matchTriggerWidth?, …]
+    ids-dropdown-trigger-shell  → projected trigger (value slot + caret)
+    ids-dropdown-menu-group [groupName]?  → optional section header
+      ids-dropdown-menu-item [value, label, disabled?]
+    ids-dropdown-menu-item …
+    ids-dropdown-menu-footer [actionLabel] (action)  → combobox/single/multi when action row needed
+  ids-dropdown-helper  → helper text below field (aria-describedby)
+  ids-dropdown-error   → validation error below field (aria-describedby)
+```
+
+**Angular imports:** `IDS_DROPDOWN_IMPORTS` from `ids-dropdown.imports.ts`.
+
+**React exports:** `IdsDropdown`, `IdsDropdownMenu`, `IdsDropdownMenuGroup`, `IdsDropdownMenuItem`, `IdsDropdownMenuFooter`, `IdsDropdownHelper`, `IdsDropdownError`, `IdsDropdownTriggerShell` (compound aliases on `IdsDropdown.*`).
+
+| Component / Slot | Required | Notes |
+|---|---|---|
+| `ids-dropdown` / root | Yes | `mode`: `combobox-single` \| `combobox-multi`. Selection via `value` / `values` + change outputs. |
+| `ids-dropdown-menu` | Yes | Open/close, search row, select-all/clear-all, show-selected panel (multi). |
+| `ids-dropdown-trigger-shell` | Yes (projected) | Field shell + caret; wrap custom value/placeholder content. |
+| `ids-dropdown-menu-group` | No | Renders section header row (`groupName`). |
+| `ids-dropdown-menu-item` | Yes (≥1) | `value` + `label`; toggles selection via root context. |
+| `ids-dropdown-menu-footer` | No | Footer action row (single/multi select scenarios). |
+| `ids-dropdown-helper` | No | Helper copy inside root (not sibling of menu in layout). |
+| `ids-dropdown-error` | No | Critical icon + error copy inside root. |
+
+**Legacy aggregate props** (`options[]`, `helperText`, `errorText` strings) remain valid for codegen/RAG but Storybook examples use composition only.
+
+| Prop / Slot (root) | Required | Type | Notes |
 |---|---|---|---|
 | `mode` | Yes | `"combobox-single" \| "combobox-multi"` | This spec supports these two combobox modes only. |
-| `size` | No | `"small" \| "large"` | Maps to `32px` / `40px`. Default `large`. |
-| `label` | No | `string` | Optional field label. |
-| `placeholder` | No | `string` | Default sample `"Select"`. |
-| `helperText` | No | `string` | Default sample `"Helper text"`. |
-| `errorText` | No | `string` | Default sample `"Error message"`. |
+| `size` | No | `"small" \| "large"` | On `ids-dropdown-trigger-shell`. Default `large`. |
 | `disabled` | No | `boolean` | Prevents interaction. |
-| `searchable` | No | `boolean` | Enables search row in popup. |
-| `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option model. |
-| `value` | No | `string \| string[]` | Controlled selected value(s). |
-| `onChange` | No | `(payload) => void` | Emits selected value(s). |
-| `onSearch` | No | `(query: string) => void` | Emits search query. |
-| `onOpenChange` | No | `(open: boolean) => void` | Open state callback. |
-| `onSelectAll` | No | `() => void` | Multi-select only. |
-| `onClearAll` | No | `() => void` | Multi-select only. |
-| `showSelectedPanel` | No | `boolean` | Multi-select only; enables Show/Hide Selected row + tag chips. |
-| `showSelectedExpanded` | No | `boolean` | Controlled expanded state for selection tag panel. |
-| `onShowSelectedExpandedChange` | No | `(expanded: boolean) => void` | Toggle callback for Show/Hide Selected. |
-| `onRemoveSelectedTag` | No | `(value: string) => void` | Removes one selected value when a tag dismiss control is activated. |
-| `onShowSelectedPanelClear` | No | `() => void` | Clears all selections from panel header dismiss; defaults to `onClearAll`. |
+| `value` / `values` | No | `string` / `string[]` | Controlled selection. |
+| `onValueChange` / `onValuesChange` | No | emitters | Selection callbacks. |
+| `searchable` | No | `boolean` | Maps to `ids-dropdown-menu` `[showSearch]`. |
+| `onSearch` | No | `(query: string) => void` | `searchValueChange` on menu. |
+| `onOpenChange` | No | `(open: boolean) => void` | `openChange` on menu. |
+| Multi-select panel | No | see menu inputs | `showSelectedPanel`, `removeSelectedTag`, etc. on menu. |
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
-1. `ComboBoxRoot`
-2. optional `Label`
-3. `FieldContainer` -> `ValueSlot` + `CaretSlot`
-4. optional `HelperText` or `ValidationError`
-5. optional `Popup` -> optional `SearchRow` -> `ListRows`
-6. optional `MultiSelectControls` (`SelectAll`, `ClearAll`, `ShowSelected`)
+1. `ComboBoxRoot` (`ids-dropdown`)
+2. optional `Label` (app-level)
+3. `Menu` (`ids-dropdown-menu`) → projected `FieldContainer` (`ids-dropdown-trigger-shell`) → `ValueSlot` + `CaretSlot`
+4. optional `MenuGroup` (`ids-dropdown-menu-group`) → repeated `MenuItem` (`ids-dropdown-menu-item`)
+5. optional `MenuFooter` (`ids-dropdown-menu-footer`)
+6. optional `HelperText` (`ids-dropdown-helper`) or `ValidationError` (`ids-dropdown-error`) **inside root**
+7. `Popup` anatomy: optional `SearchRow` → optional `MultiSelectControls` → `OptionList` → optional `ActionRow` (footer)
 
 ### Variant matrix
 - `mode`: `combobox-single | combobox-multi`
@@ -209,12 +241,14 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Multi mode emits deterministic ordered selected id list.
 - Filtering never mutates source options array; it derives visible options.
 - Disabled state blocks popup open and selection mutations.
+- Popup placement and width follow **Menu popup placement & width (runtime)** (below default; flip above + full border when needed; width tracks `.field`).
 
 ### Accessibility contract
 - Root trigger must expose combobox semantics (`role="combobox"`, `aria-expanded`, `aria-controls`).
 - Popup list must expose listbox semantics; option rows must expose option semantics and selected state.
 - Multi-select rows include checkbox semantics (`aria-checked`).
 - Validation message must be linked with `aria-describedby` when error is active.
+- `ids-dropdown-helper` / `ids-dropdown-error` register element `id` values on the root context; menu trigger receives merged `aria-describedby`.
 
 ### Asset resolution + bundling contract
 - Caret icon slug: `arrow-drop-tri-caret`.
@@ -231,6 +265,9 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 ### Validation checklist
 - [x] **Slot geometry (Figma-verified)** table complete; field containers `29393:149487` + `12730:157290` use `radius-none`
 - [x] `--dropdown-control-radius` in `ids-theme.css` matches geometry table (`radius-none`)
+- [x] Composition Storybook examples (Angular + React) use projected children only; Docs tab enabled
+- [x] Popup width matches field container; horizontal right-align fallback when wider than trigger / viewport
+- [x] Popup above-trigger flip restores full border + correct corner pairing on field + popup
 - [ ] Combobox single-select states match `29393:149209`.
 - [ ] Combobox multi-select states match `12730:157002`.
 - [ ] Size/state matrix parity for `Large (40)` and `Small (32)` matches `43415:176785`.
@@ -243,4 +280,5 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - **Primary nodes:** `29393:149209` (single), `12730:157002` (multi).
 - **Element nodes:** `29393:143195`, `29716:46779`, `12730:120316`.
 - **Figma MCP evidence:** `get_design_context` + `get_variable_defs` on all listed nodes.
-- **Last live verification:** 2026-06-19 (geometry audit: field `29393:149487`, `12730:157290` `radius-none`; focus `29393:149470`; search `29393:141946`).
+- **Reference implementation:** `storybook-angular/src/components/ids-dropdown/` (Angular), `storybook/src/components/IdsDropdown.tsx` (React IDS), `storybook/src/components/SynapseDropdown.tsx` (React Synapse fork).
+- **Last live verification (composition + popup layout):** 2026-06-30 — Storybook implementation parity; Figma nodes in Metadata unchanged.

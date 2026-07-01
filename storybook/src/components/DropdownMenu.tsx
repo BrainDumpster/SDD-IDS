@@ -1,10 +1,33 @@
 import { Menu } from "@base-ui-components/react/menu";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Tag } from "./Tag";
 import styles from "./DropdownMenu.module.css";
 import search16Icon from "../../../assets/icons/search-16.svg";
+
+const DROPDOWN_MENU_MIN_WIDTH_PX = 186;
+const VIEWPORT_EDGE_PADDING_PX = 8;
+
+type PopupHorizontalAlign = "start" | "end";
+type PopupSide = "top" | "bottom";
+
+function resolvePopupAlignment(
+  measureTarget: HTMLElement,
+  popupWidth: number,
+  triggerWidth: number,
+): PopupHorizontalAlign {
+  if (popupWidth > triggerWidth) {
+    return "end";
+  }
+  const rect = measureTarget.getBoundingClientRect();
+  const overflowsRight = rect.left + popupWidth > window.innerWidth - VIEWPORT_EDGE_PADDING_PX;
+  const fitsWhenRightAligned = rect.right - popupWidth >= VIEWPORT_EDGE_PADDING_PX;
+  if (overflowsRight && fitsWhenRightAligned) {
+    return "end";
+  }
+  return "start";
+}
 
 interface MenuItem {
   id?: string;
@@ -95,7 +118,10 @@ export function DropdownMenu({
   const [open, setOpen] = useState(defaultOpen && !disabled);
   const [internalShowSelectedExpanded, setInternalShowSelectedExpanded] = useState(defaultShowSelectedExpanded);
   const triggerMeasureRef = useRef<HTMLSpanElement | null>(null);
+  const positionerRef = useRef<HTMLDivElement | null>(null);
   const [triggerWidth, setTriggerWidth] = useState<number>();
+  const [popupAlignment, setPopupAlignment] = useState<PopupHorizontalAlign>("start");
+  const [popupSide, setPopupSide] = useState<PopupSide>("bottom");
 
   const isShowSelectedExpandedControlled = showSelectedExpanded !== undefined;
   const isShowSelectedExpanded = isShowSelectedExpandedControlled
@@ -120,38 +146,83 @@ export function DropdownMenu({
 
   const showSearchClear = Boolean(searchValue && searchValue.length > 0);
 
+  const updatePopupLayout = useCallback(() => {
+    const root = triggerMeasureRef.current;
+    if (!root || !matchTriggerWidth) {
+      return;
+    }
+
+    const fieldEl = root.querySelector(".field");
+    const measureTarget = fieldEl instanceof HTMLElement ? fieldEl : root;
+    const nextTriggerWidth = Math.round(measureTarget.getBoundingClientRect().width);
+    const popupWidth = Math.max(nextTriggerWidth, DROPDOWN_MENU_MIN_WIDTH_PX);
+    const nextAlign = resolvePopupAlignment(measureTarget, popupWidth, nextTriggerWidth);
+
+    setTriggerWidth((prev) => (prev === nextTriggerWidth ? prev : nextTriggerWidth));
+    setPopupAlignment((prev) => (prev === nextAlign ? prev : nextAlign));
+  }, [matchTriggerWidth]);
+
   useLayoutEffect(() => {
     const el = triggerMeasureRef.current;
     if (!el) return;
 
-    const updateWidth = () => {
-      const nextWidth = Math.round(el.getBoundingClientRect().width);
-      setTriggerWidth((prev) => (prev === nextWidth ? prev : nextWidth));
-    };
-
-    updateWidth();
-    const observer = new ResizeObserver(updateWidth);
+    updatePopupLayout();
+    const observer = new ResizeObserver(updatePopupLayout);
     observer.observe(el);
+    const field = el.querySelector(".field");
+    if (field instanceof HTMLElement) {
+      observer.observe(field);
+    }
 
     return () => observer.disconnect();
-  }, []);
+  }, [updatePopupLayout]);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPopupSide("bottom");
+      return;
+    }
+
+    updatePopupLayout();
+
+    const node = positionerRef.current;
+    if (!node) {
+      return;
+    }
+
+    const syncSide = () => {
+      const side = node.getAttribute("data-side") === "top" ? "top" : "bottom";
+      setPopupSide((prev) => (prev === side ? prev : side));
+    };
+
+    syncSide();
+    const observer = new MutationObserver(syncSide);
+    observer.observe(node, { attributes: true, attributeFilter: ["data-side"] });
+    return () => observer.disconnect();
+  }, [open, updatePopupLayout]);
+
+  const effectivePopupWidth =
+    matchTriggerWidth && triggerWidth
+      ? Math.max(triggerWidth, DROPDOWN_MENU_MIN_WIDTH_PX)
+      : undefined;
 
   const popupStyle = {
-    ...(matchTriggerWidth && triggerWidth
+    ...(effectivePopupWidth
       ? {
-          width: `${triggerWidth}px`,
-          minWidth: `${triggerWidth}px`,
-          maxWidth: `${triggerWidth}px`,
-          "--dropdown-trigger-width": `${triggerWidth}px`,
+          width: `${effectivePopupWidth}px`,
+          minWidth: `${effectivePopupWidth}px`,
+          maxWidth: `${effectivePopupWidth}px`,
+          "--dropdown-trigger-width": `${effectivePopupWidth}px`,
         }
       : {}),
   };
-  const positionerStyle = matchTriggerWidth && triggerWidth
+
+  const positionerStyle = effectivePopupWidth
     ? {
-        width: `${triggerWidth}px`,
-        minWidth: `${triggerWidth}px`,
-        maxWidth: `${triggerWidth}px`,
-        "--dropdown-trigger-width": `${triggerWidth}px`,
+        width: `${effectivePopupWidth}px`,
+        minWidth: `${effectivePopupWidth}px`,
+        maxWidth: `${effectivePopupWidth}px`,
+        "--dropdown-trigger-width": `${effectivePopupWidth}px`,
       }
     : undefined;
 
@@ -164,19 +235,31 @@ export function DropdownMenu({
           return;
         }
         setOpen(nextOpen);
+        if (nextOpen) {
+          requestAnimationFrame(() => updatePopupLayout());
+        }
       }}
     >
       <Menu.Trigger
         className={fullWidth ? `${styles.triggerReset} ${styles.triggerFull}` : styles.triggerReset}
         disabled={disabled}
         style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+        data-popup-side={open ? popupSide : undefined}
       >
         <span ref={triggerMeasureRef} className={styles.triggerMeasure}>
           {trigger}
         </span>
       </Menu.Trigger>
       <Menu.Portal>
-        <Menu.Positioner sideOffset={sideOffset} alignment="start" style={positionerStyle}>
+        <Menu.Positioner
+          ref={positionerRef}
+          side="bottom"
+          align={popupAlignment}
+          sideOffset={sideOffset}
+          collisionAvoidance={{ side: "flip", align: "shift" }}
+          collisionPadding={VIEWPORT_EDGE_PADDING_PX}
+          style={positionerStyle}
+        >
           <Menu.Popup className={styles.popup} style={popupStyle}>
             {showSearch ? (
               <>

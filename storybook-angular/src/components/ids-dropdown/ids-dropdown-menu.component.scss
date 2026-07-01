@@ -14,7 +14,6 @@
   box-sizing: border-box;
 }
 
-/* Field-attached below trigger: shared bottom edge, no popup top border. */
 .popup {
   background: var(--color-background-component);
   border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
@@ -23,6 +22,7 @@
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
+  /* Field-attached: bottom corners only (Figma Rounded Corners=True → radius-4). IDS menu radius = 0. */
   border-radius: 0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius);
   box-shadow:
     0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
@@ -32,27 +32,6 @@
   font-family: inherit;
   z-index: 1060;
   overflow: clip;
-}
-
-/* Flipped above trigger (Size Matrix / viewport): full border + top radius. */
-.popup[data-side="top"] {
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
-  border-radius: var(--dropdown-menu-radius) var(--dropdown-menu-radius) 0 0;
-  box-shadow:
-    0 -2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
-    0 -4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
-}
-
-.triggerReset[data-popup-open] :global(.field) {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.triggerReset[data-popup-open][data-popup-side="top"] :global(.field) {
-  border-bottom-left-radius: var(--dropdown-control-radius);
-  border-bottom-right-radius: var(--dropdown-control-radius);
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 }
 
 /* Detached menu (context menu, masthead help) — full border; not field-attached. */
@@ -640,4 +619,49 @@
 .item[data-selectable="true"][data-disabled][data-selected] .checkboxOuter,
 .item[data-selectable="true"]:disabled[data-selected] .checkboxOuter {
   background: var(--color-background-gray-base);
+}
+:host {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  vertical-align: top;
+}
+
+:host(.ids-dropdown-menu--full-width) {
+  width: 100%;
+}
+
+.positioner {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1060;
+  box-sizing: border-box;
+}
+
+.positioner--align-end {
+  left: auto;
+  right: 0;
+}
+
+.positioner--above {
+  top: auto;
+  bottom: 100%;
+}
+
+.popup--above {
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-radius: var(--dropdown-menu-radius) var(--dropdown-menu-radius) 0 0;
+  box-shadow:
+    0 -2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 -4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+}
+
+.search-icon {
+  color: var(--color-icon-brand-base);
+}
+
+/* Composition-only children — rendered via resolvedItems, not in-place. */
+.composition-source {
+  display: none !important;
 }
