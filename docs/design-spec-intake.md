@@ -62,7 +62,8 @@ Run the design-spec intake wizard. I will provide programme, component name, and
 | 6 | Figma **element** URL(s) (optional — repeat until you say `done`) |
 | 7 | Figma **state** URL(s) (optional — until `done`) |
 | 8 | Storybook examples needed? (`yes` / `no`) — if `yes`, see [Storybook examples](#storybook-examples-when-you-answer-yes) |
-| 9 | Summary for confirm (`specPattern`, `designSpecPath`, node IDs grouped by Main / Elements / States, Storybook plan) — reply **`yes`** to proceed |
+| 9 | Storybook framework? (`react` / `angular` / `both`) — **skip when step 8 = `no`**. Synapse: `react` only. |
+| 10 | Summary for confirm (`specPattern`, `designSpecPath`, node IDs grouped by Main / Elements / States, Storybook plan + framework) — reply **`yes`** to proceed |
 
 ## After confirmation
 
@@ -73,7 +74,7 @@ The agent will:
 - Update the Figma component map (primary `nodeId` from first main URL; supplemental nodes from extra main / element / state URLs)
 - Fetch **live Figma** (MCP or REST) on **every** URL in all three buckets
 - Write or update `design-spec.md` with **Status: draft**
-- If Storybook = **yes**: add or update `storybook-generated/...` under **Spec Generated**, with primary story **Spec Accurate Design**
+- If Storybook = **yes**: add or update **Spec Generated** stories per framework choice — **React** (`storybook-generated/...`), **Angular** (`storybook-angular/src/generated/...`), or **both** — with primary story **Spec Accurate Design** in each package
 
 Review the diff and iterate in chat if any checklist item is incomplete.
 
@@ -97,7 +98,7 @@ Review the diff and iterate in chat if any checklist item is incomplete.
 
 Devin works best with **one task** after inputs are known:
 
-1. Run the interview in **Cascade or Cursor** through step 9, **or** paste all answers in one message:
+1. Run the interview in **Cascade or Cursor** through step 10, **or** paste all answers in one message:
 
 ```text
 Programme: IDS
@@ -110,6 +111,7 @@ Main component URL(s):
 Element URLs: done
 State URLs: done
 Storybook: no
+Storybook framework: n/a
 Confirm: yes
 ```
 
@@ -129,6 +131,7 @@ State URLs:
 - …?node-id=53325-277102
 - done
 Storybook: yes
+Storybook framework: react
 Confirm: yes
 ```
 
@@ -154,22 +157,27 @@ When executing the wizard without the Cursor skill file:
 4. Valid programmes: resolve from `config/design_systems/*.yaml` (`ids`, `synapse`, `dap`, …).
 5. Figma URLs in three buckets — **Main component** (one or many), **Elements**, **States** — live-verify every URL.
 6. After confirm: mkdir programme + slug dirs → map entry (`specPattern` when programme) → scaffold (`NEW_SPEC_TEMPLATE` or `PROGRAMME_STANDALONE_TEMPLATE`) → live Figma → all 10 `##` sections → evidence in Metadata + Source Mapping → Status `draft`.
-7. Storybook `yes` → after the spec: **Spec Generated** group + **Spec Accurate Design** primary story (see **Storybook examples**).
+7. Storybook `yes` → ask framework (`react` / `angular` / `both`; Synapse = `react` only) → after the spec: **Spec Generated** group + **Spec Accurate Design** primary story per selected package (see **Storybook examples**).
 
 ## Storybook examples (when you answer `yes`)
 
-Examples must follow repo conventions (see [README — Spec Accurate Design](../README.md#spec-accurate-design-examples-ids)):
+At step 9, choose **React**, **Angular**, or **Both**. Examples must follow repo conventions (see [README — Spec Accurate Design](../README.md#spec-accurate-design-examples-ids)):
 
 | Rule | Value |
 |------|--------|
 | Sidebar group | **Spec Generated** — `Spec Generated/IDS/<Component>`, `Spec Generated/DAP/<Component>`, or `Spec Generated/Synapse/<Component>` |
 | Primary story name | **Spec Accurate Design** |
 | Source of truth | `design-spec.md` (tokens, layout, states, API defaults) |
-| Theme CSS | One import: `components/ids-theme.css`, `components/dap-theme.css`, or `components/synapse-theme.css` |
+| React output | `storybook-generated/<programme>/src/components/<Component>.stories.tsx` |
+| Angular output | `storybook-angular/src/generated/<programme>/src/components/<Component>.stories.ts` (IDS/DAP only) |
+| React theme CSS | One import in story file: `components/ids-theme.css`, `components/dap-theme.css`, or `components/synapse-theme.css` |
+| Angular theme CSS | Loaded globally via `storybook-angular/.storybook/preview.js` |
+
+**Synapse:** React only — do not add Synapse under `storybook-angular/` unless explicitly requested.
 
 Do not publish spec-driven examples under generic Storybook folders. Optional extra stories (state matrix, collapsed, etc.) sit under the same **Spec Generated** title.
 
-Generators: `generation/deterministic_storybook/`, `scripts/strict_spec_storybook_gate.py` when available.
+Generators: `generation/deterministic_storybook/`, `scripts/strict_spec_storybook_gate.py` when available. Add `--framework Angular` for Angular or both.
 
 ### Troubleshooting Storybook
 

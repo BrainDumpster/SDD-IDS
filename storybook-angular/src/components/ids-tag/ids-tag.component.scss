@@ -1,4 +1,8 @@
-.tag {
+:host {
+  display: inline-flex;
+}
+
+.ids-tag {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
@@ -10,7 +14,7 @@
   font-family: inherit;
 }
 
-.sm {
+.small {
   min-height: 20px;
   padding: 0 var(--padding-padding-8);
   font-size: var(--font-size-body-2);
@@ -18,7 +22,7 @@
   font-weight: 400;
 }
 
-.lg {
+.large {
   height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
   font-size: var(--font-size-body-2);
@@ -26,9 +30,9 @@
   font-weight: 400;
 }
 
-.readOnly,
+.read-only,
 .clickable,
-.typeBadge {
+.type-badge {
   cursor: default;
 }
 
@@ -40,7 +44,7 @@
   border-color: var(--color-border-brand-base);
 }
 
-.typeBadge {
+.type-badge {
   min-height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
   gap: var(--spacing-space-8);
@@ -52,93 +56,52 @@
   gap: var(--spacing-space-8);
 }
 
-.tag[data-disabled] {
+.ids-tag[data-disabled] {
   pointer-events: none;
 }
 
-.tag[data-error] {
+.ids-tag[data-error] {
   border-color: var(--color-border-alerting-critical-base);
 }
 
-.tag[data-focus] {
+.ids-tag[data-focus] {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-}
-
-/* IDS programme: 3px focus gap per IDS spec. */
-.programmeIds[data-focus] {
   outline-offset: 3px;
 }
 
-/* Synapse programme (`12715:251521`): 4px focus gap. */
-.programmeSynapse[data-focus] {
-  outline-offset: 4px;
-}
-
-/* Tone + emphasis */
-.tone_non-alerting.emphasis_light {
+.tone-non-alerting {
   background: var(--color-background-component);
   border-color: var(--color-border-accessible);
   color: var(--color-text-neutral);
 }
 
-/* Read-only alerting: Figma `38910:51200` / `AlertingTags` — border uses *-white tokens (same hue in light, ring in dark). */
-.tone_info.emphasis_light {
+.tone-info {
   background: var(--color-background-alerting-info);
   border-color: var(--color-border-alerting-info-white);
   color: var(--color-text-white);
 }
 
-.tone_success.emphasis_light {
+.tone-success {
   background: var(--color-background-alerting-success);
   border-color: var(--color-border-alerting-success-white);
   color: var(--color-text-white);
 }
 
-.tone_minor.emphasis_light {
+.tone-minor {
   background: var(--color-background-alerting-minor);
   border-color: var(--color-border-alerting-minor-transparent);
   color: var(--color-text-warning);
 }
 
-.tone_major.emphasis_light {
+.tone-major {
   background: var(--color-background-alerting-major);
   border-color: var(--color-border-alerting-major-white);
   color: var(--color-text-white);
 }
 
-.tone_critical.emphasis_light {
+.tone-critical {
   background: var(--color-background-alerting-critical);
   border-color: var(--color-border-alerting-critical-white);
-  color: var(--color-text-white);
-}
-
-.tone_info.emphasis_strong {
-  background: var(--color-background-alerting-info);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
-}
-
-.tone_success.emphasis_strong {
-  background: var(--color-background-alerting-success);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
-}
-
-.tone_minor.emphasis_strong {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-warning);
-}
-
-.tone_major.emphasis_strong {
-  background: var(--color-background-alerting-major);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
-}
-
-.tone_critical.emphasis_strong {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-white);
   color: var(--color-text-white);
 }
 
@@ -148,7 +111,7 @@
   color: var(--color-text-white);
 }
 
-.clickable.tone_non-alerting:not(.selected) {
+.clickable.tone-non-alerting:not(.selected) {
   background: var(--color-background-component);
   color: var(--color-text-neutral);
 }
@@ -157,9 +120,8 @@
   border-color: var(--color-border-brand-base);
 }
 
-/* Figma `42065:39258` / `42065:39261` — clickable hover on neutral outline + selected fill */
-.clickable.tone_non-alerting:not(.selected):hover:not([data-disabled]),
-.clickable.tone_non-alerting:not(.selected)[data-hover]:not([data-disabled]) {
+.clickable.tone-non-alerting:not(.selected):hover:not([data-disabled]),
+.clickable.tone-non-alerting:not(.selected)[data-hover]:not([data-disabled]) {
   background: var(--color-background-controls-brand-lighter);
   border-color: var(--color-border-brand-base);
 }
@@ -170,18 +132,18 @@
   border-color: var(--color-border-transparent-brand);
 }
 
-.tag[data-disabled] {
+.ids-tag[data-disabled] {
   background: var(--color-background-gray-light);
   border-color: var(--color-border-disabled);
   color: var(--color-text-disabled);
 }
 
-.tag[data-disabled].editable {
+.ids-tag[data-disabled].editable {
   background: var(--color-background-gray-lighter);
 }
 
-.tag[data-disabled] .label,
-.tag[data-disabled] .prefix {
+.ids-tag[data-disabled] .label,
+.ids-tag[data-disabled] .prefix {
   color: var(--color-text-disabled);
 }
 
@@ -206,15 +168,15 @@
   white-space: nowrap;
 }
 
-.prefixText {
+.prefix-text {
   font-weight: 500;
 }
 
-.prefixColon {
+.prefix-colon {
   font-weight: 400;
 }
 
-.textField {
+.text-field {
   display: inline-flex;
   align-items: center;
   min-height: 20px;
@@ -224,15 +186,9 @@
   outline: none;
 }
 
-.editable .textField:focus-visible {
-  border-color: var(--color-border-brand-base);
-}
-
-.editable .textField:focus {
-  border-color: var(--color-border-brand-base);
-}
-
-.editable[data-focus] .textField {
+.editable .text-field:focus-visible,
+.editable .text-field:focus,
+.editable[data-focus] .text-field {
   border-color: var(--color-border-brand-base);
 }
 
@@ -252,12 +208,12 @@
   line-height: 1;
 }
 
-.tag[data-disabled] .badge {
+.ids-tag[data-disabled] .badge {
   background: var(--color-static-gray-500);
   border-color: var(--color-border-white);
 }
 
-.menuCaret {
+.menu-caret {
   display: inline-flex;
   flex-shrink: 0;
   width: var(--sizing-size-10);
@@ -277,14 +233,6 @@
   cursor: pointer;
 }
 
-/* Synapse `11666:90413` — close icon hover. */
-.programmeSynapse .dismiss:hover:not(:disabled) {
-  color: var(--color-icon-neutral-strong);
-}
-
-/* Synapse Light critical (`50724:303493`). */
-.programmeSynapse.tone_critical.emphasis_light {
-  background: var(--color-background-alerting-critical-slate);
-  border-color: var(--color-border-alerting-critical-base);
-  color: var(--color-text-tag-critical);
+.ids-tag[data-disabled] .dismiss {
+  color: var(--color-icon-disabled);
 }

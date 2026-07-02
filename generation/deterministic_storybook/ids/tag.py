@@ -19,18 +19,36 @@ def generate_ids_tag_story(
     component_name = prefixed_component_export_name("tag", options.component_prefix)
     import_path = "../../../../storybook/src/components/Tag"
 
-    return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
+    return f"""import React from "react";
+import type {{ Meta, StoryObj }} from "@storybook/react";
+import "../../../../components/ids-theme.css";
 import {{ Tag as {component_name} }} from "{import_path}";
+
+const specAccurateArgs = {{
+  label: "Tag",
+  type: "read-only" as const,
+  tone: "non-alerting" as const,
+  size: "sm" as const,
+  visualState: "default" as const,
+  selected: false,
+  showLabel: false,
+  labelPrefix: "Label",
+  closable: false,
+  badgeCount: undefined as number | undefined,
+}};
 
 const meta: Meta<typeof {component_name}> = {{
   title: "{options.title_prefix}/Tag",
   component: {component_name},
+  args: specAccurateArgs,
   argTypes: {{
+    label: {{ control: "text" }},
     tone: {{ control: "select", options: ["non-alerting", "info", "success", "minor", "major", "critical"] }},
     type: {{ control: "select", options: ["read-only", "clickable", "editable", "badge"] }},
     size: {{ control: "select", options: ["sm", "lg"] }},
     selected: {{ control: "boolean" }},
     showLabel: {{ control: "boolean" }},
+    labelPrefix: {{ control: "text" }},
     closable: {{ control: "boolean" }},
     visualState: {{ control: "select", options: ["default", "hover", "focus", "error", "disabled"] }},
     badgeCount: {{ control: "number" }},
@@ -40,18 +58,25 @@ const meta: Meta<typeof {component_name}> = {{
 export default meta;
 type Story = StoryObj<typeof {component_name}>;
 
+export const SpecAccurateDesign: Story = {{
+  name: "Spec Accurate Design",
+  args: specAccurateArgs,
+}};
+
 export const MainComponent: Story = {{
+  parameters: {{ controls: {{ disable: true }} }},
   render: () => (
     <div style={{{{ display: "flex", gap: 16, flexWrap: "wrap" }}}}>
       <{component_name} type="read-only" label="Tag" tone="non-alerting" size="sm" />
       <{component_name} type="clickable" label="Tag" tone="non-alerting" size="lg" />
-      <{component_name} type="editable" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label:" closable />
-      <{component_name} type="badge" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label:" badgeCount={{1}} />
+      <{component_name} type="editable" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label" closable />
+      <{component_name} type="badge" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label" badgeCount={{1}} />
     </div>
   ),
 }};
 
 export const ReadOnlyAndAlerting: Story = {{
+  parameters: {{ controls: {{ disable: true }} }},
   render: () => (
     <div style={{{{ display: "flex", gap: 8, flexWrap: "wrap" }}}}>
       <{component_name} type="read-only" label="Tag" tone="non-alerting" size="sm" />
@@ -65,6 +90,7 @@ export const ReadOnlyAndAlerting: Story = {{
 }};
 
 export const ClickableStates: Story = {{
+  parameters: {{ controls: {{ disable: true }} }},
   render: () => (
     <div style={{{{ display: "flex", gap: 8, flexWrap: "wrap" }}}}>
       <{component_name} type="clickable" label="Tag" tone="non-alerting" size="lg" visualState="default" />
@@ -76,6 +102,7 @@ export const ClickableStates: Story = {{
 }};
 
 export const EditableAndBadgeStates: Story = {{
+  parameters: {{ controls: {{ disable: true }} }},
   render: () => (
     <div style={{{{ display: "grid", gap: 16 }}}}>
       <div style={{{{ display: "flex", gap: 8, flexWrap: "wrap" }}}}>
@@ -84,8 +111,8 @@ export const EditableAndBadgeStates: Story = {{
         <{component_name} type="editable" label="Tag" tone="non-alerting" size="lg" visualState="disabled" closable />
       </div>
       <div style={{{{ display: "flex", gap: 8, flexWrap: "wrap" }}}}>
-        <{component_name} type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={{1}} />
-        <{component_name} type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={{1}} visualState="focus" />
+        <{component_name} type="badge" label="Tag" size="lg" showLabel labelPrefix="Label" badgeCount={{1}} />
+        <{component_name} type="badge" label="Tag" size="lg" showLabel labelPrefix="Label" badgeCount={{1}} visualState="focus" />
       </div>
     </div>
   ),

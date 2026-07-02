@@ -88,7 +88,7 @@ export const TypeMatrix: Story = {
           label={SYNAPSE_TAG_SAMPLE_LABEL}
           size="lg"
           showLabel
-          labelPrefix="Label:"
+          labelPrefix="Label"
           badgeCount={1}
         />
       </div>
@@ -143,13 +143,13 @@ export const EditableAndBadgeStates: Story = {
         <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="disabled" closable />
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <SynapseTag type="badge" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" showLabel labelPrefix="Label:" badgeCount={1} />
+        <SynapseTag type="badge" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" showLabel labelPrefix="Label" badgeCount={1} />
         <SynapseTag
           type="badge"
           label={SYNAPSE_TAG_SAMPLE_LABEL}
           size="lg"
           showLabel
-          labelPrefix="Label:"
+          labelPrefix="Label"
           badgeCount={1}
           visualState="focus"
         />
@@ -158,7 +158,7 @@ export const EditableAndBadgeStates: Story = {
           label={SYNAPSE_TAG_SAMPLE_LABEL}
           size="lg"
           showLabel
-          labelPrefix="Label:"
+          labelPrefix="Label"
           badgeCount={1}
           visualState="error"
         />

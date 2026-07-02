@@ -11,8 +11,11 @@
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
 ## Anatomy
+- `TagsGroupRoot?` (optional layout wrapper for multiple tags; projected `TagRoot` children)
 - `TagRoot`
 - `TagLabel`
+- `TagFieldLabel?` (editable/badge; medium-weight prefix + auto-appended colon)
+- `TagContent` (groups `TagFieldLabel?` + `TagLabel` with `2px` gap)
 - `TagPrefixIcon?` (alerting state icon or badge-leading icon)
 - `TagBadge?` (count or status chip)
 - `TagCloseButton?` (dismiss/edit mode)
@@ -29,6 +32,13 @@
 - Close icon element size: `10px x 10px`.
 - Tag shape remains pill-like with fully rounded ends.
 - Focus outline gap (outline offset from tag edge): `3px`.
+
+### Slot geometry (Figma-verified)
+| Slot | Property | Value | Figma evidence |
+|---|---|---|---|
+| `TagContent` | `gap` (field label → value) | `var(--spacing-space-2)` (`2px`) | `38910:57319` (`gap-[var(--spacing/space-2,2px)]`), `38910:54779` |
+| `TagFieldLabel` | typography | Body 2 Medium (`font-weight: 500`) for prefix text; colon regular weight | `38910:57332`, `38910:54788` |
+| `TagFieldLabel` | colon | Always rendered by runtime; strip trailing `:` from `labelPrefix` input | `38910:57332` |
 ## Tokens
 - Core neutral tokens:
   - `var(--color-background-component)`
@@ -95,6 +105,23 @@
 - Focus-visible is keyboard-driven and uses outer ring.
 - Disabled suppresses click, close, and selection transitions.
 ## Composition & API (runtime)
+
+### Group (`ids-tags` / `TagsGroupRoot`)
+- Wraps one or more projected tag items for horizontal layout with wrap.
+- `wrap?: boolean` (default `true`) — when `false`, tags stay on one row.
+- `ariaLabel?: string` — optional accessible name for the tag collection (`role="group"`).
+- Gap between items: `var(--spacing-space-8)`; group does not own tag selection or dismiss state.
+
+Child order (deterministic):
+
+```
+TagsGroupRoot
+  TagRoot (item)
+  TagRoot (item)
+  …
+```
+
+### Item (`ids-tag` / `TagRoot`)
 - `type: "read-only" | "clickable" | "editable" | "badge"`
 - `size: "small" | "large"` (defaults: read-only -> small, others -> large)
 - `tone: "none" | "informational" | "success" | "minor" | "major" | "critical"`
@@ -104,6 +131,8 @@
 - `focusVisible?: boolean` (demo/testing only; runtime driven by keyboard)
 - `focusOnText?: boolean` (editable only)
 - `label: string`
+- `showLabel?: boolean` (editable/badge; default `false`)
+- `labelPrefix?: string` (field label text **without** colon; default `"Label"`; runtime strips trailing `:` if provided and always appends `:`)
 - `badgeValue?: string | number` (badge only)
 - `leadingIconSlug?: string | null`
 - `closeIconSlug?: string` (default `shape-x-thick`)
@@ -114,10 +143,11 @@
 - Deterministic slot order:
   1. `TagRoot`
   2. `TagPrefixIcon?`
-  3. `TagLabel`
-  4. `TagBadge?`
-  5. `TagEditableField?`
-  6. `TagCloseButton?`
+  3. `TagBadge?` (badge type only; before content)
+  4. `TagContent` (`TagFieldLabel?` + `TagLabel`; `gap: var(--spacing-space-2)`)
+  5. `TagEditableField?` (editable focus-on-text wraps `TagContent` only)
+  6. `TagMenuCaret?` (badge type)
+  7. `TagCloseButton?`
 - Variant matrix (all supported axes):
   - `type`: read-only | clickable | editable | badge
   - `size`: small | large
@@ -128,6 +158,8 @@
 - Per-slot style contract:
   - `TagRoot` owns pill geometry, border, surface, and padding.
   - `TagLabel` always uses Body 2 scale.
+  - `TagFieldLabel` prefix text uses Body 2 Medium; colon uses Body 2 regular; colon is never part of `labelPrefix` input.
+  - `TagContent` uses `gap: var(--spacing-space-2)` between field label and value (`TagLabel`).
   - `TagCloseButton` uses 10px icon asset and inherits state color.
   - `TagBadge` uses compact filled mini-chip treatment.
 - Behavior contract:
@@ -151,6 +183,7 @@
   - unknown `tone` -> `none`
   - if `badgeValue` provided while `type !== "badge"`, ignore `badgeValue`
   - if `selected=true` while `type !== "clickable"`, ignore `selected`
+  - if `labelPrefix` ends with `:`, strip trailing colons before render; always display one trailing `:`
 - Validation checklist (pass/fail):
   - [ ] all type variants render valid slot order
   - [ ] clickable selected/unselected tokens match spec
@@ -158,8 +191,12 @@
   - [ ] focus-visible ring appears in keyboard path only
   - [ ] editable focus-on-text path shows field border token
   - [ ] badge variant handles icon + count + label layout
+  - [ ] `showLabel` renders `TagFieldLabel` + `TagLabel` with `2px` content gap
+  - [ ] `labelPrefix` colon normalization (input `Label:` → display `Label:` once)
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Tag"`.
+- Runtime contract: `component-contracts/ids/tag.contract.ts`
+- Reference implementation: `storybook-angular/src/components/ids-tag/` (`ids-tag`, `ids-tags`)
 - IDS design library nodes verified:
   - Main example board: `42012:26686`
   - Main component board (light/dark container): `42012:26676`

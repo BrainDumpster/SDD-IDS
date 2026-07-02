@@ -37,9 +37,10 @@ Pair with **`docs/design-spec-authoring-contract.md`** for full production-ready
 | 6 | **Element URL(s)** (optional)? | Repeat: “Paste another element URL or reply `done`” |
 | 7 | **State URL(s)** (optional)? | Repeat until user replies `done` |
 | 8 | **Storybook examples needed?** | `yes` / `no` — if `yes`, run phase includes Spec Generated stories (see **Storybook follow-up** below) |
-| 9 | **Confirm summary** | Programme, slug, **`specPattern`** (`ids-native` \| `standalone`), `designSpecPath`, parsed fileKey/nodeIds **grouped by Main / Elements / States**, map file path. User must reply `yes` (or correct) before run phase |
+| 9 | **Storybook framework?** | **Skip when step 8 = `no`.** `react` / `angular` / `both` — which Storybook package(s) to generate. **Synapse:** `react` only (if user picks `angular` or `both`, explain React-only default and record `react`). |
+| 10 | **Confirm summary** | Programme, slug, **`specPattern`** (`ids-native` \| `standalone`), `designSpecPath`, parsed fileKey/nodeIds **grouped by Main / Elements / States**, map file path, **Storybook plan** (`no` \| `react` \| `angular` \| `both`). User must reply `yes` (or correct) before run phase |
 
-**Figma URL buckets:** collect links in three groups — **Main component**, **Elements**, **States**. Multiple URLs per bucket are normal; user may paste several at once or one-by-one until `done` for that bucket. If the user pastes all inputs (including inherits IDS = no) in one message, skip to **confirm summary** (step 9).
+**Figma URL buckets:** collect links in three groups — **Main component**, **Elements**, **States**. Multiple URLs per bucket are normal; user may paste several at once or one-by-one until `done` for that bucket. If the user pastes all inputs (including inherits IDS = no) in one message, skip to **confirm summary** (step 10).
 
 Parse Figma URLs: extract `fileKey` from `/design/<fileKey>/`; `node-id` query param with `-` converted to `:` for API/MCP. First **main** URL’s node becomes primary `nodeId` / `mainComponentSetNodeId` in the map; additional main URLs are supplemental `*NodeId` fields.
 
@@ -93,44 +94,58 @@ Execute in order:
 9. Record verification evidence in **Metadata** and **Source Mapping**.
 10. Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements (`get_variable_defs` on cited nodes for radius rows).
 11. Set **Status: draft** until validation checklist passes; do not mark `active` with TBD.
-12. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (audit only).
+12. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (`storybook`, `storybookFramework` when applicable; audit only).
 
 ---
 
 ## Storybook follow-up (when step 8 = yes)
 
-After `design-spec.md` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group.
+After `design-spec.md` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group. Use **step 9** (`storybookFramework`) to decide target package(s).
 
-**Framework routing:**
+**Framework routing (step 9):**
 
-| Programme | Target Storybook package |
-|-----------|-------------------------|
-| IDS, DAP | React and/or Angular per user request |
-| **Synapse** | **React only** (`storybook/` / `storybook-generated/synapse/`) — do **not** create Synapse stories or components under `storybook-angular/` unless the user explicitly asks |
+| `storybookFramework` | React (`storybook/` / `storybook-generated/`) | Angular (`storybook-angular/`) |
+|----------------------|---------------------------------------------|--------------------------------|
+| `react` | Yes | No |
+| `angular` | No | Yes |
+| `both` | Yes | Yes |
+
+| Programme | Allowed step 9 values | Notes |
+|-----------|----------------------|-------|
+| **IDS**, **DAP** | `react` / `angular` / `both` | Angular: `storybook-angular/src/generated/<programme>/` or hand-maintained `storybook-angular/src/components/ids-<slug>/` when composition reference is needed |
+| **Synapse** | `react` only | **Do not** create Synapse stories or components under `storybook-angular/` unless the user explicitly asks — coerce `angular` / `both` → `react` and note in summary |
+
+**Output paths** (resolve from `config/design_systems/<slug>.yaml`):
+
+- **React:** `{generated_storybook_dir}/src/components/<Component>.stories.tsx` (e.g. `storybook-generated/ids/src/components/`)
+- **Angular:** `{generated_angular_storybook_dir}/src/components/<Component>.stories.ts` (e.g. `storybook-angular/src/generated/ids/src/components/`) — IDS/DAP only
 
 **Meta title:** `Spec Generated/{DisplayName}/<Component Display Name>` — use programme `display_name` from yaml (e.g. `IDS`, `DAP`, `Synapse`).
 
-**Primary story (required):**
+**Primary story (required per generated package):**
 
 - Story **name:** `Spec Accurate Design`
 - Export name: `SpecAccurateDesign` (camelCase convention)
 - Args and layout must match the spec (especially any **Spec Accurate Design story defaults** in the spec); use `var(--...)` only
 
-**Theme import** in the `.stories.tsx` file: programme `{theme_css_path}` only (one import).
+**Theme:**
+
+- **React** `.stories.tsx`: one import of programme `{theme_css_path}` in the story file
+- **Angular** `.stories.ts`: theme via `storybook-angular/.storybook/preview.js` (static `/components/*-theme.css` links) — do not duplicate theme imports in each story
 
 **Do not** place spec-driven examples under generic groups (e.g. `Components/...`) or omit the Spec Accurate Design story.
 
-**Implementation:** use `generation/deterministic_storybook/` patterns and `scripts/strict_spec_storybook_gate.py` when available.
+**Implementation:** use `generation/deterministic_storybook/` patterns and `scripts/strict_spec_storybook_gate.py` when available. For deterministic gate: default React; add `--framework Angular` when step 9 is `angular` or `both`.
 
 **Composition API:** if Storybook uses group + projected children (e.g. `ids-checkbox-group` / `ids-checkbox`), update **Anatomy**, **Composition & API**, **Codegen structure**, and **Source Mapping** in `design-spec.md` in the same session — see `docs/design-spec-authoring-contract.md` → **Composition pattern sync**.
 
-Record generated story path in spec **Metadata**. Add validation checklist item for Spec Accurate Design under Spec Generated.
+Record generated story path(s) and `storybookFramework` in spec **Metadata**. Add validation checklist item(s) for Spec Accurate Design under Spec Generated (one per generated package).
 
 ---
 
 ## Devin / single-shot mode
 
-If the user says they use Devin or paste **all answers at once**, skip multi-turn interview: parse their block (include **`Inherits IDS: yes | no`** for non-IDS programmes), show confirm summary once, then run phase on `yes`. If `Inherits IDS: yes`, hand off to programme inheritance run phase instead.
+If the user says they use Devin or paste **all answers at once**, skip multi-turn interview: parse their block (include **`Inherits IDS: yes | no`** for non-IDS programmes; **`Storybook: yes | no`**; when yes, **`Storybook framework: react | angular | both`**), show confirm summary once, then run phase on `yes`. If `Inherits IDS: yes`, hand off to programme inheritance run phase instead.
 
 ---
 

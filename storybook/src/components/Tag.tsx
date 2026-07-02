@@ -9,6 +9,36 @@ type Type = "read-only" | "clickable" | "editable" | "badge";
 type Size = "sm" | "lg";
 type VisualState = "default" | "hover" | "focus" | "error" | "disabled";
 
+function normalizeLabelPrefix(value: string): string {
+  return value.replace(/:+\s*$/, "");
+}
+
+function TagContent({
+  showLabel,
+  labelPrefix,
+  label,
+  className,
+}: {
+  showLabel: boolean;
+  labelPrefix: string;
+  label: string;
+  className: string;
+}) {
+  const prefixText = normalizeLabelPrefix(labelPrefix);
+
+  return (
+    <span className={className}>
+      {showLabel ? (
+        <span className={styles.prefix}>
+          <span className={styles.prefixText}>{prefixText}</span>
+          <span className={styles.prefixColon}>:</span>
+        </span>
+      ) : null}
+      <span className={styles.label}>{label}</span>
+    </span>
+  );
+}
+
 export interface TagProps {
   /** `synapse` → 4px focus ring + critical Light slate tokens per Synapse Figma. */
   programme?: "ids" | "synapse";
@@ -20,6 +50,7 @@ export interface TagProps {
   selected?: boolean;
   defaultSelected?: boolean;
   showLabel?: boolean;
+  /** Field label text without trailing colon; runtime appends `:`. */
   labelPrefix?: string;
   closable?: boolean;
   badgeCount?: number;
@@ -41,7 +72,7 @@ export function Tag({
   selected,
   defaultSelected = false,
   showLabel = false,
-  labelPrefix = "Label:",
+  labelPrefix = "Label",
   closable = false,
   badgeCount,
   visualState = "default",
@@ -144,14 +175,10 @@ export function Tag({
           onFocus={onTextFocus}
           onBlur={onTextBlur}
         >
-          {showLabel ? <span className={styles.prefix}>{labelPrefix}</span> : null}
-          <span className={styles.label}>{label}</span>
+          <TagContent showLabel={showLabel} labelPrefix={labelPrefix} label={label} className={styles.content} />
         </span>
       ) : (
-        <>
-          {showLabel ? <span className={styles.prefix}>{labelPrefix}</span> : null}
-          <span className={styles.label}>{label}</span>
-        </>
+        <TagContent showLabel={showLabel} labelPrefix={labelPrefix} label={label} className={styles.content} />
       )}
       {isBadgeType && hasBadge ? (
         <Icon
