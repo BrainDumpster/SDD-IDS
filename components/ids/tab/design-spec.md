@@ -41,6 +41,16 @@
   - Caret icon: `arrow-tri-down-solid` at **`10×10px`** (`TAB_OVERFLOW_MORE_ICON_SIZE_PX` in contract).
   - Typography: same Body 2 scale as tab labels.
   - Selected/hover/focus/indicator rules follow the same `type` (`primary` | `secondary`) matrix as peer tab items.
+- Primary tab side divider height: `var(--padding-padding-24)` (unselected), `var(--padding-padding-24)` with `var(--padding-padding-2)` top padding for selected state (total `38px`).
+- Primary tab right divider height: `var(--padding-padding-24)` (unselected), `var(--padding-padding-24)` with `var(--padding-padding-2)` top padding for selected state (total `38px`).
+- Primary selected tab: bottom border removed.
+- Primary selected indicator placement:
+  - transparent host: top border.
+  - white host: top border.
+- Secondary selected indicator placement:
+  - transparent host: bottom border.
+  - white host: bottom border.
+
 
 ## Tokens
 - **Typography**

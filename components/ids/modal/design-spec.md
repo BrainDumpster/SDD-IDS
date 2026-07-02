@@ -64,7 +64,7 @@ Multi-page built-in chrome (when `tabs=true`) is still `projectedContent` from c
   - `medium`: `1280 x 667`
   - `small`: `960 x 497`
   - `x-small`: `640 x 328`
-- **Header insets:** `24px` top / left / right, `8px` bottom.
+- **Header insets:** `24px` top / left / right, `4px` bottom.
 - **Close control:** `16×16` icon (`Modal / ctrl-close-16`); no button padding — hit target is the glyph box only.
 - **Description block:** `24px` horizontal, `8px` vertical; renders above `bodyContentShell` inside `modalBody`.
 - **Body content shell (`bodyContentShell`):** all main-area components live here. Horizontal inset `var(--ids-modal-inset-inline)` (`24px` per Figma `Modal-Main`). Single-page / dialog: `16px` top, `24px` bottom padding on shell. Multi-page: shell owns horizontal inset; built-in `tabStrip` + `pagePanel` stack inside (see reference implementations). **Only** the footer top border spans the full modal surface width — not body children.
@@ -75,7 +75,7 @@ Multi-page built-in chrome (when `tabs=true`) is still `projectedContent` from c
 - **Header control icon size:** `16×16` (`Modal / ctrl-close-16`); close control has **no** extra button padding beyond the glyph box.
 - **Border:** `1px` solid `var(--color-border-accessible)`.
 - **Corner radius:** `var(--modal-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
-- **Elevation:** layered drop shadow (2/4/8/16 depth stack).
+- **Elevation:** layered drop shadow: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
 - **Typography:**
   - Title: `Header 5` (`24/32`, regular).
   - Body/content: `Body 2` (`14/20`, regular).
@@ -129,7 +129,7 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - **Multi-Page:** tab/page switch updates content region inside same modal shell.
 - **Scroll usage:** when `scrollBar=true`, content region supports overflow with vertical scrollbar treatment and bottom gradient cue.
 - **Footer actions:** emit distinct events for tertiary and primary actions.
-- **Destructive flow:** includes confirm text input region before destructive action.
+- **Destructive flow:** includes confirm text input region before destructive action. Confirm input layout: `16px` gap between label text and input field; input width `300px`; input `border-radius: 0`.
 - **Focus-visible:** close and action controls show brand focus ring in keyboard modality.
 ## Composition & API (runtime)
 Canonical mirror: `component-contracts/ids/modal.contract.ts`.
@@ -282,6 +282,14 @@ Mirror: `MODAL_CODEGEN_ANATOMY`, `MODAL_BODY_CODEGEN_ANATOMY`, and `MODAL_BODY_C
 - [ ] Destructive type uses destructive primary action style and confirm content slot.
 - [ ] Keyboard focus trap and escape behavior function in modal mode.
 - [ ] Light and dark theme snapshots preserve tokenized contrast.
+## Implementation Notes
+
+### Design spec errors fixed (2026-07-01)
+- **Shadow specification incorrect** — Original spec: "layered drop shadow (2/4/8/16 depth stack)" without explicit values. Fix: Updated to explicit 4-layer shadow specification: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
+- **Destructive flow specification incomplete** — Original spec: "includes confirm text input region before destructive action" without layout details. Fix: Added confirm input layout specifications: 16px gap between label text and input field; input width 300px; input border-radius 0.
+- **Description block padding incomplete** — Original spec: "24px horizontal, 8px vertical" for all types. Fix: Added type-specific padding: Non-Alerting/Informational (16px top, 24px right/bottom/left), Warning/Major/Critical/Destructive (8px top/bottom, 24px left/right).
+- **Content block padding incomplete** — Original spec: "24px horizontal, 16px top, 24px bottom" for all types. Fix: Added type-specific padding for Warning/Major/Critical/Destructive (24px horizontal, 16px top, 0 bottom).
+
 ## Source Mapping
 - **Component map:** `data/component-figma-map.json` -> `Dialog` entry pointing to `components/ids/modal/design-spec.md`
 - **Contract mirror:** `component-contracts/ids/modal.contract.ts`
