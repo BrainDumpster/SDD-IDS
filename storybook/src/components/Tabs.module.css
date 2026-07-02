@@ -76,6 +76,16 @@
   display: none;
 }
 
+.tabPrimary::after {
+  height: 24px;
+}
+
+.tabPrimary.selected::after {
+  top: 2px;
+  height: 36px;
+  transform: none;
+}
+
 .tab:hover:not([data-disabled]) {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral-strong);
@@ -100,18 +110,19 @@
 
 .tabPrimary:not(.selected)::before {
   top: 50%;
-  height: var(--sizing-size-24);
+  height: 24px;
   transform: translateY(-50%);
 }
 
 .tabPrimary.selected::before {
-  top: 0;
-  height: 100%;
+  top: 2px;
+  height: 36px;
   transform: none;
 }
 
 /* Primary selected: top brand-dark segment (inside 38px row — inset shadow, not border). */
 .tabPrimary.selected {
+  border-bottom: none;
   box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
 }
 
@@ -333,13 +344,13 @@
 
 .moreTriggerPrimary:not(.moreTriggerSelected)::before {
   top: 50%;
-  height: var(--sizing-size-24);
+  height: 24px;
   transform: translateY(-50%);
 }
 
 .moreTriggerPrimary.moreTriggerSelected::before {
-  top: 0;
-  height: 100%;
+  top: 2px;
+  height: 36px;
   transform: none;
 }
 
