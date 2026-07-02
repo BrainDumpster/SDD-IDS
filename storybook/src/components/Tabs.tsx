@@ -1,16 +1,17 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import chevDownIcon from "../../../assets/icons/chev-down.svg";
 import shapePlusIcon from "../../../assets/icons/shape-plus.svg";
 import stateAddCircSolidIcon from "../../../assets/icons/state-add-circ-solid.svg";
-import arrowTriDownSolidIcon from "../../../assets/icons/arrow-tri-down-solid.svg";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
+import { Icon } from "./Icon";
 import {
   computeTabOverflowMenuItems,
   computeTabOverflowVisibleCount,
+  TAB_OVERFLOW_MORE_ICON_SIZE_PX,
+  TAB_OVERFLOW_MORE_ICON_SLUG,
 } from "../../../component-contracts/ids/tab.contract";
 
 export interface TabItem {
@@ -206,9 +207,9 @@ export function Tabs({
                 aria-label="More tabs"
               >
                 {overflowLabel ?? moreLabel}
-                <img
-                  src={isSynapse ? chevDownIcon : arrowTriDownSolidIcon}
-                  alt=""
+                <Icon
+                  shapeName={TAB_OVERFLOW_MORE_ICON_SLUG}
+                  size={TAB_OVERFLOW_MORE_ICON_SIZE_PX}
                   className={styles.moreIcon}
                 />
               </Menu.Trigger>

@@ -31,6 +31,10 @@ export const TAB_API_DEFAULTS = {
   maxTabWidth: 250,
 } as const;
 
+/** Overflow `More` trigger caret — slug and render size (Figma-verified). */
+export const TAB_OVERFLOW_MORE_ICON_SLUG = "arrow-tri-down-solid" as const;
+export const TAB_OVERFLOW_MORE_ICON_SIZE_PX = 10 as const;
+
 /** Width reserved for the More trigger when computing visible tab slots. */
 export const TAB_OVERFLOW_MORE_TRIGGER_RESERVE_PX = 84 as const;
 

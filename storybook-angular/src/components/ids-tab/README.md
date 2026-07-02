@@ -41,4 +41,4 @@ Import `IDS_TAB_IMPORTS` from `ids-tab.imports.ts`.
 
 ## React parity
 
-React demo wrapper: `storybook/src/components/Tabs.tsx` + `IdsTabs.stories.tsx` (legacy `items[]` API). Overflow math must use the same contract helpers.
+React demo wrapper: `storybook/src/components/Tabs.tsx` + `storybook-generated/ids/src/components/Tab.stories.tsx` (legacy `items[]` API). Overflow math must use the same contract helpers.

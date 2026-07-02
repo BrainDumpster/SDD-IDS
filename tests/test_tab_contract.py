@@ -14,6 +14,8 @@ def _load_contract_js_exports() -> dict:
     text = _CONTRACT.read_text(encoding="utf-8")
     assert "TAB_OVERFLOW_MORE_TRIGGER_RESERVE_PX = 84" in text
     assert "TAB_OVERFLOW_DEMO_WIDTH = 560" in text
+    assert 'TAB_OVERFLOW_MORE_ICON_SLUG = "arrow-tri-down-solid"' in text
+    assert "TAB_OVERFLOW_MORE_ICON_SIZE_PX = 10" in text
     return {}
 
 

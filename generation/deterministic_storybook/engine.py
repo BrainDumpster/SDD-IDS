@@ -35,12 +35,14 @@ from generation.deterministic_storybook.ids.radio_button import generate_ids_rad
 from generation.deterministic_storybook.ids.segmented_button import generate_ids_segmented_button_story
 from generation.deterministic_storybook.ids.slider import generate_ids_slider_story
 from generation.deterministic_storybook.ids.spinner import generate_ids_spinner_story
+from generation.deterministic_storybook.ids.tab import generate_ids_tab_story
 from generation.deterministic_storybook.ids.tag import generate_ids_tag_story
 from generation.deterministic_storybook.ids.text_box import generate_ids_text_box_story
 from generation.deterministic_storybook.ids.toggle_switch import generate_ids_toggle_switch_story
 from generation.deterministic_storybook.ids.toast import generate_ids_toast_story
 from generation.deterministic_storybook.ids.tooltip import generate_ids_tooltip_story
 from generation.deterministic_storybook.ids.wizard import generate_ids_wizard_story
+from generation.deterministic_storybook.synapse.tab import generate_synapse_tab_story
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from validation.spec_contract_parser import SpecContract
 
@@ -71,7 +73,7 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "segmented-button"): generate_ids_segmented_button_story,
     ("ids", "slider"): generate_ids_slider_story,
     ("ids", "spinner"): generate_ids_spinner_story,
-    # tab: hand-maintained — storybook/src/components/IdsTabs.stories.tsx
+    ("ids", "tab"): generate_ids_tab_story,
     ("ids", "tag"): generate_ids_tag_story,
     ("ids", "text-box"): generate_ids_text_box_story,
     ("ids", "textbox"): generate_ids_text_box_story,
@@ -81,6 +83,7 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "tooltip"): generate_ids_tooltip_story,
     ("ids", "dialog"): generate_ids_modal_story,
     ("ids", "wizard"): generate_ids_wizard_story,
+    ("synapse", "tab"): generate_synapse_tab_story,
     # DAP-only slugs (resolved via ("ids", slug) fallback when design system is `dap`)
     ("ids", "masthead-dap"): generate_dap_masthead_story,
     ("ids", "settings-menu"): generate_dap_settings_menu_story,

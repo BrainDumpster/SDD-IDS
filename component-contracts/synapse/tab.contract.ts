@@ -35,3 +35,9 @@ export const SYNAPSE_TAB_MAX_WIDTH_PX = 250 as const;
 
 /** Re-export IDS overflow demo width for Synapse overflow stories (shared `Tabs` resize logic). */
 export { TAB_OVERFLOW_DEMO_WIDTH as SYNAPSE_TAB_OVERFLOW_DEMO_WIDTH } from "../ids/tab.contract";
+
+/** Shared `Tabs.tsx` overflow caret — inherit IDS contract (`arrow-tri-down-solid` 10×10). */
+export {
+  TAB_OVERFLOW_MORE_ICON_SLUG as SYNAPSE_TAB_OVERFLOW_MORE_ICON_SLUG,
+  TAB_OVERFLOW_MORE_ICON_SIZE_PX as SYNAPSE_TAB_OVERFLOW_MORE_ICON_SIZE_PX,
+} from "../ids/tab.contract";

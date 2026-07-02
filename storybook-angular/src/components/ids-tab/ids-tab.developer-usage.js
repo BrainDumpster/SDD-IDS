@@ -134,27 +134,11 @@ export const TAB_COMPOSITION_DEMO_TEMPLATE = `
 
 export const TAB_OVERFLOW_DEMO_TEMPLATE = `
 <div [style.max-width.px]="maxWidth" [style.width.px]="maxWidth">
-  <ids-tab [type]="tabType" defaultActiveItemId="summary" [allowAddTab]="false">
-    <ids-tab-item itemId="summary" label="Summary">
-      <ids-tab-panel>Summary content.</ids-tab-panel>
-    </ids-tab-item>
-    <ids-tab-item itemId="details" label="Details">
-      <ids-tab-panel>Details content.</ids-tab-panel>
-    </ids-tab-item>
-    <ids-tab-item itemId="settings" label="Settings">
-      <ids-tab-panel>Settings content.</ids-tab-panel>
-    </ids-tab-item>
-    <ids-tab-item itemId="activity" label="Activity">
-      <ids-tab-panel>Activity content.</ids-tab-panel>
-    </ids-tab-item>
-    <ids-tab-item itemId="audit" label="Audit Trail">
-      <ids-tab-panel>Audit trail content.</ids-tab-panel>
-    </ids-tab-item>
-    <ids-tab-item itemId="integrations" label="Integrations">
-      <ids-tab-panel>Integrations content.</ids-tab-panel>
-    </ids-tab-item>
-    <ids-tab-item itemId="policies" label="Policies">
-      <ids-tab-panel>Policies content.</ids-tab-panel>
-    </ids-tab-item>
+  <ids-tab [type]="tabType" [defaultActiveItemId]="overflowItems[0]?.id" [allowAddTab]="false">
+    @for (item of overflowItems; track item.id) {
+      <ids-tab-item [itemId]="item.id" [label]="item.label">
+        <ids-tab-panel>{{ item.content }}</ids-tab-panel>
+      </ids-tab-item>
+    }
   </ids-tab>
 </div>`.trim();

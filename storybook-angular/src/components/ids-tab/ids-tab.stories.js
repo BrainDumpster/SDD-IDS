@@ -2,7 +2,7 @@
 import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
-import { TAB_SPEC_ACCURATE_DEFAULTS, TAB_OVERFLOW_DEMO_WIDTH } from "../../../compiled/component-contracts/ids/tab.contract.js";
+import { TAB_SPEC_ACCURATE_DEFAULTS, TAB_OVERFLOW_DEMO_WIDTH, TAB_SPEC_OVERFLOW_ITEMS } from "../../../compiled/component-contracts/ids/tab.contract.js";
 import { IdsTabComponent } from "../../../compiled/storybook-angular/src/components/ids-tab/ids-tab.component.js";
 import { IDS_TAB_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-tab/ids-tab.imports.js";
 import {
@@ -137,16 +137,40 @@ export const TransparentOnGray = {
 
 /** @type {import("@storybook/angular").StoryObj<IdsTabComponent>} */
 export const OverflowResponsive = {
+  name: "Overflow Responsive",
+  parameters: {
+    docs: {
+      description: {
+        story: `Secondary overflow at ${TAB_OVERFLOW_DEMO_WIDTH}px — \`More\` + \`arrow-tri-down-solid\` (10×10) per tab contract.`,
+      },
+    },
+  },
   render: () => ({
-    props: { maxWidth: TAB_OVERFLOW_DEMO_WIDTH, tabType: "secondary" },
+    props: {
+      maxWidth: TAB_OVERFLOW_DEMO_WIDTH,
+      tabType: "secondary",
+      overflowItems: TAB_SPEC_OVERFLOW_ITEMS,
+    },
     template: TAB_OVERFLOW_DEMO_TEMPLATE,
   }),
 };
 
 /** @type {import("@storybook/angular").StoryObj<IdsTabComponent>} */
 export const PrimaryOverflowResponsive = {
+  name: "Primary Overflow Responsive",
+  parameters: {
+    docs: {
+      description: {
+        story: `Primary overflow at ${TAB_OVERFLOW_DEMO_WIDTH}px — \`More\` + \`arrow-tri-down-solid\` (10×10) per tab contract.`,
+      },
+    },
+  },
   render: () => ({
-    props: { maxWidth: TAB_OVERFLOW_DEMO_WIDTH, tabType: "primary" },
+    props: {
+      maxWidth: TAB_OVERFLOW_DEMO_WIDTH,
+      tabType: "primary",
+      overflowItems: TAB_SPEC_OVERFLOW_ITEMS,
+    },
     template: TAB_OVERFLOW_DEMO_TEMPLATE,
   }),
 };

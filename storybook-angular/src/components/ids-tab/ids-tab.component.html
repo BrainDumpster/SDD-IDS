@@ -54,7 +54,12 @@
             (click)="toggleOverflowMenu($event)"
           >
             {{ overflowLabel ?? moreLabel }}
-            <ids-icon [shapeName]="moreIconSlug" [size]="12" className="ids-tab__more-icon" />
+            <ids-icon
+              [shapeName]="moreIconSlug"
+              [size]="moreIconSizePx"
+              variant="mask"
+              className="ids-tab__more-icon"
+            />
           </button>
           @if (overflowOpen && overflowMenuItems.length > 0) {
             <div class="ids-tab__more-menu" role="menu">

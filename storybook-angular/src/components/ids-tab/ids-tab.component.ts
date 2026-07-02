@@ -21,6 +21,8 @@ import {
 import { CommonModule } from "@angular/common";
 import {
   TAB_API_DEFAULTS,
+  TAB_OVERFLOW_MORE_ICON_SIZE_PX,
+  TAB_OVERFLOW_MORE_ICON_SLUG,
   TAB_SPEC_ACCURATE_DEFAULTS,
   computeTabOverflowMenuItems,
   computeTabOverflowVisibleCount,
@@ -45,7 +47,8 @@ export class IdsTabComponent
   implements OnInit, OnChanges, AfterContentInit, AfterViewInit, OnDestroy, IdsTabContext
 {
   readonly addIconSlug = "state-add-circ-solid";
-  readonly moreIconSlug = "arrow-tri-down-solid";
+  readonly moreIconSlug = TAB_OVERFLOW_MORE_ICON_SLUG;
+  readonly moreIconSizePx = TAB_OVERFLOW_MORE_ICON_SIZE_PX;
 
   @ContentChildren(IdsTabItemComponent) itemQuery!: QueryList<IdsTabItemComponent>;
 

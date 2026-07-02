@@ -9,7 +9,8 @@
 - **Validated node id:** `30681:9530` (`text and annotation`)
 - **Variant axes observed in Figma:** `style` (`primary` | `secondary`), `state` (`selected` | `unselected-default` | `unselected-hover` | `unselected-press` | `selected-focus` | `unselected-focus`), `transparent` (`true` | `false`), `addTab` (`true` | `false`), `overflow` (`true` | `false`)
 - **Runtime scope:** Horizontal tabs with item-level content, optional add-tab, responsive overflow with `More` behavior, optional icon/badge indicators.
-- **Runtime contract:** `component-contracts/ids/tab.contract.ts` (defaults, overflow math, spec-accurate demo data)
+- **Runtime contract:** `component-contracts/ids/tab.contract.ts` (defaults, overflow math, overflow caret asset constants, spec-accurate demo data)
+- **Codegen source of truth:** this spec + contract — reference Storybook ports verify behavior but must not define undocumented constants.
 
 ## Anatomy
 - **tabRoot** — horizontal tab group shell: tablist, optional overflow/add controls, active panel region.
@@ -18,7 +19,7 @@
 - **tabLabel** — visible title on tab trigger (from item `label`).
 - **tabIcon** (optional) — icon resolved from `iconSlug`.
 - **tabBadge** (optional) — alert/count badge on item.
-- **overflowTrigger** (optional) — `More` affordance when `overflow=true` and items exceed viewport.
+- **overflowTrigger** (optional) — `More` affordance when `overflow=true` and items exceed viewport: **label** (`moreLabel` or selected hidden tab name) + **caret icon** (`TAB_OVERFLOW_MORE_ICON_SLUG`, `10×10px`).
 - **addTabTrigger** (optional) — add-tab affordance when `allowAddTab=true`.
 
 ## Layout & Measurements
@@ -33,6 +34,13 @@
 - Dividers/baseline use `var(--border-width-border-1)`.
 - Label width is content-driven; short labels (1–3 words) are preferred.
 - Secondary tabs are left-aligned; overflow behavior manages tabs that do not fit the viewport.
+- **Overflow trigger (`overflowTrigger`)**
+  - Height: `38px` (row parity with `tabItem`).
+  - Padding: `var(--padding-padding-8)` vertical, `var(--padding-padding-12)` horizontal (not tab-item `9px 24px`).
+  - Content: inline-flex row — **label** then **caret** with `var(--spacing-space-8)` gap.
+  - Caret icon: `arrow-tri-down-solid` at **`10×10px`** (`TAB_OVERFLOW_MORE_ICON_SIZE_PX` in contract).
+  - Typography: same Body 2 scale as tab labels.
+  - Selected/hover/focus/indicator rules follow the same `type` (`primary` | `secondary`) matrix as peer tab items.
 
 ## Tokens
 - **Typography**
@@ -178,7 +186,7 @@ Runtime rules:
 - `TabLabel`: Body 2 tokenized typography.
 - `SelectedIndicator`: `var(--border-width-border-thick)`; `primary` → top, `secondary` → bottom.
 - `FocusRing`: `var(--border-width-border-thick)` `var(--color-border-brand-base)`.
-- `OverflowTrigger`: same row height and affordance as peer tab items.
+- `OverflowTrigger`: `38px` height; padding `var(--padding-padding-8) var(--padding-padding-12)`; label + caret with `var(--spacing-space-8)` gap; caret `arrow-tri-down-solid` at `10×10px`; state/indicator parity with peer `TabItem` for the active `type`.
 - `AddTabTrigger`: visual parity with tab row controls.
 
 ### Behavior contract
@@ -212,9 +220,22 @@ Runtime rules:
 - Focus order: visible tabs → overflow trigger → overflow menu items → add-tab trigger.
 
 ### Asset resolution + bundling contract
-- `iconSlug` → `/assets/icons/<iconSlug>.svg`.
+- `iconSlug` (tab item) → `/assets/icons/<iconSlug>.svg`.
+- **Overflow caret (fixed):** `TAB_OVERFLOW_MORE_ICON_SLUG` (`arrow-tri-down-solid`) → `assets/icons/arrow-tri-down-solid.svg`; render at **`TAB_OVERFLOW_MORE_ICON_SIZE_PX` (`10×10`)** — not the tab-item default `16×16` icon size.
 - Alert: optional icon slug and/or `badgeCount` with alert tokens.
 - Unknown `iconSlug`: hide icon slot; keep label/badge.
+
+**Overflow trigger rendering (codegen)**
+
+```
+OverflowTrigger (button)
+  overflowLabel (text: moreLabel | selected hidden tab label)
+  overflowCaretIcon (arrow-tri-down-solid, 10×10px, currentColor / label text token)
+```
+
+- Tint caret via the same text color tokens as the trigger label (`var(--color-text-neutral)` default, `var(--color-text-neutral-strong)` hover, `var(--color-text-brand-strong)` selected / menu open).
+- React reference: render via shared `Icon` (`variant="mask"` default) so the glyph inherits `currentColor` — do **not** use raw `<img>` on fixed-fill SVG assets.
+- Import slug and size from `component-contracts/ids/tab.contract.ts`; do not hardcode in framework ports.
 
 ### Fallback/error rules
 - Unknown `type` / `variant` → `secondary`.
@@ -234,13 +255,14 @@ Runtime rules:
 - [ ] Keyboard and ARIA behavior conforms to tabs pattern.
 - [ ] Labels follow usage rules; no autosave on tab switch.
 - [ ] Light and dark values resolve through semantic tokens only.
+- [ ] Overflow trigger renders `moreLabel` (or selected hidden tab label) + `arrow-tri-down-solid` at `10×10px` per contract constants.
 
 ## Source Mapping
 | Source | Location |
 |---|---|
 | Component map | `data/component-figma-map.json` → `Tab` |
 | Validated Figma node | `30681:9530` (primary/secondary, overflow, add-tab, states) |
-| Figma MCP evidence | `get_design_context` + `get_variable_defs` on `30681:9530` |
+| Figma MCP evidence | `get_design_context` + `get_variable_defs` on `30681:9530`; overflow caret `10×10` on `arrow-tri-down-solid` (2026-07-02) |
 | Theme CSS | `components/ids-theme.css` |
 | Runtime / codegen contract | `component-contracts/ids/tab.contract.ts` |
 | Programme inheritance | `data/programme-inheritance-registry.json` → `tab` (Synapse IDS-fork) |
@@ -249,5 +271,5 @@ Reference implementations (verification only — not part of the codegen contrac
 | Port | Location |
 |---|---|
 | Angular composition | `storybook-angular/src/components/ids-tab/` |
-| React aggregate demo | `storybook/src/components/Tabs.tsx` |
+| React aggregate demo | `storybook/src/components/Tabs.tsx` · `storybook-generated/ids/src/components/Tab.stories.tsx` |
 | Synapse Nav Tab | `components/synapse/tab/design-spec.md` |
