@@ -13,6 +13,7 @@
   - Main/state matrix: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42113-67348&m=dev`
   - Text option component: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9015-20992&m=dev`
   - Icon option component: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=10148-29576&m=dev`
+  - Icon variant (3 options, validated): `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42113-67622&m=dev`
 - **Variant axes (text option component set `9015:20992` — `.Segemented Button Text`):**
   - **Type:** `Active` | `Inactive` (selected vs unselected segment)
   - **State:** `Default` | `Hover` | `Press` | `Focus`
@@ -51,14 +52,19 @@
   - Row height: **28px** per segment (`4px + 20px + 4px` padding/line box).
   - Padding: `var(--padding-padding-4)` vertical, `var(--padding-padding-8)` horizontal.
   - Label: no wrap in reference layout (`whitespace: nowrap`); overflow behavior is runtime-defined (ellipsis + `title`/`aria-label` recommended for long strings).
-- **Icon variant total height (Figma `8218:13156`, verified 2026-06-05):** **39px** outer frame (`Type=Icon, # Options=2`).
+- **Icon variant total height (Figma `8218:13156` / `42113:67622`, verified 2026-06-24):**
+  - **CSS `border-box` (Dev Mode box model):** **39px** tall = `1px` border + `2px` padding + **33px** content row + `2px` padding + `1px` border.
+  - **Figma layer frame:** **104×37** for `# Options=3`, **70×37** for `# Options=2` — autolayout height **37px** (stroke/box-model mapping differs from CSS `border-box` total by **2px**; implementations must use **39px** outer height to match Dev Mode).
+  - **Content width (`# Options=3`):** **100px** = `32 + 2 + 32 + 2 + 32` (three **32px** cells + two **`spacing-space-2`** gaps); Dev Mode total width **106px** with padding/border.
   - **Root outline:** `var(--border-width-border-default)` = **1px** solid `var(--color-border-accessible)` (`Border Width/border-default`).
   - **Root inset:** `var(--padding-padding-2)` = **2px** on all sides.
-  - **Segment row:** **33px** tall option cells (Figma instance `11925:235931` / component `10148:29585`: **32×33**).
-  - **Segment horizontal padding:** `var(--padding-padding-8)` = **8px** (`8 + 16 + 8 = 32px` min cell width).
-  - **Segment vertical padding (Figma auto-layout):** **9.5px** top/bottom around the glyph (effective **~8.5px** when reserving **1px** inset edge in CSS `border-box` — reference implementation uses **33px** row height + flex center for the **14px** glyph).
-  - **Icon glyph:** **16×14** (`w-[16px] h-[14px]` in Figma dev output).
-  - **Height budget:** `1px + 2px + 33px + 2px + 1px = 39px` (`border-box` on root).
+  - **Inter-segment gap:** `var(--spacing-space-2)` = **2px**.
+  - **Segment row:** **33px** tall option cells (Figma `10148:29585` / `11925:236070`: **32×33**).
+  - **Segment horizontal padding:** `var(--padding-padding-8)` = **8px** (`8 + 16 + 8 = 32px` cell width).
+  - **Segment vertical padding (Figma auto-layout):** **9.5px** top/bottom (`py-[9.5px]`); centers the **14px** glyph inside the **33px** row (`(33 − 14) / 2 = 9.5px`).
+  - **Icon glyph (`.SegementedButton-Element-Icons`):** **16×14** — vector tint only; **no stroke/border** on the glyph layer.
+  - **Segment border (icon cells):** **selected default** only — `var(--border-width-border-default)` solid `var(--color-border-brand-base)` (Figma `10148:29585`). **Inactive default/hover/press** and **selected hover/press** omit a visible segment stroke in Figma; **inactive focus-visible** uses solid `var(--color-border-brand-base)` (`10148:29588`); **selected focus-visible** uses dashed `var(--color-border-white)` (`10148:29577`).
+  - **Height budget (CSS):** `1px + 2px + 33px + 2px + 1px = 39px` (`border-box` on root).
 - **Icon segment (implementation)**
   - Row height: **33px** per segment cell (not `32×32`).
   - Horizontal padding: `var(--padding-padding-8)`.
@@ -68,10 +74,33 @@
   - **Unselected (Inactive):** `var(--border-width-border-1)` solid `var(--color-border-brand-base)` on the segment cell; background stays `var(--color-background-component)` (Figma `9047:20378`).
   - **Selected (Active):** `var(--border-width-border-1)` **dashed** `var(--color-border-white)` on the segment cell; background stays `var(--color-background-controls-brand-base)` (Figma `9047:20375`). Runtime may implement with `:focus-visible` + dashed border or equivalent focus ring that preserves contrast on the brand fill.
   - Focus outline must not be removed; z-index/stacking should keep the focus border visible against neighbors.
+
+### Slot geometry (Figma-verified)
+
+| Slot / layer | Property | Token / contract | Figma node | Live evidence |
+| --- | --- | --- | --- | --- |
+| `root` (`SegmentedButton-Main`) | `border-width` | `var(--border-width-border-default)` (1px) | `42113:67622` | Figma MCP `get_variable_defs`: `Border Width/border-default` |
+| `root` | `border-color` | `var(--color-border-accessible)` | `42113:67622` | Figma MCP `get_design_context`: `border-[var(--color-border-accessible)]` |
+| `root` | `border-radius` | `var(--corner-radius-radius-2)` (2px) | `8218:13149` | Figma MCP `get_variable_defs`: `Corner Radius/radius-2` |
+| `root` | `padding` | `var(--padding-padding-2)` (2px all sides) | `42113:67622` | Figma MCP `get_variable_defs`: `Padding/padding-2` |
+| `root` | `gap` (between segments) | `var(--spacing-space-2)` (2px) | `42113:67622` | Figma MCP `get_variable_defs`: `Spacing/space-2` |
+| `root` (icon, 2 options) | `height` | **39px** CSS `border-box` (layer **70×37**) | `8218:13156` | Figma MCP `get_metadata` + Dev Mode box model |
+| `root` (icon, 3 options) | `height` | **39px** CSS `border-box` (layer **104×37**) | `42113:67622` | Figma MCP `get_metadata` + Dev Mode box model |
+| `root` (icon, 3 options) | `content width` | **100px** (cells + gaps) | `42113:67622` | Dev Mode: `32+2+32+2+32` |
+| `segmentSurface` (icon) | `height` | **33px** | `10148:29585` | Figma MCP `get_metadata`: 32×33 |
+| `segmentSurface` (icon) | `min-width` | **32px** | `10148:29585` | Figma MCP `get_metadata`: 32×33 |
+| `segmentSurface` (icon) | `padding-inline` | `var(--padding-padding-8)` (8px) | `10148:29585` | Figma MCP `get_design_context`: `px-[padding-8]` |
+| `segmentSurface` (icon) | `padding-block` | **9.5px** (auto-layout; flex-center equivalent in CSS) | `10148:29585` | Figma MCP `get_design_context`: `py-[9.5px]` |
+| `segmentSurface` (icon, selected default) | `border` | `var(--border-width-border-default)` solid `var(--color-border-brand-base)` (Figma); **implementation:** `border-color: var(--color-background-controls-brand-base)` for same-color edge in dark theme | `10148:29585` | Figma MCP `get_design_context` |
+| `segmentSurface` (icon, inactive default) | `border` | none (transparent reserved edge in implementation) | `11925:236070` | Figma MCP `get_design_context`: no border class |
+| `segmentSurface` (icon) | `border-radius` | `var(--corner-radius-radius-2)` (2px) | `10148:29585` | Figma MCP `get_variable_defs`: `Corner Radius/radius-2` |
+| `segmentIcon` (glyph frame) | `width` × `height` | **16×14** | `10148:29587` | Figma MCP `get_design_context`: `w-[16px] h-[14px]` |
+| `segmentIcon` (glyph) | `border` | none (icon color via `var(--color-icon-brand-base)` / `var(--color-icon-white)`) | `10148:29563` | Figma MCP `get_design_context`: vector fill only |
+
 ## Tokens
 Use semantic tokens only (no literals for color, border width, radius, typography).
 
-- **Layout & shape:** `var(--corner-radius-radius-2)`, `var(--border-width-border-default)` (alias `var(--border-width-border-1)` = **1px**), `var(--padding-padding-2)`, `var(--spacing-space-2)`, `var(--padding-padding-4)`, `var(--padding-padding-8)`, `var(--sizing-size-32)` (icon cell min width); **text** variant outer height **34px** (node `8218:13150`), segment row **28px**; **icon** variant outer height **37px** (node `8218:13156`), segment row **33px**.
+- **Layout & shape:** `var(--corner-radius-radius-2)`, `var(--border-width-border-default)` (alias `var(--border-width-border-1)` = **1px**), `var(--padding-padding-2)`, `var(--spacing-space-2)`, `var(--padding-padding-4)`, `var(--padding-padding-8)`, `var(--sizing-size-32)` (icon cell min width); **text** variant outer height **34px** (node `8218:13150`), segment row **28px**; **icon** variant outer height **39px** CSS `border-box` (node `8218:13156` / `42113:67622`; Figma layer **37px**), segment row **33px**.
 - **Backgrounds:** `var(--color-background-component)`, `var(--color-background-controls-brand-base)`, `var(--color-background-controls-brand-strong)`, `var(--color-background-controls-brand-stronger)`, `var(--color-background-brand-lighter)`, `var(--color-background-brand-light)`.
 - **Borders:** `var(--color-border-accessible)` (group outline only), `var(--color-border-brand-base)` (unselected focus-visible; selected default same-color edge), `var(--color-border-white)` (selected focus-visible dashed edge); segment default/hover/press (non-focus) edges use the keyword **`transparent`** where Figma omits a visible stroke (see Anatomy — avoid `var(--color-border-transparent-brand)` for segment outlines in dark).
 - **Text:** `var(--color-text-white)`, `var(--color-text-neutral)`, `var(--color-text-brand-strong)`.
@@ -96,7 +125,8 @@ Semantic tokens above are authoritative for implementation; resolved light value
 | `var(--border-width-border-default)` | `1px` |
 | Text variant outer height (`8218:13150`, border-box) | `34px` |
 | Text segment cell (`9015:22086`) | `127×28px` |
-| Icon variant outer height (`8218:13156`) | `37px` |
+| Icon variant outer height (`8218:13156` / `42113:67622`, CSS border-box) | `39px` (Figma layer frame `37px`) |
+| Icon variant content width (`# Options=3`) | `100px` (total with pad/border `106px`) |
 | Icon segment cell (`11925:235931`) | `32×33px` |
 | Icon glyph (`.SegementedButton-Element-Icons`) | `16×14px` |
 ## States (Light Theme)
@@ -112,7 +142,6 @@ Semantic tokens above are authoritative for implementation; resolved light value
 | Unselected (Inactive) | Hover | `var(--color-background-brand-lighter)` (Figma `9015:20990`) | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` |
 | Unselected (Inactive) | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` |
 | Unselected (Inactive) | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` (Figma `9047:20378`) | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` |
 
 ### Icon segments
 | Selection | Interaction | Segment background | Segment border | Icon color |
@@ -125,23 +154,17 @@ Semantic tokens above are authoritative for implementation; resolved light value
 | Unselected (Inactive) | Hover | `var(--color-background-brand-lighter)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
 | Unselected (Inactive) | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-icon-brand-base)` |
 | Unselected (Inactive) | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` (Figma `10148:29588`) | `var(--color-icon-brand-base)` |
-| Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` (icon follows disabled foreground) |
 
-**Note:** The `.Segemented Button Text` component set (`9015:20992`) and `.SegementedButton-Element-OptionIcon` (`10148:29576`) each document the full **Active/Inactive × Default/Hover/Press/Focus** matrix above. The assembled matrix frame (`42113:67348`) additionally shows Option 2 interaction states while Option 1 stays selected. **Disabled** is not present in these Figma component sets; treat as a documented runtime extension using the disabled row above.
+**Note:** The `.Segemented Button Text` component set (`9015:20992`) and `.SegementedButton-Element-OptionIcon` (`10148:29576`) each document the full **Active/Inactive × Default/Hover/Press/Focus** matrix above. The assembled matrix frame (`42113:67348`) additionally shows Option 2 interaction states while Option 1 stays selected. **Disabled** is not in Figma and is **out of scope** for this component.
 ## States (Dark Theme)
-Structurally identical to **Light Theme**. All colors must resolve from the active semantic token theme (dark mode). Do not hardcode hex; validate contrast for selected vs unselected against WCAG requirements for text and icons.
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
 
-| Selection | Interaction | Segment background | Segment border | Label text / Icon |
-|---|---|---|---|---|
-| Selected (Active) | Default | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| Selected (Active) | Hover | `var(--color-background-controls-brand-strong)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-white)` / `var(--color-icon-white)` |
-| Selected (Active) | Press | `var(--color-background-controls-brand-stronger)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-white)` / `var(--color-icon-white)` |
-| Selected (Active) | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--border-width-border-1)` **dashed** `var(--color-border-white)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| Unselected (Inactive) | Default | `var(--color-background-component)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
-| Unselected (Inactive) | Hover | `var(--color-background-brand-lighter)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
-| Unselected (Inactive) | Press | `var(--color-background-brand-light)` | `var(--border-width-border-1)` solid **transparent** | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| Unselected (Inactive) | Focus-visible | `var(--color-background-component)` | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `var(--color-text-neutral)` / `var(--color-icon-brand-base)` |
-| Any | Disabled | `var(--color-background-gray-light)` | `var(--border-width-border-1)` solid `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 ## Interactions
 - **Pointer:** click / tap selects a segment; only one selected value in single-select mode.
 - **Hover:** applies to **both** selected and unselected segments. Unselected hover uses `var(--color-background-brand-lighter)` (Figma `9015:20990`). **Selected hover** uses `var(--color-background-controls-brand-strong)` (Figma `9058:27481` / `10148:29582`).
@@ -249,15 +272,15 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
 
 ### Variant matrix
 - **Type × count:** `(text × 2..5)` ∪ `(icon × 2..3)`.
-- **Per-segment interaction:** `default` | `hover` | `press` | `focus-visible` for **both** selected (Active) and unselected (Inactive) segments.
+- **Per-segment interaction:** `default` | `hover` | `press` | `focus-visible` for **both** selected (Active) and unselected (Inactive) segments. **Disabled** is **out of scope** (not in Figma).
 - **Selection:** exactly one segment `selected=true` in single-select mode.
 - **Icon sources:** string slugs (bundled under `assets/icons`) OR user `IconSlot`; Figma shows `list` / `tree` / `grid` as **examples**, not a closed set.
 
 ### Per-slot style contract
 - **root:** `var(--color-background-component)` surface, `var(--color-border-accessible)` outer border, `var(--corner-radius-radius-2)`, inner `var(--padding-padding-2)` padding, `var(--spacing-space-2)` inter-segment gap.
-- **segmentSurface:** applies row height/padding rules from **Layout & Measurements**; rounded `var(--corner-radius-radius-2)`; state table drives background/border/text/icon tokens; non-focus borders **`transparent`** except selected default (`var(--color-border-brand-base)` same-color edge); unselected `:focus-visible` → solid `var(--color-border-brand-base)`; selected `:focus-visible` → **dashed** `var(--color-border-white)`.
+- **segmentSurface:** applies row height/padding rules from **Layout & Measurements**; rounded `var(--corner-radius-radius-2)`; state table drives background/border/text/icon tokens; non-focus borders **`transparent`**; selected default same-color edge via **`border-color: var(--color-background-controls-brand-base)`** (semantic spec cites `var(--color-border-brand-base)` where it matches fill in light); unselected `:focus-visible` → solid `var(--color-border-brand-base)`; selected `:focus-visible` → **dashed** `var(--color-border-white)`.
 - **segmentLabel:** `Body 2` tokens; **28px** row height inside **34px** text-variant root (`8218:13150`).
-- **segmentIcon:** **33px** row height, **32px** min width; **16×14** glyph centered; horizontal `var(--padding-padding-8)`; string slugs render via shared **`Icon`** (`shapeName`); state icon colors come from segment `color` (`var(--color-icon-brand-base)` / `var(--color-icon-white)` / disabled foreground). Custom `IconSlot` must use `currentColor` where tinting is required. Segment edges use **inset `box-shadow`** (1px) in reference CSS so the **37px** shell is preserved without border-box growth.
+- **segmentIcon:** **33px** row height, **32px** min width; **16×14** glyph centered; horizontal `var(--padding-padding-8)`; string slugs render via shared **`Icon`** (`shapeName`); state icon colors come from segment `color` (`var(--color-icon-brand-base)` / `var(--color-icon-white)`). Custom `IconSlot` must use `currentColor` where tinting is required. Segment edges use a reserved **`1px` `border`** (`transparent` default); **selected default** sets `border-color` to match `var(--color-background-controls-brand-base)` (not `var(--color-border-brand-base)` — dark theme border token is lighter and would show a visible ring).
 
 ### Behavior contract
 - Selecting a segment updates `value` and emits **`onChange`** (or framework equivalent) with **`value`** plus **`meta`** (`label` for text segments, `ariaLabel` for icon segments).
@@ -267,7 +290,7 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
 
 ### Accessibility contract
 - Expose **radiogroup semantics** (native `<input type="radio">` set with shared `name`, or `role="radiogroup"` with managed `aria-checked`):
-  - Arrow keys move focus between enabled segments; `Space`/`Enter` selects focused segment (pattern may follow platform defaults).
+  - Arrow keys move focus between segments; `Space`/`Enter` selects focused segment (pattern may follow platform defaults).
   - Selected segment exposes `aria-checked="true"`; others `false`.
   - Root has visible label via `legend`, `aria-label`, or `aria-labelledby`.
 - Focus order: follows visual order.
@@ -286,8 +309,8 @@ Inherits **Icon Resolution Baseline** from `components/ids/root-spec.md`. Applie
 **When the target library exposes an Icon / glyph component**
 - **Prefer it** for `segmentIcon` instead of hand-rolling `<img src>`, ad-hoc CSS `mask`/`maskImage`, or `import.meta.glob` asset loading inside the SegmentedButton module.
 - Map segment `icon: string` → the library's icon name prop (`shapeName`, `name`, `icon`, `glyph`, …). Generators must **inspect** the real public API; do not assume a fixed prop key across frameworks.
-- **Monochrome** segment glyphs (all Figma demo icons): use the library's **tintable** mode when offered (e.g. `variant="mask"`, mask + `currentColor`). Drive color from the **Icon segments** state table by setting **`color` on `segmentSurface`**; **omit** Icon `color` so selection/hover/press/focus/disabled tint via inherited `currentColor`.
-- **Dimensions:** glyph **16×14** inside **33px** segment row (min width **32px**) — pass `style` / `className` on Icon. Icon-variant root is **37px** tall (`8218:13156`).
+- **Monochrome** segment glyphs (all Figma demo icons): use the library's **tintable** mode when offered (e.g. `variant="mask"`, mask + `currentColor`). Drive color from the **Icon segments** state table by setting **`color` on `segmentSurface`**; **omit** Icon `color` so selection/hover/press/focus tint via inherited `currentColor`.
+- **Dimensions:** glyph **16×14** inside **33px** segment row (min width **32px**) — pass `style` / `className` on Icon. Icon-variant root is **39px** tall CSS `border-box` (`8218:13156`; Figma layer **37px**).
 - **Custom `IconSlot`:** render caller content inside the glyph box; tintable custom SVG must use `currentColor`.
 
 **Codegen module resolution (this repository)**
@@ -322,25 +345,26 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 
 ### Validation checklist
 - [ ] Root spacing, gap, radius, and outer border match Figma `8218:13149` references.
-- [ ] Text and Icon segment paddings produce sample heights (**34** text / **37** icon outer shell with **28px** / **33px** segment rows).
+- [ ] Text and Icon segment paddings produce sample heights (**34** text / **39** icon outer shell with **28px** / **33px** segment rows).
 - [ ] Unselected **and selected** hover/press/focus states match token tables (text `9015:20992`, icon `10148:29576`).
 - [ ] Single selection updates state once per user action; keyboard and pointer agree.
 - [ ] String `icon` slugs render via the library **`Icon`** primitive (`shapeName` or equivalent); no raw `<img>` / local mask CSS / per-component asset glob in generated SegmentedButton code.
 - [ ] Generator resolves Icon import from programme `codegen.*.icon_component_module` when configured (IDS React: `storybook/src/components/Icon`).
-- [ ] Icon glyph is **16×14** inside **33px** segment row (**37px** icon-variant root per `8218:13156`); segment `color` drives tint via `currentColor` per icon state table.
+- [ ] Icon glyph is **16×14** inside **33px** segment row (**39px** icon-variant root CSS `border-box` per `8218:13156` / `42113:67622`); segment `color` drives tint via `currentColor` per icon state table.
 - [ ] Custom `IconSlot` renders without forced path mapping.
 - [ ] Dark theme resolves without literal colors.
+- [ ] No disabled segment or root `disabled` API (out of scope).
 
 ## Source Mapping
 - **Content frame:** `42113:67348`
 - **Text height reference:** `8218:13150` (`Type=Text, # Options=2`) — **34px** border-box total; component set `8218:13149`
-- **Icon height reference:** `8218:13156` (`Type=Icon, # Options=2`) — **37px** border-box total
+- **Icon height reference:** `8218:13156` (`Type=Icon, # Options=2`) — **39px** CSS `border-box` (Figma layer **70×37**); `42113:67622` (`# Options=3`) — **106×39** Dev Mode / layer **104×37**
 - **Component map:** `data/component-figma-map.json` → **Segmented Button** (`figmaUrl`, `fileKey`, `nodeId`, `textOptionNodeId`, `iconOptionNodeId`)
 - **Nested referenced in Dev Mode output:** `.Segemented Button Text` (`9015:20992`), `.SegementedButton-Element-OptionIcon` (`10148:29576`), `.SegementedButton-Element-Icons` (`10148:29563`)
 - **Storybook implementation:** `storybook/src/components/SegmentedButton.tsx`, `storybook/src/components/SegmentedButton.module.css`, `storybook/src/components/SegmentedButton.stories.tsx`
 - **Shared Icon primitive (Storybook):** `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`)
 - **Codegen Icon module (IDS React):** `config/design_systems/ids.yaml` → `codegen.react.icon_component_module`
-- **Extraction method:** Figma MCP on `42113:67348`, `8218:13149`, `8218:13150`, `8218:13156`, `9015:20992`, `10148:29576` (validated 2026-04-20; **state matrix 2026-06-15**; **heights re-verified 2026-06-05** — text `8218:13150`: **34px** outer / **28px** segment row; icon `8218:13156`: **37px** outer / **33px** segment row; **1px** `border-default`, **2px** root `padding-2`).
+- **Extraction method:** Figma MCP on `42113:67348`, `42113:67622`, `8218:13149`, `8218:13150`, `8218:13156`, `9015:20992`, `10148:29576`, `10148:29585`, `11925:236070` (validated 2026-04-20; **state matrix 2026-06-15**; **icon variant geometry 2026-06-24** — text `8218:13150`: **34px** outer / **28px** segment row; icon `42113:67622`: **39px** CSS `border-box` (layer **37px**) / **33px** content row / **32px** cell width / **100px** content width (3 options); root **1px** `border-accessible`, **2px** `padding-2`, **2px** inter-segment gap; segment **8px** horizontal padding, **9.5px** vertical auto-layout; glyph **16×14**, no icon stroke).
 
 ## Implementation Notes
 
@@ -350,7 +374,7 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - **Selected interaction surfaces** use the **controls-brand** family (`base` / `strong` / `stronger`) per Figma `9015:20991`, `9058:27481`, `9058:27483`.
 - **Theme sync:** ensure `components/ids-theme.css` includes `--padding-padding-2`, `--padding-padding-4`, `--spacing-space-2`, `--sizing-size-32`, and light-theme resolved values in the table above (Storybook imports this file globally).
 - **Text variant height:** outer shell **34px** (`8218:13150`) = `1px` root border + `2px` `padding-padding-2` + **28px** segment row + `2px` padding + `1px` border (`border-box`). Segment cells are **28px** tall (`padding-4` + `line-height-20` + `padding-4`).
-- **Icon variant height:** outer shell **37px** (`8218:13156`) = `1px` root border + `2px` `padding-padding-2` + **33px** segment row + `2px` padding + `1px` border (`border-box`). Segment cells are **32×33** with `padding-8` horizontal and **16×14** glyph; reference CSS uses **inset `box-shadow`** for segment edges so reserved **1px** edges do not grow past target shell height.
+- **Icon variant height:** outer shell **39px** CSS `border-box` (`42113:67622` Dev Mode) = `1px` root border + `2px` `padding-padding-2` + **33px** content row + `2px` padding + `1px` border. Figma layer frame reports **37px** (autolayout height). Segment cells are **32×33** with `padding-8` horizontal and **16×14** glyph; reference CSS reserves **1px** segment `border` inside the **33px** `border-box` row (`align-items: center` on root; `line-height: 0` on icon segments). **Selected default** `border-color` must match `var(--color-background-controls-brand-base)` so the same-color edge stays invisible in dark theme (`--color-border-brand-base` resolves lighter than the fill).
 - **Icon slugs (implementation + codegen):** compose `segmentIcon` through the programme **`Icon`** primitive (`shapeName` / equivalent); resolve import from `codegen.*.icon_component_module` when configured. Set segment `color` from the icon state table — do not duplicate mask/`import.meta.glob` or emit `<img>` in SegmentedButton source.
 
 

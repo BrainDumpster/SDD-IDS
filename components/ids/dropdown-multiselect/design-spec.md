@@ -271,46 +271,9 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 ---
 
 ## Implementation Notes
-> Last updated: 2026-06-15.
 
-**Focus ring must not add border-radius to the field element.**
-The field is square in all states including focus. The ring has `border-radius: var(--corner-radius-radius-4)` and a 4px gap from the field border. Implementation: `IdsDropdownTriggerShell.module.css` — use `::after` pseudo-element (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`) instead of `outline` + `border-radius` on the element itself.
-
-**Caret disabled color is `var(--color-border-disabled)`, not `var(--color-icon-disabled)`.**
-Both tokens resolve to the same value in light mode but differ in dark mode. Implementation: `IdsDropdownTriggerShell.module.css` — `.field[data-disabled] .caretWrap { color: var(--color-border-disabled) }`.
-
-**Font weight for all text elements is 400 (regular).**
-Do not set `font-weight` explicitly in component CSS — browser default (400) is correct. Implementation: `IdsDropdownTriggerShell.module.css`, `DropdownMenu.module.css` — no `font-weight` on `.field`, `.item`, `.sectionHeader`, `.footerAction`.
-
-**Option hover/press borders must use `outline`, not `box-shadow: inset`.**
-`box-shadow` is not clipped by `overflow: clip` on the popup container, causing the border to visually overlap the popup's outer border on the first and last rows. `outline` is clipped correctly. Implementation: `DropdownMenu.module.css` — `outline: 1px solid var(--color-border-brand-neutral)` on hover and press states (not `box-shadow: inset`).
-
-**Option focus state requires an inset ring.**
-Spec defines a 1px inset border using `var(--color-border-brand-base)` with `border-radius: var(--corner-radius-radius-4)`. Was previously suppressed with `outline: none`. Implementation: `DropdownMenu.module.css` — `.item:focus-visible { outline: 1px solid var(--color-border-brand-base); outline-offset: -1px; border-radius: var(--corner-radius-radius-4) }`.
-
-**Checkbox must not show its own focus ring when the option row is focused.**
-Only the row-level inset ring should appear. Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="multi"]:focus-visible .checkboxOuter::after { content: none }`.
-
-**Selected option row: component background, no row outline.**
-Multi-select option rows always have a checkbox; the checkbox fill conveys selection visually. The row itself must use `var(--color-background-component)` with neutral text and no row-level outline. Do NOT apply `var(--color-background-brand-lighter)` + outline to multi rows. Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="multi"][data-selected]` overrides the base selected rule (`background: component; color: text-neutral; outline: none`).
-
-**Disabled option row: component background, no row outline.**
-A disabled multi-select row always has a checkbox. Use `var(--color-background-component)` with disabled text. The `gray-lighter` background + disabled border applies only to single-select rows without a leading control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled]:has(.checkboxOuter)` → `background: var(--color-background-component)`.
-
-**Disabled checkbox control background was `gray-lighter`; correct value is `gray-light`.**
-The checkbox control (not the row) in a disabled option row must use `var(--color-background-gray-light)` as background and `var(--color-text-disabled)` as color (for icon/text inside). Was incorrectly set to `var(--color-background-gray-lighter)`. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light); color: var(--color-text-disabled) }`. Same fix applies to the indeterminate+disabled case.
-
-**SelectAll/ClearAll row bottom border was `color-border-neutral-light`; correct value is `color-border-accessible`.**
-The row separator must use `var(--color-border-accessible)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-accessible) }`.
-
-**SelectAll checkbox hover border was missing.**
-On hover, the unchecked and indeterminate Select All checkbox must strengthen its border to `var(--color-border-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-strong) }`.
-
-**Disabled field must not show helper text.**
-The disabled state suppresses helper/validation text — it is not applicable when the field is disabled. Implementation: `IdsDropdownMultiSelect.stories.tsx` — remove helper text span from the disabled state example in `StatesAndDetails`.
-
-**Section header border and text color were incorrect.**
-Spec uses `var(--color-border-accessible)` for `border-top` and `var(--color-text-neutral)` for text (not `color-border-neutral-light` / `color-text-neutral-strong`). Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-accessible); color: var(--color-text-neutral) }`.
-
-**Footer action row requires an inner button wrapper.**
-Outer row padding is `var(--padding-padding-8) 0` (no horizontal padding). The label sits inside a `<span>` wrapper with `padding: var(--padding-padding-2) var(--padding-padding-16); border-radius: var(--corner-radius-radius-2)`. Implementation: `DropdownMenu.module.css` `.footerAction` + `.footerActionButton`; `DropdownMenu.tsx` wraps `footerActionLabel` in `<span className={styles.footerActionButton}>`.
+### Design spec errors fixed (2026-07-01)
+- **Disabled checkbox control background incorrect** — Original spec: checkbox control background used `var(--color-background-gray-lighter)`. Fix: Updated to `var(--color-background-gray-light)` for disabled checkbox control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light) }`. Same fix applies to the indeterminate+disabled case.
+- **SelectAll/ClearAll row bottom border incorrect** — Original spec: row separator used `var(--color-border-neutral-light)`. Fix: Updated to `var(--color-border-accessible)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-accessible) }`.
+- **SelectAll checkbox hover border missing** — Original spec: hover behavior for unchecked and indeterminate Select All checkbox was not defined. Fix: Added hover state to strengthen border to `var(--color-border-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-strong) }`.
+- **Section header border and text color incorrect** — Original spec: used `color-border-neutral-light` for border and `color-text-neutral-strong` for text. Fix: Updated to `var(--color-border-accessible)` for `border-top` and `var(--color-text-neutral)` for text. Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-accessible); color: var(--color-text-neutral) }`.
