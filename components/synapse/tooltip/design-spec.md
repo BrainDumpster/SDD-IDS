@@ -7,7 +7,7 @@ Synapse **Tooltip** is an **ids-fork** of the IDS **Tooltip** family. Anatomy, a
 | Pattern | `ids-fork` |
 | IDS baseline slug | `tooltip` |
 | IDS baseline spec | [`components/ids/tooltip/design-spec.md`](../ids/tooltip/design-spec.md) |
-| Storybook reference | `storybook/src/components/SynapseTooltip.tsx` (re-exports `IdsTooltip`) |
+| Storybook reference | `storybook/src/components/SynapseTooltip.tsx` (re-exports `IdsTooltip` + composition slots); stories: `SynapseTooltip.stories.tsx` |
 | Verification method | IDS baseline + programme radius alias contract |
 
 ### Synapse programme deltas (vs IDS)
@@ -145,5 +145,6 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 ## Changelog
 
+- **2026-07-02**: Synapse React Storybook stories aligned with IDS/Angular composition pattern (`SynapseTooltipTitle` + `SynapseTooltipBody`, same story set as IDS Tooltip).
 - **2026-06-19**: Added IDS baseline + closable layout inheritance (from IDS spec); documented Synapse programme delta (8px panel radius only).
 <!-- auto:generated:end -->

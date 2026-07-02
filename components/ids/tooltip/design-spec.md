@@ -131,26 +131,68 @@ Typography contract:
 - Arrow follows chosen `placement` side and `arrowAlign`.
 - Tooltip content is consumer-supplied and may be text or structured markup.
 ## Composition & API (runtime)
-- `content: string | ReactNode | TemplateRef | SlotContent` (required, framework-adapted).
-- `title?: string` (optional header).
-- `closable?: boolean` (default `false`).
+
+### Composition (preferred — Angular / projected slots)
+
+```
+ids-tooltip [side, arrowAlign, closable, …]
+  ← TriggerAnchor (default projected content, e.g. ids-button)
+  ids-tooltip-title?     ← optional Header (Body 2 Medium)
+  ids-tooltip-body       ← required BodyContent
+```
+
+| Component | Role | Required |
+|-----------|------|----------|
+| `ids-tooltip` | Root — placement, open/close behavior, arrow | yes |
+| *(default slot)* | `TriggerAnchor` — hover/focus target | yes |
+| `ids-tooltip-title` | `Header` title text | no |
+| `ids-tooltip-body` | `BodyContent` — text or rich markup | yes |
+
+String props (`title`, `content`) remain shorthand when composition slots are not projected (Storybook controls / legacy).
+
+### Root inputs (`ids-tooltip`)
+
 - `side?: "top" | "bottom" | "left" | "right"` (default `top`).
 - `arrowAlign?: "start" | "center" | "end"` (default `center`).
+- `closable?: boolean` (default `false`).
+- `triggerDisplay?: "inline" | "block"` (default `inline`).
 - `open?: boolean` / `defaultOpen?: boolean`.
-- `onOpenChange?: (open: boolean) => void`.
-- `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
-- `closeIconShapeName?: string` default `ctrl-close-16` (for icon component integration).
+- `title?: string` — shorthand when `ids-tooltip-title` absent.
+- `content?: string` — shorthand when `ids-tooltip-body` absent.
+- `onOpenChange?: (open: boolean) => void` / `openChange` output.
+- `onClose?: (reason: "close-click" | "escape" | "programmatic") => void` / `closed` output.
+- `closeIconShapeName?: string` default `ctrl-close-16`.
+
+### React composition (preferred — IDS / Synapse Storybook)
+
+```
+IdsTooltip [side, arrowAlign, closable, …]
+  ← trigger (default child, e.g. Button)
+  IdsTooltipTitle?     ← optional Header (Body 2 Medium)
+  IdsTooltipBody       ← required BodyContent
+```
+
+Synapse re-exports the same slots as `SynapseTooltip`, `SynapseTooltipTitle`, `SynapseTooltipBody` (`storybook/src/components/SynapseTooltip.tsx`).
+
+| Component | Role | Required |
+|-----------|------|----------|
+| `IdsTooltip` / `SynapseTooltip` | Root — placement, open/close behavior, arrow | yes |
+| *(default child)* | `TriggerAnchor` — hover/focus target | yes |
+| `IdsTooltipTitle` / `SynapseTooltipTitle` | `Header` title text | no |
+| `IdsTooltipBody` / `SynapseTooltipBody` | `BodyContent` — text or rich markup | yes |
+
+String props (`title`, `content`) remain shorthand when composition slots are not used (Storybook controls / legacy).
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 Deterministic structure:
-1. `TriggerAnchor`
+1. `TriggerAnchor` (default projected child)
 2. `TooltipPortal` (if framework/library uses portaling)
 3. `TooltipRoot`
 4. `Arrow` (always rendered)
 5. `TooltipPanel`
 6. `Content` wrapper (`column` when `closable=false`; `row` when `closable=true`)
-7. When `closable=false`: optional `Header` → `BodyContent` (vertical stack inside `Content`)
-8. When `closable=true`: `ContentColumn` (optional `Header` → `BodyContent`, vertical stack, `padding-right: var(--spacing-space-8)`) + `CloseAction` (sibling, top-aligned)
+7. When `closable=false`: optional `ids-tooltip-title` / `Header` → `ids-tooltip-body` / `BodyContent` (vertical stack inside `Content`)
+8. When `closable=true`: `ContentColumn` (optional `ids-tooltip-title` / `Header` → `ids-tooltip-body` / `BodyContent`, vertical stack, `padding-right: var(--spacing-space-8)`) + `CloseAction` (sibling, top-aligned)
 
 Variant/option matrix:
 - Content mode: `header=false|true`.
@@ -203,6 +245,11 @@ Validation checklist (pass/fail):
 - IDS map file: `data/component-figma-map.json` (`Tooltip` entry).
 - Showcase frame: `42636:14688` (`Tooltip`, IDS Design Library).
 - Component set: `38201:109592` (`Tooltip-Main`).
+- Runtime contract: `component-contracts/ids/tooltip.contract.ts`
+- Reference implementations:
+  - React: `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`, `ids-tooltip.slots.tsx`, `IdsTooltip.stories.tsx`
+  - Synapse React: `storybook/src/components/SynapseTooltip.tsx`, `SynapseTooltip.stories.tsx`
+  - Angular: `storybook-angular/src/components/ids-tooltip/`
 - Arrow matrix source symbols:
   - Down: `38201:109593`, `38201:109603`, `38201:109613`
   - Up: `38201:109623`, `38201:109633`, `38201:109643`
@@ -211,6 +258,8 @@ Validation checklist (pass/fail):
 - Last live verification: Figma MCP, file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593`, `38201:109653`, session 2026-06-15.
 
 ## Changelog
+- **2026-07-02**: React IDS + Synapse Storybook stories aligned with Angular composition pattern (`IdsTooltipTitle`/`IdsTooltipBody`, per-story `render`, story set: Spec Accurate Design, Normal/No Header, With Header, Closable, Closable/No Title, Rich Content, Arrow Matrix, Playground).
+- **2026-07-02**: Documented Angular composition API (`ids-tooltip` + `ids-tooltip-title` + `ids-tooltip-body`); added Angular Storybook reference implementation and `component-contracts/ids/tooltip.contract.ts`.
 - **2026-06-19**: Documented closable layout for codegen — `ContentColumn` + `CloseAction` row, `8px` padding-right reserve before close icon column, `12×12` `ctrl-close-16` via shared `Icon`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-06-15**: Documented Storybook arrow calibration matrix (12 placements), `.arrowGraphic`/`10x6` SVG sizing rule, and panel/arrow layering in Layout & Measurements; values synced from `IdsTooltip.module.css`.
 - **2026-06-15**: Refactored Storybook tooltip to match Figma layering — border/shadow on inner `panel`, arrow overlaps panel edge (removed `::before`/`::after` border masks that caused visible gaps).

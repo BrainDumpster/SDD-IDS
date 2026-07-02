@@ -1,131 +1,246 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
+import { SPEC_ACCURATE_DESIGN_STORY } from "../../../component-contracts/common/story-meta";
+import {
+  TOOLTIP_ARROW_ALIGNS,
+  TOOLTIP_DEMO_BODY,
+  TOOLTIP_SIDES,
+  TOOLTIP_SPEC_ACCURATE_DEFAULTS,
+} from "../../../component-contracts/ids/tooltip.contract";
 import { Button } from "./Button";
-import { IdsTooltip } from "./IdsTooltip";
+import {
+  TOOLTIP_DOCS_CANVAS_STYLE,
+  TOOLTIP_DOCS_DESCRIPTION,
+  TOOLTIP_MATRIX_CELL_STYLE,
+  TOOLTIP_MATRIX_GRID_STYLE,
+  TOOLTIP_STORY_CANVAS_STYLE,
+  TOOLTIP_STORY_SOURCE_CODE,
+} from "./ids-tooltip.developer-usage";
+import { IdsTooltip, IdsTooltipBody, IdsTooltipTitle } from "./IdsTooltip";
 
-const longContent =
-  "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.";
+const TOOLTIP_PLACEMENTS = TOOLTIP_SIDES.flatMap((side) =>
+  TOOLTIP_ARROW_ALIGNS.map((align) => ({
+    key: `${side}-${align}`,
+    side,
+    align,
+  }))
+);
+
+type PlaygroundArgs = {
+  side: (typeof TOOLTIP_SIDES)[number];
+  arrowAlign: (typeof TOOLTIP_ARROW_ALIGNS)[number];
+  closable: boolean;
+  title: string;
+  content: string;
+  triggerLabel: string;
+  tooltipClosed?: (reason: string) => void;
+};
 
 const meta: Meta<typeof IdsTooltip> = {
   title: "Spec Generated/IDS/Tooltip",
   component: IdsTooltip,
-  render: (args) => (
-    <IdsTooltip {...args}>
-      <Button variant="secondary">{String(args.children ?? "Trigger")}</Button>
-    </IdsTooltip>
-  ),
-  args: {
-    title: "Tooltip Title",
-    content: longContent,
-    side: "top",
-    arrowAlign: "start",
-    closable: false,
-    children: "Hover over me",
+  parameters: {
+    layout: "centered",
+    docs: {
+      canvas: { sourceState: "open" },
+      story: { inline: true },
+      description: { component: TOOLTIP_DOCS_DESCRIPTION },
+    },
   },
   argTypes: {
-    side: { control: "select", options: ["top", "bottom", "left", "right"] },
-    align: { control: "select", options: ["start", "center", "end"] },
+    side: { control: "select", options: [...TOOLTIP_SIDES] },
+    arrowAlign: { control: "select", options: [...TOOLTIP_ARROW_ALIGNS] },
+    align: { control: "select", options: [...TOOLTIP_ARROW_ALIGNS] },
     closable: { control: "boolean" },
     title: { control: "text" },
     content: { control: "text" },
-    children: { control: "text" },
-    onClose: { action: "onClose" },
+    triggerLabel: { control: "text", name: "trigger label" },
+    tooltipClosed: { action: "closed" },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof IdsTooltip>;
 
-export const NormalNoHeader: Story = {
-  args: {
-    title: "",
-    content: longContent,
-    closable: false,
-    side: "top",
-    arrowAlign: "start",
+export const SpecAccurateDesign: Story = {
+  name: SPEC_ACCURATE_DESIGN_STORY,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Spec Accurate Design: top · start · standard hover tooltip — composition with `IdsTooltipTitle` + `IdsTooltipBody`.",
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TOOLTIP_STORY_SOURCE_CODE,
+      },
+    },
   },
+  render: (args) => (
+    <div style={TOOLTIP_DOCS_CANVAS_STYLE}>
+      <IdsTooltip
+        side={args.side}
+        arrowAlign={args.arrowAlign}
+        closable={args.closable}
+        onClose={(reason) => args.tooltipClosed?.(reason)}
+      >
+        <Button variant="secondary" size="lg">
+          {args.triggerLabel}
+        </Button>
+        {args.title ? <IdsTooltipTitle>{args.title}</IdsTooltipTitle> : null}
+        <IdsTooltipBody>{args.content}</IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
+  args: {
+    side: TOOLTIP_SPEC_ACCURATE_DEFAULTS.side,
+    arrowAlign: TOOLTIP_SPEC_ACCURATE_DEFAULTS.arrowAlign,
+    closable: TOOLTIP_SPEC_ACCURATE_DEFAULTS.closable,
+    title: TOOLTIP_SPEC_ACCURATE_DEFAULTS.title,
+    content: TOOLTIP_SPEC_ACCURATE_DEFAULTS.content,
+    triggerLabel: "Hover over me",
+  } satisfies PlaygroundArgs,
+};
+
+export const NormalNoHeader: Story = {
+  name: "Normal / No Header",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={TOOLTIP_STORY_CANVAS_STYLE}>
+      <IdsTooltip side="top" arrowAlign="start">
+        <Button variant="secondary" size="lg">
+          Hover over me
+        </Button>
+        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
 };
 
 export const WithHeader: Story = {
-  args: {
-    title: "Tooltip Title",
-    content: longContent,
-    closable: false,
-    side: "top",
-    align: "center",
-  },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={TOOLTIP_STORY_CANVAS_STYLE}>
+      <IdsTooltip side="top" arrowAlign="center">
+        <Button variant="secondary" size="lg">
+          Hover over me
+        </Button>
+        <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
+        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
 };
 
 export const Closable: Story = {
-  args: {
-    title: "Tooltip Title",
-    content: longContent,
-    closable: true,
-    side: "top",
-    arrowAlign: "end",
-    onClose: () => undefined,
-  },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={TOOLTIP_STORY_CANVAS_STYLE}>
+      <IdsTooltip
+        side="top"
+        arrowAlign="end"
+        closable
+        onClose={(reason) => {
+          // eslint-disable-next-line no-console
+          console.log("[IDS Tooltip] closed", reason);
+        }}
+      >
+        <Button variant="secondary" size="lg">
+          Hover over me
+        </Button>
+        <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
+        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
 };
 
 export const ClosableNoTitle: Story = {
   name: "Closable / No Title",
-  args: {
-    title: "",
-    content: longContent,
-    closable: true,
-    side: "top",
-    arrowAlign: "start",
-    onClose: () => undefined,
-  },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={TOOLTIP_STORY_CANVAS_STYLE}>
+      <IdsTooltip side="top" arrowAlign="start" closable>
+        <Button variant="secondary" size="lg">
+          Hover over me
+        </Button>
+        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
 };
 
 export const RichContent: Story = {
-  args: {
-    title: "Custom Content",
-    closable: false,
-    side: "right",
-    align: "center",
-    content: (
-      <div>
-        <p style={{ margin: 0 }}>Any content can be rendered here.</p>
-        <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
-          <li>Text</li>
-          <li>Lists</li>
-          <li>Inline formatting</li>
-        </ul>
-      </div>
-    ),
-  },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={TOOLTIP_STORY_CANVAS_STYLE}>
+      <IdsTooltip side="right" arrowAlign="center">
+        <Button variant="secondary" size="lg">
+          Rich content
+        </Button>
+        <IdsTooltipTitle>Custom Content</IdsTooltipTitle>
+        <IdsTooltipBody>
+          <p style={{ margin: 0 }}>Any content can be rendered here.</p>
+          <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+            <li>Text</li>
+            <li>Lists</li>
+            <li>Inline formatting</li>
+          </ul>
+        </IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
 };
 
 export const ArrowMatrix: Story = {
-  args: {
-    closable: true
+  parameters: {
+    controls: { disable: true },
+    layout: "fullscreen",
   },
-
   render: () => (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
-        gap: 20,
-        padding: 24,
-      }}
-    >
-      {(["bottom", "top", "right", "left"] as const).flatMap((side) =>
-        (["start", "center", "end"] as const).map((align) => (
-          <div key={`${side}-${align}`} style={{ display: "flex", justifyContent: "center" }}>
-            <IdsTooltip
-              title="Tooltip Title"
-              content={`${side} - ${align}`}
-              side={side}
-              align={align}
-            >
-              <Button variant="secondary">{`${side}-${align}`}</Button>
-            </IdsTooltip>
-          </div>
-        ))
-      )}
+    <div style={TOOLTIP_MATRIX_GRID_STYLE}>
+      {TOOLTIP_PLACEMENTS.map((placement) => (
+        <div key={placement.key} style={TOOLTIP_MATRIX_CELL_STYLE}>
+          <IdsTooltip side={placement.side} arrowAlign={placement.align} closable>
+            <Button variant="secondary" size="lg">
+              {placement.key}
+            </Button>
+            <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
+            <IdsTooltipBody>
+              {placement.side} - {placement.align}
+            </IdsTooltipBody>
+          </IdsTooltip>
+        </div>
+      ))}
     </div>
-  )
+  ),
+};
+
+export const Playground: Story = {
+  parameters: { controls: { disable: false } },
+  render: (args) => (
+    <div style={TOOLTIP_STORY_CANVAS_STYLE}>
+      <IdsTooltip
+        side={args.side}
+        arrowAlign={args.arrowAlign}
+        closable={args.closable}
+        onClose={(reason) => args.tooltipClosed?.(reason)}
+      >
+        <Button variant="secondary" size="lg">
+          {args.triggerLabel}
+        </Button>
+        {args.title ? <IdsTooltipTitle>{args.title}</IdsTooltipTitle> : null}
+        <IdsTooltipBody>{args.content}</IdsTooltipBody>
+      </IdsTooltip>
+    </div>
+  ),
+  args: {
+    side: TOOLTIP_SPEC_ACCURATE_DEFAULTS.side,
+    arrowAlign: TOOLTIP_SPEC_ACCURATE_DEFAULTS.arrowAlign,
+    closable: TOOLTIP_SPEC_ACCURATE_DEFAULTS.closable,
+    title: TOOLTIP_SPEC_ACCURATE_DEFAULTS.title,
+    content: TOOLTIP_SPEC_ACCURATE_DEFAULTS.content,
+    triggerLabel: "Hover over me",
+  } satisfies PlaygroundArgs,
 };

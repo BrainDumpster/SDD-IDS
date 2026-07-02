@@ -2,14 +2,17 @@ import { Tooltip as BaseTooltip } from "@base-ui-components/react/tooltip";
 import { useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import { IdsTooltipBody, IdsTooltipTitle, parseTooltipChildren } from "./ids-tooltip.slots";
 import styles from "./IdsTooltip.module.css";
+
+export { IdsTooltipBody, IdsTooltipTitle };
 
 /** Reference: `components/ids/tooltip/design-spec.md` */
 export interface IdsTooltipProps {
-  /** BodyContent — required per IDS Tooltip spec. */
-  content: ReactNode;
-  /** Optional header title (Body 2 Medium). Omitted when unset. */
-  title?: string;
+  /** Shorthand body when `IdsTooltipBody` is not used. */
+  content?: ReactNode;
+  /** Shorthand title when `IdsTooltipTitle` is not used. */
+  title?: ReactNode;
   children: ReactNode;
   /** `side` in design spec. Default `top`. */
   side?: "top" | "bottom" | "left" | "right";
@@ -37,6 +40,9 @@ export function IdsTooltip({
   onOpenChange,
   onClose,
 }: IdsTooltipProps) {
+  const { trigger, titleSlot, bodySlot, hasTitleSlot, hasBodySlot } = parseTooltipChildren(children);
+  const resolvedTitle = hasTitleSlot ? titleSlot : title;
+  const resolvedContent = hasBodySlot ? bodySlot : content;
   const resolvedAlign = arrowAlign ?? align ?? "center";
   const [open, setOpen] = useState(false);
   const [manuallyDismissed, setManuallyDismissed] = useState(false);
@@ -84,11 +90,11 @@ export function IdsTooltip({
       [
         styles.popup,
         closable ? styles.popupClosable : styles.popupStandard,
-        title ? styles.popupWithTitle : styles.popupNoTitle,
+        resolvedTitle ? styles.popupWithTitle : styles.popupNoTitle,
       ]
         .filter(Boolean)
         .join(" "),
-    [closable, title]
+    [closable, resolvedTitle]
   );
 
   return (
@@ -100,7 +106,7 @@ export function IdsTooltip({
           }
           render={<span />}
         >
-          {children}
+          {trigger}
         </BaseTooltip.Trigger>
         <BaseTooltip.Portal>
           <BaseTooltip.Positioner
@@ -136,12 +142,12 @@ export function IdsTooltip({
                   {closable ? (
                     <>
                       <div className={styles.contentColumn}>
-                        {title ? (
+                        {resolvedTitle ? (
                           <div className={styles.header}>
-                            <div className={styles.title}>{title}</div>
+                            <div className={styles.title}>{resolvedTitle}</div>
                           </div>
                         ) : null}
-                        <div className={styles.body}>{content}</div>
+                        <div className={styles.body}>{resolvedContent}</div>
                       </div>
                       <button
                         className={styles.close}
@@ -158,12 +164,12 @@ export function IdsTooltip({
                     </>
                   ) : (
                     <>
-                      {title ? (
+                      {resolvedTitle ? (
                         <div className={styles.header}>
-                          <div className={styles.title}>{title}</div>
+                          <div className={styles.title}>{resolvedTitle}</div>
                         </div>
                       ) : null}
-                      <div className={styles.body}>{content}</div>
+                      <div className={styles.body}>{resolvedContent}</div>
                     </>
                   )}
                 </div>
