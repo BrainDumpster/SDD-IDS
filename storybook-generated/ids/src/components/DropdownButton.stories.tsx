@@ -33,11 +33,14 @@ function DropdownButton({
   disabled = false,
   icon,
   items,
-  selectedItem,
+  selectedItem: controlledSelectedItem,
   onSelect,
 }: DropdownButtonProps) {
   const [open, setOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [internalSelectedItem, setInternalSelectedItem] = useState<DropdownItem | null>(null);
+  
+  const selectedItem = controlledSelectedItem !== undefined ? controlledSelectedItem : internalSelectedItem;
 
   const sizeMap = {
     small: "sm",
@@ -77,7 +80,7 @@ function DropdownButton({
             </span>
           )}
           {label && (
-            <span style={{ marginRight: "8px" }}>{label}</span>
+            <span style={{ marginRight: "8px" }}>{selectedItem ? selectedItem.label : label}</span>
           )}
           {!iconOnly && (
             <span
@@ -170,6 +173,7 @@ function DropdownButton({
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={() => {
                   if (!item.disabled) {
+                    setInternalSelectedItem(item);
                     onSelect?.(item);
                     setOpen(false);
                   }

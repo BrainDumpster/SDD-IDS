@@ -43,7 +43,7 @@
 **Anatomy slots:**
 - **Trigger Button:** The button that opens/closes the dropdown menu
   - Leading Icon (optional): Settings/gear icon (settings-gear-detailed, 16x16px)
-  - Button Label: Text content of the button
+  - Button Label: Text content of the button; updates to display selected item's label when an item is selected
   - Dropdown Icon: Caret/arrow indicator (arrow-drop-tri-caret, 10x10px)
 - **Dropdown Menu:** The menu that appears when the button is clicked
   - Menu Container: Wraps all menu options
@@ -237,6 +237,7 @@ All Dark theme states use the same `var(--...)` tokens as Light theme. The token
 - **Disabled state:** Button is non-interactive, no dropdown menu appears
 - **Icon-only variant:** When button has no text label, shows both the leading icon (gear) and dropdown icon (caret)
 - **Multiple dropdowns:** Only one dropdown menu can be open at a time per container
+- **Selection behavior:** Clicking a dropdown menu item selects that item and updates the button label to display the selected item's label. The dropdown menu closes after selection.
 
 ## Composition & API (runtime)
 
@@ -307,7 +308,7 @@ interface DropdownItem {
 **Events:**
 - `onClick`: Triggered when button is clicked (before menu toggle)
 - `onOpenChange`: Triggered when menu opens or closes
-- `onSelect`: Triggered when a menu item is selected
+- `onSelect`: Triggered when a menu item is selected; button label updates to selected item's label
 - `onKeyDown`: Keyboard events for accessibility
 
 **Spec Accurate Design story defaults:**
@@ -403,7 +404,7 @@ DropdownButton (container)
 **Menu navigation:**
 - Arrow Down/Up moves focus between items
 - Home/End jumps to first/last item
-- Enter/Space on item selects it and closes menu
+- Enter/Space on item selects it, updates button label to selected item's label, and closes menu
 
 **Disabled state:**
 - Trigger button is non-interactive
@@ -411,9 +412,11 @@ DropdownButton (container)
 - Visual opacity reduced via tokens
 
 **Controlled vs uncontrolled:**
-- If `open` prop is provided, component is controlled
-- If `onOpenChange` is provided, component reports state changes
-- If neither is provided, component manages internal state
+- If `open` prop is provided, component is controlled for menu open state
+- If `selectedItem` prop is provided, component is controlled for selection state
+- If `onOpenChange` is provided, component reports menu open state changes
+- If `onSelect` is provided, component reports selection changes
+- If neither is provided, component manages internal state for both menu open and selection
 
 ### Accessibility contract
 
