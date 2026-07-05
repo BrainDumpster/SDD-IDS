@@ -18,6 +18,11 @@
   font-weight: 400;
 }
 
+.readOnly.sm {
+  box-sizing: border-box;
+  height: 20px;
+}
+
 .lg {
   height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
@@ -64,9 +69,9 @@
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
 }
 
-/* IDS programme: 3px focus gap per IDS spec. */
+/* IDS programme: 2px focus gap */
 .programmeIds[data-focus] {
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
 /* Synapse programme (`12715:251521`): 4px focus gap. */
@@ -197,7 +202,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0;
-  min-height: 20px;
+  height: 20px;
   padding: 0 var(--padding-padding-2);
   border: var(--border-width-border-default) solid transparent;
   border-radius: var(--corner-radius-radius-2);
