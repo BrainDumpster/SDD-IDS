@@ -103,7 +103,6 @@ export const Destructive: Story = {
         defaultOpen={false}
         onClose={logEvent("onClose")}
       >
-<<<<<<< HEAD
         <IdsModal.Title>Critical</IdsModal.Title>
         <IdsModal.Body description={MODAL_FIGMA_BODY}>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -127,22 +126,6 @@ export const Destructive: Story = {
           </Button>
         </IdsModal.Footer>
       </IdsModal>
-=======
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
-            Type in CONFIRM below to verify the action.
-          </div>
-          <div style={{ width: "300px", "--corner-radius-radius-4": "0" } as React.CSSProperties}>
-            <TextInput
-              ariaLabel="Type CONFIRM"
-              value={confirmText}
-              onValueChange={setConfirmText}
-              placeholder="CONFIRM"
-            />
-          </div>
-        </div>
-      </Dialog>
->>>>>>> master
     );
   },
 };

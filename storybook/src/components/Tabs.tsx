@@ -7,6 +7,7 @@ import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
 import { Icon } from "./Icon";
+import { Badge } from "./Badge";
 import {
   computeTabOverflowMenuItems,
   computeTabOverflowVisibleCount,
@@ -21,6 +22,7 @@ export interface TabItem {
   icon?: ReactNode;
   closable?: boolean;
   disabled?: boolean;
+  badgeCount?: number;
 }
 
 export type TabsSurface = "elevated" | "transparent";
@@ -167,6 +169,9 @@ export function Tabs({
               <span className={styles.tabInner}>
                 {item.icon ? <span className={styles.tabIcon}>{item.icon}</span> : null}
                 <span className={styles.tabLabel}>{item.label}</span>
+                {item.badgeCount !== undefined && item.badgeCount > 0 ? (
+                  <Badge value={item.badgeCount} />
+                ) : null}
               </span>
               {(item.closable ?? isSynapse) ? (
                 <span

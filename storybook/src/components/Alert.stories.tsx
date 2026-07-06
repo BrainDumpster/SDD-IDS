@@ -242,7 +242,6 @@ export const GlobalWithCarousel: Story = {
     display: "global",
     severity: "critical",
     message: "This is an application-level alert that communicates a critical message.",
-    dismissible: false,
     carousel: {
       currentItem: 1,
       totalItems: 4,
@@ -270,7 +269,7 @@ function CarouselInteractiveHost({
         display="global"
         severity={severity}
         message={message}
-        dismissible={severity !== "critical"}
+        dismissible={undefined}
         carousel={{
           currentItem: safeIndex + 1,
           totalItems: total,
@@ -355,6 +354,10 @@ export const GlobalVariantMatrix: Story = {
         <Alert display="global" severity="warning-major" message="Major with link + action + carousel." linkLabel="link." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
         <Alert display="global" severity="warning-minor" message="Minor with link + action + carousel." linkLabel="link." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
         <Alert display="global" severity="informational" message="Info with link + action + carousel." linkLabel="link." actionLabel="Action" carousel={{ currentItem: 1, totalItems: 4 }} />
+      </div>
+      <div style={{ display: "grid", gap: 16 }}>
+        <Alert display="global" severity="critical" message="Critical with carousel (dismiss visible)." carousel={{ currentItem: 1, totalItems: 4 }} />
+        <Alert display="global" severity="critical" message="Critical with carousel + link (dismiss visible)." linkLabel="link." carousel={{ currentItem: 1, totalItems: 4 }} />
       </div>
     </div>
   ),

@@ -42,15 +42,15 @@ Deterministic slot order (left → right):
 - **SWID group:** inline flex, gap `var(--spacing-space-8)`; copy control **14×14px** hit target (expand focus ring per a11y contract).
 - **Time group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom (Figma asymmetric), `var(--padding-padding-16)` left, `var(--padding-padding-8)` right; clock icon **16×16px**.
 - **Time zone group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom, `var(--padding-padding-8)` left, `var(--padding-padding-16)` right; globe icon **16×16px**.
-- Typography: **Body 2** medium — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular/medium per Figma pairing.
+- Typography: **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular weight.
 - Sample frame width **1664px** in Figma is reference-only; runtime width follows application shell.
 
 ## Tokens
 ### Typography
-- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral-strong)`
-- Host/SWID values: same size/line-height, `var(--color-text-neutral)`
-- Date/time label: Body 2 medium, `var(--color-text-neutral)`
-- Time zone action label: Body 2 medium, `var(--color-text-brand-strong)`
+- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral-strong)`; gap to values via `var(--spacing-space-2)`
+- Host/SWID values: same size/line-height, regular weight, `var(--color-text-neutral)`
+- Date/time label: Body 2, regular weight, `var(--color-text-neutral)`
+- Time zone action label: Body 2, regular weight, `var(--color-text-brand-strong)`
 
 ### Colors and surfaces
 - Bar background: `var(--color-background-surface-1)`
@@ -188,7 +188,7 @@ FooterRoot
 - `FooterHostName` / SWID labels: `var(--color-text-neutral-strong)`; values `var(--color-text-neutral)`.
 - `FooterCopyControl`: 14px icon via Icon primitive slug `copy`, tint `var(--color-icon-brand-base)`.
 - `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-neutral)`.
-- `FooterDateTimeLabel`: `var(--color-text-neutral)`, Body 2 medium.
+- `FooterDateTimeLabel`: `var(--color-text-neutral)`, Body 2 regular weight.
 - `FooterTimeZoneIcon`: slug `world-globe`, 16px, `var(--color-icon-brand-base)`.
 - `FooterTimeZoneAction`: `var(--color-text-brand-strong)`; hover `var(--color-text-link-brand-base)` with underline.
 

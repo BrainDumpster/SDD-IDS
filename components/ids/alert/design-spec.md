@@ -201,7 +201,7 @@ The canonical slot trees are under **Anatomy → Child components — determinis
 - Carousel rail: **absolutely positioned** — `position: absolute; top: -1px; bottom: -1px; left: -1px; width: 132px`; carries `border: var(--border-width-border-1) solid; border-color: inherit` matching the root severity border on all 4 sides.
 - Content row: vertical padding `var(--padding-padding-10)`, gap `var(--spacing-space-8)`.
 - Actions row — two states:
-  - **Dismiss-only** (default): `align-items: flex-start; padding: 14px var(--padding-padding-16)`.
+  - **Dismiss-only** (default): `align-items: flex-start; padding: var(--padding-padding-14) var(--padding-padding-16)`.
   - **With action** (`data-has-action="true"`): `align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
   - `gap: var(--spacing-space-16)` applies in both states.
 - Status icon: `16×16`; carousel/dismiss chevrons: `12×12` (via icon `style` prop; button wrapper is `width: auto; height: auto; padding: 0`, not a fixed `24×24` box).
@@ -214,8 +214,8 @@ The canonical slot trees are under **Anatomy → Child components — determinis
   - Detailed row references: `631px` (`42903:139032` family), runtime still container-driven.
 - **Accent rail treatment:** default is `box-shadow: inset 4px 0 0 0 var(--inline-rail)` where `--inline-rail` is the severity solid alerting background token.  
   `warning-minor` uses a dedicated `::before` pseudo-element with the same solid minor fill plus warning-accessible edge stroke token.
-- **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
-- **Detailed** (`density: detailed`): height is content-driven (no `min-height`); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
+- **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: var(--scale-40); align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
+- **Detailed** (`density: detailed`): `min-height: 68px` (Figma reference frame `1000×68`; width remains container-driven); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
 - **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
 - **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message compact = **Body 2** `font-weight: 400`; message detailed = **Body 2** `font-weight: 500`; text color `var(--color-static-gray-900)`.
 - **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
@@ -432,7 +432,7 @@ Per-slot style contract:
 Asset resolution + bundling contract:
 
 - Resolve icons from `assets/icons/<shapeName>.svg` (or project bundler equivalent).
-- Global status icons and inline solid icons use the slug map in **Tokens / States → Global**; carousel chevrons use `chev-left-thick` / `chev-right-thick` (or project equivalents documented in implementation header).
+- Global status icons and inline solid icons use the slug map in **Tokens / States → Global**; carousel chevrons use `chev-left-16` / `chev-right-16`.
 - **Do not embed standalone inline `<svg>` factories** in generated Alert modules. Exception: `warning-minor` global uses `variant="inline"` routed through the shared `Icon` component + `iconInlineRegistry.ts` — this is acceptable because it still composes through the system `Icon` primitive; the registry handles SVG injection and class-based tinting (`.st0`/`.st1` → `var(--color-icon-black)`, `.st2` → `var(--color-icon-white)`).
 
 Behavior contract:
@@ -517,63 +517,60 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 ## Implementation Notes - Global Alert
 
 **Layout & structure**
-- **Global root**: no `min-height`; use `align-items: flex-start` and no `gap`
-- **Carousel rail**: use `position: absolute; top: -1px; bottom: -1px; left: -1px; width: 132px` so the rail overlaps the root border. Add a full 4-side border with `border-color: inherit` to match the root severity color. Offset `.globalContent` with `padding-left: 148px` when carousel is present
-- **Actions trailing area**: two states — dismiss-only uses `align-items: flex-start; padding-block: 14px`; with-action uses `align-items: center; padding-block: 8px`. Use `data-has-action` attribute to switch between them
-- **Dismiss button and carousel prev/next buttons**: use `width: auto; height: auto; padding: 0` so the button wrapper does not exceed the `12×12px` icon size
+- **Global root**: no `min-height`; `align-items: flex-start`; no `gap`. Non-carousel adds `padding-left: var(--padding-padding-20)` via `:not([data-carousel="true"])` selector
+- **Carousel rail**: `position: absolute; top: -1px; bottom: -1px; left: -1px; width: 132px; gap: var(--spacing-space-24)` — overlaps root border on all 4 sides. Full `border: var(--border-width-border-1) solid; border-color: inherit` matches the root severity color. `.globalContent` gets `padding-left: 148px` when carousel is present
+- **Carousel chevrons**: `chev-left-16` / `chev-right-16` via `variant="img"`; auto-sized to icon (no wrapper width/height)
+- **Carousel count**: `font-weight: 400; white-space: nowrap` — color varies by severity (see Colors)
+- **Actions trailing area** (`.globalActions`): driven by `data-has-action` attribute — `false` → `align-items: flex-start; padding-block: var(--padding-padding-14)`; `true` → `align-items: center; padding-block: var(--padding-padding-8)`. Both states use `padding-inline: var(--padding-padding-16)`
+- **Dismiss button**: `padding: var(--padding-padding-10); margin: calc(-1 * var(--padding-padding-10))` — creates `var(--scale-32)` hit area around the `var(--scale-12)` icon; negative margin cancels the padding for layout so surrounding spacing is unaffected
 
 **Colors**
-- **Informational background**: use `var(--color-background-alerting-info)` directly
-- **Dismiss icon color**: critical and informational use `var(--color-icon-white)`; both warning severities use `var(--color-icon-black)`
-- **Warning-major message text**: use `var(--color-text-black)`
-- **Carousel count color**: always `var(--color-text-white)` on all severities — the count sits inside the carousel rail whose background is the strong token (e.g. `var(--color-background-alerting-major-strong)`), not the root background. Do **not** inherit from root; set `color: var(--color-text-white)` explicitly on `.globalCarouselCount`
+- **Dismiss icon** — critical & informational: `color: var(--color-icon-white)` + `filter: brightness(0) invert(1)` on icon; warning-major & warning-minor: `color: var(--color-icon-black)` + `filter: none`
+- **Action button** — critical & informational: `border-color: var(--color-border-white); color: var(--color-text-white)`; warning-major & warning-minor: `border-color: var(--color-border-black); color: var(--color-text-black)`
+- **Warning-minor root color**: set `color: var(--color-text-black)` on root — warning-minor background is light enough to require black text throughout. Warning-major root uses `color: var(--color-text-white)` (white text on orange); only its action button and dismiss are overridden to black via per-severity selectors
+- **Carousel count**: `color: var(--color-text-white)` for critical, warning-major, and informational (dark rail backgrounds). Override to `color: var(--color-text-black)` for warning-minor — its rail background (`color-background-alerting-minor-strong`) is light, matching the black chevron treatment
 
 **Icons**
-- **Critical**: use `status-critical-square-solid-ko` with `variant="img"`. The SVG fill is white; the X mark is a cutout that reveals the red background
-- **Warning-major**: use `status-error-diamond-solid-ko` with `variant="mask"` and `color="var(--color-icon-white)"`. The outer diamond is masked white; the dash cutout reveals the orange background
-- **Warning-minor**: use `status-warn-tri-solid` with `variant="inline"`. Register in `iconInlineRegistry.ts` via `warnMinorAlertIcon()`:
-  - Remove the `<style>` block to avoid CSS class collisions when multiple inline SVGs are on the same page
-  - Apply `style="fill:var(--color-icon-black)"` to `.st0` and `.st1` (the triangle)
-  - Apply `style="fill:var(--color-icon-white)"` to `.st2` (the exclamation mark `<rect>` and `<path>`)
-  - Strip `width`/`height` from the root `<svg>` only — do not touch child elements like `<rect>`
-- **Informational**: use `info-circ-solid-ko` with `variant="img"`. The SVG fill is white; the i mark is a cutout that reveals the blue background
+- **Critical**: `status-critical-square-solid-ko`, `variant="img"` — white fill, X cutout reveals red background
+- **Warning-major**: `status-error-diamond-solid-ko`, `variant="mask"`, `color="var(--color-icon-white)"` — diamond masked white, dash cutout reveals orange
+- **Warning-minor**: `status-warn-tri-solid`, `variant="inline"` — register in `iconInlineRegistry.ts` via `warnMinorAlertIcon()`: strip `<style>` block, apply `fill:var(--color-icon-black)` to `.st0`/`.st1` (triangle), `fill:var(--color-icon-white)` to `.st2` (exclamation), strip root `<svg>` `width`/`height` only
+- **Informational**: `info-circ-solid-ko`, `variant="img"` — white fill, i-mark cutout reveals blue background
 
 **Typography**
-- **Message and action button**: `font-weight: 500`
-- **Link and carousel counter**: `font-weight: 400`
+- **Message, action button, link, carousel counter**: `font-weight: 400`
 
 **Dismiss visibility logic**
-- **`showDismiss` for critical**: use `(dismissible ?? true) && (severity !== "critical" || (showCarousel && !showAction))`. The critical constraint always applies — passing `dismissible={true}` cannot force dismiss on when there is an action button. `dismissible={false}` can still hide dismiss on any severity
+- `showDismiss` = `(dismissible ?? true) && (severity !== "critical" || (showCarousel && !showAction))`
+- Only **carousel** and **carousel + link** critical variants show dismiss (carousel present, no action). All other critical variants (plain, link-only, action, carousel + action) do not. `dismissible={false}` suppresses dismiss on any severity.
 
 ---
 
 ## Implementation Notes - Inline Alert
 
 **Layout & structure**
-- **Root**: `gap: var(--spacing-space-12)` between `.inlineMain` and `.inlineTrailing`
-- **`.inlineText`**: `padding-right: var(--padding-padding-16)`; no `gap` between children
-- **`.inlineTitleRow`** (detailed with title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title uses `flex: 1 1 auto; min-width: 0`; action button uses `flex-shrink: 0`
-- **`.inlineTrailing`**: `gap: var(--spacing-space-16)` between outlined action and dismiss when both render in trailing (compact + detailed)
-- **Compact `.inlineTrailing`**: `align-items: center; height: 40px; padding: var(--padding-padding-8) var(--padding-padding-16)` (with action: `padding-block: var(--padding-padding-8)`)
+- **Root**: `display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-space-12); width: 100%; box-sizing: border-box; padding-left: var(--padding-padding-20)`. Density class adds `min-height`: compact → `var(--scale-40)`; detailed → `68px`
+- **`.inlineMain`**: `flex: 1 1 auto; display: flex; align-items: flex-start; gap: var(--spacing-space-8)`. Compact adds `padding-block: var(--padding-padding-10); padding-right: var(--padding-padding-8)`; detailed adds `padding-block: var(--padding-padding-12)`
+- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding-right: var(--padding-padding-16)` — no gap between title row and message
+- **`.inlineTitleRow`** (detailed + title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title: `flex: 1 1 auto; min-width: 0`; action button: `flex-shrink: 0`
+- **`.inlineTrailing`**: `display: flex; flex-shrink: 0; align-items: flex-start; justify-content: flex-end; gap: var(--spacing-space-16)`
+- **Compact `.inlineTrailing`**: `align-items: center; height: var(--scale-40); padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16)`
 - **Detailed `.inlineTrailing`**: `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`
-- **Detailed `.inlineActionOutlined`**: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — action only; dismiss position unchanged
-- **Action button placement**: compact → inside `.inlineTrailing`; detailed with title → inside `.inlineTitleRow` alongside the title. Use `showTitle && showAction` to determine placement
+- **Detailed trailing action offset**: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` on `.inlineTrailing .inlineActionOutlined` only — dismiss (x) position unchanged
+- **Action button placement**: `showTitle && showAction` → render action inside `.inlineTitleRow` (detailed only); otherwise render in `.inlineTrailing`
 - **`showTrailing`**: `(!showTitle && showAction) || showDismiss`
+- **Dismiss button**: `padding: var(--padding-padding-10); margin: calc(-1 * var(--padding-padding-10))` — `var(--scale-32)` hit area around `var(--scale-12)` icon; negative margin keeps surrounding spacing unaffected
 
 **Typography**
-- **Title** (`inlineTitle`): `font-weight: 500`
-- **Message compact**: `font-weight: 400`
-- **Message detailed**: `font-weight: 500`
-- **Action button**: `font-weight: 500`
+- **All text elements** (title, message, action button): `font-weight: 400`
 
 **Action button tokens**
 - **Border**: `var(--color-border-brand-base)`
 - **Text color**: `var(--color-text-brand-strong)`
 
 **Severity tokens**
-- **`--inline-rail` and `--inline-alert-icon`**: use direct tokens with no fallback — `var(--color-background-alerting-info)`, `var(--color-background-alerting-success)`, etc.
-- **`box-shadow`**: `inset 4px 0 0 0 var(--inline-rail)`
+- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; `box-shadow: inset 4px 0 0 0 var(--inline-rail)` for all except warning-minor
+- **Warning-minor rail**: uses `::before` pseudo-element with `position: absolute; left: 0; top: 0; bottom: 0; width: 4px` instead of `box-shadow` (Figma warning-accessible stroke requirement); `box-shadow: none` on root
 
 **Dismiss visibility logic**
-- **`showDismiss` for critical**: use `(dismissible ?? true) && severity !== "critical"`. Critical inline never has dismiss regardless of action
+- `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props
 

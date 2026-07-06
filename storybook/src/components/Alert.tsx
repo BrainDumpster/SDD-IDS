@@ -62,11 +62,11 @@ export type AlertProps =
       carousel?: never;
     });
 
-const globalSeverityToIcon: Record<AlertGlobalSeverity, string> = {
-  critical: "status-critical-square",
-  "warning-major": "status-error-diamond",
-  "warning-minor": "status-warn-tri",
-  informational: "info-circ",
+const globalSeverityToIcon: Record<AlertGlobalSeverity, { slug: string; variant: "img" | "mask" | "inline"; color?: string }> = {
+  critical: { slug: "status-critical-square-solid-ko", variant: "img" },
+  "warning-major": { slug: "status-error-diamond-solid-ko", variant: "mask", color: "var(--color-icon-white)" },
+  "warning-minor": { slug: "status-warn-tri-solid", variant: "inline" },
+  informational: { slug: "info-circ-solid-ko", variant: "img" },
 };
 
 const inlineSeverityToIcon: Record<AlertInlineSeverity, string> = {
@@ -173,8 +173,9 @@ function AlertGlobalView(
       <div className={styles.globalContent}>
         <div className={styles.globalIconWrap}>
           <Icon
-            shapeName={globalSeverityToIcon[severity]}
-            variant="img"
+            shapeName={globalSeverityToIcon[severity].slug}
+            variant={globalSeverityToIcon[severity].variant}
+            color={globalSeverityToIcon[severity].color}
             className={styles.globalIcon}
           />
         </div>
@@ -195,7 +196,7 @@ function AlertGlobalView(
         </p>
       </div>
 
-      <div className={styles.globalActions}>
+      <div className={styles.globalActions} data-has-action={showAction ? "true" : "false"}>
         {showAction ? (
           <button type="button" className={styles.globalActionButton} onClick={onAction}>
             {actionLabel}
@@ -260,7 +261,8 @@ function AlertInlineView(
 
   const densityClass =
     density === "detailed" ? styles.inlineDensityDetailed : styles.inlineDensityCompact;
-  const showTrailing = showAction || showDismiss;
+  const actionInTitleRow = showTitle && showAction;
+  const showTrailing = (!showTitle && showAction) || showDismiss;
 
   return (
     <div
@@ -278,7 +280,20 @@ function AlertInlineView(
           />
         </span>
         <div className={styles.inlineText}>
-          {showTitle ? <p className={styles.inlineTitle}>{title}</p> : null}
+          {showTitle ? (
+            <div className={styles.inlineTitleRow}>
+              <p className={styles.inlineTitle}>{title}</p>
+              {actionInTitleRow ? (
+                <button
+                  type="button"
+                  className={styles.inlineActionOutlined}
+                  onClick={onAction}
+                >
+                  {actionLabel}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
           <p className={styles.inlineMessage}>
             {messageNode}
             {showLink ? " " : null}
@@ -299,9 +314,9 @@ function AlertInlineView(
       {showTrailing ? (
         <div
           className={styles.inlineTrailing}
-          data-has-action={showAction ? "true" : "false"}
+          data-has-action={(!showTitle && showAction) ? "true" : "false"}
         >
-          {showAction ? (
+          {!showTitle && showAction ? (
             <button
               type="button"
               className={styles.inlineActionOutlined}
