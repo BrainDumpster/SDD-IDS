@@ -1,0 +1,347 @@
+@import "../../../../components/ids-theme.css";
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.root {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-16);
+  height: 48px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  padding: var(--padding-padding-8) calc(var(--padding-padding-16) * 2) var(--padding-padding-8)
+    var(--padding-padding-24);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}
+
+.rootNone {
+  background: transparent;
+}
+
+.rootGray {
+  background: var(--color-background-surface-1);
+}
+
+.rootWhite {
+  background: var(--color-background-component);
+}
+
+.root.rootEmbedded {
+  border: 0;
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+}
+
+.resultsGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+}
+
+.label {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}
+
+.dropdownWrap {
+  position: relative;
+}
+
+.dropdownTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-10);
+  width: 90px;
+  height: 32px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  padding: 6px var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.dropdownTrigger:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.dropdownTrigger:focus-visible,
+.iconButton:focus-visible,
+.dropdownOption:focus-visible,
+.pageInput:focus-visible,
+.pageOffsetTrigger:focus-visible,
+.pageOffsetOption:focus-visible {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.dropdownTrigger:disabled,
+.iconButton:disabled {
+  cursor: not-allowed;
+}
+
+.dropdownTrigger:disabled ::ng-deep .caretIcon {
+  color: var(--color-icon-disabled);
+}
+
+.dropdownTrigger:disabled {
+  background: var(--color-background-gray-lighter);
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
+
+::ng-deep .caretIcon {
+  color: var(--color-icon-neutral);
+}
+
+/* Position (`fixed` + `top`/`left`/`width`) set inline when portaled to `document.body` */
+.dropdownMenu {
+  width: 90px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
+  background: var(--color-background-component);
+  list-style: none;
+  margin: 0;
+  padding: 0 1px;
+  overflow: clip;
+  box-shadow:
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+}
+
+.dropdownMenuPortaled {
+  z-index: 10000;
+}
+
+.dropdownMenuBelow {
+  border-top: none;
+}
+
+.dropdownMenuAbove {
+  border-bottom: none;
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+}
+
+.dropdownOptionWrap {
+  margin: 0;
+  padding: 0;
+}
+
+.dropdownOption {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  border-top: var(--border-width-border-default, 1px) solid transparent;
+  border-bottom: var(--border-width-border-default, 1px) solid transparent;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  text-align: left;
+  padding: 10px var(--padding-padding-24) 10px var(--padding-padding-16);
+  min-height: 40px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.dropdownOption:hover {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+}
+
+.dropdownOption:active {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+}
+
+.dropdownOptionSelected {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+}
+
+.pageNavGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-icon-brand-base);
+  cursor: pointer;
+}
+
+.iconButton:disabled {
+  color: var(--color-icon-disabled);
+}
+
+::ng-deep .navIcon {
+  color: currentColor;
+}
+
+.pageInputWrap {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 40px;
+  height: 32px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  padding: 5px 0 6px;
+}
+
+.pageInput {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-neutral);
+  text-align: center;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  padding: 0;
+}
+
+.pageInput:focus {
+  outline: 0;
+}
+
+.pageOffsetWrap {
+  position: relative;
+}
+
+.pageOffsetTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-10);
+  width: 40px;
+  height: 32px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  padding: 5px 6px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.pageOffsetTrigger:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.pageOffsetTrigger:disabled {
+  background: var(--color-background-gray-lighter);
+  border-color: var(--color-border-disabled);
+  color: var(--color-text-disabled);
+}
+
+.pageOffsetTrigger:disabled ::ng-deep .pageOffsetCaretIcon {
+  color: var(--color-icon-disabled);
+}
+
+::ng-deep .pageOffsetCaretIcon {
+  color: var(--color-icon-neutral);
+}
+
+/* Position (`fixed` + `top`/`left`/`width`) set inline when portaled to `document.body` */
+.pageOffsetMenu {
+  width: 40px;
+  max-height: 160px;
+  overflow-y: auto;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: none;
+  background: var(--color-background-component);
+  list-style: none;
+  margin: 0;
+  padding: 0 1px;
+  overflow-x: clip;
+  box-shadow:
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+}
+
+.pageOffsetMenuPortaled {
+  z-index: 10000;
+}
+
+.pageOffsetMenuBelow {
+  border-top: none;
+}
+
+.pageOffsetMenuAbove {
+  border-bottom: none;
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+}
+
+.pageOffsetOptionWrap {
+  margin: 0;
+  padding: 0;
+}
+
+.pageOffsetOption {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  border-top: var(--border-width-border-default, 1px) solid transparent;
+  border-bottom: var(--border-width-border-default, 1px) solid transparent;
+  background: var(--color-background-component);
+  color: var(--color-text-neutral);
+  text-align: right;
+  padding: 10px 6px;
+  min-height: 40px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.pageOffsetOption:hover {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+}
+
+.pageOffsetOption:active {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+}
+
+.pageOffsetOptionSelected {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+}
+
+.countText {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}

@@ -26,12 +26,14 @@
 - **Column header title row (text + optional checkbox + sort, spacing):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114673&m=dev — node id **`37721:114673`**
 - **`.Filter for table` control (header filter hit target + icon frame):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114677&m=dev — instance **`37721:114677`** (main component **`37721:114635`**)
 - **Data Grid — main variants / density matrix (container-sized frames):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev — node id **`37721:112482`** (`Data Grid - Main`)
+- **Data Grid library page (pagination in context):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=48122-183847&m=dev — node id **`48122:183847`**; embedded pagination **`47962:168577`**
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`37721:115949`** (column-freeze scenario), **`37721:114144`** (freeze boundary gradient/shadow), **`37721:114143`** (scrollable pane inset), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time)
+- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`37721:115949`** (column-freeze scenario), **`37721:114144`** (freeze boundary gradient/shadow), **`37721:114143`** (scrollable pane inset), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time), **`48122:183847`** (datagrid library page), **`47962:168306`** (table shell border), **`47962:168577`** (embedded pagination footer), **`47962:168680`** (detail panel sibling)
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`); row/cell frame re-verified with `get_design_context` (**`disableCodeConnect: true`**) on **`37721:114580`**; column header **`37721:114663`**, title row **`37721:114673`**, filter control **`37721:114677`** re-verified same way **2026-05-13**; rows/columns layout **`37721:113987`** **2026-05-14**; column freeze **`37721:115949`**, boundary **`37721:114144`**, sort states **`37721:114646`** **2026-06-05**
-- Last verified: **2026-06-05** (scroll/freeze blueprint + sort icon states `37721:114646`; column-freeze `37721:115949`; freeze boundary `37721:114144`; implementation parity `IdsDataGrid.tsx`); prior **2026-05-31** (date filter `37822:90838`, date-time `44360:181306`)
+- Last verified: **2026-07-06** (table shell + pagination borders `48122:183847` / `47962:168306` / `47962:168577`); prior **2026-06-05** (scroll/freeze blueprint + sort icon states `37721:114646`; column-freeze `37721:115949`; freeze boundary `37721:114144`; implementation parity `IdsDataGrid.tsx`); prior **2026-05-31** (date filter `37822:90838`, date-time `44360:181306`)
 - Nested specs (codegen must delegate, not reimplement): `components/ids/checkbox/design-spec.md`, `components/ids/date-picker/design-spec.md`, `components/ids/time-picker/design-spec.md`, `components/ids/radio-button/design-spec.md`, `components/ids/pagination/design-spec.md` (footer), detail panel datagrid attach mode (see `IdsDetailPanel` / product `def-new-dg-detail`)
-- Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionRadio.tsx`, `IdsDataGridSelectionCheckbox.tsx`
+- Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridComposition.tsx`, `IdsDataGridCompositionStory.tsx`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionRadio.tsx`, `IdsDataGridSelectionCheckbox.tsx`
+- Angular composition port: `storybook-angular/src/components/ids-datagrid/` (`ids-datagrid` → projected columns/rows/cells)
 - **Codegen-critical layout:** **Chrome columns & table slack (codegen-critical)** under **Layout & Measurements → Table Layout Algorithm** — required for generators (grow `auto`, chrome **48**/**40** three-layer lock, anti-patterns).
 - Implementation guide: [`components/ids/datagrid/README.md`](./README.md) (regeneration, column `width`, Storybook, tips)
 - Generated Storybook output: `storybook-generated/ids/src/components/Datagrid.stories.tsx` (title **`Spec Generated/IDS/Datagrid`**, primary story **`Spec Accurate Design`**)
@@ -93,68 +95,63 @@ Child components / projection slots map to framework wrappers; **geometry, token
 4. `DatagridFooter` / `DatagridPaginationSlot` (outside vertical scroll clip)
 5. optional `DatagridDetailPanelSlot` — **sibling** of grid shell (`flex` row: grid **`flex: 1`** + panel fixed rail)
 
-### Angular composition (`def-dg` family) — validated mapping
+### Composition pattern (canonical API)
 
-Angular uses **declarative child components** with **content projection**. The mapping below is the **canonical** product shape; generated Angular must preserve **slot order** and **ownership**:
+Preferred pattern: **projected children** inside `DatagridRoot` — not aggregate-only `columns[]` / `rows[]` props.
 
-```html
-<def-new-dg-detail> <!-- optional; when detailsPanel attached -->
-  <def-dg
-    [rowSelection]="..."
-    [headerColorAndBorder]="..."
-    (rowSelectionChange)="..."
-  >
-    <!-- optional action bar / refresh — projected above grid -->
-    <def-dg-column *ngFor="let col of columns" [field]="col.key" [sortable]="..." [freezable]="...">
-      <ng-container defColumnTitle>{{ col.title }}</ng-container>
-      <def-datagrid-filter *ngIf="col.filterable">
-        <!-- ONE of (composed per column requirement):
-             def-dg-text-filter              — Default text search
-             def-dg-combobox-multiselect     — Combobox-Multiselect (search + checkboxes)
-             def-dg-combobox-singleselect    — Combobox-SingleSelect (search + option list)
-             def-dg-dropdown-singleselect    — Dropdown-SingleSelect (option list, no search)
-             def-dg-dropdown-multiselect     — Dropdown-MultiSelect (checkboxes, no search)
-             def-dg-numeric-filter           — Numeric (operator radio + value fields)
-             custom                          — any product-defined filter panel -->
-        <def-dg-text-filter />
-      </def-datagrid-filter>
-    </def-dg-column>
-    <def-datagrid-row *ngFor="let row of rows" (rowClick)="..." [selectable]="...">
-      <def-dg-cell *ngFor="let col of columns" [field]="col.key">
-        <!-- projected cell template -->
-      </def-dg-cell>
-    </def-datagrid-row>
-    <def-datagrid-footer>
-      <def-dg-pagination />
-    </def-datagrid-footer>
-  </def-dg>
-  <def-new-dg-detail-pane *ngIf="detailOpen">
-    <!-- row detail template -->
-  </def-new-dg-detail-pane>
-</def-new-dg-detail>
+```
+DatagridRoot [rowSelection?, selectionMode?, withDetailPanel?, headerColorAndBorder?, …]
+  DatagridColumn [field, title, sortable?, filterable?, width?, …]
+    DatagridColumnTitle? (optional projected title override)
+    DatagridFilter? (optional)
+      FilterPanelBody (text / multiselect / numeric / date / custom)
+  DatagridRow [rowId] × N
+    DatagridCell [field] × per column
+  DatagridFooter?
+    DatagridPaginationSlot (IDS Pagination)
+  DatagridDetailShell? (optional wrapper when detail panel attached)
+    DatagridDetailPanelSlot
 ```
 
-| Spec slot | Angular element | Codegen notes |
+**Assessment:** Child-component decomposition is **compatible** with framework-agnostic codegen when adapters treat `DatagridColumn` as **metadata + projection** and keep **L-frame / colgroup / sticky / grow-column math** in `DatagridRoot`. Do **not** push table-width or filter-portal logic into individual column components.
+
+| Spec slot | Responsibility |
+|---|---|
+| `DatagridRoot` | Host table + scroll; owns selection model, column order, freeze, settings popup trigger |
+| `DatagridColumn` | Header title, sort, filter toggle, resize handle; **does not** own L-frame portal |
+| `DatagridFilter` | Wrapper for projected `FilterPanelBody` only |
+| `DatagridRow` | Row click, hover/selected state host |
+| `DatagridCell` | Cell projection; ellipsis on text |
+| `SelectionColumn` / `RowSelectionCell` | Grid-owned chrome — **single:** row radio, empty header; **multiple:** row checkbox + header select-all |
+| `SettingsColumn` | Grid-owned (**40px** gear); not a `DatagridColumn` |
+| `DatagridFooter` | Below body scroll; hosts pagination |
+| `DatagridDetailPanelSlot` | Sibling of grid host; row click toggle; not a table column |
+
+### Framework adapter mapping (reference ports)
+
+| Spec slot | Angular (`storybook-angular`) | React (`storybook`) |
 |---|---|---|
-| `DatagridRoot` | `<def-dg>` | Host table + scroll; owns selection model, column order, freeze, settings popup trigger |
-| `DatagridColumnHeader` | `<def-dg-column>` | Header title, sort, filter toggle, resize handle; **does not** own L-frame portal |
-| `FilterPanelBody` | child of `<def-datagrid-filter>` | Projected filter UI only (`def-dg-text-filter`, etc.) |
-| `DatagridRow` | `<def-datagrid-row>` | Row click, hover/selected state host |
-| `DatagridCell` | `<def-dg-cell>` | Cell projection; ellipsis on text |
-| `SelectionColumn` / `RowSelectionCell` | selection column templates | **single:** row radio, empty header; **multiple:** row checkbox + header select-all (IDS Checkbox **16×16**, indeterminate) |
-| `SettingsColumn` | grid-owned (not `def-dg-column`) | **40px** gear column; settings visibility popup from gear |
-| `DatagridFooter` | `<def-datagrid-footer>` + `<def-dg-pagination>` | Pagination below body scroll |
-| `DatagridDetailPanelSlot` | `<def-new-dg-detail>` + `<def-new-dg-detail-pane>` | Row click toggle; not a table column |
+| `DatagridRoot` | `ids-datagrid` | `IdsDataGridComposed` |
+| `DatagridColumn` | `ids-datagrid-column` | `IdsDataGridColumn` |
+| `DatagridFilter` | `ids-datagrid-filter` | `IdsDataGridFilter` |
+| `DatagridRow` | `ids-datagrid-row` | `IdsDataGridRow` |
+| `DatagridCell` | `ids-datagrid-cell` | `IdsDataGridCell` |
+| `DatagridFooter` | `ids-datagrid-footer` | `IdsDataGridFooter` |
+| `FilterPanelBody` | projected in filter slot | `IdsDataGridFilter` children / filter panels |
+| `DatagridDetailPanelSlot` | detail rail on `ids-datagrid` | `IdsDetailPanel` `attachMode="datagrid"` |
+| Multiselect filter host | story host wiring | `IdsDataGridDefaultStoryHost` |
+| Product Angular (`def-dg` family) | `<def-dg>` → `<def-dg-column>` → `<def-datagrid-filter>` → `<def-datagrid-row>` → `<def-dg-cell>` | same slot order as spec |
 
-**Assessment:** Angular child-component decomposition is **compatible** with framework-agnostic codegen **when** adapters treat `<def-dg-column>` as **metadata + projection** and keep **L-frame / colgroup / sticky / grow-column math** in the grid host (same as React `IdsDataGrid`). Do **not** push table-width or filter-portal logic into individual column components.
+Aggregate `columns` / `rows` props remain supported for **story hosts** and migration; composition is the **canonical** documented API.
 
-### React reference implementation
+### React reference implementation (render engine)
 
-| Spec slot | React module | Notes |
+| Concern | React module | Notes |
 |---|---|---|
-| `DatagridRoot` | `IdsDataGrid` | Monolithic table; acceptable reference for Storybook |
-| `FilterPanelBody` | `column.filterPanel` prop | e.g. `IdsDataGridFilterSearchField` |
-| `DatagridDetailPanelSlot` | `IdsDetailPanel` `attachMode="datagrid"` | Sibling in `contentRow` flex |
+| Render engine (props API) | `IdsDataGrid` | Monolithic table; used by composition collector |
+| Composition API | `IdsDataGridComposition.tsx`, `IdsDataGridCompositionStory.tsx` | Collects projected children → `IdsDataGrid` |
+| `FilterPanelBody` | `column.filterPanel` / `IdsDataGridFilter` children | e.g. `IdsDataGridFilterSearchField` |
+| `DatagridDetailPanelSlot` | `IdsDetailPanel` `attachMode="datagrid"` | Sibling in `contentRow` flex; **full** `1px solid var(--color-border-accessible)` per detail-panel spec — do **not** strip to left-only `border-light` |
 | Multiselect filter host | `IdsDataGridDefaultStoryHost` | Wires `filterActive` + Type checkbox filter |
 | Numeric filter host | `IdsDataGridNumericFilterStoryHost` | Wires `numericFilterState` + `IdsDataGridTypeNumericFilterPanel` |
 | Numeric filter panel | `IdsDataGridTypeNumericFilterPanel` | Figma `44360:182265`; model in `IdsDataGridNumericFilter.ts` |
@@ -919,7 +916,7 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
 | `SettingsColumn` | default | header-aligned | `var(--color-border-light)` | **`Icon`** `settings-gear` in `var(--color-icon-neutral)` (`16x16`) |
-| `DatagridFooter` | default | **`var(--color-background-surface-1)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-accessible)` | per IDS Pagination spec |
+| `DatagridFooter` | default | **transparent** (pass-through host) | **none** on host | embedded pagination: **top border only** on `IdsPagination` root |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -941,7 +938,7 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
 | `SettingsColumn` | default | header-aligned | `var(--color-border-light)` | **`Icon`** `settings-gear` in `var(--color-icon-neutral)` (`16x16`) |
-| `DatagridFooter` | default | **`var(--color-background-surface-1)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-accessible)` | per IDS Pagination spec |
+| `DatagridFooter` | default | **transparent** (pass-through host) | **none** on host | embedded pagination: **top border only** on `IdsPagination` root |
 
 Use the same semantic token names in both themes; **do not** hardcode hex — light/dark resolved values come from `components/ids-theme.css` (`html[data-design-system="ids"]` default vs `data-theme="dark"`).
 ## Interactions
@@ -963,6 +960,9 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - radios follow **`components/ids/radio-button/design-spec.md`**; all checkboxes (header + rows) follow **`components/ids/checkbox/design-spec.md`** (**16×16**, indeterminate on select-all when applicable).
   - control **`click`** uses **`stopPropagation`** so row-click / detail-panel handlers are not double-fired.
 - Detail panel (when `withDetailPanel` / `detailsPanel: attached`):
+  - **Placement:** sibling of `.gridWrap` inside `.contentRow` flex row — not a table column.
+  - **Borders:** delegate to `components/ids/detail-panel/design-spec.md` — **full** `1px solid var(--color-border-accessible)` on `DetailPanelRoot`; datagrid host must **not** strip or replace with left-only `border-light`.
+  - **Header band:** align expanded header to **48px** height with datagrid column header row; header bottom rule **`var(--color-border-accessible)`** (or **`var(--color-border-light)`** when `headerColorAndBorder` / styled header band).
   - **Row click** sets the active row and **opens** the attached detail panel if closed.
   - **Row click** on the **same** active row again **closes** the panel (toggle); clearing active row clears detail content.
   - selection radio / sort / filter / resize controls use **`stopPropagation`** so they do not toggle the panel.
@@ -992,9 +992,29 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - **Selected + press:** overlay **`var(--color-background-brand-light)`** (darker than selected idle).
   - **`verticalBlueLine`:** when enabled, **only** **Selected** and **Selected and Press** render the **4px** **`var(--color-border-brand-base)`** leading indicator; other states omit it.
 - Footer:
-  - Pagination slot attaches IDS Pagination behavior/component.
-  - **Footer background:** `var(--color-background-surface-1)` — both the `.footer` wrapper and the `IdsPagination` component use this token (`IdsPagination background="gray"`). Do **not** use `var(--color-background-component)` for the datagrid footer row.
+  - **Omit `DatagridFooter` / pagination** when pagination is not required: **`totalPages ≤ 1`**, or **`totalPages` not supplied** and client row count fits within **`pageSize`** (or **`pageSize`** omitted / invalid). Show all rows without a footer chrome strip.
+  - When shown, pagination slot attaches IDS Pagination behavior/component.
+  - **Footer host (`.footer` / `DatagridFooter`):** transparent pass-through — **no** background or border on the wrapper.
+  - **Pagination root:** `background="gray"` → `var(--color-background-surface-1)`; **`embeddedInDatagrid={true}`** / `[embeddedInDatagrid]="true"` → **`rootEmbedded`** (top border only — no left/right/bottom; shell owns those edges via `.contentRow` / `.gridWrap`).
 ## Composition & API (runtime)
+
+Canonical machine-readable mirror: `component-contracts/ids/datagrid.contract.ts`.
+
+**Preferred pattern:** projected children inside `DatagridRoot` — not aggregate-only `columns[]` / `rows[]`.
+
+```
+DatagridRoot [rowSelection?, selectionMode?, withDetailPanel?, …]
+  DatagridColumn [field, title, sortable?, filterable?, width?, …]
+    DatagridFilter? → FilterPanelBody
+  DatagridRow [rowId] × N
+    DatagridCell [field]
+  DatagridFooter? → DatagridPaginationSlot
+```
+
+Angular reference: `ids-datagrid` → `ids-datagrid-column` / `ids-datagrid-row` / `ids-datagrid-cell` (`storybook-angular`, port 6007).  
+React reference: `IdsDataGridComposed` → `IdsDataGridColumn` / `IdsDataGridRow` / `IdsDataGridCell` (`storybook/src/components/IdsDataGridComposition.tsx`).
+
+### Root (`DatagridRoot`) — aggregate types (migration / story hosts)
 
 Framework-agnostic types (map to TypeScript / Angular inputs / Vue props):
 
@@ -1028,6 +1048,7 @@ interface DatagridProps {
   showSingleSelectionRadio?: boolean;   // default true; single only — false hides radio column
   withDetailPanel?: boolean;                // default false (spec story: true)
   pageSize?: number;                        // client page slice; default product-defined
+  totalPages?: number | null;               // server-side page count; omit for client-derived count
   readOnly?: boolean;                       // default false → brand hover; true → surface-1 hover
   rowVerticalIndicator?: boolean;           // default false → 4px leading bar when selected
   headerColorAndBorder?: boolean;           // default true → Figma colorAndBorder
@@ -1081,7 +1102,8 @@ Generators **must** implement this block for **all** frameworks. Reference: `Ids
 | Element | Contract |
 |---|---|
 | `DatagridShell` (`.shell`) | **`width: 100%`**, **`height: 100%`**, **`min-height: 0`**, **`min-width: 0`** — fills parent container/page (**`37721:112482`**); height **not** driven by row count |
-| `DatagridGridWrap` (`.gridWrap`) | flex column, **`flex: 1`**, **`min-height: 0`**, **`width: 100%`** |
+| `DatagridGridWrap` (`.gridWrap`) | flex column, **`flex: 1`**, **`min-height: 0`**, **`width: 100%`**; with detail panel: **Table shell** — **`1px solid var(--color-border-accessible)`**, **`margin-right: -1px`** (Figma **`47962:168306`**) |
+| `DatagridContentRow` (`.contentRow`) | flex row; **without detail panel:** **`1px solid var(--color-border-accessible)`** outer shell; **with detail panel:** pass-through (table + detail panel each own border) |
 | `DatagridFooter` | **`flex: 0 0 auto`** — outside vertical scroll clip; **`var(--color-background-surface-1)`** |
 | Storybook / demo host | **`width: 100%`**, **`height: 100dvh`** (or **`100%`** of app shell), **`minHeight: 0`** — **no** arbitrary **`max-width`** on the grid host |
 
@@ -1145,6 +1167,18 @@ DatagridScrollHost
 - **Visibility:** always shown (product decision; Figma default notes hide-on-header-hover — **do not** implement hide-on-default in codegen unless product overrides).
 
 ### Deterministic structure
+
+**Composition (canonical):**
+
+```
+DatagridRoot
+  DatagridColumn* → optional DatagridFilter → FilterPanelBody
+  DatagridRow* → DatagridCell* (per column field)
+  DatagridFooter? → DatagridPaginationSlot
+  DatagridDetailShell? → DatagridDetailPanelSlot (sibling, not <col>)
+```
+
+**Render tree (all frameworks):**
 
 1. `DatagridRoot` (`DatagridShell` → `DatagridGridWrap` → `DatagridScrollHost`)
 2. `DatagridHeaderBand` (`<thead>` tables / sections — portaled **`FilterMenuLayer`** per open filter)
@@ -1345,8 +1379,8 @@ Variant matrix:
   - [ ] settings column remains fixed `40px` and non-scrollable.
   - [ ] selection/settings pinned behavior is preserved during horizontal scrolling.
   - [ ] reorder/filter/sort/selection events are emitted; **`onColumnResize`** when **`columnResizeEnabled`** is on.
-  - [ ] detail panel attaches and opens via row click when configured.
-  - [ ] footer pagination integration uses IDS Pagination slot.
+  - [ ] detail panel attaches with **full accessible border** (no host left-only `border-light` override); header aligns to **48px** when expanded.
+  - [ ] footer pagination uses IDS Pagination with **`embeddedInDatagrid`** / **`rootEmbedded`** (top border only).
   - [ ] **Grow column:** `growColumnKey` = last data column (unified) or last **scrollable** data column (freeze); sole `<col width="auto">` in that slice; settings **`40px`** in dedicated pane (freeze) or trailing chrome (unified); selection/settings **`th`** = **48**/**40**.
   - [ ] **Header ellipsis:** title `display: block` + `text-overflow: ellipsis`; `title` attribute on truncated labels.
   - [ ] **Body padding:** `10px 12px 10px 16px` on data cells; settings body **`12px 0`** (Figma `37721:114944`); selection body **`12px 16px`**.
@@ -1381,13 +1415,14 @@ Variant matrix:
 Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven pipelines) must:
 
 1. **Read** `components/ids/datagrid/design-spec.md` as sole source of truth; emit `spec_hash` in `storybook-generated/ids/src/spec-contracts/datagrid.spec-layer-hash.json`.
-2. **Import** reference implementation from `storybook/src/components/IdsDataGrid` (do not fork layout logic into the story file).
+2. **Import** composition story from `storybook/src/components/IdsDataGridCompositionStory` (primary) and render engine from `IdsDataGrid` / `IdsDataGridDefaultStoryHost` for filter/freeze demos (do not fork layout logic into the story file).
 3. **Title:** `Spec Generated/IDS/Datagrid`.
 4. **Required stories:**
 
 | Story export | Purpose | Args override |
 |---|---|---|
-| `SpecAccurateDesign` | Canonical Figma parity (`37721:112482` bounded frame) | spec defaults (see **Composition & API**) |
+| `SpecAccurateDesign` | Canonical Figma parity (`37721:112482` bounded frame) — **composition API** | spec defaults (see **Composition & API**) |
+| `CompositionApi` | Explicit composition markup demo | same as Spec Accurate Design |
 | `HeaderMinimal` | `headerColorAndBorder: false` | `headerColorAndBorder: false` |
 | `ReadOnlyTableHover` | Figma hover-readonly row | `readOnly: true` |
 | `WithoutVerticalSelectionIndicator` | `verticalBlueLine: false` | `rowVerticalIndicator: false` |
@@ -1423,8 +1458,13 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 - **Mask size on filter icon**: the filter SVG has a 12:14 natural ratio; the `Icon` default `mask-size: contain` renders it 12px wide instead of 14×14. Fix: add `.filterIcon span, .filterPopupIconTab span { mask-size: 14px 14px !important; -webkit-mask-size: 14px 14px !important; }` in `IdsDataGrid.module.css` — applies to both the header toggle icon and the open-menu tab icon
 
 **Pagination / Footer**
-- **Background**: use `var(--color-background-surface-1)` for both the `.footer` wrapper in `IdsDataGrid.module.css` and the `IdsPagination` component via `background="gray"` prop in `IdsDataGrid.tsx` — do NOT use `var(--color-background-component)` for the datagrid footer row
-- **Border**: footer has top border `1px solid var(--color-border-accessible)`
+- **Footer host (`.footer`)**: transparent pass-through — no background, no border
+- **Pagination root**: `background="gray"`; pass **`embeddedInDatagrid`** — **top border only** via `rootEmbedded` class
+
+**Table / detail shell borders**
+- **`.contentRow`** (no detail panel): `1px solid var(--color-border-accessible)`
+- **`.gridWrap`** (with detail panel): `1px solid var(--color-border-accessible)`; `margin-right: -1px`
+- **Detail panel**: full accessible border per detail-panel spec
 
 **Filter panels — common issues**
 - **Font-weight**: all filter text elements (labels, inputs, options) use `font-weight: 400` — do NOT use `font-weight: 500`

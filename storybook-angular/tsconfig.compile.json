@@ -24,6 +24,9 @@
     "src/components/ids-tag/**/*.ts",
     "src/components/ids-tooltip/**/*.ts",
     "src/components/ids-segmented-button/**/*.ts",
+    "src/components/ids-datagrid/**/*.ts",
+    "src/components/ids-pagination/**/*.ts",
+    "src/components/ids-detail-panel/**/*.ts",
     "../component-contracts/common/story-meta.ts",
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",
@@ -39,6 +42,10 @@
     "../component-contracts/ids/footer.contract.ts",
     "../component-contracts/ids/tag.contract.ts",
     "../component-contracts/ids/tooltip.contract.ts",
-    "../component-contracts/ids/segmented-button.contract.ts"
+    "../component-contracts/ids/segmented-button.contract.ts",
+    "../component-contracts/ids/datagrid.contract.ts",
+    "../component-contracts/ids/pagination.contract.ts",
+    "../component-contracts/ids/detail-panel.contract.ts",
+    "../component-contracts/synapse/detail-panel.contract.ts"
   ]
 }

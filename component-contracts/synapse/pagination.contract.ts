@@ -1,8 +1,4 @@
-import type {
-  IdsPaginationBackground,
-  IdsPaginationDropdownState,
-  IdsPaginationProps,
-} from "../components/IdsPagination";
+import type { IdsPaginationBackground, IdsPaginationDropdownState } from "../ids/pagination.contract";
 
 /**
  * Synapse Pagination — thin IDS fork; layout, anatomy, and Icon usage inherit IDS baseline.
@@ -33,21 +29,13 @@ export const SYNAPSE_PAGINATION_DROPDOWN_STATES: IdsPaginationDropdownState[] = 
   "expanded-above",
 ];
 
-export const SYNAPSE_PAGINATION_API_DEFAULTS: Pick<
-  IdsPaginationProps,
-  | "currentPage"
-  | "totalPages"
-  | "pageSize"
-  | "pageSizeOptions"
-  | "showPerPage"
-  | "showFirstLast"
-  | "showPageOffset"
-> = {
-  currentPage: 2,
+export const SYNAPSE_PAGINATION_API_DEFAULTS = {
+  currentPage: 1,
   totalPages: 16,
   pageSize: 25,
-  pageSizeOptions: [25, 50, 75, 100],
+  pageSizeOptions: [25, 50, 75, 100] as const,
   showPerPage: true,
   showFirstLast: true,
   showPageOffset: false,
+  background: "gray" as IdsPaginationBackground,
 };
