@@ -39,6 +39,9 @@
 
 .value {
   color: var(--color-text-neutral);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .swidGroup {

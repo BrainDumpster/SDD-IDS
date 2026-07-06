@@ -11,8 +11,8 @@ export const TAG_SIZES = ["small", "large"] as const;
 export type TagSize = (typeof TAG_SIZES)[number];
 
 export const TAG_TONES = [
-  "non-alerting",
-  "info",
+  "none",
+  "informational",
   "success",
   "minor",
   "major",
@@ -20,27 +20,25 @@ export const TAG_TONES = [
 ] as const;
 export type TagTone = (typeof TAG_TONES)[number];
 
-export const TAG_VISUAL_STATES = [
-  "default",
-  "hover",
-  "focus",
-  "error",
-  "disabled",
-] as const;
-export type TagVisualState = (typeof TAG_VISUAL_STATES)[number];
-
 export const TAG_SPEC_ACCURATE_DEFAULTS = {
   label: "Tag",
   type: "read-only" as TagType,
-  tone: "non-alerting" as TagTone,
+  tone: "none" as TagTone,
   size: "small" as TagSize,
-  visualState: "default" as TagVisualState,
   selected: false,
+  disabled: false,
+  error: false,
+  focusVisible: false,
+  focusOnText: false,
   showLabel: false,
   labelPrefix: "Label",
-  closable: false,
-  badgeCount: undefined as number | undefined,
+  badgeValue: undefined as string | number | undefined,
+  leadingIconSlug: null as string | null,
+  closeIconSlug: "shape-x-thick",
 } as const;
+
+/** Demo/testing only — forces hover chrome in Storybook state matrices. */
+export const TAG_DEMO_HOVER_DEFAULT = false as const;
 
 export const TAGS_GROUP_SPEC_ACCURATE_DEFAULTS = {
   wrap: true,

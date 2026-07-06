@@ -239,8 +239,16 @@
   border-color: var(--color-border-brand-base);
 }
 
-.editable[data-focus] .textField {
+.editable[data-focus] .textField,
+.editable .textField[data-focus-on-text] {
   border-color: var(--color-border-brand-base);
+}
+
+.leadingIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
 }
 
 .badge {

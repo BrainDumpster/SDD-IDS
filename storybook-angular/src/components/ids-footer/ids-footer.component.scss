@@ -30,6 +30,7 @@
 .ids-footer__field {
   display: flex;
   align-items: center;
+  gap: var(--spacing-space-2);
   min-width: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -108,7 +109,7 @@
 .ids-footer__datetime {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-text-neutral);
   white-space: nowrap;
 }
@@ -121,7 +122,7 @@
   font: inherit;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-text-brand-strong);
   white-space: nowrap;
   cursor: pointer;

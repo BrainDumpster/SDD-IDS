@@ -11,6 +11,7 @@ import {
   AlertAction,
   AlertLink,
   AlertMessage,
+  AlertTitle,
 } from "./Alert";
 import { AlertGroup, AlertItem } from "./AlertGroup";
 import type { AlertGlobalSeverity, AlertInlineSeverity } from "./Alert";
@@ -118,6 +119,7 @@ const meta = {
     dismissible: { control: "boolean" },
   },
   args: specAccurateArgs,
+  render: (args) => renderAlertFromControls(args as AlertControlArgs),
 } satisfies Meta<typeof Alert>;
 
 export default meta;
@@ -421,6 +423,47 @@ export const InlineWithLink: Story = {
   },
 };
 
+export const InlineCompactStates: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 16 }}>
+      <Alert display="inline" density="compact" severity="informational" dismissible>
+        <AlertMessage>Informational inline alert.</AlertMessage>
+      </Alert>
+      <Alert display="inline" density="compact" severity="success" dismissible>
+        <AlertMessage>Success inline alert.</AlertMessage>
+      </Alert>
+      <Alert display="inline" density="compact" severity="warning-minor" dismissible actionLabel="Resolve">
+        <AlertMessage>Warning minor inline alert.</AlertMessage>
+      </Alert>
+      <Alert display="inline" density="compact" severity="critical">
+        <AlertMessage>Critical inline alert (no dismiss per spec).</AlertMessage>
+      </Alert>
+    </div>
+  ),
+};
+
+export const InlineDetailedAllDetails: Story = {
+  name: "Inline Detailed / All Details (Figma 11946:230644)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Detailed critical inline: title + message + link + outlined action in title row. Critical inline never shows dismiss.",
+      },
+    },
+  },
+  render: () => (
+    <Alert display="inline" density="detailed" severity="critical">
+      <AlertTitle>Alert Title</AlertTitle>
+      <AlertMessage>
+        This is a page-level alert that communicates a critical message. It may include actions.
+      </AlertMessage>
+      <AlertLink label="Learn more" href="#" />
+      <AlertAction label="Action" />
+    </Alert>
+  ),
+};
+
 export const InlineDetailedLayout: Story = {
   args: {
     display: "inline",
@@ -434,17 +477,17 @@ export const InlineDetailedLayout: Story = {
 };
 
 export const InlineDetailedWithLinkActionDismiss: Story = {
-  args: {
-    display: "inline",
-    severity: "critical",
-    density: "detailed",
-    title: "Alert Title",
-    message:
-      "This is an page-level alert that communicates a critical message. It may include actions.",
-    linkLabel: "Learn more",
-    actionLabel: "Action",
-    dismissible: true,
-  },
+  name: "Inline Detailed / Link + Action + Dismiss",
+  render: () => (
+    <Alert display="inline" severity="informational" density="detailed" dismissible>
+      <AlertTitle>Policy validation failed</AlertTitle>
+      <AlertMessage>
+        You can review the failed checks and update your submission.
+      </AlertMessage>
+      <AlertLink label="Learn more" href="#" />
+      <AlertAction label="Review" />
+    </Alert>
+  ),
 };
 
 export const InlineVariantMatrix: Story = {

@@ -225,6 +225,28 @@ export const AddTabDynamic = {
 };
 
 /** @type {import("@storybook/angular").StoryObj<IdsTabComponent>} */
+export const IconAndBadge = {
+  render: () => ({
+    template: `
+      <ids-tab type="primary" defaultActiveItemId="overview">
+        <ids-tab-item itemId="overview" label="Overview" iconSlug="shield-encrypt-alt" [badgeCount]="5">
+          <ids-tab-panel>Overview tab content area.</ids-tab-panel>
+        </ids-tab-item>
+        <ids-tab-item itemId="security" label="Security" iconSlug="shield-encrypt-alt" [badgeCount]="3">
+          <ids-tab-panel>Security tab content area.</ids-tab-panel>
+        </ids-tab-item>
+        <ids-tab-item itemId="alerts" label="Alerts" iconSlug="shield-encrypt-alt" [badgeCount]="1">
+          <ids-tab-panel>Alerts tab content area with related data.</ids-tab-panel>
+        </ids-tab-item>
+        <ids-tab-item itemId="settings" label="Settings" iconSlug="shield-encrypt-alt">
+          <ids-tab-panel>Settings content area.</ids-tab-panel>
+        </ids-tab-item>
+      </ids-tab>
+    `,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsTabComponent>} */
 export const AddLabelSecondary = {
   render: () => ({
     template: `

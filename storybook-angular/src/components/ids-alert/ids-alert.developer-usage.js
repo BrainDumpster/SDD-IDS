@@ -156,3 +156,32 @@ export const ALERT_MULTIPLE_GROUP_SOURCE_CODE = `<ids-alert-group [activeIndex]=
 </ids-alert-group>`;
 
 export const ALERT_MULTIPLE_GROUP_TEMPLATE = ALERT_MULTIPLE_GROUP_SOURCE_CODE;
+
+export const ALERT_INLINE_COMPACT_TEMPLATE = `
+<div style="display: grid; gap: 16px;">
+  <ids-alert display="inline" density="compact" severity="informational" [dismissible]="true">
+    <ids-alert-message>Informational inline alert.</ids-alert-message>
+  </ids-alert>
+  <ids-alert display="inline" density="compact" severity="success" [dismissible]="true">
+    <ids-alert-message>Success inline alert.</ids-alert-message>
+  </ids-alert>
+  <ids-alert display="inline" density="compact" severity="warning-minor" [dismissible]="true" actionLabel="Resolve">
+    <ids-alert-message>Warning minor inline alert.</ids-alert-message>
+  </ids-alert>
+  <ids-alert display="inline" density="compact" severity="critical">
+    <ids-alert-message>Critical inline alert (no dismiss per spec).</ids-alert-message>
+  </ids-alert>
+</div>
+`.trim();
+
+export const ALERT_INLINE_DETAILED_ALL_DETAILS_SOURCE_CODE = `<ids-alert display="inline" density="detailed" severity="critical">
+  <ids-alert-title>Alert Title</ids-alert-title>
+  <ids-alert-message>
+    This is a page-level alert that communicates a critical message. It may include actions.
+  </ids-alert-message>
+  <ids-alert-link label="Learn more" href="#" />
+  <ids-alert-action label="Action" />
+</ids-alert>`;
+
+export const ALERT_INLINE_DETAILED_ALL_DETAILS_TEMPLATE =
+  ALERT_INLINE_DETAILED_ALL_DETAILS_SOURCE_CODE;

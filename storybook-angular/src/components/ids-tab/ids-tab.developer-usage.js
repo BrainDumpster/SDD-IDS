@@ -134,7 +134,7 @@ export const TAB_COMPOSITION_DEMO_TEMPLATE = `
 
 export const TAB_OVERFLOW_DEMO_TEMPLATE = `
 <div [style.max-width.px]="maxWidth" [style.width.px]="maxWidth">
-  <ids-tab [type]="tabType" [defaultActiveItemId]="overflowItems[0]?.id" [allowAddTab]="false">
+  <ids-tab [type]="tabType" [defaultActiveItemId]="overflowItems[0]?.id" [overflow]="true" [allowAddTab]="false">
     @for (item of overflowItems; track item.id) {
       <ids-tab-item [itemId]="item.id" [label]="item.label">
         <ids-tab-panel>{{ item.content }}</ids-tab-panel>

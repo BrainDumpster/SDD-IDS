@@ -34,6 +34,10 @@ import {{
   SYNAPSE_TAB_NO_ICON_NODE_ID,
   SYNAPSE_TAB_OVERFLOW_DEMO_WIDTH,
 }} from "{spec_contract_import}";
+import {{
+  TAB_OVERFLOW_MORE_ICON_SIZE_PX,
+  TAB_OVERFLOW_MORE_ICON_SLUG,
+}} from "@component-contracts/ids/tab.contract";
 import {{ SPEC_ACCURATE_DESIGN_STORY }} from "@component-contracts/common/story-meta";
 
 const navTabPanel = (name: string) => `${{name}} panel content.`;
@@ -72,7 +76,7 @@ const meta: Meta<typeof SynapseTabs> = {{
         component: [
           `Spec-driven Synapse Nav Tab (IDS Tab contract). Source: \\`${{SYNAPSE_TAB_DESIGN_SPEC_PATH}}\\`.`,
           `Primary story: **4 tabs + add** (Figma \\`${{SYNAPSE_NAV_TAB_GROUP_FOUR_NODE_ID}}\\`).`,
-          "Overflow: `More` + `arrow-tri-down-solid` `10×10` (IDS contract) before add tab.",
+          `Overflow: \\`More\\` + \\`${{TAB_OVERFLOW_MORE_ICON_SLUG}}\\` ${{TAB_OVERFLOW_MORE_ICON_SIZE_PX}}×${{TAB_OVERFLOW_MORE_ICON_SIZE_PX}} (IDS contract) before add tab.`,
           "Theme: `components/synapse-theme.css`.",
         ].join(" "),
       }},

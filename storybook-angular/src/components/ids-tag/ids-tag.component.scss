@@ -66,16 +66,16 @@
 
 .ids-tag[data-focus] {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
-.tone-non-alerting {
+.tone-none {
   background: var(--color-background-component);
   border-color: var(--color-border-accessible);
   color: var(--color-text-neutral);
 }
 
-.tone-info {
+.tone-informational {
   background: var(--color-background-alerting-info);
   border-color: var(--color-border-alerting-info-white);
   color: var(--color-text-white);
@@ -111,7 +111,7 @@
   color: var(--color-text-white);
 }
 
-.clickable.tone-non-alerting:not(.selected) {
+.clickable.tone-none:not(.selected) {
   background: var(--color-background-component);
   color: var(--color-text-neutral);
 }
@@ -120,8 +120,8 @@
   border-color: var(--color-border-brand-base);
 }
 
-.clickable.tone-non-alerting:not(.selected):hover:not([data-disabled]),
-.clickable.tone-non-alerting:not(.selected)[data-hover]:not([data-disabled]) {
+.clickable.tone-none:not(.selected):hover:not([data-disabled]),
+.clickable.tone-none:not(.selected)[data-hover]:not([data-disabled]) {
   background: var(--color-background-controls-brand-lighter);
   border-color: var(--color-border-brand-base);
 }
@@ -188,8 +188,16 @@
 
 .editable .text-field:focus-visible,
 .editable .text-field:focus,
-.editable[data-focus] .text-field {
+.editable[data-focus] .text-field,
+.editable .text-field[data-focus-on-text] {
   border-color: var(--color-border-brand-base);
+}
+
+.leading-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
 }
 
 .badge {

@@ -2,11 +2,11 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import {
+  IDS_TAG_DESIGN_SPEC_PATH,
   TAG_SPEC_ACCURATE_DEFAULTS,
   TAG_TONES,
   TAG_TYPES,
   TAG_SIZES,
-  TAG_VISUAL_STATES,
 } from "../../../compiled/component-contracts/ids/tag.contract.js";
 import { IdsTagComponent } from "../../../compiled/storybook-angular/src/components/ids-tag/ids-tag.component.js";
 import { IDS_TAG_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-tag/ids-tag.imports.js";
@@ -28,8 +28,7 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "IDS Tag per components/ids/tag/design-spec.md. Use `ids-tags` to lay out multiple projected `ids-tag` children.",
+        component: `IDS Tag per \`${IDS_TAG_DESIGN_SPEC_PATH}\`. Use \`ids-tags\` to lay out multiple projected \`ids-tag\` children.`,
       },
     },
   },
@@ -39,13 +38,17 @@ const meta = {
     type: { control: "select", options: [...TAG_TYPES] },
     size: { control: "select", options: [...TAG_SIZES] },
     selected: { control: "boolean" },
+    disabled: { control: "boolean" },
+    error: { control: "boolean" },
+    focusVisible: { control: "boolean" },
+    focusOnText: { control: "boolean" },
+    demoHover: { control: "boolean" },
     showLabel: { control: "boolean" },
     labelPrefix: { control: "text" },
-    closable: { control: "boolean" },
-    visualState: { control: "select", options: [...TAG_VISUAL_STATES] },
-    badgeCount: { control: "number" },
-    selectedChange: { action: "selectedChange" },
-    dismissed: { action: "dismissed" },
+    badgeValue: { control: "text" },
+    leadingIconSlug: { control: "text" },
+    selectionChange: { action: "selectionChange" },
+    dismiss: { action: "dismiss" },
     tagClick: { action: "tagClick" },
   },
 };
@@ -64,25 +67,24 @@ export const MainComponent = {
   render: () => ({
     template: `
       <ids-tags>
-        <ids-tag type="read-only" label="Tag" tone="non-alerting" size="small"></ids-tag>
-        <ids-tag type="clickable" label="Tag" tone="non-alerting" size="large"></ids-tag>
+        <ids-tag type="read-only" label="Tag" tone="none" size="small"></ids-tag>
+        <ids-tag type="clickable" label="Tag" tone="none" size="large"></ids-tag>
         <ids-tag
           type="editable"
           label="Tag"
-          tone="non-alerting"
+          tone="none"
           size="large"
           [showLabel]="true"
           labelPrefix="Label"
-          [closable]="true"
         ></ids-tag>
         <ids-tag
           type="badge"
           label="Tag"
-          tone="non-alerting"
+          tone="none"
           size="large"
           [showLabel]="true"
           labelPrefix="Label"
-          [badgeCount]="1"
+          [badgeValue]="1"
         ></ids-tag>
       </ids-tags>
     `,
@@ -95,12 +97,12 @@ export const ReadOnlyAndAlerting = {
   render: () => ({
     template: `
       <ids-tags ariaLabel="Alerting tag examples">
-        <ids-tag type="read-only" label="Tag" tone="non-alerting" size="small"></ids-tag>
+        <ids-tag type="read-only" label="Tag" tone="none" size="small"></ids-tag>
         <ids-tag type="read-only" label="Tag" tone="critical" size="small"></ids-tag>
         <ids-tag type="read-only" label="Tag" tone="major" size="small"></ids-tag>
         <ids-tag type="read-only" label="Tag" tone="minor" size="small"></ids-tag>
         <ids-tag type="read-only" label="Tag" tone="success" size="small"></ids-tag>
-        <ids-tag type="read-only" label="Tag" tone="info" size="small"></ids-tag>
+        <ids-tag type="read-only" label="Tag" tone="informational" size="small"></ids-tag>
       </ids-tags>
     `,
   }),
@@ -112,16 +114,23 @@ export const ClickableStates = {
   render: () => ({
     template: `
       <ids-tags ariaLabel="Clickable tag states">
-        <ids-tag type="clickable" label="Tag" tone="non-alerting" size="large" visualState="default"></ids-tag>
-        <ids-tag type="clickable" label="Tag" tone="non-alerting" size="large" visualState="hover"></ids-tag>
-        <ids-tag type="clickable" label="Tag" tone="non-alerting" size="large" visualState="focus"></ids-tag>
+        <ids-tag type="clickable" label="Tag" tone="none" size="large"></ids-tag>
+        <ids-tag type="clickable" label="Tag" tone="none" size="large" [demoHover]="true"></ids-tag>
+        <ids-tag type="clickable" label="Tag" tone="none" size="large" [focusVisible]="true"></ids-tag>
         <ids-tag
           type="clickable"
           label="Tag"
-          tone="non-alerting"
+          tone="none"
           size="large"
           [selected]="true"
-          visualState="default"
+        ></ids-tag>
+        <ids-tag
+          type="clickable"
+          label="Tag"
+          tone="none"
+          size="large"
+          [selected]="true"
+          [demoHover]="true"
         ></ids-tag>
       </ids-tags>
     `,
@@ -135,22 +144,29 @@ export const EditableAndBadgeStates = {
     template: `
       <div style="display: grid; gap: 16px;">
         <ids-tags ariaLabel="Editable tag states">
-          <ids-tag type="editable" label="Tag" tone="non-alerting" size="large" [closable]="true"></ids-tag>
+          <ids-tag type="editable" label="Tag" tone="none" size="large"></ids-tag>
           <ids-tag
             type="editable"
             label="Tag"
             tone="critical"
             size="large"
-            visualState="error"
-            [closable]="true"
+            [error]="true"
           ></ids-tag>
           <ids-tag
             type="editable"
             label="Tag"
-            tone="non-alerting"
+            tone="none"
             size="large"
-            visualState="disabled"
-            [closable]="true"
+            [disabled]="true"
+          ></ids-tag>
+          <ids-tag
+            type="editable"
+            label="Tag"
+            tone="none"
+            size="large"
+            [focusOnText]="true"
+            [showLabel]="true"
+            labelPrefix="Label"
           ></ids-tag>
         </ids-tags>
         <ids-tags ariaLabel="Badge tag states">
@@ -160,7 +176,7 @@ export const EditableAndBadgeStates = {
             size="large"
             [showLabel]="true"
             labelPrefix="Label"
-            [badgeCount]="1"
+            [badgeValue]="1"
           ></ids-tag>
           <ids-tag
             type="badge"
@@ -168,11 +184,35 @@ export const EditableAndBadgeStates = {
             size="large"
             [showLabel]="true"
             labelPrefix="Label"
-            [badgeCount]="1"
-            visualState="focus"
+            [badgeValue]="1"
+            [focusVisible]="true"
+          ></ids-tag>
+          <ids-tag
+            type="badge"
+            label="Tag"
+            size="large"
+            [showLabel]="true"
+            labelPrefix="Label"
+            [badgeValue]="1"
+            [error]="true"
           ></ids-tag>
         </ids-tags>
       </div>
+    `,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsTagComponent>} */
+export const NonAlertingLargeStates = {
+  name: "Non-Alerting Large States",
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: `
+      <ids-tags ariaLabel="Non-alerting large tag states">
+        <ids-tag type="read-only" label="Tag" tone="none" size="large"></ids-tag>
+        <ids-tag type="read-only" label="Tag" tone="none" size="large" [error]="true"></ids-tag>
+        <ids-tag type="read-only" label="Tag" tone="none" size="large" [focusVisible]="true"></ids-tag>
+      </ids-tags>
     `,
   }),
 };
@@ -205,10 +245,9 @@ export const DismissibleList = {
           <ids-tag
             type="editable"
             [label]="tag"
-            tone="non-alerting"
+            tone="none"
             size="large"
-            [closable]="true"
-            (dismissed)="removeTag(tags, tag)"
+            (dismiss)="removeTag(tags, tag)"
           ></ids-tag>
         }
       </ids-tags>

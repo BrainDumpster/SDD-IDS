@@ -1,13 +1,22 @@
 import { useMemo, useRef, useState } from "react";
 import type { MouseEvent } from "react";
+import type { TagSize, TagTone, TagType } from "@component-contracts/ids/tag.contract";
 import { Icon } from "./Icon";
 import styles from "./Tag.module.css";
 
-type Tone = "info" | "success" | "minor" | "major" | "critical" | "non-alerting";
 type Emphasis = "strong" | "light";
-type Type = "read-only" | "clickable" | "editable" | "badge";
-type Size = "sm" | "lg";
-type VisualState = "default" | "hover" | "focus" | "error" | "disabled";
+
+/** Maps spec tone names to legacy CSS module class suffixes. */
+function toneToCssClass(tone: TagTone): string {
+  if (tone === "none") return "non-alerting";
+  if (tone === "informational") return "info";
+  return tone;
+}
+
+/** Maps spec size to CSS module class names. */
+function sizeToCssClass(size: TagSize): "sm" | "lg" {
+  return size === "small" ? "sm" : "lg";
+}
 
 function normalizeLabelPrefix(value: string): string {
   return value.replace(/:+\s*$/, "");
@@ -43,20 +52,28 @@ export interface TagProps {
   /** `synapse` → 4px focus ring + critical Light slate tokens per Synapse Figma. */
   programme?: "ids" | "synapse";
   label: string;
-  tone?: Tone;
+  tone?: TagTone;
   emphasis?: Emphasis;
-  type?: Type;
-  size?: Size;
+  type?: TagType;
+  size?: TagSize;
   selected?: boolean;
   defaultSelected?: boolean;
+  disabled?: boolean;
+  error?: boolean;
+  /** Demo/testing only — keyboard focus ring on tag root. */
+  focusVisible?: boolean;
+  /** Editable only — inner text field focus ring. */
+  focusOnText?: boolean;
+  /** Demo/testing only — forced hover chrome for Storybook matrices. */
+  demoHover?: boolean;
   showLabel?: boolean;
   /** Field label text without trailing colon; runtime appends `:`. */
   labelPrefix?: string;
-  closable?: boolean;
-  badgeCount?: number;
-  visualState?: VisualState;
+  badgeValue?: string | number;
+  leadingIconSlug?: string | null;
+  closeIconSlug?: string;
   onClick?: () => void;
-  onSelectedChange?: (selected: boolean) => void;
+  onSelectionChange?: (selected: boolean) => void;
   onTextFocus?: () => void;
   onTextBlur?: () => void;
   onDismiss?: () => void;
@@ -65,34 +82,40 @@ export interface TagProps {
 export function Tag({
   programme = "ids",
   label,
-  tone = "non-alerting",
+  tone = "none",
   emphasis = "light",
   type = "read-only",
-  size = "sm",
+  size = "small",
   selected,
   defaultSelected = false,
+  disabled = false,
+  error = false,
+  focusVisible = false,
+  focusOnText = false,
+  demoHover = false,
   showLabel = false,
   labelPrefix = "Label",
-  closable = false,
-  badgeCount,
-  visualState = "default",
+  badgeValue,
+  leadingIconSlug = null,
+  closeIconSlug: _closeIconSlug = "shape-x-thick",
   onClick,
-  onSelectedChange,
+  onSelectionChange,
   onTextFocus,
   onTextBlur,
   onDismiss,
 }: TagProps) {
-  const disabled = visualState === "disabled";
   const clickable = type === "clickable";
   const editable = type === "editable";
   const isBadgeType = type === "badge";
-  const hasBadge = isBadgeType && badgeCount != null;
+  const hasBadge = isBadgeType && badgeValue != null;
   const isSelectedControlled = selected !== undefined;
   const [internalSelected, setInternalSelected] = useState(defaultSelected);
   const textFocusRef = useRef<HTMLSpanElement>(null);
   const isSelected = isSelectedControlled ? selected : internalSelected;
   const isInteractiveClickable = clickable && !disabled;
   const isEditableFocusable = editable && !disabled;
+  const sizeClass = sizeToCssClass(size);
+  const toneClass = toneToCssClass(tone);
   const typeClassName =
     type === "badge" ? styles.typeBadge : type === "clickable" ? styles.clickable : type === "editable" ? styles.editable : styles.readOnly;
 
@@ -104,11 +127,11 @@ export function Tag({
             if (!isSelectedControlled) {
               setInternalSelected(next);
             }
-            onSelectedChange?.(next);
+            onSelectionChange?.(next);
             onClick?.();
           }
         : undefined,
-    [isInteractiveClickable, isSelected, isSelectedControlled, onClick, onSelectedChange]
+    [isInteractiveClickable, isSelected, isSelectedControlled, onClick, onSelectionChange]
   );
 
   const handleEditableContainerClick = useMemo(
@@ -148,30 +171,38 @@ export function Tag({
       className={[
         styles.tag,
         programme === "synapse" ? styles.programmeSynapse : styles.programmeIds,
-        styles[size],
+        styles[sizeClass],
         typeClassName,
-        styles[`tone_${tone}`],
+        styles[`tone_${toneClass}`],
         styles[`emphasis_${emphasis}`],
         clickable && isSelected ? styles.selected : "",
       ]
         .filter(Boolean)
         .join(" ")}
       data-disabled={disabled || undefined}
-      data-focus={visualState === "focus" || undefined}
-      data-error={visualState === "error" || undefined}
-      data-hover={visualState === "hover" || undefined}
+      data-focus={focusVisible || undefined}
+      data-error={error || undefined}
+      data-hover={demoHover || undefined}
       role={clickable ? "button" : undefined}
       aria-pressed={clickable ? isSelected : undefined}
       tabIndex={isInteractiveClickable ? 0 : undefined}
       onClick={handleRootClick}
       onMouseDown={handleEditableMouseDown}
     >
-      {hasBadge ? <span className={styles.badge}>{badgeCount}</span> : null}
+      {leadingIconSlug ? (
+        <Icon
+          shapeName={leadingIconSlug}
+          className={styles.leadingIcon}
+          color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+        />
+      ) : null}
+      {hasBadge ? <span className={styles.badge}>{badgeValue}</span> : null}
       {editable ? (
         <span
           ref={textFocusRef}
           className={styles.textField}
           tabIndex={isEditableFocusable ? 0 : undefined}
+          data-focus-on-text={focusOnText || undefined}
           onFocus={onTextFocus}
           onBlur={onTextBlur}
         >
@@ -187,7 +218,7 @@ export function Tag({
           color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
         />
       ) : null}
-      {(closable || editable) && (
+      {editable ? (
         <button
           className={styles.dismiss}
           onClick={(event) => {
@@ -207,7 +238,7 @@ export function Tag({
             />
           </svg>
         </button>
-      )}
+      ) : null}
     </span>
   );
 }

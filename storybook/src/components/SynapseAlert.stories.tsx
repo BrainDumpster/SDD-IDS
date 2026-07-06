@@ -7,6 +7,7 @@ import {
   AlertAction,
   AlertLink,
   AlertMessage,
+  AlertTitle,
 } from "./Alert";
 import { SynapseAlert } from "./SynapseAlert";
 import { AlertGroup, AlertItem } from "./AlertGroup";
@@ -112,6 +113,7 @@ const meta = {
     dismissible: { control: "boolean" },
   },
   args: specAccurateArgs,
+  render: (args) => renderAlertFromControls(args as AlertControlArgs),
 } satisfies Meta<typeof SynapseAlert>;
 
 export default meta;
@@ -141,15 +143,10 @@ export const SpecAccurateInlineDetailedCritical: Story = {
     docs: { description: { story: `Figma \`${SYNAPSE_ALERT_INLINE_SPEC_ACCURATE_NODE_ID}\`.` } },
   },
   render: () => (
-    <SynapseAlert
-      display="inline"
-      severity="critical"
-      density="detailed"
-      title={SYNAPSE_ALERT_SAMPLE_INLINE_TITLE}
-      dismissible
-      actionLabel="Action"
-    >
+    <SynapseAlert display="inline" severity="critical" density="detailed">
+      <AlertTitle>{SYNAPSE_ALERT_SAMPLE_INLINE_TITLE}</AlertTitle>
       <AlertMessage>{SYNAPSE_ALERT_SAMPLE_INLINE_MESSAGE}</AlertMessage>
+      <AlertAction label="Action" />
     </SynapseAlert>
   ),
 };
@@ -180,6 +177,36 @@ export const MultipleAlerts: Story = {
   ),
 };
 
+export const InlineCompactStates: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 16 }}>
+      <SynapseAlert display="inline" density="compact" severity="informational" dismissible>
+        <AlertMessage>Informational inline alert.</AlertMessage>
+      </SynapseAlert>
+      <SynapseAlert display="inline" density="compact" severity="success" dismissible>
+        <AlertMessage>Success inline alert.</AlertMessage>
+      </SynapseAlert>
+      <SynapseAlert display="inline" density="compact" severity="warning-minor" dismissible actionLabel="Resolve">
+        <AlertMessage>Warning minor inline alert.</AlertMessage>
+      </SynapseAlert>
+      <SynapseAlert display="inline" density="compact" severity="critical">
+        <AlertMessage>Critical inline alert (no dismiss per spec).</AlertMessage>
+      </SynapseAlert>
+    </div>
+  ),
+};
+
+export const InlineDetailedAllDetails: Story = {
+  name: "Inline Detailed / All Details (Figma 11946:230644)",
+  render: () => (
+    <SynapseAlert display="inline" density="detailed" severity="critical">
+      <AlertTitle>{SYNAPSE_ALERT_SAMPLE_INLINE_TITLE}</AlertTitle>
+      <AlertMessage>{SYNAPSE_ALERT_SAMPLE_INLINE_MESSAGE}</AlertMessage>
+      <AlertAction label="Action" />
+    </SynapseAlert>
+  ),
+};
+
 export const InlineSuccessCompact: Story = {
   render: () => (
     <SynapseAlert display="inline" severity="success" density="compact" dismissible>
@@ -190,8 +217,8 @@ export const InlineSuccessCompact: Story = {
 
 export const GlobalCriticalDismissOnly: Story = {
   render: () => (
-    <SynapseAlert display="global" severity="critical" dismissible>
-      <AlertMessage>Critical application message requiring attention.</AlertMessage>
+    <SynapseAlert display="global" severity="critical">
+      <AlertMessage>Critical application message — dismiss hidden without carousel.</AlertMessage>
     </SynapseAlert>
   ),
 };

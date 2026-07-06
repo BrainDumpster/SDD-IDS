@@ -293,6 +293,9 @@ import {
   ALERT_DOCS_DESCRIPTION,
   ALERT_MULTIPLE_GROUP_SOURCE_CODE,
   ALERT_MULTIPLE_GROUP_TEMPLATE,
+  ALERT_INLINE_COMPACT_TEMPLATE,
+  ALERT_INLINE_DETAILED_ALL_DETAILS_SOURCE_CODE,
+  ALERT_INLINE_DETAILED_ALL_DETAILS_TEMPLATE,
   ALERT_SOURCE_CODE,
   ALERT_STORY_SOURCE_CODE,
 } from "./ids-alert.developer-usage.js";"""
@@ -348,6 +351,35 @@ export const MultipleAlerts = {
   },
   render: () => ({
     template: ALERT_MULTIPLE_GROUP_TEMPLATE,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsAlertComponent>} */
+export const InlineCompactStates = {
+  name: "Inline Compact States",
+  render: () => ({
+    template: ALERT_INLINE_COMPACT_TEMPLATE,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsAlertComponent>} */
+export const InlineDetailedAllDetails = {
+  name: "Inline Detailed / All Details (Figma 11946:230644)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Detailed critical inline: title + message + link + outlined action. Critical inline never shows dismiss.",
+      },
+      source: {
+        type: "code",
+        language: "html",
+        code: ALERT_INLINE_DETAILED_ALL_DETAILS_SOURCE_CODE,
+      },
+    },
+  },
+  render: () => ({
+    template: ALERT_INLINE_DETAILED_ALL_DETAILS_TEMPLATE,
   }),
 };"""
     else:

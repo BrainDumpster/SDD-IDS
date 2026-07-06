@@ -9,16 +9,22 @@ import {
 } from "@angular/core";
 import { NgClass } from "@angular/common";
 import {
+  TAG_DEMO_HOVER_DEFAULT,
   TAG_SPEC_ACCURATE_DEFAULTS,
   type TagSize,
   type TagTone,
   type TagType,
-  type TagVisualState,
 } from "@component-contracts/ids/tag.contract";
 import { IdsIconComponent } from "../ids-icon/ids-icon.component";
 
 function normalizeLabelPrefix(value: string): string {
   return value.replace(/:+\s*$/, "");
+}
+
+function toneToCssClass(tone: TagTone): string {
+  if (tone === "none") return "none";
+  if (tone === "informational") return "informational";
+  return tone;
 }
 
 @Component({
@@ -35,14 +41,19 @@ export class IdsTagComponent {
   @Input() type: TagType = TAG_SPEC_ACCURATE_DEFAULTS.type;
   @Input() size: TagSize = TAG_SPEC_ACCURATE_DEFAULTS.size;
   @Input() selected: boolean | undefined = TAG_SPEC_ACCURATE_DEFAULTS.selected;
+  @Input() disabled = TAG_SPEC_ACCURATE_DEFAULTS.disabled;
+  @Input() error = TAG_SPEC_ACCURATE_DEFAULTS.error;
+  @Input() focusVisible = TAG_SPEC_ACCURATE_DEFAULTS.focusVisible;
+  @Input() focusOnText = TAG_SPEC_ACCURATE_DEFAULTS.focusOnText;
+  @Input() demoHover = TAG_DEMO_HOVER_DEFAULT;
   @Input() showLabel = TAG_SPEC_ACCURATE_DEFAULTS.showLabel;
   @Input() labelPrefix = TAG_SPEC_ACCURATE_DEFAULTS.labelPrefix;
-  @Input() closable = TAG_SPEC_ACCURATE_DEFAULTS.closable;
-  @Input() badgeCount?: number = TAG_SPEC_ACCURATE_DEFAULTS.badgeCount;
-  @Input() visualState: TagVisualState = TAG_SPEC_ACCURATE_DEFAULTS.visualState;
+  @Input() badgeValue?: string | number = TAG_SPEC_ACCURATE_DEFAULTS.badgeValue;
+  @Input() leadingIconSlug: string | null = TAG_SPEC_ACCURATE_DEFAULTS.leadingIconSlug;
+  @Input() closeIconSlug = TAG_SPEC_ACCURATE_DEFAULTS.closeIconSlug;
 
-  @Output() readonly selectedChange = new EventEmitter<boolean>();
-  @Output() readonly dismissed = new EventEmitter<void>();
+  @Output() readonly selectionChange = new EventEmitter<boolean>();
+  @Output() readonly dismiss = new EventEmitter<void>();
   @Output() readonly tagClick = new EventEmitter<void>();
 
   @ViewChild("editableField") editableField?: ElementRef<HTMLSpanElement>;
@@ -51,10 +62,6 @@ export class IdsTagComponent {
 
   get isSelected(): boolean {
     return this.selected ?? this.internalSelected;
-  }
-
-  get disabled(): boolean {
-    return this.visualState === "disabled";
   }
 
   get prefixText(): string {
@@ -69,11 +76,7 @@ export class IdsTagComponent {
   }
 
   get hasBadge(): boolean {
-    return this.type === "badge" && this.badgeCount != null;
-  }
-
-  get showDismiss(): boolean {
-    return this.closable || this.type === "editable";
+    return this.type === "badge" && this.badgeValue != null;
   }
 
   get isClickable(): boolean {
@@ -85,7 +88,7 @@ export class IdsTagComponent {
   }
 
   get toneClass(): string {
-    return `tone-${this.tone}`;
+    return `tone-${toneToCssClass(this.tone)}`;
   }
 
   get typeClass(): string {
@@ -107,7 +110,7 @@ export class IdsTagComponent {
       if (this.selected === undefined) {
         this.internalSelected = next;
       }
-      this.selectedChange.emit(next);
+      this.selectionChange.emit(next);
       this.tagClick.emit();
       return;
     }
@@ -128,11 +131,11 @@ export class IdsTagComponent {
     this.editableField?.nativeElement.focus();
   }
 
-  onDismiss(event: MouseEvent): void {
+  onDismissClick(event: MouseEvent): void {
     event.stopPropagation();
     if (this.disabled) {
       return;
     }
-    this.dismissed.emit();
+    this.dismiss.emit();
   }
 }

@@ -1,12 +1,14 @@
-/* Spec Generated — IDS Footer (design-spec intake wizard) */
-import "../../../components/ids-theme.css";
+import "../../../components/synapse-theme.css";
 import type { ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { FOOTER_SPEC_ACCURATE_DEFAULTS } from "@component-contracts/ids/footer.contract";
 import { SPEC_ACCURATE_DESIGN_STORY } from "@component-contracts/common/story-meta";
-import { IdsFooter } from "./IdsFooter";
-
-const DESIGN_SPEC_PATH = "components/ids/footer/design-spec.md";
+import { SynapseFooter } from "./SynapseFooter";
+import {
+  SYNAPSE_FOOTER_DESIGN_SPEC_PATH,
+  SYNAPSE_FOOTER_IDS_BASELINE_SPEC_PATH,
+  SYNAPSE_FOOTER_IDS_MAIN_NODE_ID,
+  SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS,
+} from "../spec-contracts/synapse-footer.contract";
 
 const FOOTER_STORY_FRAME_STYLE = {
   width: "100%",
@@ -18,28 +20,27 @@ const FOOTER_STORY_FRAME_STYLE = {
   background: "var(--color-background-component)",
 };
 
-/** Defaults from design-spec.md — Spec Accurate Design story defaults (Figma `38908:5818`). */
-const specAccurateArgs: ComponentProps<typeof IdsFooter> = {
-  hostname: FOOTER_SPEC_ACCURATE_DEFAULTS.hostname,
-  swid: FOOTER_SPEC_ACCURATE_DEFAULTS.swid,
-  currentDateTime: FOOTER_SPEC_ACCURATE_DEFAULTS.currentDateTime,
-  timeZoneLabel: FOOTER_SPEC_ACCURATE_DEFAULTS.timeZoneLabel,
-  showHostname: FOOTER_SPEC_ACCURATE_DEFAULTS.showHostname,
-  showCurrentDateAndTime: FOOTER_SPEC_ACCURATE_DEFAULTS.showCurrentDateAndTime,
-  showTimeZone: FOOTER_SPEC_ACCURATE_DEFAULTS.showTimeZone,
+const specAccurateArgs: ComponentProps<typeof SynapseFooter> = {
+  hostname: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.hostname,
+  swid: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.swid,
+  currentDateTime: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.currentDateTime,
+  timeZoneLabel: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.timeZoneLabel,
+  showHostname: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.showHostname,
+  showCurrentDateAndTime: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.showCurrentDateAndTime,
+  showTimeZone: SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.showTimeZone,
 };
 
-const meta: Meta<typeof IdsFooter> = {
-  title: "Spec Generated/IDS/Footer",
-  component: IdsFooter,
+const meta: Meta<typeof SynapseFooter> = {
+  title: "Spec Generated/Synapse/Footer",
+  component: SynapseFooter,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component: [
-          `Spec-driven IDS application status footer. Source of truth: \`${DESIGN_SPEC_PATH}\`.`,
-          "Primary story matches Figma IDS Design Library node `38908:5818` (32px bar, host/SWID/time/zone).",
-          "Theme: `components/ids-theme.css`; icons via shared `Icon` + `assets/icons/<slug>.svg`.",
+          `Spec-driven Synapse application status footer (IDS-fork). Source: \`${SYNAPSE_FOOTER_DESIGN_SPEC_PATH}\`.`,
+          `IDS baseline: \`${SYNAPSE_FOOTER_IDS_BASELINE_SPEC_PATH}\` (Figma \`${SYNAPSE_FOOTER_IDS_MAIN_NODE_ID}\`).`,
+          "No programme layout deltas — geometry and API inherit IDS; tokens resolve via `components/synapse-theme.css`.",
         ].join(" "),
       },
     },
@@ -59,12 +60,12 @@ const meta: Meta<typeof IdsFooter> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof IdsFooter>;
+type Story = StoryObj<typeof SynapseFooter>;
 
-function SpecAccurateFrame(props: ComponentProps<typeof IdsFooter>) {
+function SpecAccurateFrame(props: ComponentProps<typeof SynapseFooter>) {
   return (
     <div style={FOOTER_STORY_FRAME_STYLE}>
-      <IdsFooter {...props} />
+      <SynapseFooter {...props} />
     </div>
   );
 }
@@ -75,7 +76,7 @@ export const SpecAccurateDesign: Story = {
     docs: {
       description: {
         story:
-          "Figma `38908:5818` — full 32px bar with host, SWID (+ copy), date/time, and time zone.",
+          "IDS baseline `38908:5818` — full 32px bar with host, SWID (+ copy), date/time, and time zone.",
       },
     },
   },
@@ -92,7 +93,7 @@ export const HostAndSwidOnly: Story = {
   },
   render: () => (
     <div style={FOOTER_STORY_FRAME_STYLE}>
-      <IdsFooter
+      <SynapseFooter
         hostname="prod-cluster-01.example.com"
         swid="ELMCR00222GBPB"
         showHostname
@@ -113,7 +114,7 @@ export const TimeAndZoneOnly: Story = {
   },
   render: () => (
     <div style={FOOTER_STORY_FRAME_STYLE}>
-      <IdsFooter
+      <SynapseFooter
         currentDateTime="Wed, 2024-11-06 3:45 PM"
         timeZoneLabel="Pacific Time (US & Canada)"
         showHostname={false}
@@ -134,11 +135,11 @@ export const DisabledControls: Story = {
   },
   render: () => (
     <div style={FOOTER_STORY_FRAME_STYLE}>
-      <IdsFooter
-        hostname={FOOTER_SPEC_ACCURATE_DEFAULTS.hostname}
-        swid={FOOTER_SPEC_ACCURATE_DEFAULTS.swid}
-        currentDateTime={FOOTER_SPEC_ACCURATE_DEFAULTS.currentDateTime}
-        timeZoneLabel={FOOTER_SPEC_ACCURATE_DEFAULTS.timeZoneLabel}
+      <SynapseFooter
+        hostname={SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.hostname}
+        swid={SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.swid}
+        currentDateTime={SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.currentDateTime}
+        timeZoneLabel={SYNAPSE_FOOTER_SPEC_ACCURATE_DEFAULTS.timeZoneLabel}
         copyDisabled
         timeZoneDisabled
       />
@@ -156,7 +157,7 @@ export const LongHostNameTruncation: Story = {
   },
   render: () => (
     <div style={FOOTER_STORY_FRAME_STYLE}>
-      <IdsFooter
+      <SynapseFooter
         hostname="very-long-host-name-that-should-truncate-in-the-status-bar.example.internal"
         swid="ELMCR00222GBPB-EXTENDED-SWID-IDENTIFIER"
         currentDateTime="Tue, 2023-04-23 12:30 AM"

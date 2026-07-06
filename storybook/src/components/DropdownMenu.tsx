@@ -375,8 +375,7 @@ export function DropdownMenu({
                         key={tag.value}
                         label={tag.label}
                         type="editable"
-                        size="lg"
-                        closable
+                        size="large"
                         onDismiss={() => onRemoveSelectedTag?.(tag.value)}
                       />
                     ))}

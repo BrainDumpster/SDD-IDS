@@ -22,7 +22,6 @@ def generate_ids_tab_story(
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ useState }} from "react";
 import "../../../../components/ids-theme.css";
-import shieldEncryptAltIcon from "../../../../assets/icons/shield-encrypt-alt.svg";
 import {{
   TAB_API_DEFAULTS,
   TAB_OVERFLOW_DEMO_WIDTH,
@@ -33,6 +32,7 @@ import {{
   TAB_SPEC_OVERFLOW_ITEMS,
 }} from "@component-contracts/ids/tab.contract";
 import {{ SPEC_ACCURATE_DESIGN_STORY }} from "@component-contracts/common/story-meta";
+import {{ Icon }} from "../../../../storybook/src/components/Icon";
 import {{ Tabs as {component_name} }} from "{tabs_import}";
 
 const baseItems = TAB_SPEC_DEMO_ITEMS.map((item) => ({{
@@ -41,9 +41,7 @@ const baseItems = TAB_SPEC_DEMO_ITEMS.map((item) => ({{
   panel: item.content,
   ...(item.iconSlug
     ? {{
-        icon: (
-          <img src={{shieldEncryptAltIcon}} alt="" width={{16}} height={{16}} />
-        ),
+        icon: <Icon shapeName={{item.iconSlug}} size={{16}} />,
       }}
     : {{}}),
 }}));
@@ -94,6 +92,8 @@ export const SpecAccurateDesign: Story = {{
   name: SPEC_ACCURATE_DESIGN_STORY,
   args: {{
     variant: TAB_SPEC_ACCURATE_DEFAULTS.type,
+    surface: TAB_SPEC_ACCURATE_DEFAULTS.surface,
+    defaultActiveTabId: TAB_SPEC_ACCURATE_DEFAULTS.defaultActiveItemId,
     items: baseItems,
   }},
 }};
@@ -217,33 +217,28 @@ export const IconAndBadge: Story = {{
         id: "overview",
         label: "Overview",
         panel: "Overview tab content area.",
-        icon: <img src={{shieldEncryptAltIcon}} alt="" width={{16}} height={{16}} />,
+        icon: <Icon shapeName="shield-encrypt-alt" size={{16}} />,
         badgeCount: 5,
-        closable: true,
       }},
       {{
         id: "security",
         label: "Security",
         panel: "Security tab content area.",
-        icon: <img src={{shieldEncryptAltIcon}} alt="" width={{16}} height={{16}} />,
+        icon: <Icon shapeName="shield-encrypt-alt" size={{16}} />,
         badgeCount: 3,
-        closable: true,
       }},
       {{
         id: "alerts",
         label: "Alerts",
         panel: "Alerts tab content area with related data.",
-        icon: <img src={{shieldEncryptAltIcon}} alt="" width={{16}} height={{16}} />,
+        icon: <Icon shapeName="shield-encrypt-alt" size={{16}} />,
         badgeCount: 1,
-        closable: true,
       }},
       {{
         id: "settings",
         label: "Settings",
         panel: "Settings content area.",
-        icon: <img src={{shieldEncryptAltIcon}} alt="" width={{16}} height={{16}} />,
-        badgeCount: 0,
-        closable: true,
+        icon: <Icon shapeName="shield-encrypt-alt" size={{16}} />,
       }},
     ],
   }},
