@@ -19,6 +19,18 @@
   background: var(--color-background-component);
 }
 
+.optionRow:not(:has(.radioInput:disabled)):hover {
+  background: var(--color-background-controls-brand-lighter);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
+}
+
+.optionRow:has(.radioInput:focus-visible) {
+  outline: 2px solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
 .optionLabel {
   display: inline-flex;
   align-items: center;
@@ -58,14 +70,6 @@
   border: 0;
 }
 
-.radioInput:focus-visible + .radioIndicator {
-  box-shadow: 0 0 0 1px var(--color-border-brand-base);
-}
-
-.radioRoot:has(.radioInput:focus-visible) {
-  outline: 1px solid var(--color-border-brand-base);
-  outline-offset: 2px;
-}
 
 .radioRoot[data-checked] {
   border-color: var(--color-border-brand-base);
@@ -90,6 +94,20 @@
 
 .radioRoot[data-checked]:hover .radioIndicator {
   background: var(--color-icon-brand-strong);
+}
+
+.optionRow:has(.radioInput:disabled) .radioRoot {
+  border-color: var(--color-border-disabled);
+  background: var(--color-background-disabled);
+}
+
+.optionRow:has(.radioInput:disabled) .radioIndicator {
+  background: var(--color-icon-disabled);
+}
+
+.optionRow:has(.radioInput:disabled) .optionLabel {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
 }
 
 .valueBlock {

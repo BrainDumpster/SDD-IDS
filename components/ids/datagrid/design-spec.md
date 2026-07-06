@@ -249,7 +249,7 @@ Date-only column filter: same preset radio matrix as **Date and Time**, but summ
 #### Anatomy
 
 1. `PresetRadioGroup` — vertical list of preset radio rows (reuses `.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`)
-2. `PresetSummary` — optional right-aligned **date-only** summary on the selected preset row (relative presets)
+2. `PresetSummary` — optional right-aligned **date-only** summary on the selected preset row (`All` and relative presets; not shown for `specific-date` or `custom-range`)
 3. `SpecificDateBlock` — when **Specific date** selected: single **Date:** `DatePicker-Main` (no time field)
 4. `CustomRangeBlock` — when **Custom date range** selected: two stacked date rows — **Start:** + picker, **End:** + picker
 
@@ -604,7 +604,7 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
 #### Anatomy
 
 1. `PresetRadioGroup` — vertical list of preset radio rows (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`)
-2. `PresetSummary` — optional right-aligned summary text on the same row as the selected preset (relative presets only)
+2. `PresetSummary` — optional right-aligned summary text on the same row as the selected preset (`All` and relative presets; not shown for `specific-date` or `custom-range`)
 3. `SpecificDateBlock` — when **Specific date** selected: one row with **Date:** + **Time (optional):** pickers
 4. `CustomRangeBlock` — when **Custom date and time range** selected: two rows (**Start Date** + **Time (optional)**, **End Date** + **Time (optional)**)
 
@@ -1420,7 +1420,7 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 - **Hover color**: `var(--color-icon-neutral-strong)` — do NOT use `var(--color-icon-neutral)` (identical to default, no visual feedback)
 - **Selected vs hover priority**: in `resolveFilterToggleVisual`, check `resolveIdsDataGridColumnFilterActive()` BEFORE `filterHoverKey`/`filterFocusKey`; wrong order causes the icon to show gray instead of blue when an active filter column is hovered
 - **Size in open menu tab**: use `padding: 11px 11px 12px` on `.filterPopupIconTab`, NOT `padding: 12px` — the tab has 3×1px borders; with `box-sizing: border-box` and `padding: 12px` the content area is only 12×13px, causing the icon to flex-shrink below 14×14
-- **Mask size on filter `<Icon>`**: pass `style={{ WebkitMaskSize: "14px 14px", maskSize: "14px 14px" }}` — the filter SVG has a 12:14 natural ratio; the `Icon` default `mask-size: contain` renders it 12px wide; `styleProp` is spread last so this overrides the default
+- **Mask size on filter icon**: the filter SVG has a 12:14 natural ratio; the `Icon` default `mask-size: contain` renders it 12px wide instead of 14×14. Fix: add `.filterIcon span, .filterPopupIconTab span { mask-size: 14px 14px !important; -webkit-mask-size: 14px 14px !important; }` in `IdsDataGrid.module.css` — applies to both the header toggle icon and the open-menu tab icon
 
 **Pagination / Footer**
 - **Background**: use `var(--color-background-surface-1)` for both the `.footer` wrapper in `IdsDataGrid.module.css` and the `IdsPagination` component via `background="gray"` prop in `IdsDataGrid.tsx` — do NOT use `var(--color-background-component)` for the datagrid footer row
@@ -1431,10 +1431,15 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 - **Search icon**: slug `search-16`, rendered `16×16px` with no wrapper styles (no display/align-items/justify-content on the icon itself)
 - **Dismiss/clear button**: icon slug `ctrl-close-16`, rendered `12×12px`, visible only when search query is non-empty; added to column search, single-select, and multi-select filter search inputs
 
+**Date / Date and Time filters — preset row summary**
+- **Bug (fixed)**: `modeShowsSummary` incorrectly excluded `"all"` — correct guard is `mode !== "specific-date" && mode !== "custom-range"`. Do NOT add `mode !== "all"`.
+- **Summary display** (optional feature): `showSummary = (checked || isHovered) && modeShowsSummary(mode)`. On hover for a non-selected row, compute summary from `{ ...state, mode }` so the hovered mode's range is shown regardless of the current checked mode.
+- **Hover tracking**: add `const [hoverMode, setHoverMode] = useState<Mode | null>(null)` in the panel component; attach `onMouseEnter={() => setHoverMode(mode)}` / `onMouseLeave={() => setHoverMode(null)}` to each `.optionRow` div.
+
 **Date / Date and Time / Numeric filters — option row states**
-- **hover**: background `var(--color-background-controls-brand-lighter)`, inset top/bottom `1px var(--color-border-brand-base)`
-- **focus (keyboard only)**: `outline: 2px solid var(--color-border-brand-base); outline-offset: -2px` on the row; no focus ring on radio when row-level focus is present
-- **disabled**: radio border `var(--color-border-disabled)`, radio background `var(--color-background-disabled)`, dot `var(--color-icon-disabled)`, label color `var(--color-text-disabled)`, cursor `not-allowed`
+- **hover**: `.optionRow:not(:has(.radioInput:disabled)):hover` — `background: var(--color-background-controls-brand-lighter)` + `box-shadow: inset 0 1px 0 0 var(--color-border-brand-base), inset 0 -1px 0 0 var(--color-border-brand-base)`. Exclude disabled rows via `:not(:has(.radioInput:disabled))`.
+- **focus (keyboard only)**: `.optionRow:has(.radioInput:focus-visible)` — `outline: 2px solid var(--color-border-brand-base); outline-offset: -2px` on the row. Remove any `.radioRoot`-level focus ring — row-level ring supersedes it.
+- **disabled**: `.optionRow:has(.radioInput:disabled)` — radio: `border-color: var(--color-border-disabled)`, `background: var(--color-background-disabled)`; dot: `background: var(--color-icon-disabled)`; label: `color: var(--color-text-disabled)`, `cursor: not-allowed`.
 
 **Column Search filter**
 - **Panel width**: `300px` (min-width/max-width)

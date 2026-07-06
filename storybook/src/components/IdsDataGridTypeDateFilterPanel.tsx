@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import {
   defaultIdsDataGridDateFilterState,
   formatIdsDataGridDateFilterSummary,
@@ -18,7 +18,7 @@ export interface IdsDataGridTypeDateFilterPanelProps {
 }
 
 function modeShowsSummary(mode: IdsDataGridDateFilterMode): boolean {
-  return mode !== "all" && mode !== "specific-date" && mode !== "custom-range";
+  return mode !== "specific-date" && mode !== "custom-range";
 }
 
 /**
@@ -32,6 +32,7 @@ export function IdsDataGridTypeDateFilterPanel({
 }: IdsDataGridTypeDateFilterPanelProps) {
   const slug = groupLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const groupName = `${slug}-date-filter`;
+  const [hoverMode, setHoverMode] = useState<IdsDataGridDateFilterMode | null>(null);
 
   const setMode = (mode: IdsDataGridDateFilterMode) => {
     if (mode === "all") {
@@ -55,14 +56,20 @@ export function IdsDataGridTypeDateFilterPanel({
       {IDS_DATAGRID_DATE_FILTER_MODES.map((mode) => {
         const checked = state.mode === mode;
         const inputId = `${slug}-mode-${mode}`;
-        const showSummary = checked && modeShowsSummary(mode);
-        const summary = showSummary ? formatIdsDataGridDateFilterSummary(state) : null;
+        const isHovered = hoverMode === mode;
+        const showSummary = (checked || isHovered) && modeShowsSummary(mode);
+        const summaryState: IdsDataGridDateFilterState = checked ? state : { ...state, mode };
+        const summary = showSummary ? formatIdsDataGridDateFilterSummary(summaryState) : null;
         const showSpecific = checked && mode === "specific-date";
         const showCustom = checked && mode === "custom-range";
 
         return (
           <div key={mode}>
-            <div className={styles.optionRow}>
+            <div
+              className={styles.optionRow}
+              onMouseEnter={() => setHoverMode(mode)}
+              onMouseLeave={() => setHoverMode(null)}
+            >
               <label
                 className={styles.optionLabel}
                 htmlFor={inputId}
