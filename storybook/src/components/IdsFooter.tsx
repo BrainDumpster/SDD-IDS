@@ -69,14 +69,14 @@ export function IdsFooter({
       <div className={styles.left}>
         {showHostname && (
           <div className={styles.field}>
-            <span className={styles.label}>Host Name: </span>
+            <span className={styles.label}>Host Name:</span>
             <span className={styles.value}>{hostname}</span>
           </div>
         )}
         {swid != null && swid !== "" && (
           <div className={styles.swidGroup}>
             <div className={styles.field}>
-              <span className={styles.label}>SWID: </span>
+              <span className={styles.label}>SWID:</span>
               <span className={styles.value}>{swid}</span>
             </div>
             <button
