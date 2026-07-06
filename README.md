@@ -1,14 +1,13 @@
 # SDD-IDS — Spec-Driven Design Intelligence System
 
-A RAG-powered platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.md` files, and serves them to downstream AI coding agents and development teams.
+A platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.md` files, and serves them to downstream AI coding agents and development teams.
 
 ## What It Does
 
 - **Extracts** component specs from Figma via MCP tools (tokens, states, anatomy, measurements)
 - **Generates** framework-agnostic `design-spec.md` files — the canonical deliverable for any developer (React, Angular, Vue, native)
 - **Validates** generated code against design system rules and tokens
-- **Indexes** design system documentation (MDX from GitHub Enterprise) into Qdrant vectors for RAG
-- **Answers** design system questions via chat agent and semantic search API
+- **Optionally generates** UI component code from specs via LLM APIs (Ollama)
 
 Supports multiple design systems via `DESIGN_SYSTEM` env var:
 - **IDS** (default): Original IDS design system (`components/ids`, `components/ids-theme.css`)
@@ -128,7 +127,7 @@ When SDD-IDS is open, the agent loads layers **in order** (most specific wins):
 
 ### Portable spec bundle (generate without cloning SDD-IDS)
 
-If your team works in **another repository**, copy only the **design contract files** for the component(s) you need. You do **not** need Qdrant, Ollama, Figma MCP, or the rest of SDD-IDS to generate code from specs.
+If your team works in **another repository**, copy only the **design contract files** for the component(s) you need. You do **not** need Ollama, Figma MCP, or the rest of SDD-IDS to generate code from specs.
 
 **Suggested folder in your app repo** (keep the same relative paths so prompts stay simple):
 
@@ -166,7 +165,7 @@ design-contract/
 3. Ensure your app loads the theme CSS (or maps the same `var(--…)` tokens in your build).
 4. Copy any referenced icons into your app’s asset pipeline.
 
-**What you do *not* need to copy:** `storybook/`, `generation/`, `rag/`, vector DB, `.env` Figma tokens, or full `data/` maps — unless you want Storybook parity inside SDD-IDS itself.
+**What you do *not* need to copy:** `storybook/`, `generation/`, `.env` Figma tokens, or full `data/` maps — unless you want Storybook parity inside SDD-IDS itself.
 
 ### Copy-paste prompts
 
@@ -542,8 +541,6 @@ The `generation/` folder contains runtime codegen orchestration and adapters (no
   - Materializes theme layers in deterministic order (IDS theme first, program theme second).
 - `generation/auto_repair_engine.py`
   - Post-generation auto-repair loop driven by validation feedback.
-- `generation/rag_component_generator.py`
-  - RAG-aware generation path using retrieved design knowledge context.
 - `generation/figma_aware_generator.py` and `generation/figma_enhanced_prompts.py`
   - Figma-context-aware generation helpers/prompts.
 - `generation/framework_adapters/*`
@@ -652,7 +649,7 @@ Run strict gate for one component:
 python scripts/strict_spec_storybook_gate.py --component button --framework React --style-mode css-module
 ```
 
-Run in spec-only mode (no RAG/retrieval dependency):
+Run in spec-only mode (default; `--spec-only` kept for backward compatibility):
 
 ```bash
 python scripts/strict_spec_storybook_gate.py --component button --spec-only
@@ -903,10 +900,9 @@ Key `synapse.yaml` fields:
 # Python dependencies (uses uv)
 uv pip install -r requirements.txt
 
-# Required services (for RAG features)
-docker run -p 6333:6333 qdrant/qdrant          # vector DB
-ollama serve                                     # LLM backend
-ollama pull llama3 && ollama pull embeddinggemma  # models
+# Optional: Ollama for LLM-based generation APIs
+ollama serve
+ollama pull llama3
 
 # Environment
 cp .env.example .env
@@ -917,11 +913,8 @@ cp .env.example .env
 
 | API | Port | Module | Purpose |
 |---|---|---|---|
-| RAG Query | 8000 | `api/rag_api.py` | Design system Q&A |
 | Figma Specs | 8001 | `api/figma_specs_api.py` | Figma spec extraction |
 | Enhanced Generation | 8002 | `api/enhanced_generation_api.py` | Framework-aware code gen |
-| Search | 8005 | `api/search_api.py` | Semantic search for website |
-| MCP Streamable | 8080 | `mcp_tools/streamable_mcp_server.py` | MCP tool server |
 | Audit Status | 8099 | `scripts/synapse_spec_audit.py` | Spec audit status (watch mode) |
 
 ## Architecture
@@ -940,21 +933,15 @@ Figma (MCP tools)
               ├── synapse-interaction-templates.json (keyboard/ARIA)
               └── synapse-figma-layout-cache.json (measurements)
 
-GitHub Enterprise MDX
-  │
-  └──► ingestion/ (parse/chunk) ──► embeddings/ ──► Qdrant
-                                                       │
-  User query ──► rag/ (component detection + retrieval) ┘──► LLM ──► answer
-             ──► generation/ (prompt compilation) ──► code output
-             ──► validation/ (rules + tokens + structure) ──► report
+design-spec.md + theme CSS
+  ├──► generation/ (prompt compilation) ──► code output
+  └──► validation/ (rules + tokens + structure) ──► report
 ```
 
 ### Key Subsystems
 
 - **Spec pipeline** (`scripts/rebuild_specs.py`): Root spec + 46 component override specs from CSS modules, Figma map, theme CSS, interaction templates, and layout cache
 - **Audit agent** (`scripts/synapse_spec_audit.py`): Persistent watcher or single-pass auditor that detects stale specs, invalid tokens, hardcoded values
-- **Ingestion** (`pipeline/index_pipeline.py`): GitHub MDX fetch, parse, chunk, embed, store in Qdrant
-- **RAG** (`rag/`): Component detection, filtered semantic search, LLM answer generation
 - **Generation** (`generation/`): Framework-aware code gen with Base UI, Angular, CSS Modules adapters
 - **Validation** (`validation/`): Rule + token + structure validation with severity scoring
 - **Token management** (`tokens/`): Figma MCP client, token extraction, CSS syntax generation
@@ -962,8 +949,7 @@ GitHub Enterprise MDX
 ## Project Structure
 
 ```
-├── agent/                  # Chat agents (design_chat.py, rag_agent.py)
-├── api/                    # FastAPI servers (RAG, search, figma specs, generation)
+├── api/                    # FastAPI servers (figma specs, generation, validation)
 ├── components/
 │   ├── synapse-theme.css   # Global CSS variables (light + dark)
 │   ├── ids/
@@ -979,12 +965,7 @@ GitHub Enterprise MDX
 ├── generation/             # Code generation (adapters, prompts, theme injection)
 ├── ingestion/              # GitHub MDX ingestion, Figma spec extraction
 ├── knowledge/              # Component registry, pattern graphs, schema
-├── mcp_tools/              # MCP server implementation
-├── pipeline/               # Orchestration (index, rules, knowledge)
-├── rag/                    # RAG chain (component detection, retrieval)
-├── retrieval/              # Semantic search, reranking
-├── rules/                  # Rule extraction, filtering, confidence scoring
-├── scripts/                # CLI tools (rebuild_specs, audit, enricher, indexing)
+├── scripts/                # CLI tools (rebuild_specs, audit, enricher)
 ├── storybook/              # 46 Synapse component implementations (React + CSS Modules)
 ├── tokens/                 # Figma token management (extraction, sync, mapping)
 ├── validation/             # Design validation engine (rules, tokens, structure)
@@ -1007,7 +988,6 @@ pnpm build      # production build
 - Python 3.12+ (`.python-version` = 3.12)
 - Node.js + pnpm (for Storybook)
 - Config via `.env` (see `.env.example`)
-- Embedding dimension: 768 (embeddinggemma), Qdrant distance: COSINE
 - `DESIGN_SYSTEM=synapse` for Synapse pipeline
 - `DESIGN_SYSTEM=dap` for DAP pipeline (IDS baseline + DAP overrides)
 - default when unset: `DESIGN_SYSTEM=ids`

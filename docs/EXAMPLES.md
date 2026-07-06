@@ -299,32 +299,12 @@ curl -X POST "http://localhost:8000/design/validate" \
   }'
 ```
 
-## MCP Tool Examples
+## Design-spec intake (Figma MCP)
 
-### AI Assistant Integration
+Use **Figma MCP in your IDE** with the design-spec intake wizard — see [`docs/design-spec-intake.md`](./design-spec-intake.md). Example agent prompt:
 
-```python
-from mcp_tools.component_generator_tool import generate_component
-
-# Generate component via MCP
-result = generate_component(
-    component="modal",
-    description="A modal dialog with close button and overlay",
-    framework="React",
-    style_mode="css-module"
-)
-```
-
-### Validation via MCP
-
-```python
-from mcp_tools.design_validator_tool import validate_design_tool
-
-# Validate via MCP
-report = validate_design_tool(
-    component="modal",
-    code="<div class='modal'><div class='modal__content'>...</div></div>"
-)
+```text
+@design-spec-intake-wizard Start the design-spec intake wizard for programme ids, component Button.
 ```
 
 ## Theme Integration Examples

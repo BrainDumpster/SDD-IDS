@@ -1,9 +1,10 @@
 """
 Figma-Aware Component Generator
-Enhanced component generator that integrates Figma specifications with RAG knowledge
+Enhanced component generator that integrates Figma specifications with local design-spec files.
 """
 
 import re
+from pathlib import Path
 from typing import Dict, Any, Optional, List
 from langchain_community.llms import Ollama
 
@@ -11,19 +12,15 @@ from generation.style_modes import StyleMode
 from generation.figma_enhanced_prompts import FigmaEnhancedPrompts, create_figma_enhanced_context
 from generation.component_generator import ComponentGenerator
 from tokens.figma_spec_extractor import ComponentSpec
-from rag.design_rag import DesignRAG
-from retrieval.design_retriever import DesignRetriever
 
 
 class FigmaAwareGenerator:
     """
-    Enhanced component generator that combines Figma specifications with RAG knowledge
+    Enhanced component generator that combines Figma specifications with local design-spec files.
     """
     
     def __init__(self, model: str = "llama3"):
         self.llm = Ollama(model=model, temperature=0.1)
-        self.rag = DesignRAG()
-        self.retriever = DesignRetriever()
         self.base_generator = ComponentGenerator(model)
         self.prompt_builder = FigmaEnhancedPrompts()
     
@@ -36,14 +33,14 @@ class FigmaAwareGenerator:
         include_documentation: bool = True
     ) -> Dict[str, str]:
         """
-        Generate component using Figma specifications and RAG knowledge
+        Generate component using Figma specifications and local design-spec files
         
         Args:
             figma_spec: Component specification from Figma
             framework: Target framework (React, Angular)
             style_mode: Styling approach
             additional_query: Additional user requirements
-            include_documentation: Whether to include documentation from RAG
+            include_documentation: Whether to include local design-spec documentation
             
         Returns:
             Generated component with structured output
@@ -230,26 +227,12 @@ class FigmaAwareGenerator:
         return parsed
     
     def _retrieve_documentation(self, figma_spec: ComponentSpec) -> str:
-        """Retrieve relevant documentation for the component"""
-        try:
-            # Search for component documentation
-            docs = self.retriever.search(
-                query=f"{figma_spec.name} component design system",
-                component=figma_spec.name,
-                top_k=5
-            )
-            
-            if docs:
-                # Combine documentation snippets
-                doc_content = []
-                for doc in docs[:3]:  # Top 3 most relevant
-                    doc_content.append(doc.page_content)
-                
-                return "\n\n".join(doc_content)
-            
-        except Exception as e:
-            print(f"⚠️ Error retrieving documentation: {e}")
-        
+        """Load local design-spec.md when available."""
+        slug = figma_spec.name.lower().replace(" ", "-")
+        for base in (Path("components/ids"), Path("components/synapse"), Path("components/dap")):
+            spec_path = base / slug / "design-spec.md"
+            if spec_path.exists():
+                return spec_path.read_text()
         return ""
     
     def _parse_figma_aware_output(

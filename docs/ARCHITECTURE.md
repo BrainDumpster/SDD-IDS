@@ -1,8 +1,8 @@
-# Design Intelligence RAG System Architecture
+# SDD-IDS Architecture
 
 ## Overview
 
-The Design Intelligence RAG System is a comprehensive AI-powered platform for generating, validating, and managing UI components within a strict design system. It combines retrieval-augmented generation (RAG) with automated validation and repair mechanisms to ensure design system compliance.
+Spec-Driven Design Intelligence System — extracts component specs from Figma, produces `design-spec.md` files, validates generated code, and supports optional LLM-based component generation from specs.
 
 ## System Architecture
 
@@ -12,9 +12,9 @@ The Design Intelligence RAG System is a comprehensive AI-powered platform for ge
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │   Component  │    │   Design     │    │  Validation │         │
-│  │ Generation   │    │ Intelligence │    │   Engine    │         │
-│  │   Pipeline   │    │    RAG       │    │             │         │
+│  │   Component  │    │  Design Spec │    │  Validation │         │
+│  │ Generation   │    │   Pipeline   │    │   Engine    │         │
+│  │   Pipeline   │    │  (Figma)     │    │             │         │
 │  └─────────────┘    └─────────────┘    └─────────────┘         │
 │           │                   │                   │           │
 │           ▼                   ▼                   ▼           │
@@ -60,17 +60,16 @@ Structured Output
 - `AutoRepairEngine`: Automated validation and repair loop
 - `StyleMode`: Enum for CSS Modules, CSS-in-JS, Angular SCSS
 
-### 2. Design Intelligence RAG
+### 2. Design Spec Pipeline
 
-**Location**: `rag/`
+**Location**: `components/`, `tokens/`, design-spec intake skills
 
-**Purpose**: Retrieves relevant design rules and component specifications using semantic search.
+**Purpose**: Extract Figma component data into framework-agnostic `design-spec.md` files and theme CSS.
 
 **Components**:
-- Vector database of design rules
-- Semantic search capabilities
-- Component specification retrieval
-- Design rule matching
+- Figma MCP / REST extraction
+- Token sync into programme theme CSS
+- Canonical spec files under `components/<programme>/<slug>/`
 
 ### 3. Validation Engine
 
@@ -99,15 +98,9 @@ Structured Output
 - `POST /design/validate`: Validate components against design rules
 - `POST /design/generate`: Generate new components
 
-### 5. MCP Tools
+### 5. External MCP (IDE)
 
-**Location**: `mcp_tools/`
-
-**Purpose**: Model Context Protocol tools for AI assistant integration.
-
-**Tools**:
-- `design_validator_tool`: Component validation
-- `component_generator_tool`: Component generation
+**Figma MCP** runs in your IDE (Cursor Figma plugin) — not as a folder in this repo. Use it for live spec extraction during the design-spec intake wizard.
 
 ## Data Flow
 
@@ -130,11 +123,10 @@ Structured Output
 
 ## Technology Stack
 
-- **LLM**: Ollama (Llama3)
+- **LLM**: Ollama (Llama3) — optional for generation APIs
 - **Framework**: FastAPI for APIs
 - **Validation**: Custom rule engine
-- **RAG**: Vector-based semantic search
-- **MCP**: Model Context Protocol integration
+- **MCP**: Model Context Protocol integration (Figma MCP in IDE)
 
 ## Key Features
 
@@ -142,7 +134,6 @@ Structured Output
 - **Theme Awareness**: Light/Dark theme support via CSS variables
 - **Automated Repair**: Self-healing component generation
 - **Design System Compliance**: Strict rule enforcement
-- **Semantic Search**: Intelligent design rule retrieval
 - **Production Ready**: Scalable API architecture
 
 ## Configuration Files

@@ -32,7 +32,7 @@ class ComponentGenerationRequest(BaseModel):
     framework: str = Field(default="React", description="Target framework (React, Angular)")
     style_mode: str = Field(default="css-module", description="Styling approach")
     additional_requirements: str = Field(default="", description="Additional requirements")
-    include_documentation: bool = Field(default=True, description="Include documentation from RAG")
+    include_documentation: bool = Field(default=True, description="Include local design-spec documentation when available")
     generate_states: bool = Field(default=True, description="Generate state variations")
     responsive: bool = Field(default=True, description="Generate responsive design")
 
@@ -102,7 +102,7 @@ async def root():
 @app.post("/design/generate/figma-aware", response_model=GenerationResponse)
 async def generate_figma_aware_component(request: ComponentGenerationRequest):
     """
-    Generate component using Figma specifications and RAG knowledge
+    Generate component using Figma specifications and local design-spec documentation
     
     Args:
         request: Component generation request

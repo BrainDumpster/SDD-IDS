@@ -205,24 +205,9 @@ curl -X POST "http://localhost:8001/design/generate" \
   }'
 ```
 
-### 5. MCP Tool Usage
+### 5. Figma MCP (spec generation)
 
-#### Setup MCP Tools
-
-```bash
-# Run design validator tool
-python mcp_tools/design_validator_tool.py
-
-# Run component generator tool
-python mcp_tools/component_generator_tool.py
-```
-
-#### Use with AI Assistants
-
-The MCP tools integrate with AI assistants like Cascade to provide:
-- Component validation capabilities
-- Component generation features
-- Design system compliance checking
+Use **Figma MCP in your IDE** (Cursor Figma plugin) for design-spec intake — see [`docs/design-spec-intake.md`](./design-spec-intake.md) and the `@design-spec-intake-wizard` skill. No local MCP server folder is required in this repo.
 
 ## Configuration
 

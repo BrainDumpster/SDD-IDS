@@ -14,7 +14,7 @@ def _load_json_safe(path_str: str):
 
 class ComponentContextCompiler:
 
-    def __init__(self, config=None, enable_rag: bool = True):
+    def __init__(self, config=None):
         """
         Args:
             config: Optional DesignSystemConfig. If None, loads from settings.
@@ -27,16 +27,6 @@ class ComponentContextCompiler:
                 config = None
 
         self._config = config
-
-        collection = config.qdrant_collection if config else None
-        self.rag = None
-        if enable_rag:
-            try:
-                # RAG is optional for strict spec-driven workflows.
-                from rag.design_rag import DesignRAG  # local import to avoid hard dependency
-                self.rag = DesignRAG(collection_name=collection)
-            except Exception:
-                self.rag = None
 
         registry_path = config.component_registry_path if config else "component_registry.json"
         self.registry = _load_json_safe(registry_path)
@@ -188,15 +178,6 @@ class ComponentContextCompiler:
         validation_issues = self._validate_spec_layers(spec_layers)
         tokens = self.load_tokens(component)
 
-        knowledge = ""
-        if self.rag is not None:
-            try:
-                knowledge = self.rag.query(
-                    f"Provide complete design rules and behavior for {component}"
-                )
-            except Exception:
-                knowledge = ""
-
         anatomy = self.registry.get(component, {}).get("anatomy", [])
 
         return {
@@ -209,6 +190,6 @@ class ComponentContextCompiler:
             "layer_precedence": "program_component_delta > program_root_delta > ids_component > ids_root",
             "validation_issues": validation_issues,
             "tokens": tokens,
-            "rules": knowledge,
+            "rules": "",
             "anatomy": anatomy
         }

@@ -33,16 +33,6 @@
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
       }
-    },
-    "simple-rag-component-generator": {
-      "command": "python3",
-      "args": [
-        "/home/muthu/projects/AI/CascadeProjects/windsurf-project/mcp_tools/simple_rag_generator.py"
-      ],
-      "disabled": false,
-      "env": {
-        "PYTHONPATH": "/home/muthu/projects/AI/CascadeProjects/windsurf-project"
-      }
     }
   }
 }

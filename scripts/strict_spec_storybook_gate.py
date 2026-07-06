@@ -37,7 +37,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--spec-only",
         action="store_true",
-        help="Disable RAG/retrieval context and run using layered specs/theme only",
+        help="Deprecated: specs/theme-only is now the default (kept for backward compatibility)",
     )
     parser.add_argument(
         "--deterministic-story",
@@ -238,7 +238,7 @@ def main() -> int:
         return 2
     generated_root.mkdir(parents=True, exist_ok=True)
 
-    compiler = ComponentContextCompiler(config=cfg, enable_rag=not args.spec_only)
+    compiler = ComponentContextCompiler(config=cfg)
     generator = None
     if not args.deterministic_story:
         from generation.component_generator import ComponentGenerator

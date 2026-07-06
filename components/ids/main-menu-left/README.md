@@ -50,7 +50,7 @@ python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --spec-
 | Flag | Role |
 |------|------|
 | `--component main-menu-left` | Target slug (matches `components/ids/main-menu-left/`) |
-| `--spec-only` | Disables RAG/retrieval context; gate runs on **layered specs + theme** only (faster, CI-friendly) |
+| `--spec-only` | Deprecated: specs/theme-only is now the default (kept for backward compatibility) |
 | `--deterministic-story` | Regenerates **`storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`** from `generation/deterministic_storybook/ids/main_menu_left.py` |
 
 ### Outputs this updates

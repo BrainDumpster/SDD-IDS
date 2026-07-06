@@ -10,7 +10,7 @@ The enhanced Design Intelligence System now includes comprehensive Figma integra
 - **Comprehensive Spec Extraction**: Extract layout, typography, colors, states, and anatomy from Figma
 - **Automated Pipeline**: Batch process multiple components from component mapping
 - **MDX Generation**: Convert specifications to structured documentation
-- **Vector Store Integration**: Index specifications for RAG search
+- **Local Spec Files**: Canonical `design-spec.md` per component
 
 ### 2. Figma-Aware Code Generation
 - **Pixel-Perfect Implementation**: Generate code matching exact Figma measurements
@@ -28,9 +28,9 @@ The enhanced Design Intelligence System now includes comprehensive Figma integra
 ## 🏗️ Architecture
 
 ```
-Figma Design → MCP Client → Spec Extractor → Vector Store
+Figma Design → MCP Client → Spec Extractor → design-spec.md + theme CSS
                                                     ↓
-Documentation → GitHub Loader → Vector Store → RAG → Enhanced Generator → API → Code
+                                         Enhanced Generator → API → Code
 ```
 
 ## 📁 New Components
@@ -52,11 +52,6 @@ Documentation → GitHub Loader → Vector Store → RAG → Enhanced Generator 
 - **Validation engine**: Compare generated code with Figma specs
 - **Batch processing**: Generate multiple components
 
-#### `scripts/enhanced_figma_specs_pipeline.py`
-- **EnhancedSpecPipeline**: Automated batch processing
-- **Background tasks**: Async processing with status tracking
-- **Report generation**: Comprehensive pipeline reports
-
 ### API Services
 
 #### `api/figma_specs_api.py` (Port 8001)
@@ -75,18 +70,14 @@ Documentation → GitHub Loader → Vector Store → RAG → Enhanced Generator 
 
 ### 1. Environment Setup
 
-Ensure all required services are running:
+Ensure Ollama is running when using LLM generation APIs:
 
 ```bash
-# Start Qdrant vector database
-docker run -p 6333:6333 qdrant/qdrant
-
 # Start Ollama server
 ollama serve
 
-# Pull required models
+# Pull required model
 ollama pull llama3
-ollama pull embeddinggemma
 ```
 
 ### 2. Generate Component Specifications
@@ -247,10 +238,6 @@ FIGMA_MCP_URL=https://mcp.figma.com/mcp
 # Ollama Configuration
 OLLAMA_HOST=http://localhost:11434
 LLM_MODEL=llama3
-
-# Qdrant Configuration
-QDRANT_HOST=localhost
-QDRANT_PORT=6333
 ```
 
 ### Component Mapping

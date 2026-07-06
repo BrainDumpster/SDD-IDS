@@ -104,9 +104,6 @@ Angular child components (`def-dg-column`, `def-datagrid-filter`, `def-dg-cell`)
 ## Related commands
 
 ```bash
-# Index spec into Qdrant (optional)
-python3 scripts/index_component_specs.py
-
 # Figma specs API (if running locally)
 python3 api/figma_specs_api.py
 ```

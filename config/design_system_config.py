@@ -68,9 +68,6 @@ class DesignSystemConfig:
     # Directories
     components_dir: str = "components/ids"
 
-    # Qdrant
-    qdrant_collection: str = "design_knowledge"
-
     # Framework
     framework_layer: str = ""  # e.g. "base-ui" for Synapse React
 
@@ -152,7 +149,6 @@ def load_design_system(name: str) -> DesignSystemConfig:
         theme_css_path=data.get("theme_css_path", "components/theme.css"),
         base_ui_mapping_path=data.get("base_ui_mapping_path", ""),
         components_dir=data.get("components_dir", "components/ids"),
-        qdrant_collection=data.get("qdrant_collection", "design_knowledge"),
         framework_layer=data.get("framework_layer", ""),
         root_spec_path=data.get("root_spec_path", ""),
         baseline_components_dir=data.get("baseline_components_dir", "components/ids"),

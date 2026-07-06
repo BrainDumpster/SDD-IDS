@@ -1,8 +1,8 @@
-# Design Intelligence RAG System Documentation
+# SDD-IDS Documentation
 
 ## Overview
 
-The Design Intelligence RAG System is an AI-powered platform for generating, validating, and managing UI components within a strict design system. It combines retrieval-augmented generation (RAG) with automated validation and repair mechanisms to ensure design system compliance.
+Spec-Driven Design Intelligence System — extracts component specs from Figma, produces `design-spec.md` files, validates generated code, and supports optional LLM-based component generation from specs.
 
 ## Documentation Structure
 
@@ -118,9 +118,7 @@ Component Context → Style Mode → Prompt Compiler → LLM → Structured Outp
 design-intelligence-system/
 ├── generation/          # Component generation pipeline
 ├── validation/          # Validation engine
-├── rag/                # Design intelligence RAG
 ├── api/                # REST API endpoints
-├── mcp_tools/          # MCP integration tools
 ├── docs/               # Documentation (this folder)
 └── config/             # Configuration files
 ```

@@ -1,7 +1,6 @@
 langchain
 langchain-community
 langchain-core
-qdrant-client
 beautifulsoup4
 markdown>=3.5
 requests

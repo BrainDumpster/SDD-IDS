@@ -16,19 +16,14 @@ class Settings:
     ollama_host = os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
     ollama_vision_model = os.getenv("OLLAMA_VISION_MODEL", "llava")
 
-    qdrant_host = os.getenv("QDRANT_HOST")
-    qdrant_port = int(os.getenv("QDRANT_PORT", "6333"))
-    qdrant_collection = os.getenv("QDRANT_COLLECTION_NAME", "design_knowledge")
-
     figma_token = os.getenv("FIGMA_TOKEN")
     # Optional default file key only. Multi-component flows use `figmaUrl` per row in
     # `data/component-figma-map.json` and derive file_key + node_id from that URL.
     figma_file_key = os.getenv("FIGMA_FILE_KEY")
     figma_mcp_url = os.getenv("FIGMA_MCP_URL")
 
-    # Text / embeddings model names on Ollama (host = OLLAMA_HOST above)
+    # Text model name on Ollama (host = OLLAMA_HOST above)
     llm_model = os.getenv("LLM_MODEL", "llama3")
-    embed_model = os.getenv("EMBED_MODEL", "embeddinggemma")
 
     # Active design system: "ids" (default) or "synapse"
     design_system = os.getenv("DESIGN_SYSTEM", "ids")
@@ -41,9 +36,6 @@ class Settings:
         if self._design_system_config is None:
             from config.design_system_config import load_design_system
             self._design_system_config = load_design_system(self.design_system)
-            # Override qdrant_collection from config when not explicitly set via env
-            if not os.getenv("QDRANT_COLLECTION_NAME"):
-                self.qdrant_collection = self._design_system_config.qdrant_collection
         return self._design_system_config
 
 

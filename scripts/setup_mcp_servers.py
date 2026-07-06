@@ -115,16 +115,6 @@ def create_updated_mcp_config():
                     "GITHUB_REPO": "${GITHUB_REPO}"
                 }
             },
-            "simple-rag-component-generator": {
-                "command": "python3",
-                "args": [
-                    "/home/muthu/projects/ids_design_knowledge/mcp_tools/simple_rag_generator.py"
-                ],
-                "disabled": False,
-                "env": {
-                    "PYTHONPATH": "/home/muthu/projects/ids_design_knowledge"
-                }
-            }
         }
     }
     
@@ -160,14 +150,8 @@ GITHUB_REPO=your-org/your-repo
 FIGMA_TOKEN=figd_your_figma_token_here
 
 # Ollama Configuration
-OLLAMA_HOST=http://100.65.144.93:11434
+OLLAMA_HOST=http://127.0.0.1:11434
 LLM_MODEL=llama3
-EMBED_MODEL=embeddinggemma
-
-# Qdrant Configuration
-QDRANT_HOST=100.65.144.93
-QDRANT_PORT=6333
-QDRANT_COLLECTION_NAME=design_knowledge
 """
     
     env_path = Path(".env.template")
