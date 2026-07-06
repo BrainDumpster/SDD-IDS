@@ -82,19 +82,19 @@
 }
 
 .tab:focus-visible {
-  outline: 2px solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: calc(var(--border-width-border-2) * -1);
   border-radius: var(--corner-radius-radius-4);
 }
 
 .tabSecondary:focus-visible {
-  height: 34px;
-  margin: 2px 0;
+  height: var(--sizing-size-34, 34px);
+  margin: var(--spacing-space-2, 2px) 0;
 }
 
 .tabPrimary:focus-visible {
-  height: 36px;
-  margin: 1px 0;
+  height: var(--sizing-size-36, 36px);
+  margin: var(--spacing-space-1, 1px) 0;
 }
 
 /* Primary: Figma leading accessible rail (full height when selected, 24px centered when not). */
