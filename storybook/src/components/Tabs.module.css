@@ -259,8 +259,8 @@
 }
 
 .moreIcon {
-  width: 10px;
-  height: 10px;
+  width: var(--sizing-size-10, 10px);
+  height: var(--sizing-size-10, 10px);
   display: block;
 }
 
