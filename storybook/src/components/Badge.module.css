@@ -37,7 +37,7 @@
 }
 
 .default {
-  background: #0672CB;
+  background: var(--color-background-controls-brand-base);
   border-color: var(--color-border-white, #ffffff);
   color: var(--color-text-white, #ffffff);
 }
