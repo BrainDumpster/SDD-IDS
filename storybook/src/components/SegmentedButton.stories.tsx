@@ -332,36 +332,6 @@ export const IconCustomSlot: Story = {
   },
 };
 
-export const DisabledStates: Story = {
-  render: () => {
-    const [value, setValue] = useState("a");
-    return (
-      <div style={{ display: "grid", gap: 16 }}>
-        <SegmentedButton
-          type="text"
-          ariaLabel="Disabled segment"
-          items={[
-            { value: "a", label: "Available" },
-            { value: "b", label: "Locked", disabled: true },
-            { value: "c", label: "Available" },
-          ]}
-          value={value}
-          onChange={setValue}
-        />
-        <SegmentedButton
-          type="text"
-          ariaLabel="Root disabled"
-          items={[
-            { value: "x", label: "One" },
-            { value: "y", label: "Two" },
-          ]}
-          value="x"
-          disabled
-        />
-      </div>
-    );
-  },
-};
 
 /** Back-compat for Storybook deep links / HMR (`spec-generated-ids-segmented-button--icon-modes`). */
 export const IconModes: Story = IconListTreeGrid;

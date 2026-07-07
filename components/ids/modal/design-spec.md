@@ -45,16 +45,17 @@
   - `small`: `960 x 497`
   - `x-small`: `640 x 328`
 - **Header insets:** `24px` horizontal, `20px` top, `4px` bottom.
-- **Description block:** `24px` horizontal, `8px` vertical.
-- **Tabs block (when present):** `24px` horizontal, `8px` vertical.
+- **Description block (Non-Alerting / Informational):** `16px` top, `24px` right/bottom/left.
+- **Description block (Warning / Major / Critical / Destructive):** `8px` top/bottom, `24px` left/right.
 - **Content block:** `24px` horizontal, `16px` top, `24px` bottom.
+- **Content block (Warning / Major / Critical / Destructive):** `24px` horizontal, `16px` top, `0` bottom.
 - **Footer insets:** `24px` all sides.
 - **Action gap:** `12px` between footer buttons.
 - **Header control icon size:** `16x16` (`Modal / ctrl-close-16`, optional full-screen icon).
 - **Close icon size:** `16x16`.
 - **Border:** `1px` solid `var(--color-border-accessible)`.
 - **Corner radius:** `var(--modal-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
-- **Elevation:** layered drop shadow (2/4/8/16 depth stack).
+- **Elevation:** layered drop shadow: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
 - **Typography:**
   - Title: `Header 5` (`24/32`, regular).
   - Body/content: `Body 2` (`14/20`, regular).
@@ -107,7 +108,7 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - **Multi-Page:** tab/page switch updates content region inside same modal shell.
 - **Scroll usage:** when `scrollBar=true`, content region supports overflow with vertical scrollbar treatment and bottom gradient cue.
 - **Footer actions:** emit distinct events for tertiary and primary actions.
-- **Destructive flow:** includes confirm text input region before destructive action.
+- **Destructive flow:** includes confirm text input region before destructive action. Confirm input layout: `16px` gap between label text and input field; input width `300px`; input `border-radius: 0`.
 - **Focus-visible:** close and action controls show brand focus ring in keyboard modality.
 ## Composition & API (runtime)
 - **Inputs**
@@ -205,6 +206,14 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - [ ] Destructive type uses destructive primary action style and confirm content slot.
 - [ ] Keyboard focus trap and escape behavior function in modal mode.
 - [ ] Light and dark theme snapshots preserve tokenized contrast.
+## Implementation Notes
+
+### Design spec errors fixed (2026-07-01)
+- **Shadow specification incorrect** — Original spec: "layered drop shadow (2/4/8/16 depth stack)" without explicit values. Fix: Updated to explicit 4-layer shadow specification: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
+- **Destructive flow specification incomplete** — Original spec: "includes confirm text input region before destructive action" without layout details. Fix: Added confirm input layout specifications: 16px gap between label text and input field; input width 300px; input border-radius 0.
+- **Description block padding incomplete** — Original spec: "24px horizontal, 8px vertical" for all types. Fix: Added type-specific padding: Non-Alerting/Informational (16px top, 24px right/bottom/left), Warning/Major/Critical/Destructive (8px top/bottom, 24px left/right).
+- **Content block padding incomplete** — Original spec: "24px horizontal, 16px top, 24px bottom" for all types. Fix: Added type-specific padding for Warning/Major/Critical/Destructive (24px horizontal, 16px top, 0 bottom).
+
 ## Source Mapping
 - **Component map:** `data/component-figma-map.json` -> `Dialog` entry pointing to `components/ids/modal/design-spec.md`
 - **Figma nodes used:**

@@ -38,6 +38,7 @@ Deterministic slot order (Figma-aligned + optional product slot):
 - **Expanded rail width:** `278px` (Figma `11099:56218`)
 - **Collapsed rail width:** `64px` (24px inline padding × 2 + 16px icon; Figma `11099:56206`)
 - **Sample frame height:** `888px` (container-driven at runtime; Storybook uses `100vh`)
+- **Menu top padding:** `var(--padding-padding-8)` on `MainMenuLeftRoot`
 - **Menu list gap:** `var(--spacing-space-8)` between primary blocks
 - **MainMenuList scroll:** primary stack lives in a flex child with `min-height: 0` and `overflow-y: auto` so long menus scroll inside the rail (footer + optional logo stay fixed)
 - **Primary row (expanded):** min-height `40px`; padding `var(--padding-padding-8)` block, `var(--padding-padding-24)` inline; gap `var(--spacing-space-16)`
@@ -46,7 +47,7 @@ Deterministic slot order (Figma-aligned + optional product slot):
 - **Primary icon:** 16×16
 - **Chevron:** 14×14
 - **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-accessible)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
-- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-accessible)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). Primary/secondary rows have **no** side borders.
+- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-accessible)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** has `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside the container. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-accessible)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
 
 ## Tokens
 ### Surfaces and borders
@@ -56,15 +57,15 @@ Deterministic slot order (Figma-aligned + optional product slot):
 - `var(--color-background-brand-light)` — primary/secondary press backgrounds
 
 ### Typography
-- Primary label: Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`, weight 500, `var(--color-text-neutral-strong)` default, `var(--color-text-brand-strong)` on hover/press/selected
-- Secondary label: Body 2 — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight 500
+- Primary label: Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`, weight 400, `var(--color-text-neutral-strong)` default, `var(--color-text-brand-strong)` on hover/press/selected
+- Secondary label: Body 2 — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight 400
 
 ### Icons
 - Default primary: `var(--color-icon-neutral-strong)`
 - Hover/press primary: `var(--color-icon-brand-strong)`
 - Selected primary: `var(--color-icon-brand-base)`
 - Chevron: `var(--color-icon-brand-strong)`
-- Collapse control: `var(--color-icon-neutral-strong)`
+- Collapse control: `var(--color-icon-neutral)`
 
 ## States (Light Theme)
 ### Primary row (`.MainMenu-Left-Element-Primary`, expanded)
@@ -251,6 +252,14 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 - [x] **Spec Accurate Design** uses `defaultSelectedItemId: "dashboard"` + canonical **`children`** / **`childrenMenu`**
 - [x] `onExpandedChange` + **`onSelected`** documented; single `aria-current="page"` (deepest active row)
 - [ ] Token mapping re-verified against Figma MCP after token/library changes (manual gate)
+
+## Implementation Notes
+
+### Bug fixes applied (2026-07-01)
+1. **Menu top padding missing** — Original bug: `.root` (MainMenuLeftRoot) was missing top padding. Fix: Added `padding-top: var(--padding-padding-8)`.
+2. **Font-weight incorrect** — Original bug: Primary label and secondary label font-weight were 500 instead of 400. Fix: Changed to `font-weight: 400` in `.primaryLabel`, `.secondaryRow`, and `.secondaryRowSelected`.
+3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-neutral-strong` instead of `color-icon-neutral`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-neutral)`.
+4. **Row borders missing** — Original bug: Primary and secondary rows lacked left/right borders to stack above container border. Fix: Added left/right borders to `.primaryRow` and `.secondaryRow` with `color-border-accessible` and `z-index: 1`. `.content` uses `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside container. `.focusRing` uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. `.selectedInset` uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside. This creates the visual effect where row borders read as the rail edges along each row, aligning over the root borders rather than doubling.
 
 ## Source Mapping
 - Design source: IDS Design Library `0bHk3XhrjFhowgFkz9yLr4`
