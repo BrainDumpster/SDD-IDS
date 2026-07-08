@@ -23,11 +23,9 @@
 .globalRoot {
   position: relative;
   width: 100%;
-  min-height: 40px;
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--spacing-space-8);
   padding-left: 0;
   border: var(--border-width-border-1) solid transparent;
   font-family: inherit;
@@ -35,6 +33,10 @@
 
 .globalRoot:not([data-carousel="true"]) {
   padding-left: var(--padding-padding-20);
+}
+
+.globalRoot[data-carousel="true"] .globalContent {
+  padding-left: 148px;
 }
 
 .globalContent {
@@ -48,11 +50,20 @@
 
 .globalActions {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   gap: var(--spacing-space-16);
-  padding: var(--padding-padding-8) var(--padding-padding-16);
+  padding-inline: var(--padding-padding-16);
   flex-shrink: 0;
+}
+
+.globalActions[data-has-action="false"] {
+  align-items: flex-start;
+  padding-block: 14px;
+}
+
+.globalActions[data-has-action="true"] {
+  align-items: center;
+  padding-block: var(--padding-padding-8);
 }
 
 .globalIconWrap {
@@ -73,6 +84,7 @@
   min-width: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
   color: inherit;
 }
 
@@ -90,14 +102,25 @@
   background: transparent;
   color: inherit;
   font: inherit;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
 }
 
-.globalDismissButton,
+.globalDismissButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 10px;
+  margin: -10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .globalCarouselButton {
-  width: 24px;
-  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -106,6 +129,7 @@
   color: inherit;
   padding: 0;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .globalDismissIcon,
@@ -124,21 +148,26 @@
 }
 
 .globalCarouselRail {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  width: 132px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  align-self: stretch;
-  gap: 22px;
+  gap: 24px;
   padding: var(--padding-padding-10) var(--padding-padding-14);
-  margin-inline-end: var(--spacing-space-16);
-  border-right: var(--border-width-border-1) solid transparent;
+  border: var(--border-width-border-1) solid;
+  border-color: inherit;
 }
 
 .globalCarouselCount {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: inherit;
+  font-weight: 400;
+  color: var(--color-text-white);
+  white-space: nowrap;
 }
 
 .globalRoot[data-severity="critical"] {
@@ -173,24 +202,36 @@
   --icon-contrast-color: var(--color-icon-white);
 }
 
-.globalRoot[data-severity="critical"] .globalDismissButton,
 .globalRoot[data-severity="warning-major"] .globalDismissButton,
 .globalRoot[data-severity="warning-minor"] .globalDismissButton {
   color: var(--color-icon-black);
 }
 
-.globalRoot[data-severity="critical"] .globalDismissIcon,
 .globalRoot[data-severity="warning-major"] .globalDismissIcon,
 .globalRoot[data-severity="warning-minor"] .globalDismissIcon {
   filter: none;
 }
 
+.globalRoot[data-severity="critical"] .globalDismissButton,
 .globalRoot[data-severity="informational"] .globalDismissButton {
   color: var(--color-icon-white);
 }
 
+.globalRoot[data-severity="critical"] .globalDismissIcon,
 .globalRoot[data-severity="informational"] .globalDismissIcon {
   filter: brightness(0) invert(1);
+}
+
+.globalRoot[data-severity="critical"] .globalActionButton,
+.globalRoot[data-severity="informational"] .globalActionButton {
+  border-color: var(--color-border-white);
+  color: var(--color-text-white);
+}
+
+.globalRoot[data-severity="warning-major"] .globalActionButton,
+.globalRoot[data-severity="warning-minor"] .globalActionButton {
+  border-color: var(--color-border-black);
+  color: var(--color-text-black);
 }
 
 .globalRoot[data-severity="critical"] .globalCarouselRail {
@@ -219,12 +260,17 @@
   filter: brightness(0);
 }
 
+.globalRoot[data-severity="warning-minor"] .globalCarouselCount {
+  color: var(--color-text-black);
+}
+
 /* ========== Inline (Figma InlineAlert — light “tint + inset rail”) ========== */
 .inlineRoot {
   position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: var(--spacing-space-12);
   width: 100%;
   box-sizing: border-box;
   min-height: var(--scale-40);
@@ -286,7 +332,24 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-space-4);
+  gap: 0;
+  padding-right: var(--padding-padding-16);
+}
+
+.inlineTitleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+.inlineTitleRow .inlineTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.inlineTitleRow .inlineActionOutlined {
+  flex-shrink: 0;
 }
 
 .inlineTitle {
@@ -332,18 +395,16 @@
 
 .inlineRoot[data-density="compact"] .inlineTrailing {
   align-items: center;
-  padding: var(--padding-padding-14) 17px var(--padding-padding-14) var(--padding-padding-16);
-}
-
-.inlineRoot[data-density="compact"] .inlineTrailing[data-has-action="true"] {
+  height: 40px;
   padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .inlineRoot[data-density="detailed"] .inlineTrailing {
-  padding: var(--padding-padding-16) 17px var(--padding-padding-16) var(--padding-padding-16);
+  align-items: flex-start;
+  padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
 }
 
-.inlineRoot[data-density="detailed"] .inlineActionOutlined {
+.inlineRoot[data-density="detailed"] .inlineTrailing .inlineActionOutlined {
   /* Align action top with content row padding-block (12px); close (x) stays at trailing 16px inset */
   margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
 }
@@ -351,11 +412,12 @@
 .inlineActionOutlined {
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
-  border: var(--border-width-border-1) solid var(--color-static-brand-500);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--alert-action-control-radius, var(--corner-radius-radius-2));
   background: transparent;
-  color: var(--color-static-brand-600);
+  color: var(--color-text-brand-strong);
   font: inherit;
+  font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
@@ -366,13 +428,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--scale-12);
-  height: var(--scale-12);
   border: none;
   background: transparent;
   color: var(--color-icon-black);
   cursor: pointer;
-  padding: 0;
+  padding: 10px;
+  margin: -10px;
 }
 
 .inlineCloseIcon {
@@ -393,7 +454,7 @@
 
 .inlineDensityDetailed {
   /* Figma detailed row height (sample frame); width is container-driven */
-  min-height: 85px;
+  min-height: 68px;
 }
 
 .inlineRoot[data-severity="informational"] {

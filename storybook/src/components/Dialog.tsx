@@ -216,7 +216,14 @@ export function Dialog({
               </div>
 
               {description ? (
-                <BaseDialog.Description className={styles.description}>
+                <BaseDialog.Description
+                  className={[
+                    styles.description,
+                    styles[`description${normalizeDialogType(dialogType)}`],
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {description}
                 </BaseDialog.Description>
               ) : null}
@@ -226,6 +233,7 @@ export function Dialog({
                   ref={bodyRef}
                   className={[
                     styles.body,
+                    styles[`body${normalizeDialogType(dialogType)}`],
                     bodyScrollable ? styles.bodyScrollable : "",
                   ]
                     .filter(Boolean)
@@ -237,9 +245,7 @@ export function Dialog({
 
               {showBodyScrollShadow ? (
                 <div className={styles.contentScrollShadow} aria-hidden="true" />
-              ) : (
-                <div className={styles.contentSeparator} aria-hidden="true" />
-              )}
+              ) : null}
 
               <div className={styles.footer}>
                 {showTertiary ? (

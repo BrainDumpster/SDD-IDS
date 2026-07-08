@@ -7,19 +7,22 @@
 - Node ID: 11067-54494
 ## Anatomy
 - Breadcrumb list container
-- Individual breadcrumb items
-- Separator icons between items
-- Current page indicator (non-clickable)
+- Individual breadcrumb items (links)
+- Separator characters (/) between items
+- Ellipsis (...) for truncated paths
+- Dropdown menu for truncated links (shown on hover)
+- Current page text (two-line variant only, displayed below breadcrumb trail)
 - Focus ring for keyboard navigation
-- Optional dropdown for long paths
 ## Layout & Measurements
 - Standard height: 32px
-- Item padding: 4px 8px
+- Item padding: 0px (no padding on breadcrumb links)
 - Separator spacing: 8px
 - Border radius: 4px (for focus states)
 - Focus ring: 2px offset from item
 - Minimum item width: 24px
 - Separator size: 16px × 16px
+- Container margin: 0px (no margin on breadcrumb container)
+- List margin: 0px (no margin on breadcrumb list)
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -66,13 +69,13 @@
 - Current page state is clearly distinguished
 - Dark theme adaptation through semantic tokens
 ## States (Light Theme)
-| State | Background | Border | Text | Separator |
-|---|---|---|---|---|
-| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-neutral)` (#4d4d4d) |
-| Hover | `var(--color-background-brand-lighter)` (#1e262c) | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | `var(--color-text-neutral)` (#4d4d4d) |
-| Focus | `var(--color-background-brand-lighter)` (#1e262c) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-strong)` (#94c5ea) | `var(--color-text-neutral)` (#4d4d4d) |
-| Current | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) |
-| Disabled | transparent | transparent | `var(--color-text-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |
+| State | Background | Border | Text (One Line) | Text (Two Lines Current Page) | Separator |
+|---|---|---|---|---|---|
+| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
+| Hover | `var(--color-background-brand-lighter)` (#1e262c) | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
+| Focus | `var(--color-background-brand-lighter)` (#1e262c) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
+| Current (Two Lines) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) |
+| Disabled | transparent | transparent | `var(--color-text-disabled)` (#757575) | N/A | `var(--color-text-disabled)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#111619)
@@ -82,9 +85,10 @@
 - Click breadcrumb items to navigate to that page
 - Hover provides visual feedback with background and text changes
 - Focus ring uses brand color for keyboard navigation
-- Current page is non-clickable and visually distinct
+- In two-line variant, current page is displayed below breadcrumb trail with larger typography
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
+- Truncated breadcrumbs show dropdown on hover of "..."
 ### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
@@ -96,22 +100,20 @@
 
 ### Behavior & guidelines
 - Use breadcrumbs to show navigation hierarchy
-- Limit to 3-5 levels for optimal usability
-- Show current page as non-clickable
+- Overflow pattern: breadcrumb shows full path up to 4 items (could be less based on screen size)
+- From 5 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
+- Hovering on "..." displays a dropdown menu with all truncated links
 - Use proper separator characters (/ > »)
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement
-- Consider truncation for very long paths
 - Use consistent styling across the application
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants
-- **Default**: Standard horizontal breadcrumb trail
-- **Compact**: Reduced size with smaller typography
-- **Vertical**: Stacked breadcrumb orientation
-- **With Dropdown**: Long paths truncated with dropdown menu
-- **With Icons**: Breadcrumb items with icons
-- **Minimal**: Simple text-only breadcrumbs
+- **One Line**: Standard horizontal breadcrumb trail (all links have same styling)
+- **One Line Truncated**: Long paths truncated with ellipsis and dropdown menu
+- **Two Lines**: Breadcrumb trail on top with current page displayed below (larger typography)
+- **Two Lines Truncated**: Two-line variant with truncation for long paths
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
@@ -151,3 +153,8 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - Semantic mapping: CSS custom properties with `var(--)` prefix
 - Design source: Figma URL above
 - Component map entry: data/component-figma-map.json → component "Breadcrumb" (category "Navigation"; node "11067-54494")
+- Figma variants:
+  - One line: 48608-92898 (4 items), 48608-92922 (1 item), 48608-92916 (2 items), 48608-92908 (3 items)
+  - One line truncated: 48608-92890 (5 items), 48608-92881 (with dropdown)
+  - Two lines: 48608-92945 (4 items), 48608-92972 (1 item), 48608-92965 (2 items), 48608-92956 (3 items)
+  - Two lines truncated: 48608-92936 (5 items), 48608-92926 (with dropdown)

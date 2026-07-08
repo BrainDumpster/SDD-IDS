@@ -85,4 +85,16 @@ export const AddTabDynamic: Story = {{
     );
   }},
 }};
+
+export const IconAndBadge: Story = {{
+  args: {{
+    variant: "primary",
+    items: [
+      {{ id: "overview", label: "Overview", panel: "Overview tab content area.", iconSlug: "home", badgeCount: 5 }},
+      {{ id: "security", label: "Security", panel: "Security tab content area.", iconSlug: "shield", badgeCount: 3 }},
+      {{ id: "alerts", label: "Alerts", panel: "Alerts tab content area with related data.", iconSlug: "alert", badgeCount: 1 }},
+      {{ id: "settings", label: "Settings", panel: "Settings content area.", iconSlug: "settings", badgeCount: 0 }},
+    ],
+  }},
+}};
 """

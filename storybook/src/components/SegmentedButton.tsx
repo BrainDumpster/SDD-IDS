@@ -10,7 +10,6 @@ export type SegmentedIconSource = string | ReactNode;
 export interface SegmentedButtonItemText {
   value: string;
   label: string;
-  disabled?: boolean;
   /** Storybook / visual QA only — pins hover, press, or focus-visible styling. */
   simulatedState?: "hover" | "press" | "focus-visible";
 }
@@ -20,7 +19,6 @@ export interface SegmentedButtonItemIcon {
   /** Icon file slug → `assets/icons/<slug>.svg`, or custom UI (SVG/component). */
   icon: SegmentedIconSource;
   ariaLabel: string;
-  disabled?: boolean;
   /** Storybook / visual QA only — pins hover, press, or focus-visible styling. */
   simulatedState?: "hover" | "press" | "focus-visible";
 }
@@ -39,7 +37,6 @@ type SegmentedButtonPropsBase = {
    * Passing `setState` from `useState` still works — extra args are ignored.
    */
   onChange?: (value: string, meta: SegmentedButtonChangeMeta) => void;
-  disabled?: boolean;
   /** Accessible name for the group */
   ariaLabel?: string;
   ariaLabelledby?: string;
@@ -102,14 +99,7 @@ function useSegmentSelection(
 }
 
 export function SegmentedButton(props: SegmentedButtonProps) {
-  const {
-    value: controlledValue,
-    defaultValue,
-    onChange,
-    disabled: groupDisabled = false,
-    ariaLabel,
-    ariaLabelledby,
-  } = props;
+  const { value: controlledValue, defaultValue, onChange, ariaLabel, ariaLabelledby } = props;
 
   const { setSelected, groupValue } = useSegmentSelection(
     props.items,
@@ -124,7 +114,6 @@ export function SegmentedButton(props: SegmentedButtonProps) {
     "data-type": props.type,
     value: groupValue,
     multiple: false as const,
-    disabled: groupDisabled,
     onValueChange: (next: string[]) => {
       if (next.length > 0) setSelected(String(next[next.length - 1]));
     },
@@ -139,7 +128,6 @@ export function SegmentedButton(props: SegmentedButtonProps) {
           <Toggle
             key={item.value}
             value={item.value}
-            disabled={groupDisabled || item.disabled}
             data-simulated-state={item.simulatedState}
             className={(state) =>
               [
@@ -164,7 +152,6 @@ export function SegmentedButton(props: SegmentedButtonProps) {
         <Toggle
           key={item.value}
           value={item.value}
-          disabled={groupDisabled || item.disabled}
           aria-label={item.ariaLabel}
           data-simulated-state={item.simulatedState}
           className={(state) =>

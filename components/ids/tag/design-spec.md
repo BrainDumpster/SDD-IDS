@@ -19,7 +19,7 @@
 - `TagEditableField?` (text focus surface for editable mode)
 ## Layout & Measurements
 - Two size tracks verified:
-  - `small`: height `20px` (read-only baseline)
+  - `small`: height `20px` (read-only baseline) - border included in height using box-sizing: border-box
   - `large`: height `28px` (clickable/editable/badge patterns)
 - Read-only sample width: `40px`.
 - Clickable sample width: `48px`.
@@ -28,7 +28,8 @@
 - Non-alerting large sample width: `48px` (legacy chip) and `88px` (expanded examples).
 - Close icon element size: `10px x 10px`.
 - Tag shape remains pill-like with fully rounded ends.
-- Focus outline gap (outline offset from tag edge): `3px`.
+- Focus outline gap (outline offset from tag edge): `2px`.
+- Text field focus ring height: `20px` for editable tags.
 ## Tokens
 - Core neutral tokens:
   - `var(--color-background-component)`
@@ -61,6 +62,8 @@
 - Typography:
   - `Body 2` for tag labels
   - `Body 2 - Medium` for emphasized/clickable states
+- Custom text colors:
+  - `var(--color-text-black)` for Major and Minor tone text color
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -135,7 +138,7 @@
   - editable tag body click focuses `TagEditableField` (input-like behavior) before text editing.
   - dismissible emits `onDismiss` and is removable by host list logic.
   - disabled state blocks all emitted events.
-  - focus-visible ring appears for keyboard focus with `3px` outline gap.
+  - focus-visible ring appears for keyboard focus with `2px` outline gap.
 - Accessibility contract:
   - interactive variants use `button` semantics (or role/button + keyboard parity).
   - selected clickable tags expose `aria-pressed`.
