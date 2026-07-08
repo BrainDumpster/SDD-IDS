@@ -62,6 +62,8 @@
 - Typography:
   - `Body 2` for tag labels
   - `Body 2 - Medium` for emphasized/clickable states
+- Custom text colors:
+  - `var(--color-text-black)` for Major and Minor tone text color
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
