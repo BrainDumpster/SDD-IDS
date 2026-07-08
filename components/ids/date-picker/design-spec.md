@@ -70,7 +70,7 @@
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
 - Field container corner radius: `var(--date-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
 - Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--corner-radius-radius-2)` (2px), `margin: -1px -1px -1px 0` (right/top/bottom overlap container border by 1px)
-- Calendar popup shell + month/year dropdown overlays: `border-radius: var(--date-picker-control-radius)` (IDS theme: square); when attached below field, top corners `0` and field bottom corners flatten on open
+- Calendar popup shell + month/year dropdown overlays: `border-radius: 0` (square); when attached below field, all corners are square
 - Field focus ring corner radius: `var(--corner-radius-radius-4)` (4px)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
 - Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-disabled)` (#757575)
@@ -481,7 +481,7 @@ DatePickerRoot
 | `CalendarIconTrigger:disabled` | color: `var(--color-icon-disabled)`, cursor: not-allowed, hover must NOT apply |
 | `FormatHint` | color: `var(--color-text-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
 | `FieldContainer.open` | border-color: `var(--color-border-brand-base)` |
-| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: var(--date-picker-control-radius)` (bottom corners when attached; portaled: all corners) |
+| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: 0` (square) |
 | `MonthDropdownButton` / `YearDropdownButton` | color: `var(--color-text-brand-strong)` (#055fa9), font: `var(--font-size-body-2)` Regular (400), `position: relative`, `border: 1px solid transparent`, `background: transparent`, `border-radius: 2px` |
 | `MonthDropdownButton:hover:not(.menuOpen)` / `YearDropdownButton:hover:not(.menuOpen)` | bg: `var(--color-background-controls-brand-lighter)`, border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton:active:not(.menuOpen)` / `YearDropdownButton:active:not(.menuOpen)` | bg: `var(--color-background-controls-brand-light)`, border-color: `var(--color-border-brand-base)` |
@@ -682,3 +682,6 @@ Last updated: 2026-07-08
 
 **FormatHint behavior**
 - formatHint is hidden when `error` prop is true to avoid visual clutter in error state. Changed condition from `{formatHint && ...}` to `{formatHint && !error && ...}`.
+
+**Calendar popup border-radius**
+- Changed from `border-radius: var(--corner-radius-radius-4, 4px)` with `border-top-left-radius: 0` and `border-top-right-radius: 0` to `border-radius: 0` (square popup, all corners flat).
