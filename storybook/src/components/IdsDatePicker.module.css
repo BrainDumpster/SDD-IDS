@@ -3,16 +3,54 @@
 /* ── Input field ── */
 .root {
   display: inline-flex;
-  flex-direction: column;
-  gap: var(--spacing-space-4, 4px);
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
 }
 
 .label {
+  display: flex;
+  gap: var(--spacing-space-8, 8px);
+  align-items: center;
+  flex-shrink: 0;
+  padding: var(--padding-padding-10, 10px) 0;
+  cursor: default;
+}
+
+.labelSmall {
+  padding: var(--padding-padding-6, 6px) 0;
+}
+
+.labelInner {
+  display: flex;
+  gap: var(--spacing-space-2, 2px);
+  align-items: center;
+}
+
+.labelText {
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-neutral-strong, #252525);
+  white-space: nowrap;
+}
+
+.labelRequired {
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-critical, #af0000);
+  white-space: nowrap;
+}
+
+.inputGroup {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4, 4px);
+  align-items: flex-start;
+  min-width: 1px;
 }
 
 .fieldContainer {
@@ -27,7 +65,7 @@
   box-sizing: border-box;
   padding-left: var(--padding-padding-16, 16px);
   padding-right: 0;
-  border-radius: var(--date-picker-control-radius);
+  border-radius: 0;
 }
 
 .fieldContainer.sizeLarge {
@@ -48,15 +86,22 @@
 
 /* Pointer/click focus — blue border, no ring */
 .fieldContainer:focus-within:not(.open):not(.disabled):not(.error) {
-  border-color: var(--color-border-brand-base, #0076ce);
+  border-color: var(--color-border-brand-base, #0672cb);
 }
 
-/* Keyboard focus-visible only — outer ring (suppressed when mouse-activated) */
+/* Keyboard focus-visible only — outer ring via ::after so field border-radius stays square */
 .fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated) {
   border-color: var(--color-border-accessible, #757575);
-  outline: 1px solid var(--color-border-brand-base, #0076ce);
-  outline-offset: 3px;
-  border-radius: var(--date-picker-focus-ring-radius);
+}
+
+.fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated)::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
+  border-radius: var(--corner-radius-radius-4, 4px);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 /* Always suppress ring when mouse-activated */
@@ -66,7 +111,13 @@
 
 /* Mouse-activated focus must override hover border rules */
 .fieldContainer.mouseActivated:focus-within:not(.open):not(.disabled):not(.error) {
-  border-color: var(--color-border-brand-base, #0076ce);
+  border-color: var(--color-border-brand-base, #0672cb);
+}
+
+.fieldContainer.open {
+  border-color: var(--color-border-brand-base, #0672cb);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .fieldContainer.disabled {
@@ -80,12 +131,12 @@
 }
 
 .fieldContainer.error {
-  border-color: var(--color-border-alerting-critical-base, #c41616);
+  border-color: var(--color-border-alerting-critical-base, #af0000);
 }
 
 /* When calendar is open — brand-base border; flatten bottom radius so popup reads as one shell */
 .fieldContainer.open {
-  border-color: var(--color-border-brand-base, #0076ce);
+  border-color: var(--color-border-brand-base, #0672cb);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -96,10 +147,10 @@
   outline: none;
   background: transparent;
   font-family: "Roboto", sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: 20px;
-  color: var(--color-text-neutral-strong, #252525);
+  color: var(--color-text-neutral, #4d4d4d);
   padding: 0;
   min-width: 1px;
 }
@@ -128,27 +179,30 @@
   border: var(--border-width-border-default, 1px) solid transparent;
   cursor: pointer;
   padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
-  border-radius: var(--date-picker-control-radius);
-  color: var(--color-icon-brand-base, #0076ce);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  color: var(--color-icon-brand-base, #0672cb);
   flex-shrink: 0;
   align-self: stretch;
   box-sizing: border-box;
   position: relative;
   outline: none;
+  margin: -1px -1px -1px 0;
 }
 
 .calendarIconBtn:hover:not(:disabled) {
   background: var(--color-background-controls-brand-lighter, #ebf4fb);
-  border-color: var(--color-border-brand-base, #0076ce);
-  color: var(--color-icon-brand-base, #0076ce);
+  border-color: var(--color-border-brand-base, #0672cb);
+  color: var(--color-icon-brand-base, #0672cb);
 }
 
-.calendarIconBtn:focus-visible {
-  outline-style: outset;
-  outline-width: thin;
-  outline-offset: 3px;
-  outline-color: var(--color-border-brand-base, #0076ce);
-  border-radius: var(--date-picker-focus-ring-radius);
+.calendarIconBtn:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
+  border-radius: var(--corner-radius-radius-4, 4px);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .calendarIconBtn:disabled {
@@ -156,14 +210,11 @@
   cursor: not-allowed;
 }
 
-.calendarIconBtn.error {
-  color: var(--color-icon-alerting-critical, #c41616);
-}
 
 .formatHint {
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-neutral, #4d4d4d);
   width: 100%;
@@ -176,9 +227,9 @@
   gap: var(--spacing-space-8, 8px);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-critical, #c41616);
+  color: var(--color-text-critical, #af0000);
 }
 
 /* ── Calendar popup ── */
@@ -192,13 +243,13 @@
   background: var(--color-background-surface-2, #fff);
   border: var(--border-width-border-default, 1px) solid var(--color-border-accessible, #757575);
   box-shadow:
-    var(--shadow-shadow-4-drop-shadow-4-x, 0px) var(--shadow-shadow-4-drop-shadow-4-y, 4px) var(--shadow-shadow-4-drop-shadow-4-blur, 4px) var(--shadow-shadow-4-drop-shadow-4-spread, 0px) var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
-    var(--shadow-shadow-4-drop-shadow-8-x, 0px) var(--shadow-shadow-4-drop-shadow-8-y, 8px) var(--shadow-shadow-4-drop-shadow-8-blur, 8px) var(--shadow-shadow-4-drop-shadow-8-spread, 0px) var(--shadow-shadow-4-drop-shadow-8-color, rgba(37, 37, 37, 0.08));
+    var(--shadow-shadow-2-drop-shadow-4-x, 0px) var(--shadow-shadow-2-drop-shadow-4-y, 4px) var(--shadow-shadow-2-drop-shadow-4-blur, 4px) var(--shadow-shadow-2-drop-shadow-4-spread, 0px) var(--shadow-shadow-2-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    var(--shadow-shadow-2-drop-shadow-8-x, 0px) var(--shadow-shadow-2-drop-shadow-8-y, 8px) var(--shadow-shadow-2-drop-shadow-8-blur, 8px) var(--shadow-shadow-2-drop-shadow-8-spread, 0px) var(--shadow-shadow-2-drop-shadow-8-color, rgba(37, 37, 37, 0.08));
   padding: var(--padding-padding-16, 16px);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-16, 16px);
-  border-radius: var(--date-picker-control-radius);
+  border-radius: var(--corner-radius-radius-4, 4px);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -234,17 +285,33 @@
   justify-content: center;
   gap: var(--spacing-space-8, 8px);
   padding: var(--padding-padding-2, 2px) var(--padding-padding-8, 8px);
-  line-height: var(--font-line-height-line-height-20, 20px);
-  border: none;
-  background: none;
+  min-height: var(--scale-24, 24px);
+  border: var(--border-width-border-default, 1px) solid transparent;
+  background: transparent;
   position: relative;
   cursor: pointer;
   border-radius: var(--corner-radius-radius-2, 2px);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-brand-strong, #0062ab);
+  color: var(--color-text-brand-strong, #055fa9);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.dropdownButton:hover:not(:disabled):not(.menuOpen) {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0672cb);
+}
+
+.dropdownButton:active:not(:disabled):not(.menuOpen) {
+  background: var(--color-background-controls-brand-light, #daeaf7);
+  border-color: var(--color-border-brand-base, #0672cb);
+}
+
+.dropdownButton:focus-visible {
+  border-color: var(--color-border-brand-base, #0672cb);
 }
 
 .dropdownButton.yearBtn {
@@ -253,9 +320,6 @@
 }
 
 .caretIcon {
-  width: 10px;
-  height: 10px;
-  fill: currentColor;
   flex-shrink: 0;
   display: block;
 }
@@ -275,6 +339,18 @@
   background: none;
   cursor: pointer;
   line-height: 0;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.navBtn:hover:not(:disabled) .navIcon {
+  color: var(--color-icon-brand-base, #0672cb);
+}
+
+.navBtn:focus-visible {
+  outline: 2px solid #4c9fdd;
+  outline-offset: 0;
 }
 
 .navIcon {
@@ -296,7 +372,7 @@
   width: 32px;
   text-align: center;
   font-family: "Roboto", sans-serif;
-  font-size: 12px;
+  font-size: var(--font-size-body-3, 12px);
   font-weight: 400;
   line-height: 14px;
   letter-spacing: 0.36px;
@@ -342,8 +418,8 @@
   top: 50%;
   transform: translateY(-50%);
   height: 30px;
-  background: var(--color-background-brand-light, #d9eaf8);
-  border-radius: 2px;
+  background: var(--color-background-brand-light, #daeaf7);
+  border-radius: var(--corner-radius-radius-2, 2px);
   z-index: 0;
   pointer-events: none;
 }
@@ -362,8 +438,8 @@
 
 .dateCell.rangeStart:not(.unavailable) .dateCellContainer,
 .dateCell.rangeEnd:not(.unavailable) .dateCellContainer {
-  background: var(--color-background-controls-brand-base, #0076ce);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
+  background: var(--color-background-controls-brand-base, #0672cb);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
 }
 
 .dateCell.rangeStart:not(.unavailable) .dateLabel,
@@ -376,7 +452,7 @@
   width: 32px;
   height: 32px;
   padding: var(--padding-padding-1, 1px);
-  border-radius: 2px;
+  border-radius: var(--corner-radius-radius-2, 2px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -396,7 +472,7 @@
   flex: 1;
   width: 100%;
   min-height: 1px;
-  border-radius: 2px;
+  border-radius: var(--corner-radius-radius-2, 2px);
   padding: var(--padding-padding-8, 8px) var(--padding-padding-12, 12px);
   box-sizing: border-box;
 }
@@ -406,29 +482,35 @@
 }
 
 /* Date cell states */
-.dateCell:hover:not(.unavailable) .dateCellContainer {
+.dateCell:hover:not(.unavailable):not(.selected):not(.rangeStart):not(.rangeEnd) .dateCellContainer {
   background: var(--color-background-controls-brand-lighter, #ebf4fb);
   cursor: pointer;
 }
 
 .dateCell:active:not(.unavailable) .dateCellContainer {
-  background: var(--color-background-controls-brand-light, #d9eaf8);
+  background: var(--color-background-controls-brand-light, #daeaf7);
 }
 
 .dateCell.selected .dateCellContainer {
-  background: var(--color-background-controls-brand-base, #0076ce);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
+  background: var(--color-background-controls-brand-base, #0672cb);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
 }
 
 .dateCell:focus-visible .focusRing {
   display: block;
 }
 
-.dateCell:focus-visible .dateCellContainer {
+/* Selected + Focused: outside border fills .dateCell padding → container appears 32×32 */
+.dateCell.selected:focus-visible .dateCellContainer {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
+}
+
+/* Focus only (not selected): shrink padding 1px to make room for focus ring border */
+.dateCell:focus-visible:not(.selected) .dateCellContainer {
   padding: 7px 11px;
 }
 
-.dateCell:focus-visible .dateCellContainer.todayType {
+.dateCell:focus-visible:not(.selected) .dateCellContainer.todayType {
   padding: 7px 11px;
 }
 
@@ -467,7 +549,7 @@
 .dateLabel {
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-neutral-strong, #252525);
   text-align: center;
@@ -498,7 +580,7 @@
 .todayIndicator {
   width: 18px;
   height: 2px;
-  border-radius: 1px;
+  border-radius: var(--corner-radius-radius-1, 1px);
   background: var(--color-border-strong, #252525);
   flex-shrink: 0;
 }
@@ -511,35 +593,49 @@
   background: var(--color-border-disabled, #757575);
 }
 
-/* Focus ring (date cell) */
+/* Focus ring (date cell) — sibling of container, positioned in .dateCell (32×32), inset -2px → 36×36 ring */
 .focusRing {
   display: none;
   position: absolute;
-  inset: -3px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
-  border-radius: 4px;
+  inset: -2px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
+  border-radius: var(--corner-radius-radius-4, 4px);
   pointer-events: none;
   box-sizing: border-box;
 }
 
-/* ── Today link ── */
+/* ── Today link — behaves as tertiary button ── */
 .todayLink {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
+  background: transparent;
+  border: var(--border-width-border-default, 1px) solid transparent;
+  border-radius: var(--corner-radius-radius-2, 2px);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-brand-strong, #0062ab);
-  padding: var(--padding-padding-4, 4px) var(--padding-padding-8, 8px);
+  color: var(--color-text-brand-strong, #055fa9);
+  min-height: var(--scale-24, 24px);
+  padding: var(--padding-padding-2, 2px) var(--padding-padding-16, 16px);
+  outline: none;
+  box-sizing: border-box;
 }
 
-.todayLink:hover {
-  text-decoration: underline;
+.todayLink:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0672cb);
+}
+
+.todayLink:active:not(:disabled) {
+  background: var(--color-background-controls-brand-light, #daeaf7);
+  border-color: var(--color-border-brand-base, #0672cb);
+}
+
+.todayLink:focus-visible {
+  border-color: var(--color-border-brand-base, #0672cb);
 }
 
 /* ── Month / Year dropdown overlay (per Figma 42159:132520) ── */
@@ -556,7 +652,7 @@
   box-shadow: 0px 2px 5px 0px rgba(37, 37, 37, 0.08);
   z-index: 10;
   padding: var(--padding-padding-4, 4px) var(--padding-padding-1, 1px);
-  border-radius: var(--date-picker-control-radius);
+  border-radius: var(--corner-radius-radius-4, 4px);
 }
 
 .overlayOption {
@@ -567,7 +663,7 @@
   background: white;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-neutral, #4d4d4d);
   cursor: pointer;

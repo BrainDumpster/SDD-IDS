@@ -26,7 +26,7 @@ type Story = StoryObj<typeof IdsDatePicker>;
 export const Default: Story = {
   render: () => (
     <div style={{ padding: 24 }}>
-      <IdsDatePicker size="large" label="Start date" placeholder="MM/DD/YYYY" />
+      <IdsDatePicker size="large" label="Start date" placeholder="MM-DD-YYYY" />
     </div>
   ),
 };
@@ -75,7 +75,7 @@ export const States: Story = {
       </div>
       <div>
         <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase" as const, opacity: 0.6, marginBottom: 8 }}>Custom format hint</div>
-        <IdsDatePicker size="large" label="Date" formatHint="DD/MM/YYYY" />
+        <IdsDatePicker size="large" label="Date" formatHint="DD/MM/YYYY" dateFormat="DD/MM/YYYY" />
       </div>
     </div>
   ),
@@ -115,15 +115,15 @@ function InteractiveDemo() {
   return (
     <div style={{ padding: 24, paddingBottom: 520 }}>
       <div style={{ maxWidth: 320 }}>
+        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+          Selected: {value ? value.toLocaleDateString() : "none"}
+        </div>
         <IdsDatePicker
           size="large"
           label="Pick a date"
           value={value}
           onChange={(d) => setValue(d)}
         />
-        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
-          Selected: {value ? value.toLocaleDateString() : "none"}
-        </div>
       </div>
     </div>
   );
@@ -173,6 +173,9 @@ function RestrictedRangeDemo() {
   return (
     <div style={{ padding: 24, paddingBottom: 520 }}>
       <div style={{ maxWidth: 320 }}>
+        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+          Restricted dates show gray box, disabled border, and strikethrough (not selectable).
+        </div>
         <IdsDatePicker
           size="large"
           label="Date range"
@@ -191,9 +194,6 @@ function RestrictedRangeDemo() {
             new Date(y, m, 21),
           ]}
         />
-        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
-          Restricted dates show gray box, disabled border, and strikethrough (not selectable).
-        </div>
       </div>
     </div>
   );
@@ -210,6 +210,9 @@ function RangeDemo() {
   return (
     <div style={{ padding: 24, paddingBottom: 520 }}>
       <div style={{ maxWidth: 320 }}>
+        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+          Range: {start ? start.toLocaleDateString() : "—"} → {end ? end.toLocaleDateString() : "—"}
+        </div>
         <IdsDatePicker
           size="large"
           label="Date range"
@@ -219,9 +222,6 @@ function RangeDemo() {
           onRangeChange={(s, e) => { setStart(s); setEnd(e); }}
           forceOpen
         />
-        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8 }}>
-          Range: {start ? start.toLocaleDateString() : "—"} → {end ? end.toLocaleDateString() : "—"}
-        </div>
       </div>
     </div>
   );
