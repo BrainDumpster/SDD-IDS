@@ -203,3 +203,5 @@ Runtime rules:
 - **Component map entry:** `data/component-figma-map.json` -> `Tab`.
 - **Validated Figma node:** `30681:9530` (IDS Design Library, text and annotation board for primary/secondary, overflow, add-tab, and state examples).
 - **Figma MCP evidence:** `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`, `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`.
+## Implementation Notes
+- **Caret icon size:** Overflow trigger caret icon (`moreIcon`) is set to `var(--sizing-size-10, 10px)` width and height.
