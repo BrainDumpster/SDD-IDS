@@ -81,6 +81,11 @@
   color: var(--color-text-neutral-strong);
 }
 
+.tab:active:not(.selected):not([data-disabled]) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+}
+
 .tab:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: calc(var(--border-width-border-2) * -1);
@@ -234,6 +239,11 @@
 
 .moreTriggerSecondary::after {
   display: none;
+}
+
+.moreTrigger:active:not(.moreTriggerSelected) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
 }
 
 .moreTrigger:hover {
