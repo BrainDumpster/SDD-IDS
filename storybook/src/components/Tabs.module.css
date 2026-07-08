@@ -76,17 +76,7 @@
   display: none;
 }
 
-.tabPrimary::after {
-  height: 24px;
-}
-
-.tabPrimary.selected::after {
-  top: 2px;
-  height: 36px;
-  transform: none;
-}
-
-.tab:hover:not([data-disabled]) {
+.tab:hover:not(.selected):not([data-disabled]) {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral-strong);
 }
