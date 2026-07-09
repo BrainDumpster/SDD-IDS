@@ -7,6 +7,16 @@ import type {
 export const IDS_WHATS_NEW_DESIGN_SPEC_PATH =
   "components/ids/whats-new/design-spec.md" as const;
 
+export const IDS_MODAL_DESIGN_SPEC_PATH =
+  "components/ids/modal/design-spec.md" as const;
+
+/** What's New hosts all dialog layers on IDS Modal (`IdsModal`). */
+export const WHATS_NEW_MODAL_HOST = {
+  component: "IdsModal",
+  scenario: "single-page",
+  layers: ["main", "carousel", "single-preview"] as const,
+} as const;
+
 export const WHATS_NEW_FILTER_OPTIONS: WhatsNewFilter[] = ["newest", "bookmarked"];
 
 export const WHATS_NEW_FILTER_LABELS: Record<WhatsNewFilter, string> = {

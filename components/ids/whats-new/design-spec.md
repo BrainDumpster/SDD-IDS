@@ -26,11 +26,11 @@
 | Theme CSS | `components/ids-theme.css` |
 | Storybook | `storybook/src/components/IdsWhatsNew.stories.tsx` — **Spec Accurate Design** uses compound API; `Convenience Data Sections` story uses `sections[]` only |
 | Contract mirror | `storybook/src/spec-contracts/ids-whats-new.contract.ts` |
-| Nested specs | `components/ids/button/design-spec.md`, `components/ids/toggle-switch/design-spec.md`, IDS Dropdown Single Select |
+| Nested specs | `components/ids/modal/design-spec.md` (host shell), `components/ids/button/design-spec.md`, `components/ids/toggle-switch/design-spec.md`, IDS Dropdown Single Select |
 
 ### Spec Accurate Design story defaults
 
-- **Host:** IDS `Dialog` modal, **`open: true`** by default
+- **Host:** IDS **Modal** (`IdsModal` / `ids-modal`), **`scenario=single-page`**, **`open: true`** by default
 - **Title:** `What's New`
 - **Description:** `The following updates (features, bug fixes) have recently been made.`
 - **Version (optional):** `versionNumber="1.11.11.1"` → renders **`Version: 1.11.11.1`**
@@ -46,7 +46,7 @@
 
 ### Modal stack (runtime — authoritative)
 
-Two independent IDS `Dialog` layers. **Do not** replace the list body in-place.
+Three stacked IDS **Modal** layers (`IdsModal`). **Do not** replace the list body in-place.
 
 | Layer | When visible | Header title | Body height | Footer close dismisses |
 |---|---|---|---|---|
@@ -63,7 +63,7 @@ Hosts may supply content via **(A) data props** (`sections[]`) or **(B) child co
 
 #### Root
 
-- **`WhatsNewRoot`** — main IDS `Dialog`; `open` default `true`; owns carousel + single-preview stack state, `dontShowAgain`, filter (when uncontrolled).
+- **`WhatsNewRoot`** — main IDS **Modal** (`IdsModal`, `layer=main`); `open` default `true`; owns carousel + single-preview stack state, `dontShowAgain`, filter (when uncontrolled).
 
 #### Main list modal (deterministic child order)
 
@@ -135,7 +135,7 @@ WhatsNewSinglePreviewModal
 
 ### Main modal slots (summary)
 
-- `WhatsNewRoot` — main IDS `Dialog`; **`open` defaults to `true`**
+- `WhatsNewRoot` — main IDS **Modal** (`IdsModal`); **`open` defaults to `true`**
   - Shell: `Modal-Main` border + elevation
   - `WhatsNewHeader` — title row + close (always main copy)
     - `WhatsNewTitle` — **Header 5** (`What's New`)
@@ -282,7 +282,7 @@ Use the shared IDS **`Icon`** component (`shapeName` = slug under `assets/icons/
 | Carousel / single preview expand | **`popout-double`** | **`32×32`** | **`inline`** | two-tone: **frame/border only** `var(--color-border-brand-base)`; inner arrows `var(--color-icon-neutral)` — do not tint arrows brand | `27437:44212` |
 | Carousel previous | **`chev-left`** | `16×16` | **`mask`** | enabled `var(--color-icon-brand-base)`; disabled `var(--color-icon-disabled)` | `27437:44200` |
 | Carousel next | **`chev-right`** | `16×16` | **`mask`** | same as previous | `27437:44213` |
-| Dialog close (all layers) | **`shape-x`** | `16×16` | **`img`** | `var(--color-icon-neutral)` — **do not use mask** | header close nodes |
+| Modal close (all layers) | **`shape-x`** | `16×16` | **`img`** | `var(--color-icon-neutral)` — **do not use mask** | header close nodes |
 
 #### Image media resolution (thumbnails + hero)
 
@@ -377,7 +377,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Bookmark star:** button toggles `isBookmarked`; `onSectionBookmarkChange(sectionId, isBookmarked)`; icons `star-fav` / `star-fav-solid` (`Icon` `variant="img"`).
 - **Show More:** collapsed description uses **3-line clamp** (`-webkit-line-clamp: 3`); button visible only when truncated or expanded; toggles **Show Less**; `onShowMore(sectionId, expanded)`.
 - **Inline links:** `linkText` + `linkHref` inside description; external links use `target="_blank"` + `rel="noopener"`.
-- **Scroll:** only `SectionsScroll` scrolls; overflow shadow (`19px`) when content below fold (IDS Dialog pattern).
+- **Scroll:** only `SectionsScroll` scrolls; overflow shadow (`19px`) when content below fold (IDS Modal pattern).
 
 ### Carousel body
 
@@ -734,7 +734,7 @@ Reference implementation: `storybook/src/components/IdsWhatsNew.tsx` + `IdsWhats
 
 ### Accessibility contract
 
-- Dialog semantics and focus trap as in **Interactions**.
+- Modal semantics and focus trap as in **Interactions**.
 - Close / chevron / expand controls: `aria-label`.
 - Toggle: `ariaLabel` + visible label text.
 - Active carousel thumbnail: `aria-current="true"`.
@@ -797,6 +797,6 @@ Resolve from `assets/icons/<slug>.svg` via project `Icon` component. Do **not** 
 | Elements | `27437:44190` (list content), `27437:44198` (preview content), `27437:44182` (section header), `27437:44220` (filter), `27437:44168` (thumbnail states) |
 | Map entry | `data/component-figma-map.json` → `Whats New` |
 | Design spec path | `components/ids/whats-new/design-spec.md` |
-| Reference implementation | `storybook/src/components/IdsWhatsNew.tsx` |
+| Reference implementation | `storybook/src/components/IdsWhatsNew.tsx` (uses `storybook/src/components/IdsModal.tsx`) |
 | Contract mirror | `storybook/src/spec-contracts/ids-whats-new.contract.ts` |
 | Verification | Figma MCP — session **2026-07-08** |

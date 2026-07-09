@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from "react";
-import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
 import { Button } from "./Button";
+import { IdsModal } from "./IdsModal";
 import { DropdownMenu } from "./DropdownMenu";
 import { Icon } from "./Icon";
 import { IdsDropdownTriggerShell } from "./IdsDropdownTriggerShell";
@@ -899,13 +899,13 @@ export function IdsWhatsNew({
           <h2 id={titleId} className={styles.title}>
             {title}
           </h2>
-          <BaseDialog.Close
+          <IdsModal.Close
             className={styles.closeButton}
             aria-label="Close"
             onClick={() => setOpen(false)}
           >
             <Icon shapeName="shape-x" variant="img" style={{ width: 16, height: 16 }} />
-          </BaseDialog.Close>
+          </IdsModal.Close>
         </div>
         {(summaryContent ?? descriptionProp) ? (
           <p className={styles.description}>{summaryContent ?? descriptionProp}</p>
@@ -955,13 +955,13 @@ export function IdsWhatsNew({
           <h2 id={carouselTitleId} className={styles.title}>
             {activeSection.title}
           </h2>
-          <BaseDialog.Close
+          <IdsModal.Close
             className={styles.closeButton}
             aria-label="Close image preview"
             onClick={closeCarousel}
           >
             <Icon shapeName="shape-x" variant="img" style={{ width: 16, height: 16 }} />
-          </BaseDialog.Close>
+          </IdsModal.Close>
         </header>
 
         <div className={styles.carouselBody}>
@@ -988,13 +988,13 @@ export function IdsWhatsNew({
           <h2 id={singlePreviewTitleId} className={styles.title}>
             {activeSection.title}
           </h2>
-          <BaseDialog.Close
+          <IdsModal.Close
             className={styles.closeButton}
             aria-label="Close expanded image preview"
             onClick={closeSinglePreview}
           >
             <Icon shapeName="shape-x" variant="img" style={{ width: 16, height: 16 }} />
-          </BaseDialog.Close>
+          </IdsModal.Close>
         </header>
 
         <div className={styles.carouselBody}>
@@ -1011,52 +1011,37 @@ export function IdsWhatsNew({
 
   return (
     <>
-      <BaseDialog.Root open={open} onOpenChange={setOpen}>
-        <BaseDialog.Portal>
-          <BaseDialog.Backdrop className={styles.backdrop} />
-          <BaseDialog.Popup
-            ref={dialogPopupRef}
-            className={styles.popup}
-            aria-labelledby={titleId}
-          >
-            {mainPanel}
-          </BaseDialog.Popup>
-        </BaseDialog.Portal>
-      </BaseDialog.Root>
+      <IdsModal
+        open={open}
+        onOpenChange={setOpen}
+        layer="main"
+        labelledBy={titleId}
+        popupRef={dialogPopupRef}
+      >
+        {mainPanel}
+      </IdsModal>
 
-      <BaseDialog.Root
+      <IdsModal
         open={carouselOpen}
         onOpenChange={(next) => {
           if (!next) closeCarousel();
         }}
+        layer="carousel"
+        labelledBy={carouselTitleId}
       >
-        <BaseDialog.Portal>
-          <BaseDialog.Backdrop className={styles.carouselBackdrop} />
-          <BaseDialog.Popup
-            className={styles.carouselPopup}
-            aria-labelledby={carouselTitleId}
-          >
-            {carouselPanel}
-          </BaseDialog.Popup>
-        </BaseDialog.Portal>
-      </BaseDialog.Root>
+        {carouselPanel}
+      </IdsModal>
 
-      <BaseDialog.Root
+      <IdsModal
         open={singlePreviewLayerOpen}
         onOpenChange={(next) => {
           if (!next) closeSinglePreview();
         }}
+        layer="single-preview"
+        labelledBy={singlePreviewTitleId}
       >
-        <BaseDialog.Portal>
-          <BaseDialog.Backdrop className={styles.singlePreviewBackdrop} />
-          <BaseDialog.Popup
-            className={styles.singlePreviewPopup}
-            aria-labelledby={singlePreviewTitleId}
-          >
-            {singlePreviewPanel}
-          </BaseDialog.Popup>
-        </BaseDialog.Portal>
-      </BaseDialog.Root>
+        {singlePreviewPanel}
+      </IdsModal>
     </>
   );
 }
