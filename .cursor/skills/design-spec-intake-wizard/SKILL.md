@@ -9,6 +9,8 @@ Use when the user wants to **create a new** `design-spec.md` and has not already
 
 Pair with **`docs/design-spec-authoring-contract.md`** for full production-ready rules. For section depth after intake, follow **design-spec-blueprint** skill.
 
+**Codegen goal:** Every finalized `design-spec.md` must be detailed enough that an AI agent can generate production UI from the spec alone — matching Figma without drift. Storybook **Spec Accurate Design** stories are not throwaway demos; they must use the same **canonical runtime API** and composition model as production code.
+
 ## Skill routing (choose before interview)
 
 | Situation | Skill |
@@ -54,6 +56,8 @@ Use when step 3 = **`no`** — the component exists **only in the programme** Fi
 - Full **10 required `##` sections** starting with **`## Metadata`** (no IDS baseline block)
 - Metadata: `Spec pattern: standalone`, `Design System: {display_name}`, `{theme_css_path}`, programme Figma nodes
 - Anatomy, layout, tokens, states, interactions, API — all from **programme Figma evidence**
+- **Composition model & canonical Runtime API** derived during live Figma analysis (see **Figma analysis → composition model & canonical API**)
+- **Codegen Contract** subsections filled with concrete contracts (not cross-ref placeholders) per **Codegen-ready spec depth**
 - Optional **`### Parent composition`** under Metadata when the component is consumed by a parent programme spec
 
 ### Must not include
@@ -87,8 +91,8 @@ Execute in order:
 5. Scaffold if missing:
    - **`ids`** → `NEW_SPEC_TEMPLATE`
    - **programme standalone** → `PROGRAMME_STANDALONE_TEMPLATE`
-6. **Live Figma** on **every** URL in all three buckets (main → elements → states; MCP preferred; REST if MCP unavailable — document method in spec).
-7. Fill all required `##` sections; prefer `var(--...)` tokens from programme theme / root-spec.
+6. **Live Figma** on **every** URL in all three buckets (main → elements → states; MCP preferred; REST if MCP unavailable — document method in spec). During each fetch, run **Figma analysis → composition model** (see below) before writing prose sections.
+7. Fill all required `##` sections with **codegen-ready depth** (see below); prefer `var(--...)` tokens from programme theme / root-spec.
 8. Apply dark-states dedupe per authoring contract when light/dark tokens match.
 9. Record verification evidence in **Metadata** and **Source Mapping**.
 10. Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements (`get_variable_defs` on cited nodes for radius rows).
@@ -97,9 +101,91 @@ Execute in order:
 
 ---
 
+## Figma analysis → composition model & canonical API
+
+While fetching design context (`get_design_context`, `get_metadata`, `get_variable_defs`) from **every** URL bucket, the agent **must analyze** the live node tree — not only transcribe dimensions and tokens.
+
+### What to look for
+
+| Signal in Figma | Spec action |
+|-----------------|-------------|
+| **Component set** + variant properties | Enumerate axes in **Composition & API → Variants** and **Codegen Contract → Variant matrix**; cite node id per variant value |
+| **Nested component instances** (Button, Icon, Tag, etc.) | Record as **composition dependencies**; prefer reusing existing design-system components over re-implementing slots |
+| **Repeated sibling frames** (list rows, chips, menu items, cards) | Derive **item type** + **list/container** composition (`SuggestedPrompt` + `SuggestedPromptList`, `items[]` on parent) |
+| **Optional slots** (icon on/off, trailing action, badge) | Model as boolean props or optional slots in anatomy; document default when absent |
+| **Parent frame context** (chip inside input, row inside menu) | Add **`### Parent composition`** under Metadata when consumed by another spec; document parent prop mapping |
+| **Auto-layout / grouping** | Translate to deterministic slot order in **Anatomy** and **Codegen Contract → Deterministic structure** |
+| **Instance swaps / boolean layers** | Map to canonical prop names (`showIcon`, `aiGradient`, `expanded`) — stable across frameworks |
+| **Existing Storybook or repo component** matching Figma instance | Link canonical API to that export; do not invent a parallel prop surface |
+
+### Derive the composition model
+
+Before writing **Composition & API** or **Codegen Contract**:
+
+1. **Classify** the component: atomic (single interactive surface), compound (root + children), or container (renders user data via `items` / `children`).
+2. **Name slots** in PascalCase aligned with anatomy (`SuggestedPromptRoot`, `SuggestedPromptLabel`, …) — same names in Codegen Contract tree.
+3. **Define canonical runtime API** — props, events, and data shapes a production app would pass (arrays, discriminated unions, controlled vs uncontrolled patterns). This API is what codegen **and** Spec Accurate Design stories use.
+4. **Separate demo-only controls** from runtime API: `forceStates`, `visualState`, `data-visual-state`, `data-state` → document explicitly as **Storybook / QA overrides only**; they must not be required for production.
+5. **Enumerate valid combinations** in the variant matrix (no “usually” or “as needed”).
+6. When Figma shows multiple layout modes (vertical list vs wrap, expanded vs collapsed rail), each mode gets an explicit prop value and layout contract.
+
+### Canonical API rules (production = Storybook)
+
+- **One API surface:** Spec Accurate Design story args must be a subset of the documented **Runtime API** — no story-only prop names unless flagged demo-only.
+- **Stable identifiers:** Document id derivation rules when Figma labels are user-defined (`id` from slugified `name`, disambiguation suffixes).
+- **Event payloads:** Define output shapes (`onSelected`, `onNavigate`, `onSelect(label)`) with field lists — not “fires on click”.
+- **Defaults for codegen parity:** When a Figma frame implies a default selection or expanded state, add **`### Spec Accurate Design story defaults`** under **Composition & API** with exact values (see `components/ids/main-menu-left/design-spec.md`).
+- **Composition helpers:** When the design implies a list of repeated items, document both the **item** component contract and the **list** wrapper (gap, layout axis, who owns click handlers).
+
+**Reference examples:** `components/synapse/suggested-prompt/design-spec.md` (item + list + parent mapping), `components/ids/main-menu-left/design-spec.md` (tree data model + canonical vs legacy fields), `components/synapse/topology/design-spec.md` (large composed graph + story defaults).
+
+---
+
+## Codegen-ready spec depth (anti-drift)
+
+The `design-spec.md` is the **single source of truth** for spec-driven codegen. Vague or cross-reference-only sections cause implementation drift. Every required section must contain concrete, testable contracts.
+
+### Minimum depth per section
+
+| Section | Required codegen detail |
+|---------|-------------------------|
+| **Metadata** | Verification evidence, `Spec pattern`, theme CSS path, optional **Parent composition** link, Storybook path when requested |
+| **Anatomy** | Numbered slot list in **render order**; PascalCase slot ids; note optional vs required slots |
+| **Layout & Measurements** | Per-slot tables; sample-only vs runtime width rules (`fit-content`, `100%`, `min-height`); **`### Slot geometry (Figma-verified)`** |
+| **Tokens** | Semantic `var(--...)` only; typography/spacing/radius per role or slot |
+| **States** | Full matrix per interactive slot; `default \| hover \| press \| focus-visible \| disabled` |
+| **Interactions** | Trigger → behavior table; state transitions; keyboard paths |
+| **Composition & API** | **`### Runtime API`** tables: inputs (type, default, description), outputs (event + payload), variants; user configuration model when data-driven |
+| **Codegen Contract** | **Concrete** subsections — not “see Anatomy” placeholders. Deterministic structure tree, full variant matrix, per-slot style contract, behavior, a11y, assets, fallbacks |
+| **Source Mapping** | File key, node ids per variant/state, MCP method, reproducible extraction path |
+
+### Forbidden in production-ready specs
+
+- Placeholder prose: “Document runtime props…”, “See Anatomy when present”, “TBD”, “sample only” without a runtime rule
+- Codegen Contract subsections that only cross-reference other sections without restating the contract
+- Hardcoded colors/spacing in implementation guidance (tokens only)
+- Storybook args that do not map to documented Runtime API props
+- Undocumented variant axes visible in Figma component sets
+
+### Drift-prevention checklist (agent self-check before `active`)
+
+- [ ] Anatomy slot order matches **Codegen Contract → Deterministic structure** tree
+- [ ] Every Figma variant property maps to a named prop or slot with cited node id
+- [ ] Runtime API is complete enough to implement the component without opening Figma
+- [ ] Demo-only props are labeled; production path does not depend on them
+- [ ] Spec Accurate Design defaults (if Storybook requested) are written in the spec, not only in the story file
+- [ ] Parent/child composition documented when component is nested or data-driven
+- [ ] Validation checklist items are pass/fail and cover geometry, API, states, and a11y
+
+After intake, run **design-spec-blueprint** hardening (`validate_spec_geometry_gate.py`, normalizer) before marking **Status: active**.
+
+---
+
 ## Storybook follow-up (when step 8 = yes)
 
 After `design-spec.md` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group.
+
+**Production reuse rule:** The Storybook component file must export the same **canonical runtime API** documented in **Composition & API (runtime)**. Stories demonstrate that API with Figma-accurate defaults — they do not introduce a parallel or simplified prop surface. Production apps import the same component module as Spec Accurate Design.
 
 **Meta title:** `Spec Generated/{DisplayName}/<Component Display Name>` — use programme `display_name` from yaml (e.g. `IDS`, `DAP`, `Synapse`).
 
@@ -107,7 +193,8 @@ After `design-spec.md` is written, generate or update Storybook using the **Spec
 
 - Story **name:** `Spec Accurate Design`
 - Export name: `SpecAccurateDesign` (camelCase convention)
-- Args and layout must match the spec (especially any **Spec Accurate Design story defaults** in the spec); use `var(--...)` only
+- Args and layout must match the spec (especially any **`### Spec Accurate Design story defaults`** in **Composition & API**); use `var(--...)` only
+- Story args must use **canonical** prop names from Runtime API (`children`, `items`, `name` — not legacy or story-only aliases unless documented as aliases)
 
 **Theme import** in the `.stories.tsx` file: programme `{theme_css_path}` only (one import).
 
