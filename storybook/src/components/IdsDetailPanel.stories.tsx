@@ -61,13 +61,15 @@ function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPane
             Scrollable host content
           </div>
         </main>
-        <IdsDetailPanel
-          attachMode={attachMode}
-          isExpanded={expanded}
-          onExpandedChange={setExpanded}
-          title="Details"
-          body={<ExampleContent />}
-        />
+        <div style={{ margin: "-1px -1px -1px 0", flexShrink: 0, display: "flex" }}>
+          <IdsDetailPanel
+            attachMode={attachMode}
+            isExpanded={expanded}
+            onExpandedChange={setExpanded}
+            title="Details"
+            body={<ExampleContent />}
+          />
+        </div>
       </div>
     </div>
   );
@@ -86,11 +88,15 @@ export const CollapsedStates: Story = {
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, height: "100vh", padding: 16, boxSizing: "border-box", background: "var(--color-background-surface-1)" }}>
       <div style={{ border: "1px solid var(--color-border-accessible)", background: "var(--color-background-component)", display: "flex" }}>
         <div style={{ flex: 1, padding: 12 }}>Datagrid host</div>
-        <IdsDetailPanel attachMode="datagrid" isExpanded={false} body={<ExampleContent />} />
+        <div style={{ margin: "-1px -1px -1px 0", flexShrink: 0, display: "flex" }}>
+            <IdsDetailPanel attachMode="datagrid" isExpanded={false} body={<ExampleContent />} />
+          </div>
       </div>
       <div style={{ border: "1px solid var(--color-border-accessible)", background: "var(--color-background-component)", display: "flex" }}>
         <div style={{ flex: 1, padding: 12 }}>Page host</div>
-        <IdsDetailPanel attachMode="page" isExpanded={false} body={<ExampleContent />} />
+        <div style={{ margin: "-1px -1px -1px 0", flexShrink: 0, display: "flex" }}>
+            <IdsDetailPanel attachMode="page" isExpanded={false} body={<ExampleContent />} />
+          </div>
       </div>
     </div>
   ),

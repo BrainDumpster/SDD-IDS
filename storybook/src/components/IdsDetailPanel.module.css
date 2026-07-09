@@ -8,11 +8,10 @@
   overflow: hidden;
 }
 
-.header,
-.footer {
+.header {
   box-sizing: border-box;
   min-height: 48px;
-  padding: 14px 12px 14px 24px;
+  padding: var(--spacing-space-14, 14px) var(--padding-padding-12, 12px) var(--spacing-space-14, 14px) var(--padding-padding-24, 24px);
   border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
   display: flex;
   align-items: center;
@@ -21,9 +20,14 @@
 }
 
 .footer {
-  border-bottom: 0;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: var(--spacing-space-14, 14px) var(--padding-padding-12, 12px);
   border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  display: flex;
+  align-items: center;
   justify-content: flex-end;
+  background: var(--color-background-component);
 }
 
 .title {
@@ -55,14 +59,6 @@
   outline-offset: 2px;
 }
 
-.toggleIcon {
-  width: 16px;
-  height: 16px;
-  display: block;
-  filter: brightness(0) saturate(100%) invert(30%) sepia(0%) saturate(0%) hue-rotate(168deg)
-    brightness(95%) contrast(92%);
-}
-
 .body {
   flex: 1 1 auto;
   min-height: 0;
@@ -82,11 +78,11 @@
 .collapsedRailDatagrid {
   align-items: flex-start;
   justify-content: flex-end;
-  padding: 16px 12px;
+  padding: var(--spacing-space-16, 16px) var(--padding-padding-12, 12px);
 }
 
 .collapsedRailPage {
   align-items: flex-end;
   justify-content: center;
-  padding: 12px;
+  padding: var(--padding-padding-12, 12px);
 }
