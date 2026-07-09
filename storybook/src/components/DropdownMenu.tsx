@@ -1,5 +1,5 @@
 import { Menu } from "@base-ui-components/react/menu";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Tag } from "./Tag";
@@ -55,6 +55,8 @@ interface DropdownMenuProps {
   onShowSelectedPanelClear?: () => void;
   /** When true the trigger stretches to fill its parent container. */
   fullWidth?: boolean;
+  /** Portal menu into this element (e.g. modal popup) so it stays interactive inside modal dialogs. */
+  portalContainer?: HTMLElement | RefObject<HTMLElement | null> | null;
 }
 
 export function DropdownMenu({
@@ -91,6 +93,7 @@ export function DropdownMenu({
   onRemoveSelectedTag,
   onShowSelectedPanelClear,
   fullWidth = false,
+  portalContainer,
 }: DropdownMenuProps) {
   const [open, setOpen] = useState(defaultOpen && !disabled);
   const [internalShowSelectedExpanded, setInternalShowSelectedExpanded] = useState(defaultShowSelectedExpanded);
@@ -157,6 +160,7 @@ export function DropdownMenu({
 
   return (
     <Menu.Root
+      modal={portalContainer != null ? false : undefined}
       open={open}
       onOpenChange={(nextOpen) => {
         if (disabled) {
@@ -175,7 +179,7 @@ export function DropdownMenu({
           {trigger}
         </span>
       </Menu.Trigger>
-      <Menu.Portal>
+      <Menu.Portal container={portalContainer ?? undefined}>
         <Menu.Positioner sideOffset={sideOffset} alignment="start" style={positionerStyle}>
           <Menu.Popup className={styles.popup} style={popupStyle}>
             {showSearch ? (
@@ -333,7 +337,10 @@ export function DropdownMenu({
                       data-selection-mode={selectionMode}
                       data-selected={isSelected ? "true" : undefined}
                       data-indeterminate={isIndeterminate ? "true" : undefined}
-                      onClick={() => item.onClick?.()}
+                      onClick={() => {
+                        item.onClick?.();
+                        setOpen(false);
+                      }}
                       role={selectionMode === "multi" ? "menuitemcheckbox" : "menuitemradio"}
                       aria-checked={selectionMode === "multi" && isIndeterminate ? "mixed" : isSelected}
                     >
