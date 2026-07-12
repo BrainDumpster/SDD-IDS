@@ -563,5 +563,13 @@
       "sequentialOverflowPage1": "12189-233223",
       "sequentialOverflowPage2": "12189-233228"
     }
+  },
+  {
+    "category": "Patterns and Templates",
+    "component": "Page Error",
+    "designSpecPath": "components/ids/page-error/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=26744-12102&m=dev",
+    "nodeId": "26744-12102",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4"
   }
 ]
