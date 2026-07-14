@@ -11,8 +11,12 @@ wheels/
 design-system-knowledge
 **/node_modules/
 node_modules/
-**/stoybook/node_modules/
+**/storybook/node_modules/
+**/storybook-angular/node_modules/
 storybook/storybook-static/
+storybook-angular/storybook-static/
+.angular/
+**/.angular/
 .cache/
 **/.cache/
 
