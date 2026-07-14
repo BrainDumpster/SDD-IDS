@@ -495,10 +495,43 @@
     "nodeId": "30680-10863"
   },
   {
-    "category": "Patterns and Templates",
+    "category": "Patterns",
+    "component": "Dashboard",
+    "designSpecPath": "components/ids/dashboard/design-spec.md",
+    "specPattern": "ids-native",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44523-285905&m=dev",
+    "nodeId": "44523-285905",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentSetNodeId": "44523:285905",
+    "elementNodes": {
+      "pageTitle": "44523-285919",
+      "cardDefault": "14093-123116",
+      "cardTitleContent": "14093-123118",
+      "contentTypes": "14093-123636"
+    },
+    "notes": "Wrapper around IDS Cards; title Header 5; card Title|Secondary Body 1"
+  },
+  {
+    "category": "Patterns",
     "component": "Card",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54678&m=dev",
-    "nodeId": "11067-54678"
+    "designSpecPath": "components/ids/card/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8381-14051&m=dev",
+    "nodeId": "8381-14051",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "specPattern": "ids-native",
+    "mainComponentSetNodeId": "8381:14051",
+    "elementNodes": {
+      "overflowMenu": "15718-197531",
+      "content": "15718-220135",
+      "contentText": "15718-219736",
+      "contentKeyValue": "15718-220110"
+    },
+    "variantNodes": {
+      "buttonsYesOverflowYes": "8381-14245",
+      "buttonsYesOverflowNo": "8381-14305",
+      "buttonsNoOverflowYes": "15718-197984",
+      "buttonsNoOverflowNo": "15718-197994"
+    }
   },
   {
     "category": "Patterns and Templates",
