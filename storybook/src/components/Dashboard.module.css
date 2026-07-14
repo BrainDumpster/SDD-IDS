@@ -11,6 +11,8 @@
   border-radius: 0;
   padding: var(--padding-padding-16, 16px) var(--padding-padding-24, 24px);
   font-family: inherit;
+  /* Nested Card outer + body seams use light border (Dashboard-Element-Card context). */
+  --card-border-color: var(--color-border-light);
 }
 
 /*

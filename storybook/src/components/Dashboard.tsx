@@ -1,5 +1,6 @@
 import {
   Children,
+  cloneElement,
   isValidElement,
   useCallback,
   useEffect,
@@ -9,11 +10,16 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import type { CardSize } from "./Card";
+import { isCardElement, type CardSize } from "./Card";
 import styles from "./Dashboard.module.css";
 
 export interface DashboardProps {
   children: ReactNode;
+  /**
+   * When `true` (default), nested Cards keep body dividers (`showDivider`).
+   * When `false`, injects `showDivider={false}` onto each nested Card.
+   */
+  showDividerInCard?: boolean;
   /**
    * When `true`, nested Card items are draggable and can be reordered
    * (HTML5 drag-and-drop). Default `false`.
@@ -52,6 +58,7 @@ function readCardSize(child: ReactElement): CardSize {
  */
 export function Dashboard({
   children,
+  showDividerInCard = true,
   enableDragAndDrop,
   cardsDraggable,
   onCardsReorder,
@@ -66,12 +73,17 @@ export function Dashboard({
 
   const keyedChildren = useMemo(
     () =>
-      childList.map((child, index) => ({
-        key: childKey(child, index),
-        child,
-        size: readCardSize(child),
-      })),
-    [childList],
+      childList.map((child, index) => {
+        const next = isCardElement(child)
+          ? cloneElement(child, { showDivider: showDividerInCard })
+          : child;
+        return {
+          key: childKey(child, index),
+          child: next,
+          size: readCardSize(child),
+        };
+      }),
+    [childList, showDividerInCard],
   );
 
   const defaultOrder = useMemo(
@@ -154,6 +166,7 @@ export function Dashboard({
       aria-label="Dashboard"
       data-enable-drag-and-drop={dragEnabled ? "true" : "false"}
       data-cards-draggable={dragEnabled ? "true" : "false"}
+      data-show-divider-in-card={showDividerInCard ? "true" : "false"}
     >
       <div className={styles.grid} data-dashboard-grid>
         {order.map((key) => {

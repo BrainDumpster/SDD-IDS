@@ -2,9 +2,10 @@
  * Runtime border model for Figma `8381:14245` (one continuous card):
  * - `CardRoot` owns the single outer border + square corners (radius-none).
  * - Header / footer are regions with no section borders.
- * - `CardBody` always has `border-top` (header‖body). `border-bottom` only when a footer
- *   is present (body‖footer). Without footer, the root’s outer border is the bottom edge —
- *   do not double it with body `border-bottom`.
+ * - `CardBody` has `border-top` when `showDivider` (default). `border-bottom` only when
+ *   a footer is present **and** `showDivider`. Without footer, the root’s outer border is
+ *   the bottom edge — do not double it with body `border-bottom`.
+ * - `showDivider={false}` forces body top/bottom borders to `none`.
  * Negative CSS `gap` is invalid; do not recreate Figma’s overlapping section frames in the DOM.
  */
 .card {
@@ -21,8 +22,9 @@
   min-width: min(100%, var(--card-min-width, 430px));
   max-width: 100%;
   background: var(--color-background-surface-2);
+  /* Default accessible; Dashboard sets `--card-border-color: var(--color-border-light)`. */
   border: var(--border-width-border-default, 1px) solid
-    var(--color-border-accessible);
+    var(--card-border-color, var(--color-border-accessible));
   border-radius: 0;
   font-family: inherit;
   overflow: hidden;
@@ -195,14 +197,20 @@
   min-height: 0;
   background: var(--color-background-surface-2);
   border-top: var(--border-width-border-default, 1px) solid
-    var(--color-border-accessible);
+    var(--card-border-color, var(--color-border-accessible));
   border-bottom: none;
 }
 
-/* Body‖footer seam only when footer is rendered */
+/* `showDivider={false}` — no body seams */
+.bodyNoDivider {
+  border-top: none;
+  border-bottom: none;
+}
+
+/* Body‖footer seam only when footer is rendered and showDivider */
 .bodyWithFooter {
   border-bottom: var(--border-width-border-default, 1px) solid
-    var(--color-border-accessible);
+    var(--card-border-color, var(--color-border-accessible));
 }
 
 /* Figma Card Footer `8381:14252` — padding 16px 24px */

@@ -8,7 +8,9 @@ from generation.deterministic_storybook.ids.alert import generate_ids_alert_stor
 from generation.deterministic_storybook.ids.app_launcher import generate_ids_app_launcher_story
 from generation.deterministic_storybook.ids.badge import generate_ids_badge_story
 from generation.deterministic_storybook.ids.button import generate_ids_button_story
+from generation.deterministic_storybook.ids.card import generate_ids_card_story
 from generation.deterministic_storybook.ids.checkbox import generate_ids_checkbox_story
+from generation.deterministic_storybook.ids.dashboard import generate_ids_dashboard_story
 from generation.deterministic_storybook.ids.detail_panel import generate_ids_detail_panel_story
 from generation.deterministic_storybook.ids.dropdown_combo_box import generate_ids_dropdown_combo_box_story
 from generation.deterministic_storybook.ids.dropdown_multiselect import generate_ids_dropdown_multiselect_story
@@ -47,7 +49,9 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "app-launcher"): generate_ids_app_launcher_story,
     ("ids", "badge"): generate_ids_badge_story,
     ("ids", "button"): generate_ids_button_story,
+    ("ids", "card"): generate_ids_card_story,
     ("ids", "checkbox"): generate_ids_checkbox_story,
+    ("ids", "dashboard"): generate_ids_dashboard_story,
     ("ids", "detail-panel"): generate_ids_detail_panel_story,
     ("ids", "dropdown-combo-box"): generate_ids_dropdown_combo_box_story,
     ("ids", "dropdown-multiselect"): generate_ids_dropdown_multiselect_story,

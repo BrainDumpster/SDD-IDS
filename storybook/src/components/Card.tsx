@@ -57,6 +57,11 @@ interface CardProps {
   showOverFlowMenu?: boolean;
   onOptionSelected?: (value: string) => void;
   /**
+   * When `true` (default), `CardBody` shows header‖body `border-top` and, if a
+   * footer is present, body‖footer `border-bottom`. Set `false` to hide both.
+   */
+  showDivider?: boolean;
+  /**
    * Column span inside Dashboard’s 3-column grid.
    * `span-1` (default) | `span-2` (2×) | `span-3` (3× / full row).
    */
@@ -164,6 +169,7 @@ export function Card({
   showOverflowMenu,
   showOverFlowMenu,
   onOptionSelected,
+  showDivider = true,
   size = "span-1",
   className,
 }: CardProps) {
@@ -294,9 +300,14 @@ export function Card({
         </div>
       )}
       <div
-        className={[styles.body, hasFooter ? styles.bodyWithFooter : ""]
+        className={[
+          styles.body,
+          showDivider ? "" : styles.bodyNoDivider,
+          showDivider && hasFooter ? styles.bodyWithFooter : "",
+        ]
           .filter(Boolean)
           .join(" ")}
+        data-card-show-divider={showDivider ? "true" : "false"}
       >
         {children}
       </div>
