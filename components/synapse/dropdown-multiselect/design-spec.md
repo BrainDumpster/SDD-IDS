@@ -30,7 +30,7 @@ Synapse **Dropdown Multiselect** is an **ids-fork** of the IDS **Dropdown: Multi
 
 | Topic | IDS | Synapse |
 |---|---|---|
-| Field corner radius | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) |
+| Field corner radius | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (**0px** — square; Figma `12608:96588`) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) |
 | Focus outer ring radius | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **Same** (inherit IDS) |
 | Detached / standalone menu radius | `var(--dropdown-menu-radius)` → `0` (square) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) |
 | Field-attached popup | bottom corners square (IDS) | bottom corners `var(--dropdown-menu-radius)`; field top-only when open |

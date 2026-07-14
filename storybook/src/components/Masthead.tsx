@@ -3,7 +3,7 @@ import { Badge } from "./Badge";
 import styles from "./Masthead.module.css";
 
 interface MastheadProps extends ComponentProps<"header"> {
-  /** Optional leading brand logo/icon. */
+  /** Optional product logo — render via shared Icon only (32×32); omitted when not supplied. */
   logo?: ReactNode;
   /** Required product title text/content, e.g. "Synapse". */
   productName: ReactNode;
@@ -22,11 +22,13 @@ interface MastheadActionButtonContainerProps extends ComponentProps<"div"> {
 export interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
   icon: ReactNode;
   badgeCount?: number;
-  badgeType?: "critical" | "success";
+  badgeType?: "default" | "controls" | "critical" | "warning" | "disabled" | "success";
 }
 
 interface MastheadAvatarProps extends Omit<ComponentProps<"button">, "children"> {
   initials?: string;
+  /** User icon via shared Icon primitive — slug `user-single`, 16×16, `var(--color-icon-white)`. */
+  icon?: ReactNode;
   imageSrc?: string;
   imageAlt?: string;
 }
@@ -68,10 +70,7 @@ export function MastheadActionIconButton({
       </span>
       {showBadge ? (
         <span className={styles.badgeWrapper} aria-hidden="true">
-          <Badge
-            value={badgeLabel}
-            type={badgeType === "success" ? "success" : "critical"}
-          />
+          <Badge value={badgeLabel} type={badgeType} />
         </span>
       ) : null}
     </button>
@@ -80,6 +79,7 @@ export function MastheadActionIconButton({
 
 export function MastheadAvatar({
   initials,
+  icon,
   imageSrc,
   imageAlt = "User avatar",
   className,
@@ -93,8 +93,23 @@ export function MastheadAvatar({
       aria-label={initials ? `User initials ${initials}` : imageAlt}
       {...rest}
     >
-      <span className={styles.avatarChip}>
-        {imageSrc ? <img className={styles.avatarImage} src={imageSrc} alt={imageAlt} /> : initials}
+      <span
+        className={[
+          styles.avatarChip,
+          imageSrc ? styles.avatarChipPhoto : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {imageSrc ? (
+          <img className={styles.avatarImage} src={imageSrc} alt={imageAlt} />
+        ) : icon ? (
+          <span className={styles.avatarIcon} aria-hidden="true">
+            {icon}
+          </span>
+        ) : (
+          initials
+        )}
       </span>
     </button>
   );

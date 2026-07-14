@@ -1,10 +1,11 @@
 .root {
   position: relative;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-space-16);
-  min-height: 48px;
+  height: 48px;
   border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   padding: var(--padding-padding-8) calc(var(--padding-padding-16) * 2) var(--padding-padding-8)
     var(--padding-padding-24);
@@ -14,11 +15,15 @@
 }
 
 .rootNone {
-  background: var(--color-background-component);
+  background: transparent;
 }
 
 .rootGray {
   background: var(--color-background-surface-1);
+}
+
+.rootWhite {
+  background: var(--color-background-component);
 }
 
 .resultsGroup {
@@ -190,11 +195,11 @@
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  width: 52px;
+  width: 40px;
   height: 32px;
   border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
   background: var(--color-background-component);
-  padding: 5px var(--padding-padding-16) 6px var(--padding-padding-16);
+  padding: 5px 0 6px;
 }
 
 .pageInput {

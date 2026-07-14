@@ -16,7 +16,7 @@ const meta: Meta<typeof IdsButton> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["primary", "secondary", "tertiary", "danger"],
+      options: ["primary", "secondary", "tertiary", "destructive"],
     },
     size: { control: "select", options: ["sm", "md", "lg"] },
     iconSlug: {
@@ -62,7 +62,7 @@ export const StatesMatrix: Story = {
         <IdsButton variant="tertiary" size="lg">
           Tertiary
         </IdsButton>
-        <IdsButton variant="danger" size="lg">
+        <IdsButton variant="destructive" size="lg">
           Destructive
         </IdsButton>
       </div>
@@ -76,7 +76,7 @@ export const StatesMatrix: Story = {
         <IdsButton variant="tertiary" size="lg" disabled>
           Tertiary
         </IdsButton>
-        <IdsButton variant="danger" size="lg" disabled>
+        <IdsButton variant="destructive" size="lg" disabled>
           Destructive
         </IdsButton>
       </div>
@@ -113,6 +113,28 @@ export const SizeExamples: Story = {
         <IdsButton variant="tertiary" size="md" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings medium" />
         <IdsButton variant="tertiary" size="lg" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings large" />
       </div>
+    </div>
+  ),
+};
+
+/** Body 2 typography from Figma (41894:116183 / 9662:25120): 14/20, weight 400, Roboto primary. */
+export const TypographyBody2: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 8 }}>
+      <IdsButton variant="primary" size="lg">
+        Body 2 — 14/20 / 400
+      </IdsButton>
+      <p
+        style={{
+          margin: 0,
+          fontFamily: 'var(--typography-font-style-primary, "Roboto", sans-serif)',
+          fontSize: "var(--font-size-body-2)",
+          lineHeight: "var(--font-line-height-line-height-20)",
+          fontWeight: 400,
+        }}
+      >
+        Reference text using the same Body 2 tokens as the button label.
+      </p>
     </div>
   ),
 };

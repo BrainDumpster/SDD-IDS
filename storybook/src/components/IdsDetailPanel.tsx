@@ -49,7 +49,7 @@ export function IdsDetailPanel({
       aria-expanded={isExpanded}
       onClick={handleToggle}
     >
-      <Icon shapeName={toggleIcon} variant="img" className={styles.toggleIcon} />
+      <Icon shapeName={toggleIcon} />
     </button>
   );
 

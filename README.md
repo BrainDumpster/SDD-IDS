@@ -22,6 +22,31 @@ Non-coders and developers can create production-ready `design-spec.md` files fro
 **Full guide:** [`docs/design-spec-intake.md`](docs/design-spec-intake.md)  
 **Authoring rules (IDE-agnostic):** [`docs/design-spec-authoring-contract.md`](docs/design-spec-authoring-contract.md)
 
+### Which wizard? (pick first)
+
+| Situation | Use | `specPattern` |
+|-----------|-----|---------------|
+| New **IDS-only** component | **Intake wizard** (this section) | `ids-native` |
+| **Programme fork** — same anatomy as IDS, programme token/layout/chrome changes | [**Programme inheritance**](#programme-inheritance-design-spec-any-programme-from-ids) | `ids-fork` |
+| **Programme-native** UI — no IDS counterpart (e.g. Synapse Chat Input Box, Suggested Prompt) | **Intake wizard** with **`Inherits IDS: no`** | `standalone` |
+
+### How to use the intake wizard in Cursor
+
+1. **Open SDD-IDS** in Cursor (Figma MCP enabled, or `FIGMA_TOKEN` in `.env`).
+2. **Start a new agent chat** and invoke `@design-spec-intake-wizard` or paste the [base prompt](#base-prompt-paste-into-a-new-agent-chat) below.
+3. **Answer one question per turn** until the agent shows a summary:
+   - Programme / design system (`ids`, `synapse`, `dap`, or any registered slug)
+   - Component display name
+   - **Inherits IDS component?** (skip when programme = IDS) — `yes` / `no` / `unknown`
+     - **`yes`** → agent hands off to [`@design-spec-programme-inheritance`](#programme-inheritance-design-spec-any-programme-from-ids)
+     - **`no`** → **standalone** programme spec (no IDS baseline section)
+   - Category (optional)
+   - Figma URLs in three buckets — **Main component** (one or many), **Elements**, **States** (reply `done` when finished with each bucket)
+   - Storybook: `yes` / `no`
+4. **Reply `yes`** on the summary. The agent creates `components/<programme>/<slug>/`, updates the Figma map, runs live Figma MCP on every URL, and writes `design-spec.md` with **Status: draft**.
+
+**Standalone programme specs** (`Inherits IDS: no`): full spec from programme Figma only — no `## IDS baseline` block, no programme deltas table. Metadata includes `Spec pattern: standalone`. See [authoring contract — Programme standalone](docs/design-spec-authoring-contract.md#programme-standalone-no-ids-inheritance). Examples: [`components/synapse/suggested-prompt/design-spec.md`](components/synapse/suggested-prompt/design-spec.md).
+
 ### Base prompt (paste into a new agent chat)
 
 Open the SDD-IDS repo as your workspace, start a new agent session, and paste:
@@ -30,26 +55,30 @@ Open the SDD-IDS repo as your workspace, start a new agent session, and paste:
 Run the design-spec intake wizard: ask me each required question one at a time, wait for my answer, then show a summary for confirmation. After I confirm, generate a production-ready framework-agnostic design-spec. Follow docs/design-spec-authoring-contract.md and docs/design-spec-intake.md (portable wizard rules). Do not call Figma or write files until I confirm the summary.
 ```
 
-**Cursor:** you can also use `@design-spec-intake-wizard` and say “Start the design-spec intake wizard.”
+**Cursor shortcut:**
 
-The agent will ask for **programme** (IDS / DAP / Synapse), **component name**, optional **category**, **Figma URLs** (component required; elements and states optional), and **Storybook examples** (`yes` / `no`). Reply **`yes`** on the summary to run. The agent creates `components/<programme>/<slug>/` if needed, updates the Figma map, fetches live Figma, and writes `design-spec.md` with **Status: draft**. If Storybook = **yes**, examples are generated under the **Spec Generated** group with a primary story named **Spec Accurate Design** (see [design-spec-intake.md](docs/design-spec-intake.md#storybook-examples-when-you-answer-yes)).
+```text
+@design-spec-intake-wizard Start the design-spec intake wizard.
+```
+
+**Programme standalone shortcut** (when you already know there is no IDS counterpart):
+
+```text
+@design-spec-intake-wizard Start the intake wizard. Programme: synapse. Component: Suggested Prompt. Inherits IDS: no.
+```
+
+If Storybook = **yes**, examples are generated under **Spec Generated** with primary story **Spec Accurate Design** ([details](docs/design-spec-intake.md#storybook-examples-when-you-answer-yes)).
 
 | Artifact | Path |
 |----------|------|
 | Intake guide + Devin/Cascade steps | [`docs/design-spec-intake.md`](docs/design-spec-intake.md) |
 | Production-ready contract | [`docs/design-spec-authoring-contract.md`](docs/design-spec-authoring-contract.md) |
 | Wizard skill (Cursor) | [`.cursor/skills/design-spec-intake-wizard/SKILL.md`](.cursor/skills/design-spec-intake-wizard/SKILL.md) |
+| Programme inheritance skill (Cursor) | [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](.cursor/skills/design-spec-programme-inheritance/SKILL.md) |
 | Blueprint / hardening | [`.cursor/skills/design-spec-blueprint/SKILL.md`](.cursor/skills/design-spec-blueprint/SKILL.md) |
+| Standalone scaffold template | [`scripts/design_spec_template.py`](scripts/design_spec_template.py) → `PROGRAMME_STANDALONE_TEMPLATE` |
 
 **Prerequisites:** Figma MCP in the IDE (recommended) or `FIGMA_TOKEN` in `.env` for REST fallback.
-
-### Which wizard?
-
-| Situation | Wizard |
-|-----------|--------|
-| New **IDS-only** component (no programme fork) | Intake wizard above → [`docs/design-spec-intake.md`](docs/design-spec-intake.md) |
-| **Synapse / DAP** component inherits IDS anatomy + API | Programme inheritance wizard below → [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md) |
-| Programme-native UI with no IDS counterpart | Intake wizard → **standalone** spec |
 
 ## Generate UI code with an AI agent (non-developer guide)
 
@@ -186,20 +215,64 @@ Requirements:
 
 | Situation | First step | Then generate code |
 |-----------|------------|-------------------|
-| No spec yet | [Intake wizard](#create-a-new-design-spec-intake-wizard) or [programme inheritance](#programme-inheritance-design-spec-synapse--dap-from-ids) | Prompts above |
+| No spec yet | Pick wizard from [Which wizard?](#which-wizard-pick-first) — [intake](#create-a-new-design-spec-intake-wizard) or [programme inheritance](#programme-inheritance-design-spec-any-programme-from-ids) | Prompts above |
 | Spec already in SDD-IDS | Copy portable bundle **or** open full repo | Prompts above |
 
 Machine-readable handoff for tooling: [`data/agent-generation-contract.md`](data/agent-generation-contract.md).
 
-## Programme inheritance design-spec (Synapse / DAP from IDS)
+## Programme inheritance design-spec (any programme from IDS)
 
-Use when a programme layer (**Synapse**, **DAP**, …) reuses an IDS component family in Figma but has programme-specific token, layout, radius, border, or slot changes.
+Use when a **programme layer** reuses an IDS component family in Figma but has programme-specific token, layout, radius, border, or slot changes. A **programme** is any design system defined in `config/design_systems/<slug>.yaml` that layers on IDS (for example `synapse`, `dap` — not limited to those two).
 
-**Output:** a full `components/<programme>/<slug>/design-spec.md` with an **IDS baseline pointer** + **programme deltas table** (not a deltas-only file).
+**Output:** a full `components/<programme>/<slug>/design-spec.md` with an **IDS baseline pointer** + **programme deltas table** (never a deltas-only file).
 
+**Skill:** [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](.cursor/skills/design-spec-programme-inheritance/SKILL.md)  
 **Full guide:** [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md)
 
-### Base prompt — wizard mode (one question at a time)
+### When to use this skill
+
+| Situation | Use this skill? |
+|-----------|-----------------|
+| New IDS-only component | No — use [intake wizard](#create-a-new-design-spec-intake-wizard) |
+| Programme fork of an IDS component (same anatomy, different tokens/layout) | **Yes** |
+| Programme-native UI with no IDS counterpart | No — use intake wizard → **standalone** spec |
+
+### How to use the skill in Cursor
+
+1. **Open SDD-IDS** in Cursor (Figma MCP enabled, or `FIGMA_TOKEN` in `.env`).
+2. **Start a new agent chat.**
+3. **Invoke the skill** with `@design-spec-programme-inheritance` or paste one of the [prompts below](#programme-inheritance-prompts).
+4. **Answer one question per turn** until the agent shows a summary:
+   - Programme slug (e.g. `synapse`, `dap`, or any registered yaml)
+   - Component display name
+   - IDS baseline component (or `unknown` — agent looks it up)
+   - Programme Figma URLs in three buckets: **Main component**, **Elements**, **States** (reply `done` when finished with each bucket)
+   - Storybook: `yes` / `no`
+5. **Reply `yes`** on the summary. The agent then:
+   - Reads the IDS baseline spec (`components/ids/<slug>/design-spec.md`)
+   - Runs live Figma MCP on **programme** nodes (not IDS-only)
+   - Builds the `{Display name} programme deltas (vs IDS)` table
+   - Writes the full programme spec and updates the figma map + [`programme-inheritance-registry.json`](data/programme-inheritance-registry.json)
+
+**If you already have all inputs**, skip the interview: paste the [expert one-shot](#programme-inheritance-prompts) from the full guide (programme, component, IDS baseline, all three URL blocks). The agent still confirms before writing files.
+
+**New programme?** Add `config/design_systems/<slug>.yaml` (with `baseline_components_dir: components/ids` and a distinct `components_dir`) and register it in `data/programme-inheritance-registry.json` before running the skill.
+
+### What the skill produces
+
+Each generated spec includes:
+
+- `## IDS baseline (layout, flow, contracts)` — pointer to the IDS spec
+- `### {Programme} programme deltas (vs IDS)` — table of **verified** differences only
+- All 10 required `##` sections (Anatomy, Layout, Tokens, States, Interactions, Codegen Contract, …)
+- Live Figma evidence in Metadata + Source Mapping
+- `Status: draft` until the validation checklist passes
+
+Reference examples: [`components/synapse/left-nav/design-spec.md`](components/synapse/left-nav/design-spec.md), [`components/synapse/modal/design-spec.md`](components/synapse/modal/design-spec.md).
+
+### Programme inheritance prompts
+
+#### Wizard mode (one question at a time)
 
 ```text
 Run the programme inheritance design-spec process.
@@ -216,22 +289,23 @@ For Elements and States: repeat “paste another URL or reply done” until I sa
 Show a summary (all parsed node IDs by bucket) and wait for my yes before Figma calls or file writes.
 ```
 
-**Cursor shortcut:**
+#### Cursor shortcut
 
 ```text
 @design-spec-programme-inheritance Generate a programme inheritance design-spec. Ask one question at a time, confirm before run.
 ```
 
-The agent asks for **programme** (Synapse / DAP), **component name**, **IDS baseline** (e.g. `Modal` → `components/ids/modal/design-spec.md`), then Figma URLs in three buckets — **Main component**, **Elements**, **States** (multiple URLs per bucket; reply **`done`** when finished with each), and **Storybook** (`yes` / `no`). Reply **`yes`** on the summary to run live Figma MCP and write the spec.
+#### Expert one-shot (all URLs ready)
 
-If you already have all URLs, use the **expert one-shot** template in [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md#expert-one-shot--paste-all-urls-in-three-blocks-recommended-for-you).
+Paste programme, component, IDS baseline, and Figma URLs in three blocks. Template: [`docs/design-spec-programme-inheritance.md#expert-one-shot--paste-all-urls-in-three-blocks-recommended-for-you`](docs/design-spec-programme-inheritance.md#expert-one-shot--paste-all-urls-in-three-blocks-recommended-for-you).
 
 | Artifact | Path |
 |----------|------|
 | Programme inheritance guide + one-shot prompts | [`docs/design-spec-programme-inheritance.md`](docs/design-spec-programme-inheritance.md) |
-| Synapse IDS-fork detail (examples) | [`docs/design-spec-synapse-ids-fork.md`](docs/design-spec-synapse-ids-fork.md) |
-| Wizard skill (Cursor) | [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](.cursor/skills/design-spec-programme-inheritance/SKILL.md) |
+| Programme inheritance skill | [`.cursor/skills/design-spec-programme-inheritance/SKILL.md`](.cursor/skills/design-spec-programme-inheritance/SKILL.md) |
+| Synapse walkthrough (examples only) | [`docs/design-spec-synapse-ids-fork.md`](docs/design-spec-synapse-ids-fork.md) |
 | Fork registry | [`data/programme-inheritance-registry.json`](data/programme-inheritance-registry.json) |
+| Scaffold template | [`scripts/design_spec_template.py`](scripts/design_spec_template.py) → `PROGRAMME_IDS_FORK_TEMPLATE` |
 | Example spec (active) | [`components/synapse/left-nav/design-spec.md`](components/synapse/left-nav/design-spec.md) |
 | Example spec (draft) | [`components/synapse/modal/design-spec.md`](components/synapse/modal/design-spec.md) |
 
@@ -325,14 +399,14 @@ Scripts and templates that create or maintain `components/ids/<slug>/design-spec
 
 | Artifact | Path | Role |
 |---|---|---|
-| Canonical template & bootstrap blocks | `scripts/design_spec_template.py` | Shared `##` order, `NEW_SPEC_TEMPLATE` for map-driven scaffolds, `CODEGEN_BOOTSTRAP` / `COMPOSITION_STUB` used by the normalizer |
+| Canonical template & bootstrap blocks | `scripts/design_spec_template.py` | `NEW_SPEC_TEMPLATE` (IDS), `PROGRAMME_STANDALONE_TEMPLATE` (programme-native), `PROGRAMME_IDS_FORK_TEMPLATE` (inheritance) |
 | Heading normalizer | `scripts/normalize_design_spec_headings.py` | Reorder `##` sections, rename Codegen `###` titles, reparent stray `##` blocks; add Composition/Codegen stubs for legacy specs |
 | Map-driven scaffold | `scripts/generate_specs_from_map.py` | Create `design-spec.md` from `data/component-figma-map.json` (`--overwrite` to replace existing) |
 | Docs-first composer | `ingestion/design_spec_composer.py` | Compose specs from GitHub docs + Figma extraction (outputs canonical `##` / `###` layout) |
 | Figma → MDX extractor | `tokens/figma_spec_extractor.py` | `spec_to_mdx()` output uses canonical section names (extend for full blueprint depth) |
 | Spec contract validation | `validation/spec_contract_parser.py` | Checks required `##` sections (used by gates and QA) |
-| Intake wizard (new specs) | `.cursor/skills/design-spec-intake-wizard/SKILL.md` | Interactive Q&A → confirm → create `design-spec.md`; see `docs/design-spec-intake.md` |
-| Programme inheritance wizard | `.cursor/skills/design-spec-programme-inheritance/SKILL.md` | Synapse/DAP specs from IDS baseline + programme deltas; see `docs/design-spec-programme-inheritance.md` |
+| Intake wizard (IDS + programme standalone) | `.cursor/skills/design-spec-intake-wizard/SKILL.md` | Interactive Q&A → confirm → `design-spec.md`; `standalone` when `Inherits IDS: no`; see `docs/design-spec-intake.md` |
+| Programme inheritance wizard | `.cursor/skills/design-spec-programme-inheritance/SKILL.md` | Programme fork from IDS baseline + deltas (`ids-fork`); see `docs/design-spec-programme-inheritance.md` |
 | Authoring skill | `.cursor/skills/design-spec-blueprint/SKILL.md` | Agent workflow: Figma verification, required sections, production-ready gate |
 | States dark dedupe | `scripts/dedupe_states_dark_theme.py` | Replace duplicate **States (Dark Theme)** tables when identical token-only matrices exist under Light (dry-run by default; `--apply` to write) |
 
@@ -523,6 +597,7 @@ Prompt guidance:
 
 Before auto-generation, verify:
 
+- `### Slot geometry (Figma-verified)` table under Layout & Measurements (`python3 scripts/validate_spec_geometry_gate.py --component <slug>`).
 - `Codegen Contract` exists and is deterministic.
 - Light/Dark state structures are parallel.
 - Prop/event contract and defaults are explicit.

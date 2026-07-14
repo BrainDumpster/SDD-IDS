@@ -325,7 +325,7 @@
       "specContract": "storybook/src/spec-contracts/synapse-segmented-button.contract.ts",
       "storybookPath": "storybook/src/components/SynapseSegmentedButton.stories.tsx",
       "themeAlias": "--segmented-button-control-radius",
-      "lastVerified": "2026-06-12",
+      "lastVerified": "2026-06-24",
       "status": "active"
     },
     {

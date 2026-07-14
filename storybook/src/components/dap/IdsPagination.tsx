@@ -3,7 +3,10 @@ import { Icon } from "../Icon";
 import styles from "./IdsPagination.module.css";
 
 export type IdsPaginationDropdownState = "collapsed" | "expanded-below" | "expanded-above";
-export type IdsPaginationBackground = "none" | "gray";
+export type IdsPaginationBackground = "none" | "gray" | "white";
+
+const CARET_ICON_SIZE = { width: 10, height: 10 } as const;
+const NAV_ICON_SIZE = { width: 16, height: 16 } as const;
 
 export interface IdsPaginationProps extends ComponentProps<"nav"> {
   currentPage: number;
@@ -44,7 +47,7 @@ export function IdsPagination({
   pageOffsetOptions,
   dropdownState = "collapsed",
   pageOffsetDropdownState = "collapsed",
-  background = "none",
+  background = "gray",
   disabled = false,
   className,
   ...rest
@@ -129,7 +132,11 @@ export function IdsPagination({
       aria-label="Pagination"
       className={[
         styles.root,
-        background === "gray" ? styles.rootGray : styles.rootNone,
+        background === "white"
+          ? styles.rootWhite
+          : background === "none"
+            ? styles.rootNone
+            : styles.rootGray,
         className,
       ]
         .filter(Boolean)
@@ -155,7 +162,11 @@ export function IdsPagination({
               }}
             >
               <span>{safePageSize}</span>
-              <Icon shapeName="arrow-drop-tri-caret" className={styles.caretIcon} />
+              <Icon
+                shapeName="arrow-drop-tri-caret"
+                className={styles.caretIcon}
+                style={CARET_ICON_SIZE}
+              />
             </button>
             {resolvedPerPageDropdownState !== "collapsed" ? (
               <ul
@@ -209,7 +220,11 @@ export function IdsPagination({
             disabled={disabled || atFirstPage}
             aria-label="First page"
           >
-            <Icon shapeName="double-chev-left" className={styles.navIcon} />
+            <Icon
+              shapeName="double-chev-left"
+              className={styles.navIcon}
+              style={NAV_ICON_SIZE}
+            />
           </button>
         ) : null}
         <button
@@ -219,7 +234,11 @@ export function IdsPagination({
           disabled={disabled || atFirstPage}
           aria-label="Previous page"
         >
-          <Icon shapeName="chev-left" className={styles.navIcon} />
+          <Icon
+            shapeName="chev-left"
+            className={styles.navIcon}
+            style={NAV_ICON_SIZE}
+          />
         </button>
         {showPageOffset ? (
           <div className={styles.pageOffsetWrap}>
@@ -239,7 +258,11 @@ export function IdsPagination({
               }}
             >
               <span>{safeCurrentPage}</span>
-              <Icon shapeName="arrow-drop-tri-caret" className={styles.pageOffsetCaretIcon} />
+              <Icon
+                shapeName="arrow-drop-tri-caret"
+                className={styles.pageOffsetCaretIcon}
+                style={CARET_ICON_SIZE}
+              />
             </button>
             {resolvedPageOffsetDropdownState !== "collapsed" ? (
               <ul
@@ -303,7 +326,11 @@ export function IdsPagination({
           disabled={disabled || atLastPage}
           aria-label="Next page"
         >
-          <Icon shapeName="chev-right" className={styles.navIcon} />
+          <Icon
+            shapeName="chev-right"
+            className={styles.navIcon}
+            style={NAV_ICON_SIZE}
+          />
         </button>
         {showFirstLast ? (
           <button
@@ -313,7 +340,11 @@ export function IdsPagination({
             disabled={disabled || atLastPage}
             aria-label="Last page"
           >
-            <Icon shapeName="double-chev-right" className={styles.navIcon} />
+            <Icon
+              shapeName="double-chev-right"
+              className={styles.navIcon}
+              style={NAV_ICON_SIZE}
+            />
           </button>
         ) : null}
       </div>

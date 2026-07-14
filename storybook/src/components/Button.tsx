@@ -1,5 +1,6 @@
 import { Button as BaseButton } from "@base-ui-components/react/button";
 import { forwardRef, useMemo, type ComponentProps, type ReactNode } from "react";
+import { Icon } from "./Icon";
 import styles from "./Button.module.css";
 
 type Variant = "primary" | "secondary" | "tertiary" | "ghost" | "danger" | "destructive";
@@ -44,7 +45,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   {
     programme = "ids",
     variant = "primary",
-    size = "md",
+    size = "lg",
     loading = false,
     icon,
     iconSlug,
@@ -60,7 +61,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const variantClass = variant === "destructive" ? "danger" : variant;
   const isDestructive = variant === "destructive" || variant === "danger";
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
-  const slugIconNode = iconUrl ? <img src={iconUrl} alt="" aria-hidden="true" className={styles.iconImage} /> : undefined;
+  const slugIconNode =
+    iconSlug && iconUrl ? <Icon shapeName={iconSlug} variant={iconVariant} /> : undefined;
   const resolvedIcon = isDestructive ? undefined : (icon ?? slugIconNode);
   const resolvedIconOnly = isDestructive ? false : iconOnly;
   const hasIcon = Boolean(resolvedIcon);

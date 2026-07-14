@@ -44,7 +44,7 @@
 - Menu width:
   - matches trigger width in component examples (`300px` sample)
   - runtime contract: container-driven with optional min/max constraints.
-- Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-2)` / 2px).
+- Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px — square corners**; Figma Container `12579:77895` uses `Corner Radius/radius-none`).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
 - Menu elevation: IDS shadow token stack (Shadow 1 family).
@@ -52,7 +52,20 @@
   - `var(--color-border-accessible)` top border on section boundaries
   - first section header top border may be omitted.
 - Footer action button inner wrapper: `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`
-- Focus ring: pseudo-element `::after`, `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field itself has no border-radius.
+- Focus ring: pseudo-element `::after`, `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field shell stays square (`radius-none`); only the outer focus ring is rounded.
+
+### Slot geometry (Figma-verified)
+
+| Slot / layer | Property | Token / contract | Figma node | Live evidence |
+| --- | --- | --- | --- | --- |
+| `FieldContainer` | `border-radius` | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (0px) | `12579:77895` | Figma MCP `get_variable_defs`: `Corner Radius/radius-none` |
+| `FocusRing` (`::after`) | `border-radius` | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` (4px) | `11099:58141` | Figma MCP `get_design_context`: focus child `rounded-*-[radius-4]` |
+| `MenuPopup` (detached) | `border-radius` | `var(--dropdown-menu-radius)` → `0` | `12579:19717` | Figma MCP `get_metadata` + menu frame (square shell) |
+| `FooterActionButton` (inner span) | `border-radius` | `var(--corner-radius-radius-2)` (2px) | `29392:48797` | Figma MCP `get_design_context` (action row element; separate from field shell) |
+| `OptionRow` (focus ring) | `border-radius` | `var(--corner-radius-radius-4)` on inset outline | `12380:16525` | Figma MCP `get_design_context` (option focus state) |
+
+**Anti-drift rule:** Do not set `--dropdown-control-radius` from Button/`radius-2` convention. Theme alias in `components/ids-theme.css` must match this table after every geometry audit.
+
 ## Tokens
 - Field and menu:
   - `var(--color-background-component)`
@@ -84,7 +97,7 @@
   - `var(--shadow-shadow-4-drop-shadow-4-color)` (rgba(37,37,37,0.08))
 - Geometry:
   - `var(--border-width-border-default)` (field + menu border width, 1px)
-  - `var(--dropdown-control-radius)` (field shell; IDS theme → `var(--corner-radius-radius-2)`)
+  - `var(--dropdown-control-radius)` (field shell; IDS theme → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (focus ring; IDS theme → `var(--corner-radius-radius-4)`)
   - `var(--dropdown-menu-radius)` (detached menu; IDS theme → `0`)
   - `var(--spacing-space-8)` (option gap, label gap)
@@ -224,6 +237,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Unknown action/radio flags -> disabled/off.
 
 ### Validation checklist
+- [x] **Slot geometry (Figma-verified)** table complete; field `radius-none` verified on `12579:77895`
+- [x] `--dropdown-control-radius` in `ids-theme.css` matches geometry table (`radius-none`, not `radius-2`)
 - [ ] Main state matrix matches `11099:58099`.
 - [ ] Menu scenarios match `43264:181428` (`small`, `overflow`, `section`, `action`).
 - [ ] Option states match `12380:16525`.
@@ -239,13 +254,16 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Radio dependency spec: `components/ids/radio-button/design-spec.md`
 - Component map: `data/component-figma-map.json` -> `Dropdown-Single-Select`
 - Verification method: Figma MCP (`get_design_context` + `get_variable_defs`)
-- Last live verification: 2026-05-25 (states audit: default, hover, show-dropdown, focus-visible, disabled, error; caret icon per-state; field tokens)
+- Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
 > Last updated: 2026-06-07.
 
+**Field shell is square (0px radius) in all states.**
+Figma Container `12579:77895` binds `Corner Radius/radius-none` (not `radius-2`). IDS theme maps `--dropdown-control-radius` → `var(--corner-radius-radius-none)`. Do not round the field on focus.
+
 **Focus ring must not add border-radius to the field element.**
-The field is square in all states including focus. The ring has `border-radius: var(--corner-radius-radius-4)` and a 4px gap from the field border. Implementation: `IdsDropdownTriggerShell.module.css` — use `::after` pseudo-element (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`) instead of `outline` + `border-radius` on the element itself.
+Only the outer ring is rounded (`radius-4`). Implementation: `IdsDropdownTriggerShell.module.css` — field uses `border-radius: var(--dropdown-control-radius)`; focus uses `::after` (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`).
 
 **Caret disabled color is `var(--color-border-disabled)`, not `var(--color-icon-disabled)`.**
 Both tokens resolve to the same value in light mode but differ in dark mode. Implementation: `IdsDropdownTriggerShell.module.css` — `.field[data-disabled] .caretWrap { color: var(--color-border-disabled) }`.

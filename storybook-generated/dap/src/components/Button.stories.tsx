@@ -263,7 +263,7 @@ export const StateHarness: Story = {
         }
         .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {
           outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-          outline-offset: 2px;
+          outline-offset: var(--button-focus-ring-offset);
         }
 
       `}</style>

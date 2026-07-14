@@ -9,6 +9,7 @@ import gridSquare9Raw from "../../../assets/icons/grid-square-9-16.svg?raw";
 import search16Raw from "../../../assets/icons/search-16.svg?raw";
 import settingsGearRaw from "../../../assets/icons/settings-gear.svg?raw";
 import shieldEncryptAltRaw from "../../../assets/icons/shield-encrypt-alt.svg?raw";
+import statusWarnTriSolidRaw from "../../../assets/icons/status-warn-tri-solid.svg?raw";
 
 export function stripXmlDeclaration(svg: string): string {
   return svg.replace(/<\?xml[^>]*>\s*/i, "").trim();
@@ -29,6 +30,23 @@ function monoIconFromAsset(raw: string): string {
   return s.trim();
 }
 
+/**
+ * Global alert warning-minor icon: two-tone SVG with black triangle and white exclamation mark.
+ * Per design spec: strip <style>, apply inline fill tokens to .st0/.st1 (triangle → black)
+ * and .st2 (exclamation mark → white); strip width/height from root <svg>.
+ */
+function warnMinorAlertIcon(raw: string): string {
+  let s = stripXmlDeclaration(raw);
+  s = s.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
+  s = s.replace(/\swidth="[^"]*"/i, "");
+  s = s.replace(/\sheight="[^"]*"/i, "");
+  s = s.replace(/\sstyle="enable-background:[^"]*"/gi, "");
+  s = s.replace(/class="st0"/g, 'style="fill:var(--color-icon-black)"');
+  s = s.replace(/class="st1"/g, 'style="fill:var(--color-icon-black)"');
+  s = s.replace(/class="st2"/g, 'style="fill:var(--color-icon-white)"');
+  return s.trim();
+}
+
 export const ICON_INLINE_SVG_RAW_BY_SLUG: Readonly<Record<string, string>> = {
   "grid-square-9-16": stripXmlDeclaration(gridSquare9Raw),
   "shield-encrypt-alt": stripXmlDeclaration(shieldEncryptAltRaw),
@@ -38,4 +56,5 @@ export const ICON_INLINE_SVG_RAW_BY_SLUG: Readonly<Record<string, string>> = {
   "filter-solid": monoIconFromAsset(filterSolidRaw),
   "search-16": monoIconFromAsset(search16Raw),
   "settings-gear": monoIconFromAsset(settingsGearRaw),
+  "status-warn-tri-solid": warnMinorAlertIcon(statusWarnTriSolidRaw),
 };

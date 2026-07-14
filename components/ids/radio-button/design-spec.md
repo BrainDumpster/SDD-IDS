@@ -10,7 +10,7 @@
 - Component/state matrix node ID: `42077:26730`
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-05-10
+- Verified at: 2026-06-18
 - Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
 - Reference implementation: `storybook/src/components/RadioButton.tsx` (shared IDS baseline). Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
 ## Anatomy

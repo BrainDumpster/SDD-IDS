@@ -11,7 +11,7 @@
 - States matrix node id: `9662:25120`
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-04-22
+- Verified at: 2026-06-18
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
 - `ButtonLabel` (optional for icon-only mode)

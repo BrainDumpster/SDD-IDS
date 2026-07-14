@@ -44,7 +44,7 @@ Synapse **Dropdown / Combo Box** shares the IDS **Dropdown-Combobox** family (si
 | Option label typography | Body 2 | **Body 2 Regular (`font-weight: 400`)**, `var(--color-text-neutral)` |
 | Option row hover inset | `var(--color-border-brand-base)` top/bottom | **`var(--color-border-brand-neutral)`** top/bottom (Synapse detached pattern; aligns masthead help menu) |
 | Option row press | `var(--color-background-brand-light)` + brand-strong text | **Same semantic tokens** |
-| Field trigger corner radius | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | **`var(--dropdown-control-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
+| Field trigger corner radius | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (**0px** — square; Figma `29393:149487` / `12730:157290`) | **`var(--dropdown-control-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
 | Field focus ring radius | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **Same alias** (**4px**) |
 | Detached / standalone menu radius | `var(--dropdown-menu-radius)` → `0` (square) | **`var(--dropdown-menu-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
 | Field trigger border | `var(--color-border-accessible)` | **Inherit IDS** until `11067:54551` verified |
@@ -110,7 +110,7 @@ No search row, no radio/checkbox leading controls, no field trigger in this usag
 
 | Alias | IDS default | Synapse override (`components/synapse-theme.css`) |
 |---|---|---|
-| `--dropdown-control-radius` | `var(--corner-radius-radius-2)` | **`var(--corner-radius-radius-4)`** |
+| `--dropdown-control-radius` | `var(--corner-radius-radius-none)` (0px) | **`var(--corner-radius-radius-4)`** |
 | `--dropdown-focus-ring-radius` | `var(--corner-radius-radius-4)` | **`var(--corner-radius-radius-4)`** (unchanged) |
 | `--dropdown-menu-radius` | `var(--corner-radius-radius-none)` | **`var(--corner-radius-radius-4)`** |
 

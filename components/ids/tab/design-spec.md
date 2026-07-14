@@ -26,8 +26,15 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
   - transparent host: bottom border.
   - white host: bottom border.
 - Dividers/baseline use `1px` borders.
+- Primary tab side divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
+- Primary tab right divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
+- Primary selected tab: bottom border removed.
 - Label width is content-driven; short labels (1-3 words) are preferred.
 - Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
+- Focus ring heights:
+  - Primary tabs: `var(--sizing-size-36, 36px)` focus ring height (centered within `var(--sizing-size-38, 38px)` tab with `var(--spacing-space-1, 1px)` top/bottom margin)
+  - Secondary tabs: `var(--sizing-size-34, 34px)` focus ring height (centered within `var(--sizing-size-38, 38px)` tab with `var(--spacing-space-2, 2px)` top/bottom margin)
+  - Focus ring uses `outline` (not box-shadow) with `var(--border-width-border-2, 2px)` thickness using `var(--color-border-brand-base)`
 ## Tokens
 - **Typography**
   - `Body 2` (`14/20`) for tab labels.
@@ -200,3 +207,5 @@ Runtime rules:
 - **Component map entry:** `data/component-figma-map.json` -> `Tab`.
 - **Validated Figma node:** `30681:9530` (IDS Design Library, text and annotation board for primary/secondary, overflow, add-tab, and state examples).
 - **Figma MCP evidence:** `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`, `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`.
+## Implementation Notes
+- **Caret icon size:** Overflow trigger caret icon (`moreIcon`) is set to `var(--sizing-size-10, 10px)` width and height.

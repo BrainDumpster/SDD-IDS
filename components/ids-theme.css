@@ -340,7 +340,7 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --button-control-radius: var(--corner-radius-radius-2);
   --button-focus-ring-radius: var(--corner-radius-radius-4);
   --button-focus-ring-offset: 3px;
-  --dropdown-control-radius: var(--corner-radius-radius-2);
+  --dropdown-control-radius: var(--corner-radius-radius-none);
   --dropdown-focus-ring-radius: var(--corner-radius-radius-4);
   --dropdown-menu-radius: var(--corner-radius-radius-none);
   --checkbox-control-radius: var(--corner-radius-radius-2);
@@ -662,7 +662,7 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --button-control-radius: var(--corner-radius-radius-2);
   --button-focus-ring-radius: var(--corner-radius-radius-4);
   --button-focus-ring-offset: 3px;
-  --dropdown-control-radius: var(--corner-radius-radius-2);
+  --dropdown-control-radius: var(--corner-radius-radius-none);
   --dropdown-focus-ring-radius: var(--corner-radius-radius-4);
   --dropdown-menu-radius: var(--corner-radius-radius-none);
   --checkbox-control-radius: var(--corner-radius-radius-2);
