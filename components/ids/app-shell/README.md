@@ -110,8 +110,11 @@ Masthead utility icons are **not** driven by a config array. Compose a `HeaderAc
 | Approach | When to use |
 |---|---|
 | `headerActions={<AppShellHeaderActions>…</AppShellHeaderActions>}` | **Recommended** — mix search, icon buttons, dropdowns, `badgeCount` on action buttons; wire `onClick` per control |
-| Omit `headerActions` | No utility icons (App Launcher + avatar still render when their slots are set) |
-| `AppShellSpecAccurateHeaderActions()` | Storybook / Figma parity demos only |
+| Omit `headerActions` | No search / utility action icons |
+| Omit `appLauncherSlot` | No App Launcher |
+| Omit `avatarSlot` | No avatar / account control |
+| Omit `mastheadLogo` + `mastheadProductIconSlug` | Product-name-only brand (no logo) |
+| `AppShellSpecAccurateHeaderActions()` | Storybook / Figma parity demos only — not a runtime default |
 
 **Angular analogue** (projected children, per-control click handlers):
 

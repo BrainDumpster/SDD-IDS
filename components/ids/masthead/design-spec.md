@@ -9,7 +9,7 @@
 | Category | Navigation |
 | Status | **active** |
 | Version | 1.0.0 |
-| Description | Application header bar with brand area, composed utility actions (`iconsSlot`), optional App Launcher, and user avatar. |
+| Description | Application header bar with required product name and **optional, host-composed** brand logo, utility actions (`iconsSlot` — search / action icons), App Launcher, and avatar. |
 | Theme CSS | `components/ids-theme.css` |
 | Figma file | [IDS Design Library](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library) |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
@@ -31,15 +31,17 @@
 
 ## Anatomy
 - **MastheadRoot** — full-width header bar (`56px` height), brand background
-- **MastheadBrandSlot** (left): optional logo + required product name
-- **MastheadActionsRow** (right), fixed **slot order** left → right:
-  1. **`iconsSlot`** — composed utility actions (host-defined; see below)
-  2. **`appLauncherSlot`** — App Launcher trigger (optional)
-  3. **`avatarSlot`** — user avatar / account control (required)
+- **MastheadBrandSlot** (left): optional **host-composed** logo + required product name
+- **MastheadActionsRow** (right), fixed **slot order** left → right — **every slot is optional and host-defined**; omit any unused slot (row itself is omitted when all three are empty):
+  1. **`iconsSlot`** — composed utility actions (search, action icons, dropdowns, badges — host-defined)
+  2. **`appLauncherSlot`** — App Launcher trigger (host-composed)
+  3. **`avatarSlot`** — user avatar / account control (host-composed)
+
+**Runtime rule:** Masthead never injects a default product logo, search control, action-icon set, App Launcher, or avatar. Storybook / Figma samples exist for demos only.
 
 ### Composed `iconsSlot` (HeaderActions pattern)
 
-The utility region is **not** a fixed icon list at runtime. The host projects any tree into `iconsSlot` and wires `(click)` / `onClick` on each interactive child — same pattern as a product **HeaderActions** child component.
+The utility region is **not** a fixed icon list at runtime. The host projects any tree into `iconsSlot` and wires `(click)` / `onClick` on each interactive child — same pattern as a product **HeaderActions** child component. **Omit `iconsSlot` entirely** when the product has no search or utility actions.
 
 Valid children include (non-exhaustive):
 
@@ -69,7 +71,7 @@ When no product-specific actions are composed, Storybook / spec-accurate demos M
 4. System Settings (`setting-gear-16`)
 5. Help (`help-circ-16`)
 
-App Launcher (`grid-square-9-16`) and avatar remain **separate slots** — not inside `iconsSlot`.
+App Launcher (`grid-square-9-16`) and avatar remain **separate optional slots** — not inside `iconsSlot`. Hosts may omit either or both.
 
 - Focus ring for keyboard navigation (icon buttons + avatar button only)
 - Optional notification badges on Alerts and Jobs (composed or via `MastheadActionIconButton` badge props when implemented)
@@ -202,12 +204,12 @@ Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved v
 Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
 
 ## Interactions
-- **Brand area:** product name / logo — typically non-interactive; host may wrap logo in a link.
-- **`iconsSlot`:** each projected control handles its own activation (icon button `onClick`, search submit, dropdown open/close). Masthead provides layout and shared action-button chrome only.
-- **`appLauncherSlot`:** App Launcher owns open/close; trigger uses masthead token styling (`triggerVariant="masthead"`).
-- **`avatarSlot`:** account menu or profile action; host wires `onClick` on `MastheadAvatar` or custom avatar button.
+- **Brand area:** product name / optional logo — typically non-interactive; host may wrap logo in a link.
+- **`iconsSlot` (optional):** each projected control handles its own activation (icon button `onClick`, search submit, dropdown open/close). Masthead provides layout and shared action-button chrome only. Omit when unused.
+- **`appLauncherSlot` (optional):** App Launcher owns open/close; trigger uses masthead token styling (`triggerVariant="masthead"`). Omit when unused.
+- **`avatarSlot` (optional):** account menu or profile action; host wires `onClick` on `MastheadAvatar` or custom avatar button. Omit when unused.
 - Hover / pressed / `aria-expanded` visual feedback uses Navigation Item and User Section rows in the state matrix below.
-- Search may be an inline field or icon trigger depending on product composition inside `iconsSlot`.
+- Search is never a Masthead built-in — host places a search field or icon trigger inside `iconsSlot` when needed.
 ### Accessibility
 - Focus ring: applies to action elements (icon buttons, avatar button) only — not the masthead container. Style: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset)
 - Keyboard navigation: Arrow keys, Enter, Tab, Escape
@@ -235,10 +237,12 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 | Prop / slot | Type | Required | Contract |
 |---|---|---|---|
 | `productName` | `string` \| `RenderableNode` | yes | Brand label in `MastheadBrandSlot` |
-| `logo` | `RenderableNode` | no | Leading mark before product name |
-| `iconsSlot` | `RenderableNode` | no | Composed utility actions (HeaderActions pattern); omit for none |
-| `appLauncherSlot` | `RenderableNode` | no | Trailing App Launcher before avatar |
-| `avatarSlot` | `RenderableNode` | yes | User avatar / account control |
+| `logo` | `RenderableNode` | no | Optional host-composed leading mark; omit for product-name-only |
+| `iconsSlot` | `RenderableNode` | no | Optional host-composed utilities (search, action icons, …); omit for none |
+| `appLauncherSlot` | `RenderableNode` | no | Optional host-composed App Launcher; omit when unused |
+| `avatarSlot` | `RenderableNode` | no | Optional host-composed avatar / account control; omit when unused |
+
+**All chrome except `productName` is optional and user-defined.** Do not hardcode search, action icons, product logo, App Launcher, or avatar inside Masthead codegen.
 
 **No root action callback.** Do not add `onMastheadAction`, `actions[]`, or similar — handlers attach to composed children.
 
@@ -346,7 +350,11 @@ Alternative: wrap any control in product markup inside `iconsSlot` (e.g. Angular
 
 ### Consumer usage (developer integration)
 
-Storybook **Spec Generated → IDS → Masthead → Developer usage** shows a canvas code panel and **Docs → Show code** snippet. **Composed icons slot** demonstrates search, badge buttons, and dropdown-style controls inside `iconsSlot`.
+Storybook **Spec Generated → IDS → Masthead**:
+- **Default** — `productName` only (all other chrome omitted)
+- **With Product Logo / With Figma sample actions / With App Launcher / With Avatar Initials / User Icon Avatar** — each optional slot in isolation
+- **Full host composition** — logo + Figma sample `iconsSlot` + App Launcher + avatar
+- **Developer usage** / **Composed icons slot** — hand-maintained integration demos with live code panels
 
 Reference implementation: `storybook/src/components/Masthead.tsx`, stories in `storybook-generated/ids/src/components/Masthead.stories.tsx`.
 
@@ -359,13 +367,13 @@ Emit DOM/framework nodes in this order:
 | Order | Slot id | Notes |
 |---:|---|---|
 | 1 | `MastheadRoot` | `<header>` landmark |
-| 2 | `MastheadBrandSlot` | logo (optional) + product name |
-| 3 | `MastheadActionsRow` | right-aligned flex row |
-| 4 | `MastheadIconsSlot` | `iconsSlot` projection — **host-composed** |
-| 5 | `MastheadAppLauncherSlot` | `appLauncherSlot` (optional) |
-| 6 | `MastheadAvatarSlot` | `avatarSlot` (required) |
+| 2 | `MastheadBrandSlot` | logo (optional, host-composed) + product name (required) |
+| 3 | `MastheadActionsRow` | right-aligned flex row — emit only when at least one of slots 4–6 is present |
+| 4 | `MastheadIconsSlot` | `iconsSlot` projection — **optional, host-composed** (search / action icons / …) |
+| 5 | `MastheadAppLauncherSlot` | `appLauncherSlot` — **optional, host-composed** |
+| 6 | `MastheadAvatarSlot` | `avatarSlot` — **optional, host-composed** |
 
-**Composition rule:** `MastheadIconsSlot` content is opaque to Masthead — generate a single projection point; do not hardcode a fixed icon list unless emitting a Storybook / spec-accurate sample.
+**Composition rule:** Slots 4–6 are opaque projection points. Generate them only when the host supplies content. Do not hardcode a fixed icon list, search control, App Launcher, or avatar unless emitting a Storybook / spec-accurate **sample**.
 
 ### Figma reference action order (sample only)
 
@@ -381,7 +389,8 @@ Production integrations MUST use host-composed `iconsSlot` instead of this defau
 
 ### Behavior contract
 
-- Brand area remains left-aligned; `MastheadActionsRow` right-aligned.
+- Brand area remains left-aligned; `MastheadActionsRow` right-aligned when present.
+- `logo`, `iconsSlot` (search / action icons), `appLauncherSlot`, and `avatarSlot` are all **optional** and **host-defined**.
 - `iconsSlot` accepts arbitrary host content; Masthead does not interpret action semantics.
 - `MastheadActionIconButton` (when used) maintains 16×16 icon contract and tokenized hover/active/`aria-expanded` states.
 - Optional app launcher integrates in `appLauncherSlot` without breaking spacing.
@@ -390,8 +399,10 @@ Production integrations MUST use host-composed `iconsSlot` instead of this defau
 ### Fallback/error rules
 
 - Missing `logo` → product name-only brand slot.
-- Missing `iconsSlot` → omit utility region; App Launcher and avatar still render when provided.
-- Missing `avatarSlot` → dev validation error; production fallback to initials placeholder chip.
+- Missing `iconsSlot` → omit utility region (no default search or action icons).
+- Missing `appLauncherSlot` → omit App Launcher region.
+- Missing `avatarSlot` → omit avatar region (no default initials chip).
+- Missing all of `iconsSlot` / `appLauncherSlot` / `avatarSlot` → omit `MastheadActionsRow` entirely.
 - Unknown children inside `iconsSlot` → render as-is; Masthead must not strip or reorder host projection.
 
 ### Icon primitive and asset delivery (codegen)
@@ -436,8 +447,9 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 
 ### Validation checklist
 
-- [x] Slot order: brand → `iconsSlot` → `appLauncherSlot` → `avatarSlot`
-- [x] `iconsSlot` is a projection/composition point — no mandatory fixed icon list in production codegen
+- [x] Slot order: brand → `iconsSlot` → `appLauncherSlot` → `avatarSlot` (each optional except brand `productName`)
+- [x] `iconsSlot` is a projection/composition point — no mandatory fixed icon list / search in production codegen
+- [x] `logo`, `appLauncherSlot`, and `avatarSlot` are optional host projections — no runtime defaults
 - [x] No root `onMastheadAction` / `actions[]` API on Masthead
 - [x] `MastheadActionIconButton` extends button; `aria-label` required; focus ring on action elements only
 - [x] App Shell `headerActions` maps to `iconsSlot` when composed in shell

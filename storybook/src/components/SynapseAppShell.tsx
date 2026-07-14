@@ -338,8 +338,6 @@ export function SynapseAppShell({
 
   const mainDescribedBy = showDescription ? "page-description" : undefined;
 
-  const resolvedAvatar = avatarSlot ?? <SynapseMastheadAvatar initials="YK" />;
-
   const resolvedTabBar =
     tabBarSlot ??
     (tabItems ? (
@@ -358,7 +356,7 @@ export function SynapseAppShell({
         productName={mastheadProductName}
         iconsSlot={headerActions}
         appLauncherSlot={appLauncherSlot}
-        avatarSlot={resolvedAvatar}
+        avatarSlot={avatarSlot}
       />
 
       {showTabBar ? <div className={styles.tabBarSlot}>{resolvedTabBar}</div> : null}

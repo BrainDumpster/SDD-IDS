@@ -7,7 +7,7 @@ export interface SynapseMastheadProps extends ComponentProps<"header"> {
   productName: ReactNode;
   iconsSlot?: ReactNode;
   appLauncherSlot?: ReactNode;
-  avatarSlot: ReactNode;
+  avatarSlot?: ReactNode;
 }
 
 export function SynapseMastheadActionButtonContainer({
@@ -124,11 +124,15 @@ export function SynapseMasthead({
         {logo ? <div className={styles.logo}>{logo}</div> : null}
         <div className={styles.productName}>{productName}</div>
       </div>
-      <div className={styles.actions}>
-        {iconsSlot ? <div className={styles.iconsSlot}>{iconsSlot}</div> : null}
-        {appLauncherSlot ? <div className={styles.appLauncherSlot}>{appLauncherSlot}</div> : null}
-        <div className={styles.avatarSlot}>{avatarSlot}</div>
-      </div>
+      {iconsSlot || appLauncherSlot || avatarSlot ? (
+        <div className={styles.actions}>
+          {iconsSlot ? <div className={styles.iconsSlot}>{iconsSlot}</div> : null}
+          {appLauncherSlot ? (
+            <div className={styles.appLauncherSlot}>{appLauncherSlot}</div>
+          ) : null}
+          {avatarSlot ? <div className={styles.avatarSlot}>{avatarSlot}</div> : null}
+        </div>
+      ) : null}
     </header>
   );
 }

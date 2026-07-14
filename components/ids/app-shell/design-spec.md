@@ -254,10 +254,10 @@ Composable wrapper for the Masthead icons region (left → right, before App Lau
 
 | Prop / slot | Type | Default | Notes |
 |---|---|---|---|
-| `headerActions` | `RenderableNode` | — | Composed utility region → Masthead `iconsSlot`; omit for none |
-| `appLauncherSlot` | `RenderableNode` | — | Trailing App Launcher; omit for none |
-| `avatarSlot` | `RenderableNode` | initials chip (`"DT"` in Storybook) | Trailing user avatar control |
-| `mastheadLogo` | `RenderableNode` | product icon from `mastheadProductIconSlug` | Brand mark before product name |
+| `headerActions` | `RenderableNode` | — | Optional host-composed utility region → Masthead `iconsSlot` (search / action icons / …); omit for none |
+| `appLauncherSlot` | `RenderableNode` | — | Optional host-composed App Launcher; omit for none |
+| `avatarSlot` | `RenderableNode` | — | Optional host-composed avatar; omit for none (Storybook samples may pass initials `"DT"`) |
+| `mastheadLogo` | `RenderableNode` | — | Optional host-composed brand mark; omit for product-name-only |
 
 ### Accessibility
 
@@ -352,11 +352,11 @@ interface AppShellPage {
 | `onNavigate` | `(MainMenuLeftNavigationTarget) => void` | — | ← Main Menu `onNavigate` |
 | `onMenuSelected` | `(MainMenuLeftSelectionDetail) => void` | — | ← Main Menu `onSelected` |
 | `mastheadProductName` | `string` | required | → Masthead `productName` |
-| `mastheadProductIconSlug` | `string` | `shield-cloud` | Builds Masthead `logo` when `mastheadLogo` omitted |
-| `mastheadLogo` | `RenderableNode` | icon from slug | → Masthead `logo` |
-| `headerActions` | `RenderableNode` | — | → Masthead `iconsSlot` |
-| `appLauncherSlot` | `RenderableNode` | — | → Masthead `appLauncherSlot` |
-| `avatarSlot` | `RenderableNode` | initials chip | → Masthead `avatarSlot` |
+| `mastheadProductIconSlug` | `string` | — | Builds Masthead `logo` only when set and `mastheadLogo` omitted; no runtime default |
+| `mastheadLogo` | `RenderableNode` | — | → Masthead `logo` (optional host-composed) |
+| `headerActions` | `RenderableNode` | — | → Masthead `iconsSlot` (optional; search / action icons / …) |
+| `appLauncherSlot` | `RenderableNode` | — | → Masthead `appLauncherSlot` (optional) |
+| `avatarSlot` | `RenderableNode` | — | → Masthead `avatarSlot` (optional; no default initials chip) |
 | `footerHostname` | `string` | — | Passthrough → Footer |
 | `footerSwid` | `string` | — | Passthrough → Footer |
 | `footerCurrentDateTime` | `string` | — | Passthrough → Footer |
@@ -508,7 +508,7 @@ const pages: AppShellPage[] = [
 />
 ```
 
-**Header actions:** compose any mix of search, icon buttons, dropdowns, and badges inside `headerActions`. Use `badgeCount` + `badgeType` on `MastheadActionIconButton` (or product badge wrappers like `def-icon-badge` in Angular). Include the count in `aria-label` when a badge is shown. Wire `onClick` / `(click)` on each control — App Shell does not dispatch a central action callback. Omit `headerActions` for no utility icons; use `AppShellSpecAccurateHeaderActions()` in Storybook only for Figma parity.
+**Header actions:** compose any mix of search, icon buttons, dropdowns, and badges inside `headerActions`. Use `badgeCount` + `badgeType` on `MastheadActionIconButton` (or product badge wrappers like `def-icon-badge` in Angular). Include the count in `aria-label` when a badge is shown. Wire `onClick` / `(click)` on each control — App Shell does not dispatch a central action callback. Omit `headerActions` for no search/utility icons; omit `appLauncherSlot` / `avatarSlot` / logo props independently. Use `AppShellSpecAccurateHeaderActions()` in Storybook only for Figma parity.
 
 **Controlled routing:** pass `activePageId` + `onPageChange`; optionally wire `onNavigate` to the host router. **Menu/page id alignment:** `pages[].id` should match `menuItems[].id` unless `pages[].menuItemId` maps a secondary route.
 
@@ -583,7 +583,7 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 ### Asset resolution + bundling contract
 
 - App Shell owns **no icons** directly; assets resolve through composed specs (Main Menu icons, Footer `copy`/`time-clock`/`world-globe`, Masthead action icons).
-- Product mark in Masthead: host `logo` (`RenderableNode`) or build from `mastheadProductIconSlug` → `assets/icons/<slug>.svg` per Masthead asset contract.
+- Product mark in Masthead: optional host `logo` (`RenderableNode`) or optional `mastheadProductIconSlug` → `assets/icons/<slug>.svg` per Masthead asset contract. Omit both for product-name-only.
 - Body slot assets are host responsibility.
 
 ### Fallback/error rules
@@ -616,6 +616,7 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 - [x] `AppShellBodyViewport` scrolls; footer outside scroll clip
 - [x] Root re-emits `onNavigate`, `onMenuSelected`, `onMenuExpandedChange`, `onCopySwid`, `onTimeZoneClick`
 - [x] `headerActions` composes Masthead `iconsSlot`; click handlers on composed children; omit → no utility icons
+- [x] `mastheadLogo` / `mastheadProductIconSlug`, `appLauncherSlot`, and `avatarSlot` are optional host projections — no runtime defaults
 - [x] `100vh` / `100dvh` shell height; width `100%` (not fixed 1920px)
 - [x] Accessibility: `main#main-content`, single page `h1`, optional `aria-describedby`
 - [x] No Figma `.SwapContent` placeholder in production codegen output

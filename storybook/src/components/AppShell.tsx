@@ -130,17 +130,22 @@ export interface AppShellProps {
   onMenuSelected?: (detail: MainMenuLeftSelectionDetail) => void;
   /** → Masthead `productName` — see `components/ids/masthead/design-spec.md`. */
   mastheadProductName: string;
+  /**
+   * Optional product-logo slug used only when `mastheadLogo` is omitted.
+   * No runtime default — omit both to render product name only.
+   */
   mastheadProductIconSlug?: string;
-  /** → Masthead `logo`. */
+  /** → Masthead `logo` — optional host-composed mark; omit when unused. */
   mastheadLogo?: ReactNode;
   /**
-   * → Masthead `iconsSlot`. Composed utility region (left → right), before App Launcher and avatar.
+   * → Masthead `iconsSlot`. Optional host-composed utility region (search, action icons, …).
    * Use `<AppShellHeaderActions>` or any custom tree; wire click handlers on each child.
+   * Omit for none — no fixed Figma icon list is injected at runtime.
    */
   headerActions?: ReactNode;
-  /** → Masthead `appLauncherSlot`. */
+  /** → Masthead `appLauncherSlot` — optional; omit when unused. */
   appLauncherSlot?: ReactNode;
-  /** → Masthead `avatarSlot`; defaults to initials chip when omitted. */
+  /** → Masthead `avatarSlot` — optional host-composed control; omit when unused. */
   avatarSlot?: ReactNode;
   footer?: IdsFooterProps;
   showPageDescription?: boolean;
@@ -244,7 +249,7 @@ export function AppShell({
   onNavigate,
   onMenuSelected,
   mastheadProductName,
-  mastheadProductIconSlug = "shield-cloud",
+  mastheadProductIconSlug,
   mastheadLogo,
   headerActions,
   appLauncherSlot,
@@ -340,13 +345,12 @@ export function AppShell({
   const mainDescribedBy = showDescription ? "page-description" : undefined;
 
   const resolvedLogo =
-    mastheadLogo ?? (
+    mastheadLogo ??
+    (mastheadProductIconSlug ? (
       <span className={styles.mastheadLogo} aria-hidden="true">
         <Icon shapeName={mastheadProductIconSlug} style={{ width: 32, height: 32 }} />
       </span>
-    );
-
-  const resolvedAvatar = avatarSlot ?? <IdsMastheadAvatar initials="DT" />;
+    ) : undefined);
 
   return (
     <div className={[styles.root, className].filter(Boolean).join(" ")}>
@@ -356,7 +360,7 @@ export function AppShell({
         productName={mastheadProductName}
         iconsSlot={headerActions}
         appLauncherSlot={appLauncherSlot}
-        avatarSlot={resolvedAvatar}
+        avatarSlot={avatarSlot}
       />
 
       <div className={styles.bodyRow}>

@@ -147,9 +147,12 @@ export function AppMasthead() {
   return (
     <IdsMasthead
       logo={
-        <span aria-hidden="true">
-          <Icon shapeName="shield-cloud" style={{ width: 32, height: 32 }} />
-        </span>
+        <Icon
+          shapeName="appic-dp-cloud-blue"
+          variant="img"
+          title="Product logo"
+          style={{ width: 32, height: 32 }}
+        />
       }
       productName="Product Name"
       iconsSlot={

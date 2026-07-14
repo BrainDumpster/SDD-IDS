@@ -23,9 +23,12 @@ import {
 const icon16 = { width: 16, height: 16 } as const;
 
 const productLogo = (
-  <span aria-hidden="true">
-    <Icon shapeName="shield-cloud" style={{ width: 32, height: 32 }} />
-  </span>
+  <Icon
+    shapeName="appic-dp-cloud-blue"
+    variant="img"
+    title="Product logo"
+    style={{ width: 32, height: 32 }}
+  />
 );
 
 const DEVELOPER_USAGE_SOURCE = MASTHEAD_DEVELOPER_USAGE_SOURCE;
@@ -110,7 +113,14 @@ export const WithNotificationBadges: Story = {
         />
       </IdsMastheadActionButtonContainer>
     ),
-    avatarSlot: <IdsMastheadAvatar initials="DT" />,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Optional `iconsSlot` only — search + badged Alerts/Jobs. Avatar and App Launcher omitted to show independent composition.",
+      },
+    },
   },
 };
 
@@ -173,7 +183,7 @@ export const DeveloperUsage: Story = {
     docs: {
       description: {
         story:
-          "Compose `iconsSlot` with action primitives; each control owns its `onClick`. Optional `appLauncherSlot` and `avatarSlot`.",
+          "Only `productName` is required. Compose optional `logo`, `iconsSlot` (search/action icons), `appLauncherSlot`, and `avatarSlot` — each control owns its `onClick`.",
       },
       source: { code: DEVELOPER_USAGE_SOURCE, language: "tsx" },
     },
@@ -300,7 +310,7 @@ export const ComposedIconsSlot: Story = {
     docs: {
       description: {
         story:
-          "Mirrors a product HeaderActions child: mix search, badge icon buttons, and dropdown panels inside `iconsSlot`. Clicks are wired per control — Masthead does not dispatch a central handler.",
+          "Host-composed `iconsSlot` sample: mix search, badge icon buttons, and dropdown panels. Logo, App Launcher, and avatar are also optional host slots — Masthead does not dispatch a central handler.",
       },
       source: { code: COMPOSED_ICONS_SLOT_SOURCE, language: "tsx" },
     },
