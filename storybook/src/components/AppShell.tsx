@@ -18,13 +18,37 @@ import {
 } from "./IdsMasthead";
 import {
   MainMenuLeft,
+  type MainMenuLeftLogo,
   type MainMenuLeftNavigationTarget,
   type MainMenuLeftPrimaryItem,
   type MainMenuLeftSelectionDetail,
 } from "./MainMenuLeft";
 import styles from "./AppShell.module.css";
 
+/** Composes existing IDS Masthead + Main Menu / Left + Footer specs — see design-spec.md child mapping. */
 const MENU_EXPANDED_BREAKPOINT_PX = 1600;
+const MENU_EXPANDED_STORAGE_KEY = "ids.app-shell.menuExpanded";
+
+function readPersistedMenuExpanded(): boolean | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(MENU_EXPANDED_STORAGE_KEY);
+    if (raw === "true") return true;
+    if (raw === "false") return false;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writePersistedMenuExpanded(expanded: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(MENU_EXPANDED_STORAGE_KEY, expanded ? "true" : "false");
+  } catch {
+    // Ignore quota / private-mode failures; breakpoint default applies next mount.
+  }
+}
 
 export interface AppShellPage {
   id: string;
@@ -82,23 +106,41 @@ export interface AppShellProps {
   activePageId?: string;
   defaultPageId?: string;
   onPageChange?: (pageId: string, page: AppShellPage) => void;
+  /** → Main Menu Left `items` — see `components/ids/main-menu-left/design-spec.md`. */
   menuItems: MainMenuLeftPrimaryItem[];
+  /** → Main Menu Left `logo`. */
+  menuLogo?: MainMenuLeftLogo;
+  /** → Main Menu Left `ariaLabel`. */
+  menuAriaLabel?: string;
+  /** → Main Menu Left `defaultSelectedItemId` (initial highlight only). */
+  defaultMenuSelectedItemId?: string;
+  /** → Main Menu Left `expanded` (controlled with `onMenuExpandedChange`). */
   menuExpanded?: boolean;
   defaultMenuExpanded?: boolean;
+  /**
+   * Persist user menu expand/collapse in `sessionStorage` key `ids.app-shell.menuExpanded`
+   * (`"true"` / `"false"`). Stored value wins over breakpoint default.
+   */
+  persistMenuExpanded?: boolean;
+  /** ← Main Menu Left `onExpandedChange`. */
   onMenuExpandedChange?: (expanded: boolean) => void;
+  /** ← Main Menu Left `onNavigate`. */
   onNavigate?: (target: MainMenuLeftNavigationTarget) => void;
+  /** ← Main Menu Left `onSelected`. */
   onMenuSelected?: (detail: MainMenuLeftSelectionDetail) => void;
+  /** → Masthead `productName` — see `components/ids/masthead/design-spec.md`. */
   mastheadProductName: string;
   mastheadProductIconSlug?: string;
+  /** → Masthead `logo`. */
   mastheadLogo?: ReactNode;
   /**
-   * Composed masthead utility region (left → right), before App Launcher and avatar.
+   * → Masthead `iconsSlot`. Composed utility region (left → right), before App Launcher and avatar.
    * Use `<AppShellHeaderActions>` or any custom tree; wire click handlers on each child.
    */
   headerActions?: ReactNode;
-  /** Trailing App Launcher; omit for none. */
+  /** → Masthead `appLauncherSlot`. */
   appLauncherSlot?: ReactNode;
-  /** Trailing user avatar control; defaults to initials chip when omitted. */
+  /** → Masthead `avatarSlot`; defaults to initials chip when omitted. */
   avatarSlot?: ReactNode;
   footer?: IdsFooterProps;
   showPageDescription?: boolean;
@@ -192,8 +234,12 @@ export function AppShell({
   defaultPageId,
   onPageChange,
   menuItems,
+  menuLogo,
+  menuAriaLabel,
+  defaultMenuSelectedItemId,
   menuExpanded: menuExpandedProp,
   defaultMenuExpanded,
+  persistMenuExpanded = false,
   onMenuExpandedChange,
   onNavigate,
   onMenuSelected,
@@ -210,15 +256,26 @@ export function AppShell({
 }: AppShellProps) {
   const breakpointExpanded = useBreakpointMenuDefault();
   const menuControlled = menuExpandedProp !== undefined;
-  const [internalMenuExpanded, setInternalMenuExpanded] = useState(
-    defaultMenuExpanded ?? breakpointExpanded,
-  );
+  const [internalMenuExpanded, setInternalMenuExpanded] = useState(() => {
+    if (defaultMenuExpanded !== undefined) return defaultMenuExpanded;
+    if (persistMenuExpanded) {
+      const stored = readPersistedMenuExpanded();
+      if (stored !== null) return stored;
+    }
+    return breakpointExpanded;
+  });
 
   useEffect(() => {
-    if (!menuControlled && defaultMenuExpanded === undefined) {
-      setInternalMenuExpanded(breakpointExpanded);
+    if (menuControlled || defaultMenuExpanded !== undefined) return;
+    if (persistMenuExpanded) {
+      const stored = readPersistedMenuExpanded();
+      if (stored !== null) {
+        setInternalMenuExpanded(stored);
+        return;
+      }
     }
-  }, [breakpointExpanded, menuControlled, defaultMenuExpanded]);
+    setInternalMenuExpanded(breakpointExpanded);
+  }, [breakpointExpanded, menuControlled, defaultMenuExpanded, persistMenuExpanded]);
 
   const menuExpanded = menuControlled ? (menuExpandedProp as boolean) : internalMenuExpanded;
 
@@ -226,6 +283,8 @@ export function AppShell({
   const pageControlled = activePageIdProp !== undefined;
   const [internalPageId, setInternalPageId] = useState(initialPageId);
   const activePageId = pageControlled ? (activePageIdProp as string) : internalPageId;
+  const initialMenuSelectedItemId =
+    defaultMenuSelectedItemId ?? defaultPageId ?? pages[0]?.menuItemId ?? pages[0]?.id;
 
   const activePage = useMemo(
     () => pages.find((page) => page.id === activePageId) ?? pages[0],
@@ -265,9 +324,12 @@ export function AppShell({
       if (!menuControlled) {
         setInternalMenuExpanded(expanded);
       }
+      if (persistMenuExpanded) {
+        writePersistedMenuExpanded(expanded);
+      }
       onMenuExpandedChange?.(expanded);
     },
-    [menuControlled, onMenuExpandedChange],
+    [menuControlled, persistMenuExpanded, onMenuExpandedChange],
   );
 
   const showDescription =
@@ -288,6 +350,7 @@ export function AppShell({
 
   return (
     <div className={[styles.root, className].filter(Boolean).join(" ")}>
+      {/* Masthead — contracts from components/ids/masthead/design-spec.md */}
       <IdsMasthead
         logo={resolvedLogo}
         productName={mastheadProductName}
@@ -298,11 +361,14 @@ export function AppShell({
 
       <div className={styles.bodyRow}>
         <div className={styles.mainMenuSlot}>
+          {/* Main Menu / Left — contracts from components/ids/main-menu-left/design-spec.md */}
           <MainMenuLeft
+            logo={menuLogo}
+            ariaLabel={menuAriaLabel}
             expanded={menuExpanded}
             onExpandedChange={handleMenuExpandedChange}
             items={menuItems}
-            defaultSelectedItemId={activePage?.menuItemId ?? activePage?.id}
+            defaultSelectedItemId={initialMenuSelectedItemId}
             onNavigate={handleNavigate}
             onSelected={onMenuSelected}
           />
@@ -313,6 +379,7 @@ export function AppShell({
           className={styles.mainColumn}
           aria-describedby={mainDescribedBy}
         >
+          {/* Page header is always present — title required; description optional */}
           <div className={styles.pageHeader}>
             <h1
               ref={pageTitleRef}

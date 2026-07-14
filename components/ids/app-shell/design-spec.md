@@ -8,26 +8,54 @@
 | Design system | IDS |
 | Category | Patterns and Templates |
 | Status | **active** |
-| Version | 1.0.0 |
+| Version | 1.0.1 |
 | Description | Application layout pattern composing Masthead, Main Menu (left), page header (title + description), scrollable body content slot, and Footer status bar. Body content is host-supplied and switches with navigation selection. |
 | Theme CSS | `components/ids-theme.css` |
+| Created | 2026-06-17 |
+| Updated | 2026-07-13 |
 | Figma file key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Component set | `App Shell` (`43478:90797`) |
 | Verification method | Figma MCP (`get_design_context`, `get_metadata`) |
-| Last verified | 2026-06-17 |
+| Last verified | 2026-07-13 |
 | Storybook examples requested | yes |
 | Storybook path | `storybook-generated/ids/src/components/AppShell.stories.tsx` |
 | Storybook meta title | `Spec Generated/IDS/App Shell` |
 | Implementation guide | [`components/ids/app-shell/README.md`](./README.md) |
 | Reference implementation | `storybook/src/components/AppShell.tsx`, `storybook/src/components/AppShell.module.css` |
 
-### Composed child specifications
+### Composed child specifications (mandatory)
 
-| Child | Spec path | Figma component |
+App Shell is an **orchestration pattern**. Codegen and implementations **MUST** compose the existing child components from their design specs — **never** re-implement Masthead, Main Menu / Left, or Footer chrome, states, tokens, or anatomy inside App Shell.
+
+| Child | Spec path (source of truth) | Figma component | Live App Shell instance (`43478:46307`) |
+|---|---|---|---|
+| Masthead | [`components/ids/masthead/design-spec.md`](../masthead/design-spec.md) | `Masthead-Main` (`10130:29493`) | `43478:46181` |
+| Main Menu / Left | [`components/ids/main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) | `MainMenu-Left-Main` (`11099:56205`) | `43478:50551` → expanded `11099:56218` |
+| Footer | [`components/ids/footer/design-spec.md`](../footer/design-spec.md) | `Footer` (`38908:5818`) | `43478:50555` |
+
+**Load order for codegen:** (1) this App Shell spec for shell geometry, page model, breakpoints; (2) Masthead spec for `AppShellMastheadSlot`; (3) Main Menu / Left spec for `AppShellMainMenuSlot`; (4) Footer spec for `AppShellFooterSlot`.
+
+### Child Runtime API mapping (passthrough)
+
+Flat App Shell props map **1:1** onto child Composition & API contracts. Do not invent parallel prop names on the children.
+
+| App Shell prop / slot | Child | Child Runtime API (authoritative) |
 |---|---|---|
-| Masthead | [`components/ids/masthead/design-spec.md`](../masthead/design-spec.md) | `Masthead-Main` (`10130:29493`) |
-| Main Menu / Left | [`components/ids/main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) | `MainMenu-Left-Main` (`11099:56205`) |
-| Footer | [`components/ids/footer/design-spec.md`](../footer/design-spec.md) | `Footer` (`38908:5818`) |
+| `mastheadProductName` | Masthead | `productName` |
+| `mastheadLogo` / `mastheadProductIconSlug` | Masthead | `logo` (slug → `assets/icons/<slug>.svg` per Masthead asset contract) |
+| `headerActions` | Masthead | `iconsSlot` |
+| `appLauncherSlot` | Masthead | `appLauncherSlot` |
+| `avatarSlot` | Masthead | `avatarSlot` |
+| `menuItems` | Main Menu / Left | `items` (`MainMenuLeftPrimaryItem[]`) |
+| `menuLogo` | Main Menu / Left | `logo` (`MainMenuLeftLogo`) |
+| `menuAriaLabel` | Main Menu / Left | `ariaLabel` |
+| `menuExpanded` / `defaultMenuExpanded` + `onMenuExpandedChange` | Main Menu / Left | `expanded` + `onExpandedChange` |
+| `defaultMenuSelectedItemId` | Main Menu / Left | `defaultSelectedItemId` |
+| `onNavigate` | Main Menu / Left | `onNavigate` (`MainMenuLeftNavigationTarget`) |
+| `onMenuSelected` | Main Menu / Left | `onSelected` (`MainMenuLeftSelectionDetail`) |
+| Footer flat / `footer` bundle | Footer | Footer Composition & API |
+
+**Selection sync rule:** Main Menu / Left owns selection via `defaultSelectedItemId` + internal state (`onSelected`). App Shell does **not** invent a controlled `selectedItemId` on Main Menu. Menu → page: `onNavigate` / `onSelected` resolve `itemId` → `pages[]`. Host deep-links set `activePageId` / `defaultPageId`; initial menu highlight uses `defaultMenuSelectedItemId` (default = `defaultPageId`).
 
 ### Figma breakpoint variants (live-verified)
 
@@ -47,13 +75,13 @@ Sample frame heights (`995px`) are reference-only; runtime uses viewport height 
 Deterministic slot order (top → bottom, outer → inner):
 
 1. **`AppShellRoot`** — full-viewport column shell (`<div>` or host layout root)
-2. **`AppShellMastheadSlot`** — hosts **Masthead** (`56px` fixed height, full width)
+2. **`AppShellMastheadSlot`** — hosts **Masthead** per [`masthead/design-spec.md`](../masthead/design-spec.md) (`56px` fixed height, full width)
 3. **`AppShellBodyRow`** — horizontal flex row (`flex: 1`, `min-height: 0`)
-4. **`AppShellMainMenuSlot`** — hosts **Main Menu / Left** (expanded `278px` or collapsed `64px` rail)
+4. **`AppShellMainMenuSlot`** — hosts **Main Menu / Left** per [`main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) (expanded `278px` or collapsed `64px` rail)
 5. **`AppShellMainColumn`** — primary content column (`flex: 1`, `min-width: 0`, column flex)
-6. **`AppShellPageHeader`** — page chrome block (always rendered for routed pages unless suppressed)
-   - **`AppShellPageTitle`** — route/page heading (Header 5)
-   - **`AppShellPageDescription`** — instructional subtitle (Body 2 medium); optional per page
+6. **`AppShellPageHeader`** — page chrome block; **always rendered** (required). Not optional; no `showPageHeader` prop.
+   - **`AppShellPageTitle`** — route/page heading (Header 5); always rendered inside the page header
+   - **`AppShellPageDescription`** — instructional subtitle (Body 2 medium); optional text only — omitting description does **not** omit the page header
 7. **`AppShellBodyViewport`** — scrollable region for page body (`overflow-y: auto`, `min-height: 0`)
    - **`AppShellBodyContentSlot`** — host projection / swap slot (datagrid, form, dashboard, etc.)
 8. **`AppShellFooterSlot`** — hosts **Footer** status bar (`32px`, pinned to bottom of main column)
@@ -76,7 +104,7 @@ Optional Figma reference templates (not part of default anatomy — host chooses
 | `AppShellBodyViewport` | `flex: 1 1 0%`, `min-height: 0`, `overflow-y: auto`, `width: 100%` |
 | `AppShellFooterSlot` | `flex: 0 0 auto`, `width: 100%` — outside vertical scroll clip of body viewport |
 
-Figma sample border on root (`var(--color-border-accessible)`) is **documentation chrome only**; product shells typically omit an outer stroke and rely on child borders.
+Figma sample border on root (`var(--color-border-accessible)`) is **documentation chrome only**. Runtime/product shells **MUST omit** the outer root stroke and rely on child borders (Masthead, Main Menu, Footer).
 
 ### Page header (Figma nodes `43478:50553`, `43478:90803`, `43478:90930`, `43478:91086`)
 
@@ -87,9 +115,10 @@ Figma sample border on root (`var(--color-border-accessible)`) is **documentatio
 | Padding top | `var(--padding-padding-24)` |
 | Padding bottom | `var(--padding-padding-8)` |
 | Padding inline | `var(--padding-padding-24)` |
-| Title typography | Header 5 — `var(--font-size-header-5)` / `var(--font-line-height-line-height-32)`, regular weight, `var(--color-text-neutral-strong)` |
-| Description typography | Body 2 medium — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral)` |
-| Description visibility | Render when `pageDescription` is non-empty; omit slot when empty and `showPageDescription=false` |
+| Title typography | Header 5 — `var(--font-size-header-5)` / `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-neutral-strong)` |
+| Description typography | Body 2 medium — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-neutral)` |
+| Page header presence | **Always** render `AppShellPageHeader` + `AppShellPageTitle` |
+| Description visibility | Render description when `page.description` is non-empty and `showPageDescription` / `page.showDescription` allow it; omit **description** only — never omit the page header |
 
 ### Body content slot (Figma nodes `43478:50919`, `43478:90806`, `43478:90933`, `43478:91089`)
 
@@ -142,8 +171,8 @@ Implementations MUST use the **scroll viewport split** (header + footer outside 
 
 | Slot | Tokens |
 |---|---|
-| `AppShellPageTitle` | `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `var(--color-text-neutral-strong)` |
-| `AppShellPageDescription` | `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral)` |
+| `AppShellPageTitle` | `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-neutral-strong)` |
+| `AppShellPageDescription` | `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-neutral)` |
 
 ### Spacing and padding
 
@@ -180,9 +209,9 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 1. User activates a **Main Menu** primary or secondary item → shell resolves matching **page** record → updates `activePageId` → re-renders `AppShellPageTitle`, `AppShellPageDescription`, and `AppShellBodyContentSlot`.
 2. Body content is **opaque to the shell** — any component tree the host supplies (Datagrid, form, dashboard, empty state). The shell does not inspect body internals.
-3. Each routable page SHOULD define `title` and `description` strings. Dashboard or self-explanatory pages MAY omit description when `showPageDescription=false`.
-4. **Direct URL / deep link:** host sets `activePageId` (controlled) or `defaultPageId` (uncontrolled); shell syncs menu selection via `menuSelectedItemId` prop forwarded to Main Menu.
-5. **Menu collapse:** footer control toggles expanded/collapsed rail; shell listens to `onMenuExpandedChange` and adjusts `AppShellMainMenuSlot` width. Breakpoint defaults apply on resize unless `persistMenuExpanded=true` and a stored preference exists.
+3. Each routable page must have a non-empty `title`. Description is optional; dashboards may omit description or set `showPageDescription=false` / `page.showDescription=false`. The page header chrome remains.
+4. **Direct URL / deep link:** host sets `activePageId` (controlled) or `defaultPageId` (uncontrolled). Initial menu highlight uses `defaultMenuSelectedItemId` → Main Menu `defaultSelectedItemId` (see Main Menu / Left Composition & API). Ongoing selection stays on Main Menu via `onSelected` / `onNavigate`.
+5. **Menu collapse:** Main Menu footer control toggles expanded/collapsed rail; shell listens to `onMenuExpandedChange` (← Main Menu `onExpandedChange`) and adjusts `AppShellMainMenuSlot` width. Breakpoint defaults apply on resize unless `persistMenuExpanded=true` restores a stored preference (see **Menu expanded persistence**).
 
 ### Event forwarding (composed children → shell outputs)
 
@@ -243,9 +272,26 @@ Composable wrapper for the Masthead icons region (left → right, before App Lau
 - Use App Shell as the **top-level layout** for authenticated application views.
 - Do not embed a second full shell inside the body slot.
 - Keep page descriptions concise instructional text; avoid duplicating the title.
-- Prefer composing existing IDS components in the body slot rather than bespoke layout CSS.
-- Long-running views (Datagrid, wizards) should fill `AppShellBodyContentSlot` with `height: 100%`, `min-height: 0` so internal scroll regions work (see `components/ids/datagrid/design-spec.md` shell geometry).
+- Compose existing IDS components in the body slot rather than bespoke layout CSS where an IDS component exists for the need.
+- Long-running views (Datagrid, wizards) must fill `AppShellBodyContentSlot` with `height: 100%`, `min-height: 0` so internal scroll regions work (see `components/ids/datagrid/design-spec.md` shell geometry).
 - Global alerts/toasts render **above** or **overlaying** the shell (portal), not inside `AppShellBodyContentSlot`, unless product explicitly scopes them to page content.
+
+### Menu expanded persistence
+
+When `persistMenuExpanded=true` (and menu expansion is uncontrolled or the host mirrors this store):
+
+| Rule | Contract |
+|---|---|
+| Storage | `sessionStorage` (tab-scoped; clear on tab close) |
+| Key | `ids.app-shell.menuExpanded` |
+| Value | JSON string `"true"` or `"false"` only |
+| Write | On every `onMenuExpandedChange` (user toggle) |
+| Read | On mount and before applying viewport breakpoint default |
+| Precedence | Stored value **wins** over breakpoint default until the key is removed or `persistMenuExpanded=false` |
+| Missing / invalid value | Ignore; apply breakpoint default (`≥ 1600px` → expanded, else collapsed) |
+| SSR / no `sessionStorage` | Treat as no stored preference |
+
+Do not invent alternate keys per framework. Angular/Vue/Lit adapters MUST use the same key and value format.
 
 ## Composition & API (runtime)
 
@@ -268,8 +314,8 @@ Child components are instantiated by the shell (or framework adapter) with props
 |---|---|---|---|
 | `breakpointPreset` | `fluid`, `1920`, `1600`, `1366`, `1024` | `fluid` | Storybook/QA only — pins Figma sample widths; production uses `fluid` |
 | `menuExpanded` | `true`, `false` | breakpoint-derived | Controlled with `onMenuExpandedChange`; uncontrolled uses breakpoint default + optional `defaultMenuExpanded` |
-| `persistMenuExpanded` | `true`, `false` | `false` | When true, store user toggle across resize (session storage adapter-defined) |
-| `showPageDescription` | `true`, `false` | `true` | When false, hide description slot even if string provided |
+| `persistMenuExpanded` | `true`, `false` | `false` | When true, persist user toggle per **Menu expanded persistence** (`sessionStorage` key `ids.app-shell.menuExpanded`) |
+| `showPageDescription` | `true`, `false` | `true` | When false, hide description text only — page header + title remain |
 | `focusManagementOnNavigate` | `true`, `false` | `true` | Move focus to page title on route change |
 
 ### Page model (host configuration)
@@ -295,20 +341,22 @@ interface AppShellPage {
 | `activePageId` | `string` | — | Controlled active page |
 | `defaultPageId` | `string` | first page `id` | Uncontrolled initial page |
 | `onPageChange` | `(pageId: string) => void` | — | Fired when active page changes (menu or programmatic) |
-| `menuItems` | `MainMenuLeftPrimaryItem[]` | — | Forwarded to Main Menu / Left — see [`main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) |
-| `menuSelectedItemId` | `string` | — | Controlled menu selection sync |
-| `defaultMenuSelectedItemId` | `string` | matches `defaultPageId` | Initial menu highlight |
-| `menuExpanded` | `boolean` | breakpoint default | Controlled rail width |
-| `defaultMenuExpanded` | `boolean` | breakpoint default | Uncontrolled initial rail |
-| `onMenuExpandedChange` | `(expanded: boolean) => void` | — | User toggled collapse footer |
-| `onNavigate` | `(MainMenuLeftNavigationTarget) => void` | — | Pass-through from Main Menu |
-| `onMenuSelected` | `(MainMenuLeftSelectionDetail) => void` | — | Pass-through from Main Menu |
-| `mastheadProductName` | `string` | required | Masthead brand label |
-| `mastheadProductIconSlug` | `string` | `shield-cloud` | Product icon slug or use `mastheadLogo` |
-| `mastheadLogo` | `RenderableNode` | icon from slug | Brand mark before product name |
-| `headerActions` | `RenderableNode` | — | Composed utility region → Masthead `iconsSlot` |
-| `appLauncherSlot` | `RenderableNode` | — | App Launcher before avatar |
-| `avatarSlot` | `RenderableNode` | initials chip | User avatar control |
+| `menuItems` | `MainMenuLeftPrimaryItem[]` | — | → Main Menu `items` — types/shape from [`main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) |
+| `menuLogo` | `MainMenuLeftLogo` | — | → Main Menu `logo` (optional branding above list) |
+| `menuAriaLabel` | `string` | — | → Main Menu `ariaLabel` |
+| `defaultMenuSelectedItemId` | `string` | matches `defaultPageId` | → Main Menu `defaultSelectedItemId` (initial highlight only) |
+| `menuExpanded` | `boolean` | breakpoint default | → Main Menu `expanded` (controlled with `onMenuExpandedChange`) |
+| `defaultMenuExpanded` | `boolean` | breakpoint default | Uncontrolled initial rail when `menuExpanded` omitted |
+| `onMenuExpandedChange` | `(expanded: boolean) => void` | — | ← Main Menu `onExpandedChange` |
+| `persistMenuExpanded` | `boolean` | `false` | Persist user toggle via `sessionStorage` key `ids.app-shell.menuExpanded` |
+| `onNavigate` | `(MainMenuLeftNavigationTarget) => void` | — | ← Main Menu `onNavigate` |
+| `onMenuSelected` | `(MainMenuLeftSelectionDetail) => void` | — | ← Main Menu `onSelected` |
+| `mastheadProductName` | `string` | required | → Masthead `productName` |
+| `mastheadProductIconSlug` | `string` | `shield-cloud` | Builds Masthead `logo` when `mastheadLogo` omitted |
+| `mastheadLogo` | `RenderableNode` | icon from slug | → Masthead `logo` |
+| `headerActions` | `RenderableNode` | — | → Masthead `iconsSlot` |
+| `appLauncherSlot` | `RenderableNode` | — | → Masthead `appLauncherSlot` |
+| `avatarSlot` | `RenderableNode` | initials chip | → Masthead `avatarSlot` |
 | `footerHostname` | `string` | — | Passthrough → Footer |
 | `footerSwid` | `string` | — | Passthrough → Footer |
 | `footerCurrentDateTime` | `string` | — | Passthrough → Footer |
@@ -318,7 +366,7 @@ interface AppShellPage {
 | `showFooterTimeZone` | `boolean` | `true` | Passthrough → Footer |
 | `onCopySwid` | `(swid: string) => void` | — | Pass-through from Footer |
 | `onTimeZoneClick` | `() => void` | — | Pass-through from Footer |
-| `showPageDescription` | `boolean` | `true` | Global description visibility |
+| `showPageDescription` | `boolean` | `true` | When false, omit description text only — page header + title always remain |
 | `pageTitleLevel` | `1 \| 2` | `1` | Heading level for accessible title |
 | `className` | `string` | — | Host hook on root |
 
@@ -326,13 +374,13 @@ interface AppShellPage {
 
 Implementations MAY accept nested objects instead of flat passthrough props:
 
-| Bundle prop | Child spec section | Notes |
+| Bundle prop | Child spec section | Notes (keys = child Runtime API names) |
 |---|---|---|
-| `masthead` | Masthead → Composition & API | `{ productName, productIcon, actions, avatar, ... }` |
-| `mainMenu` | Main Menu / Left → Composition & API | `{ items, expanded, logo, ariaLabel, ... }` |
+| `masthead` | Masthead → Composition & API | `{ productName, logo, iconsSlot, appLauncherSlot, avatarSlot }` |
+| `mainMenu` | Main Menu / Left → Composition & API | `{ items, logo, expanded, onExpandedChange, defaultSelectedItemId, onNavigate, onSelected, ariaLabel }` |
 | `footer` | Footer → Composition & API | `{ hostname, swid, currentDateTime, timeZoneLabel, show*, ... }` |
 
-When both flat and bundle props are supplied, **bundle wins** for that child (adapter-defined merge rule — document in generated code).
+When both flat and bundle props are supplied, **bundle wins** for that child. Merge rule: shallow-merge flat props first, then overwrite with defined bundle keys (undefined bundle keys do not clear flat values).
 
 ### Root outputs (events)
 
@@ -347,28 +395,51 @@ When both flat and bundle props are supplied, **bundle wins** for that child (ad
 
 ### Spec Accurate Design defaults (codegen parity)
 
-Reference sample aligned to Figma `43478:46307` (`Screen size=1920`):
+Reference sample aligned to Figma `43478:46307` (`Screen size=1920`). Storybook and codegen MUST use these concrete values (same menu tree as Main Menu Left Spec Accurate Design).
 
 ```ts
+const PAGE_DESCRIPTION =
+  "This subtitle is meant for instructional text that outlines the purpose of this page. It's advisable to include such text unless the page is a dashboard or self-explanatory.";
+
+const menuItems = [
+  { id: "dashboard", name: "Dashboard", iconName: "home", routeRef: "/dashboard" },
+  {
+    id: "infrastructure",
+    name: "Infrastructure",
+    iconName: "network-share",
+    routeRef: "/infrastructure",
+    childrenMenu: "collapsed",
+    children: [
+      { id: "infra-a", name: "Clusters", routeRef: "/infrastructure/clusters" },
+      { id: "infra-b", name: "Storage", routeRef: "/infrastructure/storage" },
+    ],
+  },
+  { id: "protection", name: "Protection", iconName: "shield-encrypt-alt", routeRef: "/protection" },
+  { id: "recovery", name: "Recovery", iconName: "arrows-spin", routeRef: "/recovery" },
+  { id: "alerts", name: "Alerts and Events", iconName: "alert-bell", routeRef: "/alerts" },
+  { id: "reports", name: "Reports", iconName: "productivity-alt", routeRef: "/reports" },
+  { id: "administration", name: "Administration", iconName: "user-settings", routeRef: "/administration" },
+  { id: "jobs", name: "Jobs", iconName: "time-detail", routeRef: "/jobs" },
+];
+
 {
   breakpointPreset: "1920",          // QA frame only
   defaultPageId: "dashboard",
   defaultMenuSelectedItemId: "dashboard",
   defaultMenuExpanded: true,
-  pages: [
-    {
-      id: "dashboard",
-      title: "Page Title",
-      description:
-        "This subtitle is meant for instructional text that outlines the purpose of this page. It's advisable to include such text unless the page is a dashboard or self-explanatory.",
-      content: /* host swap slot — placeholder acceptable in Storybook only */,
-    },
-  ],
-  menuItems: /* Figma 11099:56218 labels — see main-menu-left Spec Accurate Design */,
+  persistMenuExpanded: false,
+  pages: menuItems.map((item) => ({
+    id: item.id,
+    title: item.name,
+    description: PAGE_DESCRIPTION,
+    content: /* host body — Storybook may use AppShellPagePanel; production never ships .SwapContent */,
+  })),
+  menuItems,
   mastheadProductName: "Product Name",
-  headerActions: /* AppShellSpecAccurateHeaderActions() or product HeaderActions child */,
-  appLauncherSlot: /* App Launcher instance */,
-  avatarSlot: /* MastheadAvatar with onClick */,
+  mastheadProductIconSlug: "shield-cloud",
+  headerActions: /* AppShellSpecAccurateHeaderActions(): search-16, alert-bell-16 (badge 3 critical), jobs-queue-stack (badge 2 success), setting-gear-16, help-circ-16 */,
+  appLauncherSlot: /* AppLauncher triggerVariant="masthead" with two sample products */,
+  avatarSlot: /* MastheadAvatar initials="DT" */,
   footerHostname: "short_name_first_domain_name",
   footerSwid: "ELMCR00222GBPB",
   footerCurrentDateTime: "Tue, 2023-04-23 12:30 AM",
@@ -377,6 +448,8 @@ Reference sample aligned to Figma `43478:46307` (`Screen size=1920`):
 ```
 
 Additional Storybook variants: `1366` collapsed menu (`43478:90925`), `1024` (`43478:91081`).
+
+Compose Masthead and Main Menu Left from their specs for Spec Accurate Design — header actions and menu chrome come from those child contracts; App Shell only passes the values above.
 
 ### Consumer usage (developer integration)
 
@@ -459,7 +532,7 @@ Emit DOM/framework nodes in **Anatomy** order. Stable identifiers:
 | 10 | `AppShellBodyContentSlot` | projection host / `{children}` / `<ng-content>` |
 | 11 | `AppShellFooterSlot` | child `<footer>` from Footer |
 
-**Composition rule:** generate **child components** from their specs (`Masthead`, `MainMenuLeft`, `Footer`); do not inline Masthead/menu/footer markup in AppShell output.
+**Composition rule:** generate **child components** from [`masthead/design-spec.md`](../masthead/design-spec.md), [`main-menu-left/design-spec.md`](../main-menu-left/design-spec.md), and Footer; do **not** inline Masthead / Main Menu / Footer markup, tokens, or state matrices in App Shell output. Pass props only via the **Child Runtime API mapping** table.
 
 ### Variant matrix
 
@@ -482,8 +555,8 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 | `AppShellBodyRow` | row flex, `flex: 1`, `min-height: 0` | — |
 | `AppShellMainColumn` | column flex, `flex: 1`, `min-width: 0`, `min-height: 0` | `background: var(--color-background-surface-1)` |
 | `AppShellPageHeader` | column, gap `var(--spacing-space-12)` | padding per Layout section |
-| `AppShellPageTitle` | content width | Header 5 tokens |
-| `AppShellPageDescription` | content width, wrap | Body 2 medium tokens |
+| `AppShellPageTitle` | content width | Header 5 — `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-neutral-strong)` |
+| `AppShellPageDescription` | content width, wrap | Body 2 medium — `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-neutral)` |
 | `AppShellBodyViewport` | `flex: 1`, `overflow-y: auto`, `min-height: 0` | — |
 | `AppShellBodyContentSlot` | `width: 100%`, `box-sizing: border-box` | padding `var(--padding-padding-24)` inline, `var(--padding-padding-16)` block |
 | `AppShellMastheadSlot` | `56px` height | delegate to Masthead spec |
@@ -492,10 +565,10 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 
 ### Behavior contract
 
-1. **Page routing:** `activePageId` selects one record from `pages[]`; title, description, and body content update atomically.
+1. **Page routing:** `activePageId` selects one record from `pages[]`; title, description, and body content update atomically. **`AppShellPageHeader` + `AppShellPageTitle` always render.**
 2. **Menu sync:** menu `onNavigate` / `onSelected` resolves `itemId` → `pages[].id` (or `menuItemId` mapping); calls `onPageChange` when match found.
-3. **Responsive menu:** on viewport cross `1600px`, apply breakpoint default unless `persistMenuExpanded` restored a user preference.
-4. **Scroll ownership:** vertical scroll on `AppShellBodyViewport` only; masthead, menu, footer fixed within shell; body children may add nested scroll (Datagrid pattern).
+3. **Responsive menu:** on viewport cross `1600px`, apply breakpoint default unless `persistMenuExpanded` restored `ids.app-shell.menuExpanded` from `sessionStorage`.
+4. **Scroll ownership:** vertical scroll on `AppShellBodyViewport` only; masthead, menu, page header, and footer fixed within shell; body children may add nested scroll (Datagrid pattern).
 5. **Event bubbling:** child events listed in Interactions MUST surface on root with identical payload shapes (menu, footer). Masthead action clicks are handled on composed `headerActions` children — not re-emitted at shell root.
 6. **Forced states:** `data-state` on shell slots is demo-only; runtime interaction stays enabled on composed children.
 
@@ -510,7 +583,7 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 ### Asset resolution + bundling contract
 
 - App Shell owns **no icons** directly; assets resolve through composed specs (Main Menu icons, Footer `copy`/`time-clock`/`world-globe`, Masthead action icons).
-- Product icon in Masthead: `assets/icons/<slug>.svg` or host `productIconSrc` per Masthead spec.
+- Product mark in Masthead: host `logo` (`RenderableNode`) or build from `mastheadProductIconSlug` → `assets/icons/<slug>.svg` per Masthead asset contract.
 - Body slot assets are host responsibility.
 
 ### Fallback/error rules
@@ -518,29 +591,36 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 | Condition | Behavior |
 |---|---|
 | Unknown `activePageId` | Fall back to `defaultPageId` or first page; dev warning |
-| Empty `pages[]` | Render shell chrome with empty title and body; dev error |
-| `pages[].title` missing | Dev validation error; render `"Untitled"` in production fallback |
+| Empty `pages[]` | Render shell chrome with **page header present**, empty title (`""`), empty body; dev error |
+| `pages[].title` missing | Dev validation error; render `"Untitled"` in production fallback; page header still present |
 | Menu item with no matching page | Still emit `onNavigate`; no page change unless host handles |
 | Unknown `breakpointPreset` | Treat as `fluid` |
 | Missing composed child spec at codegen | Fail validation — do not inline undocumented markup |
 | Missing `mastheadProductName` | Dev validation error |
 | Both `menuExpanded` and missing `onMenuExpandedChange` in controlled mode | Warn — treat as read-only expanded state |
+| `persistMenuExpanded=true` with invalid `sessionStorage` value | Ignore stored value; use breakpoint default |
+| Attempt to omit page header | **Invalid** — codegen MUST always emit `AppShellPageHeader` + `AppShellPageTitle` |
 
 ### Validation checklist
 
-- [ ] Live Figma nodes `43478:46307`, `43478:90798`, `43478:90925`, `43478:91081` referenced in Source Mapping
-- [ ] Anatomy slot order matches generated DOM / component tree
-- [ ] Masthead, Main Menu / Left, Footer composed from child specs (no duplicated chrome markup)
-- [ ] Page header uses Header 5 + Body 2 medium tokens only (`var(--...)`)
-- [ ] Body slot accepts arbitrary host content; menu click swaps page content
-- [ ] Each page exposes `title` + optional `description` per page model
-- [ ] Breakpoint `< 1600px` defaults menu collapsed; `≥ 1600px` expanded
-- [ ] `AppShellBodyViewport` scrolls; footer outside scroll clip
-- [ ] Root re-emits `onNavigate`, `onMenuSelected`, `onMenuExpandedChange`, `onCopySwid`, `onTimeZoneClick`
-- [ ] `headerActions` composes Masthead `iconsSlot`; click handlers on composed children; omit → no utility icons
-- [ ] `100vh` / `100dvh` shell height; width `100%` (not fixed 1920px)
-- [ ] Accessibility: `main#main-content`, single page `h1`, optional `aria-describedby`
-- [ ] No Figma `.SwapContent` placeholder in production codegen output
+- [x] Live Figma nodes `43478:46307`, `43478:90798`, `43478:90925`, `43478:91081` referenced in Source Mapping
+- [x] Anatomy slot order matches generated DOM / component tree
+- [x] Masthead + Main Menu / Left + Footer composed from [`masthead`](../masthead/design-spec.md) / [`main-menu-left`](../main-menu-left/design-spec.md) / footer specs (no duplicated chrome markup)
+- [x] Shell props map 1:1 to Masthead (`productName`, `logo`, `iconsSlot`, …) and Main Menu Left (`items`, `expanded`, `defaultSelectedItemId`, `onNavigate`, `onSelected`, …)
+- [x] `AppShellPageHeader` + `AppShellPageTitle` always present (no suppress / `showPageHeader`)
+- [x] Page header uses Header 5 + Body 2 medium tokens only (`var(--...)` + `font-weight: 500` on description)
+- [x] Body slot accepts arbitrary host content; menu click swaps page content
+- [x] Each page exposes `title` + optional `description` per page model
+- [x] Breakpoint `< 1600px` defaults menu collapsed; `≥ 1600px` expanded
+- [x] `persistMenuExpanded` uses `sessionStorage` key `ids.app-shell.menuExpanded` (`"true"` / `"false"`)
+- [x] `AppShellBodyViewport` scrolls; footer outside scroll clip
+- [x] Root re-emits `onNavigate`, `onMenuSelected`, `onMenuExpandedChange`, `onCopySwid`, `onTimeZoneClick`
+- [x] `headerActions` composes Masthead `iconsSlot`; click handlers on composed children; omit → no utility icons
+- [x] `100vh` / `100dvh` shell height; width `100%` (not fixed 1920px)
+- [x] Accessibility: `main#main-content`, single page `h1`, optional `aria-describedby`
+- [x] No Figma `.SwapContent` placeholder in production codegen output
+- [x] Spec Accurate Design defaults include concrete `menuItems` matching Main Menu Left Figma sample
+- [x] Storybook **Spec Generated/IDS/App Shell** → **Spec Accurate Design** exists at `storybook-generated/ids/src/components/AppShell.stories.tsx`
 
 ## Source Mapping
 
@@ -559,9 +639,9 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 | Body slot wrapper nodes | `43478:50919`, `43478:90806`, `43478:90933`, `43478:91089` |
 | Swap placeholder (design-time only) | `.SwapContent` `43478:50900` |
 | Content templates | `.Content for app shell` (`43478:87315`) |
-| Composed Masthead instance | `43478:46181` → `Masthead-Main` (`10130:29493`) |
-| Composed Main Menu instance | `11099:56218` (expanded) / `11099:56206` (collapsed) |
+| Composed Masthead instance | `43478:46181` → `Masthead-Main` (`10130:29493`) — see [`masthead/design-spec.md`](../masthead/design-spec.md) |
+| Composed Main Menu instance | `43478:50551` → expanded `11099:56218` / collapsed `11099:56206` — see [`main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) |
 | Composed Footer instance | `43478:50555` → `Footer` (`38908:5818`) |
-| Verification method | Figma MCP — `get_design_context`, `get_metadata` |
-| Last live verification | 2026-06-17 |
+| Verification method | Figma MCP — `get_design_context`, `get_metadata` (confirmed nested Masthead + MainMenu-Left instances) |
+| Last live verification | 2026-07-13 |
 | Design spec path | `components/ids/app-shell/design-spec.md` |

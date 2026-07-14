@@ -1,8 +1,14 @@
 # IDS App Shell
 
-Application layout pattern: **Masthead** + **Main Menu / Left** + page header (title + description) + scrollable body slot + **Footer**.
+Application layout pattern composing existing IDS children:
 
-Host apps supply a **page catalog** (`pages`) and **menu tree** (`menuItems`). Menu navigation swaps the active page’s title, description, and body content. Contract: [`design-spec.md`](./design-spec.md).
+| Slot | Spec |
+|---|---|
+| Masthead | [`../masthead/design-spec.md`](../masthead/design-spec.md) |
+| Main Menu / Left | [`../main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) |
+| Footer | [`../footer/design-spec.md`](../footer/design-spec.md) |
+
+Host apps supply a **page catalog** (`pages`) and **menu tree** (`menuItems`). Menu navigation swaps the active page’s title, description, and body content. Shell contract: [`design-spec.md`](./design-spec.md).
 
 ## Reference implementation
 
@@ -157,11 +163,11 @@ export function AppWithRouter() {
 
 ## Key rules for consumers
 
-1. **`pages[].id`** should match the corresponding **`menuItems[].id`** so menu clicks resolve the right view (secondary items can use `menuItemId` on the page when ids differ).
-2. **Body content** is any React node — datagrids, forms, dashboards. Fill height with `width: 100%`, `min-height: 0` when the child manages its own scroll (see Datagrid shell contract).
-3. **Responsive menu:** rail defaults to **expanded** at viewport `≥ 1600px`, **collapsed** below. Override with `menuExpanded` / `onMenuExpandedChange` or `defaultMenuExpanded`.
-4. **Events** bubble from composed children: `onNavigate`, `onMenuSelected`, `onMenuExpandedChange`, `onCopySwid`, `onTimeZoneClick` (Footer). Masthead action clicks are wired on each composed control inside `headerActions`.
-5. Omit **page description** for dashboards (`showPageDescription={false}` or empty `description`).
+1. **Page header is always present** — `AppShellPageHeader` + title always render. Only the description may be omitted (`showPageDescription={false}` or empty `description`).
+2. **`pages[].id`** should match the corresponding **`menuItems[].id`** so menu clicks resolve the right view (secondary items can use `menuItemId` on the page when ids differ).
+3. **Body content** is any React node — datagrids, forms, dashboards. Fill height with `width: 100%`, `min-height: 0` when the child manages its own scroll (see Datagrid shell contract).
+4. **Responsive menu:** rail defaults to **expanded** at viewport `≥ 1600px`, **collapsed** below. Override with `menuExpanded` / `onMenuExpandedChange` or `defaultMenuExpanded`. With `persistMenuExpanded`, preference is stored in `sessionStorage` key `ids.app-shell.menuExpanded`.
+5. **Events** bubble from composed children: `onNavigate`, `onMenuSelected`, `onMenuExpandedChange`, `onCopySwid`, `onTimeZoneClick` (Footer). Masthead action clicks are wired on each composed control inside `headerActions`.
 
 ## Storybook
 
