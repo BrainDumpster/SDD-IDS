@@ -236,21 +236,35 @@ When executing the wizard without the Cursor skill file:
 
 ## Storybook examples (when you answer `yes`)
 
-Examples must follow repo conventions (see [README — Spec Accurate Design](../README.md#spec-accurate-design-examples-ids)):
+Examples must follow repo conventions (see [README — Spec Accurate Design](../README.md#spec-accurate-design-examples-ids)). Agents must treat this as a **required run-phase step**, not optional polish. Full procedure: **`.cursor/skills/design-spec-intake-wizard/SKILL.md` → Storybook follow-up**.
 
 **Production reuse rule:** The Storybook component file must export the same **canonical runtime API** documented in **Composition & API (runtime)**. Stories demonstrate that API with Figma-accurate defaults — they do not introduce a parallel or simplified prop surface. Production apps import the same component module as Spec Accurate Design.
 
 | Rule | Value |
 |------|--------|
 | Sidebar group | **Spec Generated** — `Spec Generated/IDS/<Component>`, `Spec Generated/DAP/<Component>`, or `Spec Generated/Synapse/<Component>` |
-| Primary story name | **Spec Accurate Design** |
+| Primary story name | **Spec Accurate Design** (`export const SpecAccurateDesign`) |
 | Source of truth | `design-spec.md` (tokens, layout, states, API defaults — including **`### Spec Accurate Design story defaults`**) |
 | Story args | Canonical Runtime API prop names only (`children`, `items`, `name` — not story-only aliases unless documented) |
 | Theme CSS | One import: `components/ids-theme.css`, `components/dap-theme.css`, or `components/synapse-theme.css` |
+| Output | Prefer `storybook-generated/<programme>/src/components/<PascalName>.stories.tsx` |
 
 Do not publish spec-driven examples under generic Storybook folders. Optional extra stories (state matrix, collapsed, etc.) sit under the same **Spec Generated** title.
 
-Generators: `generation/deterministic_storybook/`, `scripts/strict_spec_storybook_gate.py` when available.
+### Deterministic generation (agent must)
+
+1. Add/update `generation/deterministic_storybook/.../<slug>.py` and register in `engine.py` `REGISTRY`.
+2. Run:
+   ```bash
+   DESIGN_SYSTEM=<programme> python3 scripts/strict_spec_storybook_gate.py \
+     --component <kebab-slug> \
+     --spec-only \
+     --deterministic-story
+   ```
+3. Require **STRICT GATE PASSED**; record story + generator paths in spec Metadata.
+4. Do not end intake with Storybook=`yes` and only a hand file under `storybook/src` and no registry entry.
+
+Hand-authored intake stories may temporarily live under `storybook/src/components/` for hot-reload; migrate to the deterministic gate + `storybook-generated/` before calling intake complete when Storybook was requested.
 
 ### Troubleshooting Storybook
 
@@ -259,9 +273,7 @@ Generators: `generation/deterministic_storybook/`, `scripts/strict_spec_storyboo
 1. Stop every Storybook process (check port **6006** — a stale instance is a frequent cause).
 2. From `storybook/`: `pnpm dev:clean` (or `npm run dev:clean`).
 3. Open the URL Storybook prints (use that port only).
-4. Navigate to **Spec Generated → IDS → Tree → Spec Accurate Design**.
-
-Hand-authored intake stories may live under `storybook/src/components/` (for example `IdsTree.stories.tsx`) so they share the main story glob; deterministic gate output still uses `storybook-generated/`.
+4. Navigate to **Spec Generated → … → Spec Accurate Design**.
 
 **IDS Tree** supports **Mode A** (`items: TreeNode[]`) and **Mode B** (nested `<tree-item>` / `<tree-item-label>`); root emits **`onTreeItemClick`** with `TreeItemClickDetail` (see `components/ids/tree/design-spec.md`).
 

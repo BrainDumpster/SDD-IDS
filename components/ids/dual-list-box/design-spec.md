@@ -1,6 +1,8 @@
 # Dual List Box Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/DualListBox.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/dual_list_box.py`
 - **Component:** Dual List Box
 - **Design system:** IDS
 - **Category:** Form Elements

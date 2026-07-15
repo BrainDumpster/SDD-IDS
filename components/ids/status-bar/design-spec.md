@@ -1,6 +1,8 @@
 # Status Bar Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/StatusBar.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/status_bar.py`
 - Component: Status Bar
 - Design System: IDS
 - Category: Patterns and Templates

@@ -2,6 +2,8 @@
 # Time Picker Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/TimePicker.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/time_picker.py`
 - Component: Time Picker
 - Design System: IDS
 - Category: Form Elements
@@ -16,7 +18,7 @@
 - Element nodes:
   - Time dropdown: `42159:132108` (`TimePicker-Element-Dropdown` — 12h/24h × seconds variants)
 - Storybook examples requested: yes
-- Storybook path: `storybook/src/components/TimePicker.stories.tsx`
+- Storybook path: `storybook-generated/ids/src/components/TimePicker.stories.tsx`
 - Storybook title: `Spec Generated/IDS/Time Picker`
 - Verification method: Figma MCP (`get_design_context`)
 - Last verified: 2026-05-26
