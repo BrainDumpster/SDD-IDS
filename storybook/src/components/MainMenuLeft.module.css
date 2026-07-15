@@ -3,13 +3,6 @@
   flex-direction: column;
   height: 700px;
   background: var(--color-background-component);
-  background-image:
-    linear-gradient(
-      180deg,
-      var(--color-background-gradient-left-nav-start, #ffffff) 0%,
-      var(--color-background-gradient-left-nav-end, #ffffff) 100%
-    ),
-    linear-gradient(90deg, var(--color-background-component) 0%, var(--color-background-component) 100%);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-top: none;
   box-sizing: border-box;
