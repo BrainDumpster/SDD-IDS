@@ -6,6 +6,7 @@ from typing import Callable, Dict, Tuple
 from generation.deterministic_storybook.ids.about import generate_ids_about_story
 from generation.deterministic_storybook.ids.accordion import generate_ids_accordion_story
 from generation.deterministic_storybook.ids.alert import generate_ids_alert_story
+from generation.deterministic_storybook.ids.anchor_menu import generate_ids_anchor_menu_story
 from generation.deterministic_storybook.ids.app_launcher import generate_ids_app_launcher_story
 from generation.deterministic_storybook.ids.badge import generate_ids_badge_story
 from generation.deterministic_storybook.ids.button import generate_ids_button_story
@@ -35,6 +36,7 @@ from generation.deterministic_storybook.ids.segmented_button import generate_ids
 from generation.deterministic_storybook.ids.slider import generate_ids_slider_story
 from generation.deterministic_storybook.ids.spinner import generate_ids_spinner_story
 from generation.deterministic_storybook.ids.status_bar import generate_ids_status_bar_story
+from generation.deterministic_storybook.ids.tab import generate_ids_tab_story
 from generation.deterministic_storybook.ids.tag import generate_ids_tag_story
 from generation.deterministic_storybook.ids.text_box import generate_ids_text_box_story
 from generation.deterministic_storybook.ids.time_picker import generate_ids_time_picker_story
@@ -55,7 +57,7 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "about"): generate_ids_about_story,
     ("ids", "accordion"): generate_ids_accordion_story,
     ("ids", "alert"): generate_ids_alert_story,
-    # anchor-menu: hand-maintained — storybook/src/components/IdsAnchorMenu.stories.tsx
+    ("ids", "anchor-menu"): generate_ids_anchor_menu_story,
     ("ids", "app-launcher"): generate_ids_app_launcher_story,
     ("ids", "badge"): generate_ids_badge_story,
     ("ids", "button"): generate_ids_button_story,
@@ -82,7 +84,8 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "slider"): generate_ids_slider_story,
     ("ids", "spinner"): generate_ids_spinner_story,
     ("ids", "status-bar"): generate_ids_status_bar_story,
-    # tab: hand-maintained — storybook/src/components/IdsTabs.stories.tsx
+    ("ids", "tab"): generate_ids_tab_story,
+    ("ids", "tabs"): generate_ids_tab_story,
     ("ids", "tag"): generate_ids_tag_story,
     ("ids", "text-box"): generate_ids_text_box_story,
     ("ids", "textbox"): generate_ids_text_box_story,
