@@ -1,6 +1,8 @@
 # About Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/About.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/about.py`
 - Component: About
 - Category: Patterns and Templates
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=30680-10863&m=dev

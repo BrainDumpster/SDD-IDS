@@ -1,6 +1,8 @@
 # Footer Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/Footer.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/footer.py`
 - **Component:** Footer
 - **Category:** Navigation
 - **Design System:** IDS
@@ -15,7 +17,7 @@
 - **Child nodes (same file):** `38908:5819` Left; `38908:5820` Host Name; `38908:5821` SWID; `38908:5823` copy; `38908:5825` Time; `38908:5826` time-clock; `38908:5829` Time Zone; `38908:5830` world-globe
 - **Figma variant axes (boolean toggles on component):** `hostname`, `currentDateAndTime`, `timeZone` (all default `true` in library sample)
 - **Storybook examples requested:** yes
-- **Storybook path:** `storybook/src/components/IdsFooter.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
+- **Storybook path:** `storybook-generated/ids/src/components/Footer.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
 - **Storybook meta title:** `Spec Generated/IDS/Footer`
 - **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-05-22)
 
