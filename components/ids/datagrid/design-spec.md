@@ -1,6 +1,8 @@
 # Datagrid Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/Datagrid.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/datagrid.py`
 - Component: Datagrid
 - Design System: IDS
 - Category: Table and Data Grids

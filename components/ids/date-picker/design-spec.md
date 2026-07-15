@@ -2,6 +2,8 @@
 # Date Picker Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/DatePicker.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/date_picker.py`
 - Component: Date Picker
 - Design System: IDS
 - Category: Form Elements
