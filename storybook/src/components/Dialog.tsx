@@ -20,37 +20,33 @@ type DialogType =
   | "Info"
   | "Danger"
   | "Success";
-type DialogSize = "sm" | "lg" | "xl";
+type DialogSize = "x-small" | "small" | "medium" | "large";
+type DialogScenario = "dialog" | "single-page" | "multi-page";
 export type DialogVariant = "default" | "about";
 
 interface DialogProps {
-  /** Programme chrome for footer/trigger `Button` (`synapse` button aliases). Modal radius uses `--modal-control-radius` from theme CSS. */
   programme?: "ids" | "synapse";
-  /** Use `about` for the Synapse About pattern (centered product line, optional slots in children). */
   variant?: DialogVariant;
-  /** Omit when controlling visibility with `open` / `onOpenChange`. */
   trigger?: ReactNode;
 
-  // Visibility
-  openDidalog?: boolean; // initial open in uncontrolled dialog demo
+  openDidalog?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 
-  // Header
   dialogTitle: string;
   dialogType?: DialogType;
+  scenario?: DialogScenario;
   dialogSize?: DialogSize;
   dialogClosable?: boolean;
   description?: string;
+  tabs?: ReactNode;
   children?: ReactNode;
 
-  // Footer buttons (labels are product/user-defined at runtime)
   primaryButtonName: string;
   enableActionButton?: boolean;
   tertiaryButtonName?: string;
   enableTertiaryButtton?: boolean;
 
-  // Events
   onClose?: () => void;
   onPrimaryButtonClick?: () => void;
   onTertiaryButtonClick?: () => void;
@@ -65,9 +61,11 @@ export function Dialog({
   onOpenChange,
   dialogTitle,
   dialogType = "None",
-  dialogSize = "lg",
+  scenario = "dialog",
+  dialogSize,
   dialogClosable = true,
   description,
+  tabs,
   children,
   primaryButtonName,
   enableActionButton = true,
@@ -89,10 +87,13 @@ export function Dialog({
   const showTertiary =
     variant !== "about" && Boolean(tertiaryButtonName);
 
+  const isModalPage = scenario === "single-page" || scenario === "multi-page";
   const popupClassName =
     variant === "about"
       ? `${styles.popup} ${styles.popupAbout}`
-      : [styles.popup, styles[dialogSize]].filter(Boolean).join(" ");
+      : [styles.popup, isModalPage && dialogSize ? styles[dialogSize] : ""]
+          .filter(Boolean)
+          .join(" ");
 
   const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
 
@@ -124,7 +125,7 @@ export function Dialog({
       el.removeEventListener("scroll", updateContentOverflow);
       resizeObserver.disconnect();
     };
-  }, [children, description, dialogSize, dialogType, open, openDidalog, variant]);
+  }, [children, description, dialogSize, dialogType, open, openDidalog, scenario, variant]);
 
   return (
     <BaseDialog.Root
@@ -220,6 +221,7 @@ export function Dialog({
                   className={[
                     styles.description,
                     styles[`description${normalizeDialogType(dialogType)}`],
+                    isModalPage ? styles.descriptionModalPage : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
@@ -228,11 +230,16 @@ export function Dialog({
                 </BaseDialog.Description>
               ) : null}
 
+              {tabs ? (
+                <div className={styles.tabStrip}>{tabs}</div>
+              ) : null}
+
               {children ? (
                 <div
                   ref={bodyRef}
                   className={[
                     styles.body,
+                    isModalPage ? styles.bodyModalPage : "",
                     styles[`body${normalizeDialogType(dialogType)}`],
                     bodyScrollable ? styles.bodyScrollable : "",
                   ]
@@ -247,7 +254,7 @@ export function Dialog({
                 <div className={styles.contentScrollShadow} aria-hidden="true" />
               ) : null}
 
-              <div className={styles.footer}>
+              <div className={[styles.footer, isModalPage ? styles.footerModalPage : ""].filter(Boolean).join(" ")}>
                 {showTertiary ? (
                   <Button
                     programme={programme}
@@ -281,7 +288,6 @@ export function Dialog({
   );
 }
 
-/** Canonical asset: `assets/icons/shape-x.svg` */
 function DialogCloseGlyph() {
   return (
     <img

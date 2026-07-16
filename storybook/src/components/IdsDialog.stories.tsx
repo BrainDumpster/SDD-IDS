@@ -16,7 +16,6 @@ type Story = StoryObj<typeof Dialog>;
 
 function logEvent(name: string) {
   return () => {
-    // eslint-disable-next-line no-console
     console.log(`[Dialog event] ${name}`);
   };
 }
@@ -26,9 +25,7 @@ export const NonAlerting: Story = {
     <Dialog
       trigger={<Button>Open Dialog</Button>}
       dialogTitle="Non-Alerting"
-      dialogType="Non-Alerting"
-      dialogSize="lg"
-      dialogClosable={true}
+      dialogType="Non-Alerting"      dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryButtonName="Close"
@@ -45,9 +42,7 @@ export const Informational: Story = {
     <Dialog
       trigger={<Button variant="secondary">Open Informational Dialog</Button>}
       dialogTitle="Informational"
-      dialogType="Informational"
-      dialogSize="lg"
-      dialogClosable={true}
+      dialogType="Informational"      dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryButtonName="Close"
@@ -64,9 +59,7 @@ export const Warning: Story = {
     <Dialog
       trigger={<Button variant="secondary">Open Warning Dialog</Button>}
       dialogTitle="Warning"
-      dialogType="Warning"
-      dialogSize="lg"
-      dialogClosable={true}
+      dialogType="Warning"      dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryButtonName="Continue"
@@ -89,9 +82,7 @@ export const Major: Story = {
     <Dialog
       trigger={<Button variant="secondary">Open Major Dialog</Button>}
       dialogTitle="Major"
-      dialogType="Major"
-      dialogSize="lg"
-      dialogClosable={true}
+      dialogType="Major"      dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryButtonName="Continue"
@@ -114,9 +105,7 @@ export const Critical: Story = {
     <Dialog
       trigger={<Button variant="secondary">Open Critical Dialog</Button>}
       dialogTitle="Critical"
-      dialogType="Critical"
-      dialogSize="lg"
-      dialogClosable={true}
+      dialogType="Critical"      dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryButtonName="Continue"
@@ -142,9 +131,7 @@ export const Destructive: Story = {
       <Dialog
         trigger={<Button variant="secondary">Open Destructive Dialog</Button>}
         dialogTitle="Critical"
-        dialogType="Destructive"
-        dialogSize="lg"
-        dialogClosable={true}
+        dialogType="Destructive"        dialogClosable={true}
         openDidalog={false}
         description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
         primaryButtonName="Action"
@@ -173,13 +160,14 @@ export const Destructive: Story = {
   },
 };
 
-export const SinglePageModalUsage: Story = {
+export const SinglePage: Story = {
   render: () => (
     <Dialog
       trigger={<Button variant="secondary">Open Single-Page Modal</Button>}
       dialogTitle="Header"
       dialogType="Non-Alerting"
-      dialogSize="xl"
+      scenario="single-page"
+      dialogSize="x-small"
       dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit."
@@ -191,15 +179,7 @@ export const SinglePageModalUsage: Story = {
       onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
       onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
     >
-      <div
-        style={{
-          minHeight: 220,
-          border: "1px solid var(--color-border-brand-base)",
-          background: "var(--color-background-brand-lighter)",
-          padding: 16,
-          color: "var(--color-text-neutral)",
-        }}
-      >
+      <div style={{ minHeight: 220, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter)", padding: 16, color: "var(--color-text-neutral)" }}>
         <strong style={{ display: "block", marginBottom: 8 }}>Swap content</strong>
         Single-page usage keeps one continuous content panel without tab/page switching.
       </div>
@@ -207,13 +187,39 @@ export const SinglePageModalUsage: Story = {
   ),
 };
 
-export const MultiPageModalUsage: Story = {
-  render: () => (
+type MultiPageArgs = { tabVariant: "primary" | "secondary" };
+
+const multiPageTabs = (tabVariant: "primary" | "secondary") => (
+  <Tabs
+    variant={tabVariant}
+    surface="transparent"
+    items={[
+      { id: "details", label: "Details", panel: null },
+      { id: "settings", label: "Settings", panel: null },
+      { id: "review", label: "Review", panel: null },
+      { id: "audit", label: "Audit Trail", panel: null },
+      { id: "integrations", label: "Integrations", panel: null },
+    ]}
+    moreLabel="More"
+  />
+);
+
+export const MultiPage: StoryObj<MultiPageArgs> = {
+  argTypes: {
+    tabVariant: {
+      control: "radio",
+      options: ["primary", "secondary"],
+      name: "Tab Variant",
+    },
+  },
+  args: { tabVariant: "secondary" },
+  render: ({ tabVariant }) => (
     <Dialog
       trigger={<Button variant="secondary">Open Multi-Page Modal</Button>}
       dialogTitle="Header"
       dialogType="Non-Alerting"
-      dialogSize="xl"
+      scenario="multi-page"
+      dialogSize="x-small"
       dialogClosable={true}
       openDidalog={false}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
@@ -224,38 +230,12 @@ export const MultiPageModalUsage: Story = {
       onClose={logEvent("onClose")}
       onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
       onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
+      tabs={multiPageTabs(tabVariant)}
     >
-      <Tabs
-        variant="secondary"
-        items={[
-          {
-            id: "details",
-            label: "Details",
-            panel: "Page 1 content: overview details and context.",
-          },
-          {
-            id: "settings",
-            label: "Settings",
-            panel: "Page 2 content: configurable settings and options.",
-          },
-          {
-            id: "review",
-            label: "Review",
-            panel: "Page 3 content: final review before apply.",
-          },
-          {
-            id: "audit",
-            label: "Audit Trail",
-            panel: "Optional hidden page content via overflow.",
-          },
-          {
-            id: "integrations",
-            label: "Integrations",
-            panel: "Optional hidden page content via overflow.",
-          },
-        ]}
-        moreLabel="More"
-      />
+      <div style={{ minHeight: 220, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter)", padding: 16, color: "var(--color-text-neutral)" }}>
+        <strong style={{ display: "block", marginBottom: 8 }}>Swap content</strong>
+        Multi-page usage switches content panels via the tab strip above.
+      </div>
     </Dialog>
   ),
 };

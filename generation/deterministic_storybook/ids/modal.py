@@ -44,9 +44,7 @@ export const NonAlerting: Story = {{
     <{component_name}
       trigger={{<Button>Open Dialog</Button>}}
       dialogTitle="Non-Alerting"
-      dialogType="Non-Alerting"
-      dialogSize="lg"
-      dialogClosable
+      dialogType="Non-Alerting"      dialogClosable
       openDidalog={{false}}
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryButtonName="Close"
@@ -64,9 +62,7 @@ export const WarningAndCritical: Story = {{
       <{component_name}
         trigger={{<Button variant="secondary">Open Warning Dialog</Button>}}
         dialogTitle="Warning"
-        dialogType="Warning"
-        dialogSize="lg"
-        dialogClosable
+        dialogType="Warning"        dialogClosable
         openDidalog={{false}}
         description="Warning modal content."
         primaryButtonName="Continue"
@@ -77,9 +73,7 @@ export const WarningAndCritical: Story = {{
       <{component_name}
         trigger={{<Button variant="secondary">Open Critical Dialog</Button>}}
         dialogTitle="Critical"
-        dialogType="Critical"
-        dialogSize="lg"
-        dialogClosable
+        dialogType="Critical"        dialogClosable
         openDidalog={{false}}
         description="Critical modal content."
         primaryButtonName="Continue"
@@ -91,53 +85,72 @@ export const WarningAndCritical: Story = {{
   ),
 }};
 
-export const SingleAndMultiPageUsage: Story = {{
+export const SinglePage: Story = {{
   render: () => (
-    <div style={{{{ display: "grid", gap: 16 }}}}>
-      <{component_name}
-        trigger={{<Button variant="secondary">Open Single-Page Modal</Button>}}
-        dialogTitle="Header"
-        dialogType="Non-Alerting"
-        dialogSize="xl"
-        dialogClosable
-        openDidalog={{false}}
-        description="Single-page modal usage."
-        primaryButtonName="Apply"
-        enableActionButton
-        tertiaryButtonName="Cancel"
-        enableTertiaryButtton
-      >
-        <div style={{{{ minHeight: 120, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter)", padding: 16 }}}}>
-          single page modal swap content
-        </div>
-      </{component_name}>
-      <{component_name}
-        trigger={{<Button variant="secondary">Open Multi-Page Modal</Button>}}
-        dialogTitle="Header"
-        dialogType="Non-Alerting"
-        dialogSize="xl"
-        dialogClosable
-        openDidalog={{false}}
-        description="multi page modal usage with tabs/pages"
-        primaryButtonName="Apply"
-        enableActionButton
-        tertiaryButtonName="Cancel"
-        enableTertiaryButtton
-      >
-        <Tabs
-          variant="secondary"
-          items={{[
-            {{ id: "summary", label: "Summary", panel: <div style={{{{ padding: 8 }}}}>Summary content</div> }},
-            {{ id: "details", label: "Details", panel: <div style={{{{ padding: 8 }}}}>Details content</div> }},
-            {{ id: "activity", label: "Activity", panel: <div style={{{{ padding: 8 }}}}>Activity content</div> }},
-          ]}}
-          showAddTab={{false}}
-          minTabWidth={{80}}
-          maxTabWidth={{220}}
-          moreLabel="More"
-        />
-      </{component_name}>
-    </div>
+    <{component_name}
+      trigger={{<Button variant="secondary">Open Single-Page Modal</Button>}}
+      dialogTitle="Header"
+      dialogType="Non-Alerting"
+      scenario="single-page"
+      dialogSize="x-small"
+      dialogClosable
+      openDidalog={{false}}
+      description="Single-page modal usage."
+      primaryButtonName="Apply"
+      enableActionButton
+      tertiaryButtonName="Cancel"
+      enableTertiaryButtton
+    >
+      <div style={{{{ minHeight: 120, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter)", padding: 16, color: "var(--color-text-neutral)" }}}}>
+        Swap content area — page-specific content renders here.
+      </div>
+    </{component_name}>
+  ),
+}};
+
+type MultiPageArgs = {{ tabVariant: "primary" | "secondary" }};
+
+const multiPageTabs = (tabVariant: "primary" | "secondary") => (
+  <Tabs
+    variant={{tabVariant}}
+    surface="transparent"
+    items={{[
+      {{ id: "summary", label: "Summary", panel: null }},
+      {{ id: "details", label: "Details", panel: null }},
+      {{ id: "activity", label: "Activity", panel: null }},
+    ]}}
+    showAddTab={{false}}
+    minTabWidth={{80}}
+    maxTabWidth={{220}}
+    moreLabel="More"
+  />
+);
+
+export const MultiPage: StoryObj<MultiPageArgs> = {{
+  argTypes: {{
+    tabVariant: {{ control: "radio", options: ["primary", "secondary"], name: "Tab Variant" }},
+  }},
+  args: {{ tabVariant: "secondary" }},
+  render: ({{ tabVariant }}) => (
+    <{component_name}
+      trigger={{<Button variant="secondary">Open Multi-Page Modal</Button>}}
+      dialogTitle="Header"
+      dialogType="Non-Alerting"
+      scenario="multi-page"
+      dialogSize="x-small"
+      dialogClosable
+      openDidalog={{false}}
+      description="multi page modal usage with tabs/pages"
+      primaryButtonName="Apply"
+      enableActionButton
+      tertiaryButtonName="Cancel"
+      enableTertiaryButtton
+      tabs={{{{multiPageTabs(tabVariant)}}}}
+    >
+      <div style={{{{ minHeight: 120, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter)", padding: 16, color: "var(--color-text-neutral)" }}}}>
+        Swap content area — page-specific content renders here.
+      </div>
+    </{component_name}>
   ),
 }};
 """
