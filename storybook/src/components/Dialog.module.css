@@ -30,13 +30,15 @@
   z-index: 1050;
   display: flex;
   flex-direction: column;
+  width: 640px;
   max-height: 85vh;
   outline: none;
 }
 
-.sm { width: 480px; }
-.lg { width: 640px; }
-.xl { width: 800px; }
+.x-small { width: 640px;  min-height: 328px; }
+.small   { width: 960px;  min-height: 497px; }
+.medium  { width: 1280px; min-height: 667px; }
+.large   { width: 1600px; min-height: 826px; }
 
 .headerLeft {
   display: flex;
@@ -123,6 +125,21 @@
   padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24) var(--padding-padding-24);
 }
 
+.descriptionModalPage {
+  padding-top: var(--padding-padding-8);
+  padding-bottom: var(--padding-padding-8);
+}
+
+.tabStrip {
+  padding: var(--padding-padding-8) var(--padding-padding-24, 24px);
+  flex-shrink: 0;
+}
+
+/* Show tab-row only; the Tabs panel is suppressed since swap content lives in the modal body. */
+.tabStrip [role="tabpanel"] {
+  display: none;
+}
+
 .descriptionWarning,
 .descriptionMajor,
 .descriptionCritical,
@@ -132,13 +149,17 @@
 
 .body {
   position: relative;
-  padding: 0 var(--padding-padding-24) var(--padding-padding-24);
   flex: 1 1 auto;
   min-height: 0;
+  padding: 0 var(--padding-padding-24) var(--padding-padding-24);
   overflow-y: auto;
   font-size: var(--font-size-body-2);
   color: var(--color-text-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
+}
+
+.bodyModalPage {
+  padding-top: var(--padding-padding-16);
 }
 
 .bodyWarning,
@@ -169,6 +190,10 @@
   align-items: center;
   gap: var(--padding-padding-12);
   flex-shrink: 0;
+}
+
+.footerModalPage {
+  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
 }
 
 /* ----- About pattern (Synapse) — shell inside Dialog ----- */

@@ -30,7 +30,7 @@
 - **surface:** bordered container with elevation and fixed width behavior.
 - **header:** title region, optional controls (`full-screen`, close).
 - **description:** optional intro/supporting text below header.
-- **tabs (multi-page):** top tab strip for intra-modal page navigation.
+- **tabs (multi-page):** top tab strip for intra-modal page navigation. Tabs must use `surface="transparent"` to remove the default surface-2 fill (modal shell provides the background).
 - **content:** swappable page/content body (`.Modal-Element-Content` or local content component).
 - **footer:** right-aligned action group.
 - **footerCheckbox (optional):** "Don’t show again until the next update" option.
@@ -75,9 +75,11 @@ IdsModal [scenario=single-page, open, size=medium (runtime width host-driven)]
 - **Header insets:** `24px` horizontal, `20px` top, `4px` bottom.
 - **Description block (Non-Alerting / Informational):** `16px` top, `24px` right/bottom/left.
 - **Description block (Warning / Major / Critical / Destructive):** `8px` top/bottom, `24px` left/right.
+- **Description block (single-page / multi-page override):** `8px` top, `8px` bottom, `24px` left/right (overrides type-specific padding for modal-page usage).
 - **Content block:** `24px` horizontal, `16px` top, `24px` bottom.
 - **Content block (Warning / Major / Critical / Destructive):** `24px` horizontal, `16px` top, `0` bottom.
 - **Footer insets:** `24px` all sides.
+- **Footer border (single-page / multi-page only):** `border-top: var(--border-width-border-1) solid var(--color-border-accessible)`. Dialog usage has no footer border-top.
 - **Action gap:** `12px` between footer buttons.
 - **Header control icon size:** `16x16` (`Modal / ctrl-close-16`, optional full-screen icon).
 - **Close icon size:** `16x16`.
@@ -237,7 +239,12 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - [ ] Light and dark theme snapshots preserve tokenized contrast.
 ## Implementation Notes
 
-### Design spec errors fixed (2026-07-01)
+### Design spec errors fixed for single-page / multi-page modal (2026-07-16)
+- **Footer border for modal-page missing** — Single-page and multi-page usages add `border-top: var(--border-width-border-1) solid var(--color-border-accessible)` on the footer. Dialog usage does not. Was missing from spec. Added to Layout & Measurements.
+- **Description modal-page padding missing** — Single-page and multi-page override description padding to `8px top / 8px bottom` (vs the type-specific defaults). Was missing from spec. Added to Layout & Measurements.
+- **Tab strip surface requirement missing** — Tabs in multi-page usage must use `surface="transparent"` to prevent the default `--color-background-surface-2` fill from showing. Was missing from spec. Added to Anatomy.
+
+### Design spec errors fixed for dialog (2026-07-01)
 - **Shadow specification incorrect** — Original spec: "layered drop shadow (2/4/8/16 depth stack)" without explicit values. Fix: Updated to explicit 4-layer shadow specification: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
 - **Destructive flow specification incomplete** — Original spec: "includes confirm text input region before destructive action" without layout details. Fix: Added confirm input layout specifications: 16px gap between label text and input field; input width 300px; input border-radius 0.
 - **Description block padding incomplete** — Original spec: "24px horizontal, 8px vertical" for all types. Fix: Added type-specific padding: Non-Alerting/Informational (16px top, 24px right/bottom/left), Warning/Major/Critical/Destructive (8px top/bottom, 24px left/right).
