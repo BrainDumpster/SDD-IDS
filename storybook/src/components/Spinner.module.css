@@ -19,7 +19,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background: var(--color-background-surface-2, #ffffff);
+  background: var(--color-background-surface-2);
 }
 
 .spinner::before {
@@ -65,10 +65,15 @@
 .labelInline,
 .labelBelow {
   font-family: var(--font-family-body, Roboto, Arial, sans-serif);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
   color: var(--color-text-neutral-strong);
+}
+
+.onBrandBackgroundOverride .labelInline,
+.onBrandBackgroundOverride .labelBelow {
+  color: var(--color-text-white);
 }
 
 .labelBelow {
