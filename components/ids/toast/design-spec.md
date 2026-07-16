@@ -16,13 +16,13 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: 24px`, `padding-block: 14px`.
 - Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
-- Root surface: `background: var(--color-static-gray-900)`, `border: 1px solid var(--color-border-white)`, `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
+- Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
   - `ContentGroup` (status icon + message)
   - `ActionGroup` (optional link + close)
 - Content row: horizontal layout with icon/message gap exactly `8px`.
 - Action row: horizontal layout with link/close gap exactly `24px` when link exists.
-- Vertical alignment: status icon and message must be center-aligned on the same row centerline (`align-items: center` in content group).
+- Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
 - Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
 - Close icon slot: `12x12` using `shape-x`.
 ## Tokens
