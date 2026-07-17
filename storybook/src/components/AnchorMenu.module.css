@@ -28,8 +28,8 @@
 }
 
 .link {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: fit-content;
   padding: var(--padding-padding-8) var(--padding-padding-24);
   font-size: var(--font-size-body-1);
   color: var(--color-text-neutral);
@@ -56,14 +56,21 @@
 }
 
 .link:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
-  border-radius: var(--corner-radius-radius-2);
+  outline: none;
+}
+
+.link:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px -6px;
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-6);
+  pointer-events: none;
 }
 
 .active {
   color: var(--color-text-brand-strong);
-  border-left-color: var(--color-border-accessible);
+  border-left-color: var(--color-border-brand-base);
   font-weight: 400;
 }
 
