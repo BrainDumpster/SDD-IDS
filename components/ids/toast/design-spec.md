@@ -14,14 +14,14 @@
 Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
 
 ## Layout & Measurements
-- Item container: `height: 48px`, `padding-inline: left 24px, right 18px`, `padding-block: 14px`.
+- Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
 - Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
 - Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
   - `ContentGroup` (status icon + message)
   - `ActionGroup` (optional link + close)
 - Content row: horizontal layout with icon/message gap exactly `8px`.
-- Action row: horizontal layout with link/close gap exactly `24px` when link exists.
+- Action row: horizontal layout with link/close gap exactly `16px` when link exists.
 - Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
 - Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
 - Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
