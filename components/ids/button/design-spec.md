@@ -36,6 +36,7 @@ Deterministic order:
   - `medium`: height `32px`, vertical padding `8px`
   - `large`: height `40px`, vertical padding `12px`
 - Icon glyph size: `16px x 16px`.
+- Control border (`1px`) is an **inside stroke** and must NOT add to the control's height/width. The size signatures above are total box dimensions, stroke included. Do not use CSS `border` when `box-sizing: border-box` is active globally — render the stroke via `box-shadow: inset` (or `outline`) so heights stay exact.
 - Focus ring geometry (focus-visible):
   - outer ring stroke: `var(--border-width-border-1)`
   - ring offset from control edge: `var(--button-focus-ring-offset)`
@@ -269,3 +270,7 @@ Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
 **Icon rendering**
 - **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.
+
+**Control border (added 2026-07-17)**
+- The `1px` control border is an **inside stroke** — render it with `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>` (or `outline`), never CSS `border`. Under the global `box-sizing: border-box`, a real `border` adds `+2px` to every size.
+- On focus, `tertiary` keeps its control border **by state** (transparent in the default state) — only the outer ring is blue. Do not force a brand-base inner border on `tertiary` focus (secondary's base already has one; tertiary's does not).
