@@ -14,7 +14,7 @@
 Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
 
 ## Layout & Measurements
-- Item container: `height: 48px`, `padding-inline: 24px`, `padding-block: 14px`.
+- Item container: `height: 48px`, `padding-inline: left 24px, right 18px`, `padding-block: 14px`.
 - Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
 - Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
@@ -24,7 +24,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Action row: horizontal layout with link/close gap exactly `24px` when link exists.
 - Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
 - Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
-- Close icon slot: `12x12` using `shape-x`.
+- Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
 ## Tokens
 
 ### Layout aliases (theme-resolvable)
@@ -39,7 +39,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Border: `var(--color-border-white)`
 - Message text: `var(--color-static-gray-white)`
 - Link text: `var(--color-text-white)`
-- Close icon: `var(--color-icon-white)`
+- Close button icon: `var(--color-icon-brand-base)` (IDS Button tertiary icon-only default)
 
 ### Status tokens and icon mapping
 | Type | Icon (`shapeName`) | Icon color token | Border token | Text token |
@@ -52,8 +52,8 @@ Programmes override these **same alias names** in programme theme CSS. Component
 ## States (Light Theme)
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close `var(--color-icon-white)` |
-| Hover close | No root color change required | No change | Close affordance can use subtle focus-visible only (no color drift from tokens) |
+| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close button icon `var(--color-icon-brand-base)` |
+| Hover close | Follows IDS Button tertiary hover tokens | No change | Icon follows IDS Button tertiary icon token |
 | Focus-visible action | No root color change | No change | Focus ring uses brand token from root-spec rules |
 ## States (Dark Theme)
 Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.
@@ -142,11 +142,11 @@ Resolution rules:
 - [ ] Queue behavior is implemented at viewport level, not single item level.
 - [ ] `position` API supports all six values with default `top-right`.
 - [ ] Link routing contract supports `routerLink`, `href`, and event mode.
-- [ ] Close icon is `shape-x` at `12x12`.
+- [ ] Close action is an IDS tertiary icon-only button, fixed `24x24` with `Padding/padding-6`, using `shape-x`; icon fills the content area.
 - [ ] Layout uses `var(--toast-control-radius)` on toast root, not hardcoded px.
 - [ ] No hardcoded style values in generated code where token exists.
 ## Implementation Notes
-- **Close icon fix (2025-05-25)**: Changed close icon from `variant="img"` to `variant="mask"` to enable CSS color styling via `var(--color-icon-white)`. Removed hardcoded 16px width/height from Icon component's img variant to allow CSS class styles to control size (12px as per spec).
+- **Close button fix**: Replaced the bare close icon with the IDS `Button` component in `tertiary`/`iconOnly` mode, using `shape-x` rendered as a mask and sized to the fixed 24x24 Button token with `Padding/padding-6` on all sides.
 - **Status icon border fix (2025-05-25)**: Added 1px solid #FFFFFF border to all status icons (info-circ-solid, status-critical-square-solid, status-error-diamond-solid, status-warn-tri-solid, status-ok-circ-solid) in the base layer as specified in design spec.
 - **Toast border inside container fix (2025-05-25)**: Changed toast root border from outer border to inner border using CSS pseudo-element (::before) to ensure border is inside the container width, not outside.
 

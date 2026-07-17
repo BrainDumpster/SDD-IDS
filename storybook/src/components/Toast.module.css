@@ -61,7 +61,7 @@
   box-sizing: border-box;
   width: 100%;
   min-height: 48px;
-  padding: var(--padding-padding-14) var(--padding-padding-24);
+  padding: var(--padding-padding-14) var(--padding-padding-18) var(--padding-padding-14) var(--padding-padding-24);
   box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-white);
   background: var(--color-static-gray-900);
   border-radius: var(--toast-control-radius);
@@ -171,35 +171,22 @@
   outline-offset: 2px;
 }
 
-.close {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--scale-12);
-  height: var(--scale-12);
-  border: none;
-  background: transparent;
-  color: var(--color-icon-white);
-  cursor: pointer;
-  border-radius: var(--corner-radius-radius-2);
-  padding: 0;
-  transition: background 100ms ease;
-}
-.close:focus-visible {
-  outline: var(--border-width-border-thick) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.closeButton.closeButton.closeButton {
+  width: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
+  height: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
+  min-height: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
+  padding: var(--padding-padding-6);
+  box-sizing: border-box;
+  color: var(--color-icon-brand-base);
 }
 
-.closeIcon {
-  width: var(--scale-12);
-  height: var(--scale-12);
-  display: inline-block;
-  object-fit: contain;
+.closeButton.closeButton > span {
+  width: 100%;
+  height: 100%;
 }
 
 .closePlaceholder {
-  width: var(--scale-12);
-  height: var(--scale-12);
+  width: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
+  height: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
   flex-shrink: 0;
 }
