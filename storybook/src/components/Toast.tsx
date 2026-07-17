@@ -1,6 +1,7 @@
 import { Toast as BaseToast } from "@base-ui-components/react/toast";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import { Button } from "./Button";
 import styles from "./Toast.module.css";
 
 export type ToastVariant =
@@ -89,9 +90,16 @@ function ToastViewport({ position }: { position: ToastPosition }) {
                 </BaseToast.Action>
               ) : null}
               {closable ? (
-                <BaseToast.Close className={styles.close} aria-label="Close">
-                  <CloseIcon />
-                </BaseToast.Close>
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  iconOnly
+                  icon={<Icon shapeName="shape-x" variant="mask" style={{ width: "100%", height: "100%" }} />}
+                  aria-label="Close"
+                  type="button"
+                  className={styles.closeButton}
+                  onClick={() => toastManager.close(toast.id)}
+                />
               ) : (
                 <span className={styles.closePlaceholder} aria-hidden="true" />
               )}
@@ -115,7 +123,4 @@ function VariantIcon({ variant }: { variant: ToastVariant }) {
   return <Icon shapeName={iconByVariant[variant]} variant="img" className={styles.variantIcon} />;
 }
 
-function CloseIcon() {
-  return <Icon shapeName="shape-x" variant="img" className={styles.closeIcon} />;
-}
 
