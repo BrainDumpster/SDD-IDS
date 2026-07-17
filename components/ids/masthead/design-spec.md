@@ -28,7 +28,7 @@
 - Border radius: 0 (full-width masthead)
 - Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
 - Action icon button: 16px × 16px icon, padding 19px 16px
-- Avatar chip: 32px × 32px circle (`var(--scale-32)`), button padding `var(--padding-padding-12)` vertical / `var(--padding-padding-8)` horizontal
+- Avatar chip: 32px × 32px circle (`var(--scale-32)`), button padding `11px` vertical / `var(--padding-padding-8)` horizontal
 - Avatar icon (icon variant): `user-single` slug, rendered at **16×16px** inside the 32×32 chip; color **`var(--color-icon-white)`** (#ffffff)
 - Minimum width: Full viewport width
 - Badge dimensions: `height: 18px`, `min-width: 18px`, `border-radius: 100px`

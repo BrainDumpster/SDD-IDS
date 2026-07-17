@@ -29,8 +29,27 @@ const productLogo = (
   />
 );
 
-const defaultHelpSlot = (
+const searchIcon = <Icon shapeName="search-16" style={icon16} />;
+const alertsIcon = <Icon shapeName="alert-bell-16" style={icon16} />;
+const jobsIcon = <Icon shapeName="jobs-queue-stack" style={icon16} />;
+const settingsIcon = <Icon shapeName="setting-gear-16" style={icon16} />;
+
+const defaultActionsSlot = (
   <IdsMastheadActionButtonContainer>
+    <IdsMastheadActionIconButton aria-label="Global search" icon={searchIcon} />
+    <IdsMastheadActionIconButton
+      aria-label="Alerts"
+      icon={alertsIcon}
+      badgeCount={3}
+      badgeType="critical"
+    />
+    <IdsMastheadActionIconButton
+      aria-label="Jobs"
+      icon={jobsIcon}
+      badgeCount={7}
+      badgeType="success"
+    />
+    <IdsMastheadActionIconButton aria-label="System settings" icon={settingsIcon} />
     <IdsMastheadActionIconButton aria-label="Help" icon={helpIcon} />
   </IdsMastheadActionButtonContainer>
 );
@@ -59,15 +78,7 @@ type Story = StoryObj<typeof IdsMasthead>;
 export const Default: Story = {
   args: {
     productName: "Synapse",
-    iconsSlot: defaultHelpSlot,
-    avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
-  },
-};
-
-export const WithAppLauncherExample: Story = {
-  args: {
-    productName: "Synapse",
-    iconsSlot: defaultHelpSlot,
+    iconsSlot: defaultActionsSlot,
     appLauncherSlot: defaultAppLauncher,
     avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
   },
@@ -78,7 +89,7 @@ export const WithProductLogo: Story = {
   args: {
     logo: productLogo,
     productName: "Product Name",
-    iconsSlot: defaultHelpSlot,
+    iconsSlot: defaultActionsSlot,
     appLauncherSlot: defaultAppLauncher,
     avatarSlot: <IdsMastheadAvatar initials="DT" aria-label="User settings" />,
   },
@@ -88,7 +99,7 @@ export const WithProductLogo: Story = {
 export const UserIconAvatar: Story = {
   args: {
     productName: "Synapse",
-    iconsSlot: defaultHelpSlot,
+    iconsSlot: defaultActionsSlot,
     appLauncherSlot: defaultAppLauncher,
     avatarSlot: <IdsMastheadAvatar icon={userIcon} aria-label="User settings" />,
   },
