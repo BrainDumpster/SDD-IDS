@@ -18,12 +18,12 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
 - Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
-  - `ContentGroup` (status icon + message)
+  - `ContentGroup` (status icon + message) with `padding-top: var(--padding-padding-2)`
   - `ActionGroup` (optional link + close)
 - Content row: horizontal layout with icon/message gap exactly `8px`.
 - Action row: horizontal layout with link/close gap exactly `16px` when link exists.
 - Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
-- Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
+- Status icon slot: fixed `16x16` container with `padding-block: var(--padding-padding-2)` and `16x16` rendered icon (no scaling above slot size).
 - Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
 ## Tokens
 
@@ -39,7 +39,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Border: `var(--color-border-white)`
 - Message text: `var(--color-static-gray-white)`
 - Link text: `var(--color-text-white)`
-- Close button icon: `var(--color-icon-brand-base)` (IDS Button tertiary icon-only default)
+- Close button icon: `var(--color-icon-white)` (default state)
 
 ### Status tokens and icon mapping
 | Type | Icon (`shapeName`) | Icon color token | Border token | Text token |
@@ -52,8 +52,9 @@ Programmes override these **same alias names** in programme theme CSS. Component
 ## States (Light Theme)
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close button icon `var(--color-icon-brand-base)` |
-| Hover close | Follows IDS Button tertiary hover tokens | No change | Icon follows IDS Button tertiary icon token |
+| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close button icon `var(--color-icon-white)` |
+| Hover close | `var(--ui-palette-brand-900)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-white)` |
+| Active close | `var(--ui-palette-brand-800)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-white)` |
 | Focus-visible action | No root color change | No change | Focus ring uses brand token from root-spec rules |
 ## States (Dark Theme)
 Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.

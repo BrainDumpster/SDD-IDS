@@ -109,6 +109,7 @@
   gap: var(--spacing-space-8);
   flex: 1 1 auto;
   min-width: 0;
+  padding-top: var(--padding-padding-2);
 }
 
 .iconWrap {
@@ -172,12 +173,24 @@
 }
 
 .closeButton.closeButton.closeButton {
-  width: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
-  height: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
-  min-height: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
+  min-height: var(--sizing-size-24);
   padding: var(--padding-padding-6);
   box-sizing: border-box;
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-white);
+  background: transparent;
+  border: none;
+}
+.closeButton.closeButton.closeButton:hover:not(:disabled) {
+  background: var(--ui-palette-brand-900);
+  color: var(--color-icon-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+.closeButton.closeButton.closeButton:active:not(:disabled) {
+  background: var(--ui-palette-brand-800);
+  color: var(--color-icon-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
 }
 
 .closeButton.closeButton > span {
@@ -186,7 +199,7 @@
 }
 
 .closePlaceholder {
-  width: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
-  height: calc(var(--scale-24) + (2 * var(--border-width-border-1)));
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
   flex-shrink: 0;
 }
