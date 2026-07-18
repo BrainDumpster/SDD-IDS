@@ -24,6 +24,7 @@ from generation.deterministic_storybook.ids.modal import generate_ids_modal_stor
 from generation.deterministic_storybook.ids.pagination import generate_ids_pagination_story
 from generation.deterministic_storybook.ids.progress_bar import generate_ids_progress_bar_story
 from generation.deterministic_storybook.ids.radio_button import generate_ids_radio_button_story
+from generation.deterministic_storybook.ids.scroll_bar import generate_ids_scroll_bar_story
 from generation.deterministic_storybook.ids.segmented_button import generate_ids_segmented_button_story
 from generation.deterministic_storybook.ids.slider import generate_ids_slider_story
 from generation.deterministic_storybook.ids.spinner import generate_ids_spinner_story
@@ -65,6 +66,7 @@ __all__ = [
     "generate_ids_pagination_story",
     "generate_ids_progress_bar_story",
     "generate_ids_radio_button_story",
+    "generate_ids_scroll_bar_story",
     "generate_ids_segmented_button_story",
     "generate_ids_slider_story",
     "generate_ids_spinner_story",
