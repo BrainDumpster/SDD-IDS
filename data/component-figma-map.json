@@ -504,8 +504,24 @@
   {
     "category": "Patterns and Templates",
     "component": "Whats New",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=27437-44064&m=dev",
-    "nodeId": "27437-44064"
+    "designSpecPath": "components/ids/whats-new/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=27437-44073&m=dev",
+    "nodeId": "27437-44073",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=27437-44073&m=dev",
+    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryNodeId": "27437-44073",
+    "elementNodes": {
+      "newest": "27437-44094",
+      "bookmarked": "27437-44074",
+      "previewMultiple": "27437-44134",
+      "previewSingle": "27437-44151",
+      "sectionHeader": "27437-44183",
+      "listItem": "27437-44195",
+      "thumbnail": "27437-44227",
+      "imageSwap": "27437-44209",
+      "footer": "27437-44088"
+    }
   },
   {
     "category": "Form Elements",
