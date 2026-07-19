@@ -100,7 +100,9 @@ export const Inventory: Story = {
 export const ItemStates: Story = {
   args: {
     type: "status-large",
-    total: 90,
+    // No total => no overflow controls; this story only showcases the item states,
+    // and every item sets an explicit `state`, so items are non-interactive here.
+    total: undefined,
     items: [
       { id: "default", value: 10, category: "<Category>", label: "Critical", severity: "critical", state: "default" },
       { id: "hover", value: 10, category: "<Category>", label: "Warning", severity: "warning", state: "hover" },
@@ -110,7 +112,9 @@ export const ItemStates: Story = {
     ],
   },
   render: (args) => (
-    <div style={{ maxWidth: 900 }}>
+    // Size to content so all five states are visible; if the canvas is narrower the
+    // page scrolls (visible affordance) instead of silently clipping states.
+    <div style={{ width: "max-content" }}>
       <IdsStatusBar {...args} />
     </div>
   ),

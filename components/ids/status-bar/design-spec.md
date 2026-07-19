@@ -31,8 +31,10 @@
 11. optional `StatusBarOverflowRight`
 
 Inventory-only nested anatomy:
-- `InventoryMainIcon` (default icon `docs-bundle`)
-- optional `InventoryStatusBadge` (severity icon overlay)
+- `InventoryIconTile` — `40x40` circular tile (ellipse): `var(--color-background-component-light)` fill, `1px` `var(--color-border-accessible)` border
+- `InventoryMainIcon` — `16x16` `docs-bundle` (default) centered in the tile, tinted `var(--color-icon-accessible)`
+- optional `InventoryStatusBadge` (severity icon overlay, `16x16`, top-right, offset ~`-4px/-5px`)
+- inventory badge statuses limited to `critical | warning | in-progress` (Default/Complete/Not Applicable = no badge)
 ## Layout & Measurements
 - Primary variants:
   - `Status Bar - Large`: total bar height `77px`
@@ -40,7 +42,7 @@ Inventory-only nested anatomy:
   - `Inventory Bar`: total bar height `78px`
 - Item paddings:
   - large status item: `16px 24px`
-  - small status item: `12.5px 24px` (right padding may appear as 32px in specific element snapshots; runtime contract keeps 24px base spacing)
+  - small status item: `12.5px 32px 12.5px 24px` (asymmetric per Figma: 24px leading, 32px trailing)
   - inventory item: `13px 24px`
 - Gaps:
   - icon-to-value gap: `8px`
@@ -65,7 +67,7 @@ Inventory-only nested anatomy:
   - must be above status items (`positioned layer over content`)
   - layer frame follows content bounds using `inset: -1px` in implementation.
   - gradient mask from `var(--color-gradient-overflow-horizontal-inverse-start)` to `var(--color-gradient-overflow-horizontal-inverse-end)`
-  - left arrow icon: `check-left-thick`
+  - left arrow icon: `chev-left-thick`
   - right arrow icon: `chev-right-thick`
   - overflow scenarios:
     - `Beginning`: show right arrow only
@@ -106,20 +108,23 @@ MCP variable evidence confirms:
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter)` | same divider | text preserved |
-| item | press | `var(--color-background-brand-light)` | same divider | text preserved |
-| item | selected | `var(--color-background-brand-light)` | same divider | text preserved |
-| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)`, icons use accessible/disabled tone |
+| item | default | `var(--color-background-component)` | dividers only | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter)` | `1px` `var(--color-border-brand-neutral)` cell border | label `var(--color-text-brand-base)` |
+| item | press | `var(--color-background-brand-light)` | `1px` `var(--color-border-brand-neutral)` cell border | label `var(--color-text-brand-base)` |
+| item | selected | `var(--color-background-brand-lighter)` | `1px` `var(--color-border-brand-neutral)` cell border | label `var(--color-text-neutral-strong)`; top-right corner ribbon (`var(--color-background-brand-base)` triangle + `shape-check-thick` in `var(--color-icon-inverse)`) |
+| item | disabled | `var(--color-background-component)` | dividers only | `var(--color-text-disabled)`, icons `var(--color-icon-disabled)` |
+| inventory tile | default / disabled | `var(--color-background-component-light)` | `1px` `var(--color-border-accessible)` | docs-bundle `var(--color-icon-accessible)` |
+| inventory tile | hover / press / selected | `var(--color-background-component-light)` | `1px` `var(--color-border-brand-neutral)` | docs-bundle `var(--color-icon-brand-base)` |
 | overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter)` | same divider | semantic token resolution |
-| item | press | `var(--color-background-brand-light)` | same divider | semantic token resolution |
-| item | selected | `var(--color-background-brand-light)` | same divider | semantic token resolution |
-| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)` and accessible icons |
+| item | default | `var(--color-background-component)` | dividers only | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter)` | `1px` `var(--color-border-brand-neutral)` cell border | label `var(--color-text-brand-base)` (semantic resolution) |
+| item | press | `var(--color-background-brand-light)` | `1px` `var(--color-border-brand-neutral)` cell border | semantic token resolution |
+| item | selected | `var(--color-background-brand-lighter)` | `1px` `var(--color-border-brand-neutral)` cell border | label `var(--color-text-neutral-strong)`; corner ribbon (`var(--color-background-brand-base)` + `var(--color-icon-inverse)` check) |
+| item | disabled | `var(--color-background-component)` | dividers only | `var(--color-text-disabled)`, icons `var(--color-icon-disabled)` |
+| inventory tile | idle vs active | `var(--color-background-component-light)` | `var(--color-border-accessible)` → `var(--color-border-brand-neutral)` | docs-bundle `var(--color-icon-accessible)` → `var(--color-icon-brand-base)` |
 | overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
 ## Interactions
 - Item interactions support `default | hover | press | selected | disabled`.
@@ -164,7 +169,7 @@ Variant matrix:
   - in-progress -> `state-progress-circle`
   - scheduled -> `state-standby-clock-solid`
   - inventory default -> `docs-bundle` (override allowed)
-  - overflow left -> `check-left-thick`
+  - overflow left -> `chev-left-thick`
   - overflow right -> `chev-right-thick`
 - Per-slot style contract:
   - all colors/spacing/typography must resolve via semantic tokens.

@@ -22,6 +22,20 @@ export type IdsStatusBarSeverity =
   | "skipped"
   | "unknown";
 
+/**
+ * Inventory items only render a severity badge for these statuses in Figma
+ * (Default/Complete/Not Applicable = no badge). Status-bar items still use the
+ * full `IdsStatusBarSeverity` set; other severities on an inventory item are
+ * ignored (no badge rendered).
+ */
+export type IdsInventoryStatus = Extract<IdsStatusBarSeverity, "critical" | "warning" | "in-progress">;
+
+export const INVENTORY_BADGE_SEVERITIES: readonly IdsStatusBarSeverity[] = [
+  "critical",
+  "warning",
+  "in-progress",
+];
+
 export interface IdsStatusBarItemContract {
   id: string;
   value: number | string;

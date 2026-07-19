@@ -1,24 +1,21 @@
-import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentProps,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsStatusBar.module.css";
-import type {
-  IdsStatusBarItemContract,
-  IdsStatusBarItemState,
-  IdsStatusBarSeverity,
-  IdsStatusBarType,
+import {
+  INVENTORY_BADGE_SEVERITIES,
+  type IdsStatusBarItemContract,
+  type IdsStatusBarItemState,
+  type IdsStatusBarSeverity,
+  type IdsStatusBarType,
 } from "../spec-contracts/ids-status-bar.contract";
-
-const severityIconBySlug: Record<IdsStatusBarSeverity, string> = {
-  critical: "status-critical-square-solid",
-  warning: "status-warn-tri-solid",
-  success: "status-ok-circ-solid",
-  "in-progress": "state-progress-circle",
-  scheduled: "state-standby-clock-solid",
-  canceling: "state-cancelled-solid",
-  canceled: "state-remove-solid",
-  skipped: "skip-to-end",
-  unknown: "status-unknown-diamond-solid",
-};
+import { STATUS_BAR_SEVERITY_SVG } from "./severityIcons";
 
 const severityLabelByDefault: Record<IdsStatusBarSeverity, string> = {
   critical: "Critical",
@@ -52,6 +49,40 @@ const sampleInventoryItems: IdsStatusBarItemContract[] = [
   },
 ];
 
+/**
+ * Renders a theme-adaptive severity glyph. Most severities are tokenized inline
+ * SVGs (see severityIcons.ts) so their fills follow the active theme.
+ * `skipped` is the exception: Figma composes it from a solid circle plus the
+ * skip arrows layered on top, so we rebuild that stack from two masked mono
+ * icons tinted via the Icon `color` prop.
+ */
+function SeverityGlyph({ severity }: { severity: IdsStatusBarSeverity }) {
+  if (severity === "skipped") {
+    return (
+      <span className={styles.skipComposite}>
+        <Icon
+          shapeName="shape-circ-solid"
+          color="var(--color-icon-neutral-light)"
+          style={{ width: "100%", height: "100%" }}
+        />
+        <Icon
+          shapeName="skip-to-end"
+          className={styles.skipGlyph}
+          color="var(--color-icon-inverse)"
+          style={{ width: "60%", height: "60%" }}
+        />
+      </span>
+    );
+  }
+  return (
+    <span
+      className={styles.severityGlyph}
+      aria-hidden="true"
+      dangerouslySetInnerHTML={{ __html: STATUS_BAR_SEVERITY_SVG[severity] }}
+    />
+  );
+}
+
 export interface IdsStatusBarProps extends ComponentProps<"section"> {
   type?: IdsStatusBarType;
   items?: IdsStatusBarItemContract[];
@@ -59,10 +90,10 @@ export interface IdsStatusBarProps extends ComponentProps<"section"> {
   totalLabel?: string;
   totalCategory?: string;
   overflowState?: "auto" | "beginning" | "middle" | "end";
-}
-
-function resolveItemState(state: IdsStatusBarItemState | undefined): IdsStatusBarItemState {
-  return state ?? "default";
+  /** Selected item id (controlled). Omit for uncontrolled internal selection. */
+  selectedId?: string | null;
+  /** Fired when selection changes (item id, or null when cleared). */
+  onItemSelect?: (id: string | null) => void;
 }
 
 export function IdsStatusBar({
@@ -72,12 +103,23 @@ export function IdsStatusBar({
   totalLabel = "Total",
   totalCategory,
   overflowState = "auto",
+  selectedId,
+  onItemSelect,
   className,
   ...rest
 }: IdsStatusBarProps) {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [internalSelected, setInternalSelected] = useState<string | null>(null);
+  const isSelectionControlled = selectedId !== undefined;
+  const currentSelected = isSelectionControlled ? selectedId : internalSelected;
+
+  const selectItem = (id: string) => {
+    const next = currentSelected === id ? null : id;
+    if (!isSelectionControlled) setInternalSelected(next);
+    onItemSelect?.(next);
+  };
   const hasTotal = total != null;
   const isInventory = type === "inventory";
   const isSmall = type === "status-small";
@@ -143,7 +185,7 @@ export function IdsStatusBar({
           <span className={[styles.divider, styles.leftDivider].join(" ")} aria-hidden="true" />
           <span className={styles.value}>{total}</span>
           <span className={styles.meta}>
-            {totalCategory ? <span className={styles.category}>{totalCategory}</span> : null}
+            {totalCategory && !isSmall ? <span className={styles.category}>{totalCategory}</span> : null}
             <span className={styles.label}>{totalLabel}</span>
           </span>
           <span className={[styles.divider, styles.rightDivider].join(" ")} aria-hidden="true" />
@@ -153,35 +195,92 @@ export function IdsStatusBar({
       <div className={styles.contentWrap}>
         <div className={styles.content} ref={contentRef}>
           {resolvedItems.map((item, index) => {
-            const state = resolveItemState(item.state);
             const severity = item.severity;
-            const iconShapeName =
-              isInventory ? (item.iconShapeName ?? "docs-bundle") : severity ? severityIconBySlug[severity] : "docs-bundle";
+            // An explicit `state` prop forces the state (showcase); otherwise the
+            // item is live: selectable by click, with real hover/press via CSS.
+            const forcedState = item.state;
+            const isSelected = forcedState == null && currentSelected === item.id;
+            const state: IdsStatusBarItemState = forcedState ?? (isSelected ? "selected" : "default");
+            const interactive = forcedState == null;
+            // Fallback icon rendered only when there is no severity glyph: the
+            // inventory main icon (user-defined, defaults to docs-bundle) or the
+            // status default when an item has no severity.
+            const iconShapeName = isInventory ? (item.iconShapeName ?? "docs-bundle") : "docs-bundle";
             const label = item.label || (severity ? severityLabelByDefault[severity] : "");
 
             return (
               <article
                 key={item.id}
-                className={[styles.item, styles[state], isInventory ? styles.inventoryItem : styles.statusItem]
+                className={[
+                  styles.item,
+                  styles[state],
+                  interactive ? styles.interactive : "",
+                  isInventory ? styles.inventoryItem : styles.statusItem,
+                ]
                   .filter(Boolean)
                   .join(" ")}
+                {...(interactive
+                  ? {
+                      role: "button",
+                      tabIndex: 0,
+                      "aria-pressed": isSelected,
+                      onClick: () => selectItem(item.id),
+                      onKeyDown: (event: ReactKeyboardEvent) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          selectItem(item.id);
+                        }
+                      },
+                    }
+                  : {})}
               >
                 {index === 0 ? <span className={[styles.divider, styles.leftDivider].join(" ")} aria-hidden="true" /> : null}
                 <span className={styles.iconStack}>
                   <span className={styles.mainIcon}>
-                    <Icon shapeName={isInventory ? item.iconShapeName ?? "docs-bundle" : iconShapeName} className={styles.icon} />
+                    {!isInventory && severity ? (
+                      <SeverityGlyph severity={severity} />
+                    ) : isInventory ? (
+                      // Inventory main icon: 16px docs-bundle centered in the tile. Its color
+                      // (and the tile border) follow the item state via CSS (grey → brand).
+                      <Icon shapeName={iconShapeName} className={styles.inventoryIcon} />
+                    ) : (
+                      <Icon shapeName={iconShapeName} className={styles.icon} />
+                    )}
                   </span>
-                  {isInventory && severity ? (
+                  {isInventory && severity && INVENTORY_BADGE_SEVERITIES.includes(severity) ? (
                     <span className={styles.badgeIcon}>
-                      <Icon shapeName={severityIconBySlug[severity]} className={styles.icon} />
+                      <SeverityGlyph severity={severity} />
                     </span>
                   ) : null}
                 </span>
-                <span className={styles.value}>{item.value}</span>
-                <span className={styles.meta}>
-                  {item.category ? <span className={styles.category}>{item.category}</span> : null}
-                  <span className={styles.label}>{label}</span>
-                </span>
+                {isInventory ? (
+                  // Inventory "Counter": value (count) stacked over the category label
+                  // (both smaller than status items) → drives the 78px hug height.
+                  <span className={styles.counter}>
+                    <span className={styles.value}>{item.value}</span>
+                    <span className={styles.label}>{item.category}</span>
+                  </span>
+                ) : (
+                  <>
+                    <span className={styles.value}>{item.value}</span>
+                    <span className={styles.meta}>
+                      {/* Small items show value + label only (no category) per Figma. */}
+                      {item.category && !isSmall ? (
+                        <span className={styles.category}>{item.category}</span>
+                      ) : null}
+                      <span className={styles.label}>{label}</span>
+                    </span>
+                  </>
+                )}
+                {state === "selected" ? (
+                  <span className={styles.selectedRibbon} aria-hidden="true">
+                    <Icon
+                      shapeName="shape-check-thick"
+                      className={styles.ribbonCheck}
+                      style={{ width: 12, height: 12 }}
+                    />
+                  </span>
+                ) : null}
                 <span className={[styles.divider, styles.rightDivider].join(" ")} aria-hidden="true" />
               </article>
             );
@@ -189,7 +288,7 @@ export function IdsStatusBar({
         </div>
 
         {hasTotal ? (
-          <div className={styles.overflowLayer} aria-hidden="true">
+          <div className={styles.overflowLayer}>
             {showLeft ? (
               <button
                 type="button"
