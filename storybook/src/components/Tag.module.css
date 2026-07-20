@@ -72,17 +72,20 @@
   color: var(--color-text-neutral) !important;
 }
 
-.tag[data-focus] {
+.tag[data-focus],
+.tag:focus-visible {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
 }
 
 /* IDS programme: 2px focus gap */
-.programmeIds[data-focus] {
+.programmeIds[data-focus],
+.programmeIds:focus-visible {
   outline-offset: 2px;
 }
 
 /* Synapse programme (`12715:251521`): 4px focus gap. */
-.programmeSynapse[data-focus] {
+.programmeSynapse[data-focus],
+.programmeSynapse:focus-visible {
   outline-offset: 4px;
 }
 
