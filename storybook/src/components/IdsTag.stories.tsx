@@ -47,6 +47,15 @@ export const ReadOnlyAndAlertingManual: Story = {
   ),
 };
 
+export const ReadOnlyLargeManual: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <Tag type="read-only" label="Tag" tone="non-alerting" size="lg" />
+      <Tag type="read-only" label="Tag" tone="non-alerting" size="lg" visualState="error" />
+    </div>
+  ),
+};
+
 export const ClickableStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

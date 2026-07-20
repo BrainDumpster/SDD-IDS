@@ -23,6 +23,11 @@
   height: 20px;
 }
 
+.readOnly.lg {
+  box-sizing: border-box;
+  height: 28px;
+}
+
 .lg {
   height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
@@ -61,8 +66,10 @@
   pointer-events: none;
 }
 
-.tag[data-error] {
-  border-color: var(--color-border-alerting-critical-base);
+.tag[data-error]:not(.clickable) {
+  background: var(--color-background-component) !important;
+  border-color: var(--color-border-alerting-critical-base) !important;
+  color: var(--color-text-neutral) !important;
 }
 
 .tag[data-focus] {

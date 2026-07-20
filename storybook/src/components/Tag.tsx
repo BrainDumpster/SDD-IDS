@@ -158,6 +158,7 @@ export function Tag({
           shapeName="arrow-drop-tri-caret"
           className={styles.menuCaret}
           color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+          style={{ width: 10, height: 10 }}
         />
       ) : null}
       {(closable || editable) && (
