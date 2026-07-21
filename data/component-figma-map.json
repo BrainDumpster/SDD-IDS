@@ -502,10 +502,33 @@
     "variationsNodeId": "43206-189639"
   },
   {
-    "category": "Patterns and Templates",
+    "category": "Patterns",
     "component": "Whats New",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=27437-44064&m=dev",
-    "nodeId": "27437-44064"
+    "designSpecPath": "components/ids/whats-new/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=27437-44073&m=dev",
+    "nodeId": "27437-44073",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentSetNodeId": "27437-44073",
+    "newestNodeId": "27437-44094",
+    "bookmarkedNodeId": "27437-44074",
+    "previewMultipleNodeId": "27437-44134",
+    "previewSingleNodeId": "27437-44151",
+    "elementContentMainNodeId": "27437-44190",
+    "elementContentPreviewNodeId": "27437-44198",
+    "elementThumbnailsStatesNodeId": "27437-44168",
+    "elementSectionHeaderNodeId": "27437-44182",
+    "elementFilterNodeId": "27437-44220",
+    "elementNodeIds": [
+      "27437-44190",
+      "27437-44198",
+      "27437-44174",
+      "27437-44169",
+      "27437-44182",
+      "27437-44220"
+    ],
+    "stateNodeIds": [
+      "27437-44168"
+    ]
   },
   {
     "category": "Form Elements",
