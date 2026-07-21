@@ -34,6 +34,7 @@ from generation.deterministic_storybook.ids.settings_menu_dap import generate_da
 from generation.deterministic_storybook.ids.side_panel_dap import generate_dap_side_panel_story
 from generation.deterministic_storybook.ids.progress_bar import generate_ids_progress_bar_story
 from generation.deterministic_storybook.ids.radio_button import generate_ids_radio_button_story
+from generation.deterministic_storybook.ids.scroll_bar import generate_ids_scroll_bar_story
 from generation.deterministic_storybook.ids.segmented_button import generate_ids_segmented_button_story
 from generation.deterministic_storybook.ids.slider import generate_ids_slider_story
 from generation.deterministic_storybook.ids.spinner import generate_ids_spinner_story
@@ -84,6 +85,8 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "progressbar"): generate_ids_progress_bar_story,
     ("ids", "radio-button"): generate_ids_radio_button_story,
     ("ids", "radiobutton"): generate_ids_radio_button_story,
+    ("ids", "scroll-bar"): generate_ids_scroll_bar_story,
+    ("ids", "scrollbar"): generate_ids_scroll_bar_story,
     ("ids", "segmented-button"): generate_ids_segmented_button_story,
     ("ids", "slider"): generate_ids_slider_story,
     ("ids", "spinner"): generate_ids_spinner_story,

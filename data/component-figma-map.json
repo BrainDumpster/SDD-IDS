@@ -653,10 +653,41 @@
   },
   {
     "category": "Patterns and Templates",
+    "component": "Dashboard Widget",
+    "designSpecPath": "components/ids/dashboard-widget/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=14093-123116&m=dev",
+    "nodeId": "14093-123116",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=14093-123116&m=dev",
+    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "idsDesignLibraryNodeId": "14093-123116",
+    "elementNodes": {
+      "dashboardElementContent": "14093-123636"
+    },
+    "variantNodes": {
+      "swapContent": "14093-123640",
+      "jobs": "14093-123624",
+      "capacity": "14093-123637",
+      "protection": "14093-123638",
+      "alerts": "14093-123639",
+      "compliance": "14093-124293"
+    }
+  },
+   {
+    "category": "Patterns and Templates",
     "component": "Page Error",
     "designSpecPath": "components/ids/page-error/design-spec.md",
     "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=26744-12102&m=dev",
     "nodeId": "26744-12102",
     "fileKey": "0bHk3XhrjFhowgFkz9yLr4"
+  },
+  {
+    "category": "Navigation",
+    "component": "Scroll Bar",
+    "designSpecPath": "components/ids/scroll-bar/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-57442&m=dev",
+    "nodeId": "11099-57442",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentNodeId": "11099-57442"
   }
 ]
