@@ -1,5 +1,6 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
+import { DropdownMenu } from "./DropdownMenu";
 import { Tag } from "./Tag";
 
 const meta: Meta<typeof Tag> = {
@@ -90,5 +91,30 @@ export const EditableAndBadgeStatesManual: Story = {
         <Tag type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={1} visualState="disabled" />
       </div>
     </div>
+  ),
+};
+
+export const BadgeWithDropdownMenu: Story = {
+  render: () => (
+    <DropdownMenu
+      standalone
+      sideOffset={1}
+      trigger={
+        <Tag
+          type="badge"
+          label="Tag"
+          tone="non-alerting"
+          size="lg"
+          showLabel
+          labelPrefix="Label:"
+          badgeCount={1}
+        />
+      }
+      items={[
+        { label: "View details", onClick: () => {} },
+        { label: "Edit", onClick: () => {} },
+        { label: "Remove", onClick: () => {} },
+      ]}
+    />
   ),
 };

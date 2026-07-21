@@ -123,6 +123,7 @@ export function Tag({
         styles[`tone_${tone}`],
         styles[`emphasis_${emphasis}`],
         clickable && isSelected ? styles.selected : "",
+        (closable || editable) ? styles.dismissible : "",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -173,14 +174,11 @@ export function Tag({
           aria-label={`Remove ${label}`}
           type="button"
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-            <path
-              d="M8 2L2 8M2 2L8 8"
-              stroke="currentColor"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Icon
+            shapeName="shape-x-thick"
+            color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+            style={{ width: 10, height: 10 }}
+          />
         </button>
       )}
     </span>
