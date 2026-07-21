@@ -86,9 +86,17 @@
       "slug": "masthead",
       "displayName": "Masthead",
       "registrySlug": "masthead",
-      "pattern": "standalone",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "masthead",
+      "idsBaselineSpecPath": "components/ids/masthead/design-spec.md",
       "programmeSpecPath": "components/synapse/masthead/design-spec.md",
       "programmeFigmaNodeId": "47807:7569",
+      "mainComponentSetNodeId": "47807:7569",
+      "elementActionsNodeId": "49852:73090",
+      "elementStateMatrixNodeId": "50154:68499",
+      "idsFigmaNodeId": "10130:29493",
+      "storybookPath": "storybook-generated/synapse/src/components/Masthead.stories.tsx",
+      "lastVerified": "2026-06-17",
       "status": "active"
     },
     {
@@ -603,6 +611,23 @@
       "storybookPath": "storybook/src/components/SynapseTag.stories.tsx",
       "notes": "No theme layout alias; deltas are programme CSS modifiers (focus offset, critical Light, close hover)",
       "lastVerified": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "programme": "synapse",
+      "slug": "app-shell",
+      "displayName": "App Shell",
+      "registrySlug": "appshell",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "app-shell",
+      "idsBaselineSpecPath": "components/ids/app-shell/design-spec.md",
+      "programmeSpecPath": "components/synapse/app-shell/design-spec.md",
+      "programmeFigmaNodeId": "48463:143536",
+      "idsFigmaNodeId": "43478:46307",
+      "mainComponentSetNodeId": "48463:143535",
+      "documentationBoardNodeId": "47803:1845",
+      "figmaDisplayName": "Page Layout",
+      "lastVerified": "2026-06-17",
       "status": "active"
     },
     {

@@ -38,11 +38,16 @@
 - Borders:
   - root border: `1px solid var(--color-border-accessible)`.
   - sections use same accessible border continuity as shown in source nodes.
+  - **Host integration overlap**: when panel shares a border with its host container, the panel wrapper must be offset `−1px` on top/right/bottom (`margin: -1px -1px -1px 0`) so the two borders collapse into a single `1px` line. Figma token: `var(--spacing/space-minus-1, -1px)`.
 - Expanded mode composition:
   - toggle control area uses right-side placement (header for datagrid mode, footer for page mode).
+  - `DetailPanelHeader` (datagrid expanded): `min-height: 48px`, padding `14px 12px 14px 24px`, border-bottom `1px solid var(--color-border-accessible)`.
+  - `DetailPanelFooter` (page expanded): `min-height: 44px`, padding `14px 12px`, border-top `1px solid var(--color-border-accessible)`, toggle right-aligned.
   - body content area is scrollable when content exceeds available vertical space.
 - Collapsed mode composition:
   - icon-only rail of width `40px` with centered/edge-aligned toggle control per mode.
+  - Datagrid collapsed rail: padding `var(--spacing-space-16) var(--padding-padding-12)` (`16px 12px`), toggle aligned `flex-start` (top).
+  - Page collapsed rail: padding `var(--padding-padding-12)` (`12px`), toggle aligned `flex-end` (bottom).
 - Runtime sizing constraints:
   - `DetailPanelRoot` uses `box-sizing: border-box`.
   - width transition is state-driven only (`398px <-> 40px`) and must not introduce intermediate non-deterministic layout widths in codegen outputs.
@@ -75,6 +80,7 @@
   - `var(--color-text-link-brand-base)`
 - Icon:
   - `var(--color-icon-neutral)` (required for both expand/collapse toggle icons)
+  - toggle icon color MUST be token-driven via `currentColor`: set `color: var(--color-icon-neutral)` on the button element and render the icon with the default `mask` variant so the glyph inherits the token. Do NOT use a hardcoded CSS `filter` — a fixed filter does not track `[data-theme="dark"]`.
   - `var(--color-icon-accessible)`
 - Typography:
   - `Base Styles/Data Header` (14/20 medium)
@@ -177,15 +183,24 @@ Variant matrix:
   - `showHeader=false` while `attachMode=datagrid` and expanded -> ignore override and render header to preserve contract.
   - `showFooter=false` while `attachMode=page` and expanded -> ignore override and render footer to preserve contract.
 - Validation checklist:
-  - [ ] expanded/collapsed widths are exactly `398`/`40`.
-  - [ ] datagrid variant uses `Header + Body`; page variant uses `Body + Footer`.
-  - [ ] expanded icon is `double-chev-right`; collapsed icon is `double-chev-left`.
-  - [ ] toggle icon color is `var(--color-icon-neutral)` in both variants.
-  - [ ] toggle click/keyboard activation correctly toggles panel state.
-  - [ ] root height tracks host container (datagrid/page) rather than fixed sample heights.
-  - [ ] light/dark state tables remain structurally parallel and token-driven.
-  - [ ] datagrid/page branch invariants are preserved in expanded and collapsed states.
-  - [ ] responsive behavior remains host-driven with fixed state widths (`398/40`) and internal body scroll.
+  - [x] expanded/collapsed widths are exactly `398`/`40`.
+  - [x] datagrid variant uses `Header + Body`; page variant uses `Body + Footer`.
+  - [x] expanded icon is `double-chev-right`; collapsed icon is `double-chev-left`.
+  - [x] toggle icon color is `var(--color-icon-neutral)` in both variants.
+  - [x] toggle click/keyboard activation correctly toggles panel state.
+  - [x] root height tracks host container (datagrid/page) rather than fixed sample heights.
+  - [x] light/dark state tables remain structurally parallel and token-driven.
+  - [x] datagrid/page branch invariants are preserved in expanded and collapsed states.
+  - [x] responsive behavior remains host-driven with fixed state widths (`398/40`) and internal body scroll.
+## Implementation Notes (2026-07-09)
+
+All validation checklist items verified and passing as of 2026-07-09.
+
+- **Toggle icon color** — Render via `<Icon shapeName={...} />` (default `mask` variant) and set `.toggleButton { color: var(--color-icon-neutral); }` so the glyph inherits color through `currentColor`, correctly tracking light/dark token values.
+- **Header and footer heights** — `DetailPanelHeader` uses `min-height: 48px`; `DetailPanelFooter` uses `min-height: 44px` — two separate CSS rules.
+- **Collapsed rail padding** — Datagrid rail: `var(--spacing-space-16, 16px) var(--padding-padding-12, 12px)` (toggle top-aligned); page rail: `var(--padding-padding-12, 12px)` (toggle bottom-aligned).
+- **Host border overlap** — Wrap the panel in `margin: -1px -1px -1px 0` so the panel border collapses onto the host border into a single `1px` line (Figma `space-minus-1`); left edge retains its `1px` as the divider against host content.
+
 ## Source Mapping
 - Component map baseline:
   - `data/component-figma-map.json` -> component `"Detail Panel"` (legacy exploration node)

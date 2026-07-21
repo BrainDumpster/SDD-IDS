@@ -18,9 +18,10 @@
 - Header text line box height: `24px` (`Body 1` rhythm)
 - Header container vertical padding: `12px` top and `12px` bottom (no horizontal padding)
 - Item height: 40px
+- Item width: hug content (`fit-content`)
 - Section-item padding: `8px` top/bottom and `24px` left/right
-- Border radius: 4px
-- Focus ring: 2px offset from item
+- Item border radius: 0 (square); focus ring radius: `6px` outer / `4px` inner
+- Focus ring: `2px` brand border hugging the item, inset `-4px` top/bottom and `-6px` left/right (total item + ring height `48px`)
 - Minimum width: 200px
 - Maximum width: 300px
 - Item spacing: 0 (adjacent)
@@ -28,12 +29,12 @@
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Surface background: `var(--color-background-surface-1)` = #111619
-- Neutral text: `var(--color-text-neutral)` = #8898a5
-- Brand strong text: `var(--color-text-brand-strong)` = #94c5ea
-- Accessible border: `var(--color-border-accessible)` = #8898a5
-- Brand border: `var(--color-border-brand-base)` = #4c9fdd
+- Brand base: `var(--color-background-controls-brand-base)` = #0672cb
+- Surface background: `var(--color-background-surface-1)` = #f4f4f4
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Brand strong text: `var(--color-text-brand-strong)` = #055fa9
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0672cb
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -54,12 +55,12 @@
 ## States (Light Theme)
 | Element | Background | Border | Text |
 |---|---|---|---|
-| Menu Container | transparent | `var(--color-border-accessible)` (#8898a5) | `var(--color-text-neutral)` (#8898a5) |
-| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` (#8898a5) |
-| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#8898a5) |
-| Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-brand-strong)` (#94c5ea) |
-| Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#94c5ea) |
-| Progress Indicator | `var(--color-background-controls-brand-base)` (#0076ce) | transparent | transparent |
+| Menu Container | transparent | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) |
+| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` (#4d4d4d) |
+| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#4d4d4d) |
+| Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-brand-strong)` (#055fa9) |
+| Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
+| Progress Indicator | `var(--color-background-controls-brand-base)` (#0672cb) | transparent | transparent |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#111619)
@@ -96,7 +97,8 @@
 - Match section-element typography and spacing from node `11955:229729`: header uses Body 1 (regular, no text transform) with vertical-only `12px` padding and item rows use `Body 1` (`16/24`) with `8/24` padding and left-border state transitions (`1.2px` default, `4px` hover/active).
 ## Composition & API (runtime)
 - `items: Array<{ label: string; href: string; active?: boolean }>` (required)
-- `title?: string` (optional section heading)
+- `title?: string` (optional section heading, default `"On this page"`)
+- `header?: boolean` (show/hide the heading, default `true`)
 - `sticky?: boolean` (default `true` for long-page usage)
 - `onItemClick?: (href: string) => void`
 ### Variants

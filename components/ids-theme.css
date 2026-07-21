@@ -331,11 +331,13 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --padding-padding-10: 10px;
   --padding-padding-12: 12px;
   --padding-padding-16: 16px;
+  --spacing-space-minus-1: -1px;
   --spacing-space-2: 2px;
   --spacing-space-4: 4px;
   --spacing-space-8: 8px;
   --spacing-space-16: 16px;
   --spacing-space-32: 32px;
+  --spacing-space-10: 10px;  
   --scale-24: 24px;
   --scale-32: 32px;
   --scale-40: 40px;
@@ -351,7 +353,10 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --radio-label-font-weight: 500;
   --segmented-button-control-radius: var(--corner-radius-radius-2);
   --alert-action-control-radius: var(--corner-radius-radius-2);
-  --card-control-radius: var(--corner-radius-radius-8);
+  --card-control-radius: var(--corner-radius-radius-none);
+  /* Figma Card-Main preferred width `8381:14245` (430×313) — span-1 baseline.
+     Overridable in later iterations; Card uses min(100%, var(--card-min-width)). */
+  --card-min-width: 430px;
   --modal-control-radius: var(--corner-radius-radius-none);
   --progress-bar-control-radius: var(--corner-radius-radius-none);
   --date-picker-control-radius: var(--corner-radius-radius-none);
@@ -656,11 +661,13 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --padding-padding-10: 10px;
   --padding-padding-12: 12px;
   --padding-padding-16: 16px;
+  --spacing-space-minus-1: -1px;
   --spacing-space-2: 2px;
   --spacing-space-4: 4px;
   --spacing-space-8: 8px;
   --spacing-space-16: 16px;
   --spacing-space-32: 32px;
+  --spacing-space-10: 10px;  
   --scale-24: 24px;
   --scale-32: 32px;
   --scale-40: 40px;
@@ -676,7 +683,10 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --radio-label-font-weight: 500;
   --segmented-button-control-radius: var(--corner-radius-radius-2);
   --alert-action-control-radius: var(--corner-radius-radius-2);
-  --card-control-radius: var(--corner-radius-radius-8);
+  --card-control-radius: var(--corner-radius-radius-none);
+  /* Figma Card-Main preferred width `8381:14245` (430×313) — span-1 baseline.
+     Overridable in later iterations; Card uses min(100%, var(--card-min-width)). */
+  --card-min-width: 430px;
   --modal-control-radius: var(--corner-radius-radius-none);
   --progress-bar-control-radius: var(--corner-radius-radius-none);
   --date-picker-control-radius: var(--corner-radius-radius-none);

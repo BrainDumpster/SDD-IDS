@@ -102,8 +102,8 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 - Sample widths from refetched matrix node:
   - Compact row references: `1057px` (`42903:139071` family), runtime still container-driven.
   - Detailed row references: `631px` (`42903:139032` family), runtime still container-driven.
-- **Accent rail treatment:** default is `box-shadow: inset 4px 0 0 0 var(--inline-rail)` where `--inline-rail` is the severity solid alerting background token.  
-  `warning-minor` uses a dedicated `::before` pseudo-element with the same solid minor fill plus warning-accessible edge stroke token.
+- **Accent rail treatment:** all severities use a `::before` pseudo-element (`position: absolute; left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) so the rail sits on top of the border in both light and dark mode. `box-shadow: inset` must not be used — in dark mode the border tokens are opaque and would cover the rail.
+  `warning-minor` overrides `::before` to add `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides of the rail, with `box-sizing: border-box`.
 - **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: var(--scale-40); align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
 - **Detailed** (`density: detailed`): `min-height: 68px` (Figma reference frame `1000×68`; width remains container-driven); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
 - **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
@@ -116,7 +116,7 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 
 - Sample frame size: `1000 x 68` (reference only; runtime remains container-driven width).
 - Root surface: `border: 1px solid var(--color-border-alerting-critical-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
-- Inset rail: `box-shadow: inset 4px 0 0 0 var(--color-background-alerting-critical)`.
+- Inset rail: `::before` pseudo-element `left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--color-background-alerting-critical)`.
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
 - Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) aligned to content row top (`12px` via action-only negative margin); dismiss icon at trailing cluster `16px` top inset (unchanged); **gap between action and dismiss: `var(--spacing-space-16)`** when both are in the trailing cluster; link behavior/appearance follows inline link contract and does not change other visual attributes.
@@ -280,7 +280,7 @@ Deterministic structure:
 
 **`Alert` — inline (`display="inline"`):**
 
-1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `box-shadow` (not a separate DOM rail node)
+1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) — not `box-shadow`, which renders behind the border and is hidden in dark mode
 2. `ContentRow` (`inlineMain`) — `flex: 1 1 auto`, `gap: var(--spacing-space-8)`
    - `LeadingIcon` — shared `Icon` at `16×16`; vertical nudge `4px` (detailed) or `2px` (compact)
    - `ContentBlock` — column, no gap; `padding-right: var(--padding-padding-16)`
@@ -355,7 +355,7 @@ Validation checklist:
 - [ ] Icons use shared `Icon` + canonical slugs from **States → Global** table; no standalone inline SVG factories (warning-minor `variant="inline"` via `iconInlineRegistry.ts` is acceptable — it routes through the shared `Icon` primitive).
 - [ ] Link contract supports `href` and `routerLink` without ambiguity.
 - [ ] Global carousel uses **1-based** `currentItem` in API and labeled prev/next controls.
-- [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
+- [ ] Inline inset rail uses `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) + severity solid token; `warning-minor` adds `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides.
 - [ ] Light/dark state tables remain parallel (same `var(--...)` names).
 - [ ] Dismiss hit target ≥ `32×32` on inline and global.
 - [ ] Inline trailing cluster: `var(--spacing-space-16)` gap between outlined action and dismiss when both present (compact + detailed).
@@ -447,8 +447,8 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Text color**: `var(--color-text-brand-strong)`
 
 **Severity tokens**
-- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; `box-shadow: inset 4px 0 0 0 var(--inline-rail)` for all except warning-minor
-- **Warning-minor rail**: uses `::before` pseudo-element with `position: absolute; left: 0; top: 0; bottom: 0; width: 4px` instead of `box-shadow` (Figma warning-accessible stroke requirement); `box-shadow: none` on root
+- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; rail rendered via `::before` (`left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) for all severities
+- **Warning-minor rail**: same `::before` positioning but overrides `background` to `var(--color-background-alerting-minor)` and adds `border: 1px solid var(--color-border-alerting-warning-accessible); box-sizing: border-box`
 
 **Dismiss visibility logic**
 - `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props
