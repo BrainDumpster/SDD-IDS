@@ -32,20 +32,21 @@
   - Visual size: 72px × 72px
   - Inner progress arc diameter: 62px
   - Arc stroke width: 2px
-  - Container: 72px square with label optionally below
+  - Container: 72px square, no label
 - Spinner geometry:
   - Shape: circular (border radius 50%)
   - Arc thickness: fixed 2px across sizes
   - Filled progress segment length: fixed to one-third of circumference (120deg arc)
 - Label spacing:
   - Inline small: 8px gap between spinner and text
-  - Stacked medium/large: 8px vertical gap between spinner and label
+  - Stacked medium: 8px vertical gap between spinner and label
 - Minimum touch / focus region: 44px × 44px logical area when spinner is focusable
 ## Tokens
 ### Colors (semantic)
 - Spinner arc (brand): `var(--color-border-brand-base)` → resolves to `#0076ce` in light theme.
 - Spinner outer circle background / track: `var(--color-background-surface-2)` → resolves to `#ffffff` in light theme.
 - Loading text: `var(--color-text-neutral-strong)` → resolves to `#252525` in light theme.
+- Loading text on brand background: `--color-text-white` for contrast on brand-colored surfaces.
 
 ### Static references (for visual parity only)
 - Static white: `var(--color-static-gray-white)` = `#ffffff` (used in Figma art; runtime uses semantic surface tokens).
@@ -67,9 +68,8 @@
   - Color: `var(--color-text-neutral-strong)`
   - Alignment:
     - Small: inline-left/right depending on layout container
-    - Medium/large: centered below spinner in usage frame
+    - Medium: centered below spinner in usage frame
 ### Typography
-- Header 2: Roboto Regular 36px/44px (large loading messages)
 - Body 2: Roboto Regular 14px/20px (loading text)
 
 ### Token gaps and notes
@@ -240,3 +240,10 @@
   - `var(--color-text-neutral-strong)` = `#252525`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
 - Last verified: 2026-04-29 (current session via Figma MCP)
+
+## Implementation Notes
+- `Spinner` label does not render for `size="lg"`; use `labelVisibility="sr-only"` for large spinners.
+- `labelVisibility` controls `inline`, `below`, and `sr-only` label rendering.
+- Loading text color: `var(--color-text-neutral-strong)` by default; override to `--color-text-white` when placed on a brand-colored surface (`var(--color-background-brand-base)`).
+- Spinner disc background uses `var(--color-background-surface-2)` without a `#ffffff` fallback so dark themes resolve correctly.
+- Loading text typography uses `var(--font-size-body-2)` and `var(--font-line-height-line-height-20)` tokens.
