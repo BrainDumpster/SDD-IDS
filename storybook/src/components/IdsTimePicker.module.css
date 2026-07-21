@@ -2,20 +2,49 @@
 
 .root {
   display: inline-flex;
-  flex-direction: column;
-  gap: var(--spacing-space-4, 4px);
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
-  width: 100%;
 }
 
 .label {
+  display: flex;
+  gap: var(--spacing-space-8, 8px);
+  align-items: center;
+  flex-shrink: 0;
+  padding: var(--padding-padding-10, 10px) 0;
+  cursor: default;
+}
+
+.labelSmall {
+  padding: var(--padding-padding-6, 6px) 0;
+}
+
+.labelInner {
+  display: flex;
+  gap: var(--spacing-space-2, 2px);
+  align-items: center;
+}
+
+.labelText {
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-neutral-strong, #252525);
+  white-space: nowrap;
+}
+
+.labelRequired {
+  font-size: var(--font-size-body-2, 14px);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-critical, #af0000);
+  white-space: nowrap;
 }
 
 /* Field + format hint stack — Figma "Date and time picker" (gap 4px) */
+
 .fieldGroup {
   display: flex;
   flex-direction: column;
@@ -59,7 +88,11 @@
   border-color: var(--color-border-strong, #252525);
 }
 
-.fieldContainer:has(.clockIconBtn:hover):not(.disabled):not(.error):not(.open) {
+.fieldContainer:has(button:hover):not(.disabled):not(.error):not(.open) {
+  border-color: var(--color-border-accessible, #757575);
+}
+
+.fieldContainer:has(button:focus-visible):not(.disabled):not(.error):not(.open) {
   border-color: var(--color-border-accessible, #757575);
 }
 
@@ -68,6 +101,7 @@
 }
 
 /* Keyboard focus on text field — Figma inset -5px ring on container */
+
 .fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated) {
   border-color: var(--color-border-accessible, #757575);
   outline: none;
@@ -144,64 +178,25 @@
 }
 
 .textInput.filled {
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-text-neutral, #4d4d4d);
 }
 
-.clockIconBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: var(--border-width-border-default, 1px) solid transparent;
-  cursor: pointer;
-  padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
-  border-radius: var(--time-picker-control-radius);
-  color: var(--color-icon-brand-base, #0076ce);
-  flex-shrink: 0;
-  align-self: stretch;
-  box-sizing: border-box;
-  outline: none;
-  position: relative;
+/* Override native text selection background */
+.textInput::selection {
+  background: transparent;
 }
 
-.fieldContainer.sizeSmall .clockIconBtn {
-  padding: var(--padding-padding-8, 8px) var(--padding-padding-16, 16px);
-}
-
-.clockIconBtn:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
-  border-color: var(--color-border-brand-base, #0076ce);
-}
-
-.clockIconBtn:focus-visible {
-  outline: none;
-}
-
-.clockIconBtn:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border: 1px solid var(--color-border-brand-base, #0076ce);
-  border-radius: var(--time-picker-focus-ring-radius);
-  pointer-events: none;
-  box-sizing: border-box;
-}
-
-.clockIconBtn:disabled {
-  color: var(--color-icon-disabled, #757575);
-  cursor: not-allowed;
-}
-
-.clockIconBtn.error {
-  color: var(--color-icon-alerting-critical, #af0000);
+/* Ensure textInput always has transparent background */
+.textInput {
+  background: transparent !important;
 }
 
 .formatHint {
   margin: 0;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-neutral, #4d4d4d);
   width: 100%;
@@ -213,12 +208,13 @@
   gap: var(--spacing-space-8, 8px);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-critical, #af0000);
 }
 
 /* Time popup */
+
 .timePopup {
   position: absolute;
   top: 100%;
@@ -235,9 +231,7 @@
   flex-direction: row;
   gap: var(--spacing-space-16, 16px);
   align-items: center;
-  border-radius: var(--time-picker-control-radius);
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-radius: 0;
 }
 
 .timePopup.widePadding {
@@ -260,7 +254,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: var(--color-icon-neutral-strong, #252525);
+  color: var(--color-icon-neutral, #4d4d4d);
   line-height: 0;
 }
 
@@ -296,4 +290,9 @@
   width: 32px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* Clock button margin to overlap input field border */
+.clockButton {
+  margin: -1px -1px -1px 0;
 }

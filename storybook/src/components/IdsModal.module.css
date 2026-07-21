@@ -1,0 +1,33 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-background-overlay-1);
+  z-index: 1000;
+}
+
+.popup {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(1152px, calc(100vw - 48px));
+  max-height: calc(100vh - 48px);
+  outline: none;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.backdropCarousel {
+  z-index: 1002;
+}
+
+.popupCarousel {
+  z-index: 1003;
+}
+
+.backdropSinglePreview {
+  z-index: 1004;
+}
+
+.popupSinglePreview {
+  z-index: 1005;
+}

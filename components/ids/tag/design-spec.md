@@ -20,8 +20,9 @@
 ## Layout & Measurements
 - Two size tracks verified:
   - `small`: height `20px` (read-only baseline) - border included in height using box-sizing: border-box
-  - `large`: height `28px` (clickable/editable/badge patterns)
+  - `large`: height `28px` (read-non-alerting, clickable/editable/badge patterns) - border included in height using box-sizing: border-box
 - Read-only sample width: `40px`.
+- Read-only large sample width: `48px`.
 - Clickable sample width: `48px`.
 - Editable sample widths: `66px` and `70px` (error/focus-on-text).
 - Badge sample width: `92px`.
@@ -69,6 +70,8 @@
 |---|---|---|---|---|
 | TagRoot (read-only, non-alerting) | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-accessible)` |
 | TagRoot (read-only, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
+| TagRoot (editable, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
+| TagRoot (badge, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
 | TagRoot (read-only/clickable/badge) | disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | text/icon `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
 | TagRoot (clickable, selected=false) | default | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | text/icon brand-dark |
 | TagRoot (clickable, selected=false) | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | same as default (hover emphasis only) |
@@ -82,6 +85,8 @@
 |---|---|---|---|---|
 | TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-1)`/semantic tag base | `var(--color-border-accessible)` | text `var(--color-text-white)` or semantic neutral-light |
 | TagRoot (read-only, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
+| TagRoot (editable, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
+| TagRoot (badge, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
 | TagRoot (read-only/clickable/badge) | disabled | semantic disabled surface | `var(--color-border-disabled)` | text/icon disabled |
 | TagRoot (clickable, selected=false) | default | dark brand-slate token | `var(--color-border-brand-base)` | text/icon brand-light |
 | TagRoot (clickable, selected=true) | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | text/icon inverse |
@@ -99,7 +104,7 @@
 - Disabled suppresses click, close, and selection transitions.
 ## Composition & API (runtime)
 - `type: "read-only" | "clickable" | "editable" | "badge"`
-- `size: "small" | "large"` (defaults: read-only -> small, others -> large)
+- `size: "small" | "large"` (defaults: read-only -> small, others -> large; read-only also supports large for non-alerting tags)
 - `tone: "none" | "informational" | "success" | "minor" | "major" | "critical"`
 - `selected?: boolean` (clickable only; default `false`)
 - `disabled?: boolean` (default `false`)
