@@ -14,6 +14,9 @@ import {
 } from "../../../../storybook/src/components/SynapseMasthead";
 import userIcon from "../../../../assets/icons/user-single-16.svg";
 
+const DESIGN_SPEC_PATH = "components/synapse/masthead/design-spec.md";
+const FIGMA_SPEC_ACCURATE_NODE = "47807:7569";
+
 const searchIcon = <Icon shapeName="search-16" style={{ width: 16, height: 16 }} />;
 const alertsIcon = <Icon shapeName="alert-bell-16" style={{ width: 16, height: 16 }} />;
 const jobsIcon = <Icon shapeName="jobs-queue-stack" style={{ width: 16, height: 16 }} />;
@@ -78,7 +81,18 @@ const fullIconsWithBadgesSlot = (
 const meta: Meta<typeof SynapseMasthead> = {
   title: "Spec Generated/Synapse/Masthead",
   component: SynapseMasthead,
-  parameters: { layout: "fullscreen" },
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component: [
+          `Spec-driven Synapse Masthead (IDS-fork). Source: \`${DESIGN_SPEC_PATH}\`.`,
+          `Primary story: **Spec Accurate Design** (Figma \`${FIGMA_SPEC_ACCURATE_NODE}\`) — Synapse + Help + App Launcher + user menu.`,
+          "Compose utilities via `iconsSlot`; no root action callback. Theme: `components/synapse-theme.css`.",
+        ].join(" "),
+      },
+    },
+  },
 };
 
 export default meta;

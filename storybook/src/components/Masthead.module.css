@@ -142,6 +142,13 @@
   justify-content: center;
 }
 
+.badgeWrapper {
+  position: absolute;
+  top: 12px;
+  left: 23px;
+  pointer-events: none;
+}
+
 .avatarAction {
   display: inline-flex;
   align-items: center;

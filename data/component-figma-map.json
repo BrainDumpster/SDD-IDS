@@ -229,8 +229,16 @@
   {
     "category": "Navigation",
     "component": "Masthead",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24736&m=dev",
-    "nodeId": "9054-24736"
+    "designSpecPath": "components/ids/masthead/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=10130-29493&m=dev",
+    "nodeId": "10130-29493",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentSetNodeId": "10130:29493",
+    "productIconNoNodeId": "10130:29494",
+    "productIconYesNodeId": "10130:29512",
+    "appShellInstanceNodeId": "43478:46181",
+    "explorationFigmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24736&m=dev",
+    "explorationNodeId": "9054-24736"
   },
   {
     "category": "Navigation",
@@ -450,6 +458,22 @@
     "component": "Spinner",
     "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54673&m=dev",
     "nodeId": "11067-54673"
+  },  
+  {
+    "category": "Patterns and Templates",
+    "component": "App Shell",
+    "designSpecPath": "components/ids/app-shell/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-46307&m=dev",
+    "nodeId": "43478-46307",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "componentSetNodeId": "43478-90797",
+    "breakpointNodeIds": {
+      "1920": "43478-46307",
+      "1600": "43478-90798",
+      "1366": "43478-90925",
+      "1024": "43478-91081"
+    },
+    "contentTemplatesNodeId": "43478-87315"
   },
   {
     "category": "Patterns and Templates",
