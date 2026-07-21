@@ -15,7 +15,8 @@
 - `TagLabel`
 - `TagPrefixIcon?` (alerting state icon or badge-leading icon)
 - `TagBadge?` (count or status chip)
-- `TagCloseButton?` (dismiss/edit mode)
+- `TagDropdown?` (detached dropdown menu surfaced by `TagBadge` trigger)
+- `TagCloseButton?` (tertiary icon-only button for dismiss/edit mode)
 - `TagEditableField?` (text focus surface for editable mode)
 ## Layout & Measurements
 - Two size tracks verified:
@@ -27,7 +28,8 @@
 - Editable sample widths: `66px` and `70px` (error/focus-on-text).
 - Badge sample width: `92px`.
 - Non-alerting large sample width: `48px` (legacy chip) and `88px` (expanded examples).
-- Close icon element size: `10px x 10px`.
+- Close button size: `var(--sizing-size-18)` x `var(--sizing-size-18)` with `var(--padding-padding-4)` padding; icon asset remains `10px x 10px`.
+- Dismissible tag right padding: `var(--padding-padding-8)`; label-to-close gap: `var(--spacing-space-4)`.
 - Tag shape remains pill-like with fully rounded ends.
 - Focus outline gap (outline offset from tag edge): `2px`.
 - Text field focus ring height: `20px` for editable tags.
@@ -98,7 +100,7 @@
 - `read-only`: non-interactive label chip.
 - `clickable`: toggles selection (`selected=true|false`).
 - `editable/dismissible`: clicking the editable tag body behaves like an input activation surface and moves focus to the inner text field; close action removes tag.
-- `badge`: supports optional leading info icon and badge count segment.
+- `badge`: supports optional leading info icon and badge count segment; the badge can trigger a detached dropdown menu (`TagDropdown`) with a full border.
 - Hover states apply where interaction is enabled (clickable and close button).
 - Focus-visible is keyboard-driven and uses outer ring.
 - Disabled suppresses click, close, and selection transitions.
@@ -136,8 +138,8 @@
 - Per-slot style contract:
   - `TagRoot` owns pill geometry, border, surface, and padding.
   - `TagLabel` always uses Body 2 scale.
-  - `TagCloseButton` uses 10px icon asset and inherits state color.
-  - `TagBadge` uses compact filled mini-chip treatment.
+  - `TagCloseButton` is a tertiary icon-only button using `shape-x-thick`, sized `var(--sizing-size-18)`, with `var(--padding-padding-4)` padding, border-radius `var(--button-control-radius)`, icon color `var(--color-icon-accessible)` (disabled uses `var(--color-icon-disabled)`), hover/press backgrounds `var(--color-background-controls-brand-lighter)` / `var(--color-background-controls-brand-light)` with `var(--color-border-brand-base)` inset border, and a focus-visible outer ring `var(--color-border-brand-base)`.
+  - `TagBadge` uses compact filled mini-chip treatment. When used as a dropdown trigger, the dropdown (`TagDropdown`) is a detached/standalone menu offset from `TagRoot` by `var(--spacing-space-1)` with a full border of `var(--border-width-border-default)` on all sides and `var(--dropdown-menu-radius)` corners.
 - Behavior contract:
   - clickable toggles selected state and emits `onSelectionChange`.
   - editable tag body click focuses `TagEditableField` (input-like behavior) before text editing.
