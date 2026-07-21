@@ -5,7 +5,9 @@ from generation.deterministic_storybook.ids.anchor_menu import generate_ids_anch
 from generation.deterministic_storybook.ids.app_launcher import generate_ids_app_launcher_story
 from generation.deterministic_storybook.ids.button import generate_ids_button_story
 from generation.deterministic_storybook.ids.badge import generate_ids_badge_story
+from generation.deterministic_storybook.ids.card import generate_ids_card_story
 from generation.deterministic_storybook.ids.checkbox import generate_ids_checkbox_story
+from generation.deterministic_storybook.ids.dashboard import generate_ids_dashboard_story
 from generation.deterministic_storybook.ids.datagrid import generate_ids_datagrid_story
 from generation.deterministic_storybook.ids.date_picker import generate_ids_date_picker_story
 from generation.deterministic_storybook.ids.detail_panel import generate_ids_detail_panel_story
@@ -48,7 +50,9 @@ __all__ = [
     "generate_ids_app_launcher_story",
     "generate_ids_badge_story",
     "generate_ids_button_story",
+    "generate_ids_card_story",
     "generate_ids_checkbox_story",
+    "generate_ids_dashboard_story",
     "generate_ids_datagrid_story",
     "generate_ids_date_picker_story",
     "generate_ids_detail_panel_story",

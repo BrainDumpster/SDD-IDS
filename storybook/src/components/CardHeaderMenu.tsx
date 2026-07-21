@@ -2,6 +2,7 @@ import { Menu } from "@base-ui-components/react/menu";
 import { useCallback, useEffect, useState } from "react";
 import type { RefObject } from "react";
 import dropdownStyles from "./DropdownMenu.module.css";
+import { Icon } from "./Icon";
 import styles from "./CardHeaderMenu.module.css";
 
 export interface CardMenuOption {
@@ -21,23 +22,10 @@ interface CardHeaderOverflowMenuProps {
   triggerAriaLabel?: string;
 }
 
-function VerticalEllipsisIcon() {
-  return (
-    <svg
-      className={styles.kebabIcon}
-      width={20}
-      height={20}
-      viewBox="0 0 32 32"
-      aria-hidden="true"
-    >
-      <circle cx="16" cy="4.5" r="3" fill="currentColor" />
-      <circle cx="16" cy="16.5" r="3" fill="currentColor" />
-      <circle cx="16" cy="27.5" r="3" fill="currentColor" />
-    </svg>
-  );
-}
-
-/** Header overflow menu: options overlay constrained to the host card’s height. */
+/**
+ * CardFilter kebab — Figma `.Card-Element-OverflowMenu` `15718:197531`
+ * (trigger button padding 8×16, radius-2, overflow-menu-dots 16×16).
+ */
 export function CardHeaderOverflowMenu({
   options,
   onOptionSelected,
@@ -85,8 +73,17 @@ export function CardHeaderOverflowMenu({
         }
       }}
     >
-      <Menu.Trigger className={styles.kebabTrigger} aria-label={triggerAriaLabel}>
-        <VerticalEllipsisIcon />
+      <Menu.Trigger
+        className={styles.kebabTrigger}
+        aria-label={triggerAriaLabel}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        <Icon
+          shapeName="overflow-menu-dots"
+          className={styles.kebabIcon}
+          style={{ width: 16, height: 16 }}
+        />
       </Menu.Trigger>
       <Menu.Portal>
         <Menu.Positioner
@@ -97,13 +94,14 @@ export function CardHeaderOverflowMenu({
           collisionPadding={4}
         >
           <Menu.Popup
-            className={dropdownStyles.popup}
-            style={{ maxHeight, overflowY: "auto" }}
+            className={`${dropdownStyles.popup} ${dropdownStyles.popupStandalone}`}
+            style={{ maxHeight, overflowY: "auto", minWidth: 186 }}
           >
             {options.map((opt) => (
               <Menu.Item
                 key={opt.value}
                 className={dropdownStyles.item}
+                data-selectable="false"
                 disabled={opt.disabled}
                 onClick={() => onOptionSelected(opt.value)}
               >
