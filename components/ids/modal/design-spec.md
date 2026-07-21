@@ -38,6 +38,34 @@
   - baseline modal usage: tertiary + primary actions.
   - dialog scenario keeps severity-specific action intent.
   - **all footer action labels are user-defined at runtime** (no hardcoded labels in component contract).
+
+### Composed patterns (nested components)
+
+#### What's New (`components/ids/whats-new/design-spec.md`)
+
+The **What's New** pattern is a canonical **single-page Modal host** with custom body and footer chrome. It does **not** use `scenario=dialog` severity types.
+
+| Layer | `IdsModal` layer | Modal scenario | When visible | Header title | Footer |
+|---|---|---|---|---|---|
+| **Main (`WhatsNewRoot`)** | `main` | `single-page` | `open=true` | `title` (default `What's New`) | toggle + primary **Close** |
+| **Carousel (`WhatsNewCarouselModal`)** | `carousel` | `single-page` | thumbnail click | `section.title` | same root toggle + **Close** (dismiss carousel only) |
+| **Single preview (`WhatsNewSinglePreviewModal`)** | `single-preview` | `single-page` | `popout-double` in carousel | `section.title` | dismiss single layer only |
+
+**Modal anatomy mapping (main layer):**
+
+```
+IdsModal [scenario=single-page, open, size=medium (runtime width host-driven)]
+├── header — WhatsNewTitle (Header 5) + WhatsNewCloseButton (`IdsModal.Close`)
+├── description — WhatsNewSummary (Body 2 intro below title row)
+├── content — WhatsNewBody (version/filter row + scrollable sections)
+└── footer — WhatsNewFooter (`footerCheckbox` toggle + primary Close via IDS Button)
+```
+
+**Stacking contract:** three independent `IdsModal` instances (main → carousel → single-preview). Carousel and single-preview z-index layers sit above main (`1002–1005`). **Escape** dismisses the topmost open layer only; main close dismisses the entire pattern.
+
+**Figma shell:** What's New uses `Modal-Main` (`27437:44152`) inside `WhatsNew-Main` (`27437:44073`). Sample frame `1152×708`; runtime width is container-driven (`width: 100%`, `max-width`, `box-sizing: border-box`).
+
+**Reference implementation:** `storybook/src/components/IdsWhatsNew.tsx` (hosts all three layers via `IdsModal` from `storybook/src/components/IdsModal.tsx`).
 ## Layout & Measurements
 - **Size matrix (from `11348:63064`):**
   - `large`: `1600 x 826`
@@ -201,6 +229,7 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 
 ### Validation checklist
 - [ ] Modal renders `single-page` and `multi-page` usages with correct layout model.
+- [ ] **What's New** pattern hosts main/carousel/single-preview layers via `IdsModal` with documented stack z-index and anatomy mapping.
 - [ ] Size matrix (`large/medium/small/x-small`) matches usage and component nodes.
 - [ ] Surface width, paddings, and border align with Figma modal usage board.
 - [ ] Destructive type uses destructive primary action style and confirm content slot.
@@ -216,6 +245,8 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 
 ## Source Mapping
 - **Component map:** `data/component-figma-map.json` -> `Dialog` entry pointing to `components/ids/modal/design-spec.md`
+- **Composed pattern:** `data/component-figma-map.json` -> `Whats New` → `components/ids/whats-new/design-spec.md` (hosts content in `IdsModal` / `scenario=single-page`)
+- **Reference implementation (React):** `storybook/src/components/IdsModal.tsx` (composable shell); `storybook/src/components/Dialog.tsx` (dialog prop API); `storybook/src/components/IdsWhatsNew.tsx` (What's New stack)
 - **Figma nodes used:**
   - `43411:178475` (`Content`, usage board)
   - `11348:63064` (`Modal-Main`, component details)

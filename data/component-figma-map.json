@@ -458,20 +458,7 @@
     "component": "Spinner",
     "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54673&m=dev",
     "nodeId": "11067-54673"
-  },
-  {
-    "category": "Patterns and Templates",
-    "component": "Get Started",
-    "designSpecPath": "components/ids/get-started/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
-    "nodeId": "12189-233235",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "elementNodeIds": [
-      "12671-2567",
-      "12674-1881",
-      "12023-228883"
-    ]
-  },
+  },  
   {
     "category": "Patterns and Templates",
     "component": "App Shell",
@@ -526,10 +513,33 @@
     "variationsNodeId": "43206-189639"
   },
   {
-    "category": "Patterns and Templates",
+    "category": "Patterns",
     "component": "Whats New",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=27437-44064&m=dev",
-    "nodeId": "27437-44064"
+    "designSpecPath": "components/ids/whats-new/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=27437-44073&m=dev",
+    "nodeId": "27437-44073",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentSetNodeId": "27437-44073",
+    "newestNodeId": "27437-44094",
+    "bookmarkedNodeId": "27437-44074",
+    "previewMultipleNodeId": "27437-44134",
+    "previewSingleNodeId": "27437-44151",
+    "elementContentMainNodeId": "27437-44190",
+    "elementContentPreviewNodeId": "27437-44198",
+    "elementThumbnailsStatesNodeId": "27437-44168",
+    "elementSectionHeaderNodeId": "27437-44182",
+    "elementFilterNodeId": "27437-44220",
+    "elementNodeIds": [
+      "27437-44190",
+      "27437-44198",
+      "27437-44174",
+      "27437-44169",
+      "27437-44182",
+      "27437-44220"
+    ],
+    "stateNodeIds": [
+      "27437-44168"
+    ]
   },
   {
     "category": "Form Elements",
@@ -566,15 +576,18 @@
   {
     "category": "Patterns",
     "component": "Get Started",
+    "specPattern": "ids-native",
     "designSpecPath": "components/ids/get-started/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
-    "nodeId": "12189-233235",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233185&m=dev",
+    "nodeId": "12189-233185",
+    "mainComponentSetNodeId": "12189-233235",
     "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
     "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
     "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
     "idsDesignLibraryNodeId": "12189-233235",
     "elementCardStateNodeId": "12023-228883",
     "elementNodes": {
+      "cardElementSet": "12023-228883",
       "cardNotCompleted": "12023-228880",
       "cardCompleted": "12023-228902",
       "cardRequired": "12023-228939"
@@ -586,6 +599,7 @@
       "sequentialSinglePage": "12189-233218",
       "sequentialOverflowPage1": "12189-233223",
       "sequentialOverflowPage2": "12189-233228"
-    }
+    },
+    "mastheadInstanceNodeId": "12189-231406"
   }
 ]

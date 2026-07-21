@@ -1,6 +1,8 @@
 # Tree Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/Tree.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/tree.py`
 - **Component:** Tree
 - **Design system:** IDS
 - **Category:** Navigation

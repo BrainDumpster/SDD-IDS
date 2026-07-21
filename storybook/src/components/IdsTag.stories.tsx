@@ -47,6 +47,16 @@ export const ReadOnlyAndAlertingManual: Story = {
   ),
 };
 
+export const ReadOnlyLargeManual: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <Tag type="read-only" label="Tag" tone="non-alerting" size="lg" />
+      <Tag type="read-only" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label:" />
+      <Tag type="read-only" label="Tag" tone="non-alerting" size="lg" visualState="error" />
+    </div>
+  ),
+};
+
 export const ClickableStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -66,12 +76,16 @@ export const EditableAndBadgeStatesManual: Story = {
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <Tag type="editable" label="Tag" tone="non-alerting" size="lg" closable />
         <Tag type="editable" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label:" closable />
-        <Tag type="editable" label="Tag" tone="critical" size="lg" visualState="error" closable />
-        <Tag type="editable" label="Tag" tone="non-alerting" size="lg" visualState="disabled" closable />
+        <Tag type="editable" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label:" visualState="error" closable />
+        <Tag type="editable" label="Tag" tone="non-alerting" size="lg" showLabel labelPrefix="Label:" visualState="disabled" closable />
+      </div>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Tag type="badge" label="Tag" size="lg" badgeCount={1} />
+        <Tag type="badge" label="Tag" size="lg" badgeCount={1} visualState="error" />
+        <Tag type="badge" label="Tag" size="lg" badgeCount={1} visualState="disabled" />
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <Tag type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={1} />
-        <Tag type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={1} visualState="focus" />
         <Tag type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={1} visualState="error" />
         <Tag type="badge" label="Tag" size="lg" showLabel labelPrefix="Label:" badgeCount={1} visualState="disabled" />
       </div>

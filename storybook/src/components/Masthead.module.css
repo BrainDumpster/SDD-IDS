@@ -153,9 +153,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding-top: var(--padding-padding-12);
+  padding-top: 11px;
   padding-right: var(--padding-padding-8);
-  padding-bottom: var(--padding-padding-12);
+  padding-bottom: 11px;
   padding-left: var(--padding-padding-8);
   border: none;
   background: var(--color-background-masthead-brand-base);

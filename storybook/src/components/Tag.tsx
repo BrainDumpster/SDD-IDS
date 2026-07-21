@@ -62,6 +62,7 @@ export function Tag({
   const isSelected = isSelectedControlled ? selected : internalSelected;
   const isInteractiveClickable = clickable && !disabled;
   const isEditableFocusable = editable && !disabled;
+  const isBadgeFocusable = isBadgeType && !disabled;
   const typeClassName =
     type === "badge" ? styles.typeBadge : type === "clickable" ? styles.clickable : type === "editable" ? styles.editable : styles.readOnly;
 
@@ -131,7 +132,7 @@ export function Tag({
       data-hover={visualState === "hover" || undefined}
       role={clickable ? "button" : undefined}
       aria-pressed={clickable ? isSelected : undefined}
-      tabIndex={isInteractiveClickable ? 0 : undefined}
+      tabIndex={isInteractiveClickable ? 0 : isBadgeFocusable ? 0 : undefined}
       onClick={handleRootClick}
       onMouseDown={handleEditableMouseDown}
     >
@@ -158,6 +159,7 @@ export function Tag({
           shapeName="arrow-drop-tri-caret"
           className={styles.menuCaret}
           color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+          style={{ width: 10, height: 10 }}
         />
       ) : null}
       {(closable || editable) && (
