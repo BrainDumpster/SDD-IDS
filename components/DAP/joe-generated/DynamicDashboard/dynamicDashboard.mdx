@@ -1,0 +1,230 @@
+# DynamicDashboard Design Spec
+
+## Metadata
+- **Component:** DynamicDashboard
+- **Category:** Data Visualization / Layout
+- **Design System:** IDS
+- **Source:** Custom-built component using GridStack library. Spec authored from product requirements; update this file if design requirements change.
+- **Sub-components:** `Tile` (internal component for individual widgets)
+- **Rendering engine:** [GridStack](https://gridstackjs.com/) - A JavaScript library for draggable and resizable dashboard layouts
+
+## Anatomy
+- **root (`DynamicDashboard`):** base container, sized to fill its parent (`width: 100%; height: 100%`), light gray background (`#f5f5f5`). Hosts 0 or more `Tile`s arranged in a 12-column grid layout.
+- **Tile:** individual widget container with title bar, content area, and optional footer.
+  - **title bar (40px):** displays widget name on the left and overflow menu or close icon on the right. Light gray background (`#f5f5f5`) with border bottom. If there's only one menu option and it's "Remove", shows close icon (✕) instead of overflow menu (⋮).
+  - **content area:** flexible height with minimum 150px. Contains widget-specific content. Widgets are responsible for their own data fetching and rendering. Content is responsive and can scroll when needed.
+  - **footer (40px, optional):** displays action buttons on the right side. Light gray background (`#f5f5f5`) with border top. Collapses (hidden) if no buttons are provided.
+  - **grid-stack-item:** GridStack wrapper that handles positioning and sizing.
+
+## Layout & Measurements
+- **Grid system:** 12-column grid layout (responsive: 1 column on mobile, 6 on tablet, 12 on desktop)
+- **Responsive breakpoints:**
+  - **Mobile (< 768px):** 1 column layout, reduced padding and font sizes
+  - **Tablet (768px - 1024px):** 6 column layout, adjusted padding
+  - **Desktop (> 1024px):** 12 column layout, full padding
+- **Widget positioning:**
+  - **x:** horizontal position (0-indexed, 0-11 for 12 columns)
+  - **y:** vertical position (0-indexed)
+  - **w:** width in columns (1-6)
+  - **h:** height in rows (default 1)
+- **Widget constraints:**
+  - **minW:** minimum width in columns (default 1)
+  - **maxW:** maximum width in columns (default 6)
+  - **minH:** minimum height in rows (default 1)
+  - **maxH:** maximum height in rows (default 12)
+- **Tile dimensions:**
+  - **title bar:** 40px fixed height
+  - **content area:** minimum 150px height (120px on mobile), flexible with scroll
+  - **footer:** 40px fixed height (optional, collapses if no buttons)
+- **Spacing:** 16px margin between widgets (configurable via options), 16px gutter around inside of grid container
+- **Row height:** auto by default (configurable via options)
+
+## Interactions
+- **Drag and drop:** Supported via `options.disableDrag` (grid-level) and each widget's `noMove`/`locked` (per-widget level, both default `true`) - both must be `false` for a widget to be draggable. Dragging can only be initiated from the title bar (`.tile-header`, set as GridStack's `handle` option) - clicking/dragging the body or footer does not move the tile. Hovering the title bar shows a 4-pointed move cursor (`cursor: move`); other widgets reflow/compact automatically per GridStack's default collision behavior (`float: false`).
+- **Hover:** Hovering anywhere on a tile's border box (`.grid-stack-item-content`) changes its border color from `#c5c5c5` to `#757575`, with a `0.2s` transition.
+- **Selection:** Clicking anywhere on a tile selects it (border becomes `#0076ce`). Only one tile can be selected at a time - selecting a new tile deselects the previous one. Selection state is managed internally by `DynamicDashboard`; `handlers.onSelectionChange(widgetId | null)` fires when it changes. Selected border color takes priority over the hover color. The tile body (`.tile-body`) shows its natural cursor (not the tile's pointer cursor) since hovering content itself isn't the click target that matters for selection.
+- **Resize:** Supported via `options.disableResize` (grid-level) and each widget's `noResize`/`locked` (per-widget level) - both must be `false` for a widget to be resizable. Uses GridStack's default resize handle: a small icon in the tile's bottom-right (south-east) corner, hidden until hovering the tile (`alwaysShowResizeHandle` default `false` on desktop), clicking and dragging it resizes the tile.
+- **Add/Remove widgets:** Currently disabled (editing controls hidden for future implementation)
+
+## Future Functionality (Planned)
+- **Add Widget:** UI control to add new widgets to the grid
+- **Remove Widget:** UI control to remove widgets from the grid
+- **Edit Widget:** UI controls to modify widget properties
+- **Widget Library:** Integration with widget library where widgets can be added and removed dynamically
+
+## ToDo
+- Needs a Legend
+- Need Tooltips
+- Need to be able to Remove a Tile.
+- Need to be able to Add a Tile.
+- Need to be able to Edit a Tile.
+
+## API
+
+### Widget Data Structure
+```typescript
+interface DynamicDashboardWidget {
+  id: string;              // Unique identifier
+  name: string;            // Display name
+  x: number;              // Horizontal position (0-11)
+  y: number;              // Vertical position
+  w: number;              // Width in columns (1-6)
+  h?: number;             // Height in rows (default 1)
+  minW?: number;          // Minimum width (default 1)
+  maxW?: number;          // Maximum width (default 6)
+  minH?: number;          // Minimum height (default 1)
+  maxH?: number;          // Maximum height (default 12)
+  noMove?: boolean;       // Disable move (default true)
+  noResize?: boolean;     // Disable resize (default true)
+  locked?: boolean;       // Lock widget (default true)
+  menuOptions?: TileMenuOption[]; // Title bar menu options
+  footerButtons?: TileFooterButton[]; // Footer buttons
+}
+
+interface TileMenuOption {
+  id: string;             // Unique identifier
+  label: string;          // Display label
+  onClick: () => void;    // Callback when clicked
+}
+
+interface TileFooterButton {
+  id: string;             // Unique identifier
+  label: string;          // Display label
+  onClick: () => void;    // Callback when clicked
+  variant?: 'primary' | 'secondary' | 'tertiary'; // Button variant
+}
+```
+
+### Component Props
+```typescript
+interface DynamicDashboardProps {
+  widgets: DynamicDashboardWidget[];           // Array of widgets
+  options?: DynamicDashboardOptions;           // GridStack options
+  handlers?: DynamicDashboardHandlers;         // Event handlers
+  className?: string;                          // CSS class
+  style?: React.CSSProperties;                 // Inline styles
+}
+```
+
+### GridStack Options
+```typescript
+interface DynamicDashboardOptions {
+  column?: number;           // Number of columns (default 12)
+  responsiveColumns?: {     // Responsive column configuration
+    mobile?: number;        // Column count for mobile (< 768px)
+    tablet?: number;        // Column count for tablet (768px - 1024px)
+    desktop?: number;       // Column count for desktop (> 1024px)
+  };
+  rowHeight?: number | 'auto'; // Row height (default 'auto')
+  margin?: number | string;  // Gap between widgets (default 10)
+  float?: boolean;          // Allow widgets to float (default false)
+  animate?: boolean;        // Animate changes (default false)
+  disableDrag?: boolean;    // Disable dragging (default true)
+  disableResize?: boolean;  // Disable resizing (default true)
+  rtl?: boolean;            // RTL layout (default false)
+  minRow?: number;          // Minimum row count (default 0)
+  maxRow?: number;          // Maximum row count (default 0)
+}
+```
+
+### Event Handlers
+```typescript
+interface DynamicDashboardHandlers {
+  onAdd?: (widget: DynamicDashboardWidget, grid: any) => void;
+  onRemove?: (widget: DynamicDashboardWidget, grid: any) => void;
+  onChange?: (widgets: DynamicDashboardWidget[], grid: any) => void;
+  onResize?: (widget: DynamicDashboardWidget, grid: any) => void;
+  onDragStart?: (event: Event, widget: DynamicDashboardWidget) => void;
+  onDragStop?: (event: Event, widget: DynamicDashboardWidget) => void;
+  onResizeStart?: (event: Event, widget: DynamicDashboardWidget) => void;
+  onResizeStop?: (event: Event, widget: DynamicDashboardWidget) => void;
+  onSelectionChange?: (widgetId: string | null) => void; // Fired when the selected tile changes
+}
+```
+
+## Tokens
+- **Background colors:**
+  - Container: `#f5f5f5` (light gray)
+  - Tile background: `#ffffff` (white)
+  - Tile title bar: `#f5f5f5` (light gray)
+  - Tile footer: `#f5f5f5` (light gray)
+- **Border colors:**
+  - Tile border (default): `#c5c5c5` (medium gray)
+  - Tile border (hover): `#757575` (dark gray)
+  - Tile border (selected): `#0076ce` (blue) - takes priority over hover
+- **Typography:**
+  - Font family: `Roboto, sans-serif`
+  - Title bar font size: `14px`, weight: `600`
+  - Body font size: `14px`
+  - Button font size: `14px`
+  - Text colors: `#252525` (dark gray), `#757575` (medium gray)
+- **Spacing:**
+  - Widget margin: `16px` (configurable via options)
+  - Grid container gutter: `16px`
+  - Title bar padding: `0 16px`
+  - Body padding: `16px`
+  - Footer padding: `0 16px`
+  - Footer button gap: `8px`
+- **Dimensions:**
+  - Title bar height: `40px`
+  - Content area minimum height: `150px`
+  - Footer height: `40px`
+- **Shadows:**
+  - Tile shadow: `0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)`
+  - Overflow menu shadow: `0 2px 8px rgba(0, 0, 0, 0.15)`
+- **Border radius:**
+  - Tile: `4px`
+  - Overflow menu: `4px`
+  - Buttons: `4px`
+- **Button variants:**
+  - Primary: background `#0076ce`, text `#ffffff`
+  - Secondary: background `#ffffff`, text `#0076ce`, border `#0076ce`
+  - Tertiary: background `transparent`, text `#252525`, border `#d1d1d1`
+
+## States
+| State | Description |
+|---|---|
+| Default | Widgets displayed in grid, border `#c5c5c5` |
+| Hover | Tile border changes to `#757575`; title bar shows move cursor if draggable |
+| Selected | Tile clicked; border changes to `#0076ce`. Only one tile selected at a time |
+| Dragging | Widget being moved via drag and drop (when `disableDrag`/`noMove`/`locked` allow it) |
+| Resizing | Widget being resized via the SE-corner handle (when `disableResize`/`noResize`/`locked` allow it) |
+
+## Source Mapping
+| File | Description |
+|---|---|
+| Component | `src/Components/DynamicDashboard/DynamicDashboard.tsx` |
+| Types | `src/Components/DynamicDashboard/types.ts` |
+| Tile component | `src/Components/DynamicDashboard/Tile.tsx` |
+| CSS styles | `src/Components/DynamicDashboard/DynamicDashboard.css` |
+| Live example | `src/App.tsx` (`DynamicDashboard Component` section) |
+
+## Validation Checklist
+- [x] 12-column grid layout implemented
+- [x] Responsive column configuration (mobile/tablet/desktop breakpoints)
+- [x] Window resize listener to update column count
+- [x] Responsive CSS media queries for different screen sizes
+- [x] Widget positioning (x, y, w, h) working
+- [x] GridStack attributes exposed through props
+- [x] GridStack events exposed through handlers
+- [x] Tile component with 40px title bar
+- [x] Tile title bar with overflow menu (⋮ icon)
+- [x] Tile title bar with close icon (✕) when only "Remove" option
+- [x] Tile content area with minimum 150px height (120px on mobile)
+- [x] Tile content area with scroll support
+- [x] Tile footer (40px) with optional buttons
+- [x] Tile footer collapses when no buttons
+- [x] CSS styling for title bar, content, and footer
+- [x] Responsive padding and font sizes
+- [x] Example with 4 rows of 1x1 tiles and responsive columns
+- [x] Draggable example (10 tiles, drag enabled via disableDrag/noMove/locked)
+- [x] Move cursor on title bar hover; border color change on tile hover
+- [x] Single-select tiles by clicking anywhere on them (border `#0076ce`)
+- [x] Natural (non-pointer) cursor over tile body content
+- [x] Resizable example (every other tile: 1, 3, 5, 7, 9 via noResize: false)
+- [x] Menu options API (TileMenuOption)
+- [x] Footer buttons API (TileFooterButton)
+- [x] Responsive columns API (responsiveColumns option)
+- [ ] Add widget functionality (future)
+- [ ] Remove widget functionality (future)
+- [ ] Widget library integration (future)

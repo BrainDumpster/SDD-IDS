@@ -1,0 +1,161 @@
+/* ============================================================
+   Progress Bar — IDS Design System
+   ============================================================ */
+
+.progress-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+/* --- Meta Row (with-label type) -------------------------- */
+.progress-bar__meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.progress-bar__label {
+  font-weight: 400;
+}
+
+.progress-bar__percentage {
+  font-weight: 400;
+}
+
+/* --- Track Row ------------------------------------------ */
+.progress-bar__track-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar--inline .progress-bar__track-row {
+  flex-direction: row;
+}
+
+.progress-bar--with-label .progress-bar__track-row {
+  flex-direction: column;
+}
+
+.progress-bar--inline .progress-bar__track {
+  flex: 1;
+}
+
+/* --- Track --------------------------------------------- */
+.progress-bar__track {
+  position: relative;
+  width: 100%;
+  background: var(--color-background-gray-neutral-alt, #eaeaea);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  box-sizing: content-box;
+}
+
+/* --- Indicator (fill) ---------------------------------- */
+.progress-bar__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--color-background-brand-base, #0076ce);
+  border-top: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  border-left: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  border-right: none;
+  transition: width 0.3s ease;
+}
+
+.progress-bar__indicator[data-value-full="true"] {
+  border-right: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+}
+
+/* --- State: completed-success ---------------------------- */
+.progress-bar--completed-success .progress-bar__indicator {
+  background: var(--color-background-alerting-success, #1b8500);
+  border-color: var(--color-border-alerting-success-base, #1b8500);
+}
+
+/* --- State: completed-warning ---------------------------- */
+.progress-bar--completed-warning .progress-bar__indicator {
+  background: var(--color-background-alerting-minor, #ffc700);
+  border-color: var(--color-border-alerting-minor-transparent, #9c622e);
+}
+
+/* --- State: failed-error -------------------------------- */
+.progress-bar--failed-error .progress-bar__indicator {
+  background: var(--color-background-alerting-critical, #af0000);
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+/* --- Inline Percentage ----------------------------------- */
+.progress-bar__inline-percentage {
+  width: 36px;
+  text-align: left;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+/* --- Helper Row ----------------------------------------- */
+.progress-bar__helper-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+}
+
+.progress-bar__helper-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--color-icon-alerting-success, #1b8500);
+}
+
+.progress-bar--completed-warning .progress-bar__helper-icon {
+  color: var(--color-icon-alerting-minor, #ffc700);
+}
+
+.progress-bar--failed-error .progress-bar__helper-icon {
+  color: var(--color-icon-alerting-critical, #af0000);
+}
+
+.progress-bar__helper-text {
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+/* --- Thickness ------------------------------------------ */
+.progress-bar--thin .progress-bar__track {
+  height: var(--sizing-size-4, 4px);
+}
+
+.progress-bar--medium .progress-bar__track {
+  height: var(--sizing-size-8, 8px);
+}
+
+.progress-bar--thick .progress-bar__track {
+  height: var(--sizing-size-16, 16px);
+}
+
+/* --- Indeterminate Animation ----------------------------- */
+.progress-bar--indeterminate .progress-bar__indicator {
+  animation: indeterminate 2s ease-in-out infinite;
+}
+
+@keyframes indeterminate {
+  0% {
+    left: 0%;
+    width: 30%;
+  }
+  100% {
+    left: 70%;
+    width: 30%;
+  }
+}

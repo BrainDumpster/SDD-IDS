@@ -1,0 +1,197 @@
+/* ============================================================
+   Dropdown ComboBox — IDS Design System
+   ============================================================ */
+
+.dropdown-combobox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: "Roboto", sans-serif;
+}
+
+/* --- Label --------------------------------------------- */
+.dropdown-combobox__label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.dropdown-combobox__required {
+  color: var(--color-text-alerting-critical, #af0000);
+  margin-left: 2px;
+}
+
+/* --- Input Wrapper -------------------------------------- */
+.dropdown-combobox__input-wrapper {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  background: var(--color-background-component, #ffffff);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dropdown-combobox--error .dropdown-combobox__input-wrapper {
+  border-color: var(--color-border-alerting-critical, #af0000);
+}
+
+.dropdown-combobox__input-wrapper:focus-within {
+  border-color: var(--color-border-accessible, #757575);
+  box-shadow: 0 0 0 2px var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.dropdown-combobox__input {
+  flex: 1;
+  height: 100%;
+  padding: 12px 12px 12px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  outline: none;
+}
+
+.dropdown-combobox__input::placeholder {
+  color: var(--color-text-disabled, #757575);
+}
+
+.dropdown-combobox__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* --- Clear Button --------------------------------------- */
+.dropdown-combobox__clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-neutral, #4d4d4d);
+  transition: color 0.15s ease;
+}
+
+.dropdown-combobox__clear-button:hover {
+  color: var(--color-icon-neutral, #4d4d4d);
+}
+
+.dropdown-combobox__clear-button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+/* --- Toggle Button -------------------------------------- */
+.dropdown-combobox__toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-neutral, #4d4d4d);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-combobox__toggle-button:hover {
+  color: var(--color-icon-neutral, #4d4d4d);
+}
+
+.dropdown-combobox__toggle-button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+.dropdown-combobox__toggle-button svg {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.15s ease;
+}
+
+.dropdown-combobox__toggle-button--open svg {
+  transform: rotate(180deg);
+}
+
+/* --- Dropdown List ------------------------------------- */
+.dropdown-combobox__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dropdown-combobox__option {
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-combobox__option:hover:not(.dropdown-combobox__option--disabled) {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.dropdown-combobox__option--selected {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-text-brand-strong, #0062ab);
+  font-weight: 500;
+}
+
+.dropdown-combobox__option--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* --- No Results ---------------------------------------- */
+.dropdown-combobox__no-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 16px;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  text-align: center;
+}
+
+/* --- Helper Text ---------------------------------------- */
+.dropdown-combobox__helper {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.dropdown-combobox__helper--error {
+  color: var(--color-text-alerting-critical, #af0000);
+}

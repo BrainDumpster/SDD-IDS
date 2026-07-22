@@ -1,0 +1,256 @@
+# Topology Design Spec
+
+## Metadata
+- **Component:** Topology
+- **Category:** Data Visualization
+- **Design System:** IDS
+- **Source:** Custom-built component (no Figma source node). Spec authored directly from product requirements; update this file if a Figma reference is later created.
+- **Sub-components:** `Node`, `Link` (data-driven; rendered by the pluggable diagramming engine, not standalone React components)
+- **Rendering engine (default):** [GoJS](https://gojs.net/) via an internal adapter (`ITopologyEngine`), so the engine can be swapped without changing the `Topology` API. GoJS is a commercial library — an unlicensed build renders a watermark until a license key is applied.
+
+## Anatomy
+- **root (`Topology`):** base container, sized to fill its parent (`width: 100%; height: 100%`), white background. Hosts 0 or more `Node`s and any `Link`s connecting them.
+- **Node:** a single visual unit on the canvas.
+  - **shape:** `Circle` (default) | `Square` | `Hexagon`.
+  - **icon (required):** every Node must show an icon, centered inside the shape (Single-Node) or inside the top-most shape only (Group-Node).
+  - **status indicator (optional):** 16×16 icon centered exactly on the shape's own top-right extent — its actual rightmost x-coordinate and topmost y-coordinate, computed per shape type (Circle/Square/Hexagon) — so it always hangs exactly half its height above the shape's real top and half its width to the right of the shape's real right edge, for every shape type.
+  - **badge (Group-Node only):** member-count pill centered on the bottom edge of the top-most shape, hanging half off the bottom. The sole click target to explode/collapse the Group-Node (see Interactions) — shows the count normally (click to explode), and "−" while exploded (click to collapse).
+  - **name:** centered text, 8px below the shape, on an opaque white backing so nothing drawn underneath (e.g. a Link) is ever visible through it.
+  - **type-name:** centered text, 4px below the name, on the same kind of opaque white backing.
+  - **link port:** a single invisible anchor point at the exact center of the icon in the top-most (front-most) shape — this is the only point a Link may attach to, for both Single-Node and Group-Node.
+- **Link:** a single edge connecting exactly two Nodes, anchored at each Node's link port (the center of its top-most shape's icon) but drawn only up to the true visual edge of each Node's shape, so no part of the line is ever visible inside a Node's shape or above/behind its Name/Type-Name text.
+
+## Layout & Measurements
+- **Node shape:** square bounding box, default `48×48` px (`nodeSize` prop), applies to Circle/Square/Hexagon alike.
+- **Group-Node stack:** the same shape is drawn three times, one atop the other. Moving from the **bottom-most** layer to the **top-most** layer, each shape is shifted **4px further left only** (layers at x-offsets `0` (bottom), `-4` (middle), `-8` (top-most); **y-offset is always `0` for every layer** — the stack never shifts vertically). The top-most layer is drawn last (so it is never obscured by the other two) and is the only layer that renders the icon, status indicator, and badge — each aligned as an independent sibling directly off the bottom-most shape (offset by the same `-8`), rather than nested inside the top-most shape's own sub-panel, so the icon/status/badge overhang never skews the top-most shape's own position.
+- **Icon:** ~20×20px, centered within the shape.
+- **Status indicator:** 16×16px, centered on the shape's own top-right extent (`shapeTopRightExtent`: the shape's actual rightmost x-coordinate and topmost y-coordinate, computed per shape type from the same geometry as Link trimming) — i.e. positioned so exactly half of it, 8px, extends beyond the shape's real top edge and real right edge, for every shape type. **Circle and Hexagon only:** nudged an additional amount from that extent (manual per-shape visual adjustment, applies to both Single-Node and Group-Node for each shape; Square is unaffected) — Circle: 5px left, 5px down; Hexagon: 6px left, 2px down.
+- **Badge:** pill shape, fixed `18px` height (width grows only as needed for the count text, e.g. `"+99"`), centered on the shape's bottom edge (half above, half below), ~5px horizontal padding around the count text.
+- **Name / Type-Name spacing:** Name sits 8px below the shape; Type-Name sits 4px below Name. Each label is on its own opaque white backing panel sized to fit the text.
+- **Name / Type-Name truncation:** max 24 characters. When the source text exceeds 24 characters, the rendered label keeps the start and end of the original string, replacing the removed middle portion with a single ellipsis (`…`); the total rendered length (including the ellipsis) never exceeds 24 characters. Example: `"A Very Long Node Name Indeed"` → `"A Very Long …Name Indeed"`.
+- **Link stroke width:** 2px.
+- **Link attachment point:** the exact center of the icon in the Node's top-most shape (see `link port` in Anatomy) — not the edge of the Node's overall bounding box (which would otherwise include the Name/Type-Name text and, for Group-Nodes, the extra width from the stacked shapes).
+- **Link visibility — exact edge trimming:** a Link is drawn from the true edge of one Node's shape to the true edge of the other's — it stays fully visible right up until it touches the shape, and never renders on top of/within either shape. The trim distance is computed exactly per shape type and per angle (not a fixed radius approximation), using the true polygon geometry for Square and Hexagon:
+  - **Circle:** constant radius (`nodeSize / 2`) in every direction.
+  - **Square:** exact ray/edge intersection with the square's 4 sides (distance varies from `nodeSize / 2`, straight on, up to `nodeSize / 2 × √2` toward a corner).
+  - **Hexagon:** exact ray/edge intersection with the hexagon's 6 sides (same flat-top/flat-bottom, pointed-left/right geometry as the shape itself).
+  - This is recomputed live as a Node is dragged, so Links continuously track the correct edge point.
+- **Link visibility — never above or behind text:** Links render in a dedicated Layer placed below every Node's Layer in z-order (GoJS otherwise draws Links on top of Nodes by default in this build), so a Link is never drawn above a Node's shape or its Name/Type-Name text. The Name/Type-Name labels also each sit on an opaque white backing panel (not just bare text) as a second guarantee — even if a Link's path passes underneath a label, it stays fully hidden there.
+
+## Rendering Notes
+- **Hexagon figure:** GoJS's core package does not ship a built-in `"Hexagon"` figure (it only exists in GoJS's optional, non-bundled `Figures.js` extension). This component registers its own minimal flat-top/flat-bottom hexagon figure generator (`registerFigures.ts`) so `shape: "hexagon"` renders an actual hexagon rather than silently falling back to a plain rectangle. If the rendering engine is swapped away from GoJS, the replacement engine must provide an equivalent hexagon figure.
+- **Single-selection enforcement:** the installed GoJS build has no `Diagram.allowMultiselect` property (setting it throws at construction time). Single-selection is instead enforced by disabling the rubber-band drag-select gesture (`dragSelectingTool.isEnabled: false`) and, in the `"ChangedSelection"` diagram listener, immediately trimming the selection down to the most-recently-selected Node if a gesture (e.g. shift/ctrl-click) ever produces more than one.
+- **Web font load race:** GoJS renders text on canvas, which — unlike DOM text — does not automatically repaint once an async web font (this app loads Google Font Roboto weights `400`/`500`/`700` in `index.html`) finishes loading. If the diagram's first paint happens before the font is ready, every declared weight silently falls back to the browser default and renders identically (e.g. Name and Type-Name would look the same weight). `GoJSTopologyEngine.init` awaits `document.fonts.ready` and forces one `diagram.requestUpdate()` afterward so the correct weights always show up regardless of load timing.
+
+## Tokens
+No IDS design tokens are currently mapped for Topology (custom component). Colors used today are literal hex values pending token assignment, and shape fill in particular is a placeholder that will be swapped for light/dark theme tokens later:
+- Unselected shape stroke: `#4d364c`
+- Selected shape stroke: `#0076ce`
+- Selected shape fill: `#dbe9f5`
+- Unselected shape fill: `#ffffff` (placeholder — light-mode value for now; will vary by theme once tokenized)
+- Default Link color: `#757575`
+- Badge background: `#005ece`, badge text: `#ffffff`
+- Font family: `Roboto, sans-serif` for all text (Name, Type-Name, badge count) — per the project's Font Rule (see `PROJECT_RULES.md`).
+- Name text color: `#252525` (regular weight, `400`, `14px`); Type-Name text color: `#4d4d4d` (semi-bold weight, `600`, `14px`); badge count: `#ffffff` (`400`, `11px`).
+- Status icon slugs (resolved via `iconsBasePath`, default `assets/icons`):
+  - `ok` → `status-ok-circ-solid`
+  - `warning` → `status-warn-tri-solid`
+  - `error` → `status-error-diamond-solid`
+  - `critical` → `status-critical-square-solid`
+
+## States (Node)
+| Node State | Shape stroke | Shape stroke width | Shape fill |
+|---|---|---|---|
+| Unselected | `#4d364c` | `1px` | `#ffffff` (placeholder; theme-driven later) |
+| Selected | `#0076ce` | `2px` | `#dbe9f5` |
+
+Both Single-Node and Group-Node use the same selection styling; for a Group-Node, all three stacked shape layers update together.
+
+**Web font weights:** `index.html` loads Google Font Roboto weights `400`/`500`/`600`/`700`. `600` (semi-bold) is used for Type-Name specifically, requested as "a little bolder" than the `500` (medium) it started at.
+
+## Interactions
+- **Selection:** clicking a Node selects it and reports the change via `onSelectionChange` (full selected-key list) and `onNodeSelect` (the specific Node's key, fired whenever exactly one Node ends up selected). **Only one Node can be selected at a time** — clicking a different Node always replaces the current selection rather than adding to it (multi-select is disabled).
+- **Move:** click to select, then drag to reposition; the Node stays at the drop location on mouse release.
+- **No-overlap constraint:** Nodes must never overlap. While dragging, movement is blocked in real time — a Node cannot be dragged into any position where its bounds would intersect another Node's bounds; it simply stops advancing at the point of contact rather than snapping back afterward.
+- **Link rendering during drag:** since each Link's endpoint is recomputed live from the Node's center, its shape type, and the current angle toward the other Node, Links automatically stay trimmed to the true shape edge and follow a Node as it's dragged, without ever rendering inside either connected Node.
+- **Node/Link creation & deletion:** data-driven only in the current implementation. Nodes and Links are added, changed, or removed exclusively by updating the `nodes` / `links` props; there is no canvas-based create/delete UI in this version.
+- **Panning/Zooming:** enabled by default via the underlying engine (mouse wheel zoom, drag-to-pan on empty canvas) since Topology is a free-form diagram surface. Each mouse wheel "tick" always performs exactly one fixed-size zoom step ("+"/increase for scroll-up, "−"/decrease for scroll-down) via `CommandHandler.increaseZoom`/`decreaseZoom` — the same commands (and default `zoomFactor`) as GoJS's `Ctrl-+`/`Ctrl--` keyboard shortcuts, so wheel zoom and keyboard zoom always move by the identical amount. GoJS's built-in wheel-zoom is deliberately not used since it scales the zoom amount to each wheel event's delta magnitude, which varies inconsistently by device/browser (trackpad vs. mouse wheel). Since a single physical wheel tick/gesture commonly dispatches several rapid-fire `wheel` DOM events rather than exactly one, those are also coalesced (80ms window) into a single zoom step, so one tick never zooms further than one keyboard press.
+- **Zoom controls:** a floating control panel is anchored to the upper-right corner of the diagram, inset 24px from the top and 24px from the right. It contains three 32x32px icon buttons stacked vertically — **Zoom in** (fixed step, same as one mouse-wheel tick / `Ctrl-+`), **Zoom out** (same as one mouse-wheel tick / `Ctrl--`), and **Fit to screen** (scales/pans so all Nodes are fully visible via `Diagram.zoomToFit()`). The panel sits above the canvas at all times and does not participate in diagram pan/zoom itself.
+- **Node size clamp while zooming:** each Node (its shape(s), icon, status indicator, and badge together — not the Name/Type-Name labels) has a natural document size equal to `nodeSize` (default 48x48px), but its rendered *on-screen* size is clamped between `minNodeSize` (default 16px) and `maxNodeSize` (default 64px) — as the user zooms in/out (via wheel, the zoom controls, or keyboard shortcuts) past either bound, the whole Node is counter-scaled to hold exactly at that bound instead of continuing to grow/shrink. Recomputed on every `ViewportBoundsChanged` Diagram event and after every render.
+- **Data updates preserve interaction state:** after the initial load, updates to `nodes`/`links` are merged into the existing diagram (matched by `key`) rather than replacing it outright, so an in-progress or just-completed selection/click is never clobbered by the very state update it triggered.
+- **Group-Node explode/collapse:** clicking a Group-Node's **badge** (not the Node itself) reveals its `children` as real Nodes, plus a Link from the Group-Node to each one — positioned per the `x`/`y` each child data object specifies. A child may itself be an expandable Group-Node. This is purely internal view state (not reflected back into the `nodes`/`links` props) and **never auto-collapses** — expanding a different Group-Node, changing selection, or updating props all leave it exploded. While exploded, the badge shows "−" instead of the count; clicking it again collapses the Group-Node (hiding its children/Links) and restores the count. Clicking the Node itself (anywhere other than the badge) only selects it, same as any other Node — it never triggers explode/collapse.
+
+## Composition & API (runtime)
+
+### `TopologyNodeData`
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `key` | `string` | Yes | Unique identifier for the node. |
+| `name` | `string` | Yes | Name label, centered 8px under the node (max 24 chars; start/end kept, middle replaced with a single ellipsis when truncated). |
+| `typeName` | `string` | No | Type-Name label, centered 8px under Name (max 24 chars; start/end kept, middle replaced with a single ellipsis when truncated). |
+| `shape` | `"circle" \| "square" \| "hexagon"` | No | Defaults to `"circle"`. |
+| `icon` | `string` | **Yes** | Icon slug resolved to `{iconsBasePath}/{icon}.svg`. Every Node must have an icon — there is no icon-less Node state. |
+| `status` | `"ok" \| "warning" \| "error" \| "critical"` | No | Renders the matching status icon in the upper-right corner. |
+| `kind` | `"single" \| "group"` | No | Defaults to `"single"`. |
+| `x` / `y` | `number` | Yes | Position in diagram coordinates. |
+| `selected` | `boolean` | No | Controlled selection flag. |
+| `showName` | `boolean` | No | Defaults to `true`. |
+| `showTypeName` | `boolean` | No | Defaults to `true`. |
+| `childCount` | `number` | No (Group-Node) | Fallback badge count (`> 99` renders as `"+99"`), used **only** when `children` is omitted — the badge always shows `children.length` instead whenever `children` is provided, so it's guaranteed to match how many Nodes appear on explode. |
+| `children` | `TopologyNodeData[]` | No (Group-Node) | Real child Node data, revealed (with a Link from this Node to each) when this Group-Node is clicked. Also drives the badge count (`children.length`) whenever present. A child may itself be a Group-Node with its own `children`. |
+
+### `TopologyLinkData`
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `key` | `string` | Yes | Unique identifier for the link. |
+| `from` / `to` | `string` | Yes | Keys of the two Nodes the link connects. |
+| `color` | `string` | No | Defaults to `#757575`. |
+| `style` | `"solid" \| "dashed" \| "dotted"` | No | Defaults to `"solid"`. |
+
+### `TopologyProps`
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `nodes` | `TopologyNodeData[]` | Yes | 0 or more Nodes (controlled by the parent). |
+| `links` | `TopologyLinkData[]` | Yes | Links connecting exactly two Nodes each; requires at least 2 Nodes to have any effect. |
+| `nodeSize` | `number` | No | Shape diameter/side length in px. Defaults to `48`. |
+| `iconsBasePath` | `string` | No | Base path for icon/status slug resolution. Defaults to `"assets/icons"`. |
+| `minNodeSize` | `number` | No | Smallest a Node is ever allowed to render on screen (viewport px), regardless of zoom-out level. Defaults to `16`. |
+| `maxNodeSize` | `number` | No | Largest a Node is ever allowed to render on screen (viewport px), regardless of zoom-in level. Defaults to `64`. |
+| `onNodeMove` | `(key: string, x: number, y: number) => void` | No | Fires after a drag completes and the Node settles at a new position. |
+| `onSelectionChange` | `(selectedKeys: string[]) => void` | No | Fires whenever the set of selected Node keys changes. |
+| `onNodeSelect` | `(key: string) => void` | No | Fires specifically when a Node is clicked and becomes the (single) selected Node. |
+| `engine` | `() => ITopologyEngine` | No | Factory to swap the rendering engine; defaults to `GoJSTopologyEngine`. |
+
+### TypeScript reference
+
+```typescript
+type NodeShapeKind = "circle" | "square" | "hexagon";
+type NodeStatus = "ok" | "warning" | "error" | "critical";
+type NodeKind = "single" | "group";
+type LinkStyleKind = "solid" | "dashed" | "dotted";
+
+interface TopologyNodeData {
+  key: string;
+  name: string;
+  typeName?: string;
+  shape?: NodeShapeKind;
+  icon: string;
+  status?: NodeStatus;
+  kind?: NodeKind;
+  x: number;
+  y: number;
+  selected?: boolean;
+  showName?: boolean;
+  showTypeName?: boolean;
+  childCount?: number;
+  children?: TopologyNodeData[];
+}
+
+interface TopologyLinkData {
+  key: string;
+  from: string;
+  to: string;
+  color?: string;
+  style?: LinkStyleKind;
+}
+
+interface TopologyProps {
+  nodes: TopologyNodeData[];
+  links: TopologyLinkData[];
+  nodeSize?: number;
+  iconsBasePath?: string;
+  minNodeSize?: number;
+  maxNodeSize?: number;
+  onNodeMove?: (key: string, x: number, y: number) => void;
+  onSelectionChange?: (selectedKeys: string[]) => void;
+  onNodeSelect?: (key: string) => void;
+  engine?: () => ITopologyEngine;
+}
+```
+
+### Engine adapter contract (`ITopologyEngine`)
+
+```typescript
+interface ITopologyEngine {
+  init(container: HTMLDivElement, options: TopologyEngineOptions, handlers: TopologyEngineHandlers): void;
+  setData(nodes: TopologyNodeData[], links: TopologyLinkData[]): void;
+  resize(): void;
+  zoomIn(): void;
+  zoomOut(): void;
+  zoomToFit(): void;
+  destroy(): void;
+}
+```
+
+Any diagramming library can implement this interface and be supplied via the `engine` prop; the default implementation is `GoJSTopologyEngine`. Implementations should merge/diff `setData` calls against existing rendered Parts (matched by `key`) rather than tearing down and rebuilding everything on every call, so that in-progress interaction state (selection, drag) survives the very state updates it triggers via `onNodeMove`/`onSelectionChange`/`onNodeSelect`. `zoomIn`/`zoomOut`/`zoomToFit` back the on-screen zoom control panel described under Interactions; `GoJSTopologyEngine` implements them via `CommandHandler.increaseZoom`/`decreaseZoom` and `Diagram.zoomToFit()` respectively.
+
+## Codegen Contract (Framework-Agnostic Blueprint)
+
+### Deterministic structure
+1. `TopologyRoot` (full-size, white background container)
+2. `Node[]` (in `nodes` order)
+   - `NodeShapeLayers` — 1 layer for Single-Node; 3 layers for Group-Node at x-offsets `0` (bottom, drawn first), `-4` (middle), `-8` (top-most, drawn last)
+   - `NodeLinkPort` — invisible anchor at the exact center of the top-most/only layer; the sole attachment point for Links
+   - optional `NodeIcon` (top-most/only layer, centered on `NodeLinkPort`)
+   - optional `NodeStatusIcon` (top-most/only layer, top-right corner)
+   - optional `NodeBadge` (Group-Node top-most layer, bottom edge)
+   - optional `NodeName` (8px below shape)
+   - optional `NodeTypeName` (8px below Name)
+3. `Link[]` (in `links` order) — each connects exactly 2 Node keys present in `nodes`, anchored at each Node's `NodeLinkPort` and trimmed at each end to the exact edge of that Node's shape (per-shape, per-angle geometry — not a fixed radius) so it never renders within a Node's shape
+
+### Variant matrix
+- **Shape:** `circle | square | hexagon`
+- **Kind:** `single | group`
+- **Status:** `none | ok | warning | error | critical`
+- **Selection:** `selected | unselected`
+- **Link style:** `solid | dashed | dotted`
+
+### Behavior contract
+- Clicking a Group-Node's badge reveals its `children` as Nodes plus a Link from it to each child; this exploded state is internal view state, is never reflected back into `nodes`/`links`, and never auto-collapses. The badge shows "−" while exploded and is the sole click target for both exploding and collapsing — clicking the Node itself elsewhere only selects it.
+- Dragging a Node updates its live position but is blocked from entering any position that would overlap another Node's bounds.
+- Clicking a Node selects it; only one Node may be selected at a time (selecting a new Node deselects the previous one). Selecting/deselecting Nodes reports the full selected-key list (0 or 1 entries) via `onSelectionChange`; whenever that list has exactly one entry (i.e. a Node was just clicked/selected), `onNodeSelect` also fires with that Node's key.
+- A completed drag reports the final `(x, y)` via `onNodeMove`; the component is fully controlled — the parent owns `nodes`/`links` and must persist position/selection changes back into props for them to stick.
+- A Link renders only if both its `from` and `to` keys exist in the current `nodes` array.
+- A Link always anchors both ends to the target Node's `NodeLinkPort` (icon center of its top-most shape), never to the Node's outer bounding box.
+- A Link's rendered line is always trimmed at each end to the exact point where the line crosses that Node's true shape boundary (Circle: constant radius; Square/Hexagon: exact ray/polygon-edge intersection), recomputed live as Nodes move, so it is only ever visible in the space between Nodes, never overlapping either connected Node's shape.
+
+### Fallback/error rules
+- Unknown `shape` → falls back to `circle`.
+- Unknown `status` → no status icon rendered.
+- Missing `icon` → invalid data; `icon` is a required field and generators/consumers must supply a valid slug for every Node (no icon-less fallback is defined).
+- Link referencing a missing Node key → the link is silently dropped from render.
+- `children` provided on a Group-Node → badge always renders `children.length` (capped/overflowed to `+99` beyond 99), ignoring `childCount` entirely.
+- `children` omitted on a Group-Node → badge falls back to `childCount` (`0` if that's also omitted; `+99` beyond 99); clicking it behaves like any other Node (selects only; no explode, no "−" badge state).
+
+### Validation checklist
+- [ ] Nodes never visually overlap during or after a drag.
+- [ ] Every Link connects exactly two Nodes present in `nodes`.
+- [ ] Group-Node shows exactly 3 stacked shape layers; moving bottom-to-top each is shifted 4px further left, and the top-most is drawn last (unobscured).
+- [ ] Every Node (Single-Node and Group-Node) renders an icon — no Node is ever icon-less.
+- [ ] Only the top-most shape layer of a Group-Node shows icon/status/badge.
+- [ ] Every Link attaches to the exact center of the icon in each connected Node's top-most shape, not the Node's outer bounding box.
+- [ ] No portion of any Link is visible within a Node's shape, for all three shape types (Circle, Square, Hexagon) and at all angles — not just when approaching straight-on.
+- [ ] No portion of any Link is ever visible above or behind a Node's Name/Type-Name text.
+- [ ] `shape: "hexagon"` renders an actual hexagon (not a plain rectangle fallback).
+- [ ] Clicking a Node selects it; clicking a second Node deselects the first (never more than one selected Node at a time).
+- [ ] A Group-Node's 3 stacked shape layers are offset **only** on the x-axis (4px increments); the y-offset is always `0`.
+- [ ] Name/Type-Name never exceed 24 rendered characters; when truncated, the start and end of the text are kept and the removed middle is replaced with a single ellipsis.
+- [ ] Selected/unselected stroke, stroke width, and fill match the state table exactly.
+- [ ] Clicking a Group-Node's badge (not the Node itself) reveals each child Node plus a Link from parent to child; clicking the Node itself never triggers explode/collapse.
+- [ ] An exploded Group-Node's badge shows "−"; clicking it collapses the Group-Node (hides its children/Links) and restores the count.
+- [ ] Explode/collapse state is never lost or reset by an unrelated `nodes`/`links` prop update.
+- [ ] A Group-Node's badge count always equals `children.length` (when `children` is provided) — expanding always reveals exactly that many Nodes, never more or fewer.
+
+## Source Mapping
+| Source | Location |
+|---|---|
+| Component | `src/Components/Topology/Topology.tsx` |
+| Types | `src/Components/Topology/types.ts` |
+| Engine interface | `src/Components/Topology/engine/ITopologyEngine.ts` |
+| GoJS engine | `src/Components/Topology/engine/gojs/GoJSTopologyEngine.ts` |
+| Node template | `src/Components/Topology/engine/gojs/nodeTemplate.ts` |
+| Link template | `src/Components/Topology/engine/gojs/linkTemplate.ts` |
+| Truncation helper | `src/Components/Topology/engine/gojs/truncate.ts` |
+| Shape-aware Link edge math | `src/Components/Topology/engine/gojs/shapeEdgeDistance.ts` |
+| Custom figure registration (Hexagon) | `src/Components/Topology/engine/gojs/registerFigures.ts` |
+| Live example | `src/App.tsx` (`Topology Component` section) — includes a Group-Node with 2 of its own children also being expandable Group-Nodes, demonstrating recursive nesting |

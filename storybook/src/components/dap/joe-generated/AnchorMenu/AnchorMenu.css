@@ -1,0 +1,60 @@
+/* ============================================================
+   Anchor Menu — IDS Design System
+   ============================================================ */
+
+.anchor-menu {
+  width: 100%;
+  min-width: 200px;
+  max-width: 300px;
+  border: 1px solid var(--color-border-accessible, #8898a5);
+  border-radius: 4px;
+  background: transparent;
+  font-family: "Roboto", sans-serif;
+}
+
+.anchor-menu--sticky {
+  position: sticky;
+  top: 0;
+}
+
+.anchor-menu__header {
+  padding: 12px 0;
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--font-line-height-line-height-24, 24px);
+  font-weight: 400;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.anchor-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.anchor-menu__item {
+  display: block;
+  height: 40px;
+  padding: 8px 24px;
+  border-left: 1.2px solid var(--color-border-accessible, #8898a5);
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--font-line-height-line-height-24, 24px);
+  color: var(--color-text-neutral, #8898a5);
+  text-decoration: none;
+  transition: border-left-color 0.15s ease, color 0.15s ease;
+}
+
+.anchor-menu__item:hover {
+  border-left-color: var(--color-border-brand-base, #4c9fdd);
+  color: var(--color-text-neutral, #8898a5);
+}
+
+.anchor-menu__item:focus {
+  border: 2px solid var(--color-border-brand-base, #4c9fdd);
+  color: var(--color-text-brand-strong, #94c5ea);
+  outline: none;
+}
+
+.anchor-menu__item--active {
+  border-left-color: var(--color-border-brand-base, #4c9fdd);
+  color: var(--color-text-brand-strong, #94c5ea);
+}

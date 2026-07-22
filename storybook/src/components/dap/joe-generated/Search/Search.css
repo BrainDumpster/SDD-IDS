@@ -1,0 +1,95 @@
+/* ============================================================
+   Search — IDS Design System
+   ============================================================ */
+
+.search {
+  position: relative;
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+}
+
+.search__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search__icon {
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-accessible, #757575);
+  pointer-events: none;
+}
+
+.search__input {
+  width: 100%;
+  min-width: 200px;
+  height: 32px;
+  padding: 8px 32px 8px 32px;
+  border: 1px solid var(--color-border-accessible, #757575);
+  border-radius: 4px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  background: var(--color-background-component, #ffffff);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search__input:hover {
+  border-color: var(--color-border-strong, #252525);
+}
+
+.search__input:focus {
+  outline: none;
+  border-color: var(--color-border-brand-base, #0076ce);
+  box-shadow: 0 0 0 2px var(--color-border-brand-base, #0076ce);
+}
+
+.search__input:focus + .search__icon {
+  color: var(--color-icon-brand-base, #0076ce);
+}
+
+.search__input:disabled,
+.search--disabled .search__input {
+  background: var(--color-background-component, #ffffff);
+  border-color: var(--color-border-disabled, #757575);
+  color: var(--color-text-disabled, #757575);
+}
+
+.search__clear {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-accessible, #757575);
+  transition: color 0.15s ease;
+}
+
+.search__clear:hover {
+  color: var(--color-icon-brand-base, #0076ce);
+}
+
+/* --- Compact Variant -------------------------------------- */
+.search--compact .search__input {
+  height: 32px;
+  padding: 6px 28px 6px 28px;
+}
+
+/* --- Expanded Variant ------------------------------------- */
+.search--expanded {
+  width: 100%;
+}
+
+.search--expanded .search__input {
+  min-width: 100%;
+}

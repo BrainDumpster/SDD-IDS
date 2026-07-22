@@ -1,0 +1,154 @@
+/* ============================================================
+   Table — IDS Design System
+   ============================================================ */
+
+.table-container {
+  width: 100%;
+  min-width: 400px;
+  max-height: 400px;
+  overflow: auto;
+  font-family: "Roboto", sans-serif;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-background-component, #ffffff);
+}
+
+.table__header-row {
+  background: var(--color-background-gray-100, #f4f4f4);
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.table__header-cell {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  white-space: nowrap;
+}
+
+.table__header-cell--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.table__header-cell--sortable:hover {
+  background: var(--color-background-gray-lighter, #eaeaea);
+}
+
+.table__header-cell--checkbox {
+  width: 48px;
+  text-align: center;
+}
+
+.table__sort-icon {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--color-icon-brand-base, #0076ce);
+}
+
+.table__row {
+  height: 48px;
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  transition: background-color 0.15s ease;
+}
+
+.table--hoverable .table__row:hover {
+  background: var(--color-background-gray-100, #f4f4f4);
+}
+
+.table--striped .table__row:nth-child(even) {
+  background: var(--color-background-gray-50, #fafafa);
+}
+
+.table--striped .table__row:nth-child(even):hover {
+  background: var(--color-background-gray-100, #f4f4f4);
+}
+
+.table__row--selected {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+}
+
+.table__row--selected .table__cell {
+  color: var(--color-text-white, #ffffff);
+}
+
+.table__cell {
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+  border-right: var(--border-width-border-1, 1px) solid transparent;
+}
+
+.table--bordered .table__cell {
+  border-right-color: var(--color-border-accessible, #757575);
+}
+
+.table__cell--checkbox {
+  width: 48px;
+  text-align: center;
+}
+
+.table--compact .table__row {
+  height: 36px;
+}
+
+.table--compact .table__header-cell,
+.table--compact .table__cell {
+  padding: 6px 16px;
+}
+
+.table__loading,
+.table__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.table__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-top: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.table__pagination-button {
+  padding: 8px 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  transition: all 0.15s ease;
+}
+
+.table__pagination-button:hover:not(:disabled) {
+  background: var(--color-background-gray-lighter, #eaeaea);
+  border-color: var(--color-border-strong, #616161);
+}
+
+.table__pagination-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.table__pagination-info {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+}

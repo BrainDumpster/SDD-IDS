@@ -1,0 +1,154 @@
+/* ============================================================
+   Toast — IDS Design System
+   ============================================================ */
+
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 14px 24px;
+  background: var(--color-static-gray-900, #252525);
+  border: 1px solid var(--color-border-white, #ffffff);
+  border-radius: 2px;
+  font-family: "Roboto", sans-serif;
+  animation: toast-slide-in 0.3s ease-out;
+}
+
+.toast::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid transparent;
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast__content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast__status-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toast__message {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-static-gray-white, #ffffff);
+}
+
+.toast__actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.toast__link {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-white, #ffffff);
+  text-decoration: underline;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.toast__link:hover {
+  text-decoration: none;
+}
+
+.toast__link:focus-visible {
+  outline: 1px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.toast__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-white, #ffffff);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.toast__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.toast__close:focus-visible {
+  outline: 1px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+/* --- Type Variants -------------------------------------- */
+.toast--info {
+  border-color: var(--color-border-alerting-info-white, #005ece);
+}
+
+.toast--info .toast__status-icon {
+  color: var(--color-icon-alerting-info, #005ece);
+}
+
+.toast--critical {
+  border-color: var(--color-border-alerting-critical-white, #af0000);
+}
+
+.toast--critical .toast__status-icon {
+  color: var(--color-icon-alerting-critical, #af0000);
+}
+
+.toast--major-warning {
+  border-color: var(--color-border-alerting-major-white, #ed6400);
+}
+
+.toast--major-warning .toast__status-icon {
+  color: var(--color-icon-alerting-major, #ed6400);
+}
+
+.toast--minor-warning {
+  border-color: var(--color-border-alerting-minor-transparent, #9c622e);
+}
+
+.toast--minor-warning .toast__status-icon {
+  color: var(--color-icon-alerting-minor, #ffc700);
+}
+
+.toast--success {
+  border-color: var(--color-border-alerting-success-white, #1b8500);
+}
+
+.toast--success .toast__status-icon {
+  color: var(--color-icon-alerting-success, #1b8500);
+}

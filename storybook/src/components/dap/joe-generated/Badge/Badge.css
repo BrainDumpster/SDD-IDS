@@ -1,0 +1,53 @@
+/* ============================================================
+   Badge — IDS Design System
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  padding: 0 5.5px;
+  border: 1px solid;
+  border-radius: 100px;
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.758;
+  white-space: nowrap;
+}
+
+/* --- Default ---------------------------------------------- */
+.badge--default {
+  background: var(--color-background-alerting-info, #005ece);
+  border-color: var(--color-border-white, #ffffff);
+  color: var(--color-text-white, #ffffff);
+}
+
+/* --- Critical --------------------------------------------- */
+.badge--critical {
+  background: var(--color-background-alerting-critical, #af0000);
+  border-color: var(--color-border-white, #ffffff);
+  color: var(--color-text-white, #ffffff);
+}
+
+/* --- Warning --------------------------------------------- */
+.badge--warning {
+  background: var(--color-background-alerting-minor, #ffc700);
+  border-color: var(--ids-badge-warning-border-color, var(--color-border-white, #ffffff));
+  color: var(--color-text-black, #252525);
+}
+
+/* --- Disabled --------------------------------------------- */
+.badge--disabled {
+  background: var(--color-static-gray-500, #757575);
+  border-color: var(--color-border-white, #ffffff);
+  color: var(--color-text-white, #ffffff);
+}
+
+/* --- Success --------------------------------------------- */
+.badge--success {
+  background: var(--color-background-alerting-success, #1b8500);
+  border-color: var(--color-border-white, #ffffff);
+  color: var(--color-text-white, #ffffff);
+}

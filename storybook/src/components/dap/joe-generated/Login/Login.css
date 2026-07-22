@@ -1,0 +1,294 @@
+/* ============================================================
+   Login — IDS Design System
+   ============================================================ */
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: transparent;
+  font-family: "Roboto", sans-serif;
+}
+
+.login__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 48px 40px;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login__logo-section {
+  margin-bottom: 24px;
+}
+
+.login__title {
+  margin: 0 0 32px;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 400;
+  color: var(--color-text-neutral-strong, #252525);
+  text-align: center;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 24px;
+}
+
+.login__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login__label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.login__input {
+  height: 32px;
+  padding: 12px 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  background: var(--color-background-component, #ffffff);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.login__input:focus {
+  outline: none;
+  border-color: var(--color-border-brand-base, #0076ce);
+  box-shadow: 0 0 0 2px var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.login__input::placeholder {
+  color: var(--color-text-disabled, #757575);
+}
+
+.login__form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+}
+
+.login__checkbox-input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.login__forgot-password {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-brand-strong, #0062ab);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.login__forgot-password:hover {
+  color: var(--color-text-link-brand-base, #0062ab);
+  text-decoration: underline;
+}
+
+.login__submit-button {
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 4px;
+  background: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.login__submit-button:hover {
+  background: var(--color-background-brand-strong, #0062ab);
+}
+
+.login__submit-button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+}
+
+.login__registration {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral, #4d4d4d);
+  text-align: center;
+}
+
+.login__register-link {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-brand-strong, #0062ab);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login__register-link:hover {
+  text-decoration: underline;
+}
+
+.login__social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.login__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-disabled, #757575);
+}
+
+.login__divider::before,
+.login__divider::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: var(--color-border-light, #c5c5c5);
+}
+
+.login__divider::before {
+  left: 0;
+}
+
+.login__divider::after {
+  right: 0;
+}
+
+.login__divider span {
+  background: var(--color-background-component, #ffffff);
+  padding: 0 16px;
+  z-index: 1;
+}
+
+.login__social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login__social-button {
+  height: 32px;
+  padding: 0 24px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 0;
+  background: var(--color-background-component, #ffffff);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.login__social-button:hover {
+  border-color: var(--color-border-accessible, #757575);
+  background: var(--color-background-gray-light, #eaeaea);
+}
+
+.login__social-button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+}
+
+.login__social-button--google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.login__social-button--microsoft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.login__message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.login__message--error {
+  background: var(--color-background-alerting-critical-light, #ffebeb);
+  color: var(--color-text-alerting-critical, #af0000);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-alerting-critical, #af0000);
+}
+
+.login__message--success {
+  background: var(--color-background-alerting-success-light, #eafbe6);
+  color: var(--color-text-alerting-success, #1b8500);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-alerting-success, #1b8500);
+}
+
+.login__message svg {
+  flex-shrink: 0;
+}
+
+/* --- Variant: minimal ----------------------------------- */
+.login--minimal .login__container {
+  padding: 32px 24px;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.login--minimal .login__logo-section {
+  display: none;
+}
+
+/* --- Variant: branded ----------------------------------- */
+.login--branded .login__container {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0076ce);
+}

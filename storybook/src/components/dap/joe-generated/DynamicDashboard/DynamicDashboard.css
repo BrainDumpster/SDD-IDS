@@ -1,0 +1,315 @@
+/* DynamicDashboard component styles */
+
+.grid-stack-outer {
+  /* Padding here + each outermost tile's own `margin`-driven inset (see
+     .grid-stack-item-content) combine to form the total outer gutter.
+     With margin: 8 and an 8px padding here, the total is 8 + 8 = 16px on
+     all 4 sides. If the `margin` option changes, this value must change
+     too (padding = desired outer gap - margin).
+     height is intentionally NOT forced to 100% here: `.grid-stack` sizes
+     itself to its actual row content (rows * rowHeight), and this wrapper
+     needs to grow to match that plus its own padding - otherwise, once
+     content is taller than whatever fixed-height parent this sits in,
+     the tiles overflow straight through this padding instead of pushing
+     it down, and the bottom gutter ends up missing. */
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.grid-stack {
+  /* GridStack sets its own inline height based on row count * cellHeight
+     (see gridstack.js _updateContainerHeight) - let that stand instead of
+     forcing 100%, so the grid (and .grid-stack-outer above) grow to fit
+     all rows. Forcing height: 100% made tiles overflow straight through
+     .grid-stack-outer's bottom padding once content exceeded whatever
+     fixed-height parent this sits in. */
+  width: 100% !important;
+  min-height: 400px;
+  box-sizing: border-box;
+}
+
+.grid-stack-item {
+  /* Intentionally no border/background here - GridStack sizes this
+     element to the FULL cell (see gridstack.css: width: var(--gs-column-width)),
+     with no margin subtracted. The visible tile box is
+     .grid-stack-item-content below, which GridStack insets from this
+     element by var(--gs-item-margin-*) - that inset is what actually
+     creates the gap between adjacent tiles. */
+  padding: 0;
+  margin: 0;
+}
+
+.grid-stack-item-content {
+  /* This is the visible tile box: GridStack insets it from .grid-stack-item
+     by var(--gs-item-margin-*) (driven by the `margin` option), so its
+     border sits exactly `margin` px away from neighboring tiles' borders
+     on all sides. Note: no `height: 100%` here - this element already has
+     both `top` and `bottom` set by GridStack's own CSS (to the margin
+     vars), which alone determines its height. Adding an explicit `height`
+     over-constrains the box, causing the browser to ignore `bottom`
+     entirely - i.e. it silently cancels the vertical margin, eliminating
+     the visible gap between rows. */
+  background-color: var(--color-background-component, #ffffff);
+  border: 1px solid var(--color-border-light, #c5c5c5);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.grid-stack-item-content:hover {
+  border-color: var(--color-border-neutral, #757575);
+}
+
+/* Selected takes priority over hover (same specificity - rule order wins) */
+.grid-stack-item-content.selected {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+/* 40px title bar */
+.tile-header {
+  height: 40px;
+  background-color: var(--color-background-gray-lighter, #f5f5f5);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--color-border-light, #d1d1d1);
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.tile-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-neutral-strong, #252525);
+  font-family: 'Roboto', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.tile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tile-close-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--color-icon-neutral, #757575);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.tile-close-button:hover {
+  background-color: var(--color-background-gray-light, #e5e5e5);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.tile-overflow-menu {
+  position: relative;
+}
+
+.tile-overflow-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--color-icon-neutral, #757575);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.tile-overflow-button:hover {
+  background-color: var(--color-background-gray-light, #e5e5e5);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.tile-overflow-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background-color: var(--color-background-component, #ffffff);
+  border: 1px solid var(--color-border-light, #d1d1d1);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 150px;
+  z-index: 1000;
+}
+
+.tile-overflow-option {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--color-text-neutral-strong, #252525);
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tile-overflow-option:hover {
+  background-color: var(--color-background-gray-lighter, #f5f5f5);
+}
+
+.tile-overflow-option:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.tile-overflow-option:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+/* Content area with minimum 150px height */
+.tile-body {
+  flex: 1;
+  min-height: 150px;
+  padding: 16px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  /* Override the pointer cursor inherited from .grid-stack-item-content
+     (used to indicate the tile is clickable/selectable) - the body's own
+     content should show its natural cursor (text, default, etc.) instead. */
+  cursor: auto;
+}
+
+.tile-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-disabled, #757575);
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* 40px footer with optional buttons */
+.tile-footer {
+  height: 40px;
+  background-color: var(--color-background-gray-lighter, #f5f5f5);
+  padding: 0 16px;
+  border-top: 1px solid var(--color-border-light, #d1d1d1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.tile-footer-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.tile-footer-button {
+  padding: 6px 16px;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.tile-footer-button--primary {
+  background-color: var(--color-background-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.tile-footer-button--primary:hover {
+  background-color: var(--color-background-brand-strong, #0056b3);
+  border-color: var(--color-border-brand-dark, #0056b3);
+}
+
+.tile-footer-button--secondary {
+  background-color: var(--color-background-component, #ffffff);
+  color: var(--color-text-brand-base, #0076ce);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.tile-footer-button--secondary:hover {
+  background-color: var(--color-background-gray-lighter, #f5f5f5);
+  border-color: var(--color-border-brand-dark, #0056b3);
+  color: var(--color-text-brand-strong, #0056b3);
+}
+
+.tile-footer-button--tertiary {
+  background-color: transparent;
+  color: var(--color-text-neutral-strong, #252525);
+  border-color: var(--color-border-light, #d1d1d1);
+}
+
+.tile-footer-button--tertiary:hover {
+  background-color: var(--color-background-gray-lighter, #f5f5f5);
+  border-color: var(--color-border-neutral, #757575);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Mobile: Single column layout */
+  .grid-stack-item {
+    width: 100% !important;
+    left: 0 !important;
+  }
+
+  .tile-header {
+    padding: 0 12px;
+  }
+
+  .tile-header h3 {
+    font-size: 13px;
+  }
+
+  .tile-body {
+    padding: 12px;
+    min-height: 120px;
+  }
+
+  .tile-footer {
+    padding: 0 12px;
+  }
+
+  .tile-footer-button {
+    padding: 4px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet: Reduced column layout */
+  .tile-header {
+    padding: 0 14px;
+  }
+
+  .tile-body {
+    padding: 14px;
+  }
+
+  .tile-footer {
+    padding: 0 14px;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop: Full 12-column layout */
+  /* GridStack will handle 12-column layout via options */
+}

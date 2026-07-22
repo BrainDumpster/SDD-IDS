@@ -1,0 +1,154 @@
+/* ============================================================
+   Spinner — IDS Design System
+   ============================================================ */
+
+.spinner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+}
+
+/* --- Overlay Mode --------------------------------------- */
+.spinner--overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.spinner__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-background-overlay, rgba(0, 0, 0, 0.5));
+}
+
+.spinner__root {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- Spinner Visual ------------------------------------- */
+.spinner__visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner__track {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--color-background-surface-2, #ffffff);
+}
+
+.spinner__arc {
+  position: absolute;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--color-border-brand-base, #0076ce) 0deg 120deg,
+    transparent 120deg 360deg
+  );
+  animation: spinner-rotate 900ms linear infinite;
+}
+
+/* --- Reduced Motion ------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .spinner__arc {
+    animation-duration: 1800ms;
+  }
+}
+
+@keyframes spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Size Variants ------------------------------------- */
+.spinner--sm .spinner__visual {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner--sm .spinner__track {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner--sm .spinner__arc {
+  width: 10px;
+  height: 10px;
+}
+
+.spinner--md .spinner__visual {
+  width: 40px;
+  height: 40px;
+}
+
+.spinner--md .spinner__track {
+  width: 40px;
+  height: 40px;
+}
+
+.spinner--md .spinner__arc {
+  width: 30px;
+  height: 30px;
+}
+
+.spinner--lg .spinner__visual {
+  width: 72px;
+  height: 72px;
+}
+
+.spinner--lg .spinner__track {
+  width: 72px;
+  height: 72px;
+}
+
+.spinner--lg .spinner__arc {
+  width: 62px;
+  height: 62px;
+}
+
+/* --- Label Visibility ----------------------------------- */
+.spinner--label-visible-inline {
+  flex-direction: row;
+}
+
+.spinner--label-visible-below {
+  flex-direction: column;
+}
+
+.spinner__label {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+/* --- Screen Reader Only -------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

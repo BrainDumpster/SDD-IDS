@@ -1,0 +1,494 @@
+/* ============================================================
+   Datagrid — IDS Design System
+   ============================================================ */
+
+.datagrid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+  background: var(--color-background-surface-1, #f4f4f4);
+}
+
+.datagrid__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  background: var(--color-background-surface-2, #ffffff);
+}
+
+.datagrid__toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.datagrid__toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.datagrid__toolbar-count {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-medium, #545454);
+  white-space: nowrap;
+  padding-right: 16px;
+  border-right: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.datagrid__header-wrapper {
+  overflow: auto;
+  scrollbar-gutter: stable;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-bottom: none;
+  background: var(--color-background-surface-2, #ffffff);
+}
+
+.datagrid__header-wrapper--gray {
+  background: #f4f4f4;
+}
+
+.datagrid__header-wrapper::-webkit-scrollbar {
+  width: 16px;
+  height: 0;
+}
+
+.datagrid__header-wrapper::-webkit-scrollbar-track,
+.datagrid__header-wrapper::-webkit-scrollbar-thumb {
+  background: transparent;
+  border: none;
+}
+
+.datagrid__table--header {
+  table-layout: fixed;
+}
+
+.datagrid__scroll-viewport {
+  overflow-y: scroll;
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+  height: 289px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-top: none;
+  border-bottom-width: 0px;
+  background: var(--color-background-surface-2, #ffffff);
+  margin-top: -1px;
+}
+
+.datagrid--compact .datagrid__scroll-viewport {
+  height: 193px;
+}
+
+.datagrid__scroll-viewport::-webkit-scrollbar {
+  width: 16px;
+  height: 14px;
+}
+
+.datagrid__scroll-viewport::-webkit-scrollbar-track {
+  background: var(--color-background-surface-2, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.datagrid__scroll-viewport::-webkit-scrollbar-thumb {
+  background: var(--color-border-accessible, #757575);
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+
+.datagrid__scroll-viewport--no-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.datagrid__scroll-viewport::-webkit-scrollbar-corner {
+  background: var(--color-background-surface-2, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.datagrid__scroll-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-neutral-medium, #545454);
+  background-clip: padding-box;
+}
+
+.datagrid__table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 0;
+}
+
+.datagrid__table col {
+  min-width: 60px;
+}
+
+.datagrid__header {
+  background: var(--color-background-surface-2, #ffffff);
+}
+
+.datagrid__header-wrapper--gray .datagrid__header {
+  background: #f4f4f4;
+}
+
+.datagrid__header-cell {
+  padding: 0 16px;
+  height: 48px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+  border-right: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  box-shadow: inset 0 -1px 0 0 var(--color-border-accessible, #757575);
+  background: var(--color-background-surface-2, #ffffff);
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+}
+
+.datagrid__header-wrapper--gray .datagrid__header-cell {
+  background: #f4f4f4;
+}
+
+.datagrid__header-cell:last-child {
+  border-right: none;
+}
+
+.datagrid--compact .datagrid__header-cell {
+  height: 40px;
+}
+
+.datagrid__header-cell--selection {
+  width: 48px;
+  text-align: center;
+  padding: 0;
+}
+
+.datagrid__header-cell.datagrid__header-cell--icon {
+  text-align: center;
+  padding: 0 8px;
+}
+
+.datagrid__header-cell.datagrid__header-cell--icon .datagrid__header-title {
+  justify-content: center;
+  gap: 4px;
+}
+
+.datagrid__header-cell.datagrid__header-cell--icon .datagrid__header-title svg {
+  flex-shrink: 0;
+}
+
+.datagrid--compact .datagrid__header-cell--selection {
+  width: 40px;
+}
+
+.datagrid__header-cell--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.datagrid__header-cell--sortable:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.datagrid__header-cell--settings {
+  width: 40px;
+  text-align: center;
+  padding: 0;
+  position: sticky;
+  right: 0;
+  background: var(--color-background-surface-2, #ffffff);
+  pointer-events: none;
+  cursor: default;
+  border-right: none;
+}
+
+.datagrid__header-cell--settings:hover {
+  background: var(--color-background-surface-2, #ffffff);
+}
+
+.datagrid__header-cell--settings .datagrid__header-title {
+  display: none;
+}
+
+.datagrid__header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.datagrid__header-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.datagrid__filter-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral, #4d4d4d);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.datagrid__filter-toggle:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-icon-brand-strong, #0062ab);
+}
+
+.datagrid__filter-toggle:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.datagrid__settings-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral, #4d4d4d);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.datagrid__settings-toggle:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-icon-brand-strong, #0062ab);
+}
+
+.datagrid__settings-toggle:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.datagrid__row {
+  height: 40px;
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  transition: background-color 0.15s ease;
+}
+
+.datagrid--compact .datagrid__row {
+  height: 32px;
+}
+
+.datagrid__row:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.datagrid--no-hover .datagrid__row:hover {
+  background: transparent;
+}
+
+.datagrid__row--selected {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.datagrid--zebra .datagrid__row--zebra {
+  background: var(--color-background-surface-3, #f9f9f9);
+}
+
+.datagrid--zebra .datagrid__row--zebra:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.datagrid__cell {
+  padding: 0 16px;
+  height: 40px;
+  text-align: left;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-right: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.datagrid__cell:last-child {
+  border-right: none;
+}
+
+.datagrid--compact .datagrid__cell {
+  height: 32px;
+}
+
+.datagrid__cell--selection {
+  width: 48px;
+  text-align: center;
+  padding: 0;
+}
+
+.datagrid--compact .datagrid__cell--selection {
+  width: 40px;
+}
+
+.datagrid__cell--left {
+  text-align: left;
+}
+
+.datagrid__cell--right {
+  text-align: right;
+}
+
+.datagrid__cell--center {
+  text-align: center;
+}
+
+.datagrid__truncated-text {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.datagrid__column-resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.datagrid__column-resize-handle:hover {
+  background: var(--color-border-brand-base, #0076ce);
+}
+
+.datagrid__header-cell--dragging {
+  opacity: 0.5;
+  cursor: move;
+}
+
+.datagrid__header-cell--drag-over {
+  border-left: 2px solid var(--color-border-brand-base, #0076ce);
+}
+
+.datagrid__cell--settings {
+  width: 40px;
+  text-align: center;
+  padding: 0;
+  position: sticky;
+  right: 0;
+  background: inherit;
+  overflow: visible;
+}
+
+.datagrid__cell--settings .datagrid__row-settings-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.datagrid__row-settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral, #4d4d4d);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.datagrid__row-settings:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-icon-brand-strong, #0062ab);
+}
+
+.datagrid__row-settings:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.datagrid__overflow-menu {
+  position: fixed;
+  z-index: 9999;
+  background: var(--color-background-surface-2, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.datagrid__overflow-menu-item {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.datagrid__overflow-menu-item:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.datagrid__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  background: var(--color-background-surface-2, #ffffff);
+}
+
+.datagrid__pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.datagrid__pagination button {
+  padding: 8px 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+  color: var(--color-text-neutral-strong, #252525);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  transition: background-color 0.15s ease;
+}
+
+.datagrid__pagination button:hover:not(:disabled) {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.datagrid__pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.datagrid__page-info {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+}

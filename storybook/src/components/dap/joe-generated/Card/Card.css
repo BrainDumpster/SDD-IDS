@@ -1,0 +1,96 @@
+/* ============================================================
+   Card — IDS Design System
+   ============================================================ */
+
+.card {
+  min-height: 120px;
+  padding: 16px;
+  background: var(--color-background-component, #ffffff);
+  border: 1px solid var(--color-border-light, #c5c5c5);
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.card--interactive {
+  cursor: pointer;
+}
+
+.card--interactive:hover {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.card--interactive:focus-visible {
+  outline: 2px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.card--selected {
+  background: var(--color-background-brand-light, #d9eaf8);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.card--disabled {
+  background: #F4F4F4;
+  border-color: #9E9E9E;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.card--elevated {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card--bordered {
+  border-width: 2px;
+}
+
+.card--compact {
+  padding: 8px;
+  min-height: 80px;
+}
+
+.card__media {
+  margin-bottom: 16px;
+}
+
+.card__media img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.card__header {
+  padding: 16px 16px 8px 16px;
+  font-size: var(--font-size-header-6, 18px);
+  line-height: 25px;
+  font-weight: 400;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.card--compact .card__header {
+  padding: 8px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+}
+
+.card__content {
+  padding: 8px 16px;
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--font-line-height-line-height-24, 24px);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.card--compact .card__content {
+  padding: 8px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+}
+
+.card__footer {
+  padding: 8px 16px 16px 16px;
+}
+
+.card--compact .card__footer {
+  padding: 8px;
+}

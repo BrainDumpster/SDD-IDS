@@ -1,0 +1,189 @@
+/* ============================================================
+   Dual List Box — IDS Design System
+   ============================================================ */
+
+.dual-listbox {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+.dual-listbox__lists-parent {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: var(--spacing-space-16, 16px);
+  row-gap: var(--spacing-space-8, 8px);
+}
+
+.dual-listbox__pane {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+  border-radius: var(--corner-radius-radius-2, 2px);
+}
+
+.dual-listbox__pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.dual-listbox__pane-title {
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--line-height-body-1, 24px);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.dual-listbox__metrics {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.dual-listbox__list-group {
+  flex: 1;
+  padding: var(--padding-padding-24, 24px) var(--padding-padding-24, 24px) var(--padding-padding-32, 32px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8, 8px);
+  min-height: 0;
+}
+
+.dual-listbox__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-padding-24, 24px);
+  border: var(--border-width-border-1, 1px) dashed var(--color-border-accessible, #757575);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-neutral, #4d4d4d);
+  text-align: center;
+}
+
+.dual-listbox__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  width: 100%;
+  height: 32px;
+  padding: var(--padding-padding-14, 14px) var(--padding-padding-16, 16px) var(--padding-padding-14, 14px) var(--padding-padding-8, 8px);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  background: var(--color-background-component, #ffffff);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.dual-listbox__item:hover {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.dual-listbox__item--selected {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.dual-listbox__item:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.dual-listbox__drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: var(--padding-padding-2, 2px) 0;
+  color: var(--color-icon-neutral, #4d4d4d);
+  flex-shrink: 0;
+}
+
+.dual-listbox__item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dual-listbox__item-name {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-neutral, #4d4d4d);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dual-listbox__item--selected .dual-listbox__item-name {
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.dual-listbox__item-description {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dual-listbox__check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-brand-strong, #0062ab);
+  flex-shrink: 0;
+}
+
+.dual-listbox__transfer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16, 16px);
+  align-self: center;
+}
+
+.dual-listbox__transfer-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 40px;
+  padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-transparent-brand, rgba(0, 118, 206, 0));
+  background: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-icon-white, #ffffff);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  transition: background-color 0.15s ease;
+}
+
+.dual-listbox__transfer-button:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-strong, #0062ab);
+}
+
+.dual-listbox__transfer-button:disabled {
+  background: var(--color-background-gray-light, #f4f4f4);
+  border-color: var(--color-border-disabled, #757575);
+  color: var(--color-icon-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.dual-listbox__transfer-button:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}

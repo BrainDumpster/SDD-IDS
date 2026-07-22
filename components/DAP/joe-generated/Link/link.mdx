@@ -1,0 +1,191 @@
+# Link Design Spec
+
+## Metadata
+- Component: Link
+- Category: Navigation
+- Design system: IDS
+- Figma (IDS Design Library): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9628-25123&m=dev
+- Figma (with-icon scenario): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-105167&m=dev
+- File key: `0bHk3XhrjFhowgFkz9yLr4`
+- Primary node: `9628:25123`
+- Variant evidence nodes:
+  - `Type=Standalone`: `9628:25157` (default), `9628:25134` (hover), `9628:25132` (press), `12520:73205` (focus)
+  - `Type=Inline`: `9628:25159` (default), `12520:73193` (hover), `12520:73195` (press), `12520:73207` (focus)
+  - `Type=Dark Bg`: `9628:25130` (default), `12520:73197` (hover), `12520:73199` (press), `12520:73209` (focus)
+  - With-icon matrix container: `43478:105167`
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Last verified: 2026-04-29 (current session)
+## Anatomy
+- `root` (required): inline-flex container for text and optional icon.
+- `label` (required): clickable text content.
+- `focusRing` (stateful): rectangular outline drawn only in keyboard focus-visible state.
+- `externalIcon` (optional): 16px external-link icon shown when requested by API.
+## Layout & Measurements
+- Container:
+  - Layout: `inline-flex`, horizontal arrangement.
+  - Gap between text and icon: `8px`.
+  - Baseline height in Figma examples: `20px` text line box.
+- Text:
+  - Typography token: Body 2 / Body 2 Underline (same metrics).
+  - Font size: 14px.
+  - Line height: 20px.
+- Focus ring:
+  - Border width: `1px`.
+  - Border radius: `4px`.
+  - Inline/Standalone focus box: approximately 4px horizontal and 2px vertical offset around text.
+  - Dark-bg focus box uses white border token.
+- Icon:
+  - External icon size: `16px x 16px`.
+  - Color follows same semantic intent as text state.
+- Touch target rule:
+  - Runtime wrappers SHOULD provide at least 44x44 logical hit area without changing visual text metrics.
+## Tokens
+### Text and Border Tokens (from live node)
+- `var(--color-text-link-brand-base)` = `#0062ab`
+- `var(--color-text-link-brand-strong)` = `#06528a`
+- `var(--color-text-link-brand-stronger)` = `#003a65`
+- `var(--color-text-link-brand-lighter)` = `#ebf4fb`
+- `var(--color-text-link-brand-light)` = `#d9eaf8`
+- `var(--color-text-white)` = `#ffffff`
+- `var(--color-border-brand-base)` = `#0076ce`
+- `var(--color-border-white)` = `#ffffff`
+- `var(--color-icon-brand-base)` = `#0076ce`
+- `var(--color-icon-brand-strong)` = `#0062ab`
+- `var(--color-icon-brand-stronger)` = `#06528a`
+- `var(--color-icon-white)` = `#ffffff`
+
+### Typography Tokens
+- `Body 2` and `Body 2 - Underline`: `Roboto Regular 14/20`, weight 400, letter spacing 0.
+
+### Per-slot Style Contract
+- `label`:
+  - Default standalone: no underline.
+  - Default inline/dark-bg: underline.
+  - Hover/press: underline for all types.
+- `focusRing`:
+  - Inline/Standalone: `1px solid var(--color-border-brand-base)`.
+  - Dark Bg: `1px solid var(--color-border-white)`.
+- `externalIcon`:
+  - Icon asset: `pop-up-square-corner-big` (Figma component `44484:963`).
+  - Size: exactly `16px x 16px`.
+  - Color is stateful and tokenized (see icon matrix).
+## States (Light Theme)
+| Type | State | Label Color | Underline | Focus Ring |
+|---|---|---|---|---|
+| Standalone | default | `var(--color-text-link-brand-base)` | no | none |
+| Standalone | hover | `var(--color-text-link-brand-strong)` | yes | none |
+| Standalone | press | `var(--color-text-link-brand-stronger)` | yes | none |
+| Standalone | focus-visible | `var(--color-text-link-brand-base)` | no | `1px solid var(--color-border-brand-base)` |
+| Inline | default | `var(--color-text-link-brand-base)` | yes | none |
+| Inline | hover | `var(--color-text-link-brand-strong)` | yes | none |
+| Inline | press | `var(--color-text-link-brand-stronger)` | yes | none |
+| Inline | focus-visible | `var(--color-text-link-brand-base)` | yes | `1px solid var(--color-border-brand-base)` |
+| Dark Bg | default | `var(--color-text-white)` | yes | none |
+| Dark Bg | hover | `var(--color-text-link-brand-lighter)` | yes | none |
+| Dark Bg | press | `var(--color-text-link-brand-light)` | yes | none |
+| Dark Bg | focus-visible | `var(--color-text-white)` | yes | `1px solid var(--color-border-white)` |
+
+### Icon Color Matrix (`showExternalLinkIcon=true`)
+| Type | State | Icon Color Token |
+|---|---|---|
+| Standalone | default | `var(--color-icon-brand-base)` |
+| Standalone | hover | `var(--color-icon-brand-strong)` |
+| Standalone | press | `var(--color-icon-brand-stronger)` |
+| Standalone | focus-visible | `var(--color-icon-brand-base)` |
+| Inline | default | `var(--color-icon-brand-base)` |
+| Inline | hover | `var(--color-icon-brand-strong)` |
+| Inline | press | `var(--color-icon-brand-stronger)` |
+| Inline | focus-visible | `var(--color-icon-brand-base)` |
+| Dark Bg | default | `var(--color-icon-white)` |
+| Dark Bg | hover | `var(--color-icon-white)` |
+| Dark Bg | press | `var(--color-icon-white)` |
+| Dark Bg | focus-visible | `var(--color-icon-white)` |
+## States (Dark Theme)
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+
+## Interactions
+- Trigger:
+  - Mouse: hover and press states on pointer interaction.
+  - Keyboard: focus-visible ring shown on Tab focus.
+  - Activation: Enter/Space behavior follows anchor/button semantics of host framework.
+- State precedence:
+  - `press` overrides `hover`.
+  - `focus-visible` adds ring and preserves per-type text style from focus row.
+- Decoration behavior:
+  - Standalone default/focus has no underline.
+  - Inline and Dark Bg always render underline in all listed states.
+## Composition & API (runtime)
+- Required props:
+  - `type`: `"standalone" | "inline" | "dark-bg"` (default: `"standalone"`).
+  - `label`: `string` (required).
+- Optional props:
+  - `href`: `string` (if omitted, render as button-like action with `onClick`).
+  - `showExternalLinkIcon`: `boolean` (default: `false`).
+  - `target`: `"_self" | "_blank" | "_parent" | "_top"` (default: `"_self"`).
+  - `rel`: `string` (default enforce `noopener noreferrer` when `target="_blank"`).
+  - `disabled`: `boolean` (default: `false`; not shown in current Figma matrix but allowed for runtime safety).
+  - `onClick`: callback event.
+- Accessibility contract:
+  - Link-like navigation MUST use `<a>` with valid `href`.
+  - Action-like usage MUST use `<button>` semantics.
+  - Focus-visible styling MUST be keyboard-triggered, not always-on focus.
+  - External icon is decorative unless explicitly labeled; default `aria-hidden="true"`.
+## Codegen Contract (Framework-Agnostic Blueprint)
+Deterministic structure:
+  1. `root`
+  2. `label`
+  3. `externalIcon?`
+  4. `focusRing?` (stateful presentation layer)
+Variant matrix:
+  - `type`: standalone | inline | dark-bg
+  - `state`: default | hover | press | focus-visible
+  - `icon`: off | on
+- Style generation rules:
+  - Use only semantic tokens listed in this spec; no hardcoded hex values.
+  - Underline policy must follow exact matrix above.
+  - Focus ring must be 1px with 4px radius and tokenized border.
+- Behavior rules:
+  - `hover` styles apply only when pointer hover is available.
+  - `press` styles apply during active pointer/key press.
+  - `focus-visible` must not be replaced by generic `:focus` unless framework lacks support.
+- Accessibility rules:
+  - Use native `<a>` when `href` exists; use button semantics for action-only usage.
+  - Preserve keyboard focus order and implement `focus-visible` styling for keyboard users.
+  - Keep external icon decorative by default (`aria-hidden="true"`); do not replace or duplicate label text.
+  - When `target="_blank"`, enforce secure rel policy (`noopener noreferrer`) unless host application overrides explicitly.
+- Asset/bundling contract:
+  - External icon uses `pop-up-square-corner-big` at exactly `16px`.
+  - Icon color MUST follow the icon color matrix in this spec (not inherited heuristically).
+- Fallback/error rules:
+  - Unknown `type` -> fallback to `standalone`.
+  - Empty `label` -> render fallback text `"Link"` and emit warning in development builds.
+  - Unknown state in demo/testing controls -> fallback to `default`.
+  - Missing icon asset -> render label-only link without layout collapse.
+### Validation checklist
+- [ ] All 12 state/type combinations from node `9628:25123` are represented.
+- [ ] Standalone default/focus have no underline; inline + dark-bg remain underlined.
+- [ ] Focus ring is `1px` / `4px` radius and token-correct (`brand` or `white` by type).
+- [ ] Text tokens match state table exactly.
+- [ ] Optional external icon is 16px with 8px spacing and no layout shift.
+- [ ] Icon colors for all 12 state/type cells match the icon color matrix from node `43478:105167`.
+- [ ] Keyboard focus-visible and activation semantics are present.
+- [ ] Generated code remains framework-agnostic and token-driven.
+## Source Mapping
+- Component map entry found at `data/component-figma-map.json` for Link points to legacy exploratory node `11067-54506`.
+- This spec intentionally uses IDS Design Library authoritative node:
+  - File key: `0bHk3XhrjFhowgFkz9yLr4`
+  - Main state matrix node: `9628:25123`
+  - With-icon matrix node: `43478:105167`
+  - Verified state nodes: `9628:25157`, `9628:25134`, `9628:25132`, `12520:73205`, `9628:25159`, `12520:73193`, `12520:73195`, `12520:73207`, `9628:25130`, `12520:73197`, `12520:73199`, `12520:73209`
+- Verification evidence:
+  - Metadata structure: `get_metadata`
+  - State/text/icon evidence: `get_design_context`
+  - Token evidence: `get_variable_defs`

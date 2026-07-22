@@ -1,0 +1,112 @@
+/* ============================================================
+   Tree — IDS Design System
+   ============================================================ */
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+}
+
+.tree__row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  padding: var(--padding-padding-10, 10px) 0 var(--padding-padding-10, 10px) var(--padding-padding-16, 16px);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.tree__row:hover {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+}
+
+.tree__row--selected {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  box-shadow: inset 4px 0 0 0 var(--color-border-brand-base, #0076ce);
+}
+
+.tree__row:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+}
+
+.tree__chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral, #4d4d4d);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.tree__chevron--hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tree__chevron:hover {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+}
+
+.tree__chevron:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+}
+
+.tree__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  color: var(--color-icon-neutral, #4d4d4d);
+  flex-shrink: 0;
+}
+
+.tree__label-cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tree__label {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tree__row--selected .tree__label {
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.tree__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5.5px;
+  background: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-white, #ffffff);
+  border-radius: var(--corner-radius-radius-round, 999px);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  flex-shrink: 0;
+}

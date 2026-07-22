@@ -1,0 +1,187 @@
+# Date and Time Picker Design Spec
+
+## Metadata
+- Component: Date and Time Picker
+- Category: Formelements
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54547&m=dev
+- Node ID: 11067-54547
+## Anatomy
+- Date input field with calendar icon
+- Calendar popup/dropdown
+- Month/year navigation
+- Calendar grid with dates
+- Selected date indicator
+- Today button
+- Time input fields (hours, minutes, AM/PM)
+- Clear button
+- Focus ring for keyboard navigation
+- Optional date range selection
+## Layout & Measurements
+- Input field height: 40px
+- Calendar popup: 280px × 320px
+- Calendar cell size: 32px × 32px
+- Cell spacing: 2px
+- Header height: 40px
+- Navigation buttons: 32px × 32px
+- Time input width: 60px
+- Border radius: 4px (input), 8px (calendar)
+- Focus ring: 2px offset from element
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Surface background: `var(--color-background-surface-2)` = #ffffff
+- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Disabled text: `var(--color-text-disabled)` = #757575
+- Brand strong text: `var(--color-text-brand-strong)` = #0062ab
+- Critical text: `var(--color-text-critical)` = #af0000
+- Accessible border: `var(--color-border-accessible)` = #757575
+- Brand border: `var(--color-border-brand-base)` = #0076ce
+- Strong border: `var(--color-border-strong)` = #252525
+- White border: `var(--color-border-white)` = #ffffff
+- Disabled border: `var(--color-border-disabled)` = #757575
+
+### Icons
+- Brand icon: `var(--color-icon-brand-base)` = #0076ce
+- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
+- White icon: `var(--color-icon-white)` = #ffffff
+- Accessible icon: `var(--color-icon-accessible)` = #757575
+- Disabled icon: `var(--color-icon-disabled)` = #757575
+- Info icon: `var(--color-icon-alerting-info)` = #005ece
+- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+
+### Background Colors
+- Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
+- Gray light: `var(--color-background-gray-light)` = #eaeaea
+- Gray base: `var(--color-background-gray-base)` = #757575
+- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
+- Brand light: `var(--color-background-controls-brand-light)` = #d9eaf8
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 300: `UI Palettes/Gray/gray-300` = #C5C5C5
+- Gray 700: `UI Palettes/Gray/gray-700` = #4D4D4D
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Alert Colors
+- Critical border: `var(--color-border-alerting-critical-base)` = #af0000
+- Info border: `var(--color-border-alerting-info-white)` = #005ece
+
+### Other Colors
+- Annotation: `Annotation` = #E8178A
+
+### Effects
+- Cards Drop Shadow: Drop shadow effect for calendar popup
+### Typography
+- Header 1: Roboto Regular 48px/58px (large calendar headers)
+- Header 5: Roboto Regular 24px/32px (month/year display)
+- Body 1 - Medium: Roboto Medium 16px/24px (selected dates)
+- Body 2: Roboto Regular 14px/20px (calendar dates)
+- Body 3: Roboto Regular 12px/18px (helper text)
+
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Error states use critical colors for validation feedback
+- Dark theme adaptation through semantic tokens
+- Calendar interactions should be intuitive and accessible
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Hover) | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Input Field (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
+| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
+| Calendar Popup | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Calendar Header | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Selected Date | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Today Date | `var(--color-background-controls-brand-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Hover Date | `var(--color-background-gray-lighter)` (#f4f4f4) | transparent | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Disabled Date | `var(--color-background-gray-light)` (#eaeaea) | transparent | `var(--color-text-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Text and border colors remain consistent via semantic variables
+- Calendar popup maintains visibility in dark theme
+- Selected dates use brand colors for clear indication
+## Interactions
+- Click input field to open calendar popup
+- Click date to select
+- Click navigation arrows to change month/year
+- Click Today button to jump to current date
+- Click outside to close calendar
+- Keyboard navigation: Arrow keys, Enter, Escape
+- Time input with up/down arrows
+- Clear button to reset selection
+### Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Full calendar navigation with keyboard
+- Screen reader support: Proper ARIA attributes and date announcements
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use input type="date" or custom implementation
+- Focus management: Trap focus within calendar when open
+- Date format: Proper date format announcements
+
+### Behavior & guidelines
+- Use date picker for date input fields
+- Provide clear date format indicators
+- Use consistent date formatting
+- Include Today button for convenience
+- Test with screen readers for proper date announcement
+- Consider mobile touch interactions
+- Use proper validation for date ranges
+- Include time selection when needed
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Date Only**: Calendar popup for date selection
+- **Time Only**: Time input fields
+- **Date and Time**: Combined date and time selection
+- **Date Range**: Select start and end dates
+- **Inline**: Calendar always visible
+- **Disabled**: Non-interactive state
+- **Error**: With validation error styling
+- **With Clear Button**: Input with clear functionality
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
+
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
+
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
+- [ ] Implement calendar popup functionality
+- [ ] Add proper focus management
+- [ ] Test keyboard navigation (Arrows, Enter, Escape)
+- [ ] Verify ARIA attributes and roles
+- [ ] Test date selection and validation
+- [ ] Implement time input functionality
+- [ ] Add date range selection
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test mobile touch interactions
+## Source Mapping
+- Figma component: Date and Time Picker (11067-54547)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Date and Time Picker" (category "Formelements"; node "11067-54547")

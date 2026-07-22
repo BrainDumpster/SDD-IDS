@@ -1,0 +1,207 @@
+/* ============================================================
+   About — IDS Design System
+   ============================================================ */
+
+.about {
+  width: fit-content;
+  max-width: 500px;
+  background: var(--color-background-component, #ffffff);
+  border: 1px solid var(--color-border-light, #c5c5c5);
+  border-radius: 8px;
+  color: var(--color-text-neutral-strong, #252525);
+  font-family: "Roboto", sans-serif;
+}
+
+.about:focus-visible {
+  outline: 2px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+/* --- Close button ------------------------------------------- */
+.about__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral, #4d4d4d);
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.about__close:hover {
+  color: var(--color-icon-neutral-strong, #252525);
+  background: var(--color-background-gray-light, #eaeaea);
+}
+
+.about__close:focus-visible {
+  outline: 2px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+/* --- Header section ---------------------------------------- */
+.about__header {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about__logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+}
+
+.about__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.about__app-name {
+  font-size: 48px;
+  line-height: 58px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.about__version {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+/* --- Content section -------------------------------------- */
+.about__content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about__description {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.about__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about__section-header {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.about__system-info {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.about__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about__links li {
+  margin: 0;
+}
+
+.about__link {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--color-text-link-brand-base, #0062ab);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.about__link:hover {
+  color: var(--color-text-brand-strong, #0062ab);
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  text-decoration: none;
+}
+
+.about__link:focus-visible {
+  outline: 2px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+/* --- Footer section ---------------------------------------- */
+.about__footer {
+  padding: 16px 24px;
+  background: var(--color-background-gray-100, #F4F4F4);
+  border-top: 1px solid var(--color-border-light, #c5c5c5);
+  border-radius: 0 0 8px 8px;
+}
+
+.about__legal {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  margin: 0;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+/* --- Variant: Modal --------------------------------------- */
+.about--modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Variant: Inline -------------------------------------- */
+.about--inline {
+  min-width: auto;
+}
+
+/* --- Variant: Minimal ------------------------------------ */
+.about--minimal .about__footer {
+  display: none;
+}
+
+.about--minimal .about__system-info {
+  display: none;
+}
+
+/* --- Variant: Detailed ------------------------------------ */
+.about--detailed .about__content {
+  gap: 24px;
+}
+
+/* --- Variant: Branded ------------------------------------- */
+.about--branded .about__header {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-radius: 8px 8px 0 0;
+}

@@ -1,0 +1,158 @@
+# Table Design Spec
+
+## Metadata
+- Component: Table
+- Category: Table and Data Grids
+- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16008-130403&m=dev
+- Node ID: 16008-130403
+## Anatomy
+- Table container with optional scroll
+- Table header with sortable columns
+- Table body with data rows
+- Table footer (optional)
+- Row selection checkboxes
+- Sort indicators
+- Pagination controls
+- Focus ring for keyboard navigation
+- Loading states
+- Empty state message
+## Layout & Measurements
+- Standard row height: 48px
+- Cell padding: 10px vertical
+- Column spacing: 16px horizontal
+- Border width: 1px
+- Header height: 48px
+- Focus ring: 2px offset from cell
+- Minimum width: 400px
+- Maximum height: 400px (with scroll)
+- Checkbox size: 16px × 16px
+## Tokens
+### Colors
+- White: `var(--color-text-white)` = #ffffff
+- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
+- Component background: `var(--color-background-component)` = #ffffff
+- Accessible border: `var(--color-border-accessible)` = #757575
+
+### UI Palettes
+- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
+- Gray 100: `UI Palettes/Gray/gray-100` = #F4F4F4
+- Gray 300: `UI Palettes/Gray/gray-300` = #C5C5C5
+- Gray 500: `UI Palettes/Gray/gray-500` = #757575
+- Gray 600: `UI Palettes/Gray/gray-600` = #616161
+- Gray 900: `UI Palettes/Gray/gray-900` = #252525
+
+### Alert Palettes
+- Green 500: `Alert Palettes/Green/green-500` = #1B8500
+- Yellow 500: `UI Palettes/Alert Palettes/Yellow/yellow-500` = #FFC700
+- Yellow 800: `UI Palettes/Alert Palettes/Yellow/yellow-800` = #9C622E`
+
+### Icons
+- Standard gray icon: `icon-standard-gray` = #616161
+- Status yellow icon: `icon-status-yellow` = #FFC700
+
+### Spacing & Sizing
+- Standard Density: `Standard Density` = 48
+- Standard Cell Padding: `Standard/Cell - Vertical padding` = 10
+### Typography
+- Base Styles/Data Header: Roboto Medium 14px/20px (table headers)
+- Body 2: Roboto Regular 14px/20px (table data)
+
+### Token gaps and notes
+- All colors use semantic CSS custom properties for theme consistency
+- Typography scales are defined via font tokens with proper hierarchy
+- Focus states use brand colors for visual consistency
+- Row selection uses brand colors for clear indication
+- Dark theme adaptation through semantic tokens
+- Table layouts should be responsive and accessible
+## States (Light Theme)
+| Element | Background | Border | Text | Icon |
+|---|---|---|---|---|
+| Table Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `UI Palettes/Gray/gray-900` (#252525) | `icon-standard-gray` (#616161) |
+| Header Row | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `icon-standard-gray` (#616161) |
+| Data Row (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
+| Data Row (Hover) | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
+| Data Row (Selected) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Sortable Header | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `var(--color-icon-brand-base)` (#0076ce) |
+| Checkbox Cell | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
+## States (Dark Theme)
+- Uses semantic tokens that automatically adapt to dark theme
+- Text and border colors remain consistent via semantic variables
+- Selected row uses brand colors for clear indication
+- Hover states provide visual feedback
+## Interactions
+- Click header to sort column
+- Click row to select/deselect
+- Hover provides visual feedback on rows and headers
+- Checkbox selection for bulk operations
+- Keyboard navigation: Arrow keys to navigate, Space to select
+- Pagination controls for large datasets
+- Column resizing (optional)
+- Context menus on row right-click
+### Accessibility
+- Focus ring: 2px brand color border
+- Keyboard navigation: Arrow keys, Enter, Space, Tab
+- Screen reader support: Proper table semantics and announcements
+- High contrast: Meets WCAG AA standards with provided colors
+- Semantic HTML: Use table, thead, tbody, tr, th, td elements
+- Sort indicators: Proper aria-sort attributes
+- Row selection: Proper aria-selected attributes
+
+### Behavior & guidelines
+- Use tables for structured data display
+- Provide clear column headers
+- Implement proper sorting functionality
+- Use responsive design for mobile devices
+- Include pagination for large datasets
+- Test with screen readers for proper data announcement
+- Consider column freezing for wide tables
+- Use consistent styling across table variants
+## Composition & API (runtime)
+Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
+### Variants
+- **Default**: Standard table with sorting
+- **Selectable**: With row selection checkboxes
+- **Sortable**: With sortable columns
+- **Resizable**: With resizable columns
+- **Compact**: Reduced row height
+- **Striped**: Alternating row colors
+- **Bordered**: Full grid borders
+- **Hoverable**: Row hover states
+## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
+
+### Variant matrix
+See **Composition & API (runtime) → Variants** when present; otherwise document variant axes in this subsection during spec hardening.
+
+### Per-slot style contract
+Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
+
+### Behavior contract
+See **Interactions** and **Interactions → Behavior & guidelines**.
+
+### Accessibility contract
+See **Interactions → Accessibility**.
+
+### Asset resolution + bundling contract
+When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+
+### Fallback/error rules
+- Unknown variant or state → fall back to the documented default variant.
+- Missing required content → validation error at codegen boundary (do not silently omit required slots).
+### Validation checklist
+- [ ] Implement sorting functionality
+- [ ] Add row selection with checkboxes
+- [ ] Test keyboard navigation (Arrows, Enter, Space)
+- [ ] Verify table semantics and ARIA attributes
+- [ ] Test hover and focus states
+- [ ] Implement pagination controls
+- [ ] Add responsive behavior for mobile
+- [ ] Test dark theme compatibility
+- [ ] Verify screen reader announcements
+- [ ] Test empty and loading states
+## Source Mapping
+- Figma component: Table (16008-130403)
+- Variable collection: UI Palettes, Typography tokens
+- Semantic mapping: CSS custom properties with `var(--)` prefix
+- Design source: Figma URL above
+- Component map entry: data/component-figma-map.json → component "Table" (category "Table and Data Grids"; node "16008-130403")

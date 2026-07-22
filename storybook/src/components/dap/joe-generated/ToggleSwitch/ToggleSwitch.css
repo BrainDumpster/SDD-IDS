@@ -1,0 +1,118 @@
+/* ============================================================
+   Toggle Switch — IDS Design System
+   ============================================================ */
+
+.toggle-switch {
+  display: inline-flex;
+  align-items: center;
+  font-family: "Roboto", sans-serif;
+}
+
+.toggle-switch__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  cursor: pointer;
+}
+
+.toggle-switch__label:has(.toggle-switch__input:disabled) {
+  cursor: not-allowed;
+}
+
+.toggle-switch__switch {
+  position: relative;
+  width: 32px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.toggle-switch__track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--color-background-gray-neutral-dark, #616161);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-neutral, #4d4d4d);
+  transition: all 0.2s ease-out;
+}
+
+.toggle-switch__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-neutral, #4d4d4d);
+  transform: translateX(0);
+  transition: transform 0.2s ease-out, border-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+/* --- Checked State -------------------------------------- */
+.toggle-switch__input:checked + .toggle-switch__label .toggle-switch__track {
+  background: var(--color-background-brand-base, #0076ce);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.toggle-switch__input:checked + .toggle-switch__label .toggle-switch__thumb {
+  transform: translateX(16px);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+/* --- Hover State ---------------------------------------- */
+.toggle-switch__input:not(:checked):not(:disabled) + .toggle-switch__label:hover .toggle-switch__track {
+  background: var(--color-background-gray-neutral-light, #4d4d4d);
+  border-color: var(--color-border-strong, #252525);
+}
+
+.toggle-switch__input:not(:checked):not(:disabled) + .toggle-switch__label:hover .toggle-switch__thumb {
+  border-color: var(--color-border-strong, #252525);
+}
+
+.toggle-switch__input:checked:not(:disabled) + .toggle-switch__label:hover .toggle-switch__track {
+  background: var(--color-background-brand-strong, #0062ab);
+  border-color: var(--color-border-brand-dark, #0062ab);
+}
+
+.toggle-switch__input:checked:not(:disabled) + .toggle-switch__label:hover .toggle-switch__thumb {
+  border-color: var(--color-border-brand-dark, #0062ab);
+}
+
+/* --- Focus Visible -------------------------------------- */
+.toggle-switch__input:focus-visible + .toggle-switch__label .toggle-switch__switch {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- Disabled State ------------------------------------ */
+.toggle-switch__input:disabled + .toggle-switch__label .toggle-switch__track {
+  background: var(--color-background-gray-light, #eaeaea);
+  border-color: var(--color-border-disabled, #757575);
+}
+
+.toggle-switch__input:disabled + .toggle-switch__label .toggle-switch__thumb {
+  background: var(--color-background-component, #ffffff);
+  border-color: var(--color-border-disabled, #757575);
+}
+
+.toggle-switch__label-text {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: 16px;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.toggle-switch__input:disabled + .toggle-switch__label .toggle-switch__label-text {
+  color: var(--color-text-disabled, #757575);
+}

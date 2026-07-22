@@ -1,0 +1,130 @@
+/* ============================================================
+   Text Box — IDS Design System
+   ============================================================ */
+
+.text-box {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+/* --- Control -------------------------------------------- */
+.text-box__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  transition: border-color 0.15s ease;
+}
+
+.text-box__control:hover:not(.text-box__control--disabled) {
+  border-color: var(--color-border-strong, #616161);
+}
+
+.text-box__control--focused:not(.text-box__control--disabled) {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.text-box__control--focused:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.text-box__control--disabled {
+  background: var(--color-background-gray-light, #eaeaea);
+  border-color: var(--color-border-accessible, #757575);
+  cursor: not-allowed;
+}
+
+.text-box__control--error {
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+/* --- Size Variants -------------------------------------- */
+.text-box__control {
+  height: 32px;
+}
+
+.text-box__control--large {
+  height: 32px;
+}
+
+.text-box__control--small {
+  height: 32px;
+}
+
+/* --- Input / Textarea ---------------------------------- */
+.text-box__input,
+.text-box__textarea {
+  flex: 1;
+  width: 100%;
+  padding: 0 16px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  outline: none;
+}
+
+.text-box__input::placeholder,
+.text-box__textarea::placeholder {
+  color: var(--color-text-disabled, #757575);
+}
+
+.text-box__input:disabled,
+.text-box__textarea:disabled {
+  color: var(--color-text-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.text-box__textarea {
+  padding: 9px 16px 10px;
+  resize: vertical;
+  min-height: 150px;
+}
+
+/* --- Suffix Icon --------------------------------------- */
+.text-box__suffix-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 16px;
+  color: var(--color-icon-neutral, #4d4d4d);
+}
+
+.text-box__control--disabled .text-box__suffix-icon {
+  color: var(--color-icon-disabled, #757575);
+}
+
+/* --- Helper Row ---------------------------------------- */
+.text-box__helper-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.text-box__helper-row--error {
+  color: var(--color-text-critical, #af0000);
+}
+
+.text-box__error-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-alerting-critical, #af0000);
+}
+
+.text-box__helper-text {
+  font-size: inherit;
+  line-height: inherit;
+}

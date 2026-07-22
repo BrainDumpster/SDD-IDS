@@ -1,0 +1,179 @@
+/* ============================================================
+   App Launcher — IDS Design System
+   ============================================================ */
+
+.app-launcher {
+  position: relative;
+  display: inline-block;
+}
+
+.app-launcher__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-neutral-strong, #4d4d4d);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-launcher__trigger:hover {
+  background: var(--color-background-brand-lighter, #eaf6ff);
+  color: var(--color-icon-brand-strong, #0076ce);
+}
+
+.app-launcher__trigger:focus-visible {
+  outline: 2px solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.app-launcher__surface {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1000;
+  width: 298px;
+  padding: 16px;
+  background: var(--color-background-surface-2, #ffffff);
+  border: 1px solid var(--color-border-accessible, #757575);
+  border-radius: 4px;
+  box-shadow: var(--shadow-shadow-4-drop-shadow-4-x, 0px) var(--shadow-shadow-4-drop-shadow-4-y, 4px) var(--shadow-shadow-4-drop-shadow-4-blur, 8px) var(--shadow-shadow-4-drop-shadow-4-spread, 0px) var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.15));
+  overflow: visible;
+}
+
+.app-launcher__product-region {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.app-launcher__product-row {
+  display: flex;
+  gap: 0;
+}
+
+.app-launcher__product-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 148px;
+  height: 125px;
+  padding: 0;
+  border: none;
+  background: var(--color-background-surface-2, #ffffff);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.app-launcher__product-tile:hover {
+  background: var(--color-background-brand-lighter, #eaf6ff);
+}
+
+.app-launcher__product-tile:active {
+  background: var(--color-background-brand-light, #d4e9ff);
+}
+
+.app-launcher__product-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+.app-launcher__product-label {
+  max-width: 111px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  color: var(--color-text-neutral-strong, #252525);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-launcher__divider {
+  background: var(--color-border-accessible, #757575);
+}
+
+.app-launcher__divider--vertical {
+  width: 1px;
+  height: 93px;
+  border-left: 1px dotted var(--color-border-accessible, #757575);
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.app-launcher__divider--horizontal {
+  width: 262px;
+  height: 1px;
+  border-top: 1px dotted var(--color-border-accessible, #757575);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  margin: 0 auto;
+}
+
+.app-launcher__options-region {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: auto;
+  margin-top: 16px;
+  border-top: 1px solid var(--color-border-accessible, #757575);
+  padding-top: 8px;
+}
+
+.app-launcher__option-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: var(--color-background-component, #ffffff);
+  cursor: pointer;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.app-launcher__option-row:hover {
+  background: var(--color-background-brand-lighter, #eaf6ff);
+}
+
+.app-launcher__option-row:active {
+  background: var(--color-background-brand-light, #d4e9ff);
+}
+
+.app-launcher__footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-accessible, #757575);
+}
+
+.app-launcher__footer-action {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  border: 1px solid var(--color-border-brand-base, #0076ce);
+  background: transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-brand-strong, #0076ce);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.app-launcher__footer-action:hover {
+  background: var(--color-background-brand-lighter, #eaf6ff);
+}

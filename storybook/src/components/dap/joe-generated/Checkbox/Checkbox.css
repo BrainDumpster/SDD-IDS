@@ -1,0 +1,155 @@
+/* ============================================================
+   Checkbox — IDS Design System
+   ============================================================ */
+
+.checkbox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8, 8px);
+}
+
+.checkbox__wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+  user-select: none;
+  min-height: 20px;
+}
+
+/* Hide the native input visually but keep it accessible */
+.checkbox__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* --- Control box (16x16 visual with 1px border = 18x18 effective) -- */
+.checkbox__control-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  background: var(--color-background-component, #ffffff);
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* --- Indicator (CSS-only, no SVG) --------------------------- */
+.checkbox__indicator {
+  display: none;
+  width: 8px;
+  height: 8px;
+}
+
+.checkbox__indicator--checked {
+  display: block;
+  background: var(--color-icon-white, #ffffff);
+  clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%);
+  transform: translateY(-0.5px);
+}
+
+.checkbox__indicator--indeterminate {
+  display: block;
+  width: 8px;
+  height: 2px;
+  background: var(--color-icon-brand-base, #0076ce);
+  border-radius: 0;
+}
+
+/* --- Checked state ------------------------------------------ */
+.checkbox__input:checked + .checkbox__control-box {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-color: var(--color-border-transparent-brand, transparent);
+}
+
+.checkbox__input:checked + .checkbox__control-box .checkbox__indicator--checked {
+  display: block;
+}
+
+/* --- Partial/indeterminate state ------------------------------ */
+.checkbox__input[aria-checked="mixed"] + .checkbox__control-box {
+  background: var(--color-background-component, #ffffff);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.checkbox__input[aria-checked="mixed"] + .checkbox__control-box .checkbox__indicator--indeterminate {
+  display: block;
+}
+
+/* --- Hover -------------------------------------------------- */
+.checkbox__input:not(:disabled):not(:checked):hover + .checkbox__control-box,
+.checkbox__wrapper:hover .checkbox__input:not(:disabled):not(:checked) + .checkbox__control-box {
+  border-color: var(--color-border-strong, #757575);
+}
+
+.checkbox__input:not(:disabled)[aria-checked="mixed"]:hover + .checkbox__control-box,
+.checkbox__wrapper:hover .checkbox__input:not(:disabled)[aria-checked="mixed"] + .checkbox__control-box {
+  border-color: var(--color-border-strong, #757575);
+}
+
+/* --- Focus -------------------------------------------------- */
+.checkbox__input:focus-visible + .checkbox__control-box {
+  box-shadow: 0 0 0 2px var(--color-border-brand-base, #0076ce);
+}
+
+/* --- Disabled ----------------------------------------------- */
+.checkbox--disabled .checkbox__wrapper {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox--disabled .checkbox__control-box {
+  background: var(--color-background-gray-light, #eaeaea);
+  border-color: var(--color-border-disabled, #c9c9c9);
+}
+
+.checkbox--disabled .checkbox__input:checked + .checkbox__control-box {
+  background: var(--color-background-gray-base, #d9d9d9);
+}
+
+.checkbox--disabled .checkbox__indicator--checked {
+  background: var(--color-icon-inverse, #ffffff);
+}
+
+.checkbox--disabled .checkbox__indicator--indeterminate {
+  background: var(--color-icon-disabled, #757575);
+}
+
+/* --- Error state -------------------------------------------- */
+.checkbox--error .checkbox__control-box {
+  border-color: var(--color-border-strong, #757575);
+}
+
+/* --- Helper text ------------------------------------------ */
+.checkbox__helper-text {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  margin-left: 24px;
+  color: var(--color-text-neutral, #252525);
+}
+
+.checkbox__error-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-critical, #c80000);
+}

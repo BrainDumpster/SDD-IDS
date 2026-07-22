@@ -1,0 +1,238 @@
+/* ============================================================
+   Time Picker — IDS Design System
+   ============================================================ */
+
+.time-picker {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4, 4px);
+  font-family: "Roboto", sans-serif;
+  position: relative;
+}
+
+.time-picker__label {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.time-picker__field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4, 4px);
+  position: relative;
+  isolation: isolate;
+}
+
+.time-picker__field-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  transition: border-color 0.15s ease;
+}
+
+.time-picker__field-container:hover:not(.time-picker__field-container--disabled) {
+  border-color: var(--color-border-strong, #616161);
+}
+
+.time-picker__field-container--focused {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.time-picker__field-container--mouse-activated:focus-within {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.time-picker__field-container--mouse-activated:focus-within:focus-visible {
+  border-color: var(--color-border-accessible, #757575);
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.time-picker__field-container--disabled {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+  border-color: var(--color-border-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.time-picker__field-container--error {
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+.time-picker__field-container--open {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.time-picker__input {
+  flex: 1 0 0;
+  min-width: 1px;
+  padding: 0 16px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+  outline: none;
+}
+
+.time-picker__input::placeholder {
+  color: var(--color-text-disabled, #757575);
+  font-weight: 400;
+}
+
+.time-picker__input:disabled {
+  color: var(--color-text-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.time-picker__clock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  color: var(--color-icon-brand-base, #0076ce);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.time-picker__clock-icon:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.time-picker__clock-icon:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -3px;
+}
+
+.time-picker__clock-icon:disabled {
+  color: var(--color-icon-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.time-picker__format-hint {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.time-picker__validation-error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-critical, #af0000);
+}
+
+.time-picker__validation-error svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-alerting-critical, #af0000);
+}
+
+/* --- Size Variants -------------------------------------- */
+.time-picker__field-container--large {
+  height: 40px;
+}
+
+.time-picker__field-container--small {
+  height: 32px;
+}
+
+.time-picker__field-container--small .time-picker__clock-icon {
+  padding: 8px 16px;
+}
+
+/* --- Time Popup ---------------------------------------- */
+.time-picker__popup {
+  position: absolute;
+  right: 0;
+  top: calc(100% - 1px);
+  background: var(--color-background-surface-2, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+}
+
+.time-picker__columns {
+  display: flex;
+  gap: var(--spacing-space-16, 16px);
+}
+
+.time-picker__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16, 16px);
+  width: 34px;
+}
+
+.time-picker__increment,
+.time-picker__decrement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-neutral, #4d4d4d);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.time-picker__increment:hover:not(:disabled),
+.time-picker__decrement:hover:not(:disabled) {
+  background: var(--color-background-gray-lighter, #f4f4f4);
+}
+
+.time-picker__increment:disabled,
+.time-picker__decrement:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.time-picker__value-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 128px;
+  overflow-y: auto;
+}
+
+.time-picker__value-cell {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-neutral-strong, #252525);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.time-picker__value-cell:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.time-picker__value-cell.selected {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  font-weight: 500;
+}

@@ -1,0 +1,224 @@
+/* ============================================================
+   Tag — IDS Design System
+   ============================================================ */
+
+.tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-family: "Roboto", sans-serif;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+/* --- Size Variants -------------------------------------- */
+.tag--small {
+  height: 20px;
+  padding: 0 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.tag--large {
+  height: 28px;
+  padding: 0 12px;
+}
+
+/* --- Type: Read-Only ------------------------------------- */
+.tag--read-only {
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.tag--read-only.tag--error {
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+/* --- Type: Clickable ------------------------------------ */
+.tag--clickable {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  color: var(--color-text-brand-strong, #0062ab);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.tag--clickable:hover:not(.tag--disabled) {
+  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+}
+
+.tag--clickable.tag--selected {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-color: var(--color-border-transparent-brand, transparent);
+  color: var(--color-text-white, #ffffff);
+}
+
+.tag--clickable.tag--selected:hover:not(.tag--disabled) {
+  background: var(--color-background-controls-brand-strong, #0062ab);
+}
+
+/* --- Type: Editable ------------------------------------- */
+.tag--editable {
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+}
+
+.tag--editable.tag--error {
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+/* --- Type: Badge ---------------------------------------- */
+.tag--badge {
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.tag--badge.tag--error {
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+/* --- Tone Variants -------------------------------------- */
+.tag--tone-informational {
+  background: var(--color-background-alerting-info, #005ece);
+  border-color: var(--color-border-alerting-info-white, #005ece);
+  color: var(--color-text-white, #ffffff);
+}
+
+.tag--tone-success {
+  background: var(--color-background-alerting-success, #1b8500);
+  border-color: var(--color-border-alerting-success-white, #1b8500);
+  color: var(--color-text-white, #ffffff);
+}
+
+.tag--tone-minor {
+  background: var(--color-background-alerting-minor, #ffc700);
+  border-color: var(--color-border-alerting-minor-transparent, #9c622e);
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.tag--tone-major {
+  background: var(--color-background-alerting-major, #ed6400);
+  border-color: var(--color-border-alerting-major-base, #ed6400);
+  color: var(--color-text-white, #ffffff);
+}
+
+.tag--tone-critical {
+  background: var(--color-background-alerting-critical, #af0000);
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+  color: var(--color-text-white, #ffffff);
+}
+
+/* --- Disabled State ------------------------------------ */
+.tag--disabled {
+  background: var(--color-background-gray-light, #eaeaea);
+  border-color: var(--color-border-disabled, #757575);
+  color: var(--color-text-disabled, #757575);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Focus Visible ------------------------------------- */
+.tag--focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 3px;
+}
+
+/* --- Label -------------------------------------------- */
+.tag__label {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* --- Prefix Icon --------------------------------------- */
+.tag__prefix-icon {
+  flex-shrink: 0;
+  color: var(--color-icon-accessible, #757575);
+}
+
+.tag--tone-informational .tag__prefix-icon,
+.tag--tone-success .tag__prefix-icon,
+.tag--tone-major .tag__prefix-icon,
+.tag--tone-critical .tag__prefix-icon {
+  color: var(--color-icon-white, #ffffff);
+}
+
+/* --- Badge -------------------------------------------- */
+.tag__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--color-text-white, #ffffff);
+}
+
+/* --- Close Button -------------------------------------- */
+.tag__close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-accessible, #757575);
+  transition: color 0.15s ease;
+}
+
+.tag__close-button:hover:not(:disabled) {
+  color: var(--color-icon-neutral, #4d4d4d);
+}
+
+.tag__close-button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+.tag__close-button:disabled {
+  cursor: not-allowed;
+  color: var(--color-icon-disabled, #757575);
+}
+
+.tag--error .tag__close-button {
+  color: var(--color-icon-alerting-critical, #af0000);
+}
+
+/* --- Editable Field ------------------------------------- */
+.tag__editable-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  outline: none;
+}
+
+.tag__editable-field--focused {
+  border: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  background: var(--color-background-component, #ffffff);
+}

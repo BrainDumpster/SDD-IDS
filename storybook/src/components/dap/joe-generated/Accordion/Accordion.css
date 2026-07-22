@@ -1,0 +1,129 @@
+/* ============================================================
+   Accordion — IDS Design System
+   ============================================================ */
+
+.accordion {
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+.accordion__item {
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.accordion__item:last-child {
+  border-bottom: none;
+}
+
+/* --- Header/Trigger ---------------------------------------- */
+.accordion__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  padding: 12px 16px;
+  background: var(--color-background-component, #ffffff);
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.accordion__header:hover:not(:disabled) {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.accordion__header:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+}
+
+.accordion__header:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.accordion__title {
+  flex: 1;
+  font-weight: 400;
+}
+
+/* --- Chevron ---------------------------------------------- */
+.accordion__chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-icon-neutral, #4d4d4d);
+  transition: transform 0.2s ease, color 0.15s ease;
+}
+
+.accordion__header:hover:not(:disabled) .accordion__chevron {
+  color: var(--color-icon-neutral-strong, #252525);
+}
+
+.accordion__chevron--expanded {
+  transform: rotate(180deg);
+}
+
+.accordion__chevron--left {
+  margin-right: 8px;
+}
+
+.accordion__chevron--right {
+  margin-left: 8px;
+}
+
+/* --- Expanded state --------------------------------------- */
+.accordion__item--expanded .accordion__header {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  /* 4px left highlighter using linear-gradient */
+  background-image: linear-gradient(90deg, var(--color-border-brand-base, #0076ce) 0, var(--color-border-brand-base, #0076ce) 4px, var(--color-background-brand-lighter, #ebf4fb) 4px, var(--color-background-brand-lighter, #ebf4fb) 100%);
+}
+
+.accordion__item--expanded .accordion__header:hover {
+  background: var(--color-background-brand-light, #dbe9f5);
+  background-image: linear-gradient(90deg, var(--color-border-brand-base, #0076ce) 0, var(--color-border-brand-base, #0076ce) 4px, var(--color-background-brand-light, #dbe9f5) 4px, var(--color-background-brand-light, #dbe9f5) 100%);
+}
+
+/* --- Body/Panel ------------------------------------------ */
+.accordion__body {
+  background: var(--color-background-component, #ffffff);
+  /* 4px left highlighter using linear-gradient, no border-top */
+  background-image: linear-gradient(90deg, var(--color-border-brand-base, #0076ce) 0, var(--color-border-brand-base, #0076ce) 4px, var(--color-background-component, #ffffff) 4px, var(--color-background-component, #ffffff) 100%);
+  /* No border-top under header */
+  border-top: none;
+}
+
+.accordion__content {
+  padding: 8px 24px 16px 40px;
+  color: var(--color-text-neutral, #4d4d4d);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+}
+
+.accordion__meta {
+  padding: 0 24px 16px 40px;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.accordion__form-slot {
+  padding: 0 24px 16px 40px;
+}
+
+/* --- Disabled state -------------------------------------- */
+.accordion__item--disabled .accordion__header {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* --- Form variant ---------------------------------------- */
+.accordion--form .accordion__form-slot {
+  padding: 16px 24px 24px 40px;
+}

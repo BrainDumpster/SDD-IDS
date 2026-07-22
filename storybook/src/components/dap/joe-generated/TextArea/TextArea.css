@@ -1,0 +1,100 @@
+/* ============================================================
+   Text Area — IDS Design System
+   ============================================================ */
+
+.text-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+}
+
+/* --- Label ---------------------------------------------- */
+.text-area__label {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+  font-weight: 400;
+}
+
+.text-area__required {
+  color: var(--color-text-alerting-critical, #af0000);
+}
+
+/* --- Wrapper -------------------------------------------- */
+.text-area__wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* --- Input ---------------------------------------------- */
+.text-area__input {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral-strong, #252525);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.text-area__input::placeholder {
+  color: var(--color-text-disabled, #757575);
+}
+
+.text-area__input:hover:not(:disabled):not(.text-area__input--invalid) {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+.text-area__input:focus {
+  outline: none;
+  border-color: var(--color-border-brand-base, #0076ce);
+  box-shadow: 0 0 0 2px var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.text-area__input--invalid {
+  border-color: var(--color-border-alerting-critical-base, #af0000);
+}
+
+.text-area__input--invalid:focus {
+  box-shadow: 0 0 0 2px var(--color-background-alerting-critical-lighter, #fce8e8);
+}
+
+.text-area__input--disabled {
+  background: var(--color-background-gray-light, #eaeaea);
+  color: var(--color-text-disabled, #757575);
+  cursor: not-allowed;
+  border-color: var(--color-border-disabled, #757575);
+}
+
+.text-area__input:read-only {
+  background: var(--color-background-gray-light, #eaeaea);
+  cursor: default;
+}
+
+/* --- Helper Text ----------------------------------------- */
+.text-area__helper-text {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+/* --- Error Text ----------------------------------------- */
+.text-area__error-text {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-alerting-critical, #af0000);
+}
+
+/* --- Character Count ------------------------------------ */
+.text-area__character-count {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  text-align: right;
+}

@@ -45,6 +45,9 @@ const config: StorybookConfig = {
     path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
     path.join(repoRoot, "storybook-generated/synapse/src/**/*.stories.@(ts|tsx)"),
   ],
+  // Joe-generated (and similar) components use `/assets/icons/<slug>.svg` img URLs.
+  // Serve repo-root `assets/` at `/assets` so those paths resolve in Storybook.
+  staticDirs: [{ from: path.join(repoRoot, "assets"), to: "/assets" }],
   addons: ["@storybook/addon-essentials"],
   framework: {
     name: "@storybook/react-vite",

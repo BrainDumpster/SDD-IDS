@@ -1,0 +1,157 @@
+/* ============================================================
+   Main Menu Top — IDS Design System
+   ============================================================ */
+
+.main-menu-top {
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+.main-menu-top__bar {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  gap: var(--spacing-space-16, 16px);
+  padding: 0 var(--padding-padding-12, 12px);
+  background: var(--color-background-surface-1, #ffffff);
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.main-menu-top__item-wrapper {
+  position: relative;
+}
+
+.main-menu-top__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-16, 16px);
+  padding: 0 var(--padding-padding-12, 12px);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.main-menu-top__item--Large {
+  min-height: 40px;
+}
+
+.main-menu-top__item--Small {
+  min-height: 36px;
+  padding: 0 var(--padding-padding-8, 8px);
+}
+
+.main-menu-top__item:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.main-menu-top__item:active {
+  background: var(--color-background-brand-light, #d9eaf8);
+}
+
+.main-menu-top__item--selected {
+  box-shadow: inset 0 -2px 0 0 var(--color-border-brand-dark, #0062ab);
+}
+
+.main-menu-top__item:focus-visible {
+  outline: var(--border-width-border-4, 4px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -4px;
+  border-radius: var(--corner-radius-radius-4, 4px);
+}
+
+.main-menu-top__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--color-icon-neutral-strong, #252525);
+  flex-shrink: 0;
+}
+
+.main-menu-top__item:hover .main-menu-top__icon,
+.main-menu-top__item--selected .main-menu-top__icon {
+  color: var(--color-icon-brand-strong, #0062ab);
+}
+
+.main-menu-top__label {
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--line-height-body-1, 24px);
+  font-weight: 500;
+  color: var(--color-text-neutral-strong, #252525);
+}
+
+.main-menu-top__item--Small .main-menu-top__label {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--line-height-body-2, 20px);
+}
+
+.main-menu-top__item:hover .main-menu-top__label,
+.main-menu-top__item--selected .main-menu-top__label {
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.main-menu-top__chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  color: var(--color-icon-brand-strong, #0062ab);
+  flex-shrink: 0;
+}
+
+.main-menu-top__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 181px;
+  margin-top: 10px;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  padding: 4px 0;
+}
+
+.main-menu-top__dropdown-option {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: var(--padding-padding-10, 10px) var(--padding-padding-16, 16px);
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--line-height-body-2, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.main-menu-top__dropdown-option:hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.main-menu-top__dropdown-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.main-menu-top__dropdown-option:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: -2px;
+}
+
+/* --- Responsive ------------------------------------------ */
+@media (max-width: 768px) {
+  .main-menu-top__bar {
+    flex-wrap: nowrap;
+  }
+}

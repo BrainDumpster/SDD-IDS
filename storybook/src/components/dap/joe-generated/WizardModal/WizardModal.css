@@ -1,0 +1,190 @@
+/* ============================================================
+   Wizard Modal — IDS Design System
+   ============================================================ */
+
+.wizard-modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-background-overlay, rgba(37, 37, 37, 0.65));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 24px;
+}
+
+.wizard-modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 600px;
+  max-width: 800px;
+  max-height: 90vh;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-light, #c5c5c5);
+  background: var(--color-background-component, #ffffff);
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  box-shadow: 0 4px 4px 0 rgba(37, 37, 37, 0.08), 0 8px 8px 0 rgba(37, 37, 37, 0.08);
+}
+
+.wizard-modal__progress {
+  height: 4px;
+  background: var(--color-background-gray-lighter, #f4f4f4);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.wizard-modal__progress-bar {
+  height: 100%;
+  background: var(--color-background-controls-brand-base, #0076ce);
+  transition: width 0.3s ease;
+}
+
+.wizard-modal__steps {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  gap: 8px;
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.wizard-modal__step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  color: var(--color-text-brand-strong, #0062ab);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+}
+
+.wizard-modal__step:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-color: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+}
+
+.wizard-modal__step:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wizard-modal__step--active {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-color: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+}
+
+.wizard-modal__step--completed {
+  background: var(--color-background-alerting-success, #1b8500);
+  border-color: var(--color-background-alerting-success, #1b8500);
+  color: var(--color-text-white, #ffffff);
+}
+
+.wizard-modal__step:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.wizard-modal__step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 500;
+}
+
+.wizard-modal__step-title {
+  white-space: nowrap;
+}
+
+.wizard-modal__header {
+  padding: 24px;
+  border-bottom: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+}
+
+.wizard-modal__title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  color: var(--color-text-neutral-strong, #252525);
+  margin: 0 0 8px 0;
+}
+
+.wizard-modal__subtitle {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  color: var(--color-text-neutral, #4d4d4d);
+  margin: 0;
+}
+
+.wizard-modal__content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.wizard-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px;
+  border-top: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+}
+
+.wizard-modal__button {
+  padding: 8px 24px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+  color: var(--color-text-neutral, #4d4d4d);
+  cursor: pointer;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.wizard-modal__button:hover:not(:disabled) {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+  border-color: var(--color-border-brand-base, #0076ce);
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.wizard-modal__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wizard-modal__button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 2px;
+}
+
+.wizard-modal__button--next {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-color: var(--color-background-controls-brand-base, #0076ce);
+  color: var(--color-text-white, #ffffff);
+}
+
+.wizard-modal__button--next:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-strong, #0062ab);
+  border-color: var(--color-background-controls-brand-strong, #0062ab);
+}
