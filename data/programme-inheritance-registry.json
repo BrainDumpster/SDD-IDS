@@ -19,6 +19,13 @@
       "themeCssPath": "components/dap-theme.css",
       "storybookTitlePrefix": "Spec Generated/DAP",
       "baselineComponentsDir": "components/ids"
+    },
+    "powerflex": {
+      "componentsDir": "components/powerflex",
+      "figmaMapPath": "data/powerflex-component-figma-map.json",
+      "themeCssPath": "components/ids-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Powerflex",
+      "baselineComponentsDir": "components/ids"
     }
   },
   "components": [
@@ -629,6 +636,23 @@
       "figmaDisplayName": "Page Layout",
       "lastVerified": "2026-06-17",
       "status": "active"
+    },
+    {
+      "programme": "powerflex",
+      "slug": "toggle-switch",
+      "displayName": "Toggle Switch",
+      "registrySlug": "toggleswitch",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/toggle-switch/design-spec.md",
+      "programmeFigmaNodeId": "8505:14389",
+      "mainComponentSetNodeId": "8505:14389",
+      "specAccurateNodeId": "8505:14390",
+      "sharedImplementation": "storybook/src/components/ToggleSwitch.tsx",
+      "programmeWrapper": "storybook/src/components/PowerflexToggleSwitch.tsx",
+      "specContract": "storybook/src/spec-contracts/powerflex-toggle-switch.contract.ts",
+      "storybookPath": "storybook-generated/powerflex/src/components/ToggleSwitch.stories.tsx",
+      "lastVerified": "2026-07-23",
+      "status": "draft"
     },
     {
       "programme": "dap",

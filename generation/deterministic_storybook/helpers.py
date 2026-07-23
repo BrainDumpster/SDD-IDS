@@ -29,6 +29,7 @@ def ts_array(items: list[str]) -> str:
 THEME_CSS_BY_DESIGN_SYSTEM: dict[str, str] = {
     "ids": "components/ids-theme.css",
     "dap": "components/dap-theme.css",
+    "powerflex": "components/ids-theme.css",
 }
 
 
