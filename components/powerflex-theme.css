@@ -1,0 +1,28 @@
+/*
+ * Powerflex Design System — Global Theme Tokens
+ * Baseline: IDS semantic token contract imported from donor theme.
+ * Scope: html/body[data-design-system="powerflex"] (+ [data-theme="dark"]).
+ * Import in Storybook/apps with data-design-system="powerflex" on html/body.
+ *
+ * Donor: components/ids-theme.css
+ */
+
+@import "./ids-theme.css";
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /*
+   * Powerflex button chrome aligns with DAP Design Library matrix evidence
+   * (HIbl2AgqTSdR9STZueMvTH / 9662:25120) — 4px control radius family.
+   */
+  --button-control-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-offset: 3px;
+}
+
+html[data-design-system="powerflex"][data-theme="dark"],
+body[data-design-system="powerflex"][data-theme="dark"] {
+  --button-control-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-offset: 3px;
+}

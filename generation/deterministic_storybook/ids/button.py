@@ -77,7 +77,7 @@ def generate_ids_button_story(
     focus_outline_width = (
         "var(--border-width-border-default)" if options.design_system_slug == "dap" else "var(--border-width-border-1)"
     )
-    use_dap_sizes = options.design_system_slug == "dap" and options.apply_program_deltas
+    use_dap_sizes = options.apply_program_deltas and options.design_system_slug in ("dap", "powerflex")
     size_type = '"small" | "medium" | "large"' if use_dap_sizes else '"sm" | "md" | "lg"'
     size_options_json = json.dumps(["small", "medium", "large"] if use_dap_sizes else ["sm", "md", "lg"])
     # Spec API default: size large → implementation lg (sm/md/lg).

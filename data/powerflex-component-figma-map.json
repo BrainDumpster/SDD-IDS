@@ -1,0 +1,13 @@
+[
+  {
+    "category": "Form",
+    "component": "Button",
+    "displayName": "Button",
+    "designSpecPath": "components/powerflex/button/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=9662-25120&m=dev",
+    "nodeId": "9662-25120",
+    "fileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "mainComponentSetNodeId": "9662:25120",
+    "specPattern": "standalone"
+  }
+]

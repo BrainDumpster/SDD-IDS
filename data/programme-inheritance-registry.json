@@ -19,6 +19,15 @@
       "themeCssPath": "components/dap-theme.css",
       "storybookTitlePrefix": "Spec Generated/DAP",
       "baselineComponentsDir": "components/ids"
+    },
+    "powerflex": {
+      "componentsDir": "components/powerflex",
+      "figmaMapPath": "data/powerflex-component-figma-map.json",
+      "themeCssPath": "components/powerflex-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Powerflex",
+      "baselineComponentsDir": "components/ids",
+      "baselineRootSpecPath": "components/ids/root-spec.md",
+      "baselineThemeCssPath": "components/ids-theme.css"
     }
   },
   "components": [
@@ -641,6 +650,21 @@
       "programmeSpecPath": "components/DAP/pagination/design-spec.md",
       "status": "active",
       "notes": "DAP inline overrides in Layout; extend with explicit deltas table when hardening."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "button",
+      "displayName": "Button",
+      "registrySlug": "button",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/button/design-spec.md",
+      "programmeFigmaNodeId": "9662:25120",
+      "mainComponentSetNodeId": "9662:25120",
+      "figmaFileKey": "HIbl2AgqTSdR9STZueMvTH",
+      "themeCssPath": "components/powerflex-theme.css",
+      "storybookPath": "storybook-generated/powerflex/src/components/Button.stories.tsx",
+      "lastVerified": "2026-07-23",
+      "status": "draft"
     }
   ]
 }
