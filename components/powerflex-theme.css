@@ -1,0 +1,16 @@
+/*
+ * Powerflex Design System — Global Theme Tokens
+ * Programme wrapper reusing IDS semantic token contract.
+ * Donor: components/ids-theme.css
+ * Scope: html/body[data-design-system="powerflex"] (+ [data-theme="dark"]).
+ * Import in Storybook/apps with data-design-system="powerflex" on html/body when
+ * programme-specific scope is required; donor IDS tokens load via @import below.
+ */
+
+@import "./ids-theme.css";
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* Powerflex inherits IDS semantic tokens from donor theme.
+   * Add programme deltas here when Figma evidence requires overrides. */
+}

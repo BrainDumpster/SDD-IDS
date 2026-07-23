@@ -19,6 +19,13 @@
       "themeCssPath": "components/dap-theme.css",
       "storybookTitlePrefix": "Spec Generated/DAP",
       "baselineComponentsDir": "components/ids"
+    },
+    "powerflex": {
+      "componentsDir": "components/powerflex",
+      "figmaMapPath": "data/powerflex-component-figma-map.json",
+      "themeCssPath": "components/powerflex-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Powerflex",
+      "baselineComponentsDir": "components/ids"
     }
   },
   "components": [
@@ -641,6 +648,21 @@
       "programmeSpecPath": "components/DAP/pagination/design-spec.md",
       "status": "active",
       "notes": "DAP inline overrides in Layout; extend with explicit deltas table when hardening."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "toggle-switch",
+      "displayName": "Toggle Switch",
+      "registrySlug": "toggle-switch",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/toggle-switch/design-spec.md",
+      "programmeFigmaNodeId": "8505:14389",
+      "mainComponentSetNodeId": "8505:14389",
+      "specAccurateNodeId": "8505:14390",
+      "sharedImplementation": "storybook/src/components/PowerflexToggleSwitch.tsx",
+      "storybookPath": "storybook-generated/powerflex/src/components/ToggleSwitch.stories.tsx",
+      "lastVerified": "2026-07-23",
+      "status": "draft"
     }
   ]
 }
