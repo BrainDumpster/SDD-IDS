@@ -1,0 +1,168 @@
+{
+  "job_id": "90bc4a8c-55cc-46d1-86e6-9fe497d01b56",
+  "status": "finished",
+  "created_at": "2026-07-22T17:41:43Z",
+  "updated_at": "2026-07-22T17:41:45Z",
+  "request": {
+    "programme": "ids",
+    "componentDisplayName": "Phase4 Smoke",
+    "inheritsIds": "skipped",
+    "category": null,
+    "mainUrls": [
+      "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev"
+    ],
+    "elementUrls": [],
+    "stateUrls": [],
+    "storybookExamples": false,
+    "sameAnatomyAsIds": null
+  },
+  "preview": {
+    "programme": "ids",
+    "programme_display_name": "IDS",
+    "programme_is_new": false,
+    "component_display_name": "Phase4 Smoke",
+    "slug": "phase4-smoke",
+    "skill_route": "design-spec-intake-wizard",
+    "skill_path": "/home/muthu/projects/SDD-IDS/.cursor/skills/design-spec-intake-wizard/SKILL.md",
+    "spec_pattern": "ids-native",
+    "design_spec_path": "components/ids/phase4-smoke/design-spec.md",
+    "components_dir": "components/ids",
+    "figma_map_path": "data/component-figma-map.json",
+    "theme_css_path": "components/ids-theme.css",
+    "storybook_examples": false,
+    "figma": {
+      "main": [
+        {
+          "url": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev",
+          "file_key": "VZJ48bbVYrIynw8DdSukWw",
+          "node_id": "16551:26036",
+          "bucket": "main"
+        }
+      ],
+      "elements": [],
+      "states": []
+    },
+    "primary_file_key": "VZJ48bbVYrIynw8DdSukWw",
+    "primary_node_id": "16551:26036",
+    "notes": [],
+    "ready_for_agent": true,
+    "map_entry_sketch": {
+      "designSpecPath": "components/ids/phase4-smoke/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev",
+      "fileKey": "VZJ48bbVYrIynw8DdSukWw",
+      "nodeId": "16551:26036",
+      "mainComponentSetNodeId": "16551:26036",
+      "specPattern": "ids-native",
+      "displayName": "Phase4 Smoke"
+    }
+  },
+  "prompt_package": {
+    "skill_route": "design-spec-intake-wizard",
+    "skill_path": "/home/muthu/projects/SDD-IDS/.cursor/skills/design-spec-intake-wizard/SKILL.md",
+    "skill_relative_path": ".cursor/skills/design-spec-intake-wizard/SKILL.md",
+    "confirmed_payload": {
+      "programme": "ids",
+      "programmeDisplayName": "IDS",
+      "programmeIsNew": false,
+      "componentDisplayName": "Phase4 Smoke",
+      "slug": "phase4-smoke",
+      "category": null,
+      "inheritsIds": "skipped",
+      "sameAnatomyAsIds": null,
+      "specPattern": "ids-native",
+      "skillRoute": "design-spec-intake-wizard",
+      "designSpecPath": "components/ids/phase4-smoke/design-spec.md",
+      "componentsDir": "components/ids",
+      "figmaMapPath": "data/component-figma-map.json",
+      "themeCssPath": "components/ids-theme.css",
+      "storybookExamples": false,
+      "figma": {
+        "main": [
+          {
+            "url": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev",
+            "file_key": "VZJ48bbVYrIynw8DdSukWw",
+            "node_id": "16551:26036",
+            "bucket": "main"
+          }
+        ],
+        "elements": [],
+        "states": []
+      },
+      "mapEntrySketch": {
+        "designSpecPath": "components/ids/phase4-smoke/design-spec.md",
+        "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev",
+        "fileKey": "VZJ48bbVYrIynw8DdSukWw",
+        "nodeId": "16551:26036",
+        "mainComponentSetNodeId": "16551:26036",
+        "specPattern": "ids-native",
+        "displayName": "Phase4 Smoke"
+      },
+      "writePathAllowlist": [
+        "components/ids/phase4-smoke/design-spec.md",
+        "data/component-figma-map.json",
+        "data/design-spec-intake/sessions/",
+        "data/programme-inheritance-registry.json",
+        "config/design_systems/ids.yaml",
+        "components/ids/phase4-smoke/"
+      ],
+      "guardrails": [
+        "Skill-only: follow the named skill run phase only \u2014 no unrelated refactors, dependency installs, or repo-wide cleanups.",
+        "Write-path allowlist: only create/modify paths listed under writePathAllowlist (and their parent dirs).",
+        "Do not commit secrets, .env files, credentials, or API tokens.",
+        "Do not push or merge to main/master; leave changes on a feature branch for PR (portal enables autoCreatePR later).",
+        "Do not invent UI not present in Figma evidence.",
+        "Never echo or request CURSOR_API_KEY / FIGMA_TOKEN / GitHub tokens in files or chat."
+      ]
+    },
+    "map_entry_sketch": {
+      "designSpecPath": "components/ids/phase4-smoke/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev",
+      "fileKey": "VZJ48bbVYrIynw8DdSukWw",
+      "nodeId": "16551:26036",
+      "mainComponentSetNodeId": "16551:26036",
+      "specPattern": "ids-native",
+      "displayName": "Phase4 Smoke"
+    },
+    "run_phase_checklist": [
+      "Load config/design_systems/<programme>.yaml (bootstrap yaml if programmeIsNew).",
+      "Slugify / alias-resolve component; mkdir components_dir/<slug>/.",
+      "Merge/append figma map entry using mapEntrySketch (designSpecPath, figmaUrl, nodeIds, specPattern).",
+      "Scaffold design-spec.md from the correct template (IDS vs PROGRAMME_STANDALONE).",
+      "Live Figma on EVERY Main / Elements / States URL (MCP preferred): get_screenshot, get_metadata, get_variable_defs, get_design_context.",
+      "Lock element inventory \u2192 Anatomy \u2192 Codegen Contract deterministic structure.",
+      "Fill all required ## sections with codegen-ready depth; Slot geometry (Figma-verified).",
+      "Apply dark-states dedupe when light/dark semantic tokens match.",
+      "Record verification evidence in Metadata + Source Mapping.",
+      "Status: draft until validation checklist passes.",
+      "If storybookExamples: Spec Accurate Design + deterministic generator + strict_spec_storybook_gate."
+    ],
+    "prompt_text": "You are running a confirmed design-spec intake job from Design Spec Portal.\nSkip the interactive interview \u2014 all answers are confirmed below.\n\n## Mandatory guardrails\n- Skill-only: follow the named skill run phase only \u2014 no unrelated refactors, dependency installs, or repo-wide cleanups.\n- Write-path allowlist: only create/modify paths listed under writePathAllowlist (and their parent dirs).\n- Do not commit secrets, .env files, credentials, or API tokens.\n- Do not push or merge to main/master; leave changes on a feature branch for PR (portal enables autoCreatePR later).\n- Do not invent UI not present in Figma evidence.\n- Never echo or request CURSOR_API_KEY / FIGMA_TOKEN / GitHub tokens in files or chat.\n\n## Write-path allowlist (only these)\n- `components/ids/phase4-smoke/design-spec.md`\n- `data/component-figma-map.json`\n- `data/design-spec-intake/sessions/`\n- `data/programme-inheritance-registry.json`\n- `config/design_systems/ids.yaml`\n- `components/ids/phase4-smoke/`\n\nRead and follow the skill run phase in: `.cursor/skills/design-spec-intake-wizard/SKILL.md`\nSkill route: `design-spec-intake-wizard`\nSpec pattern: `ids-native`\nWrite/update: `components/ids/phase4-smoke/design-spec.md`\n\nConfirmed intake JSON:\n```json\n{\n  \"programme\": \"ids\",\n  \"programmeDisplayName\": \"IDS\",\n  \"programmeIsNew\": false,\n  \"componentDisplayName\": \"Phase4 Smoke\",\n  \"slug\": \"phase4-smoke\",\n  \"category\": null,\n  \"inheritsIds\": \"skipped\",\n  \"sameAnatomyAsIds\": null,\n  \"specPattern\": \"ids-native\",\n  \"skillRoute\": \"design-spec-intake-wizard\",\n  \"designSpecPath\": \"components/ids/phase4-smoke/design-spec.md\",\n  \"componentsDir\": \"components/ids\",\n  \"figmaMapPath\": \"data/component-figma-map.json\",\n  \"themeCssPath\": \"components/ids-theme.css\",\n  \"storybookExamples\": false,\n  \"figma\": {\n    \"main\": [\n      {\n        \"url\": \"https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev\",\n        \"file_key\": \"VZJ48bbVYrIynw8DdSukWw\",\n        \"node_id\": \"16551:26036\",\n        \"bucket\": \"main\"\n      }\n    ],\n    \"elements\": [],\n    \"states\": []\n  },\n  \"mapEntrySketch\": {\n    \"designSpecPath\": \"components/ids/phase4-smoke/design-spec.md\",\n    \"figmaUrl\": \"https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16551-26036&m=dev\",\n    \"fileKey\": \"VZJ48bbVYrIynw8DdSukWw\",\n    \"nodeId\": \"16551:26036\",\n    \"mainComponentSetNodeId\": \"16551:26036\",\n    \"specPattern\": \"ids-native\",\n    \"displayName\": \"Phase4 Smoke\"\n  },\n  \"writePathAllowlist\": [\n    \"components/ids/phase4-smoke/design-spec.md\",\n    \"data/component-figma-map.json\",\n    \"data/design-spec-intake/sessions/\",\n    \"data/programme-inheritance-registry.json\",\n    \"config/design_systems/ids.yaml\",\n    \"components/ids/phase4-smoke/\"\n  ],\n  \"guardrails\": [\n    \"Skill-only: follow the named skill run phase only \\u2014 no unrelated refactors, dependency installs, or repo-wide cleanups.\",\n    \"Write-path allowlist: only create/modify paths listed under writePathAllowlist (and their parent dirs).\",\n    \"Do not commit secrets, .env files, credentials, or API tokens.\",\n    \"Do not push or merge to main/master; leave changes on a feature branch for PR (portal enables autoCreatePR later).\",\n    \"Do not invent UI not present in Figma evidence.\",\n    \"Never echo or request CURSOR_API_KEY / FIGMA_TOKEN / GitHub tokens in files or chat.\"\n  ]\n}\n```\n\nRun-phase checklist:\n- [ ] Load config/design_systems/<programme>.yaml (bootstrap yaml if programmeIsNew).\n- [ ] Slugify / alias-resolve component; mkdir components_dir/<slug>/.\n- [ ] Merge/append figma map entry using mapEntrySketch (designSpecPath, figmaUrl, nodeIds, specPattern).\n- [ ] Scaffold design-spec.md from the correct template (IDS vs PROGRAMME_STANDALONE).\n- [ ] Live Figma on EVERY Main / Elements / States URL (MCP preferred): get_screenshot, get_metadata, get_variable_defs, get_design_context.\n- [ ] Lock element inventory \u2192 Anatomy \u2192 Codegen Contract deterministic structure.\n- [ ] Fill all required ## sections with codegen-ready depth; Slot geometry (Figma-verified).\n- [ ] Apply dark-states dedupe when light/dark semantic tokens match.\n- [ ] Record verification evidence in Metadata + Source Mapping.\n- [ ] Status: draft until validation checklist passes.\n- [ ] If storybookExamples: Spec Accurate Design + deterministic generator + strict_spec_storybook_gate.\n\nLive Figma verification is mandatory (MCP preferred).\nDo not invent UI. Fail on missing node-id or unusable nodes.\nWhen finished, leave the working tree ready for a PR (Phase 4 enables autoCreatePR).",
+    "write_path_allowlist": [
+      "components/ids/phase4-smoke/design-spec.md",
+      "data/component-figma-map.json",
+      "data/design-spec-intake/sessions/",
+      "data/programme-inheritance-registry.json",
+      "config/design_systems/ids.yaml",
+      "components/ids/phase4-smoke/"
+    ],
+    "guardrails": [
+      "Skill-only: follow the named skill run phase only \u2014 no unrelated refactors, dependency installs, or repo-wide cleanups.",
+      "Write-path allowlist: only create/modify paths listed under writePathAllowlist (and their parent dirs).",
+      "Do not commit secrets, .env files, credentials, or API tokens.",
+      "Do not push or merge to main/master; leave changes on a feature branch for PR (portal enables autoCreatePR later).",
+      "Do not invent UI not present in Figma evidence.",
+      "Never echo or request CURSOR_API_KEY / FIGMA_TOKEN / GitHub tokens in files or chat."
+    ]
+  },
+  "session_path": "/home/muthu/projects/SDD-IDS/data/design-spec-intake/sessions/phase4-smoke-20260722-90bc4a8c.yaml",
+  "actor": "anonymous",
+  "cancel_requested": false,
+  "agent_id": "dry-agent-90bc4a8c",
+  "run_id": "dry-run-90bc4a8c",
+  "result_summary": "[dry-run] Skipped Cursor Cloud. Prompt package was built; set CLOUD_AGENT_DRY_RUN=false with CURSOR_API_KEY, CLOUD_REPO_URL, FIGMA_TOKEN to run for real.",
+  "error_message": null,
+  "pr_url": null,
+  "branch": "design-spec-portal/90bc4a8c",
+  "ide_checkout_hint": "git fetch origin && git checkout design-spec-portal/90bc4a8c\n# (dry-run sample branch name \u2014 real cloud runs return the agent branch)",
+  "locked_repo_url": "https://github.com/teddygraham/SDD-IDS.git"
+}

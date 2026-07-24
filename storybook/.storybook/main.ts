@@ -39,11 +39,11 @@ function warnOnNewSpecGeneratedStories(): Plugin {
 const config: StorybookConfig = {
   // Absolute globs keep Vite importer keys aligned with the story index (avoids
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
+  // Discover every programme under storybook-generated/<programme>/ (ids, dap, synapse,
+  // and new programmes from design-spec intake) — do not hardcode programme slugs.
   stories: [
     path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/synapse/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)"),
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {
