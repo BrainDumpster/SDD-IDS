@@ -1,0 +1,752 @@
+"""Design Spec Collab — intake + dual-agent session API."""
+
+from __future__ import annotations
+
+import secrets
+from pathlib import Path
+from typing import Any
+
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Response
+from fastapi.staticfiles import StaticFiles
+
+from .artifacts import build_artifacts_zip
+from .config import settings
+from .github_publish import github_configured, publish_session
+from .portal_bridge import (
+    AuditLog,
+    CreateJobBody,
+    InheritsIds,
+    IntakePreviewResponse,
+    IntakeRequest,
+    JobStatus,
+    JobStore,
+    auth_status,
+    build_preview,
+    build_prompt_package,
+    build_session_yaml,
+    list_programmes,
+    load_programme,
+    public_job_dict,
+    resolve_actor,
+    sync_portal_auth_mode,
+    sync_portal_paths,
+)
+from .runner import start_packaging
+from .server_review import build_revise_requests, review_session
+from .session_models import (
+    Artifact,
+    ClaimBody,
+    ClientRequest,
+    ClientResultBody,
+    SessionStatus,
+)
+from .session_store import SessionStore
+
+APP_DIR = Path(__file__).resolve().parents[2]
+FRONTEND_DIR = APP_DIR / "frontend"
+
+sync_portal_paths(
+    repo_root=settings.repo_root,
+    design_systems_dir=settings.design_systems_dir,
+    jobs_dir=settings.jobs_dir,
+    sessions_dir=settings.sessions_dir,
+    audit_log_path=settings.audit_log_path,
+)
+sync_portal_auth_mode(settings.auth_mode)
+
+app = FastAPI(
+    title="Design Spec Collab",
+    version="0.1.0",
+    description="Dual-agent POC: server packs Figma; client LLM collaborates via one session URL.",
+)
+
+job_store = JobStore(settings.jobs_dir, settings.sessions_dir)
+session_store = SessionStore(settings.collab_sessions_dir)
+audit_log = AuditLog(settings.audit_log_path)
+
+
+def _actor_dep(request: Request) -> str:
+    sync_portal_auth_mode(settings.auth_mode)
+    return resolve_actor(request)
+
+
+def _preview_or_400(body: IntakeRequest) -> IntakePreviewResponse:
+    try:
+        programme = load_programme(settings.design_systems_dir, body.programme)
+        return build_preview(
+            body,
+            programme,
+            repo_root=settings.repo_root,
+            design_systems_dir=settings.design_systems_dir,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+def _extract_token(
+    t: str | None,
+    x_session_token: str | None,
+) -> str | None:
+    return (t or x_session_token or "").strip() or None
+
+
+def _load_session_authed(
+    session_id: str,
+    token: str | None,
+    *,
+    require_not_expired: bool = True,
+):
+    session = session_store.get(session_id)
+    if session is None:
+        raise HTTPException(status_code=404, detail="Session not found")
+    if not session_store.token_ok(session, token):
+        raise HTTPException(status_code=401, detail="Invalid or missing session token")
+    if require_not_expired and session_store.is_expired(session):
+        raise HTTPException(status_code=410, detail="Session expired")
+    return session
+
+
+def _job_public(record, *, include_session_url: bool = True) -> dict[str, Any]:
+    data = public_job_dict(record.model_dump(mode="json"))
+    collab = session_store.get_by_job(record.job_id)
+    if collab:
+        data["collab_status"] = collab.status.value
+        data["session_id"] = collab.session_id
+        data["turn"] = collab.turn
+        data["transcript"] = [e.model_dump(mode="json") for e in collab.transcript]
+        data["revise_count"] = collab.revise_count
+        data["claim_bound"] = bool(collab.client_nonce)
+        data["branch"] = collab.branch
+        data["pr_url"] = collab.pr_url
+        data["ide_checkout_hint"] = collab.ide_checkout_hint
+        data["published_files"] = collab.published_files
+        data["publish_error"] = collab.publish_error
+        data["publish_dry_run"] = collab.publish_dry_run
+        if include_session_url:
+            data["session_url"] = collab.session_url(settings.public_base_url)
+        if collab.result_summary:
+            data["result_summary"] = collab.result_summary
+        if collab.error_message and not data.get("error_message"):
+            data["error_message"] = collab.error_message
+        # Map collab terminal → job-ish status for UI
+        if collab.status == SessionStatus.done:
+            data["status"] = JobStatus.finished.value
+        elif collab.status == SessionStatus.failed:
+            data["status"] = JobStatus.error.value
+        elif collab.status == SessionStatus.cancelled:
+            data["status"] = JobStatus.cancelled.value
+        elif collab.status in (
+            SessionStatus.packaging,
+            SessionStatus.awaiting_client,
+            SessionStatus.reviewing,
+        ):
+            data["status"] = JobStatus.running.value
+    return data
+
+
+def _work_payload(session) -> dict[str, Any]:
+    return {
+        "session_id": session.session_id,
+        "status": session.status.value,
+        "turn": session.turn,
+        "max_turns": session.max_turns,
+        "poll_hint_ms": settings.client_poll_hint_ms,
+        "prior_feedback": session.prior_feedback,
+        "client_requests": [r.model_dump(mode="json") for r in session.client_requests],
+        "figma_evidence": session.figma_evidence,
+        "prompt_package": {
+            "skill_route": session.prompt_package.get("skill_route"),
+            "skill_relative_path": session.prompt_package.get("skill_relative_path"),
+            "write_path_allowlist": session.prompt_package.get("write_path_allowlist"),
+            "guardrails": session.prompt_package.get("guardrails"),
+            "run_phase_checklist": session.prompt_package.get("run_phase_checklist"),
+            "prompt_text": session.prompt_package.get("prompt_text"),
+        },
+        "preview": {
+            "programme": session.preview.get("programme"),
+            "slug": session.preview.get("slug"),
+            "spec_path": session.preview.get("spec_path"),
+            "skill_route": session.preview.get("skill_route"),
+        },
+        "result_url": (
+            f"{settings.public_base_url.rstrip('/')}/api/v1/sessions/"
+            f"{session.session_id}/result?t={session.access_token}"
+        ),
+        "claim_required": settings.session_require_claim,
+        "claim_bound": bool(session.client_nonce),
+        "expires_at": session.expires_at,
+    }
+
+
+@app.get("/health")
+def health() -> dict:
+    gh_ok, gh_missing = github_configured()
+    return {
+        "status": "ok",
+        "app": "design-spec-collab",
+        "figmaMode": settings.figma_mode,
+        "serverReviewMode": settings.server_review_mode,
+        "publicBaseUrl": settings.public_base_url,
+        "sessionRequireClaim": settings.session_require_claim,
+        "sessionTtlHours": settings.session_ttl_hours,
+        "collabMaxTurns": settings.collab_max_turns,
+        "autoCreatePr": settings.auto_create_pr,
+        "githubPublishDryRun": settings.github_publish_dry_run,
+        "github": {
+            "configured": gh_ok,
+            "missing": gh_missing,
+        },
+        "auth": auth_status(),
+        "secretsConfigured": {
+            "figmaToken": bool(settings.figma_token),
+            "githubToken": bool(settings.github_token),
+        },
+    }
+
+
+@app.get("/api/v1/programmes")
+def programmes(actor: str = Depends(_actor_dep)) -> dict:
+    return {"programmes": list_programmes(settings.design_systems_dir), "actor": actor}
+
+
+@app.post("/api/v1/intake/preview", response_model=IntakePreviewResponse)
+def intake_preview(
+    body: IntakeRequest, actor: str = Depends(_actor_dep)
+) -> IntakePreviewResponse:
+    preview = _preview_or_400(body)
+    audit_log.write(
+        "intake_preview",
+        actor=actor,
+        detail={
+            "programme": preview.programme,
+            "slug": preview.slug,
+            "skillRoute": preview.skill_route.value,
+            "readyForAgent": preview.ready_for_agent,
+        },
+    )
+    return preview
+
+
+@app.post("/api/v1/intake/jobs")
+def create_job(body: CreateJobBody, actor: str = Depends(_actor_dep)) -> dict:
+    if not body.confirmed:
+        raise HTTPException(
+            status_code=400,
+            detail="confirmed must be true before creating a job (wizard step 9).",
+        )
+    intake = body.intake
+    if intake.inherits_ids == InheritsIds.unknown and intake.same_anatomy_as_ids is None:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "inheritsIds=unknown cannot create a job — "
+                "choose yes/no or set sameAnatomyAsIds."
+            ),
+        )
+
+    preview = _preview_or_400(intake)
+    if not preview.ready_for_agent:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "message": "Intake is not ready for an agent job.",
+                "notes": preview.notes,
+            },
+        )
+
+    prompt = build_prompt_package(intake, preview, repo_root=settings.repo_root)
+    session_yaml = build_session_yaml(intake, preview, job_id="pending")
+    record = job_store.create(
+        request=intake.model_dump(by_alias=True, mode="json"),
+        preview=preview.model_dump(mode="json"),
+        prompt_package=prompt.model_dump(mode="json"),
+        session=session_yaml,
+        actor=actor,
+    )
+
+    collab = session_store.create(
+        job_id=record.job_id,
+        actor=actor,
+        max_turns=settings.collab_max_turns,
+        ttl_hours=settings.session_ttl_hours,
+        prompt_package=prompt.model_dump(mode="json"),
+        preview=preview.model_dump(mode="json"),
+        request=intake.model_dump(by_alias=True, mode="json"),
+    )
+
+    record.status = JobStatus.running
+    record.result_summary = "Packaging Figma evidence for collab session…"
+    job_store.save(record)
+
+    start_packaging(
+        job_store=job_store,
+        session_store=session_store,
+        session_id=collab.session_id,
+        job_id=record.job_id,
+        audit=audit_log,
+        actor=actor,
+    )
+
+    audit_log.write(
+        "job_created",
+        job_id=record.job_id,
+        actor=actor,
+        detail={
+            "sessionId": collab.session_id,
+            "programme": preview.programme,
+            "slug": preview.slug,
+        },
+    )
+
+    out = _job_public(record, include_session_url=True)
+    out["message"] = (
+        "Job created. Copy session_url into the client agent once; "
+        "no further user intervention required until done."
+    )
+    out["agent_started"] = True
+    return out
+
+
+@app.get("/api/v1/intake/jobs/{job_id}")
+def get_job(job_id: str, actor: str = Depends(_actor_dep)) -> dict:
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    # Creator binding when auth placeholder/enforced identity present
+    if (
+        settings.auth_mode != "disabled"
+        and record.actor
+        and record.actor != actor
+        and actor != "anonymous"
+    ):
+        raise HTTPException(status_code=403, detail="Not the creating actor")
+    return _job_public(record, include_session_url=True)
+
+
+@app.get("/api/v1/intake/jobs")
+def list_jobs(limit: int = 50, actor: str = Depends(_actor_dep)) -> dict:
+    jobs = []
+    for j in job_store.list_jobs(limit=limit):
+        data = _job_public(j, include_session_url=False)
+        # Never list session tokens/URLs
+        data.pop("session_url", None)
+        jobs.append(data)
+    return {"jobs": jobs, "actor": actor}
+
+
+@app.post("/api/v1/intake/jobs/{job_id}/cancel")
+def cancel_job(job_id: str, actor: str = Depends(_actor_dep)) -> dict:
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    collab = session_store.get_by_job(job_id)
+    if collab and collab.status in (
+        SessionStatus.done,
+        SessionStatus.failed,
+        SessionStatus.cancelled,
+    ):
+        return _job_public(record)
+    if collab:
+        collab.cancel_requested = True
+        collab.status = SessionStatus.cancelled
+        collab.error_message = "Cancelled by operator"
+        session_store.append_event(
+            collab, kind="cancelled", message="Session cancelled by operator"
+        )
+    record.cancel_requested = True
+    record.status = JobStatus.cancelled
+    record.error_message = "Cancelled by operator"
+    job_store.save(record)
+    audit_log.write("job_cancelled", job_id=job_id, actor=actor, detail={})
+    return _job_public(record)
+
+
+@app.get("/api/v1/intake/jobs/{job_id}/artifacts.zip")
+def download_artifacts(job_id: str, actor: str = Depends(_actor_dep)) -> Response:
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    collab = session_store.get_by_job(job_id)
+    if collab is None:
+        raise HTTPException(status_code=404, detail="Collab session not found")
+    if collab.status != SessionStatus.done:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Artifacts only after accept (status={collab.status.value})",
+        )
+    try:
+        data, included = build_artifacts_zip(collab)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    slug = (collab.preview or {}).get("slug") or "component"
+    filename = f"design-spec-collab-{slug}-{job_id[:8]}.zip"
+    audit_log.write(
+        "artifacts_downloaded",
+        job_id=job_id,
+        actor=actor,
+        detail={"files": included, "bytes": len(data)},
+    )
+    return Response(
+        content=data,
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@app.get("/s/{session_id}", response_class=HTMLResponse)
+def session_landing(
+    session_id: str,
+    t: str | None = Query(default=None),
+    x_session_token: str | None = Header(default=None, alias="X-Session-Token"),
+    format: str | None = Query(default=None),
+):
+    token = _extract_token(t, x_session_token)
+    session = _load_session_authed(session_id, token)
+    work = _work_payload(session)
+
+    if format == "json":
+        from fastapi.responses import JSONResponse
+
+        return JSONResponse(work)
+
+    if format == "md":
+        return PlainTextResponse(
+            _session_markdown(session, work), media_type="text/markdown"
+        )
+
+    md = _session_markdown(session, work)
+    html = f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/>
+<title>Collab session {session_id[:8]}…</title>
+<style>
+body{{font-family:ui-sans-serif,system-ui,sans-serif;max-width:52rem;margin:2rem auto;padding:0 1rem;line-height:1.45}}
+pre{{background:#f4f4f5;padding:1rem;overflow:auto;border-radius:8px;white-space:pre-wrap}}
+code{{font-size:.9em}}
+.meta{{color:#52525b;font-size:.9rem}}
+</style></head><body>
+<h1>Design Spec Collab Session</h1>
+<p class="meta">status=<strong>{session.status.value}</strong> · turn={session.turn} · poll every {settings.client_poll_hint_ms}ms</p>
+<pre>{md}</pre>
+</body></html>"""
+    return HTMLResponse(html)
+
+
+@app.get("/s/{session_id}.md", response_class=PlainTextResponse)
+def session_markdown(
+    session_id: str,
+    t: str | None = Query(default=None),
+    x_session_token: str | None = Header(default=None, alias="X-Session-Token"),
+):
+    token = _extract_token(t, x_session_token)
+    session = _load_session_authed(session_id, token)
+    work = _work_payload(session)
+    return PlainTextResponse(
+        _session_markdown(session, work), media_type="text/markdown"
+    )
+
+
+def _session_markdown(session, work: dict[str, Any]) -> str:
+    reqs = "\n".join(
+        f"- **{r['id']}** ({r['kind']}): {r['instruction']}"
+        for r in work.get("client_requests") or []
+    ) or "_none_"
+    claim = ""
+    if work.get("claim_required") and not work.get("claim_bound"):
+        claim = (
+            f"\n## Claim first\n\n"
+            f"POST `{settings.public_base_url.rstrip('/')}/api/v1/sessions/"
+            f"{session.session_id}/claim?t={session.access_token}` "
+            f"then send returned `clientNonce` on every result POST.\n"
+        )
+    return f"""# Collab client instructions
+
+Stay on **this session** until status is `done` or `failed`. Do not ask the human for a new URL.
+
+## Loop
+
+1. GET work: `{settings.public_base_url.rstrip('/')}/api/v1/sessions/{session.session_id}/work?t={session.access_token}`
+2. If `status` is `awaiting_client`, fulfill `client_requests` with your LLM.
+3. POST result to `{work['result_url']}` (include `turn`, `artifacts`, and `clientNonce` if claimed).
+4. Poll work again. Repeat until `done` / `failed` / `cancelled`.
+{claim}
+## Current status
+
+- status: `{session.status.value}`
+- turn: `{session.turn}` / max `{session.max_turns}`
+- expires_at: `{session.expires_at}`
+
+## Client requests
+
+{reqs}
+
+## Prior feedback
+
+{session.prior_feedback or "_none_"}
+
+## Result JSON example
+
+```json
+{{
+  "turn": {session.turn},
+  "summary": "Wrote design-spec.md",
+  "clientNonce": "<from claim>",
+  "artifacts": [{{"name": "design-spec.md", "content": "## Metadata\\n..."}}]
+}}
+```
+
+## Guardrails
+
+Use only write paths in prompt_package.write_path_allowlist. Do not invent secrets. Prefer figma_evidence already in the work payload.
+"""
+
+
+@app.post("/api/v1/sessions/{session_id}/claim")
+def claim_session(
+    session_id: str,
+    body: ClaimBody | None = None,
+    t: str | None = Query(default=None),
+    x_session_token: str | None = Header(default=None, alias="X-Session-Token"),
+):
+    token = _extract_token(t, x_session_token)
+    session = _load_session_authed(session_id, token)
+    if not settings.session_require_claim:
+        return {
+            "claimed": False,
+            "clientNonce": None,
+            "message": "Claim not required (SESSION_REQUIRE_CLAIM=false)",
+        }
+    if session.client_nonce:
+        raise HTTPException(
+            status_code=409,
+            detail="Session already claimed by another client",
+        )
+    nonce = secrets.token_urlsafe(24)
+    session.client_nonce = nonce
+    session.client_label = (body.client_label if body else None) or "client"
+    from datetime import datetime, timezone
+
+    session.claimed_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    session_store.append_event(
+        session,
+        kind="claimed",
+        message=f"Client claimed session ({session.client_label})",
+    )
+    return {
+        "claimed": True,
+        "clientNonce": nonce,
+        "clientLabel": session.client_label,
+        "message": "Include clientNonce on every POST /result",
+    }
+
+
+@app.post("/api/v1/intake/jobs/{job_id}/reset-claim")
+def reset_claim(job_id: str, actor: str = Depends(_actor_dep)) -> dict:
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    collab = session_store.get_by_job(job_id)
+    if collab is None:
+        raise HTTPException(status_code=404, detail="Session not found")
+    collab.client_nonce = None
+    collab.client_label = None
+    collab.claimed_at = None
+    session_store.append_event(
+        collab, kind="claim_reset", message=f"Claim reset by {actor}"
+    )
+    return {"ok": True, "session_id": collab.session_id}
+
+
+@app.get("/api/v1/sessions/{session_id}/work")
+def get_work(
+    session_id: str,
+    t: str | None = Query(default=None),
+    x_session_token: str | None = Header(default=None, alias="X-Session-Token"),
+):
+    token = _extract_token(t, x_session_token)
+    session = _load_session_authed(session_id, token)
+    return _work_payload(session)
+
+
+@app.post("/api/v1/sessions/{session_id}/result")
+def post_result(
+    session_id: str,
+    body: ClientResultBody,
+    t: str | None = Query(default=None),
+    x_session_token: str | None = Header(default=None, alias="X-Session-Token"),
+):
+    token = _extract_token(t, x_session_token)
+    session = _load_session_authed(session_id, token)
+
+    if not session_store.check_rate_limit(
+        session_id, settings.result_post_rate_limit_per_minute
+    ):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    if session.status not in (
+        SessionStatus.awaiting_client,
+        SessionStatus.reviewing,
+    ):
+        raise HTTPException(
+            status_code=409,
+            detail=f"Session not accepting results (status={session.status.value})",
+        )
+
+    if settings.session_require_claim:
+        if not session.client_nonce:
+            raise HTTPException(
+                status_code=409,
+                detail="Session not claimed — POST /claim first",
+            )
+        if not body.client_nonce or not secrets.compare_digest(
+            session.client_nonce, body.client_nonce
+        ):
+            raise HTTPException(
+                status_code=409,
+                detail="Invalid clientNonce — session claimed by another client",
+            )
+
+    if body.turn != session.turn:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Stale turn (got {body.turn}, expected {session.turn})",
+        )
+
+    session.status = SessionStatus.reviewing
+    session.artifacts = body.artifacts
+    session_store.append_event(
+        session,
+        kind="client_result",
+        message=body.summary or f"Client submitted {len(body.artifacts)} artifact(s)",
+        detail={"turn": body.turn, "artifactNames": [a.name for a in body.artifacts]},
+    )
+
+    verdict = review_session(session, artifacts=body.artifacts)
+    job = job_store.get(session.job_id)
+
+    if verdict.decision == "accept":
+        session.status = SessionStatus.done
+        session.result_summary = verdict.feedback
+        session.client_requests = []
+        session_store.append_event(
+            session,
+            kind="accepted",
+            message="Server accepted client result (rule review — no server LLM)",
+            detail=verdict.model_dump(mode="json"),
+        )
+
+        # Server-side publish: GitHub branch + PR (REST only)
+        if settings.auto_create_pr:
+            pub = publish_session(session)
+            session.branch = pub.branch
+            session.pr_url = pub.pr_url
+            session.ide_checkout_hint = pub.ide_checkout_hint
+            session.published_files = pub.files
+            session.publish_error = pub.error
+            session.publish_dry_run = pub.dry_run
+            session_store.save(session)
+            if pub.error:
+                session_store.append_event(
+                    session,
+                    kind="pr_failed",
+                    message=f"Publish failed: {pub.error}",
+                    detail=pub.__dict__,
+                )
+            else:
+                session_store.append_event(
+                    session,
+                    kind="pr_created" if not pub.dry_run else "pr_dry_run",
+                    message=(
+                        f"Dry-run publish on {pub.branch}"
+                        if pub.dry_run
+                        else f"Opened PR for branch {pub.branch}"
+                    ),
+                    detail={
+                        "branch": pub.branch,
+                        "prUrl": pub.pr_url,
+                        "files": pub.files,
+                        "dryRun": pub.dry_run,
+                    },
+                )
+
+        if job:
+            job.status = JobStatus.finished
+            job.branch = session.branch
+            job.pr_url = session.pr_url
+            job.ide_checkout_hint = session.ide_checkout_hint
+            job.result_summary = (
+                f"Accepted on turn {session.turn}. {verdict.feedback}"
+                + (
+                    f" PR: {session.pr_url}"
+                    if session.pr_url
+                    else (f" Publish error: {session.publish_error}" if session.publish_error else "")
+                )
+            )
+            job_store.save(job)
+        return {
+            "decision": "accept",
+            "status": session.status.value,
+            "verdict": verdict.model_dump(mode="json"),
+            "pr_url": session.pr_url,
+            "branch": session.branch,
+            "work": _work_payload(session),
+        }
+
+    # revise
+    session.revise_count += 1
+    if session.turn >= session.max_turns:
+        session.status = SessionStatus.failed
+        session.error_message = (
+            f"Max turns ({session.max_turns}) exceeded after revise"
+        )
+        session_store.append_event(
+            session,
+            kind="failed",
+            message=session.error_message,
+            detail=verdict.model_dump(mode="json"),
+        )
+        if job:
+            job.status = JobStatus.error
+            job.error_message = session.error_message
+            job_store.save(job)
+        return {
+            "decision": "failed",
+            "status": session.status.value,
+            "verdict": verdict.model_dump(mode="json"),
+            "work": _work_payload(session),
+        }
+
+    session.prior_feedback = verdict.feedback
+    session.turn += 1
+    session.client_requests = [
+        ClientRequest.model_validate(r)
+        for r in build_revise_requests(session, verdict)
+    ]
+    session.status = SessionStatus.awaiting_client
+    session_store.append_event(
+        session,
+        kind="revise",
+        message=f"Server requested revise → turn {session.turn}",
+        detail=verdict.model_dump(mode="json"),
+    )
+    if job:
+        job.status = JobStatus.running
+        job.result_summary = f"Revise requested (turn {session.turn}): {verdict.feedback}"
+        job_store.save(job)
+
+    return {
+        "decision": "revise",
+        "status": session.status.value,
+        "verdict": verdict.model_dump(mode="json"),
+        "work": _work_payload(session),
+    }
+
+
+_assets = FRONTEND_DIR / "assets"
+if FRONTEND_DIR.is_dir() and _assets.is_dir():
+    app.mount("/assets", StaticFiles(directory=_assets), name="assets")
+
+    @app.get("/")
+    def index() -> FileResponse:
+        return FileResponse(FRONTEND_DIR / "index.html")
