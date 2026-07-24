@@ -13,6 +13,13 @@ from validation.spec_contract_parser import SpecContract
 DESIGN_SPEC_PATH = "components/ids/card/design-spec.md"
 
 
+def _design_spec_path(options: DeterministicStorybookOptions) -> str:
+    slug = (options.design_system_slug or "ids").strip().lower()
+    if slug == "ids":
+        return DESIGN_SPEC_PATH
+    return f"components/{slug}/card/design-spec.md"
+
+
 def generate_ids_card_story(
     *,
     repo_root: Path,
@@ -25,6 +32,7 @@ def generate_ids_card_story(
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("card", options.component_prefix)
     theme_import = storybook_theme_import_line(options.design_system_slug)
+    design_spec_path = _design_spec_path(options)
 
     return f"""{theme_import}
 import type {{ Meta, StoryObj }} from "@storybook/react";
@@ -37,7 +45,7 @@ import {{
 }} from "../../../../storybook/src/components/Card";
 
 /* Gate coverage: default hover press focus-visible disabled */
-const DESIGN_SPEC_PATH = "{DESIGN_SPEC_PATH}";
+const DESIGN_SPEC_PATH = "{design_spec_path}";
 
 /** Spec Accurate Design story defaults — design-spec Composition & API. */
 const SPEC_MENU_OPTIONS: CardMenuOption[] = [
@@ -103,7 +111,7 @@ const meta: Meta<typeof {component_name}> = {{
     docs: {{
       description: {{
         component: [
-          `Spec-driven IDS Card. Source: \\`${{DESIGN_SPEC_PATH}}\\`.`,
+          `Spec-driven ${{options.component_prefix or "Ids"}} Card. Source: \\`${{DESIGN_SPEC_PATH}}\\`.`,
           "Figma `Card-Main` variants: Show Buttons × Show Overflow menu.",
           "Border & divider contract: `--card-border-color` cascade + `showDivider` (see design-spec).",
           "CardBody fill is `var(--color-background-surface-2)` (Figma Card Content `14978:28002`).",

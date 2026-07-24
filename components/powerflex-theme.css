@@ -1,0 +1,12 @@
+/*
+ * Powerflex Design System — Global Theme Tokens
+ * Reuses IDS semantic token contract via donor import.
+ * Scope: [data-design-system="powerflex"]
+ */
+
+@import "./ids-theme.css";
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* Programme-specific overrides — none at bootstrap. */
+}

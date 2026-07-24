@@ -1,0 +1,36 @@
+[
+  {
+    "category": "Patterns and Templates",
+    "component": "Card",
+    "designSpecPath": "components/powerflex/card/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=8381-14051&m=dev",
+    "nodeId": "8381-14051",
+    "fileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "specPattern": "standalone",
+    "displayName": "Card",
+    "mainComponentSetNodeId": "8381:14051",
+    "elementsNodeIds": [
+      "15718:197533",
+      "15718:220135",
+      "15718:197126"
+    ],
+    "elementsUrls": [
+      "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=15718-197533&m=dev",
+      "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=15718-220135&m=dev",
+      "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=15718-197126&m=dev"
+    ],
+    "elementNodes": {
+      "elementsBoardA": "15718-197533",
+      "content": "15718-220135",
+      "elementsBoardB": "15718-197126"
+    },
+    "variantNodes": {
+      "buttonsYesOverflowYes": "8381-14245",
+      "buttonsYesOverflowNo": "8381-14305",
+      "buttonsNoOverflowYes": "15718-197984",
+      "buttonsNoOverflowNo": "15718-197994",
+      "contentText": "15718-219736",
+      "contentKeyValue": "15718-220110"
+    }
+  }
+]

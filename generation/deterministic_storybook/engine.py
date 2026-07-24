@@ -65,6 +65,7 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "badge"): generate_ids_badge_story,
     ("ids", "button"): generate_ids_button_story,
     ("ids", "card"): generate_ids_card_story,
+    ("powerflex", "card"): generate_ids_card_story,
     ("ids", "checkbox"): generate_ids_checkbox_story,
     ("ids", "dashboard"): generate_ids_dashboard_story,
     ("ids", "datagrid"): generate_ids_datagrid_story,

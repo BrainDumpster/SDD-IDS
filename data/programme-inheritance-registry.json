@@ -19,6 +19,13 @@
       "themeCssPath": "components/dap-theme.css",
       "storybookTitlePrefix": "Spec Generated/DAP",
       "baselineComponentsDir": "components/ids"
+    },
+    "powerflex": {
+      "componentsDir": "components/powerflex",
+      "figmaMapPath": "data/powerflex-component-figma-map.json",
+      "themeCssPath": "components/powerflex-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Powerflex",
+      "baselineComponentsDir": "components/ids"
     }
   },
   "components": [
@@ -641,6 +648,25 @@
       "programmeSpecPath": "components/DAP/pagination/design-spec.md",
       "status": "active",
       "notes": "DAP inline overrides in Layout; extend with explicit deltas table when hardening."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "card",
+      "displayName": "Card",
+      "registrySlug": "card",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/card/design-spec.md",
+      "programmeFigmaNodeId": "8381:14051",
+      "mainComponentSetNodeId": "8381:14051",
+      "elementsNodeIds": [
+        "15718:197533",
+        "15718:220135",
+        "15718:197126"
+      ],
+      "sharedImplementation": "storybook/src/components/Card.tsx",
+      "storybookPath": "storybook-generated/powerflex/src/components/Card.stories.tsx",
+      "lastVerified": "2026-07-24",
+      "status": "draft"
     }
   ]
 }

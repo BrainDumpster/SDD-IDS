@@ -1,0 +1,38 @@
+# Powerflex Design System Configuration
+# Reuses IDS baseline tokens/theme via donor import at bootstrap.
+
+name: powerflex
+display_name: Powerflex
+token_transform: ids
+
+figma_file_key: "HIbl2AgqTSdR9STZueMvTH"
+
+figma_map_path: data/powerflex-component-figma-map.json
+rules_path: rules.json
+allowed_tokens_path: allowed_tokens.json
+component_registry_path: component_registry.json
+theme_css_path: components/powerflex-theme.css
+base_ui_mapping_path: ""
+
+components_dir: components/powerflex
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.md
+baseline_theme_css_path: components/ids-theme.css
+program_components_dir: components/powerflex
+program_root_spec_path: components/powerflex/root-spec.md
+program_theme_css_path: components/powerflex-theme.css
+
+qdrant_collection: powerflex_design_knowledge
+
+framework_layer: ""
+root_spec_path: components/powerflex/root-spec.md
+generated_storybook_dir: storybook-generated/powerflex
+strict_storybook_gate: false
+
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+
+elevation_levels: {}
