@@ -28,7 +28,7 @@ Optional child sub-slots:
 ## Layout & Measurements
 - Root width is container-driven (`width: 100%`).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
-- Trigger row uses IDS Figma contract: `height: 40px`, padding `12px 16px` (`var(--padding-padding-12)` `var(--padding-padding-16)`).
+- Trigger row uses IDS Figma contract: `height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`).
 - **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
 - Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
 - Selected/open state does **not** add a second item outline beyond shared row borders.
@@ -41,7 +41,7 @@ Optional child sub-slots:
 - Focus indicator must be visible on trigger row and not clipped by item container.
 - Group rows follow Figma contiguous model (1px overlap/no vertical gaps).
 - Expanded content container padding: `8px 24px 16px 40px` (implementations: `var(--padding-padding-40)` when present, otherwise `calc(var(--padding-padding-32) + var(--padding-padding-8))` so left inset is valid in Storybook themes).
-- Optional inner **content card** (“Swap content” in Figma): padding `24px`; background `var(--color-background-brand-lighter)`; stroke `var(--color-border-brand-dark)` on **left, right, and bottom** only (`border-top: none`) so the card does not draw an extra rule under the header.
+- Optional inner **content card** (“Swap content” in Figma): **no background color**, **no border**, and **no padding**; it holds the body text and optional `AccordionFormSlot`.
 ## Tokens
 - Surface:
   - `var(--color-background-component)`
@@ -91,10 +91,10 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 | trigger | hover (collapsed) | `var(--color-background-brand-lighter)` | unchanged divider | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
 | trigger | hover (expanded) | `var(--color-background-brand-light)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral-strong)` |
 | trigger | expanded (open) | `var(--color-background-brand-lighter)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-neutral-strong)`, chevron `var(--color-icon-neutral)` (rotated) |
-| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | same as default |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)` | same as default |
 | trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
 | panel/content | expanded | `var(--color-background-component)` | item perimeter `var(--color-border-accessible)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-neutral)`, link `var(--color-text-link-brand-base)` |
-| content-card | expanded (optional) | `var(--color-background-brand-lighter)` | L/R/B `var(--color-border-brand-dark)`; **no** top stroke (`border-top: none`) | heading/body per content; link `var(--color-text-link-brand-base)` |
+| content-card | expanded (optional) | none / transparent | none | heading/body per content; link `var(--color-text-link-brand-base)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -186,7 +186,7 @@ Validation checklist:
 - [ ] Focus-visible ring is visible and not clipped.
 - [ ] Disabled rows are non-interactive.
 - [ ] Expanded open item shows a visible left highlighter on trigger and body (aligned; not hidden under opaque fills); expanded body has **no** `border-top` under the header.
-- [ ] Optional inner content card uses `var(--color-background-brand-lighter)` and `var(--color-border-brand-dark)` on sides/bottom only (no top brand stroke under header).
+- [ ] Optional inner content card has no background color, no border, and no padding.
 - [ ] `form` variant supports form slot without breaking structure.
 ### Icon primitive and asset delivery
 Use this section whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. Names vary by framework (`Icon`, `CdsIcon`, `mat-icon` + registry, `SpriteIcon`, etc.); the contract is the same.

@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-space-8);
-  padding: var(--padding-padding-12) var(--padding-padding-16);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
   border: 0;
   cursor: pointer;
   text-align: left;
@@ -49,7 +49,7 @@
 .title {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* Mask icon: `Icon` applies mask from `assets/icons/<shapeName>.svg`; tint via `color` + `currentColor` fill (same pattern as MainMenuLeft). */
@@ -64,23 +64,18 @@
   transition: transform 120ms ease;
 }
 
-.trigger:hover:not([data-disabled]) {
+.trigger:hover {
   background: var(--color-background-brand-lighter);
 }
 
-.trigger:hover:not([data-disabled]) .icon {
+.trigger:hover .icon {
   color: var(--color-icon-neutral-strong);
 }
 
 .trigger:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
-}
-
-.disabled,
-.trigger[data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 /* Left highlighter: gradient (opaque child layers hide parent inset box-shadow). */
@@ -97,9 +92,9 @@
   );
 }
 
-.open:hover:not([data-disabled]),
-.trigger[data-panel-open]:hover:not([data-disabled]),
-.item[data-open] .trigger:hover:not([data-disabled]) {
+.open:hover,
+.trigger[data-panel-open]:hover,
+.item[data-open] .trigger:hover {
   background-color: var(--color-background-brand-light);
   background-image: linear-gradient(
     90deg,
@@ -155,12 +150,9 @@
 }
 
 .contentCard {
-  padding: var(--padding-padding-24);
-  background-color: var(--color-background-brand-lighter);
-  border-width: var(--border-width-border-1);
-  border-style: solid;
-  border-color: var(--color-border-brand-dark);
-  border-top: none;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .meta {
