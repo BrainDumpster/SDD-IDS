@@ -80,21 +80,23 @@ function ToastViewport({ position }: { position: ToastPosition }) {
             </div>
             <div className={styles.actionsGroup}>
               {showLink ? (
-                <BaseToast.Action
-                  className={styles.link}
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  className={styles.linkButton}
                   onClick={() => {
                     onLinkClick?.();
                   }}
                 >
-                  <span>{linkLabel}</span>
-                </BaseToast.Action>
+                  {linkLabel}
+                </Button>
               ) : null}
               {closable ? (
                 <Button
                   variant="tertiary"
                   size="sm"
                   iconOnly
-                  icon={<Icon shapeName="shape-x" variant="mask" style={{ width: "100%", height: "100%" }} />}
+                  icon={<Icon shapeName="shape-x" variant="mask" color="var(--color-icon-white)" style={{ width: "100%", height: "100%" }} />}
                   aria-label="Close"
                   type="button"
                   className={styles.closeButton}
