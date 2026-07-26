@@ -70,9 +70,9 @@
   - `Small`: `32px` height
 - Field container: `padding-left: var(--padding-padding-16)`, no right padding — trailing padding belongs to the icon button
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
-- Field container corner radius: `var(--date-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
+- Field container corner radius: `var(--corner-radius-radius-none)` (0, square)
 - Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--corner-radius-radius-2)` (2px), `margin: -1px -1px -1px 0` (right/top/bottom overlap container border by 1px)
-- Calendar popup shell + month/year dropdown overlays: `border-radius: 0` (square); when attached below field, all corners are square
+- Calendar popup shell + month/year dropdown overlays: `border-radius: var(--corner-radius-radius-none)` (0, square); when attached below field, all corners are square
 - Field focus ring corner radius: `var(--corner-radius-radius-4)` (4px)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
 - Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-disabled)` (#757575)
@@ -157,15 +157,18 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - Width: `114px` fixed
 - Max height: `200px`, scrollable (`overflow-y: auto`, `overflow-x: hidden`)
 - Background: `white`
-- Border: `var(--border-width-border-default)` (1px) solid `#eaeaea` (gray-200)
-- Shadow: `0px 2px 5px 0px rgba(37,37,37,0.08)`
+- Border: `var(--border-width-border-default)` (1px) solid — top/left/right `var(--color-border-lighter)`, bottom `var(--color-border-accessible)`
+- Shadow: dual-layer, same as IDS DropdownMenu popup — `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)`
+- Corner radius: `var(--corner-radius-radius-none)` (0, square — matches calendar popup)
 - Container padding: `var(--padding-padding-4)` (4px) vertical, `var(--padding-padding-1)` (1px) horizontal
-- Option row:
-  - Padding: `var(--padding-padding-6)` (6px) vertical, `var(--padding-padding-16)` (16px) horizontal
-  - Text: Roboto Regular (400) 14px/20px, `var(--color-text-neutral)` (#4d4d4d)
-  - No border on options, `border-radius: 0`
-- Selected option: background `var(--color-background-controls-brand-lighter)` (#ebf4fb), text Roboto Regular (400) 14px/20px, `var(--color-text-neutral-strong)` (#252525)
-- Hover option: background `var(--color-background-controls-brand-lighter)` (#ebf4fb)
+- Option row — copies IDS DropdownMenu single-select `.item` (text-only, no radio), compact `min-height: 32px`:
+  - Padding: `var(--padding-padding-6)` (6px) vertical, `var(--padding-padding-24)` (24px) right / `var(--padding-padding-16)` (16px) left
+  - Text: Roboto Regular (400) 14px/20px, `var(--color-text-neutral)`
+  - `transition: background 80ms ease`, `gap: var(--spacing-space-8)`, no border/radius on the option itself
+- Hover option: background `var(--color-background-brand-lighter)`, text `var(--color-text-neutral)`, top+bottom inset border `var(--color-border-brand-base)` (`box-shadow: inset 0 ±1px`) — **no left/right edge**
+- Selected option (current month/year): background `var(--color-background-brand-lighter)`, text `var(--color-text-brand-strong)`, top+bottom inset border `var(--color-border-brand-neutral)`
+- Press: background `var(--color-background-brand-light)`, text `var(--color-text-brand-strong)`, top+bottom inset border `var(--color-border-brand-neutral)`
+- Focus-visible: `outline: var(--border-width-border-default) solid var(--color-border-brand-base)`, `outline-offset: -1px`, `border-radius: var(--corner-radius-radius-4)`
 
 ## Tokens
 
@@ -209,7 +212,7 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - `var(--spacing-space-20)` — gap between prev/next chevrons
 
 ### Calendar shadow
-- `0px 2px 5px 0px rgba(37,37,37,0.08)` — single-layer shadow (same value used by month/year dropdown overlays)
+- `0px 2px 5px 0px rgba(37,37,37,0.08)` — single-layer shadow (month/year dropdown overlays use the dual-layer DropdownMenu shadow — see below)
 
 ### Date cell
 - `var(--color-text-neutral-strong)` — default date text (#252525)
@@ -236,10 +239,11 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 
 ### Month / Year dropdown
 - Surface: `white`
-- Border: `var(--ui-palette-gray-200)` (#eaeaea) or `var(--color-border-accessible)`
-- Option text: `var(--ui-palette-gray-700)` (#4d4d4d), Medium weight
-- Selected option background: `var(--color-background-brand-lighter)` (#ebf4fb)
-- Selected option text: `var(--ui-palette-gray-900)` (#252525), Regular weight
+- Border: top/left/right `var(--color-border-lighter)`, bottom `var(--color-border-accessible)`
+- Shadow: `var(--shadow-shadow-4-drop-shadow-4-color)` dual-layer (matches DropdownMenu popup); corner radius `0`
+- Option text: `var(--color-text-neutral)`, Regular (400) weight
+- Hover option: background `var(--color-background-brand-lighter)`, top/bottom border `var(--color-border-brand-base)`
+- Selected option: background `var(--color-background-brand-lighter)`, text `var(--color-text-brand-strong)`, top/bottom border `var(--color-border-brand-neutral)`
 
 ### Icons
 - `arrow-drop-tri-caret` — 10×10px, caret for month/year dropdowns
@@ -299,11 +303,14 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 
 ### Month / Year dropdown option states
 
-| State | Background | Text |
-|---|---|---|
-| Default | `white` | `var(--ui-palette-gray-700)` Medium |
-| Hover | `var(--color-background-brand-lighter)` | `var(--ui-palette-gray-700)` Medium |
-| Selected (current) | `var(--color-background-brand-lighter)` | `var(--ui-palette-gray-900)` Regular |
+Border applies to top + bottom edges only (`box-shadow: inset 0 ±1px`), never left/right.
+
+| State | Background | Text | Top/Bottom border |
+|---|---|---|---|
+| Default | `white` | `var(--color-text-neutral)` Regular | — |
+| Hover | `var(--color-background-brand-lighter)` | `var(--color-text-neutral)` Regular | `var(--color-border-brand-base)` |
+| Selected (current) | `var(--color-background-brand-lighter)` | `var(--color-text-brand-strong)` Regular | `var(--color-border-brand-neutral)` |
+| Press | `var(--color-background-brand-light)` | `var(--color-text-brand-strong)` Regular | `var(--color-border-brand-neutral)` |
 
 ## States (Dark Theme)
 
@@ -483,13 +490,13 @@ DatePickerRoot
 | `CalendarIconTrigger:disabled` | color: `var(--color-icon-disabled)`, cursor: not-allowed, hover must NOT apply |
 | `FormatHint` | color: `var(--color-text-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
 | `FieldContainer.open` | border-color: `var(--color-border-brand-base)` |
-| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: 0` (square) |
+| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: var(--corner-radius-radius-none)` (square) |
 | `MonthDropdownButton` / `YearDropdownButton` | color: `var(--color-text-brand-strong)` (#055fa9), font: `var(--font-size-body-2)` Regular (400), `position: relative`, `border: 1px solid transparent`, `background: transparent`, `border-radius: 2px` |
 | `MonthDropdownButton:hover:not(.menuOpen)` / `YearDropdownButton:hover:not(.menuOpen)` | bg: `var(--color-background-controls-brand-lighter)`, border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton:active:not(.menuOpen)` / `YearDropdownButton:active:not(.menuOpen)` | bg: `var(--color-background-controls-brand-light)`, border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton:focus-visible` / `YearDropdownButton:focus-visible` | border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton.menuOpen` / `YearDropdownButton.menuOpen` | bg: transparent, border: transparent — hover/active suppressed while dropdown is open; button returns to default appearance |
-| `MonthDropdownOverlay` / `YearDropdownOverlay` | centered on trigger (`left: 50%; transform: translateX(-50%)`), min-width: 114px, max-height: 200px, border: `var(--color-border-accessible)` 1px, radius: `var(--corner-radius-radius-2)`, option padding: 10px/16px/24px, min-height: 44px, follows IDS Dropdown Single-Select spec |
+| `MonthDropdownOverlay` / `YearDropdownOverlay` | left-aligned under trigger (`left: 0`, `top: 100%`), width: 114px, max-height: 200px, border 1px: top/left/right `var(--color-border-lighter)` + bottom `var(--color-border-accessible)`, radius: `var(--corner-radius-radius-none)`, dual-layer `var(--shadow-shadow-4-drop-shadow-4-color)` shadow; options follow IDS DropdownMenu single-select `.item` at `min-height: 32px` |
 | `PrevMonthButton` / `NextMonthButton` | 20×20px total (icon 12×12, padding 4px all sides), bg: transparent, border: none, `border-radius: var(--corner-radius-radius-2)` (2px), `outline: none` |
 | `PrevMonthButton:hover` / `NextMonthButton:hover` | icon color: `var(--color-icon-brand-base)` (#0672cb) |
 | `PrevMonthButton:focus-visible` / `NextMonthButton:focus-visible` | `outline: 2px solid #4c9fdd`, `outline-offset: 0` |
@@ -503,8 +510,8 @@ DatePickerRoot
 | `DateCell:unavailable` | bg: `var(--color-background-gray-lighter)`, border: `var(--color-border-disabled)`, text: strikethrough |
 | `TodayIndicator` | color: `var(--color-border-strong)` (default), `var(--color-border-white)` (selected) |
 | `RangeHighlightBar` | bg: `var(--color-background-brand-light)` (#daeaf7), height: 30px, radius: 2px |
-| `MonthDropdownList` / `YearDropdownList` | bg: white, border: `var(--ui-palette-gray-200)` 1px, shadow: `0 2px 5px rgba(37,37,37,0.08)`, `border-radius: var(--date-picker-control-radius)` |
-| `MonthOption` / `YearOption` | padding: 16px h / 6px v, font-weight: 400, selected bg: `var(--color-background-brand-lighter)` |
+| `MonthDropdownList` / `YearDropdownList` | bg: white, border 1px: top/left/right `var(--color-border-lighter)` + bottom `var(--color-border-accessible)`, shadow: `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)`, `border-radius: var(--corner-radius-radius-none)` |
+| `MonthOption` / `YearOption` | copies DropdownMenu single-select `.item`, `min-height: 32px`, padding 6px v / 24px r / 16px l, font-weight: 400; hover/selected/press use top+bottom inset border (`box-shadow`), selected text `var(--color-text-brand-strong)` |
 | `TodayLink` | color: `var(--color-text-brand-strong)` (#055fa9), font-weight: 400 |
 
 ### Behavior contract
@@ -618,7 +625,22 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 ---
 
 ## Implementation Notes
-Last updated: 2026-07-08
+Last updated: 2026-07-26
+
+### 2026-07-26 — Month/Year dropdown parity with IDS DropdownMenu
+
+**Month/Year dropdown option row (single-select parity)**
+- `.overlayOption` rewritten to copy IDS DropdownMenu single-select `.item` (text-only, no radio) at a compact `min-height: 32px` (vs 44px in the shared component): `appearance: none`, `display: flex`, `gap: var(--spacing-space-8)`, `padding: var(--padding-padding-6)` vertical / `var(--padding-padding-24)` right / `var(--padding-padding-16)` left, `transition: background 80ms ease`, `user-select: none`.
+- Hover/selected/press use a **top + bottom** inset border only (`box-shadow: inset 0 1px 0 0 … , inset 0 -1px 0 0 …`), never left/right — matching how DropdownMenu `.item` renders. Do **not** use `outline` for these states (outline draws all 4 sides; the left/right edges are not part of the single-select row spec).
+  - Hover: bg `var(--color-background-brand-lighter)`, text `var(--color-text-neutral)`, border `var(--color-border-brand-base)`.
+  - Selected (`.selectedOption`, current month/year): bg `var(--color-background-brand-lighter)`, text `var(--color-text-brand-strong)`, border `var(--color-border-brand-neutral)`.
+  - Press: bg `var(--color-background-brand-light)`, text `var(--color-text-brand-strong)`, border `var(--color-border-brand-neutral)`.
+- Focus-visible: `outline: var(--border-width-border-default) solid var(--color-border-brand-base)`, `outline-offset: -1px`, `border-radius: var(--corner-radius-radius-4)` (keyboard focus ring, all four sides — same as DropdownMenu `.item:focus-visible`).
+
+**Month/Year dropdown overlay (`.overlayDropdown`)**
+- Border split: top/left/right `var(--color-border-lighter)` (#eaeaea), bottom `var(--color-border-accessible)` (#757575) via `border-bottom-color`.
+- Shadow changed from single-layer to the dual-layer DropdownMenu popup shadow: `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)`.
+- `border-radius: var(--corner-radius-radius-none)` (0, square — matches `.calendarPopup`; same `--corner-radius-radius-*` family as the `-2`/`-4` tokens used elsewhere).
 
 **Font-weight consistency**
 - All text elements use `font-weight: 400`. Changed from `font-weight: 500` in `.errorMessage`, `.dropdownButton`, `.dateLabel`, `.todayLink`, `.overlayOption`.
@@ -678,12 +700,12 @@ Last updated: 2026-07-08
 **Token fixes**
 - Border widths: Changed hardcoded `1px` to `var(--border-width-border-default, 1px)` in `.fieldContainer`, `.calendarIconBtn`, `.navBtn`, `.todayLink`, `.overlayDropdown`.
 - Font-sizes: Changed hardcoded `14px` to `var(--font-size-body-2, 14px)` in `.textInput`; changed hardcoded `12px` to `var(--font-size-body-3, 12px)` in `.weekDayLabel`.
-- Border-radius: Changed `var(--date-picker-control-radius)` and `var(--button-control-radius, 2px)` to `var(--corner-radius-radius-2, 2px)` or `var(--corner-radius-radius-4, 4px)` in `.dropdownButton`, `.todayLink`, `.overlayDropdown`, `.dateCell`, `.rangeBar`, `.dateCellContainer`, `.todayIndicator`. `.fieldContainer` border-radius set to `0` (square input field).
-- Shadows: calendarPopup uses `--shadow-shadow-2` tokens (dual shadow: drop-shadow-4 + drop-shadow-8); overlayDropdown uses hardcoded shadow `0px 2px 5px 0px rgba(37, 37, 37, 0.08)` (per spec).
+- Border-radius: Changed `var(--date-picker-control-radius)` and `var(--button-control-radius, 2px)` to `var(--corner-radius-radius-2, 2px)` or `var(--corner-radius-radius-4, 4px)` in `.dropdownButton`, `.todayLink`, `.dateCell`, `.rangeBar`, `.dateCellContainer`, `.todayIndicator`. `.fieldContainer`, `.calendarPopup`, and `.overlayDropdown` border-radius set to `var(--corner-radius-radius-none)` (0, square).
+- Shadows: calendarPopup uses `--shadow-shadow-2` tokens (dual shadow: drop-shadow-4 + drop-shadow-8); overlayDropdown uses the dual-layer `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)` shadow (matches IDS DropdownMenu popup).
 - navBtn focus-visible color `#4c9fdd` stays hardcoded (no corresponding token).
 
 **FormatHint behavior**
 - formatHint is hidden when `error` prop is true to avoid visual clutter in error state. Changed condition from `{formatHint && ...}` to `{formatHint && !error && ...}`.
 
 **Calendar popup border-radius**
-- Changed from `border-radius: var(--corner-radius-radius-4, 4px)` with `border-top-left-radius: 0` and `border-top-right-radius: 0` to `border-radius: 0` (square popup, all corners flat).
+- Changed from `border-radius: var(--corner-radius-radius-4, 4px)` with `border-top-left-radius: 0` and `border-top-right-radius: 0` to `border-radius: var(--corner-radius-radius-none)` (0, square popup, all corners flat).
