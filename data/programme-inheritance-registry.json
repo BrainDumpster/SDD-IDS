@@ -19,6 +19,13 @@
       "themeCssPath": "components/dap-theme.css",
       "storybookTitlePrefix": "Spec Generated/DAP",
       "baselineComponentsDir": "components/ids"
+    },
+    "powerflex": {
+      "componentsDir": "components/powerflex",
+      "figmaMapPath": "data/powerflex-component-figma-map.json",
+      "themeCssPath": "components/powerflex-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Powerflex",
+      "baselineComponentsDir": "components/ids"
     }
   },
   "components": [
@@ -241,7 +248,11 @@
       "triggerShell": "storybook/src/components/SynapseDropdownTriggerShell.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-dropdown-single-select.contract.ts",
       "storybookPath": "storybook/src/components/SynapseDropdownSingleSelect.stories.tsx",
-      "themeAliases": ["--dropdown-control-radius", "--dropdown-focus-ring-radius", "--dropdown-menu-radius"],
+      "themeAliases": [
+        "--dropdown-control-radius",
+        "--dropdown-focus-ring-radius",
+        "--dropdown-menu-radius"
+      ],
       "lastVerified": "2026-06-12",
       "status": "active"
     },
@@ -261,7 +272,11 @@
       "triggerShell": "storybook/src/components/SynapseDropdownTriggerShell.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-dropdown-multiselect.contract.ts",
       "storybookPath": "storybook/src/components/SynapseDropdownMultiSelect.stories.tsx",
-      "themeAliases": ["--dropdown-control-radius", "--dropdown-focus-ring-radius", "--dropdown-menu-radius"],
+      "themeAliases": [
+        "--dropdown-control-radius",
+        "--dropdown-focus-ring-radius",
+        "--dropdown-menu-radius"
+      ],
       "lastVerified": "2026-06-12",
       "status": "active"
     },
@@ -282,7 +297,10 @@
       "programmeWrapper": "storybook/src/components/SynapseCheckbox.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-checkbox.contract.ts",
       "storybookPath": "storybook/src/components/SynapseCheckbox.stories.tsx",
-      "themeAliases": ["--checkbox-control-radius", "--checkbox-label-font-weight"],
+      "themeAliases": [
+        "--checkbox-control-radius",
+        "--checkbox-label-font-weight"
+      ],
       "lastVerified": "2026-06-12",
       "status": "active"
     },
@@ -641,6 +659,77 @@
       "programmeSpecPath": "components/DAP/pagination/design-spec.md",
       "status": "active",
       "notes": "DAP inline overrides in Layout; extend with explicit deltas table when hardening."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "card",
+      "displayName": "Card",
+      "registrySlug": "card",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/card/design-spec.md",
+      "programmeFigmaNodeId": "8381:14051",
+      "mainComponentSetNodeId": "8381:14051",
+      "elementsNodeIds": [
+        "15718:197533",
+        "15718:220135",
+        "15718:197126"
+      ],
+      "sharedImplementation": "storybook/src/components/Card.tsx",
+      "storybookPath": "storybook-generated/powerflex/src/components/Card.stories.tsx",
+      "lastVerified": "2026-07-24",
+      "status": "draft"
+    },
+    {
+      "programme": "powerflex",
+      "slug": "toggle-switch",
+      "displayName": "Toggle Switch",
+      "registrySlug": "toggleswitch",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/toggle-switch/design-spec.md",
+      "programmeFigmaNodeId": "8505:14389",
+      "mainComponentSetNodeId": "8505:14389",
+      "sharedImplementation": "storybook/src/components/ToggleSwitch.tsx",
+      "storybookPath": "storybook-generated/powerflex/src/components/ToggleSwitch.stories.tsx",
+      "lastVerified": "2026-07-27",
+      "status": "draft",
+      "notes": "Standalone Powerflex intake from IDS Design Library node 8505:14389; collab session 2oKWtpmrvFVZHAbKniH_2aMZOp7t44g7."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "accordion",
+      "displayName": "Accordion",
+      "registrySlug": "accordion",
+      "pattern": "ids-fork",
+      "idsBaselineSlug": "accordion",
+      "idsBaselineSpecPath": "components/ids/accordion/design-spec.md",
+      "programmeSpecPath": "components/powerflex/accordion/design-spec.md",
+      "programmeFigmaNodeId": "10962:89111",
+      "idsFigmaNodeId": "10962:89111",
+      "mainComponentSetNodeId": "10962:89111",
+      "elementsNodeIds": [
+        "10962:89124",
+        "10962:89134"
+      ],
+      "sharedImplementation": "storybook/src/components/IdsAccordion.tsx",
+      "storybookPath": "storybook-generated/powerflex/src/components/Accordion.stories.tsx",
+      "lastVerified": "2026-07-27",
+      "status": "draft",
+      "notes": "Powerflex ids-fork Accordion; packaged REST evidence session oYPFSu4xlT5LGyvVSy2mwuKIamIkT8RP."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "button-dropdown",
+      "displayName": "Button-Dropdown",
+      "registrySlug": "buttondropdown",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/button-dropdown/design-spec.md",
+      "programmeFigmaNodeId": "2591:1696",
+      "mainComponentSetNodeId": "2591:1696",
+      "sharedImplementation": "storybook/src/components/ButtonDropdown.tsx",
+      "storybookPath": "storybook-generated/powerflex/src/components/ButtonDropdown.stories.tsx",
+      "lastVerified": "2026-07-27",
+      "status": "draft",
+      "notes": "Standalone Powerflex intake; collab session yT-UahwkDDffyvkwLfjlOOp7VenSN5pk."
     }
   ]
 }
