@@ -5,6 +5,12 @@ from typing import Callable, Dict, Tuple
 
 from generation.deterministic_storybook.ids.about import generate_ids_about_story
 from generation.deterministic_storybook.ids.accordion import generate_ids_accordion_story
+from generation.deterministic_storybook.powerflex.button_dropdown import (
+    generate_powerflex_button_dropdown_story,
+)
+from generation.deterministic_storybook.powerflex.select import (
+    generate_powerflex_select_story,
+)
 from generation.deterministic_storybook.ids.alert import generate_ids_alert_story
 from generation.deterministic_storybook.ids.anchor_menu import generate_ids_anchor_menu_story
 from generation.deterministic_storybook.ids.app_launcher import generate_ids_app_launcher_story
@@ -59,6 +65,9 @@ StoryGenerator = Callable[..., str]
 REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "about"): generate_ids_about_story,
     ("ids", "accordion"): generate_ids_accordion_story,
+    ("powerflex", "accordion"): generate_ids_accordion_story,
+    ("powerflex", "button-dropdown"): generate_powerflex_button_dropdown_story,
+    ("powerflex", "select"): generate_powerflex_select_story,
     ("ids", "alert"): generate_ids_alert_story,
     ("ids", "anchor-menu"): generate_ids_anchor_menu_story,
     ("ids", "app-launcher"): generate_ids_app_launcher_story,
