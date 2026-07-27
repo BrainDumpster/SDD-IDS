@@ -97,6 +97,18 @@ const meta: Meta<typeof {component_name}> = {{
 export default meta;
 type Story = StoryObj<typeof {component_name}>;
 
+/** Spec Accurate Design — matches design-spec story defaults (chevron left, first open). */
+export const SpecAccurateDesign: Story = {{
+  name: "Spec Accurate Design",
+  args: {{
+    items: sampleItems,
+    multiple: false,
+    defaultValue: ["network"],
+    variant: "default",
+    chevronPosition: "left",
+  }},
+}};
+
 export const Playground: Story = {{
   render: (args) => <{component_name} {{...args}} />,
 }};
