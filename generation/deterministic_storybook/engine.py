@@ -59,6 +59,7 @@ StoryGenerator = Callable[..., str]
 REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "about"): generate_ids_about_story,
     ("ids", "accordion"): generate_ids_accordion_story,
+    ("powerflex", "accordion"): generate_ids_accordion_story,
     ("ids", "alert"): generate_ids_alert_story,
     ("ids", "anchor-menu"): generate_ids_anchor_menu_story,
     ("ids", "app-launcher"): generate_ids_app_launcher_story,
