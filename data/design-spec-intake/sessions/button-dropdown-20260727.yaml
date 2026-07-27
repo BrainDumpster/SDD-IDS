@@ -1,0 +1,13 @@
+programme: powerflex
+componentDisplayName: Button-Dropdown
+slug: button-dropdown
+specPattern: standalone
+inheritsIds: no
+storybookExamples: true
+figma:
+  main:
+    - url: https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2591-1696&m=dev
+      file_key: 82bDP05ESsiiGe38p5TEQJ
+      node_id: "2591:1696"
+collabSession: yT-UahwkDDffyvkwLfjlOOp7VenSN5pk
+verifiedAt: "2026-07-27"
