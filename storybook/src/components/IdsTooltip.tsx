@@ -2,6 +2,7 @@ import { Tooltip as BaseTooltip } from "@base-ui-components/react/tooltip";
 import { useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import buttonStyles from "./Button.module.css";
 import styles from "./IdsTooltip.module.css";
 
 /** Reference: `components/ids/tooltip/design-spec.md` */
@@ -136,22 +137,24 @@ export function IdsTooltip({
                   {closable ? (
                     <>
                       <div className={styles.contentColumn}>
-                        {title ? (
-                          <div className={styles.header}>
-                            <div className={styles.title}>{title}</div>
-                          </div>
-                        ) : null}
+                        <div className={styles.header} aria-hidden={!title}>
+                          {title ? <div className={styles.title}>{title}</div> : null}
+                        </div>
                         <div className={styles.body}>{content}</div>
                       </div>
                       <button
-                        className={styles.close}
                         type="button"
+                        className={[
+                          buttonStyles.button,
+                          buttonStyles.tertiary,
+                          styles.closeButton,
+                        ].filter(Boolean).join(" ")}
                         aria-label="Close tooltip"
                         onClick={dismissTooltip}
                       >
                         <Icon
                           shapeName="ctrl-close-16"
-                          className={styles.closeIcon}
+                          color="var(--color-icon-neutral)"
                           style={{ width: 12, height: 12 }}
                         />
                       </button>
