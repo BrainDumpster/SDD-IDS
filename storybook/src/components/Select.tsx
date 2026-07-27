@@ -1,97 +1,229 @@
-import { Select as BaseSelect } from "@base-ui-components/react/select";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
+import { Icon } from "./Icon";
 import styles from "./Select.module.css";
 
-interface SelectOption {
-  value: string;
-  label: string;
-}
+export type SelectSize = "lg" | "md" | "sm";
+export type SelectDataState = "default" | "hover" | "active" | "focus-visible" | "disabled";
 
-interface SelectProps {
+export interface SelectItem {
+  id: string;
   label: string;
-  options: SelectOption[];
-  placeholder?: string;
   disabled?: boolean;
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
+  hasSubmenu?: boolean;
+  keepOpen?: boolean;
 }
 
-export function Select({
-  label,
-  options,
-  placeholder = "Select an option",
-  disabled,
-  value,
-  defaultValue,
-  onValueChange,
-}: SelectProps) {
+export interface SelectProps {
+  value?: string;
+  placeholder?: string;
+  size?: SelectSize;
+  open?: boolean;
+  defaultOpen?: boolean;
+  disabled?: boolean;
+  trailingIconSlug?: string;
+  items?: SelectItem[];
+  ariaLabel?: string;
+  /** Storybook / QA override only — must not replace runtime interaction. */
+  dataState?: SelectDataState;
+  onOpenChange?: (open: boolean) => void;
+  onChange?: (value: string, item: SelectItem) => void;
+  onSelect?: (item: SelectItem) => void;
+  className?: string;
+}
+
+function useControllableOpen(
+  open: boolean | undefined,
+  defaultOpen: boolean,
+  onOpenChange?: (open: boolean) => void,
+) {
+  const [uncontrolled, setUncontrolled] = useState(defaultOpen);
+  const isControlled = open !== undefined;
+  const value = isControlled ? Boolean(open) : uncontrolled;
+  const setValue = useCallback(
+    (next: boolean) => {
+      if (!isControlled) setUncontrolled(next);
+      onOpenChange?.(next);
+    },
+    [isControlled, onOpenChange],
+  );
+  return [value, setValue] as const;
+}
+
+export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select(
+  {
+    value,
+    placeholder = "Placeholder",
+    size = "lg",
+    open,
+    defaultOpen = false,
+    disabled = false,
+    trailingIconSlug = "arrow-tri-down-solid",
+    items = [],
+    ariaLabel,
+    dataState,
+    onOpenChange,
+    onChange,
+    onSelect,
+    className,
+  },
+  forwardedRef,
+) {
+  const listboxId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [openState, setOpenState] = useControllableOpen(open, defaultOpen, onOpenChange);
+  const [focusVisible, setFocusVisible] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [internalValue, setInternalValue] = useState<string | undefined>(value);
+
+  const selectedValue = value !== undefined ? value : internalValue;
+  const forcedDisabled = dataState === "disabled" || disabled;
+  const forcedOpen = dataState === "active" ? true : dataState === "default" ? false : undefined;
+  const isOpen = !forcedDisabled && (forcedOpen ?? openState);
+  const showFocusRing = dataState === "focus-visible" || (focusVisible && !forcedDisabled);
+
+  const contentState = selectedValue ? "filled" : placeholder ? "example" : "empty";
+  const displayText = selectedValue || (contentState === "example" ? placeholder : "");
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onDoc = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpenState(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [isOpen, setOpenState]);
+
+  const toggle = () => {
+    if (forcedDisabled) return;
+    setOpenState(!isOpen);
+  };
+
+  const selectItem = (item: SelectItem) => {
+    if (forcedDisabled || item.disabled) return;
+    if (value === undefined) setInternalValue(item.label);
+    onSelect?.(item);
+    onChange?.(item.label, item);
+    if (!item.keepOpen) setOpenState(false);
+  };
+
+  const onTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (forcedDisabled) return;
+    if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (!isOpen) setOpenState(true);
+      setActiveIndex(0);
+    } else if (event.key === "Escape" && isOpen) {
+      event.preventDefault();
+      setOpenState(false);
+    }
+  };
+
+  const onListKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
+    if (!items.length) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((i) => Math.min(i + 1, items.length - 1));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((i) => Math.max(i - 1, 0));
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      setActiveIndex(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      setActiveIndex(items.length - 1);
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      const item = items[activeIndex];
+      if (item) selectItem(item);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      setOpenState(false);
+    }
+  };
+
+  const rootClass = useMemo(() => {
+    const parts = [styles.root, styles[size], className];
+    if (isOpen) parts.push(styles.open);
+    if (showFocusRing) parts.push(styles.focusVisible);
+    return parts.filter(Boolean).join(" ");
+  }, [size, className, isOpen, showFocusRing]);
+
   return (
-    <div className={styles.field}>
-      <span className={styles.label}>{label}</span>
-      <BaseSelect.Root
-        value={value}
-        defaultValue={defaultValue}
-        onValueChange={onValueChange}
-        disabled={disabled}
+    <div ref={rootRef} className={rootClass} data-content-state={contentState}>
+      <button
+        ref={forwardedRef}
+        type="button"
+        className={styles.trigger}
+        disabled={forcedDisabled}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? listboxId : undefined}
+        aria-label={ariaLabel}
+        onClick={toggle}
+        onKeyDown={onTriggerKeyDown}
+        onFocus={() => setFocusVisible(true)}
+        onBlur={() => setFocusVisible(false)}
       >
-        <BaseSelect.Trigger className={styles.trigger}>
-          <BaseSelect.Value placeholder={placeholder} />
-          <ChevronIcon />
-        </BaseSelect.Trigger>
-        <BaseSelect.Portal>
-          <BaseSelect.Positioner className={styles.positioner}>
-            <BaseSelect.Popup className={styles.popup}>
-              {options.map((option) => (
-                <BaseSelect.Item
-                  key={option.value}
-                  value={option.value}
-                  className={styles.option}
-                >
-                  <BaseSelect.ItemIndicator className={styles.optionIndicator}>
-                    <CheckIcon />
-                  </BaseSelect.ItemIndicator>
-                  <BaseSelect.ItemText>{option.label}</BaseSelect.ItemText>
-                </BaseSelect.Item>
-              ))}
-            </BaseSelect.Popup>
-          </BaseSelect.Positioner>
-        </BaseSelect.Portal>
-      </BaseSelect.Root>
+        <span
+          className={[
+            styles.value,
+            contentState === "example" ? styles.placeholder : "",
+            contentState === "empty" ? styles.empty : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {displayText}
+        </span>
+        <span className={styles.trailingIcon} aria-hidden>
+          <Icon shapeName={trailingIconSlug} variant="mask" />
+        </span>
+        <span className={styles.focusRing} aria-hidden />
+      </button>
+      {isOpen ? (
+        <ul
+          id={listboxId}
+          className={styles.menu}
+          role="listbox"
+          tabIndex={-1}
+          onKeyDown={onListKeyDown}
+        >
+          {items.map((item, index) => (
+            <li key={item.id} role="presentation">
+              <button
+                type="button"
+                role="option"
+                className={[styles.item, index === activeIndex ? styles.itemActive : ""]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-selected={selectedValue === item.label}
+                disabled={item.disabled}
+                onClick={() => selectItem(item)}
+                onMouseEnter={() => setActiveIndex(index)}
+              >
+                <span className={styles.itemLabel}>{item.label}</span>
+                {item.hasSubmenu ? (
+                  <span className={styles.submenuIcon} aria-hidden>
+                    <Icon shapeName="arrow-tri-right-solid" variant="mask" />
+                  </span>
+                ) : null}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
-}
+});
 
-function ChevronIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      className={styles.chevron}
-      aria-hidden="true"
-    >
-      <path
-        d="M4 6L8 10L12 6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path
-        d="M10 3L4.5 8.5L2 6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+Select.displayName = "Select";
