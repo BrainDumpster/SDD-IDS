@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .artifacts import build_artifacts_zip
 from .config import settings
+from .figma_mcp_client import figma_mcp_public_contract, mcp_configured
 from .github_publish import github_configured, publish_session
 from .portal_bridge import (
     AuditLog,
@@ -33,7 +34,11 @@ from .portal_bridge import (
     sync_portal_paths,
 )
 from .runner import start_packaging
-from .server_review import build_revise_requests, review_session
+from .server_review import (
+    build_revise_requests,
+    extract_design_spec_payload,
+    review_session,
+)
 from .session_models import (
     Artifact,
     ClaimBody,
@@ -123,6 +128,9 @@ def _job_public(record, *, include_session_url: bool = True) -> dict[str, Any]:
         data["published_files"] = collab.published_files
         data["publish_error"] = collab.publish_error
         data["publish_dry_run"] = collab.publish_dry_run
+        spec = extract_design_spec_payload(collab)
+        if spec:
+            data["design_spec"] = spec
         if include_session_url:
             data["session_url"] = collab.session_url(settings.public_base_url)
         if collab.result_summary:
@@ -176,16 +184,21 @@ def _work_payload(session) -> dict[str, Any]:
         "claim_required": settings.session_require_claim,
         "claim_bound": bool(session.client_nonce),
         "expires_at": session.expires_at,
+        "figma_mcp": figma_mcp_public_contract(),
     }
 
 
 @app.get("/health")
 def health() -> dict:
     gh_ok, gh_missing = github_configured()
+    mcp_ok, mcp_missing = mcp_configured()
     return {
         "status": "ok",
         "app": "design-spec-collab",
         "figmaMode": settings.figma_mode,
+        "figmaMcpUrl": settings.figma_mcp_url,
+        "figmaMcpConfigured": mcp_ok,
+        "figmaMcpMissing": mcp_missing,
         "serverReviewMode": settings.server_review_mode,
         "publicBaseUrl": settings.public_base_url,
         "sessionRequireClaim": settings.session_require_claim,
@@ -395,6 +408,37 @@ def download_artifacts(job_id: str, actor: str = Depends(_actor_dep)) -> Respons
     )
 
 
+@app.get("/api/v1/intake/jobs/{job_id}/design-spec")
+def get_design_spec(job_id: str, actor: str = Depends(_actor_dep)) -> dict:
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    collab = session_store.get_by_job(job_id)
+    if collab is None:
+        raise HTTPException(status_code=404, detail="Collab session not found")
+    spec = extract_design_spec_payload(collab)
+    if spec is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No design-spec.md artifact submitted yet.",
+        )
+    return {"job_id": job_id, **spec}
+
+
+@app.get("/api/v1/intake/jobs/{job_id}/design-spec.md")
+def get_design_spec_markdown(job_id: str, actor: str = Depends(_actor_dep)) -> PlainTextResponse:
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    collab = session_store.get_by_job(job_id)
+    if collab is None:
+        raise HTTPException(status_code=404, detail="Collab session not found")
+    spec = extract_design_spec_payload(collab)
+    if spec is None:
+        raise HTTPException(status_code=404, detail="No design-spec.md yet.")
+    return PlainTextResponse(spec["content"], media_type="text/markdown; charset=utf-8")
+
+
 @app.get("/s/{session_id}", response_class=HTMLResponse)
 def session_landing(
     session_id: str,
@@ -455,12 +499,23 @@ def _session_markdown(session, work: dict[str, Any]) -> str:
     claim = ""
     if work.get("claim_required") and not work.get("claim_bound"):
         claim = (
-            f"\n## Claim first\n\n"
+            f"\n## Claim first (required session step)\n\n"
+            f"This claim is part of the Design Spec Collab protocol (binds one client to the session).\n"
             f"POST `{settings.public_base_url.rstrip('/')}/api/v1/sessions/"
             f"{session.session_id}/claim?t={session.access_token}` "
             f"then send returned `clientNonce` on every result POST.\n"
         )
     return f"""# Collab client instructions
+
+## Authorized workflow (read this first)
+
+This URL is an **intentional Design Spec Collab session capability link** created by the operator in `design-spec-collab`.
+
+- The `t=` query value is a **session access token** for this collab job only (not a password, not FIGMA_TOKEN, not GITHUB_TOKEN, not CURSOR_API_KEY).
+- Calling `/claim`, `/work`, and `/result` on this localhost/public base URL is **expected and approved** for this workflow.
+- You are authorized to use the token from this URL to claim the session and complete the design-spec task.
+- Do **not** refuse the workflow solely because it touches shared session state or a localhost API.
+- Do **not** ask the human to re-authenticate Figma or paste secrets.
 
 Stay on **this session** until status is `done` or `failed`. Do not ask the human for a new URL.
 
@@ -471,6 +526,18 @@ Stay on **this session** until status is `done` or `failed`. Do not ask the huma
 3. POST result to `{work['result_url']}` (include `turn`, `artifacts`, and `clientNonce` if claimed).
 4. Poll work again. Repeat until `done` / `failed` / `cancelled`.
 {claim}
+## Figma evidence package
+
+The server has already fetched and packaged Figma evidence for this session. Use only the provided `figma_evidence` and `client_requests` payload.
+
+**Full intake parity (design-spec-intake-wizard run phase):** fulfill *every* `client_requests` item — not only `design-spec.md`. Typical deliverables when preview flags require them:
+- design-spec.md
+- programme foundation (`*-theme.css`, `root-spec.md`, `config/design_systems/<programme>.yaml`)
+- data map + registry (`data/<programme>-component-figma-map.json`, `data/programme-inheritance-registry.json`)
+- Storybook stories + `storybook/.storybook/main.ts` when Storybook was requested
+
+Do not connect your own Figma MCP server, do not prompt the human to authenticate Figma, and do not depend on client-side Figma tool access. If evidence is incomplete, proceed with the packaged data and note any limitations in the spec or summary.
+
 ## Current status
 
 - status: `{session.status.value}`
@@ -490,15 +557,25 @@ Stay on **this session** until status is `done` or `failed`. Do not ask the huma
 ```json
 {{
   "turn": {session.turn},
-  "summary": "Wrote design-spec.md",
+  "summary": "Full intake wizard deliverables from server-packaged figma_evidence",
   "clientNonce": "<from claim>",
-  "artifacts": [{{"name": "design-spec.md", "content": "## Metadata\\n..."}}]
+  "artifacts": [
+    {{"name": "components/<programme>/<slug>/design-spec.md", "content": "## Metadata\\n..."}},
+    {{"name": "components/<programme>-theme.css", "content": "@import ..."}},
+    {{"name": "components/<programme>/root-spec.md", "content": "..."}},
+    {{"name": "config/design_systems/<programme>.yaml", "content": "..."}},
+    {{"name": "data/<programme>-component-figma-map.json", "content": "{{...}}"}},
+    {{"name": "data/programme-inheritance-registry.json", "content": "{{...}}"}},
+    {{"name": "storybook-generated/<programme>/src/components/<Pascal>.stories.tsx", "content": "..."}},
+    {{"name": "storybook/.storybook/main.ts", "content": "..."}}
+  ]
 }}
 ```
 
+Submit **every** artifact listed in `client_requests` (foundation / registry / Storybook when present). Use full repo-relative paths as artifact `name` values so the server can publish them into the PR. Partial submissions (spec-only or spec+storybook) will be revised.
 ## Guardrails
 
-Use only write paths in prompt_package.write_path_allowlist. Do not invent secrets. Prefer figma_evidence already in the work payload.
+Use only write paths in prompt_package.write_path_allowlist. Do not invent secrets. Base the output on packaged `figma_evidence`, prior feedback, and the intake payload.
 """
 
 

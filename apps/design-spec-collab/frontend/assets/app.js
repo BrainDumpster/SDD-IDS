@@ -48,6 +48,9 @@ const NOTES_DANGER_RE =
 const agentConfigEl = document.getElementById("agent-config");
 const authBannerEl = document.getElementById("auth-banner");
 const portalActorEl = document.getElementById("portal-actor");
+const authActorSection = document.getElementById("auth-actor-section");
+const authActorSummaryHint = document.getElementById("auth-actor-summary-hint");
+const AUTH_SECTION_KEY = "collab.authSectionOpen";
 const cancelJobBtn = document.getElementById("cancel-job");
 const resetClaimBtn = document.getElementById("reset-claim");
 const branchPanel = document.getElementById("branch-panel");
@@ -62,9 +65,28 @@ const sessionReadyBanner = document.getElementById("session-ready-banner");
 const copySessionUrlBtn = document.getElementById("copy-session-url");
 const openSessionEl = document.getElementById("open-session");
 const collabTranscriptEl = document.getElementById("collab-transcript");
+const resultsPlaceholder = document.getElementById("results-placeholder");
+const specPreviewPanel = document.getElementById("spec-preview-panel");
+const specPreviewMeta = document.getElementById("spec-preview-meta");
+const specTabPreview = document.getElementById("spec-tab-preview");
+const specTabSource = document.getElementById("spec-tab-source");
+const specPreviewRendered = document.getElementById("spec-preview-rendered");
+const specPreviewSource = document.getElementById("spec-preview-source");
+const copySpecBtn = document.getElementById("copy-spec");
+const openSpecRawEl = document.getElementById("open-spec-raw");
+const layoutSplit = document.getElementById("layout-split");
+const layoutDivider = document.getElementById("layout-divider");
+const toggleResultsBtn = document.getElementById("toggle-results");
+
+const LAYOUT_LEFT_KEY = "collab.layoutLeftPct";
+const LAYOUT_RESULTS_KEY = "collab.resultsVisible";
+const LEFT_PCT_MIN = 28;
+const LEFT_PCT_MAX = 72;
 
 /** @type {string|null} */
 let currentJobId = null;
+/** @type {string|null} */
+let lastSpecContent = null;
 
 /** Scroll/highlight once when session becomes ready for the client. */
 let sessionReadyAnnouncedForJob = null;
@@ -90,7 +112,7 @@ async function loadAgentConfig() {
     const res = await fetch("/health");
     const h = await res.json();
     agentConfigEl.textContent =
-      `Collab · figma=${h.figmaMode || "?"} · review=${h.serverReviewMode || "rules"} (no heavy server LLM) · ` +
+      `Collab · figma=${h.figmaMode || "?"} · mcp=${h.figmaMcpConfigured ? "ready" : "missing"} · review=${h.serverReviewMode || "rules"} · ` +
       `PR=${h.autoCreatePr ? (h.githubPublishDryRun ? "dry-run" : h.github?.configured ? "github" : "needs GITHUB_TOKEN") : "off"} · ` +
       `base=${h.publicBaseUrl || "?"}`;
     const auth = h.auth || {};
@@ -101,6 +123,15 @@ async function loadAgentConfig() {
         : auth.authMode === "enforced"
           ? "AUTH_MODE=enforced returns 501 until SSO is wired."
           : "Open access until stakeholders pick SSO.");
+    if (authActorSummaryHint) {
+      const mode = auth.authMode || "disabled";
+      authActorSummaryHint.textContent =
+        mode === "placeholder"
+          ? "placeholder · set actor"
+          : mode === "enforced"
+            ? "enforced · SSO TBD"
+            : `${mode} · optional`;
+    }
   } catch {
     agentConfigEl.textContent = "";
   }
@@ -113,6 +144,196 @@ function stopPolling() {
   }
 }
 
+function clampLeftPct(pct) {
+  return Math.min(LEFT_PCT_MAX, Math.max(LEFT_PCT_MIN, Math.round(pct)));
+}
+
+function applyLeftPct(pct) {
+  if (!layoutSplit) return;
+  const value = clampLeftPct(pct);
+  layoutSplit.style.setProperty("--left-pct", `${value}%`);
+  layoutDivider?.setAttribute("aria-valuenow", String(value));
+  try {
+    localStorage.setItem(LAYOUT_LEFT_KEY, String(value));
+  } catch {
+    /* ignore */
+  }
+}
+
+function isResultsVisible() {
+  return !layoutSplit?.classList.contains("results-collapsed");
+}
+
+function setResultsVisible(visible) {
+  if (!layoutSplit || !toggleResultsBtn) return;
+  layoutSplit.classList.toggle("results-collapsed", !visible);
+  toggleResultsBtn.setAttribute("aria-pressed", visible ? "true" : "false");
+  toggleResultsBtn.textContent = visible ? "Hide results" : "Show results";
+  toggleResultsBtn.classList.remove("has-new-results");
+  toggleResultsBtn.title = "Show or hide the results panel";
+  if (layoutDivider) {
+    layoutDivider.tabIndex = visible ? 0 : -1;
+  }
+  try {
+    localStorage.setItem(LAYOUT_RESULTS_KEY, visible ? "1" : "0");
+  } catch {
+    /* ignore */
+  }
+}
+
+function initAuthActorSection() {
+  if (!authActorSection) return;
+  try {
+    const saved = localStorage.getItem(AUTH_SECTION_KEY);
+    if (saved === "1") authActorSection.open = true;
+    else if (saved === "0") authActorSection.open = false;
+  } catch {
+    /* ignore */
+  }
+  authActorSection.addEventListener("toggle", () => {
+    try {
+      localStorage.setItem(AUTH_SECTION_KEY, authActorSection.open ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  });
+}
+
+function initLayoutControls() {
+  let leftPct = 60;
+  let resultsVisible = true;
+  try {
+    const savedPct = Number(localStorage.getItem(LAYOUT_LEFT_KEY));
+    if (Number.isFinite(savedPct)) leftPct = savedPct;
+    const savedVisible = localStorage.getItem(LAYOUT_RESULTS_KEY);
+    if (savedVisible === "0") resultsVisible = false;
+  } catch {
+    /* ignore */
+  }
+  applyLeftPct(leftPct);
+  setResultsVisible(resultsVisible);
+
+  toggleResultsBtn?.addEventListener("click", () => {
+    setResultsVisible(!isResultsVisible());
+  });
+
+  if (!layoutDivider || !layoutSplit) return;
+
+  let dragging = false;
+
+  const onPointerMove = (event) => {
+    if (!dragging) return;
+    const rect = layoutSplit.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const pct = ((event.clientX - rect.left) / rect.width) * 100;
+    applyLeftPct(pct);
+  };
+
+  const endDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.classList.remove("is-resizing");
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", endDrag);
+    window.removeEventListener("pointercancel", endDrag);
+  };
+
+  layoutDivider.addEventListener("pointerdown", (event) => {
+    if (!isResultsVisible() || window.matchMedia("(max-width: 960px)").matches) {
+      return;
+    }
+    event.preventDefault();
+    dragging = true;
+    document.body.classList.add("is-resizing");
+    layoutDivider.setPointerCapture?.(event.pointerId);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
+  });
+
+  layoutDivider.addEventListener("keydown", (event) => {
+    if (!isResultsVisible()) return;
+    const step = event.shiftKey ? 5 : 2;
+    const current = Number(layoutDivider.getAttribute("aria-valuenow") || 50);
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      applyLeftPct(current - step);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      applyLeftPct(current + step);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      applyLeftPct(LEFT_PCT_MIN);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      applyLeftPct(LEFT_PCT_MAX);
+    }
+  });
+}
+
+function updateResultsPlaceholder() {
+  if (!resultsPlaceholder) return;
+  const anyVisible =
+    !result.classList.contains("hidden") ||
+    !sessionPanel?.classList.contains("hidden") ||
+    !jobPanel.classList.contains("hidden") ||
+    !jobDoneEl.classList.contains("hidden") ||
+    !specPreviewPanel?.classList.contains("hidden") ||
+    !errorEl.classList.contains("hidden");
+  resultsPlaceholder.classList.toggle("hidden", anyVisible);
+  if (anyVisible && !isResultsVisible() && toggleResultsBtn) {
+    toggleResultsBtn.classList.add("has-new-results");
+    toggleResultsBtn.title = "Results updated — click to show the results panel";
+  }
+}
+
+function renderMarkdownPreview(content) {
+  if (typeof marked !== "undefined" && marked.parse) {
+    return marked.parse(content, { gfm: true, breaks: false });
+  }
+  return content
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function setSpecTab(mode) {
+  const preview = mode === "preview";
+  specTabPreview?.classList.toggle("active", preview);
+  specTabSource?.classList.toggle("active", !preview);
+  specTabPreview?.setAttribute("aria-selected", preview ? "true" : "false");
+  specTabSource?.setAttribute("aria-selected", preview ? "false" : "true");
+  specPreviewRendered?.classList.toggle("hidden", !preview);
+  specPreviewSource?.classList.toggle("hidden", preview);
+}
+
+function renderSpecPreview(job) {
+  if (!specPreviewPanel) return;
+  const spec = job.design_spec;
+  if (!spec?.content) {
+    specPreviewPanel.classList.add("hidden");
+    lastSpecContent = null;
+    updateResultsPlaceholder();
+    return;
+  }
+
+  lastSpecContent = spec.content;
+  specPreviewPanel.classList.remove("hidden");
+  const path = spec.path || spec.name || "design-spec.md";
+  const turn = spec.turn != null ? ` · turn ${spec.turn}` : "";
+  const chars = spec.charCount != null ? ` · ${spec.charCount.toLocaleString()} chars` : "";
+  specPreviewMeta.textContent = `${path}${turn}${chars}`;
+
+  specPreviewSource.textContent = spec.content;
+  specPreviewRendered.innerHTML = renderMarkdownPreview(spec.content);
+  setSpecTab("preview");
+
+  if (job.job_id && openSpecRawEl) {
+    openSpecRawEl.href = `/api/v1/intake/jobs/${job.job_id}/design-spec.md`;
+  }
+  updateResultsPlaceholder();
+}
+
 function hideJobDone() {
   jobDoneEl.classList.add("hidden");
   jobDoneEl.classList.remove("is-error", "is-cancelled");
@@ -121,6 +342,51 @@ function hideJobDone() {
   jobDoneSummaryEl.classList.add("hidden");
   jobDoneSummaryEl.textContent = "";
   jobDoneDetailsEl.innerHTML = "";
+  updateResultsPlaceholder();
+}
+
+/**
+ * Clear session/job/spec/completion results before a new Start session.
+ * Does not hide the routing preview JSON from Preview task.
+ * Do not call on job completion — PR / zip must stay visible.
+ */
+function resetResultsPanelForNewSession() {
+  stopPolling();
+  currentJobId = null;
+  lastSpecContent = null;
+  sessionReadyAnnouncedForJob = null;
+
+  clearError();
+  hideJobDone();
+
+  sessionPanel?.classList.add("hidden");
+  if (sessionUrlEl) sessionUrlEl.value = "";
+  sessionReadyBanner?.classList.add("hidden");
+  if (sessionReadyBanner) sessionReadyBanner.textContent = "";
+  if (collabTranscriptEl) collabTranscriptEl.innerHTML = "";
+  if (openSessionEl) {
+    openSessionEl.href = "#";
+  }
+
+  specPreviewPanel?.classList.add("hidden");
+  if (specPreviewMeta) specPreviewMeta.textContent = "";
+  if (specPreviewRendered) specPreviewRendered.innerHTML = "";
+  if (specPreviewSource) specPreviewSource.textContent = "";
+  if (openSpecRawEl) openSpecRawEl.href = "#";
+  setSpecTab("preview");
+
+  jobPanel.classList.add("hidden");
+  if (jobMeta) jobMeta.textContent = "";
+  if (jobJson) jobJson.textContent = "";
+  branchPanel?.classList.add("hidden");
+  downloadZipEl?.classList.add("hidden");
+  if (prLinkEl) prLinkEl.textContent = "";
+  if (branchNameEl) branchNameEl.textContent = "";
+  if (checkoutHintEl) checkoutHintEl.textContent = "";
+  if (cancelJobBtn) cancelJobBtn.disabled = true;
+  if (resetClaimBtn) resetClaimBtn.disabled = true;
+
+  updateResultsPlaceholder();
 }
 
 function renderSessionPanel(job) {
@@ -185,6 +451,7 @@ function renderSessionPanel(job) {
       return `<li><span class="ts">${at}</span> <strong>${kind}</strong> — ${msg}</li>`;
     })
     .join("");
+  updateResultsPlaceholder();
 }
 
 function renderJobDone(job) {
@@ -266,6 +533,10 @@ function renderJobDone(job) {
   }
 
   jobDoneEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  updateResultsPlaceholder();
+  if (job.design_spec?.content && specPreviewPanel) {
+    specPreviewPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 }
 
 function renderJobRecord(job) {
@@ -320,6 +591,7 @@ function renderJobRecord(job) {
   }
 
   renderSessionPanel(job);
+  renderSpecPreview(job);
 
   if (["finished", "error", "cancelled"].includes(job.status)) {
     renderJobDone(job);
@@ -351,6 +623,7 @@ function renderJobRecord(job) {
     2
   );
   jobPanel.classList.remove("hidden");
+  updateResultsPlaceholder();
 }
 
 function pollJob(jobId) {
@@ -363,8 +636,9 @@ function pollJob(jobId) {
       renderJobRecord(job);
       if (["finished", "error", "cancelled"].includes(job.status)) {
         stopPolling();
+        // Keep results (PR / zip / spec / job-done) visible after completion.
         finishProgress(job.status === "finished", {
-          clearIntake: job.status === "finished",
+          clearIntakeForm: job.status === "finished",
         });
         if (job.status === "error") {
           showError(job.error_message || "Agent job failed");
@@ -399,11 +673,13 @@ function lines(text) {
 function showError(msg) {
   errorEl.textContent = msg;
   errorEl.classList.remove("hidden");
+  updateResultsPlaceholder();
 }
 
 function clearError() {
   errorEl.classList.add("hidden");
   errorEl.textContent = "";
+  updateResultsPlaceholder();
 }
 
 function setFieldErrors(listEl, messages) {
@@ -522,7 +798,7 @@ function startProgress(label) {
   }, 280);
 }
 
-function finishProgress(ok, { clearIntake = false } = {}) {
+function finishProgress(ok, { clearIntakeForm = false } = {}) {
   clearInterval(progressTimer);
   progressBar.style.width = "100%";
   progressLabel.textContent = ok ? "Done" : "Stopped";
@@ -531,16 +807,19 @@ function finishProgress(ok, { clearIntake = false } = {}) {
     progress.classList.add("hidden");
     progressBar.style.width = "0%";
     submitBtn.disabled = false;
-    if (clearIntake) {
-      resetIntakeForNextJob();
+    if (clearIntakeForm) {
+      resetIntakeFormForNextJob();
     } else {
       syncCreateJobEnabled();
     }
   }, ok ? 350 : 150);
 }
 
-/** After a successful job: clear intake so Create Job cannot re-fire the same payload. */
-function resetIntakeForNextJob() {
+/**
+ * After a successful job: clear left-side intake so Start session cannot re-fire
+ * the same payload. Never clears the results panel (PR / download stay visible).
+ */
+function resetIntakeFormForNextJob() {
   form.reset();
   const existing = form.querySelector('input[name="programmeMode"][value="existing"]');
   if (existing) existing.checked = true;
@@ -555,7 +834,6 @@ function resetIntakeForNextJob() {
   lastPayload = null;
   lastPreview = null;
   confirmSection.classList.add("hidden");
-  result.classList.add("hidden");
   [
     "main-urls-errors",
     "element-urls-errors",
@@ -649,13 +927,16 @@ function renderConfirm(preview) {
     const dd = document.createElement("dd");
     dd.classList.add("warn");
     dd.textContent =
-      "Choose Inherits IDS = yes or no (recommended). If you keep unknown, set “Same Figma anatomy as an IDS component?” to yes/no, then click Preview routing again.";
+      "Choose Inherits IDS = yes or no (recommended). If you keep unknown, set “Same Figma anatomy as an IDS component?” to yes/no, then click Preview task again.";
     confirmSummary.appendChild(dt);
     confirmSummary.appendChild(dd);
   }
   confirmSection.classList.remove("hidden");
   confirmCheck.checked = false;
   syncCreateJobEnabled();
+  requestAnimationFrame(() => {
+    confirmSection.scrollIntoView({ behavior: "smooth", block: "end" });
+  });
 }
 
 function validateAdditionalNotes() {
@@ -897,18 +1178,22 @@ document.getElementById("variables-library-url").addEventListener("blur", () => 
   validateVariablesLibraryUrl();
 });
 
-confirmCheck.addEventListener("change", syncCreateJobEnabled);
+confirmCheck.addEventListener("change", () => {
+  syncCreateJobEnabled();
+  if (confirmCheck.checked) {
+    requestAnimationFrame(() => {
+      createJobBtn.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  clearError();
-  hideJobDone();
-  jobPanel.classList.add("hidden");
 
   const payload = buildPayload();
   if (!payload) return;
 
-  startProgress("Previewing routing…");
+  startProgress("Previewing task…");
   try {
     const res = await apiFetch("/api/v1/intake/preview", {
       method: "POST",
@@ -928,6 +1213,7 @@ form.addEventListener("submit", async (e) => {
     resultJson.textContent = JSON.stringify(data, null, 2);
     result.classList.remove("hidden");
     renderConfirm(data);
+    updateResultsPlaceholder();
   } catch (err) {
     finishProgress(false);
     showError(String(err));
@@ -935,10 +1221,8 @@ form.addEventListener("submit", async (e) => {
 });
 
 createJobBtn.addEventListener("click", async () => {
-  clearError();
-  hideJobDone();
   if (!lastPayload || !lastPreview) {
-    showError("Preview routing first.");
+    showError("Preview task first.");
     return;
   }
   if (!confirmCheck.checked) {
@@ -950,9 +1234,11 @@ createJobBtn.addEventListener("click", async () => {
     return;
   }
 
+  // Only Start session clears prior results; keep routing preview JSON.
+  resetResultsPanelForNewSession();
+
   startProgress("Creating collab session + packaging Figma…");
   createJobBtn.disabled = true;
-  sessionReadyAnnouncedForJob = null;
   try {
     const res = await apiFetch("/api/v1/intake/jobs", {
       method: "POST",
@@ -964,6 +1250,7 @@ createJobBtn.addEventListener("click", async () => {
       finishProgress(false);
       const detail = data.detail;
       showError(typeof detail === "string" ? detail : JSON.stringify(detail, null, 2));
+      createJobBtn.disabled = false;
       return;
     }
     renderJobRecord(data);
@@ -973,7 +1260,7 @@ createJobBtn.addEventListener("click", async () => {
       return;
     }
     if (data.status === "finished") {
-      finishProgress(true, { clearIntake: true });
+      finishProgress(true, { clearIntakeForm: true });
     } else {
       finishProgress(false);
       if (data.status === "error") {
@@ -984,6 +1271,8 @@ createJobBtn.addEventListener("click", async () => {
   } catch (err) {
     finishProgress(false);
     showError(String(err));
+  } finally {
+    syncCreateJobEnabled();
   }
 });
 
@@ -1041,6 +1330,22 @@ copySessionUrlBtn?.addEventListener("click", async () => {
   }
 });
 
+specTabPreview?.addEventListener("click", () => setSpecTab("preview"));
+specTabSource?.addEventListener("click", () => setSpecTab("source"));
+
+copySpecBtn?.addEventListener("click", async () => {
+  if (!lastSpecContent) return;
+  try {
+    await navigator.clipboard.writeText(lastSpecContent);
+    copySpecBtn.textContent = "Copied";
+    setTimeout(() => {
+      copySpecBtn.textContent = "Copy markdown";
+    }, 1500);
+  } catch {
+    showError("Could not copy design-spec markdown.");
+  }
+});
+
 resetClaimBtn?.addEventListener("click", async () => {
   if (!currentJobId) return;
   try {
@@ -1061,3 +1366,5 @@ resetClaimBtn?.addEventListener("click", async () => {
 
 loadProgrammes();
 loadAgentConfig();
+initAuthActorSection();
+initLayoutControls();

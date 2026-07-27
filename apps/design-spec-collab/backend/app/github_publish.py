@@ -83,12 +83,18 @@ def _headers() -> dict[str, str]:
 
 
 def resolve_repo_paths(session: CollabSession) -> dict[str, str]:
-    """Map artifact basename → allowlisted repo-relative path."""
+    """Map artifact basename / relative name → allowlisted repo-relative path."""
+    from .server_review import (
+        expected_storybook_paths,
+        foundation_paths,
+        registry_paths,
+    )
+
     preview = session.preview or {}
     pkg = session.prompt_package or {}
     allow = [
         str(p).replace("\\", "/").lstrip("./")
-        for p in (pkg.get("write_path_allowlist") or [])
+        for p in (pkg.get("write_path_allowlist") or pkg.get("writePathAllowlist") or [])
         if p and not str(p).endswith("/")
     ]
     design = (
@@ -100,8 +106,17 @@ def resolve_repo_paths(session: CollabSession) -> dict[str, str]:
     if design:
         mapping["design-spec.md"] = str(design).replace("\\", "/")
         mapping["outline.md"] = str(design).replace("\\", "/")
-    # Also allow exact basename matches against allowlist
     for p in allow:
+        mapping[p.rsplit("/", 1)[-1]] = p
+        mapping[p] = p
+
+    # Canonical intake paths (wizard parity) even when allowlist is directory-only
+    for p in (
+        foundation_paths(preview)
+        + registry_paths(preview)
+        + expected_storybook_paths(preview)
+    ):
+        mapping[p] = p
         mapping[p.rsplit("/", 1)[-1]] = p
     return mapping
 
@@ -109,14 +124,16 @@ def resolve_repo_paths(session: CollabSession) -> dict[str, str]:
 def _path_allowed(path: str, session: CollabSession) -> bool:
     allow = [
         str(p).replace("\\", "/").lstrip("./")
-        for p in (session.prompt_package or {}).get("write_path_allowlist") or []
+        for p in (session.prompt_package or {}).get("write_path_allowlist")
+        or (session.prompt_package or {}).get("writePathAllowlist")
+        or []
     ]
     norm = path.replace("\\", "/").lstrip("./")
     if not allow:
         return norm.endswith("design-spec.md")
     for a in allow:
         if a.endswith("/"):
-            if norm.startswith(a) or norm.startswith(a.rstrip("/")):
+            if norm.startswith(a) or norm.startswith(a.rstrip("/") + "/"):
                 return True
         elif norm == a:
             return True
@@ -132,11 +149,10 @@ def build_file_plan(session: CollabSession) -> list[tuple[str, str]]:
         name = (art.name or "").strip()
         if not name:
             continue
-        base = name.replace("\\", "/").rsplit("/", 1)[-1]
-        path = mapping.get(base) or mapping.get(name)
+        cand = name.replace("\\", "/").lstrip("./")
+        base = cand.rsplit("/", 1)[-1]
+        path = mapping.get(cand) or mapping.get(base) or mapping.get(name)
         if not path:
-            # if client sent a relative path that is allowlisted
-            cand = name.replace("\\", "/").lstrip("./")
             path = cand if _path_allowed(cand, session) else None
         if not path or not _path_allowed(path, session):
             logger.warning("Skipping artifact outside allowlist: %s", name)

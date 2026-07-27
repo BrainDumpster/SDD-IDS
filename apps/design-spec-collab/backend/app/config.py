@@ -57,7 +57,8 @@ class Settings(BaseSettings):
     auth_mode: str = "disabled"
     public_base_url: str = "http://127.0.0.1:8091"
     figma_token: str | None = None
-    figma_mode: str = "stub"  # stub | live
+    figma_mode: str = "rest"  # stub | mcp | rest (live→rest)
+    figma_mcp_url: str = "https://api.figma.com/mcp"
     server_review_mode: str = "rules"  # rules | ollama
     ollama_host: str = "http://127.0.0.1:11434"
     ollama_model: str = "llama3"
@@ -132,6 +133,8 @@ if os.getenv("FIGMA_TOKEN"):
     settings.figma_token = os.environ["FIGMA_TOKEN"]
 if os.getenv("FIGMA_MODE"):
     settings.figma_mode = os.environ["FIGMA_MODE"].strip().lower()
+if os.getenv("FIGMA_MCP_URL"):
+    settings.figma_mcp_url = os.environ["FIGMA_MCP_URL"].strip().rstrip("/")
 if os.getenv("SERVER_REVIEW_MODE"):
     settings.server_review_mode = os.environ["SERVER_REVIEW_MODE"].strip().lower()
 if os.getenv("OLLAMA_HOST"):

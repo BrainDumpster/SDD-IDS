@@ -3,11 +3,11 @@
 Dual-agent collaboration for design-spec intake:
 
 1. **Operator** fills the same intake form as [design-spec-portal](../design-spec-portal) (validations + guardrails reused).
-2. **Server** packs Figma evidence (REST or stub) and opens **one** session URL. Review is **rules-based** (no heavy server LLM).
-3. **Client agent** (Devin, or `scripts/simulate_client.py`) pastes that URL **once**, then loops until accept.
+2. **Server** packs Figma evidence with **`FIGMA_MODE=rest`** (recommended, PAT-based, MCP-parity enrichment via existing REST helpers) or optional `mcp` / `stub`. Review is **rules-based** (no heavy server LLM).
+3. **Client agent** pastes the session URL once and writes `design-spec.md` from packaged `figma_evidence` only — **no client Figma auth / MCP**.
 4. On accept, **server** commits allowlisted artifacts via GitHub REST, opens a **PR**, and exposes **artifacts.zip**.
 
-No per-turn re-paste. No Cursor Cloud / no server-side LLM authoring.
+No per-turn re-paste. No Cursor Cloud / no server-side LLM authoring. IDE + Figma MCP plugin flows elsewhere in the repo are unchanged.
 
 ## Quick start (stub mode)
 
@@ -73,8 +73,9 @@ See [`.env.example`](.env.example).
 | Var | Meaning |
 |-----|---------|
 | `PUBLIC_BASE_URL` | Absolute session URLs |
-| `FIGMA_MODE` | `stub` or `live` |
-| `SERVER_REVIEW_MODE` | Keep `rules` (avoid server LLM) |
+| `FIGMA_MODE` | `rest` (recommended), `stub`, or `mcp` |
+| `FIGMA_MCP_URL` | Optional; used only when `FIGMA_MODE=mcp` |
+| `FIGMA_TOKEN` | Figma PAT (`X-Figma-Token`) for server REST packaging |
 | `GITHUB_PUBLISH_DRY_RUN` | `true` for local demo without GitHub writes |
 | `AUTO_CREATE_PR` | Run publish after accept |
 

@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Design Spec Portal — Intake</title>
+    <title>Design Spec Collab — Intake</title>
     <link rel="stylesheet" href="/assets/styles.css" />
   </head>
   <body>
     <main class="wrap">
-      <header>
+      <header class="page-header">
         <p class="eyebrow">Dual-agent collab POC</p>
         <h1>Design Spec Collab</h1>
         <p class="lede">
@@ -17,247 +17,315 @@
           Server and client loop on that session until done — no further handoffs.
         </p>
         <p id="agent-config" class="hint" aria-live="polite"></p>
-        <p id="auth-banner" class="auth-banner" aria-live="polite"></p>
-        <label class="actor-field">
-          Actor (auth placeholder)
-          <input
-            id="portal-actor"
-            name="portalActor"
-            placeholder="e.g. your.name — used when AUTH_MODE=placeholder"
-            autocomplete="username"
-          />
-        </label>
+        <details id="auth-actor-section" class="auth-actor-section">
+          <summary class="auth-actor-summary">
+            <span class="auth-actor-summary-label">Auth &amp; actor</span>
+            <span class="auth-actor-summary-hint" id="auth-actor-summary-hint">placeholder · optional</span>
+          </summary>
+          <div class="auth-actor-body">
+            <p id="auth-banner" class="auth-banner" aria-live="polite"></p>
+            <label class="actor-field">
+              Actor (auth placeholder)
+              <input
+                id="portal-actor"
+                name="portalActor"
+                placeholder="e.g. your.name — used when AUTH_MODE=placeholder"
+                autocomplete="username"
+              />
+            </label>
+          </div>
+        </details>
       </header>
 
-      <form id="intake-form" class="card" novalidate>
-        <fieldset class="programme-mode">
-          <legend>Programme / design system</legend>
-          <label class="row">
-            <input type="radio" name="programmeMode" value="existing" checked />
-            Select existing
-          </label>
-          <label class="row">
-            <input type="radio" name="programmeMode" value="new" />
-            Add new programme
-          </label>
+      <div class="layout-toolbar">
+        <button
+          type="button"
+          id="toggle-results"
+          class="secondary layout-toggle"
+          aria-pressed="true"
+          aria-controls="panel-right"
+          title="Show or hide the results panel"
+        >
+          Hide results
+        </button>
+      </div>
 
-          <label id="programme-existing-wrap">
-            Existing programme
-            <select name="programmeExisting" id="programme"></select>
-          </label>
+      <div class="layout-split" id="layout-split" style="--left-pct: 60%">
+        <div class="panel panel-left" aria-label="Intake form">
+          <form id="intake-form" class="card" novalidate>
+            <fieldset class="programme-mode">
+              <legend>Programme / design system</legend>
+              <label class="row">
+                <input type="radio" name="programmeMode" value="existing" checked />
+                Select existing
+              </label>
+              <label class="row">
+                <input type="radio" name="programmeMode" value="new" />
+                Add new programme
+              </label>
 
-          <label id="programme-new-wrap" class="hidden">
-            New programme name
-            <input
-              name="programmeNew"
-              id="programme-new"
-              placeholder="e.g. my-programme"
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <span class="hint">Lowercase letters, digits, hyphens. Starts with a letter.</span>
-          </label>
-        </fieldset>
+              <label id="programme-existing-wrap">
+                Existing programme
+                <select name="programmeExisting" id="programme"></select>
+              </label>
 
-        <fieldset id="theme-foundation-block" class="hidden">
-          <legend>Theme + root-spec foundation</legend>
-          <p class="hint">
-            If <code>&lt;programme&gt;-theme.css</code> and <code>root-spec.md</code> already
-            exist, they are left alone. If missing: reuse creates programme files that
-            <code>@import</code> the donor theme; or generate both from a Figma variables library URL.
-            Storybook always imports the programme theme CSS.
+              <label id="programme-new-wrap" class="hidden">
+                New programme name
+                <input
+                  name="programmeNew"
+                  id="programme-new"
+                  placeholder="e.g. my-programme"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <span class="hint">Lowercase letters, digits, hyphens. Starts with a letter.</span>
+              </label>
+            </fieldset>
+
+            <fieldset id="theme-foundation-block" class="hidden">
+              <legend>Theme + root-spec foundation</legend>
+              <p class="hint">
+                If <code>&lt;programme&gt;-theme.css</code> and <code>root-spec.md</code> already
+                exist, they are left alone. If missing: reuse creates programme files that
+                <code>@import</code> the donor theme; or generate both from a Figma variables library URL.
+                Storybook always imports the programme theme CSS.
+              </p>
+              <label class="row">
+                <input type="radio" name="themeFoundation" value="reuse" checked />
+                Reuse existing programme (create wrapper theme + root-spec with CSS import)
+              </label>
+              <label id="theme-reuse-wrap">
+                Reuse from
+                <select name="themeReuseProgramme" id="theme-reuse-programme"></select>
+              </label>
+              <label class="row">
+                <input type="radio" name="themeFoundation" value="generateFromFigma" />
+                Generate from Figma variables library
+              </label>
+              <label id="variables-library-wrap" class="hidden">
+                Variables library URL
+                <span class="hint">Figma file link (file key required; node-id optional)</span>
+                <textarea
+                  name="variablesLibraryUrl"
+                  id="variables-library-url"
+                  rows="2"
+                  placeholder="https://www.figma.com/design/<fileKey>/…variables…"
+                ></textarea>
+                <ul class="field-errors" id="variables-library-errors" hidden></ul>
+              </label>
+            </fieldset>
+
+            <label>
+              Component display name
+              <input name="componentDisplayName" required placeholder="e.g. Suggested Prompt" />
+            </label>
+
+            <fieldset id="inherits-block">
+              <legend>Inherits IDS component?</legend>
+              <label class="row"><input type="radio" name="inheritsIds" value="yes" /> yes → inheritance skill</label>
+              <label class="row"><input type="radio" name="inheritsIds" value="no" checked /> no → standalone</label>
+              <label class="row"><input type="radio" name="inheritsIds" value="unknown" /> unknown</label>
+              <label id="anatomy-wrap" class="hidden">
+                Same Figma anatomy as an IDS component?
+                <select name="sameAnatomyAsIds">
+                  <option value="">—</option>
+                  <option value="true">yes</option>
+                  <option value="false">no</option>
+                </select>
+              </label>
+            </fieldset>
+
+            <label>
+              Category (optional)
+              <input name="category" placeholder="skip or e.g. Navigation" />
+            </label>
+
+            <label>
+              Main component URL(s)
+              <span class="req">required · one per line · must include node-id</span>
+              <textarea
+                name="mainUrls"
+                id="main-urls"
+                rows="3"
+                required
+                placeholder="https://www.figma.com/design/.../...?node-id=1-2"
+              ></textarea>
+              <ul class="field-errors" id="main-urls-errors" hidden></ul>
+            </label>
+
+            <label>
+              Element URL(s) <span class="muted">optional</span>
+              <textarea
+                name="elementUrls"
+                id="element-urls"
+                rows="2"
+                placeholder="one URL per line, or leave blank"
+              ></textarea>
+              <ul class="field-errors" id="element-urls-errors" hidden></ul>
+            </label>
+
+            <label>
+              State URL(s) <span class="muted">optional</span>
+              <textarea
+                name="stateUrls"
+                id="state-urls"
+                rows="2"
+                placeholder="one URL per line, or leave blank"
+              ></textarea>
+              <ul class="field-errors" id="state-urls-errors" hidden></ul>
+            </label>
+
+            <label class="row">
+              <input type="checkbox" name="storybookExamples" />
+              Storybook Spec Accurate Design examples needed
+            </label>
+
+            <label>
+              Additional details <span class="muted">optional</span>
+              <span class="hint">
+                Extra design/context for the agent (constraints, naming, focus areas).
+                Max 2000 characters. Do not paste secrets or instructions that try to
+                override the skill / guardrails.
+              </span>
+              <textarea
+                name="additionalNotes"
+                id="additional-notes"
+                rows="4"
+                maxlength="2000"
+                placeholder="e.g. Prefer dense spacing; document focus ring carefully; exclude deprecated variant X"
+              ></textarea>
+              <ul class="field-errors" id="additional-notes-errors" hidden></ul>
+            </label>
+
+            <div id="progress" class="progress hidden" aria-live="polite" aria-busy="false">
+              <div class="progress-row">
+                <span class="spinner" aria-hidden="true"></span>
+                <span id="progress-label">Validating…</span>
+              </div>
+              <div class="progress-track" aria-hidden="true">
+                <div class="progress-bar" id="progress-bar"></div>
+              </div>
+            </div>
+
+            <div class="actions form-actions-row">
+              <button type="submit" id="submit-btn">Preview task</button>
+              <button type="button" id="create-job" class="secondary" disabled>
+                Start session
+              </button>
+              <button type="button" id="cancel-job" class="danger" disabled>Cancel session</button>
+              <button type="button" id="reset-claim" class="secondary" disabled>Reset client claim</button>
+            </div>
+          </form>
+
+          <section id="confirm" class="card hidden" aria-live="polite">
+            <h2>Confirm summary</h2>
+            <dl id="confirm-summary" class="summary"></dl>
+            <label class="row confirm-check">
+              <input type="checkbox" id="confirm-check" />
+              I confirm this summary (wizard step 9) — create a pending job
+            </label>
+            <p class="hint" id="confirm-blocked" hidden>
+              Resolve inheritsIds (yes/no). If unknown, answer “Same Figma anatomy as IDS?” then Preview again.
+            </p>
+          </section>
+        </div>
+
+        <div
+          class="layout-divider"
+          id="layout-divider"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize panels"
+          aria-valuemin="28"
+          aria-valuemax="72"
+          aria-valuenow="50"
+          tabindex="0"
+        >
+          <span class="layout-divider-grip" aria-hidden="true"></span>
+        </div>
+
+        <div class="panel panel-right" id="panel-right" aria-label="Results and session">
+          <p id="results-placeholder" class="results-placeholder card">
+            Results appear here after <strong>Preview task</strong> or
+            <strong>Start session</strong>.
           </p>
-          <label class="row">
-            <input type="radio" name="themeFoundation" value="reuse" checked />
-            Reuse existing programme (create wrapper theme + root-spec with CSS import)
-          </label>
-          <label id="theme-reuse-wrap">
-            Reuse from
-            <select name="themeReuseProgramme" id="theme-reuse-programme"></select>
-          </label>
-          <label class="row">
-            <input type="radio" name="themeFoundation" value="generateFromFigma" />
-            Generate from Figma variables library
-          </label>
-          <label id="variables-library-wrap" class="hidden">
-            Variables library URL
-            <span class="hint">Figma file link (file key required; node-id optional)</span>
-            <textarea
-              name="variablesLibraryUrl"
-              id="variables-library-url"
-              rows="2"
-              placeholder="https://www.figma.com/design/<fileKey>/…variables…"
-            ></textarea>
-            <ul class="field-errors" id="variables-library-errors" hidden></ul>
-          </label>
-        </fieldset>
 
-        <label>
-          Component display name
-          <input name="componentDisplayName" required placeholder="e.g. Suggested Prompt" />
-        </label>
+          <p id="error" class="error hidden" role="alert"></p>
 
-        <fieldset id="inherits-block">
-          <legend>Inherits IDS component?</legend>
-          <label class="row"><input type="radio" name="inheritsIds" value="yes" /> yes → inheritance skill</label>
-          <label class="row"><input type="radio" name="inheritsIds" value="no" checked /> no → standalone</label>
-          <label class="row"><input type="radio" name="inheritsIds" value="unknown" /> unknown</label>
-          <label id="anatomy-wrap" class="hidden">
-            Same Figma anatomy as an IDS component?
-            <select name="sameAnatomyAsIds">
-              <option value="">—</option>
-              <option value="true">yes</option>
-              <option value="false">no</option>
-            </select>
-          </label>
-        </fieldset>
+          <details id="result" class="card hidden result-details" aria-live="polite">
+            <summary class="result-details-summary">Routing preview</summary>
+            <pre id="result-json"></pre>
+          </details>
 
-        <label>
-          Category (optional)
-          <input name="category" placeholder="skip or e.g. Navigation" />
-        </label>
+          <section id="session-panel" class="card hidden" aria-live="polite">
+            <h2>Session URL (paste into client once)</h2>
+            <p id="session-ready-banner" class="session-ready-banner hidden" role="status"></p>
+            <p class="hint">
+              After packaging, copy this URL into Devin. The client stays on this
+              session until finished — no re-paste between turns.
+            </p>
+            <div class="actions">
+              <input id="session-url" readonly class="session-url-input" />
+              <button type="button" id="copy-session-url" class="secondary">Copy session URL</button>
+              <a id="open-session" class="button secondary" href="#" target="_blank" rel="noopener">Open</a>
+            </div>
+            <h3>Transcript</h3>
+            <ol id="collab-transcript" class="collab-transcript"></ol>
+          </section>
 
-        <label>
-          Main component URL(s)
-          <span class="req">required · one per line · must include node-id</span>
-          <textarea
-            name="mainUrls"
-            id="main-urls"
-            rows="3"
-            required
-            placeholder="https://www.figma.com/design/.../...?node-id=1-2"
-          ></textarea>
-          <ul class="field-errors" id="main-urls-errors" hidden></ul>
-        </label>
+          <section id="spec-preview-panel" class="card hidden" aria-live="polite">
+            <div class="spec-preview-header">
+              <h2>design-spec.md</h2>
+              <p id="spec-preview-meta" class="hint"></p>
+            </div>
+            <div class="spec-preview-tabs" role="tablist">
+              <button type="button" id="spec-tab-preview" class="spec-tab active" role="tab" aria-selected="true">
+                Preview
+              </button>
+              <button type="button" id="spec-tab-source" class="spec-tab" role="tab" aria-selected="false">
+                Source
+              </button>
+            </div>
+            <div id="spec-preview-rendered" class="spec-preview-body markdown-body" role="tabpanel"></div>
+            <pre id="spec-preview-source" class="spec-preview-body spec-source hidden" role="tabpanel"></pre>
+            <div class="actions spec-preview-actions">
+              <button type="button" id="copy-spec" class="secondary">Copy markdown</button>
+              <a id="open-spec-raw" class="button secondary" href="#" target="_blank" rel="noopener">Open raw .md</a>
+            </div>
+          </section>
 
-        <label>
-          Element URL(s) <span class="muted">optional</span>
-          <textarea
-            name="elementUrls"
-            id="element-urls"
-            rows="2"
-            placeholder="one URL per line, or leave blank"
-          ></textarea>
-          <ul class="field-errors" id="element-urls-errors" hidden></ul>
-        </label>
+          <details id="job-panel" class="card hidden job-panel-details" aria-live="polite">
+            <summary class="job-panel-summary">
+              Session details
+              <span id="job-meta" class="job-meta-inline"></span>
+            </summary>
+            <div id="branch-panel" class="branch-panel hidden">
+              <h3>Git branch (fine-tune in IDE)</h3>
+              <p id="branch-name" class="branch-name"></p>
+              <p id="pr-link" class="hint"></p>
+              <pre id="checkout-hint" class="checkout-hint"></pre>
+              <div class="actions branch-actions">
+                <button type="button" id="copy-checkout" class="secondary">Copy checkout commands</button>
+                <a id="download-zip" class="button secondary hidden" href="#" download>Download zip</a>
+              </div>
+            </div>
+            <pre id="job-json" class="job-json-pre"></pre>
+          </details>
 
-        <label>
-          State URL(s) <span class="muted">optional</span>
-          <textarea
-            name="stateUrls"
-            id="state-urls"
-            rows="2"
-            placeholder="one URL per line, or leave blank"
-          ></textarea>
-          <ul class="field-errors" id="state-urls-errors" hidden></ul>
-        </label>
-
-        <label class="row">
-          <input type="checkbox" name="storybookExamples" />
-          Storybook Spec Accurate Design examples needed
-        </label>
-
-        <label>
-          Additional details <span class="muted">optional</span>
-          <span class="hint">
-            Extra design/context for the agent (constraints, naming, focus areas).
-            Max 2000 characters. Do not paste secrets or instructions that try to
-            override the skill / guardrails.
-          </span>
-          <textarea
-            name="additionalNotes"
-            id="additional-notes"
-            rows="4"
-            maxlength="2000"
-            placeholder="e.g. Prefer dense spacing; document focus ring carefully; exclude deprecated variant X"
-          ></textarea>
-          <ul class="field-errors" id="additional-notes-errors" hidden></ul>
-        </label>
-
-        <div id="progress" class="progress hidden" aria-live="polite" aria-busy="false">
-          <div class="progress-row">
-            <span class="spinner" aria-hidden="true"></span>
-            <span id="progress-label">Validating…</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <div class="progress-bar" id="progress-bar"></div>
-          </div>
+          <section id="job-done" class="card job-done hidden" aria-live="polite" role="status">
+            <h2 id="job-done-title">Job complete</h2>
+            <p id="job-done-message" class="job-done-message"></p>
+            <ul id="job-done-details" class="job-done-details"></ul>
+            <div class="actions job-done-actions">
+              <a id="job-done-pr" class="button hidden" href="#" target="_blank" rel="noopener">Open pull request</a>
+              <a id="job-done-zip" class="button secondary hidden" href="#" download>Download artifacts zip</a>
+            </div>
+            <pre id="job-done-summary" class="job-done-summary hidden"></pre>
+          </section>
         </div>
-
-        <div class="actions">
-          <button type="submit" id="submit-btn">Preview routing</button>
-          <button type="button" id="create-job" class="secondary" disabled>
-            Start collab session
-          </button>
-        </div>
-      </form>
-
-      <section id="confirm" class="card hidden" aria-live="polite">
-        <h2>Confirm summary</h2>
-        <dl id="confirm-summary" class="summary"></dl>
-        <label class="row confirm-check">
-          <input type="checkbox" id="confirm-check" />
-          I confirm this summary (wizard step 9) — create a pending job
-        </label>
-        <p class="hint" id="confirm-blocked" hidden>
-          Resolve inheritsIds (yes/no). If unknown, answer “Same Figma anatomy as IDS?” then Preview again.
-        </p>
-      </section>
-
-      <section id="result" class="card hidden" aria-live="polite">
-        <h2>Routing preview</h2>
-        <pre id="result-json"></pre>
-      </section>
-
-      <section id="job-done" class="card job-done hidden" aria-live="polite" role="status">
-        <h2 id="job-done-title">Job complete</h2>
-        <p id="job-done-message" class="job-done-message"></p>
-        <ul id="job-done-details" class="job-done-details"></ul>
-        <div class="actions job-done-actions">
-          <a id="job-done-pr" class="button hidden" href="#" target="_blank" rel="noopener">Open pull request</a>
-          <a id="job-done-zip" class="button secondary hidden" href="#" download>Download artifacts zip</a>
-        </div>
-        <pre id="job-done-summary" class="job-done-summary hidden"></pre>
-      </section>
-
-      <section id="session-panel" class="card hidden" aria-live="polite">
-        <h2>Session URL (paste into client once)</h2>
-        <p id="session-ready-banner" class="session-ready-banner hidden" role="status"></p>
-        <p class="hint">
-          After packaging, copy this URL into Devin. The client stays on this
-          session until finished — no re-paste between turns.
-        </p>
-        <div class="actions">
-          <input id="session-url" readonly class="session-url-input" />
-          <button type="button" id="copy-session-url" class="secondary">Copy session URL</button>
-          <a id="open-session" class="button secondary" href="#" target="_blank" rel="noopener">Open</a>
-        </div>
-        <h3>Transcript</h3>
-        <ol id="collab-transcript" class="collab-transcript"></ol>
-      </section>
-
-      <section id="job-panel" class="card hidden" aria-live="polite">
-        <h2>Job</h2>
-        <p id="job-meta"></p>
-        <div id="branch-panel" class="branch-panel hidden">
-          <h3>Git branch (fine-tune in IDE)</h3>
-          <p id="branch-name" class="branch-name"></p>
-          <p id="pr-link" class="hint"></p>
-          <pre id="checkout-hint" class="checkout-hint"></pre>
-          <div class="actions branch-actions">
-            <button type="button" id="copy-checkout" class="secondary">Copy checkout commands</button>
-            <a id="download-zip" class="button secondary hidden" href="#" download>Download zip</a>
-          </div>
-        </div>
-        <div class="actions">
-          <button type="button" id="cancel-job" class="danger" disabled>Cancel session</button>
-          <button type="button" id="reset-claim" class="secondary" disabled>Reset client claim</button>
-        </div>
-        <pre id="job-json"></pre>
-      </section>
-
-      <p id="error" class="error hidden" role="alert"></p>
+      </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/assets/app.js"></script>
   </body>
 </html>
