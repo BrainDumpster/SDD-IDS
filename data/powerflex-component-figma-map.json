@@ -1,0 +1,62 @@
+[
+  {
+    "category": "Patterns and Templates",
+    "component": "Card",
+    "designSpecPath": "components/powerflex/card/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=8381-14051&m=dev",
+    "nodeId": "8381-14051",
+    "fileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "specPattern": "standalone",
+    "displayName": "Card",
+    "mainComponentSetNodeId": "8381:14051",
+    "elementsNodeIds": [
+      "15718:197533",
+      "15718:220135",
+      "15718:197126"
+    ],
+    "elementsUrls": [
+      "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=15718-197533&m=dev",
+      "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=15718-220135&m=dev",
+      "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=15718-197126&m=dev"
+    ],
+    "elementNodes": {
+      "elementsBoardA": "15718-197533",
+      "content": "15718-220135",
+      "elementsBoardB": "15718-197126"
+    },
+    "variantNodes": {
+      "buttonsYesOverflowYes": "8381-14245",
+      "buttonsYesOverflowNo": "8381-14305",
+      "buttonsNoOverflowYes": "15718-197984",
+      "buttonsNoOverflowNo": "15718-197994",
+      "contentText": "15718-219736",
+      "contentKeyValue": "15718-220110"
+    }
+  },
+  {
+    "category": "Form",
+    "component": "Toggle Switch",
+    "designSpecPath": "components/powerflex/toggle-switch/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14389&m=dev",
+    "nodeId": "8505:14389",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "specPattern": "standalone",
+    "displayName": "Toggle Switch",
+    "mainComponentSetNodeId": "8505:14389",
+    "variantNodes": {
+      "onFocusLeft": "9527:25469",
+      "onFocusTop": "47594:30074",
+      "onDisabledLeft": "8505:14435",
+      "onDisabledTop": "47594:30081",
+      "onHoverLeft": "8505:14426",
+      "onHoverTop": "47594:30087",
+      "onDefaultLeft": "8505:14417",
+      "onDefaultTop": "47594:30093",
+      "offFocusLeft": "9527:25448",
+      "offFocusTop": "47594:30067",
+      "offDisabledLeft": "8505:14444",
+      "offDisabledTop": "47594:30061"
+    },
+    "notes": "Packaged REST structure returns 12 children with childrenTruncated:4 (Off Default/Hover Left+Top). Layout/anatomy bullets name them at 115×40 (Left) / 60×56 (Top). Collab session 2oKWtpmrvFVZHAbKniH_2aMZOp7t44g7."
+  }
+]
