@@ -41,9 +41,7 @@ const config: StorybookConfig = {
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
   stories: [
     path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/dap/src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/synapse/src/**/*.stories.@(ts|tsx)"),
+    path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)"),
   ],
   addons: ["@storybook/addon-essentials"],
   framework: {
