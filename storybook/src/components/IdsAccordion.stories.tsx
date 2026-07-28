@@ -4,7 +4,6 @@ import { IdsAccordion } from "./IdsAccordion";
 import {
   ACCORDION_API_DEFAULTS,
   ACCORDION_SPEC_DEMO_ITEMS,
-  ACCORDION_SPEC_DISABLED_ITEM,
   ACCORDION_SPEC_FORM_ITEMS,
   IDS_ACCORDION_DESIGN_SPEC_PATH,
 } from "../spec-contracts/ids-accordion.contract";
@@ -45,12 +44,6 @@ export const MultipleOpen: Story = {
   args: {
     multiple: true,
     defaultValue: ["section1", "section2"],
-  },
-};
-
-export const WithDisabledItem: Story = {
-  args: {
-    items: [...ACCORDION_SPEC_DEMO_ITEMS, ACCORDION_SPEC_DISABLED_ITEM],
   },
 };
 

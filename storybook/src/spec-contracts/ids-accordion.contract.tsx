@@ -29,7 +29,6 @@ export const ACCORDION_ITEM_INPUT_KEYS = [
   "value",
   "title",
   "content",
-  "disabled",
   "meta",
   "formSlot",
 ] as const;
@@ -60,7 +59,7 @@ export const ACCORDION_VARIANT_MATRIX = {
   variant: ["default", "form"] as const,
   chevronPosition: ["left", "right"] as const,
   expandBehavior: ["single", "multiple"] as const,
-  itemState: ["collapsed", "expanded", "disabled"] as const,
+  itemState: ["collapsed", "expanded"] as const,
 };
 
 /** Defaults from design-spec Composition & API. */
@@ -94,14 +93,6 @@ export const ACCORDION_SPEC_DEMO_ITEMS: IdsAccordionItem[] = [
       'Yes. Set data-theme="dark" on your root element. All Synapse tokens automatically switch to dark values.',
   },
 ];
-
-/** Disabled row from Synapse `WithDisabled` story — exercises `disabled` per-item input. */
-export const ACCORDION_SPEC_DISABLED_ITEM: IdsAccordionItem = {
-  value: "locked",
-  title: "Premium features (locked)",
-  content: "Upgrade to access.",
-  disabled: true,
-};
 
 const formNetworkSlot: ReactNode = (
   <div style={{ display: "grid", gap: 8 }}>
@@ -163,5 +154,4 @@ export function assertAccordionItemValuesUnique(items: Pick<IdsAccordionItem, "v
 }
 
 assertAccordionItemValuesUnique(ACCORDION_SPEC_DEMO_ITEMS);
-assertAccordionItemValuesUnique([...ACCORDION_SPEC_DEMO_ITEMS, ACCORDION_SPEC_DISABLED_ITEM]);
 assertAccordionItemValuesUnique(ACCORDION_SPEC_FORM_ITEMS);

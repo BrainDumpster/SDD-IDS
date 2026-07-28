@@ -7,7 +7,6 @@ export interface IdsAccordionItem {
   value: string;
   title: string;
   content: ReactNode;
-  disabled?: boolean;
   meta?: ReactNode;
   formSlot?: ReactNode;
 }
@@ -37,7 +36,6 @@ export function IdsAccordion({
         <BaseAccordion.Item
           key={item.value}
           value={item.value}
-          disabled={item.disabled}
           className={styles.item}
           data-first={index === 0 ? "true" : "false"}
         >
@@ -48,7 +46,6 @@ export function IdsAccordion({
                   styles.trigger,
                   chevronPosition === "left" ? styles.triggerLeft : styles.triggerRight,
                   state.open ? styles.open : "",
-                  item.disabled ? styles.disabled : "",
                 ]
                   .filter(Boolean)
                   .join(" ")
