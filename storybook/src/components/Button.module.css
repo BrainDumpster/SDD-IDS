@@ -198,8 +198,16 @@
 
 /* Focus: outer ring 1px brand, offset from --button-focus-ring-offset (IDS default outline) */
 .button:focus-visible:not(:disabled) {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: var(--button-focus-ring-offset);
+  outline: none;
+}
+
+.button:focus-visible:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 .programmeSynapse:focus-visible:not(:disabled) {

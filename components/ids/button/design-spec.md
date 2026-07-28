@@ -41,6 +41,7 @@ Deterministic order:
   - outer ring stroke: `var(--border-width-border-1)`
   - ring offset from control edge: `var(--button-focus-ring-offset)`
   - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
+  - Render via `::after`, not `outline` — see Implementation Notes → Focus ring for the technique and the offset compensation.
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, font-weight: `400`) for button text.
@@ -51,7 +52,7 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 |---|---|
 | `--button-control-radius` | `var(--corner-radius-radius-2)` |
 | `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` |
-| `--button-focus-ring-offset` | `3px` |
+| `--button-focus-ring-offset` | `2px` |
 
 - Core primary tokens:
   - `var(--color-background-controls-brand-base)`
@@ -274,3 +275,8 @@ Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 **Control border (added 2026-07-17)**
 - The `1px` control border is an **inside stroke** — render it with `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>` (or `outline`), never CSS `border`. Under the global `box-sizing: border-box`, a real `border` adds `+2px` to every size.
 - On focus, `tertiary` keeps its control border **by state** (transparent in the default state) — only the outer ring is blue. Do not force a brand-base inner border on `tertiary` focus (secondary's base already has one; tertiary's does not).
+
+**Focus ring (added 2026-07-21)**
+- Corrected to match Figma: IDS `--button-focus-ring-offset` `3px` → `2px`, and the ring corner radius now resolves to `--button-focus-ring-radius` (`4px`) instead of following the `2px` control radius.
+- Don't use CSS `outline` (it inherits the control's `border-radius`, but the ring radius must differ). Render the ring as an absolutely-positioned `::after` (`outline: none` on the control) with `border` + `border-radius: var(--button-focus-ring-radius)`.
+- Offset: `inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)))`. The `+ border-width` is needed because `::after`'s `inset` positions the ring's **outer** edge (the `border` draws inward), whereas the offset is defined as the gap to the ring's **inner** edge. Plain `-offset` leaves the gap short by 1px. (With `outline` this compensation wasn't needed — `outline-offset` measures to the inner edge directly — but `outline` can't carry its own radius, hence `::after`.)
