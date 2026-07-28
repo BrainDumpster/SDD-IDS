@@ -1,0 +1,12 @@
+[
+  {
+    "category": "Form",
+    "component": "Radio",
+    "designSpecPath": "components/powerflex/radio/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2760-2562&m=dev",
+    "nodeId": "2760-2562",
+    "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+    "mainComponentSetNodeId": "2760-2562",
+    "specPattern": "standalone"
+  }
+]
