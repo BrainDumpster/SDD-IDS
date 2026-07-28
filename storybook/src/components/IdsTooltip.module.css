@@ -214,13 +214,14 @@
   flex-direction: column;
   gap: var(--spacing-space-4);
   min-width: 0;
-  padding-right: var(--spacing-space-8);
+  padding-right: var(--padding-padding-4);
 }
 
 .header {
   display: flex;
   align-items: center;
   min-width: 0;
+  min-height: var(--font-line-height-line-height-20);
 }
 
 .title {
@@ -255,6 +256,13 @@
 .closeIcon {
   display: inline-block;
   flex-shrink: 0;
+}
+
+.closeButton.closeButton {
+  min-height: var(--sizing-size-20);
+  min-width: var(--sizing-size-20);
+  padding: var(--padding-padding-4);
+  box-sizing: border-box;
 }
 
 :global([data-theme="dark"]) .close,
