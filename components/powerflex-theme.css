@@ -1,0 +1,67 @@
+/*
+ * Powerflex Design System — Global Theme Tokens
+ * Wrapper over IDS baseline theme (components/ids-theme.css).
+ * Scope: [data-design-system="powerflex"] (and [data-theme="dark"]).
+ */
+
+@import "ids-theme.css";
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* Radio button tokens */
+  --radio-radius: 5px;
+  --radio-focus-ring: #0076ce;
+  --radio-indicator-fill: #ffffff;
+
+  --radio-track-size-sm: 16px;
+  --radio-track-size-md: 24px;
+  --radio-track-size-lg: 32px;
+  --radio-track-size-xl: 40px;
+
+  --radio-indicator-size-sm: 8px;
+  --radio-indicator-size-md: 12px;
+  --radio-indicator-size-lg: 16px;
+  --radio-indicator-size-xl: 24px;
+
+  --radio-focus-ring-size-sm: 20px;
+  --radio-focus-ring-size-md: 28px;
+  --radio-focus-ring-size-lg: 36px;
+  --radio-focus-ring-size-xl: 46px;
+
+  --radio-track-fill-default-unchecked: #ffffff;
+  --radio-track-stroke-default: #888888;
+  --radio-track-fill-default-checked: #0076ce;
+  --radio-track-stroke-default-checked: #0076ce;
+
+  --radio-track-fill-hover-unchecked: #f4f4f4;
+  --radio-track-stroke-hover: #333333;
+  --radio-track-fill-hover-checked: #005da4;
+
+  --radio-track-fill-active-unchecked: #ffffff;
+  --radio-track-stroke-active: #0076ce;
+  --radio-track-fill-active-checked: #00447c;
+
+  --radio-track-fill-disabled-unchecked: #f4f4f4;
+  --radio-track-stroke-disabled: #bbbbbb;
+  --radio-track-fill-disabled-checked: #bbbbbb;
+}
+
+html[data-design-system="powerflex"][data-theme="dark"],
+body[data-design-system="powerflex"][data-theme="dark"] {
+  /* Radio dark overrides (placeholders) */
+  --radio-focus-ring: #4c9fdd;
+  --radio-indicator-fill: #ffffff;
+  --radio-track-fill-default-unchecked: #111619;
+  --radio-track-stroke-default: #566c7f;
+  --radio-track-fill-default-checked: #4c9fdd;
+  --radio-track-stroke-default-checked: #4c9fdd;
+  --radio-track-fill-hover-unchecked: #1e262c;
+  --radio-track-stroke-hover: #b8c1c9;
+  --radio-track-fill-hover-checked: #94c5ea;
+  --radio-track-fill-active-unchecked: #111619;
+  --radio-track-stroke-active: #4c9fdd;
+  --radio-track-fill-active-checked: #003a65;
+  --radio-track-fill-disabled-unchecked: #1e262c;
+  --radio-track-stroke-disabled: #566c7f;
+  --radio-track-fill-disabled-checked: #566c7f;
+}
