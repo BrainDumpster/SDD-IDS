@@ -1,0 +1,43 @@
+/*
+ * Powerflex Design System — Global Theme Tokens
+ * Wrapper over IDS baseline theme (components/ids-theme.css).
+ * Scope: [data-design-system="powerflex"] (and [data-theme="dark"]).
+ */
+
+@import "ids-theme.css";
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* Powerflex dropdown-menu item tokens derived from Figma 82bDP05ESsiiGe38p5TEQJ */
+  --color-action-tertiary-default: #ffffff;
+
+  --dropdown-menu-item-radius: 5px;
+  --dropdown-menu-item-min-height: 32px;
+  --dropdown-menu-item-padding-x: 16px;
+  --dropdown-menu-item-padding-y: 6px;
+  --dropdown-menu-item-gap: 8px;
+
+  --dropdown-menu-item-background-hover: #eeeeee;
+  --dropdown-menu-item-background-active: #d2e7f8;
+
+  --dropdown-menu-item-text-default: #333333;
+  --dropdown-menu-item-text-disabled: #bbbbbb;
+
+  --dropdown-menu-item-icon-default: #333333;
+  --dropdown-menu-item-icon-disabled: #bbbbbb;
+
+  --dropdown-menu-item-border-active: #8a38f5;
+}
+
+html[data-design-system="powerflex"][data-theme="dark"],
+body[data-design-system="powerflex"][data-theme="dark"] {
+  /* Dark tokens are placeholders pending a dark-mode Figma export for Powerflex. */
+  --color-action-tertiary-default: #252525;
+  --dropdown-menu-item-background-hover: #393939;
+  --dropdown-menu-item-background-active: #34414c;
+  --dropdown-menu-item-text-default: #e6e9ec;
+  --dropdown-menu-item-text-disabled: #757575;
+  --dropdown-menu-item-icon-default: #e6e9ec;
+  --dropdown-menu-item-icon-disabled: #757575;
+  --dropdown-menu-item-border-active: #8a38f5;
+}
