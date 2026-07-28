@@ -1,0 +1,18 @@
+[
+  {
+    "category": "Navigation",
+    "component": "Dropdown-Menu",
+    "designSpecPath": "components/powerflex/dropdown-menu/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2557-1870&m=dev",
+    "nodeId": "2557-1870",
+    "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+    "mainComponentSetNodeId": "2557-1870",
+    "specPattern": "standalone",
+    "statesNodeIds": [
+      "2557:1046"
+    ],
+    "statesUrls": [
+      "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2557-1046&m=dev"
+    ]
+  }
+]
