@@ -31,10 +31,10 @@ from .figma_mcp_client import (
 logger = logging.getLogger(__name__)
 
 # Cap sizes so session payloads stay usable for client LLMs.
-_MAX_VAR_BULLETS = 80
-_MAX_SPEC_LINES = 80
-_MAX_SLOT_ROWS = 40
-_MAX_IMAGE_NODES = 6
+_MAX_VAR_BULLETS = 160
+_MAX_SPEC_LINES = 200
+_MAX_SLOT_ROWS = 80
+_MAX_IMAGE_NODES = 12
 
 
 def _ensure_repo_on_path() -> None:
@@ -110,6 +110,19 @@ def _slot_geometry_rows(doc: dict[str, Any], *, limit: int = _MAX_SLOT_ROWS) -> 
             radii = node.get("rectangleCornerRadii")
             if radii:
                 row["rectangleCornerRadii"] = radii
+            bound_names = _bound_var_names(node)
+            if bound_names:
+                row["boundVariableHints"] = bound_names
+                # Prefer semantic CSS var naming when the binding already looks like a token path
+                css_hints = []
+                for n in bound_names:
+                    s = str(n)
+                    if s.startswith("--"):
+                        css_hints.append(f"var({s})")
+                    elif "/" in s or s.lower().startswith("color") or "radius" in s.lower():
+                        css_hints.append(s)
+                if css_hints:
+                    row["tokenHints"] = css_hints[:6]
             pads = {
                 k: node.get(k)
                 for k in (
@@ -372,6 +385,69 @@ def _raise_if_server_auth_failed(evidence: dict[str, Any]) -> None:
         )
 
 
+def _collect_node_errors(evidence: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    for bucket, rows in (evidence.get("buckets") or {}).items():
+        for i, row in enumerate(rows or []):
+            if not isinstance(row, dict):
+                continue
+            err = row.get("error")
+            if err:
+                url = row.get("url") or row.get("nodeId") or i
+                errors.append(f"{bucket}[{i}]: {err} ({url})")
+    return errors
+
+
+def _raise_if_packaging_incomplete(evidence: dict[str, Any]) -> None:
+    """Do not hand clients a session with failed Main Figma evidence (non-stub)."""
+    mode = (evidence.get("mode") or "").lower()
+    if mode == "stub":
+        return
+    buckets = evidence.get("buckets") or {}
+    main = buckets.get("main") or []
+    if not main:
+        raise RuntimeError(
+            "Figma packaging incomplete: Main bucket is empty. "
+            "Provide at least one Main Figma URL with node-id."
+        )
+    main_ok = [
+        r
+        for r in main
+        if isinstance(r, dict) and not r.get("error") and r.get("structure")
+    ]
+    if not main_ok:
+        errs = _collect_node_errors(evidence)
+        sample = "; ".join(errs[:3]) if errs else "unknown error"
+        raise RuntimeError(
+            "Figma packaging incomplete: every Main node failed. "
+            "Fix FIGMA_TOKEN / file access / node ids, then Start session again. "
+            f"Errors: {sample}"
+        )
+
+
+def _evidence_completeness(evidence: dict[str, Any]) -> dict[str, Any]:
+    buckets = evidence.get("buckets") or {}
+    summary: dict[str, Any] = {"buckets": {}, "ok": True, "warnings": []}
+    for name in ("main", "elements", "states"):
+        rows = buckets.get(name) or []
+        ok = sum(
+            1
+            for r in rows
+            if isinstance(r, dict) and not r.get("error") and (r.get("structure") or r.get("tools"))
+        )
+        err = sum(1 for r in rows if isinstance(r, dict) and r.get("error"))
+        summary["buckets"][name] = {"nodes": len(rows), "ok": ok, "errors": err}
+        if name == "main" and ok == 0:
+            summary["ok"] = False
+        if name in ("elements", "states") and len(rows) == 0:
+            summary["warnings"].append(
+                f"No {name} URLs packaged — state/variant depth may be limited."
+            )
+        if err:
+            summary["warnings"].append(f"{name}: {err} node(s) failed")
+    return summary
+
+
 def _fetch_one(it: dict[str, Any], *, mode: str) -> dict[str, Any]:
     fk = it.get("file_key") or it.get("fileKey")
     nid = it.get("node_id") or it.get("nodeId")
@@ -483,6 +559,8 @@ def build_figma_evidence(preview: dict[str, Any]) -> dict[str, Any]:
     ]
     evidence["clientGuidance"] = {
         "usePackagedEvidenceOnly": True,
+        "forbidClientFigmaAuth": True,
+        "youAreTheAuthor": True,
         "preferKeys": [
             "tools.get_design_context",
             "tools.get_variable_defs",
@@ -493,7 +571,17 @@ def build_figma_evidence(preview: dict[str, Any]) -> dict[str, Any]:
             "screenshots",
         ],
         "slotGeometryRequired": True,
+        "sourceMappingRequired": True,
+        "preferSemanticTokens": True,
         "verificationMethod": "Figma REST API" if mode == "rest" else "Figma MCP",
+        "designSpecMustInclude": [
+            "### Slot geometry (Figma-verified) under Layout & Measurements",
+            "States tables with Background / Border / Text-Icon",
+            "Codegen Contract with all required ### subsections",
+            "Source Mapping with file key + node ids from this evidence",
+        ],
     }
+    evidence["completeness"] = _evidence_completeness(evidence)
     _raise_if_server_auth_failed(evidence)
+    _raise_if_packaging_incomplete(evidence)
     return evidence

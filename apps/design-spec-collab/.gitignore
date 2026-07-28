@@ -3,3 +3,5 @@ data/
 __pycache__/
 *.pyc
 .venv/
+design-spec-collab-image.tar.gz
+*.tar.gz

@@ -1,15 +1,76 @@
 # Design Spec Collab (POC)
 
-Dual-agent collaboration for design-spec intake:
+Dual-agent collaboration for design-spec **generate** and **update**:
 
-1. **Operator** fills the same intake form as [design-spec-portal](../design-spec-portal) (validations + guardrails reused).
-2. **Server** packs Figma evidence with **`FIGMA_MODE=rest`** (recommended, PAT-based, MCP-parity enrichment via existing REST helpers) or optional `mcp` / `stub`. Review is **rules-based** (no heavy server LLM).
-3. **Client agent** pastes the session URL once and writes `design-spec.md` from packaged `figma_evidence` only — **no client Figma auth / MCP**.
-4. On accept, **server** commits allowlisted artifacts via GitHub REST, opens a **PR**, and exposes **artifacts.zip**.
+1. **Dashboard home** — list programmes/components (local `components/` tree, or GitHub when configured). **Generate Spec** is always available; **Update** after selecting a component.
+2. **Generate / Update pages** — forms with Back; same session URL flow.
+3. **Server** packs Figma evidence (`FIGMA_MODE=rest` + `FIGMA_TOKEN`) **and a read-only context pack** (theme CSS, root-spec, programme yaml, map entry, authoring-contract excerpt; update baselines when applicable).
+4. **Client agent** pastes the session URL once and writes artifacts with its **LLM only** — **no local filesystem search**, **no client Figma auth / MCP**. Supporting files come from `context_artifacts` in `/work`.
+5. Server **rule-reviews** (optional Ollama soft check). On accept → GitHub PR + zip.
 
-No per-turn re-paste. No Cursor Cloud / no server-side LLM authoring. IDE + Figma MCP plugin flows elsewhere in the repo are unchanged.
+Operator UI may subscribe to **SSE** (`GET /api/v1/intake/jobs/{id}/events`) for live transcript; the client loop stays claim → `/work` → `/result`.
 
-## Quick start (stub mode)
+Collab prompt packages override “Live Figma MCP” checklist items so the client does not trigger Figma Authenticate. IDE skills / portal Cloud agents are unchanged.
+
+**Deploy (build / push / run on a server without git clone):** see [`docs/design-spec-collab-deploy.md`](../../docs/design-spec-collab-deploy.md).
+
+## Quick start (Docker — recommended)
+
+The image is **self-contained**: `components/`, maps, programme yaml, skills, and Storybook trees are baked in. The server does **not** need a git clone.
+
+### Build on your laptop
+
+```bash
+# From monorepo root — builds + writes design-spec-collab-image.tar.gz
+./apps/design-spec-collab/scripts/export-image.sh design-spec-collab:1.0
+
+# Or Compose on the build machine
+cd apps/design-spec-collab && cp .env.example .env && docker compose build && docker compose up -d
+```
+
+### Deploy to server (no git clone)
+
+**A) Copy tar (no registry)**
+
+```bash
+# Laptop → server
+scp apps/design-spec-collab/design-spec-collab-image.tar.gz \
+    apps/design-spec-collab/docker-compose.deploy.yml \
+    apps/design-spec-collab/.env.example \
+    user@server:~/collab/
+
+# On server
+cd ~/collab
+gzip -t design-spec-collab-image.tar.gz
+gzip -dc design-spec-collab-image.tar.gz > design-spec-collab-image.tar
+docker load -i design-spec-collab-image.tar   # not docker import
+cp .env.example .env   # PUBLIC_BASE_URL, FIGMA_TOKEN, GITHUB_*
+mkdir -p data
+COLLAB_IMAGE=design-spec-collab:1.0 docker compose -f docker-compose.deploy.yml up -d
+curl -s http://127.0.0.1:8091/health
+```
+
+**B) Registry push/pull**
+
+```bash
+export COLLAB_IMAGE=ghcr.io/YOUR_ORG/design-spec-collab:1.0
+./apps/design-spec-collab/scripts/export-image.sh --push
+# Server: scp only docker-compose.deploy.yml + .env
+COLLAB_PULL_POLICY=always docker compose -f docker-compose.deploy.yml pull && \
+  docker compose -f docker-compose.deploy.yml up -d
+```
+
+Only `./data` is mounted on the server (jobs/sessions). When specs/maps change, rebuild and redeploy the image.
+
+Production: HTTPS reverse proxy; `PUBLIC_BASE_URL` = public origin; `STUB_FORCE_REVISE_ONCE=false`; `GITHUB_PUBLISH_DRY_RUN=false`.
+
+### Simulate the client
+
+```bash
+python3 apps/design-spec-collab/scripts/simulate_client.py 'http://127.0.0.1:8091/s/SESSION_ID?t=TOKEN'
+```
+
+## Quick start (local venv, no Docker)
 
 ```bash
 cd apps/design-spec-collab
@@ -22,15 +83,7 @@ cd backend
 ../design-spec-portal/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8091 --reload
 ```
 
-Open http://127.0.0.1:8091 — preview → confirm → **Start collab session** → **Copy session URL**.
-
-Simulate the client (revise-then-accept path):
-
-```bash
-python3 scripts/simulate_client.py 'http://127.0.0.1:8091/s/SESSION_ID?t=TOKEN'
-```
-
-After accept you get a transcript event `pr_dry_run` or `pr_created`, plus **Download artifacts zip** in the UI.
+Open http://127.0.0.1:8091 — dashboard → Generate or Update → preview → confirm → **Start session** → **Copy session URL**.
 
 ### Real PR
 
@@ -44,25 +97,53 @@ GITHUB_STARTING_REF=master
 AUTO_CREATE_PR=true
 ```
 
-Restart uvicorn. Server creates `collab/<slug>-<id>` branch, commits `design-spec.md` (allowlisted path only), opens PR.
-
 ## Architecture
 
 ```text
-submit → server Figma pack (REST) → session_url (once)
+dashboard → generate|update form
+     → server Figma pack (REST) + context_artifacts
+     → session_url (once)
               │
               ▼
-     client polls /work ⇄ POST /result   ← LLM only here
+     client polls /work ⇄ POST /result   ← LLM only (no FS / no Figma)
               │
-     server rule review accept | revise
+     server rule review (+ optional Ollama soft) accept | revise
               │
-     on accept → GitHub branch+PR + zip download  ← no LLM
+     on accept → GitHub branch+PR + zip
+
+operator UI ← optional SSE /events (progress only)
 ```
+
+### LLM-only client + context pack
+
+- `/work` includes `context_artifacts` (theme, root-spec, yaml, map, contract excerpt; donors when foundation is missing).
+- `clientGuidance.forbidLocalFilesystem=true` — client must not glob/read the workspace.
+- Foundation **write** requests are omitted when those files already exist on the server (they are shipped read-only instead).
+- Optional `SERVER_REVIEW_MODE=ollama` is a **soft quality check only** — never authors `design-spec.md`. Default remains `rules`.
+
+### Catalogue
+
+- `GET /api/v1/update/programmes`
+- `GET /api/v1/update/programmes/{programme}/components`
+- Default source: local `components/*/…/design-spec.md` (set `CATALOGUE_SOURCE=github` to force GitHub tree).
+- Map enrichment from `data/*-component-figma-map.json` / yaml `figma_map_path`.
+
+### Fidelity / robustness
+
+- Packaging **fails the job** if Main Figma nodes all error (auth / access / bad node-id) — no weak client sessions.
+- Evidence includes `completeness`, larger caps, and `boundVariableHints` / `tokenHints` on slot geometry.
+- Session markdown + **Copy client prompt** spell out authoring checklist (slot geometry, Source Mapping, semantic tokens).
+- Server review gates Slot geometry, Source Mapping, Codegen depth, and Storybook title/theme when Storybook is requested.
+- Operator can **Download evidence** (`GET /api/v1/intake/jobs/{id}/figma-evidence`) and **Copy client prompt** (`…/client-prompt.md`).
+
+### Popup selects
+
+Programme/component pickers use IDS Dropdown single-select chrome (theme CSS from `/theme/ids-theme.css` or the programme theme when available).
 
 ### Security
 
 - Session URL includes an unguessable `t=` access token (`401` without it).
-- Optional first-client **claim** (`SESSION_REQUIRE_CLAIM=true`): second writer gets `409`.
+- Optional first-client **claim** (`SESSION_REQUIRE_CLAIM=true`).
 - TTL via `SESSION_TTL_HOURS`.
 - Writes only to `write_path_allowlist` paths from the prompt package.
 
@@ -72,16 +153,18 @@ See [`.env.example`](.env.example).
 
 | Var | Meaning |
 |-----|---------|
+| `SERVER_REVIEW_MODE` | `rules` (default) or `ollama` soft check only |
+| `OLLAMA_HOST` / `OLLAMA_MODEL` | Used only when `SERVER_REVIEW_MODE=ollama` |
 | `PUBLIC_BASE_URL` | Absolute session URLs |
 | `FIGMA_MODE` | `rest` (recommended), `stub`, or `mcp` |
-| `FIGMA_MCP_URL` | Optional; used only when `FIGMA_MODE=mcp` |
-| `FIGMA_TOKEN` | Figma PAT (`X-Figma-Token`) for server REST packaging |
+| `FIGMA_TOKEN` | Figma PAT for **server** REST packaging |
+| `CATALOGUE_SOURCE` | `auto` (default, local first), `local`, or `github` |
 | `GITHUB_PUBLISH_DRY_RUN` | `true` for local demo without GitHub writes |
 | `AUTO_CREATE_PR` | Run publish after accept |
 
 ### Reuse
 
-- Frontend copied from design-spec-portal (collab post-submit UX).
+- Frontend SPA (hash routes `#/`, `#/generate`, `#/update?…`).
 - Backend imports portal models/services via `backend/portal_app` → symlink to portal `app`.
 
-Portal itself is unchanged.
+Portal itself is unchanged for v1 (create Cloud path still uses live Figma MCP).

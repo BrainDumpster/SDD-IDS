@@ -1,0 +1,169 @@
+/* IDS Dropdown single-select chrome — semantic tokens from programme theme */
+
+.dd-field-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--color-text-neutral-strong, #e6e9ec);
+  font-size: var(--font-size-body-2, 0.875rem);
+}
+
+.ids-dropdown {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.ids-dd-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-10, 10px);
+  width: 100%;
+  min-height: 40px;
+  padding: var(--padding-padding-10, 10px) var(--padding-padding-16, 16px);
+  border: 1px solid var(--color-border-accessible, #8898a5);
+  border-radius: var(--dropdown-control-radius, 0);
+  background: var(--color-background-component, #111619);
+  color: var(--color-text-neutral, #b8c1c9);
+  font: inherit;
+  font-size: var(--font-size-body-2, 0.875rem);
+  line-height: var(--font-line-height-line-height-20, 1.25rem);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+
+.ids-dd-field:hover:not(:disabled) {
+  border-color: var(--color-border-strong, #aeb8c1);
+}
+
+.ids-dd-field:focus {
+  outline: none;
+}
+
+.ids-dd-field:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid var(--color-border-brand-base, #3d8bfd);
+  border-radius: var(--dropdown-focus-ring-radius, 4px);
+  pointer-events: none;
+}
+
+.ids-dd-field:disabled {
+  background: var(--color-background-gray-lighter, #1e262c);
+  border-color: var(--color-border-disabled, #5a6a78);
+  color: var(--color-text-disabled, #7a8a98);
+  cursor: not-allowed;
+}
+
+.ids-dd-placeholder {
+  color: var(--color-text-disabled, #7a8a98);
+}
+
+.ids-dd-caret {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 5px 1px;
+  color: inherit;
+}
+
+.ids-dropdown.is-open .ids-dd-field {
+  border-color: var(--color-border-accessible, #8898a5);
+}
+
+.ids-dd-menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 16rem;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--color-background-component, #111619);
+  border: 1px solid var(--color-border-accessible, #8898a5);
+  border-radius: var(--dropdown-menu-radius, 0);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.ids-dd-option {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 24px 10px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-neutral, #b8c1c9);
+  font: inherit;
+  font-size: var(--font-size-body-2, 0.875rem);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ids-dd-option:hover,
+.ids-dd-option:focus-visible {
+  background: var(--color-background-component-light, #1e262c);
+  outline: none;
+}
+
+.ids-dd-option.is-selected {
+  box-shadow: inset 0 0 0 1px var(--color-border-brand-base, #3d8bfd);
+}
+
+.ids-dd-empty {
+  padding: 12px 16px;
+  color: var(--color-text-disabled, #7a8a98);
+  font-size: 0.875rem;
+}
+
+.dashboard-hero-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.view-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.view-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.update-context {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border, #2a3542);
+}
+
+.update-context p {
+  margin: 0.35rem 0;
+}
+
+.view[hidden] {
+  display: none !important;
+}

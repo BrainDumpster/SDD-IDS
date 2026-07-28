@@ -32,6 +32,10 @@ class TranscriptEvent(BaseModel):
 class Artifact(BaseModel):
     name: str
     content: str
+    role: str | None = None  # context | baseline | output
+    read_only: bool | None = Field(default=None, alias="readOnly")
+
+    model_config = {"populate_by_name": True}
 
 
 class ClientResultBody(BaseModel):
@@ -83,6 +87,10 @@ class CollabSession(BaseModel):
     error_message: str | None = None
     result_summary: str | None = None
     cancel_requested: bool = False
+    job_kind: str = "create"  # create | update
+    baseline_artifacts: list[Artifact] = Field(default_factory=list)
+    context_artifacts: list[Artifact] = Field(default_factory=list)
+    change_hints: list[str] = Field(default_factory=list)
     # Post-accept publish (server git ops — no LLM)
     branch: str | None = None
     pr_url: str | None = None

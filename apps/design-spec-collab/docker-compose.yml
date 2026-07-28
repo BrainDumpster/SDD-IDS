@@ -1,0 +1,61 @@
+# Local / build machine — builds self-contained image (monorepo baked in).
+#
+#   cd apps/design-spec-collab
+#   cp .env.example .env
+#   docker compose build
+#   docker compose up -d
+#
+# For transfer to a server with no git clone, see docker-compose.deploy.yml
+# and scripts/export-image.sh
+
+services:
+  collab:
+    build:
+      context: ../..
+      dockerfile: apps/design-spec-collab/Dockerfile
+    image: ${COLLAB_IMAGE:-design-spec-collab:latest}
+    ports:
+      - "${COLLAB_HOST_PORT:-8091}:8091"
+    env_file:
+      - .env
+    environment:
+      REPO_ROOT: /workspace
+      DESIGN_SYSTEMS_DIR: /workspace/config/design_systems
+      JOBS_DIR: /app/data/jobs
+      SESSIONS_DIR: /app/data/sessions
+      COLLAB_SESSIONS_DIR: /app/data/collab_sessions
+      AUDIT_LOG_PATH: /app/data/audit/audit.jsonl
+      AUTH_MODE: ${AUTH_MODE:-disabled}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://127.0.0.1:8091}
+      FIGMA_MODE: ${FIGMA_MODE:-rest}
+      FIGMA_TOKEN: ${FIGMA_TOKEN:-}
+      FIGMA_MCP_URL: ${FIGMA_MCP_URL:-https://api.figma.com/mcp}
+      SERVER_REVIEW_MODE: ${SERVER_REVIEW_MODE:-rules}
+      STUB_FORCE_REVISE_ONCE: ${STUB_FORCE_REVISE_ONCE:-false}
+      SESSION_REQUIRE_CLAIM: ${SESSION_REQUIRE_CLAIM:-true}
+      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-24}
+      COLLAB_MAX_TURNS: ${COLLAB_MAX_TURNS:-3}
+      AUTO_CREATE_PR: ${AUTO_CREATE_PR:-true}
+      GITHUB_PUBLISH_DRY_RUN: ${GITHUB_PUBLISH_DRY_RUN:-true}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_REPO_URL: ${GITHUB_REPO_URL:-}
+      GITHUB_OWNER: ${GITHUB_OWNER:-}
+      GITHUB_REPO: ${GITHUB_REPO:-}
+      GITHUB_STARTING_REF: ${GITHUB_STARTING_REF:-master}
+      CATALOGUE_SOURCE: ${CATALOGUE_SOURCE:-local}
+    volumes:
+      # Writable only — design system tree is inside the image
+      - ./data:/app/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8091/health')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped

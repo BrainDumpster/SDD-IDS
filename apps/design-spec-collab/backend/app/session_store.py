@@ -42,6 +42,7 @@ class SessionStore:
         prompt_package: dict[str, Any],
         preview: dict[str, Any],
         request: dict[str, Any],
+        job_kind: str = "create",
     ) -> CollabSession:
         now = _utc_now()
         session = CollabSession(
@@ -59,6 +60,7 @@ class SessionStore:
             prompt_package=prompt_package,
             preview=preview,
             request=request,
+            job_kind=job_kind,
             transcript=[
                 TranscriptEvent(
                     at=_utc_now_str(),

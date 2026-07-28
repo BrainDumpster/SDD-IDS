@@ -177,7 +177,9 @@ def publish_session(session: CollabSession) -> PublishResult:
 
     slug = (session.preview or {}).get("slug") or "component"
     short = session.session_id[:8]
-    branch = f"collab/{slug}-{short}"
+    kind = session.job_kind or (session.preview or {}).get("job_kind") or "create"
+    prefix = "update" if kind == "update" else "collab"
+    branch = f"{prefix}/{slug}-{short}"
 
     if settings.github_publish_dry_run or not settings.github_token:
         fake_pr = (
@@ -207,6 +209,19 @@ def publish_session(session: CollabSession) -> PublishResult:
         )
 
     base = (settings.github_starting_ref or "master").strip()
+    pr_title = (
+        f"Update design-spec: {slug}"
+        if kind == "update"
+        else f"design-spec-collab: {slug}"
+    )
+    pr_body = (
+        f"{'Update' if kind == 'update' else 'Create'} design-spec via Design Spec Collab.\n\n"
+        "Server performed packaging + rule review only (no heavy LLM on server).\n"
+        f"- Session: `{session.session_id}`\n"
+        f"- Job: `{session.job_id}`\n"
+        f"- Kind: `{kind}`\n"
+        f"- Files: {', '.join(f'`{p}`' for p, _ in files)}\n"
+    )
     try:
         _create_branch_from_base(repo, branch=branch, base=base)
         for path, content in files:
@@ -215,14 +230,8 @@ def publish_session(session: CollabSession) -> PublishResult:
             repo,
             branch=branch,
             base=base,
-            title=f"design-spec-collab: {slug}",
-            body=(
-                "Opened by Design Spec Collab after server accepted the client artifact.\n\n"
-                "Server performed packaging + rule review only (no heavy LLM on server).\n"
-                f"- Session: `{session.session_id}`\n"
-                f"- Job: `{session.job_id}`\n"
-                f"- Files: {', '.join(f'`{p}`' for p, _ in files)}\n"
-            ),
+            title=pr_title,
+            body=pr_body,
         )
         hint = (
             f"git fetch origin && git checkout {branch}\n"

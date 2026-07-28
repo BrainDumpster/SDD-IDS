@@ -63,6 +63,8 @@ const sessionPanel = document.getElementById("session-panel");
 const sessionUrlEl = document.getElementById("session-url");
 const sessionReadyBanner = document.getElementById("session-ready-banner");
 const copySessionUrlBtn = document.getElementById("copy-session-url");
+const copyClientPromptBtn = document.getElementById("copy-client-prompt");
+const downloadEvidenceEl = document.getElementById("download-evidence");
 const openSessionEl = document.getElementById("open-session");
 const collabTranscriptEl = document.getElementById("collab-transcript");
 const resultsPlaceholder = document.getElementById("results-placeholder");
@@ -93,6 +95,8 @@ let sessionReadyAnnouncedForJob = null;
 
 /** @type {ReturnType<typeof setInterval>|null} */
 let pollTimer = null;
+/** @type {EventSource|null} */
+let jobEventSource = null;
 
 function apiHeaders(extra = {}) {
   const headers = { ...extra };
@@ -141,6 +145,10 @@ function stopPolling() {
   if (pollTimer) {
     clearInterval(pollTimer);
     pollTimer = null;
+  }
+  if (jobEventSource) {
+    jobEventSource.close();
+    jobEventSource = null;
   }
 }
 
@@ -408,9 +416,17 @@ function renderSessionPanel(job) {
   if (url && !url.startsWith("(")) {
     sessionUrlEl.value = url;
     openSessionEl.href = url;
+    if (downloadEvidenceEl && jobId) {
+      downloadEvidenceEl.classList.remove("hidden");
+      downloadEvidenceEl.dataset.jobId = jobId;
+    }
   } else if (collab === "packaging" || job.status === "running") {
     sessionUrlEl.value = "(packaging… session URL appears when ready)";
     openSessionEl.removeAttribute("href");
+    if (downloadEvidenceEl) {
+      downloadEvidenceEl.classList.add("hidden");
+      delete downloadEvidenceEl.dataset.jobId;
+    }
   }
 
   if (sessionReadyBanner) {
@@ -628,6 +644,35 @@ function renderJobRecord(job) {
 
 function pollJob(jobId) {
   stopPolling();
+  // Operator SSE for live transcript; poll remains source of truth for job record.
+  try {
+    jobEventSource = new EventSource(`/api/v1/intake/jobs/${jobId}/events`);
+    const refresh = async () => {
+      try {
+        const res = await apiFetch(`/api/v1/intake/jobs/${jobId}`);
+        if (!res.ok) return;
+        renderJobRecord(await res.json());
+      } catch {
+        /* ignore */
+      }
+    };
+    jobEventSource.onmessage = refresh;
+    for (const kind of [
+      "packaged",
+      "client_result",
+      "revise",
+      "accepted",
+      "error",
+      "closed",
+    ]) {
+      jobEventSource.addEventListener(kind, refresh);
+    }
+    jobEventSource.onerror = () => {
+      /* poll continues */
+    };
+  } catch {
+    /* EventSource unavailable */
+  }
   pollTimer = setInterval(async () => {
     try {
       const res = await apiFetch(`/api/v1/intake/jobs/${jobId}`);
@@ -1306,13 +1351,13 @@ copyCheckoutBtn.addEventListener("click", async () => {
   const text = checkoutHintEl.textContent || "";
   if (!text) return;
   try {
-    await navigator.clipboard.writeText(text);
+    await copyTextToClipboard(text);
     copyCheckoutBtn.textContent = "Copied";
     setTimeout(() => {
       copyCheckoutBtn.textContent = "Copy checkout commands";
     }, 1500);
-  } catch {
-    showError("Could not copy — select the checkout commands manually.");
+  } catch (err) {
+    showError(String(err.message || err));
   }
 });
 
@@ -1320,13 +1365,64 @@ copySessionUrlBtn?.addEventListener("click", async () => {
   const text = sessionUrlEl?.value || "";
   if (!text || text.startsWith("(")) return;
   try {
-    await navigator.clipboard.writeText(text);
+    await copyTextToClipboard(text);
     copySessionUrlBtn.textContent = "Copied";
     setTimeout(() => {
       copySessionUrlBtn.textContent = "Copy session URL";
     }, 1500);
-  } catch {
-    showError("Could not copy session URL.");
+    clearError();
+  } catch (err) {
+    // Select the input so user can Ctrl/Cmd+C
+    sessionUrlEl?.focus();
+    sessionUrlEl?.select();
+    showError(String(err.message || err));
+  }
+});
+
+copyClientPromptBtn?.addEventListener("click", async () => {
+  if (!currentJobId) return;
+  try {
+    const res = await apiFetch(`/api/v1/intake/jobs/${currentJobId}/client-prompt.md`);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showError(
+        typeof data.detail === "string" ? data.detail : "Could not load client prompt"
+      );
+      return;
+    }
+    const text = await res.text();
+    await copyTextToClipboard(text);
+    copyClientPromptBtn.textContent = "Copied";
+    setTimeout(() => {
+      copyClientPromptBtn.textContent = "Copy client prompt";
+    }, 1500);
+    clearError();
+  } catch (err) {
+    showError(String(err.message || err));
+  }
+});
+
+downloadEvidenceEl?.addEventListener("click", async () => {
+  const jobId = downloadEvidenceEl.dataset.jobId || currentJobId;
+  if (!jobId) return;
+  try {
+    const res = await apiFetch(`/api/v1/intake/jobs/${jobId}/figma-evidence`);
+    const data = await res.json();
+    if (!res.ok) {
+      showError(typeof data.detail === "string" ? data.detail : "Evidence not ready");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `figma-evidence-${String(jobId).slice(0, 8)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    clearError();
+  } catch (err) {
+    showError(String(err.message || err));
   }
 });
 
@@ -1336,13 +1432,13 @@ specTabSource?.addEventListener("click", () => setSpecTab("source"));
 copySpecBtn?.addEventListener("click", async () => {
   if (!lastSpecContent) return;
   try {
-    await navigator.clipboard.writeText(lastSpecContent);
+    await copyTextToClipboard(lastSpecContent);
     copySpecBtn.textContent = "Copied";
     setTimeout(() => {
       copySpecBtn.textContent = "Copy markdown";
     }, 1500);
-  } catch {
-    showError("Could not copy design-spec markdown.");
+  } catch (err) {
+    showError(String(err.message || err));
   }
 });
 

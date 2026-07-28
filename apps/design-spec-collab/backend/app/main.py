@@ -7,12 +7,14 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from .artifacts import build_artifacts_zip
+from .collab_prompt import apply_collab_figma_overrides
 from .config import settings
 from .figma_mcp_client import figma_mcp_public_contract, mcp_configured
+from .github_catalog import list_update_components, list_update_programmes
 from .github_publish import github_configured, publish_session
 from .portal_bridge import (
     AuditLog,
@@ -47,6 +49,8 @@ from .session_models import (
     SessionStatus,
 )
 from .session_store import SessionStore
+from .update_models import CreateUpdateJobBody, UpdateRequest
+from .update_service import build_update_preview, update_to_intake_request
 
 APP_DIR = Path(__file__).resolve().parents[2]
 FRONTEND_DIR = APP_DIR / "frontend"
@@ -154,6 +158,18 @@ def _job_public(record, *, include_session_url: bool = True) -> dict[str, Any]:
 
 
 def _work_payload(session) -> dict[str, Any]:
+    from .collab_prompt import build_client_authoring_checklist
+
+    evidence = session.figma_evidence or {}
+    client_guidance = {}
+    if isinstance(evidence.get("clientGuidance"), dict):
+        client_guidance = dict(evidence["clientGuidance"])
+    client_guidance["usePackagedEvidenceOnly"] = True
+    client_guidance["forbidClientFigmaAuth"] = True
+    client_guidance["youAreTheAuthor"] = True
+    client_guidance["forbidLocalFilesystem"] = True
+    client_guidance["useContextArtifactsOnly"] = True
+    job_kind = session.job_kind or "create"
     return {
         "session_id": session.session_id,
         "status": session.status.value,
@@ -161,11 +177,25 @@ def _work_payload(session) -> dict[str, Any]:
         "max_turns": session.max_turns,
         "poll_hint_ms": settings.client_poll_hint_ms,
         "prior_feedback": session.prior_feedback,
+        "job_kind": job_kind,
         "client_requests": [r.model_dump(mode="json") for r in session.client_requests],
-        "figma_evidence": session.figma_evidence,
+        "figma_evidence": evidence,
+        "context_artifacts": [
+            a.model_dump(mode="json", by_alias=True)
+            for a in (session.context_artifacts or [])
+        ],
+        "baseline_artifacts": [
+            a.model_dump(mode="json", by_alias=True)
+            for a in (session.baseline_artifacts or [])
+        ],
+        "change_hints": list(session.change_hints or []),
+        "authoring_checklist": build_client_authoring_checklist(job_kind=str(job_kind)),
+        "clientGuidance": client_guidance,
         "prompt_package": {
             "skill_route": session.prompt_package.get("skill_route"),
-            "skill_relative_path": session.prompt_package.get("skill_relative_path"),
+            # Intentionally omit skill file path — do not load SKILL.md (live Figma).
+            "skill_relative_path": None,
+            "job_kind": session.prompt_package.get("job_kind") or session.job_kind,
             "write_path_allowlist": session.prompt_package.get("write_path_allowlist"),
             "guardrails": session.prompt_package.get("guardrails"),
             "run_phase_checklist": session.prompt_package.get("run_phase_checklist"),
@@ -174,8 +204,11 @@ def _work_payload(session) -> dict[str, Any]:
         "preview": {
             "programme": session.preview.get("programme"),
             "slug": session.preview.get("slug"),
-            "spec_path": session.preview.get("spec_path"),
+            "design_spec_path": session.preview.get("design_spec_path")
+            or session.preview.get("designSpecPath"),
             "skill_route": session.preview.get("skill_route"),
+            "storybook_examples": session.preview.get("storybook_examples")
+            or session.preview.get("storybookExamples"),
         },
         "result_url": (
             f"{settings.public_base_url.rstrip('/')}/api/v1/sessions/"
@@ -184,7 +217,11 @@ def _work_payload(session) -> dict[str, Any]:
         "claim_required": settings.session_require_claim,
         "claim_bound": bool(session.client_nonce),
         "expires_at": session.expires_at,
-        "figma_mcp": figma_mcp_public_contract(),
+        "figma_mcp": {
+            **figma_mcp_public_contract(),
+            "clientMustNotConnect": True,
+            "note": "Use packaged figma_evidence only — do not authenticate Figma.",
+        },
     }
 
 
@@ -221,6 +258,165 @@ def health() -> dict:
 @app.get("/api/v1/programmes")
 def programmes(actor: str = Depends(_actor_dep)) -> dict:
     return {"programmes": list_programmes(settings.design_systems_dir), "actor": actor}
+
+
+@app.get("/api/v1/update/programmes")
+def update_programmes(actor: str = Depends(_actor_dep)) -> dict:
+    data = list_update_programmes()
+    data["actor"] = actor
+    return data
+
+
+@app.get("/api/v1/update/programmes/{programme}/components")
+def update_programme_components(
+    programme: str, actor: str = Depends(_actor_dep)
+) -> dict:
+    try:
+        data = list_update_components(programme)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    data["actor"] = actor
+    return data
+
+
+@app.post("/api/v1/update/preview")
+def update_preview(body: UpdateRequest, actor: str = Depends(_actor_dep)) -> dict:
+    try:
+        preview = build_update_preview(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    audit_log.write(
+        "update_preview",
+        actor=actor,
+        detail={
+            "programme": preview.get("programme"),
+            "slug": preview.get("slug"),
+            "readyForAgent": preview.get("ready_for_agent"),
+        },
+    )
+    return preview
+
+
+@app.post("/api/v1/update/jobs")
+def create_update_job(
+    body: CreateUpdateJobBody, actor: str = Depends(_actor_dep)
+) -> dict:
+    if not body.confirmed:
+        raise HTTPException(
+            status_code=400,
+            detail="confirmed must be true before creating an update job.",
+        )
+    try:
+        preview = build_update_preview(body.update)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if not preview.get("ready_for_agent"):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "message": "Update is not ready for an agent job.",
+                "notes": preview.get("notes"),
+            },
+        )
+
+    intake = update_to_intake_request(body.update, preview)
+    # Reuse portal prompt builder with intake-shaped request + IntakePreviewResponse
+    try:
+        programme = load_programme(settings.design_systems_dir, body.update.programme)
+        intake_preview = build_preview(
+            intake,
+            programme,
+            repo_root=settings.repo_root,
+            design_systems_dir=settings.design_systems_dir,
+        )
+    except Exception:  # noqa: BLE001
+        # Fall back: build prompt from update preview fields via IntakePreviewResponse
+        intake_preview = IntakePreviewResponse.model_validate(
+            {
+                **preview,
+                "skill_route": preview.get("skill_route"),
+                "spec_pattern": preview.get("spec_pattern"),
+                "figma": preview.get("figma"),
+            }
+        )
+
+    # Prefer update preview paths/figma (map + additional URLs) over create slugify
+    intake_preview_dict = intake_preview.model_dump(mode="json")
+    intake_preview_dict.update(
+        {
+            "design_spec_path": preview["design_spec_path"],
+            "slug": preview["slug"],
+            "component_display_name": preview["component_display_name"],
+            "figma": preview["figma"],
+            "primary_file_key": preview["primary_file_key"],
+            "primary_node_id": preview["primary_node_id"],
+            "figma_map_path": preview["figma_map_path"],
+            "storybook_examples": preview["storybook_examples"],
+            "map_entry_sketch": preview.get("map_entry_sketch"),
+            "job_kind": "update",
+            "skill_route": preview.get("skill_route"),
+            "spec_pattern": preview.get("spec_pattern"),
+            "generate_theme_assets": False,
+        }
+    )
+    # Rebuild typed preview for prompt package when possible
+    try:
+        typed = IntakePreviewResponse.model_validate(intake_preview_dict)
+        prompt = build_prompt_package(intake, typed, repo_root=settings.repo_root)
+        prompt_dict = apply_collab_figma_overrides(
+            prompt.model_dump(mode="json"), job_kind="update"
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=400, detail=f"Could not build update prompt: {exc}"
+        ) from exc
+
+    session_yaml = build_session_yaml(intake, typed, job_id="pending")
+    record = job_store.create(
+        request=body.update.model_dump(by_alias=True, mode="json"),
+        preview=intake_preview_dict,
+        prompt_package=prompt_dict,
+        session=session_yaml,
+        actor=actor,
+    )
+    collab = session_store.create(
+        job_id=record.job_id,
+        actor=actor,
+        max_turns=settings.collab_max_turns,
+        ttl_hours=settings.session_ttl_hours,
+        prompt_package=prompt_dict,
+        preview=intake_preview_dict,
+        request=body.update.model_dump(by_alias=True, mode="json"),
+        job_kind="update",
+    )
+    record.status = JobStatus.running
+    record.result_summary = "Packaging Figma evidence for update session…"
+    job_store.save(record)
+
+    start_packaging(
+        job_store=job_store,
+        session_store=session_store,
+        session_id=collab.session_id,
+        job_id=record.job_id,
+        audit=audit_log,
+        actor=actor,
+    )
+    audit_log.write(
+        "update_job_created",
+        job_id=record.job_id,
+        actor=actor,
+        detail={
+            "sessionId": collab.session_id,
+            "programme": preview.get("programme"),
+            "slug": preview.get("slug"),
+        },
+    )
+    out = _job_public(record, include_session_url=True)
+    out["message"] = (
+        "Update job created. Copy session_url into the client agent once."
+    )
+    out["agent_started"] = True
+    return out
 
 
 @app.post("/api/v1/intake/preview", response_model=IntakePreviewResponse)
@@ -269,11 +465,14 @@ def create_job(body: CreateJobBody, actor: str = Depends(_actor_dep)) -> dict:
         )
 
     prompt = build_prompt_package(intake, preview, repo_root=settings.repo_root)
+    prompt_dict = apply_collab_figma_overrides(
+        prompt.model_dump(mode="json"), job_kind="create"
+    )
     session_yaml = build_session_yaml(intake, preview, job_id="pending")
     record = job_store.create(
         request=intake.model_dump(by_alias=True, mode="json"),
         preview=preview.model_dump(mode="json"),
-        prompt_package=prompt.model_dump(mode="json"),
+        prompt_package=prompt_dict,
         session=session_yaml,
         actor=actor,
     )
@@ -283,9 +482,10 @@ def create_job(body: CreateJobBody, actor: str = Depends(_actor_dep)) -> dict:
         actor=actor,
         max_turns=settings.collab_max_turns,
         ttl_hours=settings.session_ttl_hours,
-        prompt_package=prompt.model_dump(mode="json"),
+        prompt_package=prompt_dict,
         preview=preview.model_dump(mode="json"),
         request=intake.model_dump(by_alias=True, mode="json"),
+        job_kind="create",
     )
 
     record.status = JobStatus.running
@@ -335,6 +535,68 @@ def get_job(job_id: str, actor: str = Depends(_actor_dep)) -> dict:
     ):
         raise HTTPException(status_code=403, detail="Not the creating actor")
     return _job_public(record, include_session_url=True)
+
+
+@app.get("/api/v1/intake/jobs/{job_id}/events")
+async def job_events_sse(job_id: str, actor: str = Depends(_actor_dep)):
+    """Operator-only SSE stream of collab transcript events (progress). Clients keep polling /work."""
+    import asyncio
+    import json as _json
+
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    if (
+        settings.auth_mode != "disabled"
+        and record.actor
+        and record.actor != actor
+        and actor != "anonymous"
+    ):
+        raise HTTPException(status_code=403, detail="Not the creating actor")
+
+    async def event_gen():
+        last_idx = 0
+        idle_rounds = 0
+        while True:
+            collab = session_store.get_by_job(job_id)
+            if collab is None:
+                yield f"event: error\ndata: {_json.dumps({'message': 'session missing'})}\n\n"
+                break
+            transcript = list(collab.transcript or [])
+            while last_idx < len(transcript):
+                ev = transcript[last_idx]
+                payload = (
+                    ev.model_dump(mode="json")
+                    if hasattr(ev, "model_dump")
+                    else dict(ev)
+                )
+                payload["status"] = collab.status.value
+                payload["turn"] = collab.turn
+                yield f"event: {payload.get('kind') or 'message'}\ndata: {_json.dumps(payload)}\n\n"
+                last_idx += 1
+                idle_rounds = 0
+            if collab.status in (
+                SessionStatus.done,
+                SessionStatus.failed,
+                SessionStatus.cancelled,
+            ):
+                yield f"event: closed\ndata: {_json.dumps({'status': collab.status.value})}\n\n"
+                break
+            idle_rounds += 1
+            if idle_rounds > 900:  # ~30 min at 2s
+                yield f"event: timeout\ndata: {_json.dumps({'message': 'SSE idle timeout'})}\n\n"
+                break
+            await asyncio.sleep(2.0)
+
+    return StreamingResponse(
+        event_gen(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.get("/api/v1/intake/jobs")
@@ -439,6 +701,41 @@ def get_design_spec_markdown(job_id: str, actor: str = Depends(_actor_dep)) -> P
     return PlainTextResponse(spec["content"], media_type="text/markdown; charset=utf-8")
 
 
+@app.get("/api/v1/intake/jobs/{job_id}/client-prompt.md")
+def get_client_prompt_markdown(job_id: str, actor: str = Depends(_actor_dep)) -> PlainTextResponse:
+    """Operator copy of the same markdown the session landing page shows clients."""
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    collab = session_store.get_by_job(job_id)
+    if collab is None:
+        raise HTTPException(status_code=404, detail="Collab session not found")
+    work = _work_payload(collab)
+    return PlainTextResponse(
+        _session_markdown(collab, work), media_type="text/markdown; charset=utf-8"
+    )
+
+
+@app.get("/api/v1/intake/jobs/{job_id}/figma-evidence")
+def get_figma_evidence_pack(job_id: str, actor: str = Depends(_actor_dep)) -> dict:
+    """Download packaged Figma evidence for debugging / offline review."""
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+    collab = session_store.get_by_job(job_id)
+    if collab is None:
+        raise HTTPException(status_code=404, detail="Collab session not found")
+    evidence = collab.figma_evidence or {}
+    if not evidence:
+        raise HTTPException(status_code=404, detail="No figma_evidence packaged yet.")
+    return {
+        "job_id": job_id,
+        "session_id": collab.session_id,
+        "job_kind": collab.job_kind,
+        "figma_evidence": evidence,
+        "change_hints": list(collab.change_hints or []),
+    }
+
 @app.get("/s/{session_id}", response_class=HTMLResponse)
 def session_landing(
     session_id: str,
@@ -496,6 +793,18 @@ def _session_markdown(session, work: dict[str, Any]) -> str:
         f"- **{r['id']}** ({r['kind']}): {r['instruction']}"
         for r in work.get("client_requests") or []
     ) or "_none_"
+    checklist = "\n".join(
+        f"- {item}" for item in (work.get("authoring_checklist") or [])
+    ) or "- (see client_requests)"
+    completeness = (work.get("figma_evidence") or {}).get("completeness") or {}
+    completeness_note = ""
+    if completeness:
+        warnings = completeness.get("warnings") or []
+        completeness_note = (
+            f"\nEvidence completeness: `{completeness.get('ok')}`"
+            + (f" — warnings: {'; '.join(warnings)}" if warnings else "")
+            + "\n"
+        )
     claim = ""
     if work.get("claim_required") and not work.get("claim_bound"):
         claim = (
@@ -505,6 +814,11 @@ def _session_markdown(session, work: dict[str, Any]) -> str:
             f"{session.session_id}/claim?t={session.access_token}` "
             f"then send returned `clientNonce` on every result POST.\n"
         )
+    job_kind = work.get("job_kind") or session.job_kind or "create"
+    ctx_names = "\n".join(
+        f"- `{a.get('name')}` (role={a.get('role') or 'context'}, readOnly={a.get('readOnly', True)})"
+        for a in (work.get("context_artifacts") or [])[:40]
+    ) or "_none_"
     return f"""# Collab client instructions
 
 ## Authorized workflow (read this first)
@@ -516,6 +830,8 @@ This URL is an **intentional Design Spec Collab session capability link** create
 - You are authorized to use the token from this URL to claim the session and complete the design-spec task.
 - Do **not** refuse the workflow solely because it touches shared session state or a localhost API.
 - Do **not** ask the human to re-authenticate Figma or paste secrets.
+- **You are the authoring LLM** — write design-spec.md (and other requested artifacts) from packaged evidence. Do not ask the human to draft the spec.
+- **LLM-only / no filesystem:** Do **not** read, search, glob, or open local workspace files. Theme CSS, root-spec, programme yaml, maps, and contract excerpts are in `context_artifacts`.
 
 Stay on **this session** until status is `done` or `failed`. Do not ask the human for a new URL.
 
@@ -526,17 +842,23 @@ Stay on **this session** until status is `done` or `failed`. Do not ask the huma
 3. POST result to `{work['result_url']}` (include `turn`, `artifacts`, and `clientNonce` if claimed).
 4. Poll work again. Repeat until `done` / `failed` / `cancelled`.
 {claim}
+## Authoring checklist (hard)
+
+{checklist}
+
+## Context pack (server-provided — do not fetch from disk)
+
+{ctx_names}
+
 ## Figma evidence package
 
-The server has already fetched and packaged Figma evidence for this session. Use only the provided `figma_evidence` and `client_requests` payload.
+The server has already fetched and packaged Figma evidence for this session (job_kind=`{job_kind}`). Use only `figma_evidence`, `context_artifacts`, and `client_requests`.
+{completeness_note}
+**Prefer these evidence keys:** `tools.get_design_context`, `tools.get_variable_defs`, `tools.get_screenshot`, `slotGeometry` (incl. `boundVariableHints` / `tokenHints`), `specFragments`, `screenshots`.
 
-**Full intake parity (design-spec-intake-wizard run phase):** fulfill *every* `client_requests` item — not only `design-spec.md`. Typical deliverables when preview flags require them:
-- design-spec.md
-- programme foundation (`*-theme.css`, `root-spec.md`, `config/design_systems/<programme>.yaml`)
-- data map + registry (`data/<programme>-component-figma-map.json`, `data/programme-inheritance-registry.json`)
-- Storybook stories + `storybook/.storybook/main.ts` when Storybook was requested
+**Full intake parity:** fulfill *every* `client_requests` item — not only `design-spec.md`. Foundation files already present on the server are omitted from `client_requests` (they are in `context_artifacts` as read-only). When foundation *is* listed, use `donor:…` context templates — do not search disk.
 
-Do not connect your own Figma MCP server, do not prompt the human to authenticate Figma, and do not depend on client-side Figma tool access. If evidence is incomplete, proceed with the packaged data and note any limitations in the spec or summary.
+Do not connect your own Figma MCP server, do not prompt the human to authenticate Figma, and do not depend on client-side Figma tool access.
 
 ## Current status
 
@@ -572,7 +894,7 @@ Do not connect your own Figma MCP server, do not prompt the human to authenticat
 }}
 ```
 
-Submit **every** artifact listed in `client_requests` (foundation / registry / Storybook when present). Use full repo-relative paths as artifact `name` values so the server can publish them into the PR. Partial submissions (spec-only or spec+storybook) will be revised.
+Submit **every** artifact listed in `client_requests`. Use full repo-relative paths as artifact `name` values. Partial submissions will be revised.
 ## Guardrails
 
 Use only write paths in prompt_package.write_path_allowlist. Do not invent secrets. Base the output on packaged `figma_evidence`, prior feedback, and the intake payload.
@@ -824,6 +1146,38 @@ _assets = FRONTEND_DIR / "assets"
 if FRONTEND_DIR.is_dir() and _assets.is_dir():
     app.mount("/assets", StaticFiles(directory=_assets), name="assets")
 
-    @app.get("/")
-    def index() -> FileResponse:
-        return FileResponse(FRONTEND_DIR / "index.html")
+
+@app.get("/theme/{name}")
+def theme_css(name: str) -> FileResponse:
+    """Serve programme theme CSS for dropdown chrome (ids-theme.css, etc.)."""
+    safe = name.strip().replace("..", "").lstrip("/")
+    if not safe.endswith(".css"):
+        safe = f"{safe}.css"
+    components_root = (settings.repo_root / "components").resolve()
+    candidates = [components_root / safe]
+    if safe in ("ids.css",):
+        candidates.insert(0, components_root / "ids-theme.css")
+    for path in candidates:
+        try:
+            resolved = path.resolve()
+        except OSError:
+            continue
+        if not resolved.is_file():
+            continue
+        try:
+            resolved.relative_to(components_root)
+        except ValueError:
+            continue
+        return FileResponse(resolved, media_type="text/css")
+    raise HTTPException(status_code=404, detail=f"Theme not found: {name}")
+
+
+@app.get("/")
+def index() -> FileResponse:
+    return FileResponse(FRONTEND_DIR / "index.html")
+
+
+@app.get("/generate")
+@app.get("/update")
+def spa_pages() -> FileResponse:
+    return FileResponse(FRONTEND_DIR / "index.html")
