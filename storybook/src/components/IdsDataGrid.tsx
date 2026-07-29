@@ -81,22 +81,59 @@ export function resolveIdsDataGridColumnFilterActive(column: IdsDataGridColumn):
 export interface IdsDataGridFilterSearchFieldProps {
   placeholder?: string;
   "aria-label": string;
+  /** Controlled query. When omitted, the field manages its own value. */
+  value?: string;
+  /** Fired on type and when the clear (close) control resets the field. */
+  onChange?: (value: string) => void;
 }
 
-/** Optional search row for `column.filterPanel` — not required for every filter type. */
+/**
+ * Column Search filter field — same search/clear behavior as DropdownMenu /
+ * Combobox-Multiselect search (Figma `37822:91077`).
+ * Clear (`ctrl-close-16`) shows only when the query is non-empty.
+ */
 export function IdsDataGridFilterSearchField({
   placeholder = "Search",
   "aria-label": ariaLabel,
+  value,
+  onChange,
 }: IdsDataGridFilterSearchFieldProps) {
+  const [uncontrolledValue, setUncontrolledValue] = useState("");
+  const query = value ?? uncontrolledValue;
+  const showClear = query.length > 0;
+
+  const setQuery = (next: string) => {
+    if (value === undefined) setUncontrolledValue(next);
+    onChange?.(next);
+  };
+
   return (
-    <div className={styles.filterPopupSearchRow}>
+    <div className={styles.filterPopupSearchRow} data-text-filter>
       <Icon shapeName="search-16" className={styles.filterPopupSearchIcon} />
-      <input
-        type="search"
-        className={styles.filterPopupSearchInput}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
-      />
+      <div className={styles.filterPopupSearchInputWrap}>
+        <input
+          type="search"
+          className={styles.filterPopupSearchInput}
+          placeholder={placeholder}
+          aria-label={ariaLabel}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        {showClear ? (
+          <button
+            type="button"
+            className={styles.filterPopupSearchClear}
+            aria-label="Clear search"
+            onClick={() => setQuery("")}
+          >
+            <Icon
+              shapeName="ctrl-close-16"
+              className={styles.filterPopupSearchClearIcon}
+              style={{ width: 12, height: 12 }}
+            />
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -160,7 +197,10 @@ function columnBaseWidthPx(column: IdsDataGridColumn): number {
   return Math.max(floor, preferred);
 }
 
-type FilterMenuPos = { top: number; right: number };
+type FilterMenuPos = { top: number; right: number; maxPanelWidth?: number };
+
+/** Keep L-frame filter panels inside the grid (right-anchored menus must not spill past the left edge). */
+const FILTER_MENU_EDGE_PAD_PX = 8;
 
 type GridSectionPart = "header" | "body";
 
@@ -248,6 +288,8 @@ export function IdsDataGrid({
     });
   }, [columns]);
 
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const gridWrapRef = useRef<HTMLDivElement | null>(null);
   const bodyViewportRef = useRef<HTMLDivElement | null>(null);
   const headerUnifiedTrackRef = useRef<HTMLDivElement | null>(null);
   const headerFrozenTrackRef = useRef<HTMLDivElement | null>(null);
@@ -438,9 +480,19 @@ export function IdsDataGrid({
       const anchor = filterAnchorRefs.current.get(openFilterColumn);
       if (!anchor) return;
       const r = anchor.getBoundingClientRect();
+      const boundsEl = gridWrapRef.current ?? shellRef.current;
+      const boundsLeft = boundsEl
+        ? boundsEl.getBoundingClientRect().left
+        : FILTER_MENU_EDGE_PAD_PX;
+      // Right-anchored L-frame: available width is from grid/viewport left → anchor right.
+      const maxPanelWidth = Math.max(
+        FILTER_MENU_EDGE_PAD_PX,
+        r.right - boundsLeft - FILTER_MENU_EDGE_PAD_PX,
+      );
       setFilterMenuPos({
         top: r.top + 5,
         right: document.documentElement.clientWidth - r.right,
+        maxPanelWidth,
       });
     };
 
@@ -1203,6 +1255,7 @@ export function IdsDataGrid({
 
   return (
     <div
+      ref={shellRef}
       className={styles.shell}
       data-with-detail-panel={withDetailPanel ? "true" : undefined}
     >
@@ -1210,7 +1263,7 @@ export function IdsDataGrid({
         <span className={styles.modeLabel}>View: {viewMode}</span>
       </div>
       <div className={styles.contentRow}>
-        <div className={styles.gridWrap}>
+        <div ref={gridWrapRef} className={styles.gridWrap}>
           {showSelectionColumn && selectionMode === "single" ? (
             <RadioGroup
               className={styles.rowSelectionGroup}
@@ -1271,6 +1324,10 @@ export function IdsDataGrid({
             right: filterMenuPos?.right ?? 0,
             visibility: filterMenuPos ? "visible" : "hidden",
             pointerEvents: filterMenuPos ? "auto" : "none",
+            ["--ids-datagrid-filter-panel-max-width" as string]:
+              filterMenuPos?.maxPanelWidth != null
+                ? `${filterMenuPos.maxPanelWidth}px`
+                : undefined,
           }}
           onClick={(event) => event.stopPropagation()}
         >

@@ -20,6 +20,7 @@
 - **Combobox-filter multiselect (`Dropdown Menu`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-147581&m=dev — node id **`44360:147581`** (search + Select All/Clear All + scrollable checkbox list)
 - **Combobox-filter single-select (`Single-select + Search`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179074&m=dev — node id **`44360:179074`** (search + scrollable text option list)
 - **Default text filter (`Column Search`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-91073&m=dev — node id **`37822:91073`**
+- **Default text filter search field (`Search Box Properties`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37822-91077&m=dev — node id **`37822:91077`** (Large **40px**; icon + text alignment)
 - **Dropdown-SingleSelect filter (`Single-select`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179200&m=dev — node id **`44360:179201`** (Dropdown Menu)
 - **Dropdown-MultiSelect filter (`Multi-select`):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44360-179347&m=dev — node id **`44360:179348`** (Dropdown Menu)
 - Sort icon (`.Sort for table`): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114646&m=dev — node id **`37721:114646`**
@@ -29,9 +30,9 @@
 - **`.Filter for table` control (header filter hit target + icon frame):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114677&m=dev — instance **`37721:114677`** (main component **`37721:114635`**)
 - **Data Grid — main variants / density matrix (container-sized frames):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-112482&m=dev — node id **`37721:112482`** (`Data Grid - Main`)
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`37721:115949`** (column-freeze scenario), **`37721:114144`** (freeze boundary gradient/shadow), **`37721:114143`** (scrollable pane inset), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time)
+- Validated nodes: `44398:164837`, `37721:114734`, `37721:114646`, `44551:229021`, `37721:114635`, `37721:114663`, **`37721:114673`**, **`37721:114677`**, **`37721:114682`** (selection header — empty chrome), **`37721:114686`** (settings header), `37721:114887`, `37721:112483`, **`37721:112482`**, **`37721:114580`**, **`37721:113987`**, **`37721:113988`** (selection column), **`37721:113995`**, **`37721:113997`**, **`37721:114944`** (settings column), **`37721:115949`** (column-freeze scenario), **`37721:114144`** (freeze boundary gradient/shadow), **`37721:114143`** (scrollable pane inset), **`44360:179074`** (combobox-singleselect filter), **`37822:91073`** (default text filter), **`37822:91077`** (text filter Search Box Properties), **`37822:90838`** (date filter), **`37822:91078`** (`Column Filter-Main` `Type=Date`), **`44360:181306`** (date-time filter), **`44360:181713`** (date-time preset panel / Shadow 1), **`37822:90943`** (preset filter row — shared by Date + Date and Time)
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`); row/cell frame re-verified with `get_design_context` (**`disableCodeConnect: true`**) on **`37721:114580`**; column header **`37721:114663`**, title row **`37721:114673`**, filter control **`37721:114677`** re-verified same way **2026-05-13**; rows/columns layout **`37721:113987`** **2026-05-14**; column freeze **`37721:115949`**, boundary **`37721:114144`**, sort states **`37721:114646`** **2026-06-05**
-- Last verified: **2026-06-05** (scroll/freeze blueprint + sort icon states `37721:114646`; column-freeze `37721:115949`; freeze boundary `37721:114144`; implementation parity `IdsDataGrid.tsx`); prior **2026-05-31** (date filter `37822:90838`, date-time `44360:181306`)
+- Last verified: **2026-07-28** (text filter Search Box Properties **`37822:91077`** alignment — Figma MCP `get_variable_defs` + REST node tree + screenshot; implementation parity `IdsDataGridFilterSearchField` / `.filterPopupSearchRow`); prior **2026-06-05** (scroll/freeze blueprint + sort icon states `37721:114646`; column-freeze `37721:115949`; freeze boundary `37721:114144`; implementation parity `IdsDataGrid.tsx`); prior **2026-05-31** (date filter `37822:90838`, date-time `44360:181306`)
 - Nested specs (codegen must delegate, not reimplement): `components/ids/checkbox/design-spec.md`, `components/ids/date-picker/design-spec.md`, `components/ids/time-picker/design-spec.md`, `components/ids/radio-button/design-spec.md`, `components/ids/pagination/design-spec.md` (footer), detail panel datagrid attach mode (see `IdsDetailPanel` / product `def-new-dg-detail`)
 - Reference implementation (Storybook / React parity target): `storybook/src/components/IdsDataGrid.tsx`, `IdsDataGrid.module.css`, `IdsDataGridDefaultStoryHost.tsx`, `IdsDataGridSelectionRadio.tsx`, `IdsDataGridSelectionCheckbox.tsx`
 - **Codegen-critical layout:** **Chrome columns & table slack (codegen-critical)** under **Layout & Measurements → Table Layout Algorithm** — required for generators (grow `auto`, chrome **48**/**40** three-layer lock, anti-patterns).
@@ -196,6 +197,7 @@ Angular uses **declarative child components** with **content projection**. The m
 ### `FilterMenuLayer` (open) — stacking & anchor
 - Prefer **`position: fixed`** + **portal to `document.body`** so the menu is **not** a child of **`overflow: auto`** on the grid viewport (avoids extra scroll height, column shift, and clipping). **`z-index`** high enough to sit **above** grid body and side panels (e.g. **10000** until a global z-index token exists).
 - **Position:** `top = anchor.getBoundingClientRect().top + 5px` (optical **38** in **48** header), `right = document.documentElement.clientWidth - anchorRect.right` (right-align to filter column). Recompute on **resize**, **window scroll (capture)**, **viewport scroll**, and **ResizeObserver** on the viewport.
+- **Left-edge clamp (codegen-critical):** L-frame panels grow **left** from the filter tab. Set CSS var **`--ids-datagrid-filter-panel-max-width`** = `max(8px, anchorRect.right - gridWrapLeft - 8px)` so the panel (and leading chrome such as the text-filter **`search-16`** icon) never spills past the **datagrid** left edge. Prefer **grid wrap** bounds over bare viewport when available. Text filter preferred width remains **300px** but **shrinks** when space is tighter.
 - **Scroll viewport:** use **`scrollbar-gutter: auto`** on **`.bodyViewport`** (vertical scrollbar only when needed; avoid **`stable`** — it reserves a permanent right gutter). When a **detail panel** is attached, keep **`auto`** so no white strip appears beside **`SettingsColumn`**.
 
 ### L-frame geometry (invariant — all filter UIs)
@@ -329,18 +331,19 @@ Label copy differs from **Date and Time**: Figma uses **`Custom date range`** (n
 
 ---
 
-### Filter type: Default text search (`Column Search`, `37822:91073`)
+### Filter type: Default text search (`Column Search`, `37822:91073` / search field `37822:91077`)
 
-Simple inline search field rendered directly inside `FilterPanelBody`.
+Simple inline search field rendered directly inside `FilterPanelBody`. Geometry from **Search Box Properties** instance **`37822:91077`** (variant **Size=Large - 40 px**, **State=Default**).
 
-- **Anatomy:** `SearchIcon` (16×16) + `TextInput` + conditional `DismissButton` in a horizontal row.
-- **Panel width:** `300px` (`FilterPanel` `min-width` / `max-width`).
-- **Row padding:** `6px` vertical / `16px` horizontal (`padding: 6px 16px`).
-- **Search icon:** slug `search-16`, `16×16` (no wrapper), color `var(--color-icon-brand-base)`.
-- **Text input:** `font-size: var(--font-size-body-2)`, `font-weight: 400`, `line-height: var(--font-line-height-line-height-20)`, color `var(--color-text-neutral)`, `flex: 1`.
+- **Anatomy:** `SearchIcon` (16×16) + `TextInput` (+ conditional `DismissButton` on the inner text frame) in a horizontal row.
+- **Panel width:** preferred **`300px`** (`FilterPanel` width / max; mark body with `data-text-filter`). When the right-anchored L-frame would spill past the datagrid left edge, **shrink** to `--ids-datagrid-filter-panel-max-width` (see **FilterMenuLayer** left-edge clamp) so the leading **`search-16`** icon stays visible.
+- **Row (`Search Box Properties`):** horizontal flex, **`align-items: center`**, **`height: 40px`**, **`box-sizing: border-box`**, **`padding: var(--padding-padding-6) var(--padding-padding-16)`** (6px / 16px). Outer **`itemSpacing`** = **`var(--spacing-space-none)`** (0) — do **not** use a flex `gap` between icon and input; spacing comes from the text frame’s left padding.
+- **Search icon:** shared **`Icon`** (`shapeName="search-16"`, default **`variant="mask"`**). Tint via CSS `color: var(--color-icon-brand-base)` on the icon class — SVG/mask fill uses **`currentColor`** (do not hardcode fill or pass a `color` prop). Size `16×16`.
+- **Text frame / input:** `flex: 1` wrap with `justify-content: space-between`; input padding owned by wrap **`padding: var(--padding-padding-4) 0 var(--padding-padding-4) var(--padding-padding-8)`**. Typography Body 2 Regular: `font-size: var(--font-size-body-2)`, `font-weight: 400`, `line-height: var(--font-line-height-line-height-20)`, color `var(--color-text-neutral)`.
 - **Placeholder:** `"Search"`, color `var(--color-text-neutral)`.
-- **Dismiss button:** visible only when `query` is non-empty. Icon slug `ctrl-close-16`, rendered `12×12`. `all: unset`, color `var(--color-icon-neutral)`, cursor pointer.
-- **Behavior:** typing filters column rows immediately (client-side); empty query shows all rows. Clicking dismiss button clears query. No selection controls.
+- **Dismiss / clear button:** same contract as DropdownMenu / Combobox filter search — **visible only when `query` is non-empty**; hidden when empty. Trailing on the text frame. Shared **`Icon`** (`shapeName="ctrl-close-16"`, mask/`currentColor`), rendered `12×12`. Button sets `color: var(--color-icon-accessible)`; icon inherits via **`currentColor`**. `all: unset`, cursor pointer, `aria-label="Clear search"`. Click clears the query (and fires `onChange("")` when controlled).
+- **Border / radius:** Figma field uses `var(--border-width-border-default)` + `var(--color-border-accessible)` and **`Corner Radius/radius-none`**. Inside the shared L-frame, **do not** redraw a second outer border on the row — L-frame `FilterPanel` owns the shell stroke; the row supplies the **40px / 6×16 padding / icon+text inset** alignment only.
+- **Behavior:** typing updates query immediately; empty query shows all rows (host filters via `onChange`). Clicking dismiss clears query. No selection controls.
 - **Filter model:** `query: string`; `filterActive` when `query` is non-empty.
 
 ---
@@ -361,7 +364,7 @@ Multiselect combobox filter with search, Select All / Clear All, and scrollable 
 
 - **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`. Min-width `186px`, max-width `700px`.
 - **Container width:** `269px` (`FilterPanel` `min-width` / `max-width`).
-- **Search row:** `var(--padding-padding-8)` wrapper padding. Inner field: `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners per Figma `Search-Main`). Search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`). Text input left-padded `var(--padding-padding-8)`, `var(--padding-padding-4)` vertical, `font-weight: 400`. **Dismiss button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-neutral)`, cursor pointer.
+- **Search row:** `var(--padding-padding-8)` wrapper padding. Inner field: `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners per Figma `Search-Main`). Search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`). Text input left-padded `var(--padding-padding-8)`, `var(--padding-padding-4)` vertical, `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-accessible)`, cursor pointer, `aria-label="Clear search"`; click sets `searchQuery` to `""`. Hidden when empty.
 - **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`. **Clear All** is right-aligned; row has no right padding — the button supplies `var(--padding-padding-16)` horizontal inset.
   - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.md`.
   - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
@@ -412,7 +415,7 @@ No Select All / Clear All row (single-select has no batch action).
 
 - **Container width:** `269px` (`FilterPanel` `min-width` / `max-width`).
 - **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; min-width `186px`, max-width `700px`, min-height `212px`.
-- **Search row:** identical to Combobox-Multiselect — `var(--padding-padding-8)` wrapper, bordered inner field with **no border-radius** (sharp corners per Figma `Search-Main`), search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`), text input `font-weight: 400`. **Dismiss button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-neutral)`, cursor pointer.
+- **Search row:** identical to Combobox-Multiselect — `var(--padding-padding-8)` wrapper, bordered inner field with **no border-radius** (sharp corners per Figma `Search-Main`), search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`), text input `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-accessible)`, cursor pointer, `aria-label="Clear search"`; click clears. Hidden when empty.
 - **Option list:** scrollable, sample height `406px`, no bottom padding.
 - **Option row:** `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right padding, `var(--spacing-space-8)` gap. Min-height `40px`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis.
 
@@ -1369,13 +1372,14 @@ Variant matrix:
   - **Column freeze (pinned data columns + boundary shadow):** **`37721:115949`** (horizontal scroll **`37721:114143`**, boundary gradient **`37721:114144`**)
   - **Column filter type matrix:** `37822:91069` (Column Filter-Main)
   - **Default text filter (Column Search):** `37822:91073`
+  - **Default text filter search field (Search Box Properties):** `37822:91077`
   - **Combobox-Multiselect filter:** `44360:147581` (Dropdown Menu, search + Select All/Clear All + checkbox list)
   - **Combobox-SingleSelect filter:** `44360:179074` (Dropdown Menu, search + plain text option list)
   - **Dropdown-SingleSelect filter:** `44360:179201` (`.Dropdown-SingleSelect-Elements-Options`, no search)
   - **Dropdown-MultiSelect filter:** `44360:179348` (`.Dropdown-Elements-MultiSelect-Options`, no search, Select All/Clear All)
   - **Numeric filter:** `44360:182265` (`.Filter-Element-NumericFilter`); operator rows `44367:182693`; proof nodes `44360:182266`, `44367:182637`, `44370:145919`
 - Live verification evidence:
-  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; sort icon matrix **`37721:114646`** (symbols **`37721:114647`**–**`37721:114661`**) re-checked **`2026-06-05`** (Figma MCP); column freeze scenario **`37721:115949`** re-checked **`2026-06-05`**; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**).
+  - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; sort icon matrix **`37721:114646`** (symbols **`37721:114647`**–**`37721:114661`**) re-checked **`2026-06-05`** (Figma MCP); column freeze scenario **`37721:115949`** re-checked **`2026-06-05`**; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**); text filter search field **`37822:91077`** re-checked **`2026-07-28`** (Figma MCP `get_variable_defs` + REST + screenshot).
 ### Storybook generation contract
 
 **Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).
@@ -1431,7 +1435,7 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 **Filter panels — common issues**
 - **Font-weight**: all filter text elements (labels, inputs, options) use `font-weight: 400` — do NOT use `font-weight: 500`
 - **Search icon**: slug `search-16`, rendered `16×16px` with no wrapper styles (no display/align-items/justify-content on the icon itself)
-- **Dismiss/clear button**: icon slug `ctrl-close-16`, rendered `12×12px`, visible only when search query is non-empty; added to column search, single-select, and multi-select filter search inputs
+- **Dismiss/clear button**: icon slug `ctrl-close-16`, rendered `12×12px`, color `var(--color-icon-accessible)` — visible only when search query is non-empty; click clears. Same contract on Column Search, Combobox-SingleSelect, and Combobox-Multiselect filter search inputs (aligned with DropdownMenu search clear).
 
 **Date / Date and Time filters — preset row summary**
 - **Bug (fixed)**: `modeShowsSummary` incorrectly excluded `"all"` — correct guard is `mode !== "specific-date" && mode !== "custom-range"`. Do NOT add `mode !== "all"`.
@@ -1444,8 +1448,12 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 - **disabled**: `.optionRow:has(.radioInput:disabled)` — radio: `border-color: var(--color-border-disabled)`, `background: var(--color-background-disabled)`; dot: `background: var(--color-icon-disabled)`; label: `color: var(--color-text-disabled)`, `cursor: not-allowed`.
 
 **Column Search filter**
-- **Panel width**: `300px` (min-width/max-width)
-- **Padding**: `6px` top/bottom, `16px` left/right on `.filterPopupSearchRow`
+- **Figma:** `37822:91073` (L-frame) + search field **`37822:91077`** (Search Box Properties, Large 40px)
+- **Panel width**: preferred `300px`; clamp with `--ids-datagrid-filter-panel-max-width` so the menu stays inside the datagrid (Name / first columns)
+- **Row**: `width: 100%`; `height: 40px`; `padding: var(--padding-padding-6) var(--padding-padding-16)`; `align-items: center`; **no** flex gap (icon→text via input `padding-left: 8px`)
+- **Icon**: shared `Icon` `search-16` (mask + `currentColor`); CSS `color: var(--color-icon-brand-base)`
+- **Clear**: shared `Icon` `ctrl-close-16` `12×12` (mask + `currentColor`); button `color: var(--color-icon-accessible)` — only when query non-empty; click clears
+- **Input**: text/placeholder `var(--color-text-neutral)`
 
 **Multiselect / Single-select filters**
 - **Panel width**: `269px` (min-width/max-width)
