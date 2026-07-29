@@ -29,7 +29,18 @@
   min-width: 0;
 }
 
+/* Continue the row baseline past the last tab/control (selected tabs omit their own bottom border). */
+.list::after {
+  content: "";
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  pointer-events: none;
+}
+
 .tab {
+  box-sizing: border-box;
   height: 38px;
   padding: 9px var(--padding-padding-24);
   font-size: var(--font-size-body-2);
@@ -141,7 +152,8 @@
 .selected {
   background: var(--color-background-surface-2);
   color: var(--color-text-brand-strong);
-  border-bottom-color: transparent;
+  /* Never draw the accessible baseline under the active tab (elevated or transparent). */
+  border-bottom: none;
   z-index: 1;
 }
 
@@ -226,6 +238,12 @@
   position: relative;
 }
 
+/* `all: unset` clears box-sizing; re-assert for consistent 38px border-box height. */
+.moreTrigger,
+.addButton {
+  box-sizing: border-box;
+}
+
 .moreTrigger::after {
   content: "";
   position: absolute;
@@ -264,7 +282,7 @@
 
 .moreTriggerSelected {
   color: var(--color-text-brand-strong);
-  border-bottom-color: transparent;
+  border-bottom: none;
   z-index: 1;
 }
 
@@ -365,6 +383,7 @@
 }
 
 .moreTriggerPrimary.moreTriggerSelected {
+  border-bottom: none;
   box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
 }
 
@@ -413,8 +432,8 @@
 }
 
 .panel {
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
-  margin-top: -1px;
+  /* Baseline lives on tab/control borders + `.list::after` only — do not overlay a
+     panel top border (it showed through transparent selected tabs). */
   padding: var(--padding-padding-16) 0;
   font-size: var(--font-size-body-2);
   color: var(--color-text-neutral-strong);
@@ -422,6 +441,10 @@
 }
 
 /* Synapse Nav Tab — Figma `47807:3185` / `Tab-Single` (`47804:189`). */
+.programmeSynapse .list::after {
+  display: none;
+}
+
 .programmeSynapse .listWrap {
   border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
   padding-bottom: var(--padding-padding-1);
