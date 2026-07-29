@@ -35,19 +35,29 @@ export const UsageMastheadAttached: Story = {
 
 export const ComponentDetailMatrix: Story = {
   render: () => (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16, alignItems: "start" }}>
       <IdsAppLauncher products={products.slice(0, 1)} panelOnly />
       <IdsAppLauncher products={products.slice(0, 2)} panelOnly />
       <IdsAppLauncher products={products.slice(0, 3)} panelOnly />
       <IdsAppLauncher products={products} panelOnly />
       <div style={{ gridColumn: "span 2" }}>
-        <IdsAppLauncher
-          products={[...products, ...products].map((p, i) => ({ ...p, id: `${p.id}-${i}` }))}
-          options={optionsList}
-          panelOnly
-        />
+        <IdsAppLauncher products={products} options={optionsList} panelOnly />
       </div>
     </div>
+  ),
+};
+
+export const OptionTextOverflow: Story = {
+  render: () => (
+    <IdsAppLauncher
+      products={products.slice(0, 2)}
+      options={[
+        { id: "o1", label: "Option" },
+        { id: "o2", label: "This is a very long option label that truncates with an ellipsis instead of wrapping" },
+        { id: "o3", label: "Option" },
+      ]}
+      panelOnly
+    />
   ),
 };
 
