@@ -404,6 +404,12 @@ export function MainMenuLeft({
             : hasChildren
               ? hasSelectedSecondary
               : selectedKey === itemId;
+          // The primary row is the active page when it is a selected leaf, or when it
+          // is a parent whose selected secondary child is currently hidden (sub-menu
+          // collapsed) — so the row stays marked as the current page after collapse.
+          const primaryIsCurrentPage =
+            (isSelected && !hasSelectedSecondary) ||
+            (hasSelectedSecondary && !showChildrenList);
           const primaryLabel = primaryDisplayName(item);
           const primaryTitle = item.tooltip ?? primaryLabel;
           const secondaryContextMenuEnabled =
@@ -416,6 +422,16 @@ export function MainMenuLeft({
                 title={primaryTitle}
                 onClick={() => {
                   if (hasForcedState) return;
+
+                  // Parent rows (with children) act as sub-menu accordions when the
+                  // rail is expanded. Expanding/collapsing only toggles the sub-menu —
+                  // it must not navigate or change the active selection, so the user
+                  // stays on the current page. Navigation comes from the secondary rows.
+                  if (hasChildren && isExpanded) {
+                    setExpandedChildrenKey((prev) => (prev === itemId ? null : itemId));
+                    return;
+                  }
+
                   setSelectedKey(itemId);
                   onNavigate?.(
                     buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
@@ -429,20 +445,8 @@ export function MainMenuLeft({
                       routeRef: item.routeRef,
                     }),
                   );
-                  if (!hasChildren) {
-                    setSelectedSecondaryParentKey(null);
-                    setSelectedSecondaryKey(null);
-                    return;
-                  }
-                  if (!isExpanded) return;
-                  setExpandedChildrenKey((prev) => {
-                    const next = prev === itemId ? null : itemId;
-                    if (next === null) {
-                      setSelectedSecondaryParentKey(null);
-                      setSelectedSecondaryKey(null);
-                    }
-                    return next;
-                  });
+                  setSelectedSecondaryParentKey(null);
+                  setSelectedSecondaryKey(null);
                 }}
                 className={[
                   styles.primaryRow,
@@ -453,10 +457,11 @@ export function MainMenuLeft({
                 ]
                   .filter(Boolean)
                   .join(" ")}
-                aria-current={
-                  isSelected && !(hasChildren && hasSelectedSecondary) ? "page" : undefined
-                }
+                aria-current={primaryIsCurrentPage ? "page" : undefined}
                 aria-expanded={showChevron ? showChildrenList : undefined}
+                // Forced-state snapshot rows (matrix) are visual only: keep them out of
+                // the tab order so they never take real keyboard focus / a real focus ring.
+                tabIndex={hasForcedState ? -1 : undefined}
               >
                 <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
                 {isExpanded ? <span className={styles.primaryLabel}>{primaryLabel}</span> : null}
@@ -480,6 +485,10 @@ export function MainMenuLeft({
                       selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId;
 
                     const activateSecondary = () => {
+                      // Navigating to a secondary row makes it the current page, so
+                      // clear any stale primary selection (the parent still reads as
+                      // active via `hasSelectedSecondary`).
+                      setSelectedKey(null);
                       setSelectedSecondaryParentKey(itemId);
                       setSelectedSecondaryKey(childId);
                       onNavigate?.(
