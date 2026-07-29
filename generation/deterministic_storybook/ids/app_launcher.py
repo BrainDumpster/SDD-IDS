@@ -56,15 +56,29 @@ export const UsageMastheadAttached: Story = {{
 
 export const ComponentDetailMatrix: Story = {{
   render: () => (
-    <div style={{{{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}}}>
-      <{component_name} products={{products.slice(0, 1)}} />
-      <{component_name} products={{products.slice(0, 2)}} />
-      <{component_name} products={{products.slice(0, 3)}} />
-      <{component_name} products={{products}} />
+    <div style={{{{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16, alignItems: "start" }}}}>
+      <{component_name} products={{products.slice(0, 1)}} panelOnly />
+      <{component_name} products={{products.slice(0, 2)}} panelOnly />
+      <{component_name} products={{products.slice(0, 3)}} panelOnly />
+      <{component_name} products={{products}} panelOnly />
       <div style={{{{ gridColumn: "span 2" }}}}>
-        <{component_name} products={{[...products, ...products].map((p, i) => ({{ ...p, id: `${{p.id}}-${{i}}` }}))}} options={{optionsList}} />
+        <{component_name} products={{products}} options={{optionsList}} panelOnly />
       </div>
     </div>
+  ),
+}};
+
+export const OptionTextOverflow: Story = {{
+  render: () => (
+    <{component_name}
+      products={{products.slice(0, 2)}}
+      options={{[
+        {{ id: "o1", label: "Option" }},
+        {{ id: "o2", label: "This is a very long option label that truncates with an ellipsis instead of wrapping" }},
+        {{ id: "o3", label: "Option" }},
+      ]}}
+      panelOnly
+    />
   ),
 }};
 """

@@ -166,7 +166,7 @@ export function AppLauncherOptionsList({
                 className={styles.optionItem}
                 onClick={opt.onSelect}
               >
-                {opt.label}
+                <span className={styles.optionLabel}>{opt.label}</span>
               </button>
             </li>
           ))}
