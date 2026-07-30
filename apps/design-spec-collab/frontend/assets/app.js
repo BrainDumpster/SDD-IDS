@@ -31,6 +31,12 @@ const submitBtn = document.getElementById("submit-btn");
 const progress = document.getElementById("progress");
 const progressLabel = document.getElementById("progress-label");
 const progressBar = document.getElementById("progress-bar");
+const sessionBusyHint = document.getElementById("session-busy-hint");
+
+/** True while a collab job is packaging / awaiting client / reviewing. */
+let sessionInFlight = false;
+/** True while Preview or Start request is in-flight (progress UI). */
+let formRequestInFlight = false;
 
 const FIGMA_HOSTS = new Set(["figma.com", "www.figma.com"]);
 const FILE_KEY_RE = /\/(?:design|file|proto|board|slides)\/([a-zA-Z0-9]+)/i;
@@ -374,7 +380,9 @@ function resetResultsPanelForNewSession() {
   if (collabTranscriptEl) collabTranscriptEl.innerHTML = "";
   if (openSessionEl) {
     openSessionEl.href = "#";
+    openSessionEl.setAttribute("aria-disabled", "true");
   }
+  setSessionUrlActionsEnabled(false);
 
   specPreviewPanel?.classList.add("hidden");
   if (specPreviewMeta) specPreviewMeta.textContent = "";
@@ -428,6 +436,9 @@ function renderSessionPanel(job) {
       delete downloadEvidenceEl.dataset.jobId;
     }
   }
+
+  // Copy / Open only when a real session URL is ready (not during packaging).
+  setSessionUrlActionsEnabled(readyForClient);
 
   if (sessionReadyBanner) {
     if (collab === "packaging") {
@@ -557,6 +568,8 @@ function renderJobDone(job) {
 
 function renderJobRecord(job) {
   currentJobId = job.job_id || null;
+  sessionInFlight = isJobInFlight(job);
+  syncFormActionAvailability();
   const bits = [
     `status=${job.status}`,
     job.collab_status ? `collab=${job.collab_status}` : null,
@@ -566,12 +579,7 @@ function renderJobRecord(job) {
     job.claim_bound ? "claim=bound" : "claim=open",
   ].filter(Boolean);
   jobMeta.textContent = bits.join(" · ");
-  cancelJobBtn.disabled = !(
-    currentJobId &&
-    (job.status === "running" ||
-      job.status === "pending" ||
-      ["packaging", "awaiting_client", "reviewing"].includes(job.collab_status))
-  );
+  cancelJobBtn.disabled = !(currentJobId && sessionInFlight);
   if (resetClaimBtn) {
     resetClaimBtn.disabled = !(currentJobId && job.claim_bound);
   }
@@ -681,6 +689,7 @@ function pollJob(jobId) {
       renderJobRecord(job);
       if (["finished", "error", "cancelled"].includes(job.status)) {
         stopPolling();
+        sessionInFlight = false;
         // Keep results (PR / zip / spec / job-done) visible after completion.
         finishProgress(job.status === "finished", {
           clearIntakeForm: job.status === "finished",
@@ -689,12 +698,12 @@ function pollJob(jobId) {
           showError(job.error_message || "Agent job failed");
           // Keep form filled so the user can fix/retry; require re-confirm.
           confirmCheck.checked = false;
-          syncCreateJobEnabled();
+          syncFormActionAvailability();
         }
         if (job.status === "cancelled") {
           showError(job.error_message || "Agent cancelled");
           confirmCheck.checked = false;
-          syncCreateJobEnabled();
+          syncFormActionAvailability();
         }
       }
     } catch {
@@ -829,12 +838,12 @@ function syncInheritsUi() {
 let progressTimer = null;
 
 function startProgress(label) {
+  formRequestInFlight = true;
   progress.classList.remove("hidden");
   progress.setAttribute("aria-busy", "true");
   progressLabel.textContent = label;
   progressBar.style.width = "8%";
-  submitBtn.disabled = true;
-  createJobBtn.disabled = true;
+  syncFormActionAvailability();
   let pct = 8;
   clearInterval(progressTimer);
   progressTimer = setInterval(() => {
@@ -848,15 +857,14 @@ function finishProgress(ok, { clearIntakeForm = false } = {}) {
   progressBar.style.width = "100%";
   progressLabel.textContent = ok ? "Done" : "Stopped";
   progress.setAttribute("aria-busy", "false");
+  formRequestInFlight = false;
   setTimeout(() => {
     progress.classList.add("hidden");
     progressBar.style.width = "0%";
-    submitBtn.disabled = false;
     if (clearIntakeForm) {
       resetIntakeFormForNextJob();
-    } else {
-      syncCreateJobEnabled();
     }
+    syncFormActionAvailability();
   }, ok ? 350 : 150);
 }
 
@@ -895,13 +903,41 @@ function resetIntakeFormForNextJob() {
     }
   );
   syncProgrammeModeUi();
-  createJobBtn.disabled = true;
+  syncFormActionAvailability();
+}
+
+function isJobInFlight(job) {
+  if (!job) return false;
+  if (["pending", "running"].includes(job.status)) return true;
+  return ["packaging", "awaiting_client", "reviewing"].includes(job.collab_status);
+}
+
+function setSessionUrlActionsEnabled(enabled) {
+  if (copySessionUrlBtn) copySessionUrlBtn.disabled = !enabled;
+  if (copyClientPromptBtn) copyClientPromptBtn.disabled = !enabled;
+  if (openSessionEl) {
+    if (enabled && openSessionEl.href && !openSessionEl.href.endsWith("#")) {
+      openSessionEl.removeAttribute("aria-disabled");
+    } else {
+      openSessionEl.setAttribute("aria-disabled", "true");
+    }
+  }
+}
+
+function syncFormActionAvailability() {
+  const locked = sessionInFlight || formRequestInFlight;
+  if (submitBtn) submitBtn.disabled = locked;
+  if (sessionBusyHint) {
+    sessionBusyHint.hidden = !sessionInFlight;
+  }
+  syncCreateJobEnabled();
 }
 
 function syncCreateJobEnabled() {
   const ready = Boolean(lastPreview?.ready_for_agent);
   const confirmed = confirmCheck.checked;
-  createJobBtn.disabled = !(ready && confirmed && lastPayload);
+  const locked = sessionInFlight || formRequestInFlight;
+  createJobBtn.disabled = locked || !(ready && confirmed && lastPayload);
   confirmBlocked.hidden = ready;
   if (!ready && lastPreview) {
     const why =
@@ -1283,7 +1319,6 @@ createJobBtn.addEventListener("click", async () => {
   resetResultsPanelForNewSession();
 
   startProgress("Creating collab session + packaging Figma…");
-  createJobBtn.disabled = true;
   try {
     const res = await apiFetch("/api/v1/intake/jobs", {
       method: "POST",
@@ -1295,18 +1330,21 @@ createJobBtn.addEventListener("click", async () => {
       finishProgress(false);
       const detail = data.detail;
       showError(typeof detail === "string" ? detail : JSON.stringify(detail, null, 2));
-      createJobBtn.disabled = false;
       return;
     }
+    sessionInFlight = true;
+    syncFormActionAvailability();
     renderJobRecord(data);
     if (data.status === "running" || data.agent_started || data.session_url) {
-      progressLabel.textContent = "Collab session running… paste session URL into client";
+      progressLabel.textContent = "Collab session running… paste session URL into client when ready";
       pollJob(data.job_id);
       return;
     }
     if (data.status === "finished") {
+      sessionInFlight = false;
       finishProgress(true, { clearIntakeForm: true });
     } else {
+      sessionInFlight = false;
       finishProgress(false);
       if (data.status === "error") {
         showError(data.message || "Job failed to start");
@@ -1314,10 +1352,11 @@ createJobBtn.addEventListener("click", async () => {
       }
     }
   } catch (err) {
+    sessionInFlight = false;
     finishProgress(false);
     showError(String(err));
   } finally {
-    syncCreateJobEnabled();
+    syncFormActionAvailability();
   }
 });
 
@@ -1338,8 +1377,10 @@ cancelJobBtn.addEventListener("click", async () => {
     renderJobRecord(job);
     if (job.status === "cancelled") {
       stopPolling();
+      sessionInFlight = false;
       finishProgress(false);
       showError(job.error_message || "Agent cancelled");
+      syncFormActionAvailability();
     }
   } catch (err) {
     showError(String(err));
@@ -1362,6 +1403,7 @@ copyCheckoutBtn.addEventListener("click", async () => {
 });
 
 copySessionUrlBtn?.addEventListener("click", async () => {
+  if (copySessionUrlBtn.disabled) return;
   const text = sessionUrlEl?.value || "";
   if (!text || text.startsWith("(")) return;
   try {
@@ -1380,7 +1422,7 @@ copySessionUrlBtn?.addEventListener("click", async () => {
 });
 
 copyClientPromptBtn?.addEventListener("click", async () => {
-  if (!currentJobId) return;
+  if (copyClientPromptBtn.disabled || !currentJobId) return;
   try {
     const res = await apiFetch(`/api/v1/intake/jobs/${currentJobId}/client-prompt.md`);
     if (!res.ok) {

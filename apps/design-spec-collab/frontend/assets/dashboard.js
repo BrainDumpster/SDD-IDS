@@ -22,6 +22,41 @@
   let updLastPreview = null;
   let updJobId = null;
   let updPollTimer = null;
+  let updSessionInFlight = false;
+  let updRequestInFlight = false;
+
+  function isUpdJobInFlight(job) {
+    if (!job) return false;
+    if (["pending", "running"].includes(job.status)) return true;
+    return ["packaging", "awaiting_client", "reviewing"].includes(job.collab_status);
+  }
+
+  function setUpdSessionUrlActionsEnabled(enabled) {
+    const copyBtn = document.getElementById("upd-copy-session");
+    const promptBtn = document.getElementById("upd-copy-prompt");
+    if (copyBtn) copyBtn.disabled = !enabled;
+    if (promptBtn) promptBtn.disabled = !enabled;
+  }
+
+  function syncUpdFormActions() {
+    const locked = updSessionInFlight || updRequestInFlight;
+    const previewBtn = document.getElementById("upd-preview-btn");
+    const startBtn = document.getElementById("upd-start-btn");
+    const busyHint = document.getElementById("upd-session-busy-hint");
+    if (previewBtn) previewBtn.disabled = locked;
+    if (busyHint) busyHint.hidden = !updSessionInFlight;
+    const confirmed = document.getElementById("upd-confirm-check")?.checked;
+    if (startBtn) {
+      startBtn.disabled =
+        locked ||
+        !(
+          confirmed &&
+          updLastPayload &&
+          updLastPreview &&
+          updLastPreview.ready_for_agent
+        );
+    }
+  }
 
   function actorHeaders() {
     const h = {};
@@ -208,6 +243,8 @@
     if (bundleStatus) {
       bundleStatus.hidden = true;
       bundleStatus.textContent = "";
+      bundleStatus.classList.remove("is-busy", "is-ok", "is-error");
+      bundleStatus.innerHTML = "";
     }
   }
 
@@ -246,6 +283,22 @@
     )}&component=${encodeURIComponent(selectedComponent.slug)}`;
   });
 
+  function setBundleStatus(message, state) {
+    if (!bundleStatus) return;
+    bundleStatus.hidden = !message;
+    bundleStatus.classList.remove("is-busy", "is-ok", "is-error");
+    if (!message) {
+      bundleStatus.innerHTML = "";
+      return;
+    }
+    if (state) bundleStatus.classList.add(state);
+    if (state === "is-busy") {
+      bundleStatus.innerHTML = `<span class="spinner" aria-hidden="true"></span><span>${message}</span>`;
+    } else {
+      bundleStatus.textContent = message;
+    }
+  }
+
   if (btnBundle) {
     btnBundle.addEventListener("click", async (event) => {
       if (!selectedProgramme || !selectedComponent) {
@@ -262,10 +315,8 @@
       const filename =
         btnBundle.getAttribute("download") ||
         `${selectedProgramme.slug}-${selectedComponent.slug}-bundle.zip`;
-      if (bundleStatus) {
-        bundleStatus.hidden = false;
-        bundleStatus.textContent = "Building bundle…";
-      }
+      btnBundle.setAttribute("aria-disabled", "true");
+      setBundleStatus("Building portable bundle (specs, themes, Storybook, nested deps)…", "is-busy");
       try {
         const res = await apiFetch(url);
         if (!res.ok) {
@@ -289,13 +340,14 @@
         URL.revokeObjectURL(objectUrl);
         const nested = res.headers.get("X-Bundle-Nested-Count") || "0";
         const files = res.headers.get("X-Bundle-File-Count") || "?";
-        if (bundleStatus) {
-          bundleStatus.textContent = `Downloaded ${filename} (${files} files, ${nested} nested).`;
-        }
+        setBundleStatus(
+          `Downloaded ${filename} — ${files} files (${nested} nested components).`,
+          "is-ok"
+        );
       } catch (err) {
-        if (bundleStatus) {
-          bundleStatus.textContent = `Bundle failed: ${err.message || err}`;
-        }
+        setBundleStatus(`Bundle failed: ${err.message || err}`, "is-error");
+      } finally {
+        syncUpdateButton();
       }
     });
   }
@@ -365,17 +417,22 @@
   }
 
   function updStartProgress(label) {
+    updRequestInFlight = true;
     const p = document.getElementById("upd-progress");
     p.classList.remove("hidden");
     document.getElementById("upd-progress-label").textContent = label || "Working…";
+    syncUpdFormActions();
   }
 
   function updFinishProgress() {
+    updRequestInFlight = false;
     document.getElementById("upd-progress").classList.add("hidden");
+    syncUpdFormActions();
   }
 
   document.getElementById("update-form").addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (updSessionInFlight || updRequestInFlight) return;
     const payload = buildUpdatePayload();
     if (!payload) return;
     updStartProgress("Previewing update…");
@@ -422,7 +479,7 @@
       });
       document.getElementById("upd-confirm").classList.remove("hidden");
       document.getElementById("upd-confirm-check").checked = false;
-      document.getElementById("upd-start-btn").disabled = true;
+      syncUpdFormActions();
     } catch (err) {
       updFinishProgress();
       document.getElementById("upd-error").textContent = String(err);
@@ -430,28 +487,42 @@
     }
   });
 
-  document.getElementById("upd-confirm-check").addEventListener("change", (e) => {
-    document.getElementById("upd-start-btn").disabled = !(
-      e.target.checked &&
-      updLastPayload &&
-      updLastPreview &&
-      updLastPreview.ready_for_agent
-    );
+  document.getElementById("upd-confirm-check").addEventListener("change", () => {
+    syncUpdFormActions();
   });
 
   async function pollUpdateJob(jobId) {
     const res = await apiFetch(`/api/v1/intake/jobs/${jobId}`);
     const job = await res.json();
     if (!res.ok) return;
+    updSessionInFlight = isUpdJobInFlight(job);
+    syncUpdFormActions();
     const url = job.session_url || "";
-    if (url) {
-      document.getElementById("upd-session-panel").classList.remove("hidden");
+    const collab = job.collab_status || "";
+    const readyForClient =
+      Boolean(url) &&
+      !String(url).startsWith("(") &&
+      (collab === "awaiting_client" || collab === "reviewing" || collab === "done");
+    const panel = document.getElementById("upd-session-panel");
+    const banner = document.getElementById("upd-session-ready");
+    if (url || collab === "packaging" || job.status === "running") {
+      panel.classList.remove("hidden");
+    }
+    if (url && !String(url).startsWith("(")) {
       document.getElementById("upd-session-url").value = url;
-      const banner = document.getElementById("upd-session-ready");
-      if (job.collab_status === "awaiting_client") {
-        banner.textContent = "Session ready — paste URL into client agent.";
-        banner.classList.remove("hidden");
-      }
+    } else if (collab === "packaging" || job.status === "running") {
+      document.getElementById("upd-session-url").value =
+        "(packaging… session URL appears when ready)";
+    }
+    setUpdSessionUrlActionsEnabled(readyForClient);
+    if (collab === "packaging") {
+      banner.textContent =
+        "Packaging Figma evidence on the server… Session URL will be ready next.";
+      banner.classList.remove("hidden");
+      banner.classList.add("is-packing");
+    } else if (readyForClient && collab === "awaiting_client") {
+      banner.textContent = "Session ready — paste URL into client agent.";
+      banner.classList.remove("hidden", "is-packing");
     }
     const ol = document.getElementById("upd-transcript");
     ol.innerHTML = "";
@@ -463,6 +534,7 @@
     if (job.status === "finished" || job.collab_status === "done") {
       clearInterval(updPollTimer);
       updPollTimer = null;
+      updSessionInFlight = false;
       document.getElementById("upd-job-done").classList.remove("hidden");
       document.getElementById("upd-job-done-message").textContent =
         job.result_summary || "Accepted.";
@@ -475,23 +547,28 @@
       zip.href = `/api/v1/intake/jobs/${jobId}/artifacts.zip`;
       zip.classList.remove("hidden");
       document.getElementById("upd-cancel-btn").disabled = true;
+      setUpdSessionUrlActionsEnabled(true);
       updFinishProgress();
     } else if (job.status === "error" || job.collab_status === "failed") {
       clearInterval(updPollTimer);
       updPollTimer = null;
+      updSessionInFlight = false;
       document.getElementById("upd-error").textContent =
         job.error_message || "Update session failed";
       document.getElementById("upd-error").classList.remove("hidden");
       document.getElementById("upd-cancel-btn").disabled = true;
+      setUpdSessionUrlActionsEnabled(false);
       updFinishProgress();
+    } else {
+      document.getElementById("upd-cancel-btn").disabled = !updSessionInFlight;
     }
   }
 
   document.getElementById("upd-start-btn").addEventListener("click", async () => {
     if (!updLastPayload || !document.getElementById("upd-confirm-check").checked)
       return;
+    if (updSessionInFlight || updRequestInFlight) return;
     updStartProgress("Creating update session + packaging Figma…");
-    document.getElementById("upd-start-btn").disabled = true;
     try {
       const res = await apiFetch("/api/v1/update/jobs", {
         method: "POST",
@@ -504,33 +581,39 @@
         document.getElementById("upd-error").textContent =
           typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail);
         document.getElementById("upd-error").classList.remove("hidden");
-        document.getElementById("upd-start-btn").disabled = false;
         return;
       }
       updJobId = data.job_id;
+      updSessionInFlight = true;
+      syncUpdFormActions();
       document.getElementById("upd-cancel-btn").disabled = false;
       document.getElementById("upd-session-panel").classList.remove("hidden");
-      if (data.session_url) {
+      setUpdSessionUrlActionsEnabled(false);
+      if (data.session_url && !String(data.session_url).startsWith("(")) {
         document.getElementById("upd-session-url").value = data.session_url;
+      } else {
+        document.getElementById("upd-session-url").value =
+          "(packaging… session URL appears when ready)";
       }
       if (updPollTimer) clearInterval(updPollTimer);
       updPollTimer = setInterval(() => pollUpdateJob(updJobId), 2000);
       pollUpdateJob(updJobId);
     } catch (err) {
+      updSessionInFlight = false;
       updFinishProgress();
       document.getElementById("upd-error").textContent = String(err);
       document.getElementById("upd-error").classList.remove("hidden");
-      document.getElementById("upd-start-btn").disabled = false;
     }
   });
 
   document.getElementById("upd-copy-session").addEventListener("click", async () => {
+    const btn = document.getElementById("upd-copy-session");
+    if (btn.disabled) return;
     const input = document.getElementById("upd-session-url");
     const v = input.value;
-    if (!v) return;
+    if (!v || String(v).startsWith("(")) return;
     try {
       await copyTextToClipboard(v);
-      const btn = document.getElementById("upd-copy-session");
       btn.textContent = "Copied";
       setTimeout(() => {
         btn.textContent = "Copy URL";
@@ -544,7 +627,8 @@
   });
 
   document.getElementById("upd-copy-prompt")?.addEventListener("click", async () => {
-    if (!updJobId) return;
+    const promptBtn = document.getElementById("upd-copy-prompt");
+    if (promptBtn?.disabled || !updJobId) return;
     const btn = document.getElementById("upd-copy-prompt");
     try {
       const res = await apiFetch(`/api/v1/intake/jobs/${updJobId}/client-prompt.md`);
@@ -573,7 +657,11 @@
     if (!updJobId) return;
     await apiFetch(`/api/v1/intake/jobs/${updJobId}/cancel`, { method: "POST" });
     if (updPollTimer) clearInterval(updPollTimer);
+    updPollTimer = null;
+    updSessionInFlight = false;
     document.getElementById("upd-cancel-btn").disabled = true;
+    setUpdSessionUrlActionsEnabled(false);
+    updFinishProgress();
   });
 
   // boot

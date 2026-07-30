@@ -49,7 +49,7 @@
                 Or generate a new spec anytime.
               </p>
             </div>
-            <a class="button" href="#/generate" id="btn-generate-spec">Generate Spec</a>
+            <a class="button primary" href="#/generate" id="btn-generate-spec">Generate Spec</a>
           </div>
           <p id="catalogue-status" class="hint" aria-live="polite">Loading catalogue…</p>
         </div>
@@ -70,17 +70,17 @@
           <div class="dashboard-action-buttons">
             <a
               id="btn-download-bundle"
-              class="button secondary"
+              class="button primary"
               href="#"
               download
               aria-disabled="true"
               tabindex="-1"
               >Download bundle</a
             >
-            <button type="button" id="btn-update-spec" class="button" disabled>Update</button>
+            <button type="button" id="btn-update-spec" class="button secondary" disabled>Update</button>
           </div>
         </div>
-        <p id="bundle-status" class="hint" aria-live="polite" hidden></p>
+        <div id="bundle-status" class="bundle-status" role="status" aria-live="polite" hidden></div>
       </section>
 
       <!-- GENERATE -->
@@ -230,6 +230,9 @@
                 <button type="button" id="cancel-job" class="danger" disabled>Cancel session</button>
                 <button type="button" id="reset-claim" class="secondary" disabled>Reset client claim</button>
               </div>
+              <p id="session-busy-hint" class="session-busy-hint hint" hidden>
+                A session is in progress. Cancel it or wait until it finishes before previewing or starting another.
+              </p>
             </form>
 
             <section id="confirm" class="card hidden" aria-live="polite">
@@ -271,10 +274,10 @@
               <p class="hint">Copy into the client agent. Figma is already packaged on the server.</p>
               <div class="actions">
                 <input id="session-url" readonly class="session-url-input" />
-                <button type="button" id="copy-session-url" class="secondary">Copy session URL</button>
-                <button type="button" id="copy-client-prompt" class="secondary">Copy client prompt</button>
+                <button type="button" id="copy-session-url" class="secondary" disabled>Copy session URL</button>
+                <button type="button" id="copy-client-prompt" class="secondary" disabled>Copy client prompt</button>
                 <button type="button" id="download-evidence" class="secondary hidden">Download evidence</button>
-                <a id="open-session" class="button secondary" href="#" target="_blank" rel="noopener">Open</a>
+                <a id="open-session" class="button secondary" href="#" target="_blank" rel="noopener" aria-disabled="true">Open</a>
               </div>
               <h3>Transcript</h3>
               <ol id="collab-transcript" class="collab-transcript"></ol>
@@ -382,6 +385,9 @@
                 <button type="button" id="upd-start-btn" class="secondary" disabled>Start session</button>
                 <button type="button" id="upd-cancel-btn" class="danger" disabled>Cancel session</button>
               </div>
+              <p id="upd-session-busy-hint" class="session-busy-hint hint" hidden>
+                A session is in progress. Cancel it or wait until it finishes before previewing or starting another.
+              </p>
             </form>
 
             <section id="upd-confirm" class="card hidden">
@@ -404,8 +410,8 @@
               <p id="upd-session-ready" class="session-ready-banner hidden"></p>
               <div class="actions">
                 <input id="upd-session-url" readonly class="session-url-input" />
-                <button type="button" id="upd-copy-session" class="secondary">Copy URL</button>
-                <button type="button" id="upd-copy-prompt" class="secondary">Copy client prompt</button>
+                <button type="button" id="upd-copy-session" class="secondary" disabled>Copy URL</button>
+                <button type="button" id="upd-copy-prompt" class="secondary" disabled>Copy client prompt</button>
               </div>
               <ol id="upd-transcript" class="collab-transcript"></ol>
             </section>
