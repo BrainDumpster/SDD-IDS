@@ -85,6 +85,27 @@ cd backend
 
 Open http://127.0.0.1:8091 — dashboard → Generate or Update → preview → confirm → **Start session** → **Copy session URL**.
 
+### Stop the server
+
+**Local uvicorn (CLI):** in the terminal where the server is running, press **Ctrl+C** (uvicorn prints `Press CTRL+C to quit`).
+
+If that terminal is gone or Ctrl+C does not stop it:
+
+```bash
+# Find and stop whatever is listening on 8091
+lsof -t -i:8091 | xargs -r kill
+# If it still hangs:
+lsof -t -i:8091 | xargs -r kill -9
+```
+
+**Docker Compose:**
+
+```bash
+cd apps/design-spec-collab && docker compose down
+# Deploy compose file on a server:
+# docker compose -f docker-compose.deploy.yml down
+```
+
 ### Real PR
 
 In `.env`:
@@ -125,8 +146,10 @@ operator UI ← optional SSE /events (progress only)
 
 - `GET /api/v1/update/programmes`
 - `GET /api/v1/update/programmes/{programme}/components`
+- `GET /api/v1/update/programmes/{programme}/components/{slug}/bundle.zip` — download a **portable handoff zip** for an existing catalogue component (no collab session required). Includes design-spec source-of-truth files (themes, root-specs, nested composition dependency specs), Spec Accurate Design stories under `storybook-generated/`, Storybook reference sources when present, referenced icons, and `HANDOFF_MANIFEST.json`. Nested deps are resolved from path links in specs/maps (e.g. checkbox referenced by dropdown-multiselect). **IDS-fork / inherited deltas** also pull the baseline source component (`idsBaselineSpecPath`) with its supporting files, examples, `components/ids/root-spec.md`, and `ids-theme.css` alongside the programme delta + programme theme/root-spec.
 - Default source: local `components/*/…/design-spec.md` (set `CATALOGUE_SOURCE=github` to force GitHub tree).
 - Map enrichment from `data/*-component-figma-map.json` / yaml `figma_map_path`.
+- Dashboard home: after selecting programme + component, use **Download bundle** (next to **Update**).
 
 ### Fidelity / robustness
 

@@ -66,9 +66,21 @@
         </div>
 
         <div class="dashboard-actions card">
-          <div id="selected-component-meta" class="hint">Select a programme and component to enable Update.</div>
-          <button type="button" id="btn-update-spec" class="button" disabled>Update</button>
+          <div id="selected-component-meta" class="hint">Select a programme and component to enable Update or Download bundle.</div>
+          <div class="dashboard-action-buttons">
+            <a
+              id="btn-download-bundle"
+              class="button secondary"
+              href="#"
+              download
+              aria-disabled="true"
+              tabindex="-1"
+              >Download bundle</a
+            >
+            <button type="button" id="btn-update-spec" class="button" disabled>Update</button>
+          </div>
         </div>
+        <p id="bundle-status" class="hint" aria-live="polite" hidden></p>
       </section>
 
       <!-- GENERATE -->

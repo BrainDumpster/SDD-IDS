@@ -7,7 +7,9 @@
   const viewUpdate = document.getElementById("view-update");
   const catalogueStatus = document.getElementById("catalogue-status");
   const btnUpdate = document.getElementById("btn-update-spec");
+  const btnBundle = document.getElementById("btn-download-bundle");
   const selectedMeta = document.getElementById("selected-component-meta");
+  const bundleStatus = document.getElementById("bundle-status");
 
   let programmes = [];
   let components = [];
@@ -173,11 +175,39 @@
   }
 
   function syncUpdateButton() {
-    btnUpdate.disabled = !(selectedProgramme && selectedComponent);
-    if (selectedProgramme && selectedComponent) {
+    const ready = !!(selectedProgramme && selectedComponent);
+    btnUpdate.disabled = !ready;
+    if (btnBundle) {
+      if (ready) {
+        const prog = selectedProgramme.slug;
+        const slug = selectedComponent.slug;
+        btnBundle.href = `/api/v1/update/programmes/${encodeURIComponent(
+          prog
+        )}/components/${encodeURIComponent(slug)}/bundle.zip`;
+        btnBundle.setAttribute(
+          "download",
+          `${prog}-${slug}-bundle.zip`
+        );
+        btnBundle.removeAttribute("aria-disabled");
+        btnBundle.removeAttribute("tabindex");
+      } else {
+        btnBundle.href = "#";
+        btnBundle.removeAttribute("download");
+        btnBundle.setAttribute("aria-disabled", "true");
+        btnBundle.setAttribute("tabindex", "-1");
+      }
+    }
+    if (ready) {
       selectedMeta.textContent = `${selectedComponent.displayName} · ${selectedComponent.designSpecPath}${
         selectedComponent.mapEntryFound ? "" : " · ⚠ no map entry"
-      }`;
+      }${selectedComponent.hasStorybook ? " · Storybook" : ""}`;
+    } else if (selectedMeta) {
+      selectedMeta.textContent =
+        "Select a programme and component to enable Update or Download bundle.";
+    }
+    if (bundleStatus) {
+      bundleStatus.hidden = true;
+      bundleStatus.textContent = "";
     }
   }
 
@@ -215,6 +245,60 @@
       selectedProgramme.slug
     )}&component=${encodeURIComponent(selectedComponent.slug)}`;
   });
+
+  if (btnBundle) {
+    btnBundle.addEventListener("click", async (event) => {
+      if (!selectedProgramme || !selectedComponent) {
+        event.preventDefault();
+        return;
+      }
+      if (btnBundle.getAttribute("aria-disabled") === "true") {
+        event.preventDefault();
+        return;
+      }
+      // Prefer fetch so we can surface API errors; fall back to navigation.
+      event.preventDefault();
+      const url = btnBundle.href;
+      const filename =
+        btnBundle.getAttribute("download") ||
+        `${selectedProgramme.slug}-${selectedComponent.slug}-bundle.zip`;
+      if (bundleStatus) {
+        bundleStatus.hidden = false;
+        bundleStatus.textContent = "Building bundle…";
+      }
+      try {
+        const res = await apiFetch(url);
+        if (!res.ok) {
+          let detail = res.statusText;
+          try {
+            const body = await res.json();
+            detail = body.detail || detail;
+          } catch {
+            /* ignore */
+          }
+          throw new Error(detail || `HTTP ${res.status}`);
+        }
+        const blob = await res.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(objectUrl);
+        const nested = res.headers.get("X-Bundle-Nested-Count") || "0";
+        const files = res.headers.get("X-Bundle-File-Count") || "?";
+        if (bundleStatus) {
+          bundleStatus.textContent = `Downloaded ${filename} (${files} files, ${nested} nested).`;
+        }
+      } catch (err) {
+        if (bundleStatus) {
+          bundleStatus.textContent = `Bundle failed: ${err.message || err}`;
+        }
+      }
+    });
+  }
 
   /* ——— Update page ——— */
 

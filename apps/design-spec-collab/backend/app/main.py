@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .artifacts import build_artifacts_zip
 from .collab_prompt import apply_collab_figma_overrides
+from .component_bundle import build_component_bundle_zip
 from .config import settings
 from .figma_mcp_client import figma_mcp_public_contract, mcp_configured
 from .github_catalog import list_update_components, list_update_programmes
@@ -277,6 +278,66 @@ def update_programme_components(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     data["actor"] = actor
     return data
+
+
+@app.get("/api/v1/update/programmes/{programme}/components/{slug}/bundle.zip")
+def download_component_bundle(
+    programme: str,
+    slug: str,
+    actor: str = Depends(_actor_dep),
+) -> Response:
+    """Zip source-of-truth specs + Storybook examples (including nested deps)."""
+    try:
+        # Confirm the component exists in the catalogue when possible
+        catalogue = list_update_components(programme)
+        known = {
+            str(c.get("slug") or "").lower()
+            for c in (catalogue.get("components") or [])
+            if isinstance(c, dict)
+        }
+        if known and slug.lower() not in known:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Component '{slug}' not found for programme '{programme}'",
+            )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    try:
+        data, summary = build_component_bundle_zip(programme, slug)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ImportError as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Bundle packager unavailable: {exc}",
+        ) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to build component bundle: {exc}",
+        ) from exc
+
+    audit_log.write(
+        "component_bundle_download",
+        actor=actor,
+        detail={
+            "programme": summary.get("programme"),
+            "slug": summary.get("slug"),
+            "fileCount": summary.get("fileCount"),
+            "nestedSlugs": summary.get("nestedSlugs"),
+        },
+    )
+    filename = f"{programme.strip().lower()}-{slug.strip()}-bundle.zip"
+    return Response(
+        content=data,
+        media_type="application/zip",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "X-Bundle-File-Count": str(summary.get("fileCount") or 0),
+            "X-Bundle-Nested-Count": str(len(summary.get("nestedSlugs") or [])),
+        },
+    )
 
 
 @app.post("/api/v1/update/preview")
