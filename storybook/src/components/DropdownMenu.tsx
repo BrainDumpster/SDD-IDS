@@ -213,7 +213,7 @@ export function DropdownMenu({
                           <Icon
                             shapeName="shape-x-thick"
                             className={styles.searchClearIcon}
-                            color="var(--color-icon-accessible)"
+                            color="var(--color-icon-gray-neutral-accessible)"
                             style={{ width: 10, height: 10 }}
                           />
                         </button>
@@ -284,7 +284,7 @@ export function DropdownMenu({
                     <Icon
                       shapeName="shape-x-thick"
                       className={styles.showSelectedClearIcon}
-                      color="var(--color-icon-accessible)"
+                      color="var(--color-icon-gray-neutral-accessible)"
                       style={{ width: 10, height: 10 }}
                     />
                   </button>

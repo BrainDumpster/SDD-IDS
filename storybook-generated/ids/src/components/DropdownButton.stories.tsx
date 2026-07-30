@@ -105,9 +105,9 @@ function DropdownButton({
                   d="M0,6h32L16,26L0,6z"
                   fill={
                     disabled
-                      ? "var(--color-icon-disabled, #757575)"
+                      ? "var(--color-icon-gray-disabled, #757575)"
                       : buttonStyle === "primary"
-                      ? "var(--color-icon-white, #ffffff)"
+                      ? "var(--color-icon-gray-white, #ffffff)"
                       : "var(--color-icon-brand-base, #0672cb)"
                   }
                 />
@@ -134,8 +134,8 @@ function DropdownButton({
               top: "100%",
               left: 0,
               marginTop: "0px",
-              backgroundColor: "var(--color-background-component, white)",
-              border: "1px solid var(--color-border-accessible, #757575)",
+              backgroundColor: "var(--color-background-surface-component, white)",
+              border: "1px solid var(--color-border-gray-neutral-base, #757575)",
               borderRadius: "2px",
               boxShadow: "var(--shadow-shadow-4)",
               minWidth: "269px",
@@ -154,11 +154,11 @@ function DropdownButton({
                   backgroundColor:
                     hoveredItem === item.id || selectedItem?.id === item.id
                       ? "var(--color-background-gray-lighter, #f4f4f4)"
-                      : "var(--color-background-component, white)",
+                      : "var(--color-background-surface-component, white)",
                   color:
                     hoveredItem === item.id || selectedItem?.id === item.id
                       ? "var(--color-text-brand-strong, #055fa9)"
-                      : "var(--color-text-neutral, #4d4d4d)",
+                      : "var(--color-text-gray-neutral, #4d4d4d)",
                   cursor: item.disabled ? "not-allowed" : "pointer",
                   opacity: item.disabled ? 0.5 : 1,
                   fontSize: "14px",

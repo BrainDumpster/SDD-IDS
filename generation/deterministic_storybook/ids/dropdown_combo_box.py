@@ -45,9 +45,9 @@ function Trigger({{ value, placeholder = "Select product" }}: {{ value?: string;
       style={{{{
         width: "100%",
         padding: "10px 16px",
-        border: "1px solid var(--color-border-accessible)",
-        background: "var(--color-background-component)",
-        color: "var(--color-text-neutral)",
+        border: "1px solid var(--color-border-gray-neutral-base)",
+        background: "var(--color-background-surface-component)",
+        color: "var(--color-text-gray-neutral)",
         boxSizing: "border-box",
         whiteSpace: "nowrap",
         overflow: "hidden",

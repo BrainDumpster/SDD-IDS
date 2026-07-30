@@ -106,7 +106,7 @@ const meta: Meta<typeof {component_name}> = {{
           `Spec-driven IDS Card. Source: \\`${{DESIGN_SPEC_PATH}}\\`.`,
           "Figma `Card-Main` variants: Show Buttons × Show Overflow menu.",
           "Border & divider contract: `--card-border-color` cascade + `showDivider` (see design-spec).",
-          "CardBody fill is `var(--color-background-surface-2)` (Figma Card Content `14978:28002`).",
+          "CardBody fill is `var(--color-background-surface-secondary)` (Figma Card Content `14978:28002`).",
           "Kebab opens a per-card Dropdown via `menuOptions`.",
         ].join(" "),
       }},
@@ -317,11 +317,11 @@ export const WithAdditionalFilter: Story = {{
           fontFamily: "inherit",
           fontSize: "var(--font-size-body-2)",
           lineHeight: "var(--font-line-height-line-height-20)",
-          color: "var(--color-text-neutral-strong)",
-          border: "1px solid var(--color-border-accessible)",
+          color: "var(--color-text-gray-neutral-strong)",
+          border: "1px solid var(--color-border-gray-neutral-base)",
           borderRadius: "var(--corner-radius-radius-2)",
           padding: "var(--padding-padding-8) var(--padding-padding-16)",
-          background: "var(--color-background-surface-2)",
+          background: "var(--color-background-surface-secondary)",
         }}}}
       >
         <option value="all">All</option>

@@ -45,7 +45,7 @@ def generate_ids_toast_story(
         {
             "rootBorderRadius": "--corner-radius-radius-8",
             "rootBackground": "--color-static-gray-900",
-            "rootBorderColor": "--color-border-white",
+            "rootBorderColor": "--color-border-gray-white",
             "rootRowGap": "--spacing-space-32",
             "contentGap": "--spacing-space-8",
             "actionGap": "--spacing-space-24",

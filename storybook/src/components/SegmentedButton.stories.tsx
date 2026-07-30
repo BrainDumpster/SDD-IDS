@@ -33,7 +33,7 @@ const matrixRow: CSSProperties = {
 const matrixHeading: CSSProperties = {
   fontSize: 12,
   fontWeight: 600,
-  color: "var(--color-text-neutral-strong)",
+  color: "var(--color-text-gray-neutral-strong)",
   textTransform: "uppercase",
   letterSpacing: "0.04em",
 };
@@ -47,7 +47,7 @@ const matrixColumns: CSSProperties = {
 
 const matrixCellLabel: CSSProperties = {
   fontSize: 11,
-  color: "var(--color-text-neutral)",
+  color: "var(--color-text-gray-neutral)",
   marginBottom: 6,
 };
 
@@ -84,7 +84,7 @@ const stateColumns: { label: string; simulatedState?: SimulatedState }[] = [
 function StateMatrixTextDemo() {
   return (
     <div style={matrixWrap}>
-      <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+      <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
         Figma text option component (node 9015:20992). Focus column uses{" "}
         <code>simulatedState</code>; hover/press columns are pinned for QA.
       </div>

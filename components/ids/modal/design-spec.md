@@ -81,7 +81,7 @@ IdsModal [scenario=single-page, open, size=medium (runtime width host-driven)]
 - **Action gap:** `12px` between footer buttons.
 - **Header control icon size:** `16x16` (`Modal / ctrl-close-16`, optional full-screen icon).
 - **Close icon size:** `16x16`.
-- **Border:** `1px` solid `var(--color-border-accessible)`.
+- **Border:** `1px` solid `var(--color-border-gray-neutral-base)`.
 - **Corner radius:** `var(--modal-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - **Elevation:** layered drop shadow: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
 - **Typography:**
@@ -96,16 +96,16 @@ Programmes override these **same alias names** in programme theme CSS. Component
 |---|---|
 | `--modal-control-radius` | `var(--corner-radius-radius-none)` |
 
-- **Surface:** `var(--color-background-component)`, `var(--color-border-accessible)`
-- **Text:** `var(--color-text-neutral-strong)` (title), `var(--color-text-neutral)` (body), `var(--color-text-brand-strong)` (tertiary action)
-- **Icons:** `var(--color-icon-neutral)` (close), severity icons:
-  - Critical/Destructive: `var(--color-icon-alerting-critical)`
-  - Warning: `var(--color-icon-alerting-minor)`
-  - Major: `var(--color-icon-alerting-major)`
-  - Informational: `var(--color-icon-alerting-info)`
+- **Surface:** `var(--color-background-surface-component)`, `var(--color-border-gray-neutral-base)`
+- **Text:** `var(--color-text-gray-neutral-strong)` (title), `var(--color-text-gray-neutral)` (body), `var(--color-text-brand-strong)` (tertiary action)
+- **Icons:** `var(--color-icon-gray-neutral-base)` (close), severity icons:
+  - Critical/Destructive: `var(--color-icon-alerting-critical-base)`
+  - Warning: `var(--color-icon-alerting-minor-base)`
+  - Major: `var(--color-icon-alerting-major-base)`
+  - Informational: `var(--color-icon-alerting-info-base)`
 - **Buttons:**
-  - Primary: `var(--color-background-controls-brand-base)` + `var(--color-text-white)`
-  - Destructive primary: `var(--color-background-alerting-critical)` + `var(--color-text-white)`
+  - Primary: `var(--color-background-controls-base)` + `var(--color-text-gray-white)`
+  - Destructive primary: `var(--color-background-alerting-critical-base)` + `var(--color-text-gray-white)`
 - **Backdrop:** `var(--color-background-overlay-1)` (runtime token-backed overlay)
 
 ### Alerting icon asset mapping (Figma verified)
@@ -117,8 +117,8 @@ Programmes override these **same alias names** in programme theme CSS. Component
 ## States (Light Theme)
 | Scenario | Surface | Header/Tabs | Content | Footer |
 |---|---|---|---|---|
-| Single-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | Header only (no tabs) | single content panel | footer actions, optional checkbox |
-| Multi-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | Header + tabs (`active` top indicator + divider borders) | page panel changes by selected tab/page | footer actions, optional checkbox |
+| Single-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | Header only (no tabs) | single content panel | footer actions, optional checkbox |
+| Multi-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | Header + tabs (`active` top indicator + divider borders) | page panel changes by selected tab/page | footer actions, optional checkbox |
 | Dialog (non-alerting/informational) | same modal shell | title + optional severity icon | message + optional content | one-button or two-button by type |
 | Dialog (warning/major/critical/destructive) | same modal shell | title + severity icon | message + optional confirm input (destructive) | two-button footer; destructive primary for destructive |
 ## States (Dark Theme)
@@ -126,8 +126,8 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 
 | Scenario | Surface | Header/Tabs | Content | Footer |
 |---|---|---|---|---|
-| Single-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | header only | single content panel | actions + optional checkbox |
-| Multi-Page | `var(--color-background-component)` + `var(--color-border-accessible)` | header + tabs (tokenized active/inactive states) | page panel switched by navigation | actions + optional checkbox |
+| Single-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | header only | single content panel | actions + optional checkbox |
+| Multi-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | header + tabs (tokenized active/inactive states) | page panel switched by navigation | actions + optional checkbox |
 | Dialog | tokenized dialog shell and severity icon mappings from dialog matrix | title/icon | message/content | type-based action model |
 ## Interactions
 - **Open:** by trigger or controlled `open=true`.

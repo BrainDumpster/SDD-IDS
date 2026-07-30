@@ -40,32 +40,32 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
   - `Body 2` (`14/20`) for tab labels.
   - `Body 1` (`16/24`) for section headings/examples.
 - **Tab shell**
-  - `var(--color-background-surface-2)` (white host / tab background)
-  - `var(--color-border-accessible)` (default divider/baseline)
+  - `var(--color-background-surface-secondary)` (white host / tab background)
+  - `var(--color-border-gray-neutral-base)` (default divider/baseline)
   - `var(--color-border-brand-base)` (focus ring)
-  - `var(--color-border-brand-dark)` (selected indicator)
+  - `var(--color-border-brand-strong)` (selected indicator)
 - **State backgrounds**
-  - `var(--color-background-brand-lighter)` (hover unselected)
-  - `var(--color-background-brand-light)` (press unselected)
+  - `var(--color-background-brand-lighter-slate)` (hover unselected)
+  - `var(--color-background-brand-light-slate)` (press unselected)
 - **Label text**
-  - `var(--color-text-neutral)` (unselected default/focus)
-  - `var(--color-text-neutral-strong)` (hover unselected)
+  - `var(--color-text-gray-neutral)` (unselected default/focus)
+  - `var(--color-text-gray-neutral-strong)` (hover unselected)
   - `var(--color-text-brand-strong)` (selected)
 - **Badges/alerts**
-  - `var(--color-background-alerting-critical)` for alert badge background
-  - `var(--color-text-white)` for badge text
+  - `var(--color-background-alerting-critical-base)` for alert badge background
+  - `var(--color-text-gray-white)` for badge text
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Primary | Selected | host-dependent (`transparent` or `var(--color-background-surface-2)`) | side divider `var(--color-border-accessible)` + top indicator `2px var(--color-border-brand-dark)` | `var(--color-text-brand-strong)` |
-| Primary | Unselected Default | host-dependent | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Primary | Unselected Hover | `var(--color-background-brand-lighter)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` |
-| Primary | Unselected Press | `var(--color-background-brand-light)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
+| Primary | Selected | host-dependent (`transparent` or `var(--color-background-surface-secondary)`) | side divider `var(--color-border-gray-neutral-base)` + top indicator `2px var(--color-border-brand-strong)` | `var(--color-text-brand-strong)` |
+| Primary | Unselected Default | host-dependent | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Primary | Unselected Hover | `var(--color-background-brand-lighter-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` |
+| Primary | Unselected Press | `var(--color-background-brand-light-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-brand-strong)` |
 | Primary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
-| Secondary | Selected | host-dependent (`transparent` or `var(--color-background-surface-2)`) | bottom indicator `2px var(--color-border-brand-dark)` | `var(--color-text-brand-strong)` |
-| Secondary | Unselected Default | host-dependent | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Secondary | Unselected Hover | `var(--color-background-brand-lighter)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` |
-| Secondary | Unselected Press | `var(--color-background-brand-light)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
+| Secondary | Selected | host-dependent (`transparent` or `var(--color-background-surface-secondary)`) | bottom indicator `2px var(--color-border-brand-strong)` | `var(--color-text-brand-strong)` |
+| Secondary | Unselected Default | host-dependent | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Secondary | Unselected Hover | `var(--color-background-brand-lighter-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` |
+| Secondary | Unselected Press | `var(--color-background-brand-light-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-brand-strong)` |
 | Secondary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
 ## States (Dark Theme)
 Dark mode follows the exact same structural matrix and interaction semantics as Light mode, with all visual values resolved via semantic tokens and no hardcoded hex values.

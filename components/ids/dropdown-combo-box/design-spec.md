@@ -44,20 +44,20 @@
   - popup opens attached below trigger (`top: fieldHeight - 1px` visual alignment).
   - border `1px`, drop shadow uses IDS shadow tokens.
   - search row wrapper padding: `var(--padding-padding-8)`.
-  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
+  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
   - option row padding: `var(--padding-padding-10) var(--padding-padding-16)`.
 - Multi-select summary selection element (Figma `12730:120314` collapsed, `12730:120315` expanded):
   - panel padding: `var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0`; expanded bottom `var(--padding-padding-16)`.
   - header row: full width, `justify-content: space-between`, inner right inset `var(--padding-padding-8)`.
   - toggle label (`Show Selected` / `Hide Selected`): `var(--color-text-brand-strong)`, toggle padding `var(--padding-padding-2) var(--padding-padding-16)`.
   - caret (`arrow-drop-tri-caret`, Figma `9662:26612`): **10×10px** frame, `var(--color-icon-brand-base)`.
-  - row dismiss (`.Tag-Element-Close` / `shape-x-thick`, Figma `11666:90408`): **10×10px** frame, `var(--color-icon-accessible)`, **right-aligned** in header row.
+  - row dismiss (`.Tag-Element-Close` / `shape-x-thick`, Figma `11666:90408`): **10×10px** frame, `var(--color-icon-gray-neutral-accessible)`, **right-aligned** in header row.
   - expanded tag wrap: `gap: var(--spacing-space-4)`, padding `var(--spacing-space-8) var(--padding-padding-8) 0 var(--padding-padding-16)`.
   - dismissible tags use IDS Tag large editable geometry (`components/ids/tag/design-spec.md`).
   - selected-count badge follows IDS badge geometry (`18px` height, pill radius).
 - Search dismiss control:
   - visible when query length `> 0`; right-aligned inside search field row.
-  - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-accessible)`.
+  - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-gray-neutral-accessible)`.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -77,29 +77,29 @@
 
 ## Tokens
 - **Core field tokens**
-  - `var(--color-background-component)`
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-border-accessible)`
-  - `var(--color-border-strong)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
+  - `var(--color-border-gray-neutral-base)`
+  - `var(--color-border-gray-neutral-strong)`
   - `var(--color-border-brand-base)`
-  - `var(--color-text-disabled)`
+  - `var(--color-text-gray-disabled)`
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-lighter)`
 - **Interactive/selection tokens**
-  - `var(--color-background-brand-lighter)`
+  - `var(--color-background-brand-lighter-slate)`
   - `var(--color-text-brand-strong)`
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-border-transparent-brand)`
-  - `var(--color-text-white)`
+  - `var(--color-background-controls-base)`
+  - `var(--color-border-brand-transparent-brand)`
+  - `var(--color-text-gray-white)`
 - **Error tokens**
   - `var(--color-border-alerting-critical-base)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-text-critical)`
+  - `var(--color-icon-alerting-critical-base)`
+  - `var(--color-text-alerting-critical-base)`
 - **Icon tokens**
-  - `var(--color-icon-accessible)`
+  - `var(--color-icon-gray-neutral-accessible)`
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-white)`
+  - `var(--color-icon-gray-white)`
 - **Shape/space tokens**
   - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
@@ -111,17 +111,17 @@
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Field container | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` + `var(--color-icon-accessible)` |
-| Field container | hover | `var(--color-background-component)` | `var(--color-border-strong)` | neutral text |
-| Field container | selected/open | `var(--color-background-component)` | `var(--color-border-accessible)` | selected text stays neutral/brand per content state |
-| Field container | focus-visible | `var(--color-background-component)` | base border + outer focus ring `var(--color-border-brand-base)` | caret/text may shift to brand token |
-| Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
-| Field container | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | error icon/text tokenized critical |
-| Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Option row | hover | `var(--color-background-brand-lighter)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| Option row | press | `var(--color-background-brand-light)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Field container | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` + `var(--color-icon-gray-neutral-accessible)` |
+| Field container | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | neutral text |
+| Field container | selected/open | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | selected text stays neutral/brand per content state |
+| Field container | focus-visible | `var(--color-background-surface-component)` | base border + outer focus ring `var(--color-border-brand-base)` | caret/text may shift to brand token |
+| Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` |
+| Field container | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | error icon/text tokenized critical |
+| Option row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| Option row | hover | `var(--color-background-brand-lighter-slate)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Option row | press | `var(--color-background-brand-light-slate)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Option row | focus-visible | current-state fill | focus indicator tokenized with `var(--color-border-brand-base)` | text/icon unchanged |
-| Option row | selected (single) | `var(--color-background-brand-lighter)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
+| Option row | selected (single) | `var(--color-background-brand-lighter-slate)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
 | Option row | selected (multi) | component background with checked checkbox | none | neutral text + selected checkbox visuals |
 ## States (Dark Theme)
 Dark theme uses the same structural state matrix as Light Theme and resolves all visual values through semantic tokens. No hardcoded color literals are allowed in implementation contracts.
@@ -199,8 +199,8 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Field container must keep tokenized border/background/text for all states.
 - Focus-visible uses an outer ring tokenized with brand border color.
 - Menu rows use tokenized row padding and explicit interaction mapping:
-  - hover: `var(--color-background-brand-lighter)` + inset row emphasis strokes
-  - press: `var(--color-background-brand-light)` + inset row emphasis strokes + brand-strong text
+  - hover: `var(--color-background-brand-lighter-slate)` + inset row emphasis strokes
+  - press: `var(--color-background-brand-light-slate)` + inset row emphasis strokes + brand-strong text
   - focus-visible: visible focus indicator using brand-base border token
 - Multi-select checkbox uses `2px` corner token and control-brand tokens for checked state.
 

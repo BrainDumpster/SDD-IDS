@@ -16,7 +16,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
 - Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime width is container-driven.
-- Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
+- Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-gray-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
   - `ContentGroup` (status icon + message) with `padding-top: var(--padding-padding-2)`
   - `ActionGroup` (optional view details button + close)
@@ -25,7 +25,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
 - Status icon slot: fixed `16x16` container with `padding-block: var(--padding-padding-2)` and `16x16` rendered icon (no scaling above slot size).
 - Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
-- View Details action: IDS small tertiary button with `View Details` text, uses IDS Button component `sm` size/padding, text color `var(--color-text-white)`, matching close button hover/active colors.
+- View Details action: IDS small tertiary button with `View Details` text, uses IDS Button component `sm` size/padding, text color `var(--color-text-gray-white)`, matching close button hover/active colors.
 ## Tokens
 
 ### Layout aliases (theme-resolvable)
@@ -37,25 +37,25 @@ Programmes override these **same alias names** in programme theme CSS. Component
 
 ### Core surface/text tokens
 - Surface: `var(--color-static-gray-900)`
-- Border: `var(--color-border-white)`
+- Border: `var(--color-border-gray-white)`
 - Message text: `var(--color-static-gray-white)`
-- View Details button text: `var(--color-text-white)`
-- Close button icon: `var(--color-icon-white)` (default state)
+- View Details button text: `var(--color-text-gray-white)`
+- Close button icon: `var(--color-icon-gray-white)` (default state)
 
 ### Status tokens and icon mapping
 | Type | Icon (`shapeName`) | Icon color token | Border token | Text token |
 |---|---|---|---|---|
-| `info` | `info-circ-solid` | `var(--color-icon-alerting-info)` | `var(--color-border-alerting-info-white)` | `var(--color-static-gray-white)` |
-| `critical` | `status-critical-square-solid` | `var(--color-icon-alerting-critical)` | `var(--color-border-alerting-critical-white)` | `var(--color-static-gray-white)` |
-| `major-warning` | `status-error-diamond-solid` | `var(--color-icon-alerting-major)` | `var(--color-border-alerting-major-white)` | `var(--color-static-gray-white)` |
-| `minor-warning` | `status-warn-tri-solid` | `var(--color-icon-alerting-minor)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-static-gray-white)` |
-| `success` | `status-ok-circ-solid` | `var(--color-icon-alerting-success)` | `var(--color-border-alerting-success-white)` | `var(--color-static-gray-white)` |
+| `info` | `info-circ-solid` | `var(--color-icon-alerting-info-base)` | `var(--color-border-alerting-info-base-white)` | `var(--color-static-gray-white)` |
+| `critical` | `status-critical-square-solid` | `var(--color-icon-alerting-critical-base)` | `var(--color-border-alerting-critical-base-white)` | `var(--color-static-gray-white)` |
+| `major-warning` | `status-error-diamond-solid` | `var(--color-icon-alerting-major-base)` | `var(--color-border-alerting-major-base-white)` | `var(--color-static-gray-white)` |
+| `minor-warning` | `status-warn-tri-solid` | `var(--color-icon-alerting-minor-base)` | `var(--color-border-alerting-minor-base)` | `var(--color-static-gray-white)` |
+| `success` | `status-ok-circ-solid` | `var(--color-icon-alerting-success-base)` | `var(--color-border-alerting-success-base-white)` | `var(--color-static-gray-white)` |
 ## States (Light Theme)
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/view details `var(--color-static-gray-white)`; close button icon `var(--color-icon-white)` |
-| Hover close | `var(--ui-palette-brand-900)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-white)` |
-| Active close | `var(--ui-palette-brand-800)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-white)` |
+| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/view details `var(--color-static-gray-white)`; close button icon `var(--color-icon-gray-white)` |
+| Hover close | `var(--ui-palette-brand-900)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-gray-white)` |
+| Active close | `var(--ui-palette-brand-800)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-gray-white)` |
 | Focus-visible view details | No root color change | No change | Focus ring uses brand token from root-spec rules |
 ## States (Dark Theme)
 Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.

@@ -77,7 +77,7 @@ export const Warning: Story = {
       onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
       onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
     >
-      <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
+      <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
         Continue to &lt;describe the action&gt;?
       </div>
     </Dialog>
@@ -102,7 +102,7 @@ export const Major: Story = {
       onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
       onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
     >
-      <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
+      <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
         Continue to &lt;describe the action&gt;?
       </div>
     </Dialog>
@@ -127,7 +127,7 @@ export const Critical: Story = {
       onPrimaryButtonClick={logEvent("onPrimaryButtonClick")}
       onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
     >
-      <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
+      <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
         Continue to &lt;describe the action&gt;?
       </div>
     </Dialog>
@@ -156,7 +156,7 @@ export const Destructive: Story = {
         onTertiaryButtonClick={logEvent("onTertiaryButtonClick")}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
+          <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
             Type in CONFIRM below to verify the action.
           </div>
           <div style={{ width: "300px", "--corner-radius-radius-4": "0" } as React.CSSProperties}>
@@ -195,9 +195,9 @@ export const SinglePageModalUsage: Story = {
         style={{
           minHeight: 220,
           border: "1px solid var(--color-border-brand-base)",
-          background: "var(--color-background-brand-lighter)",
+          background: "var(--color-background-brand-lighter-slate)",
           padding: 16,
-          color: "var(--color-text-neutral)",
+          color: "var(--color-text-gray-neutral)",
         }}
       >
         <strong style={{ display: "block", marginBottom: 8 }}>Swap content</strong>

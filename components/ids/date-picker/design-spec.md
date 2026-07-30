@@ -75,22 +75,22 @@
 - Calendar popup shell + month/year dropdown overlays: `border-radius: 0` (square); when attached below field, all corners are square
 - Field focus ring corner radius: `var(--corner-radius-radius-4)` (4px)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
-- Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-disabled)` (#757575)
-- Format hint: always shown below the input, Roboto Regular (400), `var(--font-size-body-2)` (14px), `var(--font-line-height-line-height-20)` (20px), `color: var(--color-text-neutral)` (#4d4d4d), `width: 100%`
-- Label (when `label` prop provided): flex row, `gap: var(--spacing-space-8)` (8px), `align-items: center`, `flex-shrink: 0`, `cursor: default`; padding: `var(--padding-padding-10)` (10px) top/bottom for large size, `var(--padding-padding-6)` (6px) top/bottom for small size, 0 left/right; label text: Roboto Regular (400), 14px/20px, `color: var(--color-text-neutral-strong)` (#252525); required asterisk (`required` prop): same font, `color: var(--color-text-critical)` (#af0000)
+- Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-gray-disabled)` (#757575)
+- Format hint: always shown below the input, Roboto Regular (400), `var(--font-size-body-2)` (14px), `var(--font-line-height-line-height-20)` (20px), `color: var(--color-text-gray-neutral)` (#4d4d4d), `width: 100%`
+- Label (when `label` prop provided): flex row, `gap: var(--spacing-space-8)` (8px), `align-items: center`, `flex-shrink: 0`, `cursor: default`; padding: `var(--padding-padding-10)` (10px) top/bottom for large size, `var(--padding-padding-6)` (6px) top/bottom for small size, 0 left/right; label text: Roboto Regular (400), 14px/20px, `color: var(--color-text-gray-neutral-strong)` (#252525); required asterisk (`required` prop): same font, `color: var(--color-text-alerting-critical-base)` (#af0000)
 - Root-to-hint gap: `var(--spacing-space-4)` (4px)
-- Validation error row (Figma `42159:132988`): `gap: var(--spacing-space-4)` (4px) between field and error row; error row uses `gap: var(--spacing-space-8)` (8px) between `status-critical-square-solid` icon (16×16) and message text; message: Roboto Regular (400), body-2, `var(--color-text-critical)`
+- Validation error row (Figma `42159:132988`): `gap: var(--spacing-space-4)` (4px) between field and error row; error row uses `gap: var(--spacing-space-8)` (8px) between `status-critical-square-solid` icon (16×16) and message text; message: Roboto Regular (400), body-2, `var(--color-text-alerting-critical-base)`
 
 ### Calendar popup
 - Calendar popup: absolutely positioned below the input field, right-aligned with the input's right edge (`right: 0`)
 - Calendar popup is a bordered box attached to the input: `margin-top: -1px` (1px overlap) so the input bottom border and popup top border read as one continuous edge; full border on all 4 sides of the popup panel
-- When input is open, input border changes to `var(--color-border-brand-base)` (blue) — the calendar border stays `var(--color-border-accessible)` (gray)
+- When input is open, input border changes to `var(--color-border-brand-base)` (blue) — the calendar border stays `var(--color-border-gray-neutral-base)` (gray)
 - Calendar container padding: `var(--padding-padding-16)` (16px all sides)
 - Calendar header width: `248px`
 - Section gap (header → grid): `var(--spacing-space-16)` (16px)
 - Date grid gap (between cells): `var(--spacing-space-4)` (4px)
 - Date grid row gap: `var(--spacing-space-4)` (4px) between week rows
-- Calendar border: `var(--border-width-border-default)` (1px) solid `var(--color-border-accessible)` (#757575)
+- Calendar border: `var(--border-width-border-default)` (1px) solid `var(--color-border-gray-neutral-base)` (#757575)
 - Calendar elevation: `box-shadow: 0px 2px 5px 0px rgba(37,37,37,0.08)` — single-layer shadow
 
 ### Date cell
@@ -115,7 +115,7 @@
 ### Range highlight bar
 - Height: `30px`
 - Border-radius: `2px`
-- Background: `var(--color-background-brand-light)` (#daeaf7)
+- Background: `var(--color-background-brand-light-slate)` (#daeaf7)
 - Positioned absolutely, vertically centered behind the date cell row (`top: 50%; transform: translateY(-50%)`)
 - Width spans from the first selected cell edge to the last selected cell edge, inset by ~1px on the anchored end
 - The row container (`position: relative`) holds 7 date cells in a flex row with `gap: var(--spacing-space-4)` (4px)
@@ -146,8 +146,8 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 #### Selected cell in range
 - Only the anchor cell (the date the user clicked last) gets `Selected` styling
 - All other cells within the range remain default text on the highlight bar background
-- Selected cell: `bg: var(--color-background-controls-brand-base)`, `border: 1px solid var(--color-border-brand-base)`, `color: var(--color-text-white)`
-- Non-selected cells in range: `color: var(--color-text-neutral-strong)` (default, no background change on cell itself — bar behind provides the visual)
+- Selected cell: `bg: var(--color-background-controls-base)`, `border: 1px solid var(--color-border-brand-base)`, `color: var(--color-text-gray-white)`
+- Non-selected cells in range: `color: var(--color-text-gray-neutral-strong)` (default, no background change on cell itself — bar behind provides the visual)
 
 ### Month / Year dropdown overlay
 - Verified against Figma node `42159:132514` (Month Dropdown) and `42159:132470` (Year Dropdown)
@@ -162,10 +162,10 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - Container padding: `var(--padding-padding-4)` (4px) vertical, `var(--padding-padding-1)` (1px) horizontal
 - Option row:
   - Padding: `var(--padding-padding-6)` (6px) vertical, `var(--padding-padding-16)` (16px) horizontal
-  - Text: Roboto Regular (400) 14px/20px, `var(--color-text-neutral)` (#4d4d4d)
+  - Text: Roboto Regular (400) 14px/20px, `var(--color-text-gray-neutral)` (#4d4d4d)
   - No border on options, `border-radius: 0`
-- Selected option: background `var(--color-background-controls-brand-lighter)` (#ebf4fb), text Roboto Regular (400) 14px/20px, `var(--color-text-neutral-strong)` (#252525)
-- Hover option: background `var(--color-background-controls-brand-lighter)` (#ebf4fb)
+- Selected option: background `var(--color-background-controls-lighter)` (#ebf4fb), text Roboto Regular (400) 14px/20px, `var(--color-text-gray-neutral-strong)` (#252525)
+- Hover option: background `var(--color-background-controls-lighter)` (#ebf4fb)
 
 ## Tokens
 
@@ -177,24 +177,24 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 | `--date-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` |
 
 ### Input field
-- `var(--color-background-component)` — field background
-- `var(--color-border-accessible)` — default border (1px)
-- `var(--color-border-strong)` — hover border
+- `var(--color-background-surface-component)` — field background
+- `var(--color-border-gray-neutral-base)` — default border (1px)
+- `var(--color-border-gray-neutral-strong)` — hover border
 - `var(--color-border-brand-base)` — focus border
-- `var(--color-text-neutral-strong)` — filled value text
-- `var(--color-text-disabled)` — placeholder text (#757575)
-- `var(--color-text-disabled)` — disabled text
+- `var(--color-text-gray-neutral-strong)` — filled value text
+- `var(--color-text-gray-disabled)` — placeholder text (#757575)
+- `var(--color-text-gray-disabled)` — disabled text
 - `var(--color-background-gray-light)` — disabled background
-- `var(--color-border-disabled)` — disabled border
+- `var(--color-border-gray-disabled)` — disabled border
 - `var(--color-icon-brand-base)` — calendar icon default
-- `var(--color-icon-disabled)` — calendar icon disabled
+- `var(--color-icon-gray-disabled)` — calendar icon disabled
 - `var(--color-border-alerting-critical-base)` — error border
-- `var(--color-icon-alerting-critical)` — error icon
-- `var(--color-text-critical)` — error message text
+- `var(--color-icon-alerting-critical-base)` — error icon
+- `var(--color-text-alerting-critical-base)` — error message text
 
 ### Calendar popup
-- `var(--color-background-surface-2)` — calendar surface (white)
-- `var(--color-border-accessible)` — calendar border (#757575)
+- `var(--color-background-surface-secondary)` — calendar surface (white)
+- `var(--color-border-gray-neutral-base)` — calendar border (#757575)
 - `var(--border-width-border-default)` — border width (1px)
 
 ### Calendar header
@@ -212,33 +212,33 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - `0px 2px 5px 0px rgba(37,37,37,0.08)` — single-layer shadow (same value used by month/year dropdown overlays)
 
 ### Date cell
-- `var(--color-text-neutral-strong)` — default date text (#252525)
-- `var(--color-text-disabled)` — adjacent month date text (#757575)
-- `var(--color-text-neutral)` — adjacent month pressed text (#4d4d4d)
-- `var(--color-text-white)` — selected date text (white)
-- `var(--color-background-controls-brand-lighter)` — hover background (#ebf4fb)
-- `var(--color-background-controls-brand-light)` — press background (#daeaf7)
-- `var(--color-background-controls-brand-base)` — selected background (#0672cb)
+- `var(--color-text-gray-neutral-strong)` — default date text (#252525)
+- `var(--color-text-gray-disabled)` — adjacent month date text (#757575)
+- `var(--color-text-gray-neutral)` — adjacent month pressed text (#4d4d4d)
+- `var(--color-text-gray-white)` — selected date text (white)
+- `var(--color-background-controls-lighter)` — hover background (#ebf4fb)
+- `var(--color-background-controls-light)` — press background (#daeaf7)
+- `var(--color-background-controls-base)` — selected background (#0672cb)
 - `var(--color-border-brand-base)` — selected border + focus ring (#0672cb)
 - `var(--color-background-gray-lighter)` — unavailable background (#f4f4f4)
-- `var(--color-border-disabled)` — unavailable border (#757575)
+- `var(--color-border-gray-disabled)` — unavailable border (#757575)
 
 ### Today indicator
-- `var(--color-border-strong)` — default underline (#252525)
-- `var(--color-border-white)` — selected underline (white)
-- `var(--color-border-disabled)` — unavailable underline (#757575)
+- `var(--color-border-gray-neutral-strong)` — default underline (#252525)
+- `var(--color-border-gray-white)` — selected underline (white)
+- `var(--color-border-gray-disabled)` — unavailable underline (#757575)
 
 ### Range highlight
-- `var(--color-background-brand-light)` — range bar (#daeaf7)
+- `var(--color-background-brand-light-slate)` — range bar (#daeaf7)
 
 ### Weekday labels
-- `var(--color-text-neutral)` — weekday abbreviation text (#4d4d4d)
+- `var(--color-text-gray-neutral)` — weekday abbreviation text (#4d4d4d)
 
 ### Month / Year dropdown
 - Surface: `white`
-- Border: `var(--ui-palette-gray-200)` (#eaeaea) or `var(--color-border-accessible)`
+- Border: `var(--ui-palette-gray-200)` (#eaeaea) or `var(--color-border-gray-neutral-base)`
 - Option text: `var(--ui-palette-gray-700)` (#4d4d4d), Medium weight
-- Selected option background: `var(--color-background-brand-lighter)` (#ebf4fb)
+- Selected option background: `var(--color-background-brand-lighter-slate)` (#ebf4fb)
 - Selected option text: `var(--ui-palette-gray-900)` (#252525), Regular weight
 
 ### Icons
@@ -253,47 +253,47 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 
 | State | Background | Border | Text | Icon | Notes |
 |---|---|---|---|---|---|
-| Default (empty) | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` (placeholder) | `var(--color-icon-brand-base)` | — |
-| Default (filled) | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` | `var(--color-icon-brand-base)` | — |
-| Hover (text field) | `var(--color-background-component)` | `var(--color-border-strong)` | (unchanged) | `var(--color-icon-brand-base)` (unchanged) | Container border darkens; icon button unchanged |
-| Hover on icon | `var(--color-background-component)` | `var(--color-border-accessible)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Icon button: bg `var(--color-background-controls-brand-lighter)`, border `var(--color-border-brand-base)` 1px; container border stays default |
-| Pointer-focused / Selected (Figma `42159:133061`) | `var(--color-background-component)` | `var(--color-border-brand-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Click-focus: blue border, no focus ring, placeholder hidden (`:focus::placeholder { color: transparent }`) |
-| Keyboard-focused on text field | `var(--color-background-component)` | `var(--color-border-accessible)` (unchanged) | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Outer focus ring via `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); field border-radius stays `0` (square) |
-| Focused on icon | `var(--color-background-component)` | `var(--color-border-accessible)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Focus ring on **icon button only** via `::after`: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); button keeps its own `border-radius: 2px` |
-| Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-icon-disabled)` | Non-interactive; hover on icon must NOT apply; hover on field must NOT change border |
-| Selected with dropdown | `var(--color-background-component)` | `var(--color-border-brand-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Calendar popup open; popup `margin-top: -1px` attaches to input; format hint remains below the field |
-| Selected | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Date chosen, popup closed |
-| Error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Error icon stays brand-base (not critical); only border and message change |
+| Default (empty) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` (placeholder) | `var(--color-icon-brand-base)` | — |
+| Default (filled) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` | `var(--color-icon-brand-base)` | — |
+| Hover (text field) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | (unchanged) | `var(--color-icon-brand-base)` (unchanged) | Container border darkens; icon button unchanged |
+| Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Icon button: bg `var(--color-background-controls-lighter)`, border `var(--color-border-brand-base)` 1px; container border stays default |
+| Pointer-focused / Selected (Figma `42159:133061`) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Click-focus: blue border, no focus ring, placeholder hidden (`:focus::placeholder { color: transparent }`) |
+| Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Outer focus ring via `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); field border-radius stays `0` (square) |
+| Focused on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Focus ring on **icon button only** via `::after`: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); button keeps its own `border-radius: 2px` |
+| Disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-icon-gray-disabled)` | Non-interactive; hover on icon must NOT apply; hover on field must NOT change border |
+| Selected with dropdown | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Calendar popup open; popup `margin-top: -1px` attaches to input; format hint remains below the field |
+| Selected | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Date chosen, popup closed |
+| Error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Error icon stays brand-base (not critical); only border and message change |
 
 ### Date cell states
 
 | Type | State | Background | Border | Text | Today indicator |
 |---|---|---|---|---|---|
-| Default | Default | transparent | none | `var(--color-text-neutral-strong)` | — |
-| Default | Hover | `var(--color-background-controls-brand-lighter)` | none | `var(--color-text-neutral-strong)` | — |
-| Default | Press | `var(--color-background-controls-brand-light)` | none | `var(--color-text-neutral-strong)` | — |
-| Default | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-neutral-strong)` | — |
-| Default | Selected | `var(--color-background-controls-brand-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-white)` | — |
-| Default | Selected + Focused | `var(--color-background-controls-brand-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-white)` | — |
-| Default | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` 1px | `var(--color-text-disabled)` strikethrough | — |
-| Adjacent Month | Default | transparent | none | `var(--color-text-disabled)` | — |
-| Adjacent Month | Hover | `var(--color-background-controls-brand-lighter)` | none | `var(--color-text-disabled)` | — |
-| Adjacent Month | Press | `var(--color-background-controls-brand-light)` | none | `var(--color-text-neutral)` | — |
-| Adjacent Month | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-disabled)` | — |
-| Adjacent Month | Selected | `var(--color-background-controls-brand-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-white)` | — |
-| Adjacent Month | Selected + Focused | `var(--color-background-controls-brand-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-white)` | — |
-| Adjacent Month | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` 1px | `var(--color-text-disabled)` strikethrough | — |
-| Today | Default | transparent | none | `var(--color-text-neutral-strong)` | `var(--color-border-strong)` |
-| Today | Hover | `var(--color-background-controls-brand-lighter)` | none | `var(--color-text-neutral-strong)` | `var(--color-border-strong)` |
-| Today | Press | `var(--color-background-controls-brand-light)` | none | `var(--color-text-neutral-strong)` | `var(--color-border-strong)` |
-| Today | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-neutral-strong)` | `var(--color-border-strong)` |
-| Today | Selected | `var(--color-background-controls-brand-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-white)` | `var(--color-border-white)` |
-| Today | Selected + Focused | `var(--color-background-controls-brand-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-white)` | `var(--color-border-white)` |
-| Today | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` 1px | `var(--color-text-disabled)` strikethrough | `var(--color-border-disabled)` |
+| Default | Default | transparent | none | `var(--color-text-gray-neutral-strong)` | — |
+| Default | Hover | `var(--color-background-controls-lighter)` | none | `var(--color-text-gray-neutral-strong)` | — |
+| Default | Press | `var(--color-background-controls-light)` | none | `var(--color-text-gray-neutral-strong)` | — |
+| Default | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-gray-neutral-strong)` | — |
+| Default | Selected | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-gray-white)` | — |
+| Default | Selected + Focused | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-gray-white)` | — |
+| Default | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` 1px | `var(--color-text-gray-disabled)` strikethrough | — |
+| Adjacent Month | Default | transparent | none | `var(--color-text-gray-disabled)` | — |
+| Adjacent Month | Hover | `var(--color-background-controls-lighter)` | none | `var(--color-text-gray-disabled)` | — |
+| Adjacent Month | Press | `var(--color-background-controls-light)` | none | `var(--color-text-gray-neutral)` | — |
+| Adjacent Month | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-gray-disabled)` | — |
+| Adjacent Month | Selected | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-gray-white)` | — |
+| Adjacent Month | Selected + Focused | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-gray-white)` | — |
+| Adjacent Month | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` 1px | `var(--color-text-gray-disabled)` strikethrough | — |
+| Today | Default | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
+| Today | Hover | `var(--color-background-controls-lighter)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
+| Today | Press | `var(--color-background-controls-light)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
+| Today | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
+| Today | Selected | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-gray-white)` | `var(--color-border-gray-white)` |
+| Today | Selected + Focused | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-gray-white)` | `var(--color-border-gray-white)` |
+| Today | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` 1px | `var(--color-text-gray-disabled)` strikethrough | `var(--color-border-gray-disabled)` |
 
 #### Unavailable implementation (Figma `42159:132767`)
-- **Default / Adjacent Month:** gray background + `1px` `var(--color-border-disabled)` border on **inner** `DateCellContainer` only; label `var(--color-text-disabled)` with `line-through` (Roboto Regular 400).
-- **Today:** gray background + `1px` `var(--color-border-disabled)` border on **outer** `DateCell` (32×32); inner container has gray background, **no** inner border, `6px` padding; today underline uses `var(--color-border-disabled)`.
+- **Default / Adjacent Month:** gray background + `1px` `var(--color-border-gray-disabled)` border on **inner** `DateCellContainer` only; label `var(--color-text-gray-disabled)` with `line-through` (Roboto Regular 400).
+- **Today:** gray background + `1px` `var(--color-border-gray-disabled)` border on **outer** `DateCell` (32×32); inner container has gray background, **no** inner border, `6px` padding; today underline uses `var(--color-border-gray-disabled)`.
 - **Interaction:** `cursor: not-allowed`, no hover/press/focus/selected/range-endpoint styling; not included in range hover preview; `aria-disabled="true"`, `tabIndex={-1}`.
 - **Range mode:** range highlight bar may pass behind unavailable cells; unavailable cells retain unavailable visuals on top and are not valid range endpoints.
 
@@ -302,8 +302,8 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 | State | Background | Text |
 |---|---|---|
 | Default | `white` | `var(--ui-palette-gray-700)` Medium |
-| Hover | `var(--color-background-brand-lighter)` | `var(--ui-palette-gray-700)` Medium |
-| Selected (current) | `var(--color-background-brand-lighter)` | `var(--ui-palette-gray-900)` Regular |
+| Hover | `var(--color-background-brand-lighter-slate)` | `var(--ui-palette-gray-700)` Medium |
+| Selected (current) | `var(--color-background-brand-lighter-slate)` | `var(--ui-palette-gray-900)` Regular |
 
 ## States (Dark Theme)
 
@@ -469,42 +469,42 @@ DatePickerRoot
 
 | Slot | Token(s) |
 |---|---|
-| `FieldContainer` | bg: `var(--color-background-component)`, border: `var(--color-border-accessible)` 1px, padding-left: `var(--padding-padding-16)`, no right padding, gap: `var(--spacing-space-none)` |
-| `FieldContainer:hover` | border: `var(--color-border-strong)` |
+| `FieldContainer` | bg: `var(--color-background-surface-component)`, border: `var(--color-border-gray-neutral-base)` 1px, padding-left: `var(--padding-padding-16)`, no right padding, gap: `var(--spacing-space-none)` |
+| `FieldContainer:hover` | border: `var(--color-border-gray-neutral-strong)` |
 | `FieldContainer:focus:not(:focus-visible)` | border: `var(--color-border-brand-base)` (active/selected), no outline ring |
-| `FieldContainer:focus-visible` | border stays `var(--color-border-accessible)`; `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); `FieldContainer` border-radius stays unchanged (square in IDS) |
+| `FieldContainer:focus-visible` | border stays `var(--color-border-gray-neutral-base)`; `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); `FieldContainer` border-radius stays unchanged (square in IDS) |
 | `CalendarIconTrigger:focus-visible` | `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); button itself keeps `border-radius: var(--corner-radius-radius-2)` (2px) |
-| `FieldContainer:disabled` | bg: `var(--color-background-gray-light)`, border: `var(--color-border-disabled)`; hover must NOT change any styling |
+| `FieldContainer:disabled` | bg: `var(--color-background-gray-light)`, border: `var(--color-border-gray-disabled)`; hover must NOT change any styling |
 | `FieldContainer:error` | border: `var(--color-border-alerting-critical-base)` |
-| `TextInput` | color: `var(--color-text-neutral-strong)`, font: Roboto Regular (400) 14px/20px, flex: `1 0 0`, min-width: 1px |
-| `TextInput::placeholder` | color: `var(--color-text-disabled)` (#757575), font-weight: 400 |
+| `TextInput` | color: `var(--color-text-gray-neutral-strong)`, font: Roboto Regular (400) 14px/20px, flex: `1 0 0`, min-width: 1px |
+| `TextInput::placeholder` | color: `var(--color-text-gray-disabled)` (#757575), font-weight: 400 |
 | `CalendarIconTrigger` | padding: `var(--padding-padding-12)` vertical, `var(--padding-padding-16)` horizontal, align-self: stretch, border-radius: `var(--corner-radius-radius-2)` (2px), `margin: -1px -1px -1px 0` (overlaps container border), icon color: `var(--color-icon-brand-base)`, default `border: 1px solid transparent` |
-| `CalendarIconTrigger:hover:not(:disabled)` | bg: `var(--color-background-controls-brand-lighter)`, border-color: `var(--color-border-brand-base)` |
-| `CalendarIconTrigger:disabled` | color: `var(--color-icon-disabled)`, cursor: not-allowed, hover must NOT apply |
-| `FormatHint` | color: `var(--color-text-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
+| `CalendarIconTrigger:hover:not(:disabled)` | bg: `var(--color-background-controls-lighter)`, border-color: `var(--color-border-brand-base)` |
+| `CalendarIconTrigger:disabled` | color: `var(--color-icon-gray-disabled)`, cursor: not-allowed, hover must NOT apply |
+| `FormatHint` | color: `var(--color-text-gray-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
 | `FieldContainer.open` | border-color: `var(--color-border-brand-base)` |
-| `CalendarPopup` | bg: `var(--color-background-surface-2)`, border: `var(--color-border-accessible)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: 0` (square) |
+| `CalendarPopup` | bg: `var(--color-background-surface-secondary)`, border: `var(--color-border-gray-neutral-base)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: 0` (square) |
 | `MonthDropdownButton` / `YearDropdownButton` | color: `var(--color-text-brand-strong)` (#055fa9), font: `var(--font-size-body-2)` Regular (400), `position: relative`, `border: 1px solid transparent`, `background: transparent`, `border-radius: 2px` |
-| `MonthDropdownButton:hover:not(.menuOpen)` / `YearDropdownButton:hover:not(.menuOpen)` | bg: `var(--color-background-controls-brand-lighter)`, border-color: `var(--color-border-brand-base)` |
-| `MonthDropdownButton:active:not(.menuOpen)` / `YearDropdownButton:active:not(.menuOpen)` | bg: `var(--color-background-controls-brand-light)`, border-color: `var(--color-border-brand-base)` |
+| `MonthDropdownButton:hover:not(.menuOpen)` / `YearDropdownButton:hover:not(.menuOpen)` | bg: `var(--color-background-controls-lighter)`, border-color: `var(--color-border-brand-base)` |
+| `MonthDropdownButton:active:not(.menuOpen)` / `YearDropdownButton:active:not(.menuOpen)` | bg: `var(--color-background-controls-light)`, border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton:focus-visible` / `YearDropdownButton:focus-visible` | border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton.menuOpen` / `YearDropdownButton.menuOpen` | bg: transparent, border: transparent — hover/active suppressed while dropdown is open; button returns to default appearance |
-| `MonthDropdownOverlay` / `YearDropdownOverlay` | centered on trigger (`left: 50%; transform: translateX(-50%)`), min-width: 114px, max-height: 200px, border: `var(--color-border-accessible)` 1px, radius: `var(--corner-radius-radius-2)`, option padding: 10px/16px/24px, min-height: 44px, follows IDS Dropdown Single-Select spec |
+| `MonthDropdownOverlay` / `YearDropdownOverlay` | centered on trigger (`left: 50%; transform: translateX(-50%)`), min-width: 114px, max-height: 200px, border: `var(--color-border-gray-neutral-base)` 1px, radius: `var(--corner-radius-radius-2)`, option padding: 10px/16px/24px, min-height: 44px, follows IDS Dropdown Single-Select spec |
 | `PrevMonthButton` / `NextMonthButton` | 20×20px total (icon 12×12, padding 4px all sides), bg: transparent, border: none, `border-radius: var(--corner-radius-radius-2)` (2px), `outline: none` |
 | `PrevMonthButton:hover` / `NextMonthButton:hover` | icon color: `var(--color-icon-brand-base)` (#0672cb) |
 | `PrevMonthButton:focus-visible` / `NextMonthButton:focus-visible` | `outline: 2px solid #4c9fdd`, `outline-offset: 0` |
-| `WeekDayLabel` | color: `var(--color-text-neutral)`, font: 12px Regular, tracking: 0.36px |
+| `WeekDayLabel` | color: `var(--color-text-gray-neutral)`, font: 12px Regular, tracking: 0.36px |
 | `DateCell` | size: 32×32px, radius: 2px |
-| `DateCell:hover:not(.selected):not(.rangeStart):not(.rangeEnd)` | bg: `var(--color-background-controls-brand-lighter)` — hover does NOT apply when cell is selected or a range endpoint |
-| `DateCell:press` | bg: `var(--color-background-controls-brand-light)` |
-| `DateCell:selected` | bg: `var(--color-background-controls-brand-base)` (#0672cb), text: `var(--color-text-white)` |
+| `DateCell:hover:not(.selected):not(.rangeStart):not(.rangeEnd)` | bg: `var(--color-background-controls-lighter)` — hover does NOT apply when cell is selected or a range endpoint |
+| `DateCell:press` | bg: `var(--color-background-controls-light)` |
+| `DateCell:selected` | bg: `var(--color-background-controls-base)` (#0672cb), text: `var(--color-text-gray-white)` |
 | `DateCell:focus` | ring: `var(--color-border-brand-base)` 1px, offset -2px (36×36 ring), radius 4px |
 | `DateCell.selected:focus-visible` | `outline: 1px solid var(--color-border-brand-base)` on inner container — outside border fills 1px `DateCell` padding so container visually expands to 32×32 |
-| `DateCell:unavailable` | bg: `var(--color-background-gray-lighter)`, border: `var(--color-border-disabled)`, text: strikethrough |
-| `TodayIndicator` | color: `var(--color-border-strong)` (default), `var(--color-border-white)` (selected) |
-| `RangeHighlightBar` | bg: `var(--color-background-brand-light)` (#daeaf7), height: 30px, radius: 2px |
+| `DateCell:unavailable` | bg: `var(--color-background-gray-lighter)`, border: `var(--color-border-gray-disabled)`, text: strikethrough |
+| `TodayIndicator` | color: `var(--color-border-gray-neutral-strong)` (default), `var(--color-border-gray-white)` (selected) |
+| `RangeHighlightBar` | bg: `var(--color-background-brand-light-slate)` (#daeaf7), height: 30px, radius: 2px |
 | `MonthDropdownList` / `YearDropdownList` | bg: white, border: `var(--ui-palette-gray-200)` 1px, shadow: `0 2px 5px rgba(37,37,37,0.08)`, `border-radius: var(--date-picker-control-radius)` |
-| `MonthOption` / `YearOption` | padding: 16px h / 6px v, font-weight: 400, selected bg: `var(--color-background-brand-lighter)` |
+| `MonthOption` / `YearOption` | padding: 16px h / 6px v, font-weight: 400, selected bg: `var(--color-background-brand-lighter-slate)` |
 | `TodayLink` | color: `var(--color-text-brand-strong)` (#055fa9), font-weight: 400 |
 
 ### Behavior contract
@@ -566,20 +566,20 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 - [ ] Input field renders in both `large` (40px) and `small` (32px) sizes
 - [ ] All 9 input field states render correctly (default empty/filled, hover, hover-icon, focus-text, focus-icon, disabled, selected-with-dropdown, selected, error)
 - [ ] Calendar popup opens on icon click with correct shadow (`0px 2px 5px 0px rgba(37,37,37,0.08)`)
-- [ ] Calendar surface uses `var(--color-background-surface-2)` with `var(--color-border-accessible)` border
+- [ ] Calendar surface uses `var(--color-background-surface-secondary)` with `var(--color-border-gray-neutral-base)` border
 - [ ] Month/year dropdown buttons show `var(--color-text-brand-strong)` text with caret
 - [ ] Prev/next month chevrons navigate correctly
 - [ ] Weekday row shows 7 abbreviated day names in correct order
 - [ ] Date grid renders 7×6 grid with 4px gap between cells
 - [ ] Date cells are 32×32px with 2px border-radius
-- [ ] Today cell has underline indicator (18×2px, `var(--color-border-strong)`)
-- [ ] Hover state: `var(--color-background-controls-brand-lighter)`
-- [ ] Press state: `var(--color-background-controls-brand-light)`
-- [ ] Selected state: `var(--color-background-controls-brand-base)` bg, white text
+- [ ] Today cell has underline indicator (18×2px, `var(--color-border-gray-neutral-strong)`)
+- [ ] Hover state: `var(--color-background-controls-lighter)`
+- [ ] Press state: `var(--color-background-controls-light)`
+- [ ] Selected state: `var(--color-background-controls-base)` bg, white text
 - [ ] Focus ring: `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring from 32×32 cell), 4px radius
-- [ ] Adjacent month dates show `var(--color-text-disabled)` text
+- [ ] Adjacent month dates show `var(--color-text-gray-disabled)` text
 - [ ] Unavailable dates show gray background with strikethrough text
-- [ ] Range highlight bar: `var(--color-background-brand-light)`, 30px height
+- [ ] Range highlight bar: `var(--color-background-brand-light-slate)`, 30px height
 - [ ] Month dropdown overlay: 114px wide, 200px max height, scrollable
 - [ ] Year dropdown overlay matches month dropdown pattern
 - [ ] "Today" link navigates to current date
@@ -596,7 +596,7 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 | `42159:132058` | Date Picker — overview (states × sizes) | Input field states, size variants |
 | `42159:133107` | Full Date Picker component (container + format hint) | Root layout, gap, z-index stacking |
 | `42159:133115` | Input field container (Large, Empty, Default) | Padding, gap, placeholder token details |
-| `42159:133105` | DatePicker-Main — Hover on text field | Container border `--color-border-strong` |
+| `42159:133105` | DatePicker-Main — Hover on text field | Container border `--color-border-gray-neutral-strong` |
 | `42159:133098` | DatePicker-Main — Hover on icon | Icon button bg + border brand tokens |
 | `42159:133090` | DatePicker-Main — Focused on text field | Focus ring `::after` `inset: -5px`, `border-radius: 4px`; field stays square |
 | `42159:133083` | DatePicker-Main — Focused on icon | Focus ring `::after` `inset: -5px`, `border-radius: 4px`; button keeps `border-radius: 2px` |
@@ -624,7 +624,7 @@ Last updated: 2026-07-08
 - All text elements use `font-weight: 400`. Changed from `font-weight: 500` in `.errorMessage`, `.dropdownButton`, `.dateLabel`, `.todayLink`, `.overlayOption`.
 
 **Required field indicator**
-- Add `required?: boolean` prop. When true, render label with `.labelInner` wrapper containing `.labelText` + `.labelRequired` (asterisk, `color: var(--color-text-critical, #af0000)`). Label element changed from `<span>` to `<div>`.
+- Add `required?: boolean` prop. When true, render label with `.labelInner` wrapper containing `.labelText` + `.labelRequired` (asterisk, `color: var(--color-text-alerting-critical-base, #af0000)`). Label element changed from `<span>` to `<div>`.
 
 **Focus ring (field container & calendar icon button)**
 - Changed from `outline` to `::after` pseudo-element: `.fieldContainer:has(.textInput:focus-visible)::after` and `.calendarIconBtn:focus-visible::after` with `content: ''; position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base, #0672cb); border-radius: var(--corner-radius-radius-4, 4px)`. This keeps the field/button border-radius square while the focus ring has 4px radius.
@@ -632,8 +632,8 @@ Last updated: 2026-07-08
 **Dropdown button (month/year)**
 - Add `.menuOpen` class when dropdown is open (TSX: `${styles.dropdownButton}${monthDropdownOpen ? ` ${styles.menuOpen}` : ""}`).
 - Updated to tertiary button pattern: `min-height: var(--scale-24, 24px)`, `border: var(--border-width-border-default, 1px) solid transparent`, `background: transparent`, `border-radius: var(--button-control-radius, 2px)`, `outline: none`, `box-sizing: border-box`.
-- Hover: `background: var(--color-background-controls-brand-lighter, #ebf4fb)`, `border-color: var(--color-border-brand-base, #0672cb)` (exclude `.menuOpen`).
-- Active: `background: var(--color-background-controls-brand-light, #daeaf7)`, `border-color: var(--color-border-brand-base, #0672cb)` (exclude `.menuOpen`).
+- Hover: `background: var(--color-background-controls-lighter, #ebf4fb)`, `border-color: var(--color-border-brand-base, #0672cb)` (exclude `.menuOpen`).
+- Active: `background: var(--color-background-controls-light, #daeaf7)`, `border-color: var(--color-border-brand-base, #0672cb)` (exclude `.menuOpen`).
 - Focus-visible: `border-color: var(--color-border-brand-base, #0672cb)`.
 
 **Navigation buttons (prev/next month)**
@@ -643,8 +643,8 @@ Last updated: 2026-07-08
 
 **Today link**
 - Updated to tertiary button pattern: `display: inline-flex`, `min-height: var(--scale-24, 24px)`, `border: var(--border-width-border-default, 1px) solid transparent`, `background: transparent`, `border-radius: var(--button-control-radius, 2px)`, `outline: none`, `box-sizing: border-box`, `padding: var(--padding-padding-2, 2px) var(--padding-padding-16, 16px)`.
-- Hover: `background: var(--color-background-controls-brand-lighter, #ebf4fb)`, `border-color: var(--color-border-brand-base, #0672cb)`.
-- Active: `background: var(--color-background-controls-brand-light, #daeaf7)`, `border-color: var(--color-border-brand-base, #0672cb)`.
+- Hover: `background: var(--color-background-controls-lighter, #ebf4fb)`, `border-color: var(--color-border-brand-base, #0672cb)`.
+- Active: `background: var(--color-background-controls-light, #daeaf7)`, `border-color: var(--color-border-brand-base, #0672cb)`.
 - Focus-visible: `border-color: var(--color-border-brand-base, #0672cb)`.
 
 **Color updates**

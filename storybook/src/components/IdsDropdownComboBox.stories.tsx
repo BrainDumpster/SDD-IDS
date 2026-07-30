@@ -94,11 +94,11 @@ export const SingleSelectContractManual: Story = {
           defaultOpen
           maxHeight={220}
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>{helperText}</div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>{helperText}</div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           <strong>onSelection (csv):</strong> {selectionEvent.csv}
         </div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)", whiteSpace: "pre-wrap" }}>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)", whiteSpace: "pre-wrap" }}>
           <strong>onSelection (item):</strong> {JSON.stringify(selectionEvent.item)}
         </div>
       </div>
@@ -167,13 +167,13 @@ export const MultiSelectContractManual: Story = {
           defaultOpen
           maxHeight={220}
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
           Choose one or more products
         </div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           <strong>onSelection (csv):</strong> {selectionEvent.csv || "(empty)"}
         </div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)", whiteSpace: "pre-wrap" }}>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)", whiteSpace: "pre-wrap" }}>
           <strong>onSelection (items):</strong> {JSON.stringify(selectionEvent.items)}
         </div>
       </div>
@@ -198,7 +198,7 @@ export const DisabledState: Story = {
           disabled
           showSearch
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
           Component is disabled (no expand + disabled cursor)
         </div>
       </div>
@@ -226,7 +226,7 @@ export const ErrorState: Story = {
             display: "flex",
             alignItems: "center",
             gap: "var(--spacing-space-8)",
-            color: "var(--color-text-critical)",
+            color: "var(--color-text-alerting-critical-base)",
             fontSize: "var(--font-size-body-2)",
           }}
         >
@@ -289,7 +289,7 @@ export const MultiSelectShowSelectedPanel: Story = {
           defaultOpen
           maxHeight={220}
         />
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           Toggle Show/Hide Selected; dismiss tags individually; search clear appears when query is non-empty.
         </div>
       </div>

@@ -52,8 +52,8 @@ function GlobalSearch({
   return (
     <div
       style={{
-        backgroundColor: "var(--color-background-component, white)",
-        border: "1px solid var(--color-border-accessible, #757575)",
+        backgroundColor: "var(--color-background-surface-component, white)",
+        border: "1px solid var(--color-border-gray-neutral-base, #757575)",
         display: "flex",
         flexDirection: "column",
         gap: "16px",
@@ -82,7 +82,7 @@ function GlobalSearch({
       >
         <div
           style={{
-            backgroundColor: "var(--color-background-component, white)",
+            backgroundColor: "var(--color-background-surface-component, white)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -101,7 +101,7 @@ function GlobalSearch({
               fontWeight: 400,
               fontSize: "16px",
               lineHeight: "24px",
-              color: "var(--color-text-neutral-strong, #252525)",
+              color: "var(--color-text-gray-neutral-strong, #252525)",
               whiteSpace: "nowrap",
             }}
           >
@@ -114,7 +114,7 @@ function GlobalSearch({
             fill="none"
             style={{ flexShrink: 0 }}
           >
-            <path d="M4 4L12 12M12 4L4 12" stroke="var(--color-icon-neutral, #4d4d4d)" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M4 4L12 12M12 4L4 12" stroke="var(--color-icon-gray-neutral-base, #4d4d4d)" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </div>
 
@@ -146,8 +146,8 @@ function GlobalSearch({
             {showFilter && (
               <div
                 style={{
-                  backgroundColor: "var(--color-background-component, white)",
-                  border: "1px solid var(--color-border-accessible, #757575)",
+                  backgroundColor: "var(--color-background-surface-component, white)",
+                  border: "1px solid var(--color-border-gray-neutral-base, #757575)",
                   display: "flex",
                   gap: "8px",
                   alignItems: "center",
@@ -165,7 +165,7 @@ function GlobalSearch({
                     fontWeight: 400,
                     fontSize: "14px",
                     lineHeight: "20px",
-                    color: "var(--color-text-neutral, #4d4d4d)",
+                    color: "var(--color-text-gray-neutral, #4d4d4d)",
                     flexShrink: 0,
                     width: "80px",
                   }}
@@ -179,7 +179,7 @@ function GlobalSearch({
                   fill="none"
                   style={{ flexShrink: 0 }}
                 >
-                  <path d="M5 6.5L2 3.5H8L5 6.5Z" fill="var(--color-icon-neutral, #4d4d4d)" />
+                  <path d="M5 6.5L2 3.5H8L5 6.5Z" fill="var(--color-icon-gray-neutral-base, #4d4d4d)" />
                 </svg>
               </div>
             )}
@@ -194,8 +194,8 @@ function GlobalSearch({
             >
               <div
                 style={{
-                  backgroundColor: "var(--color-background-component, white)",
-                  border: "1px solid var(--color-border-accessible, #757575)",
+                  backgroundColor: "var(--color-background-surface-component, white)",
+                  border: "1px solid var(--color-border-gray-neutral-base, #757575)",
                   display: "flex",
                   flex: "1 0 0",
                   gap: "0px",
@@ -216,10 +216,10 @@ function GlobalSearch({
                   fill="none"
                   style={{ flexShrink: 0 }}
                 >
-                  <circle cx="7" cy="7" r="4.5" stroke="var(--color-icon-neutral, #4d4d4d)" strokeWidth="1.5" />
+                  <circle cx="7" cy="7" r="4.5" stroke="var(--color-icon-gray-neutral-base, #4d4d4d)" strokeWidth="1.5" />
                   <path
                     d="M10.5 10.5L14 14"
-                    stroke="var(--color-icon-neutral, #4d4d4d)"
+                    stroke="var(--color-icon-gray-neutral-base, #4d4d4d)"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                   />
@@ -244,7 +244,7 @@ function GlobalSearch({
                       fontWeight: 400,
                       fontSize: "14px",
                       lineHeight: "20px",
-                      color: "var(--color-text-neutral, #4d4d4d)",
+                      color: "var(--color-text-gray-neutral, #4d4d4d)",
                       flex: "1 0 0",
                       minHeight: "0px",
                       overflow: "hidden",
@@ -277,7 +277,7 @@ function GlobalSearch({
                     >
                       <path
                         d="M4 4L12 12M12 4L4 12"
-                        stroke="var(--color-icon-neutral, #4d4d4d)"
+                        stroke="var(--color-icon-gray-neutral-base, #4d4d4d)"
                         strokeWidth="1.5"
                         strokeLinecap="round"
                       />
@@ -326,7 +326,7 @@ function GlobalSearch({
               fontWeight: 400,
               justifyContent: "center",
               lineHeight: "0px",
-              color: "var(--color-text-neutral-strong, #252525)",
+              color: "var(--color-text-gray-neutral-strong, #252525)",
               fontSize: "14px",
               textAlign: "center",
               whiteSpace: "nowrap",
@@ -371,7 +371,7 @@ function GlobalSearch({
                 fontWeight: 500,
                 fontSize: "14px",
                 lineHeight: "20px",
-                color: "var(--color-text-neutral-strong, #252525)",
+                color: "var(--color-text-gray-neutral-strong, #252525)",
                 whiteSpace: "nowrap",
                 flexShrink: 0,
               }}
@@ -408,7 +408,7 @@ function GlobalSearch({
                     fontWeight: 500,
                     fontSize: "14px",
                     lineHeight: "20px",
-                    color: "var(--color-text-neutral-strong, #252525)",
+                    color: "var(--color-text-gray-neutral-strong, #252525)",
                     flex: "1 0 0",
                     minHeight: "0px",
                   }}
@@ -443,7 +443,7 @@ function GlobalSearch({
                         width: "100%",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "var(--color-background-brand-lighter, #ebf4fb)";
+                        e.currentTarget.style.backgroundColor = "var(--color-background-brand-lighter-slate, #ebf4fb)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.backgroundColor = "transparent";
@@ -473,7 +473,7 @@ function GlobalSearch({
                             fontWeight: 400,
                             fontSize: "14px",
                             lineHeight: "20px",
-                            color: "var(--color-text-neutral, #4d4d4d)",
+                            color: "var(--color-text-gray-neutral, #4d4d4d)",
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -525,7 +525,7 @@ function GlobalSearch({
                     <div
                       style={{
                         height: "1px",
-                        backgroundColor: "var(--color-border-light, #c5c5c5)",
+                        backgroundColor: "var(--color-border-gray-neutral-light, #c5c5c5)",
                         flexShrink: 0,
                         width: "100%",
                       }}
@@ -551,7 +551,7 @@ function GlobalSearch({
                       >
                         <path
                           d="M16,0C8.16,0,3,2.68,3,5.13v22.08C3,29.66,8.8,32,16,32c7.21,0,13-2.34,13-4.79V5.13C29,2.68,24.57,0,16,0z M16,2c7.14,0,10.22,1.92,10.86,2.82c-2.24,1.19-6.11,2.35-10.95,2.35c-4.73,0-8.56-1.09-10.81-2.21C5.78,3.97,9.44,2,16,2z M27,27.13C26.57,27.96,22.69,30,16,30c-6.69,0-10.57-2.04-11-2.87l0-4.58c2.97,1.29,6.91,2.05,10.92,2.05c4.11,0,8.11-0.8,11.08-2.18V27.13z M27,20.19c-2.22,1.21-6.14,2.42-11.08,2.42c-4.8,0-8.68-1.13-10.92-2.26l0-5.4C7.96,16.23,11.93,17,15.92,17c4.11,0,8.11-0.8,11.08-2.18V20.19z M27,12.58C24.78,13.8,20.86,15,15.92,15C11.11,15,7.27,13.9,5,12.74l0-5.63c2.97,1.3,6.91,2.05,10.92,2.05c4.11,0,8.11-0.8,11.08-2.18V12.58z"
-                          fill="var(--color-icon-neutral, #4d4d4d)"
+                          fill="var(--color-icon-gray-neutral-base, #4d4d4d)"
                         />
                       </svg>
                     )}
@@ -563,7 +563,7 @@ function GlobalSearch({
                         fontWeight: 500,
                         justifyContent: "center",
                         lineHeight: "0px",
-                        color: "var(--color-text-neutral-strong, #252525)",
+                        color: "var(--color-text-gray-neutral-strong, #252525)",
                         fontSize: "16px",
                         whiteSpace: "nowrap",
                         flexShrink: 0,
@@ -592,7 +592,7 @@ function GlobalSearch({
                       fontWeight: 500,
                       fontSize: "14px",
                       lineHeight: "20px",
-                      color: "var(--color-text-neutral-strong, #252525)",
+                      color: "var(--color-text-gray-neutral-strong, #252525)",
                       flex: "1 0 0",
                       minHeight: "0px",
                     }}
@@ -627,7 +627,7 @@ function GlobalSearch({
                       width: "100%",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "var(--color-background-brand-lighter, #ebf4fb)";
+                      e.currentTarget.style.backgroundColor = "var(--color-background-brand-lighter-slate, #ebf4fb)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = "transparent";
@@ -657,7 +657,7 @@ function GlobalSearch({
                           fontWeight: 400,
                           fontSize: "14px",
                           lineHeight: "20px",
-                          color: "var(--color-text-neutral, #4d4d4d)",
+                          color: "var(--color-text-gray-neutral, #4d4d4d)",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",

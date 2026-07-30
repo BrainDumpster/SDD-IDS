@@ -54,7 +54,7 @@ const checkerboardStyle = {{
 
 function StoryCaption({{ children }}: {{ children: string }}) {{
   return (
-    <div style={{{{ fontSize: 12, fontWeight: 600, lineHeight: "16px", color: "var(--color-text-neutral-strong)", marginBottom: 8 }}}}>
+    <div style={{{{ fontSize: 12, fontWeight: 600, lineHeight: "16px", color: "var(--color-text-gray-neutral-strong)", marginBottom: 8 }}}}>
       {{children}}
     </div>
   );

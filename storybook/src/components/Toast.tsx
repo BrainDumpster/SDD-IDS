@@ -96,7 +96,7 @@ function ToastViewport({ position }: { position: ToastPosition }) {
                   variant="tertiary"
                   size="sm"
                   iconOnly
-                  icon={<Icon shapeName="shape-x" variant="mask" color="var(--color-icon-white)" style={{ width: "100%", height: "100%" }} />}
+                  icon={<Icon shapeName="shape-x" variant="mask" color="var(--color-icon-gray-white)" style={{ width: "100%", height: "100%" }} />}
                   aria-label="Close"
                   type="button"
                   className={styles.closeButton}

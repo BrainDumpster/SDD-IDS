@@ -36,7 +36,7 @@ Deterministic slot order (left → right):
 - Root width is container-driven: `width: 100%`, `box-sizing: border-box`.
 - Root height: **32px** (fixed bar height in Figma sample `38908:5818`).
 - Root layout: horizontal flex, `align-items: center`, main axis packs optional right groups toward the **end** (`justify-content: flex-end`); left region still consumes free space on the start side.
-- Root border: `var(--border-width-border-1)` solid `var(--color-border-light)` on all sides (Figma frame uses full perimeter stroke).
+- Root border: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-light)` on all sides (Figma frame uses full perimeter stroke).
 - Root padding: none on root; inner regions carry horizontal padding.
 - **Left region:** `padding-left` / `padding-right` `var(--padding-padding-16)`; gap between host and SWID groups `var(--spacing-space-24)`; items vertically centered.
 - **Host name block:** content-driven width; Figma sample text area ~277px — do not hardcode width at runtime unless product requires truncation.
@@ -48,16 +48,16 @@ Deterministic slot order (left → right):
 
 ## Tokens
 ### Typography
-- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral-strong)`; gap to values via `var(--spacing-space-2)`
-- Host/SWID values: same size/line-height, regular weight, `var(--color-text-neutral)`
-- Date/time label: Body 2, regular weight, `var(--color-text-neutral)`
+- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-gray-neutral-strong)`; gap to values via `var(--spacing-space-2)`
+- Host/SWID values: same size/line-height, regular weight, `var(--color-text-gray-neutral)`
+- Date/time label: Body 2, regular weight, `var(--color-text-gray-neutral)`
 - Time zone action label: Body 2, regular weight, `var(--color-text-brand-strong)`
 
 ### Colors and surfaces
-- Bar background: `var(--color-background-surface-1)`
-- Bar border: `var(--color-border-light)`
+- Bar background: `var(--color-background-surface-primary)`
+- Bar border: `var(--color-border-gray-neutral-light)`
 - Copy icon (default/interactive): `var(--color-icon-brand-base)`
-- Time clock icon: `var(--color-icon-neutral)`
+- Time clock icon: `var(--color-icon-gray-neutral-base)`
 - World globe icon: `var(--color-icon-brand-base)` (matches brand treatment of time-zone group)
 
 ### Spacing
@@ -73,20 +73,20 @@ Deterministic slot order (left → right):
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 | --- | --- | --- | --- | --- |
-| root | default | `var(--color-background-surface-1)` | `var(--border-width-border-1)` `var(--color-border-light)` | — |
-| host label | default | transparent | none | `var(--color-text-neutral-strong)` |
-| host value | default | transparent | none | `var(--color-text-neutral)` |
-| swid label | default | transparent | none | `var(--color-text-neutral-strong)` |
-| swid value | default | transparent | none | `var(--color-text-neutral)` |
+| root | default | `var(--color-background-surface-primary)` | `var(--border-width-border-1)` `var(--color-border-gray-neutral-light)` | — |
+| host label | default | transparent | none | `var(--color-text-gray-neutral-strong)` |
+| host value | default | transparent | none | `var(--color-text-gray-neutral)` |
+| swid label | default | transparent | none | `var(--color-text-gray-neutral-strong)` |
+| swid value | default | transparent | none | `var(--color-text-gray-neutral)` |
 | copy control | default | transparent | none | `var(--color-icon-brand-base)` |
 | copy control | hover | transparent | none | `var(--color-icon-brand-base)` |
 | copy control | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| copy control | disabled | transparent | none | `var(--color-icon-disabled)` |
-| datetime label | default | transparent | none | `var(--color-text-neutral)` |
+| copy control | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
+| datetime label | default | transparent | none | `var(--color-text-gray-neutral)` |
 | timezone action | default | transparent | none | `var(--color-text-brand-strong)` |
 | timezone action | hover | transparent | none | `var(--color-text-link-brand-base)` + underline |
 | timezone action | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits hover or default text token |
-| timezone action | disabled | transparent | none | `var(--color-text-disabled)` |
+| timezone action | disabled | transparent | none | `var(--color-text-gray-disabled)` |
 
 ## States (Dark Theme)
 
@@ -184,12 +184,12 @@ FooterRoot
 - Root height remains **32px** for all visibility combinations.
 
 ### Per-slot style contract
-- `FooterRoot`: background `var(--color-background-surface-1)`; border `var(--border-width-border-1)` `var(--color-border-light)`; height 32px; flex end alignment; width 100%.
+- `FooterRoot`: background `var(--color-background-surface-primary)`; border `var(--border-width-border-1)` `var(--color-border-gray-neutral-light)`; height 32px; flex end alignment; width 100%.
 - `FooterLeftRegion`: flex 1 0 0; gap `var(--spacing-space-24)`; horizontal padding `var(--padding-padding-16)`.
-- `FooterHostName` / SWID labels: `var(--color-text-neutral-strong)`; values `var(--color-text-neutral)`.
+- `FooterHostName` / SWID labels: `var(--color-text-gray-neutral-strong)`; values `var(--color-text-gray-neutral)`.
 - `FooterCopyControl`: 14px icon via Icon primitive slug `copy`, tint `var(--color-icon-brand-base)`.
-- `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-neutral)`.
-- `FooterDateTimeLabel`: `var(--color-text-neutral)`, Body 2 regular weight.
+- `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-gray-neutral-base)`.
+- `FooterDateTimeLabel`: `var(--color-text-gray-neutral)`, Body 2 regular weight.
 - `FooterTimeZoneIcon`: slug `world-globe`, 16px, `var(--color-icon-brand-base)`.
 - `FooterTimeZoneAction`: `var(--color-text-brand-strong)`; hover `var(--color-text-link-brand-base)` with underline.
 

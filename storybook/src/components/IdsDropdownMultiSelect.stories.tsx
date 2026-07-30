@@ -277,7 +277,7 @@ export const MainScenarios: Story = {
               defaultOpen
               maxHeight={180}
             />
-            <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+            <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
               <strong>onActionClick:</strong> {actionEvent}
             </div>
           </div>
@@ -342,7 +342,7 @@ export const StatesAndDetails: Story = {
               clearAllDisabled={selected.length === 0}
               disabled
             />
-            <span style={{ color: "var(--color-text-neutral)", fontSize: 14, lineHeight: "20px" }}>
+            <span style={{ color: "var(--color-text-gray-neutral)", fontSize: 14, lineHeight: "20px" }}>
               Helper text
             </span>
           </div>
@@ -359,7 +359,7 @@ export const StatesAndDetails: Story = {
               onClearAllClick={() => setSelected([])}
               clearAllDisabled={selected.length === 0}
             />
-            <span style={{ color: "var(--color-text-critical)", fontSize: 14, lineHeight: "20px", display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "var(--color-text-alerting-critical-base)", fontSize: 14, lineHeight: "20px", display: "flex", alignItems: "center", gap: 8 }}>
               <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
               Error message
             </span>

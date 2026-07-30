@@ -46,7 +46,7 @@ Deterministic child structure (required order):
 - Header padding: `20px 24px` (right side includes close action spacing in sample).
 - Header has **no bottom divider line** in the verified sample.
 - Footer padding: `24px`; footer has top border.
-- Footer uses a 1px top border (`--color-border-accessible`) and no shadow treatment.
+- Footer uses a 1px top border (`--color-border-gray-neutral-base`) and no shadow treatment.
 - Steps pane sample width: `256px`.
 - Step row padding: `8px 34px` with optional right-side status indicator.
 - Step rows are borderless in default state; only the pane separator and selected-row leading accent are visible.
@@ -64,54 +64,54 @@ Deterministic child structure (required order):
 - Modal mode uses backdrop and centered shell; modal wizard root uses **`border-radius: var(--modal-control-radius)`** (IDS theme: `var(--corner-radius-radius-none)` / 0); inline mode renders in normal document flow.
 ## Tokens
 - Container/surfaces:
-  - `var(--color-background-component)`
+  - `var(--color-background-surface-component)`
   - `var(--color-background-gray-lighter)`
-  - `var(--color-background-brand-lighter)`
+  - `var(--color-background-brand-lighter-slate)`
 - Text:
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-text-neutral)`
-  - `var(--color-text-disabled)`
+  - `var(--color-text-gray-neutral-strong)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-disabled)`
   - `var(--color-text-brand-strong)`
-  - `var(--color-text-white)`
+  - `var(--color-text-gray-white)`
 - Border/lines:
-  - `var(--color-border-accessible)`
+  - `var(--color-border-gray-neutral-base)`
   - `var(--color-border-brand-base)`
-  - `var(--color-border-disabled)`
-  - `var(--color-border-transparent-brand)`
+  - `var(--color-border-gray-disabled)`
+  - `var(--color-border-brand-transparent-brand)`
 - Action fills:
-  - `var(--color-background-controls-brand-base)`
+  - `var(--color-background-controls-base)`
 - Status icon colors:
-  - success `var(--color-icon-alerting-success)`
-  - warning `var(--color-icon-alerting-minor)` (fallback to warning token family)
-  - error `var(--color-icon-alerting-critical)` (fallback to critical token family)
+  - success `var(--color-icon-alerting-success-base)`
+  - warning `var(--color-icon-alerting-minor-base)` (fallback to warning token family)
+  - error `var(--color-icon-alerting-critical-base)` (fallback to critical token family)
 - Overflow gradients:
   - `var(--color-gradient-overflow-vertical-start)`
   - `var(--color-gradient-overflow-vertical-end)`
 
 MCP variable evidence (`12690:246134`):
-- `var(--color-background-component)` = `#ffffff`
-- `var(--color-border-accessible)` = `#757575`
-- `var(--color-background-brand-lighter)` = `#ebf4fb`
+- `var(--color-background-surface-component)` = `#ffffff`
+- `var(--color-border-gray-neutral-base)` = `#757575`
+- `var(--color-background-brand-lighter-slate)` = `#ebf4fb`
 - `var(--color-text-brand-strong)` = `#0062ab`
-- `var(--color-background-controls-brand-base)` = `#0076ce`
-- `var(--color-text-white)` = `#ffffff`
-- `var(--color-text-disabled)` = `#757575`
+- `var(--color-background-controls-base)` = `#0076ce`
+- `var(--color-text-gray-white)` = `#ffffff`
+- `var(--color-text-gray-disabled)` = `#757575`
 - `Header 5` = `Roboto 24/32`
 - `Body 1` = `Roboto 16/24`
 - `Body 2` = `Roboto 14/20`
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| wizard root | default | `var(--color-background-component)` | `var(--color-border-accessible)` | neutral text |
-| step item | default | `var(--color-background-component)` | none (row-level) | `var(--color-text-disabled)` |
-| step item | active | `var(--color-background-brand-lighter)` | no row border + active leading accent | `var(--color-text-brand-strong)` |
-| step item | completed | `var(--color-background-component)` | none (row-level) | `var(--color-text-neutral-strong)` + success icon |
-| step item | warning | `var(--color-background-component)` | none (row-level) | neutral text + warning icon |
-| step item | error | `var(--color-background-component)` | none (row-level) | neutral text + error icon |
-| footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-accessible)` | neutral text |
-| footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-| footer primary button | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
-| footer primary button | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| wizard root | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | neutral text |
+| step item | default | `var(--color-background-surface-component)` | none (row-level) | `var(--color-text-gray-disabled)` |
+| step item | active | `var(--color-background-brand-lighter-slate)` | no row border + active leading accent | `var(--color-text-brand-strong)` |
+| step item | completed | `var(--color-background-surface-component)` | none (row-level) | `var(--color-text-gray-neutral-strong)` + success icon |
+| step item | warning | `var(--color-background-surface-component)` | none (row-level) | neutral text + warning icon |
+| step item | error | `var(--color-background-surface-component)` | none (row-level) | neutral text + error icon |
+| footer secondary buttons | enabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-neutral-base)` | neutral text |
+| footer secondary buttons | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
+| footer primary button | enabled | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` |
+| footer primary button | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:

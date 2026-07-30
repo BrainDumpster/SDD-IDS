@@ -44,9 +44,9 @@
 ## Tokens
 ### Colors (semantic)
 - Spinner arc (brand): `var(--color-border-brand-base)` → resolves to `#0076ce` in light theme.
-- Spinner outer circle background / track: `var(--color-background-surface-2)` → resolves to `#ffffff` in light theme.
-- Loading text: `var(--color-text-neutral-strong)` → resolves to `#252525` in light theme.
-- Loading text on brand background: `--color-text-white` for contrast on brand-colored surfaces.
+- Spinner outer circle background / track: `var(--color-background-surface-secondary)` → resolves to `#ffffff` in light theme.
+- Loading text: `var(--color-text-gray-neutral-strong)` → resolves to `#252525` in light theme.
+- Loading text on brand background: `--color-text-gray-white` for contrast on brand-colored surfaces.
 
 ### Static references (for visual parity only)
 - Static white: `var(--color-static-gray-white)` = `#ffffff` (used in Figma art; runtime uses semantic surface tokens).
@@ -62,10 +62,10 @@
   - Stroke width: `2px`
   - Arc coverage: 33.33% of full circle (120deg)
 - Spinner track / disc:
-  - Fill: `var(--color-background-surface-2)`
+  - Fill: `var(--color-background-surface-secondary)`
   - Shape: full circle sized to the outer spinner diameter.
 - Label text:
-  - Color: `var(--color-text-neutral-strong)`
+  - Color: `var(--color-text-gray-neutral-strong)`
   - Alignment:
     - Small: inline-left/right depending on layout container
     - Medium: centered below spinner in usage frame
@@ -73,18 +73,18 @@
 - Body 2: Roboto Regular 14px/20px (loading text)
 
 ### Token gaps and notes
-- Overlay color token (`var(--color-background-overlay)`) should be referenced from the global theme definition.
+- Overlay color token (`var(--color-background-surface-overlay)`) should be referenced from the global theme definition.
 - Focus ring tokens for overlay/focusable states must be aligned with the global focus specification; this spec does not redefine them.
 - Determinate progress indication (percent-complete) is **out of scope** for this component and must use a progress bar or a dedicated determinate indicator spec.
 ## States (Light Theme)
 | Variant | Element | Background | Border / Arc | Text | Animation |
 |---|---|---|---|---|---|
 | `inline` | Spinner arc | transparent | `var(--color-border-brand-base)` | n/a | Continuous rotation |
-| `inline` | Inner disc | `var(--color-background-surface-2)` | none | n/a | none |
-| `inline` | Loading text | transparent | none | `var(--color-text-neutral-strong)` | none |
-| `overlay` | Backdrop | `var(--color-background-overlay)` | none | n/a | none |
+| `inline` | Inner disc | `var(--color-background-surface-secondary)` | none | n/a | none |
+| `inline` | Loading text | transparent | none | `var(--color-text-gray-neutral-strong)` | none |
+| `overlay` | Backdrop | `var(--color-background-surface-overlay)` | none | n/a | none |
 | `overlay` | Spinner arc | transparent | `var(--color-border-brand-base)` | n/a | Continuous rotation |
-| `overlay` | Loading text | transparent | none | `var(--color-text-neutral-strong)` | none |
+| `overlay` | Loading text | transparent | none | `var(--color-text-gray-neutral-strong)` | none |
 
 ### Size-specific timing (light theme)
 - All sizes use a single deterministic animation contract:
@@ -96,11 +96,11 @@
 | Variant | Element | Background | Border / Arc | Text | Notes |
 |---|---|---|---|---|---|
 | `inline` | Spinner arc | transparent | `var(--color-border-brand-base)` | n/a | Brand arc remains vivid on dark backgrounds. |
-| `inline` | Inner disc | `var(--color-background-surface-2)` | none | n/a | Token resolves for dark theme surface contrast. |
-| `inline` | Loading text | transparent | none | `var(--color-text-neutral-strong)` | Ensures AA contrast on dark surfaces. |
-| `overlay` | Backdrop | semantic overlay surface token (e.g. `var(--color-background-overlay)`) | none | n/a | Dims content without hiding it. |
+| `inline` | Inner disc | `var(--color-background-surface-secondary)` | none | n/a | Token resolves for dark theme surface contrast. |
+| `inline` | Loading text | transparent | none | `var(--color-text-gray-neutral-strong)` | Ensures AA contrast on dark surfaces. |
+| `overlay` | Backdrop | semantic overlay surface token (e.g. `var(--color-background-surface-overlay)`) | none | n/a | Dims content without hiding it. |
 | `overlay` | Spinner arc | transparent | `var(--color-border-brand-base)` | n/a | Same as light theme. |
-| `overlay` | Loading text | transparent | none | `var(--color-text-neutral-strong)` | Same semantic token; resolves appropriately in dark. |
+| `overlay` | Loading text | transparent | none | `var(--color-text-gray-neutral-strong)` | Same semantic token; resolves appropriately in dark. |
 ## Interactions
 - Spinner is **non-interactive by default**:
   - No hover-only visual state.
@@ -203,9 +203,9 @@
   - Spinner filled progress segment MUST cover one-third of circumference (120deg).
   - All colors MUST be expressed using semantic tokens:
     - Arc: `var(--color-border-brand-base)`.
-    - Inner disc/track: `var(--color-background-surface-2)`.
-    - Overlay backdrop: `var(--color-background-overlay)` when `mode="overlay"`.
-    - Text: `var(--color-text-neutral-strong)`.
+    - Inner disc/track: `var(--color-background-surface-secondary)`.
+    - Overlay backdrop: `var(--color-background-surface-overlay)` when `mode="overlay"`.
+    - Text: `var(--color-text-gray-neutral-strong)`.
   - Do not hardcode hex values in generated code.
 - Behavior:
   - Spinner animation MUST run continuously while mounted and visible.
@@ -234,16 +234,16 @@
 - Primary usage frame: node `11099:58972` (three side-by-side spinners + labels)
 - Spinner element prototype: node `11466:98447` (rotation variants)
 - Variables inspected:
-  - `var(--color-background-surface-2)` = `#ffffff`
-  - `var(--color-background-overlay)` = design-system overlay token (resolved via active theme)
+  - `var(--color-background-surface-secondary)` = `#ffffff`
+  - `var(--color-background-surface-overlay)` = design-system overlay token (resolved via active theme)
   - `var(--color-border-brand-base)` = `#0076ce`
-  - `var(--color-text-neutral-strong)` = `#252525`
+  - `var(--color-text-gray-neutral-strong)` = `#252525`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
 - Last verified: 2026-04-29 (current session via Figma MCP)
 
 ## Implementation Notes
 - `Spinner` label does not render for `size="lg"`; use `labelVisibility="sr-only"` for large spinners.
 - `labelVisibility` controls `inline`, `below`, and `sr-only` label rendering.
-- Loading text color: `var(--color-text-neutral-strong)` by default; override to `--color-text-white` when placed on a brand-colored surface (`var(--color-background-brand-base)`).
-- Spinner disc background uses `var(--color-background-surface-2)` without a `#ffffff` fallback so dark themes resolve correctly.
+- Loading text color: `var(--color-text-gray-neutral-strong)` by default; override to `--color-text-gray-white` when placed on a brand-colored surface (`var(--color-background-brand-base)`).
+- Spinner disc background uses `var(--color-background-surface-secondary)` without a `#ffffff` fallback so dark themes resolve correctly.
 - Loading text typography uses `var(--font-size-body-2)` and `var(--font-line-height-line-height-20)` tokens.

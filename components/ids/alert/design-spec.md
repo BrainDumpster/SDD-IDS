@@ -115,8 +115,8 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 #### Detailed all-details scenario (`11946:230644`) visual checklist
 
 - Sample frame size: `1000 x 68` (reference only; runtime remains container-driven width).
-- Root surface: `border: 1px solid var(--color-border-alerting-critical-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
-- Inset rail: `::before` pseudo-element `left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--color-background-alerting-critical)`.
+- Root surface: `border: 1px solid var(--color-border-alerting-critical-base-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
+- Inset rail: `::before` pseudo-element `left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--color-background-alerting-critical-base)`.
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
 - Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) aligned to content row top (`12px` via action-only negative margin); dismiss icon at trailing cluster `16px` top inset (unchanged); **gap between action and dismiss: `var(--spacing-space-16)`** when both are in the trailing cluster; link behavior/appearance follows inline link contract and does not change other visual attributes.
@@ -132,15 +132,15 @@ Chevron tinting: white on `critical`, `warning-major`, `informational` rails; bl
 
 ### Inline — severity surfaces (Figma “light tint + solid rail”)
 
-Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from canonical `components/ids-theme.css` used by Storybook and generated outputs); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info)`).
+Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from canonical `components/ids-theme.css` used by Storybook and generated outputs); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info-base)`).
 
 | Severity | Background | Border | Inset rail (4px) | Leading icon (`shapeName`, `16x16`) + color |
 |---|---|---|---|---|
-| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-transparent)` | `var(--color-background-alerting-info)` | `info-circ-solid` + `var(--color-icon-alerting-info)` |
-| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-transparent)` | `var(--color-background-alerting-success)` | `status-ok-circ-solid` + `var(--color-icon-alerting-success)` |
-| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-background-alerting-minor)` (+ warning-accessible edge `Color/Border/Alerting/Warning-Accessible` on explicit rail layer) | `status-warn-tri-solid` + `var(--color-icon-alerting-minor)` |
-| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `status-error-diamond-solid` + `var(--color-icon-alerting-major)` |
-| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `status-critical-square-solid` + `var(--color-icon-alerting-critical)` |
+| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-base-transparent)` | `var(--color-background-alerting-info-base)` | `info-circ-solid` + `var(--color-icon-alerting-info-base)` |
+| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-base-transparent)` | `var(--color-background-alerting-success-base)` | `status-ok-circ-solid` + `var(--color-icon-alerting-success-base)` |
+| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-base)` | `var(--color-background-alerting-minor-base)` (+ warning-accessible edge `Color/Border/Alerting/Warning-Accessible` on explicit rail layer) | `status-warn-tri-solid` + `var(--color-icon-alerting-minor-base)` |
+| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-base-transparent)` | `var(--color-background-alerting-major-base)` | `status-error-diamond-solid` + `var(--color-icon-alerting-major-base)` |
+| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-base-transparent)` | `var(--color-background-alerting-critical-base)` | `status-critical-square-solid` + `var(--color-icon-alerting-critical-base)` |
 
 Inline **message link** and **outlined action** use **static brand** tokens above, not legacy “slate” border/background pairs.
 ## States (Light Theme)
@@ -151,13 +151,13 @@ Structural states follow **`density`** (compact vs detailed) and optional slots 
 
 | Severity | Root background | Root border | Inset rail | Title / body text | Icon | Link | Action border | Action label |
 |---|---|---|---|---|---|---|---|---|
-| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-transparent)` | `var(--color-background-alerting-info)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-info)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-transparent)` | `var(--color-background-alerting-success)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-success)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-background-alerting-minor)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-minor)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-major)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-base-transparent)` | `var(--color-background-alerting-info-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-info-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-base-transparent)` | `var(--color-background-alerting-success-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-success-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-base)` | `var(--color-background-alerting-minor-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-minor-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-base-transparent)` | `var(--color-background-alerting-major-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-major-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-base-transparent)` | `var(--color-background-alerting-critical-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
 
-**Dismiss** control: `Icon` component tinted with `var(--color-icon-black)` on default surface; hover/focus per **Interactions**.
+**Dismiss** control: `Icon` component tinted with `var(--color-icon-gray-black)` on default surface; hover/focus per **Interactions**.
 
 **Detailed all-details scenario:** a detailed inline alert may concurrently render title + body/message + inline link + outlined action + dismiss icon. This is a valid composition and should be represented in generated examples/tests.
 
@@ -167,14 +167,14 @@ Root row + carousel rail row per severity (informational, warning-major, warning
 
 | Severity | Text color | Status icon `shapeName` | Icon `variant` | Icon notes | Dismiss icon color |
 |---|---|---|---|---|---|
-| `critical` | `var(--color-text-white)` | `status-critical-square-solid-ko` | `img` | — | `var(--color-icon-white)` |
-| `warning-major` | `var(--color-text-black)` | `status-error-diamond-solid-ko` | `mask` | `color="var(--color-icon-white)"` | `var(--color-icon-black)` |
-| `warning-minor` | `var(--color-text-black)` | `status-warn-tri-solid` | `inline` | SVG injected via `iconInlineRegistry.ts`; `.st0`/`.st1` (triangle) → `var(--color-icon-black)`, `.st2` (exclamation) → `var(--color-icon-white)` | `var(--color-icon-black)` |
-| `informational` | `var(--color-text-white)` | `info-circ-solid-ko` | `img` | — | `var(--color-icon-white)` |
+| `critical` | `var(--color-text-gray-white)` | `status-critical-square-solid-ko` | `img` | — | `var(--color-icon-gray-white)` |
+| `warning-major` | `var(--color-text-gray-black)` | `status-error-diamond-solid-ko` | `mask` | `color="var(--color-icon-gray-white)"` | `var(--color-icon-gray-black)` |
+| `warning-minor` | `var(--color-text-gray-black)` | `status-warn-tri-solid` | `inline` | SVG injected via `iconInlineRegistry.ts`; `.st0`/`.st1` (triangle) → `var(--color-icon-gray-black)`, `.st2` (exclamation) → `var(--color-icon-gray-white)` | `var(--color-icon-gray-black)` |
+| `informational` | `var(--color-text-gray-white)` | `info-circ-solid-ko` | `img` | — | `var(--color-icon-gray-white)` |
 
 Dismiss icon always uses `variant="mask"`.
 
-**Carousel count color:** the count text lives inside the carousel rail (strong background token), so its color is **independent of the root message text color**. All severities use `var(--color-text-white)` for the count — including `warning-major` whose root message text is `var(--color-text-black)`.
+**Carousel count color:** the count text lives inside the carousel rail (strong background token), so its color is **independent of the root message text color**. All severities use `var(--color-text-gray-white)` for the count — including `warning-major` whose root message text is `var(--color-text-gray-black)`.
 
 **`showDismiss` logic (global):** `(dismissible ?? true) && (severity !== "critical" || (showCarousel && !showAction))`.
 - Non-critical severities: always show dismiss unless `dismissible={false}`.
@@ -313,7 +313,7 @@ Asset resolution + bundling contract:
 
 - Resolve icons from `assets/icons/<shapeName>.svg` (or project bundler equivalent).
 - Global status icons and inline solid icons use the slug map in **Tokens / States → Global**; carousel chevrons use `chev-left-16` / `chev-right-16`.
-- **Do not embed standalone inline `<svg>` factories** in generated Alert modules. Exception: `warning-minor` global uses `variant="inline"` routed through the shared `Icon` component + `iconInlineRegistry.ts` — this is acceptable because it still composes through the system `Icon` primitive; the registry handles SVG injection and class-based tinting (`.st0`/`.st1` → `var(--color-icon-black)`, `.st2` → `var(--color-icon-white)`).
+- **Do not embed standalone inline `<svg>` factories** in generated Alert modules. Exception: `warning-minor` global uses `variant="inline"` routed through the shared `Icon` component + `iconInlineRegistry.ts` — this is acceptable because it still composes through the system `Icon` primitive; the registry handles SVG injection and class-based tinting (`.st0`/`.st1` → `var(--color-icon-gray-black)`, `.st2` → `var(--color-icon-gray-white)`).
 
 Behavior contract:
 
@@ -404,15 +404,15 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Dismiss button**: `padding: var(--padding-padding-10); margin: calc(-1 * var(--padding-padding-10))` — creates `var(--scale-32)` hit area around the `var(--scale-12)` icon; negative margin cancels the padding for layout so surrounding spacing is unaffected
 
 **Colors**
-- **Dismiss icon** — critical & informational: `color: var(--color-icon-white)` + `filter: brightness(0) invert(1)` on icon; warning-major & warning-minor: `color: var(--color-icon-black)` + `filter: none`
-- **Action button** — critical & informational: `border-color: var(--color-border-white); color: var(--color-text-white)`; warning-major & warning-minor: `border-color: var(--color-border-black); color: var(--color-text-black)`
-- **Warning-minor root color**: set `color: var(--color-text-black)` on root — warning-minor background is light enough to require black text throughout. Warning-major root uses `color: var(--color-text-white)` (white text on orange); only its action button and dismiss are overridden to black via per-severity selectors
-- **Carousel count**: `color: var(--color-text-white)` for critical, warning-major, and informational (dark rail backgrounds). Override to `color: var(--color-text-black)` for warning-minor — its rail background (`color-background-alerting-minor-strong`) is light, matching the black chevron treatment
+- **Dismiss icon** — critical & informational: `color: var(--color-icon-gray-white)` + `filter: brightness(0) invert(1)` on icon; warning-major & warning-minor: `color: var(--color-icon-gray-black)` + `filter: none`
+- **Action button** — critical & informational: `border-color: var(--color-border-gray-white); color: var(--color-text-gray-white)`; warning-major & warning-minor: `border-color: var(--color-border-gray-black); color: var(--color-text-gray-black)`
+- **Warning-minor root color**: set `color: var(--color-text-gray-black)` on root — warning-minor background is light enough to require black text throughout. Warning-major root uses `color: var(--color-text-gray-white)` (white text on orange); only its action button and dismiss are overridden to black via per-severity selectors
+- **Carousel count**: `color: var(--color-text-gray-white)` for critical, warning-major, and informational (dark rail backgrounds). Override to `color: var(--color-text-gray-black)` for warning-minor — its rail background (`color-background-alerting-minor-strong`) is light, matching the black chevron treatment
 
 **Icons**
 - **Critical**: `status-critical-square-solid-ko`, `variant="img"` — white fill, X cutout reveals red background
-- **Warning-major**: `status-error-diamond-solid-ko`, `variant="mask"`, `color="var(--color-icon-white)"` — diamond masked white, dash cutout reveals orange
-- **Warning-minor**: `status-warn-tri-solid`, `variant="inline"` — register in `iconInlineRegistry.ts` via `warnMinorAlertIcon()`: strip `<style>` block, apply `fill:var(--color-icon-black)` to `.st0`/`.st1` (triangle), `fill:var(--color-icon-white)` to `.st2` (exclamation), strip root `<svg>` `width`/`height` only
+- **Warning-major**: `status-error-diamond-solid-ko`, `variant="mask"`, `color="var(--color-icon-gray-white)"` — diamond masked white, dash cutout reveals orange
+- **Warning-minor**: `status-warn-tri-solid`, `variant="inline"` — register in `iconInlineRegistry.ts` via `warnMinorAlertIcon()`: strip `<style>` block, apply `fill:var(--color-icon-gray-black)` to `.st0`/`.st1` (triangle), `fill:var(--color-icon-gray-white)` to `.st2` (exclamation), strip root `<svg>` `width`/`height` only
 - **Informational**: `info-circ-solid-ko`, `variant="img"` — white fill, i-mark cutout reveals blue background
 
 **Typography**
@@ -448,7 +448,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 
 **Severity tokens**
 - **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; rail rendered via `::before` (`left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) for all severities
-- **Warning-minor rail**: same `::before` positioning but overrides `background` to `var(--color-background-alerting-minor)` and adds `border: 1px solid var(--color-border-alerting-warning-accessible); box-sizing: border-box`
+- **Warning-minor rail**: same `::before` positioning but overrides `background` to `var(--color-background-alerting-minor-base)` and adds `border: 1px solid var(--color-border-alerting-warning-accessible); box-sizing: border-box`
 
 **Dismiss visibility logic**
 - `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props

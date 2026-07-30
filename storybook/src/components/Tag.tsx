@@ -159,7 +159,7 @@ export function Tag({
         <Icon
           shapeName="arrow-drop-tri-caret"
           className={styles.menuCaret}
-          color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+          color={disabled ? "var(--color-icon-gray-disabled)" : "var(--color-icon-gray-neutral-accessible)"}
           style={{ width: 10, height: 10 }}
         />
       ) : null}
@@ -176,7 +176,7 @@ export function Tag({
         >
           <Icon
             shapeName="shape-x-thick"
-            color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+            color={disabled ? "var(--color-icon-gray-disabled)" : "var(--color-icon-gray-neutral-accessible)"}
             style={{ width: 10, height: 10 }}
           />
         </button>

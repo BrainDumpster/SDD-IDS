@@ -35,67 +35,67 @@
 - Text field focus ring height: `20px` for editable tags.
 ## Tokens
 - Core neutral tokens:
-  - `var(--color-background-component)`
-  - `var(--color-border-accessible)`
-  - `var(--color-text-neutral)`
-  - `var(--color-icon-accessible)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-border-gray-neutral-base)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-icon-gray-neutral-accessible)`
 - Interactive/select tokens:
   - `var(--color-border-brand-base)`
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-background-controls-brand-lighter)`
-  - `var(--color-background-controls-brand-strong)`
-  - `var(--color-border-transparent-brand)`
+  - `var(--color-background-controls-base)`
+  - `var(--color-background-controls-lighter)`
+  - `var(--color-background-controls-strong)`
+  - `var(--color-border-brand-transparent-brand)`
 - Disabled tokens:
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-lighter)`
-  - `var(--color-text-disabled)`
-  - `var(--color-icon-disabled)`
-  - `var(--color-border-disabled)`
+  - `var(--color-text-gray-disabled)`
+  - `var(--color-icon-gray-disabled)`
+  - `var(--color-border-gray-disabled)`
 - Alerting tokens:
-  - `var(--color-background-alerting-info)`
-  - `var(--color-background-alerting-success)`
-  - `var(--color-background-alerting-major)`
-  - `var(--color-background-alerting-minor)`
-  - `var(--color-background-alerting-critical)`
+  - `var(--color-background-alerting-info-base)`
+  - `var(--color-background-alerting-success-base)`
+  - `var(--color-background-alerting-major-base)`
+  - `var(--color-background-alerting-minor-base)`
+  - `var(--color-background-alerting-critical-base)`
   - `var(--color-border-alerting-critical-base)`
-  - `var(--color-border-alerting-minor-transparent)`
+  - `var(--color-border-alerting-minor-base)`
 - Inverse/content tokens:
-  - `var(--color-text-white)`
-  - `var(--color-border-white)`
+  - `var(--color-text-gray-white)`
+  - `var(--color-border-gray-white)`
 - Typography:
   - `Body 2` for tag labels
   - `Body 2 - Medium` for emphasized/clickable states
 - Custom text colors:
-  - `var(--color-text-black)` for Major and Minor tone text color
+  - `var(--color-text-gray-black)` for Major and Minor tone text color
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| TagRoot (read-only, non-alerting) | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-accessible)` |
-| TagRoot (read-only, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
-| TagRoot (editable, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
-| TagRoot (badge, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
-| TagRoot (read-only/clickable/badge) | disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | text/icon `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
-| TagRoot (clickable, selected=false) | default | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | text/icon brand-dark |
-| TagRoot (clickable, selected=false) | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | same as default (hover emphasis only) |
-| TagRoot (clickable, selected=true) | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | text/icon inverse (`var(--color-text-white)`) |
-| TagRoot (clickable, selected=true) | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | text/icon inverse |
+| TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-accessible)` |
+| TagRoot (read-only, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, close icon critical |
+| TagRoot (editable, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, close icon critical |
+| TagRoot (badge, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, close icon critical |
+| TagRoot (read-only/clickable/badge) | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | text/icon `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
+| TagRoot (clickable, selected=false) | default | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | text/icon brand-dark |
+| TagRoot (clickable, selected=false) | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | same as default (hover emphasis only) |
+| TagRoot (clickable, selected=true) | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | text/icon inverse (`var(--color-text-gray-white)`) |
+| TagRoot (clickable, selected=true) | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | text/icon inverse |
 | TagRoot (focus-visible) | focus | keep base state | outer focus outline brand (`var(--color-border-brand-base)`) with `3px` gap | content unchanged |
 | TagEditableField | focus-on-text=true | transparent | text field border `var(--color-border-brand-base)` | text neutral |
-| TagBadge | default | `var(--color-background-controls-brand-base)` | none | text `var(--color-text-white)` |
+| TagBadge | default | `var(--color-background-controls-base)` | none | text `var(--color-text-gray-white)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-1)`/semantic tag base | `var(--color-border-accessible)` | text `var(--color-text-white)` or semantic neutral-light |
+| TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-primary)`/semantic tag base | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-white)` or semantic neutral-light |
 | TagRoot (read-only, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
 | TagRoot (editable, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
 | TagRoot (badge, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
-| TagRoot (read-only/clickable/badge) | disabled | semantic disabled surface | `var(--color-border-disabled)` | text/icon disabled |
+| TagRoot (read-only/clickable/badge) | disabled | semantic disabled surface | `var(--color-border-gray-disabled)` | text/icon disabled |
 | TagRoot (clickable, selected=false) | default | dark brand-slate token | `var(--color-border-brand-base)` | text/icon brand-light |
-| TagRoot (clickable, selected=true) | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | text/icon inverse |
-| TagRoot (clickable, selected=true) | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | text/icon inverse |
+| TagRoot (clickable, selected=true) | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | text/icon inverse |
+| TagRoot (clickable, selected=true) | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | text/icon inverse |
 | TagRoot (focus-visible) | focus | keep base state | outer focus outline brand (`var(--color-border-brand-base)`) with `3px` gap | content unchanged |
 | TagEditableField | focus-on-text=true | transparent | text field border `var(--color-border-brand-base)` | text semantic neutral-light |
-| TagBadge | default | `var(--color-background-controls-brand-base)` | none | text inverse |
+| TagBadge | default | `var(--color-background-controls-base)` | none | text inverse |
 ## Interactions
 - `read-only`: non-interactive label chip.
 - `clickable`: toggles selection (`selected=true|false`).
@@ -138,7 +138,7 @@
 - Per-slot style contract:
   - `TagRoot` owns pill geometry, border, surface, and padding.
   - `TagLabel` always uses Body 2 scale.
-  - `TagCloseButton` is a tertiary icon-only button using `shape-x-thick`, sized `var(--sizing-size-18)`, with `var(--padding-padding-4)` padding, border-radius `var(--button-control-radius)`, icon color `var(--color-icon-accessible)` (disabled uses `var(--color-icon-disabled)`), hover/press backgrounds `var(--color-background-controls-brand-lighter)` / `var(--color-background-controls-brand-light)` with `var(--color-border-brand-base)` inset border, and a focus-visible outer ring `var(--color-border-brand-base)`.
+  - `TagCloseButton` is a tertiary icon-only button using `shape-x-thick`, sized `var(--sizing-size-18)`, with `var(--padding-padding-4)` padding, border-radius `var(--button-control-radius)`, icon color `var(--color-icon-gray-neutral-accessible)` (disabled uses `var(--color-icon-gray-disabled)`), hover/press backgrounds `var(--color-background-controls-lighter)` / `var(--color-background-controls-light)` with `var(--color-border-brand-base)` inset border, and a focus-visible outer ring `var(--color-border-brand-base)`.
   - `TagBadge` uses compact filled mini-chip treatment. When used as a dropdown trigger, the dropdown (`TagDropdown`) is a detached/standalone menu offset from `TagRoot` by `var(--spacing-space-1)` with a full border of `var(--border-width-border-default)` on all sides and `var(--dropdown-menu-radius)` corners.
 - Behavior contract:
   - clickable toggles selected state and emits `onSelectionChange`.

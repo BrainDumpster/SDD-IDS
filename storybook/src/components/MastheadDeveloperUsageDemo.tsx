@@ -19,7 +19,7 @@ const searchInputStyle: React.CSSProperties = {
   height: 32,
   marginRight: 8,
   padding: "0 8px",
-  border: "1px solid var(--color-border-accessible)",
+  border: "1px solid var(--color-border-gray-neutral-base)",
   borderRadius: 4,
   fontSize: 14,
   boxSizing: "border-box",
@@ -132,7 +132,7 @@ function MySearchInput() {
         height: 32,
         marginRight: 8,
         padding: "0 8px",
-        border: "1px solid var(--color-border-accessible)",
+        border: "1px solid var(--color-border-gray-neutral-base)",
         borderRadius: 4,
         fontSize: 14,
       }}
@@ -216,7 +216,7 @@ function MySearchInput() {
         height: 32,
         marginRight: 8,
         padding: "0 8px",
-        border: "1px solid var(--color-border-accessible)",
+        border: "1px solid var(--color-border-gray-neutral-base)",
         borderRadius: 4,
         fontSize: 14,
       }}
@@ -303,8 +303,8 @@ export function DeveloperUsageStatusHint({
       style={{
         padding: "6px 10px",
         fontSize: 12,
-        background: "var(--color-background-component)",
-        border: "1px solid var(--color-border-accessible)",
+        background: "var(--color-background-surface-component)",
+        border: "1px solid var(--color-border-gray-neutral-base)",
         borderRadius: 4,
         pointerEvents: "none",
         ...style,

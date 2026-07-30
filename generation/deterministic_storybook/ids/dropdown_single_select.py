@@ -56,9 +56,9 @@ function Trigger({{ value, placeholder = "Select", disabled = false, error = fal
       style={{{{
         width: 300,
         padding: "10px 16px",
-        border: `1px solid ${{error ? "var(--color-border-alerting-critical-base)" : "var(--color-border-accessible)"}}`,
-        background: disabled ? "var(--color-background-gray-light)" : "var(--color-background-component)",
-        color: disabled ? "var(--color-text-disabled)" : "var(--color-text-neutral)",
+        border: `1px solid ${{error ? "var(--color-border-alerting-critical-base)" : "var(--color-border-gray-neutral-base)"}}`,
+        background: disabled ? "var(--color-background-gray-light)" : "var(--color-background-surface-component)",
+        color: disabled ? "var(--color-text-gray-disabled)" : "var(--color-text-gray-neutral)",
         boxSizing: "border-box",
       }}}}
     >

@@ -46,7 +46,7 @@
   - runtime contract: matches trigger width unless host overrides.
 - Search row (when `searchable`):
   - wrapper padding: `var(--padding-padding-8)`.
-  - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
+  - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
 - `SelectAllClearAllRow`:
   - fixed/stable row above options
   - not scrollable with options list
@@ -74,29 +74,29 @@
 
 ## Tokens
 - Field/menu tokens:
-  - `var(--color-background-component)`
-  - `var(--color-border-accessible)` (field default/show-dropdown border; menu border; section header border)
-  - `var(--color-border-strong)` (field hover border)
+  - `var(--color-background-surface-component)`
+  - `var(--color-border-gray-neutral-base)` (field default/show-dropdown border; menu border; section header border)
+  - `var(--color-border-gray-neutral-strong)` (field hover border)
   - `var(--color-border-brand-base)` (field focus ring; option focus inset border)
-  - `var(--color-border-disabled)` (field disabled border; caret disabled color; disabled checkbox border)
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)` (label text)
-  - `var(--color-text-disabled)`
+  - `var(--color-border-gray-disabled)` (field disabled border; caret disabled color; disabled checkbox border)
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)` (label text)
+  - `var(--color-text-gray-disabled)`
   - `var(--color-background-gray-lighter)` (disabled field background)
 - Selection tokens:
-  - `var(--color-background-brand-lighter)` (option hover background)
-  - `var(--color-border-brand-neutral)` (option hover/press border)
-  - `var(--color-background-controls-brand-lighter)`
-  - `var(--color-background-controls-brand-base)` (checkbox selected fill)
-  - `var(--color-background-controls-brand-strong)` (checkbox selected hover/press fill)
+  - `var(--color-background-brand-lighter-slate)` (option hover background)
+  - `var(--color-border-brand-base-neutral)` (option hover/press border)
+  - `var(--color-background-controls-lighter)`
+  - `var(--color-background-controls-base)` (checkbox selected fill)
+  - `var(--color-background-controls-strong)` (checkbox selected hover/press fill)
   - `var(--color-text-brand-strong)`
-  - `var(--color-border-transparent-brand)` (checkbox selected border)
-  - `var(--color-icon-white)` (checkbox tick)
-  - `var(--color-icon-inverse)`
+  - `var(--color-border-brand-transparent-brand)` (checkbox selected border)
+  - `var(--color-icon-gray-white)` (checkbox tick)
+  - `var(--color-icon-gray-inverse)`
 - Error tokens:
   - `var(--color-border-alerting-critical-base)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-text-critical)`
+  - `var(--color-icon-alerting-critical-base)`
+  - `var(--color-text-alerting-critical-base)`
 - Geometry/spacing:
   - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
@@ -115,19 +115,19 @@
 | Field container | hover | component | strong border | neutral text |
 | Field container | show-dropdown | component | accessible border | neutral text |
 | Field container | focus-visible | component | brand border + focus ring | neutral text |
-| Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | disabled text/icon |
+| Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | disabled text/icon |
 | Field container | error | component | critical border | critical helper/icon |
 | Option row | default | component | none | neutral/strong text per checkbox spec |
-| Option row | hover | `var(--color-background-brand-lighter)` | `outline: 1px solid var(--color-border-brand-neutral)` | neutral text |
+| Option row | hover | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base-neutral)` | neutral text |
 | Option row | selected (multi) | component | none | checkbox selected + neutral text |
 | Option row | indeterminate | component | none | checkbox dash token state |
-| Option row | disabled | `var(--color-background-component)` | none (checkbox always present; checkbox control itself shows disabled state) | disabled text |
-| SelectAll row | default | component | `var(--color-border-accessible)` bottom | neutral text + checkbox |
-| SelectAll row | hover (checkbox unchecked/indeterminate) | component | `var(--color-border-accessible)` bottom | checkbox border → `var(--color-border-strong)` |
-| SelectAll row | hover (checkbox checked) | component | `var(--color-border-accessible)` bottom | checkbox fill → `var(--color-background-controls-brand-strong)` |
+| Option row | disabled | `var(--color-background-surface-component)` | none (checkbox always present; checkbox control itself shows disabled state) | disabled text |
+| SelectAll row | default | component | `var(--color-border-gray-neutral-base)` bottom | neutral text + checkbox |
+| SelectAll row | hover (checkbox unchecked/indeterminate) | component | `var(--color-border-gray-neutral-base)` bottom | checkbox border → `var(--color-border-gray-neutral-strong)` |
+| SelectAll row | hover (checkbox checked) | component | `var(--color-border-gray-neutral-base)` bottom | checkbox fill → `var(--color-background-controls-strong)` |
 | ClearAll action | default | transparent | none | brand-strong |
 | ClearAll action | disabled | transparent | none | disabled text |
-| Option row (disabled) | checkbox control | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| Option row (disabled) | checkbox control | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 Dark theme must preserve the same state matrix and resolve values through semantic IDS tokens only.
 
@@ -273,6 +273,6 @@ Dark theme must preserve the same state matrix and resolve values through semant
 
 ### Design spec errors fixed (2026-07-01)
 - **Disabled checkbox control background incorrect** — Original spec: checkbox control background used `var(--color-background-gray-lighter)`. Fix: Updated to `var(--color-background-gray-light)` for disabled checkbox control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light) }`. Same fix applies to the indeterminate+disabled case.
-- **SelectAll/ClearAll row bottom border incorrect** — Original spec: row separator used `var(--color-border-neutral-light)`. Fix: Updated to `var(--color-border-accessible)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-accessible) }`.
-- **SelectAll checkbox hover border missing** — Original spec: hover behavior for unchecked and indeterminate Select All checkbox was not defined. Fix: Added hover state to strengthen border to `var(--color-border-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-strong) }`.
-- **Section header border and text color incorrect** — Original spec: used `color-border-neutral-light` for border and `color-text-neutral-strong` for text. Fix: Updated to `var(--color-border-accessible)` for `border-top` and `var(--color-text-neutral)` for text. Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-accessible); color: var(--color-text-neutral) }`.
+- **SelectAll/ClearAll row bottom border incorrect** — Original spec: row separator used `var(--color-border-neutral-light)`. Fix: Updated to `var(--color-border-gray-neutral-base)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-gray-neutral-base) }`.
+- **SelectAll checkbox hover border missing** — Original spec: hover behavior for unchecked and indeterminate Select All checkbox was not defined. Fix: Added hover state to strengthen border to `var(--color-border-gray-neutral-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-brand-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-gray-neutral-strong) }`.
+- **Section header border and text color incorrect** — Original spec: used `color-border-neutral-light` for border and `color-text-neutral-strong` for text. Fix: Updated to `var(--color-border-gray-neutral-base)` for `border-top` and `var(--color-text-gray-neutral)` for text. Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-gray-neutral-base); color: var(--color-text-gray-neutral) }`.

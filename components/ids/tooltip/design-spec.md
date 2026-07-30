@@ -44,7 +44,7 @@
 - `ContentColumn` (`.contentColumn`): stacks `Header` slot + `BodyContent` vertically; header text is optional, but the slot is always rendered in `closable` mode (empty when title is absent, one-line min-height) to preserve vertical rhythm and close-icon alignment; `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--padding-padding-4)` (4px reserve before the close icon column so title/body wrap inside the remaining width).
 - `CloseAction` is a **sibling** of `ContentColumn`, top-aligned — **not** nested inside `Header`.
 - `CloseAction` dimensions: `20px × 20px` IDS tertiary icon-only button (`sizing/size-20`); padding `padding/padding-4` on all sides.
-- Close icon: shared `Icon` component with `shapeName="ctrl-close-16"` at explicit `12px × 12px` (overrides `Icon` default `16×16` mask size); color `var(--color-icon-neutral)`.
+- Close icon: shared `Icon` component with `shapeName="ctrl-close-16"` at explicit `12px × 12px` (overrides `Icon` default `16×16` mask size); color `var(--color-icon-gray-neutral-base)`.
 - Popup shell: `popupClosable` width `264px` (vs `popupStandard` `240px`); inner content box after panel padding remains `240px` (`264 − 24px`).
 - Inner width math: `240px` inner = `ContentColumn` content area (`216px`) + `4px` column padding-right + `20px` close → body/title text wraps at ~`216px` (does not extend under the close icon).
 - Standard (`closable=false`): `.content` stays a vertical column; `BodyContent` uses full inner width (sample `216px` after padding on `240px` popup).
@@ -96,11 +96,11 @@ Programmes override these **same alias names** in programme theme CSS. Component
 | `--tooltip-control-radius` | `var(--corner-radius-radius-none)` |
 
 ### Core surface/text tokens
-- Panel background: `var(--color-background-surface-2)`.
-- Panel border + arrow stroke: `var(--color-border-accessible)`.
-- Header text: `var(--color-text-neutral-strong)`.
-- Body text: `var(--color-text-neutral)`.
-- Close icon color: `var(--color-icon-neutral)`.
+- Panel background: `var(--color-background-surface-secondary)`.
+- Panel border + arrow stroke: `var(--color-border-gray-neutral-base)`.
+- Header text: `var(--color-text-gray-neutral-strong)`.
+- Body text: `var(--color-text-gray-neutral)`.
+- Close icon color: `var(--color-icon-gray-neutral-base)`.
 - Shadow tone reference: `rgba(37,37,37,0.25)` from Figma effect.
 
 Typography contract:
@@ -109,16 +109,16 @@ Typography contract:
 ## States (Light Theme)
 | Variant | Background | Border | Text/Icon |
 |---|---|---|---|
-| Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-text-neutral)` |
-| With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` |
-| Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close icon uses `var(--color-icon-neutral)` |
+| Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-text-gray-neutral)` |
+| With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-gray-neutral-strong)`, body `var(--color-text-gray-neutral)` |
+| Closable | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header/body as above; close icon uses `var(--color-icon-gray-neutral-base)` |
 | Any arrow side/align | same as panel | same as panel | n/a |
 ## States (Dark Theme)
 | Variant | Background | Border | Text/Icon |
 |---|---|---|---|
-| Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | body `var(--color-text-neutral)` (dark-resolved) |
-| With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | header `var(--color-text-neutral-strong)`, body `var(--color-text-neutral)` (dark-resolved) |
-| Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) | close icon uses `var(--color-icon-neutral)` (dark-resolved) |
+| Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) | body `var(--color-text-gray-neutral)` (dark-resolved) |
+| With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) | header `var(--color-text-gray-neutral-strong)`, body `var(--color-text-gray-neutral)` (dark-resolved) |
+| Closable | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) | close icon uses `var(--color-icon-gray-neutral-base)` (dark-resolved) |
 | Any arrow side/align | same as panel | same as panel | n/a |
 ## Interactions
 - Standard tooltip (`closable=false`):
@@ -162,7 +162,7 @@ Per-slot style contract:
 - `Header`: Body 2 Medium + strong text token; title only (no close control inside header when `closable=true`). In `closable` mode the header slot is rendered even when title is absent, with a one-line min-height to preserve vertical rhythm.
 - `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots; when `closable=true`, wraps within `ContentColumn` width (respects `4px` padding-right reserve).
 - `ContentColumn` (`closable=true` only): `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--padding-padding-4)`.
-- `CloseAction`: `20×20` IDS tertiary icon-only button (`sizing/size-20`, `padding/padding-4`); shared `Icon` with `shapeName="ctrl-close-16"` at `12×12`; color `var(--color-icon-neutral)`; sibling of `ContentColumn`, not inside `Header`.
+- `CloseAction`: `20×20` IDS tertiary icon-only button (`sizing/size-20`, `padding/padding-4`); shared `Icon` with `shapeName="ctrl-close-16"` at `12×12`; color `var(--color-icon-gray-neutral-base)`; sibling of `ContentColumn`, not inside `Header`.
 - `Arrow`: shares panel surface and border tokens; always renders `10x6` SVG inside `.arrowGraphic` (rotate per side; never resize SVG to `6x10`); apply cross-axis insets and per-placement attachment offsets from the calibration table above.
 
 Behavior contract:
@@ -212,7 +212,7 @@ Validation checklist (pass/fail):
 
 ## Changelog
 - **2026-07-27**: Preserved the `Header` slot in closable no-title tooltips (empty, one-line min-height) to maintain close-icon alignment and vertical rhythm; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
-- **2026-07-27**: Updated closable tooltip `CloseAction` to a `20×20` IDS tertiary icon-only button with `padding/padding-4`, `sizing/size-20`, and close icon color `var(--color-icon-neutral)`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
+- **2026-07-27**: Updated closable tooltip `CloseAction` to a `20×20` IDS tertiary icon-only button with `padding/padding-4`, `sizing/size-20`, and close icon color `var(--color-icon-gray-neutral-base)`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-06-19**: Documented closable layout for codegen — `ContentColumn` + `CloseAction` row, `8px` padding-right reserve before close icon column, `12×12` `ctrl-close-16` via shared `Icon`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-06-15**: Documented Storybook arrow calibration matrix (12 placements), `.arrowGraphic`/`10x6` SVG sizing rule, and panel/arrow layering in Layout & Measurements; values synced from `IdsTooltip.module.css`.
 - **2026-06-15**: Refactored Storybook tooltip to match Figma layering — border/shadow on inner `panel`, arrow overlaps panel edge (removed `::before`/`::after` border masks that caused visible gaps).

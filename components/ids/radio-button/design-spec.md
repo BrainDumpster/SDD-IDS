@@ -35,24 +35,24 @@
 - Borders:
   - `var(--border-width-border-1)`
   - `var(--border-width-border-2)`
-  - `var(--color-border-accessible)`
-  - `var(--color-border-strong)`
+  - `var(--color-border-gray-neutral-base)`
+  - `var(--color-border-gray-neutral-strong)`
   - `var(--color-border-brand-base)`
-  - `var(--color-border-disabled)`
+  - `var(--color-border-gray-disabled)`
 - Backgrounds:
-  - `var(--color-background-component)`
-  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-background-controls-strong)`
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-base)`
 - Text/Icon:
-  - `var(--color-text-neutral)` (default option label)
-  - `var(--color-text-neutral-strong)` (optional stronger label emphasis)
-  - `var(--color-text-disabled)`
-  - `var(--color-text-critical)` (error assistive text only — label color does NOT change in error state)
-  - `var(--color-icon-white)`
-  - `var(--color-icon-inverse)`
+  - `var(--color-text-gray-neutral)` (default option label)
+  - `var(--color-text-gray-neutral-strong)` (optional stronger label emphasis)
+  - `var(--color-text-gray-disabled)`
+  - `var(--color-text-alerting-critical-base)` (error assistive text only — label color does NOT change in error state)
+  - `var(--color-icon-gray-white)`
+  - `var(--color-icon-gray-inverse)`
   - `var(--color-icon-brand-strong)` (selected dot hover)
-  - `var(--color-icon-disabled)` (disabled selected dot)
+  - `var(--color-icon-gray-disabled)` (disabled selected dot)
 - Typography:
   - `var(--font-size-body-2)`
   - `var(--font-line-height-line-height-20)`
@@ -60,14 +60,14 @@
 ## States (Light Theme)
 | Selection | Interaction | Outer Background | Outer Border | Inner Dot | Label |
 |---|---|---|---|---|---|
-| Unselected | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral)` |
-| Unselected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral)` |
-| Unselected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-neutral)` |
-| Selected | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dot in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Selected | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-neutral)` |
-| Selected | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | none | `var(--color-text-disabled)` |
-| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | dot in `var(--color-icon-disabled)` | `var(--color-text-disabled)` |
+| Unselected | Default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | none | `var(--color-text-gray-neutral)` |
+| Unselected | Hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | none | `var(--color-text-gray-neutral)` |
+| Unselected | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + focus ring | none | `var(--color-text-gray-neutral)` |
+| Selected | Default | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | dot in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
+| Selected | Hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | dot in `var(--color-icon-brand-strong)` | `var(--color-text-gray-neutral)` |
+| Selected | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + focus ring | dot in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
+| Unselected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | none | `var(--color-text-gray-disabled)` |
+| Selected | Disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | dot in `var(--color-icon-gray-disabled)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -83,8 +83,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Click on a radio selects it and deselects sibling radios with the same `name`.
 - Radio is single-select in group; one selected value at a time.
 - Hover trigger area is the full radio row hit target (control + label), not only the 16x16 control:
-  - Unselected hover: border shifts to `var(--color-border-strong)` while background remains `var(--color-background-component)`.
-  - Selected hover: border/icon shift to hover tokens while fill stays `var(--color-background-component)`.
+  - Unselected hover: border shifts to `var(--color-border-gray-neutral-strong)` while background remains `var(--color-background-surface-component)`.
+  - Selected hover: border/icon shift to hover tokens while fill stays `var(--color-background-surface-component)`.
 - Keyboard:
   - `Tab`: enters/leaves group,
   - `Arrow` keys: move selection among enabled radios in group,
@@ -110,7 +110,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 | `value` | Yes | Unique value within the group. |
 | `label` | Yes | Visible label for the option row. |
 | `disabled` | No | Disables this option only. |
-| `error` | No | Error state: ring border shifts to `var(--color-border-strong)`; label color unchanged; assistive text turns critical with icon. |
+| `error` | No | Error state: ring border shifts to `var(--color-border-gray-neutral-strong)`; label color unchanged; assistive text turns critical with icon. |
 | `helperText` | No | Helper or error line under the option row. |
 | `simulatedState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` for static matrices; not a substitute for real `:hover` / `:focus-visible` in production. |
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -177,8 +177,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Label font-weight**: `400` — apply on `.wrapper` (the label row), not on the label element alone
 
 **Error state**
-- **Ring border in error**: unselected ring uses `var(--color-border-strong)`, NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level, not by a red border on the individual control.
-- **Label color in error**: label stays `var(--color-text-neutral)` — do NOT apply `var(--color-text-critical)` to the label.
+- **Ring border in error**: unselected ring uses `var(--color-border-gray-neutral-strong)`, NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level, not by a red border on the individual control.
+- **Label color in error**: label stays `var(--color-text-gray-neutral)` — do NOT apply `var(--color-text-alerting-critical-base)` to the label.
 - **Error assistive text icon**: prepend `status-critical-square-solid` icon (16×16, `variant="img"`) before the helper text. Gap between icon and text: `var(--spacing-space-8)`. Icon hidden when `disabled`.
 - **Assistive text layout**: `display: flex; align-items: center; gap: var(--spacing-space-8)`. No left offset — row aligns with the left edge of the control.
 - **Assistive text spacing from options**: `var(--spacing-space-8)` (8px) when options are laid out horizontally; `var(--spacing-space-16)` (16px) between the last option and the error message when options are stacked vertically.
@@ -187,4 +187,4 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Outline offset**: `2px` — applies to both real `:focus-visible` and `data-simulated-state="focus-visible"`
 
 **Selected dot token**
-- **Dot fill (default + focus-visible)**: use `var(--color-icon-brand-base)`, not `var(--color-background-controls-brand-base)`. The `-controls-` background token is unused in this component
+- **Dot fill (default + focus-visible)**: use `var(--color-icon-brand-base)`, not `var(--color-background-controls-base)`. The `-controls-` background token is unused in this component
