@@ -1,0 +1,24 @@
+/*
+ * PowerFlex Design System — Global Theme Tokens
+ * Thin wrapper around the IDS theme; imports IDS variables and overrides
+ * the text-box component aliases with values verified from the PowerFlex
+ * Figma file (82bDP05ESsiiGe38p5TEQJ, node 2723:2611).
+ */
+
+@import url("ids-theme.css");
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* Component layout aliases (Figma-verified) */
+  --text-box-control-radius: 0px;
+  --text-box-focus-ring-radius: 4px;
+
+  /* PowerFlex text-input colour overrides verified from REST pack */
+  --text-box-border-default: #888888;
+  --text-box-border-hover: #333333;
+  --text-box-border-active: #0076ce;
+  --text-box-border-error: #af0000;
+  --text-box-placeholder-color: #888888;
+  --text-box-disabled-value-color: #777777;
+  --text-box-error-icon-color: #af0000;
+}
