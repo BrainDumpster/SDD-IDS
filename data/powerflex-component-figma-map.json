@@ -1,0 +1,31 @@
+{
+  "lastUpdated": "2026-08-03",
+  "programme": "powerflex",
+  "figmaFileKey": "82bDP05ESsiiGe38p5TEQJ",
+  "components": [
+    {
+      "slug": "text-box",
+      "displayName": "Text Box",
+      "figmaName": "text-input",
+      "designSpecPath": "components/powerflex/text-box/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2723-2611&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2723:2611",
+      "mainComponentSetNodeId": "2723:2611",
+      "specPattern": "standalone",
+      "elements": {
+        "inputRow": "2723:2533",
+        "errorMessage": "2723:2398",
+        "iconLeading": "2723:2403",
+        "statusCriticalCircSolid": "2723:2399"
+      },
+      "states": {
+        "default": "2723:2610",
+        "hover": "2723:2589",
+        "active": "2723:2576",
+        "disabled": "2723:2608",
+        "error": "2723:2579"
+      }
+    }
+  ]
+}
