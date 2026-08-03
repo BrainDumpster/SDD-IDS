@@ -50,6 +50,10 @@ from .session_models import (
     SessionStatus,
 )
 from .session_store import SessionStore
+from .storybook_preview import (
+    build_preview_payload,
+    resolve_storybook_static_dir,
+)
 from .update_models import CreateUpdateJobBody, UpdateRequest
 from .update_service import build_update_preview, update_to_intake_request
 
@@ -230,6 +234,11 @@ def _work_payload(session) -> dict[str, Any]:
 def health() -> dict:
     gh_ok, gh_missing = github_configured()
     mcp_ok, mcp_missing = mcp_configured()
+    static_dir = resolve_storybook_static_dir(
+        configured=settings.storybook_static_dir,
+        app_root=settings.app_root,
+        repo_root=settings.repo_root,
+    )
     return {
         "status": "ok",
         "app": "design-spec-collab",
@@ -253,7 +262,83 @@ def health() -> dict:
             "figmaToken": bool(settings.figma_token),
             "githubToken": bool(settings.github_token),
         },
+        "storybookPreview": {
+            "staticReady": static_dir is not None,
+            "staticDir": str(static_dir) if static_dir else None,
+            "mountPath": "/storybook/",
+        },
     }
+
+
+@app.get("/api/v1/preview/storybook")
+def preview_storybook(
+    programme: str = Query(..., min_length=1),
+    slug: str = Query(..., min_length=1),
+    theme: str = Query("light"),
+    t: str | None = Query(None, description="Cache-bust query for iframe"),
+    actor: str = Depends(_actor_dep),
+) -> dict:
+    """Resolve Spec Accurate Design iframe URL for a catalogue component."""
+    _ = actor
+    static_dir = resolve_storybook_static_dir(
+        configured=settings.storybook_static_dir,
+        app_root=settings.app_root,
+        repo_root=settings.repo_root,
+    )
+    payload = build_preview_payload(
+        programme=programme,
+        slug=slug,
+        repo_root=settings.repo_root,
+        static_dir=static_dir,
+        theme=theme,
+        cache_bust=t,
+    )
+    return payload
+
+
+@app.get("/api/v1/intake/jobs/{job_id}/preview/storybook")
+def preview_storybook_for_job(
+    job_id: str,
+    theme: str = Query("light"),
+    t: str | None = Query(None),
+    actor: str = Depends(_actor_dep),
+) -> dict:
+    """Preview Spec Accurate Design for a generate/update job's programme+slug."""
+    record = job_store.get(job_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    _ = actor
+    preview = getattr(record, "preview", None) or {}
+    if not isinstance(preview, dict):
+        preview = {}
+    programme = str(preview.get("programme") or preview.get("designSystem") or "")
+    slug = str(preview.get("slug") or "")
+    collab = session_store.get_by_job(job_id)
+    if collab and collab.preview:
+        programme = str(collab.preview.get("programme") or programme)
+        slug = str(collab.preview.get("slug") or slug)
+    if not programme or not slug:
+        return {
+            "available": False,
+            "reason": "job_missing_component",
+            "message": "Job has no programme/slug for Storybook preview",
+            "jobId": job_id,
+        }
+    static_dir = resolve_storybook_static_dir(
+        configured=settings.storybook_static_dir,
+        app_root=settings.app_root,
+        repo_root=settings.repo_root,
+    )
+    payload = build_preview_payload(
+        programme=programme,
+        slug=slug,
+        repo_root=settings.repo_root,
+        static_dir=static_dir,
+        theme=theme,
+        cache_bust=t or job_id[:8],
+    )
+    payload["jobId"] = job_id
+    return payload
 
 
 @app.get("/api/v1/programmes")
@@ -1206,6 +1291,18 @@ def post_result(
 _assets = FRONTEND_DIR / "assets"
 if FRONTEND_DIR.is_dir() and _assets.is_dir():
     app.mount("/assets", StaticFiles(directory=_assets), name="assets")
+
+_storybook_static = resolve_storybook_static_dir(
+    configured=settings.storybook_static_dir,
+    app_root=settings.app_root,
+    repo_root=settings.repo_root,
+)
+if _storybook_static is not None:
+    app.mount(
+        "/storybook",
+        StaticFiles(directory=str(_storybook_static), html=True),
+        name="storybook-static",
+    )
 
 
 @app.get("/theme/{name}")

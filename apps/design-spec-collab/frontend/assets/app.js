@@ -78,8 +78,10 @@ const specPreviewPanel = document.getElementById("spec-preview-panel");
 const specPreviewMeta = document.getElementById("spec-preview-meta");
 const specTabPreview = document.getElementById("spec-tab-preview");
 const specTabSource = document.getElementById("spec-tab-source");
+const specTabStorybook = document.getElementById("spec-tab-storybook");
 const specPreviewRendered = document.getElementById("spec-preview-rendered");
 const specPreviewSource = document.getElementById("spec-preview-source");
+const jobStorybookPreview = document.getElementById("job-storybook-preview");
 const copySpecBtn = document.getElementById("copy-spec");
 const openSpecRawEl = document.getElementById("open-spec-raw");
 const layoutSplit = document.getElementById("layout-split");
@@ -312,13 +314,38 @@ function renderMarkdownPreview(content) {
 }
 
 function setSpecTab(mode) {
-  const preview = mode === "preview";
-  specTabPreview?.classList.toggle("active", preview);
-  specTabSource?.classList.toggle("active", !preview);
-  specTabPreview?.setAttribute("aria-selected", preview ? "true" : "false");
-  specTabSource?.setAttribute("aria-selected", preview ? "false" : "true");
-  specPreviewRendered?.classList.toggle("hidden", !preview);
-  specPreviewSource?.classList.toggle("hidden", preview);
+  const isSpec = mode === "preview" || mode === "spec";
+  const isSource = mode === "source";
+  const isSb = mode === "storybook";
+  specTabPreview?.classList.toggle("active", isSpec);
+  specTabSource?.classList.toggle("active", isSource);
+  specTabStorybook?.classList.toggle("active", isSb);
+  specTabPreview?.setAttribute("aria-selected", isSpec ? "true" : "false");
+  specTabSource?.setAttribute("aria-selected", isSource ? "true" : "false");
+  specTabStorybook?.setAttribute("aria-selected", isSb ? "true" : "false");
+  specPreviewRendered?.classList.toggle("hidden", !isSpec);
+  specPreviewSource?.classList.toggle("hidden", !isSource);
+  if (jobStorybookPreview) {
+    jobStorybookPreview.classList.toggle("hidden", !isSb);
+    jobStorybookPreview.hidden = !isSb;
+  }
+}
+
+function loadJobStorybookPreview(job) {
+  if (!jobStorybookPreview || !window.CollabStorybookPreview) return;
+  const jobId = job?.job_id || currentJobId;
+  if (!jobId) {
+    CollabStorybookPreview.setEmpty(
+      jobStorybookPreview,
+      "No Spec Accurate Design story for this component."
+    );
+    return;
+  }
+  CollabStorybookPreview.loadInto(jobStorybookPreview, {
+    jobId,
+    theme: jobStorybookPreview.dataset.theme || "light",
+    cacheBust: String(Date.now()),
+  });
 }
 
 function renderSpecPreview(job) {
@@ -341,6 +368,7 @@ function renderSpecPreview(job) {
   specPreviewSource.textContent = spec.content;
   specPreviewRendered.innerHTML = renderMarkdownPreview(spec.content);
   setSpecTab("preview");
+  loadJobStorybookPreview(job);
 
   if (job.job_id && openSpecRawEl) {
     openSpecRawEl.href = `/api/v1/intake/jobs/${job.job_id}/design-spec.md`;
@@ -1470,6 +1498,18 @@ downloadEvidenceEl?.addEventListener("click", async () => {
 
 specTabPreview?.addEventListener("click", () => setSpecTab("preview"));
 specTabSource?.addEventListener("click", () => setSpecTab("source"));
+specTabStorybook?.addEventListener("click", () => {
+  setSpecTab("storybook");
+  if (currentJobId) {
+    loadJobStorybookPreview({ job_id: currentJobId });
+  }
+});
+
+if (jobStorybookPreview && window.CollabStorybookPreview) {
+  CollabStorybookPreview.bindThemeToggle(jobStorybookPreview, () => {
+    if (currentJobId) loadJobStorybookPreview({ job_id: currentJobId });
+  });
+}
 
 copySpecBtn?.addEventListener("click", async () => {
   if (!lastSpecContent) return;

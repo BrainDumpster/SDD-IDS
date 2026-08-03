@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 design-spec-collab-image.tar.gz
 *.tar.gz
+storybook-static/

@@ -60,7 +60,7 @@ COLLAB_PULL_POLICY=always docker compose -f docker-compose.deploy.yml pull && \
   docker compose -f docker-compose.deploy.yml up -d
 ```
 
-Only `./data` is mounted on the server (jobs/sessions). When specs/maps change, rebuild and redeploy the image.
+Only `./data` is mounted on the server (jobs/sessions). When specs/maps **or** `storybook-generated/` / Storybook component sources change, rebuild and redeploy the image (preview uses a baked Storybook static build under `/storybook/`).
 
 Production: HTTPS reverse proxy; `PUBLIC_BASE_URL` = public origin; `STUB_FORCE_REVISE_ONCE=false`; `GITHUB_PUBLISH_DRY_RUN=false`.
 
@@ -151,6 +151,19 @@ operator UI ← optional SSE /events (progress only)
 - Map enrichment from `data/*-component-figma-map.json` / yaml `figma_map_path`.
 - Dashboard home: after selecting programme + component, use **Download bundle** (next to **Update**).
 
+### Storybook Spec Accurate Design preview
+
+Collab can iframe the **Spec Accurate Design** story for a catalogue component (no local `pnpm dev` on port 6006).
+
+- **UI:** Home → select programme + component → **Storybook preview** card. Generate/Update job results → **Storybook** tab next to Spec/Source.
+- **API:** `GET /api/v1/preview/storybook?programme=ids&slug=about` (and `GET /api/v1/intake/jobs/{id}/preview/storybook`).
+- **Static assets:** served at `/storybook/` from a Storybook build with `STORYBOOK_BASE_PATH=/storybook/`.
+- **Docker:** multi-stage image builds `storybook-static` into `/app/storybook-static`. When `storybook-generated/` or component sources change, **rebuild and redeploy the Collab image** so preview stays in sync (Task 1a — no live rebuild in the container).
+- **Local (venv):**  
+  `./apps/design-spec-collab/scripts/build_collab_storybook_static.sh`  
+  then `export STORYBOOK_STATIC_DIR=…/apps/design-spec-collab/storybook-static` before starting uvicorn.
+- `/health` includes `storybookPreview.staticReady`.
+
 ### Fidelity / robustness
 
 - Packaging **fails the job** if Main Figma nodes all error (auth / access / bad node-id) — no weak client sessions.
@@ -182,6 +195,7 @@ See [`.env.example`](.env.example).
 | `FIGMA_MODE` | `rest` (recommended), `stub`, or `mcp` |
 | `FIGMA_TOKEN` | Figma PAT for **server** REST packaging |
 | `CATALOGUE_SOURCE` | `auto` (default, local first), `local`, or `github` |
+| `STORYBOOK_STATIC_DIR` | Path to Storybook static build (`iframe.html`); Docker default `/app/storybook-static` |
 | `GITHUB_PUBLISH_DRY_RUN` | `true` for local demo without GitHub writes |
 | `AUTO_CREATE_PR` | Run publish after accept |
 

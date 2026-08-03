@@ -18,69 +18,141 @@
           Client never authenticates Figma.
         </p>
         <p id="agent-config" class="hint" aria-live="polite"></p>
-        <details id="auth-actor-section" class="auth-actor-section">
-          <summary class="auth-actor-summary">
-            <span class="auth-actor-summary-label">Auth &amp; actor</span>
-            <span class="auth-actor-summary-hint" id="auth-actor-summary-hint">placeholder · optional</span>
-          </summary>
-          <div class="auth-actor-body">
-            <p id="auth-banner" class="auth-banner" aria-live="polite"></p>
-            <label class="actor-field">
-              Actor (auth placeholder)
-              <input
-                id="portal-actor"
-                name="portalActor"
-                placeholder="e.g. your.name — used when AUTH_MODE=placeholder"
-                autocomplete="username"
-              />
-            </label>
-          </div>
-        </details>
+        <div id="header-auth-slot">
+          <details id="auth-actor-section" class="auth-actor-section">
+            <summary class="auth-actor-summary">
+              <span class="auth-actor-summary-label">Auth &amp; actor</span>
+              <span class="auth-actor-summary-hint" id="auth-actor-summary-hint">placeholder · optional</span>
+            </summary>
+            <div class="auth-actor-body">
+              <p id="auth-banner" class="auth-banner" aria-live="polite"></p>
+              <label class="actor-field">
+                Actor (auth placeholder)
+                <input
+                  id="portal-actor"
+                  name="portalActor"
+                  placeholder="e.g. your.name — used when AUTH_MODE=placeholder"
+                  autocomplete="username"
+                />
+              </label>
+            </div>
+          </details>
+        </div>
       </header>
 
       <!-- HOME -->
       <section id="view-home" class="view" hidden>
-        <div class="dashboard-hero card">
-          <div class="dashboard-hero-row">
-            <div>
-              <h2>Programmes &amp; components</h2>
-              <p class="hint">
-                Select a programme, then a component to update an existing design-spec.
-                Or generate a new spec anytime.
-              </p>
+        <div class="layout-split home-layout-split" id="home-layout-split" style="--left-pct: 40%">
+          <div class="panel panel-left home-catalogue-panel" aria-label="Catalogue">
+            <div id="home-auth-slot" class="home-auth-slot"></div>
+
+            <div class="dashboard-hero card">
+              <div class="dashboard-hero-row">
+                <div>
+                  <h2>Programmes &amp; components</h2>
+                  <p class="hint">
+                    Select a programme, then a component to update an existing design-spec.
+                    Or generate a new spec anytime.
+                  </p>
+                </div>
+                <div class="dashboard-hero-actions">
+                  <button
+                    type="button"
+                    id="toggle-home-preview"
+                    class="secondary layout-toggle"
+                    aria-pressed="true"
+                    aria-controls="home-preview-panel"
+                    title="Show or hide Storybook preview panel"
+                  >
+                    Hide preview
+                  </button>
+                  <a class="button primary" href="#/generate" id="btn-generate-spec">Generate Spec</a>
+                </div>
+              </div>
+              <p id="catalogue-status" class="hint" aria-live="polite">Loading catalogue…</p>
             </div>
-            <a class="button primary" href="#/generate" id="btn-generate-spec">Generate Spec</a>
-          </div>
-          <p id="catalogue-status" class="hint" aria-live="polite">Loading catalogue…</p>
-        </div>
 
-        <div class="dashboard-grid">
-          <div class="card">
-            <label class="dd-field-label" for="dd-programme-trigger">Programme</label>
-            <div id="dd-programme" class="ids-dropdown" data-dropdown="programme"></div>
-          </div>
-          <div class="card">
-            <label class="dd-field-label" for="dd-component-trigger">Component</label>
-            <div id="dd-component" class="ids-dropdown" data-dropdown="component"></div>
-          </div>
-        </div>
+            <div class="dashboard-grid">
+              <div class="card">
+                <label class="dd-field-label" for="dd-programme-trigger">Programme</label>
+                <div id="dd-programme" class="ids-dropdown" data-dropdown="programme"></div>
+              </div>
+              <div class="card">
+                <label class="dd-field-label" for="dd-component-trigger">Component</label>
+                <div id="dd-component" class="ids-dropdown" data-dropdown="component"></div>
+              </div>
+            </div>
 
-        <div class="dashboard-actions card">
-          <div id="selected-component-meta" class="hint">Select a programme and component to enable Update or Download bundle.</div>
-          <div class="dashboard-action-buttons">
-            <a
-              id="btn-download-bundle"
-              class="button primary"
-              href="#"
-              download
-              aria-disabled="true"
-              tabindex="-1"
-              >Download bundle</a
+            <div class="dashboard-actions card">
+              <div id="selected-component-meta" class="hint">Select a programme and component to enable Update or Download bundle.</div>
+              <div class="dashboard-action-buttons">
+                <a
+                  id="btn-download-bundle"
+                  class="button primary"
+                  href="#"
+                  download
+                  aria-disabled="true"
+                  tabindex="-1"
+                  >Download bundle</a
+                >
+                <button type="button" id="btn-update-spec" class="button secondary" disabled>Update</button>
+              </div>
+            </div>
+            <div id="bundle-status" class="bundle-status" role="status" aria-live="polite" hidden></div>
+          </div>
+
+          <div
+            class="layout-divider"
+            id="home-layout-divider"
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize catalogue and Storybook preview"
+            tabindex="0"
+          >
+            <span class="layout-divider-grip" aria-hidden="true"></span>
+          </div>
+
+          <aside
+            id="home-preview-panel"
+            class="panel panel-right home-preview-side"
+            aria-label="Storybook preview"
+          >
+            <section
+              id="home-storybook-preview"
+              class="card storybook-preview-panel storybook-split-panel"
+              data-theme="light"
+              aria-label="Spec Accurate Design preview"
             >
-            <button type="button" id="btn-update-spec" class="button secondary" disabled>Update</button>
-          </div>
+              <div class="storybook-preview-header">
+                <div>
+                  <h2>Storybook preview</h2>
+                  <p class="hint" data-sb-meta></p>
+                </div>
+                <div class="storybook-preview-toolbar">
+                  <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+                  <a
+                    id="home-sb-open-manager"
+                    class="button secondary"
+                    href="/storybook/"
+                    target="_blank"
+                    rel="noopener"
+                    hidden
+                    >Open Storybook</a
+                  >
+                </div>
+              </div>
+              <p class="storybook-preview-empty hint" data-sb-empty>
+                Select a component to preview its generated Storybook story here.
+              </p>
+              <iframe
+                class="storybook-preview-iframe"
+                data-sb-iframe
+                title="Spec Accurate Design preview"
+                hidden
+              ></iframe>
+            </section>
+          </aside>
         </div>
-        <div id="bundle-status" class="bundle-status" role="status" aria-live="polite" hidden></div>
       </section>
 
       <!-- GENERATE -->
@@ -288,11 +360,33 @@
                 <p id="spec-preview-meta" class="hint"></p>
               </div>
               <div class="spec-preview-tabs" role="tablist">
-                <button type="button" id="spec-tab-preview" class="spec-tab active" role="tab">Preview</button>
+                <button type="button" id="spec-tab-preview" class="spec-tab active" role="tab">Spec</button>
                 <button type="button" id="spec-tab-source" class="spec-tab" role="tab">Source</button>
+                <button type="button" id="spec-tab-storybook" class="spec-tab" role="tab">Storybook</button>
               </div>
               <div id="spec-preview-rendered" class="spec-preview-body markdown-body" role="tabpanel"></div>
               <pre id="spec-preview-source" class="spec-preview-body spec-source hidden" role="tabpanel"></pre>
+              <div
+                id="job-storybook-preview"
+                class="storybook-preview-panel spec-preview-body hidden"
+                role="tabpanel"
+                data-theme="light"
+                hidden
+              >
+                <div class="storybook-preview-header storybook-preview-header-compact">
+                  <p class="hint" data-sb-meta></p>
+                  <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+                </div>
+                <p class="storybook-preview-empty hint" data-sb-empty>
+                  No Spec Accurate Design story for this component.
+                </p>
+                <iframe
+                  class="storybook-preview-iframe"
+                  data-sb-iframe
+                  title="Spec Accurate Design preview"
+                  hidden
+                ></iframe>
+              </div>
               <div class="actions spec-preview-actions">
                 <button type="button" id="copy-spec" class="secondary">Copy markdown</button>
                 <a id="open-spec-raw" class="button secondary" href="#" target="_blank" rel="noopener">Open raw .md</a>
@@ -423,6 +517,30 @@
                 <a id="upd-job-done-zip" class="button secondary hidden" href="#" download>Download zip</a>
               </div>
             </section>
+            <section
+              id="upd-storybook-preview"
+              class="card storybook-preview-panel hidden"
+              hidden
+              aria-label="Spec Accurate Design preview"
+              data-theme="light"
+            >
+              <div class="storybook-preview-header">
+                <div>
+                  <h2>Storybook preview</h2>
+                  <p class="hint" data-sb-meta></p>
+                </div>
+                <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+              </div>
+              <p class="storybook-preview-empty hint" data-sb-empty>
+                No Spec Accurate Design story for this component.
+              </p>
+              <iframe
+                class="storybook-preview-iframe"
+                data-sb-iframe
+                title="Spec Accurate Design preview"
+                hidden
+              ></iframe>
+            </section>
           </div>
         </div>
       </section>
@@ -430,6 +548,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="/assets/clipboard.js"></script>
     <script src="/assets/dropdown.js"></script>
+    <script src="/assets/storybook-preview.js"></script>
     <script src="/assets/dashboard.js"></script>
     <script src="/assets/app.js"></script>
   </body>

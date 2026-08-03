@@ -15,6 +15,7 @@ node_modules/
 **/storybook-angular/node_modules/
 storybook/storybook-static/
 storybook-angular/storybook-static/
+apps/design-spec-collab/storybook-static/
 .angular/
 **/.angular/
 .cache/

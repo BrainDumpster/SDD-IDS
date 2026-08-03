@@ -77,6 +77,8 @@ class Settings(BaseSettings):
     github_starting_ref: str = "master"
     github_publish_dry_run: bool = False
     auto_create_pr: bool = True
+    # Static Storybook build for Spec Accurate Design iframe preview
+    storybook_static_dir: Path | None = None
 
     def model_post_init(self, __context: object) -> None:
         if self.design_systems_dir is None:
@@ -104,6 +106,12 @@ class Settings(BaseSettings):
                 self,
                 "audit_log_path",
                 self.app_root / "data" / "audit" / "audit.jsonl",
+            )
+        if self.storybook_static_dir is None:
+            object.__setattr__(
+                self,
+                "storybook_static_dir",
+                self.app_root / "storybook-static",
             )
 
 
@@ -182,3 +190,5 @@ if os.getenv("GITHUB_STARTING_REF") or os.getenv("CLOUD_STARTING_REF"):
         or os.environ.get("CLOUD_STARTING_REF")
         or settings.github_starting_ref
     )
+if os.getenv("STORYBOOK_STATIC_DIR"):
+    settings.storybook_static_dir = Path(os.environ["STORYBOOK_STATIC_DIR"]).resolve()

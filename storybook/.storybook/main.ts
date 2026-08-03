@@ -41,17 +41,24 @@ const config: StorybookConfig = {
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
   // Discover every programme under storybook-generated/<programme>/ (ids, dap, synapse,
   // and new programmes from design-spec intake) — do not hardcode programme slugs.
-  stories: [
-    path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-    path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)"),
-  ],
+  // Collab static preview (STORYBOOK_BASE_PATH=/storybook/) only needs Spec Accurate Design
+  // stories — skip storybook/src hand stories that may not build cleanly in CI/Docker.
+  stories: process.env.STORYBOOK_BASE_PATH
+    ? [path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)")]
+    : [
+        path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
+        path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)"),
+      ],
   addons: ["@storybook/addon-essentials"],
   framework: {
     name: "@storybook/react-vite",
     options: {},
   },
   async viteFinal(config) {
+    // Collab Docker serves the static build under /storybook/ (STORYBOOK_BASE_PATH).
+    const basePath = (process.env.STORYBOOK_BASE_PATH || "").trim();
     return mergeConfig(config, {
+      ...(basePath ? { base: basePath.endsWith("/") ? basePath : `${basePath}/` } : {}),
       plugins: [warnOnNewSpecGeneratedStories()],
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],

@@ -10,6 +10,8 @@
   const btnBundle = document.getElementById("btn-download-bundle");
   const selectedMeta = document.getElementById("selected-component-meta");
   const bundleStatus = document.getElementById("bundle-status");
+  const homeSbPreview = document.getElementById("home-storybook-preview");
+  const homeSbOpen = document.getElementById("home-sb-open-manager");
 
   let programmes = [];
   let components = [];
@@ -17,6 +19,139 @@
   let selectedComponent = null;
   let programmeDd = null;
   let componentDd = null;
+
+  function refreshHomeStorybookPreview() {
+    if (!homeSbPreview || !window.CollabStorybookPreview) return;
+    // Split panel stays mounted; show empty state until a component is selected
+    homeSbPreview.hidden = false;
+    if (!selectedProgramme || !selectedComponent) {
+      CollabStorybookPreview.setEmpty(
+        homeSbPreview,
+        "Select a component to preview its generated Storybook story here."
+      );
+      if (homeSbOpen) homeSbOpen.hidden = true;
+      return;
+    }
+    homeSbPreview.dataset.theme = homeSbPreview.dataset.theme || "light";
+    CollabStorybookPreview.loadInto(homeSbPreview, {
+      programme: selectedProgramme.slug,
+      slug: selectedComponent.slug,
+      theme: homeSbPreview.dataset.theme,
+      cacheBust: String(Date.now()),
+    }).then((data) => {
+      if (homeSbOpen) {
+        if (data?.available && data.managerUrl) {
+          homeSbOpen.href = data.managerUrl;
+          homeSbOpen.hidden = false;
+        } else {
+          homeSbOpen.hidden = true;
+        }
+      }
+    });
+  }
+
+  const HOME_PREVIEW_KEY = "collab.homePreviewVisible";
+  const HOME_LEFT_PCT_KEY = "collab.homeLeftPct";
+  const homeLayoutSplit = document.getElementById("home-layout-split");
+  const toggleHomePreviewBtn = document.getElementById("toggle-home-preview");
+
+  function setHomePreviewVisible(visible) {
+    if (!homeLayoutSplit) return;
+    homeLayoutSplit.classList.toggle("results-collapsed", !visible);
+    if (toggleHomePreviewBtn) {
+      toggleHomePreviewBtn.setAttribute("aria-pressed", visible ? "true" : "false");
+      toggleHomePreviewBtn.textContent = visible ? "Hide preview" : "Show preview";
+    }
+    try {
+      localStorage.setItem(HOME_PREVIEW_KEY, visible ? "1" : "0");
+    } catch (_) {
+      /* ignore */
+    }
+  }
+
+  if (toggleHomePreviewBtn && homeLayoutSplit) {
+    let storedVisible = "1";
+    try {
+      storedVisible = localStorage.getItem(HOME_PREVIEW_KEY) || "1";
+    } catch (_) {
+      /* ignore */
+    }
+    setHomePreviewVisible(storedVisible !== "0");
+    try {
+      const pct = localStorage.getItem(HOME_LEFT_PCT_KEY);
+      if (pct) homeLayoutSplit.style.setProperty("--left-pct", pct);
+    } catch (_) {
+      /* ignore */
+    }
+    toggleHomePreviewBtn.addEventListener("click", () => {
+      const show = homeLayoutSplit.classList.contains("results-collapsed");
+      setHomePreviewVisible(show);
+      if (show) refreshHomeStorybookPreview();
+    });
+  }
+
+  const homeDivider = document.getElementById("home-layout-divider");
+  if (homeDivider && homeLayoutSplit) {
+    let dragging = false;
+    const applyPct = (pct) => {
+      const clamped = Math.min(70, Math.max(28, pct));
+      const value = `${clamped}%`;
+      homeLayoutSplit.style.setProperty("--left-pct", value);
+      try {
+        localStorage.setItem(HOME_LEFT_PCT_KEY, value);
+      } catch (_) {
+        /* ignore */
+      }
+    };
+    const onMove = (clientX) => {
+      const rect = homeLayoutSplit.getBoundingClientRect();
+      if (!rect.width) return;
+      applyPct(((clientX - rect.left) / rect.width) * 100);
+    };
+    homeDivider.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      homeDivider.setPointerCapture?.(e.pointerId);
+      e.preventDefault();
+    });
+    homeDivider.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      onMove(e.clientX);
+    });
+    homeDivider.addEventListener("pointerup", () => {
+      dragging = false;
+    });
+    homeDivider.addEventListener("keydown", (e) => {
+      const cur =
+        parseFloat(getComputedStyle(homeLayoutSplit).getPropertyValue("--left-pct")) ||
+        40;
+      if (e.key === "ArrowLeft") {
+        applyPct(cur - 2);
+        e.preventDefault();
+      } else if (e.key === "ArrowRight") {
+        applyPct(cur + 2);
+        e.preventDefault();
+      }
+    });
+  }
+
+  if (homeSbPreview && window.CollabStorybookPreview) {
+    CollabStorybookPreview.bindThemeToggle(homeSbPreview, () => {
+      refreshHomeStorybookPreview();
+    });
+    refreshHomeStorybookPreview();
+  }
+
+  const updSbPreview = document.getElementById("upd-storybook-preview");
+  if (updSbPreview && window.CollabStorybookPreview) {
+    CollabStorybookPreview.bindThemeToggle(updSbPreview, (theme) => {
+      if (!updJobId) return;
+      CollabStorybookPreview.loadInto(updSbPreview, {
+        jobId: updJobId,
+        theme,
+        cacheBust: String(Date.now()),
+      });
+    });
+  }
 
   let updLastPayload = null;
   let updLastPreview = null;
@@ -71,6 +206,20 @@
     return fetch(path, { ...(init || {}), headers });
   }
 
+  function placeAuthForRoute(name) {
+    const auth = document.getElementById("auth-actor-section");
+    const homeSlot = document.getElementById("home-auth-slot");
+    const headerSlot = document.getElementById("header-auth-slot");
+    if (!auth) return;
+    if (name === "home" && homeSlot) {
+      homeSlot.appendChild(auth);
+      document.body.classList.add("route-home");
+    } else if (headerSlot) {
+      headerSlot.appendChild(auth);
+      document.body.classList.remove("route-home");
+    }
+  }
+
   function showView(name) {
     [viewHome, viewGenerate, viewUpdate].forEach((v) => {
       if (v) v.hidden = true;
@@ -78,6 +227,7 @@
     if (name === "home" && viewHome) viewHome.hidden = false;
     if (name === "generate" && viewGenerate) viewGenerate.hidden = false;
     if (name === "update" && viewUpdate) viewUpdate.hidden = false;
+    placeAuthForRoute(name);
   }
 
   function parseRoute() {
@@ -246,6 +396,7 @@
       bundleStatus.classList.remove("is-busy", "is-ok", "is-error");
       bundleStatus.innerHTML = "";
     }
+    refreshHomeStorybookPreview();
   }
 
   function initDropdowns() {
@@ -549,6 +700,16 @@
       document.getElementById("upd-cancel-btn").disabled = true;
       setUpdSessionUrlActionsEnabled(true);
       updFinishProgress();
+      const updSb = document.getElementById("upd-storybook-preview");
+      if (updSb && window.CollabStorybookPreview) {
+        updSb.hidden = false;
+        updSb.classList.remove("hidden");
+        CollabStorybookPreview.loadInto(updSb, {
+          jobId,
+          theme: updSb.dataset.theme || "light",
+          cacheBust: String(Date.now()),
+        });
+      }
     } else if (job.status === "error" || job.collab_status === "failed") {
       clearInterval(updPollTimer);
       updPollTimer = null;

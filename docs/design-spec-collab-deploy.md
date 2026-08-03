@@ -7,6 +7,7 @@ The image includes:
 - Collab app (API + frontend)
 - Portal intake stack (`portal_app`)
 - Baked design-system tree: `components/`, `data/` maps, `config/design_systems/`, `.cursor/skills/`, `storybook-generated/`, `scripts/`, `docs/design-spec-authoring-contract.md` (for session context pack)
+- **Storybook static** under `/storybook/` (Spec Accurate Design iframe preview; Node multi-stage build)
 
 On the server you only need Docker, a small compose file, and a `.env` file. Writable job/session data lives in a local `./data` volume.
 
