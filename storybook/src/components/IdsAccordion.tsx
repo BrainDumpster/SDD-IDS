@@ -8,14 +8,12 @@ export interface IdsAccordionItem {
   title: string;
   content: ReactNode;
   meta?: ReactNode;
-  formSlot?: ReactNode;
 }
 
 export interface IdsAccordionProps {
   items: IdsAccordionItem[];
   multiple?: boolean;
   defaultValue?: string[];
-  variant?: "default" | "form";
   chevronPosition?: "left" | "right";
 }
 
@@ -23,12 +21,11 @@ export function IdsAccordion({
   items,
   multiple = false,
   defaultValue,
-  variant = "default",
   chevronPosition = "left",
 }: IdsAccordionProps) {
   return (
     <BaseAccordion.Root
-      className={[styles.root, variant === "form" ? styles.rootForm : ""].filter(Boolean).join(" ")}
+      className={styles.root}
       multiple={multiple}
       defaultValue={defaultValue}
     >
@@ -52,11 +49,15 @@ export function IdsAccordion({
               }
             >
               {chevronPosition === "left" ? (
-                <Icon shapeName="chev-down-thick" className={styles.icon} />
+                <div className={styles.iconFrame}>
+                  <Icon shapeName="chev-down-thick" className={styles.icon} />
+                </div>
               ) : null}
               <span className={styles.title}>{item.title}</span>
               {chevronPosition === "right" ? (
-                <Icon shapeName="chev-down-thick" className={styles.icon} />
+                <div className={styles.iconFrame}>
+                  <Icon shapeName="chev-down-thick" className={styles.icon} />
+                </div>
               ) : null}
             </BaseAccordion.Trigger>
           </BaseAccordion.Header>
@@ -65,9 +66,6 @@ export function IdsAccordion({
               <div className={styles.contentCard}>{item.content}</div>
             </div>
             {item.meta ? <div className={styles.meta}>{item.meta}</div> : null}
-            {variant === "form" && item.formSlot ? (
-              <div className={styles.formSlot}>{item.formSlot}</div>
-            ) : null}
           </BaseAccordion.Panel>
         </BaseAccordion.Item>
       ))}

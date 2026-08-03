@@ -21,7 +21,6 @@ export const ACCORDION_ROOT_PROP_KEYS = [
   "multiple",
   "defaultValue",
   "chevronPosition",
-  "variant",
 ] as const;
 
 /** Per-item inputs from design-spec § Composition & API (runtime). */
@@ -30,7 +29,6 @@ export const ACCORDION_ITEM_INPUT_KEYS = [
   "title",
   "content",
   "meta",
-  "formSlot",
 ] as const;
 
 export type AccordionRootPropKey = (typeof ACCORDION_ROOT_PROP_KEYS)[number];
@@ -51,12 +49,10 @@ export const ACCORDION_CODEGEN_ANATOMY = [
   "AccordionBody",
   "AccordionContent",
   "AccordionMetaSlot?",
-  "AccordionFormSlot?",
 ] as const;
 
 /** Variant matrix from design-spec § Codegen Contract. */
 export const ACCORDION_VARIANT_MATRIX = {
-  variant: ["default", "form"] as const,
   chevronPosition: ["left", "right"] as const,
   expandBehavior: ["single", "multiple"] as const,
   itemState: ["collapsed", "expanded"] as const,
@@ -65,11 +61,10 @@ export const ACCORDION_VARIANT_MATRIX = {
 /** Defaults from design-spec Composition & API. */
 export const ACCORDION_API_DEFAULTS: Pick<
   IdsAccordionProps,
-  "multiple" | "chevronPosition" | "variant"
+  "multiple" | "chevronPosition"
 > = {
   multiple: false,
   chevronPosition: "left",
-  variant: "default",
 };
 
 /** Stable demo items (shared with Synapse accordion stories for visual parity). */
@@ -94,46 +89,6 @@ export const ACCORDION_SPEC_DEMO_ITEMS: IdsAccordionItem[] = [
   },
 ];
 
-const formNetworkSlot: ReactNode = (
-  <div style={{ display: "grid", gap: 8 }}>
-    <label>
-      Host
-      <input style={{ marginLeft: 8 }} defaultValue="localhost" />
-    </label>
-    <label>
-      Port
-      <input style={{ marginLeft: 8 }} defaultValue="8080" />
-    </label>
-  </div>
-);
-
-const formSecuritySlot: ReactNode = (
-  <div style={{ display: "grid", gap: 8 }}>
-    <label>
-      <input type="checkbox" defaultChecked /> Enable TLS
-    </label>
-    <label>
-      <input type="checkbox" /> Require client certificate
-    </label>
-  </div>
-);
-
-/** Form variant items — exercises `formSlot` + `variant: "form"` from the spec matrix. */
-export const ACCORDION_SPEC_FORM_ITEMS: IdsAccordionItem[] = [
-  {
-    value: "form1",
-    title: "Network settings",
-    content: "Configure values for this section.",
-    formSlot: formNetworkSlot,
-  },
-  {
-    value: "form2",
-    title: "Security options",
-    content: "Toggle security-related preferences.",
-    formSlot: formSecuritySlot,
-  },
-];
-
 /** Optional `meta` slot demo — not used in base stories; available for codegen / extended stories. */
 export const ACCORDION_SPEC_META_SAMPLE: ReactNode = (
   <span>Helper metadata slot (AccordionMetaSlot).</span>
@@ -154,4 +109,3 @@ export function assertAccordionItemValuesUnique(items: Pick<IdsAccordionItem, "v
 }
 
 assertAccordionItemValuesUnique(ACCORDION_SPEC_DEMO_ITEMS);
-assertAccordionItemValuesUnique(ACCORDION_SPEC_FORM_ITEMS);
