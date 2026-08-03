@@ -8,28 +8,30 @@
 | Programme | PowerFlex |
 | Slug | `text-box` |
 | Figma name | `text-input` |
-| Version | 1.0.0 |
-| Status | `draft` |
+| Version | 1.0.1 |
+| Status | `active` |
 | Created | 2026-08-03 |
 | Updated | 2026-08-03 |
 | Spec pattern | `standalone` |
 | Theme CSS | `components/powerflex-theme.css` |
+| Figma file key | `82bDP05ESsiiGe38p5TEQJ` |
+| Main component set node | `2723:2611` |
 | Figma verification | Figma REST API (packaged evidence) |
 
 > Live verification performed from packaged `figma_evidence.json`. No client-side Figma authentication or MCP calls were made.
 
 ## Anatomy
 
-The `text-input` component set (`2723:2611`) is a multi-variant component set. The following slots/layers are codegen-relevant:
+The `text-input` component set (`2723:2611`) contains the full state/size/content matrix. Codegen-relevant slots are:
 
-1. **FieldContainer** — the outer `COMPONENT` for each `State`/`Content state`/`Size` permutation. Renders the input border and background.
+1. **FieldContainer** — the outer `COMPONENT` for each `State` / `Content state` / `Size` permutation. Renders the input border and background.
 2. **Value** / **Placeholder** — inner `TEXT` layer:
-   - `value` node id `2694:3711` (filled content)
-   - `placeholder` node id `2694:3741` (example content)
-3. **FocusRing** — `FRAME` drawn outside the field on focus/active (`2694:3714`, `2694:3719`, `2694:3724`, `2694:3729`, `2694:3734`, `2694:3739`, `2694:3744`, `2694:3749`, `2694:3754`, `2694:3759`, `2694:3764`, `2694:3769`).
-4. **InputRow** — the red-bordered field surface inside `State=error` variants (`2723:2533`).
-5. **ErrorMessage** — text + icon row shown below the field in error variants (`2723:2398`).
-6. **IconLeading** / **StatusCriticalCircSolid** — critical icon used in error messages (`2723:2403`, `2723:2399`).
+   - `value` node `2694:3711` (filled content)
+   - `placeholder` node `2694:3741` (example/empty placeholder text)
+3. **FocusRing** — `FRAME` drawn outside the field on focus/active. Representative verified nodes: `2694:3714` (lg default), `2694:3719` (lg disabled), `2694:3724` (md default), `2694:3734` (sm default), `2723:2537` (error sm).
+4. **InputRow** — red-bordered field surface inside `State=error` variants. Node `2723:2533`.
+5. **ErrorMessage** — text + critical icon row shown below the field in error variants. Node `2723:2398`.
+6. **IconLeading** / **StatusCriticalCircSolid** — critical icon used in error messages. Nodes `2723:2403` and `2723:2399`.
 
 ## Layout & Measurements
 
@@ -41,7 +43,14 @@ The `text-input` component set (`2723:2611`) is a multi-variant component set. T
 | `md` | 32px | 476px | 8px / 8px | 16px |
 | `lg` | 40px | 476px | 8px / 8px | 16px |
 
-### Focus ring offsets
+### Error component sizes
+
+| Size | Input row height | Error message height | Total component height |
+|---|---|---|---|
+| `sm` | 24px | 28px | 52px |
+| `md` | 32px | 28px | 60px |
+
+### Focus ring dimensions
 
 | Size | FocusRing dimensions |
 |---|---|
@@ -53,13 +62,16 @@ The `text-input` component set (`2723:2611`) is a multi-variant component set. T
 
 | Slot / layer | Property | Token / contract | Figma node | Live evidence |
 |---|---|---|---|---|
-| `text-input` component set | `border-radius` | `5.0px` (component set container) | `2723:2611` | `get_design_context` — `cornerRadius=5.0` |
-| `FieldContainer` | `border-radius` | `var(--text-box-control-radius)` (`0px`) | `2723:2610` | `get_design_context` — no reported `cornerRadius`; boundVariableHints `VariableID:2454:3`, `VariableID:2454:2`, `VariableID:2521:3`, `VariableID:2453:4`, `VariableID:2453:8` |
-| `FocusRing` | `border-radius` | `var(--text-box-focus-ring-radius)` (`4px`) | `2694:3714` | `get_design_context`; boundVariableHint `VariableID:2453:30` |
-| `FieldContainer` | `min-height` | size-specific (24/32/40px) | `2723:2610`, `2723:2605`, `2723:2603` | `get_design_context` — component dimensions |
-| `FieldContainer` | `padding` | `0 var(--padding-padding-8)` | `2723:2610` | `get_design_context` — `paddingLeft=8.0`, `paddingRight=8.0` |
-| `FieldContainer` | `border-width` | `1px` | `2723:2610` | `get_design_context` — `strokeWeight=1.0` |
-| `ErrorMessage` | `padding` | `var(--padding-padding-4) 0` | `2723:2398` | `get_design_context` — `paddingTop=4.0`, `paddingBottom=4.0` |
+| `text-input` component set | `border-radius` | `5.0px` (component-set container only) | `2723:2611` | `slotGeometry` — `borderRadius=5.0` |
+| `FieldContainer` (default filled lg) | `border-radius` | `var(--text-box-control-radius)` (`0px`); no `cornerRadius` reported on the Figma node | `2723:2610` | `slotGeometry` / `get_design_context` — `boundVariableHints` include `VariableID:2454:3`, `VariableID:2454:2`, `VariableID:2521:3`, `VariableID:2453:4`, `VariableID:2453:8` |
+| `FieldContainer` | `min-height` | 24px / 32px / 40px per size | `2723:2603`, `2723:2605`, `2723:2610` | `slotGeometry` — component dimensions |
+| `FieldContainer` | `padding` | `0 8px` | `2723:2610` | `slotGeometry` — `paddingLeft=8.0`, `paddingRight=8.0` |
+| `FieldContainer` | `border-width` | `1px` | `2723:2610` | `slotGeometry` — `strokeWeight=1.0` |
+| `InputRow` (error) | `border-radius` | `var(--text-box-control-radius)` (`0px`); no `cornerRadius` reported | `2723:2533` | `slotGeometry` — `boundVariableHints` include `VariableID:2454:3`, `VariableID:2454:2`, `VariableID:2521:3`, `VariableID:2453:4`, `VariableID:2453:58` |
+| `FocusRing` | `border-radius` | `var(--text-box-focus-ring-radius)` (`4px`) bound to `VariableID:2453:30` | `2694:3714` | `slotGeometry` — `boundVariableHint` `VariableID:2453:30` |
+| `ErrorMessage` | `padding` | `4px 0` | `2723:2398` | `slotGeometry` — `paddingTop=4.0`, `paddingBottom=4.0` |
+| `ErrorMessage` | `item-spacing` | `8px` | `2723:2398` | `slotGeometry` — `itemSpacing=8.0` |
+| `IconLeading` | `padding` | `2px` top | `2723:2403` | `slotGeometry` — `paddingTop=2.0` |
 
 ## Tokens
 
@@ -67,12 +79,12 @@ The `text-input` component set (`2723:2611`) is a multi-variant component set. T
 
 | Token | Value | Source |
 |---|---|---|
-| Font family | `Roboto` | `specFragments.typography` |
+| Font family | `Roboto` | `get_design_context` typography — `specFragments.typography` |
 | Value / placeholder / error | `14px` / `20px` line-height / `400` weight | `specFragments.typography` |
 
-### Colours
+### Colors
 
-All colours must be consumed as CSS custom properties. Values in parentheses show the resolved **Light** theme value from `components/ids-theme.css` or the PowerFlex theme override.
+All colors are consumed as CSS custom properties. Parenthesized values are the resolved **Light** theme values from `components/powerflex-theme.css` or the imported IDS theme.
 
 | Token | Light value | Usage |
 |---|---|---|
@@ -86,14 +98,14 @@ All colours must be consumed as CSS custom properties. Values in parentheses sho
 | `var(--text-box-border-active)` | `#0076ce` | active/focus border (PowerFlex override) |
 | `var(--text-box-border-error)` | `#af0000` | error border (PowerFlex override) |
 | `var(--text-box-error-icon-color)` | `#af0000` | error icon (PowerFlex override) |
-| `var(--color-border-brand-base)` | `#0672cb` | focus-ring stroke fallback |
+| `var(--color-border-brand-base)` | `#0672cb` | fallback focus-ring stroke token |
 
 ### Component aliases
 
 | Alias | Value | Figma evidence |
 |---|---|---|
-| `var(--text-box-control-radius)` | `0px` | No borderRadius reported on field components; IDS default `radius-none` |
-| `var(--text-box-focus-ring-radius)` | `4px` | Focus ring frame; IDS `radius-4` |
+| `var(--text-box-control-radius)` | `0px` | FieldContainer/InputRow components do not report `cornerRadius`; captured as a PowerFlex component alias |
+| `var(--text-box-focus-ring-radius)` | `4px` | Focus ring bound to `VariableID:2453:30`; `4px` verified from `slotGeometry` |
 
 ## States (Light Theme)
 
@@ -117,7 +129,7 @@ All colours must be consumed as CSS custom properties. Values in parentheses sho
 
 ## States (Dark Theme)
 
-Dark theme values are resolved from the imported IDS dark palette (`components/ids-theme.css` under `data-theme="dark"`). No PowerFlex-specific dark overrides were packaged.
+Dark theme values resolve from the imported IDS dark palette (`components/ids-theme.css` under `data-theme="dark"`). No PowerFlex-specific dark overrides were packaged for the `text-input` states.
 
 | State | Background | Border | Text-Icon |
 |---|---|---|---|
@@ -172,7 +184,7 @@ Recommended props for generated components:
 
 ### Deterministic structure
 
-Emit a single root element with two visual children:
+Emit a single root element with three visual children:
 1. `Field` — `<input>` (or framework equivalent) wrapped in the border/background shell.
 2. `FocusRing` — absolutely positioned pseudo-element or sibling frame drawn outside the field on `:focus-visible` and `active`.
 3. `ErrorMessage` — rendered conditionally below the field when `state='error'`.
@@ -189,16 +201,16 @@ Emit a single root element with two visual children:
 | `content=example` | empty value, placeholder visible | `.content-example` |
 | `content=empty` | empty value | `.content-empty` |
 | `content=filled` | value present | `.content-filled` |
-| `size=sm|md|lg` | — | `.size-sm`, `.size-md`, `.size-lg` |
+| `size=sm\|md\|lg` | — | `.size-sm`, `.size-md`, `.size-lg` |
 
 ### Per-slot style contract
 
 | Slot | CSS selector | Contract |
 |---|---|---|
-| `Field` | `.text-box__field` | `min-height` per size; `padding: 0 var(--padding-padding-8)`; `border: 1px solid var(--text-box-border-default)`; `border-radius: var(--text-box-control-radius)`; `background: var(--color-background-component)` |
+| `Field` | `.text-box__field` | `min-height` per size; `padding: 0 8px`; `border: 1px solid var(--text-box-border-default)`; `border-radius: var(--text-box-control-radius)`; `background: var(--color-background-component)` |
 | `FocusRing` | `.text-box__focus-ring` | `position: absolute`; inset `-2px`; `border-radius: var(--text-box-focus-ring-radius)`; `border: 1px solid var(--text-box-border-active)` |
-| `ErrorMessage` | `.text-box__error` | `display: flex`; `gap: 8px`; `padding: var(--padding-padding-4) 0`; `color: var(--text-box-border-error)`; `font: 14px/20px Roboto` |
-| `IconLeading` | `.text-box__error-icon` | `width: 16px; height: 18px`; `color: var(--text-box-error-icon-color)` |
+| `ErrorMessage` | `.text-box__error` | `display: flex`; `gap: 8px`; `padding: 4px 0`; `color: var(--text-box-border-error)`; `font: 14px/20px Roboto` |
+| `IconLeading` | `.text-box__error-icon` | `width: 16px; height: 16px`; `color: var(--text-box-error-icon-color)` |
 
 ### Behavior contract
 
@@ -249,8 +261,13 @@ Emit a single root element with two visual children:
 | Hover `filled` `lg` node | `2723:2589` |
 | Active `filled` `lg` node | `2723:2576` |
 | Error `filled` `sm` node | `2723:2579` |
-| Focus ring node (lg) | `2694:3714` |
+| Error `filled` `md` node | `2723:2567` |
 | Error input-row node | `2723:2533` |
+| Error focus-ring node (sm) | `2723:2537` |
 | Error message node | `2723:2398` |
+| Icon leading node | `2723:2403` |
+| Status critical icon node | `2723:2399` |
+| Focus ring node (lg default) | `2694:3714` |
+| Focus ring node (lg disabled) | `2694:3719` |
 | Verification method | Figma REST API (packaged evidence) |
 | Packaged evidence | `figma_evidence.json` in this Bridge session |
