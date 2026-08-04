@@ -1,0 +1,45 @@
+@import url("ids-theme.css");
+
+/* PowerFlex Text Box theme overrides.
+   The base IDS token library is imported above. The variables below are
+   scoped to [data-design-system="powerflex"] and provide the Figma-verified
+   Text Box geometry and color contracts. */
+
+[data-design-system="powerflex"] {
+  --text-box-control-radius: 5px;
+  --text-box-focus-ring-radius: 4px;
+
+  --text-box-background: #ffffff;
+  --text-box-background-disabled: #f4f4f4;
+
+  --text-box-border-default: #888888;
+  --text-box-border-hover: #333333;
+  --text-box-border-active: #0076ce;
+  --text-box-border-error: #af0000;
+
+  --text-box-text: #333333;
+  --text-box-text-disabled: #777777;
+  --text-box-placeholder: #888888;
+
+  --text-box-focus-ring: #0076ce;
+  --text-box-icon-error: #af0000;
+  --text-box-error-text: #af0000;
+}
+
+[data-design-system="powerflex"][data-theme="dark"] {
+  --text-box-background: #111619;
+  --text-box-background-disabled: #1e262c;
+
+  --text-box-border-default: #8898a5;
+  --text-box-border-hover: #e6e9ec;
+  --text-box-border-active: #509cda;
+  --text-box-border-error: #dd9494;
+
+  --text-box-text: #e6e9ec;
+  --text-box-text-disabled: #c5c5c5;
+  --text-box-placeholder: #8898a5;
+
+  --text-box-focus-ring: #509cda;
+  --text-box-icon-error: #c74c4c;
+  --text-box-error-text: #dd9494;
+}
