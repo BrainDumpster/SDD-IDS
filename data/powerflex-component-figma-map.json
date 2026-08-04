@@ -1,0 +1,59 @@
+{
+  "description": "PowerFlex component to Figma node mapping",
+  "lastUpdated": "2026-08-04",
+  "programme": "powerflex",
+  "components": [
+    {
+      "slug": "text-box",
+      "displayName": "Text Box",
+      "designSpecPath": "components/powerflex/text-box/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2723-2611&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2723:2611",
+      "mainComponentSetNodeId": "2723:2611",
+      "specPattern": "standalone",
+      "elements": {
+        "mainComponentSet": "2723:2611",
+        "inputLgDefault": "2723:2610",
+        "focusRingLgDefault": "2694:3714",
+        "inputMdDefault": "2723:2605",
+        "focusRingMdDefault": "2694:3724",
+        "inputSmDefault": "2723:2603",
+        "focusRingSmDefault": "2694:3734",
+        "errorSm": "2723:2579",
+        "errorMd": "2723:2567",
+        "inputRow": "2723:2533",
+        "errorMessage": "2723:2398",
+        "iconLeading": "2723:2403",
+        "statusCriticalCircSolid": "2723:2399"
+      },
+      "states": {
+        "default": {
+          "lg": "2723:2610",
+          "md": "2723:2605",
+          "sm": "2723:2603"
+        },
+        "hover": {
+          "lg": "2723:2589",
+          "md": "2723:2587",
+          "sm": "2723:2598"
+        },
+        "active": {
+          "lg": "2723:2576",
+          "md": "2723:2573",
+          "sm": "2723:2572"
+        },
+        "disabled": {
+          "lg": "2723:2608",
+          "md": "2723:2604",
+          "sm": "2723:2602"
+        },
+        "error": {
+          "sm": "2723:2579",
+          "md": "2723:2567"
+        }
+      },
+      "lastVerified": "2026-08-04"
+    }
+  ]
+}
