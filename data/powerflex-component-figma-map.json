@@ -1,0 +1,27 @@
+{
+  "description": "PowerFlex component → Figma node mapping",
+  "components": [
+    {
+      "slug": "text-box",
+      "displayName": "Text Box",
+      "designSpecPath": "components/powerflex/text-box/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2723-2611&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2723:2611",
+      "mainComponentSetNodeId": "2723:2611",
+      "specPattern": "standalone",
+      "elements": {
+        "inputRow": "2723:2533",
+        "errorMessage": "2723:2398",
+        "iconLeading": "2723:2403",
+        "statusIcon": "2723:2399"
+      },
+      "states": {
+        "default": "2723:2610",
+        "disabled": "2723:2608",
+        "errorSm": "2723:2579",
+        "errorMd": "2723:2567"
+      }
+    }
+  ]
+}
