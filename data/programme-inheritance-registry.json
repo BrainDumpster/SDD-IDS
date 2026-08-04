@@ -19,6 +19,13 @@
       "themeCssPath": "components/dap-theme.css",
       "storybookTitlePrefix": "Spec Generated/DAP",
       "baselineComponentsDir": "components/ids"
+    },
+    "powerflex": {
+      "componentsDir": "components/powerflex",
+      "figmaMapPath": "data/powerflex-component-figma-map.json",
+      "themeCssPath": "components/powerflex-theme.css",
+      "storybookTitlePrefix": "Spec Generated/Powerflex",
+      "baselineComponentsDir": "components/ids"
     }
   },
   "components": [
@@ -241,7 +248,11 @@
       "triggerShell": "storybook/src/components/SynapseDropdownTriggerShell.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-dropdown-single-select.contract.ts",
       "storybookPath": "storybook/src/components/SynapseDropdownSingleSelect.stories.tsx",
-      "themeAliases": ["--dropdown-control-radius", "--dropdown-focus-ring-radius", "--dropdown-menu-radius"],
+      "themeAliases": [
+        "--dropdown-control-radius",
+        "--dropdown-focus-ring-radius",
+        "--dropdown-menu-radius"
+      ],
       "lastVerified": "2026-06-12",
       "status": "active"
     },
@@ -261,7 +272,11 @@
       "triggerShell": "storybook/src/components/SynapseDropdownTriggerShell.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-dropdown-multiselect.contract.ts",
       "storybookPath": "storybook/src/components/SynapseDropdownMultiSelect.stories.tsx",
-      "themeAliases": ["--dropdown-control-radius", "--dropdown-focus-ring-radius", "--dropdown-menu-radius"],
+      "themeAliases": [
+        "--dropdown-control-radius",
+        "--dropdown-focus-ring-radius",
+        "--dropdown-menu-radius"
+      ],
       "lastVerified": "2026-06-12",
       "status": "active"
     },
@@ -282,7 +297,10 @@
       "programmeWrapper": "storybook/src/components/SynapseCheckbox.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-checkbox.contract.ts",
       "storybookPath": "storybook/src/components/SynapseCheckbox.stories.tsx",
-      "themeAliases": ["--checkbox-control-radius", "--checkbox-label-font-weight"],
+      "themeAliases": [
+        "--checkbox-control-radius",
+        "--checkbox-label-font-weight"
+      ],
       "lastVerified": "2026-06-12",
       "status": "active"
     },
@@ -641,6 +659,21 @@
       "programmeSpecPath": "components/DAP/pagination/design-spec.md",
       "status": "active",
       "notes": "DAP inline overrides in Layout; extend with explicit deltas table when hardening."
+    },
+    {
+      "programme": "powerflex",
+      "slug": "text-box",
+      "displayName": "Text Box",
+      "registrySlug": "textbox",
+      "pattern": "standalone",
+      "programmeSpecPath": "components/powerflex/text-box/design-spec.md",
+      "programmeFigmaNodeId": "2723:2611",
+      "mainComponentSetNodeId": "2723:2611",
+      "specAccurateNodeId": "2723:2610",
+      "storybookPath": "storybook-generated/powerflex/src/components/TextBox.stories.tsx",
+      "themeAlias": "--text-box-control-radius",
+      "lastVerified": "2026-08-04",
+      "status": "active"
     }
   ]
 }
