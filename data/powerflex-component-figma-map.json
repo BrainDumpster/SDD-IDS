@@ -1,0 +1,78 @@
+{
+  "lastUpdated": "2026-08-05",
+  "programme": "powerflex",
+  "components": [
+    {
+      "slug": "toggle",
+      "displayName": "Toggle",
+      "designSpecPath": "components/powerflex/toggle/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2754-109&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2754:109",
+      "mainComponentSetNodeId": "2754:109",
+      "specPattern": "standalone",
+      "elements": {
+        "track": {
+          "mdDefaultOn": "2754:46",
+          "mdHoverOn": "2754:50",
+          "mdActiveOn": "2754:54",
+          "mdDisabledOn": "2754:58",
+          "mdDefaultOff": "2754:62",
+          "mdHoverOff": "2754:66",
+          "mdActiveOff": "2754:70",
+          "mdDisabledOff": "2754:74",
+          "lgDefaultOn": "2754:78",
+          "smDefaultOn": "2754:14"
+        },
+        "thumb": {
+          "md": "2754:47",
+          "lg": "2754:79",
+          "sm": "2754:15"
+        },
+        "focusRing": {
+          "md": "2754:48",
+          "lg": "2754:80",
+          "sm": "2754:16"
+        }
+      },
+      "states": {
+        "mdOn": [
+          "2754:45",
+          "2754:49",
+          "2754:53",
+          "2754:57"
+        ],
+        "mdOff": [
+          "2754:61",
+          "2754:65",
+          "2754:69",
+          "2754:73"
+        ],
+        "lgOn": [
+          "2754:77",
+          "2754:81",
+          "2754:85",
+          "2754:89"
+        ],
+        "lgOff": [
+          "2754:93",
+          "2754:97",
+          "2754:101",
+          "2754:105"
+        ],
+        "smOn": [
+          "2754:13",
+          "2754:17",
+          "2754:21",
+          "2754:25"
+        ],
+        "smOff": [
+          "2754:29",
+          "2754:33",
+          "2754:37",
+          "2754:41"
+        ]
+      }
+    }
+  ]
+}
