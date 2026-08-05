@@ -1,0 +1,45 @@
+{
+  "description": "PowerFlex component → Figma node map. Maintained by the design-spec intake and Collab Bridge processes.",
+  "programme": "powerflex",
+  "figmaFileKey": "82bDP05ESsiiGe38p5TEQJ",
+  "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2754-109&m=dev",
+  "components": {
+    "toggle": {
+      "designSpecPath": "components/powerflex/toggle/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2754-109&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2754:109",
+      "mainComponentSetNodeId": "2754:109",
+      "specPattern": "standalone",
+      "displayName": "Toggle",
+      "elements": {
+        "track": "2754:46",
+        "thumb": "2754:47",
+        "focusRing": "2754:48"
+      },
+      "states": {
+        "onDefaultMd": "2754:45",
+        "onHoverMd": "2754:49",
+        "onActiveMd": "2754:53",
+        "onDisabledMd": "2754:57",
+        "offDefaultMd": "2754:61",
+        "offHoverMd": "2754:65",
+        "offActiveMd": "2754:69",
+        "offDisabledMd": "2754:73",
+        "onDefaultLg": "2754:77",
+        "onHoverLg": "2754:81",
+        "onActiveLg": "2754:85",
+        "onDisabledLg": "2754:89",
+        "offDefaultLg": "2754:93",
+        "offHoverLg": "2754:97",
+        "offActiveLg": "2754:101",
+        "offDisabledLg": "2754:105",
+        "onDefaultSm": "2754:13",
+        "onHoverSm": "2754:17",
+        "onActiveSm": "2754:21",
+        "onDisabledSm": "2754:25"
+      },
+      "notes": "sm off-state node IDs were truncated in the packaged evidence; retrieve directly from Figma node 2754:109 when hardening the sm variant."
+    }
+  }
+}
