@@ -1,0 +1,46 @@
+{
+  "version": "1.1",
+  "lastUpdated": "2026-08-05",
+  "programme": "powerflex",
+  "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+  "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/toggle?node-id=2754%3A109",
+  "components": {
+    "toggle": {
+      "designSpecPath": "components/powerflex/toggle/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/toggle?node-id=2754%3A109",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2754:109",
+      "mainComponentSetNodeId": "2754:109",
+      "specPattern": "standalone",
+      "displayName": "Toggle",
+      "elements": {
+        "componentSet": "2754:109",
+        "track": "2754:46",
+        "thumb": "2754:47",
+        "focusRing": "2754:48"
+      },
+      "states": {
+        "defaultOnMd": "2754:45",
+        "hoverOnMd": "2754:49",
+        "activeOnMd": "2754:53",
+        "disabledOnMd": "2754:57",
+        "defaultOffMd": "2754:61",
+        "hoverOffMd": "2754:65",
+        "activeOffMd": "2754:69",
+        "disabledOffMd": "2754:73",
+        "defaultOnLg": "2754:77",
+        "hoverOnLg": "2754:81",
+        "activeOnLg": "2754:85",
+        "disabledOnLg": "2754:89",
+        "defaultOffLg": "2754:93",
+        "hoverOffLg": "2754:97",
+        "activeOffLg": "2754:101",
+        "disabledOffLg": "2754:105",
+        "defaultOnSm": "2754:13",
+        "hoverOnSm": "2754:17",
+        "activeOnSm": "2754:21",
+        "disabledOnSm": "2754:25"
+      }
+    }
+  }
+}
