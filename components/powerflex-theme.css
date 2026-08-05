@@ -1,0 +1,15 @@
+/*
+ * Powerflex Design System — Theme Tokens
+ * Thin wrapper around the IDS theme. Imports IDS tokens and defines
+ * Powerflex component aliases under the Powerflex design-system selector.
+ */
+
+@import url("ids-theme.css");
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* Toggle aliases — fall back to pill/round radius if IDS variable is not in scope */
+  --toggle-control-radius: var(--corner-radius-radius-round, 999999px);
+  --toggle-thumb-radius: var(--corner-radius-radius-round, 999999px);
+  --toggle-focus-ring-radius: var(--corner-radius-radius-round, 999999px);
+}
