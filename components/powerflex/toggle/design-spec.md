@@ -9,12 +9,14 @@
 | Programme | PowerFlex |
 | Status | `draft` |
 | Spec pattern | `standalone` |
-| Version | 1.0.0 |
+| Version | 1.0.1 |
 | Created | 2026-08-05 |
 | Updated | 2026-08-05 |
 | Theme CSS | `components/powerflex-theme.css` |
-| Verification | Figma REST API (`figma_rest_enriched`) |
+| Verification | `Figma REST API` — packaged `figma_evidence.json` (`verificationMethod` in `clientGuidance`) |
 | Evidence date | 2026-08-05 |
+| Figma file key | `82bDP05ESsiiGe38p5TEQJ` |
+| Main component set node | `2754:109` |
 
 ## Anatomy
 
@@ -49,10 +51,13 @@ The thumb is centered vertically inside the track with a 2px inset on both sides
 | Slot / layer | Property | Token / contract | Figma value | Figma node | Live evidence |
 |---|---|---|---|---|---|
 | `toggle` (component set) | `border-radius` | `var(--corner-radius-radius-4)` | 5.0px | `2754:109` | `get_design_context` cornerRadius=5.0 |
-| `track` | `border-radius` | `var(--corner-radius-radius-round)` | 9999.0px | `2754:46` | `boundVariableHint` `VariableID:2453:26`; `get_variable_defs` export did not resolve a name for this binding |
-| `thumb` | `border-radius` | `var(--corner-radius-radius-round)` | 9999.0px | `2754:47` | `boundVariableHint` `VariableID:2453:4`; `get_variable_defs` export did not resolve a name for this binding |
-| `focus-ring` | `border-radius` | `var(--corner-radius-radius-round)` | 9999.0px | `2754:48` | `boundVariableHint` `VariableID:2453:30`; `get_variable_defs` export did not resolve a name for this binding |
-| `track` (off default md) | `border-color` bound variable | `var(--color-border/default)` — inferred from `VariableID:2453:8` (`color/border/default`) | n/a | `2754:62` | `get_variable_defs` `VariableID:2453:8` → `color/border/default` |
+| `track` | `border-radius` | `var(--toggle-control-radius)` / `var(--corner-radius-radius-round)` | 9999.0px | `2754:46` | `get_design_context` cornerRadius=9999.0; `get_variable_defs` `VariableID:2453:26` → `color/action/primary/default` is the **fill** binding, not radius |
+| `thumb` | `border-radius` | `var(--toggle-control-radius)` / `var(--corner-radius-radius-round)` | 9999.0px | `2754:47` | `get_design_context` cornerRadius=9999.0; `get_variable_defs` `VariableID:2453:4` not resolved |
+| `focus-ring` | `border-radius` | `var(--toggle-control-radius)` / `var(--corner-radius-radius-round)` | 9999.0px | `2754:48` | `get_design_context` cornerRadius=9999.0; `get_variable_defs` `VariableID:2453:30` not resolved |
+| `track` (on default md) | `background` (fill) | `var(--color-background-controls-brand-base)` | #0076ce | `2754:46` | `get_variable_defs` `VariableID:2453:26` → `color/action/primary/default` |
+| `track` (off default md) | `background` (fill) | `var(--color-background-gray-light)` | #eeeeee | `2754:62` | `get_variable_defs` `VariableID:2453:8` not resolved |
+| `thumb` (md) | `background` (fill) | `var(--color-background-white)` | #ffffff | `2754:47` | `get_design_context` color sample |
+| `focus-ring` (md) | `border` (stroke) | `var(--color-border-brand-base)` | #0076ce | `2754:48` | `get_design_context` stroke sample |
 
 ## Tokens
 
@@ -78,6 +83,42 @@ The thumb is centered vertically inside the track with a 2px inset on both sides
 | `--toggle-control-radius` | `var(--corner-radius-radius-round)` | track / thumb / focus-ring `borderRadius=9999.0` |
 | `--toggle-focus-ring-offset` | 3px | focus-ring is 6px larger than track on each axis |
 | `--toggle-thumb-offset` | 2px | thumb inset from track edge in `off` position |
+
+### CSS custom properties
+
+The PowerFlex theme loads these custom properties for the toggle. They must be present for `var(--...)` declarations in the state matrices to resolve.
+
+```css
+/* components/powerflex-theme.css */
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  --color-background-controls-brand-base: #0076ce;
+  --color-background-controls-brand-strong: #005da4;
+  --color-background-controls-brand-stronger: #00447c;
+  --color-border-brand-base: #0076ce;
+  --color-border-brand-dark: #005da4;
+  --color-background-gray-light: #eeeeee;
+  --color-background-gray-base: #888888;
+  --color-background-gray-strong: #333333;
+  --color-background-gray-lighter: #f4f4f4;
+  --toggle-control-radius: var(--corner-radius-radius-round);
+  --toggle-focus-ring-offset: 3px;
+  --toggle-thumb-offset: 2px;
+}
+
+html[data-design-system="powerflex"][data-theme="dark"],
+body[data-design-system="powerflex"][data-theme="dark"] {
+  --color-background-controls-brand-base: #4c9ede;
+  --color-background-controls-brand-strong: #3a8bc7;
+  --color-background-controls-brand-stronger: #2a6fa3;
+  --color-border-brand-base: #4c9ede;
+  --color-border-brand-dark: #3a8bc7;
+  --color-background-gray-light: #4d4d4d;
+  --color-background-gray-base: #9e9e9e;
+  --color-background-gray-strong: #b8c1c9;
+  --color-background-gray-lighter: #393939;
+}
+```
 
 ## States (Light Theme)
 
@@ -166,17 +207,17 @@ Classes must be stable. Framework-specific wrappers (React, Angular, Vue, Lit) m
 | `size=sm`, `checked=true` | `data-size="sm" data-checked="true"` | same; thumb translated |
 | `size=md`, `checked=false` | `data-size="md" data-checked="false"` | `State=default, Checked=off, Size=md` (`2754:61`) |
 | `size=md`, `checked=true` | `data-size="md" data-checked="true"` | `State=default, Checked=on, Size=md` (`2754:45`) |
-| `size=lg`, `checked=false` | `data-size="lg" data-checked="false"` | `State=default, Checked=off, Size=lg` |
-| `size=lg`, `checked=true` | `data-size="lg" data-checked="true"` | `State=default, Checked=on, Size=lg` |
+| `size=lg`, `checked=false` | `data-size="lg" data-checked="false"` | `State=default, Checked=off, Size=lg` (`2754:93`) |
+| `size=lg`, `checked=true` | `data-size="lg" data-checked="true"` | `State=default, Checked=on, Size=lg` (`2754:77`) |
 | `disabled=true` | `data-disabled="true"` | disabled variants in the component set |
 
 ### Per-slot style contract
 
 | Slot | CSS selectors | Required declarations |
 |---|---|---|
-| `track` | `.powerflex-toggle__track` | `width`, `height`, `border-radius: var(--toggle-control-radius)`, `background` from state matrix |
-| `thumb` | `.powerflex-toggle__thumb` | `width`, `height`, `border-radius: var(--toggle-control-radius)`, `background: var(--color-background-white)`, `transform: translateX(...)` based on `checked` and size |
-| `focus-ring` | `.powerflex-toggle__focus-ring` | `position: absolute`, sized +6px around track, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--toggle-control-radius)`, shown only on `:focus-visible` |
+| `track` | `.powerflex-toggle__track` | `width`, `height`, `border-radius: var(--toggle-control-radius)` / `var(--corner-radius-radius-round)` (round), `background` from state matrix |
+| `thumb` | `.powerflex-toggle__thumb` | `width`, `height`, `border-radius: var(--toggle-control-radius)` / `var(--corner-radius-radius-round)` (round), `background: var(--color-background-white)`, `transform: translateX(...)` based on `checked` and size |
+| `focus-ring` | `.powerflex-toggle__focus-ring` | `position: absolute`, sized +6px around track, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--toggle-control-radius)` / `var(--corner-radius-radius-round)`, shown only on `:focus-visible` |
 
 ### Behavior contract
 
@@ -196,11 +237,13 @@ Classes must be stable. Framework-specific wrappers (React, Angular, Vue, Lit) m
 
 - No image assets are required; the toggle is rendered entirely with CSS geometry and semantic tokens.
 - Theme CSS `components/powerflex-theme.css` must be imported by any Storybook or application entry that renders the component.
+- The import must be a resolvable relative path (e.g., `import "../../../../components/powerflex-theme.css";` from `storybook-generated/powerflex/src/components/Toggle.stories.tsx`) so the variables are available at runtime.
 
 ### Fallback/error rules
 
 - If an unsupported `size` is supplied, fall back to `md`.
 - If `aria-label` and `aria-labelledby` are both missing, the generator must emit a lint warning and supply a default `aria-label="Toggle"`.
+- If a CSS custom property is not defined, the corresponding declaration should carry a roundness fallback of `9999px` for `border-radius` slots so the track and thumb remain pill/circular instead of square.
 - If theme CSS is not loaded, the component renders using browser defaults; generators should warn at build time when the design system CSS import is missing.
 
 ### Validation checklist
@@ -210,14 +253,16 @@ Classes must be stable. Framework-specific wrappers (React, Angular, Vue, Lit) m
 - [ ] `aria-checked` is bound to the component state.
 - [ ] Keyboard `Space` toggles state.
 - [ ] Disabled state blocks interaction and uses `var(--color-background-gray-lighter)` for the track.
-- [ ] Storybook story set imports `components/powerflex-theme.css` and renders `sm`, `md`, `lg`, checked, and disabled states.
+- [ ] Storybook story set imports `components/powerflex-theme.css` via a relative path and renders `sm`, `md`, `lg`, checked, and disabled states.
 
 ## Source Mapping
 
 | Source | Key / ID | URL / Method |
 |---|---|---|
 | Figma file | `82bDP05ESsiiGe38p5TEQJ` | [PowerFlex MCP Design System — toggle](https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2754-109&m=dev) |
-| Main component set node | `2754:109` | Figma REST API `get_metadata` / `get_design_context` |
-| State nodes (md) | `2754:45` (on default), `2754:49` (on hover), `2754:53` (on active), `2754:57` (on disabled), `2754:61` (off default), `2754:65` (off hover), `2754:69` (off active), `2754:73` (off disabled) | Figma REST API `get_design_context` |
-| Element nodes | `2754:46` / `2754:50` / `2754:54` / `2754:58` / `2754:62` / `2754:66` / `2754:70` / `2754:74` (track), `2754:47` / `2754:51` / `2754:55` / `2754:59` / `2754:63` / `2754:67` / `2754:71` / `2754:75` (thumb), `2754:48` / `2754:52` / `2754:56` / `2754:60` / `2754:64` / `2754:68` / `2754:72` / `2754:76` (focus-ring) | Figma REST API `get_metadata` structure |
-| Verification method | `Figma REST API` | `verificationMethod` in packaged evidence; no client MCP call |
+| Main component set node | `2754:109` | `get_metadata` / `get_design_context` from packaged `figma_evidence.json` |
+| State nodes (md) | `2754:45` (on default), `2754:49` (on hover), `2754:53` (on active), `2754:57` (on disabled), `2754:61` (off default), `2754:65` (off hover), `2754:69` (off active), `2754:73` (off disabled) | `get_design_context` from packaged `figma_evidence.json` |
+| State nodes (lg) | `2754:77` (on default), `2754:81` (on hover), `2754:85` (on active), `2754:89` (on disabled), `2754:93` (off default), `2754:97` (off hover), `2754:101` (off active), `2754:105` (off disabled) | `get_design_context` from packaged `figma_evidence.json` |
+| State nodes (sm) | `2754:13` (on default), `2754:17` (on hover), `2754:21` (on active), `2754:25` (on disabled) | `get_design_context` from packaged `figma_evidence.json`; `sm` off-state node IDs were not packaged and should be read from `2754:109` if hardening |
+| Element nodes (md) | `2754:46` / `2754:50` / `2754:54` / `2754:58` / `2754:62` / `2754:66` / `2754:70` / `2754:74` (track), `2754:47` / `2754:51` / `2754:55` / `2754:59` / `2754:63` / `2754:67` / `2754:71` / `2754:75` (thumb), `2754:48` / `2754:52` / `2754:56` / `2754:60` / `2754:64` / `2754:68` / `2754:72` / `2754:76` (focus-ring) | `get_metadata` from packaged `figma_evidence.json` |
+| Verification method | `Figma REST API` | `verificationMethod` in `figma_evidence.json` `clientGuidance`; no client MCP call |
