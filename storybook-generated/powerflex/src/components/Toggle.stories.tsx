@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import 'components/powerflex-theme.css';
+import { useEffect } from 'react';
+import '../../../../components/powerflex-theme.css';
 
 interface ToggleProps {
   checked?: boolean;
@@ -17,9 +18,12 @@ function Toggle({ checked = false, disabled = false, size = 'md' }: ToggleProps)
   const dims = sizeMap[size];
   const thumbOffset = checked ? dims.track.w - dims.thumb.w - 4 : 2;
 
+  useEffect(() => {
+    document.body.setAttribute('data-design-system', 'powerflex');
+  }, []);
+
   return (
     <div
-      data-design-system="powerflex"
       role="switch"
       aria-checked={checked}
       aria-disabled={disabled || undefined}
@@ -38,12 +42,12 @@ function Toggle({ checked = false, disabled = false, size = 'md' }: ToggleProps)
           position: 'relative',
           width: dims.track.w,
           height: dims.track.h,
-          borderRadius: 'var(--toggle-control-radius)',
+          borderRadius: 'var(--toggle-control-radius, 9999px)',
           background: disabled
-            ? 'var(--color-background-gray-lighter)'
+            ? 'var(--color-background-gray-lighter, #f4f4f4)'
             : checked
-              ? 'var(--color-background-controls-brand-base)'
-              : 'var(--color-background-gray-light)',
+              ? 'var(--color-background-controls-brand-base, #0076ce)'
+              : 'var(--color-background-gray-light, #eeeeee)',
         }}
       >
         <div
@@ -53,9 +57,23 @@ function Toggle({ checked = false, disabled = false, size = 'md' }: ToggleProps)
             left: thumbOffset,
             width: dims.thumb.w,
             height: dims.thumb.h,
-            borderRadius: 'var(--toggle-control-radius)',
-            background: 'var(--color-background-white)',
+            borderRadius: 'var(--toggle-control-radius, 9999px)',
+            background: 'var(--color-background-white, #ffffff)',
             transition: 'left 150ms ease-out',
+          }}
+        />
+        <span
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: -3,
+            left: -3,
+            width: dims.ring.w,
+            height: dims.ring.h,
+            border: '1px solid var(--color-border-brand-base, #0076ce)',
+            borderRadius: 'var(--toggle-control-radius, 9999px)',
+            pointerEvents: 'none',
+            opacity: 1,
           }}
         />
       </div>
@@ -64,7 +82,7 @@ function Toggle({ checked = false, disabled = false, size = 'md' }: ToggleProps)
 }
 
 const meta: Meta<typeof Toggle> = {
-  title: 'Spec Generated/Powerflex/Toggle',
+  title: 'Spec Generated/Powerflex/toggle',
   component: Toggle,
   parameters: {
     layout: 'centered',
