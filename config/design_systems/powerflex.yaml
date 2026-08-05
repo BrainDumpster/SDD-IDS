@@ -1,14 +1,11 @@
 # PowerFlex Design System Configuration
-# Inherits IDS baseline tokens and components; overrides programme-specific values.
 
 name: powerflex
 display_name: PowerFlex
-token_transform: ids
+token_transform: powerflex
 
 # Component library
 figma_file_key: "82bDP05ESsiiGe38p5TEQJ"
-# PowerFlex does not expose a separate Variables Library file in the packaged evidence.
-figma_variables_library_key: ""
 
 figma_map_path: data/powerflex-component-figma-map.json
 rules_path: rules.json
@@ -25,14 +22,11 @@ program_components_dir: ""
 program_root_spec_path: ""
 program_theme_css_path: ""
 
-qdrant_collection: design_knowledge
-
-framework_layer: ""
 root_spec_path: components/powerflex/root-spec.md
+
 generated_storybook_dir: storybook-generated/powerflex
 strict_storybook_gate: false
 
-# Optional: concrete paths for codegen / agents in this repository only.
 codegen:
   react:
     icon_component_module: storybook/src/components/Icon
