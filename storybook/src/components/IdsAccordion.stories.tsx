@@ -4,7 +4,6 @@ import { IdsAccordion } from "./IdsAccordion";
 import {
   ACCORDION_API_DEFAULTS,
   ACCORDION_SPEC_DEMO_ITEMS,
-  ACCORDION_SPEC_FORM_ITEMS,
   IDS_ACCORDION_DESIGN_SPEC_PATH,
 } from "../spec-contracts/ids-accordion.contract";
 
@@ -56,13 +55,5 @@ export const ChevronLeft: Story = {
 export const ChevronRight: Story = {
   args: {
     chevronPosition: "right",
-  },
-};
-
-export const AccordionWithForm: Story = {
-  args: {
-    chevronPosition: "left",
-    variant: "form",
-    items: ACCORDION_SPEC_FORM_ITEMS,
   },
 };
