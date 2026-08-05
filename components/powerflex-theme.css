@@ -1,0 +1,75 @@
+/*
+ * PowerFlex Design System — Global Theme Tokens
+ * Auto-extracted from the packaged Figma PowerFlex MCP Design System evidence.
+ * Scope: html/body[data-design-system="powerflex"] (+ [data-theme="dark"]).
+ * This file imports the IDS token library as a donor and layers PowerFlex
+ * semantic overrides for components packaged from the PowerFlex Figma file.
+ */
+
+@import "ids-theme.css";
+
+/* ========================================================
+   LIGHT THEME
+   ======================================================== */
+
+html[data-design-system="powerflex"], body[data-design-system="powerflex"] {
+  /* --- PowerFlex brand / action primitives --- */
+  --color-action-primary-default: #0076ce;
+  --color-action-primary-hover: #005da4;
+  --color-action-primary-active: #00447c;
+  --color-action-primary-disabled: #f4f4f4;
+
+  --color-action-secondary-default: #eeeeee;
+  --color-action-secondary-hover: #888888;
+  --color-action-secondary-active: #333333;
+  --color-action-secondary-disabled: #f4f4f4;
+
+  /* --- Toggle-specific aliases --- */
+  --toggle-thumb-color: #ffffff;
+  --toggle-focus-ring-color: var(--color-action-primary-default);
+
+  /* --- Geometry / radius (full pill) --- */
+  --corner-radius-radius-round: 999999px;
+  --toggle-track-radius: var(--corner-radius-radius-round);
+  --toggle-thumb-radius: var(--corner-radius-radius-round);
+  --toggle-focus-ring-radius: var(--corner-radius-radius-round);
+  --toggle-track-padding: 2px;
+  --toggle-focus-ring-stroke: 1px;
+
+  /* --- Size tokens --- */
+  --toggle-track-sm-width: 32px;
+  --toggle-track-sm-height: 16px;
+  --toggle-thumb-sm: 12px;
+
+  --toggle-track-md-width: 44px;
+  --toggle-track-md-height: 24px;
+  --toggle-thumb-md: 20px;
+
+  --toggle-track-lg-width: 52px;
+  --toggle-track-lg-height: 28px;
+  --toggle-thumb-lg: 24px;
+}
+
+/* ========================================================
+   DARK THEME
+   ======================================================== */
+
+html[data-design-system="powerflex"][data-theme="dark"], body[data-design-system="powerflex"][data-theme="dark"] {
+  /*
+   * Dark values are not present in the packaged Figma evidence.
+   * The tokens below are interim accessible equivalents and should be
+   * replaced with verified PowerFlex dark-mode variable values when synced.
+   */
+  --color-action-primary-default: #4c8edd;
+  --color-action-primary-hover: #509cda;
+  --color-action-primary-active: #005ece;
+  --color-action-primary-disabled: #393939;
+
+  --color-action-secondary-default: #4d4d4d;
+  --color-action-secondary-hover: #616161;
+  --color-action-secondary-active: #393939;
+  --color-action-secondary-disabled: #393939;
+
+  --toggle-thumb-color: #ffffff;
+  --toggle-focus-ring-color: var(--color-action-primary-default);
+}
