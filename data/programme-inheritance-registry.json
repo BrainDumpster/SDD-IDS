@@ -683,7 +683,6 @@
       "programmeFigmaNodeId": "2723:2611",
       "mainComponentSetNodeId": "2723:2611",
       "storybookPath": "storybook-generated/powerflex/src/components/TextBox.stories.tsx",
-      "themeAlias": "--text-box-control-radius",
       "lastVerified": "2026-08-06",
       "status": "draft"
     }
