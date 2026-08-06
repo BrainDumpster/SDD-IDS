@@ -17,7 +17,7 @@
 | Figma file key | `82bDP05ESsiiGe38p5TEQJ` |
 | Main Figma node | `2723:2611` |
 | Verification method | Figma REST API (packaged evidence) |
-| Designer follow-up applied | Text inputs must render as a native `<input type="text">`; the `value` slot is not a `<div>`. |
+| Designer follow-up applied | Text inputs must render as a native `<input type="text">`; the Figma `value`/`placeholder` text layers must not become DOM `<div>` text nodes. |
 
 ## Anatomy
 
@@ -154,6 +154,12 @@ The component exposes these slots:
 Dark-mode values are **not present** in the packaged Figma evidence. The tokens listed above should be resolved against the PowerFlex dark theme palette (`components/powerflex-theme.css` under `html[data-design-system="powerflex"][data-theme="dark"]`) when the variables are synced. Until verified, implementations should use the inverse-contrast equivalents of the light tokens and expose the same state matrix.
 
 ## Interactions
+
+### Designer follow-up (applied)
+
+The follow-up from the Collab chat asked: **"Why text inputs are rendering as div?"**
+
+In the packaged Figma evidence the editable content is represented by `value` and `placeholder` **TEXT** nodes. Those nodes must not be emitted as separate DOM `<div>` elements. The component's editable control is a native `<input type="text">`, and the Figma text content maps to the input's `value` and `placeholder` attributes/properties. The surrounding `text-box` wrapper is a `<div>` only for layout; the actual text input is the `<input>`.
 
 ### Behavior & guidelines
 
