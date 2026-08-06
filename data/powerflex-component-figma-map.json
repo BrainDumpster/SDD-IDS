@@ -1,0 +1,205 @@
+{
+  "lastUpdated": "2026-08-06",
+  "programme": "powerflex",
+  "components": [
+    {
+      "slug": "toggle",
+      "displayName": "Toggle",
+      "designSpecPath": "components/powerflex/toggle/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2754-109&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2754:109",
+      "mainComponentSetNodeId": "2754:109",
+      "specPattern": "standalone",
+      "elements": {
+        "track": {
+          "mdDefaultOn": "2754:46",
+          "mdHoverOn": "2754:50",
+          "mdActiveOn": "2754:54",
+          "mdDisabledOn": "2754:58",
+          "mdDefaultOff": "2754:62",
+          "mdHoverOff": "2754:66",
+          "mdActiveOff": "2754:70",
+          "mdDisabledOff": "2754:74",
+          "lgDefaultOn": "2754:78",
+          "smDefaultOn": "2754:14"
+        },
+        "thumb": {
+          "md": "2754:47",
+          "lg": "2754:79",
+          "sm": "2754:15"
+        },
+        "focusRing": {
+          "md": "2754:48",
+          "lg": "2754:80",
+          "sm": "2754:16"
+        }
+      },
+      "states": {
+        "mdOn": [
+          "2754:45",
+          "2754:49",
+          "2754:53",
+          "2754:57"
+        ],
+        "mdOff": [
+          "2754:61",
+          "2754:65",
+          "2754:69",
+          "2754:73"
+        ],
+        "lgOn": [
+          "2754:77",
+          "2754:81",
+          "2754:85",
+          "2754:89"
+        ],
+        "lgOff": [
+          "2754:93",
+          "2754:97",
+          "2754:101",
+          "2754:105"
+        ],
+        "smOn": [
+          "2754:13",
+          "2754:17",
+          "2754:21",
+          "2754:25"
+        ],
+        "smOff": [
+          "2754:29",
+          "2754:33",
+          "2754:37",
+          "2754:41"
+        ]
+      }
+    },
+    {
+      "slug": "text-box",
+      "displayName": "Text Box",
+      "designSpecPath": "components/powerflex/text-box/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/82bDP05ESsiiGe38p5TEQJ/PowerFlex-MCP-Design-System?node-id=2723-2611&m=dev",
+      "fileKey": "82bDP05ESsiiGe38p5TEQJ",
+      "nodeId": "2723:2611",
+      "mainComponentSetNodeId": "2723:2611",
+      "specPattern": "standalone",
+      "elements": {
+        "field": {
+          "defaultLg": "2723:2610",
+          "defaultMd": "2723:2605",
+          "defaultSm": "2723:2603",
+          "defaultExampleLg": "2723:2601",
+          "defaultExampleMd": "2723:2597",
+          "defaultExampleSm": "2723:2590",
+          "defaultEmptyLg": "2723:2585",
+          "defaultEmptyMd": "2723:2586",
+          "defaultEmptySm": "2723:2596",
+          "hoverLg": "2723:2589",
+          "hoverMd": "2723:2587",
+          "hoverSm": "2723:2598",
+          "hoverExampleLg": "2723:2594",
+          "hoverExampleMd": "2723:2591",
+          "hoverExampleSm": "2723:2581",
+          "hoverEmptyLg": "2723:2580",
+          "hoverEmptyMd": "2723:2578",
+          "hoverEmptySm": "2723:2577",
+          "activeLg": "2723:2576",
+          "activeMd": "2723:2573",
+          "activeSm": "2723:2572",
+          "activeExampleLg": "2723:2584",
+          "activeExampleMd": "2723:2571",
+          "activeExampleSm": "2723:2570",
+          "activeEmptyLg": "2723:2569",
+          "activeEmptyMd": "2723:2592",
+          "activeEmptySm": "2723:2568",
+          "disabledLg": "2723:2608",
+          "disabledMd": "2723:2604",
+          "disabledSm": "2723:2602",
+          "disabledExampleLg": "2723:2599",
+          "disabledExampleMd": "2723:2593",
+          "disabledExampleSm": "2723:2588",
+          "disabledEmptyLg": "2723:2600",
+          "disabledEmptyMd": "2723:2583",
+          "disabledEmptySm": "2723:2582",
+          "errorSm": "2723:2579",
+          "errorMd": "2723:2567"
+        },
+        "focusRing": {
+          "defaultLg": "2694:3714",
+          "defaultMd": "2694:3724",
+          "defaultSm": "2694:3734",
+          "hoverLg": "2694:3798",
+          "hoverMd": "2694:3803",
+          "hoverSm": "2694:3808",
+          "activeLg": "2694:3840",
+          "activeMd": "2694:3845",
+          "activeSm": "2694:3850"
+        },
+        "value": {
+          "defaultLg": "2694:3711",
+          "defaultMd": "2694:3721",
+          "defaultSm": "2694:3731"
+        },
+        "placeholder": {
+          "defaultLg": "2694:3741",
+          "defaultMd": "2694:3751",
+          "defaultSm": "2694:3761"
+        },
+        "errorMessage": "2723:2398",
+        "iconLeading": "2723:2403",
+        "statusIcon": "2723:2399"
+      },
+      "states": {
+        "default": [
+          "2723:2603",
+          "2723:2605",
+          "2723:2610",
+          "2723:2590",
+          "2723:2597",
+          "2723:2601",
+          "2723:2596",
+          "2723:2586",
+          "2723:2585"
+        ],
+        "hover": [
+          "2723:2577",
+          "2723:2578",
+          "2723:2580",
+          "2723:2581",
+          "2723:2591",
+          "2723:2594",
+          "2723:2598",
+          "2723:2587",
+          "2723:2589"
+        ],
+        "active": [
+          "2723:2568",
+          "2723:2592",
+          "2723:2569",
+          "2723:2570",
+          "2723:2571",
+          "2723:2584",
+          "2723:2572",
+          "2723:2573",
+          "2723:2576"
+        ],
+        "disabled": [
+          "2723:2602",
+          "2723:2604",
+          "2723:2608",
+          "2723:2588",
+          "2723:2593",
+          "2723:2599",
+          "2723:2590",
+          "2723:2582",
+          "2723:2583",
+          "2723:2600"
+        ],
+        "error": [
+          "2723:2579",
+          "2723:2567"
+        ]
+      }
+    }
+  ]
+}
