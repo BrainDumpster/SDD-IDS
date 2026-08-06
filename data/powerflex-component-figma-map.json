@@ -1,0 +1,14 @@
+[
+  {
+    "category": "Form",
+    "component": "Toggle Switch",
+    "designSpecPath": "components/powerflex/toggle-switch/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=8505-14389&m=dev",
+    "fileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "nodeId": "8505:14389",
+    "mainComponentSetNodeId": "8505:14389",
+    "specPattern": "standalone",
+    "displayName": "Toggle Switch",
+    "specAccurateOffDefaultNodeId": "8505:14390"
+  }
+]

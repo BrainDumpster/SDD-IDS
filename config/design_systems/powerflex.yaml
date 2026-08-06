@@ -1,0 +1,31 @@
+# Powerflex Design System Configuration
+# Programme-native components sourced from DAP Design Library Figma file.
+
+name: powerflex
+display_name: Powerflex
+token_transform: ids
+
+figma_file_key: HIbl2AgqTSdR9STZueMvTH
+
+figma_map_path: data/powerflex-component-figma-map.json
+rules_path: rules.json
+allowed_tokens_path: allowed_tokens.json
+component_registry_path: component_registry.json
+theme_css_path: components/powerflex-theme.css
+
+components_dir: components/powerflex
+program_components_dir: components/powerflex
+program_theme_css_path: components/powerflex-theme.css
+
+qdrant_collection: powerflex_design_knowledge
+
+generated_storybook_dir: storybook-generated/powerflex
+strict_storybook_gate: false
+
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+
+elevation_levels: {}

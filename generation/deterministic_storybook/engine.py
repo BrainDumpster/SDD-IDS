@@ -50,6 +50,7 @@ from generation.deterministic_storybook.ids.tree import generate_ids_tree_story
 from generation.deterministic_storybook.ids.wizard import generate_ids_wizard_story
 from generation.deterministic_storybook.ids.wizard_inline import generate_ids_wizard_inline_story
 from generation.deterministic_storybook.ids.wizard_modal import generate_ids_wizard_modal_story
+from generation.deterministic_storybook.powerflex.toggle_switch import generate_powerflex_toggle_switch_story
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from validation.spec_contract_parser import SpecContract
 
@@ -110,6 +111,8 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "masthead-dap"): generate_dap_masthead_story,
     ("ids", "settings-menu"): generate_dap_settings_menu_story,
     ("ids", "side-panel"): generate_dap_side_panel_story,
+    ("powerflex", "toggle-switch"): generate_powerflex_toggle_switch_story,
+    ("powerflex", "toggleswitch"): generate_powerflex_toggle_switch_story,
 }
 
 
