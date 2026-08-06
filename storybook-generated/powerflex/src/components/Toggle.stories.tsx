@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/powerflex-theme.css";
 
@@ -33,17 +33,23 @@ const stateBg = {
 
 const Toggle = ({
   size = "md",
-  checked = false,
+  checked: checkedProp = false,
   disabled = false,
   state = "default",
   "aria-label": ariaLabel = "Toggle",
 }: ToggleProps) => {
+  const [isChecked, setIsChecked] = useState(checkedProp);
+
+  useEffect(() => {
+    setIsChecked(checkedProp);
+  }, [checkedProp]);
+
   const s = sizeMap[size] ?? sizeMap.md;
-  const variant = checked ? "on" : "off";
+  const variant = isChecked ? "on" : "off";
   const isDisabled = disabled || state === "disabled";
   const visualState = isDisabled ? "disabled" : state;
   const trackBg = stateBg[variant][visualState];
-  const thumbTranslate = checked ? s.trackW - s.thumb - 4 : 0;
+  const thumbTranslate = isChecked ? s.trackW - s.thumb - 4 : 0;
 
   return (
     <label
@@ -58,11 +64,12 @@ const Toggle = ({
       <input
         type="checkbox"
         role="switch"
-        defaultChecked={checked}
+        checked={isChecked}
         disabled={isDisabled}
-        aria-checked={checked}
+        aria-checked={isChecked}
         aria-disabled={isDisabled}
         aria-label={ariaLabel}
+        onChange={() => setIsChecked((prev) => !prev)}
         style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
       />
       <span
