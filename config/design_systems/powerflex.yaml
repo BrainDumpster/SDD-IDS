@@ -1,10 +1,15 @@
 # PowerFlex Design System Configuration
+# Standalone programme; no IDS baseline inheritance for packaged components.
 
 name: powerflex
 display_name: PowerFlex
 token_transform: powerflex
 
+# Component library (components + REST variable export via subscribed library)
 figma_file_key: "82bDP05ESsiiGe38p5TEQJ"
+# Canonical centralized variable definitions (not REST-exportable; see sync scripts)
+figma_variables_library_key: ""
+
 figma_map_path: data/powerflex-component-figma-map.json
 rules_path: rules.json
 allowed_tokens_path: allowed_tokens.json
@@ -22,10 +27,15 @@ program_theme_css_path: ""
 
 qdrant_collection: design_knowledge
 
-framework_layer: framework-agnostic
+framework_layer: ""
 root_spec_path: components/powerflex/root-spec.md
 generated_storybook_dir: storybook-generated/powerflex
 strict_storybook_gate: false
+
+# Optional: concrete paths for codegen / agents in this repository only (not part of Figma contract).
+codegen:
+  react:
+    icon_component_module: storybook/src/components/Icon
 
 breakpoints:
   sm: "576px"
