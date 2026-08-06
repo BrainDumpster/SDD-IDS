@@ -1,0 +1,30 @@
+# PowerFlex Design System Configuration
+# Standalone programme that overrides the IDS baseline for selected tokens.
+
+name: powerflex
+display_name: PowerFlex
+token_transform: powerflex
+
+# PowerFlex component library source file
+figma_file_key: "82bDP05ESsiiGe38p5TEQJ"
+
+# Component-to-Figma mapping for this programme
+figma_map_path: data/powerflex-component-figma-map.json
+
+# Directory and spec paths
+components_dir: components/powerflex
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.md
+baseline_theme_css_path: components/ids-theme.css
+
+root_spec_path: components/powerflex/root-spec.md
+theme_css_path: components/powerflex-theme.css
+
+# Storybook generation output
+generated_storybook_dir: storybook-generated/powerflex
+strict_storybook_gate: false
+
+# Optional codegen hints (repo-local only)
+codegen:
+  react:
+    icon_component_module: storybook/src/components/Icon
