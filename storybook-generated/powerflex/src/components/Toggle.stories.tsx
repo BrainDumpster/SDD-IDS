@@ -8,6 +8,7 @@ type ToggleProps = {
   disabled?: boolean;
   state?: "default" | "hover" | "active" | "disabled";
   "aria-label"?: string;
+  onChange?: (checked: boolean) => void;
 };
 
 const sizeMap = {
@@ -37,6 +38,7 @@ const Toggle = ({
   disabled = false,
   state = "default",
   "aria-label": ariaLabel = "Toggle",
+  onChange,
 }: ToggleProps) => {
   const [isChecked, setIsChecked] = useState(checkedProp);
 
@@ -51,13 +53,22 @@ const Toggle = ({
   const trackBg = stateBg[variant][visualState];
   const thumbTranslate = isChecked ? s.trackW - s.thumb - 4 : 0;
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.checked;
+    setIsChecked(next);
+    onChange?.(next);
+  };
+
   return (
     <label
-      className={`toggle toggle--${size}`}
+      className={`toggle toggle--${size} toggle--${isChecked ? "on" : "off"} toggle--${isDisabled ? "disabled" : "enabled"}`}
       style={{
         display: "inline-flex",
         alignItems: "center",
+        justifyContent: "center",
         position: "relative",
+        width: s.trackW,
+        height: s.trackH,
         cursor: isDisabled ? "not-allowed" : "pointer",
       }}
     >
@@ -66,38 +77,50 @@ const Toggle = ({
         role="switch"
         checked={isChecked}
         disabled={isDisabled}
-        aria-checked={isChecked}
-        aria-disabled={isDisabled}
+        aria-checked={isChecked ? "true" : "false"}
+        aria-disabled={isDisabled ? "true" : undefined}
         aria-label={ariaLabel}
-        onChange={() => setIsChecked((prev) => !prev)}
-        style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
+        onChange={handleChange}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          opacity: 0,
+          margin: 0,
+          cursor: "inherit",
+          zIndex: 2,
+        }}
       />
       <span
         className="toggle__track"
         style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
           width: s.trackW,
           height: s.trackH,
           borderRadius: "var(--toggle-control-radius, 9999px)",
           backgroundColor: trackBg,
-          position: "relative",
-          display: "inline-block",
+          zIndex: 0,
         }}
-      >
-        <span
-          className="toggle__thumb"
-          style={{
-            width: s.thumb,
-            height: s.thumb,
-            borderRadius: "var(--toggle-control-radius, 9999px)",
-            backgroundColor: "var(--toggle-thumb-fill, #ffffff)",
-            position: "absolute",
-            top: 2,
-            left: 2,
-            transform: `translateX(${thumbTranslate}px)`,
-            transition: "transform 150ms ease",
-          }}
-        />
-      </span>
+      />
+      <span
+        className="toggle__thumb"
+        style={{
+          width: s.thumb,
+          height: s.thumb,
+          borderRadius: "var(--toggle-control-radius, 9999px)",
+          backgroundColor: "var(--toggle-thumb-fill, #ffffff)",
+          position: "absolute",
+          top: 2,
+          left: 2,
+          transform: `translateX(${thumbTranslate}px)`,
+          transition: "transform 150ms ease",
+          zIndex: 1,
+        }}
+      />
       <span
         className="toggle__focus-ring"
         aria-hidden="true"
@@ -111,6 +134,7 @@ const Toggle = ({
           border: "1px solid var(--color-border-brand-base)",
           boxSizing: "border-box",
           pointerEvents: "none",
+          zIndex: 3,
         }}
       />
     </label>
