@@ -8,7 +8,7 @@
 | Description | PowerFlex toggle switch. Native standalone component with no IDS counterpart. |
 | Status | draft |
 | Created | 2026-08-06 |
-| Updated | 2026-08-06 |
+| Updated | 2026-08-07 |
 | Figma verification | Packaged `figma_evidence.json` (`source: figma_rest_enriched`, `verificationMethod: Figma REST API`, file key `82bDP05ESsiiGe38p5TEQJ`, main component set `2754:109`) |
 | Spec pattern | standalone |
 | Theme CSS | `components/powerflex-theme.css` |
@@ -137,7 +137,7 @@ The same semantic variables are used; the dark theme overrides are defined in `c
 
 ### Behavior & guidelines
 
-- Click or tap the track to toggle `checked`.
+- Click or tap the track or thumb to toggle `checked`.
 - Keyboard: `Space` toggles; `Enter` may submit a containing form. The input must be focusable.
 - `disabled` removes pointer events and uses the disabled color row regardless of hover/active intent.
 - Hover/Active states are applied while the pointer is over/pressed on the track; disabled overrides both.
