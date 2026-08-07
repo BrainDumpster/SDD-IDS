@@ -22,6 +22,8 @@ export interface IdsTooltipProps {
   closable?: boolean;
   /** Trigger layout; use `block` for full-width row triggers (e.g. Dual List Box items). */
   triggerDisplay?: "inline" | "block";
+  /** When true, the tooltip popup shrinks to fit its content instead of using the standard 240px width. */
+  hugContent?: boolean;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: "close-click" | "escape" | "programmatic") => void;
 }
@@ -35,6 +37,7 @@ export function IdsTooltip({
   align,
   closable = false,
   triggerDisplay = "inline",
+  hugContent = false,
   onOpenChange,
   onClose,
 }: IdsTooltipProps) {
@@ -86,15 +89,16 @@ export function IdsTooltip({
         styles.popup,
         closable ? styles.popupClosable : styles.popupStandard,
         title ? styles.popupWithTitle : styles.popupNoTitle,
+        hugContent ? styles.popupHug : null,
       ]
         .filter(Boolean)
         .join(" "),
-    [closable, title]
+    [closable, title, hugContent]
   );
 
   return (
     <BaseTooltip.Provider>
-      <BaseTooltip.Root open={open} onOpenChange={handleOpenChange}>
+      <BaseTooltip.Root open={closable ? open : undefined} onOpenChange={handleOpenChange}>
         <BaseTooltip.Trigger
           className={
             triggerDisplay === "block" ? styles.triggerBlock : styles.trigger
