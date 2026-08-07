@@ -33,18 +33,63 @@ def storybook_requested(preview: dict[str, Any] | None) -> bool:
     return bool(p.get("storybook_examples") or p.get("storybookExamples"))
 
 
+def runtime_component_pascal(preview: dict[str, Any] | None) -> str:
+    p = preview or {}
+    slug = str(p.get("slug") or "component")
+    return _slug_to_pascal(slug)
+
+
+def expected_runtime_component_paths(preview: dict[str, Any] | None) -> list[str]:
+    """IDE-parity runtime module paths (component + CSS module)."""
+    p = preview or {}
+    if not storybook_requested(p):
+        return []
+    pascal = runtime_component_pascal(p)
+    return [
+        f"storybook/src/components/{pascal}.tsx",
+        f"storybook/src/components/{pascal}.module.css",
+    ]
+
+
 def expected_storybook_paths(preview: dict[str, Any] | None) -> list[str]:
-    """Canonical Storybook artifact paths when storybookExamples is enabled."""
+    """Canonical Storybook deliverables when storybookExamples is enabled.
+
+    Required artifact *contents* (client submits via session API — no local repo):
+    - Spec Accurate Design CSF under ``storybook-generated/…``
+    - Runtime component + CSS module under ``storybook/src/components/``
+
+    Discovery uses the glob in ``storybook/.storybook/main.ts``; clients do not
+    need to submit ``main.ts`` for new programmes. Clients never run the
+    deterministic Storybook gate (no monorepo checkout on the client).
+    """
     p = preview or {}
     if not storybook_requested(p):
         return []
     programme = str(p.get("programme") or "ids")
-    slug = str(p.get("slug") or "component")
-    pascal = _slug_to_pascal(slug)
+    pascal = runtime_component_pascal(p)
     return [
         f"storybook-generated/{programme}/src/components/{pascal}.stories.tsx",
-        "storybook/.storybook/main.ts",
+        *expected_runtime_component_paths(p),
     ]
+
+
+def _existing_path_set(preview: dict[str, Any] | None) -> set[str]:
+    p = preview or {}
+    return {
+        str(x).replace("\\", "/").lstrip("./")
+        for x in (p.get("context_pack_existing_paths") or [])
+        if x
+    }
+
+
+def _find_artifact_content(artifacts: list[Artifact], path: str) -> str | None:
+    norm = path.replace("\\", "/").lstrip("./")
+    base = norm.rsplit("/", 1)[-1]
+    for a in artifacts:
+        name = (a.name or "").replace("\\", "/").lstrip("./")
+        if name == norm or name.endswith("/" + base) or name == base:
+            return a.content or ""
+    return None
 
 
 def _find_design_spec_artifact(artifacts: list[Artifact]) -> Artifact | None:
@@ -130,21 +175,40 @@ def _missing_storybook_criteria(
     if not storybook_requested(preview):
         return []
     missing: list[str] = []
-    expected = expected_storybook_paths(preview)
+    existing = _existing_path_set(preview)
+    pascal = runtime_component_pascal(preview)
+    stories_path = expected_storybook_paths(preview)[0]
+    comp_tsx = f"storybook/src/components/{pascal}.tsx"
+    comp_css = f"storybook/src/components/{pascal}.module.css"
+
     if not _has_storybook_stories(artifacts, preview):
         missing.append(
             "storybook stories missing — submit "
-            + (expected[0] if expected else "*.stories.tsx under storybook-generated/")
+            f"`{stories_path}`"
         )
-    names = [n.lower() for n in _artifact_names(artifacts)]
-    has_main = any(
-        n.endswith("storybook/.storybook/main.ts") or n.endswith(".storybook/main.ts")
-        for n in names
+
+    # Runtime component + CSS (IDE parity). Skip create requirement when already
+    # on the publish starting ref and packaged as context — unless client submits
+    # a stories-only mock that does not import it.
+    has_comp = _has_artifact_path(artifacts, comp_tsx) or any(
+        n.endswith(f"/{pascal}.tsx") or n.endswith(f"/{pascal}.ts")
+        for n in _artifact_names(artifacts)
     )
-    if not has_main:
+    has_css = _has_artifact_path(artifacts, comp_css)
+    if not has_comp and comp_tsx not in existing:
+        # Also accept .ts extension already on base
+        ts_alt = f"storybook/src/components/{pascal}.ts"
+        if ts_alt not in existing:
+            missing.append(
+                f"runtime component missing — submit `{comp_tsx}` "
+                "(real controls / DS primitives; not a stories-only div mock)"
+            )
+    if not has_css and comp_css not in existing:
         missing.append(
-            "storybook/.storybook/main.ts missing (required for Spec Generated discovery)"
+            f"CSS module missing — submit `{comp_css}` "
+            "(tokenized styles; do not put component chrome only in inline style={{}})"
         )
+
     stories = _find_storybook_stories_content(artifacts, preview)
     if stories is not None:
         programme = str(preview.get("programme") or "ids")
@@ -166,15 +230,123 @@ def _missing_storybook_criteria(
             "ids-theme" in stories
             or "synapse-theme" in stories
             or "dap-theme" in stories
+            or "powerflex-theme" in stories
             or "theme.css" in stories
             or bool(re.search(r"import\s+['\"].*theme", stories, flags=re.IGNORECASE))
         )
         if not theme_ok:
             missing.append(
                 "Storybook stories should import programme theme CSS "
-                "(e.g. ids-theme.css / dap-theme.css / synapse-theme.css)"
+                "(e.g. `../../../../components/ids-theme.css` — relative from "
+                "storybook-generated/<programme>/src/components/)"
             )
+        # Bare `components/foo-theme.css` breaks Vite unless an alias exists.
+        if re.search(
+            r"""import\s+['"]components/[^'"]+-theme\.css['"]""",
+            stories,
+        ):
+            missing.append(
+                "Theme CSS import must be relative "
+                "(use `import \"../../../../components/<programme>-theme.css\"`, "
+                "not bare `components/…`)"
+            )
+
+        imports_runtime = bool(
+            re.search(
+                rf"""from\s+['"][^'"]*storybook/src/components/{re.escape(pascal)}['"]""",
+                stories,
+            )
+        ) or bool(
+            re.search(
+                rf"""from\s+['"][^'"]*storybook/src/components/{re.escape(pascal)}\.(tsx?|jsx?)['"]""",
+                stories,
+            )
+        ) or bool(
+            re.search(
+                rf"""from\s+['"](?:\.\./)+storybook/src/components/{re.escape(pascal)}['"]""",
+                stories,
+            )
+        )
+        if not imports_runtime:
+            missing.append(
+                f"Stories must import the runtime `{pascal}` component from "
+                f"`storybook/src/components/{pascal}` — do not redefine the component "
+                "inline inside the CSF file"
+            )
+        # Detect stories-only div/span mocks (common Collab regression).
+        inline_mock = bool(
+            re.search(
+                rf"""function\s+{re.escape(pascal)}\s*\([^)]*\)\s*\{{""",
+                stories,
+            )
+        ) and bool(re.search(r"style=\{\{", stories))
+        if inline_mock and not imports_runtime:
+            missing.append(
+                "Stories define an inline styled mock component — replace with a real "
+                f"`storybook/src/components/{pascal}.tsx` + `.module.css` and import it"
+            )
+
+        if not re.search(r"SpecAccurateDesign|Spec Accurate Design", stories):
+            missing.append(
+                "Primary story **Spec Accurate Design** "
+                "(`export const SpecAccurateDesign`) is required"
+            )
+
+        # Fidelity to submitted design-spec (no invented markup)
+        spec = _find_design_spec_content(artifacts, preview) or ""
+        if re.search(r"(?i)TextBoxInput|`input`|single-line\s*`?<input>", spec):
+            # Prefer check in component module when present
+            comp_src = (
+                _find_artifact_content(artifacts, comp_tsx)
+                or _find_artifact_content(artifacts, f"storybook/src/components/{pascal}.ts")
+                or ""
+            )
+            hay = f"{stories}\n{comp_src}"
+            if not re.search(r"<\s*input\b", hay, flags=re.IGNORECASE):
+                missing.append(
+                    "design-spec documents an input control — runtime component must render "
+                    "`<input>` (not a `<div>` stand-in)"
+                )
+        if re.search(r"(?i)TextBoxTextArea|`textarea`", spec):
+            comp_src = (
+                _find_artifact_content(artifacts, comp_tsx)
+                or _find_artifact_content(artifacts, f"storybook/src/components/{pascal}.ts")
+                or ""
+            )
+            hay = f"{stories}\n{comp_src}"
+            if not re.search(r"<\s*textarea\b", hay, flags=re.IGNORECASE):
+                missing.append(
+                    "design-spec documents a textarea — runtime component must render "
+                    "`<textarea>` where that anatomy applies"
+                )
+        if re.search(r"var\(--", spec):
+            css_src = _find_artifact_content(artifacts, comp_css) or ""
+            hay = f"{stories}\n{css_src}\n{_find_artifact_content(artifacts, comp_tsx) or ''}"
+            if not re.search(r"var\(--", hay):
+                missing.append(
+                    "design-spec uses `var(--…)` tokens — component CSS / styles should use "
+                    "the same semantic tokens from the spec"
+                )
     return missing
+
+
+def _find_design_spec_content(
+    artifacts: list[Artifact], preview: dict[str, Any]
+) -> str | None:
+    expected = str(
+        preview.get("design_spec_path") or preview.get("designSpecPath") or ""
+    ).replace("\\", "/")
+    for a in artifacts:
+        name = (a.name or "").replace("\\", "/").lstrip("./")
+        if not name:
+            continue
+        if expected and (
+            name == expected or name.endswith(expected.rsplit("/", 1)[-1])
+        ):
+            return a.content or ""
+        if name.endswith("design-spec.md"):
+            return a.content or ""
+    return None
 
 
 def _missing_fidelity_criteria(content: str) -> list[str]:
@@ -316,12 +488,33 @@ def foundation_paths(preview: dict[str, Any]) -> list[str]:
 
 
 def registry_paths(preview: dict[str, Any]) -> list[str]:
-    """Data-map / registry artifacts expected for every intake run."""
+    """Data-map / registry artifacts expected for create/update intake runs.
+
+    Review revise skips these: forcing a full-file map rewrite on every feedback
+    turn destroys continuity on the open PR (and is unrelated to most feedback).
+
+    Catalogue Update never touches programme-inheritance-registry.json; map is
+    only required when the operator supplied additional Figma URLs.
+    """
+    job_kind = str(preview.get("job_kind") or preview.get("jobKind") or "create")
+    if job_kind == "review_revise":
+        return []
+
     paths: list[str] = []
     fmap = _preview_path(preview, "figma_map_path", "figmaMapPath")
+
+    if job_kind == "update":
+        include_map = bool(
+            preview.get("update_include_map")
+            or preview.get("updateIncludeMap")
+        )
+        if include_map and fmap:
+            paths.append(fmap)
+        return paths
+
     if fmap:
         paths.append(fmap)
-    # Standalone / inheritance registry updates
+    # Standalone / inheritance registry updates (create only)
     pattern = str(preview.get("spec_pattern") or preview.get("specPattern") or "")
     programme = str(preview.get("programme") or "")
     if programme and programme != "ids":
@@ -391,10 +584,10 @@ def review_session(
     foundation_missing = _missing_foundation_criteria(artifacts, preview)
     registry_missing = _missing_registry_criteria(artifacts, preview)
 
-    # Update jobs: path must match existing design-spec (no new slug)
+    # Update / review_revise jobs: path must match existing design-spec (no new slug)
     update_missing: list[str] = []
     job_kind = getattr(session, "job_kind", None) or preview.get("job_kind") or "create"
-    if job_kind == "update":
+    if job_kind in ("update", "review_revise"):
         expected = str(
             preview.get("design_spec_path") or preview.get("designSpecPath") or ""
         ).replace("\\", "/")
@@ -405,7 +598,8 @@ def review_session(
                 # allow basename-only if content is the update target
                 if name not in (expected, expected.rsplit("/", 1)[-1], "design-spec.md"):
                     update_missing.append(
-                        f"Update must write `{expected}` (got `{name}`)"
+                        f"{'Review revise' if job_kind == 'review_revise' else 'Update'} "
+                        f"must write `{expected}` (got `{name}`)"
                     )
         if storybook_requested(preview) and not _has_storybook_stories(
             artifacts, preview
@@ -546,6 +740,39 @@ def build_initial_requests(preview: dict[str, Any]) -> list[dict[str, str]]:
         _preview_path(preview, "design_spec_path", "designSpecPath") or "design-spec.md"
     )
     skill = preview.get("skill_route") or preview.get("skillRoute") or "design-spec-intake-wizard"
+    pascal = runtime_component_pascal(preview)
+    existing = _existing_path_set(preview)
+    existing_runtime = [
+        p
+        for p in (
+            f"storybook/src/components/{pascal}.tsx",
+            f"storybook/src/components/{pascal}.ts",
+            f"storybook/src/components/{pascal}.module.css",
+            f"storybook-generated/{programme}/src/components/{pascal}.stories.tsx",
+        )
+        if p in existing
+        or preview.get("existing_runtime_component")
+        and p.endswith(f"/{pascal}.tsx")
+    ]
+    # Prefer explicit flags from context pack meta
+    if preview.get("existing_runtime_component"):
+        existing_runtime.append(str(preview["existing_runtime_component"]))
+    if preview.get("existing_runtime_css"):
+        existing_runtime.append(str(preview["existing_runtime_css"]))
+    if preview.get("existing_stories_path"):
+        existing_runtime.append(str(preview["existing_stories_path"]))
+    existing_note = ""
+    if existing_runtime:
+        uniq = sorted({str(p).replace("\\", "/") for p in existing_runtime if p})
+        existing_note = (
+            " BEFORE authoring: inspect context_artifacts for these **existing** "
+            "runtime/story files (IDE parity — do not invent a parallel API): "
+            + ", ".join(f"`{p}`" for p in uniq)
+            + ". Align **Composition & API (runtime)** with the exported props of the "
+            "existing component module; extend only when Figma evidence requires it. "
+            "If only a div/span mock story exists, plan to replace it with a real "
+            f"`storybook/src/components/{pascal}.tsx` + `.module.css`."
+        )
     requests: list[dict[str, str]] = [
         {
             "id": "req-write-spec",
@@ -556,6 +783,7 @@ def build_initial_requests(preview: dict[str, Any]) -> list[dict[str, str]]:
                 f"`{design_path}` for {programme}/{slug} (`{display}`). Include every "
                 f"required ## section + Slot geometry (Figma-verified). Use var(--...). "
                 f"Do not connect client Figma MCP. Return artifact name `{design_path}`."
+                f"{existing_note}"
             ),
             "expected_artifact": str(design_path),
         }
@@ -576,13 +804,15 @@ def build_initial_requests(preview: dict[str, Any]) -> list[dict[str, str]]:
                 "instruction": (
                     f"Programme foundation files are REQUIRED for this job (they are missing "
                     f"on the server). Submit these artifacts (full paths as names): {paths_txt}. "
-                    f"Use packaged `context_artifacts` entries named `donor:{donor}` / "
-                    f"`donor:{donor_root}` (and donor programme yaml if present) as templates — "
+                    f"Use packaged context_artifacts named donor:{donor} / "
+                    f"donor:{donor_root} (and donor programme yaml if present) as templates — "
                     f"do NOT search the local filesystem. "
-                    f"If creating theme CSS, prefer a thin wrapper that `@import`s the donor "
+                    f"Submit the foundation under the real repo paths above "
+                    f"(never as artifact names starting with donor:). "
+                    f"If creating theme CSS, prefer a thin wrapper that @imports the donor "
                     f"unless variables-library generation was requested. "
                     f"If creating root-spec.md, inherit/document the donor root-spec. "
-                    f"If creating `config/design_systems/{programme}.yaml`, include "
+                    f"If creating config/design_systems/{programme}.yaml, include "
                     f"components_dir, figma_map_path, theme_css_path, root_spec_path, display_name. "
                     f"Skip inventing paths outside write_path_allowlist."
                 ),
@@ -615,30 +845,76 @@ def build_initial_requests(preview: dict[str, Any]) -> list[dict[str, str]]:
     if storybook_requested(preview):
         story_paths = expected_storybook_paths(preview)
         stories_path = story_paths[0]
-        main_ts = story_paths[1]
+        comp_tsx = f"storybook/src/components/{pascal}.tsx"
+        comp_css = f"storybook/src/components/{pascal}.module.css"
         programme_display = (
             preview.get("programme_display_name")
             or preview.get("programmeDisplayName")
             or str(programme).title()
         )
         theme_rule = (
-            f"Import theme CSS exactly from `{theme_css}`."
+            f"Import theme CSS with a **relative** path from the stories file, e.g. "
+            f'`import "../../../../{theme_css}";` '
+            f"(do **not** use bare `import \"{theme_css}\"` — Vite cannot resolve it)."
             if theme_css
-            else "Import the programme theme CSS from confirmed_payload.themeCssPath."
+            else (
+                "Import the programme theme CSS with a relative path from "
+                "`storybook-generated/<programme>/src/components/`, e.g. "
+                '`import "../../../../components/<programme>-theme.css";`.'
+            )
         )
+        must_write_comp = comp_tsx not in existing and (
+            f"storybook/src/components/{pascal}.ts" not in existing
+        )
+        must_write_css = comp_css not in existing
+        reuse_bits: list[str] = []
+        if not must_write_comp:
+            reuse_bits.append(
+                f"`{comp_tsx}` is already packaged in context_artifacts / on the publish "
+                "base — update the file content in your submit when Figma/API changes; "
+                "otherwise keep it and import it from stories"
+            )
+        if not must_write_css:
+            reuse_bits.append(
+                f"`{comp_css}` already exists in context — update tokens/layout when needed"
+            )
+        reuse_txt = (
+            (" Existing modules: " + "; ".join(reuse_bits) + ".") if reuse_bits else ""
+        )
+        submit_lines = [
+            f"1. `{comp_tsx}` — **runtime component** as a full-file session artifact "
+            f"(no local repo required). Real controls / DS primitives "
+            f"(`<button>`, `<input>`, Base UI, shared Icon, etc.). "
+            f"Do **not** fake interactive controls as decorative `<div>` / `<span>`. "
+            f"Export the same canonical Runtime API documented in Composition & API.",
+            f"2. `{comp_css}` — CSS module artifact with `var(--…)` tokens from the "
+            f"design-spec (not stories-only inline `style={{…}}`).",
+            f"3. `{stories_path}` — meta.title `Spec Generated/{programme_display}/{display}`; "
+            f"primary export **Spec Accurate Design**. Stories **import** "
+            f"`{pascal}` from `../../../../storybook/src/components/{pascal}` — "
+            f"do **not** redefine the component inside the CSF file. {theme_rule}",
+            "4. Do **not** submit `storybook/.storybook/main.ts` unless Storybook config "
+            "itself must change — globs already discover "
+            "`storybook-generated/*/src/**/*.stories.@(ts|tsx)`.",
+            "5. Do **not** run local scripts, gates, or git — the client has no monorepo. "
+            "Only return artifact `name` + `content` for the paths above.",
+        ]
         requests.append(
             {
                 "id": "req-write-storybook",
                 "kind": "write_storybook_examples",
                 "instruction": (
-                    f"Storybook Spec Accurate Design is REQUIRED. Submit:\n"
-                    f"1. `{stories_path}` — meta.title `Spec Generated/{programme_display}/{display}`. "
-                    f"{theme_rule}\n"
-                    f"2. `{main_ts}` — include glob `storybook-generated/*/src/**/*.stories.@(ts|tsx)`.\n"
-                    f"3. Optionally update files under `generation/deterministic_storybook/` "
-                    f"if needed for the gate (allowlisted)."
+                    "Storybook Spec Accurate Design is REQUIRED. Submit these artifacts "
+                    "via the session API only (LLM-authored file contents — no client "
+                    "checkout, no Storybook gate, no deterministic generator run):\n"
+                    + "\n".join(submit_lines)
+                    + reuse_txt
+                    + " Map Anatomy slots to real DOM from the design-spec for this job only; "
+                    "do not invent variants or placeholder markup."
                 ),
-                "expected_artifact": stories_path,
+                "expected_artifact": (
+                    stories_path if not must_write_comp else comp_tsx
+                ),
             }
         )
     return requests

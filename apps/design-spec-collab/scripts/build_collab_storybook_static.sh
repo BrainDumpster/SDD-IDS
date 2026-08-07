@@ -16,12 +16,14 @@ SB="$ROOT/storybook"
 cd "$SB"
 export CI=1
 export STORYBOOK_DISABLE_TELEMETRY=1
+export STORYBOOK_BASE_PATH=/storybook/
+export COLLAB_STORYBOOK_SPEC_ONLY=1
 if command -v pnpm >/dev/null 2>&1; then
   pnpm install --frozen-lockfile
-  STORYBOOK_BASE_PATH=/storybook/ pnpm exec storybook build -o "$OUT"
+  pnpm exec storybook build -o "$OUT"
 elif command -v npm >/dev/null 2>&1; then
   npm ci || npm install
-  STORYBOOK_BASE_PATH=/storybook/ npx storybook build -o "$OUT"
+  npx storybook build -o "$OUT"
 else
   echo "Need pnpm or npm to build Storybook static" >&2
   exit 1

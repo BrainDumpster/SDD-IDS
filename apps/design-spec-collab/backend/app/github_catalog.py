@@ -64,6 +64,37 @@ def read_repo_file(path: str, *, ref: str | None = None) -> str | None:
     return None
 
 
+def file_exists_on_starting_ref(path: str, *, ref: str | None = None) -> bool:
+    """True if ``path`` exists on the GitHub publish base (starting ref).
+
+    Local-only / untracked files do **not** count — Collab must still create and
+    publish programme foundation (theme CSS, root-spec, yaml) when they are
+    absent from the remote base branch (see PR gaps like missing powerflex theme).
+    Falls back to local disk only when GitHub is not configured.
+    """
+    norm = (path or "").replace("\\", "/").lstrip("./")
+    if not norm:
+        return False
+    ref = ref or _starting_ref()
+    ok, _ = github_configured()
+    repo = parse_github_repo()
+    if ok and repo is not None:
+        return _github_get_file(repo, norm, ref=ref) is not None
+    return (settings.repo_root / norm).is_file()
+
+
+def _read_for_context(path: str, *, prefer_accepted: bool = False) -> str | None:
+    """Read a context/baseline file; optionally prefer Review ``accepted_workspace``."""
+    if prefer_accepted:
+        overlay = settings.app_root / "data" / "accepted_workspace" / path
+        if overlay.is_file():
+            try:
+                return overlay.read_text(encoding="utf-8")
+            except OSError:
+                pass
+    return read_repo_file(path)
+
+
 def _github_get_file(repo: GithubRepo, path: str, *, ref: str) -> str | None:
     encoded = "/".join(part for part in path.split("/") if part)
     url = f"{repo.api_base}/repos/{repo.full_name}/contents/{encoded}"
@@ -224,19 +255,64 @@ def _figma_map_path_for_programme(programme: str) -> str:
     return f"data/{slug}-component-figma-map.json"
 
 
-def _load_map_entries(map_path: str) -> list[dict[str, Any]]:
-    text = read_repo_file(map_path)
-    if not text:
-        local = settings.repo_root / map_path
-        if local.is_file():
-            text = local.read_text(encoding="utf-8")
+def _load_map_entries(map_path: str, *, prefer_accepted: bool = False) -> list[dict[str, Any]]:
+    """Load map rows from list-shaped or programme object-shaped Figma maps.
+
+    List shape (IDS): ``[{ designSpecPath, figmaUrl, ... }, ...]``
+    Object shape (programmes): ``{ programme, components: { slug: { ... } } }``
+    """
+    text = _read_for_context(map_path, prefer_accepted=prefer_accepted)
     if not text:
         return []
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
         return []
-    return data if isinstance(data, list) else []
+    return _entries_from_map_json(data, map_path=map_path)
+
+
+def _entries_from_map_json(
+    data: Any, *, map_path: str = ""
+) -> list[dict[str, Any]]:
+    if isinstance(data, list):
+        return [e for e in data if isinstance(e, dict)]
+    if not isinstance(data, dict):
+        return []
+
+    comps = data.get("components")
+    if isinstance(comps, dict):
+        programme = str(data.get("programme") or "").strip().lower()
+        if not programme and map_path:
+            # data/<programme>-component-figma-map.json
+            base = Path(map_path).name
+            m = re.match(r"^([a-z0-9-]+)-component-figma-map\.json$", base, re.I)
+            if m:
+                programme = m.group(1).lower()
+        file_key = str(data.get("figmaFileKey") or data.get("fileKey") or "").strip()
+        out: list[dict[str, Any]] = []
+        for slug, entry in comps.items():
+            if not isinstance(entry, dict):
+                continue
+            row = dict(entry)
+            slug_s = str(slug).strip()
+            row.setdefault("slug", slug_s)
+            row.setdefault(
+                "component",
+                row.get("displayName") or slug_s.replace("-", " ").title(),
+            )
+            if not row.get("fileKey") and file_key:
+                row["fileKey"] = file_key
+            if not row.get("designSpecPath") and programme and slug_s:
+                row["designSpecPath"] = (
+                    f"components/{programme}/{slug_s}/design-spec.md"
+                )
+            out.append(row)
+        return out
+
+    # Single-entry object with designSpecPath
+    if data.get("designSpecPath") or data.get("figmaUrl"):
+        return [data]
+    return []
 
 
 def _match_map_entry(
@@ -265,6 +341,13 @@ def _match_map_entry(
             return dap[0]
     if by_path:
         return by_path[0]
+
+    # Object-map rows often key by slug
+    for e in entries:
+        if not isinstance(e, dict):
+            continue
+        if str(e.get("slug") or "").lower() == slug.lower():
+            return e
 
     for e in entries:
         if not isinstance(e, dict):
@@ -474,22 +557,34 @@ def _append_map_slice(
     *,
     figma_map_path: str,
     design_spec_path: str,
+    prefer_accepted: bool = False,
 ) -> None:
     if not figma_map_path:
         return
-    map_text = read_repo_file(figma_map_path)
+    map_text = _read_for_context(figma_map_path, prefer_accepted=prefer_accepted)
     if map_text is None:
         return
     try:
         data = json.loads(map_text)
-        if isinstance(data, list) and design_spec_path:
+        entries = _entries_from_map_json(data, map_path=figma_map_path)
+        if entries and design_spec_path:
             matched = [
                 e
-                for e in data
+                for e in entries
                 if isinstance(e, dict)
                 and str(e.get("designSpecPath") or "").replace("\\", "/")
                 == design_spec_path.replace("\\", "/")
             ]
+            if not matched:
+                # try slug from path
+                bits = design_spec_path.replace("\\", "/").split("/")
+                slug = bits[-2] if len(bits) >= 2 else ""
+                matched = [
+                    e
+                    for e in entries
+                    if isinstance(e, dict)
+                    and str(e.get("slug") or "").lower() == slug.lower()
+                ]
             if matched:
                 arts.append(
                     _pack_item(
@@ -571,34 +666,44 @@ def load_context_pack(
     existing_paths: list[str] = []
 
     theme_text = read_repo_file(theme_path)
+    theme_on_base = file_exists_on_starting_ref(theme_path)
     if theme_text is not None:
         add(_pack_item(theme_path, theme_text))
-        existing_paths.append(theme_path)
+        # Only skip client create/publish when the file is already on the PR base.
+        if theme_on_base:
+            existing_paths.append(theme_path)
     else:
         donor = read_repo_file(donor_theme)
         if donor is not None:
             add(_pack_item(f"donor:{donor_theme}", donor))
 
     root_text = read_repo_file(root_path)
+    root_on_base = file_exists_on_starting_ref(root_path)
     if root_text is not None:
         add(_pack_item(root_path, root_text))
-        existing_paths.append(root_path)
+        if root_on_base:
+            existing_paths.append(root_path)
     else:
         donor = read_repo_file(donor_root)
         if donor is not None:
             add(_pack_item(f"donor:{donor_root}", donor))
 
     yaml_text = read_repo_file(yaml_path)
+    yaml_on_base = file_exists_on_starting_ref(yaml_path)
     if yaml_text is not None:
         add(_pack_item(yaml_path, yaml_text))
-        existing_paths.append(yaml_path)
+        if yaml_on_base:
+            existing_paths.append(yaml_path)
     elif programme != "ids":
         ids_yaml = read_repo_file("config/design_systems/ids.yaml")
         if ids_yaml is not None:
             add(_pack_item("donor:config/design_systems/ids.yaml", ids_yaml))
 
     _append_map_slice(
-        arts, figma_map_path=figma_map_path, design_spec_path=design_spec_path
+        arts,
+        figma_map_path=figma_map_path,
+        design_spec_path=design_spec_path,
+        prefer_accepted=job_kind == "review_revise",
     )
     for a in arts:
         n = str(a.get("name") or "")
@@ -618,9 +723,9 @@ def load_context_pack(
             )
         )
 
-    # Update baselines (also tagged baseline for change-hints)
-    if job_kind == "update" and design_spec_path:
-        spec = read_repo_file(design_spec_path)
+    # Update / Review-revise baselines (also tagged baseline for change-hints)
+    if job_kind in ("update", "review_revise") and design_spec_path:
+        spec = _read_for_context(design_spec_path, prefer_accepted=job_kind == "review_revise")
         if spec is not None:
             add(
                 {
@@ -636,15 +741,88 @@ def load_context_pack(
         or preview.get("storybookExamples")
         or preview.get("has_storybook")
     )
-    if job_kind == "update" and include_storybook and slug:
-        pascal = "".join(p.capitalize() for p in slug.split("-") if p)
-        story_prog = "dap" if programme == "dap" else programme
+    pascal = "".join(p.capitalize() for p in slug.split("-") if p) if slug else ""
+    story_prog = "dap" if programme == "dap" else programme
+    existing_runtime_component: str | None = None
+    existing_runtime_css: str | None = None
+    existing_stories_path: str | None = None
+    existing_generator_path: str | None = None
+
+    # Always discover runtime component / stories when we know the slug (IDE parity:
+    # check existing before authoring design-spec + Storybook).
+    if slug and pascal:
+        runtime_candidates = [
+            f"storybook/src/components/{pascal}.tsx",
+            f"storybook/src/components/{pascal}.ts",
+            f"storybook/src/components/{pascal}.module.css",
+            f"storybook/src/components/{pascal.lower()}.tsx",  # rare
+        ]
+        for rel in runtime_candidates:
+            text = _read_for_context(
+                rel, prefer_accepted=job_kind == "review_revise"
+            )
+            if text is None:
+                continue
+            role = "baseline" if job_kind in ("update", "review_revise") else "reference"
+            add(
+                {
+                    "name": rel,
+                    "content": text,
+                    "role": role,
+                    "readOnly": True,
+                }
+            )
+            if file_exists_on_starting_ref(rel):
+                existing_paths.append(rel)
+            if rel.endswith(".module.css") and existing_runtime_css is None:
+                existing_runtime_css = rel
+            elif rel.endswith((".tsx", ".ts")) and existing_runtime_component is None:
+                existing_runtime_component = rel
+
+        stories_rel = (
+            f"storybook-generated/{story_prog}/src/components/{pascal}.stories.tsx"
+        )
+        stories_text = _read_for_context(
+            stories_rel, prefer_accepted=job_kind == "review_revise"
+        )
+        if stories_text is not None:
+            role = "baseline" if job_kind in ("update", "review_revise") else "reference"
+            add(
+                {
+                    "name": stories_rel,
+                    "content": stories_text,
+                    "role": role,
+                    "readOnly": True,
+                }
+            )
+            existing_stories_path = stories_rel
+            if file_exists_on_starting_ref(stories_rel):
+                existing_paths.append(stories_rel)
+
+        underscored = slug.replace("-", "_")
+        gen_rel = (
+            f"generation/deterministic_storybook/{story_prog}/{underscored}.py"
+        )
+        gen_text = _read_for_context(gen_rel, prefer_accepted=False)
+        if gen_text is not None:
+            add(
+                {
+                    "name": gen_rel,
+                    "content": gen_text,
+                    "role": "reference",
+                    "readOnly": True,
+                }
+            )
+            existing_generator_path = gen_rel
+            if file_exists_on_starting_ref(gen_rel):
+                existing_paths.append(gen_rel)
+
+    if job_kind in ("update", "review_revise") and include_storybook and slug and pascal:
         for rel in (
-            f"storybook-generated/{story_prog}/src/components/{pascal}.stories.tsx",
             f"storybook-generated/{story_prog}/src/spec-contracts/{slug}.spec-layer-hash.json",
             "storybook/.storybook/main.ts",
         ):
-            text = read_repo_file(rel)
+            text = _read_for_context(rel, prefer_accepted=job_kind == "review_revise")
             if text is not None:
                 add(
                     {
@@ -659,7 +837,15 @@ def load_context_pack(
     arts.append(
         {
             "name": "__context_pack_meta__",
-            "content": json.dumps({"existing_paths": existing_paths}),
+            "content": json.dumps(
+                {
+                    "existing_paths": existing_paths,
+                    "existing_runtime_component": existing_runtime_component,
+                    "existing_runtime_css": existing_runtime_css,
+                    "existing_stories_path": existing_stories_path,
+                    "existing_generator_path": existing_generator_path,
+                }
+            ),
             "role": "meta",
             "readOnly": True,
         }

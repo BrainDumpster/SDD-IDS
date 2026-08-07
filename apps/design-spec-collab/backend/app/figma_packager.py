@@ -154,12 +154,53 @@ def _slot_geometry_rows(doc: dict[str, Any], *, limit: int = _MAX_SLOT_ROWS) -> 
     return rows
 
 
+def _ssl_verify() -> bool:
+    """False disables TLS verify (corporate MITM). Prefer REQUESTS_CA_BUNDLE instead."""
+    return bool(settings.figma_ssl_verify)
+
+
+def _figma_get(url: str, *, headers: dict | None = None, params: dict | None = None, timeout: int = 120):
+    verify = _ssl_verify()
+    if not verify:
+        try:
+            import urllib3
+
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        except Exception:  # noqa: BLE001
+            pass
+        logger.warning(
+            "FIGMA_SSL_VERIFY=false — TLS certificate verification disabled for Figma REST"
+        )
+    # Prefer shared retry helper (connection reset / 429 / 5xx)
+    try:
+        _ensure_repo_on_path()
+        from ingestion.figma_sync_client import figma_request
+
+        return figma_request(
+            "GET",
+            url,
+            headers=headers or {},
+            params=params,
+            timeout=timeout,
+            verify=verify,
+            retries=5,
+        )
+    except ImportError:
+        return requests.get(
+            url,
+            headers=headers or {},
+            params=params,
+            timeout=timeout,
+            verify=verify,
+        )
+
+
 def _fetch_images_rest(file_key: str, node_ids: list[str]) -> dict[str, Any]:
     if not settings.figma_token or not node_ids:
         return {}
     ids = ",".join(n.replace("-", ":") for n in node_ids[:_MAX_IMAGE_NODES])
     url = f"https://api.figma.com/v1/images/{file_key}"
-    r = requests.get(
+    r = _figma_get(
         url,
         headers={"X-Figma-Token": settings.figma_token},
         params={"ids": ids, "format": "png", "scale": 2},
@@ -233,7 +274,7 @@ def _fetch_nodes_rest(file_key: str, node_id: str, *, enrich: bool = True) -> di
 
     if not enrich:
         url = f"https://api.figma.com/v1/files/{file_key}/nodes"
-        r = requests.get(
+        r = _figma_get(
             url,
             headers={"X-Figma-Token": settings.figma_token},
             params={"ids": nid},
@@ -263,7 +304,11 @@ def _fetch_nodes_rest(file_key: str, node_id: str, *, enrich: bool = True) -> di
     from ingestion.figma_spec_extract import extract_from_nodes_response
     from ingestion.figma_sync_client import FigmaSyncClient
 
-    client = FigmaSyncClient(token=settings.figma_token)
+    # Ensure helpers see the same verify flag
+    __import__("os").environ["FIGMA_SSL_VERIFY"] = (
+        "true" if settings.figma_ssl_verify else "false"
+    )
+    client = FigmaSyncClient(token=settings.figma_token, verify=settings.figma_ssl_verify)
     data = client.get_file_nodes(file_key, [nid])
     nodes = data.get("nodes") or {}
     entry = nodes.get(nid) or next(iter(nodes.values()), None)
@@ -369,13 +414,75 @@ def _looks_like_auth_error(message: str) -> bool:
     )
 
 
+def _looks_like_ssl_error(message: str) -> bool:
+    msg = (message or "").lower()
+    return any(
+        token in msg
+        for token in (
+            "certificate_verify_failed",
+            "sslcerterror",
+            "sslcertverificationerror",
+            "self-signed certificate",
+            "certificate verify failed",
+            "ssl: certificate",
+        )
+    )
+
+
+def _looks_like_network_error(message: str) -> bool:
+    msg = (message or "").lower()
+    return any(
+        token in msg
+        for token in (
+            "connection aborted",
+            "connection reset",
+            "connectionreseterror",
+            "remotely closed",
+            "name or service not known",
+            "temporary failure in name resolution",
+            "timed out",
+            "read timed out",
+            "network is unreachable",
+            "failed to establish a new connection",
+        )
+    )
+
+
 def _raise_if_server_auth_failed(evidence: dict[str, Any]) -> None:
     auth_errors: list[str] = []
+    ssl_errors: list[str] = []
+    network_errors: list[str] = []
     for bucket_rows in (evidence.get("buckets") or {}).values():
         for row in bucket_rows or []:
             message = str(row.get("error") or row.get("mcpFallbackError") or "")
-            if message and _looks_like_auth_error(message):
+            if not message:
+                continue
+            if _looks_like_ssl_error(message):
+                ssl_errors.append(message)
+            elif _looks_like_network_error(message):
+                network_errors.append(message)
+            elif _looks_like_auth_error(message):
                 auth_errors.append(message)
+    if ssl_errors:
+        sample = ssl_errors[0]
+        raise RuntimeError(
+            "Server-side Figma packaging failed SSL verification "
+            "(often a corporate proxy with a self-signed CA inside Docker). "
+            "Preferred: mount org CA and set REQUESTS_CA_BUNDLE=/certs/…. "
+            "Escape hatch: set FIGMA_SSL_VERIFY=false and recreate the container "
+            "(insecure — disables TLS verify for Figma REST only). "
+            f"Sample error: {sample}"
+        )
+    if network_errors:
+        sample = network_errors[0]
+        raise RuntimeError(
+            "Server-side Figma packaging lost the connection to api.figma.com "
+            "(Connection reset / timeout — often corporate firewall, proxy, or "
+            "transient network). This is usually not a bad FIGMA_TOKEN. "
+            "Retry Start session; from the container check: "
+            "curl -sI https://api.figma.com/ . "
+            f"Sample error: {sample}"
+        )
     if auth_errors:
         sample = auth_errors[0]
         raise RuntimeError(
@@ -403,6 +510,8 @@ def _raise_if_packaging_incomplete(evidence: dict[str, Any]) -> None:
     mode = (evidence.get("mode") or "").lower()
     if mode == "stub":
         return
+    # Prefer specific SSL / network / auth guidance before the generic message
+    _raise_if_server_auth_failed(evidence)
     buckets = evidence.get("buckets") or {}
     main = buckets.get("main") or []
     if not main:

@@ -5,7 +5,7 @@ Step-by-step guide to build a **self-contained** image on your laptop, move it t
 The image includes:
 
 - Collab app (API + frontend)
-- Portal intake stack (`portal_app`)
+- Collab-owned intake helpers (`backend/intake_core/`)
 - Baked design-system tree: `components/`, `data/` maps, `config/design_systems/`, `.cursor/skills/`, `storybook-generated/`, `scripts/`, `docs/design-spec-authoring-contract.md` (for session context pack)
 - **Storybook static** under `/storybook/` (Spec Accurate Design iframe preview; Node multi-stage build)
 

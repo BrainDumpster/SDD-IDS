@@ -30,6 +30,7 @@ services:
       FIGMA_MODE: ${FIGMA_MODE:-rest}
       FIGMA_TOKEN: ${FIGMA_TOKEN:-}
       FIGMA_MCP_URL: ${FIGMA_MCP_URL:-https://api.figma.com/mcp}
+      FIGMA_SSL_VERIFY: ${FIGMA_SSL_VERIFY:-true}
       SERVER_REVIEW_MODE: ${SERVER_REVIEW_MODE:-rules}
       STUB_FORCE_REVISE_ONCE: ${STUB_FORCE_REVISE_ONCE:-false}
       SESSION_REQUIRE_CLAIM: ${SESSION_REQUIRE_CLAIM:-true}
@@ -43,9 +44,24 @@ services:
       GITHUB_REPO: ${GITHUB_REPO:-}
       GITHUB_STARTING_REF: ${GITHUB_STARTING_REF:-master}
       CATALOGUE_SOURCE: ${CATALOGUE_SOURCE:-local}
+      STORYBOOK_STATIC_DIR: /app/storybook-static
+      STORYBOOK_REBUILD_ENABLED: ${STORYBOOK_REBUILD_ENABLED:-true}
+      # Corporate SSL inspection: point at a CA file mounted under /certs
+      REQUESTS_CA_BUNDLE: ${REQUESTS_CA_BUNDLE:-}
+      SSL_CERT_FILE: ${SSL_CERT_FILE:-}
+      CURL_CA_BUNDLE: ${CURL_CA_BUNDLE:-}
     volumes:
       # Writable only — design system tree is inside the image
       - ./data:/app/data
+      # Icons for in-container Storybook rebuild (stories import ../../../../assets/icons/…)
+      # Works even when the image was built before Dockerfile copied assets into /workspace.
+      - ../../assets:/workspace/assets:ro
+      # Optional: place corp-root-ca.pem here (see README § Corporate SSL)
+      - ${COLLAB_CERTS_DIR:-./certs}:/certs:ro
+      # Optional override: COLLAB_STORYBOOK_STATIC_DIR=/abs/path/to/storybook-static
+      # (must contain iframe.html — includes Scratchpad after local rebuild)
+      # Uncomment or set env when iterating on Storybook without full image rebuild:
+      # - ${COLLAB_STORYBOOK_STATIC_DIR}:/app/storybook-static:ro
     healthcheck:
       test:
         [

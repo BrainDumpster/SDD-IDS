@@ -1,25 +1,30 @@
-"""Import design-spec-portal intake stack via backend/portal_app symlink."""
+"""Re-export Collab-owned intake stack (`intake_core`).
+
+Historically this bridged into design-spec-portal via a symlink. Collab now
+vendors the needed modules under ``backend/intake_core`` and does not import
+portal at runtime.
+"""
 
 from __future__ import annotations
 
-from portal_app.models.intake import (
+from intake_core.models.intake import (
     InheritsIds,
     IntakePreviewResponse,
     IntakeRequest,
 )
-from portal_app.models.jobs import CreateJobBody, JobRecord, JobStatus
-from portal_app.services.additional_notes import sanitize_additional_notes
-from portal_app.services.audit import AuditLog
-from portal_app.services.auth_placeholder import auth_status, resolve_actor
-from portal_app.services.job_store import JobStore
-from portal_app.services.programmes import list_programmes, load_programme
-from portal_app.services.prompt_builder import (
+from intake_core.models.jobs import CreateJobBody, JobRecord, JobStatus
+from intake_core.services.additional_notes import sanitize_additional_notes
+from intake_core.services.audit import AuditLog
+from intake_core.services.auth_placeholder import auth_status, resolve_actor
+from intake_core.services.job_store import JobStore
+from intake_core.services.programmes import list_programmes, load_programme
+from intake_core.services.prompt_builder import (
     build_prompt_package,
     build_session_yaml,
 )
-from portal_app.services.secrets import public_job_dict, redact_text
-from portal_app.services.skill_router import build_preview
-from portal_app import config as portal_config
+from intake_core.services.secrets import public_job_dict, redact_text
+from intake_core.services.skill_router import build_preview
+from intake_core import config as portal_config
 
 
 def sync_portal_auth_mode(auth_mode: str) -> None:
@@ -34,7 +39,7 @@ def sync_portal_paths(
     sessions_dir,
     audit_log_path,
 ) -> None:
-    """Point portal modules at collab/repo paths."""
+    """Point intake_core settings at Collab/repo paths."""
     portal_config.settings.repo_root = repo_root
     portal_config.settings.design_systems_dir = design_systems_dir
     portal_config.settings.jobs_dir = jobs_dir

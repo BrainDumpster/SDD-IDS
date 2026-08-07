@@ -87,20 +87,25 @@ Use when step 3 = **`no`** — the component exists **only in the programme** Fi
 Execute in order:
 
 1. Load config: `config/design_systems/<slug>.yaml` → `components_dir`, `figma_map_path`, `theme_css_path`, `display_name`, `root_spec_path`, `alias_path` (if any).
-2. Slugify component name; check `{alias_path}` when present.
-3. `mkdir -p` `{components_dir}/{slug}/`.
-4. Merge or append map entry (`designSpecPath`, `figmaUrl`, primary `nodeId` / `mainComponentSetNodeId`, `fileKey`, `specPattern`, supplemental `*NodeId` from all URL buckets). **Standalone:** omit `idsBaselineSpecPath`.
-5. Scaffold if missing:
+2. **New / incomplete programme foundation (mandatory):** If `{theme_css_path}` or `{root_spec_path}` (or the programme yaml) is **missing from the repo / publish base**, create them **before** filling the component spec:
+   - Prefer **reuse donor** (usually IDS): thin `{programme}-theme.css` that `@import`s the donor theme + `[data-design-system="{programme}"]` overrides; `{components_dir}/root-spec.md` that inherits the donor root-spec and records programme identity.
+   - Or generate from Figma variables when the user chose that foundation mode.
+   - Also write `config/design_systems/{programme}.yaml` when absent (`theme_css_path`, `root_spec_path`, `components_dir`, `figma_map_path`, `display_name`).
+   - **Do not** treat untracked local leftovers as “already in the repo” for publish — foundation files must land in the same PR as the first component.
+3. Slugify component name; check `{alias_path}` when present.
+4. `mkdir -p` `{components_dir}/{slug}/`.
+5. Merge or append map entry (`designSpecPath`, `figmaUrl`, primary `nodeId` / `mainComponentSetNodeId`, `fileKey`, `specPattern`, supplemental `*NodeId` from all URL buckets). **Standalone:** omit `idsBaselineSpecPath`.
+6. Scaffold if missing:
    - **`ids`** → `NEW_SPEC_TEMPLATE`
    - **programme standalone** → `PROGRAMME_STANDALONE_TEMPLATE`
-6. **Live Figma** on **every** URL in all three buckets (main → elements → states; MCP preferred; REST if MCP unavailable — document method in spec). Enforce **Figma extraction gates** (below) on each URL, then run **Figma analysis → composition model** before writing prose sections.
-7. Fill all required `##` sections with **codegen-ready depth** (see below); prefer `var(--...)` tokens from programme theme / root-spec. **Never invent UI** (see extraction gates).
-8. Apply dark-states dedupe per authoring contract when light/dark tokens match.
-9. Record verification evidence in **Metadata** and **Source Mapping** (include which bucket each screenshot / node came from).
-10. Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements (`get_variable_defs` on cited nodes for radius rows).
-11. Set **Status: draft** until validation checklist passes; do not mark `active` with TBD.
-12. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (audit only).
-13. **If step 8 = Storybook yes:** complete **Storybook follow-up** (deterministic generator + `strict_spec_storybook_gate.py --deterministic-story` + Spec Accurate Design) before ending the run phase.
+7. **Live Figma** on **every** URL in all three buckets (main → elements → states; MCP preferred; REST if MCP unavailable — document method in spec). Enforce **Figma extraction gates** (below) on each URL, then run **Figma analysis → composition model** before writing prose sections.
+8. Fill all required `##` sections with **codegen-ready depth** (see below); prefer `var(--...)` tokens from programme theme / root-spec. **Never invent UI** (see extraction gates).
+9. Apply dark-states dedupe per authoring contract when light/dark tokens match.
+10. Record verification evidence in **Metadata** and **Source Mapping** (include which bucket each screenshot / node came from).
+11. Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements (`get_variable_defs` on cited nodes for radius rows).
+12. Set **Status: draft** until validation checklist passes; do not mark `active` with TBD.
+13. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (audit only).
+14. **If step 8 (interview) = Storybook yes:** complete **Storybook follow-up** (deterministic generator + `strict_spec_storybook_gate.py --deterministic-story` + Spec Accurate Design) before ending the run phase.
 
 ---
 

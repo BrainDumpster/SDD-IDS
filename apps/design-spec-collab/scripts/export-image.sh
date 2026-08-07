@@ -32,6 +32,10 @@ docker build \
   -t "${TAG}" \
   "${ROOT}"
 
+echo "Verifying Storybook static is baked into ${TAG}…"
+docker run --rm "${TAG}" sh -c \
+  'test -f /app/storybook-static/index.html && test -f /app/storybook-static/iframe.html && echo OK_storybook_static'
+
 if [[ "${PUSH}" -eq 1 ]]; then
   echo "Pushing ${TAG}…"
   docker push "${TAG}"

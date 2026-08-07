@@ -2,18 +2,19 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
-from portal_app.models.intake import (
+from intake_core.models.intake import (
     InheritsIds,
     IntakeRequest,
     SkillRoute,
     SpecPattern,
     parse_figma_url,
 )
-from portal_app.services.programmes import load_programme
+from intake_core.services.programmes import load_programme
 
 from .config import settings
 from .github_catalog import (
@@ -22,6 +23,41 @@ from .github_catalog import (
     list_update_components,
 )
 from .update_models import UpdateRequest
+
+
+_FIGMA_RECHECK_RE = re.compile(
+    r"\b("
+    r"re-?check|re-?fetch|refetch|re-?verify|re-?inspect|"
+    r"from\s+figma|against\s+figma|figma\s+(design|update|change)|"
+    r"visual\s+(check|review|refresh)|refresh\s+(from\s+)?(design|figma)|"
+    r"layout\s+change|token\s+change|state\s+matrix|anatomy|"
+    r"screenshot|design\s+changed|outdated\s+spec"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def update_needs_figma_pack(body: UpdateRequest) -> bool:
+    """True when optional URLs were provided or the prompt asks to recheck design/Figma."""
+    if (
+        body.additional_main_urls
+        or body.additional_element_urls
+        or body.additional_state_urls
+    ):
+        return True
+    prompt = (body.additional_prompt or "").strip()
+    if not prompt:
+        return False
+    return bool(_FIGMA_RECHECK_RE.search(prompt))
+
+
+def update_include_map(body: UpdateRequest) -> bool:
+    """Map file is only required on the new PR when operator supplied extra Figma URLs."""
+    return bool(
+        body.additional_main_urls
+        or body.additional_element_urls
+        or body.additional_state_urls
+    )
 
 
 def _skill_path(repo_root: Path, skill: SkillRoute) -> str:
@@ -75,23 +111,27 @@ def _urls_from_map_entry(entry: dict[str, Any]) -> dict[str, list[str]]:
     return {"main": main, "elements": elements, "states": states}
 
 
-def build_update_preview(body: UpdateRequest) -> dict[str, Any]:
+def build_update_preview(
+    body: UpdateRequest, *, prefer_accepted_map: bool = False
+) -> dict[str, Any]:
     """Return a dict compatible with collab packaging (mirrors IntakePreviewResponse + extras)."""
     catalogue = list_update_components(body.programme)
     match = next(
         (c for c in catalogue["components"] if c["slug"] == body.component_slug),
         None,
     )
-    if match is None:
-        raise ValueError(
-            f"Component '{body.component_slug}' not found under programme "
-            f"'{body.programme}' (no design-spec.md)."
-        )
-
-    design_spec_path = str(match["designSpecPath"])
-    map_path = str(match["mapPath"] or catalogue["figmaMapPath"])
-    entries = _load_map_entries(map_path)
-    components_dir = str(catalogue["componentsDir"])
+    design_spec_path = (
+        str(match["designSpecPath"])
+        if match
+        else f"components/{body.programme}/{body.component_slug}/design-spec.md"
+    )
+    map_path = str(
+        (match or {}).get("mapPath")
+        or catalogue.get("figmaMapPath")
+        or f"data/{body.programme}-component-figma-map.json"
+    )
+    components_dir = str(catalogue.get("componentsDir") or f"components/{body.programme}")
+    entries = _load_map_entries(map_path, prefer_accepted=prefer_accepted_map)
     entry = _match_map_entry(
         entries,
         programme=body.programme,
@@ -99,16 +139,69 @@ def build_update_preview(body: UpdateRequest) -> dict[str, Any]:
         slug=body.component_slug,
         design_spec_path=design_spec_path,
     )
+    if entry is None and match is None and not prefer_accepted_map:
+        raise ValueError(
+            f"Component '{body.component_slug}' not found under programme "
+            f"'{body.programme}' (no design-spec.md)."
+        )
     if entry is None:
         raise ValueError(
             f"No figma map entry for {design_spec_path} in {map_path}. "
             "Cannot update without mapped Figma URLs."
         )
 
+    return _preview_from_map_entry(
+        body=body,
+        entry=entry,
+        design_spec_path=design_spec_path,
+        map_path=map_path,
+        components_dir=components_dir,
+        catalogue=catalogue,
+        match=match,
+    )
+
+
+def _preview_from_map_entry(
+    *,
+    body: UpdateRequest,
+    entry: dict[str, Any],
+    design_spec_path: str,
+    map_path: str,
+    components_dir: str,
+    catalogue: dict[str, Any] | None = None,
+    match: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    catalogue = catalogue or {}
+    match = match or {}
     mapped = _urls_from_map_entry(entry)
     main_urls = list(mapped["main"]) + list(body.additional_main_urls)
     element_urls = list(mapped["elements"]) + list(body.additional_element_urls)
     state_urls = list(mapped["states"]) + list(body.additional_state_urls)
+    # Object-map elements/states nested dicts → URLs
+    file_key = str(entry.get("fileKey") or "")
+    elements_obj = entry.get("elements")
+    if isinstance(elements_obj, dict) and file_key:
+        for nid in elements_obj.values():
+            if nid:
+                element_urls.append(_node_url(file_key, str(nid)))
+    states_obj = entry.get("states")
+    if isinstance(states_obj, dict) and file_key:
+        for nid in states_obj.values():
+            if nid:
+                state_urls.append(_node_url(file_key, str(nid)))
+    # de-dupe preserve order
+    def _dedupe(urls: list[str]) -> list[str]:
+        seen: set[str] = set()
+        out: list[str] = []
+        for u in urls:
+            if u and u not in seen:
+                seen.add(u)
+                out.append(u)
+        return out
+
+    main_urls = _dedupe(main_urls)
+    element_urls = _dedupe(element_urls)
+    state_urls = _dedupe(state_urls)
     if not main_urls:
         raise ValueError("Map entry has no figmaUrl/nodeId and no additionalMainUrls.")
 
@@ -155,9 +248,6 @@ def build_update_preview(body: UpdateRequest) -> dict[str, Any]:
         or body.component_slug
     )
     storybook = bool(body.storybook_examples)
-    if body.storybook_examples is False and match.get("hasStorybook"):
-        # Caller may pass explicit false; preview still reports hasStorybook
-        pass
 
     theme_css = str(
         programme_cfg.get("theme_css_path")
@@ -182,9 +272,25 @@ def build_update_preview(body: UpdateRequest) -> dict[str, Any]:
         )
 
     notes = [
-        "Update job — existing design-spec.md will be refreshed from server-packaged Figma.",
+        "Catalogue Update — new branch `update/{slug}-{sessionShort}` and new PR "
+        "(not an existing Review PR).",
         f"Map: `{map_path}`.",
+        "Programme foundation (theme/root-spec/yaml) is context-only — do not recreate.",
+        "Do not modify data/programme-inheritance-registry.json.",
     ]
+    need_figma = update_needs_figma_pack(body)
+    include_map = update_include_map(body)
+    if need_figma:
+        notes.append("Figma evidence will be packed (extra URLs and/or recheck prompt).")
+    else:
+        notes.append(
+            "Figma pack skipped — apply additional prompt against baseline only "
+            "(no recheck keywords / no extra URLs)."
+        )
+    if include_map:
+        notes.append("Figma map update is in scope (extra URLs provided).")
+    else:
+        notes.append("Figma map file not required on this PR (reuse existing map entry).")
     if match.get("hasStorybook"):
         notes.append("Existing Storybook stories detected for this component.")
 
@@ -212,6 +318,7 @@ def build_update_preview(body: UpdateRequest) -> dict[str, Any]:
         "generate_theme_assets": False,
         "theme_css_exists": True,
         "root_spec_exists": bool(root_spec),
+        "programme_yaml_exists": True,
         "storybook_examples": storybook,
         "figma": {
             k: [n.model_dump(mode="json") for n in v] for k, v in figma.items()
@@ -222,9 +329,17 @@ def build_update_preview(body: UpdateRequest) -> dict[str, Any]:
         "ready_for_agent": True,
         "map_entry_sketch": map_entry_sketch,
         "job_kind": "update",
-        "has_storybook": bool(match.get("hasStorybook")),
-        "mapped_figma_url": match.get("figmaUrl") or primary.url,
-        "mapped_node_id": match.get("nodeId") or primary.node_id,
+        "has_storybook": bool(match.get("hasStorybook") or storybook),
+        "mapped_figma_url": primary.url,
+        "mapped_node_id": primary.node_id,
+        "inherits_ids": inherits.value if hasattr(inherits, "value") else str(inherits),
+        "skip_figma_pack": not need_figma,
+        "skipFigmaPack": not need_figma,
+        "update_include_map": include_map,
+        "updateIncludeMap": include_map,
+        "update_skip_inheritance_registry": True,
+        "baseline_source": "catalogue",
+        "reviewer_feedback": (body.additional_prompt or "").strip() or None,
     }
     return preview
 

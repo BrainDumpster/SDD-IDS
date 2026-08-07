@@ -67,6 +67,11 @@ const copyCheckoutBtn = document.getElementById("copy-checkout");
 const downloadZipEl = document.getElementById("download-zip");
 const sessionPanel = document.getElementById("session-panel");
 const sessionUrlEl = document.getElementById("session-url");
+const bridgeCommandEl = document.getElementById("bridge-command");
+const bridgeStatusEl = document.getElementById("bridge-status");
+const copyBridgeCommandBtn = document.getElementById("copy-bridge-command");
+const chatMessageEl = document.getElementById("chat-message");
+const chatSendBtn = document.getElementById("chat-send");
 const sessionReadyBanner = document.getElementById("session-ready-banner");
 const copySessionUrlBtn = document.getElementById("copy-session-url");
 const copyClientPromptBtn = document.getElementById("copy-client-prompt");
@@ -100,6 +105,14 @@ let lastSpecContent = null;
 
 /** Scroll/highlight once when session becomes ready for the client. */
 let sessionReadyAnnouncedForJob = null;
+/** Preferred Spec/Source/Storybook tab; preserved across poll refreshes. */
+let preferredSpecTab = "preview";
+/** Job id for which we already auto-opened Storybook after accept. */
+let autoStorybookJobId = null;
+/** Last PR URL we announced in the banner (created vs updated). */
+let announcedPrUrlForJob = null;
+/** Last Storybook auto-refresh key for a finished job. */
+let storybookRefreshedForJob = null;
 
 /** @type {ReturnType<typeof setInterval>|null} */
 let pollTimer = null;
@@ -317,6 +330,7 @@ function setSpecTab(mode) {
   const isSpec = mode === "preview" || mode === "spec";
   const isSource = mode === "source";
   const isSb = mode === "storybook";
+  preferredSpecTab = isSb ? "storybook" : isSource ? "source" : "preview";
   specTabPreview?.classList.toggle("active", isSpec);
   specTabSource?.classList.toggle("active", isSource);
   specTabStorybook?.classList.toggle("active", isSb);
@@ -329,6 +343,15 @@ function setSpecTab(mode) {
     jobStorybookPreview.classList.toggle("hidden", !isSb);
     jobStorybookPreview.hidden = !isSb;
   }
+}
+
+function jobWantsStorybook(job) {
+  const p = job?.preview || lastPreview || {};
+  return Boolean(p.storybook_examples || p.storybookExamples);
+}
+
+function jobSessionAccepted(job) {
+  return job?.status === "finished" || job?.collab_status === "done";
 }
 
 function loadJobStorybookPreview(job) {
@@ -344,8 +367,30 @@ function loadJobStorybookPreview(job) {
   CollabStorybookPreview.loadInto(jobStorybookPreview, {
     jobId,
     theme: jobStorybookPreview.dataset.theme || "light",
-    cacheBust: String(Date.now()),
   });
+}
+
+function maybeAutoRefreshStorybook(job) {
+  if (!job || job.status !== "finished" || !jobWantsStorybook(job)) return;
+  const jobId = job.job_id || currentJobId;
+  if (!jobId) return;
+  const key = `${jobId}:${job.pr_url || ""}:${job.turn || ""}`;
+  if (storybookRefreshedForJob === key) return;
+  storybookRefreshedForJob = key;
+  setSpecTab("storybook");
+  if (sessionReadyBanner) {
+    sessionReadyBanner.classList.remove("hidden", "is-packing");
+    sessionReadyBanner.textContent =
+      "Refreshing Storybook preview for this component…";
+  }
+  if (jobStorybookPreview && window.CollabStorybookPreview) {
+    CollabStorybookPreview.loadInto(jobStorybookPreview, {
+      jobId,
+      theme: jobStorybookPreview.dataset.theme || "light",
+      forceRefresh: true,
+      cacheBust: String(Date.now()),
+    });
+  }
 }
 
 function renderSpecPreview(job) {
@@ -367,7 +412,19 @@ function renderSpecPreview(job) {
 
   specPreviewSource.textContent = spec.content;
   specPreviewRendered.innerHTML = renderMarkdownPreview(spec.content);
-  setSpecTab("preview");
+
+  // After accept with Storybook requested: open Spec Accurate Design once and poll rebuild.
+  const jobId = job.job_id || currentJobId;
+  if (
+    jobSessionAccepted(job) &&
+    jobWantsStorybook(job) &&
+    jobId &&
+    autoStorybookJobId !== jobId
+  ) {
+    autoStorybookJobId = jobId;
+    preferredSpecTab = "storybook";
+  }
+  setSpecTab(preferredSpecTab || "preview");
   loadJobStorybookPreview(job);
 
   if (job.job_id && openSpecRawEl) {
@@ -397,12 +454,23 @@ function resetResultsPanelForNewSession() {
   currentJobId = null;
   lastSpecContent = null;
   sessionReadyAnnouncedForJob = null;
+  preferredSpecTab = "preview";
+  autoStorybookJobId = null;
+  announcedPrUrlForJob = null;
+  storybookRefreshedForJob = null;
+  if (window.CollabIdleSession) CollabIdleSession.disarm();
 
   clearError();
   hideJobDone();
 
   sessionPanel?.classList.add("hidden");
   if (sessionUrlEl) sessionUrlEl.value = "";
+  if (bridgeCommandEl) bridgeCommandEl.value = "";
+  if (bridgeStatusEl) {
+    bridgeStatusEl.hidden = true;
+    bridgeStatusEl.textContent = "";
+  }
+  if (chatMessageEl) chatMessageEl.value = "";
   sessionReadyBanner?.classList.add("hidden");
   if (sessionReadyBanner) sessionReadyBanner.textContent = "";
   if (collabTranscriptEl) collabTranscriptEl.innerHTML = "";
@@ -450,14 +518,25 @@ function renderSessionPanel(job) {
   }
 
   if (url && !url.startsWith("(")) {
-    sessionUrlEl.value = url;
-    openSessionEl.href = url;
+    const publicUrl =
+      typeof collabPublicizeUrl === "function" ? collabPublicizeUrl(url) : url;
+    sessionUrlEl.value = publicUrl;
+    if (bridgeCommandEl) {
+      bridgeCommandEl.value =
+        typeof collabBridgeCommand === "function"
+          ? collabBridgeCommand(publicUrl)
+          : `curl -fsSL "${location.origin}/bridge/collab_bridge.py" -o /tmp/collab_bridge.py && python3 /tmp/collab_bridge.py run '${publicUrl}'`;
+    }
+    openSessionEl.href = publicUrl;
     if (downloadEvidenceEl && jobId) {
       downloadEvidenceEl.classList.remove("hidden");
       downloadEvidenceEl.dataset.jobId = jobId;
     }
   } else if (collab === "packaging" || job.status === "running") {
     sessionUrlEl.value = "(packaging… session URL appears when ready)";
+    if (bridgeCommandEl) {
+      bridgeCommandEl.value = "(packaging… Bridge command appears when ready)";
+    }
     openSessionEl.removeAttribute("href");
     if (downloadEvidenceEl) {
       downloadEvidenceEl.classList.add("hidden");
@@ -468,29 +547,98 @@ function renderSessionPanel(job) {
   // Copy / Open only when a real session URL is ready (not during packaging).
   setSessionUrlActionsEnabled(readyForClient);
 
+  if (bridgeStatusEl) {
+    const hb = job.bridge_last_heartbeat_at;
+    const label = job.bridge_label || "";
+    const progress = (job.bridge_progress || "").trim();
+    if (hb) {
+      bridgeStatusEl.hidden = false;
+      bridgeStatusEl.textContent = progress
+        ? `Bridge: ${progress}${label ? ` · ${label}` : ""} — ${hb}`
+        : `Bridge connected${label ? ` (${label})` : ""} — last heartbeat ${hb}`;
+    } else if (readyForClient && collab === "awaiting_client") {
+      bridgeStatusEl.hidden = false;
+      bridgeStatusEl.textContent =
+        "Waiting for Bridge… run the command in a terminal on your machine.";
+    } else {
+      bridgeStatusEl.hidden = true;
+      bridgeStatusEl.textContent = "";
+    }
+  }
+
+  if (chatSendBtn) {
+    chatSendBtn.disabled = !(
+      readyForClient &&
+      (collab === "awaiting_client" || collab === "done")
+    );
+  }
+
   if (sessionReadyBanner) {
     if (collab === "packaging") {
+      const packMsg =
+        job.packaging_progress ||
+        job.result_summary ||
+        "Packaging Figma evidence on the server… Bridge command will be ready next.";
       sessionReadyBanner.classList.remove("hidden");
       sessionReadyBanner.classList.add("is-packing");
-      sessionReadyBanner.textContent =
-        "Packaging Figma evidence on the server… Session URL will be ready next.";
+      sessionReadyBanner.textContent = packMsg;
+      if (progressLabel && (formRequestInFlight || sessionInFlight)) {
+        progressLabel.textContent = packMsg;
+      }
     } else if (readyForClient && collab === "awaiting_client") {
       sessionReadyBanner.classList.remove("hidden", "is-packing");
-      sessionReadyBanner.textContent =
-        "Session URL is ready — copy it and paste into the client agent (Devin). No further handoffs needed.";
+      const followUp =
+        Array.isArray(job.transcript) &&
+        [...job.transcript].reverse().find((e) =>
+          e && (e.kind === "follow_up" || e.kind === "chat" || e.kind === "awaiting_client")
+        );
+      const followUpActive =
+        followUp &&
+        (followUp.kind === "follow_up" ||
+          (followUp.kind === "awaiting_client" &&
+            /follow-up/i.test(followUp.message || "")));
+      sessionReadyBanner.textContent = followUpActive
+        ? "Follow-up queued — Bridge should pick it up on the next /work cycle. Watch the Transcript."
+        : "Ready — run Copy Bridge command only (do not also paste session URL into Devin).";
+      if (progressLabel && (formRequestInFlight || sessionInFlight)) {
+        progressLabel.textContent = followUpActive
+          ? "Follow-up awaiting Bridge…"
+          : job.bridge_progress
+            ? `Bridge: ${job.bridge_progress}`
+            : "Session ready — waiting for Bridge / client…";
+      }
       if (jobId && sessionReadyAnnouncedForJob !== jobId) {
         sessionReadyAnnouncedForJob = jobId;
         sessionPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-        sessionUrlEl.focus?.();
+        bridgeCommandEl?.focus?.();
       }
     } else if (readyForClient && collab === "reviewing") {
       sessionReadyBanner.classList.remove("hidden", "is-packing");
       sessionReadyBanner.textContent =
         "Client result received — server is reviewing (rules only, no server LLM).";
+      if (progressLabel && (formRequestInFlight || sessionInFlight)) {
+        progressLabel.textContent = "Server reviewing client result…";
+      }
     } else if (collab === "done") {
       sessionReadyBanner.classList.remove("hidden", "is-packing");
-      sessionReadyBanner.textContent =
-        "Session finished. Use the completion card for PR / zip download.";
+      const pr =
+        job.pr_url && !String(job.pr_url).includes("dry_run=1") ? job.pr_url : "";
+      const kind = job.job_kind || "";
+      if (pr && announcedPrUrlForJob !== `${jobId}:${pr}`) {
+        announcedPrUrlForJob = `${jobId}:${pr}`;
+        sessionReadyBanner.textContent =
+          kind === "review_revise"
+            ? `PR updated — ${pr}`
+            : `Pull request created — ${pr}`;
+      } else if (pr) {
+        sessionReadyBanner.textContent =
+          kind === "review_revise"
+            ? `PR updated — ${pr}. Send a follow-up or use the completion card.`
+            : `Pull request created — ${pr}. Send a follow-up or use the completion card.`;
+      } else {
+        sessionReadyBanner.textContent =
+          "Session finished. Send a follow-up to reopen for Bridge, or use the completion card for PR / zip.";
+      }
     } else {
       sessionReadyBanner.classList.add("hidden");
       sessionReadyBanner.textContent = "";
@@ -498,14 +646,20 @@ function renderSessionPanel(job) {
   }
 
   const events = Array.isArray(job.transcript) ? job.transcript : [];
-  collabTranscriptEl.innerHTML = events
-    .map((e) => {
-      const at = e.at || "";
-      const kind = e.kind || "";
-      const msg = e.message || "";
-      return `<li><span class="ts">${at}</span> <strong>${kind}</strong> — ${msg}</li>`;
-    })
-    .join("");
+  if (window.CollabTranscript) {
+    CollabTranscript.render(collabTranscriptEl, events);
+  } else {
+    collabTranscriptEl.innerHTML = events
+      .slice()
+      .reverse()
+      .map((e) => {
+        const at = e.at || "";
+        const kind = e.kind || "";
+        const msg = e.message || "";
+        return `<li><span class="ts">${at}</span> <strong>${kind}</strong> — ${msg}</li>`;
+      })
+      .join("");
+  }
   updateResultsPlaceholder();
 }
 
@@ -523,9 +677,28 @@ function renderJobDone(job) {
   const jobId = job.job_id || currentJobId || "";
 
   if (status === "finished") {
-    jobDoneTitleEl.textContent = "Collab complete";
-    jobDoneMessageEl.textContent =
-      "Server accepted the client result, published artifacts (PR when GitHub is configured), and prepared a download zip.";
+    const kind = job.job_kind || "";
+    const pr =
+      job.pr_url && !String(job.pr_url).includes("dry_run=1") ? job.pr_url : "";
+    jobDoneTitleEl.textContent =
+      kind === "review_revise" ? "Revise complete" : "Collab complete";
+    if (pr && kind === "review_revise") {
+      jobDoneMessageEl.textContent = jobWantsStorybook(job)
+        ? `PR updated. Artifacts published and Storybook preview is refreshing for this component.`
+        : `PR updated. Artifacts published onto the existing PR branch.`;
+    } else if (pr) {
+      jobDoneMessageEl.textContent = jobWantsStorybook(job)
+        ? `Pull request created. Opening Storybook for Spec Accurate Design (filtered to this component).`
+        : `Pull request created. Download the zip or open the PR.`;
+    } else {
+      jobDoneMessageEl.textContent = jobWantsStorybook(job)
+        ? "Server accepted the client result, published artifacts (PR when GitHub is configured), and prepared a download zip. Opening the Storybook tab for Spec Accurate Design review."
+        : "Server accepted the client result, published artifacts (PR when GitHub is configured), and prepared a download zip.";
+    }
+    if (pr) {
+      jobDonePrEl.textContent =
+        kind === "review_revise" ? "Open updated pull request" : "Open pull request";
+    }
   } else if (status === "error") {
     jobDoneEl.classList.add("is-error");
     jobDoneTitleEl.textContent = "Collab failed";
@@ -590,7 +763,11 @@ function renderJobDone(job) {
   jobDoneEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
   updateResultsPlaceholder();
   if (job.design_spec?.content && specPreviewPanel) {
-    specPreviewPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    const scrollTarget =
+      jobWantsStorybook(job) && jobStorybookPreview && !jobStorybookPreview.hidden
+        ? jobStorybookPreview
+        : specPreviewPanel;
+    scrollTarget.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 }
 
@@ -615,8 +792,13 @@ function renderJobRecord(job) {
   if (job.branch || job.pr_url || job.status === "finished") {
     branchPanel.classList.remove("hidden");
     branchNameEl.textContent = job.branch || "(no branch yet)";
-    if (job.pr_url) {
-      const label = job.publish_dry_run ? "Dry-run PR" : "PR";
+  if (job.pr_url) {
+      const kind = job.job_kind || "";
+      const label = job.publish_dry_run
+        ? "Dry-run PR"
+        : kind === "review_revise"
+          ? "PR updated"
+          : "Pull request created";
       prLinkEl.innerHTML = `${label}: <a href="${job.pr_url}" target="_blank" rel="noopener">${job.pr_url}</a>`;
     } else if (job.publish_error) {
       prLinkEl.textContent = `Publish error: ${job.publish_error}`;
@@ -647,8 +829,23 @@ function renderJobRecord(job) {
 
   if (["finished", "error", "cancelled"].includes(job.status)) {
     renderJobDone(job);
+    maybeAutoRefreshStorybook(job);
   } else {
     hideJobDone();
+  }
+
+  if (window.CollabIdleSession) {
+    CollabIdleSession.syncFromJob(job, {
+      onEnd: async () => {
+        const id = job.job_id || currentJobId;
+        if (!id) return;
+        await apiFetch(`/api/v1/intake/jobs/${encodeURIComponent(id)}/close-idle`, {
+          method: "POST",
+        });
+        stopPolling();
+        currentJobId = null;
+      },
+    });
   }
 
   jobJson.textContent = JSON.stringify(
@@ -694,6 +891,7 @@ function pollJob(jobId) {
     };
     jobEventSource.onmessage = refresh;
     for (const kind of [
+      "packaging",
       "packaged",
       "client_result",
       "revise",
@@ -941,6 +1139,7 @@ function isJobInFlight(job) {
 }
 
 function setSessionUrlActionsEnabled(enabled) {
+  if (copyBridgeCommandBtn) copyBridgeCommandBtn.disabled = !enabled;
   if (copySessionUrlBtn) copySessionUrlBtn.disabled = !enabled;
   if (copyClientPromptBtn) copyClientPromptBtn.disabled = !enabled;
   if (openSessionEl) {
@@ -1190,25 +1389,37 @@ function buildPayload() {
 async function loadProgrammes() {
   startProgress("Loading programmes…");
   try {
-    const res = await apiFetch("/api/v1/programmes");
-    const data = await res.json();
+    let res = await apiFetch("/api/v1/programmes");
+    let data = await res.json();
     if (!res.ok) {
       finishProgress(false);
       showError(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail));
       return;
     }
+    let list = Array.isArray(data.programmes) ? data.programmes : [];
+    // Fallback: catalogue API (GitHub/local components tree) when yaml dir is empty
+    if (!list.length) {
+      const res2 = await apiFetch("/api/v1/update/programmes");
+      const data2 = await res2.json();
+      if (res2.ok && Array.isArray(data2.programmes)) {
+        list = data2.programmes;
+      }
+    }
     programmeEl.innerHTML = "";
     themeReuseProgrammeEl.innerHTML = "";
-    for (const p of data.programmes || []) {
+    for (const p of list) {
+      const slug = p.slug || p.name || "";
+      if (!slug) continue;
+      const label = p.displayName || p.display_name || slug;
       const opt = document.createElement("option");
-      opt.value = p.slug;
-      opt.textContent = `${p.displayName} (${p.slug})`;
+      opt.value = slug;
+      opt.textContent = `${label} (${slug})`;
       programmeEl.appendChild(opt);
 
       const reuseOpt = document.createElement("option");
-      reuseOpt.value = p.slug;
-      reuseOpt.textContent = `${p.displayName} (${p.slug})`;
-      if (p.slug === "ids") reuseOpt.selected = true;
+      reuseOpt.value = slug;
+      reuseOpt.textContent = `${label} (${slug})`;
+      if (slug === "ids") reuseOpt.selected = true;
       themeReuseProgrammeEl.appendChild(reuseOpt);
     }
     if (![...programmeEl.options].some((o) => o.value === "ids")) {
@@ -1364,7 +1575,9 @@ createJobBtn.addEventListener("click", async () => {
     syncFormActionAvailability();
     renderJobRecord(data);
     if (data.status === "running" || data.agent_started || data.session_url) {
-      progressLabel.textContent = "Collab session running… paste session URL into client when ready";
+      progressLabel.textContent =
+        data.packaging_progress ||
+        "Packaging Figma evidence… Bridge command appears when ready";
       pollJob(data.job_id);
       return;
     }
@@ -1449,6 +1662,60 @@ copySessionUrlBtn?.addEventListener("click", async () => {
   }
 });
 
+copyBridgeCommandBtn?.addEventListener("click", async () => {
+  if (copyBridgeCommandBtn.disabled) return;
+  const text = bridgeCommandEl?.value || "";
+  if (!text || text.startsWith("(")) return;
+  try {
+    await copyTextToClipboard(text);
+    copyBridgeCommandBtn.textContent = "Copied";
+    setTimeout(() => {
+      copyBridgeCommandBtn.textContent = "Copy Bridge command";
+    }, 1500);
+    clearError();
+  } catch (err) {
+    bridgeCommandEl?.focus();
+    bridgeCommandEl?.select();
+    showError(String(err.message || err));
+  }
+});
+
+chatSendBtn?.addEventListener("click", async () => {
+  if (chatSendBtn.disabled || !currentJobId) return;
+  const message = (chatMessageEl?.value || "").trim();
+  if (!message) {
+    showError("Enter a follow-up message");
+    return;
+  }
+  chatSendBtn.disabled = true;
+  try {
+    const res = await apiFetch(`/api/v1/intake/jobs/${currentJobId}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      showError(
+        typeof data.detail === "string" ? data.detail : "Could not send follow-up"
+      );
+      return;
+    }
+    if (chatMessageEl) chatMessageEl.value = "";
+    clearError();
+    if (sessionReadyBanner) {
+      sessionReadyBanner.classList.remove("hidden", "is-packing");
+      sessionReadyBanner.textContent =
+        "Follow-up sent — see Transcript. Waiting for Bridge…";
+    }
+    renderJobRecord(data);
+  } catch (err) {
+    showError(String(err.message || err));
+  } finally {
+    // re-enabled by next poll/render based on status
+  }
+});
+
 copyClientPromptBtn?.addEventListener("click", async () => {
   if (copyClientPromptBtn.disabled || !currentJobId) return;
   try {
@@ -1500,14 +1767,22 @@ specTabPreview?.addEventListener("click", () => setSpecTab("preview"));
 specTabSource?.addEventListener("click", () => setSpecTab("source"));
 specTabStorybook?.addEventListener("click", () => {
   setSpecTab("storybook");
+  // Reuse cached preview for this job — do not force a rebuild on tab switch.
   if (currentJobId) {
     loadJobStorybookPreview({ job_id: currentJobId });
   }
 });
 
 if (jobStorybookPreview && window.CollabStorybookPreview) {
-  CollabStorybookPreview.bindThemeToggle(jobStorybookPreview, () => {
-    if (currentJobId) loadJobStorybookPreview({ job_id: currentJobId });
+  CollabStorybookPreview.bindPreviewChrome(jobStorybookPreview, () => {
+    if (currentJobId) {
+      CollabStorybookPreview.loadInto(jobStorybookPreview, {
+        jobId: currentJobId,
+        theme: jobStorybookPreview.dataset.theme || "light",
+        forceRefresh: true,
+        cacheBust: String(Date.now()),
+      });
+    }
   });
 }
 
@@ -1546,3 +1821,9 @@ loadProgrammes();
 loadAgentConfig();
 initAuthActorSection();
 initLayoutControls();
+if (window.CollabTranscript) {
+  CollabTranscript.bindToggle(document.getElementById("generate-transcript-block"));
+}
+if (window.CollabIdleSession) {
+  CollabIdleSession.loadConfig();
+}

@@ -27,6 +27,7 @@ services:
       FIGMA_MODE: ${FIGMA_MODE:-rest}
       FIGMA_TOKEN: ${FIGMA_TOKEN:-}
       FIGMA_MCP_URL: ${FIGMA_MCP_URL:-https://api.figma.com/mcp}
+      FIGMA_SSL_VERIFY: ${FIGMA_SSL_VERIFY:-true}
       SERVER_REVIEW_MODE: ${SERVER_REVIEW_MODE:-rules}
       STUB_FORCE_REVISE_ONCE: ${STUB_FORCE_REVISE_ONCE:-false}
       SESSION_REQUIRE_CLAIM: ${SESSION_REQUIRE_CLAIM:-true}
@@ -40,8 +41,15 @@ services:
       GITHUB_REPO: ${GITHUB_REPO:-}
       GITHUB_STARTING_REF: ${GITHUB_STARTING_REF:-master}
       CATALOGUE_SOURCE: ${CATALOGUE_SOURCE:-local}
+      # Baked Spec Accurate Design preview (must exist in the image)
+      STORYBOOK_STATIC_DIR: /app/storybook-static
+      STORYBOOK_REBUILD_ENABLED: ${STORYBOOK_REBUILD_ENABLED:-true}
+      REQUESTS_CA_BUNDLE: ${REQUESTS_CA_BUNDLE:-}
+      SSL_CERT_FILE: ${SSL_CERT_FILE:-}
+      CURL_CA_BUNDLE: ${CURL_CA_BUNDLE:-}
     volumes:
       - ./data:/app/data
+      - ${COLLAB_CERTS_DIR:-./certs}:/certs:ro
     healthcheck:
       test:
         [

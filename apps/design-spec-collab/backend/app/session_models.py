@@ -50,8 +50,22 @@ class ClientResultBody(BaseModel):
 
 class ClaimBody(BaseModel):
     client_label: str | None = Field(default=None, alias="clientLabel")
+    # Session-token holder may take over a stale/wrong claim (Bridge vs pasted Devin).
+    force: bool = False
 
     model_config = {"populate_by_name": True}
+
+
+class HeartbeatBody(BaseModel):
+    client_label: str | None = Field(default=None, alias="clientLabel")
+    # Short status line from Bridge (e.g. "Devin turn 2 — writing artifacts")
+    progress: str | None = Field(default=None, max_length=500)
+
+    model_config = {"populate_by_name": True}
+
+
+class ChatBody(BaseModel):
+    message: str = Field(min_length=1, max_length=4000)
 
 
 class ReviewVerdict(BaseModel):
@@ -87,7 +101,7 @@ class CollabSession(BaseModel):
     error_message: str | None = None
     result_summary: str | None = None
     cancel_requested: bool = False
-    job_kind: str = "create"  # create | update
+    job_kind: str = "create"  # create | update | review_revise
     baseline_artifacts: list[Artifact] = Field(default_factory=list)
     context_artifacts: list[Artifact] = Field(default_factory=list)
     change_hints: list[str] = Field(default_factory=list)
@@ -98,7 +112,25 @@ class CollabSession(BaseModel):
     published_files: list[str] = Field(default_factory=list)
     publish_error: str | None = None
     publish_dry_run: bool = False
+    bridge_last_heartbeat_at: str | None = None
+    bridge_label: str | None = None
+    bridge_progress: str | None = None
+    # Live stage text while status=packaging (cleared when awaiting_client)
+    packaging_progress: str | None = None
+    # Operator idle End (B2): finished session closed for follow-up; Bridge process not killed
+    operator_closed: bool = False
+    operator_closed_at: str | None = None
 
     def session_url(self, public_base_url: str) -> str:
         base = public_base_url.rstrip("/")
         return f"{base}/s/{self.session_id}?t={self.access_token}"
+
+    def bridge_command(self, public_base_url: str, *, ai_cli: str = "devin") -> str:
+        """One-shot command shown in Collab UI (outbound Bridge Agent)."""
+        base = public_base_url.rstrip("/")
+        session = self.session_url(public_base_url)
+        ai_flag = f" --ai-cli {ai_cli}" if ai_cli and ai_cli != "devin" else ""
+        return (
+            f'curl -fsSL "{base}/bridge/collab_bridge.py" -o /tmp/collab_bridge.py '
+            f'&& python3 /tmp/collab_bridge.py run \'{session}\'{ai_flag}'
+        )

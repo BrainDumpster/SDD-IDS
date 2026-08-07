@@ -38,7 +38,10 @@ _FALLBACK_EXPORT_ORDER = (
     "SpecAccurateDesign",
     "Playground",
     "Default",
+    "DefaultOff",
+    "DefaultOn",
     "Primary",
+    "AllStates",
 )
 
 
@@ -75,21 +78,31 @@ def export_name_to_story_name(export_name: str) -> str:
     return spaced.strip() or export_name
 
 
-def resolve_stories_path(repo_root: Path, programme: str, slug: str) -> Path | None:
+def resolve_stories_path(
+    repo_root: Path,
+    programme: str,
+    slug: str,
+    *,
+    extra_roots: list[Path] | None = None,
+) -> Path | None:
     prog = storybook_programme_dir(programme)
     pascal = slug_to_pascal(slug)
-    candidates = [
-        repo_root / "storybook-generated" / prog / "src" / "components" / f"{pascal}.stories.tsx",
-        repo_root
-        / "storybook-generated"
-        / programme
-        / "src"
-        / "components"
-        / f"{pascal}.stories.tsx",
-    ]
-    for path in candidates:
-        if path.is_file():
-            return path
+    roots = [repo_root]
+    if extra_roots:
+        roots.extend(extra_roots)
+    for root in roots:
+        candidates = [
+            root / "storybook-generated" / prog / "src" / "components" / f"{pascal}.stories.tsx",
+            root
+            / "storybook-generated"
+            / programme
+            / "src"
+            / "components"
+            / f"{pascal}.stories.tsx",
+        ]
+        for path in candidates:
+            if path.is_file():
+                return path
     return None
 
 
@@ -134,6 +147,77 @@ def pick_fallback_export(exports: list[str]) -> str | None:
         if preferred in exports:
             return preferred
     return exports[0]
+
+
+def _list_exports_loose(stories_path: Path) -> list[str]:
+    exports = list_story_exports(stories_path)
+    if exports:
+        return exports
+    try:
+        text = stories_path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    return [
+        m.group(1)
+        for m in re.finditer(
+            r"""export\s+const\s+([A-Za-z][A-Za-z0-9_]*)\s*=\s*\{""",
+            text,
+        )
+    ]
+
+
+def resolve_story_in_static(
+    index: dict[str, Any] | None,
+    *,
+    title: str | None,
+    programme: str,
+    slug: str,
+    stories_path: Path | None = None,
+) -> tuple[str, str, bool] | None:
+    """Pick a story id that **exists in the static index** (never invent missing ids).
+
+    When a CSF file is present, require at least one of its exports to map to an
+    index entry. Never deep-link a stale index story (e.g. ``Default``) after the
+    imported CSF switched to ``DefaultOff`` — that causes Storybook's
+    "Couldn't find story matching id … after importing a CSF file" error once
+    the rebuild publishes the new module map.
+    """
+    if not index:
+        return None
+
+    entries = index.get("entries") or index.get("stories") or {}
+    if not isinstance(entries, dict):
+        return None
+
+    exports: list[str] = []
+    if stories_path is not None and stories_path.is_file():
+        exports = _list_exports_loose(stories_path)
+
+    if title and exports:
+        ordered: list[str] = []
+        for pref in _FALLBACK_EXPORT_ORDER:
+            if pref in exports and pref not in ordered:
+                ordered.append(pref)
+        for ex in exports:
+            if ex not in ordered:
+                ordered.append(ex)
+
+        for export in ordered:
+            name = export_name_to_story_name(export)
+            sid = story_id_from_title_and_name(title, name)
+            if sid in entries:
+                return sid, name, export == "SpecAccurateDesign"
+        # CSF and baked index disagree — force rebuild path (caller → static_stale)
+        return None
+
+    found = find_story_in_index(
+        index, title=title, programme=programme, slug=slug
+    )
+    if found:
+        sid, _name, _is_spec = found
+        if sid in entries:
+            return found
+    return None
 
 
 def load_story_index(static_dir: Path) -> dict[str, Any] | None:
@@ -293,6 +377,7 @@ def build_preview_payload(
     static_dir: Path | None,
     theme: str | None = None,
     cache_bust: str | None = None,
+    extra_roots: list[Path] | None = None,
 ) -> dict[str, Any]:
     programme = (programme or "").strip()
     slug = (slug or "").strip()
@@ -303,14 +388,19 @@ def build_preview_payload(
             "message": "programme and slug are required",
         }
 
-    stories_path = resolve_stories_path(repo_root, programme, slug)
+    stories_path = resolve_stories_path(
+        repo_root, programme, slug, extra_roots=extra_roots
+    )
     if stories_path is None:
         return {
             "available": False,
             "reason": "no_generated_story",
             "message": (
                 f"No generated Storybook file for {programme}/{slug} "
-                "under storybook-generated/"
+                "under storybook-generated/. If the collab session just accepted, "
+                "download the artifacts zip (stories are there) or retry GitHub "
+                "publish, then rebuild the Collab Docker image so the iframe build "
+                "includes the new story."
             ),
             "programme": programme,
             "slug": slug,
@@ -341,15 +431,22 @@ def build_preview_payload(
     story_id: str | None = None
     story_name: str | None = None
     resolved_spec = False
+    in_index = False
 
     if index:
-        found = find_story_in_index(
-            index, title=title, programme=programme, slug=slug
+        found = resolve_story_in_static(
+            index,
+            title=title,
+            programme=programme,
+            slug=slug,
+            stories_path=stories_path,
         )
         if found:
             story_id, story_name, resolved_spec = found
+            in_index = True
 
     if not story_id and title:
+        # Synthesize only for stale messaging; available stays false until in_index
         export = pick_fallback_export(exports)
         if export:
             story_name = export_name_to_story_name(export)
@@ -381,6 +478,49 @@ def build_preview_payload(
         qs += f"&t={cache_bust}"
 
     iframe_url = f"/storybook/iframe.html?{qs}"
+    # Use index.html (not bare /storybook/) so reverse proxies and StaticFiles
+    # always hit a real file — bare directory URLs 404 on some remote Docker setups.
+    manager_parts = [
+        f"path=/story/{story_id}",
+        f"globals=theme:{theme_val}",
+        "panel=bottom",
+        "addonPanel=sdd-ids%2Fscratchpad%2Fpanel",
+    ]
+    if cache_bust:
+        manager_parts.append(f"t={cache_bust}")
+    manager_url = "/storybook/index.html?" + "&".join(manager_parts)
+
+    if not in_index:
+        export_hint = ""
+        if exports:
+            export_hint = (
+                f" On-disk CSF exports ({', '.join(exports[:6])}"
+                f"{'…' if len(exports) > 6 else ''}) are not in the baked "
+                "Storybook index yet (common after a PR import)."
+            )
+        return {
+            "available": False,
+            "reason": "static_stale",
+            "message": (
+                f"Found {stories_rel} on disk, but the Storybook static preview "
+                "does not include a matching story id yet."
+                f"{export_hint} Collab rebuilds the preview in the container "
+                "(1–3 min) — this panel refreshes automatically."
+            ),
+            "programme": programme,
+            "slug": slug,
+            "title": title,
+            "storyId": story_id,
+            "storyName": story_name,
+            "iframeUrl": iframe_url,
+            "canvasUrl": iframe_url,
+            "managerUrl": manager_url,
+            "storiesPath": stories_rel,
+            "staticReady": True,
+            "hasSpecAccurateDesign": is_spec or resolved_spec,
+            "exports": exports,
+        }
+
     note = None
     if not resolved_spec:
         note = (
@@ -398,7 +538,8 @@ def build_preview_payload(
         "storyId": story_id,
         "storyName": story_name,
         "iframeUrl": iframe_url,
-        "managerUrl": f"/storybook/?path=/story/{story_id}",
+        "canvasUrl": iframe_url,
+        "managerUrl": manager_url,
         "storiesPath": stories_rel,
         "theme": theme_val,
         "staticReady": True,

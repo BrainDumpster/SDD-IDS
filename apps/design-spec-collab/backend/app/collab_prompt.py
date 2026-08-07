@@ -22,6 +22,19 @@ _COLLAB_GUARDRAILS = [
     "Never echo or request CURSOR_API_KEY / FIGMA_TOKEN / GitHub tokens.",
 ]
 
+_REVIEW_REVISE_GUARDRAILS = [
+    "REVIEW REVISE CONTINUITY: baseline_artifacts (role=baseline) are the PR-head "
+    "source of truth. Start from that exact content. Apply prior_feedback as a "
+    "minimal patch. Preserve every section, wording, token, and Storybook export "
+    "not implicated by feedback. Do not regenerate the component from scratch.",
+    "REVIEW REVISE: figma_evidence is for verifying feedback claims only — not a "
+    "license to rewrite Metadata, Layout, Tokens, States, Codegen, or CSF anew.",
+    "REVIEW REVISE Storybook: edit the baseline `*.stories.tsx` in place. Keep the "
+    "same meta.title, story export names, and structure unless feedback asks "
+    "otherwise. Always include `import React from \"react\";` when the file uses JSX "
+    "or `React.*`.",
+]
+
 
 def _rewrite_checklist_item(item: str) -> str | None:
     low = item.lower()
@@ -35,6 +48,12 @@ def _rewrite_checklist_item(item: str) -> str | None:
         return (
             "Use packaged programme figma_evidence only (no live MCP). "
             "Derive tokens, geometry, and states from evidence tools keys."
+        )
+    if "main.ts" in low and ("mandatory" in low or "update storybook" in low or "ensure storybook" in low):
+        return (
+            "If storybookExamples: submit Spec Accurate Design under "
+            "storybook-generated/<programme>/src/… only. Do not submit "
+            "storybook/.storybook/main.ts — globs already discover storybook-generated/*/."
         )
     return item
 
@@ -70,12 +89,26 @@ def apply_collab_figma_overrides(
         1,
         "COLLAB: Do not read the local filesystem. Supporting files are in context_artifacts.",
     )
-    if job_kind == "update":
+    if job_kind in ("update", "review_revise"):
         rewritten.insert(
             2,
-            "UPDATE: Diff figma_evidence against baseline_artifacts / context baselines; "
-            "change only what Figma proves changed; preserve stable contracts; refresh "
-            "Metadata Updated + Source Mapping; update Storybook when in scope.",
+            (
+                "REVIEW REVISE: Copy baseline design-spec + Storybook from "
+                "baseline_artifacts; apply prior_feedback as a minimal diff; change "
+                "only what feedback + Figma prove; preserve stable contracts, section "
+                "order, and story export names; refresh Metadata Updated + Source "
+                "Mapping only if evidence warrants it. Publish stays on the existing "
+                "PR branch — do not invent a new slug. Do NOT full-rewrite."
+                if job_kind == "review_revise"
+                else (
+                    "UPDATE: Start from baseline_artifacts; apply the operator ask "
+                    "(minimal vs fuller based on the prompt). Use figma_evidence only when "
+                    "mode is not skipped. Preserve stable contracts; refresh Metadata "
+                    "Updated + Source Mapping when evidence warrants; update Storybook "
+                    "when in scope. Never touch programme-inheritance-registry.json. "
+                    "Publish to a new update/{slug}-* branch + new PR."
+                )
+            ),
         )
     pkg["run_phase_checklist"] = rewritten
     pkg["runPhaseChecklist"] = rewritten
@@ -87,7 +120,10 @@ def apply_collab_figma_overrides(
         for g in guards
         if "live figma" not in str(g).lower() and "figma mcp" not in str(g).lower()
     ]
-    pkg["guardrails"] = _COLLAB_GUARDRAILS + guards
+    base_guards = list(_COLLAB_GUARDRAILS)
+    if job_kind == "review_revise":
+        base_guards = base_guards + list(_REVIEW_REVISE_GUARDRAILS)
+    pkg["guardrails"] = base_guards + guards
 
     text = str(pkg.get("prompt_text") or pkg.get("promptText") or "")
     if text:
@@ -108,11 +144,38 @@ def apply_collab_figma_overrides(
             "`context_artifacts`. Do **not** authenticate Figma, use MCP, or read the "
             "local filesystem.\n\n"
         )
-        if job_kind == "update":
+        if job_kind == "review_revise":
             preamble += (
-                "## Update contract\n\n"
-                "Compare evidence to `baseline_artifacts` / context baselines. "
-                "Update design-spec.md, map entry, and related Storybook only where needed.\n\n"
+                "## Review revise contract (continuity — mandatory)\n\n"
+                "You are revising an **existing open PR**. The PR-head files in "
+                "`baseline_artifacts` (role=`baseline`) are authoritative.\n\n"
+                "1. **Start from the baseline text** for design-spec.md and "
+                "`*.stories.tsx` — copy it, then patch.\n"
+                "2. Address `prior_feedback` only (plus tiny fixes Figma proves are wrong).\n"
+                "3. **Do not** regenerate the whole spec/CSF from `figma_evidence`.\n"
+                "4. Keep the same slug, paths, meta.title, and story export names.\n"
+                "5. Submit full files (API requires full artifacts) but the **diff vs "
+                "baseline must be minimal** — reviewers will reject wholesale rewrites.\n"
+                "6. Storybook: keep `import React from \"react\";` when using JSX / "
+                "`React.*`.\n\n"
+            )
+        elif job_kind == "update":
+            preamble += (
+                "## Catalogue Update contract\n\n"
+                "You are updating an **existing catalogue component**. Publish creates a "
+                "**new** branch `update/{slug}-{session}` and a **new** PR "
+                "(never reuse an open Review PR).\n\n"
+                "1. Start from `baseline_artifacts` / context baselines for design-spec.md "
+                "and Storybook.\n"
+                "2. Scope the diff to the operator `additional_prompt` / feedback — "
+                "minimal when the ask is small; fuller only when the ask requires it.\n"
+                "3. If `figma_evidence.mode` is `skipped`, do **not** invent Figma-driven "
+                "visual changes — text/API/docs-only patches from the prompt.\n"
+                "4. Do **not** modify `data/programme-inheritance-registry.json`.\n"
+                "5. Update the figma map file only when it is listed in client_requests "
+                "(extra URLs were provided).\n"
+                "6. Do **not** recreate programme theme/root-spec/yaml.\n"
+                "7. Storybook: keep `import React from \"react\";` when using JSX.\n\n"
             )
         pkg["prompt_text"] = preamble + text
         pkg["promptText"] = pkg["prompt_text"]
@@ -149,29 +212,86 @@ def rewrite_client_requests_for_collab(
         if "local filesystem" not in instr.lower():
             instr += fs_ban
         if r.get("kind") == "write_design_spec":
-            instr += (
-                " Hard requirements from packaged evidence: "
-                "(1) `### Slot geometry (Figma-verified)` with border-radius citing node ids / "
-                "boundVariableHints / get_variable_defs; "
-                "(2) state matrices Background/Border/Text-Icon using `var(--…)`; "
-                "(3) complete Codegen Contract subsections; "
-                "(4) Source Mapping with file key, node ids, and verification method "
-                f"from figma_evidence.clientGuidance; "
-                "(5) you are the authoring LLM — do not ask the human to write the spec; "
-                "(6) for theme/token names prefer context_artifacts theme CSS + "
-                "docs/design-spec-authoring-contract.md#excerpt."
-            )
+            if job_kind == "review_revise":
+                instr += (
+                    " Hard requirements: start from the baseline design-spec.md in "
+                    "baseline_artifacts / context_artifacts (role=baseline). Apply "
+                    "prior_feedback as a minimal patch. Keep Slot geometry, state "
+                    "matrices, Codegen Contract, and Source Mapping unless feedback "
+                    "targets them. Prefer semantic `var(--…)` already in the baseline. "
+                    "You are patching an existing PR file — do not ask the human to "
+                    "rewrite the spec, and do not regenerate from figma_evidence alone."
+                )
+            else:
+                instr += (
+                    " Hard requirements from packaged evidence: "
+                    "(1) `### Slot geometry (Figma-verified)` with border-radius citing node ids / "
+                    "boundVariableHints / get_variable_defs; "
+                    "(2) state matrices Background/Border/Text-Icon using `var(--…)`; "
+                    "(3) complete Codegen Contract subsections; "
+                    "(4) Source Mapping with file key, node ids, and verification method "
+                    f"from figma_evidence.clientGuidance; "
+                    "(5) you are the authoring LLM — do not ask the human to write the spec; "
+                    "(6) for theme/token names prefer context_artifacts theme CSS + "
+                    "docs/design-spec-authoring-contract.md#excerpt."
+                )
         if r.get("kind") == "write_data_registry":
             instr += (
                 " Start from the packaged map/registry in context_artifacts "
                 "(including `#entry` slices); do not open map files from disk."
             )
-        if job_kind == "update" and r.get("kind") == "write_design_spec":
-            instr = (
-                "UPDATE existing design-spec.md in place (same path). "
-                + instr
-                + " Diff against baseline_artifacts; do not create a new slug."
+        if r.get("kind") == "write_storybook_examples":
+            fidelity = (
+                " STORYBOOK FIDELITY: Submit full-file artifacts only (no client repo, no "
+                "local scripts): `storybook/src/components/<Pascal>.tsx` + "
+                "`<Pascal>.module.css` with real controls / DS primitives, plus CSF under "
+                "storybook-generated that **imports** that module (Spec Accurate Design). "
+                "Never redefine the component as an inline div/span mock with style={{…}} "
+                "inside the stories file. Build strictly from the design-spec.md in "
+                "baseline_artifacts / context_artifacts (or authored this turn). "
+                "Do not invent structure, variants, or placeholder markup."
             )
+            if job_kind == "review_revise":
+                instr = (
+                    "REVISE existing Storybook **component + CSS + CSF** artifacts in place "
+                    "on the same PR branch. Copy baselines from baseline_artifacts / "
+                    "context_artifacts, then apply prior_feedback. Keep meta.title and story "
+                    "export names unless feedback renames them. Always include "
+                    '`import React from "react";` when JSX or `React.*` is used. '
+                    + instr
+                    + fidelity
+                    + " Do not invent a brand-new stories-only mock from scratch."
+                )
+            else:
+                instr += fidelity
+        if r.get("kind") == "write_design_spec":
+            # Ensure create jobs also see the existing-component gate (rewrite may run
+            # after build_initial_requests already embedded the note).
+            if "BEFORE authoring" not in instr and job_kind == "create":
+                instr += (
+                    " BEFORE authoring: check context_artifacts for an existing "
+                    "`storybook/src/components/<Pascal>.tsx` / `.module.css` / stories "
+                    "(packaged by the server) — align Composition & API with that module "
+                    "when present. Do not search a local filesystem."
+                )
+            if job_kind in ("update", "review_revise"):
+                prefix = (
+                    "REVISE existing design-spec.md in place on the same PR branch. "
+                    "Start from baseline_artifacts content; emit a full file whose "
+                    "changes vs baseline are minimal. "
+                    if job_kind == "review_revise"
+                    else "UPDATE existing design-spec.md in place (same path). "
+                )
+                instr = (
+                    prefix
+                    + instr
+                    + " Diff against baseline_artifacts; do not create a new slug."
+                    + (
+                        " Apply reviewer feedback from prior_feedback."
+                        if job_kind == "review_revise"
+                        else ""
+                    )
+                )
         r["instruction"] = instr
         out.append(r)
     return out
@@ -179,15 +299,31 @@ def rewrite_client_requests_for_collab(
 
 def build_client_authoring_checklist(*, job_kind: str = "create") -> list[str]:
     """Operator-facing + session markdown checklist for the client LLM."""
+    if job_kind == "review_revise":
+        return [
+            "Claim the session, then GET /work — use baseline_artifacts + prior_feedback.",
+            "Do NOT read/search/glob the local filesystem or random workspace folders.",
+            "Never Authenticate Figma / never call Figma MCP from the client.",
+            "REVIEW REVISE: copy PR-head baseline design-spec + Storybook; apply prior_feedback as a minimal patch.",
+            "Do NOT full-rewrite from figma_evidence — preserve unchanged sections and story exports.",
+            "Same slug/path/PR branch; refresh Metadata Updated only if needed.",
+            "Storybook must match design-spec Anatomy/Layout/Tokens/States (no fake div-inputs).",
+            "Storybook: submit runtime component + CSS module + CSF that imports it (session artifacts only — no client repo/scripts).",
+            "Storybook: keep `import React from \"react\";` when using JSX / React.*.",
+            "Submit every client_requests artifact (full files) but keep the diff small.",
+            "On revise: fix prior_feedback exactly; do not invent unrelated redesigns.",
+        ]
     items = [
         "Claim the session, then GET /work — use only packaged figma_evidence + context_artifacts.",
         "Do NOT read/search/glob the local filesystem or random workspace folders.",
         "Never Authenticate Figma / never call Figma MCP from the client.",
+        "BEFORE design-spec: check context_artifacts for existing storybook/src/components/<Pascal>.* and stories (server-packaged); reuse that Runtime API when present.",
         "Author the full design-spec.md yourself from evidence (you are the author).",
         "Include `### Slot geometry (Figma-verified)` with radius rows citing Figma nodes.",
         "Prefer semantic `var(--token)` from tools.get_variable_defs / boundVariableHints.",
         "Fill all required ## sections + Codegen Contract subsections.",
         "Source Mapping: file key + node ids + verification method from evidence.",
+        "If storybookExamples: submit runtime .tsx + .module.css + Spec Accurate Design CSF that imports the module (not an inline div mock). No local checkout or Storybook gate.",
         "Submit every client_requests artifact only (skip foundation if not listed — already on server).",
         "On revise: fix prior_feedback exactly; resubmit full artifact set.",
     ]

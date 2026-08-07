@@ -74,7 +74,7 @@
 
 .ids-dd-menu {
   position: absolute;
-  z-index: 40;
+  z-index: 200;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
@@ -87,6 +87,16 @@
   border: 1px solid var(--color-border-accessible, #8898a5);
   border-radius: var(--dropdown-menu-radius, 0);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.dashboard-grid > .card {
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-grid > .card:has(.ids-dropdown.is-open) {
+  z-index: 5;
 }
 
 .ids-dd-option {
@@ -178,4 +188,13 @@
 
 .view[hidden] {
   display: none !important;
+}
+
+
+/* Catalogue native selects (reliable vs custom IdsDropdown) */
+#catalogue-programme,
+#catalogue-component {
+  width: 100%;
+  max-width: 28rem;
+  min-height: 40px;
 }

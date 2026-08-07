@@ -12,7 +12,6 @@ from .collab_prompt import (
     build_change_hints,
     rewrite_client_requests_for_collab,
 )
-from .config import settings
 from .figma_packager import build_figma_evidence
 from .github_catalog import load_context_pack
 from .server_review import build_initial_requests
@@ -61,6 +60,28 @@ def _artifact_from_pack(row: dict[str, Any]) -> Artifact:
     )
 
 
+def _pack_stage(
+    *,
+    session_store: "SessionStore",
+    job_store: "JobStore",
+    session,
+    job,
+    stage: str,
+    message: str,
+    detail: dict[str, Any] | None = None,
+) -> None:
+    """Emit packaging progress so Collab UI can show stages until Bridge is ready."""
+    session.packaging_progress = message
+    job.result_summary = message
+    session_store.append_event(
+        session,
+        kind="packaging",
+        message=message,
+        detail={"stage": stage, **(detail or {})},
+    )
+    job_store.save(job)
+
+
 def _pack(
     *,
     job_store: "JobStore",
@@ -88,9 +109,27 @@ def _pack(
 
         job_kind = session.job_kind or (session.preview or {}).get("job_kind") or "create"
 
+        _pack_stage(
+            session_store=session_store,
+            job_store=job_store,
+            session=session,
+            job=job,
+            stage="prompt",
+            message="Packaging (1/4): preparing collab prompt package…",
+        )
+
         # Collab-only: strip live-Figma instructions from prompt package
         session.prompt_package = apply_collab_figma_overrides(
             session.prompt_package, job_kind=str(job_kind)
+        )
+
+        _pack_stage(
+            session_store=session_store,
+            job_store=job_store,
+            session=session,
+            job=job,
+            stage="context",
+            message="Packaging (2/4): loading GitHub context pack…",
         )
 
         preview = dict(session.preview or {})
@@ -103,12 +142,26 @@ def _pack(
                 try:
                     meta = json.loads(row.get("content") or "{}")
                     existing_paths = list(meta.get("existing_paths") or [])
+                    if meta.get("existing_runtime_component"):
+                        preview["existing_runtime_component"] = meta[
+                            "existing_runtime_component"
+                        ]
+                    if meta.get("existing_runtime_css"):
+                        preview["existing_runtime_css"] = meta["existing_runtime_css"]
+                    if meta.get("existing_stories_path"):
+                        preview["existing_stories_path"] = meta["existing_stories_path"]
+                    if meta.get("existing_generator_path"):
+                        preview["existing_generator_path"] = meta[
+                            "existing_generator_path"
+                        ]
                 except json.JSONDecodeError:
                     existing_paths = []
                 continue
             context_rows.append(row)
 
-        # Mark foundation that already exists so we do not ask the client to rewrite it
+        # Mark foundation that already exists on the GitHub publish base so we
+        # do not ask the client to rewrite it. Local-only leftovers must still
+        # be created/published (existing_paths only lists starting-ref files).
         preview["context_pack_existing_paths"] = existing_paths
         theme_path = str(
             preview.get("theme_css_path") or preview.get("themeCssPath") or ""
@@ -119,13 +172,29 @@ def _pack(
         if theme_path and theme_path in existing_paths:
             preview["theme_css_exists"] = True
             preview["themeCssExists"] = True
+        elif theme_path:
+            preview["theme_css_exists"] = False
+            preview["themeCssExists"] = False
         if root_path and root_path in existing_paths:
             preview["root_spec_exists"] = True
             preview["rootSpecExists"] = True
+        elif root_path:
+            preview["root_spec_exists"] = False
+            preview["rootSpecExists"] = False
         yaml_path = f"config/design_systems/{str(preview.get('programme') or 'ids').lower()}.yaml"
         if yaml_path in existing_paths:
             preview["programme_yaml_exists"] = True
             preview["programmeYamlExists"] = True
+        elif preview.get("programme") and str(preview.get("programme")).lower() != "ids":
+            preview["programme_yaml_exists"] = False
+            preview["programmeYamlExists"] = False
+        # Re-enable theme generation when foundation is still missing on base
+        if (
+            (theme_path and theme_path not in existing_paths)
+            or (root_path and root_path not in existing_paths)
+        ) and str(preview.get("programme") or "").lower() != "ids":
+            preview["generate_theme_assets"] = True
+            preview["generateThemeAssets"] = True
         session.preview = preview
 
         session.context_artifacts = [_artifact_from_pack(r) for r in context_rows]
@@ -133,7 +202,41 @@ def _pack(
             a for a in session.context_artifacts if (a.role or "") == "baseline"
         ]
 
-        evidence = build_figma_evidence(session.preview)
+        _pack_stage(
+            session_store=session_store,
+            job_store=job_store,
+            session=session,
+            job=job,
+            stage="figma",
+            message=(
+                "Packaging (3/4): skipping Figma fetch (prompt/URLs do not require it)…"
+                if (
+                    preview.get("skip_figma_pack")
+                    or preview.get("skipFigmaPack")
+                )
+                else "Packaging (3/4): fetching Figma evidence (may take a minute)…"
+            ),
+        )
+
+        if preview.get("skip_figma_pack") or preview.get("skipFigmaPack"):
+            evidence = {
+                "mode": "skipped",
+                "buckets": {},
+                "completeness": {
+                    "ok": True,
+                    "warnings": [
+                        "Figma pack skipped — apply additional_prompt against "
+                        "baseline_artifacts only."
+                    ],
+                },
+                "clientGuidance": (
+                    "No fresh Figma evidence. Start from baseline design-spec + "
+                    "Storybook; apply the operator prompt as a minimal patch. "
+                    "Do not invent visual changes."
+                ),
+            }
+        else:
+            evidence = build_figma_evidence(session.preview)
         session.figma_evidence = evidence
 
         baseline_spec = None
@@ -145,6 +248,15 @@ def _pack(
             baseline_spec=baseline_spec, figma_evidence=evidence
         )
 
+        _pack_stage(
+            session_store=session_store,
+            job_store=job_store,
+            session=session,
+            job=job,
+            stage="requests",
+            message="Packaging (4/4): building client requests…",
+        )
+
         raw_reqs = build_initial_requests(session.preview)
         raw_reqs = rewrite_client_requests_for_collab(
             raw_reqs, job_kind=str(job_kind)
@@ -154,6 +266,7 @@ def _pack(
         ]
         session.turn = 1
         session.status = SessionStatus.awaiting_client
+        session.packaging_progress = None
         completeness = evidence.get("completeness") or {}
         warn = completeness.get("warnings") or []
         session_store.save(session)
@@ -161,8 +274,7 @@ def _pack(
             session,
             kind="packaged",
             message=(
-                "Figma evidence + context pack ready; awaiting client LLM "
-                "(no client Figma / no local filesystem)."
+                "Figma evidence + context pack ready — Bridge command is available."
                 + (f" Warnings: {'; '.join(warn)}" if warn else "")
             ),
             detail={
@@ -209,6 +321,7 @@ def _pack(
         session = session_store.get(session_id) or session
         session.status = SessionStatus.failed
         session.error_message = f"Packaging failed: {exc}"
+        session.packaging_progress = None
         session_store.append_event(
             session,
             kind="error",

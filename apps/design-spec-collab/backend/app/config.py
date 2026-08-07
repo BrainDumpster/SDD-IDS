@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Any
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -59,6 +61,8 @@ class Settings(BaseSettings):
     figma_token: str | None = None
     figma_mode: str = "rest"  # stub | mcp | rest (live→rest)
     figma_mcp_url: str = "https://api.figma.com/mcp"
+    # Corporate TLS inspection: set FIGMA_SSL_VERIFY=false (insecure; prefer CA mount)
+    figma_ssl_verify: bool = True
     server_review_mode: str = "rules"  # rules | ollama
     ollama_host: str = "http://127.0.0.1:11434"
     ollama_model: str = "llama3"
@@ -77,8 +81,23 @@ class Settings(BaseSettings):
     github_starting_ref: str = "master"
     github_publish_dry_run: bool = False
     auto_create_pr: bool = True
+    # Corporate TLS for GitHub REST (defaults to FIGMA_SSL_VERIFY when unset)
+    github_ssl_verify: bool = True
     # Static Storybook build for Spec Accurate Design iframe preview
     storybook_static_dir: Path | None = None
+    # Rebuild /storybook static in-container after accept (needs Node in image)
+    storybook_rebuild_enabled: bool = True
+    # Operator-browser idle timeout after a job reaches a terminal state (minutes).
+    # Continue resets the timer; End closes the finished session (B2) and returns to Dashboard.
+    operator_idle_minutes: int = 10
+
+    @field_validator("github_ssl_verify", "figma_ssl_verify", mode="before")
+    @classmethod
+    def _empty_env_bool(cls, value: Any) -> Any:
+        # Compose often passes GITHUB_SSL_VERIFY= (empty) — treat as unset.
+        if value is None or (isinstance(value, str) and value.strip() == ""):
+            return None
+        return value
 
     def model_post_init(self, __context: object) -> None:
         if self.design_systems_dir is None:
@@ -143,6 +162,32 @@ if os.getenv("FIGMA_MODE"):
     settings.figma_mode = os.environ["FIGMA_MODE"].strip().lower()
 if os.getenv("FIGMA_MCP_URL"):
     settings.figma_mcp_url = os.environ["FIGMA_MCP_URL"].strip().rstrip("/")
+settings.figma_ssl_verify = _env_bool("FIGMA_SSL_VERIFY", settings.figma_ssl_verify)
+# Keep process env in sync for ingestion helpers that read FIGMA_SSL_VERIFY
+os.environ["FIGMA_SSL_VERIFY"] = "true" if settings.figma_ssl_verify else "false"
+
+# GitHub publish uses the same corporate MITM reality as Figma unless overridden.
+_raw_github_ssl = os.getenv("GITHUB_SSL_VERIFY")
+if _raw_github_ssl is not None and _raw_github_ssl.strip() != "":
+    settings.github_ssl_verify = _env_bool(
+        "GITHUB_SSL_VERIFY", settings.github_ssl_verify
+    )
+else:
+    settings.github_ssl_verify = settings.figma_ssl_verify
+
+# requests reads REQUESTS_CA_BUNDLE / CURL_CA_BUNDLE / SSL_CERT_FILE as the
+# default verify path. A missing file raises:
+#   "Could not find a suitable TLS CA certificate bundle, invalid path: …"
+# Drop invalid paths; when SSL verify is disabled also clear them so verify=False works.
+_ca_keys = ("REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "SSL_CERT_FILE")
+_any_ssl_verify = settings.figma_ssl_verify or settings.github_ssl_verify
+for _key in _ca_keys:
+    _path = (os.environ.get(_key) or "").strip()
+    if not _path:
+        continue
+    if not _any_ssl_verify or not Path(_path).is_file():
+        os.environ.pop(_key, None)
+
 if os.getenv("SERVER_REVIEW_MODE"):
     settings.server_review_mode = os.environ["SERVER_REVIEW_MODE"].strip().lower()
 if os.getenv("OLLAMA_HOST"):
@@ -190,5 +235,17 @@ if os.getenv("GITHUB_STARTING_REF") or os.getenv("CLOUD_STARTING_REF"):
         or os.environ.get("CLOUD_STARTING_REF")
         or settings.github_starting_ref
     )
-if os.getenv("STORYBOOK_STATIC_DIR"):
-    settings.storybook_static_dir = Path(os.environ["STORYBOOK_STATIC_DIR"]).resolve()
+if os.getenv("STORYBOOK_STATIC_DIR", "").strip():
+    settings.storybook_static_dir = Path(
+        os.environ["STORYBOOK_STATIC_DIR"].strip()
+    ).resolve()
+settings.storybook_rebuild_enabled = _env_bool(
+    "STORYBOOK_REBUILD_ENABLED", settings.storybook_rebuild_enabled
+)
+if os.getenv("COLLAB_OPERATOR_IDLE_MINUTES"):
+    try:
+        settings.operator_idle_minutes = max(
+            1, int(os.environ["COLLAB_OPERATOR_IDLE_MINUTES"])
+        )
+    except ValueError:
+        pass

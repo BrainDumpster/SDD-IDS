@@ -1,0 +1,6 @@
+# Place corporate / custom CA files here (*.pem, *.crt).
+# Mounted read-only at /certs in the Collab container.
+# See README § Corporate SSL / proxy.
+*
+!.gitignore
+!.gitkeep

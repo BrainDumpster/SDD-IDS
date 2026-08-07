@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, field_validator
 
-from portal_app.services.additional_notes import MAX_ADDITIONAL_NOTES_CHARS
+from intake_core.services.additional_notes import MAX_ADDITIONAL_NOTES_CHARS
 
 from .portal_bridge import sanitize_additional_notes
 
@@ -26,7 +26,7 @@ class UpdateRequest(BaseModel):
         alias="additionalPrompt",
         max_length=MAX_ADDITIONAL_NOTES_CHARS,
     )
-    storybook_examples: bool = Field(default=False, alias="storybookExamples")
+    storybook_examples: bool = Field(default=True, alias="storybookExamples")
 
     model_config = {"populate_by_name": True}
 

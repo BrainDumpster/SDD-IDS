@@ -13,6 +13,27 @@ const repoRoot = path.resolve(storybookPackageRoot, "..");
 const reactRoot = path.join(storybookPackageRoot, "node_modules/react");
 const reactDomRoot = path.join(storybookPackageRoot, "node_modules/react-dom");
 
+/** Collab static/preview builds only need Spec Accurate Design under storybook-generated/. */
+const collabSpecOnly = Boolean(
+  (process.env.STORYBOOK_BASE_PATH || "").trim() ||
+    process.env.COLLAB_STORYBOOK_SPEC_ONLY === "1",
+);
+
+/** Incomplete joe-generated demos import missing tokens.css / components — never build them. */
+const excludeJoeGenerated = path.join(
+  storybookPackageRoot,
+  "src/components/**/joe-generated/**",
+);
+
+const generatedStories = path.join(
+  repoRoot,
+  "storybook-generated/*/src/**/*.stories.@(ts|tsx)",
+);
+const handStories = path.join(
+  storybookPackageRoot,
+  "src/**/*.stories.@(ts|tsx)",
+);
+
 /** New files under storybook-generated are not in the startup importers map until restart. */
 function warnOnNewSpecGeneratedStories(): Plugin {
   return {
@@ -41,15 +62,17 @@ const config: StorybookConfig = {
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
   // Discover every programme under storybook-generated/<programme>/ (ids, dap, synapse,
   // and new programmes from design-spec intake) — do not hardcode programme slugs.
-  // Collab static preview (STORYBOOK_BASE_PATH=/storybook/) only needs Spec Accurate Design
-  // stories — skip storybook/src hand stories that may not build cleanly in CI/Docker.
-  stories: process.env.STORYBOOK_BASE_PATH
-    ? [path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)")]
-    : [
-        path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
-        path.join(repoRoot, "storybook-generated/*/src/**/*.stories.@(ts|tsx)"),
-      ],
-  addons: ["@storybook/addon-essentials"],
+  // Collab static preview (STORYBOOK_BASE_PATH / COLLAB_STORYBOOK_SPEC_ONLY) only needs
+  // Spec Accurate Design stories — skip storybook/src hand stories that may not build.
+  // Always exclude joe-generated (broken imports: missing tokens.css / components).
+  stories: collabSpecOnly
+    ? [generatedStories]
+    : [handStories, generatedStories, `!${excludeJoeGenerated}`],
+  addons: [
+    "@storybook/addon-essentials",
+    // Local Scratchpad panel is registered in `.storybook/manager.tsx`
+    // (npm `storybook-addon-scratchpad` did not reliably appear as a tab in SB 8.6).
+  ],
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -63,6 +86,9 @@ const config: StorybookConfig = {
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {
+          // Bare `components/…-theme.css` imports from client-generated stories
+          // (common in Collab) resolve to the monorepo components/ tree.
+          components: path.join(repoRoot, "components"),
           react: reactRoot,
           "react-dom": reactDomRoot,
           "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),
