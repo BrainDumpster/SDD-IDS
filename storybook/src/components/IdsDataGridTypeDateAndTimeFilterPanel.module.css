@@ -141,8 +141,16 @@
   min-width: 200px;
 }
 
+.dateField > * {
+  width: 100%;
+}
+
 .timeField {
   flex-shrink: 0;
   width: 177px;
   max-width: 177px;
+}
+
+.timeField > * {
+  width: 177px;
 }

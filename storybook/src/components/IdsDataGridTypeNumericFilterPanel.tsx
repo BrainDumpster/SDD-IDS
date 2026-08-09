@@ -206,6 +206,7 @@ export function IdsDataGridTypeNumericFilterPanel({
   return (
     <div
       className={styles.root}
+      data-numeric-filter=""
       role="radiogroup"
       aria-label={`${groupLabel}: numeric filter`}
     >
