@@ -348,8 +348,6 @@
   box-sizing: border-box;
   background: var(--color-background-component);
   border-top: none;
-  width: 295px;
-  margin-inline: auto;
   padding-inline: var(--padding-padding-1);
   padding-block-end: var(--padding-padding-16);
   overflow: hidden;
@@ -383,6 +381,7 @@
 
 .optionItem {
   display: flex;
+  align-items: center;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -397,6 +396,21 @@
   text-align: start;
   cursor: pointer;
   transition: background 80ms ease;
+}
+
+/* Leading logo: fixed 16px width, height auto (aspect ratio), 8px gap before label. */
+.optionIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 16px;
+  margin-inline-end: var(--spacing-space-8);
+}
+
+.optionIcon :where(svg, img) {
+  display: block;
+  width: 16px;
+  height: auto;
 }
 
 .optionLabel {
@@ -424,8 +438,9 @@
 }
 
 .optionItem:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .optionsFooter {

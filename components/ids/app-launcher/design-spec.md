@@ -122,9 +122,10 @@ Token: `var(--color-border-accessible)`.
 
 | Property | Value |
 |---|---|
-| Block width | **`295px`**, centered within the `298px` surface (`margin-inline: auto`); option rows fill the block |
+| Block width | fills the `296px` surface content; `1px` left/right padding → option rows are **`294px`**, inset `1px` from the surface border on each side (symmetric — avoids the sub-pixel snapping a `295px` centered block would cause) |
 | Options list block padding | **`16px`** bottom (`var(--padding-padding-16)`); `1px` left/right |
 | Option row padding | `10px 24px 10px 16px` (top/bottom `10`, left `16`, right `24`) |
+| Option logo (optional) | leading logo inside the row, vertically centered with the label; **`16px`** fixed width, height auto (aspect ratio); **`8px`** gap to label (`var(--spacing-space-8)`) |
 | Option text overflow | single-line — truncates on the **first line** with an ellipsis (`text-overflow: ellipsis`; `white-space: nowrap`) |
 | Row contract | mirrors `Dropdown-SingleSelect-Elements-Options` (`337:180199`) — **re-implemented locally in App Launcher, not reusing `DropdownMenu`** |
 
@@ -344,7 +345,7 @@ _Updated 2026-07-29._
 
 - **Product icon color** — the product icon inherits the tile color via `currentColor`: `var(--color-icon-neutral-strong)` for default and hover, `var(--color-icon-brand-strong)` for press. The icon asset uses `fill: currentColor` so it tracks theme and state (light `#252525`, dark `#b8c1c9`, press `#055fa9`).
 - **Label padding** — label cluster is `28px 0` (icon variant) / `52px 0` (no-icon); horizontal padding is `0`.
-- **Surface width & border** — fixed **`298px`** with **`1px`** padding; the `1px` border is an inset box-shadow (not `border`) so it does not consume layout, leaving `296px` content (two `148px` tiles). Never stretches with option text. The options menu is a **`295px`** block centered within it (`margin-inline: auto`); option rows are **`293px`** (`1px` inset each side).
+- **Surface width & border** — fixed **`298px`** with **`1px`** padding; the `1px` border is an inset box-shadow (not `border`) so it does not consume layout, leaving `296px` content (two `148px` tiles). Never stretches with option text. The options menu fills the `296px` content with `1px` left/right padding → option rows are **`294px`**, symmetrically inset `1px` from the border (an even inset avoids the half-pixel snapping — hence a visibly off-centre focus ring — that a `295px` centered block produces in a `296px` space).
 - **Options list padding** — `16px` above the first option row and below the last.
 - **Option text overflow** — long option text truncates on the **first line** with an ellipsis (single line, no wrap).
 - **Option row** — follows the `Dropdown-SingleSelect-Elements-Options` contract as a standalone element (not a shared dropdown component).

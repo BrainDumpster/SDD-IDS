@@ -5,6 +5,7 @@ import React from "react";
 import "../../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { AppLauncher as IdsAppLauncher } from "../../../../storybook/src/components/AppLauncher";
+import { Icon } from "../../../../storybook/src/components/Icon";
 
 const products = [
   { id: "p1", name: "Product Name 1", href: "#" },
@@ -50,11 +51,41 @@ export const ComponentDetailMatrix: Story = {
 export const OptionTextOverflow: Story = {
   render: () => (
     <IdsAppLauncher
-      products={products.slice(0, 2)}
+      products={products}
       options={[
         { id: "o1", label: "Option" },
         { id: "o2", label: "This is a very long option label that truncates with an ellipsis instead of wrapping" },
         { id: "o3", label: "Option" },
+      ]}
+      panelOnly
+    />
+  ),
+};
+
+export const NoIconTiles: Story = {
+  render: () => (
+    <IdsAppLauncher
+      products={[
+        { id: "n1", name: "Product Name 1", icon: null, href: "#" },
+        { id: "n2", name: "Very Long Product Name That Truncates", icon: null, href: "#" },
+        { id: "n3", name: "Product Name 3", icon: null, href: "#" },
+        { id: "n4", name: "Product Name 4", icon: null, href: "#" },
+      ]}
+      panelOnly
+    />
+  ),
+};
+
+const optionLogo = <Icon shapeName="shield-encrypt-alt" variant="inline" />;
+
+export const OptionRowWithLogo: Story = {
+  render: () => (
+    <IdsAppLauncher
+      products={products}
+      options={[
+        { id: "l1", label: "Option with logo", icon: optionLogo },
+        { id: "l2", label: "Another option with logo", icon: optionLogo },
+        { id: "l3", label: "Option without logo" },
       ]}
       panelOnly
     />
