@@ -18,10 +18,12 @@ def generate_ids_dropdown_single_select_story(
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("dropdown-single-select", options.component_prefix)
     import_path = "../../../../storybook/src/components/DropdownMenu"
+    trigger_shell_import_path = "../../../../storybook/src/components/IdsDropdownTriggerShell"
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ useMemo, useState }} from "react";
 import {{ DropdownMenu as {component_name} }} from "{import_path}";
+import {{ IdsDropdownTriggerShell }} from "{trigger_shell_import_path}";
 
 type Option = {{ id: string; label: string; disabled?: boolean }};
 
@@ -52,18 +54,16 @@ function Trigger({{ value, placeholder = "Select", disabled = false, error = fal
   error?: boolean;
 }}) {{
   return (
-    <div
-      style={{{{
-        width: 300,
-        padding: "10px 16px",
-        border: `1px solid ${{error ? "var(--color-border-alerting-critical-base)" : "var(--color-border-accessible)"}}`,
-        background: disabled ? "var(--color-background-gray-light)" : "var(--color-background-component)",
-        color: disabled ? "var(--color-text-disabled)" : "var(--color-text-neutral)",
-        boxSizing: "border-box",
-      }}}}
-    >
-      {{value ?? placeholder}}
-    </div>
+    <IdsDropdownTriggerShell
+      disabled={{disabled}}
+      error={{error}}
+      filled={{Boolean(value)}}
+      left={{
+        <span style={{{{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}}}>
+          {{value || placeholder}}
+        </span>
+      }}
+    />
   );
 }}
 
@@ -91,7 +91,6 @@ export const Playground: Story = {{
         selectedValues={{[selected]}}
         showSingleSelectRadio={{args.showSingleSelectRadio}}
         defaultOpen
-        maxHeight={{220}}
       />
     );
   }},

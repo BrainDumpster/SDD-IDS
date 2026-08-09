@@ -33,6 +33,7 @@ function Trigger({ selected, disabled = false }: { selected: string[]; disabled?
   return (
     <IdsDropdownTriggerShell
       disabled={disabled}
+      filled={selected.length > 0}
       left={
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {text}
@@ -81,7 +82,6 @@ export const Playground: Story = {
         onClearAllClick={() => setSelected([])}
         clearAllDisabled={selected.length === 0}
         defaultOpen
-        maxHeight={220}
       />
     );
   },
@@ -125,7 +125,6 @@ export const Overflowing: Story = {
         selectionMode="multi"
         selectedValues={selected}
         defaultOpen
-        maxHeight={220}
       />
     );
   },
@@ -173,7 +172,6 @@ export const Sectioned: Story = {
         selectionMode="multi"
         selectedValues={selected}
         defaultOpen
-        maxHeight={220}
       />
     );
   },
@@ -207,7 +205,6 @@ export const WithAction: Story = {
           footerActionLabel="Action"
           onFooterActionClick={() => setActionEvent("action clicked")}
           defaultOpen
-          maxHeight={220}
         />
         <div style={{ fontSize: 12 }}>with-action: {actionEvent}</div>
       </div>
