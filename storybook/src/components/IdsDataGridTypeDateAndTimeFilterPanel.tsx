@@ -59,9 +59,12 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
         const checked = state.mode === mode;
         const inputId = `${slug}-mode-${mode}`;
         const isHovered = hoverMode === mode;
-        const showSummary = (checked || isHovered) && modeShowsSummary(mode);
+        const canShowSummary = modeShowsSummary(mode);
         const summaryState: IdsDataGridDateTimeFilterState = checked ? state : { ...state, mode };
-        const summary = showSummary ? formatIdsDataGridDateTimeFilterSummary(summaryState) : null;
+        const summary = canShowSummary
+          ? formatIdsDataGridDateTimeFilterSummary(summaryState)
+          : null;
+        const summaryVisible = (checked || isHovered) && summary != null;
         const showSpecific = checked && mode === "specific-date";
         const showCustom = checked && mode === "custom-range";
 
@@ -97,8 +100,12 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
                   {IDS_DATAGRID_DATETIME_MODE_LABELS[mode]}
                 </span>
               </label>
-              {summary && (
-                <span className={styles.summary} aria-hidden>
+              {summary != null && (
+                <span
+                  className={styles.summary}
+                  aria-hidden
+                  style={{ visibility: summaryVisible ? "visible" : "hidden" }}
+                >
                   {summary}
                 </span>
               )}
@@ -117,7 +124,7 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
                   </div>
                   <div className={styles.timeField}>
                     <IdsTimePicker
-                      label="Time (optional):"
+                      label="Time:"
                       value={state.specificTime ?? null}
                       onChange={(specificTime) => onStateChange({ ...state, specificTime })}
                       formatHint="HH:MM AM/PM"
@@ -142,7 +149,7 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
                   </div>
                   <div className={styles.timeField}>
                     <IdsTimePicker
-                      label="Time (optional):"
+                      label="Time:"
                       value={state.rangeStartTime ?? null}
                       onChange={(rangeStartTime) => onStateChange({ ...state, rangeStartTime })}
                       formatHint="HH:MM AM/PM"
@@ -163,7 +170,7 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
                   </div>
                   <div className={styles.timeField}>
                     <IdsTimePicker
-                      label="Time (optional):"
+                      label="Time:"
                       value={state.rangeEndTime ?? null}
                       onChange={(rangeEndTime) => onStateChange({ ...state, rangeEndTime })}
                       formatHint="HH:MM AM/PM"

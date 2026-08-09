@@ -63,7 +63,9 @@
 - Validation error row: `gap: var(--spacing-space-8)` between icon and message; icon `status-critical-square-solid` 16×16, `variant="img"`
 
 ### Time popup (`42159:132108`)
-- Position: `absolute`, `right: 0`, `top: 100%`, `margin-top: -1px` (attached to input — 1px overlap with field bottom edge)
+- Default behavior: portal the popup to `document.body` with `position: fixed` so it escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels). Use `popupPortal` prop (`default: true`) to toggle.
+- Positioned below the anchor field, right-aligned (`left = anchor.right - popupWidth`, `top = anchor.bottom - 1`), with 1px overlap on the field bottom edge. Falls back to opening above the field when viewport space is insufficient.
+- Non-portaled fallback: `position: absolute`, `right: 0`, `top: 100%`, `margin-top: -1px`.
 - When open: input border `var(--color-border-brand-base)`; popup full `1px` `var(--color-border-accessible)` border on all sides
 - Padding: `var(--padding-padding-16)` (16px); 24h-only layout may use `px: var(--padding-padding-40)` per Figma variant
 - Column gap: `var(--spacing-space-16)` (16px) between columns
@@ -165,6 +167,7 @@ Same semantic `var(--...)` tokens as **States (Light Theme)**. Resolved dark val
 | Scroll column list | Change hour/minute/seconds/period |
 | Select value | Update pending time; may close on confirm (implementation) |
 | Click outside | Close popup |
+| Click inside portaled popup | Value updates; `mousedown` is isolated so ancestor overlays (e.g. DataGrid filter menu) are not closed |
 
 ### Keyboard navigation
 - `Tab` / `Shift+Tab`: move between input, icon, column controls
@@ -215,6 +218,7 @@ Same semantic `var(--...)` tokens as **States (Light Theme)**. Resolved dark val
 | `open` | `boolean` | — | Controlled popup |
 | `onOpenChange` | `(open: boolean) => void` | — | Popup visibility |
 | `forceOpen` | `boolean` | — | Storybook/demo only |
+| `popupPortal` | `boolean` | `true` | Render popup in `document.body` with fixed positioning to escape overflow containers |
 
 ### Spec Accurate Design story defaults
 - `size`: `large`
@@ -336,3 +340,10 @@ Last updated: 2026-07-17
 - **Text selection:** input has no selection highlight; selection is cleared when opening the popup.
 - **Column arrows:** use `var(--color-icon-neutral)`.
 - **Time popup:** border-radius is `0` (square corners).
+
+**2026-08-09**
+
+**Portal / DataGrid filter-menu fix**
+- `IdsTimePicker.tsx`: time popup uses `createPortal` to `document.body`.
+- Enable `popupPortal` (default `true`) so the popup escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels).
+- Add `e.stopPropagation()` on `mousedown`/`pointerdown` so selecting a time does not close the parent filter menu.

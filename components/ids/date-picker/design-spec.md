@@ -82,8 +82,10 @@
 - Validation error row (Figma `42159:132988`): `gap: var(--spacing-space-4)` (4px) between field and error row; error row uses `gap: var(--spacing-space-8)` (8px) between `status-critical-square-solid` icon (16×16) and message text; message: Roboto Regular (400), body-2, `var(--color-text-critical)`
 
 ### Calendar popup
-- Calendar popup: absolutely positioned below the input field, right-aligned with the input's right edge (`right: 0`)
-- Calendar popup is a bordered box attached to the input: `margin-top: -1px` (1px overlap) so the input bottom border and popup top border read as one continuous edge; full border on all 4 sides of the popup panel
+- Default behavior: portal the calendar popup to `document.body` with `position: fixed` so it escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels). Controlled by `popupPortal` prop (`default: true`).
+- Positioned below the input field, right-aligned with the input's right edge (`left = anchor.right - popupWidth`, `top = anchor.bottom - 1`), with `margin-top: -1px` (1px overlap) so the input bottom border and popup top border read as one continuous edge. Falls back to opening above the field when viewport space is insufficient.
+- Non-portaled fallback: `position: absolute`, `right: 0`, `top: 100%`.
+- Calendar popup is a bordered box with full border on all 4 sides of the popup panel
 - When input is open, input border changes to `var(--color-border-brand-base)` (blue) — the calendar border stays `var(--color-border-accessible)` (gray)
 - Calendar container padding: `var(--padding-padding-16)` (16px all sides)
 - Calendar header width: `248px`
@@ -333,6 +335,7 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 | Select year from dropdown | Update calendar to show selected year, close year dropdown |
 | Click "Today" link | Navigate to current month and select today's date |
 | Click outside popup | Close popup |
+| Click inside portaled popup | Selection is applied; `mousedown` is isolated so ancestor overlays (e.g. DataGrid filter menu) are not closed |
 
 ### Date cell
 | Trigger | Action |
@@ -401,6 +404,7 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 | `onRangePreviewChange` | `(date: Date \| null) => void` | — | Callback when hover preview date changes |
 | `open` | `boolean` | — | Controlled popup open state |
 | `onOpenChange` | `(open: boolean) => void` | — | Callback when popup visibility changes |
+| `popupPortal` | `boolean` | `true` | Render popup in `document.body` with fixed positioning to escape overflow containers |
 
 ### Events
 
@@ -687,3 +691,10 @@ Last updated: 2026-07-08
 
 **Calendar popup border-radius**
 - Changed from `border-radius: var(--corner-radius-radius-4, 4px)` with `border-top-left-radius: 0` and `border-top-right-radius: 0` to `border-radius: 0` (square popup, all corners flat).
+
+**2026-08-09**
+
+**Portal / DataGrid filter-menu fix**
+- `IdsDatePicker.tsx`: calendar popup uses `createPortal` to `document.body`.
+- Enable `popupPortal` (default `true`) so the popup escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels).
+- Add `e.stopPropagation()` on `mousedown`/`pointerdown` so selecting a date does not close the parent filter menu.

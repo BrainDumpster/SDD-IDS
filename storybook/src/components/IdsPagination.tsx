@@ -1,9 +1,11 @@
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type ComponentProps,
+  type RefObject,
 } from "react";
 import { Icon } from "./Icon";
 import styles from "./IdsPagination.module.css";
@@ -45,6 +47,34 @@ function normalizePageSizeOptions(options: number[]): number[] {
   return uniquePositive.length > 0 ? uniquePositive : [25, 50, 75, 100];
 }
 
+const DROPDOWN_OPTION_HEIGHT = 40;
+
+function useViewportDropdownPlacement<T extends HTMLElement>(
+  triggerRef: RefObject<T | null>,
+  isOpen: boolean,
+  itemCount: number,
+): "below" | "above" {
+  const [placement, setPlacement] = useState<"below" | "above">("below");
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined" || !isOpen) {
+      setPlacement("below");
+      return;
+    }
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const menuHeight = itemCount * DROPDOWN_OPTION_HEIGHT + 2;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    setPlacement(
+      spaceBelow < menuHeight && spaceAbove >= menuHeight ? "above" : "below",
+    );
+  }, [isOpen, itemCount, triggerRef]);
+
+  return placement;
+}
+
 export function IdsPagination({
   currentPage,
   totalPages,
@@ -63,7 +93,8 @@ export function IdsPagination({
   className,
   ...rest
 }: IdsPaginationProps) {
-  const pageOffsetRef = useRef<HTMLDivElement | null>(null);
+  const pageOffsetRef = useRef<HTMLButtonElement | null>(null);
+  const perPageTriggerRef = useRef<HTMLButtonElement | null>(null);
   const safeTotalPages = Math.max(1, totalPages);
   const controlledCurrentPage = clamp(currentPage, 1, safeTotalPages);
   const safePageSizeOptions = normalizePageSizeOptions(pageSizeOptions);
@@ -85,18 +116,32 @@ export function IdsPagination({
   );
   const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
   const [pageOffsetMenuOpen, setPageOffsetMenuOpen] = useState(false);
+  const perPagePlacement = useViewportDropdownPlacement(
+    perPageTriggerRef,
+    perPageMenuOpen,
+    safePageSizeOptions.length,
+  );
+  const pageOffsetPlacement = useViewportDropdownPlacement(
+    pageOffsetRef,
+    pageOffsetMenuOpen,
+    offsetOptions.length,
+  );
   const resolvedPerPageDropdownState =
     dropdownState !== "collapsed"
       ? dropdownState
       : perPageMenuOpen
-        ? "expanded-below"
+        ? perPagePlacement === "above"
+          ? "expanded-above"
+          : "expanded-below"
         : "collapsed";
   const safeCurrentPage = onPageChange ? controlledCurrentPage : internalPage;
   const resolvedPageOffsetDropdownState =
     pageOffsetDropdownState !== "collapsed"
       ? pageOffsetDropdownState
       : pageOffsetMenuOpen
-        ? "expanded-below"
+        ? pageOffsetPlacement === "above"
+          ? "expanded-above"
+          : "expanded-below"
         : "collapsed";
 
   useEffect(() => {
@@ -169,6 +214,7 @@ export function IdsPagination({
           <span className={styles.label}>Show:</span>
           <div className={styles.dropdownWrap}>
             <button
+              ref={perPageTriggerRef}
               className={styles.dropdownTrigger}
               type="button"
               disabled={disabled}

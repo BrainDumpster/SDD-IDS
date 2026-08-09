@@ -193,14 +193,16 @@
 }
 
 /*
- * Freeze boundary bar (Figma `37721:114144`, 20px) — pinned at frozen/scrollable seam;
- * gradient casts onto scrollable columns while the bar stays fixed.
+ * Freeze boundary bar (Figma `37721:114144`, 20px gradient) — sits immediately
+ * to the right of the frozen/scrollable divider and extends into the scrollable
+ * pane. The crisp 1px divider line is the leading rail of the first scrollable
+ * data column; this bar only casts the overflow shadow while staying fixed.
  */
 .gridScrollHost[data-split-freeze="true"] .freezePaneEdge {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: calc(var(--datagrid-frozen-pane-width, 0px) - 20px);
+  left: calc(var(--datagrid-frozen-pane-width, 0px) + 1px);
   width: 20px;
   flex-shrink: 0;
   align-self: stretch;
@@ -210,7 +212,7 @@
   background: linear-gradient(
     270deg,
     var(--color-gradient-overflow-vertical-end) 0%,
-    var(--color-gradient-overflow-vertical-start) 63.46%,
+    var(--color-gradient-overflow-vertical-start) 63%,
     var(--color-gradient-overflow-vertical-start) 100%
   );
 }
@@ -307,6 +309,11 @@
   display: none;
 }
 
+/* When freeze is active, the first scrollable data column owns the divider rail. */
+.gridScrollHost[data-split-freeze="true"] .scrollableHeaderHost .grid thead tr > .headerDataCell:first-child::before {
+  display: block;
+}
+
 /* Figma column header host: 48px row; children vertically centered on full height */
 .headerCellRow {
   display: flex;
@@ -390,11 +397,11 @@
   position: relative;
   z-index: 1;
   width: max-content;
-  min-width: 200px;
+  min-width: min(186px, var(--ids-datagrid-filter-panel-max-width, 186px));
   max-width: min(
-    480px,
+    700px,
     calc(100vw - 24px),
-    var(--ids-datagrid-filter-panel-max-width, 480px)
+    var(--ids-datagrid-filter-panel-max-width, 700px)
   );
   box-sizing: border-box;
   margin: 0;
@@ -431,23 +438,38 @@
   overflow: clip;
 }
 
-/* Date / date-time inner panel: 480px sample, py-8 px-1 on slot content. */
-.filterPopupPanel:has([data-datetime-filter]),
-.filterPopupPanel:has([data-date-filter]) {
+/* Date-time inner panel: fixed width for the widest option (custom range) sample 480px. */
+.filterPopupPanel:has([data-datetime-filter]) {
+  width: min(480px, var(--ids-datagrid-filter-panel-max-width, 480px));
   min-width: min(480px, var(--ids-datagrid-filter-panel-max-width, 480px));
-  max-width: min(480px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 480px));
+  max-width: min(700px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 700px));
+}
+
+/* Date inner panel: fixed width for the widest option sample 382px. */
+.filterPopupPanel:has([data-date-filter]) {
+  width: min(382px, var(--ids-datagrid-filter-panel-max-width, 382px));
+  min-width: min(382px, var(--ids-datagrid-filter-panel-max-width, 382px));
+  max-width: min(700px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 700px));
+}
+
+/* Numeric inner panel: fixed width for the widest operator layout (Between) sample 300px. */
+.filterPopupPanel:has([data-numeric-filter]) {
+  width: min(300px, var(--ids-datagrid-filter-panel-max-width, 300px));
+  min-width: min(300px, var(--ids-datagrid-filter-panel-max-width, 300px));
+  max-width: min(700px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 700px));
 }
 
 .filterPopupPanel:has([data-datetime-filter]) .filterPopupPanelBody,
-.filterPopupPanel:has([data-date-filter]) .filterPopupPanelBody {
+.filterPopupPanel:has([data-date-filter]) .filterPopupPanelBody,
+.filterPopupPanel:has([data-numeric-filter]) .filterPopupPanelBody {
   padding: 0;
 }
 
 /* Column Search — Figma Search Box Properties `37822:91077` (Large 40px). */
 .filterPopupPanel:has([data-text-filter]) {
-  width: min(300px, var(--ids-datagrid-filter-panel-max-width, 300px));
-  min-width: min(200px, var(--ids-datagrid-filter-panel-max-width, 200px));
-  max-width: min(300px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 300px));
+  width: max-content;
+  min-width: min(300px, var(--ids-datagrid-filter-panel-max-width, 300px));
+  max-width: min(700px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 700px));
 }
 
 .filterPopupSearchRow {
@@ -775,7 +797,8 @@
 .rowSelectionCell {
   position: relative;
   box-sizing: border-box;
-  height: 40px;
+  /* 41px border-box = 40px content/padding area + 1px bottom border. */
+  height: 41px;
   padding: 0 !important;
   text-align: center;
 }
@@ -926,9 +949,11 @@
 }
 
 /* Body row chrome: components/ids/datagrid/design-spec.md + Figma 37721:114580
-   Paint per-cell: <tr> backgrounds are not reliable with border-collapse: collapse. */
+   Paint per-cell: <tr> backgrounds are not reliable with border-collapse: collapse.
+   Cell height is 41px border-box: 40px content/padding area + 1px bottom border.
+   This keeps frozen/scrollable/settings panes pixel-aligned. */
 .bodyRow {
-  height: 40px;
+  height: 41px;
   cursor: pointer;
   position: relative;
 }
@@ -974,7 +999,8 @@
 
 .bodyCell {
   box-sizing: border-box;
-  height: 40px;
+  /* 41px border-box = 40px content/padding area + 1px bottom border. */
+  height: 41px;
   /* Figma `.Cell Item` `37721:114328`: pl 16, pr 12, py 10 */
   padding: 10px 12px 10px 16px;
   border-bottom: 1px solid var(--color-border-light);
