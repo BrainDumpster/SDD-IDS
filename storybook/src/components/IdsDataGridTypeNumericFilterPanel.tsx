@@ -150,19 +150,28 @@ function NumericValueField({
   unitAriaLabel?: string;
 }) {
   const hasUnit = unitOptions && unitOptions.length > 0;
+  // Track pointer- vs keyboard-initiated focus: text inputs report
+  // :focus-visible even on mouse click, so CSS alone can't tell them apart.
+  // Pointer focus shows the active border only; keyboard focus shows the ring.
+  const [pointerFocus, setPointerFocus] = useState(false);
 
   return (
     <div className={styles.valueField}>
       <div className={hasUnit ? styles.valueRow : undefined}>
-        <input
-          id={id}
-          type="text"
-          inputMode="decimal"
-          className={styles.valueInput}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={ariaLabel}
-        />
+        <span className={styles.valueInputWrap}>
+          <input
+            id={id}
+            type="text"
+            inputMode="decimal"
+            className={styles.valueInput}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            aria-label={ariaLabel}
+            data-pointer-focus={pointerFocus ? "true" : undefined}
+            onPointerDown={() => setPointerFocus(true)}
+            onBlur={() => setPointerFocus(false)}
+          />
+        </span>
         {hasUnit && (
           <div className={styles.unitDropdownWrap}>
             <NativeUnitDropdown

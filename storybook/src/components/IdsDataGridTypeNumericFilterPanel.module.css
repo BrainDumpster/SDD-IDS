@@ -133,9 +133,17 @@
   align-items: flex-start;
 }
 
-.valueRow .valueInput {
-  flex: 1 1 0;
+.valueInputWrap {
+  position: relative;
+  /* flex (not block) so the inline-block <input> fills the wrapper with no
+     baseline descender gap — keeps the ring vertically centred on the field. */
+  display: flex;
+  width: 100%;
   min-width: 0;
+}
+
+.valueRow .valueInputWrap {
+  flex: 1 1 0;
 }
 
 .unitDropdownWrap {
@@ -170,10 +178,34 @@
   border-color: var(--color-border-strong);
 }
 
+/* Pointer / active focus: brand border only, no ring (matches value field). */
+.unitTriggerBtn:focus {
+  border-color: var(--color-border-brand-base);
+}
+
+/* Keyboard focus: neutral border + rounded ring drawn on the root ::after so
+   the trigger stays square. Buttons only match :focus-visible via keyboard,
+   so no pointer-focus tracking is needed here. */
 .unitTriggerBtn:focus-visible {
-  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
-  outline-offset: 4px;
-  border-radius: 4px;
+  border-color: var(--color-border-accessible);
+}
+
+.unitDropdownRoot::after {
+  content: "";
+  position: absolute;
+  /* -4px (not -5px): the wrapper has no border, so inset is measured from the
+     input's/button's outer edge directly — one pixel further out than the date
+     picker, whose ::after sits on the bordered container. -4px matches it. */
+  inset: -4px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4, 4px);
+  pointer-events: none;
+  box-sizing: border-box;
+  display: none;
+}
+
+.unitDropdownRoot:has(.unitTriggerBtn:focus-visible)::after {
+  display: block;
 }
 
 .unitTriggerLabel {
@@ -264,15 +296,36 @@
   border-color: var(--color-border-strong);
 }
 
-.valueInput:focus:not(:focus-visible) {
+/* Pointer / active focus: brand border only, no ring (matches date/time field). */
+.valueInput:focus {
   border-color: var(--color-border-brand-base);
 }
 
-.valueInput:focus-visible {
+/* Keyboard focus: keep the field square with a neutral border; the rounded
+   ring is drawn on the wrapper ::after below. Suppressed when focus was
+   pointer-initiated, because text inputs report :focus-visible on click too. */
+.valueInput:focus-visible:not([data-pointer-focus="true"]) {
   border-color: var(--color-border-accessible);
-  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
-  outline-offset: 4px;
-  border-radius: 4px;
+}
+
+/* Rounded outer focus ring — drawn on the wrapper (an <input> can't host
+   ::after) so the field itself stays square, matching the date/time field. */
+.valueInputWrap::after {
+  content: "";
+  position: absolute;
+  /* -4px (not -5px): the wrapper has no border, so inset is measured from the
+     input's/button's outer edge directly — one pixel further out than the date
+     picker, whose ::after sits on the bordered container. -4px matches it. */
+  inset: -4px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4, 4px);
+  pointer-events: none;
+  box-sizing: border-box;
+  display: none;
+}
+
+.valueInputWrap:has(.valueInput:focus-visible:not([data-pointer-focus="true"]))::after {
+  display: block;
 }
 
 .valueInput::placeholder {
