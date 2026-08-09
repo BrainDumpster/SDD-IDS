@@ -23,7 +23,7 @@ def generate_ids_alert_story(
 import {{ Alert as {component_name} }} from "{import_path}";
 
 const meta: Meta<typeof {component_name}> = {{
-  title: "{options.title_prefix}/Alert",
+  title: "{options.title_prefix}/Alert/Overview",
   component: {component_name},
   parameters: {{ layout: "padded" }},
   args: {{
