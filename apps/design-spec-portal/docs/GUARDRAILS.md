@@ -10,7 +10,7 @@
 | **Prompt / agent** | Implemented | Skill-only + write-path allowlist + no secrets/no merge-to-main in prompt package. |
 | **Additional notes** | Implemented | Optional `additionalNotes` (max 2000). Server rejects secrets, injection/override language, shell/exfil patterns, bidi tricks. Fenced as **UNTRUSTED** in agent prompt; cannot expand write paths. |
 | **Theme foundation (new programme)** | Implemented | If programme `*-theme.css` + `root-spec.md` exist → skip. If missing: **reuse** creates programme files that `@import` donor theme + inherit donor root-spec; **generateFromFigma** builds both from variables library. Storybook imports programme `themeCssPath` only. |
-| **Storybook discovery** | Implemented | When `storybookExamples`, allowlist includes `storybook/.storybook/main.ts` and prompt requires glob `storybook-generated/*/src/**/*.stories…` so new programmes appear under Spec Generated. |
+| **Storybook discovery** | Implemented | When `storybookExamples`, allowlist includes `storybook-generated/<programme>/` (and optionally `storybook/.storybook/main.ts`). Globs in `main.ts` already discover `storybook-generated/*/src/**/*.stories…` — clients need not update `main.ts` for a normal new story. |
 
 ## AUTH_MODE
 

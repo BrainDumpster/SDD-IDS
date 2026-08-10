@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from ..models.intake import (
     InheritsIds,
@@ -126,17 +126,23 @@ def resolve_theme_foundation(
     *,
     design_systems_dir: Path,
     repo_root: Path,
+    path_exists: Callable[[str], bool] | None = None,
 ) -> dict[str, Any]:
     """
     Resolve programme-local theme CSS + root-spec.
 
     Rules:
-    - IDS / paths that already exist on disk → do not recreate.
+    - IDS / paths that already exist on the publish base → do not recreate.
     - Missing files + themeFoundation=reuse → create programme files that
       @import / inherit the donor theme + root-spec.
     - Missing files + generateFromFigma → create from variables library URL.
     - Storybook always imports the programme themeCssPath (not the donor directly).
+
+    ``path_exists`` defaults to local disk. Collab should pass a checker keyed to
+    the GitHub starting ref so untracked local leftovers do not skip foundation
+    create/publish.
     """
+    exists = path_exists or (lambda p: (repo_root / str(p)).is_file())
     components_dir = (
         programme.get("components_dir")
         or programme.get("program_components_dir")
@@ -164,8 +170,8 @@ def resolve_theme_foundation(
             "donor_root_spec_path": None,
             "variables_library": None,
             "generate_theme_assets": False,
-            "theme_css_exists": (repo_root / str(theme)).is_file(),
-            "root_spec_exists": (repo_root / str(root)).is_file(),
+            "theme_css_exists": exists(str(theme)),
+            "root_spec_exists": exists(str(root)),
             "notes": [],
         }
 
@@ -185,9 +191,11 @@ def resolve_theme_foundation(
         local_theme = f"components/{body.programme}-theme.css"
         local_root = f"{components_dir}/root-spec.md"
 
-    theme_exists = (repo_root / str(local_theme)).is_file()
-    root_exists = (repo_root / str(local_root)).is_file()
-    need_create = not (theme_exists and root_exists)
+    theme_exists = exists(str(local_theme))
+    root_exists = exists(str(local_root))
+    # New programme yaml missing on disk/base → always bootstrap foundation
+    # even if leftover local files exist (they still must land on the PR).
+    need_create = bool(programme.get("_is_new")) or not (theme_exists and root_exists)
 
     if not need_create:
         return {
@@ -209,8 +217,9 @@ def resolve_theme_foundation(
 
     mode = body.theme_foundation or ThemeFoundationMode.reuse
     notes = [
-        f"Missing theme/root assets "
-        f"(theme exists={theme_exists}, root exists={root_exists}) — will create.",
+        f"Missing theme/root assets on publish base "
+        f"(theme exists={theme_exists}, root exists={root_exists}"
+        f"{', programme is new' if programme.get('_is_new') else ''}) — will create.",
     ]
 
     if mode == ThemeFoundationMode.generate_from_figma:
@@ -250,7 +259,7 @@ def resolve_theme_foundation(
             "do not leave Storybook pointing only at the donor file.",
             f"Create `{local_root}` that inherits/references `{donor_root}` "
             "(e.g. `<!-- ds:inherits root-spec -->` + programme identity table).",
-            "Only create files that are missing; leave existing ones untouched.",
+            "Only create files that are missing on the publish base; leave base-owned files untouched.",
             f"Yaml theme_css_path=`{local_theme}`, root_spec_path=`{local_root}`.",
             f"Storybook MUST import exactly `{local_theme}` "
             f"(which pulls in {donor_display} via CSS import).",
@@ -277,6 +286,7 @@ def build_preview(
     *,
     repo_root: Path,
     design_systems_dir: Path | None = None,
+    path_exists: Callable[[str], bool] | None = None,
 ) -> IntakePreviewResponse:
     slug, alias_note = resolve_component_slug(
         body.component_display_name.strip(),
@@ -305,6 +315,7 @@ def build_preview(
         programme,
         design_systems_dir=ds_dir,
         repo_root=repo_root,
+        path_exists=path_exists,
     )
     notes.extend(theme_info["notes"])
 

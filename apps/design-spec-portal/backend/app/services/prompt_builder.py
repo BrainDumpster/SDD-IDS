@@ -30,7 +30,7 @@ _INTAKE_CHECKLIST = [
     "Record verification evidence in Metadata + Source Mapping.",
     "Status: draft until validation checklist passes.",
     "If storybookExamples: Spec Accurate Design + deterministic generator + strict_spec_storybook_gate. Write under storybook-generated/<programme>/src/… with meta.title Spec Generated/<ProgrammeDisplayName>/<Component>.",
-    "If storybookExamples: MANDATORY — update storybook/.storybook/main.ts so stories are discovered. Prefer a single glob `storybook-generated/*/src/**/*.stories.@(ts|tsx)` (replace hardcoded ids/dap/synapse-only globs). Without this, Spec Generated/<Programme> will NOT appear in Storybook.",
+    "If storybookExamples: Do **not** require storybook/.storybook/main.ts — globs already discover `storybook-generated/*/src/**/*.stories.@(ts|tsx)`. Only touch main.ts if Storybook config itself must change.",
     "CRITICAL — Storybook theme import: the .stories.tsx MUST import exactly themeCssPath (programme file). Never import only the donor theme unless themeCssPath IS that donor path.",
 ]
 
@@ -42,7 +42,7 @@ _INHERITANCE_CHECKLIST = [
     "Map entry includes idsBaselineSpecPath + programme nodes.",
     "Slot geometry, tokens, states, Composition & API, Codegen Contract from programme evidence.",
     "If storybookExamples: Spec Accurate Design under Spec Generated/{DisplayName}/… at storybook-generated/<programme>/src/….",
-    "If storybookExamples: MANDATORY — ensure storybook/.storybook/main.ts includes `storybook-generated/*/src/**/*.stories.@(ts|tsx)` (or an explicit programme glob).",
+    "If storybookExamples: Do **not** require storybook/.storybook/main.ts — globs already discover `storybook-generated/*/src/**/*.stories.@(ts|tsx)`.",
     "CRITICAL — Storybook theme import: MUST import exactly themeCssPath from confirmed JSON (programme theme), not a different design-system theme.",
 ]
 
@@ -82,7 +82,7 @@ def build_write_path_allowlist(preview: IntakePreviewResponse) -> list[str]:
                 f"storybook-generated/{preview.programme}/",
                 f"generation/deterministic_storybook/",
                 "storybook/src/components/",
-                # Required so new programmes appear under Spec Generated in Storybook
+                # Optional: only if Storybook config itself must change (globs already cover programmes)
                 "storybook/.storybook/main.ts",
             ]
         )
