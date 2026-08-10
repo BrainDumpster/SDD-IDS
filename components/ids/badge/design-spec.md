@@ -73,6 +73,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - If consuming implementation opts into interactivity (clickable badge):
   - cursor and focus handling are controlled by host component, not Badge itself.
   - visual colors in this spec remain unchanged unless explicit interactive variant is introduced.
+- For numeric values of 999 or greater, hover/focus of the badge displays the full value in an `IdsTooltip` that is sized to hug its content.
 - Badge content updates are data-driven; no internal state transitions are required.
 ## Composition & API (runtime)
 Main inputs:
