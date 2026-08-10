@@ -283,7 +283,7 @@ Deterministic structure:
 1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) — not `box-shadow`, which renders behind the border and is hidden in dark mode
 2. `ContentRow` (`inlineMain`) — `flex: 1 1 auto`, `gap: var(--spacing-space-8)`
    - `LeadingIcon` — shared `Icon` at `16×16`; vertical nudge `4px` (detailed) or `2px` (compact)
-   - `ContentBlock` — column, no gap; `padding-right: var(--padding-padding-16)`
+   - `ContentBlock` — column, `gap: var(--spacing-space-4)` (between title row and message); `padding-right: var(--padding-padding-16)`
      - optional `TitleRow` (`density="detailed"` + `title` present): flex row `gap: 4px` containing `Title` + optional `ActionButton`
      - optional `Title` only (detailed, no action)
      - `Message` (required)
@@ -429,7 +429,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 **Layout & structure**
 - **Root**: `display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-space-12); width: 100%; box-sizing: border-box; padding-left: var(--padding-padding-20)`. Density class adds `min-height`: compact → `var(--scale-40)`; detailed → `68px`
 - **`.inlineMain`**: `flex: 1 1 auto; display: flex; align-items: flex-start; gap: var(--spacing-space-8)`. Compact adds `padding-block: var(--padding-padding-10); padding-right: var(--padding-padding-8)`; detailed adds `padding-block: var(--padding-padding-12)`
-- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding-right: var(--padding-padding-16)` — no gap between title row and message
+- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-space-4); padding-right: var(--padding-padding-16)` — `spacing-4` between title row and message
 - **`.inlineTitleRow`** (detailed + title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title: `flex: 1 1 auto; min-width: 0`; action button: `flex-shrink: 0`
 - **`.inlineTrailing`**: `display: flex; flex-shrink: 0; align-items: flex-start; justify-content: flex-end; gap: var(--spacing-space-16)`
 - **Compact `.inlineTrailing`**: `align-items: center; height: var(--scale-40); padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16)`
@@ -452,4 +452,8 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 
 **Dismiss visibility logic**
 - `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props
+
+**2026-08-09**
+- `.inlineText`: vertical gap between the title row (title + optional action) and the message changed `0` → `var(--spacing-space-4)`; visible only in `density="detailed"` (title present), `compact` (message-only) unchanged. Source: `storybook/src/components/Alert.module.css`.
+- Spec synced to code: **Anatomy → Component composition** (`ContentBlock` gap) and the `.inlineText` note above updated to `var(--spacing-space-4)`.
 
