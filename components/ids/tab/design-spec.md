@@ -16,8 +16,9 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Root is container-driven: `width: 100%`, `box-sizing: border-box`.
 - Tab row is horizontal and non-wrapping by default.
 - Tab item height: `38px`.
-- Tab item padding: `9px 24px`.
+- Tab item padding: `9px 24px` (default); `9px var(--padding-padding-20) 9px 24px` when a close control is present (`hasClose`).
 - Internal content gap: `8px` between icon/label/badge.
+- Content-to-close gap: `var(--spacing-space-20)` between the tab content and the close control.
 - Bottom indicator thickness for selected tabs: `2px`.
 - Primary selected indicator placement:
   - transparent host: top border.
@@ -154,12 +155,13 @@ Runtime rules:
 - Valid combinations must include **Primary × transparent × selected** and **Primary × elevated × selected** in dark and light — both omit the accessible bottom baseline under the selected tab.
 
 ### Per-slot style contract
-- `TabItem`: `38px` height (`box-sizing: border-box`), `9px 24px` padding, `8px` internal gap.
+- `TabItem`: `38px` height (`box-sizing: border-box`), `9px 24px` padding (`padding-right: var(--padding-padding-20)` when a `TabClose` is shown), `8px` internal gap between icon/label/badge, `var(--spacing-space-20)` gap between the tab content and the `TabClose` control.
 - `TabItem` unselected: `border-bottom` = `var(--border-width-border-1)` solid `var(--color-border-accessible)`.
 - `TabItem` selected: `border-bottom: none` (elevated **and** transparent). Do not rely on opaque fill to hide a baseline drawn elsewhere.
 - `TabLabel`: Body 2 tokenized typography.
 - `SelectedIndicator`: `2px`, placement depends on variant (`primary=top`, `secondary=bottom` in validated IDS examples).
 - `FocusRing`: `2px` brand border, tokenized.
+- `TabClose` (IDS tabs only): rendered as an `IdsButton` tertiary icon-only control (`variant="tertiary"`, `size="sm"`, `iconOnly`, `iconSlug="ctrl-close-16"`). The control is `24px` × `24px` (`var(--sizing-size-24)`) with `var(--padding-padding-4)` padding on all sides; the icon is tinted `var(--color-icon-neutral)`. Synapse tabs continue to use the previous `shape-x` 12px icon in a padded span.
 - `OverflowTrigger`: same sizing and tab affordance as peer tab items; selected overflow trigger also uses `border-bottom: none`.
 - `AddTabTrigger`: visual parity with tab row controls; keeps accessible baseline.
 - `TabList` trailing filler: flex-grow pseudo/spacer with the same accessible `border-bottom` to continue the baseline past the last control.
