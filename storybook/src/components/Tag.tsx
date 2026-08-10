@@ -24,6 +24,9 @@ export interface TagProps {
   closable?: boolean;
   badgeCount?: number;
   visualState?: VisualState;
+  /** Optional max width for the tag; the label truncates with an ellipsis when
+   *  it exceeds this. Opt-in — unset tags keep their intrinsic width. */
+  maxWidth?: number | string;
   onClick?: () => void;
   onSelectedChange?: (selected: boolean) => void;
   onTextFocus?: () => void;
@@ -45,6 +48,7 @@ export function Tag({
   closable = false,
   badgeCount,
   visualState = "default",
+  maxWidth,
   onClick,
   onSelectedChange,
   onTextFocus,
@@ -124,9 +128,11 @@ export function Tag({
         styles[`emphasis_${emphasis}`],
         clickable && isSelected ? styles.selected : "",
         (closable || editable) ? styles.dismissible : "",
+        maxWidth != null ? styles.truncated : "",
       ]
         .filter(Boolean)
         .join(" ")}
+      style={maxWidth != null ? { maxWidth } : undefined}
       data-disabled={disabled || undefined}
       data-focus={visualState === "focus" || undefined}
       data-error={visualState === "error" || undefined}

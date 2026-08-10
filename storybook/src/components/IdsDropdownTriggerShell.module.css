@@ -64,6 +64,21 @@
   gap: var(--spacing-space-4);
 }
 
+/* Let the value/text child shrink below its content width so a caller's
+   `text-overflow: ellipsis` actually triggers. Flex items default to
+   `min-width: auto` (won't shrink past content), which silently disables
+   truncation of long selected values (e.g. long timezone labels in a combo
+   box). Badges/icons keep their intrinsic size because the flexible text
+   child absorbs the shrink first. */
+.main > * {
+  min-width: 0;
+}
+
+/* Field showing selected option(s): 16px between content and caret. */
+.field[data-filled="true"] .main {
+  padding-right: var(--padding-padding-16);
+}
+
 .caretWrap {
   flex-shrink: 0;
   display: inline-flex;
@@ -71,6 +86,12 @@
   padding: 5px var(--padding-padding-1);
   color: var(--color-icon-neutral);
   line-height: 0;
+  transition: transform 150ms ease;
+}
+
+/* Menu open: caret flips to point up. */
+:global([data-popup-open]) .caretWrap {
+  transform: rotate(180deg);
 }
 
 .field[data-disabled="true"] .caretWrap {
