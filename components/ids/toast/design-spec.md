@@ -130,7 +130,8 @@ Resolution rules:
 - Viewport: `aria-live="polite"`, `aria-atomic="false"`.
 - Item role: `status` by default; allow severity-driven escalation to `alert` when product rules require.
 - Close action: accessible label ("Dismiss notification").
-- Keyboard: tab to view details/close, `Escape` dismiss focused item.
+- Keyboard: tab to view details/close; `Escape` dismisses the active toast when any focusable control inside it has focus.
+- Toast container is not keyboard-focusable; only the view-details and close controls receive focus.
 
 ### Fallback/error rules
 - Unknown `type` -> fallback to `info`.
