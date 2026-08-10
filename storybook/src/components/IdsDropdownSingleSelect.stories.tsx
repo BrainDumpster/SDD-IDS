@@ -33,9 +33,10 @@ function SingleSelectTrigger({
       error={error}
       hover={hover}
       focusVisible={focusVisible}
+      filled={Boolean(value)}
       left={
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {value ?? placeholder}
+          {value || placeholder}
         </span>
       }
     />
@@ -45,7 +46,14 @@ function SingleSelectTrigger({
 const meta: Meta<typeof DropdownMenu> = {
   title: "Spec Generated/IDS/Dropdown/Single Select",
   component: DropdownMenu,
-  parameters: { layout: "centered" },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <div style={{ display: "flex", justifyContent: "center", padding: "32px 16px" }}>
+        <Story />
+      </div>
+    ),
+  ],
   argTypes: {
     showSingleSelectRadio: { control: "boolean" },
   },
@@ -146,10 +154,11 @@ export const MainScenarios: Story = {
               trigger={<SingleSelectTrigger value={smallValue} />}
               items={disabledOptionItems}
               selectionMode="single"
-              selectedValues={[smallValue]}
+              selectedValues={smallValue ? [smallValue] : []}
               showSingleSelectRadio={showSingleSelectRadio}
+              showClearAll
+              onClearAllClick={() => setSmallValue("")}
               defaultOpen
-              maxHeight={220}
             />
           </div>
           <div style={{ display: "grid", gap: 6, width: 300 }}>
@@ -161,7 +170,6 @@ export const MainScenarios: Story = {
               selectedValues={[overflowValue]}
               showSingleSelectRadio={showSingleSelectRadio}
               defaultOpen
-              maxHeight={220}
             />
           </div>
           <div style={{ display: "grid", gap: 6, width: 300 }}>
@@ -173,7 +181,6 @@ export const MainScenarios: Story = {
               selectedValues={[sectionValue]}
               showSingleSelectRadio={showSingleSelectRadio}
               defaultOpen
-              maxHeight={220}
             />
           </div>
           <div style={{ display: "grid", gap: 6, width: 300 }}>
@@ -352,7 +359,7 @@ export const FieldStatesMatrix: Story = {
               showSingleSelectRadio={false}
               defaultOpen
               maxHeight={280}
-              sideOffset={0}
+              sideOffset={-1}
             />
             {helper}
           </div>
@@ -411,7 +418,6 @@ export const OptionalRadioButton: Story = {
             selectedValues={[selected]}
             showSingleSelectRadio={false}
             defaultOpen
-            maxHeight={220}
           />
         </div>
         <div style={{ width: 300, display: "grid", gap: 6 }}>
@@ -423,7 +429,6 @@ export const OptionalRadioButton: Story = {
             selectedValues={[selected]}
             showSingleSelectRadio
             defaultOpen
-            maxHeight={220}
           />
         </div>
       </div>
@@ -451,7 +456,6 @@ export const DisabledOptionState: Story = {
           selectedValues={[selected]}
           showSingleSelectRadio={showSingleSelectRadio}
           defaultOpen
-          maxHeight={220}
         />
         <span style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           Option 3 is disabled at option level.

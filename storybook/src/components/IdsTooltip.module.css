@@ -190,10 +190,11 @@
   width: 264px;
 }
 
-.popupWithTitle .body,
-.popupNoTitle .body {
-  min-height: 80px;
+.popup.popupHug {
+  width: auto;
+  min-width: 0;
 }
+
 
 .content {
   display: flex;

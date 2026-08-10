@@ -30,7 +30,7 @@ Deterministic slot order (left → right):
 4. `FooterSwidGroup` (optional when SWID shown) — label + value + `FooterCopyControl`
 5. `FooterCopyControl` — icon-only control for SWID copy (`copy` icon, 14×14)
 6. `FooterTimeGroup` (optional) — `FooterTimeIcon` + `FooterDateTimeLabel`
-7. `FooterTimeZoneGroup` (optional) — `FooterTimeZoneIcon` + `FooterTimeZoneAction` (link-styled control)
+7. `FooterTimeZoneGroup` (optional) — single tertiary button with world-globe icon (size: small, variant: tertiary, iconSlug: world-globe)
 
 ## Layout & Measurements
 - Root width is container-driven: `width: 100%`, `box-sizing: border-box`.
@@ -39,10 +39,10 @@ Deterministic slot order (left → right):
 - Root border: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-light)` on all sides (Figma frame uses full perimeter stroke).
 - Root padding: none on root; inner regions carry horizontal padding.
 - **Left region:** `padding-left` / `padding-right` `var(--padding-padding-16)`; gap between host and SWID groups `var(--spacing-space-24)`; items vertically centered.
-- **Host name block:** content-driven width; Figma sample text area ~277px — do not hardcode width at runtime unless product requires truncation.
+- **Host name block:** content-driven width; truncates at **48 characters** with ellipsis; Figma sample text area ~277px.
 - **SWID group:** inline flex, gap `var(--spacing-space-8)`; copy control **14×14px** hit target (expand focus ring per a11y contract).
 - **Time group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom (Figma asymmetric), `var(--padding-padding-16)` left, `var(--padding-padding-8)` right; clock icon **16×16px**.
-- **Time zone group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom, `var(--padding-padding-8)` left, `var(--padding-padding-16)` right; globe icon **16×16px**.
+- **Time zone group:** single tertiary button (size: small, variant: tertiary) with world-globe icon; no padding/gap as handled by Button component.
 - Typography: **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular weight.
 - Sample frame width **1664px** in Figma is reference-only; runtime width follows application shell.
 
@@ -117,6 +117,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 ### Behavior & guidelines
 - Footer is a **persistent shell status strip**, not a marketing/site footer with link columns.
 - Keep one line at 32px height; truncate long host/SWID strings with ellipsis rather than growing bar height.
+- Host name truncates at **48 characters** maximum with ellipsis.
+- Labels and values always display on single line (white-space: nowrap).
 - Time zone label should reflect the user’s active zone; update when host clock/zone changes.
 - Do not embed primary actions (Save, Submit) in this bar.
 
@@ -174,8 +176,7 @@ FooterRoot
     FooterTimeIcon
     FooterDateTimeLabel
   [optional] FooterTimeZoneGroup
-    FooterTimeZoneIcon
-    FooterTimeZoneAction
+    FooterTimeZoneAction (tertiary button with world-globe icon)
 ```
 
 ### Variant matrix
@@ -197,7 +198,8 @@ FooterRoot
 - Copy writes `swid` prop to clipboard when enabled; always call `onCopySwid` on successful activation.
 - Time zone button does not navigate by default; host handles picker via `onTimeZoneClick`.
 - Hiding a group removes it from layout and tab order without reserving space.
-- Long strings truncate with ellipsis; tooltips are host-defined (optional).
+- Host name truncates at 48 characters with ellipsis; if the value reaches the 48-character limit or is visually truncated (including by component resize), hovering the value shows the full text in a tooltip.
+- Other long strings truncate with ellipsis; tooltips for other content are host-defined (optional).
 
 ### Accessibility contract
 - See **Interactions → Accessibility**; codegen must emit native buttons for copy and time-zone actions.

@@ -46,19 +46,22 @@ function MultiSelectTrigger({
       error={error}
       hover={hover}
       focusVisible={focusVisible}
+      filled={selectedCount > 0}
       left={
         <>
           {showBadge ? (
-            <IdsTooltip
-              side="top"
-              align="start"
-              title={`${selectedCount} Items`}
-              content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
-            >
-              <span style={{ display: "inline-flex" }}>
-                <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
-              </span>
-            </IdsTooltip>
+            <span style={{ display: "inline-flex", flexShrink: 0 }}>
+              <IdsTooltip
+                side="top"
+                align="start"
+                title={`${selectedCount} Items`}
+                content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
+              >
+                <span style={{ display: "inline-flex" }}>
+                  <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
+                </span>
+              </IdsTooltip>
+            </span>
           ) : null}
           <span
             style={{
@@ -80,7 +83,16 @@ function MultiSelectTrigger({
 const meta: Meta<typeof DropdownMenu> = {
   title: "Spec Generated/IDS/Dropdown/Multi Select",
   component: DropdownMenu,
-  parameters: { layout: "centered" },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      // Headroom above the trigger so the badge tooltip (side="top") points UP
+      // instead of Base UI flipping it below onto the open menu.
+      <div style={{ display: "flex", justifyContent: "center", padding: "120px 16px 32px" }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
@@ -183,7 +195,6 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setSmallSelected([])}
               clearAllDisabled={smallSelected.length === 0}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -210,7 +221,6 @@ export const MainScenarios: Story = {
               }
               onShowSelectedPanelClear={() => setVisibleSelected([])}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -237,7 +247,6 @@ export const MainScenarios: Story = {
               }
               onShowSelectedPanelClear={() => setHiddenSelected([])}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -255,7 +264,6 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setSectionSelected([])}
               clearAllDisabled={sectionSelected.length === 0}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 

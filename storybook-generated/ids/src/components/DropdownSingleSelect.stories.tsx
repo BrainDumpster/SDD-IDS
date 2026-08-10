@@ -40,9 +40,10 @@ function Trigger({ value, placeholder = "-Select-", disabled = false, error = fa
     <IdsDropdownTriggerShell
       disabled={disabled}
       error={error}
+      filled={Boolean(value)}
       left={
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {value ?? placeholder}
+          {value || placeholder}
         </span>
       }
     />
@@ -73,7 +74,6 @@ export const Playground: Story = {
         selectedValues={[selected]}
         showSingleSelectRadio={args.showSingleSelectRadio}
         defaultOpen
-        maxHeight={220}
       />
     );
   },

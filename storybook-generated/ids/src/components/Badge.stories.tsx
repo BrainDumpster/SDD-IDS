@@ -49,7 +49,7 @@ export const ContentSizing: Story = {
       <IdsBadge value={1} type="default" />
       <IdsBadge value={12} type="default" />
       <IdsBadge value={128} type="default" />
-      <IdsBadge value={"999+"} type="default" ariaLabel="Nine hundred ninety nine plus notifications" />
+      <IdsBadge value={999} type="default" ariaLabel="999 notifications" />
     </div>
   ),
 };

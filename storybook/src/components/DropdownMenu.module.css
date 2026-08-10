@@ -1,10 +1,20 @@
 .triggerReset {
   all: unset;
   display: inline-flex;
+  /* Size to the field's content, not the container. As a grid/flex item the trigger
+     would otherwise stretch to fill a wider column, making the measured width (and thus
+     the popup) wider than the field. */
+  width: max-content;
+  justify-self: start;
 }
 
 .triggerFull {
   width: 100%;
+  /* Allow the full-width trigger to shrink below its content's intrinsic width
+     (nowrap value text has a large min-content) so it tracks a shrinking
+     container instead of overflowing it. The field's own min-width still
+     clamps at 186px. */
+  min-width: 0;
 }
 
 .triggerMeasure {
@@ -17,6 +27,9 @@
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
+  /* Default (container-driven): menu matches the trigger/field width so it
+     tracks the field as its container resizes; long options truncate via
+     `.itemLabel`. Content-driven sizing is opt-in via `.popupContentWidth`. */
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
@@ -39,6 +52,15 @@
   width: auto !important;
   min-width: 186px !important;
   max-width: none !important;
+}
+
+/* Content-driven width (menuWidth="content"): grow to the widest option,
+   clamped between the trigger width (≥ 186px) and 700px. Options past the max
+   truncate via `.itemLabel`. Placed after `.popup` so it wins the cascade. */
+.popupContentWidth {
+  width: max-content !important;
+  min-width: var(--dropdown-trigger-width, 186px) !important;
+  max-width: var(--dropdown-menu-max-width, 700px) !important;
 }
 
 .searchRow {
@@ -85,11 +107,53 @@
   color: var(--color-text-gray-neutral);
 }
 
+/* Holds the input plus the greyed-out ghost suggestion, overlaid in the same box. */
+.searchInputBox {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.searchInputBox .searchInput {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+/* Ghost suggestion overlay: the typed portion is invisible (only reserves the
+   caret offset — the real glyphs come from the input on top), the suffix renders
+   in disabled grey. Same font metrics as the input so the tail aligns exactly. */
+.searchGhost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  overflow: hidden;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  white-space: pre;
+}
+
+.searchGhostTyped {
+  visibility: hidden;
+  white-space: pre;
+}
+
+.searchGhostSuffix {
+  color: var(--color-static-gray-400); /* #9E9E9E, fixed in light + dark */
+  white-space: pre;
+}
+
 .searchInputWrap {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-space-8);
+  gap: var(--spacing-space-10);
   flex: 1 1 auto;
   min-width: 0;
   padding-left: var(--padding-padding-8);
@@ -125,10 +189,6 @@
   padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
 }
 
-.showSelectedPanel[data-expanded="true"] {
-  padding-bottom: var(--padding-padding-16);
-}
-
 .showSelectedHeader {
   display: flex;
   align-items: center;
@@ -156,43 +216,89 @@
   transition: transform 150ms ease;
 }
 
-.showSelectedClear {
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 10px;
-  height: 10px;
-  flex-shrink: 0;
-  margin-left: auto;
-  cursor: pointer;
-}
-
-.showSelectedClear:focus-visible,
 .showSelectedToggle:focus-visible {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
   outline-offset: 1px;
 }
 
-.showSelectedClearIcon {
-  flex-shrink: 0;
+.showSelectedTagsRoot {
+  position: relative;
+  /* Extend past the panel's right padding so the overlay scrollbar sits at the
+     popup edge (aligned with the options list scrollbar). */
+  width: calc(100% + var(--padding-padding-16));
+  box-sizing: border-box;
 }
 
 .showSelectedTags {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  align-content: flex-end;
+  align-content: flex-start;
   gap: var(--spacing-space-4);
   width: 100%;
   box-sizing: border-box;
-  padding: var(--spacing-space-8) var(--padding-padding-8) 0 var(--padding-padding-16);
+  /* Contain the inline size so the wrapped tags do NOT contribute their
+     "all-on-one-line" width to the content-driven menu's `max-content`. The menu
+     width is driven by the options (each tag is a selected option, so the option
+     list is always wide enough); the tags simply wrap within that width. */
+  contain: inline-size;
+  /* Native scrollbar hidden — the overlay scrollbar (shared with the options
+     list) draws on top without taking space. */
+  scrollbar-width: none;
+  padding: var(--padding-padding-8) var(--padding-padding-24) 0 var(--padding-padding-16);
+  /* Cap at 3 rows of tags, then scroll: top (8) + 3 × 28px tag (lg) + 2 × 4px gap = 100px. */
+  max-height: 100px;
+  overflow-y: auto;
 }
 
-.optionsScrollRegion {
+.showSelectedTags::-webkit-scrollbar {
+  display: none;
+}
+
+.optionsScrollRoot {
+  position: relative;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+}
+
+.optionsScrollViewport {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Hide the native scrollbar — the overlay scrollbar below draws on top
+     without taking layout space, so option rows keep their full width. */
+  scrollbar-width: none;
+}
+
+.optionsScrollViewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Overlay scrollbar (Base UI ScrollArea): absolutely positioned so it does not
+   reduce the viewport/option width. Always visible while the list overflows.
+   Thumb mirrors the IDS ScrollBar component (6px thumb, radius-4, border-light). */
+.optionsScrollbar {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  display: flex;
+  justify-content: center;
+  width: 6px;
+  opacity: 1;
+}
+
+.optionsScrollThumb {
+  width: 100%;
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-border-light);
+}
+
+.optionsScrollThumb:hover {
+  background-color: var(--color-text-gray-neutral);
 }
 
 .selectAllClearAllRow {
@@ -277,9 +383,41 @@
   gap: var(--spacing-space-16);
 }
 
+/* Option label truncates with an ellipsis when longer than the menu width
+   (popup is locked to the trigger width). Flex child must be able to shrink. */
+.itemLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Empty search state — first row is "No results found" (Body 2 Medium). */
+.noResults {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
+  background: var(--color-background-surface-component);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+  font-variation-settings: "wdth" 100;
+  color: var(--color-text-gray-neutral);
+}
+
 .item[data-selection-mode="single"] {
-  padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10) var(--padding-padding-16);
-  min-height: 44px;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  min-height: 40px;
+}
+
+/* Figma single-select text-only option aligns content to the top (items-start).
+   Radio rows keep center alignment so the control lines up with the label. */
+.item[data-selection-mode="single"]:not(:has(.radioOuter)) {
+  align-items: flex-start;
 }
 
 .item:hover:not([data-disabled]) {
@@ -302,8 +440,11 @@
 .item[data-selection-mode="single"][data-highlighted]:not([data-disabled]) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  /* Top + bottom border only (no side borders); inset box-shadow is not clipped
+     by the options scroll region the way a 0-offset outline is. */
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-focus-visible] {
@@ -341,7 +482,9 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-disabled],
 .item[data-selection-mode="single"]:not(:has(.radioOuter)):disabled {
   background: var(--color-background-gray-lighter);
-  outline: 1px solid var(--color-border-gray-disabled);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-gray-disabled),
+    inset 0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="false"][data-disabled],
@@ -393,19 +536,33 @@
   border-radius: var(--corner-radius-radius-2);
 }
 
+/* Single-select Clear All: identical visual to the footer action button, but
+   placed at the top of the menu with a bottom border (instead of the footer's
+   top border). Reuses `.footerActionButton` for the inner button. */
+.clearAllAction {
+  all: unset;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--padding-padding-8) 0;
+  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+/* 16px = the control size (checkbox/radio), so it aligns left with the Select All
+   checkbox with no wrapper-centering offset. */
 .leadingControl {
   display: inline-flex;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   pointer-events: none;
-}
-
-.item[data-selection-mode="single"] .leadingControl {
-  width: 16px;
-  height: 16px;
 }
 
 .radioOuter {
@@ -494,8 +651,9 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
@@ -527,8 +685,9 @@
 .item[data-selection-mode="single"]:active:not([data-disabled]) {
   background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */

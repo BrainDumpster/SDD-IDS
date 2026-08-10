@@ -224,6 +224,29 @@
   outline: none;
 }
 
+/* Opt-in max-width truncation (set via the `maxWidth` prop). The label
+   ellipsizes; the dismiss/badge/caret keep their size. */
+.truncated {
+  min-width: 0;
+}
+
+.truncated .textField {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.truncated .label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncated .badge,
+.truncated .dismiss,
+.truncated .menuCaret {
+  flex-shrink: 0;
+}
+
 .editable .textField:focus-visible {
   border-color: var(--color-border-brand-base);
 }

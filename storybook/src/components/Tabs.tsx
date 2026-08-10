@@ -9,6 +9,8 @@ import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
 import { Badge } from "./Badge";
+import { IdsButton } from "./IdsButton";
+import { Icon } from "./Icon";
 
 export interface TabItem {
   id: string;
@@ -149,6 +151,7 @@ export function Tabs({
                 styles.tab,
                 variant === "primary" ? styles.tabPrimary : styles.tabSecondary,
                 activeTabId === item.id ? styles.selected : "",
+                item.closable && !isSynapse ? styles.hasClose : "",
               ].join(" ")}
               style={{ minWidth: `${minTabWidth}px`, maxWidth: `${maxTabWidth}px` }}
               onClick={() => handleVisibleTabSelect(item.id)}
@@ -161,25 +164,46 @@ export function Tabs({
                 ) : null}
               </span>
               {(item.closable ?? isSynapse) ? (
-                <span
-                  className={styles.close}
-                  role="button"
-                  aria-label={`Close ${item.label}`}
-                  tabIndex={0}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeTab(item.id);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
+                isSynapse ? (
+                  <span
+                    className={styles.close}
+                    role="button"
+                    aria-label={`Close ${item.label}`}
+                    tabIndex={0}
+                    onClick={(e) => {
                       e.stopPropagation();
                       closeTab(item.id);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeTab(item.id);
+                      }
+                    }}
+                  >
+                    <img src={shapeXIcon} alt="" className={styles.closeIcon} />
+                  </span>
+                ) : (
+                  <IdsButton
+                    className={styles.closeButton}
+                    variant="tertiary"
+                    size="sm"
+                    iconOnly
+                    icon={
+                      <Icon
+                        shapeName="ctrl-close-16"
+                        color="var(--color-icon-neutral)"
+                        variant="mask"
+                      />
                     }
-                  }}
-                >
-                  <img src={shapeXIcon} alt="" className={styles.closeIcon} />
-                </span>
+                    aria-label={`Close ${item.label}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeTab(item.id);
+                    }}
+                  />
+                )
               ) : null}
             </button>
           ))}
