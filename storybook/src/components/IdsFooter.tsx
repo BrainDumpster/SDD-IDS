@@ -1,6 +1,8 @@
-import type { ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 
+import { Button } from "./Button";
 import { Icon } from "./Icon";
+import { IdsTooltip } from "./IdsTooltip";
 import styles from "./IdsFooter.module.css";
 
 export interface IdsFooterProps extends Omit<ComponentProps<"footer">, "children"> {
@@ -50,6 +52,30 @@ export function IdsFooter({
 }: IdsFooterProps) {
   const canCopy = Boolean(swid) && !copyDisabled;
 
+  const truncatedHostname = hostname.length > 48 ? `${hostname.slice(0, 48)}...` : hostname;
+
+  const [valueEl, setValueEl] = useState<HTMLSpanElement | null>(null);
+  const [isOverflowed, setIsOverflowed] = useState(false);
+
+  useEffect(() => {
+    if (!valueEl) return;
+
+    const updateOverflow = () => {
+      setIsOverflowed(valueEl.scrollWidth > valueEl.clientWidth);
+    };
+
+    updateOverflow();
+
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateOverflow) : null;
+    if (ro) ro.observe(valueEl);
+
+    return () => {
+      if (ro) ro.disconnect();
+    };
+  }, [valueEl, truncatedHostname]);
+
+  const showTooltip = isOverflowed || hostname.length >= 48;
+
   const handleCopy = async () => {
     if (!canCopy || !swid) return;
     try {
@@ -68,9 +94,20 @@ export function IdsFooter({
     >
       <div className={styles.left}>
         {showHostname && (
-          <div className={styles.field}>
+          <div className={[styles.field, styles.hostnameField].join(' ')}>
             <span className={styles.label}>Host Name:</span>
-            <span className={styles.value}>{hostname}</span>
+            <span className={styles.hostnameValue}>
+              {showTooltip ? (
+                <IdsTooltip
+                  content={<span style={{ overflowWrap: "break-word" }}>{hostname}</span>}
+                  triggerDisplay="block"
+                >
+                  <span ref={setValueEl} className={styles.hostnameText}>{truncatedHostname}</span>
+                </IdsTooltip>
+              ) : (
+                <span ref={setValueEl} className={styles.hostnameText}>{truncatedHostname}</span>
+              )}
+            </span>
           </div>
         )}
         {swid != null && swid !== "" && (
@@ -108,22 +145,16 @@ export function IdsFooter({
         </div>
       )}
       {showTimeZone && (
-        <div className={styles.timeZoneGroup}>
-          <Icon
-            shapeName="world-globe"
-            variant="mask"
-            color="var(--color-icon-brand-base)"
-            style={{ width: 16, height: 16 }}
-          />
-          <button
-            type="button"
-            className={styles.timeZoneButton}
-            disabled={timeZoneDisabled}
-            onClick={() => onTimeZoneClick?.()}
-          >
-            {timeZoneLabel || "Time zone"}
-          </button>
-        </div>
+        <Button
+          type="button"
+          variant="tertiary"
+          size="sm"
+          iconSlug="world-globe"
+          disabled={timeZoneDisabled}
+          onClick={() => onTimeZoneClick?.()}
+        >
+          {timeZoneLabel || "Time zone"}
+        </Button>
       )}
     </footer>
   );
