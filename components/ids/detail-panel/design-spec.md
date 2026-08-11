@@ -14,7 +14,7 @@
 - Last verified: 2026-04-30 (current session)
 - Component map baseline: `data/component-figma-map.json` entry exists for "Detail Panel"; this spec is upgraded to IDS Design Library nodes above.
 ## Anatomy
-- `DetailPanelRoot`
+- `DetailPanel`
 - `DetailPanelContent`
 - Variant branch: `attachMode="datagrid"`
   - expanded: `DetailPanelHeader` + `DetailPanelBody`
@@ -49,7 +49,7 @@
   - Datagrid collapsed rail: padding `var(--spacing-space-16) var(--padding-padding-12)` (`16px 12px`), toggle aligned `flex-start` (top).
   - Page collapsed rail: padding `var(--padding-padding-12)` (`12px`), toggle aligned `flex-end` (bottom).
 - Runtime sizing constraints:
-  - `DetailPanelRoot` uses `box-sizing: border-box`.
+  - `DetailPanel` uses `box-sizing: border-box`.
   - width transition is state-driven only (`398px <-> 40px`) and must not introduce intermediate non-deterministic layout widths in codegen outputs.
   - body region must allow vertical scroll when content exceeds available height.
 ### Responsiveness
@@ -88,8 +88,8 @@
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `DetailPanelRoot` | expanded | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text token-resolved |
-| `DetailPanelRoot` | collapsed | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | icon token-resolved |
+| `DetailPanel` | expanded | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text token-resolved |
+| `DetailPanel` | collapsed | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | icon token-resolved |
 | `DetailPanelToggleButton` | default | transparent | none | `double-chev-right` or `double-chev-left` in `var(--color-icon-gray-neutral-base)` |
 | `DetailPanelToggleButton` | hover | transparent | none | `var(--color-icon-gray-neutral-base)` |
 | `DetailPanelToggleButton` | press | transparent | none | `var(--color-icon-gray-neutral-base)` |
@@ -99,7 +99,7 @@
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `DetailPanelRoot` | expanded/collapsed | semantic token-resolved | semantic token-resolved | semantic token-resolved |
+| `DetailPanel` | expanded/collapsed | semantic token-resolved | semantic token-resolved | semantic token-resolved |
 | `DetailPanelToggleButton` | default/hover/press/focus-visible | semantic token-resolved | semantic token-resolved | semantic token-resolved |
 | `DetailPanelHeader` | default | semantic token-resolved | semantic token-resolved | semantic token-resolved |
 | `DetailPanelFooter` | default | semantic token-resolved | semantic token-resolved | semantic token-resolved |
@@ -122,33 +122,50 @@ Dark table is structurally parallel to light; runtime must not hardcode color li
 - Focus:
   - focus-visible styling must be present on toggle control.
 ## Composition & API (runtime)
-- Required props:
-  - `attachMode: "datagrid" | "page"`
-  - `isExpanded: boolean`
-  - `onExpandedChange: (next: boolean) => void`
-  - `body: RenderableContent`
-- Optional props:
-  - `title?: string` (default `"Details"` for datagrid mode header)
-  - `showHeader?: boolean` (default `true` in datagrid mode)
-  - `showFooter?: boolean` (default `true` in page mode)
-  - `ariaLabelExpand?: string` (default `"Expand details panel"`)
-  - `ariaLabelCollapse?: string` (default `"Collapse details panel"`)
-  - `className?: string`
-  - `collapsedWidth?: number` (default `40`)
-  - `expandedWidth?: number` (default `398`)
-  - `id?: string` (for deterministic `aria-controls` linkage)
+
+### Compound composition
+
+```
+DetailPanel
+  DetailPanelContent                 — expanded branch (hidden when collapsed)
+    datagrid: DetailPanelHeader + DetailPanelBody
+    page:     DetailPanelBody + DetailPanelFooter
+  DetailPanelCollapsedRail           — collapsed icon-only rail (hidden when expanded)
+    DetailPanelToggleButton
+```
+
+`DetailPanelHeader` / `DetailPanelFooter` project `DetailPanelToggleButton` into the controls cluster; remaining header children are the title.
+
+### `DetailPanel` (root) props
+
+**Required**
+
+- `attachMode: "datagrid" | "page"`
+
+**Optional**
+
+- `isExpanded?: boolean` (controlled); when omitted, uses local / `defaultExpanded` state
+- `onExpandedChange?: (next: boolean) => void`
+- `defaultExpanded?: boolean` (default `true`)
+- `ariaLabelExpand?: string` (default `"Expand details panel"`)
+- `ariaLabelCollapse?: string` (default `"Collapse details panel"`)
+- `className?: string`
+- `collapsedWidth?: number` (default `40`)
+- `expandedWidth?: number` (default `398`)
+- `id?: string` (for deterministic `aria-controls` linkage)
+
+Body content is projected via `DetailPanelBody` children (not a root `body` prop). Header title is projected as `DetailPanelHeader` children (or optional `DetailPanelTitle`).
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
-  1. `DetailPanelRoot`
-  2. conditional branch by `attachMode`
-     - datagrid/expanded: `DetailPanelHeader` + `DetailPanelBody`
-     - datagrid/collapsed: `DetailPanelCollapsedRail` + `DetailPanelToggleButton`
-     - page/expanded: `DetailPanelBody` + `DetailPanelFooter`
-     - page/collapsed: `DetailPanelCollapsedRail` + `DetailPanelToggleButton`
+  1. `DetailPanel`
+  2. `DetailPanelContent` (expanded only)
+     - datagrid: `DetailPanelHeader` + `DetailPanelBody` (+ `DetailPanelToggleButton` in header)
+     - page: `DetailPanelBody` + `DetailPanelFooter` (+ `DetailPanelToggleButton` in footer)
+  3. `DetailPanelCollapsedRail` (collapsed only) + `DetailPanelToggleButton`
 - Branch invariants:
   - datagrid expanded branch MUST include header.
   - page expanded branch MUST include footer.
-  - collapsed branch MUST be icon-only rail (body hidden).
+  - collapsed branch MUST be icon-only rail (body/content hidden).
 Variant matrix:
   - `attachMode`: `datagrid | page`
   - `panelState`: `expanded | collapsed`
@@ -213,3 +230,5 @@ All validation checklist items verified and passing as of 2026-07-09.
   - `get_metadata` on all four nodes (dimensions/structure)
   - `get_design_context` on all four nodes (layout + icon placement/sections)
   - `get_variable_defs` on expanded nodes (`44257:246888`, `44333:174879`) for token validation
+- Storybook reference: `storybook/src/components/IdsDetailPanel.tsx` / `IdsDetailPanel.stories.tsx`
+- Lib React implementation (no Base UI): `lib/react/ids/detail-panel/` (`IdsDetailPanel.tsx`, `IdsDetailPanel.module.css`; selectors `ids-detail-panel`, …); stories: `storybook/src/components/lib-generated/DetailPanel.stories.tsx`

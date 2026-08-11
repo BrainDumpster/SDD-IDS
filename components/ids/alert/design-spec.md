@@ -390,6 +390,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - `storybook/src/components/Alert.tsx` — unified implementation (`display` prop)
 - `storybook/src/components/Alert.stories.tsx` — **IDS/Alert** (single entry; global vs inline via `display`)
 - `storybook/src/components/GlobalAlert.tsx` / `InlineAlert.tsx` — optional thin re-exports for app code; not separate Storybook entries
+- Lib React implementation (no Base UI): `lib/react/ids/alert/` (`IdsAlert.tsx`, `IdsAlertGroup.tsx`, `IdsAlert.module.css`; selectors `ids-alert-global`, `ids-alert-inline`, …); stories: `storybook/src/components/lib-generated/Alert.stories.tsx`
 
 ---
 

@@ -1,0 +1,173 @@
+/**
+ * IDS Progress Bar — CSS Modules from design-spec.
+ * Selectors: ids-progress-bar-*
+ * Theme: components/ids-theme.css (`--progress-bar-control-radius`)
+ */
+
+.ids-progress-bar {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.ids-progress-bar-labeled-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-padding-8);
+  width: 100%;
+}
+
+.ids-progress-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--padding-padding-8);
+}
+
+.ids-progress-bar-label,
+.ids-progress-bar-value {
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-progress-bar-inline-row {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-padding-8);
+  width: 100%;
+}
+
+.ids-progress-bar-inline-row .ids-progress-bar-track {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ids-progress-bar-inline-value {
+  flex-shrink: 0;
+  width: 36px;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral-strong);
+  text-align: left;
+}
+
+/* Shell: sizing only. Border lives on trackBg; fill stacks above it. */
+.ids-progress-bar-track {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  overflow: hidden;
+}
+
+.ids-progress-bar--thin .ids-progress-bar-track {
+  height: var(--sizing-size-4);
+}
+
+.ids-progress-bar--medium .ids-progress-bar-track {
+  height: var(--sizing-size-8);
+}
+
+.ids-progress-bar--thick .ids-progress-bar-track {
+  height: var(--sizing-size-16);
+}
+
+/* Unfilled segment: accessible border + neutral track (clipped from left by progress %) */
+.ids-progress-bar-track-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--progress-bar-control-radius);
+  background: var(--color-background-gray-light);
+  clip-path: inset(0 0 0 var(--progress-clip, 0%));
+  pointer-events: none;
+}
+
+.ids-progress-bar--indeterminate .ids-progress-bar-track-bg {
+  clip-path: none;
+}
+
+.ids-progress-bar-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  height: auto;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: var(--border-width-border-1);
+  border-right-width: 0;
+  border-radius: var(--progress-bar-control-radius);
+  transition: width 300ms ease;
+}
+
+.ids-progress-bar--in-progress .ids-progress-bar-indicator {
+  background: var(--color-background-brand-base);
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-progress-bar--completed-success .ids-progress-bar-indicator {
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-alerting-success-base);
+}
+
+.ids-progress-bar--completed-warning .ids-progress-bar-indicator {
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+}
+
+.ids-progress-bar--failed-error .ids-progress-bar-indicator {
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-base);
+}
+
+.ids-progress-bar[data-value-full="true"] .ids-progress-bar-indicator {
+  border-right-width: var(--border-width-border-1);
+  border-right-style: solid;
+}
+
+.ids-progress-bar[data-value-full="true"].ids-progress-bar--in-progress
+  .ids-progress-bar-indicator {
+  border-right-color: var(--color-border-brand-base);
+}
+
+.ids-progress-bar[data-value-full="true"].ids-progress-bar--completed-success
+  .ids-progress-bar-indicator {
+  border-right-color: var(--color-border-alerting-success-base);
+}
+
+.ids-progress-bar[data-value-full="true"].ids-progress-bar--completed-warning
+  .ids-progress-bar-indicator {
+  border-right-color: var(--color-border-alerting-minor-base);
+}
+
+.ids-progress-bar[data-value-full="true"].ids-progress-bar--failed-error
+  .ids-progress-bar-indicator {
+  border-right-color: var(--color-border-alerting-critical-base);
+}
+
+.ids-progress-bar--indeterminate .ids-progress-bar-indicator {
+  width: 60% !important;
+  animation: ids-progress-bar-indeterminate 1.1s ease-in-out infinite;
+}
+
+@keyframes ids-progress-bar-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(25%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}

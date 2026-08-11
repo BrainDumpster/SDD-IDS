@@ -560,7 +560,14 @@ html, body {
   --text-header: 5px;
   --text-header-compact: 1px;
   --text-header-loose: 8px;
-  /* --- Programme layout aliases (ids-fork; reference Sizes tokens above) --- */
+}
+
+/*
+ * Programme layout aliases — do NOT set on :root (leaks into IDS/DAP stories).
+ * IDS defaults live in components/ids-theme.css under [data-design-system="ids"].
+ */
+html[data-design-system="synapse"],
+body[data-design-system="synapse"] {
   --button-control-radius: var(--corner-radius-radius-4);
   --button-focus-ring-offset: 3px;
   --button-focus-ring-radius: var(--corner-radius-radius-6);
@@ -583,7 +590,6 @@ html, body {
   --chat-input-textarea-max-height: 252px;
   --date-picker-control-radius: var(--corner-radius-radius-4);
   --date-picker-focus-ring-radius: var(--corner-radius-radius-4);
-  --modal-control-radius: var(--corner-radius-radius-16);
   --progress-bar-control-radius: var(--corner-radius-radius-2);
   --suggested-prompt-radius: var(--corner-radius-radius-8);
   --text-box-control-radius: var(--corner-radius-radius-4);
@@ -592,6 +598,7 @@ html, body {
   --time-picker-focus-ring-radius: var(--corner-radius-radius-4);
   --toast-control-radius: var(--corner-radius-radius-8);
   --tooltip-control-radius: var(--corner-radius-radius-8);
+  --modal-control-radius: var(--corner-radius-radius-16);
 }
 
 /* ========================================================

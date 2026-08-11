@@ -30,7 +30,7 @@ const preview: Preview = {
         const partsA = titleA.split("/");
         const partsB = titleB.split("/");
 
-        const rootOrder = ["Spec Generated"];
+        const rootOrder = ["Spec Generated", "Lib Generated"];
         const rootA = rootOrder.indexOf(partsA[0] ?? "");
         const rootB = rootOrder.indexOf(partsB[0] ?? "");
 
@@ -40,7 +40,10 @@ const preview: Preview = {
           return rootA - rootB;
         }
 
-        if (partsA[0] === "Spec Generated" && partsB[0] === "Spec Generated") {
+        if (
+          (partsA[0] === "Spec Generated" || partsA[0] === "Lib Generated") &&
+          partsA[0] === partsB[0]
+        ) {
           const specGroupOrder = ["IDS", "DAP", "Synapse"];
           const groupA = specGroupOrder.indexOf(partsA[1] ?? "");
           const groupB = specGroupOrder.indexOf(partsB[1] ?? "");

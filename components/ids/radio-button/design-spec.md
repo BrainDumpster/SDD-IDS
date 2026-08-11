@@ -166,6 +166,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Primary extraction source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26737&m=dev`
 - Component/state matrix source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26730&m=dev`
 - Additional state validation board: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14225&m=dev`
+- Lib React implementation (no Base UI): `lib/react/ids/radio-button/` (`IdsRadioGroup`, `IdsRadioButton`, `IdsRadioLabel`; selectors `ids-radio-*`); stories: `storybook/src/components/lib-generated/RadioButton.stories.tsx`
 
 ---
 

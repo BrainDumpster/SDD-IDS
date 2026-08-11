@@ -53,6 +53,11 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     return mergeConfig(config, {
       plugins: [warnOnNewSpecGeneratedStories()],
+      // `lib/` lives outside the storybook package root; force automatic JSX
+      // so components there do not need a classic `React` global.
+      esbuild: {
+        jsx: "automatic",
+      },
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {

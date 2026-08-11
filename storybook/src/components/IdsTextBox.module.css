@@ -15,7 +15,7 @@
 
 .label {
   align-items: center;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   display: flex;
   flex-shrink: 0;
   font-size: var(--font-size-body-2);
@@ -27,7 +27,7 @@
 }
 
 .requiredMark {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .control {
@@ -127,7 +127,7 @@
   width: 16px;
   flex: 0 0 auto;
   display: block;
-  background-color: var(--color-icon-neutral);
+  background-color: var(--color-icon-gray-neutral-base);
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -137,7 +137,7 @@
 }
 
 .control[data-state="disabled"] .suffixIcon {
-  background-color: var(--color-icon-disabled);
+  background-color: var(--color-icon-gray-disabled);
 }
 
 .helperRow {
