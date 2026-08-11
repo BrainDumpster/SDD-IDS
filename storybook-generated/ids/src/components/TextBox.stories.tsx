@@ -34,7 +34,11 @@ export default meta;
 type Story = StoryObj<typeof IdsTextBox>;
 
 export const Playground: Story = {
-  render: (args) => <IdsTextBox {...args} />,
+  render: (args) => (
+    <div style={{ width: 300 }}>
+      <IdsTextBox {...args} />
+    </div>
+  ),
 };
 
 export const StateMatrix: Story = {
@@ -52,7 +56,7 @@ export const StateMatrix: Story = {
 
 export const TextAreaVariants: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 16, maxWidth: 300 }}>
+    <div style={{ display: "grid", gap: 16, width: 300 }}>
       <IdsTextBox componentType="text-area" state="default" placeholder="Default text-area" helperText="Helper text" />
       <IdsTextBox componentType="text-area" state="hover" placeholder="Hover text-area" helperText="Helper text" />
       <IdsTextBox componentType="text-area" state="error" placeholder="Error text-area" errorText="Error message" />
@@ -62,7 +66,7 @@ export const TextAreaVariants: Story = {
 
 export const SizeScale: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 16, maxWidth: 300 }}>
+    <div style={{ display: "grid", gap: 16, width: 300 }}>
       <IdsTextBox size="large" placeholder="Large (40)" helperText="Helper text" />
       <IdsTextBox size="small" placeholder="Small (32)" helperText="Helper text" />
     </div>
@@ -71,7 +75,7 @@ export const SizeScale: Story = {
 
 export const FocusVisibleAndPointerFocus: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 12, maxWidth: 300 }}>
+    <div style={{ display: "grid", gap: 12, width: 300 }}>
       <p style={{ margin: 0, fontSize: 12, color: "var(--color-text-neutral)" }}>
         pointer focus and focus-visible: click inside input for pointer focus; use Tab for focus-visible ring.
       </p>
