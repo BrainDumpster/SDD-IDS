@@ -412,7 +412,7 @@
 }
 
 .secondaryParentSelected {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .secondaryParentSelected .primaryIcon {

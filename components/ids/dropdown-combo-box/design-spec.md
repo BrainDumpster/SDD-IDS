@@ -122,7 +122,7 @@
 - **Scrollbar** (options list and Show Selected tag wrap)
   - **Overlay** scrollbar (Base UI `ScrollArea`) — absolutely positioned, does **not** take layout space, so option rows and tags keep their full width (a classic space-taking scrollbar would shorten them).
   - Always visible while the region overflows (not hover-reveal); hidden when there is no overflow.
-  - Thumb: `6px` wide, `var(--corner-radius-radius-4)`, `var(--color-border-light)` (→ `var(--color-text-gray-neutral)` on hover).
+  - Thumb: `6px` wide, `var(--corner-radius-radius-4)`, `var(--color-border-gray-neutral-light)` (→ `var(--color-text-gray-neutral)` on hover).
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|

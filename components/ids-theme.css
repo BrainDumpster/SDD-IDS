@@ -225,6 +225,7 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --color-background-gray-light: #eaeaea;
   --color-background-gray-lighter: #f4f4f4;
   --color-background-gray-neutral-base: #757575;
+  --color-background-gray-neutral-dark: #616161;
   --color-background-gray-neutral-light: #eaeaea;
   --color-background-gray-neutral-light-alt: #eaeaea;
   --color-background-gray-neutral-lighter: #f4f4f4;
@@ -558,6 +559,7 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --text-box-control-radius: var(--corner-radius-radius-none);
   --text-box-focus-ring-radius: var(--corner-radius-radius-4);
   --tooltip-control-radius: var(--corner-radius-radius-none);
+  --toast-control-radius: var(--corner-radius-radius-2);
 }
 
 /* ========================================================
@@ -771,6 +773,7 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --color-background-gray-light: #393939;
   --color-background-gray-lighter: #393939;
   --color-background-gray-neutral-base: #8898a5;
+  --color-background-gray-neutral-dark: #8898a5;
   --color-background-gray-neutral-light: #34414c;
   --color-background-gray-neutral-light-alt: #1e262c;
   --color-background-gray-neutral-lighter: #1e262c;
@@ -1083,4 +1086,5 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --text-box-control-radius: var(--corner-radius-radius-none);
   --text-box-focus-ring-radius: var(--corner-radius-radius-4);
   --tooltip-control-radius: var(--corner-radius-radius-none);
+  --toast-control-radius: var(--corner-radius-radius-2);
 }

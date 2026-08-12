@@ -148,7 +148,6 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 | `ariaLabel` | Input | `string?` | Default: `"Main menu left"` |
 
 ### User configuration model (codegen source)
-
 All menu data is **host-defined**. Types mirror `storybook/src/components/MainMenuLeft.tsx` exports.
 
 **`MainMenuLeftLogo`** (optional)
@@ -228,7 +227,7 @@ Emit slots in **Anatomy** order. Primary/secondary PascalCase names must match c
 | false | n/a | 64px icon-only primary rows |
 
 ### Per-slot style contract
-Resolve from **Tokens** and **States (Light Theme)** using `var(--...)` only.
+Resolve from **Tokens** and **States (Light Theme)** using `var(--...)` only
 
 ### Behavior contract
 See **Interactions**. Selection changes emit **`onSelected`** (`MainMenuLeftSelectionDetail`); activation (including logo) emits **`onNavigate`** (`MainMenuLeftNavigationTarget`).

@@ -16,7 +16,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-background-surface-component);
-  border-radius: var(--modal-control-radius);
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   box-shadow:
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
@@ -32,6 +31,15 @@
   flex-direction: column;
   max-height: 85vh;
   outline: none;
+}
+
+/* Programme radius: class-bound so Synapse 16px cannot leak into IDS stories. */
+.popupIds {
+  border-radius: var(--corner-radius-radius-none, 0px);
+}
+
+.popupSynapse {
+  border-radius: var(--modal-control-radius, var(--corner-radius-radius-16));
 }
 
 .sm { width: 480px; }

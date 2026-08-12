@@ -299,7 +299,14 @@ export function DropdownMenu({
         </span>
       </Menu.Trigger>
       <Menu.Portal container={portalContainer ?? undefined}>
-        <Menu.Positioner sideOffset={sideOffset} align="start">
+        <Menu.Positioner
+          sideOffset={sideOffset}
+          align="start"
+          /* Field-attached combobox: keep left edge and side glued to the trigger.
+             Default align-shift repositions the popup when Show Selected expands and
+             briefly changes intrinsic width/height — perceived as screen drift. */
+          collisionAvoidance={{ side: "none", align: "none", fallbackAxisSide: "none" }}
+        >
           <Menu.Popup
             className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
             style={popupStyle}

@@ -1,0 +1,59 @@
+/**
+ * IDS Dropdown Button — local slots only.
+ * Popup / menu-item visuals reuse `dropdown-shared/DropdownMenu.module.css`
+ * (same contract as Dropdown Combo Box).
+ */
+
+.root {
+  display: inline-flex;
+  position: relative;
+  max-width: 100%;
+}
+
+.triggerReset {
+  all: unset;
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.triggerReset:disabled,
+.triggerReset[data-disabled] {
+  cursor: not-allowed;
+}
+
+.triggerReset:focus-visible {
+  outline: none;
+}
+
+.submenuChevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  color: var(--color-icon-gray-neutral-accessible);
+}
+
+.itemWithSubmenu {
+  justify-content: space-between;
+}
+
+.caret {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.defaultTriggerContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+}

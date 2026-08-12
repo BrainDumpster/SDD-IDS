@@ -193,7 +193,7 @@ export function Tabs({
                     icon={
                       <Icon
                         shapeName="ctrl-close-16"
-                        color="var(--color-icon-neutral)"
+                        color="var(--color-icon-gray-neutral-base)"
                         variant="mask"
                       />
                     }

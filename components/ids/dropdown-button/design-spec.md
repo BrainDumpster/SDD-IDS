@@ -14,40 +14,36 @@
 
 ## Anatomy
 
+Deterministic child structure (runtime composition order):
+
 ```
-┌─────────────────────────────────┐
-│  [⚙ Icon] [Label]      [▼ Icon] │  ← Trigger Button (With Icon variant)
-└─────────────────────────────────┘
-           ↓ (on click)
-┌─────────────────────────────────┐
-│  Option 1                        │
-│  Option 2                        │
-│  Option 3                        │
-│  ...                             │
-└─────────────────────────────────┘  ← Dropdown Menu
+dropdown
+├── trigger-slot          ← any host: button | div | icon | custom node
+└── dropdown-menu         ← popup (shared combo-box detached menu styling)
+    └── dropdown-menu-item*
+        └── dropdown-menu?  ← optional nested submenu (same slot contract)
 ```
 
 ```
 ┌─────────────────────────────────┐
-│  [⚙ Icon]           [▼ Icon]    │  ← Trigger Button (Icon Only variant)
+│  [⚙ Icon] [Label]      [▼ Icon] │  ← trigger-slot (button example)
 └─────────────────────────────────┘
            ↓ (on click)
 ┌─────────────────────────────────┐
-│  Option 1                        │
-│  Option 2                        │
+│  Option 1                        │  ← dropdown-menu-item
+│  Option 2 ▸                      │  ← item with nested dropdown-menu
 │  Option 3                        │
-│  ...                             │
-└─────────────────────────────────┘  ← Dropdown Menu
+└─────────────────────────────────┘  ← dropdown-menu
 ```
 
 **Anatomy slots:**
-- **Trigger Button:** The button that opens/closes the dropdown menu
-  - Leading Icon (optional): Settings/gear icon (settings-gear-detailed, 16x16px)
-  - Button Label: Text content of the button
-  - Dropdown Icon: Caret/arrow indicator (arrow-drop-tri-caret, 10x10px)
-- **Dropdown Menu:** The menu that appears when the button is clicked
-  - Menu Container: Wraps all menu options
-  - Menu Option: Individual selectable items in the menu
+- **`dropdown`:** Root container; owns open state and Base UI `Menu.Root`.
+- **`trigger-slot`:** Opens/closes the menu. Accepts any projected content (IDS Button, icon-only control, plain `div`, etc.). Default Mode A trigger may include:
+  - Leading Icon (optional): e.g. `settings-gear-detailed` (16×16)
+  - Button Label: text content
+  - Dropdown Icon: `arrow-drop-tri-caret` (10×10)
+- **`dropdown-menu`:** Popup surface. **Must use the same styling contract as Dropdown Combo Box detached popup** (`popup` + `popupStandalone` from shared dropdown menu CSS): surface, 4-sided border, radius, shadow, option row hover/press.
+- **`dropdown-menu-item`:** Row inside a menu. May nest another `dropdown-menu` to form a submenu (flyout). Nested menus reuse the same popup styling.
 
 ## Layout & Measurements
 
@@ -65,7 +61,7 @@
 | Dropdown Icon | margin-left | 8px | 9662:26341 | Figma MCP get_design_context |
 | Content Wrapper | display | flex | - | Storybook implementation |
 | Content Wrapper | align-items | center | - | Storybook implementation |
-| Dropdown Menu | border-radius | `var(--menu-control-radius)` (2px) | 14737:142851 | Figma MCP get_design_context |
+| Dropdown Menu | border-radius | `var(--dropdown-menu-radius)` (IDS → 0; shared with combo-box detached popup) | 14737:142851 | Figma MCP get_design_context + shared `DropdownMenu.module.css` `.popupStandalone` |
 | Dropdown Menu | box-shadow | `var(--shadow-shadow-4)` | 14737:142851 | Figma MCP get_design_context |
 | Menu Option | padding-x | `var(--padding-16)` (16px) left, `var(--padding-24)` (24px) right | 22472:147638 | Figma MCP get_design_context |
 | Menu Option | padding-y | `var(--padding-10)` (10px) | 22472:147638 | Figma MCP get_design_context |
@@ -141,10 +137,11 @@
 
 **Dropdown Menu:**
 - Background: `var(--color-background-surface-component, white)`
-- Border: `var(--color-border-gray-neutral-base, #757575)`
+- Border: `var(--color-border-gray-neutral-base, #757575)` (full 4-sided — detached popup, same as combo-box `popupStandalone`)
 - Border width: `var(--border-width-border-default, 1px)`
-- Box shadow: `var(--shadow-shadow-4)`
-
+- Box shadow: shared combo-box menu shadow (`shadow-shadow-4` drop layers)
+- Corner radius: `var(--dropdown-menu-radius)` (IDS → 0; same token as combo-box detached menu)
+- Option row states: shared `.item` contract (hover brand-lighter-slate + inset brand strokes)
 **Menu Option:**
 - Background (default): `var(--color-background-surface-component, white)`
 - Background (hover): `var(--color-background-gray-lighter, #f4f4f4)`
@@ -266,50 +263,56 @@ All Dark theme states use the same `var(--...)` tokens as Light theme. The token
 
 ### Runtime API
 
-**Props:**
+**Compound children (Mode B — preferred anatomy):**
+```tsx
+<IdsDropdownButton>
+  <IdsDropdownTrigger>{/* button | div | icon | any */}</IdsDropdownTrigger>
+  <IdsDropdownMenu>
+    <IdsDropdownMenuItem onSelect={…}>Option 1</IdsDropdownMenuItem>
+    <IdsDropdownMenuItem>
+      Nested parent
+      <IdsDropdownMenu>
+        <IdsDropdownMenuItem>Child</IdsDropdownMenuItem>
+      </IdsDropdownMenu>
+    </IdsDropdownMenuItem>
+  </IdsDropdownMenu>
+</IdsDropdownButton>
+```
+
+**Props (Mode A convenience + shared root):**
 ```typescript
-interface DropdownButtonProps {
-  /** Button label text (required unless iconOnly is true) */
-  label: string;
-  /** Button style variant */
-  buttonStyle?: 'primary' | 'secondary' | 'tertiary';
-  /** Button size variant */
-  size?: 'small' | 'medium' | 'large';
-  /** Optional leading icon (e.g., settings-gear-detailed) */
-  icon?: React.ReactNode;
-  /** Whether to show only the icon without text */
-  iconOnly?: boolean;
-  /** Whether the button is disabled */
-  disabled?: boolean;
-  /** Whether the dropdown menu is currently open (controlled) */
+interface IdsDropdownButtonProps {
+  children?: React.ReactNode;
   open?: boolean;
-  /** Callback when dropdown open state changes */
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Menu items to display in the dropdown */
-  items: DropdownItem[];
-  /** Currently selected item (optional) */
-  selectedItem?: DropdownItem | null;
-  /** Callback when an item is selected */
-  onSelect?: (item: DropdownItem) => void;
+  disabled?: boolean;
+  /** Mode A: synthesizes dropdown-menu when no IdsDropdownMenu child */
+  items?: IdsDropdownButtonItem[];
+  onSelect?: (item: IdsDropdownButtonItem) => void;
+  /** Mode A: synthesizes trigger-slot when no IdsDropdownTrigger child */
+  label?: string;
+  buttonStyle?: 'primary' | 'secondary' | 'tertiary';
+  size?: 'small' | 'medium' | 'large';
+  icon?: React.ReactNode;
+  iconOnly?: boolean;
+  ariaLabel?: string;
 }
 
-interface DropdownItem {
-  /** Unique identifier for the item */
+interface IdsDropdownButtonItem {
   id: string;
-  /** Display text for the item */
   label: string;
-  /** Whether the item is disabled */
   disabled?: boolean;
-  /** Optional icon for the item */
   icon?: React.ReactNode;
+  /** Nested items → submenu under this row */
+  children?: IdsDropdownButtonItem[];
 }
 ```
 
 **Events:**
-- `onClick`: Triggered when button is clicked (before menu toggle)
 - `onOpenChange`: Triggered when menu opens or closes
-- `onSelect`: Triggered when a menu item is selected
-- `onKeyDown`: Keyboard events for accessibility
+- `onSelect`: Mode A — item selected (leaf)
+- `IdsDropdownMenuItem.onSelect`: Mode B — leaf item activated
 
 **Spec Accurate Design story defaults:**
 - `buttonStyle`: 'primary'
@@ -324,26 +327,24 @@ interface DropdownItem {
 ### Deterministic structure
 
 ```
-DropdownButton (container)
-├── TriggerButton (button element)
-│   ├── ContentWrapper (span, display: flex, align-items: center)
-│   │   ├── LeadingIcon (optional, svg/img, 16px)
-│   │   ├── ButtonLabel (text/span)
-│   │   └── DropdownIcon (svg/img, 10px)
-└── DropdownMenu (menu element, conditionally rendered)
-    └── MenuOptions (list/ul)
-        ├── MenuItem (li/option)
-        │   └── MenuItemLabel (text)
-        ├── MenuItem (li/option)
-        │   └── MenuItemLabel (text)
-        └── ...
+IdsDropdownButton (`dropdown`)
+├── IdsDropdownTrigger (`trigger-slot`)     — required (or Mode A label/icon synthesizes it)
+│   └── any projected host (button | div | icon | …)
+└── IdsDropdownMenu (`dropdown-menu`)       — required (or Mode A `items` synthesizes it)
+    └── IdsDropdownMenuItem (`dropdown-menu-item`)*
+        ├── item content (label / icon / …)
+        └── IdsDropdownMenu?                — optional nested submenu
+            └── IdsDropdownMenuItem*
 ```
 
-**Required DOM hierarchy:**
-- Root container must be a `<button>` element for the trigger
-- Dropdown menu must be a separate DOM element (not nested inside button)
-- Menu must use appropriate ARIA roles (`menu`, `menuitem`)
-- Icon must be an `<img>` or `<svg>` with `aria-hidden="true"`
+**Required hierarchy rules:**
+- Root owns open state; children must be `trigger-slot` then `dropdown-menu` (order in tree; portal may relocate popup DOM).
+- `trigger-slot` is not required to be a native `<button>` — any focusable host is valid; when a single element is projected, trigger props merge onto it.
+- `dropdown-menu` must be a separate popup (not nested inside the trigger host).
+- Nesting rule: a `dropdown-menu` may appear only as a child of `dropdown` (root menu) or of `dropdown-menu-item` (submenu).
+- Menu / items use ARIA roles `menu` / `menuitem` (submenu parents use submenu-trigger semantics).
+- Decorative icons: `aria-hidden="true"`.
+- **Popup style parity:** `dropdown-menu` MUST share Dropdown Combo Box detached popup tokens/classes (surface, full border, radius, shadow, `.item` row states) — do not invent a separate menu chrome.
 
 ### Variant matrix
 
@@ -381,16 +382,17 @@ DropdownButton (container)
 
 **Dropdown Menu:**
 - Background: `var(--color-background-surface-component)`
-- Border: `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`
-- Border-radius: `var(--menu-control-radius)`
-- Box-shadow: `var(--shadow-shadow-4)`
-- Position: Absolute, below trigger button
-- Z-index: Higher than trigger button
+- Border: `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` (full 4-sided; detached)
+- Border-radius: `var(--dropdown-menu-radius)` (shared with combo-box detached popup)
+- Box-shadow: shared combo-box menu shadow layers
+- Position: Absolute / portaled below trigger (root) or to the side (submenu)
+- Z-index: Higher than trigger
+- **Style source:** `lib/react/ids/dropdown-shared/DropdownMenu.module.css` (`.popup` + `.popupStandalone` + `.item`)
 
 **Menu Option:**
-- Padding: `var(--padding-16)` left, `var(--padding-24)` right, `var(--padding-10)` vertical
-- Background: `var(--color-background-surface-component)` (default), `var(--color-background-gray-lighter)` (hover)
-- Text: `var(--color-text-gray-neutral)` (default), `var(--color-text-brand-strong)` (hover)
+- Padding: `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` horizontal (shared combo-box `.item`)
+- Background: `var(--color-background-surface-component)` (default), `var(--color-background-brand-lighter-slate)` (hover / highlighted) with inset brand strokes
+- Text: `var(--color-text-gray-neutral)` (default/hover), `var(--color-text-brand-strong)` (press / selected affordances per shared item contract)
 - Cursor: Pointer (interactive), Not-allowed (disabled)
 
 ### Behavior contract

@@ -1,0 +1,230 @@
+/**
+ * IDS Segmented Button styles — derived from
+ * components/ids/segmented-button/design-spec.md
+ *
+ * Slots: root, segmentSurface, segmentLabel | segmentIcon
+ * Theme: components/ids-theme.css
+ * Geometry: text shell 34px / segment 28px; icon shell 39px / segment 33px
+ */
+
+.ids-segmented-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  padding: var(--padding-padding-2);
+  border: var(--border-width-border-default) solid
+    var(--color-border-gray-neutral-base);
+  border-radius: var(--corner-radius-radius-2);
+  background: var(--color-background-surface-component);
+}
+
+/* Text variant shell — Figma `8218:13150`: 34px border-box */
+.ids-segmented-button[data-type="text"] {
+  height: 34px;
+  min-height: 34px;
+}
+
+.ids-segmented-button[data-type="text"] .ids-segmented-button__segment--text {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+/* Icon variant shell — Figma Dev Mode `42113:67622`: 39px border-box */
+.ids-segmented-button[data-type="icon"] {
+  height: 39px;
+  min-height: 39px;
+}
+
+.ids-segmented-button__segment {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  outline: none;
+  /* Reserved 1px edge — transparent except focus / selected-default */
+  border: var(--border-width-border-default) solid transparent;
+  box-shadow: none;
+  border-radius: var(--corner-radius-radius-2);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
+  flex-shrink: 0;
+}
+
+.ids-segmented-button__segment--text {
+  box-sizing: border-box;
+  height: 28px;
+  min-height: 28px;
+  padding: var(--padding-padding-4) var(--padding-padding-8);
+  white-space: nowrap;
+}
+
+.ids-segmented-button__segment--icon {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  min-width: var(--sizing-size-32);
+  height: 33px;
+  min-height: 33px;
+  max-height: 33px;
+  padding: 0 var(--padding-padding-8);
+  line-height: 0;
+}
+
+/* Icon segments: tint via segment `color` → IdsIcon currentColor */
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment:not([data-selected="true"]),
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment:not([data-selected="true"]):hover,
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment:not([data-selected="true"]):active,
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-simulated-state="hover"]:not(
+    [data-selected="true"]
+  ),
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-simulated-state="press"]:not(
+    [data-selected="true"]
+  ),
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-simulated-state="focus-visible"]:not(
+    [data-selected="true"]
+  ) {
+  color: var(--color-icon-brand-base);
+}
+
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-selected="true"],
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-selected="true"]:hover,
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-selected="true"]:active,
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-selected="true"]:focus-visible,
+.ids-segmented-button[data-type="icon"]
+  .ids-segmented-button__segment[data-selected="true"][data-simulated-state] {
+  color: var(--color-icon-gray-white) !important;
+}
+
+/* Unselected — brand lighter / light slate (Figma 9015:20990 / 9015:20988) */
+.ids-segmented-button__segment:not([data-selected="true"]):hover {
+  background: var(--color-background-brand-lighter-slate);
+  border-color: transparent;
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-segmented-button__segment:not([data-selected="true"]):active {
+  background: var(--color-background-brand-light-slate);
+  border-color: transparent;
+  color: var(--color-text-brand-strong);
+}
+
+.ids-segmented-button__segment:not([data-selected="true"]):focus-visible {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-brand-base);
+  outline: none;
+}
+
+/* Demo / visual QA — pin interaction styling (does not block runtime) */
+.ids-segmented-button__segment[data-simulated-state="hover"]:not(
+  [data-selected="true"]
+) {
+  background: var(--color-background-brand-lighter-slate);
+  border-color: transparent;
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-segmented-button__segment[data-selected="true"][data-simulated-state="hover"] {
+  background: var(--color-background-controls-strong) !important;
+  border-color: transparent !important;
+  color: var(--color-text-gray-white) !important;
+}
+
+.ids-segmented-button__segment[data-simulated-state="press"]:not(
+  [data-selected="true"]
+) {
+  background: var(--color-background-brand-light-slate);
+  border-color: transparent;
+  color: var(--color-text-brand-strong);
+}
+
+.ids-segmented-button__segment[data-selected="true"][data-simulated-state="press"] {
+  background: var(--color-background-controls-stronger) !important;
+  border-color: transparent !important;
+  color: var(--color-text-gray-white) !important;
+}
+
+.ids-segmented-button__segment[data-simulated-state="focus-visible"]:not(
+  [data-selected="true"]
+) {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-brand-base);
+  outline: none;
+}
+
+.ids-segmented-button__segment[data-selected="true"][data-simulated-state="focus-visible"] {
+  background: var(--color-background-controls-base) !important;
+  border-color: transparent !important;
+  outline: var(--border-width-border-default) dashed
+    var(--color-border-gray-white) !important;
+  outline-offset: calc(-1 * var(--border-width-border-default));
+  color: var(--color-text-gray-white) !important;
+}
+
+/*
+ * Selected default — same-color edge via controls-base fill
+ * (not border-brand-base; dark theme border token is lighter).
+ */
+.ids-segmented-button__segment[data-selected="true"] {
+  background: var(--color-background-controls-base) !important;
+  border-color: var(--color-background-controls-base) !important;
+  color: var(--color-text-gray-white) !important;
+}
+
+.ids-segmented-button__segment[data-selected="true"]:hover {
+  background: var(--color-background-controls-strong) !important;
+  border-color: transparent !important;
+  color: var(--color-text-gray-white) !important;
+}
+
+.ids-segmented-button__segment[data-selected="true"]:active {
+  background: var(--color-background-controls-stronger) !important;
+  border-color: transparent !important;
+  color: var(--color-text-gray-white) !important;
+}
+
+.ids-segmented-button__segment[data-selected="true"]:focus-visible {
+  background: var(--color-background-controls-base) !important;
+  border-color: transparent !important;
+  outline: var(--border-width-border-default) dashed
+    var(--color-border-gray-white);
+  outline-offset: calc(-1 * var(--border-width-border-default));
+  color: var(--color-text-gray-white) !important;
+}
+
+/* Figma glyph frame 16×14 inside 33px segment row */
+.ids-segmented-button__icon-glyph {
+  display: block;
+  flex-shrink: 0;
+  line-height: 0;
+  width: 16px;
+  height: 14px;
+}
+
+.ids-segmented-button__custom-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 14px;
+  flex-shrink: 0;
+  line-height: 0;
+}

@@ -187,6 +187,9 @@
   border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
+  /* Keep Show/Hide Selected from resizing content-driven popup max-content (avoids
+     Floating UI collision-shift “drift” when the tag panel mounts/unmounts). */
+  contain: inline-size;
 }
 
 .showSelectedHeader {
@@ -223,10 +226,20 @@
 
 .showSelectedTagsRoot {
   position: relative;
-  /* Extend past the panel's right padding so the overlay scrollbar sits at the
-     popup edge (aligned with the options list scrollbar). */
-  width: calc(100% + var(--padding-padding-16));
+  /* Stay within the panel content box. Do NOT use width: calc(100% + padding) —
+     that bleeds into content-driven popup max-content and shifts the menu on
+     expand/collapse. Overlay scrollbar is offset to the popup edge instead. */
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  contain: inline-size;
+  overflow: visible;
+}
+
+.showSelectedTagsRoot .optionsScrollbar {
+  /* Panel has padding-right 16px; pull the overlay thumb to the popup edge so it
+     still aligns with the options-list scrollbar (same visual as the old width bleed). */
+  right: calc(2px - var(--padding-padding-16));
 }
 
 .showSelectedTags {
@@ -294,7 +307,7 @@
 .optionsScrollThumb {
   width: 100%;
   border-radius: var(--corner-radius-radius-4);
-  background-color: var(--color-border-light);
+  background-color: var(--color-border-gray-neutral-light);
 }
 
 .optionsScrollThumb:hover {

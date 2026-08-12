@@ -46,7 +46,7 @@
   - `"trigger"` (default): menu = trigger/field width, tracks a resizing container; long labels truncate.
   - `"content"`: menu grows to the widest option/tag (clamped `[trigger, 700px]`), then the content truncates.
 - Truncation: option label and the field value truncate with an ellipsis; a truncated field value is wrapped in the IDS Tooltip (the badge tooltip reveals the full selected list).
-- Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-light)`.
+- Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-gray-neutral-light)`.
 - Search row (when `searchable`):
   - wrapper padding: `var(--padding-padding-8)`.
   - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
