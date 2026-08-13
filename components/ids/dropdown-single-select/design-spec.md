@@ -139,13 +139,17 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles open/close.
+  - when the popup opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
+  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, option rows, footer action).
   - `Escape` closes and returns focus to trigger.
 - Selection:
   - selecting an option sets exactly one selected value.
   - selecting a new option replaces previous selection.
 - Keyboard:
-  - `ArrowUp`/`ArrowDown` navigates options.
+  - `ArrowUp`/`ArrowDown` on a selectable option row move focus to the previous/next enabled `data-selectable` row; stops at the ends of the list.
+  - `ArrowUp`/`ArrowDown` move focus between popup sections (search row, option rows, footer action) and stop at section boundaries.
   - `Enter` commits active option.
+  - `ScrollArea.Viewport` elements use `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable. `searchClearButton` is part of the tab order.
 - Optional radio mode:
   - radio control visibility is input-driven.
   - radio does not change single-select behavior semantics; it is visual control parity.
@@ -251,6 +255,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - [ ] Radio optional mode and behavior are deterministic.
 - [ ] Error and disabled states align to IDS tokens.
 - [ ] Output remains token-only in both light and dark themes.
+
 ## Source Mapping
 - Figma design frame: `43264:181428`
 - Figma component matrix: `11099:58099`
@@ -263,46 +268,27 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-06-07.
 
-**Field shell is square (0px radius) in all states.**
-Figma Container `12579:77895` binds `Corner Radius/radius-none` (not `radius-2`). IDS theme maps `--dropdown-control-radius` → `var(--corner-radius-radius-none)`. Do not round the field on focus.
+### 2026-08-13
+- **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
+- **Section-aware keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections (option rows, footer action) and stop at section boundaries. `Tab` still traverses every tabbable control.
+- **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport`) carry `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable.
+- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -5px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Action button focus rings** — Added missing `:focus-visible` focus ring for the `footerAction` button to match IDS Button / Dropdown Button specs.
 
-**Focus ring must not add border-radius to the field element.**
-Only the outer ring is rounded (`radius-4`). Implementation: `IdsDropdownTriggerShell.module.css` — field uses `border-radius: var(--dropdown-control-radius)`; focus uses `::after` (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`).
+- **Truncated option label tooltip** — `DropdownMenu.tsx` wraps any option label that overflows its row in `IdsTooltip`, revealing the full label on hover. The tooltip is rendered only when `scrollWidth > clientWidth`, with `delay={0}` for immediate appearance. The `IdsTooltip.Trigger` uses `triggerDisplay="block"` and `.triggerBlock { min-width: 0 }` so long labels do not force the menu wider.
+- **Top-side popup shadow suppression** — when Base UI flips/places the menu above the trigger (`data-side="top"`), `DropdownMenu.module.css` removes `box-shadow` from `.popup[data-side="top"]` so the menu does not cast a shadow onto the field or container below. The default `bottom` side keeps the standard `IDS Shadow 1` elevation.
 
-**Caret disabled color is `var(--color-border-disabled)`, not `var(--color-icon-disabled)`.**
-Both tokens resolve to the same value in light mode but differ in dark mode. Implementation: `IdsDropdownTriggerShell.module.css` — `.field[data-disabled] .caretWrap { color: var(--color-border-disabled) }`.
+### 2026-08-05
+- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownSingleSelect` wrapper and does not constrain the menu width.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup) while the caret rotates `180°`. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field` and `:global([data-popup-open]) .caretWrap`.
+- **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip showing the full item. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
+- **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
+- **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.
+- **Filled field content group** — selected value and caret with `gap: var(--spacing-space-4)`; the group gets `padding-right: var(--padding-padding-16)` when a selection is shown. Implementation: `IdsDropdownTriggerShell.module.css` — `.main` and `.field[data-filled="true"] .main`.
+- **Trigger width** — `width: max-content` so the popup tracks the field width, not a wider container. Implementation: `DropdownMenu.module.css` — `.triggerReset`.
 
-**Font weight for all text elements is 400 (regular).**
-Do not set `font-weight` explicitly in component CSS — browser default (400) is correct. Implementation: `IdsDropdownTriggerShell.module.css`, `DropdownMenu.module.css` — no `font-weight` on `.field`, `.item`, `.sectionHeader`, `.footerAction`.
-
-**Option hover/press/selected/active borders must use `outline`, not `box-shadow: inset`.**
-`box-shadow` is not clipped by `overflow: clip` on the popup container, causing the border to visually overlap the popup's outer border on the first and last rows. `outline` is clipped correctly. Implementation: `DropdownMenu.module.css` — `outline: 1px solid var(--color-border-brand-neutral)` on hover, press, selected, and active states.
-
-**Option focus state requires an inset ring.**
-Spec defines a 1px inset border using `var(--color-border-brand-base)` with `border-radius: var(--corner-radius-radius-4)`. Was previously suppressed with `outline: none`. Implementation: `DropdownMenu.module.css` — `.item:focus-visible { outline: 1px solid var(--color-border-brand-base); outline-offset: -1px; border-radius: var(--corner-radius-radius-4) }`.
-
-**Radio button must not show its own focus ring when the option row is focused.**
-Only the row-level ring should appear. Implementation: `DropdownMenu.module.css` — `.item:focus-visible .radioOuter::after { content: none }`.
-
-**Selected and disabled option states differ depending on radio presence.**
-With radio button: `var(--color-background-component)`, no outline. Without radio button: `var(--color-background-brand-lighter)` + outline (selected) or `var(--color-background-gray-lighter)` + `var(--color-border-disabled)` outline (disabled). Implementation: `DropdownMenu.module.css` — use `:has(.radioOuter)` selector to split the two cases.
-
-**Section header border and text color were incorrect.**
-Spec uses `var(--color-border-accessible)` for `border-top` and `var(--color-text-neutral)` for text. Implementation: `DropdownMenu.module.css` — update `.sectionHeader` accordingly.
-
-**Footer action row requires an inner button wrapper.**
-Outer row padding is `var(--padding-padding-8) 0` (no horizontal padding). The label sits inside a `<span>` wrapper with `padding: var(--padding-padding-2) var(--padding-padding-16); border-radius: var(--corner-radius-radius-2)`. Implementation: `DropdownMenu.module.css` `.footerAction` + `.footerActionButton`; `DropdownMenu.tsx` wraps `footerActionLabel` in `<span className={styles.footerActionButton}>`.
-
-**FieldStatesMatrix story: cell width was too narrow.**
-`cellStyle.width: 240` caused the 300px field to overflow and appear merged with adjacent columns; focus rings spanned all four fields as one. Implementation: `IdsDropdownSingleSelect.stories.tsx` — `cellStyle.width: 332`.
-
-**FieldStatesMatrix story: helper text and error message font weight was 500.**
-Spec is 400. Implementation: `IdsDropdownSingleSelect.stories.tsx` — `helperStyle.fontWeight: 400`, `errorMsgStyle.fontWeight: 400`.
-
-### Design spec errors fixed (2026-07-25)
-
+### 2026-07-25
 **Menu popup has a full 4-sided `1px` border.**
 `sideOffset: -1` so the top border overlaps the field's bottom border into a single line. Implementation: `DropdownMenu.module.css` `.popup`; `DropdownMenu.tsx` `sideOffset` default `-1`.
 
@@ -318,13 +304,3 @@ Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single
 **Caret rotates `180°` while the popup is open.**
 Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .caretWrap { transform: rotate(180deg) }`.
 
-### Implementation updates (2026-08-05)
-
-- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownSingleSelect` wrapper and does not constrain the menu width.
-- **Single-select `Clear All` row** — visible above the option list whenever a value is selected (enabled via `showClearAll`). Clicking it fires `onClearAllClick`, clears the selection and the row auto-hides; the popup stays open (does **not** collapse the menu). Implementation: `DropdownMenu.tsx` — `showSingleClearAllRow`; `DropdownMenu.module.css` — `.clearAllAction`.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup) while the caret rotates `180°`. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field` and `:global([data-popup-open]) .caretWrap`.
-- **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip showing the full item. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
-- **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
-- **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.
-- **Filled field content group** — selected value and caret with `gap: var(--spacing-space-4)`; the group gets `padding-right: var(--padding-padding-16)` when a selection is shown. Implementation: `IdsDropdownTriggerShell.module.css` — `.main` and `.field[data-filled="true"] .main`.
-- **Trigger width** — `width: max-content` so the popup tracks the field width, not a wider container. Implementation: `DropdownMenu.module.css` — `.triggerReset`.

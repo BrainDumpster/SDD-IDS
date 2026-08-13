@@ -152,12 +152,16 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 ## Interactions
 - Trigger interaction:
   - click/`Enter`/`Space` toggles popup open/close.
+  - when the popup opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup so the search caret does not jump in.
+  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, select/clear all, option rows, footer action).
   - `Escape` closes popup and restores focus to trigger.
   - the caret indicator rotates `180°` while the popup is open (attached-dropdown affordance).
 - Keyboard list navigation:
-  - `ArrowUp`/`ArrowDown` moves active option.
+  - `ArrowUp`/`ArrowDown` on a selectable option row move focus to the previous/next enabled `data-selectable` row; stops at the ends of the list.
+  - `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags). `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags.
   - `Enter` commits active option in single-select mode.
   - `Space` toggles active option in multi-select mode.
+  - `ScrollArea.Viewport` elements use `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable. `searchClearButton` is part of the tab order.
 - Search behavior:
   - typing in the search row filters the option list immediately by **case-insensitive substring (contains) match** on the option label (e.g. typing `c` shows options containing `c`, then `ca` narrows to those containing `ca`) — same match behavior as the datagrid combobox/multiselect filters. Section headers and dividers are hidden while a query is active.
   - when search query is non-empty, a right-aligned dismiss control (`shape-x-thick`, **10×10px** frame) clears the query.
@@ -272,8 +276,25 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - [ ] Accessibility semantics and keyboard behavior pass parity checks.
 ## Implementation Notes
 
-### Design spec errors fixed (2026-07-25)
+### 2026-08-13
+- **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
+- **Cross-section keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags); `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags. `Tab` still traverses every tabbable control.
+- **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport` and `showSelectedTags`) carry `tabIndex={-1}` so they do not receive focus; `searchClearButton` is kept in the tab order.
+- **Focus ring geometry** — `triggerReset` and `searchField` use a `::after` pseudo-element focus ring: `inset: -5px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. The `searchField` ring is rendered only when `data-focus-visible` is set (keyboard `Tab` focus) and is hidden while typing. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Action button focus rings** — Added missing `:focus-visible` focus rings for popup action buttons (`selectAllButton`, `clearAllButton`, `showSelectedToggle`, `footerAction`, `clearAllAction`) to match IDS Checkbox / Button / Dropdown Button specs.
+- **Select All / Clear All row** — `.selectAllClearAllRow` `padding-right` is `0`.
 
+- **Truncated option label tooltip** — `DropdownMenu.tsx` wraps any option label that overflows its row in `IdsTooltip`, revealing the full label on hover. The tooltip is rendered only when `scrollWidth > clientWidth`, with `delay={0}` for immediate appearance. The `IdsTooltip.Trigger` uses `triggerDisplay="block"` and `.triggerBlock { min-width: 0 }` so long labels do not force the menu wider.
+- **Top-side popup shadow suppression** — when Base UI flips/places the menu above the trigger (`data-side="top"`), `DropdownMenu.module.css` removes `box-shadow` from `.popup[data-side="top"]` so the menu does not cast a shadow onto the field or container below. The default `bottom` side keeps the standard `IDS Shadow 1` elevation.
+
+### 2026-08-05
+- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
+- **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; IME composition is deferred until `compositionend`; deletions always clear the suggestion.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` and the caret to rotate `180°`.
+- **Tooltip** — truncated field value is wrapped in the IDS Tooltip: single-select shows the full selected item, multi-select shows the full selected list via the badge tooltip. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
+- **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. The selected tag wrap uses `contain: inline-size` so wrapped tags do not inflate the menu width. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth` and `.showSelectedTags` `contain: inline-size`.
+
+### 2026-07-25
 Design-level implementation contract for the shared component (`DropdownMenu.tsx` / `DropdownMenu.module.css`, `IdsDropdownTriggerShell.*`) and `ids-theme.css`. Shared with single-/multi-select — verify all three after edits.
 
 - **Popup border** — full 4-sided `1px` border (`var(--color-border-accessible)`); `sideOffset: -1` so the top border overlaps the field's bottom border into a single line.
@@ -293,13 +314,6 @@ Design-level implementation contract for the shared component (`DropdownMenu.tsx
 - **Filled field content group** — badge + value with `gap: 4`; `padding-right: 16` when a selection is shown (none for placeholder-only).
 - **Trigger width** — `width: max-content` so the popup matches the field, not a wider container.
 
-### Implementation updates (2026-08-05)
-
-- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
-- **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; IME composition is deferred until `compositionend`; deletions always clear the suggestion.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` and the caret to rotate `180°`.
-- **Tooltip** — truncated field value is wrapped in the IDS Tooltip: single-select shows the full selected item, multi-select shows the full selected list via the badge tooltip. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
-- **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. The selected tag wrap uses `contain: inline-size` so wrapped tags do not inflate the menu width. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth` and `.showSelectedTags` `contain: inline-size`.
 
 ## Source Mapping
 - **Component map entry:** `data/component-figma-map.json` -> `Dropdown / Combo Box`.
