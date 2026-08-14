@@ -1,5 +1,5 @@
 import { Popover } from "@base-ui-components/react/popover";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import { Icon } from "./Icon";
 import styles from "./AppLauncher.module.css";
 
@@ -158,6 +158,7 @@ export function AppLauncherOptionsList({
       ]
         .filter(Boolean)
         .join(" ")}
+      data-focus-section="options"
     >
       {options.length > 0 ? (
         <ul className={styles.optionsList}>
@@ -263,7 +264,7 @@ function AppLauncherSurface({
         .join(" ")}
     >
       {list.length > 0 ? (
-        <div className={styles.productRegion}>
+        <div className={styles.productRegion} data-focus-section="products">
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.productRowGroup}>
               {rowIndex > 0 ? (
@@ -358,6 +359,118 @@ export function AppLauncher({
     triggerVariant === "masthead" ? Math.max(sideOffset, 1) : sideOffset;
 
   const controlledOpen = open !== undefined;
+
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const isOpen = controlledOpen ? Boolean(open) : uncontrolledOpen;
+  const skipInitialFocusRef = useRef(defaultOpen);
+
+  const handleOpenChange = (next: boolean) => {
+    if (!controlledOpen) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  };
+
+  // Match the dropdown: on open, Base UI Popover moves focus into the popup — we
+  // don't want that. Keep focus on the trigger so the launcher opens quietly; the
+  // user Tabs into the panel and Arrow keys navigate the tiles/options. Double rAF
+  // lands after Base UI's own focus. Skip when `defaultOpen` (no false focus ring).
+  useEffect(() => {
+    if (!isOpen) return;
+    if (skipInitialFocusRef.current) {
+      skipInitialFocusRef.current = false;
+      return;
+    }
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => triggerRef.current?.focus());
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [isOpen]);
+
+  // Cross-section Arrow-key navigation inside the panel (like the dropdown popup):
+  // products are a `columns`-wide grid (Left/Right within a row, Up/Down across
+  // rows); the options list is vertical; at the grid/list boundary focus jumps
+  // between the two sections.
+  const handlePopupKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
+      return;
+    }
+    const popup = popupRef.current;
+    if (!popup) return;
+    const active = popup.ownerDocument.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusables = (root: Element | null) =>
+      root ? Array.from(root.querySelectorAll<HTMLElement>(focusableSelector)) : [];
+
+    const productsSection = popup.querySelector<HTMLElement>('[data-focus-section="products"]');
+    const optionsSection = popup.querySelector<HTMLElement>('[data-focus-section="options"]');
+    const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
+    const dir = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+    const cols = Math.max(1, columns);
+    const focus = (el?: HTMLElement) => {
+      if (!el) return;
+      event.preventDefault();
+      event.stopPropagation();
+      el.focus();
+    };
+
+    // Products grid.
+    if (productsSection?.contains(active)) {
+      const tiles = getFocusables(productsSection);
+      const idx = tiles.indexOf(active);
+      if (idx === -1) return;
+      if (horizontal) {
+        const nextIdx = idx + dir; // stay within the same row
+        if (
+          nextIdx >= 0 &&
+          nextIdx < tiles.length &&
+          Math.floor(nextIdx / cols) === Math.floor(idx / cols)
+        ) {
+          focus(tiles[nextIdx]);
+        }
+        return;
+      }
+      const nextIdx = idx + dir * cols; // move one row up/down
+      if (nextIdx >= 0 && nextIdx < tiles.length) {
+        focus(tiles[nextIdx]);
+        return;
+      }
+      // Past the last grid row → first option (Down). Above the first row → stay.
+      if (dir > 0) focus(getFocusables(optionsSection)[0]);
+      return;
+    }
+
+    // Options list (vertical only).
+    if (optionsSection?.contains(active)) {
+      if (horizontal) return;
+      const opts = getFocusables(optionsSection);
+      const idx = opts.indexOf(active);
+      if (idx === -1) return;
+      const nextIdx = idx + dir;
+      if (nextIdx >= 0 && nextIdx < opts.length) {
+        focus(opts[nextIdx]);
+        return;
+      }
+      // Above the first option → last product tile.
+      if (dir < 0) {
+        const tiles = getFocusables(productsSection);
+        focus(tiles[tiles.length - 1]);
+      }
+    }
+  };
+
   const surfaceProps: AppLauncherSurfaceProps = {
     programme,
     list,
@@ -381,9 +494,10 @@ export function AppLauncher({
     <Popover.Root
       open={controlledOpen ? open : undefined}
       defaultOpen={controlledOpen ? undefined : defaultOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
     >
       <Popover.Trigger
+        ref={triggerRef}
         className={[
           styles.trigger,
           triggerVariant === "masthead" ? styles.triggerMasthead : "",
@@ -405,7 +519,11 @@ export function AppLauncher({
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={positionerSideOffset} align="end">
-          <Popover.Popup className={styles.launcherPopup}>
+          <Popover.Popup
+            ref={popupRef}
+            className={styles.launcherPopup}
+            onKeyDownCapture={handlePopupKeyDown}
+          >
             <AppLauncherSurface {...surfaceProps} />
           </Popover.Popup>
         </Popover.Positioner>

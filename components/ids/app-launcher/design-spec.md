@@ -193,9 +193,14 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - `data-state` / `demoState` forced values are Storybook/demo-only; runtime interaction must not be blocked.
 
 ### Keyboard
-- `Enter` / `Space` activates focused tile/option.
-- `Escape` closes launcher.
+- On open, focus **stays on the trigger** (the panel does not steal focus); the user `Tab`s into the panel. Matches the IDS dropdown menu behavior.
 - `Tab` traverses trigger → tiles → options in visible order.
+- **Arrow keys** navigate within the open panel (same model as the dropdown popup, keyed off `data-focus-section`):
+  - **Products** are a `columns`-wide grid: `←` / `→` move within a row (stop at the row edges); `↑` / `↓` move across rows in the same column.
+  - **Options** are a vertical list: `↑` / `↓` move between rows (including the footer action).
+  - At a section boundary focus **crosses over**: `↓` past the last product row → first option; `↑` above the first option → last product tile.
+- `Enter` / `Space` activates the focused tile/option.
+- `Escape` closes the launcher and returns focus to the trigger.
 
 ### Accessibility
 
