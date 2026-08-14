@@ -30,7 +30,8 @@
 .triggerReset[data-focus-visible]::after {
   content: "";
   position: absolute;
-  inset: -5px;
+  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
+  inset: -4px;
   border: var(--border-width-border-default) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -108,11 +109,11 @@
 }
 
 /* Outer focus ring: matches the IDS dropdown trigger focus ring
-   (`inset: -5px` offset, brand border, 4px radius). */
+   (`inset: -4px` = 2px offset, brand border, 4px radius). */
 .searchField[data-focus-visible="true"]::after {
   content: "";
   position: absolute;
-  inset: -5px;
+  inset: -4px;
   border: var(--border-width-border-default) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;

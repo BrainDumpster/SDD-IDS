@@ -54,7 +54,7 @@
   - `var(--color-border-accessible)` top border on section boundaries
   - first section header top border may be omitted.
 - Footer action button inner wrapper: `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`
-- Focus ring: pseudo-element `::after`, `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field shell stays square (`radius-none`); only the outer focus ring is rounded.
+- Focus ring: pseudo-element `::after`, `inset: -4px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field shell stays square (`radius-none`); only the outer focus ring is rounded.
 
 ### Slot geometry (Figma-verified)
 
@@ -116,7 +116,7 @@
 | Field container | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
 | Field container | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
 | Field container | show-dropdown | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
-| Field container | focus-visible | `var(--color-background-component)` | inner `var(--color-border-accessible)` + outer ring `var(--color-border-brand-base)` (pseudo `::after`, `inset: -5px`, `border-radius: 4px`) | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
+| Field container | focus-visible | `var(--color-background-component)` | inner `var(--color-border-accessible)` + outer ring `var(--color-border-brand-base)` (pseudo `::after`, `inset: -4px`, `border-radius: 4px`) | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
 | Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | text `var(--color-text-disabled)`, caret `var(--color-border-disabled)` |
 | Field container | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)`, error icon `var(--color-icon-alerting-critical)`, error text `var(--color-text-critical)` |
 | Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
@@ -217,7 +217,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Disabled option behavior differs by radio mode:
   - with radio: white background, no outline
   - without radio: `color-background-gray-lighter` background, `outline: 1px solid color-border-disabled`
-- Focus ring on field: pseudo-element `::after` with `inset: -5px` (4px gap), `border: 1px solid color-border-brand-base`, `border-radius: var(--corner-radius-radius-4)`. Field element itself has no border-radius.
+- Focus ring on field: pseudo-element `::after` with `inset: -4px` (2px gap from the 1px field border), `border: 1px solid color-border-brand-base`, `border-radius: var(--corner-radius-radius-4)`. Field element itself has no border-radius.
 - Option focus ring: inset `outline: 1px solid color-border-brand-base` with `outline-offset: -1px`.
 - When option row is focused, radio button must not render its own focus ring.
 - Font weight: `400` (regular) for all text elements (field value, option label, helper text, error message, section header, action label).
@@ -273,7 +273,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
 - **Section-aware keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections (option rows, footer action) and stop at section boundaries. `Tab` still traverses every tabbable control.
 - **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport`) carry `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable.
-- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -5px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
 - **Action button focus rings** — Added missing `:focus-visible` focus ring for the `footerAction` button to match IDS Button / Dropdown Button specs.
 
 - **Truncated option label tooltip** — `DropdownMenu.tsx` wraps any option label that overflows its row in `IdsTooltip`, revealing the full label on hover. The tooltip is rendered only when `scrollWidth > clientWidth`, with `delay={0}` for immediate appearance. The `IdsTooltip.Trigger` uses `triggerDisplay="block"` and `.triggerBlock { min-width: 0 }` so long labels do not force the menu wider.
