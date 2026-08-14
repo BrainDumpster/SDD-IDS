@@ -40,7 +40,7 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-critical, #af0000);
+  color: var(--color-text-neutral-strong, #252525);
   white-space: nowrap;
 }
 
@@ -65,7 +65,7 @@
   box-sizing: border-box;
   padding-left: var(--padding-padding-16, 16px);
   padding-right: 0;
-  border-radius: 0;
+  border-radius: var(--corner-radius-radius-none, 0);
 }
 
 .fieldContainer.sizeLarge {
@@ -230,6 +230,7 @@
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-critical, #af0000);
+  white-space: nowrap;
 }
 
 /* ── Calendar popup ── */
@@ -249,7 +250,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-16, 16px);
-  border-radius: 0;
+  border-radius: var(--corner-radius-radius-none, 0);
 }
 
 /* Portaled calendar — escapes overflow/stacking (e.g. DataGrid filter `overflow: clip`). */
@@ -259,8 +260,8 @@
   left: 0;
   margin-top: 0;
   right: auto;
-  border-top-left-radius: var(--date-picker-control-radius);
-  border-top-right-radius: var(--date-picker-control-radius);
+  border-top-left-radius: var(--corner-radius-radius-none, 0);
+  border-top-right-radius: var(--corner-radius-radius-none, 0);
 }
 
 /* ── Calendar header ── */
@@ -646,46 +647,76 @@
   overflow-x: hidden;
   overflow-y: auto;
   background: white;
-  border: var(--border-width-border-default, 1px) solid var(--color-background-gray-light, #eaeaea);
-  box-shadow: 0px 2px 5px 0px rgba(37, 37, 37, 0.08);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-lighter);
+  border-bottom-color: var(--color-border-accessible);
+  box-shadow:
+    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color),
+    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color);
   z-index: 10;
   padding: var(--padding-padding-4, 4px) var(--padding-padding-1, 1px);
-  border-radius: var(--corner-radius-radius-4, 4px);
+  border-radius: var(--corner-radius-radius-none, 0);
 }
 
+/* Option row copies IDS DropdownMenu single-select `.item` (text-only, no radio),
+   with a compact 32px min-height for the month/year lists. */
 .overlayOption {
+  appearance: none;
+  -webkit-appearance: none;
   display: flex;
   align-items: center;
+  gap: var(--spacing-space-8, 8px);
   padding: var(--padding-padding-6, 6px) var(--padding-padding-16, 16px);
+  width: 100%;
   box-sizing: border-box;
-  background: white;
+  border: none;
+  background: var(--color-background-component);
+  text-align: left;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-neutral, #4d4d4d);
+  color: var(--color-text-neutral);
   cursor: pointer;
-  width: 100%;
-  border: none;
-  border-radius: 0;
   outline: none;
-  text-align: left;
-  margin: 0;
+  transition: background 80ms ease;
+  user-select: none;
+  min-height: 32px;
 }
 
-.overlayOption:hover {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+.overlayOption:hover:not(:disabled) {
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-neutral);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
 }
 
-.overlayOption:focus,
+.overlayOption:active:not(:disabled) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
 .overlayOption:focus-visible {
-  outline: none;
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4, 4px);
 }
 
 .overlayOption.selectedOption {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
-  color: var(--color-text-neutral-strong, #252525);
-  font-weight: 400;
+  background: var(--color-background-brand-lighter);
+  color: var(--color-text-brand-strong);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+}
+
+.overlayOption:disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  background: var(--color-background-gray-lighter);
 }
 
 /* ── Wrapper for positioning ── */

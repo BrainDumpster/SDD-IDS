@@ -19,6 +19,34 @@ const MONTH_NAMES = [
   "July", "August", "September", "October", "November", "December",
 ];
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_FULL = [
+  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+];
+
+/** Stable per-day key (ignores time-of-day) for focus/roving-tabindex lookups. */
+function dayKey(d: Date) {
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function addDays(d: Date, n: number) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+}
+
+/** Add months/years, clamping the day to the last valid day of the target month. */
+function addMonths(d: Date, n: number) {
+  const y = d.getFullYear();
+  const m = d.getMonth() + n;
+  const targetY = y + Math.floor(m / 12);
+  const targetM = ((m % 12) + 12) % 12;
+  const day = Math.min(d.getDate(), getDaysInMonth(targetY, targetM));
+  return new Date(targetY, targetM, day);
+}
+
+function addYears(d: Date, n: number) {
+  const targetY = d.getFullYear() + n;
+  const day = Math.min(d.getDate(), getDaysInMonth(targetY, d.getMonth()));
+  return new Date(targetY, d.getMonth(), day);
+}
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -48,29 +76,43 @@ function formatDate(d: Date, format: string = "MM-DD-YYYY") {
   return `${mm}-${dd}-${yyyy}`;
 }
 
+/**
+ * Parse a date string against the active format. Accepts a range of separators
+ * (`-`, `/`, `.`, whitespace) per the a11y guidance ("accept dashes, spaces,
+ * slashes, dots"); the caller re-formats to the canonical separator on commit.
+ * Rejects overflow dates (e.g. 02-30) via a round-trip check.
+ */
 function parseDate(s: string, format: string = "MM-DD-YYYY"): Date | null {
-  let m: RegExpMatchArray | null;
+  const parts = s.trim().split(/[-/.\s]+/).filter(Boolean);
+  if (parts.length !== 3) return null;
+  if (parts.some((p) => !/^\d+$/.test(p))) return null;
 
-  if (format === "DD/MM/YYYY") {
-    m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (!m) return null;
-    const d = new Date(+m[3], +m[2] - 1, +m[1]);
-    if (isNaN(d.getTime())) return null;
-    return d;
-  }
+  let yStr: string;
+  let mo: number;
+  let da: number;
   if (format === "YYYY-MM-DD") {
-    m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-    if (!m) return null;
-    const d = new Date(+m[1], +m[2] - 1, +m[3]);
-    if (isNaN(d.getTime())) return null;
-    return d;
+    [yStr] = parts;
+    mo = +parts[1];
+    da = +parts[2];
+  } else if (format === "DD/MM/YYYY") {
+    da = +parts[0];
+    mo = +parts[1];
+    yStr = parts[2];
+  } else {
+    // Default: MM-DD-YYYY
+    mo = +parts[0];
+    da = +parts[1];
+    yStr = parts[2];
   }
 
-  // Default: MM-DD-YYYY
-  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-  if (!m) return null;
-  const d = new Date(+m[3], +m[1] - 1, +m[2]);
+  if (yStr.length !== 4) return null;
+  const y = +yStr;
+  if (mo < 1 || mo > 12 || da < 1 || da > 31) return null;
+
+  const d = new Date(y, mo - 1, da);
   if (isNaN(d.getTime())) return null;
+  // Reject overflow (Feb 30 -> Mar 2, etc.)
+  if (d.getFullYear() !== y || d.getMonth() !== mo - 1 || d.getDate() !== da) return null;
   return d;
 }
 
@@ -100,6 +142,12 @@ export interface IdsDatePickerProps {
   rangeEnd?: Date | null;
   /** Callback when range start or end changes */
   onRangeChange?: (start: Date | null, end: Date | null) => void;
+  /**
+   * For a two-field date range picker: bind this field's input text to one range
+   * endpoint. Both fields share `rangeStart`/`rangeEnd`, so either calendar
+   * highlights the range while selecting.
+   */
+  rangeField?: "start" | "end";
   /** Force-open state for Storybook demos */
   forceOpen?: boolean;
   /** Force selected-with-dropdown visual (demo only) */
@@ -131,6 +179,7 @@ export function IdsDatePicker({
   rangeStart: controlledRangeStart,
   rangeEnd: controlledRangeEnd,
   onRangeChange,
+  rangeField,
   forceOpen,
   forceState,
   popupPortal = true,
@@ -155,15 +204,32 @@ export function IdsDatePicker({
   const rootRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const calendarPopupRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const calendarBtnRef = useRef<HTMLButtonElement>(null);
+  const monthBtnRef = useRef<HTMLButtonElement>(null);
+  const yearBtnRef = useRef<HTMLButtonElement>(null);
   const [calendarPos, setCalendarPos] = useState<{ top: number; left: number } | null>(null);
   const [mouseActivated, setMouseActivated] = useState(false);
+  /** Roving-tabindex focus target inside the calendar grid (keyboard nav). */
+  const [focusedDate, setFocusedDate] = useState<Date | null>(null);
+  /** Inline validation message for a typed value that fails to parse (cleared on external `error`). */
+  const [inputError, setInputError] = useState<string | null>(null);
 
   useEffect(() => {
     if (value !== undefined) {
       setInternalValue(value);
       setInputText(value ? formatDate(value, dateFormat) : "");
+      setInputError(null);
     }
   }, [value, dateFormat]);
+
+  // Two-field range picker: mirror this field's bound endpoint into its input text.
+  useEffect(() => {
+    if (rangeMode && rangeField) {
+      const endpoint = rangeField === "start" ? rangeStart : rangeEnd;
+      setInputText(endpoint ? formatDate(endpoint, dateFormat) : "");
+    }
+  }, [rangeMode, rangeField, rangeStart, rangeEnd, dateFormat]);
 
   useEffect(() => {
     if (forceOpen !== undefined) setOpen(forceOpen);
@@ -171,8 +237,37 @@ export function IdsDatePicker({
 
   const selectedDate = internalValue;
 
+  // Seed the keyboard focus target when the calendar opens; clear it on close.
+  useEffect(() => {
+    if (!open) {
+      setFocusedDate(null);
+      return;
+    }
+    const seed = selectedDate ?? rangeStart ?? today;
+    setFocusedDate((prev) => prev ?? new Date(seed.getFullYear(), seed.getMonth(), seed.getDate()));
+    setViewMonth(seed.getMonth());
+    setViewYear(seed.getFullYear());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Move DOM focus onto the roving grid cell whenever the focus target changes.
+  // Skipped on the initial mount so forceOpen demos don't grab focus on load.
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    if (!open || !focusedDate) return;
+    const el = gridRef.current?.querySelector<HTMLElement>(
+      `[data-day="${dayKey(focusedDate)}"]`,
+    );
+    el?.focus();
+  }, [open, focusedDate, viewMonth, viewYear]);
+
   const selectDate = useCallback(
     (d: Date) => {
+      setInputError(null);
       if (rangeMode) {
         if (!rangeStart || (rangeStart && rangeEnd)) {
           setInternalRangeStart(d);
@@ -325,13 +420,19 @@ export function IdsDatePicker({
   }, [viewYear, viewMonth]);
 
   const handleInputBlur = () => {
-    if (inputText.trim()) {
-      const d = parseDate(inputText, dateFormat);
-      if (d && !isDateDisabled(d)) {
-        selectDate(d);
-        setViewMonth(d.getMonth());
-        setViewYear(d.getFullYear());
-      }
+    const text = inputText.trim();
+    if (!text) {
+      setInputError(null);
+      return;
+    }
+    const d = parseDate(inputText, dateFormat);
+    if (d && !isDateDisabled(d)) {
+      selectDate(d);
+      setViewMonth(d.getMonth());
+      setViewYear(d.getFullYear());
+    } else {
+      // Parsed but out of range/disabled → unavailable; otherwise the format is wrong.
+      setInputError(d ? "Date unavailable" : `Invalid date, use ${formatHint || dateFormat}`);
     }
   };
 
@@ -399,17 +500,121 @@ export function IdsDatePicker({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape" && open) {
-      setOpen(false);
-      setMonthDropdownOpen(false);
-      setYearDropdownOpen(false);
+      e.preventDefault();
+      closeCalendar();
     }
   };
+
+  const closeCalendar = useCallback((returnFocus = true) => {
+    setOpen(false);
+    setMonthDropdownOpen(false);
+    setYearDropdownOpen(false);
+    if (returnFocus) calendarBtnRef.current?.focus();
+  }, []);
+
+  /** Keyboard navigation within the calendar grid (single focus stop, roving tabindex). */
+  const onGridKeyDown = (e: React.KeyboardEvent) => {
+    if (!focusedDate) return;
+    let next: Date | null = null;
+    switch (e.key) {
+      // NOTE: the design doc lists Right=previous / Left=next, which is the
+      // reverse of the conventional LTR calendar (and of the WAI-ARIA pattern).
+      // We follow the conventional mapping so the grid isn't backwards.
+      case "ArrowLeft":
+        next = addDays(focusedDate, -1);
+        break;
+      case "ArrowRight":
+        next = addDays(focusedDate, 1);
+        break;
+      case "ArrowUp":
+        next = addDays(focusedDate, -7);
+        break;
+      case "ArrowDown":
+        next = addDays(focusedDate, 7);
+        break;
+      case "Home":
+        next = addDays(focusedDate, -focusedDate.getDay());
+        break;
+      case "End":
+        next = addDays(focusedDate, 6 - focusedDate.getDay());
+        break;
+      case "PageUp":
+        next = e.shiftKey ? addYears(focusedDate, -1) : addMonths(focusedDate, -1);
+        break;
+      case "PageDown":
+        next = e.shiftKey ? addYears(focusedDate, 1) : addMonths(focusedDate, 1);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        if (!isDateDisabled(focusedDate)) selectDate(focusedDate);
+        return;
+      default:
+        return;
+    }
+    if (next) {
+      e.preventDefault();
+      setFocusedDate(next);
+      setViewMonth(next.getMonth());
+      setViewYear(next.getFullYear());
+    }
+  };
+
+  /** Focusable elements inside the calendar dialog, in DOM order (for the focus trap). */
+  const getFocusableEls = () => {
+    const rootEl = calendarPopupRef.current;
+    if (!rootEl) return [] as HTMLElement[];
+    return Array.from(
+      rootEl.querySelectorAll<HTMLElement>('button:not([disabled]), [tabindex="0"]'),
+    ).filter((el) => el.offsetParent !== null);
+  };
+
+  /** Dialog-level keys: Esc, Tab focus trap, Shift-M / Shift-Y dropdown shortcuts. */
+  const onDialogKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeCalendar();
+      return;
+    }
+    if (e.shiftKey && (e.key === "M" || e.key === "m")) {
+      e.preventDefault();
+      setYearDropdownOpen(false);
+      setMonthDropdownOpen(true);
+      monthBtnRef.current?.focus();
+      return;
+    }
+    if (e.shiftKey && (e.key === "Y" || e.key === "y")) {
+      e.preventDefault();
+      setMonthDropdownOpen(false);
+      setYearDropdownOpen(true);
+      yearBtnRef.current?.focus();
+      return;
+    }
+    if (e.key === "Tab") {
+      const els = getFocusableEls();
+      if (els.length === 0) return;
+      const first = els[0];
+      const last = els[els.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  };
+
+  // External `error` prop wins; otherwise surface the inline typed-value validation message.
+  const showError = error || Boolean(inputError);
+  const shownErrorMessage = error ? errorMessage : inputError;
 
   const fieldClasses = [
     styles.fieldContainer,
     size === "large" ? styles.sizeLarge : styles.sizeSmall,
     disabled ? styles.disabled : "",
-    error ? styles.error : "",
+    showError ? styles.error : "",
     open ? styles.open : "",
     mouseActivated ? styles.mouseActivated : "",
   ]
@@ -443,12 +648,17 @@ export function IdsDatePicker({
       role="dialog"
       aria-modal="true"
       aria-label="Choose date"
+      onKeyDown={onDialogKeyDown}
     >
       <div className={styles.calendarHeader}>
         <div className={styles.headerDropdowns}>
           <button
+            ref={monthBtnRef}
             type="button"
             className={`${styles.dropdownButton}${monthDropdownOpen ? ` ${styles.menuOpen}` : ""}`}
+            aria-haspopup="listbox"
+            aria-expanded={monthDropdownOpen}
+            aria-label="Month"
             onClick={() => {
               setMonthDropdownOpen((v) => !v);
               setYearDropdownOpen(false);
@@ -476,8 +686,12 @@ export function IdsDatePicker({
             )}
           </button>
           <button
+            ref={yearBtnRef}
             type="button"
             className={`${styles.dropdownButton} ${styles.yearBtn}${yearDropdownOpen ? ` ${styles.menuOpen}` : ""}`}
+            aria-haspopup="listbox"
+            aria-expanded={yearDropdownOpen}
+            aria-label="Year"
             onClick={() => {
               setYearDropdownOpen((v) => !v);
               setMonthDropdownOpen(false);
@@ -549,7 +763,7 @@ export function IdsDatePicker({
               </span>
             ))}
           </div>
-          <div className={styles.dateGrid}>
+          <div className={styles.dateGrid} ref={gridRef} onKeyDown={onGridKeyDown}>
             {calendarGrid.map((row, ri) => {
               const bar = computeRangeBar(row);
               return (
@@ -571,6 +785,15 @@ export function IdsDatePicker({
                     const isToday = isSameDay(cellDate, today);
                     const isAdjacentMonth = cell.type !== "current";
                     const inRange = !isUnavailable && isInRange(cellDate);
+                    const isFocusTarget = isSameDay(cellDate, focusedDate);
+                    const ariaLabel = [
+                      `${WEEKDAY_FULL[cellDate.getDay()]}, ${MONTH_NAMES[cell.month]} ${cell.day}, ${cell.year}`,
+                      isToday ? "today" : "",
+                      isSelected ? "selected" : "",
+                      isUnavailable ? "unavailable" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(", ");
                     const cellClasses = [
                       styles.dateCell,
                       isSelected ? styles.selected : "",
@@ -590,15 +813,18 @@ export function IdsDatePicker({
                         key={ci}
                         className={cellClasses}
                         role="gridcell"
+                        data-day={dayKey(cellDate)}
+                        aria-label={ariaLabel}
                         aria-selected={isSelected || inRange}
                         aria-disabled={isUnavailable}
-                        tabIndex={isUnavailable ? -1 : 0}
+                        tabIndex={isFocusTarget ? 0 : -1}
                         onClick={() => {
                           if (isUnavailable) return;
                           if (isAdjacentMonth) {
                             setViewMonth(cell.month);
                             setViewYear(cell.year);
                           }
+                          setFocusedDate(cellDate);
                           selectDate(cellDate);
                         }}
                         onMouseEnter={() => {
@@ -608,16 +834,6 @@ export function IdsDatePicker({
                         }}
                         onMouseLeave={() => {
                           if (rangeMode) setHoverDate(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if ((e.key === "Enter" || e.key === " ") && !isUnavailable) {
-                            e.preventDefault();
-                            if (isAdjacentMonth) {
-                              setViewMonth(cell.month);
-                              setViewYear(cell.year);
-                            }
-                            selectDate(cellDate);
-                          }
                         }}
                       >
                         <div
@@ -672,20 +888,31 @@ export function IdsDatePicker({
               className={styles.textInput}
               placeholder={effectivePlaceholder}
               value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
+              onChange={(e) => {
+                setInputText(e.target.value);
+                if (inputError) setInputError(null);
+              }}
               onMouseDown={() => setMouseActivated(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleInputBlur();
+                }
+              }}
               onBlur={() => { setMouseActivated(false); handleInputBlur(); }}
               disabled={disabled}
-              aria-label={label || "Date"}
+              aria-label={label ? (inputText ? label : `${label}, ${effectivePlaceholder}`) : "Date"}
             />
             <button
+              ref={calendarBtnRef}
               type="button"
-              className={`${styles.calendarIconBtn} ${error ? styles.error : ""}`}
+              className={`${styles.calendarIconBtn} ${showError ? styles.error : ""}`}
               onClick={() => {
                 if (!disabled) setOpen((v) => !v);
               }}
               disabled={disabled}
-              aria-label="Open calendar"
+              aria-label="Choose date"
+              aria-haspopup="dialog"
               aria-expanded={open}
             >
               <Icon shapeName="calendar-simple-16" style={{ width: 16, height: 16 }} />
@@ -700,15 +927,15 @@ export function IdsDatePicker({
             calendarPopup &&
             createPortal(calendarPopup, document.body)}
         </div>
-        {formatHint && !error && <span className={styles.formatHint}>{formatHint}</span>}
-        {error && errorMessage && (
+        {formatHint && !showError && <span className={styles.formatHint}>{formatHint}</span>}
+        {showError && shownErrorMessage && (
           <span className={styles.errorMessage}>
             <Icon
               shapeName="status-critical-square-solid"
               variant="img"
               style={{ width: 16, height: 16, flexShrink: 0 }}
             />
-            {errorMessage}
+            {shownErrorMessage}
           </span>
         )}
       </div>
