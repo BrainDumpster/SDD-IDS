@@ -155,7 +155,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - when the popup opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup so the search caret does not jump in.
   - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, select/clear all, option rows, footer action).
   - `Escape` closes popup and restores focus to trigger.
-  - the caret indicator rotates `180°` while the popup is open (attached-dropdown affordance).
+  - the caret indicator does **not** rotate when the popup opens — it stays pointing down.
 - Keyboard list navigation:
   - `ArrowUp`/`ArrowDown` on a selectable option row move focus to the previous/next enabled `data-selectable` row; stops at the ends of the list.
   - `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags). `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags.
@@ -172,6 +172,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - multi-select toggles the option and **keeps the popup open** for further selection.
 - Single-select Clear All (`showClearAll`, Figma `348:140631`):
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the footer action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding: var(--padding-padding-2) var(--padding-padding-16)`, `radius-2`) but with a **bottom** border (not the footer's top border) since it sits at the top of the list.
+  - the Clear All row is **hidden while a search query is active** (same as the multi-select `SelectAllRow`), and reappears when the search is cleared.
   - clicking it clears the selection; the row then **auto-hides** (no value remains). It does **not** collapse the menu.
 - Menu sizing:
   - the option list shows up to **6 rows** before it scrolls; ≤6 options render with no scroll, >6 introduce a vertical scroll region.
@@ -199,7 +200,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 | `disabled` | No | `boolean` | Prevents interaction. |
 | `searchable` | No | `boolean` | Enables search row in popup. |
 | `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default): menu = trigger width (container-driven, truncates). `"content"`: menu grows to widest option/tag, clamped `[trigger, 700px]`, then truncates. |
-| `showClearAll` | No | `boolean` | Single-select only. Shows a "Clear All" row (below the search) when a value is selected; clicking clears the selection (the row then auto-hides). Does **not** collapse the menu. |
+| `showClearAll` | No | `boolean` | Single-select only. Shows a "Clear All" row (below the search) when a value is selected; clicking clears the selection (the row then auto-hides). Hidden while a search query is active. Does **not** collapse the menu. |
 | `maxVisibleItems` | No | `number` | Option rows shown before the list scrolls. Default `6`. |
 | `noResultsLabel` | No | `string` | Row text when a query matches no options. Default `"No results found"`. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option model. |
@@ -290,7 +291,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 ### 2026-08-05
 - **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
 - **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; IME composition is deferred until `compositionend`; deletions always clear the suggestion.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` and the caret to rotate `180°`.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0`. The caret does **not** rotate.
 - **Tooltip** — truncated field value is wrapped in the IDS Tooltip: single-select shows the full selected item, multi-select shows the full selected list via the badge tooltip. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
 - **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. The selected tag wrap uses `contain: inline-size` so wrapped tags do not inflate the menu width. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth` and `.showSelectedTags` `contain: inline-size`.
 
@@ -303,7 +304,7 @@ Design-level implementation contract for the shared component (`DropdownMenu.tsx
 - **Leading control (checkbox/radio)** — `16×16px`, left edge flush with the `Select All` checkbox.
 - **Search input wrap gap** — `var(--spacing-space-10)`.
 - **Empty-search row (`No results found`)** — Body 2 - Medium (`500`), `var(--color-text-neutral)`, `wdth 100`, padding `pl-16 pr-16 py-10`; rendered as the sole list row.
-- **Caret** — rotates `180°` while the popup is open (`[data-popup-open]`).
+- **Caret** — does **not** rotate when the popup opens; it stays pointing down.
 - **Popup min-height** — `212px` (search only) / `252px` (search + Select All + Show Selected). The `252px` applies only while the `Select All` row is shown; when it collapses (no results, or `<2` matches) the popup falls back to `212px`.
 - **Option list scroll** — caps at `maxVisibleItems` rows (default `6`); ≤6 no scroll, >6 scrolls.
 - **Search filter** — case-insensitive substring (contains) match on the option label; sections/dividers hidden while filtering.

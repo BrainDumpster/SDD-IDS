@@ -252,7 +252,6 @@
 
 .showSelectedCaret {
   flex-shrink: 0;
-  transition: transform 150ms ease;
 }
 
 .showSelectedToggle:focus-visible {

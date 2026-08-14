@@ -159,6 +159,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - emits action event on click.
 - Optional Clear All (`showClearAll`, Figma `348:140631`):
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding-2 / padding-16`, `radius-2`) but with a **bottom** border since it sits at the top of the list.
+  - the Clear All row is **hidden while a search query is active**, and reappears when the search is cleared.
   - clicking clears the selection; the row then auto-hides. It does **not** collapse the menu.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
@@ -171,7 +172,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | `disabled` | No | `boolean` | Blocks interactions. |
 | `searchable` | No | `boolean` | Enables search row. |
 | `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default) = trigger width; `"content"` = grow to widest option, clamped `[trigger, 700px]`. |
-| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. |
+| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. Hidden while a search query is active. |
 | `showRadio` | No | `boolean` | Optional radio visual in option rows. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option list. |
 | `value` | No | `string` | Controlled selected value. |
@@ -281,7 +282,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 
 ### 2026-08-05
 - **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownSingleSelect` wrapper and does not constrain the menu width.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup) while the caret rotates `180°`. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field` and `:global([data-popup-open]) .caretWrap`.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup). The caret does **not** rotate. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field`.
 - **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip showing the full item. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
 - **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
 - **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.
@@ -301,6 +302,5 @@ Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single
 **Text-only single-select option aligns to the top (`align-items: flex-start`); radio rows stay centered.**
 Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single"]:not(:has(.radioOuter)) { align-items: flex-start }`.
 
-**Caret rotates `180°` while the popup is open.**
-Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .caretWrap { transform: rotate(180deg) }`.
+**Caret does not rotate when the popup opens** — it stays pointing down.
 

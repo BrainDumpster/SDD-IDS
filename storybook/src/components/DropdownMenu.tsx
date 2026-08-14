@@ -309,9 +309,14 @@ export function DropdownMenu({
   // only keep it when at least 2 options match the query.
   const showSelectAllRow = showSelectAllClearAll && (!hasSearchQuery || optionRowCount >= 2);
 
-  // Single-select Clear All row: visible whenever a value is selected.
+  // Single-select Clear All row: visible whenever a value is selected, but hidden
+  // while a search query is active (same as the multi-select Select All / Clear
+  // All row, which also hides during search).
   const showSingleClearAllRow =
-    selectionMode === "single" && showClearAll && selectedValues.length > 0;
+    selectionMode === "single" &&
+    showClearAll &&
+    selectedValues.length > 0 &&
+    !hasSearchQuery;
 
   // Values of the options currently visible (respecting the search filter).
   const visibleSelectableValues = displayedItems
@@ -668,11 +673,7 @@ export function DropdownMenu({
                       shapeName="arrow-drop-tri-caret"
                       className={styles.showSelectedCaret}
                       color="var(--color-icon-brand-base)"
-                      style={{
-                        width: 10,
-                        height: 10,
-                        transform: isShowSelectedExpanded ? "rotate(180deg)" : undefined,
-                      }}
+                      style={{ width: 10, height: 10 }}
                     />
                   </button>
                 </div>

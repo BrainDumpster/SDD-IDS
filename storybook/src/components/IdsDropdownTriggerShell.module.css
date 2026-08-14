@@ -90,11 +90,6 @@
   transition: transform 150ms ease;
 }
 
-/* Menu open: caret flips to point up. */
-:global([data-popup-open]) .caretWrap {
-  transform: rotate(180deg);
-}
-
 .field[data-disabled="true"] .caretWrap {
   color: var(--color-border-disabled);
 }
