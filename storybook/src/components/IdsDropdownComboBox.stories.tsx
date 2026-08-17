@@ -260,7 +260,7 @@ export const MultiSelectContractManual: Story = {
     ];
     const [selected, setSelected] = useState<string[]>(options.map((o) => o.label));
     const [searchQuery, setSearchQuery] = useState("");
-    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(false);
 
     // Single source of truth: update the selection state.
     const applySelection = (next: string[]) => {
@@ -367,7 +367,7 @@ export const MultiSelectLongOption: Story = {
     ];
     const [selected, setSelected] = useState<string[]>(options.map((o) => o.label));
     const [searchQuery, setSearchQuery] = useState("");
-    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(false);
 
     const applySelection = (next: string[]) => {
       setSelected(next);

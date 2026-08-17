@@ -191,7 +191,7 @@ export const MainScenarios: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(smallOptions, smallSelected).checked}
               selectAllIndeterminate={getSelectAllState(smallOptions, smallSelected).indeterminate}
-              onSelectAllClick={() => setSmallSelected(getAllEnabledLabels(smallOptions))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(smallOptions); setSmallSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setSmallSelected([])}
               clearAllDisabled={smallSelected.length === 0}
               defaultOpen
@@ -199,7 +199,7 @@ export const MainScenarios: Story = {
           </div>
 
           <div style={{ width: 300, display: "grid", gap: 6 }}>
-            <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Items selected and selection list is visible</div>
+            <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Items selected with Show Selected panel</div>
             <DropdownMenu
               trigger={<MultiSelectTrigger selectedLabels={visibleSelected} />}
               items={useMultiItems(longOptions, visibleSelected, setVisibleSelected)}
@@ -211,11 +211,11 @@ export const MainScenarios: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(longOptions, visibleSelected).checked}
               selectAllIndeterminate={getSelectAllState(longOptions, visibleSelected).indeterminate}
-              onSelectAllClick={() => setVisibleSelected(getAllEnabledLabels(longOptions))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(longOptions); setVisibleSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setVisibleSelected([])}
               clearAllDisabled={visibleSelected.length === 0}
               showSelectedPanel
-              defaultShowSelectedExpanded
+              defaultShowSelectedExpanded={false}
               onRemoveSelectedTag={(value) =>
                 setVisibleSelected((prev) => prev.filter((entry) => entry !== value))
               }
@@ -237,7 +237,7 @@ export const MainScenarios: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(longOptions, hiddenSelected).checked}
               selectAllIndeterminate={getSelectAllState(longOptions, hiddenSelected).indeterminate}
-              onSelectAllClick={() => setHiddenSelected(getAllEnabledLabels(longOptions))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(longOptions); setHiddenSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setHiddenSelected([])}
               clearAllDisabled={hiddenSelected.length === 0}
               showSelectedPanel
@@ -260,7 +260,7 @@ export const MainScenarios: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(sectionOptions, sectionSelected).checked}
               selectAllIndeterminate={getSelectAllState(sectionOptions, sectionSelected).indeterminate}
-              onSelectAllClick={() => setSectionSelected(getAllEnabledLabels(sectionOptions))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(sectionOptions); setSectionSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setSectionSelected([])}
               clearAllDisabled={sectionSelected.length === 0}
               defaultOpen
@@ -277,7 +277,7 @@ export const MainScenarios: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(longOptions, actionSelected).checked}
               selectAllIndeterminate={getSelectAllState(longOptions, actionSelected).indeterminate}
-              onSelectAllClick={() => setActionSelected(getAllEnabledLabels(longOptions))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(longOptions); setActionSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setActionSelected([])}
               clearAllDisabled={actionSelected.length === 0}
               footerActionLabel="Action"
@@ -318,7 +318,7 @@ export const StatesAndDetails: Story = {
             showSelectAllClearAll
             selectAllChecked={getSelectAllState(options, selected).checked}
             selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-            onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
+            onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(options); setSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
             onClearAllClick={() => setSelected([])}
             clearAllDisabled={selected.length === 0}
           />
@@ -330,7 +330,7 @@ export const StatesAndDetails: Story = {
             showSelectAllClearAll
             selectAllChecked={getSelectAllState(options, selected).checked}
             selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-            onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
+            onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(options); setSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
             onClearAllClick={() => setSelected([])}
             clearAllDisabled={selected.length === 0}
           />
@@ -345,7 +345,7 @@ export const StatesAndDetails: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(options, selected).checked}
               selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-              onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(options); setSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setSelected([])}
               clearAllDisabled={selected.length === 0}
               disabled
@@ -363,7 +363,7 @@ export const StatesAndDetails: Story = {
               showSelectAllClearAll
               selectAllChecked={getSelectAllState(options, selected).checked}
               selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-              onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
+              onSelectAllClick={(visible) => { const scope = visible ?? getAllEnabledLabels(options); setSelected((prev) => { const allSelected = scope.every((label) => prev.includes(label)); return allSelected ? prev.filter((label) => !scope.includes(label)) : Array.from(new Set([...prev, ...scope])); }); }}
               onClearAllClick={() => setSelected([])}
               clearAllDisabled={selected.length === 0}
             />

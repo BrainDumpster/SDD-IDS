@@ -1,11 +1,37 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { ScrollArea } from "@base-ui-components/react/scroll-area";
-import { useMemo, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Tag } from "./Tag";
+import { IdsTooltip } from "./IdsTooltip";
 import styles from "./DropdownMenu.module.css";
 import search16Icon from "../../../assets/icons/search-16.svg";
+
+function OptionLabel({ label }: { label: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [truncated, setTruncated] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setTruncated(el.scrollWidth > el.clientWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [label, truncated]);
+  const text = (
+    <span ref={ref} className={styles.itemLabel}>
+      {label}
+    </span>
+  );
+  if (!truncated) return text;
+  return (
+    <IdsTooltip content={label} side="right" arrowAlign="start" hugContent triggerDisplay="block" delay={0}>
+      {text}
+    </IdsTooltip>
+  );
+}
 
 interface MenuItem {
   id?: string;
@@ -54,6 +80,11 @@ interface DropdownMenuProps {
   maxHeight?: number;
   /** Number of option rows visible before the list starts scrolling. Default `6`. */
   maxVisibleItems?: number;
+  /**
+   * Preferred side of the trigger the popup opens on. When the preferred side does not
+   * fit, Base UI flips. Defaults to `bottom`.
+   */
+  side?: "top" | "bottom";
   sideOffset?: number;
   matchTriggerWidth?: boolean;
   /**
@@ -108,6 +139,7 @@ export function DropdownMenu({
   selectedValues = [],
   maxHeight,
   maxVisibleItems = 6,
+  side = "bottom",
   // -1 so the popup's top border overlaps the field's bottom border (they merge into
   // one 1px line) — the attached-dropdown look, while keeping a full 4-sided border.
   sideOffset = -1,
@@ -130,7 +162,55 @@ export function DropdownMenu({
   portalContainer,
 }: DropdownMenuProps) {
   const [open, setOpen] = useState(defaultOpen && !disabled);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const [internalShowSelectedExpanded, setInternalShowSelectedExpanded] = useState(defaultShowSelectedExpanded);
+  const [searchFocusVisible, setSearchFocusVisible] = useState(false);
+  const inputSourceRef = useRef<"pointer" | "keyboard" | null>(null);
+
+  // On open, Base UI Menu moves focus into the popup (to the search input or first
+  // option). We don't want that — the menu should open with focus left on the
+  // trigger, so the search caret never jumps in. After the popup mounts and Base UI
+  // has run its focus, push focus back to the trigger (rAF = after that effect).
+  // The user then Tabs into the menu; Arrow Up/Down move between option rows.
+  // Skip the initial focus push when `defaultOpen` is used so stories don't show a
+  // false focus ring on page load.
+  const skipInitialFocusRef = useRef(defaultOpen);
+  useEffect(() => {
+    if (!open) return;
+    if (skipInitialFocusRef.current) {
+      skipInitialFocusRef.current = false;
+      return;
+    }
+    // Base UI positions the popup with floating-ui (async) and focuses it after that,
+    // so a single rAF can fire too early. Double rAF lands after Base UI's focus.
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => triggerRef.current?.focus());
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [open]);
+
+  // Track whether focus moved to the search input via pointer or keyboard so we can
+  // show the focus ring only for keyboard focus (Tab), not while typing/clicking.
+  useEffect(() => {
+    const doc = typeof document !== "undefined" ? document : null;
+    if (!doc) return;
+    const handlePointerDown = () => {
+      inputSourceRef.current = "pointer";
+    };
+    const handleKeyDown = () => {
+      inputSourceRef.current = "keyboard";
+    };
+    doc.addEventListener("pointerdown", handlePointerDown, true);
+    doc.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      doc.removeEventListener("pointerdown", handlePointerDown, true);
+      doc.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, []);
 
   const isShowSelectedExpandedControlled = showSelectedExpanded !== undefined;
   const isShowSelectedExpanded = isShowSelectedExpandedControlled
@@ -172,6 +252,7 @@ export function DropdownMenu({
   // suggestion accepted with Tab / → / End. Only computed on text insertion —
   // deleting/clearing clears the suggestion.
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const [ghostSuffix, setGhostSuffix] = useState("");
   const computeGhostSuffix = (typed: string): string => {
     if (typed.length === 0) return "";
@@ -228,9 +309,14 @@ export function DropdownMenu({
   // only keep it when at least 2 options match the query.
   const showSelectAllRow = showSelectAllClearAll && (!hasSearchQuery || optionRowCount >= 2);
 
-  // Single-select Clear All row: visible whenever a value is selected.
+  // Single-select Clear All row: visible whenever a value is selected, but hidden
+  // while a search query is active (same as the multi-select Select All / Clear
+  // All row, which also hides during search).
   const showSingleClearAllRow =
-    selectionMode === "single" && showClearAll && selectedValues.length > 0;
+    selectionMode === "single" &&
+    showClearAll &&
+    selectedValues.length > 0 &&
+    !hasSearchQuery;
 
   // Values of the options currently visible (respecting the search filter).
   const visibleSelectableValues = displayedItems
@@ -277,6 +363,108 @@ export function DropdownMenu({
     ...(popupMinHeight ? { minHeight: `${popupMinHeight}px` } : {}),
   };
 
+  // Cross-section arrow-key navigation. Up/Down move between focusable popup
+  // sections; Left/Right move within horizontal sections such as Select All /
+  // Clear All and the Show Selected tags. Tab still visits every control.
+  const handlePopupKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
+      return;
+    }
+    const popup = popupRef.current;
+    if (!popup) return;
+    const active = popup.ownerDocument.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+
+    const focusableSelector =
+      'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusables = (root: Element) => {
+      const descendants = Array.from(
+        root.querySelectorAll<HTMLElement>(focusableSelector),
+      );
+      if (root !== popup && root.matches(focusableSelector)) {
+        descendants.unshift(root as HTMLElement);
+      }
+      return descendants;
+    };
+
+    const section = active.closest<HTMLElement>("[data-focus-section]");
+    const sections = Array.from(popup.querySelectorAll<HTMLElement>("[data-focus-section]"));
+    const sectionIndex = section ? sections.indexOf(section) : -1;
+    if (sectionIndex === -1 || !section) return;
+
+    const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
+    const dir = horizontal
+      ? event.key === "ArrowRight"
+        ? 1
+        : -1
+      : event.key === "ArrowDown"
+        ? 1
+        : -1;
+
+    // Horizontal: move within a multi-control row (Select All / Clear All) or
+    // between Show Selected tags. Leave search input arrow keys for caret/ghost.
+    if (horizontal) {
+      const sectionId = section.dataset.focusSection;
+      if (sectionId === "selectAllClearAll") {
+        const focusables = getFocusables(section);
+        const idx = focusables.indexOf(active);
+        if (idx === -1) return;
+        const next = focusables[idx + dir];
+        if (next) {
+          event.preventDefault();
+          event.stopPropagation();
+          next.focus();
+        }
+      } else if (sectionId === "showSelected" && active !== getFocusables(section)[0]) {
+        const tagRow = section.querySelector<HTMLElement>('[data-focus-row="showSelectedTags"]');
+        const tags = tagRow ? getFocusables(tagRow) : [];
+        const idx = tags.indexOf(active);
+        if (idx !== -1) {
+          const next = tags[idx + dir];
+          if (next) {
+            event.preventDefault();
+            event.stopPropagation();
+            next.focus();
+          }
+        }
+      }
+      return;
+    }
+
+    // Vertical: navigate inside the option list and the Show Selected panel
+    // (toggle → tags); at the ends jump to the adjacent popup section.
+    if (section.dataset.focusSection === "options" || section.dataset.focusSection === "showSelected") {
+      const focusables = getFocusables(section);
+      const idx = focusables.indexOf(active);
+      if (idx !== -1) {
+        const nextIdx = idx + dir;
+        if (nextIdx >= 0 && nextIdx < focusables.length) {
+          event.preventDefault();
+          event.stopPropagation();
+          focusables[nextIdx].focus();
+          return;
+        }
+      }
+    }
+
+    const nextSectionIndex = sectionIndex + dir;
+    if (nextSectionIndex < 0 || nextSectionIndex >= sections.length) return;
+    const nextSection = sections[nextSectionIndex];
+    const nextFocusables = getFocusables(nextSection);
+    const next =
+      dir > 0 ? nextFocusables[0] : nextFocusables[nextFocusables.length - 1];
+    if (next) {
+      event.preventDefault();
+      event.stopPropagation();
+      next.focus();
+    }
+  };
+
   return (
     <Menu.Root
       modal={portalContainer != null ? false : undefined}
@@ -290,6 +478,7 @@ export function DropdownMenu({
       }}
     >
       <Menu.Trigger
+        ref={triggerRef}
         className={fullWidth ? `${styles.triggerReset} ${styles.triggerFull}` : styles.triggerReset}
         disabled={disabled}
         style={{ cursor: disabled ? "not-allowed" : "pointer" }}
@@ -299,15 +488,20 @@ export function DropdownMenu({
         </span>
       </Menu.Trigger>
       <Menu.Portal container={portalContainer ?? undefined}>
-        <Menu.Positioner sideOffset={sideOffset} align="start">
+        <Menu.Positioner side={side} sideOffset={sideOffset} align="start">
           <Menu.Popup
             className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
             style={popupStyle}
           >
+            <div ref={popupRef} onKeyDownCapture={handlePopupKeyDown}>
             {showSearch ? (
               <>
                 <div className={styles.searchRow}>
-                  <div className={styles.searchField}>
+                  <div
+                  className={styles.searchField}
+                  data-focus-section="search"
+                  data-focus-visible={searchFocusVisible || undefined}
+                >
                     <span
                       className={styles.searchIcon}
                       aria-hidden="true"
@@ -324,7 +518,10 @@ export function DropdownMenu({
                           type="text"
                           value={currentSearch}
                           placeholder={searchPlaceholder}
+                          onFocus={() => setSearchFocusVisible(inputSourceRef.current === "keyboard")}
+                          onBlur={() => setSearchFocusVisible(false)}
                           onChange={(event) => {
+                            setSearchFocusVisible(false);
                             const value = event.target.value;
                             const nativeEvent = event.nativeEvent as Partial<InputEvent>;
                             // While an IME (e.g. Vietnamese Telex) is composing, the
@@ -398,7 +595,6 @@ export function DropdownMenu({
                           type="button"
                           className={styles.searchClearButton}
                           aria-label="Clear search"
-                          tabIndex={-1}
                           onClick={() => setSearch("")}
                         >
                           <Icon
@@ -415,10 +611,11 @@ export function DropdownMenu({
               </>
             ) : null}
             {showSelectAllRow ? (
-              <div className={styles.selectAllClearAllRow}>
+              <div className={styles.selectAllClearAllRow} data-focus-section="selectAllClearAll">
                 <button
                   type="button"
                   className={styles.selectAllButton}
+                  data-focus-row="selectAllClearAll"
                   data-checked={effectiveSelectAllChecked ? "true" : undefined}
                   data-indeterminate={effectiveSelectAllIndeterminate ? "true" : undefined}
                   onClick={() => onSelectAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined)}
@@ -435,14 +632,11 @@ export function DropdownMenu({
                 <button
                   type="button"
                   className={styles.clearAllButton}
-                  onClick={() => {
-                    onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined);
-                    // Clear All collapses the dropdown menu (Figma combo-box behavior 3d/4e).
-                    setOpen(false);
-                  }}
+                  data-focus-row="selectAllClearAll"
+                  onClick={() => onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined)}
                   disabled={effectiveClearAllDisabled}
                 >
-                  {clearAllLabel}
+                  <span className={styles.footerActionButton}>{clearAllLabel}</span>
                 </button>
               </div>
             ) : null}
@@ -452,6 +646,7 @@ export function DropdownMenu({
               <button
                 type="button"
                 className={styles.clearAllAction}
+                data-focus-section="singleClearAll"
                 onClick={() => onClearAllClick?.()}
               >
                 <span className={styles.footerActionButton}>{clearAllLabel}</span>
@@ -464,6 +659,7 @@ export function DropdownMenu({
               <div
                 className={styles.showSelectedPanel}
                 data-expanded={isShowSelectedExpanded ? "true" : undefined}
+                data-focus-section="showSelected"
               >
                 <div className={styles.showSelectedHeader}>
                   <button
@@ -477,17 +673,17 @@ export function DropdownMenu({
                       shapeName="arrow-drop-tri-caret"
                       className={styles.showSelectedCaret}
                       color="var(--color-icon-brand-base)"
-                      style={{
-                        width: 10,
-                        height: 10,
-                        transform: isShowSelectedExpanded ? "rotate(180deg)" : undefined,
-                      }}
+                      style={{ width: 10, height: 10 }}
                     />
                   </button>
                 </div>
                 {isShowSelectedExpanded ? (
                   <ScrollArea.Root className={styles.showSelectedTagsRoot}>
-                    <ScrollArea.Viewport className={styles.showSelectedTags}>
+                    <ScrollArea.Viewport
+                      className={styles.showSelectedTags}
+                      tabIndex={-1}
+                      data-focus-row="showSelectedTags"
+                    >
                       {selectedTagItems.map((tag) => (
                         <Tag
                           key={tag.value}
@@ -507,8 +703,8 @@ export function DropdownMenu({
                 ) : null}
               </div>
             ) : null}
-            <ScrollArea.Root className={styles.optionsScrollRoot}>
-              <ScrollArea.Viewport className={styles.optionsScrollViewport} style={scrollRegionStyle}>
+            <ScrollArea.Root className={styles.optionsScrollRoot} data-focus-section="options">
+              <ScrollArea.Viewport className={styles.optionsScrollViewport} style={scrollRegionStyle} tabIndex={-1}>
               {showNoResults ? (
                 <div className={styles.noResults} role="presentation">
                   {noResultsLabel}
@@ -571,7 +767,7 @@ export function DropdownMenu({
                           </span>
                         </span>
                       ) : null}
-                      <span className={styles.itemLabel}>{item.label}</span>
+                      <OptionLabel label={item.label} />
                     </button>
                   );
                 }
@@ -584,7 +780,7 @@ export function DropdownMenu({
                     data-selectable="false"
                     data-selected={isSelected ? "true" : undefined}
                   >
-                    <span className={styles.itemLabel}>{item.label}</span>
+                    <OptionLabel label={item.label} />
                   </Menu.Item>
                 );
               })}
@@ -597,11 +793,13 @@ export function DropdownMenu({
               <button
                 type="button"
                 className={styles.footerAction}
+                data-focus-section="footer"
                 onClick={() => onFooterActionClick?.()}
               >
                 <span className={styles.footerActionButton}>{footerActionLabel}</span>
               </button>
             ) : null}
+            </div>
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>
