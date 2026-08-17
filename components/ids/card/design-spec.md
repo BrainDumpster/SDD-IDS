@@ -12,7 +12,7 @@
 | Version | 2.1.0 |
 | Description | Surface container with required header (title + optional filters) and body; optional footer actions. Header kebab opens a Dropdown of **per-card user-defined** options. Border color and body divider seams are tokenized (`--card-border-color`) and gated by `showDivider` (see **Border & divider contract**). |
 | Theme CSS | `components/ids-theme.css` |
-| Updated | 2026-07-14 — border token cascade + `showDivider` / Dashboard `showDividerInCard` anti-drift |
+| Updated | 2026-08-17 — kebab icon `var(--color-icon-brand-base)`; header end-padding collapse when kebab shown |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Main (`Card-Main`) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8381-14051&m=dev — **`8381:14051`** |
 | Element overflow (kebab / Filter Menu) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=15718-197531&m=dev — **`15718:197531`** (`Filter Menu=Hide` closed trigger) |
@@ -75,9 +75,9 @@ flowchart TD
 | Main board | `Card-Main` **`945×662`** (`8381:14051`) | Documentation board only |
 | Card sample frame | **`430×313`** (with footer) / **`430×258`** (no footer) | Preferred **`min-width: min(100%, var(--card-min-width))`** → `430px` at large hosts for default `span-1`; never exceed parent (responsive). Token changeable later. `width: 100%`; height content-driven |
 | Card stack | One wrapper: `flex-direction: column`; **single outer border**; **`border-radius: 0`**. Header/body/footer are inner regions only. Seam: **`CardBody` `border-top` when `showDivider` (default `true`)** (header‖body). **`CardBody` `border-bottom` only when footer is present and `showDivider`** (body‖footer). `showDivider={false}` → body borders `none`. Without footer, `Card` outer border is the bottom edge — do not double it. (Figma uses overlapping frames + −1px; CSS uses single-shell.) | One card outline, not three stacked boxes |
-| CardHeader | `padding: 12px 8px 12px 24px` (`py-12`, `pl-24`, `pr-8`); `gap: 8px`; items center | Title grows; filters shrink-0 on the trailing side |
+| CardHeader | `padding: 12px 8px 12px 24px` (`py-12`, `pl-24`, `pr-8`) when **no** kebab; **`padding-right: 0` when CardFilter is shown** — kebab trigger `padding-right: 16px` is the end inset. `gap: 8px`; items center | Title grows; filters shrink-0 on the trailing side. Do **not** stack header `pr-8` on top of kebab `pr-16` |
 | CardTitle | height sample **32px**; Header 6 **18/25** | `min-width: 0`; ellipsis when overflowing |
-| CardFilter trigger button | padding `8px 16px`; icon **16×16**; button radius **2px** (`15718:197453`) | Kebab uses `overflow-menu-dots` (vertical ellipsis) |
+| CardFilter trigger button | padding `8px 16px`; icon **16×16**; button radius **2px** (`15718:197453` / Dashboard kebab `49163:96565`); icon fill `var(--color-icon-brand-base)` `#0672cb` (light) | Kebab uses `overflow-menu-dots` (vertical ellipsis). Trigger flush to header trailing edge |
 | CardBody | `padding: 16px 24px`; column; `gap: 10px`; `flex: 1` | Hosts children / content templates |
 | CardFooter | `padding: 16px 24px`; action group `gap: 8px` | Omit entirely when no actions |
 | Content Text | stack `gap: 4px`; section title Body 1 **16/24**; body Body 2 **14/20** (`15718:219736`) | Sample width ~390px — runtime `100%` |
@@ -92,7 +92,8 @@ flowchart TD
 | `CardBody` fill | `background` | `var(--color-background-surface-secondary)` → `#ffffff` (light) | `14978:28002` | MCP `get_design_context` / `get_variable_defs` on Card Content |
 | Header ‖ body seam | divider | `border-top` on `CardBody` when `showDivider` — `accessible` standalone / `light` inside Dashboard via `--card-border-color` | `14978:28002` | Default on; `showDivider={false}` → `none` |
 | Body ‖ footer seam | divider | `border-bottom` on `CardBody` when footer **and** `showDivider` — same `--card-border-color` rule | `14978:28002` / `8381:14252` | Omit when no footer or `showDivider={false}` |
-| `CardFilter` trigger button | `border-radius` | `var(--corner-radius-radius-2)` → **2px** | `15718:197453` | MCP `get_variable_defs` → `Corner Radius/radius-2` = 2 |
+| `CardFilter` trigger button | `border-radius` | `var(--corner-radius-radius-2)` → **2px** | `15718:197453` / `49163:96565` | MCP `get_variable_defs` → `Corner Radius/radius-2` = 2 |
+| `CardHeader` with kebab | `padding-right` | **`0`** (kebab `padding-right: 16px` covers end inset) | Dashboard-Element-Card Header **`14093:123117`** (Header Right Content x=356 w=152 → flush to 508); kebab **`49163:96565`** 48×32 | MCP `get_metadata` 2026-08-17 — do not keep header `pr-8` when CardFilter is present |
 
 **Geometry authoring rules (mandatory):**
 - Document **each** interactive shell separately: field/control, focus ring, menu/panel, inner action wrappers.
@@ -124,7 +125,7 @@ flowchart TD
 | Section / outer / body seam borders | `var(--color-border-gray-neutral-base)` | `#757575` (standalone Card) |
 | Outer + body seams inside Dashboard | `var(--color-border-gray-neutral-light)` via `--card-border-color` | `#c5c5c5` (light) |
 | Title / body text | `var(--color-text-gray-neutral-strong)` | `#252525` |
-| Kebab icon | `var(--color-icon-gray-neutral-base)` | `#4d4d4d` |
+| Kebab icon | `var(--color-icon-brand-base)` | `#0672cb` (light) / `#509cda` (dark) |
 | Footer action text | `var(--color-text-brand-strong)` | `#055fa9` |
 | Design-time `.SwapContent` fill only (not `CardBody`) | `var(--color-background-brand-lighter-slate)` | `#ebf4fb` — nested placeholder **`14978:28110`**; do **not** use as body chrome |
 | Design-time `.SwapContent` border | `var(--color-border-brand-strong)` | `#055fa9` |
@@ -235,9 +236,9 @@ No elevation / shadow bindings on `Card-Main` variants. Do **not** invent elevat
 | `CardBody` | default (no footer, `showDivider`) | **`var(--color-background-surface-secondary)`** (`#ffffff` light) | `border-top` only — `accessible` standalone / `light` in Dashboard | `var(--color-text-gray-neutral-strong)` |
 | `CardBody` | with footer + `showDivider` | same fill | `border-top` + `border-bottom` — same `--card-border-color` rule | same |
 | `CardBody` | `showDivider={false}` | same fill | `border-top` / `border-bottom` → `none` | same |
-| `CardHeader` / `CardFooter` | default | `var(--color-background-surface-secondary)` (or transparent over root fill) | none | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-base)` |
-| `CardFilter` trigger | default | transparent | transparent | `var(--color-icon-gray-neutral-base)` |
-| `CardFilter` trigger | hover | (Button hover per IDS Button) | — | `var(--color-icon-gray-neutral-base)` or Button icon hover token |
+| `CardHeader` / `CardFooter` | default | `var(--color-background-surface-secondary)` (or transparent over root fill) | none | `var(--color-text-gray-neutral-strong)` / kebab `var(--color-icon-brand-base)` |
+| `CardFilter` trigger | default | transparent | transparent | `var(--color-icon-brand-base)` |
+| `CardFilter` trigger | hover | (Button hover per IDS Button) | — | `var(--color-icon-brand-base)` |
 | `CardFilter` trigger | focus-visible | — | focus ring per IDS Button / focus tokens | — |
 | `CardFilter` trigger | disabled | — | — | `var(--color-icon-gray-neutral-accessible)` |
 | Dropdown overlay items | default / hover / press / disabled | Per Dropdown menu contract (`components/ids/dropdown-single-select` / shared `DropdownMenu`) | — | — |
@@ -392,12 +393,12 @@ Card [data-card-size=span-1|span-2|span-3]
 | Slot | Styles |
 |---|---|
 | `Card` | column flex; `width: 100%`; **`min-width: var(--card-min-width)` → `430px`** (default / `span-1`); outer `border: var(--border-width-border-default) solid var(--card-border-color, var(--color-border-gray-neutral-base))`; **`border-radius: 0`**; fill `var(--color-background-surface-secondary)` |
-| `CardHeader` | **no section border**; padding `12px 8px 12px 24px`; flex row; gap 8 |
+| `CardHeader` | **no section border**; padding `12px 8px 12px 24px` without kebab; **`padding-right: 0` when CardFilter shown**; flex row; gap 8 |
 | `CardTitle` | Header 6 when alone; Body 1 + strong when with secondary (Dashboard card) |
 | `CardSecondaryTitle` | Inline after `\|`; Body 1; `var(--color-text-gray-neutral)` |
 | `headerMeta` | Body 2; `var(--color-text-gray-neutral)`; before kebab |
 | `CardAdditionalFilter` | shrink-0; consumer styles |
-| `CardFilter` | Button padding `8px 16px`; icon 16×16; icon color `var(--color-icon-gray-neutral-base)`; radius 2px |
+| `CardFilter` | Button padding `8px 16px`; icon 16×16; icon color **`var(--color-icon-brand-base)`** (`#0672cb` light); radius 2px; flush to header trailing edge |
 | Dropdown | Shared IDS dropdown/overlay tokens — do not re-skin ad hoc |
 | `CardBody` | fill **`var(--color-background-surface-secondary)`**; padding `16px 24px`; **divider rules: Border & divider contract §C**; seam color always via cascade §A |
 | `CardFooter` | **no section border**; padding `16px 24px`; flex row; gap 8 |
@@ -425,7 +426,7 @@ Card [data-card-size=span-1|span-2|span-3]
 
 | Asset | Slug / source | Rule |
 |---|---|---|
-| Kebab icon | `overflow-menu-dots` (Figma **`48133:233331`**) | Bundle via IDS Icon / SVG map; 16×16 in trigger |
+| Kebab icon | `overflow-menu-dots` (Figma **`48133:233331`**) | Bundle via IDS Icon / SVG map; 16×16 in trigger; tint **`var(--color-icon-brand-base)`** |
 | Key-value icons | Per table/cell instances | Owned by Key-value / table dependency |
 
 ### Fallback/error rules
@@ -451,6 +452,8 @@ Card [data-card-size=span-1|span-2|span-3]
 - [ ] `showDivider=false` → body top and bottom `none` (footer may still show)
 - [ ] Anatomy order matches Deterministic structure (incl. optional AdditionalFilter + kebab)
 - [ ] Kebab opens Dropdown with **per-card** `menuOptions`
+- [ ] When CardFilter is shown, `CardHeader` `padding-right` is `0` (kebab `pr-16` is the end inset; `data-has-overflow-menu="true"`)
+- [ ] Kebab dots use `var(--color-icon-brand-base)` (not SVG `#616161`, not `var(--color-icon-gray-neutral-base)`)
 - [ ] `showButtons` / `showOverflowMenu` matrix covers all four Figma variants
 - [ ] Footer supports multiple `CardAction`s
 - [ ] No design-time “Swap content” chrome in production output

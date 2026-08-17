@@ -6,11 +6,11 @@
 - **Description:** A button that triggers a dropdown menu when clicked. Supports multiple button styles (Primary, Secondary, Tertiary), sizes (Small, Medium, Large), and states (Default, Hover, Press, Focus, Disabled). Supports optional leading icon (settings-gear-detailed) and icon-only variant with both leading icon and dropdown caret. Used as a trigger for dropdown menus and action lists.
 - **Status:** draft
 - **Created:** 2025-06-23
-- **Updated:** 2025-06-23
+- **Updated:** 2026-08-17
 - **Figma verification:** Figma MCP (get_design_context, get_metadata, get_variable_defs, get_screenshot)
-- **Verification date:** 2025-06-23
+- **Verification date:** 2026-08-17
 - **Figma file key:** 0bHk3XhrjFhowgFkz9yLr4
-- **Figma node IDs:** Main: 14737:165791, Button instance: 9662:26341, Icon-only (primary): 9662:26098, Icon-only (secondary): 9662:26087, Icon-only (tertiary): 9662:26076, With icon: 9662:26192, Dropdown menu: 14737:142851
+- **Figma node IDs:** Main: 14737:165791, Button instance: 9662:26341, Icon-only (primary): 9662:26098, Icon-only (secondary): 9662:26087, Icon-only (tertiary): 9662:26076, With icon: 9662:26192, Dropdown menu: 14737:142851, Option hover (no radio): 29377:159478
 
 ## Anatomy
 
@@ -141,12 +141,13 @@ dropdown
 - Border width: `var(--border-width-border-default, 1px)`
 - Box shadow: shared combo-box menu shadow (`shadow-shadow-4` drop layers)
 - Corner radius: `var(--dropdown-menu-radius)` (IDS → 0; same token as combo-box detached menu)
-- Option row states: shared `.item` contract (hover brand-lighter-slate + inset brand strokes)
+- Option row states: shared `.item` contract (hover brand-lighter-slate + inset `var(--color-border-brand-base-neutral)` strokes)
 **Menu Option:**
 - Background (default): `var(--color-background-surface-component, white)`
-- Background (hover): `var(--color-background-gray-lighter, #f4f4f4)`
+- Background (hover): `var(--color-background-brand-lighter-slate, #ebf4fb)`
 - Text (default): `var(--color-text-gray-neutral, #4d4d4d)`
-- Text (hover): `var(--color-text-brand-strong, #055fa9)`
+- Text (hover): `var(--color-text-gray-neutral, #4d4d4d)`
+- Row-emphasis stroke (hover): inset top/bottom `var(--color-border-brand-base-neutral, #0672cb)`
 
 ### Spacing
 
@@ -194,11 +195,11 @@ dropdown
 | Closed | N/A (not rendered) | N/A | N/A |
 
 **Menu Option States:**
-| State | Background | Text |
-|-------|------------|------|
-| Default | `var(--color-background-surface-component)` | `var(--color-text-gray-neutral)` |
-| Hover | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` |
-| Selected | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` |
+| State | Background | Border | Text |
+|-------|------------|--------|------|
+| Default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Press | `var(--color-background-brand-light-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 
@@ -391,7 +392,7 @@ IdsDropdownButton (`dropdown`)
 
 **Menu Option:**
 - Padding: `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` horizontal (shared combo-box `.item`)
-- Background: `var(--color-background-surface-component)` (default), `var(--color-background-brand-lighter-slate)` (hover / highlighted) with inset brand strokes
+- Background: `var(--color-background-surface-component)` (default), `var(--color-background-brand-lighter-slate)` (hover / highlighted) with inset `var(--color-border-brand-base-neutral)` strokes
 - Text: `var(--color-text-gray-neutral)` (default/hover), `var(--color-text-brand-strong)` (press / selected affordances per shared item contract)
 - Cursor: Pointer (interactive), Not-allowed (disabled)
 
@@ -530,11 +531,17 @@ IdsDropdownButton (`dropdown`)
 - Node type: INSTANCE
 - Parent: 14737:142851
 
+**Menu Option Hover Node (shared with Dropdown Single-Select, no radio):**
+- Node ID: `29377:159478`
+- Node name: State=Hover, Type=Options, Show radio button=False
+- Live evidence: Figma MCP `get_variable_defs` — fill `var(--color-background-brand-lighter-slate)`, text `var(--color-text-gray-neutral)`, stroke `var(--color-border-brand-base-neutral)`
+- URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=29377-159478
+
 **Verification Method:**
 - Method: Figma MCP
-- Tools: get_design_context, get_metadata, get_variable_defs, get_screenshot
-- Date: 2025-06-23
-- Session: Design-spec intake wizard
+- Tools: get_metadata, get_variable_defs
+- Date: 2026-08-17
+- Session: Align dropdown-button option hover with dropdown option hover states
 
 **Supplemental Node IDs (for reference):**
 - Button variants (all styles × sizes × states): See metadata output for full list

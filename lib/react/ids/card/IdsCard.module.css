@@ -35,7 +35,10 @@
   flex-shrink: 0;
 }
 
-/* Figma Card Title `8381:14246` — padding 12px 8px 12px 24px */
+/* Figma Card Title `8381:14246` — padding 12px 8px 12px 24px.
+ * When kebab is shown, drop header padding-right: CardFilter trigger
+ * `padding-right: 16px` is the end inset (Dashboard-Element-Card `14093:123117`).
+ */
 .ids-card-header {
   display: flex;
   align-items: center;
@@ -43,6 +46,10 @@
   padding: var(--padding-padding-12, 12px) var(--padding-padding-8, 8px)
     var(--padding-padding-12, 12px) var(--padding-padding-24, 24px);
   min-height: 56px;
+}
+
+.ids-card-header[data-has-overflow-menu="true"] {
+  padding-right: 0;
 }
 
 .ids-card-header-row {

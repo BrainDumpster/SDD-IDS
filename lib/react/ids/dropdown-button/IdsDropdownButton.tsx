@@ -355,6 +355,7 @@ export function IdsDropdownMenuItem({
             className,
           )}
           data-ids="ids-dropdown-menu-item"
+          data-selection-mode="single"
           data-has-submenu="true"
         >
           <span className={menuStyles.itemLabel}>{content}</span>
@@ -379,6 +380,7 @@ export function IdsDropdownMenuItem({
       closeOnClick={closeOnClick}
       className={cx(menuStyles.item, className)}
       data-ids="ids-dropdown-menu-item"
+      data-selection-mode="single"
       data-selectable="false"
       onClick={() => onSelect?.()}
     >

@@ -8,10 +8,10 @@
 | Design system | IDS |
 | Category | Patterns |
 | Status | active |
-| Version | 1.2.0 |
+| Version | 1.3.0 |
 | Spec pattern | `ids-native` |
 | Created | 2026-07-09 |
-| Updated | 2026-07-13 |
+| Updated | 2026-08-17 |
 | Description | Full-page onboarding pattern — optional IDS Masthead, brand hero banner, horizontal configuration cards, optional overflow navigation, Skip action |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Component set (`GetStarted-Main`) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev — **`12189:233235`** |
@@ -21,8 +21,8 @@
 | Embedded Masthead instance | **`12189:231406`** (`Masthead-Main` inside **`12189:233185`**) |
 | Validated nodes | **`12189:233235`**, **`12189:233185`**, **`12189:233198`**, **`12189:233211`**, **`12189:233218`**, **`12189:233223`**, **`12189:233228`**, **`12189:231401`**, **`12189:231402`**, **`12189:231403`**, **`12189:231404`**, **`12189:231405`**, **`12023:228883`**, **`12023:228880`** (Not Completed), **`12023:228902`** (Completed), **`12023:228939`** (Required) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`, `disableCodeConnect: true`) — last live **2026-07-13** (Background `12189:231401` re-verified); primary set **2026-07-09** |
-| Reference implementation | `storybook/src/components/IdsGetStarted.tsx`, `IdsGetStarted.module.css` |
-| Storybook | `storybook/src/components/IdsGetStarted.stories.tsx` (title **`Spec Generated/IDS/Get Started`**; primary story **`Spec Accurate Design`**) |
+| Reference implementation | `lib/react/ids/get-started` (`GetStarted` / `IdsGetStarted` — not `GetStartedRoot`); `storybook/src/components/IdsGetStarted.tsx` |
+| Storybook | `storybook/src/components/lib-generated/GetStarted.stories.tsx` (title **`Lib Generated/IDS/Get Started`**; primary story **`Spec Accurate Design`**); also `storybook/src/components/IdsGetStarted.stories.tsx` (**`Spec Generated/IDS/Get Started`**) |
 | Nested specs | `components/ids/button/design-spec.md` (Configure / Skip buttons — hover/press/focus-visible), `components/ids/masthead/design-spec.md` (embedded top chrome) |
 
 ### Masthead composition (Figma-verified)
@@ -45,7 +45,9 @@ Pass full Masthead configuration through optional `mastheadProps` (or `mastheadS
 
 ## Anatomy
 
-- `GetStartedRoot` — page shell (`surface-1` background)
+Root slot is **`GetStarted`** (compound alias; not `GetStartedRoot`). DOM selectors use **Ids camelCase** (`data-ids="IdsGetStarted"`, class `IdsGetStarted`) — not Base UI `data-slot="GetStarted"` / kebab `ids-get-started`.
+
+- `GetStarted` — page shell (`surface-1` background)
 - `GetStartedMastheadSlot` (optional) — embedded **`Masthead-Main`** (`12189:231406`, **`56px`** band, absolute top of hero)
 - `GetStartedHeroHeader` — **`272px`** brand hero (Figma **Background** `12189:231401`)
   - `GetStartedHeroBackground` — fill `var(--color-background-masthead-base)` (`12189:231402`)
@@ -141,7 +143,7 @@ Pass full Masthead configuration through optional `mastheadProps` (or `mastheadS
 **Line diagram — right overlay (page 1):**
 
 ```text
-GetStartedRoot (1920×995)  position:relative
+GetStarted (1920×995)  position:relative
 │
 ├── Header / Hero          y=0 … 272     z-index ABOVE overflow
 │   ├── Brand fill (`12189:231402`)
@@ -186,7 +188,7 @@ Same 157×720 box at top:275px, but:
 **DOM order:**
 
 ```text
-GetStartedRoot
+GetStarted
   GetStartedHeroHeader (+ MastheadSlot?)
   GetStartedContainer
     GetStartedCardTrack → cards[]
@@ -454,7 +456,7 @@ Placeholder copy for description/note matches Figma element **`12023:228880`** (
 
 Required DOM order (codegen must emit this sequence):
 
-1. `GetStartedRoot` (`position: relative`)
+1. `GetStarted` (`position: relative`)
 2. `GetStartedHeroHeader` (`height: 272px`; `z-index` **>** OverflowEdge)
    1. `GetStartedHeroBackground` — brand fill only
    2. `GetStartedHeroShadowBand` — under honeycomb
@@ -462,7 +464,14 @@ Required DOM order (codegen must emit this sequence):
    4. `GetStartedMastheadSlot?` — when `showMasthead=true`; opaque; compose Masthead
    5. `GetStartedHeroTitle` + `GetStartedHeroSubtitle`
 3. `GetStartedContainer`
-   1. `GetStartedCardTrack` → `GetStartedCardAnchor` → `GetStartedCard`[] (icon badge + title band + content panel + Configure)
+   1. `GetStartedCardTrack` → `GetStartedCardAnchor`[]
+      1. `GetStartedCardIconBadge`
+      2. `GetStartedCard`
+         1. `GetStartedCardTitleBand` (title + optional Required)
+         2. `GetStartedCardContentPanel`
+            1. `GetStartedCardDescription`
+            2. `GetStartedCardNote?`
+            3. `GetStartedCardConfigureButton`
    2. `GetStartedSkipButton`
 4. `GetStartedOverflowEdge?` (absolute on Root; **after** Container; only when `overflow=true` and scroll metrics require it)
    1. `GetStartedOverflowGradient` (`width: 100%`)
@@ -579,13 +588,15 @@ Card / chrome icons: render via shared **`Icon`** (`shapeName`); icon box **`32�
 - [ ] Runtime API: `onConfigure` emits full card; `onSkip` for bottom action; `skipButtonText` default **Skip**
 - [ ] Legacy aliases documented (`bannerTitle`, `launchButtonText`, `configureModuleAction`, etc.)
 - [ ] All colors/spacing use `var(--...)` — no hardcoded hex in implementation
-- [ ] Spec Accurate Design story under `Spec Generated/IDS/Get Started`
+- [ ] Spec Accurate Design story under `Spec Generated/IDS/Get Started` and `Lib Generated/IDS/Get Started`
+- [ ] Root slot is `GetStarted` — not `GetStartedRoot`. Selectors are Ids camelCase (`data-ids="IdsGetStarted"`, `IdsGetStartedHeroHeader`, …) not Base UI `data-slot` / kebab `ids-get-started`
 
 ## Source Mapping
 
 - Component map: `data/component-figma-map.json` → **Get Started**
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Live verification: Figma MCP — primary variants **2026-07-09**; Background `12189:231401` (+ `231402`–`231405`) re-verified **2026-07-13**
+- Anatomy root rename (`GetStartedRoot` → `GetStarted`) for codegen compound slots — **2026-08-17**
 - Primary variant: **`12189:233185`**; component set: **`12189:233235`**
 - Hero Background: **`12189:231401`**
 - Masthead instance: **`12189:231406`**

@@ -249,7 +249,7 @@ export function IdsCardHeaderOverflowMenu({
         <IdsIcon
           shape="overflow-menu-dots"
           size={16}
-          color="currentColor"
+          color="var(--color-icon-brand-base)"
           className={styles["ids-card-kebab-icon"]}
         />
       </button>

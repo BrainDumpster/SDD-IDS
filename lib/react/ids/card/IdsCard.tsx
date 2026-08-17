@@ -310,7 +310,12 @@ export function IdsCard({
       aria-describedby={secondaryNode != null ? secondaryId : undefined}
     >
       {hasHeader ? (
-        <div className={styles["ids-card-header"]} data-card-header data-ids="ids-card-header">
+        <div
+          className={styles["ids-card-header"]}
+          data-card-header
+          data-ids="ids-card-header"
+          data-has-overflow-menu={showMenu ? "true" : "false"}
+        >
           {header != null ? (
             trailing != null ? (
               <div className={styles["ids-card-header-row"]}>

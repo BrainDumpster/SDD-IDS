@@ -264,7 +264,11 @@ export function Card({
       aria-describedby={secondaryNode != null ? secondaryId : undefined}
     >
       {hasHeader && (
-        <div className={styles.header} data-card-header>
+        <div
+          className={styles.header}
+          data-card-header
+          data-has-overflow-menu={showMenu ? "true" : "false"}
+        >
           {header != null ? (
             trailing != null ? (
               <div className={styles.headerRow}>

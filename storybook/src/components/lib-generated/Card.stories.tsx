@@ -4,7 +4,8 @@
  * Anatomy:
  *   IdsCard → Header (Title cluster + AdditionalFilter? + kebab?) → Body → Footer?
  *
- * Composition: lib `IdsIcon` (kebab / key-value), `IdsButton` tertiary for footer actions.
+ * Composition: lib `IdsIcon` (kebab `overflow-menu-dots` in `var(--color-icon-brand-base)`;
+ * key-value icons), `IdsButton` tertiary for footer actions.
  * Theme: components/ids-theme.css
  * Spec: components/ids/card/design-spec.md
  */
@@ -89,7 +90,7 @@ const meta: Meta<IdsCardProps> = {
           `React IDS Card from \`${DESIGN_SPEC_PATH}\`. ` +
           "Anatomy: Card → CardHeader → CardBody → CardFooter?. " +
           "Border & divider contract: `--card-border-color` cascade + `showDivider`. " +
-          "Composes lib `IdsIcon` (kebab / key-value) and `IdsButton` tertiary for footer actions. " +
+          "Composes lib `IdsIcon` (kebab `overflow-menu-dots` in `var(--color-icon-brand-base)`; key-value icons) and `IdsButton` tertiary for footer actions. " +
           "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
       },
     },
