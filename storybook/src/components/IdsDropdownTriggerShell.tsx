@@ -12,6 +12,8 @@ export interface IdsDropdownTriggerShellProps {
   hover?: boolean;
   /** Demo-only: keyboard focus ring (`outline-offset: 5px`). */
   focusVisible?: boolean;
+  /** True when the field shows selected option(s) rather than the placeholder — adds right padding to the content. */
+  filled?: boolean;
   left: ReactNode;
   /** Optional className for the field wrapper (e.g. for width overrides). */
   className?: string;
@@ -25,6 +27,7 @@ export function IdsDropdownTriggerShell({
   error = false,
   hover = false,
   focusVisible = false,
+  filled = false,
   left,
   className,
   style,
@@ -38,6 +41,7 @@ export function IdsDropdownTriggerShell({
       data-error={error || undefined}
       data-hover={hover || undefined}
       data-focus={focusVisible || undefined}
+      data-filled={filled || undefined}
     >
       <div className={styles.main}>{left}</div>
       <span className={styles.caretWrap} aria-hidden>

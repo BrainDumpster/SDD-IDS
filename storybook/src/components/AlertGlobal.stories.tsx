@@ -5,13 +5,13 @@ import { Alert } from "./Alert";
 import type { AlertGlobalSeverity } from "./Alert";
 
 const meta = {
-  title: "Spec Generated/IDS/Alert",
+  title: "Spec Generated/IDS/Alert/Global Alert",
   component: Alert,
   parameters: {
     docs: {
       description: {
         component:
-          "Unified IDS alert: set **display** to `global` (application banner) or `inline` (contextual slate). Only **inline** supports **success** severity. **Carousel** is only valid when `display=\"global\"`.",
+          "IDS global alert (`display=\"global\"`): an application-level banner. **Carousel** is only valid in this mode. `success` severity is **not** supported for global — use inline for success.",
       },
     },
   },
@@ -23,17 +23,8 @@ const meta = {
     },
     severity: {
       control: "select",
-      options: ["informational", "success", "warning-minor", "warning-major", "critical"],
+      options: ["informational", "warning-minor", "warning-major", "critical"],
       description: "For `display=\"global\"`, omit `success` (invalid).",
-    },
-    density: {
-      control: "select",
-      options: ["compact", "detailed"],
-      if: { arg: "display", eq: "inline" },
-    },
-    title: {
-      control: "text",
-      if: { arg: "display", eq: "inline" },
     },
     dismissible: { control: "boolean" },
   },
@@ -41,17 +32,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof Alert>;
-
-export const PlaygroundManual: Story = {
-  args: {
-    display: "global",
-    severity: "informational",
-    message: "Alert message — use **display** to switch global vs inline.",
-    dismissible: true,
-  },
-};
-
-/* ——— Global (banner) ——— */
 
 export const GlobalInformational: Story = {
   args: {
@@ -231,113 +211,6 @@ export const GlobalVariantMatrix: Story = {
         <Alert display="global" severity="critical" message="Critical with carousel (dismiss visible)." carousel={{ currentItem: 1, totalItems: 4 }} />
         <Alert display="global" severity="critical" message="Critical with carousel + link (dismiss visible)." linkLabel="link." carousel={{ currentItem: 1, totalItems: 4 }} />
       </div>
-    </div>
-  ),
-};
-
-/* ——— Inline (contextual) ——— */
-
-export const InlineInformational: Story = {
-  args: {
-    display: "inline",
-    severity: "informational",
-    message: "This is informational inline alert text for context.",
-    dismissible: true,
-  },
-};
-
-export const InlineSuccess: Story = {
-  args: {
-    display: "inline",
-    severity: "success",
-    message: "Your changes are now saved.",
-    dismissible: true,
-  },
-};
-
-export const InlineWarningMinor: Story = {
-  args: {
-    display: "inline",
-    severity: "warning-minor",
-    message: "This action needs additional confirmation.",
-    dismissible: true,
-  },
-};
-
-export const InlineWarningMajor: Story = {
-  args: {
-    display: "inline",
-    severity: "warning-major",
-    message: "A blocking issue was found in your request.",
-    dismissible: true,
-  },
-};
-
-export const InlineCriticalWithAction: Story = {
-  args: {
-    display: "inline",
-    severity: "critical",
-    message: "Critical alert requires immediate action.",
-    actionLabel: "Take action",
-    dismissible: false,
-  },
-};
-
-export const InlineWithLink: Story = {
-  args: {
-    display: "inline",
-    severity: "informational",
-    message: "Please review the updated policy.",
-    linkLabel: "Learn more",
-    dismissible: true,
-  },
-};
-
-export const InlineDetailedLayout: Story = {
-  args: {
-    display: "inline",
-    severity: "warning-major",
-    density: "detailed",
-    title: "Policy validation failed",
-    message: "You can review the failed checks and update your submission.",
-    actionLabel: "Review",
-    dismissible: true,
-  },
-};
-
-export const InlineDetailedWithLinkActionDismiss: Story = {
-  args: {
-    display: "inline",
-    severity: "critical",
-    density: "detailed",
-    title: "Alert Title",
-    message:
-      "This is an page-level alert that communicates a critical message. It may include actions.",
-    linkLabel: "Learn more",
-    actionLabel: "Action",
-    dismissible: true,
-  },
-};
-
-export const InlineVariantMatrix: Story = {
-  render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 1100 }}>
-      <Alert display="inline" severity="informational" message="Informational inline." dismissible />
-      <Alert display="inline" severity="success" message="Success inline." dismissible />
-      <Alert display="inline" severity="warning-minor" message="Warning minor inline." dismissible />
-      <Alert display="inline" severity="warning-major" message="Warning major inline." dismissible />
-      <Alert display="inline" severity="critical" message="Critical inline." dismissible />
-      <Alert display="inline" severity="informational" message="With link." linkLabel="Learn more" dismissible />
-      <Alert display="inline" severity="critical" message="With action." actionLabel="Resolve now" dismissible={false} />
-      <Alert
-        display="inline"
-        severity="warning-major"
-        density="detailed"
-        title="Expanded alert title"
-        message="Detailed inline supports title + body."
-        actionLabel="Take action"
-        dismissible
-      />
     </div>
   ),
 };

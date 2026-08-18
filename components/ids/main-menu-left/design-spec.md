@@ -109,8 +109,11 @@ Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved v
 Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
 
 ## Interactions
-- Primary row click: emit navigation payload (see **Link contract**); toggle `children` list when `children` exist (expanded rail only).
-- Secondary row click: emit navigation; sets parent as selected context for inset.
+- Primary row click:
+  - **Leaf (no `children`, or collapsed rail):** emit navigation payload (see **Link contract**) and select the row.
+  - **Parent (`children` present, expanded rail):** acts as a sub-menu accordion — **only toggle the `children` list open/closed; do not navigate or change the active selection.** Expanding/collapsing keeps the user on the current page; navigation happens via the secondary rows.
+- Secondary row click: emit navigation; becomes the active page and sets its parent as selected context (clears any prior primary selection). The **parent row reads as selected** — brand-lighter background, brand-strong label, brand icon/chevron, and the 4px inset — while its sub-menu is expanded.
+- Parent selected-context persistence: when a secondary child is the active page and its sub-menu is **collapsed**, the parent row **stays in the selected state** (background + inset retained) and takes over `aria-current="page"` from the now-hidden child, so the current-page indicator is never lost.
 - Collapsed rail: primary buttons use `title` / tooltip from `tooltip` when set, else visible `name`.
 - Collapse footer: toggles expanded (`278px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`.
 - Chevron reflects `children` list open (`chev-down-thick`) vs closed (`chev-right-thick`).
@@ -119,7 +122,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ### Accessibility
 - Root: `<nav aria-label="Main menu left">`
-- Primary: `aria-current="page"` when this row is the active destination **and** no secondary child under it is `aria-current="page"`; `aria-expanded` when chevron shown
+- Primary: `aria-current="page"` when this row is the active destination — i.e. it is a selected leaf, **or** it is a parent whose selected secondary child is currently hidden (sub-menu collapsed). When the sub-menu is expanded, the visible child carries `aria-current="page"` instead. `aria-expanded` when chevron shown
 - Secondary: `aria-current="page"` on the active child row when it represents the current route
 - Visible focus ring on primary/secondary focus variants
 - WCAG AA contrast via semantic tokens
@@ -254,6 +257,12 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 - [ ] Token mapping re-verified against Figma MCP after token/library changes (manual gate)
 
 ## Implementation Notes
+
+### Updates (2026-07-29)
+1. **Selected inset color** — the primary `.selectedInset` bar uses `--color-border-brand-base` in **every** state; expanded and collapsed match (no state-specific override). Also removed the stray 4px `box-shadow` inset on secondary selected-focus rows — per spec only primary rows have the inset bar; secondary selected-focus shows just the focus outline.
+2. **Expand behavior** — parent rows (with `children`, expanded rail) only toggle the sub-menu, no navigate/select; secondary activation clears the primary `selectedKey`.
+3. **Parent selected-context** — `.secondaryParentSelected` reads fully selected (brand-lighter bg, brand-strong label, brand icon/chevron), and the parent takes `aria-current="page"` when its selected child is hidden.
+4. **Primary focus ring** — real keyboard focus on a primary row uses `.interactive:focus-visible` → 1px `--color-border-brand-base` outline, `outline-offset: -1px`, `radius-4`, so the ring is uniform on all four sides.
 
 ### Bug fixes applied (2026-07-01)
 1. **Menu top padding missing** — Original bug: `.root` (MainMenuLeftRoot) was missing top padding. Fix: Added `padding-top: var(--padding-padding-8)`.

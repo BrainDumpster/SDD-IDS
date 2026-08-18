@@ -11,6 +11,9 @@
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
 ## Anatomy
+- `TextBoxField` (outer wrapper; only rendered when a label is present, lays label left of the field group)
+- `TextBoxLabel` (**optional** form label; `<label>` linked to the input via `for`/`id`)
+- `TextBoxRequiredMark` (**optional** `*` shown when `required`, inside the label)
 - `TextBoxRoot` (field wrapper)
 - `TextBoxControl` (input/textarea container)
 - `TextBoxInput` (single-line `<input>`)
@@ -32,6 +35,10 @@
 - Vertical spacing:
   - control to helper row: `4px`
   - helper row icon-to-text gap: `8px`
+- Label (optional; left position only):
+  - label and field group in a row, gap `16px`, aligned to top
+  - label vertical padding: `10px` top and bottom; label text-to-`*` gap: `2px`
+  - label text is single-line (`nowrap`)
 - Control corner radius: **`var(--text-box-control-radius)`** (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Text area padding aligns to sample: `9px` top and `10px` bottom.
 - Trailing icon size: `16px x 16px`.
@@ -57,6 +64,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
   - `var(--color-border-alerting-critical-base)` (error)
 - Text:
   - `var(--color-text-gray-neutral)` (input value, helper text)
+  - `var(--color-text-gray-neutral-strong)` (label text and required `*`)
   - `var(--color-text-gray-disabled)` (disabled value/placeholder)
   - `var(--color-text-alerting-critical-base)` (error message)
 - Icon:
@@ -100,6 +108,9 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 ## Composition & API (runtime)
 - `componentType: "text-input" | "text-area"` (default `"text-input"`)
 - `size: "large" | "small"` (default `"large"`; `small` valid for text-input)
+- `label?: string` (**optional**; when omitted no label renders and output is the bare field group)
+- `showLabel?: boolean` (default `true`; toggles label visibility when `label` is set)
+- `required?: boolean` (default `false`; renders the `*` mark and sets `aria-required`)
 - `state: "default" | "hover" | "selected" | "focus" | "disabled" | "error"` (default `"default"`; demo override)
 - `value?: string` / `defaultValue?: string`
 - `placeholder?: string`
@@ -143,8 +154,10 @@ Variant matrix:
     - keyboard focus (`:focus-visible`) -> control border `var(--color-border-gray-neutral-base)` + visible outer focus ring (`var(--text-box-focus-ring-radius)`)
 - Accessibility contract:
   - input/textarea must expose `aria-invalid` when invalid.
-  - helper/error row must be linked via `aria-describedby`.
-  - keyboard operations use native input semantics.
+  - a visible label must be programmatically linked to the input via `for`/`id`; `aria-label` is the fallback when no visible label is shown (placeholder is never the label).
+  - `required` exposes `aria-required`.
+  - helper/error row must be linked via `aria-describedby`, combined with any caller-provided `aria-describedby` (not replaced by it).
+  - keyboard operations use native input semantics (Tab/Shift-Tab tab stops, arrow keys within the field, typing on focus with no extra action).
 - Asset resolution + bundling:
   - suffix icon is user-defined via `iconName` and resolves from `assets/icons/<slug>.svg` (default `mail`).
   - error helper icon slug is `status-critical-square-solid` and resolves from `assets/icons/status-critical-square-solid.svg`.

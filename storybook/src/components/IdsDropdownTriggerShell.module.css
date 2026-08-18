@@ -44,7 +44,8 @@
 .field[data-focus="true"]:not([data-disabled="true"])::after {
   content: "";
   position: absolute;
-  inset: -5px;
+  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
+  inset: -4px;
   border: var(--border-width-border-default) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -64,6 +65,21 @@
   gap: var(--spacing-space-4);
 }
 
+/* Let the value/text child shrink below its content width so a caller's
+   `text-overflow: ellipsis` actually triggers. Flex items default to
+   `min-width: auto` (won't shrink past content), which silently disables
+   truncation of long selected values (e.g. long timezone labels in a combo
+   box). Badges/icons keep their intrinsic size because the flexible text
+   child absorbs the shrink first. */
+.main > * {
+  min-width: 0;
+}
+
+/* Field showing selected option(s): 16px between content and caret. */
+.field[data-filled="true"] .main {
+  padding-right: var(--padding-padding-16);
+}
+
 .caretWrap {
   flex-shrink: 0;
   display: inline-flex;
@@ -71,6 +87,7 @@
   padding: 5px var(--padding-padding-1);
   color: var(--color-icon-gray-neutral-base);
   line-height: 0;
+  transition: transform 150ms ease;
 }
 
 .field[data-disabled="true"] .caretWrap {

@@ -67,6 +67,7 @@ function ToastViewport({ position }: { position: ToastPosition }) {
             key={toast.id}
             toast={toast}
             className={`${styles.root} ${styles[variant]}`}
+            tabIndex={-1}
           >
             <div className={styles.contentGroup}>
               <div className={styles.iconWrap}>

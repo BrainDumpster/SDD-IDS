@@ -24,14 +24,15 @@ const options = [
   { id: "app-4", label: "Security" },
 ];
 
-function Trigger({ value, placeholder = "Select product", disabled = false, error = false }: { value?: string; placeholder?: string; disabled?: boolean; error?: boolean }) {
+function Trigger({ value, placeholder = "-Select-", disabled = false, error = false }: { value?: string; placeholder?: string; disabled?: boolean; error?: boolean }) {
   return (
     <IdsDropdownTriggerShell
       disabled={disabled}
       error={error}
+      filled={Boolean(value)}
       left={
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {value ?? placeholder}
+          {value || placeholder}
         </span>
       }
     />
@@ -62,7 +63,6 @@ export const SingleSelectContract: Story = {
           showSearch
           matchTriggerWidth
           defaultOpen
-          maxHeight={220}
         />
       </div>
     );
@@ -94,7 +94,7 @@ export const MultiSelectContract: Story = {
         <IdsDropdownComboBox
           selectionMode="multi"
           selectedValues={selected}
-          trigger={<Trigger value={selected.join(", ")} placeholder="Select products" />}
+          trigger={<Trigger value={selected.join(", ")} placeholder="-Select-" />}
           items={items}
           showSearch
           searchValue={searchQuery}
@@ -102,16 +102,20 @@ export const MultiSelectContract: Story = {
           showSelectAllClearAll
           selectAllChecked={selected.length === options.length}
           selectAllIndeterminate={selected.length > 0 && selected.length < options.length}
-          onSelectAllClick={() => setSelected(options.map((option) => option.label))}
-          onClearAllClick={() => setSelected([])}
+          onSelectAllClick={(visible) =>
+            setSelected((prev) =>
+              visible ? Array.from(new Set([...prev, ...visible])) : options.map((option) => option.label),
+            )
+          }
+          onClearAllClick={(visible) =>
+            setSelected((prev) => (visible ? prev.filter((entry) => !visible.includes(entry)) : []))
+          }
           clearAllDisabled={selected.length === 0}
           showSelectedPanel
-          defaultShowSelectedExpanded
           onRemoveSelectedTag={(value) => setSelected((prev) => prev.filter((entry) => entry !== value))}
           onShowSelectedPanelClear={() => setSelected([])}
           matchTriggerWidth
           defaultOpen
-          maxHeight={220}
         />
       </div>
     );

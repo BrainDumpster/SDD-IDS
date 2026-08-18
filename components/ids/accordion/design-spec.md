@@ -10,25 +10,25 @@
 - Primary node: `16551:26036` (library / layout contract)
 - Related component-set nodes (same file): `.Accordion-Main` `10962:89111`; `.Accordion-Element-Left` `10962:89124`; `.Accordion-Element-Right` `10962:89134`; showcase `11067:54535`
 - **Canonical IDS Design Library (colors / published accordion examples):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42156-108639&m=dev — file key `0bHk3XhrjFhowgFkz9yLr4`, node `42156:108639` (`Content` frame: accordion states + Swap content).
-- Includes scenarios: all collapsed, one expanded, multi expanded, accordion with form
+- Includes scenarios: all collapsed, one expanded, multi expanded
 ## Anatomy
 Main component:
 - `AccordionRoot`
 
 Child components (deterministic order):
 1. `AccordionItem`
-2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Implementations may use an inner native `button` or a library sub-component (e.g. Base UI `Accordion.Trigger`) **inside** this header for semantics; that inner node is **not** a separate public IDS slot or second generated component—codegen exposes one header/trigger API.
-3. `AccordionChevron` (left or right slot)
+2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Implementations may use an inner native `button` or a library sub-component (e.g. Base UI `Accordion.Trigger`) **inside** this header for semantics; that inner node is **not** a separate public IDS slot or second generated component—codegen exposes one header/trigger API. Header content is **top-aligned**.
+3. `AccordionChevron` (left or right slot) — wrapped in a frame with **hug content** sizing and **padding-2** top/bottom
 4. `AccordionBody` (framework alias: `AccordionPanel`)
-5. `AccordionContent`
+5. `AccordionContent` — content is **top-aligned**
 
 Optional child sub-slots:
-- `AccordionFormSlot` (for "accordion with form" usage)
 - `AccordionMetaSlot` (optional helper text/metadata)
 ## Layout & Measurements
 - Root width is container-driven (`width: 100%`).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
-- Trigger row uses IDS Figma contract: `height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`).
+- Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
+- Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
 - **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
 - Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
 - Selected/open state does **not** add a second item outline beyond shared row borders.
@@ -36,12 +36,13 @@ Optional child sub-slots:
 - Chevron can be placed on:
   - `left` (leading; default)
   - `right` (trailing)
+- Chevron icon is wrapped in a frame with **hug content** sizing (`display: inline-flex`) and **padding-2** top/bottom (`var(--padding-padding-2)`)
 - Expanded item: left highlighter reads as **one** continuous **4px** strip through header and body (same token); render on surfaces that carry the row fill (trigger + panel slots), aligned so the bar does not stack into a seam.
 - Expanded panel keeps contiguous border continuity with header (no visual break).
 - Focus indicator must be visible on trigger row and not clipped by item container.
 - Group rows follow Figma contiguous model (1px overlap/no vertical gaps).
 - Expanded content container padding: `8px 24px 16px 40px` (implementations: `var(--padding-padding-40)` when present, otherwise `calc(var(--padding-padding-32) + var(--padding-padding-8))` so left inset is valid in Storybook themes).
-- Optional inner **content card** (“Swap content” in Figma): **no background color**, **no border**, and **no padding**; it holds the body text and optional `AccordionFormSlot`.
+- Optional inner **content card**: **no background color**, **no border**, and **no padding**; it holds the body text. Content card text has a **max-width of 900px**.
 ## Tokens
 - Surface:
   - `var(--color-background-surface-component)`
@@ -91,7 +92,7 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 | trigger | hover (collapsed) | `var(--color-background-brand-lighter-slate)` | unchanged divider | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
 | trigger | hover (expanded) | `var(--color-background-brand-light-slate)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
 | trigger | expanded (open) | `var(--color-background-brand-lighter-slate)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-base)` (rotated) |
-| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)` | same as default |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)`; `outline-offset: 0` (height equals item border) | same as default |
 | trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
 | panel/content | expanded | `var(--color-background-surface-component)` | item perimeter `var(--color-border-gray-neutral-base)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-gray-neutral)`, link `var(--color-text-link-brand-base)` |
 | content-card | expanded (optional) | none / transparent | none | heading/body per content; link `var(--color-text-link-brand-base)` |
@@ -123,7 +124,6 @@ Main inputs:
 - `multiple?: boolean` (default `false`)
 - `defaultValue?: string[]`
 - `chevronPosition?: "left" | "right"` (default `"left"`)
-- `variant?: "default" | "form"` (default `"default"`)
 
 Per-item inputs:
 - `value: string` (required stable ID)
@@ -131,7 +131,6 @@ Per-item inputs:
 - `content: RenderableNode` (required; framework-native renderable/content type)
 - `disabled?: boolean`
 - `meta?: RenderableNode`
-- `formSlot?: RenderableNode`
 
 Outputs:
 - `onValueChange?(openValues: string[])`
@@ -147,10 +146,8 @@ Deterministic structure:
     - `AccordionBody` (aka `AccordionPanel` for libraries that use panel naming)
       - `AccordionContent`
       - optional `AccordionMetaSlot`
-      - optional `AccordionFormSlot`
 
 Variant matrix:
-- `variant`: `default | form`
 - `chevronPosition`: `left | right`
 - expand behavior: `single | multiple` (resolved from user input)
 - item state: `collapsed | expanded | disabled`
@@ -174,7 +171,6 @@ Accessibility contract:
 
 Fallback/error rules:
 - Unknown `chevronPosition` -> fallback to `"left"`.
-- Unknown `variant` -> fallback to `"default"`.
 - Missing `value` or duplicate `value` entries are validation errors.
 
 Validation checklist:
@@ -187,7 +183,6 @@ Validation checklist:
 - [ ] Disabled rows are non-interactive.
 - [ ] Expanded open item shows a visible left highlighter on trigger and body (aligned; not hidden under opaque fills); expanded body has **no** `border-top` under the header.
 - [ ] Optional inner content card has no background color, no border, and no padding.
-- [ ] `form` variant supports form slot without breaking structure.
 ### Icon primitive and asset delivery
 Use this section whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. Names vary by framework (`Icon`, `CdsIcon`, `mat-icon` + registry, `SpriteIcon`, etc.); the contract is the same.
 

@@ -38,6 +38,7 @@
 - Panel corner radius: `border-radius: var(--tooltip-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0 — square panel corners per Figma).
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
+- Default content panel width is `240px` (`264px` when `closable=true`). Consumers may set `hugContent=true` to size the panel to its content instead of the fixed width.
 
 **Closable content layout** (`closable=true`; Storybook `.contentClosable` / `.contentColumn`):
 - Panel inner `.content` is a **horizontal flex row** (`flex-direction: row`; `align-items: flex-start`; no inter-column gap — spacing is column padding).
@@ -61,6 +62,7 @@ Arrow geometry contract:
 - Trigger-to-tooltip spacing (with arrow): `16px` (runtime positioner `sideOffset`).
 
 Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`):
+- `TriggerAnchor` / `.trigger` (inline) and `.triggerBlock` (block): the trigger anchor element. `.triggerBlock` uses `display: block`, `width: 100%`, `min-width: 0` to fill the host row and remain shrinkable in flex layouts. The `BaseTooltip.Trigger` is rendered with a `render` prop so the `className` and `children` merge correctly.
 - `TooltipRoot` / `.popup`: transparent positioning shell (`overflow: visible`; no border/shadow).
 - `TooltipPanel` / `.panel`: bordered content surface (background, border, shadow, `box-sizing: border-box`).
 - `Arrow` / `.arrow`: absolute sibling above `.panel`; overlaps panel edge (no `::before`/`::after` border-notch masks).
@@ -140,6 +142,10 @@ Typography contract:
 - `onOpenChange?: (open: boolean) => void`.
 - `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
 - `closeIconShapeName?: string` default `ctrl-close-16` (for icon component integration).
+- `hugContent?: boolean` (default `false`). When `true`, the tooltip popup width shrinks to fit its content instead of using the standard `240px` / `264px` fixed widths.
+- `triggerDisplay?: "inline" | "block"` (default `inline`). When `block`, the trigger anchor spans the full width of its container (e.g. for truncated dropdown option labels or dual-list rows) and uses `min-width: 0` so it does not force a wider flex parent.
+- `delay?: number` (default `600` ms, Base UI default). Open delay for standard hover tooltips; use `0` for immediate appearance.
+- `closeDelay?: number` (default `0` ms). Delay before closing when the pointer leaves the trigger.
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 Deterministic structure:
@@ -211,6 +217,7 @@ Validation checklist (pass/fail):
 - Last live verification: Figma MCP, file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593`, `38201:109653`, session 2026-06-15.
 
 ## Changelog
+- **2026-08-07**: Added `hugContent` runtime API and `.popupHug` style to let the popup width shrink to fit its content; default remains the standard `240px` (`popupStandard`) / `264px` (`popupClosable`) fixed widths. Synced from `storybook/src/components/IdsTooltip.tsx` and `IdsTooltip.module.css`.
 - **2026-07-27**: Preserved the `Header` slot in closable no-title tooltips (empty, one-line min-height) to maintain close-icon alignment and vertical rhythm; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-07-27**: Updated closable tooltip `CloseAction` to a `20×20` IDS tertiary icon-only button with `padding/padding-4`, `sizing/size-20`, and close icon color `var(--color-icon-gray-neutral-base)`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-06-19**: Documented closable layout for codegen — `ContentColumn` + `CloseAction` row, `8px` padding-right reserve before close icon column, `12×12` `ctrl-close-16` via shared `Icon`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.

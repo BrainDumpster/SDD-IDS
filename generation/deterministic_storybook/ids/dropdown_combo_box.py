@@ -18,13 +18,17 @@ def generate_ids_dropdown_combo_box_story(
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("dropdown-combo-box", options.component_prefix)
     import_path = "../../../../storybook/src/components/DropdownMenu"
+    trigger_shell_import_path = "../../../../storybook/src/components/IdsDropdownTriggerShell"
 
-    return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
+    return f"""import React from "react";
+import "../../../../components/ids-theme.css";
+import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ useMemo, useState }} from "react";
 import {{ DropdownMenu as {component_name} }} from "{import_path}";
+import {{ IdsDropdownTriggerShell }} from "{trigger_shell_import_path}";
 
 const meta: Meta<typeof {component_name}> = {{
-  title: "{options.title_prefix}/Dropdown Combo Box",
+  title: "{options.title_prefix}/Dropdown/Combo Box",
   component: {component_name},
   parameters: {{ layout: "centered" }},
 }};
@@ -39,23 +43,16 @@ const options = [
   {{ id: "app-4", label: "Security" }},
 ];
 
-function Trigger({{ value, placeholder = "Select product" }}: {{ value?: string; placeholder?: string }}) {{
+function Trigger({{ value, placeholder = "-Select-" }}: {{ value?: string; placeholder?: string }}) {{
   return (
-    <div
-      style={{{{
-        width: "100%",
-        padding: "10px 16px",
-        border: "1px solid var(--color-border-gray-neutral-base)",
-        background: "var(--color-background-surface-component)",
-        color: "var(--color-text-gray-neutral)",
-        boxSizing: "border-box",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }}}}
-    >
-      {{value ?? placeholder}}
-    </div>
+    <IdsDropdownTriggerShell
+      filled={{Boolean(value)}}
+      left={{
+        <span style={{{{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}}}>
+          {{value || placeholder}}
+        </span>
+      }}
+    />
   );
 }}
 
@@ -83,7 +80,6 @@ export const SingleSelectContract: Story = {{
           showSearch
           matchTriggerWidth
           defaultOpen
-          maxHeight={{220}}
         />
       </div>
     );
@@ -114,12 +110,11 @@ export const MultiSelectContract: Story = {{
         <{component_name}
           selectionMode="multi"
           selectedValues={{selected}}
-          trigger={{<Trigger value={{selected.join(", ")}} placeholder="Select products" />}}
+          trigger={{<Trigger value={{selected.join(", ")}} placeholder="-Select-" />}}
           items={{items}}
           showSearch
           matchTriggerWidth
           defaultOpen
-          maxHeight={{220}}
         />
       </div>
     );

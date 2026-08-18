@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Alert as IdsAlert } from "../../../../storybook/src/components/Alert";
 
 const meta: Meta<typeof IdsAlert> = {
-  title: "Spec Generated/IDS/Alert",
+  title: "Spec Generated/IDS/Alert/Overview",
   component: IdsAlert,
   parameters: { layout: "padded" },
   args: {

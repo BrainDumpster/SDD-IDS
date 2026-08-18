@@ -11,7 +11,7 @@
 - Separator characters (/) between items
 - Ellipsis (...) for truncated paths
 - Dropdown menu for truncated links (shown on hover)
-- Current page text (two-line variant only, displayed below breadcrumb trail)
+- Current page text (displayed below breadcrumb trail)
 - Focus ring for keyboard navigation
 ## Layout & Measurements
 - Standard height: 32px
@@ -69,13 +69,13 @@
 - Current page state is clearly distinguished
 - Dark theme adaptation through semantic tokens
 ## States (Light Theme)
-| State | Background | Border | Text (One Line) | Text (Two Lines Current Page) | Separator |
+| State | Background | Border | Text (Breadcrumb Links) | Text (Current Page) | Separator |
 |---|---|---|---|---|---|
-| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Hover | `var(--color-background-brand-lighter-slate)` (#1e262c) | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Focus | `var(--color-background-brand-lighter-slate)` (#1e262c) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Current (Two Lines) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Disabled | transparent | transparent | `var(--color-text-gray-disabled)` (#757575) | N/A | `var(--color-text-gray-disabled)` (#757575) |
+| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Hover | transparent | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Press | transparent | transparent | `var(--color-text-link-brand-stronger)` (#d9eaf8) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Focus | transparent | `var(--border-width-border-default, 1px) solid var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Disabled | transparent | transparent | `var(--color-text-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-primary)` (#111619)
@@ -83,14 +83,14 @@
 - Current page uses neutral strong for clear indication
 ## Interactions
 - Click breadcrumb items to navigate to that page
-- Hover provides visual feedback with background and text changes
+- Hover provides visual feedback with text color and underline changes
 - Focus ring uses brand color for keyboard navigation
-- In two-line variant, current page is displayed below breadcrumb trail with larger typography
+- Current page is displayed below breadcrumb trail with larger typography
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
 - Truncated breadcrumbs show dropdown on hover of "..."
 ### Accessibility
-- Focus ring: 2px brand color border
+- Focus ring: `var(--border-width-border-default, 1px)` brand color border
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
 - Screen reader support: Proper ARIA attributes (navigation, breadcrumb list)
 - High contrast: Meets WCAG AA standards with provided colors
@@ -110,10 +110,8 @@
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants
-- **One Line**: Standard horizontal breadcrumb trail (all links have same styling)
-- **One Line Truncated**: Long paths truncated with ellipsis and dropdown menu
-- **Two Lines**: Breadcrumb trail on top with current page displayed below (larger typography)
-- **Two Lines Truncated**: Two-line variant with truncation for long paths
+- **Breadcrumb**: Breadcrumb trail on top with current page displayed below (larger typography)
+- **Breadcrumb Truncated**: Breadcrumb variant with truncation for long paths
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
@@ -154,7 +152,5 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - Design source: Figma URL above
 - Component map entry: data/component-figma-map.json → component "Breadcrumb" (category "Navigation"; node "11067-54494")
 - Figma variants:
-  - One line: 48608-92898 (4 items), 48608-92922 (1 item), 48608-92916 (2 items), 48608-92908 (3 items)
-  - One line truncated: 48608-92890 (5 items), 48608-92881 (with dropdown)
   - Two lines: 48608-92945 (4 items), 48608-92972 (1 item), 48608-92965 (2 items), 48608-92956 (3 items)
   - Two lines truncated: 48608-92936 (5 items), 48608-92926 (with dropdown)

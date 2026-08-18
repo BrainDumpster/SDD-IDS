@@ -18,10 +18,12 @@ def generate_ids_dropdown_multiselect_story(
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("dropdown-multiselect", options.component_prefix)
     import_path = "../../../../storybook/src/components/DropdownMenu"
+    trigger_shell_import_path = "../../../../storybook/src/components/IdsDropdownTriggerShell"
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ useMemo, useState }} from "react";
 import {{ DropdownMenu as {component_name} }} from "{import_path}";
+import {{ IdsDropdownTriggerShell }} from "{trigger_shell_import_path}";
 
 type Option = {{ id: string; label: string; disabled?: boolean }};
 
@@ -46,21 +48,15 @@ type Story = StoryObj<typeof {component_name}>;
 function Trigger({{ selected, disabled = false }}: {{ selected: string[]; disabled?: boolean }}) {{
   const text = selected.length ? selected.join(", ") : "-Select-";
   return (
-    <div
-      style={{{{
-        width: 300,
-        padding: "10px 16px",
-        border: "1px solid var(--color-border-gray-neutral-base)",
-        background: disabled ? "var(--color-background-gray-light)" : "var(--color-background-surface-component)",
-        color: disabled ? "var(--color-text-gray-disabled)" : "var(--color-text-gray-neutral)",
-        boxSizing: "border-box",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }}}}
-    >
-      {{text}}
-    </div>
+    <IdsDropdownTriggerShell
+      disabled={{disabled}}
+      filled={{selected.length > 0}}
+      left={{
+        <span style={{{{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}}}>
+          {{text}}
+        </span>
+      }}
+    />
   );
 }}
 
@@ -103,7 +99,6 @@ export const Playground: Story = {{
         onClearAllClick={{() => setSelected([])}}
         clearAllDisabled={{selected.length === 0}}
         defaultOpen
-        maxHeight={{220}}
       />
     );
   }},
@@ -147,7 +142,6 @@ export const Overflowing: Story = {{
         selectionMode="multi"
         selectedValues={{selected}}
         defaultOpen
-        maxHeight={{220}}
       />
     );
   }},
@@ -195,7 +189,6 @@ export const Sectioned: Story = {{
         selectionMode="multi"
         selectedValues={{selected}}
         defaultOpen
-        maxHeight={{220}}
       />
     );
   }},
@@ -229,7 +222,6 @@ export const WithAction: Story = {{
           footerActionLabel="Action"
           onFooterActionClick={{() => setActionEvent("action clicked")}}
           defaultOpen
-          maxHeight={{220}}
         />
         <div style={{{{ fontSize: 12 }}}}>with-action: {{actionEvent}}</div>
       </div>

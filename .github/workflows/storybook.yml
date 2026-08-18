@@ -1,0 +1,83 @@
+name: Build and Publish Storybook Preview Environments
+
+on:
+  push:
+    branches:
+      - master      
+  pull_request:
+    types: [opened, synchronize]
+
+# Core permissions required for official Pages deployment and PR commenting
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24 # Upgraded to Node 24 to avoid runner deprecation warnings
+          cache: 'npm'
+          cache-dependency-path: './storybook/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./storybook
+        run: npm ci
+
+      - name: Build Storybook
+        working-directory: ./storybook
+        run: npm run build
+
+      # STRATEGY A: If this is the MAIN branch, build it directly for GitHub Pages deployment
+      - name: Upload GitHub Pages Artifact (Main Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'storybook/storybook-static'
+
+      - name: Deploy to GitHub Pages (Main Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # STRATEGY B: If this is a Pull Request, upload the build as a downloadable zip artifact
+      - name: Upload PR Preview Artifact (PRs Only)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-pr-${{ github.event.number }}
+          path: 'storybook/storybook-static'
+          retention-days: 7 # Automatically cleans up old PR files after a week
+
+      # Post a helpful message using the native GitHub CLI telling reviewers where to find the build
+      - name: Comment PR Status via GitHub CLI
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          COMMENT_BODY="📦 **Storybook Build Ready!** 
+          Because third-party actions are restricted, the live web server is reserved for the \`main\` branch. 
+          
+          To review this PR's components:
+          1. Go to the **Actions** tab or the bottom of this PR.
+          2. Click on the summary of this run.
+          3. Download the **\`storybook-pr-${PR_NUMBER}\`** artifact zip file to view it locally."
+          
+          EXISTING_COMMENT_ID=$(gh api repos/${REPO}/issues/${PR_NUMBER}/comments \
+            --jq '.[] | select(.body | contains("Storybook Build Ready!")) | .id' | head -n 1)
+          
+          if [ -z "$EXISTING_COMMENT_ID" ]; then
+            gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
+          else
+            gh api -X PATCH repos/${REPO}/issues/comments/$EXISTING_COMMENT_ID -f body="$COMMENT_BODY"
+          fi

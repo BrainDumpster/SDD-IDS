@@ -41,9 +41,12 @@
 - Option rows:
   - tokenized visual rhythm (`10px` vertical, `16px` horizontal)
   - minimum hit area: `44px`.
-- Menu width:
-  - sample `300px`
-  - runtime contract: matches trigger width unless host overrides.
+- `Label` (optional): sits to the **left** of the field on the same row, label-to-field gap `var(--spacing-space-16)` (16px). Typography `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight `400`; color `var(--color-text-neutral-strong)`. An optional trailing required indicator `*` shows only when the field is required. Two sizes track the field height: **Large** `40px` (vertical padding `var(--padding-padding-10)`), **Small** `32px` (vertical padding `var(--padding-padding-6)`). The label is **independent of the menu min/max width** (`186–700px`) — its width does not affect, and is not constrained by, the dropdown menu sizing.
+- Menu width (`menuWidth` prop; min `186px`, max `700px`, left-aligned to trigger via `--anchor-width`):
+  - `"trigger"` (default): menu = trigger/field width, tracks a resizing container; long labels truncate.
+  - `"content"`: menu grows to the widest option/tag (clamped `[trigger, 700px]`), then the content truncates.
+- Truncation: option label and the field value truncate with an ellipsis; a truncated field value is wrapped in the IDS Tooltip (the badge tooltip reveals the full selected list).
+- Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-light)`.
 - Search row (when `searchable`):
   - wrapper padding: `var(--padding-padding-8)`.
   - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
@@ -55,6 +58,7 @@
   - scrollable region for long sets (overflow menu variants).
 - Selected count badge:
   - uses IDS Badge size/shape contract (`18px` pill).
+  - badge does **not** shrink (`flex-shrink: 0`) so a 2-digit count never overlaps the value text; the value text (not the badge) absorbs the truncation.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -139,19 +143,21 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles menu.
+  - when the menu opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
+  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, select all, clear all, option rows, footer action).
   - `Escape` closes menu and restores trigger focus.
 - Option selection:
   - clicking option toggles inclusion in selected set.
   - disabled options cannot be toggled.
 - `Select All`:
-  - selects all currently visible and enabled options (post-filter semantics).
+  - **toggles** the currently-visible enabled options (post-filter): selects them if not all are selected; if every visible option is already selected, clicking again **deselects** the visible scope. Does **not** collapse the menu.
   - checkbox state:
     - checked when all visible enabled options selected
     - indeterminate when partial
     - unchecked when none.
 - `Clear All`:
-  - clears entire selected set
-  - disabled when selected count is zero.
+  - clears the selected set; the menu stays open.
+  - while filtering, clears only the currently-visible options (off-filter selections kept); disabled when selected count is zero (or none visibly selected while filtering).
 - Search:
   - filters visible options in real time; source options remain unchanged.
 - Badge + tooltip:
@@ -160,6 +166,12 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Optional action row:
   - user-defined label
   - emits explicit action event.
+- Keyboard navigation:
+  - `ArrowUp`/`ArrowDown` on a selectable option row move focus to the previous/next enabled `data-selectable` row; stops at the ends of the list.
+  - `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags). `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags.
+  - `Enter` / `Space` toggles the focused option.
+  - `ScrollArea.Viewport` elements use `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable. `searchClearButton` is part of the tab order.
+
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -170,13 +182,14 @@ Dark theme must preserve the same state matrix and resolve values through semant
 | `errorText` | No | `string` | User-defined error text. |
 | `disabled` | No | `boolean` | Blocks trigger/menu interactions. |
 | `searchable` | No | `boolean` | Enables search row. |
+| `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default) = trigger width; `"content"` = grow to widest option/tag, clamped `[trigger, 700px]`. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical options. |
 | `value` | No | `string[]` | Controlled selected values. |
 | `onChange` | No | `(values: string[] \| optionObject[]) => void` | Payload strategy app-defined. |
 | `showSelectAllClearAll` | No | `boolean` | Enables top controls row. |
 | `selectAllLabel` | No | `string` | Default `"Select All"`. |
 | `clearAllLabel` | No | `string` | Default `"Clear All"`. |
-| `onSelectAll` | No | `() => void` | Select all callback. |
+| `onSelectAll` | No | `(visibleValues?: string[]) => void` | Toggles the currently-visible enabled options: selects all if any are missing; if every visible option is already selected, deselects the visible scope. |
 | `onClearAll` | No | `() => void` | Clear callback. |
 | `clearAllDisabled` | No | `boolean` | Disabled state for clear action. |
 | `showSelectedBadge` | No | `boolean` | Enables selected-count badge. |
@@ -255,6 +268,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - [ ] `SelectAllClearAllRow` remains fixed while options scroll.
 - [ ] Badge uses IDS Badge spec and tooltip uses IDS Tooltip spec.
 - [ ] Light/dark outputs remain semantic-token driven.
+
 ## Source Mapping
 - Figma design frame: `43406:39370`
 - Figma component matrix: `12608:93872`
@@ -271,7 +285,37 @@ Dark theme must preserve the same state matrix and resolve values through semant
 
 ## Implementation Notes
 
-### Design spec errors fixed (2026-07-01)
+### 2026-08-13
+- **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
+- **Cross-section keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags); `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags. `Tab` still traverses every tabbable control.
+- **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport` and `showSelectedTags`) carry `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable.
+- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Action button focus rings** — Added missing `:focus-visible` focus rings for popup action buttons (`selectAllButton`, `clearAllButton`, `showSelectedToggle`, `footerAction`, `clearAllAction`) to match IDS Checkbox / Button / Dropdown Button specs.
+- **Select All / Clear All row** — `.selectAllClearAllRow` `padding-right` is `0`.
+
+- **Truncated option label tooltip** — `DropdownMenu.tsx` wraps any option label that overflows its row in `IdsTooltip`, revealing the full label on hover. The tooltip is rendered only when `scrollWidth > clientWidth`, with `delay={0}` for immediate appearance. The `IdsTooltip.Trigger` uses `triggerDisplay="block"` and `.triggerBlock { min-width: 0 }` so long labels do not force the menu wider.
+- **Top-side popup shadow suppression** — when Base UI flips/places the menu above the trigger (`data-side="top"`), `DropdownMenu.module.css` removes `box-shadow` from `.popup[data-side="top"]` so the menu does not cast a shadow onto the field or container below. The default `bottom` side keeps the standard `IDS Shadow 1` elevation.
+
+### 2026-08-05
+- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownMultiSelect` wrapper and does not constrain the menu width.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup). The caret does **not** rotate. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field`.
+- **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip; the selected-count badge also uses an IDS Tooltip to reveal the full selected list. Both only show when the content is actually cut off. Implementation: `IdsDropdownTriggerShell` / `SelectedCountBadge` uses `components/ids/tooltip/design-spec.md`.
+- **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
+- **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.
+- **Filled field content group** — selected-count badge + value with `gap: var(--spacing-space-4)`; the group gets `padding-right: var(--padding-padding-16)` when a selection is shown. Implementation: `IdsDropdownTriggerShell.module.css` — `.main` and `.field[data-filled="true"] .main`.
+- **Trigger width** — `width: max-content` so the popup tracks the field width, not a wider container. Implementation: `DropdownMenu.module.css` — `.triggerReset`.
+- **Show Selected tag wrap `contain: inline-size`** — wrapped tags do not drive the content-driven menu width; the menu is sized by the option list, and tags simply wrap within that width. Implementation: `DropdownMenu.module.css` — `.showSelectedTags` `contain: inline-size`.
+
+### 2026-07-25
+- **Menu popup** — full 4-sided `1px` border, with `sideOffset: -1` so the top border overlaps the field's bottom border into a single line. Implementation: `DropdownMenu.module.css` `.popup`; `DropdownMenu.tsx` `sideOffset` default `-1`.
+- **Leading control (checkbox)** — `16×16px`, left edge flush with the `Select All` checkbox. Implementation: `DropdownMenu.module.css` — `.leadingControl { width: 16px; height: 16px }`.
+- **Caret** — does **not** rotate when the popup opens; it stays pointing down.
+- **`Select All`** — selects only the visible (filtered) options, added to any off-filter selections; its checked/indeterminate state reflects the visible set; the row is hidden when `<2` options match. Implementation: `DropdownMenu.tsx` — `visibleSelectableValues`, `effectiveSelectAllChecked/Indeterminate`, `showSelectAllRow`; callback receives `visibleValues?`.
+- **`Clear All`** — while filtering, clears only the visible options (keeps off-filter selections) and is disabled when none are visibly selected; with no filter, clears all. The popup stays open after `Clear All` is clicked. Implementation: `DropdownMenu.tsx` — `effectiveClearAllDisabled`; callback receives `visibleValues?`.
+- **`Show Selected` panel** — defaults collapsed (`Show Selected`); has no dismiss (X) control; auto-hides when nothing is selected. Implementation: `DropdownMenu.tsx` — `defaultShowSelectedExpanded = false` (`onShowSelectedPanelClear` deprecated).
+- **Option selection** — multi-select keeps the popup open for continued selection (single-select closes on commit). Implementation: `DropdownMenu.tsx` — `onClick` closes only when `selectionMode !== "multi"`.
+
+### 2026-07-01
 - **Disabled checkbox control background incorrect** — Original spec: checkbox control background used `var(--color-background-gray-lighter)`. Fix: Updated to `var(--color-background-gray-light)` for disabled checkbox control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light) }`. Same fix applies to the indeterminate+disabled case.
 - **SelectAll/ClearAll row bottom border incorrect** — Original spec: row separator used `var(--color-border-neutral-light)`. Fix: Updated to `var(--color-border-gray-neutral-base)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-gray-neutral-base) }`.
 - **SelectAll checkbox hover border missing** — Original spec: hover behavior for unchecked and indeterminate Select All checkbox was not defined. Fix: Added hover state to strengthen border to `var(--color-border-gray-neutral-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-brand-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-gray-neutral-strong) }`.
