@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Storybook
         working-directory: ./storybook
-        run: npm run build-storybook
+        run: npm run build
 
       # STRATEGY A: If this is the MAIN branch, build it directly for GitHub Pages deployment
       - name: Upload GitHub Pages Artifact (Main Only)
