@@ -16,7 +16,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # Upgraded to Node 24 to avoid runner deprecation warnings
           cache: 'npm'
           cache-dependency-path: './storybook/package-lock.json'
 
@@ -37,58 +37,48 @@ jobs:
         working-directory: ./storybook
         run: npm run build-storybook
 
-      # Pre-arranges directory structure for deployment: 
-      # Puts PR builds inside a /pr-XX folder, and main branch builds straight in the root.
-      - name: Organize Deployment Workspace
-        run: |
-          mkdir -p public_site
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            mkdir -p public_site/pr-${{ github.event.number }}
-            cp -r storybook/storybook-static/* public_site/pr-${{ github.event.number }}/
-          else
-            cp -r storybook/storybook-static/* public_site/
-          fi
-
-      # Official GitHub action to turn your organized directory into a Pages deployment artifact
-      - name: Upload artifact
+      # STRATEGY A: If this is the MAIN branch, build it directly for GitHub Pages deployment
+      - name: Upload GitHub Pages Artifact (Main Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'public_site'
-          
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+          path: 'storybook/storybook-static'
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
-    steps:
-      # Official GitHub action to publish the artifact created in the build job
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Main Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
-        
-      - name: Comment PR Link via GitHub CLI
+
+      # STRATEGY B: If this is a Pull Request, upload the build as a downloadable zip artifact
+      - name: Upload PR Preview Artifact (PRs Only)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-pr-${{ github.event.number }}
+          path: 'storybook/storybook-static'
+          retention-days: 7 # Automatically cleans up old PR files after a week
+
+      # Post a helpful message using the native GitHub CLI telling reviewers where to find the build
+      - name: Comment PR Status via GitHub CLI
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
           REPO: ${{ github.repository }}
-          OWNER: ${{ github.repository_owner }}
-          REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          COMMENT_BODY="🚀 Storybook Preview is ready!
-          🔗 [Click here to view preview](https://${OWNER}.github.io/${REPO_NAME}/pr-${PR_NUMBER}/)"
+          COMMENT_BODY="📦 **Storybook Build Ready!** 
+          Because third-party actions are restricted, the live web server is reserved for the \`main\` branch. 
           
-          # Check if we already left a preview comment to avoid spamming the PR timeline
+          To review this PR's components:
+          1. Go to the **Actions** tab or the bottom of this PR.
+          2. Click on the summary of this run.
+          3. Download the **\`storybook-pr-${PR_NUMBER}\`** artifact zip file to view it locally."
+          
           EXISTING_COMMENT_ID=$(gh api repos/${REPO}/issues/${PR_NUMBER}/comments \
-            --jq '.[] | select(.body | contains("Storybook Preview is ready!")) | .id' | head -n 1)
+            --jq '.[] | select(.body | contains("Storybook Build Ready!")) | .id' | head -n 1)
           
           if [ -z "$EXISTING_COMMENT_ID" ]; then
-            # Create a brand new comment
             gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
           else
-            # Edit the existing comment with the updated code deployment
             gh api -X PATCH repos/${REPO}/issues/comments/$EXISTING_COMMENT_ID -f body="$COMMENT_BODY"
-          fi 
+          fi
