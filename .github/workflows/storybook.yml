@@ -8,63 +8,87 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+# Core permissions required for official Pages deployment and PR commenting
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      pull-requests: write
-
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-          # Tells GitHub Actions where to find package-lock.json for caching
           cache-dependency-path: './storybook/package-lock.json'
 
-      - name: Install Dependencies
-        # Runs the installation inside the subfolder
+      - name: Install dependencies
         working-directory: ./storybook
         run: npm ci
 
       - name: Build Storybook
-        # Runs the build script inside the subfolder
         working-directory: ./storybook
-        run: npm run build
+        run: npm run build-storybook
 
-        # Set routing paths based on whether it is a PR or Main branch push
-      - name: Set Deployment Destination
-        id: paths
+      # Pre-arranges directory structure for deployment: 
+      # Puts PR builds inside a /pr-XX folder, and main branch builds straight in the root.
+      - name: Organize Deployment Workspace
         run: |
+          mkdir -p public_site
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "target_dir=preview/pr-${{ github.event.number }}" >> $GITHUB_OUTPUT
-            echo "is_pr=true" >> $GITHUB_OUTPUT
+            mkdir -p public_site/pr-${{ github.event.number }}
+            cp -r storybook/storybook-static/* public_site/pr-${{ github.event.number }}/
           else
-            echo "target_dir=." >> $GITHUB_OUTPUT
-            echo "is_pr=false" >> $GITHUB_OUTPUT
+            cp -r storybook/storybook-static/* public_site/
           fi
 
-      # Deploys files cleanly without destroying existing subdirectories
-      - name: Deploy to GitHub Pages Branch
-        uses: JamesIves/github-pages-deploy-action@v4
+      # Official GitHub action to turn your organized directory into a Pages deployment artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          # Points to the build output directory inside your subfolder
-          folder: storybook/storybook-static
-          branch: gh-pages
-          target-folder: ${{ steps.paths.outputs.target_dir }}
-          clean: ${{ steps.paths.outputs.is_pr == 'false' }}
+          path: 'public_site'
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
 
-      # Leave a helpful link directly in your Pull Request
-      - name: Comment PR Link
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      # Official GitHub action to publish the artifact created in the build job
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Comment PR Link via GitHub CLI
         if: github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v3
-        with:
-          message: |
-            🚀 Storybook Preview is ready!
-            🔗 [View Staging Storybook](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/preview/pr-${{ github.event.number }}/index.html)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          COMMENT_BODY="🚀 Storybook Preview is ready!
+          🔗 [Click here to view preview](https://${OWNER}.github.io/${REPO_NAME}/pr-${PR_NUMBER}/)"
+          
+          # Check if we already left a preview comment to avoid spamming the PR timeline
+          EXISTING_COMMENT_ID=$(gh api repos/${REPO}/issues/${PR_NUMBER}/comments \
+            --jq '.[] | select(.body | contains("Storybook Preview is ready!")) | .id' | head -n 1)
+          
+          if [ -z "$EXISTING_COMMENT_ID" ]; then
+            # Create a brand new comment
+            gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
+          else
+            # Edit the existing comment with the updated code deployment
+            gh api -X PATCH repos/${REPO}/issues/comments/$EXISTING_COMMENT_ID -f body="$COMMENT_BODY"
+          fi 
