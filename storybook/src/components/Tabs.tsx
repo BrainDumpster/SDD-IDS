@@ -11,6 +11,7 @@ import styles from "./Tabs.module.css";
 import { Badge } from "./Badge";
 import { IdsButton } from "./IdsButton";
 import { Icon } from "./Icon";
+import { DropdownMenu } from "./DropdownMenu";
 
 export interface TabItem {
   id: string;
@@ -209,44 +210,84 @@ export function Tabs({
           ))}
 
           {hiddenTabs.length > 0 ? (
-            <Menu.Root>
-              <Menu.Trigger
-                className={[
-                  styles.moreTrigger,
-                  overflowLabel ? styles.moreTriggerSelected : "",
-                  variant === "primary"
-                    ? styles.moreTriggerPrimary
-                    : styles.moreTriggerSecondary,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-label="More tabs"
-              >
-                {overflowLabel ?? moreLabel}
-                <img
-                  src={isSynapse ? chevDownIcon : arrowTriDownSolidIcon}
-                  alt=""
-                  className={styles.moreIcon}
-                />
-              </Menu.Trigger>
-              <Menu.Portal>
-                <Menu.Positioner side="bottom" align="end" sideOffset={4}>
-                  <Menu.Popup
-                    className={isSynapse ? synapseMenuStyles.popup : styles.moreMenu}
+            isSynapse ? (
+              <Menu.Root>
+                <Menu.Trigger
+                  className={[
+                    styles.moreTrigger,
+                    overflowLabel ? styles.moreTriggerSelected : "",
+                    variant === "primary"
+                      ? styles.moreTriggerPrimary
+                      : styles.moreTriggerSecondary,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  aria-label="More tabs"
+                >
+                  {overflowLabel ?? moreLabel}
+                  <img
+                    src={chevDownIcon}
+                    alt=""
+                    className={styles.moreIcon}
+                  />
+                </Menu.Trigger>
+                <Menu.Portal>
+                  <Menu.Positioner side="bottom" align="end" sideOffset={4}>
+                    <Menu.Popup className={synapseMenuStyles.popup}>
+                      {hiddenTabs.map((tab) => (
+                        <Menu.Item
+                          key={tab.id}
+                          className={synapseMenuStyles.optionRow}
+                          onClick={() => handleHiddenTabSelect(tab.id, tab.label)}
+                        >
+                          {tab.label}
+                        </Menu.Item>
+                      ))}
+                    </Menu.Popup>
+                  </Menu.Positioner>
+                </Menu.Portal>
+              </Menu.Root>
+            ) : (
+              <DropdownMenu
+                trigger={
+                  <span
+                    className={[
+                      styles.moreTrigger,
+                      overflowLabel ? styles.moreTriggerSelected : "",
+                      variant === "primary"
+                        ? styles.moreTriggerPrimary
+                        : styles.moreTriggerSecondary,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-label="More tabs"
                   >
-                    {hiddenTabs.map((tab) => (
-                      <Menu.Item
-                        key={tab.id}
-                        className={isSynapse ? synapseMenuStyles.optionRow : styles.moreItem}
-                        onClick={() => handleHiddenTabSelect(tab.id, tab.label)}
-                      >
-                        {tab.label}
-                      </Menu.Item>
-                    ))}
-                  </Menu.Popup>
-                </Menu.Positioner>
-              </Menu.Portal>
-            </Menu.Root>
+                    {overflowLabel ?? moreLabel}
+                    <img
+                      src={arrowTriDownSolidIcon}
+                      alt=""
+                      className={styles.moreIcon}
+                    />
+                  </span>
+                }
+                items={hiddenTabs.map((tab) => ({
+                  id: tab.id,
+                  value: tab.id,
+                  label: tab.label,
+                  selectable: true,
+                  selected: tab.id === activeTabId,
+                  disabled: tab.disabled,
+                  onClick: () => handleHiddenTabSelect(tab.id, tab.label),
+                }))}
+                selectionMode="single"
+                showSingleSelectRadio={false}
+                side="bottom"
+                align="end"
+                sideOffset={4}
+                matchTriggerWidth={false}
+                menuWidth="content"
+              />
+            )
           ) : null}
 
           {showAddTab ? (
