@@ -45,7 +45,7 @@
   - `"trigger"` (default): menu = trigger/field width, tracks a resizing container; long labels truncate.
   - `"content"`: menu grows to the widest option (clamped `[trigger, 700px]`), then the option label truncates.
 - Option label truncates with an ellipsis when it exceeds the row width; when the **field** value is truncated it is wrapped in the IDS Tooltip showing the full item (only when actually cut off).
-- Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-light)`.
+- Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-gray-neutral-light)`.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px — square corners**; Figma Container `12579:77895` uses `Corner Radius/radius-none`).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
