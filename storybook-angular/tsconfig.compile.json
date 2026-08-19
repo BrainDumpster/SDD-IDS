@@ -3,7 +3,14 @@
   "compilerOptions": {
     "outDir": "./compiled",
     "declaration": false,
-    "noEmit": false
+    "noEmit": false,
+    "importHelpers": false,
+    "paths": {
+      "@storybook/angular": ["node_modules/@storybook/angular"],
+      "@storybook/*": ["node_modules/@storybook/*"],
+      "@component-contracts/*": ["../component-contracts/*"],
+      "@angular/*": ["node_modules/@angular/*"]
+    }
   },
   "include": [
     "src/components/ids-accordion/**/*.ts",
@@ -46,6 +53,8 @@
     "../component-contracts/ids/datagrid.contract.ts",
     "../component-contracts/ids/pagination.contract.ts",
     "../component-contracts/ids/detail-panel.contract.ts",
+    "../component-contracts/ids/anchor-menu.contract.ts",
+    "../lib/angular/ids/**/*.ts",
     "../component-contracts/synapse/detail-panel.contract.ts"
   ]
 }

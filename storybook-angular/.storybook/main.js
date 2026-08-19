@@ -96,6 +96,10 @@ const config = {
         compiledRoot,
         "component-contracts/ids/masthead.contract.js",
       ),
+      "@component-contracts/ids/anchor-menu.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/anchor-menu.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 
@@ -104,6 +108,7 @@ const config = {
 
     patchNgtoolsExclude(config.module.rules, compiledRoot);
     patchNgtoolsExclude(config.module.rules, path.join(repoRoot, "component-contracts"));
+    patchNgtoolsExclude(config.module.rules, path.join(repoRoot, "lib"));
 
     config.plugins = config.plugins ?? [];
     config.plugins.push(new PatchAngularAotPlugin());

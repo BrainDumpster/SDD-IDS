@@ -28,6 +28,8 @@
     "../component-contracts/ids/accordion.contract.ts",
     "../component-contracts/ids/alert.contract.ts",
     "../component-contracts/ids/badge.contract.ts",
-    "../component-contracts/ids/text-box.contract.ts"
+    "../component-contracts/ids/text-box.contract.ts",
+    "../component-contracts/ids/anchor-menu.contract.ts",
+    "../lib/angular/ids/**/*.ts"
   ]
 }
