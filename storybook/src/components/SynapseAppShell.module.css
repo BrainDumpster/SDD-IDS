@@ -1,0 +1,202 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--color-background-surface-1);
+}
+
+.tabBarSlot {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.bodyRow {
+  display: flex;
+  flex: 1 1 0%;
+  min-height: 0;
+  width: 100%;
+  align-items: stretch;
+}
+
+.leftNavSlot {
+  flex: 0 0 auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.leftNavSlot nav {
+  height: 100%;
+  min-height: 0;
+}
+
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 0;
+  background: var(--color-background-surface-1);
+}
+
+.pageHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8)
+    var(--padding-padding-24);
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: var(--border-width-border-default) solid var(--color-border-neutral-light);
+}
+
+.pageHeaderText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-12);
+  min-width: 0;
+}
+
+.pageTitle {
+  margin: 0;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-header-6);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-25);
+  color: var(--color-text-neutral-strong);
+}
+
+.pageDescription {
+  margin: 0;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+}
+
+.pageHeaderActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex-shrink: 0;
+}
+
+.pageHeaderIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-32);
+  height: var(--scale-32);
+  padding: var(--padding-padding-8);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  color: var(--color-icon-neutral-strong);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.pageHeaderIconButton:hover {
+  background: var(--color-background-gray-lighter);
+}
+
+.pageHeaderIconButton:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.bodyViewport {
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-y: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bodyContent {
+  box-sizing: border-box;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: var(--padding-padding-16) var(--padding-padding-24);
+}
+
+.chatInputRegion {
+  flex: 0 0 auto;
+  padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24);
+  box-sizing: border-box;
+}
+
+.chatTrackerSlot {
+  flex: 0 0 250px;
+  min-width: 250px;
+  max-width: 250px;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  box-sizing: border-box;
+  border-left: var(--border-width-border-default) solid var(--color-border-neutral-light);
+  background: var(--color-background-component);
+}
+
+.chatTrackerPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-16);
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.chatTrackerTitle {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+}
+
+.chatTrackerList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chatTrackerItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-6) var(--padding-padding-16);
+  border-radius: var(--corner-radius-radius-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral);
+}
+
+.headerActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.footerSlot {
+  flex: 0 0 auto;
+  width: 100%;
+}

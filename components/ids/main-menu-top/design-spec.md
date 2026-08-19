@@ -1,6 +1,8 @@
 # Main Menu Top Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/MainMenuTop.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/main_menu_top.py`
 - **Component:** Main Menu Top
 - **Design system:** IDS
 - **Category:** Navigation

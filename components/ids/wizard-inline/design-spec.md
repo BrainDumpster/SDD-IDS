@@ -1,6 +1,8 @@
 # Wizard - Inline Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/WizardInline.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/wizard_inline.py`
 - Component: Wizard - Inline
 - Category: Modals and Wizards
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54625&m=dev

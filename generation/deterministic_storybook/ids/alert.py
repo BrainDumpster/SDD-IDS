@@ -27,7 +27,7 @@ import {{ Alert as {component_name} }} from "{alert_import}";
  * variant matrix, Angular parity) live in `storybook/src/components/Alert.stories.tsx`.
  */
 const meta: Meta<typeof {component_name}> = {{
-  title: "{options.title_prefix}/Alert",
+  title: "{options.title_prefix}/Alert/Overview",
   component: {component_name},
   parameters: {{ layout: "padded", docs: {{ disable: true }} }},
 }};

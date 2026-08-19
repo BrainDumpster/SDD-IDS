@@ -338,35 +338,35 @@ export const StateHarness: Story = {
         
         .sbSimButton[data-sim-state="hover"][data-sim-variant="primary"]:not(:disabled) {
           background: var(--color-background-controls-brand-strong);
-          border-color: var(--color-border-transparent-brand);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-transparent-brand);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="primary"]:not(:disabled) {
           background: var(--color-background-controls-brand-stronger);
-          border-color: var(--color-border-transparent-brand);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-transparent-brand);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="secondary"]:not(:disabled) {
           background: var(--color-background-controls-brand-lighter);
-          border-color: var(--color-border-brand-base);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {
           background: var(--color-background-controls-brand-light);
-          border-color: var(--color-border-brand-base);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {
           background: var(--color-background-controls-brand-lighter);
-          border-color: var(--color-border-brand-base);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
           background: var(--color-background-controls-brand-light);
-          border-color: var(--color-border-brand-base);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {
           background: var(--color-background-alerting-critical-strong);
-          border-color: var(--color-border-alerting-transparent-critical);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-transparent-critical);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="destructive"]:not(:disabled) {
           background: var(--color-background-alerting-critical-stronger);
-          border-color: var(--color-border-alerting-transparent-critical);
+          box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-transparent-critical);
         }
         .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {
           outline: var(--border-width-border-1) solid var(--color-border-brand-base);

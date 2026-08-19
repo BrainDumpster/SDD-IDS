@@ -14,8 +14,8 @@
 - Verified at: 2026-06-18
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
-- `ButtonLeadingIcon` (optional; projected icon child — see Composition & API)
-- `ButtonLabel` (optional for icon-only mode; default content slot)
+- `ButtonLabel` (optional for icon-only mode)
+- `ButtonLeadingIcon` (optional; icon slug driven)
 
 Deterministic order:
 1. `ButtonRoot`
@@ -36,10 +36,12 @@ Deterministic order:
   - `medium`: height `32px`, vertical padding `8px`
   - `large`: height `40px`, vertical padding `12px`
 - Icon glyph size: `16px x 16px`.
+- Control border (`1px`) is an **inside stroke** and must NOT add to the control's height/width. The size signatures above are total box dimensions, stroke included. Do not use CSS `border` when `box-sizing: border-box` is active globally — render the stroke via `box-shadow: inset` (or `outline`) so heights stay exact.
 - Focus ring geometry (focus-visible):
   - outer ring stroke: `var(--border-width-border-1)`
   - ring offset from control edge: `var(--button-focus-ring-offset)`
   - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
+  - Render via `::after`, not `outline` — see Implementation Notes → Focus ring for the technique and the offset compensation.
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, font-weight: `400`) for button text.
@@ -50,7 +52,7 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 |---|---|
 | `--button-control-radius` | `var(--corner-radius-radius-2)` |
 | `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` |
-| `--button-focus-ring-offset` | `3px` |
+| `--button-focus-ring-offset` | `2px` |
 
 - Core primary tokens:
   - `var(--color-background-controls-brand-base)`
@@ -131,40 +133,14 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 - Runtime default must remain interactive.
 - Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
 ## Composition & API (runtime)
-Suggested runtime component name: `Button` (programme prefixes such as `IdsButton` are implementation-specific).
+- Suggested runtime component: `IdsButton`.
 
-### Composition (canonical)
-
-Deterministic child order inside `ButtonRoot`:
-
-```
-ButtonRoot [variant, size, disabled, loading, iconOnly?, ariaLabel?, type?, …]
-  ButtonLeadingIcon?   ← optional; must precede label in DOM order
-  ButtonLabel          ← default content slot (text or inline markup)
-```
-
-**Example (pseudocode — adapt selectors to target framework):**
-
-```
-<Button variant="secondary" size="large">
-  <Icon shape="settings-gear-detailed" renderMode="mask" />
-  Settings
-</Button>
-```
-
-Icon-only (supported for `medium` and `large` only):
-
-```
-<Button variant="tertiary" size="large" iconOnly ariaLabel="Settings">
-  <Icon shape="settings-gear-detailed" renderMode="mask" />
-</Button>
-```
-
-### Root inputs
-
+Inputs:
+- `label?: string` (required unless `iconOnly=true`)
 - `variant?: "primary" | "secondary" | "tertiary" | "destructive"` (default `primary`)
 - `size?: "small" | "medium" | "large"` (default `large`)
-- `iconOnly?: boolean` (default `false`; `medium` and `large` only)
+- `iconSlug?: string` (optional; user-defined icon slug from `/asset/icons/<slug>.svg`)
+- `iconOnly?: boolean` (default `false`)
 - `disabled?: boolean` (default `false`)
 - `loading?: boolean` (default `false`; if true, interactions are blocked)
 - `type?: "button" | "submit" | "reset"` (default `button`)
@@ -173,13 +149,6 @@ Icon-only (supported for `medium` and `large` only):
 - `value?: string`
 - `autofocus?: boolean`
 - `dataState?: "default" | "hover" | "press" | "focus-visible" | "disabled"` (demo/testing override only)
-
-### Slots
-
-| Slot | Required | Notes |
-|------|----------|-------|
-| `ButtonLabel` | Yes unless `iconOnly=true` | Default projected content / primary text slot |
-| `ButtonLeadingIcon` | No | Compose through the programme **Icon** primitive when available; **mask/tintable** mode required so `var(--color-icon-*)` applies. **Not rendered** for `destructive` variant. |
 
 Outputs / events:
 - `onClick(event)` — emitted on successful activation.
@@ -197,7 +166,7 @@ Deterministic structure:
 Variant matrix:
   - `variant`: `primary | secondary | tertiary | destructive`
   - `size`: `small | medium | large`
-  - icon modes: no leading icon / leading icon with label / `iconOnly` with leading icon only
+  - icon modes: `iconSlug omitted` / `iconSlug present with label` / `iconOnly with iconSlug`
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
@@ -229,16 +198,15 @@ Variant matrix:
   - Keyboard parity: `Enter` and `Space` activate.
   - Visible `focus-visible` treatment required.
 - Asset resolution + bundling:
-  - `ButtonLeadingIcon` resolves by **stable icon slug** (e.g. demo slug `settings-gear-detailed` → `assets/icons/<slug>.svg`).
-  - When the target stack exposes an **Icon** (or equivalent) primitive, render the leading icon **through that component** in **mask / tintable** mode so semantic `color` tokens apply.
+  - Icon input uses slug: `iconSlug`.
+  - Resolve icon from `/asset/icons/<iconSlug>.svg`.
   - Unknown slug fallback: hide icon slot and continue rendering label.
 - Fallback/error rules:
   - Unknown `variant` -> `primary`.
   - Unknown `size` -> `large`.
   - `iconOnly=true` and missing `ariaLabel` -> validation error.
-  - `iconOnly=true` and missing `ButtonLeadingIcon` content -> validation error.
+  - `iconOnly=true` and missing `iconSlug` -> validation error.
   - `iconOnly=true` with `size=small` -> validation error (or coerce to `medium` only if product explicitly enables coercion).
-  - `destructive` variant: do not render `ButtonLeadingIcon` even when projected / passed.
 - Validation checklist:
   - [ ] All variant x size x state combinations resolve tokenized styles.
   - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
@@ -249,22 +217,29 @@ Variant matrix:
   - [ ] Keyboard and pointer activation parity is preserved.
   - [ ] Light/Dark tables remain structurally parallel.
 
-### Icon primitive & asset delivery
+## Storybook proof & codegen consumers
 
-Use whenever codegen targets a stack that ships an **Icon** (or equivalent) layer.
+**Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
 
-**When an Icon primitive exists**
-- Prefer it for `ButtonLeadingIcon` instead of ad-hoc `<img src>` paths in the button module.
-- Pass a **stable asset slug** via the library’s shape/name prop; slug must match the asset contract below.
-- Use **tintable / mask** rendering so `var(--color-icon-*)` from the state tables applies via `currentColor`.
-- Place the icon as the **first child** in composition order (before `ButtonLabel`).
+1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
+2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
+3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
 
-**When no Icon primitive exists**
-- Fallback remains slug-driven (inline SVG with `fill="currentColor"`, sprite, or bundler asset pipeline) with the same token → color mapping.
+Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
-**Asset contract (demo / Storybook canonical slug)**
-- Slug: `settings-gear-detailed`
-- File: `assets/icons/settings-gear-detailed.svg`
+### Icon Implementation Details (Spec Generated Stories)
+
+The spec-generated Button stories (`storybook-generated/ids/src/components/Button.stories.tsx`) implement icons with the following configuration:
+
+- **Icon asset**: All icons use `assets/icons/settings-gear-detailed.svg`
+- **Icon variant**: All icons use `variant="mask"` (mask-based coloring)
+- **Color token mapping**:
+  - `primary` variant (default/hover/press states): `var(--color-icon-white)`
+  - `secondary` variant (default/hover/press states): `var(--color-icon-brand-base)`
+  - `tertiary` variant (default/hover/press states): `var(--color-icon-brand-base)`
+  - All variants (disabled state): `var(--color-icon-disabled)`
+
+This implementation aligns with the **States (Light Theme)** and **States (Dark Theme)** tables above, which specify icon colors per variant and state.
 
 ## Source Mapping
 - Component map entry: `data/component-figma-map.json` -> `Button`.
@@ -275,6 +250,15 @@ Use whenever codegen targets a stack that ships an **Icon** (or equivalent) laye
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+### Storybook proof and codegen consumers
+
+**Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
+
+1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
+2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
+3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
+
+Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
 ## Implementation Notes
 
@@ -286,4 +270,13 @@ Use whenever codegen targets a stack that ships an **Icon** (or equivalent) laye
 - **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-white)`.
 
 **Icon rendering**
-- **Icon slot must use mask / tintable rendering** so CSS `color` tokens tint the glyph. Non-tintable `<img>` ignores `color` and breaks variant icon colors.
+- **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.
+
+**Control border (added 2026-07-17)**
+- The `1px` control border is an **inside stroke** — render it with `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>` (or `outline`), never CSS `border`. Under the global `box-sizing: border-box`, a real `border` adds `+2px` to every size.
+- On focus, `tertiary` keeps its control border **by state** (transparent in the default state) — only the outer ring is blue. Do not force a brand-base inner border on `tertiary` focus (secondary's base already has one; tertiary's does not).
+
+**Focus ring (added 2026-07-21)**
+- Corrected to match Figma: IDS `--button-focus-ring-offset` `3px` → `2px`, and the ring corner radius now resolves to `--button-focus-ring-radius` (`4px`) instead of following the `2px` control radius.
+- Don't use CSS `outline` (it inherits the control's `border-radius`, but the ring radius must differ). Render the ring as an absolutely-positioned `::after` (`outline: none` on the control) with `border` + `border-radius: var(--button-focus-ring-radius)`.
+- Offset: `inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)))`. The `+ border-width` is needed because `::after`'s `inset` positions the ring's **outer** edge (the `border` draws inward), whereas the offset is defined as the gap to the ring's **inner** edge. Plain `-offset` leaves the gap short by 1px. (With `outline` this compensation wasn't needed — `outline-offset` measures to the inner edge directly — but `outline` can't carry its own radius, hence `::after`.)

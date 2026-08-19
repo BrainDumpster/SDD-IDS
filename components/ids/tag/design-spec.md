@@ -11,33 +11,26 @@
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
 ## Anatomy
-- `TagsGroupRoot?` (optional layout wrapper for multiple tags; projected `TagRoot` children)
 - `TagRoot`
 - `TagLabel`
-- `TagFieldLabel?` (editable/badge; medium-weight prefix + auto-appended colon)
-- `TagContent` (groups `TagFieldLabel?` + `TagLabel` with `2px` gap)
 - `TagPrefixIcon?` (alerting state icon or badge-leading icon)
 - `TagBadge?` (count or status chip)
-- `TagCloseButton?` (dismiss/edit mode)
+- `TagDropdown?` (detached dropdown menu surfaced by `TagBadge` trigger)
+- `TagCloseButton?` (tertiary icon-only button for dismiss/edit mode)
 - `TagEditableField?` (text focus surface for editable mode)
 ## Layout & Measurements
 - Two size tracks verified:
   - `small`: height `20px` (read-only baseline) - border included in height using box-sizing: border-box
-  - `large`: height `28px` (clickable/editable/badge patterns)
+  - `large`: height `28px` (read-non-alerting, clickable/editable/badge patterns) - border included in height using box-sizing: border-box
 - Read-only sample width: `40px`.
+- Read-only large sample width: `48px`.
 - Clickable sample width: `48px`.
 - Editable sample widths: `66px` and `70px` (error/focus-on-text).
 - Badge sample width: `92px`.
 - Non-alerting large sample width: `48px` (legacy chip) and `88px` (expanded examples).
-- Close icon element size: `10px x 10px`.
+- Close button size: `var(--sizing-size-18)` x `var(--sizing-size-18)` with `var(--padding-padding-4)` padding; icon asset remains `10px x 10px`.
+- Dismissible tag right padding: `var(--padding-padding-8)`; label-to-close gap: `var(--spacing-space-4)`.
 - Tag shape remains pill-like with fully rounded ends.
-
-### Slot geometry (Figma-verified)
-| Slot | Property | Value | Figma evidence |
-|---|---|---|---|
-| `TagContent` | `gap` (field label → value) | `var(--spacing-space-2)` (`2px`) | `38910:57319` (`gap-[var(--spacing/space-2,2px)]`), `38910:54779` |
-| `TagFieldLabel` | typography | Body 2 Medium (`font-weight: 500`) for prefix text; colon regular weight | `38910:57332`, `38910:54788` |
-| `TagFieldLabel` | colon | Always rendered by runtime; strip trailing `:` from `labelPrefix` input | `38910:57332` |
 - Focus outline gap (outline offset from tag edge): `2px`.
 - Text field focus ring height: `20px` for editable tags.
 ## Tokens
@@ -72,11 +65,15 @@
 - Typography:
   - `Body 2` for tag labels
   - `Body 2 - Medium` for emphasized/clickable states
+- Custom text colors:
+  - `var(--color-text-black)` for Major and Minor tone text color
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | TagRoot (read-only, non-alerting) | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-accessible)` |
 | TagRoot (read-only, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
+| TagRoot (editable, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
+| TagRoot (badge, non-alerting) | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, close icon critical |
 | TagRoot (read-only/clickable/badge) | disabled | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | text/icon `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
 | TagRoot (clickable, selected=false) | default | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | text/icon brand-dark |
 | TagRoot (clickable, selected=false) | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | same as default (hover emphasis only) |
@@ -90,6 +87,8 @@
 |---|---|---|---|---|
 | TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-1)`/semantic tag base | `var(--color-border-accessible)` | text `var(--color-text-white)` or semantic neutral-light |
 | TagRoot (read-only, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
+| TagRoot (editable, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
+| TagRoot (badge, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
 | TagRoot (read-only/clickable/badge) | disabled | semantic disabled surface | `var(--color-border-disabled)` | text/icon disabled |
 | TagRoot (clickable, selected=false) | default | dark brand-slate token | `var(--color-border-brand-base)` | text/icon brand-light |
 | TagRoot (clickable, selected=true) | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | text/icon inverse |
@@ -101,30 +100,13 @@
 - `read-only`: non-interactive label chip.
 - `clickable`: toggles selection (`selected=true|false`).
 - `editable/dismissible`: clicking the editable tag body behaves like an input activation surface and moves focus to the inner text field; close action removes tag.
-- `badge`: supports optional leading info icon and badge count segment.
+- `badge`: supports optional leading info icon and badge count segment; the badge can trigger a detached dropdown menu (`TagDropdown`) with a full border.
 - Hover states apply where interaction is enabled (clickable and close button).
 - Focus-visible is keyboard-driven and uses outer ring.
 - Disabled suppresses click, close, and selection transitions.
 ## Composition & API (runtime)
-
-### Group (`ids-tags` / `TagsGroupRoot`)
-- Wraps one or more projected tag items for horizontal layout with wrap.
-- `wrap?: boolean` (default `true`) — when `false`, tags stay on one row.
-- `ariaLabel?: string` — optional accessible name for the tag collection (`role="group"`).
-- Gap between items: `var(--spacing-space-8)`; group does not own tag selection or dismiss state.
-
-Child order (deterministic):
-
-```
-TagsGroupRoot
-  TagRoot (item)
-  TagRoot (item)
-  …
-```
-
-### Item (`ids-tag` / `TagRoot`)
 - `type: "read-only" | "clickable" | "editable" | "badge"`
-- `size: "small" | "large"` (defaults: read-only -> small, others -> large)
+- `size: "small" | "large"` (defaults: read-only -> small, others -> large; read-only also supports large for non-alerting tags)
 - `tone: "none" | "informational" | "success" | "minor" | "major" | "critical"`
 - `selected?: boolean` (clickable only; default `false`)
 - `disabled?: boolean` (default `false`)
@@ -132,8 +114,6 @@ TagsGroupRoot
 - `focusVisible?: boolean` (demo/testing only; runtime driven by keyboard)
 - `focusOnText?: boolean` (editable only)
 - `label: string`
-- `showLabel?: boolean` (editable/badge; default `false`)
-- `labelPrefix?: string` (field label text **without** colon; default `"Label"`; runtime strips trailing `:` if provided and always appends `:`)
 - `badgeValue?: string | number` (badge only)
 - `leadingIconSlug?: string | null`
 - `closeIconSlug?: string` (default `shape-x-thick`)
@@ -144,11 +124,10 @@ TagsGroupRoot
 - Deterministic slot order:
   1. `TagRoot`
   2. `TagPrefixIcon?`
-  3. `TagBadge?` (badge type only; before content)
-  4. `TagContent` (`TagFieldLabel?` + `TagLabel`; `gap: var(--spacing-space-2)`)
-  5. `TagEditableField?` (editable focus-on-text wraps `TagContent` only)
-  6. `TagMenuCaret?` (badge type)
-  7. `TagCloseButton?`
+  3. `TagLabel`
+  4. `TagBadge?`
+  5. `TagEditableField?`
+  6. `TagCloseButton?`
 - Variant matrix (all supported axes):
   - `type`: read-only | clickable | editable | badge
   - `size`: small | large
@@ -159,10 +138,8 @@ TagsGroupRoot
 - Per-slot style contract:
   - `TagRoot` owns pill geometry, border, surface, and padding.
   - `TagLabel` always uses Body 2 scale.
-  - `TagFieldLabel` prefix text uses Body 2 Medium; colon uses Body 2 regular; colon is never part of `labelPrefix` input.
-  - `TagContent` uses `gap: var(--spacing-space-2)` between field label and value (`TagLabel`).
-  - `TagCloseButton` uses 10px icon asset and inherits state color.
-  - `TagBadge` uses compact filled mini-chip treatment.
+  - `TagCloseButton` is a tertiary icon-only button using `shape-x-thick`, sized `var(--sizing-size-18)`, with `var(--padding-padding-4)` padding, border-radius `var(--button-control-radius)`, icon color `var(--color-icon-accessible)` (disabled uses `var(--color-icon-disabled)`), hover/press backgrounds `var(--color-background-controls-brand-lighter)` / `var(--color-background-controls-brand-light)` with `var(--color-border-brand-base)` inset border, and a focus-visible outer ring `var(--color-border-brand-base)`.
+  - `TagBadge` uses compact filled mini-chip treatment. When used as a dropdown trigger, the dropdown (`TagDropdown`) is a detached/standalone menu offset from `TagRoot` by `var(--spacing-space-1)` with a full border of `var(--border-width-border-default)` on all sides and `var(--dropdown-menu-radius)` corners.
 - Behavior contract:
   - clickable toggles selected state and emits `onSelectionChange`.
   - editable tag body click focuses `TagEditableField` (input-like behavior) before text editing.
@@ -184,7 +161,6 @@ TagsGroupRoot
   - unknown `tone` -> `none`
   - if `badgeValue` provided while `type !== "badge"`, ignore `badgeValue`
   - if `selected=true` while `type !== "clickable"`, ignore `selected`
-  - if `labelPrefix` ends with `:`, strip trailing colons before render; always display one trailing `:`
 - Validation checklist (pass/fail):
   - [ ] all type variants render valid slot order
   - [ ] clickable selected/unselected tokens match spec
@@ -192,12 +168,8 @@ TagsGroupRoot
   - [ ] focus-visible ring appears in keyboard path only
   - [ ] editable focus-on-text path shows field border token
   - [ ] badge variant handles icon + count + label layout
-  - [ ] `showLabel` renders `TagFieldLabel` + `TagLabel` with `2px` content gap
-  - [ ] `labelPrefix` colon normalization (input `Label:` → display `Label:` once)
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Tag"`.
-- Runtime contract: `component-contracts/ids/tag.contract.ts`
-- Reference implementation: `storybook-angular/src/components/ids-tag/` (`ids-tag`, `ids-tags`)
 - IDS design library nodes verified:
   - Main example board: `42012:26686`
   - Main component board (light/dark container): `42012:26676`

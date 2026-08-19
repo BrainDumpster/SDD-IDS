@@ -172,6 +172,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Hover:** applies to **both** selected and unselected segments. Unselected hover uses `var(--color-background-brand-lighter)` (Figma `9015:20990`). **Selected hover** uses `var(--color-background-controls-brand-strong)` (Figma `9058:27481` / `10148:29582`).
 - **Press (active pointer down):** unselected segments use `var(--color-background-brand-light)` + `var(--color-text-brand-strong)` label (text type). **Selected press** uses `var(--color-background-controls-brand-stronger)` with white label/icon (Figma `9058:27483` / `10148:29579`).
 - **Focus-visible:** unselected segments use solid `var(--color-border-brand-base)`; selected segments use **dashed** `var(--color-border-white)` on the brand fill (`:focus-visible` pattern; mouse-only focus must not steal keyboard focus styles).
+- **Keyboard (Tab):** every segment is a Tab stop (`tabIndex=0` on each segment); the selected segment is the active composite item so arrow-key navigation starts from the selected option.
 
 - **Selection model:** default is **single-select** (like a coordinated radio group). Multi-select is **out of scope** unless a separate Figma component and matrix are provided.
 ## Composition & API (runtime)
@@ -342,7 +343,7 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
   - Arrow keys move focus between segments; `Space`/`Enter` selects focused segment (pattern may follow platform defaults).
   - Selected segment exposes `aria-checked="true"`; others `false`.
   - Root has visible label via `legend`, `aria-label`, or `aria-labelledby`.
-- Focus order: follows visual order.
+- Focus order: follows visual order; every segment is reachable by Tab. The selected segment is marked as the active composite item (`data-composite-item-active`) so arrow-key navigation begins from the selected option.
 
 ### Asset resolution + bundling contract
 - **Slug mode:** `icon: "<slug>"` → render with the target library's shared **`Icon`** primitive (`shapeName="<slug>"` or equivalent name prop per that API); asset file **`{iconsBasePath}/<slug>.svg`** (default `assets/icons`). **Codegen:** see **Icon primitive and asset delivery (codegen)** — generators must not emit raw `<img>`, local CSS `mask`, or per-component asset globs when the library Icon exists.

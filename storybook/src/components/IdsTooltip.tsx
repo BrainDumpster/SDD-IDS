@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { IdsTooltipBody, IdsTooltipTitle, parseTooltipChildren } from "./ids-tooltip.slots";
+import buttonStyles from "./Button.module.css";
 import styles from "./IdsTooltip.module.css";
 
 export { IdsTooltipBody, IdsTooltipTitle };
@@ -24,6 +25,12 @@ export interface IdsTooltipProps {
   closable?: boolean;
   /** Trigger layout; use `block` for full-width row triggers (e.g. Dual List Box items). */
   triggerDisplay?: "inline" | "block";
+  /** When true, the tooltip popup shrinks to fit its content instead of using the standard 240px width. */
+  hugContent?: boolean;
+  /** Open delay in ms. Default is Base UI's 600ms. */
+  delay?: number;
+  /** Close delay in ms. Default is 0. */
+  closeDelay?: number;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: "close-click" | "escape" | "programmatic") => void;
 }
@@ -37,6 +44,9 @@ export function IdsTooltip({
   align,
   closable = false,
   triggerDisplay = "inline",
+  hugContent = false,
+  delay,
+  closeDelay,
   onOpenChange,
   onClose,
 }: IdsTooltipProps) {
@@ -91,20 +101,23 @@ export function IdsTooltip({
         styles.popup,
         closable ? styles.popupClosable : styles.popupStandard,
         resolvedTitle ? styles.popupWithTitle : styles.popupNoTitle,
+        hugContent ? styles.popupHug : null,
       ]
         .filter(Boolean)
         .join(" "),
-    [closable, resolvedTitle]
+    [closable, resolvedTitle, hugContent]
   );
 
   return (
     <BaseTooltip.Provider>
-      <BaseTooltip.Root open={open} onOpenChange={handleOpenChange}>
+      <BaseTooltip.Root open={closable ? open : undefined} onOpenChange={handleOpenChange}>
         <BaseTooltip.Trigger
           className={
             triggerDisplay === "block" ? styles.triggerBlock : styles.trigger
           }
-          render={<span />}
+          delay={delay}
+          closeDelay={closeDelay}
+          render={(props) => <span {...props}>{props.children ?? children}</span>}
         >
           {trigger}
         </BaseTooltip.Trigger>
@@ -150,14 +163,18 @@ export function IdsTooltip({
                         <div className={styles.body}>{resolvedContent}</div>
                       </div>
                       <button
-                        className={styles.close}
                         type="button"
+                        className={[
+                          buttonStyles.button,
+                          buttonStyles.tertiary,
+                          styles.closeButton,
+                        ].filter(Boolean).join(" ")}
                         aria-label="Close tooltip"
                         onClick={dismissTooltip}
                       >
                         <Icon
                           shapeName="ctrl-close-16"
-                          className={styles.closeIcon}
+                          color="var(--color-icon-neutral)"
                           style={{ width: 12, height: 12 }}
                         />
                       </button>

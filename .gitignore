@@ -11,10 +11,13 @@ wheels/
 design-system-knowledge
 **/node_modules/
 node_modules/
-**/stoybook/node_modules/
+**/storybook/node_modules/
+**/storybook-angular/node_modules/
 storybook/storybook-static/
 storybook-angular/storybook-static/
 storybook-angular/.angular/cache/
+.angular/
+**/.angular/
 .cache/
 **/.cache/
 
@@ -24,4 +27,3 @@ storybook-angular/.angular/cache/
 # Design-spec intake wizard session logs (optional audit files)
 data/design-spec-intake/sessions/*
 !data/design-spec-intake/sessions/.gitkeep
-

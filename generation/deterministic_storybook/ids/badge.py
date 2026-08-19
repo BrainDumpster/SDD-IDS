@@ -83,7 +83,7 @@ export const ContentSizing: Story = {{
       <{component_name} value={{1}} type="default" />
       <{component_name} value={{12}} type="default" />
       <{component_name} value={{128}} type="default" />
-      <{component_name} value={{"999+"}} type="default" ariaLabel="Nine hundred ninety nine plus notifications" />
+      <{component_name} value={{999}} type="default" ariaLabel="999 notifications" />
     </div>
   ),
 }};

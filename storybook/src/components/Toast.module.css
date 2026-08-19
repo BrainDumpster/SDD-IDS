@@ -56,15 +56,13 @@
 
 .root {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-space-32);
   box-sizing: border-box;
   width: 100%;
   min-height: 48px;
-  padding: var(--padding-padding-14) var(--padding-padding-24);
-  border-width: var(--border-width-border-default);
-  border-style: solid;
-  border-color: var(--color-border-white);
+  padding: var(--padding-padding-14) var(--padding-padding-16) var(--padding-padding-14) var(--padding-padding-24);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-white);
   background: var(--color-static-gray-900);
   border-radius: var(--toast-control-radius);
   font-family: inherit;
@@ -107,16 +105,17 @@
 
 .contentGroup {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-space-8);
   flex: 1 1 auto;
   min-width: 0;
+  padding-top: var(--padding-padding-2);
 }
 
 .iconWrap {
   flex-shrink: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding-block: var(--padding-padding-2);
 }
@@ -137,7 +136,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-space-24);
+  gap: var(--spacing-space-4);
   flex-shrink: 0;
 }
 
@@ -150,58 +149,52 @@
   line-height: var(--font-line-height-line-height-20);
 }
 
-.link {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-space-2);
-  border: none;
-  background: transparent;
+.linkButton {
+  flex-shrink: 1;
+  min-width: 0;
   color: var(--color-text-white);
-  padding: 0;
-  cursor: pointer;
-  font-family: var(--typography-font-style-primary), sans-serif;
-  font-size: var(--font-size-body-2);
-  font-weight: 400;
-  line-height: var(--font-line-height-line-height-20);
-  text-decoration: underline;
-  text-decoration-skip-ink: none;
-  border-radius: var(--corner-radius-radius-2);
-}
-.link:focus-visible {
-  outline: var(--border-width-border-thick) solid var(--color-border-brand-base);
-  outline-offset: 2px;
-}
-
-.close {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--scale-12);
-  height: var(--scale-12);
-  border: none;
   background: transparent;
-  color: var(--color-icon-white);
-  cursor: pointer;
-  border-radius: var(--corner-radius-radius-2);
-  padding: 0;
-  transition: background 100ms ease;
+  border: none;
 }
-.close:focus-visible {
-  outline: var(--border-width-border-thick) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.linkButton:hover:not(:disabled) {
+  background: var(--ui-palette-brand-900);
+  color: var(--color-text-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+.linkButton:active:not(:disabled) {
+  background: var(--ui-palette-brand-800);
+  color: var(--color-text-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
 }
 
-.closeIcon {
-  width: var(--scale-12);
-  height: var(--scale-12);
-  display: inline-block;
-  object-fit: contain;
+.closeButton.closeButton.closeButton {
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
+  min-height: var(--sizing-size-24);
+  padding: var(--padding-padding-6);
+  box-sizing: border-box;
+  color: var(--color-icon-white);
+  background: transparent;
+  border: none;
+}
+.closeButton.closeButton.closeButton:hover:not(:disabled) {
+  background: var(--ui-palette-brand-900);
+  color: var(--color-icon-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+.closeButton.closeButton.closeButton:active:not(:disabled) {
+  background: var(--ui-palette-brand-800);
+  color: var(--color-icon-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.closeButton.closeButton > span {
+  width: 100%;
+  height: 100%;
 }
 
 .closePlaceholder {
-  width: var(--scale-12);
-  height: var(--scale-12);
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
   flex-shrink: 0;
 }

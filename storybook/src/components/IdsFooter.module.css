@@ -35,13 +35,39 @@
 .label {
   font-weight: 500;
   color: var(--color-text-neutral-strong);
+  white-space: nowrap;
 }
 
 .value {
   color: var(--color-text-neutral);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 48ch;
+}
+
+.hostnameField {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: max-content;
+}
+
+.hostnameValue {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  max-width: 48ch;
+}
+
+.hostnameText {
+  color: var(--color-text-neutral);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+  max-width: 48ch;
 }
 
 .swidGroup {

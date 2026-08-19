@@ -14,17 +14,18 @@
 Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
 
 ## Layout & Measurements
-- Item container: `height: 48px`, `padding-inline: 24px`, `padding-block: 14px`.
-- Item sample widths from Figma: `516px` (without link), `617px` (with link); runtime width is container-driven.
-- Root surface: `background: var(--color-static-gray-900)`, `border: 1px solid var(--color-border-white)`, `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
+- Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
+- Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime width is container-driven.
+- Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
-  - `ContentGroup` (status icon + message)
-  - `ActionGroup` (optional link + close)
+  - `ContentGroup` (status icon + message) with `padding-top: var(--padding-padding-2)`
+  - `ActionGroup` (optional view details button + close)
 - Content row: horizontal layout with icon/message gap exactly `8px`.
-- Action row: horizontal layout with link/close gap exactly `24px` when link exists.
-- Vertical alignment: status icon and message must be center-aligned on the same row centerline (`align-items: center` in content group).
-- Status icon slot: fixed `16x16` container and `16x16` rendered icon (no scaling above slot size).
-- Close icon slot: `12x12` using `shape-x`.
+- Action row: horizontal layout with view details/close gap exactly `var(--spacing-space-4)` (4px) when view details exists.
+- Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
+- Status icon slot: fixed `16x16` container with `padding-block: var(--padding-padding-2)` and `16x16` rendered icon (no scaling above slot size).
+- Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
+- View Details action: IDS small tertiary button with `View Details` text, uses IDS Button component `sm` size/padding, text color `var(--color-text-white)`, matching close button hover/active colors.
 ## Tokens
 
 ### Layout aliases (theme-resolvable)
@@ -38,8 +39,8 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Surface: `var(--color-static-gray-900)`
 - Border: `var(--color-border-white)`
 - Message text: `var(--color-static-gray-white)`
-- Link text: `var(--color-text-white)`
-- Close icon: `var(--color-icon-white)`
+- View Details button text: `var(--color-text-white)`
+- Close button icon: `var(--color-icon-white)` (default state)
 
 ### Status tokens and icon mapping
 | Type | Icon (`shapeName`) | Icon color token | Border token | Text token |
@@ -52,15 +53,16 @@ Programmes override these **same alias names** in programme theme CSS. Component
 ## States (Light Theme)
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/link `var(--color-static-gray-white)`; close `var(--color-icon-white)` |
-| Hover close | No root color change required | No change | Close affordance can use subtle focus-visible only (no color drift from tokens) |
-| Focus-visible action | No root color change | No change | Focus ring uses brand token from root-spec rules |
+| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/view details `var(--color-static-gray-white)`; close button icon `var(--color-icon-white)` |
+| Hover close | `var(--ui-palette-brand-900)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-white)` |
+| Active close | `var(--ui-palette-brand-800)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-white)` |
+| Focus-visible view details | No root color change | No change | Focus ring uses brand token from root-spec rules |
 ## States (Dark Theme)
 Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.
 ## Interactions
 - Toast appears with entrance motion and exits with dismissal motion.
 - `close` click removes toast item and emits dismissal event.
-- Optional link action emits link event or navigates depending on link contract.
+- Optional view details action emits view details event when clicked.
 - Auto-dismiss timer runs per toast item when `duration > 0`.
 - Hover/focus pauses auto-dismiss timer for that item (recommended behavior contract).
 - `Escape` dismisses focused toast item.
@@ -71,7 +73,7 @@ Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolve
 - `message`: string (required).
 - `duration`: number, default `8000` (host-configurable timeout input).
 - `closable`: boolean, default `true`.
-- `link`: optional structured link object (see link contract below).
+- `link`: optional structured view details object (see view details contract below).
 - `onClose`: emitted with item id/reason.
 - `onTimeout`: emitted when timer dismisses.
 
@@ -87,7 +89,7 @@ Queue/stack behavior contract:
 3. When an item closes/expires, next queued item enters visible stack.
 4. In top positions, newest visible toast appears at bottom; older items move upward.
 5. In bottom positions, newest visible toast appears at top; older items move downward.
-### Link contract
+### View Details contract
 `link` object shape:
 - `label: string` (required if link exists)
 - `href?: string`
@@ -105,11 +107,11 @@ Resolution rules:
 ### Deterministic structure
 - `ToastViewport` -> repeated `ToastItem` -> `Content` + `ActionContainer`.
 - `Content` always renders icon + message.
-- `ActionContainer` renders optional `LinkAction`, then optional `CloseAction`.
+- `ActionContainer` renders optional `ViewDetailsAction`, then optional `CloseAction`.
 
 ### Variant matrix
 - Supported types: `info`, `critical`, `major-warning`, `minor-warning`, `success`.
-- `link` optional for each type.
+- `view details` optional for each type.
 - `duration` and `position` supported for all combinations.
 
 ### Per-slot style contract
@@ -128,7 +130,8 @@ Resolution rules:
 - Viewport: `aria-live="polite"`, `aria-atomic="false"`.
 - Item role: `status` by default; allow severity-driven escalation to `alert` when product rules require.
 - Close action: accessible label ("Dismiss notification").
-- Keyboard: tab to link/close, `Escape` dismiss focused item.
+- Keyboard: tab to view details/close; `Escape` dismisses the active toast when any focusable control inside it has focus.
+- Toast container is not keyboard-focusable; only the view-details and close controls receive focus.
 
 ### Fallback/error rules
 - Unknown `type` -> fallback to `info`.
@@ -141,17 +144,17 @@ Resolution rules:
 - [ ] Variant to token/icon mapping matches table exactly.
 - [ ] Queue behavior is implemented at viewport level, not single item level.
 - [ ] `position` API supports all six values with default `top-right`.
-- [ ] Link routing contract supports `routerLink`, `href`, and event mode.
-- [ ] Close icon is `shape-x` at `12x12`.
+- [ ] View Details contract supports `routerLink`, `href`, and event mode.
+- [ ] Close action is an IDS tertiary icon-only button, fixed `24x24` with `Padding/padding-6`, using `shape-x`; icon fills the content area.
 - [ ] Layout uses `var(--toast-control-radius)` on toast root, not hardcoded px.
 - [ ] No hardcoded style values in generated code where token exists.
 ## Implementation Notes
-- **Close icon fix (2025-05-25)**: Changed close icon from `variant="img"` to `variant="mask"` to enable CSS color styling via `var(--color-icon-white)`. Removed hardcoded 16px width/height from Icon component's img variant to allow CSS class styles to control size (12px as per spec).
+- **Close button fix**: Replaced the bare close icon with the IDS `Button` component in `tertiary`/`iconOnly` mode, using `shape-x` rendered as a mask and sized to the fixed 24x24 Button token with `Padding/padding-6` on all sides.
 - **Status icon border fix (2025-05-25)**: Added 1px solid #FFFFFF border to all status icons (info-circ-solid, status-critical-square-solid, status-error-diamond-solid, status-warn-tri-solid, status-ok-circ-solid) in the base layer as specified in design spec.
 - **Toast border inside container fix (2025-05-25)**: Changed toast root border from outer border to inner border using CSS pseudo-element (::before) to ensure border is inside the container width, not outside.
 
 ## Source Mapping
-- Figma examples: `42903:139689` (toast variants with/without link).
+- Figma examples: `42903:139689` (toast variants with/without view details).
 - Figma icon base: `39484:7432` (alerting icon family).
 - Active IDS map file: `data/component-figma-map.json`.
 - Suggested map alignment for Toast: example node `42903:139689`, base icon node `39484:7432`.

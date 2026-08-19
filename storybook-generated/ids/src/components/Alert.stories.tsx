@@ -11,7 +11,7 @@ import { Alert as IdsAlert } from "../../../../storybook/src/components/Alert";
  * variant matrix, Angular parity) live in `storybook/src/components/Alert.stories.tsx`.
  */
 const meta: Meta<typeof IdsAlert> = {
-  title: "Spec Generated/IDS/Alert",
+  title: "Spec Generated/IDS/Alert/Overview",
   component: IdsAlert,
   parameters: { layout: "padded", docs: { disable: true } },
 };

@@ -46,106 +46,17 @@ Unified specification for **Global** (application banner) and **Inline** (contex
 | Codegen blueprint verification | 2026-05-18 (Figma MCP `get_metadata` on global `11067:54641`, inline matrix `42903:139522`; structure aligned to `storybook/src/components/Alert.tsx`) |
 ## Anatomy
 
-### Reference mapping — [Clarity Alert](https://clarity.design/documentation/alert/code)
-
-IDS alert anatomy is **Figma-first** (global banner + inline contextual). Clarity is a useful **composition reference**, not a visual source of truth.
-
-| Clarity (Angular) | IDS codegen name | Role |
-|---|---|---|
-| `clr-alerts` | `AlertGroup` / `AlertGroupRoot` | Host for **multiple global** alerts; owns pager / `activeIndex` |
-| `clr-alert` | `AlertRoot` | Single alert chrome (`display`: global ≈ app-level, inline ≈ lightweight/page) |
-| `clr-alert-item` | `AlertItem` | One logical message surface (text + optional actions) |
-| `.alert-text` / projected copy | `AlertMessage` | **Primary copy — composition slot** (not only a string prop) |
-| `.alert-actions` | `AlertActions` | Optional trailing / inline action cluster |
-| `clrAlertAppLevel` + pager | `display="global"` + `CarouselRail` | One banner chrome; swap active item |
-
-**IDS differences from Clarity (intentional):**
-
-- Global **ContentRow** and **ActionsRow** are **siblings** under `AlertRoot` (Figma layout), not nested inside a single `alert-item` wrapper — but composition children still map 1:1 to those regions.
-- Inline uses a **4px inset rail** (`box-shadow`), not Clarity’s lightweight card.
-- **Inline** never uses carousel; **global** group uses **one** `AlertRoot` + carousel rail (do not stack multiple global roots).
-
-### Main components
-
-| Component | When used |
-|---|---|
-| `AlertGroup` | Optional. **Global only.** Multiple alert items sharing one banner + carousel rail. |
-| `Alert` (`AlertRoot`) | Always. One visible alert surface (`display: global \| inline`). |
-
-### Child components — deterministic order
-
-Use this order for composition APIs, Storybook markup, and codegen (accordion-style). Selector names are framework examples (`ids-alert-*` for Angular).
-
-#### A. Single alert — `Alert` (`AlertRoot`)
-
-**Global (`display="global"`)**
-
-1. `AlertRoot` — `role="alert"`, `aria-live="assertive"` when content swaps (carousel)
-2. `CarouselRail` *(optional; global + group / `carousel` present only)*
-   - `CarouselPreviousButton`
-   - `CarouselCount` (1-based `currentItem` of `totalItems`)
-   - `CarouselNextButton`
-3. `ContentRow`
-   - `LeadingStatusIcon` — severity → icon slug (internal; not a public override slot unless documented)
-   - `AlertContent` — text column wrapper
-     - `AlertMessage` — **required** primary copy (**projected slot**; string `message` prop is shorthand fallback)
-     - `AlertLink` *(optional; after message in reading order)*
-4. `ActionsRow`
-   - `AlertAction` *(optional; IDS Button small outlined)*
-   - `AlertDismiss` *(optional; per dismiss rules)*
-
-**Inline (`display="inline"`)**
-
-1. `AlertRoot` — `role="alert"`; inset 4px rail via `box-shadow` (or `::before` for `warning-minor`)
-2. `ContentRow` (`inlineMain`)
-   - `LeadingIcon` — `16×16`; compact `+2px` / detailed `+4px` vertical nudge
-   - `AlertContent`
-     - `TitleRow` *(optional; `density="detailed"` + `AlertTitle` present)* — flex row `gap: 4px`
-       - `AlertTitle` *(optional)*
-       - `AlertAction` *(optional; detailed only — action in title row)*
-     - `AlertTitle` *(optional; detailed, when no title-row action)*
-     - `AlertMessage` — **required** projected slot
-     - `AlertLink` *(optional)*
-3. `TrailingControls` (`AlertActions` region)
-   - `AlertAction` *(optional; compact only)*
-   - `AlertDismiss` *(optional)*
-
-#### B. Group of alerts — `AlertGroup` (global only)
-
-```
-AlertGroupRoot
-  └── Alert [display="global"]  ← exactly one banner chrome
-        ├── CarouselRail (when items.length > 1 or carousel mode)
-        ├── ContentRow → … active AlertItem content …
-        └── ActionsRow → … active AlertItem actions …
-```
-
-- `AlertGroup` owns `items[]`, `activeIndex`, wrap/clamp policy, and wires `carousel` + prev/next into the single `Alert`.
-- **Do not** render multiple `AlertRoot` nodes for carousel mode.
-- Each logical entry is an **`AlertItem`** (data object or composed child); only the **active** item’s slots are projected into the single `Alert`.
-
-#### C. `AlertItem` (logical unit — composition or data)
-
-Whether expressed as `items[]` or nested markup, one `AlertItem` supplies:
-
-| Field / slot | Required | Notes |
-|---|---|---|
-| `severity` | per item in group; on `AlertRoot` for single | Global set vs inline set (inline adds `success`) |
-| `AlertMessage` | **yes** | Replaces legacy `message: string`; slot may contain rich text / inline elements |
-| `AlertTitle` | no | Inline `density="detailed"` only |
-| `AlertLink` | no | Link contract (`href` / `routerLink`) |
-| `AlertAction` | no | Composes IDS Button small outlined |
-| `AlertDismiss` | no | Subject to global/inline dismiss rules |
+### Component composition
 
 ### Single alert item (shared logical model)
 
 Every rendered alert (global or inline) reflects **one** `AlertItem` at a time:
 
 - **`severity`** — semantic state (see sets above).
-- **Details** — primary copy via **`AlertMessage` slot** (preferred) or shorthand **`message`** string for demos/codegen; inline may also show optional **`AlertTitle`** when `density = detailed`.
-- **Link** — optional `AlertLink`; see **Link contract** below.
-- **Action** — optional `AlertAction` (IDS Button).
-- **Dismiss** — optional `AlertDismiss`; per display and severity defaults.
+- **Details** — primary copy (`message`); inline may also show optional **`title`** when `density = detailed`.
+- **Link** — optional; see **Link contract** below.
+- **Action** — optional text-style or outlined control per display rules.
+- **Dismiss** — optional per display and severity defaults.
 
 ### Cross-component dependency contract (Button)
 
@@ -170,28 +81,7 @@ When multiple alert items must share **one** banner chrome:
 
 ### Deterministic render order
 
-The canonical slot trees are under **Anatomy → Child components — deterministic order** and **Codegen Contract → Deterministic structure**. Implementations must not invent alternate hierarchies.
-
-**Composition example (inline, Clarity-style `alert-text` → `AlertMessage`):**
-
-```html
-<ids-alert display="inline" severity="informational" density="compact">
-  <ids-alert-message>
-    This is informational inline alert text for context.
-  </ids-alert-message>
-</ids-alert>
-```
-
-**Group example (global, maps to `clr-alerts` + pager):**
-
-```html
-<ids-alert-group [activeIndex]="index" (activeIndexChange)="index = $event">
-  <ids-alert display="global" [carousel]="carouselState">
-    <ids-alert-message>{{ items[index].copy }}</ids-alert-message>
-    <ids-alert-action actionLabel="Fix" />
-  </ids-alert>
-</ids-alert-group>
-```
+Framework-agnostic slot trees and optional branches are defined in **Codegen Contract → Deterministic structure** (do not duplicate ad-hoc hierarchies in generated code).
 ## Layout & Measurements
 
 ### Global
@@ -212,8 +102,8 @@ The canonical slot trees are under **Anatomy → Child components — determinis
 - Sample widths from refetched matrix node:
   - Compact row references: `1057px` (`42903:139071` family), runtime still container-driven.
   - Detailed row references: `631px` (`42903:139032` family), runtime still container-driven.
-- **Accent rail treatment:** default is `box-shadow: inset 4px 0 0 0 var(--inline-rail)` where `--inline-rail` is the severity solid alerting background token.  
-  `warning-minor` uses a dedicated `::before` pseudo-element with the same solid minor fill plus warning-accessible edge stroke token.
+- **Accent rail treatment:** all severities use a `::before` pseudo-element (`position: absolute; left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) so the rail sits on top of the border in both light and dark mode. `box-shadow: inset` must not be used — in dark mode the border tokens are opaque and would cover the rail.
+  `warning-minor` overrides `::before` to add `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides of the rail, with `box-sizing: border-box`.
 - **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: var(--scale-40); align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
 - **Detailed** (`density: detailed`): `min-height: 68px` (Figma reference frame `1000×68`; width remains container-driven); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
 - **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
@@ -226,7 +116,7 @@ The canonical slot trees are under **Anatomy → Child components — determinis
 
 - Sample frame size: `1000 x 68` (reference only; runtime remains container-driven width).
 - Root surface: `border: 1px solid var(--color-border-alerting-critical-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
-- Inset rail: `box-shadow: inset 4px 0 0 0 var(--color-background-alerting-critical)`.
+- Inset rail: `::before` pseudo-element `left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--color-background-alerting-critical)`.
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
 - Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) aligned to content row top (`12px` via action-only negative margin); dismiss icon at trailing cluster `16px` top inset (unchanged); **gap between action and dismiss: `var(--spacing-space-16)`** when both are in the trailing cluster; link behavior/appearance follows inline link contract and does not change other visual attributes.
@@ -311,28 +201,19 @@ Use the same **semantic token names**; resolved values are defined per theme in 
 - Default dismissibility (global): non-critical severities show dismiss unless `dismissible={false}`; `critical` shows dismiss **only** when carousel is present AND no action button — even `dismissible={true}` cannot override this for the critical + action combination (see `showDismiss` logic in **States → Global**).
 ## Composition & API (runtime)
 
-### API modes
-
-| Mode | Use | Notes |
-|---|---|---|
-| **Composition (preferred)** | App / framework components | Project `AlertMessage`, `AlertTitle`, `AlertLink`, `AlertAction`, `AlertDismiss` as children; mirrors [Clarity `clr-alert-item`](https://clarity.design/documentation/alert/code) + `.alert-text` |
-| **Props / data (shorthand)** | Storybook controls, tests, `AlertItem[]` in `AlertGroup` | `message`, `title`, `linkLabel`, `actionLabel` string props; codegen may map these to the same slots |
-
-**Rule:** `AlertMessage` slot content is **authoritative** when present; `message` string is a convenience fallback for the same region. Validation fails if **both** are empty.
-
 ### `Alert` (single surface)
 
 **Required**
 
 - `display: "global" | "inline"`
-- **Primary copy:** `AlertMessage` slot **or** `message: string` (shorthand)
+- `message: string`
 
 **Optional (both)**
 
 - `severity` (per display set)
-- `link` / `AlertLink`: `{ label: string; href?: string; routerLink?: string | any[] }` (see Link contract)
-- `actionLabel` + `onAction` / `AlertAction` (composes IDS Button)
-- `dismissible`, `onDismiss` / `AlertDismiss`
+- `link`: `{ label: string; href?: string; routerLink?: string | any[] }` (see Link contract)
+- `actionLabel`, `onAction`
+- `dismissible`, `onDismiss`
 - `onLinkClick`
 
 **Global-only**
@@ -341,14 +222,14 @@ Use the same **semantic token names**; resolved values are defined per theme in 
 
 **Inline-only**
 
-- `title` / `AlertTitle?: string` (detailed density)
+- `title?: string`
 - `density?: "compact" | "detailed"`
 
 ### `AlertGroup` (global, multi-item)
 
-- `items: AlertItem[]` **or** composed `AlertItem` children (same logical shape)
-- `activeIndex` (internal / host-controlled)
-- Renders **one** `Alert` with `display="global"` bound to the active item’s slots/fields and `carousel` counter + handlers.
+- `items: AlertItem[]`
+- `activeIndex` (internal)
+- Renders **one** `Alert` with `display="global"` bound to `items[activeIndex]` and `carousel` counter + handlers.
 ### Display modes
 
 | `display` | Role | Carousel | Typical container |
@@ -391,26 +272,25 @@ Deterministic structure:
    - `CarouselNextButton` (native `button`, chevron `12×12`)
 3. `ContentRow`
    - `LeadingStatusIcon` (shared `Icon`, `16×16`, severity → `shapeName` map in **Tokens**)
-   - `AlertContent`
-     - `AlertMessage` (**required** — projected slot; `message` string is shorthand)
-     - optional `AlertLink` / `InlineLink` (reading order after message)
+   - `Message` (required copy)
+   - optional `InlineLink` (reading order after message when `link` is set)
 4. `ActionsRow`
-   - optional `AlertAction` / `ActionButton` (IDS Button **small** outlined; see Button spec)
-   - optional `AlertDismiss` / `DismissButton` (icon control, `12×12` glyph, `32×32` min hit target)
+   - optional `ActionButton` (IDS Button **small** outlined; see Button spec)
+   - optional `DismissButton` (icon control, `12×12` glyph, `32×32` min hit target)
 
 **`Alert` — inline (`display="inline"`):**
 
-1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `box-shadow` (not a separate DOM rail node)
+1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) — not `box-shadow`, which renders behind the border and is hidden in dark mode
 2. `ContentRow` (`inlineMain`) — `flex: 1 1 auto`, `gap: var(--spacing-space-8)`
    - `LeadingIcon` — shared `Icon` at `16×16`; vertical nudge `4px` (detailed) or `2px` (compact)
-   - `AlertContent` — column, no gap; `padding-right: var(--padding-padding-16)`
-     - optional `TitleRow` (`density="detailed"` + `AlertTitle` present): flex row `gap: 4px` containing `AlertTitle` + optional `AlertAction`
-     - optional `AlertTitle` only (detailed, no action in title row)
-     - `AlertMessage` (**required** — projected slot)
-     - optional `AlertLink` / `InlineLink`
-3. `TrailingControls` / `AlertActions` — `shrink: 0`; `gap: var(--spacing-space-16)` between `AlertAction` and `AlertDismiss` when both present; compact: `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`; detailed: `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; detailed `AlertAction` only: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` to align with content `padding-block` without moving dismiss
-   - optional `AlertAction` (outlined IDS Button small) — compact only; detailed action is in `TitleRow`
-   - optional `AlertDismiss`
+   - `ContentBlock` — column, `gap: var(--spacing-space-4)` (between title row and message); `padding-right: var(--padding-padding-16)`
+     - optional `TitleRow` (`density="detailed"` + `title` present): flex row `gap: 4px` containing `Title` + optional `ActionButton`
+     - optional `Title` only (detailed, no action)
+     - `Message` (required)
+     - optional `InlineLink`
+3. `TrailingControls` — `shrink: 0`; `gap: var(--spacing-space-16)` between `ActionButton` and `DismissButton` when both present; compact: `height: 40px; align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`; detailed: `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; detailed `ActionButton` only: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` to align with content `padding-block` without moving dismiss
+   - optional `ActionButton` (outlined IDS Button small) — compact only; detailed action is in `TitleRow`
+   - optional `DismissButton`
 
 Variant matrix:
 
@@ -460,7 +340,7 @@ Fallback/error rules:
 - `display="global"` + `severity="success"` → **validation error** (or explicit product map to `informational` documented in app config; default is error).
 - Unknown `severity` for active `display` → fallback to `informational`.
 - Unknown `density` on inline → fallback to `compact`.
-- Missing or empty `AlertMessage` slot **and** missing/empty `message` shorthand → validation error.
+- Missing or empty `message` → validation error.
 - `carousel` on inline → validation error.
 - `title` on global → validation error (or ignore with dev warning; prefer validation error).
 - Unknown icon slug → hide leading icon slot, continue rendering message (log in dev).
@@ -469,14 +349,13 @@ Fallback/error rules:
 
 Validation checklist:
 
-- [ ] Composition API: `AlertMessage` slot documented and preferred over `message` string; empty slot + empty string fails validation.
-- [ ] `AlertGroup` + single `AlertRoot` pattern matches global carousel (no stacked global roots).
+- [ ] `Deterministic structure` matches generated DOM for both `display` modes (no duplicate global roots for carousel).
 - [ ] Variant matrix: all valid `display` × `severity` × optional slot combinations documented; global rejects `success`.
 - [ ] Action controls reuse IDS Button small outlined contract, not alert-local button CSS.
 - [ ] Icons use shared `Icon` + canonical slugs from **States → Global** table; no standalone inline SVG factories (warning-minor `variant="inline"` via `iconInlineRegistry.ts` is acceptable — it routes through the shared `Icon` primitive).
 - [ ] Link contract supports `href` and `routerLink` without ambiguity.
 - [ ] Global carousel uses **1-based** `currentItem` in API and labeled prev/next controls.
-- [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
+- [ ] Inline inset rail uses `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) + severity solid token; `warning-minor` adds `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides.
 - [ ] Light/dark state tables remain parallel (same `var(--...)` names).
 - [ ] Dismiss hit target ≥ `32×32` on inline and global.
 - [ ] Inline trailing cluster: `var(--spacing-space-16)` gap between outlined action and dismiss when both present (compact + detailed).
@@ -550,7 +429,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 **Layout & structure**
 - **Root**: `display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-space-12); width: 100%; box-sizing: border-box; padding-left: var(--padding-padding-20)`. Density class adds `min-height`: compact → `var(--scale-40)`; detailed → `68px`
 - **`.inlineMain`**: `flex: 1 1 auto; display: flex; align-items: flex-start; gap: var(--spacing-space-8)`. Compact adds `padding-block: var(--padding-padding-10); padding-right: var(--padding-padding-8)`; detailed adds `padding-block: var(--padding-padding-12)`
-- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding-right: var(--padding-padding-16)` — no gap between title row and message
+- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-space-4); padding-right: var(--padding-padding-16)` — `spacing-4` between title row and message
 - **`.inlineTitleRow`** (detailed + title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title: `flex: 1 1 auto; min-width: 0`; action button: `flex-shrink: 0`
 - **`.inlineTrailing`**: `display: flex; flex-shrink: 0; align-items: flex-start; justify-content: flex-end; gap: var(--spacing-space-16)`
 - **Compact `.inlineTrailing`**: `align-items: center; height: var(--scale-40); padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16)`
@@ -568,9 +447,13 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Text color**: `var(--color-text-brand-strong)`
 
 **Severity tokens**
-- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; `box-shadow: inset 4px 0 0 0 var(--inline-rail)` for all except warning-minor
-- **Warning-minor rail**: uses `::before` pseudo-element with `position: absolute; left: 0; top: 0; bottom: 0; width: 4px` instead of `box-shadow` (Figma warning-accessible stroke requirement); `box-shadow: none` on root
+- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; rail rendered via `::before` (`left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) for all severities
+- **Warning-minor rail**: same `::before` positioning but overrides `background` to `var(--color-background-alerting-minor)` and adds `border: 1px solid var(--color-border-alerting-warning-accessible); box-sizing: border-box`
 
 **Dismiss visibility logic**
 - `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props
+
+**2026-08-09**
+- `.inlineText`: vertical gap between the title row (title + optional action) and the message changed `0` → `var(--spacing-space-4)`; visible only in `density="detailed"` (title present), `compact` (message-only) unchanged. Source: `storybook/src/components/Alert.module.css`.
+- Spec synced to code: **Anatomy → Component composition** (`ContentBlock` gap) and the `.inlineText` note above updated to `var(--spacing-space-4)`.
 

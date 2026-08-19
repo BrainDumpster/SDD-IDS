@@ -3,13 +3,6 @@
   flex-direction: column;
   height: 700px;
   background: var(--color-background-component);
-  background-image:
-    linear-gradient(
-      180deg,
-      var(--color-background-gradient-left-nav-start, #ffffff) 0%,
-      var(--color-background-gradient-left-nav-end, #ffffff) 100%
-    ),
-    linear-gradient(90deg, var(--color-background-component) 0%, var(--color-background-component) 100%);
   border: var(--border-width-border-1) solid var(--color-border-accessible);
   border-top: none;
   box-sizing: border-box;
@@ -335,10 +328,6 @@
   border-radius: var(--corner-radius-radius-4);
 }
 
-.secondaryInteractive.secondaryRowSelected:focus-visible {
-  box-shadow: inset 4px 0 0 0 var(--color-border-brand-dark);
-}
-
 .bottomToggle {
   box-sizing: border-box;
   /* 1px top + 16 + 16 + 16 — bottom stroke is `.root` `border-bottom` only (no double line). */
@@ -372,6 +361,11 @@
   -webkit-appearance: none;
 }
 
+.bottomToggleButton:focus,
+.bottomToggleButton:focus-visible {
+  outline: none;
+}
+
 .bottomToggleIcon {
   width: 16px;
   height: 16px;
@@ -391,26 +385,37 @@
   pointer-events: none;
 }
 
+.interactive:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: calc(-1 * var(--border-width-border-1));
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.primaryRow:not(.interactive):focus,
+.primaryRow:not(.interactive):focus-visible {
+  outline: none;
+}
+
 .selectedInset {
   position: absolute;
   left: calc(-1 * var(--border-width-border-1));
   top: 0;
   bottom: 0;
   width: calc(4px + var(--border-width-border-1));
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-base);
 }
 
 .selected .selectedInset {
   display: block;
 }
 
-/* IDS default: selected + selected-focus use brand-dark inset. */
+/* IDS default: selected + selected-focus use brand-base inset. */
 .stateSelected .selectedInset {
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-base);
 }
 
 .stateSelectedFocus .selectedInset {
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-base);
 }
 
 .stateDefault,
@@ -446,7 +451,19 @@
   color: var(--color-icon-brand-base, #0076ce);
 }
 
+.secondaryParentSelected {
+  background: var(--color-background-brand-lighter);
+}
+
 .secondaryParentSelected .primaryIcon {
+  color: var(--color-icon-brand-base, #0076ce);
+}
+
+.secondaryParentSelected .primaryLabel {
+  color: var(--color-text-brand-strong);
+}
+
+.secondaryParentSelected .chevronIcon {
   color: var(--color-icon-brand-base, #0076ce);
 }
 
@@ -485,7 +502,7 @@
 
 .programmeSynapse.collapsed .stateSelected .selectedInset,
 .programmeSynapse.collapsed .stateSelectedFocus .selectedInset {
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-base);
 }
 
 .programmeSynapse .stateSelected .primaryIcon,

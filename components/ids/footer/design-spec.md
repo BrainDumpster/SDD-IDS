@@ -1,6 +1,8 @@
 # Footer Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/Footer.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/footer.py`
 - **Component:** Footer
 - **Category:** Navigation
 - **Design System:** IDS
@@ -15,8 +17,7 @@
 - **Child nodes (same file):** `38908:5819` Left; `38908:5820` Host Name; `38908:5821` SWID; `38908:5823` copy; `38908:5825` Time; `38908:5826` time-clock; `38908:5829` Time Zone; `38908:5830` world-globe
 - **Figma variant axes (boolean toggles on component):** `hostname`, `currentDateAndTime`, `timeZone` (all default `true` in library sample)
 - **Storybook examples requested:** yes
-- **Storybook path (React):** `storybook/src/components/IdsFooter.stories.tsx`
-- **Storybook path (Angular):** `storybook-angular/src/components/ids-footer/ids-footer.stories.js`
+- **Storybook path:** `storybook-generated/ids/src/components/Footer.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
 - **Storybook meta title:** `Spec Generated/IDS/Footer`
 - **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-05-22)
 
@@ -29,7 +30,7 @@ Deterministic slot order (left → right):
 4. `FooterSwidGroup` (optional when SWID shown) — label + value + `FooterCopyControl`
 5. `FooterCopyControl` — icon-only control for SWID copy (`copy` icon, 14×14)
 6. `FooterTimeGroup` (optional) — `FooterTimeIcon` + `FooterDateTimeLabel`
-7. `FooterTimeZoneGroup` (optional) — `FooterTimeZoneIcon` + `FooterTimeZoneAction` (link-styled control)
+7. `FooterTimeZoneGroup` (optional) — single tertiary button with world-globe icon (size: small, variant: tertiary, iconSlug: world-globe)
 
 ## Layout & Measurements
 - Root width is container-driven: `width: 100%`, `box-sizing: border-box`.
@@ -38,10 +39,10 @@ Deterministic slot order (left → right):
 - Root border: `var(--border-width-border-1)` solid `var(--color-border-light)` on all sides (Figma frame uses full perimeter stroke).
 - Root padding: none on root; inner regions carry horizontal padding.
 - **Left region:** `padding-left` / `padding-right` `var(--padding-padding-16)`; gap between host and SWID groups `var(--spacing-space-24)`; items vertically centered.
-- **Host name block:** content-driven width; Figma sample text area ~277px — do not hardcode width at runtime unless product requires truncation.
+- **Host name block:** content-driven width; truncates at **48 characters** with ellipsis; Figma sample text area ~277px.
 - **SWID group:** inline flex, gap `var(--spacing-space-8)`; copy control **14×14px** hit target (expand focus ring per a11y contract).
 - **Time group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom (Figma asymmetric), `var(--padding-padding-16)` left, `var(--padding-padding-8)` right; clock icon **16×16px**.
-- **Time zone group:** gap `var(--spacing-space-8)`; padding `var(--padding-padding-4)` top, `3px` bottom, `var(--padding-padding-8)` left, `var(--padding-padding-16)` right; globe icon **16×16px**.
+- **Time zone group:** single tertiary button (size: small, variant: tertiary) with world-globe icon; no padding/gap as handled by Button component.
 - Typography: **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular weight.
 - Sample frame width **1664px** in Figma is reference-only; runtime width follows application shell.
 
@@ -82,10 +83,10 @@ Deterministic slot order (left → right):
 | copy control | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 | copy control | disabled | transparent | none | `var(--color-icon-disabled)` |
 | datetime label | default | transparent | none | `var(--color-text-neutral)` |
-| timezone action | default | transparent | none | `var(--color-text-brand-strong)` |
-| timezone action | hover | transparent | none | `var(--color-text-link-brand-base)` + underline |
-| timezone action | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits hover or default text token |
-| timezone action | disabled | transparent | none | `var(--color-text-disabled)` |
+| timezone action | default | transparent | none | tertiary button styles (uses Button component) |
+| timezone action | hover | transparent | none | tertiary button hover styles |
+| timezone action | focus-visible | transparent | focus ring from Button component | tertiary button focus styles |
+| timezone action | disabled | transparent | none | tertiary button disabled styles |
 
 ## States (Dark Theme)
 
@@ -116,6 +117,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 ### Behavior & guidelines
 - Footer is a **persistent shell status strip**, not a marketing/site footer with link columns.
 - Keep one line at 32px height; truncate long host/SWID strings with ellipsis rather than growing bar height.
+- Host name truncates at **48 characters** maximum with ellipsis.
+- Labels and values always display on single line (white-space: nowrap).
 - Time zone label should reflect the user’s active zone; update when host clock/zone changes.
 - Do not embed primary actions (Save, Submit) in this bar.
 
@@ -173,8 +176,7 @@ FooterRoot
     FooterTimeIcon
     FooterDateTimeLabel
   [optional] FooterTimeZoneGroup
-    FooterTimeZoneIcon
-    FooterTimeZoneAction
+    FooterTimeZoneAction (tertiary button with world-globe icon)
 ```
 
 ### Variant matrix
@@ -189,14 +191,14 @@ FooterRoot
 - `FooterCopyControl`: 14px icon via Icon primitive slug `copy`, tint `var(--color-icon-brand-base)`.
 - `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-neutral)`.
 - `FooterDateTimeLabel`: `var(--color-text-neutral)`, Body 2 regular weight.
-- `FooterTimeZoneIcon`: slug `world-globe`, 16px, `var(--color-icon-brand-base)`.
-- `FooterTimeZoneAction`: `var(--color-text-brand-strong)`; hover `var(--color-text-link-brand-base)` with underline.
+- `FooterTimeZoneAction`: tertiary button (size: small, variant: tertiary) with iconSlug `world-globe`; uses Button component.
 
 ### Behavior contract
 - Copy writes `swid` prop to clipboard when enabled; always call `onCopySwid` on successful activation.
 - Time zone button does not navigate by default; host handles picker via `onTimeZoneClick`.
 - Hiding a group removes it from layout and tab order without reserving space.
-- Long strings truncate with ellipsis; tooltips are host-defined (optional).
+- Host name truncates at 48 characters with ellipsis; if the value reaches the 48-character limit or is visually truncated (including by component resize), hovering the value shows the full text in a tooltip.
+- Other long strings truncate with ellipsis; tooltips for other content are host-defined (optional).
 
 ### Accessibility contract
 - See **Interactions → Accessibility**; codegen must emit native buttons for copy and time-zone actions.
@@ -236,8 +238,5 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 | Theme CSS | `components/ids-theme.css` |
 | Root spec | `components/ids/root-spec.md` |
 | Figma MCP (2026-05-22) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
-| Storybook implementation (React) | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
-| Spec Generated story (React) | `storybook/src/components/IdsFooter.stories.tsx` |
-| Runtime contract | `component-contracts/ids/footer.contract.ts` |
-| Storybook implementation (Angular) | `storybook-angular/src/components/ids-footer/` |
-| Spec Generated story (Angular) | `storybook-angular/src/components/ids-footer/ids-footer.stories.js` |
+| Storybook implementation | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
+| Spec Generated story | `storybook/src/components/IdsFooter.stories.tsx` |

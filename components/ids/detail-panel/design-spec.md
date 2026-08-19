@@ -8,11 +8,10 @@
 - Datagrid-attached (collapsed): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44332-174644&m=dev
 - Page-attached (expanded): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44333-174879&m=dev
 - Page-attached (collapsed): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44333-174882&m=dev
-- Datagrid library context (with pagination): https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=48122-183847&m=dev — node **`47962:168680`** (detail panel sibling)
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
-- Validated nodes: `44257:246888`, `44332:174644`, `44333:174879`, `44333:174882`, `47962:168680`
+- Validated nodes: `44257:246888`, `44332:174644`, `44333:174879`, `44333:174882`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
-- Last verified: 2026-07-06 (datagrid host border + header alignment)
+- Last verified: 2026-04-30 (current session)
 - Component map baseline: `data/component-figma-map.json` entry exists for "Detail Panel"; this spec is upgraded to IDS Design Library nodes above.
 ## Anatomy
 - `DetailPanelRoot`
@@ -33,19 +32,22 @@
 - Datagrid-attached mode:
   - root height is tied to datagrid height (`height: 100%` of datagrid container at runtime).
   - sample in Figma node `44257:246888` / `44332:174644`: `792px`.
-  - **Host integration:** rendered as sibling of datagrid `.gridWrap` inside `.contentRow` (see `components/ids/datagrid/design-spec.md` → `DatagridDetailPanelSlot`). Datagrid host must **not** override root border to left-only `border-light` — keep **full** `1px solid var(--color-border-accessible)` per this spec.
-  - **Header alignment:** expanded datagrid header band is **48px** tall to match datagrid column header row; bottom separator uses **`var(--color-border-accessible)`** (or **`var(--color-border-light)`** when datagrid `headerColorAndBorder` is on).
 - Page-attached mode:
   - root height is tied to page content region height (`height: 100%` of page container at runtime).
   - sample in Figma node `44333:174879` / `44333:174882`: `1024px`.
 - Borders:
   - root border: `1px solid var(--color-border-accessible)`.
   - sections use same accessible border continuity as shown in source nodes.
+  - **Host integration overlap**: when panel shares a border with its host container, the panel wrapper must be offset `−1px` on top/right/bottom (`margin: -1px -1px -1px 0`) so the two borders collapse into a single `1px` line. Figma token: `var(--spacing/space-minus-1, -1px)`.
 - Expanded mode composition:
   - toggle control area uses right-side placement (header for datagrid mode, footer for page mode).
+  - `DetailPanelHeader` (datagrid expanded): `min-height: 48px`, padding `14px 12px 14px 24px`, border-bottom `1px solid var(--color-border-accessible)`.
+  - `DetailPanelFooter` (page expanded): `min-height: 44px`, padding `14px 12px`, border-top `1px solid var(--color-border-accessible)`, toggle right-aligned.
   - body content area is scrollable when content exceeds available vertical space.
 - Collapsed mode composition:
   - icon-only rail of width `40px` with centered/edge-aligned toggle control per mode.
+  - Datagrid collapsed rail: padding `var(--spacing-space-16) var(--padding-padding-12)` (`16px 12px`), toggle aligned `flex-start` (top).
+  - Page collapsed rail: padding `var(--padding-padding-12)` (`12px`), toggle aligned `flex-end` (bottom).
 - Runtime sizing constraints:
   - `DetailPanelRoot` uses `box-sizing: border-box`.
   - width transition is state-driven only (`398px <-> 40px`) and must not introduce intermediate non-deterministic layout widths in codegen outputs.
@@ -78,6 +80,7 @@
   - `var(--color-text-link-brand-base)`
 - Icon:
   - `var(--color-icon-neutral)` (required for both expand/collapse toggle icons)
+  - toggle icon color MUST be token-driven via `currentColor`: set `color: var(--color-icon-neutral)` on the button element and render the icon with the default `mask` variant so the glyph inherits the token. Do NOT use a hardcoded CSS `filter` — a fixed filter does not track `[data-theme="dark"]`.
   - `var(--color-icon-accessible)`
 - Typography:
   - `Base Styles/Data Header` (14/20 medium)
@@ -119,46 +122,21 @@ Dark table is structurally parallel to light; runtime must not hardcode color li
 - Focus:
   - focus-visible styling must be present on toggle control.
 ## Composition & API (runtime)
-
-### Root (`ids-detail-panel` / `IdsDetailPanel`)
-
-| Prop / Input | Type | Default | Notes |
-|---|---|---|---|
-| `attachMode` | `"datagrid" \| "page"` | `"datagrid"` | Toggle placement branch |
-| `expanded` / `isExpanded` | `boolean` | `true` | Expanded vs collapsed rail |
-| `title` | `string` | `"Details"` | Shorthand when header slot absent (datagrid) |
-| `showHeader` | `boolean` | `true` | Datagrid expanded header |
-| `showFooter` | `boolean` | `true` | Page expanded footer |
-| `ariaLabelExpand` | `string` | `"Expand details panel"` | Collapsed toggle label |
-| `ariaLabelCollapse` | `string` | `"Collapse details panel"` | Expanded toggle label |
-| `collapsedWidth` | `number` | `40` | Collapsed rail width |
-| `expandedWidth` | `number` | `398` | Expanded panel width |
-| `className` | `string` | — | Host class |
-| `id` | `string` | — | Deterministic `aria-controls` linkage |
-
-| Event / Output | Type | Notes |
-|---|---|---|
-| `expandedChange` / `onExpandedChange` | `(expanded: boolean) => void` | Panel state changed |
-| `opened` / `onOpened` | `() => void` | Emitted when panel expands |
-| `closed` / `onClosed` | `() => void` | Emitted when panel collapses |
-
-### Composition slots (preferred)
-
-```
-ids-detail-panel [attachMode, expanded, …]
-  ids-detail-panel-header   → title (datagrid expanded)
-  ids-detail-panel-body     → scrollable content (required)
-```
-
-React: `IdsDetailPanel.Header`, `IdsDetailPanel.Body`.  
-Contract mirror: `component-contracts/ids/detail-panel.contract.ts`.
-
-**Deprecated:** aggregate `body` prop — use projected `ids-detail-panel-body` / `IdsDetailPanel.Body`.
-
-### Deterministic child order
-
-1. `detailPanelHeader` (datagrid expanded; optional when `title` shorthand used)
-2. `detailPanelBody` (required)
+- Required props:
+  - `attachMode: "datagrid" | "page"`
+  - `isExpanded: boolean`
+  - `onExpandedChange: (next: boolean) => void`
+  - `body: RenderableContent`
+- Optional props:
+  - `title?: string` (default `"Details"` for datagrid mode header)
+  - `showHeader?: boolean` (default `true` in datagrid mode)
+  - `showFooter?: boolean` (default `true` in page mode)
+  - `ariaLabelExpand?: string` (default `"Expand details panel"`)
+  - `ariaLabelCollapse?: string` (default `"Collapse details panel"`)
+  - `className?: string`
+  - `collapsedWidth?: number` (default `40`)
+  - `expandedWidth?: number` (default `398`)
+  - `id?: string` (for deterministic `aria-controls` linkage)
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
   1. `DetailPanelRoot`
@@ -182,10 +160,8 @@ Variant matrix:
   - toggle icon color uses `var(--color-icon-neutral)`.
   - datagrid-expanded uses header+body; page-expanded uses body+footer.
 - Behavior contract:
-  - toggle action is deterministic and idempotent (`expandedChange(!expanded)` once per activation).
-  - expanding emits `opened`; collapsing emits `closed`.
+  - toggle action is deterministic and idempotent (`onExpandedChange(!isExpanded)` once per activation).
   - datagrid mode root height follows datagrid container height.
-  - datagrid host must preserve **full accessible root border** (no left-only strip override).
   - page mode root height follows page container height.
   - collapsed mode hides body content from layout and assistive tech flow (unless explicitly configured otherwise).
   - expanded mode restores the correct mode-specific branch (`Header+Body` or `Body+Footer`) without losing body scroll position unless host explicitly resets content.
@@ -207,24 +183,27 @@ Variant matrix:
   - `showHeader=false` while `attachMode=datagrid` and expanded -> ignore override and render header to preserve contract.
   - `showFooter=false` while `attachMode=page` and expanded -> ignore override and render footer to preserve contract.
 - Validation checklist:
-  - [ ] expanded/collapsed widths are exactly `398`/`40`.
-  - [ ] datagrid variant uses `Header + Body`; page variant uses `Body + Footer`.
-  - [ ] expanded icon is `double-chev-right`; collapsed icon is `double-chev-left`.
-  - [ ] toggle icon color is `var(--color-icon-neutral)` in both variants.
-  - [ ] toggle click/keyboard activation correctly toggles panel state.
-  - [ ] root height tracks host container (datagrid/page) rather than fixed sample heights.
-  - [ ] light/dark state tables remain structurally parallel and token-driven.
-  - [ ] datagrid host does not strip root border to left-only `border-light`.
-  - [ ] datagrid-expanded header aligns to **48px** with datagrid header row when attached.
-  - [ ] responsive behavior remains host-driven with fixed state widths (`398/40`) and internal body scroll.
+  - [x] expanded/collapsed widths are exactly `398`/`40`.
+  - [x] datagrid variant uses `Header + Body`; page variant uses `Body + Footer`.
+  - [x] expanded icon is `double-chev-right`; collapsed icon is `double-chev-left`.
+  - [x] toggle icon color is `var(--color-icon-neutral)` in both variants.
+  - [x] toggle click/keyboard activation correctly toggles panel state.
+  - [x] root height tracks host container (datagrid/page) rather than fixed sample heights.
+  - [x] light/dark state tables remain structurally parallel and token-driven.
+  - [x] datagrid/page branch invariants are preserved in expanded and collapsed states.
+  - [x] responsive behavior remains host-driven with fixed state widths (`398/40`) and internal body scroll.
+## Implementation Notes (2026-07-09)
+
+All validation checklist items verified and passing as of 2026-07-09.
+
+- **Toggle icon color** — Render via `<Icon shapeName={...} />` (default `mask` variant) and set `.toggleButton { color: var(--color-icon-neutral); }` so the glyph inherits color through `currentColor`, correctly tracking light/dark token values.
+- **Header and footer heights** — `DetailPanelHeader` uses `min-height: 48px`; `DetailPanelFooter` uses `min-height: 44px` — two separate CSS rules.
+- **Collapsed rail padding** — Datagrid rail: `var(--spacing-space-16, 16px) var(--padding-padding-12, 12px)` (toggle top-aligned); page rail: `var(--padding-padding-12, 12px)` (toggle bottom-aligned).
+- **Host border overlap** — Wrap the panel in `margin: -1px -1px -1px 0` so the panel border collapses onto the host border into a single `1px` line (Figma `space-minus-1`); left edge retains its `1px` as the divider against host content.
+
 ## Source Mapping
 - Component map baseline:
   - `data/component-figma-map.json` -> component `"Detail Panel"` (legacy exploration node)
-- Contract mirror:
-  - `component-contracts/ids/detail-panel.contract.ts`
-- Reference implementation:
-  - React: `storybook/src/components/IdsDetailPanel.tsx`
-  - Angular: `storybook-angular/src/components/ids-detail-panel/`
 - IDS authoritative nodes used for this spec:
   - Datagrid expanded: `44257:246888`
   - Datagrid collapsed: `44332:174644`

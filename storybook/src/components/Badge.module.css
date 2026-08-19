@@ -40,7 +40,7 @@
 }
 
 .default {
-  background: var(--color-background-alerting-info, #005ece);
+  background: var(--color-background-controls-brand-base);
   border-color: var(--color-border-white, #ffffff);
   color: var(--color-text-white, #ffffff);
 }

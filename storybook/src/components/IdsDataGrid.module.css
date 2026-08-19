@@ -401,7 +401,11 @@
   z-index: 1;
   width: max-content;
   min-width: 200px;
-  max-width: min(480px, calc(100vw - 24px));
+  max-width: min(
+    480px,
+    calc(100vw - 24px),
+    var(--ids-datagrid-filter-panel-max-width, 480px)
+  );
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -440,8 +444,8 @@
 /* Date / date-time inner panel: 480px sample, py-8 px-1 on slot content. */
 .filterPopupPanel:has([data-datetime-filter]),
 .filterPopupPanel:has([data-date-filter]) {
-  min-width: 480px;
-  max-width: min(480px, calc(100vw - 24px));
+  min-width: min(480px, var(--ids-datagrid-filter-panel-max-width, 480px));
+  max-width: min(480px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 480px));
 }
 
 .filterPopupPanel:has([data-datetime-filter]) .filterPopupPanelBody,
@@ -449,22 +453,55 @@
   padding: 0;
 }
 
+/* Column Search — Figma Search Box Properties `37822:91077` (Large 40px). */
+.filterPopupPanel:has([data-text-filter]) {
+  width: min(300px, var(--ids-datagrid-filter-panel-max-width, 300px));
+  min-width: min(200px, var(--ids-datagrid-filter-panel-max-width, 200px));
+  max-width: min(300px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 300px));
+}
+
 .filterPopupSearchRow {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
-  min-height: 32px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 40px;
+  /* Figma: padding-16 L/R, padding-6 T/B; outer itemSpacing = space-none */
+  padding: var(--padding-padding-6, 6px) var(--padding-padding-16, 16px);
+  gap: 0;
+  background: var(--color-background-component);
+  /* Outer border lives on L-frame FilterPanel — do not double-stroke the row */
 }
 
 .filterPopupSearchIcon {
   flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 16px;
   height: 16px;
+  /* Tint via Icon mask `currentColor` — do not hardcode fill on the SVG */
   color: var(--color-icon-brand-base);
+}
+
+.filterPopupSearchIcon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: currentColor;
+}
+
+/* Inner text frame — Figma Frame 3466216 / DropdownMenu `.searchInputWrap` */
+.filterPopupSearchInputWrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--spacing-space-8, 8px);
+  padding: var(--padding-padding-4, 4px) 0 var(--padding-padding-4, 4px)
+    var(--padding-padding-8, 8px);
+  box-sizing: border-box;
 }
 
 .filterPopupSearchInput {
@@ -474,16 +511,46 @@
   margin: 0;
   padding: 0;
   background: transparent;
-  font-size: 14px;
+  font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
-  line-height: 20px;
-  color: var(--color-text-neutral-strong);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral);
   outline: none;
 }
 
 .filterPopupSearchInput::placeholder {
   color: var(--color-text-neutral);
   font-weight: 400;
+}
+
+.filterPopupSearchInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* Clear — same contract as DropdownMenu search clear (visible only when query non-empty). */
+.filterPopupSearchClear {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: var(--color-icon-accessible);
+}
+
+.filterPopupSearchClear:focus-visible {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.filterPopupSearchClearIcon {
+  flex-shrink: 0;
+  display: block;
+  /* Inherits button `color` → Icon mask / SVG fill use currentColor */
+  color: inherit;
+  fill: currentColor;
 }
 
 /* Holds header layout while the open filter menu is portaled above scroll/stacking contexts */

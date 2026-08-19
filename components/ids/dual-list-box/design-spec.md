@@ -1,6 +1,8 @@
 # Dual List Box Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/DualListBox.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/dual_list_box.py`
 - **Component:** Dual List Box
 - **Design system:** IDS
 - **Category:** Form Elements
@@ -43,25 +45,26 @@ Deterministic slot order for **`DualListBoxRoot`**:
 
 ## Layout & Measurements
 - **Runtime width:** container-driven (`width: 100%`, `box-sizing: border-box`); Figma sample assembly ~`724×459` (`12114:232557`, reference only).
-- **`ListsParent`:** CSS grid — `grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr)`; `grid-template-rows: auto minmax(384px, 1fr)`; `column-gap: var(--spacing-space-16)`; `row-gap: var(--spacing-space-8)`.
+- **Root container (`.root`):** background `var(--color-background-component)`; border `var(--border-width-border-default, 1px) solid var(--color-border-accessible)`; padding `var(--padding-padding-24)` all sides.
+- **`ListsParent`:** CSS grid — `grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr)`; `grid-template-rows: auto minmax(384px, 1fr)`; `column-gap: var(--spacing-space-24)`; `row-gap: var(--spacing-space-8)`.
 - **Pane header:** full width of column; `justify-content: space-between`; title start-aligned; **Total** end-aligned flush with list panel right edge (no extra header inset).
 - **List panel (`.DualListBox-Elements-ListItemGroup`):** `width: 100%` of column (responsive); `min-height: 384px` (sample); padding `var(--padding-padding-24)` top, `var(--padding-padding-32)` bottom, inline `var(--padding-padding-24)`; vertical gap between items `var(--spacing-space-8)`.
-- **Pane header row:** `justify-content: space-between`; title **Body 1** medium (`var(--font-size-body-1)` / `var(--line-height-body-1, 24px)`, `var(--color-text-neutral-strong)`); metrics **Body 2** regular, right-aligned (`Total: N` only in default Figma sample `12114:232557`).
-- **Empty panel:** dashed border `var(--color-border-accessible)`; placeholder **Body 2** medium, centered, user-defined per pane (defaults below).
+- **Pane header row:** `justify-content: space-between`; title **Body 1** regular (`var(--font-size-body-1)` / `var(--line-height-body-1, 24px)`, `var(--color-text-neutral-strong)`); metrics **Body 2** regular, right-aligned (`Total: N` only in default Figma sample `12114:232557`).
+- **Empty panel:** dashed border `var(--color-border-accessible)`; placeholder **Body 2** regular, centered, user-defined per pane (defaults below).
 - **List item row:** width `100%` of panel; padding `var(--padding-padding-8)` inline start, `var(--padding-padding-16)` inline end, `var(--padding-padding-14)` block; `border-radius: 2px`; `border-width: var(--border-width-border-default, 1px)` solid `var(--color-border-accessible)`.
 - **Item interior:** `gap: var(--spacing-space-8)` between drag handle and text; drag icon wrapper `16×16` with `var(--padding-padding-2)` block padding on icon rail.
-- **Item content block:** width `204px` (sample); **Body 2** medium (`var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`).
+- **Item content block:** width `204px` (sample); **Body 2** regular (`var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`).
 - **Transfer column:** vertical `gap: var(--spacing-space-16)`; each button `padding: var(--padding-padding-12)` block, `var(--padding-padding-16)` inline; `border-radius: 2px`; icon `16×16`.
-- **Metrics (header):** `gap: var(--spacing-space-4)`; optional “Selected: N” (medium) + “Total: N” (regular 14/20) on the **pane header row** (not below the list). Figma `12114:232557` uses **Total only** in the header.
+- **Metrics (header):** `gap: var(--spacing-space-4)`; optional “Selected: N” (regular) + “Total: N” (regular 14/20) on the **pane header row** (not below the list). Figma `12114:232557` uses **Total only** in the header.
 - **Scrollbar (12-item variant):** track `var(--color-background-gray-lighter)`; thumb `var(--color-background-gray-base)`; width `10px`; optional overflow gradient `var(--color-gradient-overflow-vertical-start)` → `var(--color-gradient-overflow-vertical-end)`.
 - **Pane-to-transfer spacing:** product-defined; Figma assembly uses clear separation between `300px` list and button column (document host gap ≥ `var(--spacing-space-16)`).
 
 ## Tokens
 ### Typography
-- **List item label:** Body 2 medium — `var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`.
+- **List item label:** Body 2 regular — `var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`.
 - **List item description (optional):** Body 2 — same size/line-height under label.
-- **Empty placeholder:** Body 2 medium — `var(--color-text-neutral)`.
-- **Metrics “Selected”:** Body 2 medium — `var(--color-text-neutral)`.
+- **Empty placeholder:** Body 2 regular — `var(--color-text-neutral)`.
+- **Metrics “Selected”:** Body 2 regular — `var(--color-text-neutral)`.
 - **Metrics “Total”:** Body 2 regular — `var(--color-text-neutral)`.
 
 ### Surfaces, borders, icons

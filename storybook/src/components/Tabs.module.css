@@ -29,7 +29,18 @@
   min-width: 0;
 }
 
+/* Continue the row baseline past the last tab/control (selected tabs omit their own bottom border). */
+.list::after {
+  content: "";
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  pointer-events: none;
+}
+
 .tab {
+  box-sizing: border-box;
   height: 38px;
   padding: 9px var(--padding-padding-24);
   font-size: var(--font-size-body-2);
@@ -46,7 +57,7 @@
   font-family: inherit;
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-space-24);
+  gap: var(--spacing-space-20);
   flex: 0 1 auto;
   min-width: 80px;
   max-width: 250px;
@@ -76,25 +87,30 @@
   display: none;
 }
 
-.tabPrimary::after {
-  height: 24px;
-}
-
-.tabPrimary.selected::after {
-  top: 2px;
-  height: 36px;
-  transform: none;
-}
-
-.tab:hover:not([data-disabled]) {
+.tab:hover:not(.selected):not([data-disabled]) {
   background: var(--color-background-brand-lighter);
   color: var(--color-text-neutral-strong);
 }
 
+.tab:active:not(.selected):not([data-disabled]) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
+}
+
 .tab:focus-visible {
-  outline: none;
-  box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: calc(var(--border-width-border-2) * -1);
   border-radius: var(--corner-radius-radius-4);
+}
+
+.tabSecondary:focus-visible {
+  height: var(--sizing-size-34, 34px);
+  margin: var(--spacing-space-2, 2px) 0;
+}
+
+.tabPrimary:focus-visible {
+  height: var(--sizing-size-36, 36px);
+  margin: var(--spacing-space-1, 1px) 0;
 }
 
 /* Primary: Figma leading accessible rail (full height when selected, 24px centered when not). */
@@ -136,7 +152,8 @@
 .selected {
   background: var(--color-background-surface-2);
   color: var(--color-text-brand-strong);
-  border-bottom-color: transparent;
+  /* Never draw the accessible baseline under the active tab (elevated or transparent). */
+  border-bottom: none;
   z-index: 1;
 }
 
@@ -204,6 +221,19 @@
   display: block;
 }
 
+.tab .closeButton {
+  box-sizing: border-box;
+  width: var(--sizing-size-24);
+  min-width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
+  min-height: var(--sizing-size-24);
+  padding: var(--padding-padding-4) !important;
+}
+
+.tab.hasClose {
+  padding-right: var(--padding-padding-20);
+}
+
 .moreTrigger {
   all: unset;
   box-sizing: border-box;
@@ -221,6 +251,12 @@
   position: relative;
 }
 
+/* `all: unset` clears box-sizing; re-assert for consistent 38px border-box height. */
+.moreTrigger,
+.addButton {
+  box-sizing: border-box;
+}
+
 .moreTrigger::after {
   content: "";
   position: absolute;
@@ -234,6 +270,11 @@
 
 .moreTriggerSecondary::after {
   display: none;
+}
+
+.moreTrigger:active:not(.moreTriggerSelected) {
+  background: var(--color-background-brand-light);
+  color: var(--color-text-brand-strong);
 }
 
 .moreTrigger:hover {
@@ -254,7 +295,7 @@
 
 .moreTriggerSelected {
   color: var(--color-text-brand-strong);
-  border-bottom-color: transparent;
+  border-bottom: none;
   z-index: 1;
 }
 
@@ -271,6 +312,8 @@
 
 .moreIcon {
   flex-shrink: 0;
+  width: var(--sizing-size-10, 10px);
+  height: var(--sizing-size-10, 10px);
   display: block;
 }
 
@@ -354,6 +397,7 @@
 }
 
 .moreTriggerPrimary.moreTriggerSelected {
+  border-bottom: none;
   box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
 }
 
@@ -402,8 +446,8 @@
 }
 
 .panel {
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
-  margin-top: -1px;
+  /* Baseline lives on tab/control borders + `.list::after` only — do not overlay a
+     panel top border (it showed through transparent selected tabs). */
   padding: var(--padding-padding-16) 0;
   font-size: var(--font-size-body-2);
   color: var(--color-text-neutral-strong);
@@ -411,6 +455,10 @@
 }
 
 /* Synapse Nav Tab — Figma `47807:3185` / `Tab-Single` (`47804:189`). */
+.programmeSynapse .list::after {
+  display: none;
+}
+
 .programmeSynapse .listWrap {
   border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
   padding-bottom: var(--padding-padding-1);

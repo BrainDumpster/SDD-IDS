@@ -1,6 +1,8 @@
 # Wizard - Modal Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/WizardModal.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/wizard_modal.py`
 - Component: Wizard - Modal
 - Category: Modals and Wizards
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54621&m=dev

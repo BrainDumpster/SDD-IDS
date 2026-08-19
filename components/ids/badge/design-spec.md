@@ -57,7 +57,7 @@ Optional slots:
 Required semantic tokens from Figma variable extraction:
 - `var(--color-text-white)` = `#ffffff`
 - `var(--color-text-black)` = `#252525`
-- `var(--color-background-alerting-info)` = `#005ece`
+- `var(--color-background-controls-brand-base)` = `#0672CB`
 - `var(--color-background-alerting-critical)` = `#af0000`
 - `var(--color-background-alerting-minor)` = `#ffc700`
 - `var(--color-background-alerting-success)` = `#1b8500`
@@ -69,7 +69,7 @@ Required semantic tokens from Figma variable extraction:
 ## States (Light Theme)
 | Variant key (`Type`) | Background | Border | Text |
 |---|---|---|---|
-| Default | `var(--color-background-alerting-info)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Default | `var(--color-background-controls-brand-base)` | `var(--color-border-white)` | `var(--color-text-white)` |
 | Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
 | Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
 | Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
@@ -88,6 +88,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - If consuming implementation opts into interactivity (clickable badge):
   - cursor and focus handling are controlled by host component, not Badge itself.
   - visual colors in this spec remain unchanged unless explicit interactive variant is introduced.
+- For numeric values of 999 or greater, hover/focus of the badge displays the full value in an `IdsTooltip` that is sized to hug its content.
 - Badge content updates are data-driven; no internal state transitions are required.
 ## Composition & API (runtime)
 Main inputs:

@@ -23,6 +23,11 @@
   height: 20px;
 }
 
+.readOnly.lg {
+  box-sizing: border-box;
+  height: 28px;
+}
+
 .lg {
   height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
@@ -57,25 +62,35 @@
   gap: var(--spacing-space-8);
 }
 
+.dismissible {
+  padding-right: var(--padding-padding-8);
+  gap: var(--spacing-space-4);
+}
+
 .tag[data-disabled] {
   pointer-events: none;
 }
 
-.tag[data-error] {
-  border-color: var(--color-border-alerting-critical-base);
+.tag[data-error]:not(.clickable) {
+  background: var(--color-background-component) !important;
+  border-color: var(--color-border-alerting-critical-base) !important;
+  color: var(--color-text-neutral) !important;
 }
 
-.tag[data-focus] {
+.tag[data-focus],
+.tag:focus-visible {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
 }
 
 /* IDS programme: 2px focus gap */
-.programmeIds[data-focus] {
+.programmeIds[data-focus],
+.programmeIds:focus-visible {
   outline-offset: 2px;
 }
 
 /* Synapse programme (`12715:251521`): 4px focus gap. */
-.programmeSynapse[data-focus] {
+.programmeSynapse[data-focus],
+.programmeSynapse:focus-visible {
   outline-offset: 4px;
 }
 
@@ -102,13 +117,13 @@
 .tone_minor.emphasis_light {
   background: var(--color-background-alerting-minor);
   border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-warning);
+  color: var(--color-text-black);
 }
 
 .tone_major.emphasis_light {
   background: var(--color-background-alerting-major);
   border-color: var(--color-border-alerting-major-white);
-  color: var(--color-text-white);
+  color: var(--color-text-black);
 }
 
 .tone_critical.emphasis_light {
@@ -132,13 +147,13 @@
 .tone_minor.emphasis_strong {
   background: var(--color-background-alerting-minor);
   border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-warning);
+  color: var(--color-text-black);
 }
 
 .tone_major.emphasis_strong {
   background: var(--color-background-alerting-major);
   border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  color: var(--color-text-black);
 }
 
 .tone_critical.emphasis_strong {
@@ -231,6 +246,29 @@
   outline: none;
 }
 
+/* Opt-in max-width truncation (set via the `maxWidth` prop). The label
+   ellipsizes; the dismiss/badge/caret keep their size. */
+.truncated {
+  min-width: 0;
+}
+
+.truncated .textField {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.truncated .label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncated .badge,
+.truncated .dismiss,
+.truncated .menuCaret {
+  flex-shrink: 0;
+}
+
 .editable .textField:focus-visible {
   border-color: var(--color-border-brand-base);
 }
@@ -283,13 +321,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 10px;
-  height: 10px;
+  width: var(--sizing-size-18);
+  height: var(--sizing-size-18);
+  box-sizing: border-box;
   border: none;
+  border-radius: var(--button-control-radius);
   background: transparent;
   color: inherit;
-  padding: 0;
+  padding: var(--padding-padding-4);
   cursor: pointer;
+}
+
+.dismiss:hover:not(:disabled) {
+  background: var(--color-background-controls-brand-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.dismiss:active:not(:disabled) {
+  background: var(--color-background-controls-brand-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.dismiss:focus-visible:not(:disabled) {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: var(--button-focus-ring-offset);
 }
 
 /* Synapse `11666:90413` — close icon hover. */

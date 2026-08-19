@@ -106,7 +106,7 @@ export function IdsDetailPanel({
       aria-controls={isExpanded ? bodyId : undefined}
       onClick={handleToggle}
     >
-      <Icon shapeName={toggleIcon} variant="img" className={styles.toggleIcon} />
+      <Icon shapeName={toggleIcon} />
     </button>
   );
 

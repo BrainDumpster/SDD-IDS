@@ -3,27 +3,38 @@
 ## Metadata
 - Component: Global Search
 - Category: Navigation
-- Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54498&m=dev
-- Node ID: 11067-54498
+- Figma: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37295-6759&m=dev
+- Node ID: 37295-6759
+
 ## Anatomy
-- Search input field with icon
-- Search results dropdown
-- Result categories
-- Result items with icons and descriptions
-- Keyboard shortcuts
-- Focus ring for keyboard navigation
-- Clear button
-- Search suggestions (optional)
+- Modal container (552px × 1024px)
+- Header with "Search" title and close button (X icon)
+- Search box with filter dropdown, search icon, input field, and clear button
+- Results area with sections (for Keyword Results variant)
+- Section headers with icons and titles
+- Line separators between sections
+- Result items with titles and metadata (breadcrumbs)
+- Hover states for result items
+- Search suggestions (for No Results variant)
+
 ## Layout & Measurements
-- Input field height: 40px
-- Dropdown width: 400px (minimum)
-- Result item height: 48px
-- Category header height: 32px
-- Horizontal padding: 16px
-- Border radius: 4px (input), 8px (dropdown)
-- Focus ring: 2px offset from element
-- Icon size: 20px × 20px
-- Maximum dropdown height: 400px (with scroll)
+- Modal width: 552px
+- Modal height: 1024px
+- Header height: 64px (20px padding top/bottom + 24px padding left/right)
+- Search box height: 56px
+- Search box width: 504px (with 24px padding left/right from modal edges)
+- Filter dropdown: 80px width
+- Input field: flexible width
+- Section header height: 24px
+- Result item height: 36px (8px padding top/bottom)
+- Horizontal padding: 24px (modal edges)
+- Vertical gap: 16px (between major sections)
+- Section gap: 16px
+- Result gap: 8px
+- Line separator height: 1px
+- Icon size: 16px × 16px
+- Border radius: 2px (modal and input elements)
+- Font sizes: 16px (header), 14px (results), 14px (section headers)
 ## Tokens
 ### Colors
 - White: `var(--color-text-white)` = #ffffff
@@ -99,16 +110,20 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Search Input (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Search Input (Hover) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
-| Search Input (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
-| Search Dropdown | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-light)` (#c5c5c5) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
-| Category Header | `var(--color-background-gray-lighter)` (#f4f4f4) | transparent | `Body 2 - Medium` (Roboto Medium 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Result Item (Default) | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Result Item (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
-| Result Item (Focus) | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-strong)` (#0062ab) |
-| Clear Button (Default) | transparent | transparent | `var(--color-icon-accessible)` (#757575) | `var(--color-icon-accessible)` (#757575) |
-| Clear Button (Hover) | transparent | transparent | `var(--color-icon-brand-base)` (#0076ce) | `var(--color-icon-brand-base)` (#0076ce) |
+| Modal Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | - | - |
+| Header | `var(--color-background-component)` (#ffffff) | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-accessible)` (#757575) |
+| Search Box Container | `var(--color-background-component)` (#ffffff) | transparent | - | - |
+| Filter Dropdown | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Search Input | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Clear Button | transparent | transparent | `var(--color-icon-accessible)` (#757575) | `var(--color-icon-accessible)` (#757575) |
+| Results Area | `var(--color-background-component)` (#ffffff) | transparent | - | - |
+| Section Header | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Line Separator | transparent | `var(--color-border-light)` (#c5c5c5) | - | - |
+| Result Item (Default) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | - |
+| Result Item (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-link-brand-base)` (#0062ab) | - |
+| Result Metadata | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | - |
+| No Results Text | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | - |
+| Loading Spinner | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | - |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
@@ -116,14 +131,17 @@
 - Search dropdown maintains visibility in dark theme
 - Result items adapt to dark theme
 ## Interactions
-- Type in search field to trigger search
+- Type in search field to show search results
+- Click filter dropdown to select filter options
+- Click clear button to reset search input
 - Click results to navigate to respective content
-- Hover provides visual feedback on results
-- Focus ring uses brand color for keyboard navigation
-- Clear button to reset search
-- Keyboard navigation: Arrow keys to navigate results, Enter to select
-- Escape to close dropdown
-- Auto-complete suggestions while typing
+- Hover provides visual feedback on result items (brand lighter background)
+- Click close button (X) to close the modal
+- Keyboard navigation: Tab to navigate between elements
+- Escape to close modal
+- Enter to select search result
+- Loading state shows spinner while searching
+- No results state shows "No Results Found" with search suggestions
 ### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Arrow keys, Enter, Escape, Tab
@@ -145,14 +163,11 @@
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants
-- **Default**: Standard global search with dropdown
-- **Inline**: Search integrated into navigation
-- **Modal**: Search in modal overlay
-- **With Categories**: Results organized by category
-- **With Suggestions**: Auto-complete suggestions
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Filters**: Search with filter options
-- **With History**: Recent searches section
+- **EmptySearch**: Modal with header and search box, no results shown (Figma 37295-6766)
+- **WithRecentVisit**: Modal with header, search box, and recently visited results (Figma 37295-6759)
+- **LoadingState**: Modal with header, search box with text, cursor, and loading spinner (Figma 37295-6767)
+- **NoResultsFound**: Modal with header, search box with text, cursor, and no results with search suggestions (Figma 37295-6775)
+- **KeywordResults**: Modal with header, search box with text, cursor, sectioned results with icons, line separators, and scrollbar (Figma 37295-6743)
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
@@ -187,8 +202,14 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - [ ] Verify screen reader announcements
 - [ ] Test search performance
 ## Source Mapping
-- Figma component: Global Search (11067-54498)
+- Figma component: Global Search (37295-6759)
 - Variable collection: UI Palettes, Typography tokens
 - Semantic mapping: CSS custom properties with `var(--)` prefix
 - Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Global Search" (category "Navigation"; node "11067-54498")
+- Component map entry: data/component-figma-map.json → component "Global Search" (category "Navigation"; node "37295-6759")
+- Additional Figma nodes:
+  - Empty Search: 37295-6766
+  - Loading State: 37295-6767
+  - No Results Found: 37295-6775
+  - Keyword Results: 37295-6743
+  - Search Box element: 37295-6670
