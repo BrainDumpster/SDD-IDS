@@ -287,8 +287,8 @@
 
 /* Figma `.Column Header` `37721:114663` — `colorAndBorder` */
 .grid[data-header-styled="true"] .headerCell {
-  border-top: 1px solid var(--color-border-light);
-  border-bottom: 1px solid var(--color-border-light);
+  border-top: 1px solid var(--color-border-gray-neutral-light);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
   background: var(--color-background-gray-neutral-lighter);
 }
 
@@ -307,7 +307,7 @@
   transform: translateY(-50%);
   width: 1px;
   height: 24px;
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   pointer-events: none;
   z-index: 1;
 }
@@ -682,7 +682,7 @@
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   pointer-events: none;
   z-index: 2;
 }
@@ -987,7 +987,7 @@
   height: 40px;
   /* Figma `.Cell Item` `37721:114328`: pl 16, pr 12, py 10 */
   padding: 10px 12px 10px 16px;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
   color: var(--color-text-gray-neutral);
   font-size: 14px;
   line-height: 20px;
@@ -1035,7 +1035,7 @@
 }
 
 .shell[data-header-styled="true"][data-with-detail-panel="true"] :global(.ids-detail-panel__header) {
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
 }
 
 .detailBody {

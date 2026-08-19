@@ -57,7 +57,7 @@ Icon variant: project \`ids-icon shapeName="${MASTHEAD_USER_ICON_SLUG}"\` at **1
 ### Theme & assets
 
 - Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-- Monochrome masthead icons use \`var(--color-icon-white)\` via host \`color\` + \`ids-icon variant="mask"\`.
+- Monochrome masthead icons use \`var(--color-icon-gray-white)\` via host \`color\` + \`ids-icon variant="mask"\`.
 - Product logo: \`ids-icon shapeName="${MASTHEAD_PRODUCT_LOGO_SLUG}" variant="img" [size]="32"\`.
 `.trim();
 

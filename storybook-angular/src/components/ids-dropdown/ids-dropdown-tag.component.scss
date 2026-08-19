@@ -2,10 +2,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
-  border: var(--border-width-border-default) solid var(--color-border-accessible);
+  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   border-radius: var(--corner-radius-radius-24);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   white-space: nowrap;
   font-family: inherit;
   min-height: 28px;
@@ -28,7 +28,7 @@
   height: 10px;
   flex-shrink: 0;
   cursor: pointer;
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-accessible);
 }
 
 .dismiss:focus-visible {

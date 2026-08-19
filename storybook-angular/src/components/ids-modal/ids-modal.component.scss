@@ -23,8 +23,8 @@
   box-sizing: border-box;
   overflow: hidden;
   --ids-modal-inset-inline: var(--padding-padding-24, 24px);
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--modal-control-radius);
   box-shadow:
     var(--shadow-drop-shadow-32-x) var(--shadow-drop-shadow-32-y)
@@ -72,7 +72,7 @@
 .ids-modal__severity-icon {
   display: inline-flex;
   flex-shrink: 0;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .ids-modal__title {
@@ -81,7 +81,7 @@
   font-size: var(--font-size-header-5);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-32);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-modal__close {
@@ -95,7 +95,7 @@
   border: none;
   border-radius: var(--corner-radius-radius-4);
   background: transparent;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   cursor: pointer;
   flex-shrink: 0;
   line-height: 0;
@@ -113,7 +113,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-modal__tabs {
@@ -130,13 +130,13 @@
 .ids-modal__tab {
   position: relative;
   border: none;
-  background: var(--color-background-surface-2);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-secondary);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   padding: 9px var(--ids-modal-inset-inline);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   cursor: pointer;
   white-space: nowrap;
   flex: 0 1 auto;
@@ -155,7 +155,7 @@
   right: 0;
   bottom: 0;
   height: var(--border-width-border-thick);
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-strong);
   pointer-events: none;
 }
 
@@ -178,7 +178,7 @@
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-modal__content > * {

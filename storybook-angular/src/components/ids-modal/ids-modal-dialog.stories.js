@@ -118,7 +118,7 @@ export const Warning = {
       showTertiary: true,
       primaryLabel: "Continue",
       bodyExtra: `
-        <div style="color: var(--color-text-neutral);">
+        <div style="color: var(--color-text-gray-neutral);">
           Continue to &lt;describe the action&gt;?
         </div>
       `,
@@ -137,7 +137,7 @@ export const Major = {
       showTertiary: true,
       primaryLabel: "Continue",
       bodyExtra: `
-        <div style="color: var(--color-text-neutral);">
+        <div style="color: var(--color-text-gray-neutral);">
           Continue to &lt;describe the action&gt;?
         </div>
       `,
@@ -156,7 +156,7 @@ export const Critical = {
       showTertiary: true,
       primaryLabel: "Continue",
       bodyExtra: `
-        <div style="color: var(--color-text-neutral);">
+        <div style="color: var(--color-text-gray-neutral);">
           Continue to &lt;describe the action&gt;?
         </div>
       `,

@@ -82,7 +82,7 @@
   - `var(--color-background-brand-light-slate)`
 - Border:
   - `var(--color-border-gray-neutral-base)`
-  - `var(--color-border-brand-neutral)`
+  - `var(--color-border-brand-base-neutral)`
 - Text:
   - `var(--color-text-gray-neutral)`
   - `var(--color-text-gray-neutral-strong)`
@@ -112,9 +112,9 @@
 | Per-page dropdown trigger | hover | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text/caret unchanged |
 | Per-page dropdown trigger | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` + focus outline | text/caret unchanged |
 | Dropdown option row | default (layout-stable) | `var(--color-background-surface-component)` | top+bottom `1px solid transparent` | `var(--color-text-gray-neutral)` |
-| Dropdown option row | hover | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-gray-neutral)` |
-| Dropdown option row | press | `var(--color-background-brand-light-slate)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-| Dropdown option row | selected | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Dropdown option row | hover | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Dropdown option row | press | `var(--color-background-brand-light-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| Dropdown option row | selected | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|

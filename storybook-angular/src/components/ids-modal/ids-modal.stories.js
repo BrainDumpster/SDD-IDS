@@ -144,7 +144,7 @@ export const WarningAndCritical = {
           >
             <ids-modal-title>Warning</ids-modal-title>
             <ids-modal-body [description]="description">
-              <div style="color: var(--color-text-neutral);">
+              <div style="color: var(--color-text-gray-neutral);">
                 Continue to &lt;describe the action&gt;?
               </div>
             </ids-modal-body>
@@ -241,7 +241,7 @@ export const SingleAndMultiPageUsage = {
                 style="
                   min-height: 120px;
                   border: 1px solid var(--color-border-brand-base);
-                  background: var(--color-background-brand-lighter);
+                  background: var(--color-background-brand-lighter-slate);
                   padding: 16px;
                 "
               >
@@ -377,7 +377,7 @@ export const ScrollableContent = {
         >
           <div style="display: grid; gap: 12px;">
             @for (row of rows; track row) {
-              <p style="margin: 0; color: var(--color-text-neutral);">{{ row }}</p>
+              <p style="margin: 0; color: var(--color-text-gray-neutral);">{{ row }}</p>
             }
           </div>
         </ids-modal-body>

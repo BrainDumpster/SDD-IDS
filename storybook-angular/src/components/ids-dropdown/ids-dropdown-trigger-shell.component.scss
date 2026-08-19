@@ -16,9 +16,9 @@
   min-width: 186px;
   min-height: 40px;
   box-sizing: border-box;
-  border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-accessible));
-  background: var(--trigger-bg, var(--color-background-component));
-  color: var(--trigger-fg, var(--color-text-neutral));
+  border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-gray-neutral-base));
+  background: var(--trigger-bg, var(--color-background-surface-component));
+  color: var(--trigger-fg, var(--color-text-gray-neutral));
   padding: var(--trigger-py, var(--padding-padding-10)) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -35,8 +35,8 @@
 .field[data-disabled="true"] {
   cursor: not-allowed;
   background: var(--color-background-gray-lighter);
-  --trigger-border: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  --trigger-border: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .field[data-error="true"]:not([data-disabled="true"]) {
@@ -44,7 +44,7 @@
 }
 
 .field[data-hover="true"]:not([data-disabled="true"]):not([data-error="true"]) {
-  --trigger-border: var(--color-border-strong);
+  --trigger-border: var(--color-border-gray-neutral-strong);
 }
 
 .field[data-focus="true"]:not([data-disabled="true"])::after {
@@ -80,10 +80,10 @@
   display: inline-flex;
   align-items: flex-start;
   padding: 5px var(--padding-padding-1);
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   line-height: 0;
 }
 
 .field[data-disabled="true"] .caret-wrap {
-  color: var(--color-border-disabled);
+  color: var(--color-border-gray-disabled);
 }

@@ -6,8 +6,8 @@
   justify-content: space-between;
   height: var(--scale-56);
   padding: 0 var(--padding-padding-8) 0 0;
-  background: var(--color-background-masthead-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-transparent-neutral);
+  background: var(--color-background-masthead-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-transparent-base);
   font-family: inherit;
   box-sizing: border-box;
 }
@@ -35,7 +35,7 @@
 .ids-masthead__product-name {
   display: flex;
   align-items: center;
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   font-size: var(--font-size-header-6);
   line-height: var(--font-line-height-line-height-32);
   font-weight: 400;

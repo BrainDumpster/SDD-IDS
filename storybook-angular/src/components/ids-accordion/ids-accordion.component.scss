@@ -15,13 +15,13 @@ ids-accordion-form-slot {
 }
 
 .ids-accordion--form {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .ids-accordion__item {
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   margin-top: calc(-1 * var(--border-width-border-1));
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .ids-accordion__item--first {
@@ -43,8 +43,8 @@ ids-accordion-form-slot {
   border: 0;
   cursor: pointer;
   text-align: left;
-  background: var(--color-background-component);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
   font: inherit;
 }
 
@@ -68,7 +68,7 @@ ids-accordion-form-slot {
   height: var(--scale-16);
   flex-shrink: 0;
   background-color: currentColor;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -79,11 +79,11 @@ ids-accordion-form-slot {
 }
 
 .ids-accordion__trigger:hover:not(:disabled) {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .ids-accordion__trigger:hover:not(:disabled) .ids-accordion__icon {
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .ids-accordion__trigger:focus-visible {
@@ -99,32 +99,32 @@ ids-accordion-form-slot {
 
 .ids-accordion__trigger--open,
 .ids-accordion__item--open .ids-accordion__trigger {
-  background-color: var(--color-background-brand-lighter);
+  background-color: var(--color-background-brand-lighter-slate);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-brand-lighter) 4px,
-    var(--color-background-brand-lighter) 100%
+    var(--color-background-brand-lighter-slate) 4px,
+    var(--color-background-brand-lighter-slate) 100%
   );
 }
 
 .ids-accordion__trigger--open:hover:not(:disabled),
 .ids-accordion__item--open .ids-accordion__trigger:hover:not(:disabled) {
-  background-color: var(--color-background-brand-light);
+  background-color: var(--color-background-brand-light-slate);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-brand-light) 4px,
-    var(--color-background-brand-light) 100%
+    var(--color-background-brand-light-slate) 4px,
+    var(--color-background-brand-light-slate) 100%
   );
 }
 
 .ids-accordion__trigger--open .ids-accordion__icon,
 .ids-accordion__item--open .ids-accordion__icon {
   transform: rotate(180deg);
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .ids-accordion__panel {
@@ -134,43 +134,43 @@ ids-accordion-form-slot {
 .ids-accordion__content {
   padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-16)
     calc(var(--padding-padding-32) + var(--padding-padding-8));
-  background-color: var(--color-background-component);
+  background-color: var(--color-background-surface-component);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-component) 4px,
-    var(--color-background-component) 100%
+    var(--color-background-surface-component) 4px,
+    var(--color-background-surface-component) 100%
   );
 }
 
 .ids-accordion__content-card {
   padding: var(--padding-padding-24);
-  background-color: var(--color-background-brand-lighter);
+  background-color: var(--color-background-brand-lighter-slate);
   border-width: var(--border-width-border-1);
   border-style: solid;
-  border-color: var(--color-border-brand-dark);
+  border-color: var(--color-border-brand-strong);
   border-top: none;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-accordion__meta,
 .ids-accordion__form-slot {
   padding: 0 var(--padding-padding-24) var(--padding-padding-16)
     calc(var(--padding-padding-32) + var(--padding-padding-8));
-  background-color: var(--color-background-component);
+  background-color: var(--color-background-surface-component);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-component) 4px,
-    var(--color-background-component) 100%
+    var(--color-background-surface-component) 4px,
+    var(--color-background-surface-component) 100%
   );
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-accordion__form-slot-label {

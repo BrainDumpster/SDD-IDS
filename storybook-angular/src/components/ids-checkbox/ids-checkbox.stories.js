@@ -143,7 +143,7 @@ export const FigmaMainMatrix = {
           gap: 12px 16px;
           align-items: center;
           font-size: 12px;
-          color: var(--color-text-neutral-strong);
+          color: var(--color-text-gray-neutral-strong);
         "
       >
         <div></div>

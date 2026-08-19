@@ -91,7 +91,7 @@ export const StateMatrix = {
   render: () => ({
     template: `
       <div style="display: grid; gap: 20px;">
-        <div style="font-size: 12px; color: var(--color-text-neutral-strong);">
+        <div style="font-size: 12px; color: var(--color-text-gray-neutral-strong);">
           Live groups: hover the Hover row for pointer parity. Focus column pins simulatedState focus-visible per Figma node 8505:14225.
         </div>
         <div style="display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start;">
@@ -182,7 +182,7 @@ export const ControlledExampleManual = {
             <ids-radio-button value="option2" label="Option 2"></ids-radio-button>
             <ids-radio-button value="option3" label="Option 3"></ids-radio-button>
           </ids-radio-button-group>
-          <div style="font-size: 14px; color: var(--color-text-neutral);">
+          <div style="font-size: 14px; color: var(--color-text-gray-neutral);">
             Selected value: {{ state.value }}
           </div>
         </div>

@@ -120,7 +120,7 @@ export const PageAttached = {
 const collapsedFrameTemplate = `
 <div class="detail-panel-story-shell">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;height:calc(100vh - 32px);">
-    <div style="border:1px solid var(--color-border-accessible);background:var(--color-background-component);display:flex;">
+    <div style="border:1px solid var(--color-border-gray-neutral-base);background:var(--color-background-surface-component);display:flex;">
       <div style="flex:1;padding:12px;">Datagrid host</div>
       <ids-detail-panel
         attachMode="datagrid"
@@ -131,7 +131,7 @@ const collapsedFrameTemplate = `
         <ids-detail-panel-body><div>Details content</div></ids-detail-panel-body>
       </ids-detail-panel>
     </div>
-    <div style="border:1px solid var(--color-border-accessible);background:var(--color-background-component);display:flex;">
+    <div style="border:1px solid var(--color-border-gray-neutral-base);background:var(--color-background-surface-component);display:flex;">
       <div style="flex:1;padding:12px;">Page host</div>
       <ids-detail-panel
         attachMode="page"

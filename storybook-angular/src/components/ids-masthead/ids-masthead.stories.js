@@ -112,7 +112,7 @@ export const UserIconAvatar = {
     docs: {
       description: {
         story:
-          "Figma `User Settings=Icon` — `user-single` 16×16, `var(--color-icon-white)`.",
+          "Figma `User Settings=Icon` — `user-single` 16×16, `var(--color-icon-gray-white)`.",
       },
     },
   },

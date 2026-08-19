@@ -48,9 +48,9 @@
   - `var(--color-text-gray-neutral)` (default option label)
   - `var(--color-text-gray-neutral-strong)` (optional stronger label emphasis)
   - `var(--color-text-gray-disabled)`
-  - `var(--color-text-critical)` (error assistive text only — label color does NOT change in error state)
+  - `var(--color-text-alerting-critical-base)` (error assistive text only — label color does NOT change in error state)
   - `var(--color-icon-gray-white)`
-  - `var(--color-icon-inverse)`
+  - `var(--color-icon-gray-inverse)`
   - `var(--color-icon-brand-strong)` (selected dot hover)
   - `var(--color-icon-gray-disabled)` (disabled selected dot)
 - Typography:
@@ -195,7 +195,7 @@ Outputs (group): `onChange(value)` / `valueChange`.
 
 **Error state**
 - **Ring border in error**: unselected ring uses `var(--color-border-gray-neutral-strong)`, NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level, not by a red border on the individual control.
-- **Label color in error**: label stays `var(--color-text-gray-neutral)` — do NOT apply `var(--color-text-critical)` to the label.
+- **Label color in error**: label stays `var(--color-text-gray-neutral)` — do NOT apply `var(--color-text-alerting-critical-base)` to the label.
 - **Error assistive text icon**: prepend `status-critical-square-solid` icon (16×16, `variant="img"`) before the helper text. Gap between icon and text: `var(--spacing-space-8)`. Icon hidden when `disabled`.
 - **Assistive text layout**: `display: flex; align-items: center; gap: var(--spacing-space-8)`. No left offset — row aligns with the left edge of the control.
 - **Assistive text spacing from options**: `var(--spacing-space-8)` (8px) when options are laid out horizontally; `var(--spacing-space-16)` (16px) between the last option and the error message when options are stacked vertically.

@@ -42,17 +42,17 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
-        color: var(--color-text-neutral-strong);
+        color: var(--color-text-gray-neutral-strong);
         cursor: pointer;
       }
 
       .filterOption:hover {
-        background: var(--color-background-brand-lighter);
+        background: var(--color-background-brand-lighter-slate);
       }
 
       .filterOptionSelected {
         color: var(--color-text-brand-strong);
-        background: var(--color-background-brand-lighter);
+        background: var(--color-background-brand-lighter-slate);
       }
     `,
   ],

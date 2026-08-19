@@ -136,14 +136,14 @@ export const MAIN_MENU_LEFT_STORY_FRAME_STYLES = `
     height: 100vh;
     box-sizing: border-box;
     display: flex;
-    background: var(--color-background-surface-1);
+    background: var(--color-background-surface-primary);
     min-height: 0;
   }
   .ids-main-menu-left-story-canvas {
     flex: 1;
     min-width: 0;
     padding: 24px;
-    color: var(--color-text-neutral-strong);
+    color: var(--color-text-gray-neutral-strong);
     font-size: 14px;
   }
   .ids-main-menu-left-story-canvas p { margin: 0; opacity: 0.85; }
@@ -152,7 +152,7 @@ export const MAIN_MENU_LEFT_STORY_FRAME_STYLES = `
     flex-direction: column;
     gap: 8px;
     padding: 16px;
-    background: var(--color-background-surface-1);
+    background: var(--color-background-surface-primary);
   }
 `.trim();
 

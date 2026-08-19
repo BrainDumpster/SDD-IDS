@@ -345,7 +345,7 @@ export function IdsDropdownHelper({ children }: IdsDropdownHelperProps) {
         margin: "var(--spacing-space-4) 0 0",
         fontSize: "var(--font-size-body-2)",
         lineHeight: "var(--font-line-height-line-height-20)",
-        color: "var(--color-text-neutral)",
+        color: "var(--color-text-gray-neutral)",
       }}
     >
       {children}
@@ -376,7 +376,7 @@ export function IdsDropdownError({ children }: IdsDropdownErrorProps) {
         gap: "var(--spacing-space-8)",
         fontSize: "var(--font-size-body-2)",
         lineHeight: "var(--font-line-height-line-height-20)",
-        color: "var(--color-text-critical)",
+        color: "var(--color-text-alerting-critical-base)",
       }}
     >
       <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden width={16} height={16} />

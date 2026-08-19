@@ -199,7 +199,7 @@ export const FocusBehavior = {
   render: () => ({
     template: `
       <div style="display: grid; gap: 12px; max-width: 300px;">
-        <p style="margin: 0; font-size: 12px; color: var(--color-text-neutral);">
+        <p style="margin: 0; font-size: 12px; color: var(--color-text-gray-neutral);">
           Click inside input for pointer focus; use Tab to see focus-visible ring.
         </p>
         <ids-text-box value="Focus behavior demo" helperText="Helper text"></ids-text-box>

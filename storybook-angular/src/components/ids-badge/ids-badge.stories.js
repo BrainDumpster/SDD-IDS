@@ -142,7 +142,7 @@ export const BackgroundShowcase = {
             border-radius: 6px;
             background: var(--color-background-gray-subtle);
             border: 1px solid var(--color-border-subtle);
-            --ids-badge-warning-border-color: var(--color-border-alerting-minor-transparent);
+            --ids-badge-warning-border-color: var(--color-border-alerting-minor-base);
           "
         >
           <ids-badge [value]="3" type="default"></ids-badge>

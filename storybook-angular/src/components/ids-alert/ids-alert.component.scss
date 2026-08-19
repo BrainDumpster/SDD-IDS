@@ -151,32 +151,32 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   white-space: nowrap;
 }
 
 .ids-alert--global[data-severity="critical"] {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-transparent-critical);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
 }
 
 .ids-alert--global[data-severity="warning-major"] {
-  background: var(--color-background-alerting-major);
-  border-color: var(--color-border-alerting-transparent-major);
-  color: var(--color-text-black);
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-transparent-base);
+  color: var(--color-text-gray-black);
 }
 
 .ids-alert--global[data-severity="warning-minor"] {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-black);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-gray-black);
 }
 
 .ids-alert--global[data-severity="informational"] {
-  background: var(--color-background-alerting-info);
-  border-color: var(--color-border-alerting-transparent-info);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-info-base);
+  border-color: var(--color-border-alerting-info-transparent-base);
+  color: var(--color-text-gray-white);
 }
 
 .ids-alert--global[data-severity="critical"] .ids-alert__carousel-rail {
@@ -229,7 +229,7 @@
   border-radius: 0;
   font-family: inherit;
   gap: var(--spacing-space-12);
-  box-shadow: inset 4px 0 0 0 var(--inline-rail, var(--color-background-alerting-info));
+  box-shadow: inset 4px 0 0 0 var(--inline-rail, var(--color-background-alerting-info-base));
 }
 
 .ids-alert__inline-main {
@@ -353,7 +353,7 @@
   box-sizing: border-box;
   border: none;
   background: transparent;
-  color: var(--color-icon-black);
+  color: var(--color-icon-gray-black);
   cursor: pointer;
   /* 12×12 glyph; 32×32 min hit target extends left/up/down — trailing pad-right keeps icon 16px from alert edge */
   padding: 10px 0 10px 20px;
@@ -388,24 +388,24 @@
 }
 
 .ids-alert--inline[data-severity="informational"] {
-  --inline-alert-icon: var(--color-icon-alerting-info);
-  --inline-rail: var(--color-background-alerting-info);
+  --inline-alert-icon: var(--color-icon-alerting-info-base);
+  --inline-rail: var(--color-background-alerting-info-base);
   background: var(--color-background-alerting-info-light);
-  border-color: var(--color-border-alerting-info-transparent);
+  border-color: var(--color-border-alerting-info-base-transparent);
 }
 
 .ids-alert--inline[data-severity="success"] {
-  --inline-alert-icon: var(--color-icon-alerting-success);
-  --inline-rail: var(--color-background-alerting-success);
+  --inline-alert-icon: var(--color-icon-alerting-success-base);
+  --inline-rail: var(--color-background-alerting-success-base);
   background: var(--color-background-alerting-success-light);
-  border-color: var(--color-border-alerting-success-transparent);
+  border-color: var(--color-border-alerting-success-base-transparent);
 }
 
 .ids-alert--inline[data-severity="warning-minor"] {
-  --inline-alert-icon: var(--color-icon-alerting-minor);
-  --inline-rail: var(--color-background-alerting-minor);
+  --inline-alert-icon: var(--color-icon-alerting-minor-base);
+  --inline-rail: var(--color-background-alerting-minor-base);
   background: var(--color-background-alerting-minor-light);
-  border-color: var(--color-border-alerting-minor-transparent);
+  border-color: var(--color-border-alerting-minor-base);
   box-shadow: none;
 }
 
@@ -418,22 +418,22 @@
   width: 4px;
   background: linear-gradient(
     90deg,
-    var(--color-background-alerting-minor) 0 75%,
+    var(--color-background-alerting-minor-base) 0 75%,
     var(--color-border-alerting-warning-accessible, var(--color-border-alerting-minor-minor)) 75% 100%
   );
   pointer-events: none;
 }
 
 .ids-alert--inline[data-severity="warning-major"] {
-  --inline-alert-icon: var(--color-icon-alerting-major);
-  --inline-rail: var(--color-background-alerting-major);
+  --inline-alert-icon: var(--color-icon-alerting-major-base);
+  --inline-rail: var(--color-background-alerting-major-base);
   background: var(--color-background-alerting-major-light);
-  border-color: var(--color-border-alerting-major-transparent);
+  border-color: var(--color-border-alerting-major-base-transparent);
 }
 
 .ids-alert--inline[data-severity="critical"] {
-  --inline-alert-icon: var(--color-icon-alerting-critical);
-  --inline-rail: var(--color-background-alerting-critical);
+  --inline-alert-icon: var(--color-icon-alerting-critical-base);
+  --inline-rail: var(--color-background-alerting-critical-base);
   background: var(--color-background-alerting-critical-light);
-  border-color: var(--color-border-alerting-critical-transparent);
+  border-color: var(--color-border-alerting-critical-base-transparent);
 }

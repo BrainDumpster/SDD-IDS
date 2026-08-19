@@ -34,7 +34,7 @@ ids-anchor-active-indicator {
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   text-transform: none;
   letter-spacing: normal;
 }
@@ -56,17 +56,17 @@ ids-anchor-active-indicator {
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-decoration: none;
   position: relative;
-  border-left: 1.2px solid var(--color-border-accessible);
+  border-left: 1.2px solid var(--color-border-gray-neutral-base);
   border-radius: 0;
   background: transparent;
   cursor: pointer;
 }
 
 .ids-anchor-menu__link:hover {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-anchor-menu__link:hover::before {

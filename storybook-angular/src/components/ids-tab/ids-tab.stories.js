@@ -275,7 +275,7 @@ export const StateMatrix = {
   render: () => ({
     template: `
       <div style="display: grid; gap: 24px;">
-        <div style="font-size: 12px; color: var(--color-text-neutral-strong);">
+        <div style="font-size: 12px; color: var(--color-text-gray-neutral-strong);">
           Secondary tabs — hover the middle column; focus column uses simulatedState.
         </div>
         <ids-tab type="secondary" defaultActiveItemId="selected">

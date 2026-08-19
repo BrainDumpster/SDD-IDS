@@ -6,31 +6,31 @@
   padding: 19px var(--padding-padding-16);
   border: none;
   border-radius: 0;
-  background: var(--color-background-masthead-brand-base);
-  color: var(--color-icon-white);
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
   box-sizing: border-box;
   cursor: pointer;
   transition: background-color 120ms ease, opacity 120ms ease;
 }
 
 .ids-masthead-action-icon-button:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .ids-masthead-action-icon-button:active:not(:disabled),
 .ids-masthead-action-icon-button[aria-pressed="true"],
 .ids-masthead-action-icon-button[aria-expanded="true"] {
-  background-color: var(--color-background-masthead-brand-stronger);
+  background-color: var(--color-background-masthead-stronger);
 }
 
 .ids-masthead-action-icon-button[aria-expanded="true"]:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .ids-masthead-action-icon-button:focus-visible {
-  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline: var(--border-width-border-default) dashed var(--color-border-gray-white);
   outline-offset: -1px;
-  background-color: var(--color-background-masthead-brand-base);
+  background-color: var(--color-background-masthead-base);
 }
 
 .ids-masthead-action-icon-button__glyph {

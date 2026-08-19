@@ -5,7 +5,7 @@
   min-width: 200px;
   max-width: 320px;
   box-sizing: border-box;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .validation {
@@ -14,7 +14,7 @@
   gap: var(--spacing-space-8);
   margin: 0;
   padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-light);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-light);
   box-sizing: border-box;
 }
 
@@ -22,7 +22,7 @@
   font-size: var(--font-size-body-2);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-critical);
+  color: var(--color-text-alerting-critical-base);
 }
 
 .optionList {
@@ -41,16 +41,16 @@
   display: flex;
   align-items: center;
   padding: var(--padding-padding-10) var(--padding-padding-16);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   min-height: 40px;
   box-sizing: border-box;
 }
 
 .optionItem:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .checkboxHost {

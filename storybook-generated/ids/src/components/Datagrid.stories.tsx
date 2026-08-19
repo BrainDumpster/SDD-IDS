@@ -358,7 +358,7 @@ export const ExpandableRows: Story = {
         height: "100dvh",
         boxSizing: "border-box",
         padding: "clamp(8px, 2vw, 16px)",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,

@@ -32,7 +32,7 @@ Storybook title: **`Spec Generated/IDS/Main Menu Left`**
 
 | Story | Purpose |
 |---|---|
-| **Spec Accurate Design** | Canonical expanded nav from Figma `11099:56218`: Dashboard selected (`defaultSelectedItemId`), Infrastructure with `children` + `childrenMenu: "collapsed"`; `100vh` host + `var(--color-background-surface-1)` canvas |
+| **Spec Accurate Design** | Canonical expanded nav from Figma `11099:56218`: Dashboard selected (`defaultSelectedItemId`), Infrastructure with `children` + `childrenMenu: "collapsed"`; `100vh` host + `var(--color-background-surface-primary)` canvas |
 | **Collapsed** | Initial **64px** icon-only rail |
 | **PrimaryStateSnapshotMatrix** | `forceStates` snapshots: `default`, `hover`, `press`, `selected`, `default-focus`, `selected-focus` |
 | **TokenInspector** | Live `var(--...)` preview + spec references (appended by strict gate) |

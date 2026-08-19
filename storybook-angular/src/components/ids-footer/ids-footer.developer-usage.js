@@ -20,7 +20,7 @@ export const FOOTER_STORY_FRAME_STYLE = `
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 `.trim();
 
 export const FOOTER_SPEC_ACCURATE_TEMPLATE = `

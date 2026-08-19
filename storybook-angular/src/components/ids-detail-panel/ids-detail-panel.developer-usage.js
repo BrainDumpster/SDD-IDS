@@ -129,20 +129,20 @@ export const DETAIL_PANEL_COMPOSITION_DEMO_TEMPLATE = `
 export const DETAIL_PANEL_STORY_STYLES = `
 .detail-panel-story-shell {
   height: 100vh;
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
   padding: 16px;
   box-sizing: border-box;
 }
 .detail-panel-story-status {
   margin-bottom: 12px;
   font-size: 14px;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 .detail-panel-story-frame {
   display: flex;
   height: 768px;
-  border: 1px solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: 1px solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
 }
 .detail-panel-story-host {
   flex: 1;
@@ -156,15 +156,15 @@ export const DETAIL_PANEL_STORY_STYLES = `
   gap: 12px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 .detail-panel-demo-heading {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-weight: 500;
 }
 .detail-panel-demo-overflow {
   height: 600px;
-  border: 1px dashed var(--color-border-accessible);
+  border: 1px dashed var(--color-border-gray-neutral-base);
   padding: 12px;
   box-sizing: border-box;
 }

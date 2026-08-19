@@ -10,8 +10,8 @@
 
 .ids-text-box__control {
   align-items: center;
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--text-box-control-radius);
   display: flex;
   gap: var(--spacing-space-10);
@@ -36,11 +36,11 @@
 }
 
 .ids-text-box__control:hover:not([data-state="disabled"]):not([data-state="error"]) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .ids-text-box__control[data-state="hover"] {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 
   ::ng-deep .ids-text-box__suffix-icon {
     opacity: 0.92;
@@ -61,7 +61,7 @@
 .ids-text-box__control[data-focus-modality="keyboard"][data-focused]:not([data-state="disabled"]):not(
     [data-state="error"]
   ) {
-  border-color: var(--color-border-accessible);
+  border-color: var(--color-border-gray-neutral-base);
 }
 
 .ids-text-box__control[data-state="focus"]::after,
@@ -97,7 +97,7 @@
 .ids-text-box__value {
   background: transparent;
   border: none;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   flex: 1 1 auto;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -107,12 +107,12 @@
 }
 
 .ids-text-box__value::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .ids-text-box__control[data-state="disabled"] .ids-text-box__value,
 .ids-text-box__control[data-state="disabled"] .ids-text-box__value::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .ids-text-box__suffix-icon {
@@ -130,14 +130,14 @@
 }
 
 .ids-text-box__helper-copy {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   margin: 0;
 }
 
 .ids-text-box__helper-copy--error {
-  color: var(--color-text-critical);
+  color: var(--color-text-alerting-critical-base);
 }
 
 .ids-text-box__error-icon {

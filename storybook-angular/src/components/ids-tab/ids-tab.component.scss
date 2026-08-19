@@ -39,10 +39,10 @@ ids-tab-panel {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral);
-  background: var(--color-background-surface-2);
+  color: var(--color-text-gray-neutral);
+  background: var(--color-background-surface-secondary);
   border: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   cursor: pointer;
   transition: all 150ms ease;
   outline: none;
@@ -73,7 +73,7 @@ ids-tab-panel {
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .ids-tab__tab--secondary::after {
@@ -81,13 +81,13 @@ ids-tab-panel {
 }
 
 .ids-tab__tab:hover:not([data-disabled]):not([data-simulated-state]) {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-tab__tab[data-simulated-state="hover"] {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-tab__tab:focus-visible,
@@ -102,7 +102,7 @@ ids-tab-panel {
   position: absolute;
   left: 0;
   width: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
   pointer-events: none;
   z-index: 0;
 }
@@ -120,19 +120,19 @@ ids-tab-panel {
 }
 
 .ids-tab__tab--primary.ids-tab__tab--selected {
-  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
+  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong);
 }
 
 .ids-tab__tab--primary.ids-tab__tab--selected:focus-visible,
 .ids-tab__tab--primary.ids-tab__tab--selected[data-simulated-state="focus-visible"] {
   border-radius: var(--corner-radius-radius-4);
   box-shadow:
-    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark),
+    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong),
     inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
 }
 
 .ids-tab__tab--selected {
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   color: var(--color-text-brand-strong);
   border-bottom-color: transparent;
   z-index: 1;
@@ -154,7 +154,7 @@ ids-tab-panel {
   left: 0;
   right: 0;
   height: var(--border-width-border-thick);
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-strong);
   pointer-events: none;
   bottom: 0;
 }
@@ -190,8 +190,8 @@ ids-tab-panel {
   border-radius: 8px;
   font-size: 11px;
   line-height: 1;
-  background: var(--color-background-alerting-critical);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  color: var(--color-text-gray-white);
 }
 
 .ids-tab__more {
@@ -207,10 +207,10 @@ ids-tab-panel {
   gap: var(--component-gap-s, var(--spacing-space-8));
   padding: var(--padding-padding-8) var(--padding-padding-12);
   height: 38px;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   border: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
-  color: var(--color-text-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
   cursor: pointer;
   position: relative;
 }
@@ -223,7 +223,7 @@ ids-tab-panel {
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .ids-tab__more-trigger--secondary::after {
@@ -231,8 +231,8 @@ ids-tab-panel {
 }
 
 .ids-tab__more-trigger:hover {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-tab__more-trigger--selected {
@@ -247,7 +247,7 @@ ids-tab-panel {
   left: 0;
   right: 0;
   height: var(--border-width-border-thick);
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-strong);
   pointer-events: none;
   bottom: 0;
 }
@@ -263,7 +263,7 @@ ids-tab-panel {
   position: absolute;
   left: 0;
   width: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
   pointer-events: none;
   z-index: 0;
 }
@@ -281,12 +281,12 @@ ids-tab-panel {
 }
 
 .ids-tab__more-trigger--primary.ids-tab__more-trigger--selected {
-  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
+  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong);
 }
 
 .ids-tab__more-trigger--primary.ids-tab__more-trigger--selected:focus-visible {
   box-shadow:
-    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark),
+    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong),
     inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
 }
@@ -301,8 +301,8 @@ ids-tab-panel {
   top: 100%;
   right: 0;
   z-index: 100;
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
   box-shadow:
     var(--shadow-drop-shadow-8-x)
     var(--shadow-drop-shadow-8-y)
@@ -318,7 +318,7 @@ ids-tab-panel {
   display: block;
   width: 100%;
   padding: var(--padding-padding-8) var(--padding-padding-12);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
@@ -334,7 +334,7 @@ ids-tab-panel {
   width: auto;
   min-width: 56px;
   height: 38px;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -343,7 +343,7 @@ ids-tab-panel {
   cursor: pointer;
   color: var(--color-text-brand-strong);
   flex-shrink: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   position: relative;
 }
 
@@ -361,7 +361,7 @@ ids-tab-panel {
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .ids-tab__more + .ids-tab__add::before {
@@ -379,7 +379,7 @@ ids-tab-panel {
 }
 
 .ids-tab__add:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
 }
 
@@ -396,10 +396,10 @@ ids-tab-panel {
 }
 
 .ids-tab__panel {
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   margin-top: -1px;
   padding: var(--padding-padding-16) 0;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
 }

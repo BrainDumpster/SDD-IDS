@@ -28,7 +28,7 @@
 
 .rootEmbedded {
   border: 0;
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
 }
 
 .resultsGroup {
@@ -124,7 +124,7 @@
 
 .dropdownMenuAbove {
   border-bottom: none;
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
 }
 
 .dropdownOptionWrap {
@@ -294,7 +294,7 @@
 
 .pageOffsetMenuAbove {
   border-bottom: none;
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
 }
 
 .pageOffsetOptionWrap {

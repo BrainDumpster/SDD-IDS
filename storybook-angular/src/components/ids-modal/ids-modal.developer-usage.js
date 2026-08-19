@@ -210,9 +210,9 @@ export const MODAL_SINGLE_PAGE_TEMPLATE = `
         style="
           min-height: 220px;
           border: 1px solid var(--color-border-brand-base);
-          background: var(--color-background-brand-lighter);
+          background: var(--color-background-brand-lighter-slate);
           padding: 16px;
-          color: var(--color-text-neutral);
+          color: var(--color-text-gray-neutral);
         "
       >
         <strong style="display: block; margin-bottom: 8px;">Swap content</strong>
@@ -280,7 +280,7 @@ export const MODAL_DESTRUCTIVE_TEMPLATE = `
     <ids-modal-title>Critical</ids-modal-title>
     <ids-modal-body [description]="description">
       <div style="display: grid; gap: 12px;">
-        <p style="margin: 0; color: var(--color-text-neutral);">
+        <p style="margin: 0; color: var(--color-text-gray-neutral);">
           Type in CONFIRM below to verify the action.
         </p>
         <ids-text-box

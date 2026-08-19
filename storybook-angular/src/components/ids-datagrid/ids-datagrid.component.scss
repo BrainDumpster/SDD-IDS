@@ -24,7 +24,7 @@ ids-datagrid-demo-host {
 }
 
 .modeLabel {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: 14px;
 }
 
@@ -39,8 +39,8 @@ ids-datagrid-demo-host {
 }
 
 .shell:not([data-with-detail-panel="true"]) .contentRow {
-  border: 1px solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: 1px solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
 }
 
 .gridWrap {
@@ -51,13 +51,13 @@ ids-datagrid-demo-host {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   overflow: hidden;
   box-sizing: border-box;
 }
 
 .shell[data-with-detail-panel="true"] .gridWrap {
-  border: 1px solid var(--color-border-accessible);
+  border: 1px solid var(--color-border-gray-neutral-base);
   margin-right: -1px;
 }
 
@@ -152,7 +152,7 @@ ids-datagrid-demo-host {
   align-self: stretch;
   min-height: 100%;
   z-index: 3;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .tableSplitRow {
@@ -182,7 +182,7 @@ ids-datagrid-demo-host {
   min-height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .scrollablePane {
@@ -194,7 +194,7 @@ ids-datagrid-demo-host {
   overflow-x: auto;
   overflow-y: hidden;
   z-index: 1;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 /*
@@ -251,17 +251,17 @@ ids-datagrid-demo-host {
   max-height: 48px;
   padding-top: 0;
   padding-bottom: 0;
-  border-bottom: 1px solid var(--color-border-accessible);
+  border-bottom: 1px solid var(--color-border-gray-neutral-base);
 }
 
 .shell[data-header-styled="true"][data-with-detail-panel="true"]
   ids-detail-panel.detailPanel
   .ids-detail-panel__header {
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
 }
 
 .detailBody {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: 14px;
 }
 
@@ -323,15 +323,15 @@ ids-datagrid-demo-host {
 
 /* Figma `.Column Header` `37721:114663` — `colorAndBorder` */
 .grid[data-header-styled="true"] .headerCell {
-  border-top: 1px solid var(--color-border-light);
-  border-bottom: 1px solid var(--color-border-light);
+  border-top: 1px solid var(--color-border-gray-neutral-light);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
   background: var(--color-background-gray-neutral-lighter);
 }
 
 .grid[data-header-styled="false"] .headerCell {
   border-top: none;
   border-bottom: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 /* Data column headers: leading 1×24px rail after selection chrome (Figma `37721:114663`) */
@@ -343,7 +343,7 @@ ids-datagrid-demo-host {
   transform: translateY(-50%);
   width: 1px;
   height: 24px;
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   pointer-events: none;
   z-index: 1;
 }
@@ -417,19 +417,19 @@ ids-datagrid-demo-host {
   margin: 0 0 -1px;
   box-sizing: border-box;
   border: none;
-  border-top: 1px solid var(--color-border-accessible);
-  border-right: 1px solid var(--color-border-accessible);
-  border-left: 1px solid var(--color-border-accessible);
+  border-top: 1px solid var(--color-border-gray-neutral-base);
+  border-right: 1px solid var(--color-border-gray-neutral-base);
+  border-left: 1px solid var(--color-border-gray-neutral-base);
   border-bottom: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   line-height: 0;
   cursor: pointer;
 }
 
 .filterPopupIconTab:hover {
-  border-top-color: var(--color-border-strong);
-  border-right-color: var(--color-border-strong);
-  border-left-color: var(--color-border-strong);
+  border-top-color: var(--color-border-gray-neutral-strong);
+  border-right-color: var(--color-border-gray-neutral-strong);
+  border-left-color: var(--color-border-gray-neutral-strong);
 }
 
 .filterPopupPanel {
@@ -441,11 +441,11 @@ ids-datagrid-demo-host {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-top: none;
-  border-right: 1px solid var(--color-border-accessible);
-  border-bottom: 1px solid var(--color-border-accessible);
-  border-left: 1px solid var(--color-border-accessible);
+  border-right: 1px solid var(--color-border-gray-neutral-base);
+  border-bottom: 1px solid var(--color-border-gray-neutral-base);
+  border-left: 1px solid var(--color-border-gray-neutral-base);
   /*
    * Shadow 1 — Figma `44360:181713`: 0 2px 2px + 0 4px 4px @ 8%.
    * Offsets/blur are literal px (ids-theme FLOAT tokens are unitless; var() would invalidate box-shadow).
@@ -463,7 +463,7 @@ ids-datagrid-demo-host {
   left: 0;
   width: calc(100% - 38px);
   height: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
   pointer-events: none;
 }
 
@@ -513,12 +513,12 @@ ids-datagrid-demo-host {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   outline: none;
 }
 
 .filterPopupSearchInput::placeholder {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-weight: 400;
 }
 
@@ -568,7 +568,7 @@ ids-datagrid-demo-host {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -598,7 +598,7 @@ ids-datagrid-demo-host {
   justify-content: center;
   width: 12px;
   height: 12px;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .sortIconSelected {
@@ -606,7 +606,7 @@ ids-datagrid-demo-host {
 }
 
 .iconButton:hover .sortIcon {
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .iconButton[data-sorted="true"]:hover .sortIcon {
@@ -628,11 +628,11 @@ ids-datagrid-demo-host {
 }
 
 .filter-default {
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .filter-hover {
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .filter-selected {
@@ -651,7 +651,7 @@ ids-datagrid-demo-host {
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   pointer-events: none;
   z-index: 2;
 }
@@ -702,23 +702,23 @@ ids-datagrid-demo-host {
   position: sticky;
   left: 0;
   z-index: 1;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .bodyRow[data-selected="true"] .selectionColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-selected="true"]:active .selectionColumn {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .bodyRow:not([data-readonly="true"]):not([data-selected="true"]):hover .selectionColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-readonly="true"]:not([data-selected="true"]):hover .selectionColumn {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .headerSelectionColumn {
@@ -786,7 +786,7 @@ ids-datagrid-demo-host {
   z-index: 2;
   text-align: center;
   vertical-align: middle;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .settingsColumn.headerCell {
@@ -799,19 +799,19 @@ ids-datagrid-demo-host {
 }
 
 .bodyRow[data-selected="true"] .settingsColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-selected="true"]:active .settingsColumn {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .bodyRow:not([data-readonly="true"]):not([data-selected="true"]):hover .settingsColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-readonly="true"]:not([data-selected="true"]):hover .settingsColumn {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .settingsHeaderInner {
@@ -867,7 +867,7 @@ ids-datagrid-demo-host {
   justify-content: center;
   width: var(--datagrid-chrome-icon-size);
   height: var(--datagrid-chrome-icon-size);
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   line-height: 0;
 }
 
@@ -891,8 +891,8 @@ ids-datagrid-demo-host {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: var(--color-background-component);
-  border: 1px solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: 1px solid var(--color-border-gray-neutral-base);
   box-shadow:
     0 2px 2px 0 var(--shadow-shadow-1-drop-shadow-2-color, rgba(37, 37, 37, 0.08)),
     0 4px 4px 0 var(--shadow-shadow-1-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
@@ -913,23 +913,23 @@ ids-datagrid-demo-host {
 }
 
 .bodyRow > td {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .bodyRow:not([data-readonly="true"]):not([data-selected="true"]):hover > td {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-readonly="true"]:not([data-selected="true"]):hover > td {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .bodyRow[data-selected="true"] > td {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-selected="true"]:active > td {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 /* 4px leading selection accent when vertical indicator is on */
@@ -956,8 +956,8 @@ ids-datagrid-demo-host {
   height: 40px;
   /* Figma `.Cell Item` `37721:114328`: pl 16, pr 12, py 10 */
   padding: 10px 12px 10px 16px;
-  border-bottom: 1px solid var(--color-border-light);
-  color: var(--color-text-neutral);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
+  color: var(--color-text-gray-neutral);
   font-size: 14px;
   line-height: 20px;
   vertical-align: middle;
@@ -987,9 +987,9 @@ ids-datagrid-demo-host {
   width: 16px;
   height: 16px;
   margin: 0;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: 50%;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -998,8 +998,8 @@ ids-datagrid-demo-host {
   border-color: var(--color-border-brand-base);
   background: radial-gradient(
     circle,
-    var(--color-background-controls-brand-base) 0 35%,
-    var(--color-background-component) 36% 100%
+    var(--color-background-controls-base) 0 35%,
+    var(--color-background-surface-component) 36% 100%
   );
 }
 

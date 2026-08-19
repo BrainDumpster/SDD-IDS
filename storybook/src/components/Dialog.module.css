@@ -191,7 +191,7 @@
   gap: var(--spacing-space-8);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 /* ----- About pattern (Synapse) — shell inside Dialog ----- */

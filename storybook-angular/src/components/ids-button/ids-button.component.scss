@@ -67,7 +67,7 @@
 }
 
 .primary .icon-slot {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 
 .secondary .icon-slot,
@@ -76,31 +76,31 @@
 }
 
 .danger .icon-slot {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 
 .ids-button:disabled .icon-slot {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .primary {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
 }
 
 .primary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-strong);
+  background: var(--color-background-controls-strong);
 }
 
 .primary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-stronger);
+  background: var(--color-background-controls-stronger);
 }
 
 .primary:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .secondary {
@@ -110,17 +110,17 @@
 }
 
 .secondary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
 }
 
 .secondary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
 }
 
 .secondary:disabled {
   background: transparent;
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .tertiary {
@@ -130,25 +130,25 @@
 }
 
 .tertiary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
   border-color: var(--color-border-brand-base);
 }
 
 .tertiary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
   border-color: var(--color-border-brand-base);
 }
 
 .tertiary:disabled {
   background: transparent;
   border-color: transparent;
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .danger {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-transparent-critical);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
 }
 
 .danger:hover:not(:disabled) {
@@ -161,8 +161,8 @@
 
 .danger:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .ids-button:disabled {

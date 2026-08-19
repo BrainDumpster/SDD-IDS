@@ -11,8 +11,8 @@
   align-items: center;
   justify-content: flex-end;
   overflow: hidden;
-  background: var(--color-background-surface-1);
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  background: var(--color-background-surface-primary);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   font-family: inherit;
 }
 
@@ -39,11 +39,11 @@
 
 .ids-footer__label {
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-footer__value {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,7 +74,7 @@
 
 .ids-footer__copy-button:disabled {
   cursor: not-allowed;
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .ids-footer__copy-button:focus-visible {
@@ -99,7 +99,7 @@
 }
 
 .ids-footer__time-icon {
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .ids-footer__globe-icon {
@@ -110,7 +110,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   white-space: nowrap;
 }
 
@@ -140,7 +140,7 @@
 }
 
 .ids-footer__timezone-button:disabled {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
   text-decoration: none;
 }

@@ -1,8 +1,8 @@
 .ids-detail-panel {
   box-sizing: border-box;
   height: 100%;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -13,16 +13,16 @@
   box-sizing: border-box;
   min-height: 48px;
   padding: 14px 12px 14px 24px;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .ids-detail-panel__footer {
   border-bottom: 0;
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   justify-content: flex-end;
 }
 
@@ -31,7 +31,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .ids-detail-panel__controls {
@@ -43,7 +43,7 @@
 .ids-detail-panel__toggle {
   border: 0;
   background: transparent;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   padding: 0;
   width: 16px;
   height: 16px;
@@ -67,14 +67,14 @@
   overflow: auto;
   padding: 24px;
   box-sizing: border-box;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .ids-detail-panel__collapsed-rail {
   height: 100%;
   box-sizing: border-box;
   display: flex;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .ids-detail-panel__collapsed-rail--datagrid {

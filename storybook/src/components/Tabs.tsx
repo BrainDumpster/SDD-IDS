@@ -36,7 +36,7 @@ interface TabsProps {
   minTabWidth?: number;
   maxTabWidth?: number;
   variant?: "primary" | "secondary";
-  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-2)`. */
+  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-secondary)`. */
   surface?: TabsSurface;
   moreLabel?: string;
   /** `synapse` → Nav Tab chrome (32px, closable defaults, `shape-plus` add). */
