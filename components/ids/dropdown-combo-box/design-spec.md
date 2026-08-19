@@ -68,7 +68,7 @@
   - selected-count badge follows IDS badge geometry (`18px` height, pill radius). The badge does not shrink (`flex-shrink: 0`) so a 2-digit count never overlaps the value text.
 - Search dismiss control:
   - visible when query length `> 0`; right-aligned inside search field row.
-  - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-accessible)`.
+  - dismiss icon (`ctrl-close-16`, matching the Datagrid filter search clear): **12×12px** frame, `var(--color-icon-accessible)`.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -164,7 +164,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - `ScrollArea.Viewport` elements use `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable. `searchClearButton` is part of the tab order.
 - Search behavior:
   - typing in the search row filters the option list immediately by **case-insensitive substring (contains) match** on the option label (e.g. typing `c` shows options containing `c`, then `ca` narrows to those containing `ca`) — same match behavior as the datagrid combobox/multiselect filters. Section headers and dividers are hidden while a query is active.
-  - when search query is non-empty, a right-aligned dismiss control (`shape-x-thick`, **10×10px** frame) clears the query.
+  - when search query is non-empty, a right-aligned dismiss control (`ctrl-close-16`, **12×12px** frame) clears the query.
   - when no option matches, the list shows a single `No results found` row (see Layout for typography/padding); nothing else is rendered.
   - **Inline autocomplete (ghost text):** when the typed keyword is a **prefix of exactly one** selectable option, the remaining tail of that option's label renders as **greyed-out ghost text** immediately after the caret (the typed characters keep their normal `var(--color-text-neutral)` colour; the suggested tail uses `var(--color-static-gray-400)` = `#9E9E9E`, fixed in both light and dark). The ghost tail is a **non-committed suggestion**, not a text selection — nothing is highlighted. Accept it with `Tab`, `→` (caret at end), or `End`, which commits the full option label (preserving the option's own casing). Any further typing or deletion recomputes/clears the suggestion. Only computed on insertion — deleting never re-completes.
 - Option selection:
@@ -180,7 +180,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - `Select All` **toggles** the currently-visible (filtered) scope: if not all visible options are selected it selects them (added to any off-filter selections); if every visible option is already selected, clicking again **deselects** the visible scope. It does **not** collapse the menu. While a filter is active its checked/indeterminate state reflects only the visible options.
   - the `SelectAll` row is **hidden while searching when fewer than 2 options match**.
   - **No results found:** when the query matches no options, the `SelectAll` / `Clear All` row **and** the `Show Selected` / `Hide Selected` panel are both hidden — only the search row and the "No results found" row remain, and the popup min-height falls back to `212px`.
-  - `Clear All` clears selections **and collapses the menu**; while a filter is active it clears **only the currently-visible options** (off-filter selections are kept), and is disabled when no visible option is selected. With no filter it clears everything.
+  - `Clear All` clears selections **and collapses the menu**; while a filter is active it clears **only the currently-visible options** (off-filter selections are kept), and is disabled when no visible option is selected. With no filter it clears everything. Clicking it also **resets the options list scroll to the top** (both the multi-select row and the single-select Clear All row).
   - `Show Selected` / `Hide Selected` toggles the selection summary panel (Figma `12730:120316`, menu `29393:146761`). It **defaults to collapsed** (`Show Selected`) and expands to `Hide Selected` on click.
   - when expanded, selected values render as dismissible **Tag** chips per `components/ids/tag/design-spec.md` (`type=editable`, `closable`, large dismissible geometry).
   - the panel auto-hides when no option is selected (e.g. after `Clear All`); there is **no separate panel dismiss (X) control** — clearing is done via `Clear All`.

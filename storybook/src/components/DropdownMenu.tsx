@@ -56,6 +56,12 @@ interface DropdownMenuProps {
    *  a bottom border) whenever a value is selected. Clicking fires
    *  `onClearAllClick`; once the selection is cleared the row disappears. */
   showClearAll?: boolean;
+  /** Single-select Clear All row alignment. Default `"left"`; `"right"` pushes
+   *  the Clear All control to the right edge of the row. */
+  clearAllAlign?: "left" | "right";
+  /** Multi-select: render the Show Selected panel **above** the Select All /
+   *  Clear All row (default renders the Select All / Clear All row first). */
+  showSelectedFirst?: boolean;
   selectAllLabel?: string;
   clearAllLabel?: string;
   selectAllChecked?: boolean;
@@ -127,6 +133,8 @@ export function DropdownMenu({
   showSingleSelectRadio = false,
   showSelectAllClearAll = false,
   showClearAll = false,
+  clearAllAlign = "left",
+  showSelectedFirst = false,
   selectAllLabel = "Select All",
   clearAllLabel = "Clear All",
   selectAllChecked = false,
@@ -253,6 +261,11 @@ export function DropdownMenu({
   // deleting/clearing clears the suggestion.
   const searchInputRef = useRef<HTMLInputElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+  const optionsViewportRef = useRef<HTMLDivElement>(null);
+  // Reset the options list scroll to the top (used after Clear All).
+  const scrollOptionsToTop = () => {
+    optionsViewportRef.current?.scrollTo({ top: 0 });
+  };
   const [ghostSuffix, setGhostSuffix] = useState("");
   const computeGhostSuffix = (typed: string): string => {
     if (typed.length === 0) return "";
@@ -598,10 +611,10 @@ export function DropdownMenu({
                           onClick={() => setSearch("")}
                         >
                           <Icon
-                            shapeName="shape-x-thick"
+                            shapeName="ctrl-close-16"
                             className={styles.searchClearIcon}
                             color="var(--color-icon-accessible)"
-                            style={{ width: 10, height: 10 }}
+                            style={{ width: 12, height: 12 }}
                           />
                         </button>
                       ) : null}
@@ -610,6 +623,7 @@ export function DropdownMenu({
                 </div>
               </>
             ) : null}
+            <div className={showSelectedFirst ? styles.menuControlsReversed : styles.menuControls}>
             {showSelectAllRow ? (
               <div className={styles.selectAllClearAllRow} data-focus-section="selectAllClearAll">
                 <button
@@ -633,7 +647,10 @@ export function DropdownMenu({
                   type="button"
                   className={styles.clearAllButton}
                   data-focus-row="selectAllClearAll"
-                  onClick={() => onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined)}
+                  onClick={() => {
+                    onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined);
+                    scrollOptionsToTop();
+                  }}
                   disabled={effectiveClearAllDisabled}
                 >
                   <span className={styles.footerActionButton}>{clearAllLabel}</span>
@@ -646,8 +663,12 @@ export function DropdownMenu({
               <button
                 type="button"
                 className={styles.clearAllAction}
+                data-align={clearAllAlign}
                 data-focus-section="singleClearAll"
-                onClick={() => onClearAllClick?.()}
+                onClick={() => {
+                  onClearAllClick?.();
+                  scrollOptionsToTop();
+                }}
               >
                 <span className={styles.footerActionButton}>{clearAllLabel}</span>
               </button>
@@ -703,8 +724,9 @@ export function DropdownMenu({
                 ) : null}
               </div>
             ) : null}
+            </div>
             <ScrollArea.Root className={styles.optionsScrollRoot} data-focus-section="options">
-              <ScrollArea.Viewport className={styles.optionsScrollViewport} style={scrollRegionStyle} tabIndex={-1}>
+              <ScrollArea.Viewport ref={optionsViewportRef} className={styles.optionsScrollViewport} style={scrollRegionStyle} tabIndex={-1}>
               {showNoResults ? (
                 <div className={styles.noResults} role="presentation">
                   {noResultsLabel}
