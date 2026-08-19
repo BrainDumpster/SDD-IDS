@@ -74,7 +74,7 @@ export const Warning: Story = {
     >
       <IdsModal.Title>Warning</IdsModal.Title>
       <IdsModal.Body description={MODAL_FIGMA_BODY}>
-        <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
+        <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
           Continue to &lt;describe the action&gt;?
         </div>
       </IdsModal.Body>
@@ -106,7 +106,7 @@ export const Destructive: Story = {
         <IdsModal.Title>Critical</IdsModal.Title>
         <IdsModal.Body description={MODAL_FIGMA_BODY}>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ color: "var(--color-text-neutral)", lineHeight: "20px" }}>
+            <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
               Type in CONFIRM below to verify the action.
             </div>
             <TextInput

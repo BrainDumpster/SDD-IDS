@@ -40,10 +40,10 @@ type Story = StoryObj<typeof IdsWizard>;
 
 const baseStepContentStyle = {
   border: "1px solid var(--color-border-brand-base)",
-  background: "var(--color-background-brand-lighter)",
+  background: "var(--color-background-brand-lighter-slate)",
   padding: 16,
   minHeight: 120,
-  color: "var(--color-text-neutral)",
+  color: "var(--color-text-gray-neutral)",
 } as const;
 
 export const Default: Story = {
@@ -178,7 +178,7 @@ export const Default: Story = {
     }, []);
 
     return (
-      <div style={{ padding: 24, background: "var(--color-background-surface-1)", minHeight: 860 }}>
+      <div style={{ padding: 24, background: "var(--color-background-surface-primary)", minHeight: 860 }}>
         <IdsWizard
           {...args}
           steps={steps}
@@ -188,7 +188,7 @@ export const Default: Story = {
           onFinish={handleFinish}
           onStepChange={handleStepChange}
         />
-        <p style={{ marginTop: 16, color: "var(--color-text-neutral-strong)" }}>Last event: {lastEvent}</p>
+        <p style={{ marginTop: 16, color: "var(--color-text-gray-neutral-strong)" }}>Last event: {lastEvent}</p>
       </div>
     );
   },
@@ -241,7 +241,7 @@ export const Modal: Story = {
           onNext={handleNext}
           onFinish={handleFinish}
         />
-        <p style={{ marginTop: 16, color: "var(--color-text-neutral-strong)" }}>Last event: {lastEvent}</p>
+        <p style={{ marginTop: 16, color: "var(--color-text-gray-neutral-strong)" }}>Last event: {lastEvent}</p>
       </div>
     );
   },

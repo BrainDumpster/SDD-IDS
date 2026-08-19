@@ -196,7 +196,7 @@ export const MainScenarios: Story = {
               defaultOpen
               maxHeight={180}
             />
-            <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+            <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
               <strong>onActionClick:</strong> {actionEvent}
             </div>
           </div>
@@ -240,13 +240,13 @@ export const FieldStatesMatrix: Story = {
     const helperStyle: React.CSSProperties = {
       fontSize: "var(--font-size-body-2)",
       lineHeight: "var(--font-line-height-line-height-20)",
-      color: "var(--color-text-neutral)",
+      color: "var(--color-text-gray-neutral)",
       fontWeight: 400,
     };
     const errorMsgStyle: React.CSSProperties = {
       fontSize: "var(--font-size-body-2)",
       lineHeight: "var(--font-line-height-line-height-20)",
-      color: "var(--color-text-critical)",
+      color: "var(--color-text-alerting-critical-base)",
       fontWeight: 400,
       display: "flex",
       alignItems: "center",
@@ -457,7 +457,7 @@ export const DisabledOptionState: Story = {
           showSingleSelectRadio={showSingleSelectRadio}
           defaultOpen
         />
-        <span style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <span style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           Option 3 is disabled at option level.
         </span>
       </div>

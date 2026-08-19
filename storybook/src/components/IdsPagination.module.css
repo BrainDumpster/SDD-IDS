@@ -6,12 +6,12 @@
   justify-content: space-between;
   gap: var(--spacing-space-16);
   height: 48px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   padding: var(--padding-padding-8) calc(var(--padding-padding-16) * 2) var(--padding-padding-8)
     var(--padding-padding-24);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .rootNone {
@@ -19,11 +19,11 @@
 }
 
 .rootGray {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .rootWhite {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .rootEmbedded {
@@ -40,7 +40,7 @@
 .label {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .dropdownWrap {
@@ -54,9 +54,9 @@
   gap: var(--spacing-space-10);
   width: 90px;
   height: 32px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   padding: 6px var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -64,7 +64,7 @@
 }
 
 .dropdownTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .dropdownTrigger:focus-visible,
@@ -84,27 +84,27 @@
 }
 
 .dropdownTrigger:disabled .caretIcon {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .dropdownTrigger:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .caretIcon {
   width: 10px;
   height: 10px;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   background-color: currentColor;
 }
 
 .dropdownMenu {
   width: 90px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-top: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
@@ -139,8 +139,8 @@
   border: 0;
   border-top: var(--border-width-border-default, 1px) solid transparent;
   border-bottom: var(--border-width-border-default, 1px) solid transparent;
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   text-align: left;
   padding: 10px var(--padding-padding-24) 10px var(--padding-padding-16);
   min-height: 40px;
@@ -150,24 +150,24 @@
 }
 
 .dropdownOption:hover {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .dropdownOption:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .dropdownOptionSelected {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .pageNavGroup {
@@ -190,7 +190,7 @@
 }
 
 .iconButton:disabled {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .navIcon {
@@ -206,8 +206,8 @@
   box-sizing: border-box;
   width: 40px;
   height: 32px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   padding: 5px 0 6px;
 }
 
@@ -216,7 +216,7 @@
   min-width: 0;
   border: 0;
   background: transparent;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-align: center;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -238,9 +238,9 @@
   gap: var(--spacing-space-10);
   width: 40px;
   height: 32px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   padding: 5px 6px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -248,23 +248,23 @@
 }
 
 .pageOffsetTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .pageOffsetTrigger:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .pageOffsetTrigger:disabled .pageOffsetCaretIcon {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .pageOffsetCaretIcon {
   width: 10px;
   height: 10px;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   background-color: currentColor;
 }
 
@@ -272,9 +272,9 @@
   width: 40px;
   max-height: 160px;
   overflow-y: auto;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-top: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   list-style: none;
   margin: 0;
   padding: 0 1px;
@@ -309,8 +309,8 @@
   border: 0;
   border-top: var(--border-width-border-default, 1px) solid transparent;
   border-bottom: var(--border-width-border-default, 1px) solid transparent;
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   text-align: right;
   padding: 10px 6px;
   min-height: 40px;
@@ -320,28 +320,28 @@
 }
 
 .pageOffsetOption:hover {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .pageOffsetOption:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .pageOffsetOptionSelected {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-neutral);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .countText {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }

@@ -61,7 +61,7 @@ export const ControlledManual: Story = {
           checked={checked}
           onCheckedChange={setChecked}
         />
-        <span style={{ color: "var(--color-text-neutral)" }}>
+        <span style={{ color: "var(--color-text-gray-neutral)" }}>
           Checked: {checked ? "true" : "false"}
         </span>
       </div>

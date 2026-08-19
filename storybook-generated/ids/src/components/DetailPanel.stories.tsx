@@ -39,9 +39,9 @@ type Story = StoryObj<typeof IdsDetailPanel>;
 function ExampleBody() {
   return (
     <div style={{ display: "grid", gap: 12 }}>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-neutral-strong)", fontWeight: 500 }}>Section Header</div>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-neutral)" }}>Label: Single line content</div>
-      <div style={{ height: 600, border: "1px dashed var(--color-border-accessible)", padding: 12, boxSizing: "border-box" }}>Overflow sample content area</div>
+      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral-strong)", fontWeight: 500 }}>Section Header</div>
+      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral)" }}>Label: Single line content</div>
+      <div style={{ height: 600, border: "1px dashed var(--color-border-gray-neutral-base)", padding: 12, boxSizing: "border-box" }}>Overflow sample content area</div>
     </div>
   );
 }
@@ -49,8 +49,8 @@ function ExampleBody() {
 function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPanelAttachMode; initialExpanded: boolean }) {
   const [expanded, setExpanded] = useState(initialExpanded);
   return (
-    <div style={{ height: "100vh", background: "var(--color-background-surface-1)", padding: 16, boxSizing: "border-box" }}>
-      <div style={{ display: "flex", height: 768, border: "1px solid var(--color-border-accessible)", background: "var(--color-background-component)" }}>
+    <div style={{ height: "100vh", background: "var(--color-background-surface-primary)", padding: 16, boxSizing: "border-box" }}>
+      <div style={{ display: "flex", height: 768, border: "1px solid var(--color-border-gray-neutral-base)", background: "var(--color-background-surface-component)" }}>
         <main style={{ flex: 1, minWidth: 0, padding: 16, boxSizing: "border-box", overflow: "auto" }}>Host content</main>
         <IdsDetailPanel attachMode={attachMode} isExpanded={expanded} onExpandedChange={setExpanded} onOpened={() => console.log("[IDS Detail Panel event] opened")} onClosed={() => console.log("[IDS Detail Panel event] closed")}>
           <IdsDetailPanelHeader>{DETAIL_PANEL_SPEC_ACCURATE_DEFAULTS.title}</IdsDetailPanelHeader>
@@ -71,7 +71,7 @@ export const PageAttached: Story = { render: () => <PanelFrame attachMode="page"
 
 export const FocusVisibleReference: Story = {
   render: () => (
-    <div style={{ padding: 16, color: "var(--color-text-neutral)" }}>
+    <div style={{ padding: 16, color: "var(--color-text-gray-neutral)" }}>
       focus-visible reference: panel toggle must expose keyboard-visible focus ring.
       <div style={{ marginTop: 12 }}>
         <PanelFrame attachMode="datagrid" initialExpanded={false} />
@@ -79,3 +79,84 @@ export const FocusVisibleReference: Story = {
     </div>
   ),
 };
+
+const specTokens = ["--color-border-gray-neutral-base", "--color-background-surface-component", "--color-background-controls-base", "--color-border-brand-transparent-brand", "--color-text-gray-neutral-strong", "--color-text-gray-neutral", "--color-text-brand-strong", "--color-text-gray-white", "--color-text-link-brand-base", "--color-icon-gray-neutral-base", "--color-icon-gray-neutral-accessible"] as const;
+const specTokenRefs = {"--color-border-gray-neutral-base": ["Layout & Measurements: - root border: `1px solid var(--color-border-gray-neutral-base)`.", "Tokens: - `var(--color-border-gray-neutral-base)`", "States (Light Theme): | `DetailPanelRoot` | expanded | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | t...", "States (Light Theme): | `DetailPanelRoot` | collapsed | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | ...", "States (Light Theme): | `DetailPanelHeader` (datagrid expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-bo...", "States (Light Theme): | `DetailPanelFooter` (page expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-border...", "Codegen Contract (Framework-Agnostic Blueprint): - root border uses `1px solid var(--color-border-gray-neutral-base)`."], "--color-background-surface-component": ["Tokens: - `var(--color-background-surface-component)`", "States (Light Theme): | `DetailPanelRoot` | expanded | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | t...", "States (Light Theme): | `DetailPanelRoot` | collapsed | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | ...", "States (Light Theme): | `DetailPanelHeader` (datagrid expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-bo...", "States (Light Theme): | `DetailPanelFooter` (page expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-border..."], "--color-background-controls-base": ["Tokens: - `var(--color-background-controls-base)` (for nested actions shown in template content)"], "--color-border-brand-transparent-brand": ["Tokens: - `var(--color-border-brand-transparent-brand)`"], "--color-text-gray-neutral-strong": ["Tokens: - `var(--color-text-gray-neutral-strong)`", "States (Light Theme): | `DetailPanelHeader` (datagrid expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-bo..."], "--color-text-gray-neutral": ["Tokens: - `var(--color-text-gray-neutral)`"], "--color-text-brand-strong": ["Tokens: - `var(--color-text-brand-strong)`"], "--color-text-gray-white": ["Tokens: - `var(--color-text-gray-white)`"], "--color-text-link-brand-base": ["Tokens: - `var(--color-text-link-brand-base)`"], "--color-icon-gray-neutral-base": ["Tokens: - `var(--color-icon-gray-neutral-base)` (required for both expand/collapse toggle icons)", "States (Light Theme): | `DetailPanelToggleButton` | default | transparent | none | `double-chev-right` or `double-chev-left` in `var(--colo...", "States (Light Theme): | `DetailPanelToggleButton` | hover | transparent | none | `var(--color-icon-gray-neutral-base)` |", "States (Light Theme): | `DetailPanelToggleButton` | press | transparent | none | `var(--color-icon-gray-neutral-base)` |", "States (Light Theme): | `DetailPanelFooter` (page expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-border...", "Codegen Contract (Framework-Agnostic Blueprint): - toggle icon color uses `var(--color-icon-gray-neutral-base)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] toggle icon color is `var(--color-icon-gray-neutral-base)` in both variants."], "--color-icon-gray-neutral-accessible": ["Tokens: - `var(--color-icon-gray-neutral-accessible)`"]} as Record<string, string[]>;
+
+export const TokenInspector: Story = {
+  render: () => (
+    <div className="sbTokenInspector">
+      <style>{
+        `
+        .sbTokenInspector {
+          display: grid;
+          gap: 8px;
+          max-width: 880px;
+        }
+        .sbTokenHeader {
+          font-size: 12px;
+          opacity: 0.8;
+        }
+        .sbTokenRow {
+          display: grid;
+          grid-template-columns: minmax(260px, 1fr) 72px 120px minmax(260px, 1fr);
+          align-items: start;
+          gap: 12px;
+          padding: 6px 8px;
+          border: 1px solid var(--color-border-neutral-light, #c5c5c5);
+          border-radius: 4px;
+          background: var(--color-background-surface-component, #ffffff);
+        }
+        .sbTokenCode {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .sbTokenSwatch {
+          width: 64px;
+          height: 20px;
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
+          border-radius: 2px;
+          background: transparent;
+        }
+        .sbTokenSample {
+          font-size: 12px;
+          white-space: nowrap;
+        }
+        .sbTokenRefs {
+          display: grid;
+          gap: 2px;
+          font-size: 11px;
+          line-height: 16px;
+          opacity: 0.9;
+        }
+        .sbTokenRef {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        `
+      }</style>
+      <div className="sbTokenHeader">Spec token inspector (name + live preview + where token is referenced in spec)</div>
+      {specTokens.map((token) => (
+        <div key={token} className="sbTokenRow">
+          <span className="sbTokenCode">{`var(${token})`}</span>
+          <span className="sbTokenSwatch" style={{ background: `var(${token})` }} />
+          <span className="sbTokenSample" style={{ color: `var(${token})` }}>Sample</span>
+          <div className="sbTokenRefs">
+            {(specTokenRefs[token] || []).slice(0, 3).map((ref, idx) => (
+              <div key={`${token}-${idx}`} className="sbTokenRef" title={ref}>{ref}</div>
+            ))}
+            {(specTokenRefs[token] || []).length === 0 ? <div className="sbTokenRef">No direct spec reference found</div> : null}
+            {(specTokenRefs[token] || []).length > 3 ? (
+              <div className="sbTokenRef">+{(specTokenRefs[token] || []).length - 3} more</div>
+            ) : null}
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};
+

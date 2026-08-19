@@ -112,7 +112,7 @@ function ComboTrigger({
 
 /**
  * Optional field `Label`. Sits to the LEFT of the field on the same row; body-2
- * / weight 400 / `--color-text-neutral-strong`. Two sizes track the field height:
+ * / weight 400 / `--color-text-gray-neutral-strong`. Two sizes track the field height:
  * Large 40px (`--padding-padding-10` top/bottom), Small 32px (`--padding-padding-6`).
  * The trailing `*` (required indicator) is optional.
  */
@@ -137,7 +137,7 @@ function FieldLabel({
         fontSize: "var(--font-size-body-2)",
         lineHeight: "var(--font-line-height-line-height-20)",
         fontWeight: 400,
-        color: "var(--color-text-neutral-strong)",
+        color: "var(--color-text-gray-neutral-strong)",
         whiteSpace: "nowrap",
       }}
     >
@@ -217,11 +217,11 @@ export const SingleSelectContractManual: Story = {
           }}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>{helperText}</div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>{helperText}</div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           <strong>onSelection (csv):</strong> {selectionEvent.csv}
         </div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)", whiteSpace: "pre-wrap" }}>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)", whiteSpace: "pre-wrap" }}>
           <strong>onSelection (item):</strong> {JSON.stringify(selectionEvent.item)}
         </div>
       </div>
@@ -294,7 +294,7 @@ export const MultiSelectContractManual: Story = {
           resize: "horizontal",
           overflow: "auto",
           padding: 16,
-          border: "1px dashed var(--color-border-accessible)",
+          border: "1px dashed var(--color-border-gray-neutral-base)",
           display: "grid",
           gap: 8,
         }}
@@ -343,7 +343,7 @@ export const MultiSelectContractManual: Story = {
           onShowSelectedPanelClear={() => applySelection([])}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
           Resize the dashed box → the field clamps 186–700px; the menu grows to the widest option (up to 700, then truncates). Toggle Show/Hide Selected, dismiss tags, Select All toggles off when all visible are selected.
         </div>
 
@@ -395,7 +395,7 @@ export const MultiSelectLongOption: Story = {
         style={{
           width: 360,
           padding: 16,
-          border: "1px dashed var(--color-border-accessible)",
+          border: "1px dashed var(--color-border-gray-neutral-base)",
           display: "grid",
           gap: 8,
         }}
@@ -441,7 +441,7 @@ export const MultiSelectLongOption: Story = {
           onShowSelectedPanelClear={() => applySelection([])}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
           The 360px field is narrower than the menu; the menu grows to the widest option and truncates at 700px. The selected long tag also truncates. Toggle Show/Hide Selected, dismiss tags, Select All toggles off when all visible are selected.
         </div>
       </div>
@@ -489,7 +489,7 @@ export const Truncation: Story = {
           showSearch
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>Time zone</div>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>Time zone</div>
       </div>
     );
   },
@@ -570,7 +570,7 @@ export const DisabledAndErrorStates: Story = {
             disabled
             showSearch
           />
-          <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
+          <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
             Component is disabled (no expand + disabled cursor)
           </div>
         </div>
@@ -586,7 +586,7 @@ export const DisabledAndErrorStates: Story = {
               display: "flex",
               alignItems: "center",
               gap: "var(--spacing-space-8)",
-              color: "var(--color-text-critical)",
+              color: "var(--color-text-alerting-critical-base)",
               fontSize: "var(--font-size-body-2)",
             }}
           >

@@ -187,10 +187,10 @@ export const LayoutTokens: Story = {{
         font-size: 14px;
       }}
       .sbInput {{
-        border: 1px solid var(--color-border-accessible);
+        border: 1px solid var(--color-border-gray-neutral-base);
         padding: 6px 8px;
         border-radius: 2px;
-        background: var(--color-background-component);
+        background: var(--color-background-surface-component);
       }}
       `
     }}</style>

@@ -55,74 +55,74 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 | `--button-focus-ring-offset` | `2px` |
 
 - Core primary tokens:
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-background-controls-brand-strong)`
-  - `var(--color-background-controls-brand-stronger)`
-  - `var(--color-border-transparent-brand)`
-  - `var(--color-text-white)`
+  - `var(--color-background-controls-base)`
+  - `var(--color-background-controls-strong)`
+  - `var(--color-background-controls-stronger)`
+  - `var(--color-border-brand-transparent-brand)`
+  - `var(--color-text-gray-white)`
 - Secondary/tertiary tokens:
-  - `var(--color-background-controls-brand-lighter)`
-  - `var(--color-background-controls-brand-light)`
+  - `var(--color-background-controls-lighter)`
+  - `var(--color-background-controls-light)`
   - `var(--color-border-brand-base)`
   - `var(--color-text-brand-strong)`
 - Destructive tokens:
-  - `var(--color-background-alerting-critical)`
+  - `var(--color-background-alerting-critical-base)`
   - `var(--color-background-alerting-critical-strong)`
   - `var(--color-background-alerting-critical-stronger)`
-  - `var(--color-border-alerting-transparent-critical)`
+  - `var(--color-border-alerting-critical-transparent-base)`
 - Disabled tokens:
   - `var(--color-background-gray-lighter)`
-  - `var(--color-border-disabled)`
-  - `var(--color-text-disabled)`
-  - `var(--color-icon-disabled)`
+  - `var(--color-border-gray-disabled)`
+  - `var(--color-text-gray-disabled)`
+  - `var(--color-icon-gray-disabled)`
 - Icon tokens:
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-white)`
+  - `var(--color-icon-gray-white)`
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| primary | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | press | `var(--color-background-controls-brand-stronger)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| primary | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | press | `var(--color-background-controls-stronger)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | primary | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
 | secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | disabled | transparent | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| secondary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | secondary | focus-visible | same as current interactive base state | control border `var(--color-border-brand-base)` + outer brand focus outline | text/icon unchanged |
 | tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | disabled | transparent | transparent | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| tertiary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | tertiary | focus-visible | same as current interactive base state | control border by state + outer brand focus outline | text/icon unchanged |
-| destructive | default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | destructive | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
 ## States (Dark Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| primary | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | press | `var(--color-background-controls-brand-stronger)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| primary | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | press | `var(--color-background-controls-stronger)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | primary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
 | secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | disabled | transparent | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| secondary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | secondary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
 | tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | disabled | transparent | transparent | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| tertiary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | tertiary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
-| destructive | default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | destructive | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
 ## Interactions
 - Trigger: pointer click, `Enter`, and `Space`.
@@ -170,7 +170,7 @@ Variant matrix:
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
-  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-white)`; disabled (all variants) → `var(--color-icon-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
+  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-gray-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-gray-white)`; disabled (all variants) → `var(--color-icon-gray-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
   - `ButtonLabel`: `Body 2` (`14/20`, font-weight: `400`).
 ### Theme & programme resolution
 - Generators **must** emit component layout aliases (`var(--button-control-radius)`, `var(--button-focus-ring-radius)`, `var(--button-focus-ring-offset)`), never raw `px` or programme-specific scale token names in component CSS.
@@ -234,10 +234,10 @@ The spec-generated Button stories (`storybook-generated/ids/src/components/Butto
 - **Icon asset**: All icons use `assets/icons/settings-gear-detailed.svg`
 - **Icon variant**: All icons use `variant="mask"` (mask-based coloring)
 - **Color token mapping**:
-  - `primary` variant (default/hover/press states): `var(--color-icon-white)`
+  - `primary` variant (default/hover/press states): `var(--color-icon-gray-white)`
   - `secondary` variant (default/hover/press states): `var(--color-icon-brand-base)`
   - `tertiary` variant (default/hover/press states): `var(--color-icon-brand-base)`
-  - All variants (disabled state): `var(--color-icon-disabled)`
+  - All variants (disabled state): `var(--color-icon-gray-disabled)`
 
 This implementation aligns with the **States (Light Theme)** and **States (Dark Theme)** tables above, which specify icon colors per variant and state.
 
@@ -266,8 +266,8 @@ Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 - **Label font-weight**: `400` — do NOT use `500`; `Body 2` spec is `14/20` at weight `400`.
 
 **Icon color**
-- **Primary button icon**: `var(--color-icon-white)` — do NOT use `var(--color-icon-brand-base)`.
-- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-white)`.
+- **Primary button icon**: `var(--color-icon-gray-white)` — do NOT use `var(--color-icon-brand-base)`.
+- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-gray-white)`.
 
 **Icon rendering**
 - **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.

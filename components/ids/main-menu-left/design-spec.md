@@ -67,59 +67,59 @@ Figma slot mapping:
 - **Secondary row:** height `32px` (`box-sizing: border-box`); padding `var(--padding-padding-6)` block, `var(--padding-padding-58)` inline (Figma `11099:56237`: 6px top/bottom, 58px left/right)
 - **Primary icon:** 16×16
 - **Chevron:** 14×14
-- **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-accessible)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
-- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-accessible)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** has `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside the container. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-accessible)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
+- **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-gray-neutral-base)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
+- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** has `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside the container. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-gray-neutral-base)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
 
 ## Tokens
 ### Surfaces and borders
-- `var(--color-background-component)` — rail background
-- `var(--color-border-accessible)` — **root** left/right/**bottom** border (closes the rail); footer uses **top** border only to separate from `MainMenuList` (not per-row strokes)
-- `var(--color-background-brand-lighter)` — primary/secondary hover, selected, selected-focus backgrounds
-- `var(--color-background-brand-light)` — primary/secondary press backgrounds
+- `var(--color-background-surface-component)` — rail background
+- `var(--color-border-gray-neutral-base)` — **root** left/right/**bottom** border (closes the rail); footer uses **top** border only to separate from `MainMenuList` (not per-row strokes)
+- `var(--color-background-brand-lighter-slate)` — primary/secondary hover, selected, selected-focus backgrounds
+- `var(--color-background-brand-light-slate)` — primary/secondary press backgrounds
 
 ### Typography
-- Primary label: Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`, weight 400, `var(--color-text-neutral-strong)` default, `var(--color-text-brand-strong)` on hover/press/selected
+- Primary label: Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`, weight 400, `var(--color-text-gray-neutral-strong)` default, `var(--color-text-brand-strong)` on hover/press/selected
 - Secondary label: Body 2 — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight 400
 
 ### Icons
-- Default primary: `var(--color-icon-neutral-strong)`
+- Default primary: `var(--color-icon-gray-neutral-strong)`
 - Hover/press primary: `var(--color-icon-brand-strong)`
 - Selected primary: `var(--color-icon-brand-base)`
 - Chevron: `var(--color-icon-brand-strong)`
-- Collapse control: `var(--color-icon-neutral)`
+- Collapse control: `var(--color-icon-gray-neutral-base)`
 
 ## States (Light Theme)
 ### Primary row (`.MainMenu-Left-Element-Primary`, expanded)
 
 | State | Children list (`childrenMenu` when `forceStates`) | Background | Border / inset | Text | Icon |
 |---|---|---|---|---|---|
-| Default | Collapsed | transparent | none (container border only) | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Default | Expanded | transparent | none | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Hover | * | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Press | * | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Selected | Collapsed | `var(--color-background-brand-lighter)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
-| Selected | Expanded | `var(--color-background-brand-lighter)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
-| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (not a side border) | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Selected-Focus | * | `var(--color-background-brand-lighter)` | inset + focus ring | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
+| Default | Collapsed | transparent | none (container border only) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Default | Expanded | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Hover | * | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Press | * | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Selected | Collapsed | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
+| Selected | Expanded | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
+| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (not a side border) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Selected-Focus | * | `var(--color-background-brand-lighter-slate)` | inset + focus ring | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
 
 ### Primary icon-only (`.MainMenu-Left-Element-PrimaryIcon`, collapsed)
 
 | State | Background | Inset | Icon |
 |---|---|---|---|
-| Default | transparent | — | `var(--color-icon-neutral-strong)` |
-| Selected | `var(--color-background-brand-lighter)` | **4px** `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
+| Default | transparent | — | `var(--color-icon-gray-neutral-strong)` |
+| Selected | `var(--color-background-brand-lighter-slate)` | **4px** `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 | Hover / Press | same token mapping as expanded primary | — | brand-strong / brand-base per state |
 
 ### Secondary row (`.MainMenu-Left-Element-Secondary`)
 
 | State | Background | Text |
 |---|---|---|
-| Default | transparent | `var(--color-text-neutral)` |
-| Hover | `var(--color-background-brand-lighter)` | `var(--color-text-brand-strong)` |
-| Press | `var(--color-background-brand-light)` | `var(--color-text-brand-strong)` |
-| Selected | `var(--color-background-brand-lighter)` | `var(--color-text-brand-strong)` |
-| Default-Focus | transparent + outline `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
-| Selected-Focus | `var(--color-background-brand-lighter)` + outline | `var(--color-text-brand-strong)` |
+| Default | transparent | `var(--color-text-gray-neutral)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
+| Press | `var(--color-background-brand-light-slate)` | `var(--color-text-brand-strong)` |
+| Selected | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
+| Default-Focus | transparent + outline `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
+| Selected-Focus | `var(--color-background-brand-lighter-slate)` + outline | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -288,7 +288,7 @@ Codegen and `MainMenuLeft.stories.tsx` **Spec Accurate Design** must use **compo
 - `defaultSelectedItemId: "dashboard"` on Dashboard primary item
 - Figma icon slugs on `MainMenuLeftItemIcon` / `ids-main-menu-left-item-icon`
 - Infrastructure group: `defaultExpanded={false}` / `[defaultExpanded]="false"`
-- Parent frame: `height: 100vh`, flex row, canvas `var(--color-background-surface-1)`
+- Parent frame: `height: 100vh`, flex row, canvas `var(--color-background-surface-primary)`
 - Stories: **Collapsed**, **PrimaryStateSnapshotMatrix** (`forceStates` + `forceState` per item), **Legacy items[] adapter** (optional)
 
 Legacy `items[]` story args remain valid for programmatic adapter parity tests.
@@ -358,7 +358,7 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 ### Bug fixes applied (2026-07-01)
 1. **Menu top padding missing** — Original bug: `.root` (MainMenuLeftRoot) was missing top padding. Fix: Added `padding-top: var(--padding-padding-8)`.
 2. **Font-weight incorrect** — Original bug: Primary label and secondary label font-weight were 500 instead of 400. Fix: Changed to `font-weight: 400` in `.primaryLabel`, `.secondaryRow`, and `.secondaryRowSelected`.
-3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-neutral-strong` instead of `color-icon-neutral`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-neutral)`.
+3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-neutral-strong` instead of `color-icon-neutral`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-gray-neutral-base)`.
 4. **Row borders missing** — Original bug: Primary and secondary rows lacked left/right borders to stack above container border. Fix: Added left/right borders to `.primaryRow` and `.secondaryRow` with `color-border-accessible` and `z-index: 1`. `.content` uses `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside container. `.focusRing` uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. `.selectedInset` uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside. This creates the visual effect where row borders read as the rail edges along each row, aligning over the root borders rather than doubling.
 
 ## Source Mapping

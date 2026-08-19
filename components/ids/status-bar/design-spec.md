@@ -56,9 +56,9 @@ Inventory-only nested anatomy:
   - label uses `18px/25px` in large variant and `16px/24px` in small variant
   - category text uses `14px/20px`
 - Borders and separators:
-  - container border: `1px` using `var(--color-border-disabled)`
+  - container border: `1px` using `var(--color-border-gray-disabled)`
   - divider is a separate element (not a simple item border) to match design overlays.
-  - divider geometry: `1px` width, `56px` height, dashed stroke using `var(--color-border-disabled)`.
+  - divider geometry: `1px` width, `56px` height, dashed stroke using `var(--color-border-gray-disabled)`.
   - divider placement: vertically centered, rendered at slot edges as needed (including total item edges).
 - Overflow layer:
   - overlay controls width: `64px` each side
@@ -76,25 +76,25 @@ Inventory-only nested anatomy:
   - when `total` is omitted, item strip stays static (no overflow arrows).
 ## Tokens
 - Surfaces and borders:
-  - `var(--color-background-component)`
-  - `var(--color-background-component-light)`
-  - `var(--color-border-disabled)`
-  - `var(--color-border-accessible)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-background-surface-component-light)`
+  - `var(--color-border-gray-disabled)`
+  - `var(--color-border-gray-neutral-base)`
 - Text:
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
   - `var(--color-text-brand-base)`
-  - `var(--color-text-disabled)`
+  - `var(--color-text-gray-disabled)`
 - Icons:
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-neutral)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-icon-alerting-minor)`
-  - `var(--color-icon-alerting-success)`
-  - `var(--color-icon-inverse)`
+  - `var(--color-icon-gray-neutral-base)`
+  - `var(--color-icon-alerting-critical-base)`
+  - `var(--color-icon-alerting-minor-base)`
+  - `var(--color-icon-alerting-success-base)`
+  - `var(--color-icon-gray-inverse)`
 - Interaction fills:
-  - `var(--color-background-brand-lighter)`
-  - `var(--color-background-brand-light)`
+  - `var(--color-background-brand-lighter-slate)`
+  - `var(--color-background-brand-light-slate)`
   - `var(--color-background-brand-base)`
 - Overflow gradients:
   - `var(--color-gradient-overflow-horizontal-inverse-start)`
@@ -106,21 +106,21 @@ MCP variable evidence confirms:
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter)` | same divider | text preserved |
-| item | press | `var(--color-background-brand-light)` | same divider | text preserved |
-| item | selected | `var(--color-background-brand-light)` | same divider | text preserved |
-| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)`, icons use accessible/disabled tone |
-| overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
+| item | default | `var(--color-background-surface-component)` | right divider `var(--color-border-gray-disabled)` | value `var(--color-text-gray-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter-slate)` | same divider | text preserved |
+| item | press | `var(--color-background-brand-light-slate)` | same divider | text preserved |
+| item | selected | `var(--color-background-brand-light-slate)` | same divider | text preserved |
+| item | disabled | `var(--color-background-surface-component-light)` | same divider | `var(--color-text-gray-disabled)`, icons use accessible/disabled tone |
+| overflow button | default | `var(--color-background-surface-component)` | side border `var(--color-border-gray-disabled)` | `var(--color-icon-brand-base)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter)` | same divider | semantic token resolution |
-| item | press | `var(--color-background-brand-light)` | same divider | semantic token resolution |
-| item | selected | `var(--color-background-brand-light)` | same divider | semantic token resolution |
-| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)` and accessible icons |
-| overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
+| item | default | `var(--color-background-surface-component)` | right divider `var(--color-border-gray-disabled)` | value `var(--color-text-gray-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter-slate)` | same divider | semantic token resolution |
+| item | press | `var(--color-background-brand-light-slate)` | same divider | semantic token resolution |
+| item | selected | `var(--color-background-brand-light-slate)` | same divider | semantic token resolution |
+| item | disabled | `var(--color-background-surface-component-light)` | same divider | `var(--color-text-gray-disabled)` and accessible icons |
+| overflow button | default | `var(--color-background-surface-component)` | side border `var(--color-border-gray-disabled)` | `var(--color-icon-brand-base)` |
 ## Interactions
 - Item interactions support `default | hover | press | selected | disabled`.
 - Overflow controls:

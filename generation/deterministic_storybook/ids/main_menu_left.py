@@ -98,7 +98,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof {component_name}>) {{
         height: "100vh",
         boxSizing: "border-box",
         display: "flex",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         minHeight: 0,
       }}}}
     >
@@ -110,7 +110,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof {component_name}>) {{
           flex: 1,
           minWidth: 0,
           padding: 24,
-          color: "var(--color-text-neutral-strong)",
+          color: "var(--color-text-gray-neutral-strong)",
           fontSize: 14,
         }}}}
       >
@@ -141,7 +141,7 @@ export const PrimaryStateSnapshotMatrix: Story = {{
         flexDirection: "column",
         gap: 8,
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
       }}}}
     >
       <{component_name} expanded forceStates>

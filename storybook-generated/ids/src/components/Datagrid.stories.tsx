@@ -288,7 +288,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGridCompositionSt
         height: "100dvh",
         boxSizing: "border-box",
         padding: "clamp(8px, 2vw, 16px)",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -446,7 +446,7 @@ function TreeviewFrame(props: ComponentProps<typeof IdsDataGrid>) {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -468,7 +468,7 @@ function ViewModeToggleFrame(
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -659,7 +659,7 @@ export const DateColumnFilter: Story = {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -688,7 +688,7 @@ export const DateAndTimeColumnFilter: Story = {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -717,7 +717,7 @@ export const NumericColumnFilter: Story = {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -739,37 +739,37 @@ export const NumericColumnFilter: Story = {
 };
 
 const specTokens = [
-  "--color-background-component",
-  "--color-background-surface-1",
+  "--color-background-surface-component",
+  "--color-background-surface-primary",
   "--color-background-gray-neutral-lighter",
-  "--color-background-brand-lighter",
-  "--color-background-brand-light",
-  "--color-border-light",
-  "--color-border-accessible",
+  "--color-background-brand-lighter-slate",
+  "--color-background-brand-light-slate",
+  "--color-border-gray-neutral-light",
+  "--color-border-gray-neutral-base",
   "--color-border-brand-base",
-  "--color-text-neutral-strong",
-  "--color-text-neutral",
-  "--color-icon-neutral",
+  "--color-text-gray-neutral-strong",
+  "--color-text-gray-neutral",
+  "--color-icon-gray-neutral-base",
   "--color-icon-brand-base",
   "--color-icon-brand-stronger",
 ] as const;
 
 const specTokenRefs: Record<string, string[]> = {
-  "--color-background-component": [
+  "--color-background-surface-component": [
     "Layout: default row fill on each body cell",
     "States: DatagridHeader colorAndBorder=false",
     "FilterMenu: FilterIconTab background",
   ],
-  "--color-background-surface-1": ["States: DatagridRow hover on read-only table"],
+  "--color-background-surface-primary": ["States: DatagridRow hover on read-only table"],
   "--color-background-gray-neutral-lighter": ["States: DatagridHeader colorAndBorder=true"],
-  "--color-background-brand-lighter": ["States: DatagridRow hover / selected"],
-  "--color-background-brand-light": ["States: DatagridRow selected and press"],
-  "--color-border-light": ["Layout: row bottom divider; header rails and band borders"],
-  "--color-border-accessible": ["Column filter L-frame outer border"],
+  "--color-background-brand-lighter-slate": ["States: DatagridRow hover / selected"],
+  "--color-background-brand-light-slate": ["States: DatagridRow selected and press"],
+  "--color-border-gray-neutral-light": ["Layout: row bottom divider; header rails and band borders"],
+  "--color-border-gray-neutral-base": ["Column filter L-frame outer border"],
   "--color-border-brand-base": ["Row vertical selection accent (4px leading bar)"],
-  "--color-text-neutral-strong": ["Layout: column title Body 2 - Medium"],
-  "--color-text-neutral": ["Layout: body cell text"],
-  "--color-icon-neutral": ["States: SortToggle default; FilterToggle default/hover"],
+  "--color-text-gray-neutral-strong": ["Layout: column title Body 2 - Medium"],
+  "--color-text-gray-neutral": ["Layout: body cell text"],
+  "--color-icon-gray-neutral-base": ["States: SortToggle default; FilterToggle default/hover"],
   "--color-icon-brand-base": ["States: SortToggle selected; FilterToggle selected"],
   "--color-icon-brand-stronger": ["States: FilterToggle press"],
 };
@@ -830,7 +830,7 @@ function ColumnFreezeStoryFrame({ children }: { children: React.ReactNode }) {
         height: "100dvh",
         boxSizing: "border-box",
         padding: "clamp(8px, 2vw, 16px)",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -844,7 +844,7 @@ function ColumnFreezeStoryFrame({ children }: { children: React.ReactNode }) {
           width: "100%",
           fontSize: 12,
           lineHeight: "16px",
-          color: "var(--color-text-neutral)",
+          color: "var(--color-text-gray-neutral)",
         }}
       >
         Frozen columns stay pinned on the left; remaining columns scroll horizontally. Resize the
@@ -992,9 +992,9 @@ export const TokenInspector: Story = {
           align-items: start;
           gap: 12px;
           padding: 6px 8px;
-          border: 1px solid var(--color-border-light);
+          border: 1px solid var(--color-border-gray-neutral-light);
           border-radius: 4px;
-          background: var(--color-background-component);
+          background: var(--color-background-surface-component);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1003,7 +1003,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible);
+          border: 1px solid var(--color-border-gray-neutral-base);
           border-radius: 2px;
         }
         .sbTokenSample {

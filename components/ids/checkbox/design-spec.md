@@ -38,22 +38,22 @@ Use semantic tokens only.
 - Borders:
   - `var(--border-width-border-1)`
   - `var(--border-width-border-2)`
-  - `var(--color-border-accessible)`
-  - `var(--color-border-strong)`
+  - `var(--color-border-gray-neutral-base)`
+  - `var(--color-border-gray-neutral-strong)`
   - `var(--color-border-brand-base)`
-  - `var(--color-border-disabled)`
+  - `var(--color-border-gray-disabled)`
 - Backgrounds:
-  - `var(--color-background-component)`
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-background-controls-brand-strong)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-background-controls-base)`
+  - `var(--color-background-controls-strong)`
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-base)`
 - Text/Icon:
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-text-disabled)`
-  - `var(--color-text-critical)` (error assistive text only — label color does NOT change in error state)
-  - `var(--color-icon-white)`
-  - `var(--color-icon-inverse)`
+  - `var(--color-text-gray-neutral-strong)`
+  - `var(--color-text-gray-disabled)`
+  - `var(--color-text-alerting-critical-base)` (error assistive text only — label color does NOT change in error state)
+  - `var(--color-icon-gray-white)`
+  - `var(--color-icon-gray-inverse)`
   - `var(--color-icon-brand-base)` (focus/semantic emphasis when needed)
 - Typography:
   - `var(--font-size-body-2)`
@@ -62,16 +62,16 @@ Use semantic tokens only.
 ## States (Light Theme)
 | Selection | Interaction | Box Background | Box Border | Indicator | Label |
 |---|---|---|---|---|---|
-| Unchecked | Default | `var(--color-background-component)` | `var(--color-border-accessible)` | none | `var(--color-text-neutral-strong)` |
-| Unchecked | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | none | `var(--color-text-neutral-strong)` |
-| Unchecked | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | none | `var(--color-text-neutral-strong)` |
-| Checked | Default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Hover | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Checked | Focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` + 2px focus ring offset | check in `var(--color-icon-white)` | `var(--color-text-neutral)` |
-| Partial | Default | `var(--color-background-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Partial | Hover | `var(--color-background-component)` | `var(--color-border-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Partial | Focus-visible | `var(--color-background-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-neutral)` |
-| Any | Disabled | `var(--color-background-gray-light)` for unselected/partial; `var(--color-background-gray-base)` for checked | `var(--color-border-disabled)` | selected check uses `var(--color-icon-inverse)`; partial dash uses `var(--color-icon-disabled)`; unchecked none | `var(--color-text-disabled)` |
+| Unchecked | Default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | none | `var(--color-text-gray-neutral-strong)` |
+| Unchecked | Hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | none | `var(--color-text-gray-neutral-strong)` |
+| Unchecked | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | none | `var(--color-text-gray-neutral-strong)` |
+| Checked | Default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
+| Checked | Hover | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
+| Checked | Focus-visible | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` + 2px focus ring offset | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
+| Partial | Default | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
+| Partial | Hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
+| Partial | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
+| Any | Disabled | `var(--color-background-gray-light)` for unselected/partial; `var(--color-background-gray-base)` for checked | `var(--color-border-gray-disabled)` | selected check uses `var(--color-icon-gray-inverse)`; partial dash uses `var(--color-icon-gray-disabled)`; unchecked none | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -89,7 +89,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Indeterminate behavior:
   - programmatic state (`aria-checked="mixed"`),
   - next user toggle transitions to checked (recommended deterministic rule).
-- Hover affects border/icon emphasis only; background remains unchanged from each selection baseline. Label color remains `var(--color-text-neutral)` in error state (only `assistiveText` turns critical).
+- Hover affects border/icon emphasis only; background remains unchanged from each selection baseline. Label color remains `var(--color-text-gray-neutral)` in error state (only `assistiveText` turns critical).
 - Disabled blocks pointer + keyboard interactions.
 ## Composition & API (runtime)
 Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts/ids/checkbox.contract.ts`.
@@ -199,8 +199,8 @@ Outputs (item): `onChange(checked)` / `checkedChange`.
 - **Label font-weight**: `400` — apply on the wrapper label row
 
 **Error state**
-- **Box border in error**: unchecked box uses `var(--color-border-strong)` (same as hover), NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level via `ValidationErrorMessage`, not by a red border on the individual checkbox.
-- **Label color in error**: label stays `var(--color-text-neutral)` — do NOT apply `var(--color-text-critical)` to the label.
+- **Box border in error**: unchecked box uses `var(--color-border-gray-neutral-strong)` (same as hover), NOT `var(--color-border-alerting-critical-base)`. Error is communicated at the form-group level via `ValidationErrorMessage`, not by a red border on the individual checkbox.
+- **Label color in error**: label stays `var(--color-text-gray-neutral)` — do NOT apply `var(--color-text-alerting-critical-base)` to the label.
 - **Error assistive text icon**: prepend `status-critical-square-solid` icon (16×16, `variant="img"` to preserve the red fill + white × from the SVG) inline before the helper text. Gap between icon and text: `var(--spacing-space-8)`. Icon hidden when `disabled`.
 - **Assistive text alignment**: the assistive text row aligns to the left edge of the control (no left offset). Use `display: flex; align-items: center; gap: var(--spacing-space-8)` on the assistive text container.
 - **Assistive text spacing from options**: `var(--spacing-space-8)` (8px) when options are laid out horizontally (short list, single row); `var(--spacing-space-16)` (16px) between the last option and the error message when options are stacked vertically (long list).
@@ -216,4 +216,4 @@ Outputs (item): `onChange(checked)` / `checkedChange`.
 - **No border-radius**: the horizontal dash (`8x2`) uses no `border-radius`; do not add rounded ends
 
 **Disabled indicator token**
-- **Indeterminate and mixed disabled**: use `var(--color-icon-disabled)` for the dash color, not `var(--color-border-disabled)`
+- **Indeterminate and mixed disabled**: use `var(--color-icon-gray-disabled)` for the dash color, not `var(--color-border-gray-disabled)`

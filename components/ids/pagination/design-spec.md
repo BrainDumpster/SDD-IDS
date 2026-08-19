@@ -19,7 +19,7 @@
   - `PerPageDropdown` (trigger + menu with `arrow-drop-tri-caret`)
   - `ResultsSuffix` ("per page")
 - `PageNavigationGroup`
-  - `FirstPageButton` (`double-chev-left`) (always shown when `showFirstLast` is true, disabled at first page with `var(--color-icon-disabled)`)
+  - `FirstPageButton` (`double-chev-left`) (always shown when `showFirstLast` is true, disabled at first page with `var(--color-icon-gray-disabled)`)
   - `PrevPageButton` (`chev-left`)
   - `PageInput` (textbox)
   - `PageCountText` (format is `"of {totalPages}"` with exactly one space after `of`; single-page fallback `"1 page"`)
@@ -31,7 +31,7 @@
 - Main row (`Pagination - Main`):
   - Height: `48px` (total height including border)
   - Horizontal padding: `24px` left, `32px` right
-  - Border: `1px solid var(--color-border-accessible)` on all sides (**standalone**). When **`embeddedInDatagrid`** is `true`, **`rootEmbedded`** applies **top border only** — left/right/bottom are owned by the datagrid shell (see **Datagrid footer integration**).
+  - Border: `1px solid var(--color-border-gray-neutral-base)` on all sides (**standalone**). When **`embeddedInDatagrid`** is `true`, **`rootEmbedded`** applies **top border only** — left/right/bottom are owned by the datagrid shell (see **Datagrid footer integration**).
   - Supports `Background=Gray` (default), `Background=White`, and `Background=None`.
 - Results-per-page group gap: approximately `15.5px` in Figma; runtime may normalize to nearest spacing token.
 - Page-navigation group gap: `16px`.
@@ -75,22 +75,22 @@
   - Menu placement remains `open-above | open-below` based on available viewport space.
 ## Tokens
 - Surface/background:
-  - `var(--color-background-surface-1)` (`background="gray"`)
-  - `var(--color-background-component)` (`background="white"`)
+  - `var(--color-background-surface-primary)` (`background="gray"`)
+  - `var(--color-background-surface-component)` (`background="white"`)
   - transparent (`background="none"`)
-  - `var(--color-background-brand-lighter)`
-  - `var(--color-background-brand-light)`
+  - `var(--color-background-brand-lighter-slate)`
+  - `var(--color-background-brand-light-slate)`
 - Border:
-  - `var(--color-border-accessible)`
+  - `var(--color-border-gray-neutral-base)`
   - `var(--color-border-brand-neutral)`
 - Text:
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
   - `var(--color-text-brand-strong)`
 - Icon:
-  - `var(--color-icon-neutral)`
+  - `var(--color-icon-gray-neutral-base)`
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-disabled)`
+  - `var(--color-icon-gray-disabled)`
 - Typography:
   - `Body 2` (`14/20`)
 - Elevation:
@@ -105,16 +105,16 @@
 |---|---|---|---|---|
 | Navigation icon buttons | default | transparent | none | disabled/neutral/brand icon based on position |
 | Navigation icon buttons | hover | transparent | none | `var(--color-icon-brand-base)` |
-| Navigation icon buttons | disabled | transparent | none | `var(--color-icon-disabled)` |
-| Page input | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Page input | focus-visible | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` + outer focus treatment | text unchanged |
-| Per-page dropdown trigger | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | text `var(--color-text-neutral)`, caret `var(--color-icon-neutral)` |
-| Per-page dropdown trigger | hover | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | text/caret unchanged |
-| Per-page dropdown trigger | focus-visible | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` + focus outline | text/caret unchanged |
-| Dropdown option row | default (layout-stable) | `var(--color-background-component)` | top+bottom `1px solid transparent` | `var(--color-text-neutral)` |
-| Dropdown option row | hover | `var(--color-background-brand-lighter)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| Dropdown option row | press | `var(--color-background-brand-light)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-| Dropdown option row | selected | `var(--color-background-brand-lighter)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Navigation icon buttons | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
+| Page input | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Page input | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` + outer focus treatment | text unchanged |
+| Per-page dropdown trigger | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
+| Per-page dropdown trigger | hover | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text/caret unchanged |
+| Per-page dropdown trigger | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` + focus outline | text/caret unchanged |
+| Dropdown option row | default (layout-stable) | `var(--color-background-surface-component)` | top+bottom `1px solid transparent` | `var(--color-text-gray-neutral)` |
+| Dropdown option row | hover | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-gray-neutral)` |
+| Dropdown option row | press | `var(--color-background-brand-light-slate)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Dropdown option row | selected | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -127,9 +127,9 @@ Dark table is structurally parallel to light; runtime must not hardcode literal 
 ## Interactions
 - First/previous/next/last controls navigate pages when available.
 - At first page:
-  - first + previous remain visible and are disabled (`var(--color-icon-disabled)`).
+  - first + previous remain visible and are disabled (`var(--color-icon-gray-disabled)`).
 - At last page:
-  - next + last remain visible and are disabled (`var(--color-icon-disabled)`).
+  - next + last remain visible and are disabled (`var(--color-icon-gray-disabled)`).
 - Page input:
   - accepts numeric input only
   - commit on `Enter` or blur
@@ -182,10 +182,10 @@ When pagination is hosted inside an IDS Datagrid footer (see `components/ids/dat
 | Layer | Background | Border | Notes |
 |---|---|---|---|
 | `DatagridFooter` host (`.footer`) | **transparent** (pass-through) | **none** | Wrapper only |
-| `PaginationRoot` (`ids-pagination` / `IdsPagination`) | `background="gray"` → `var(--color-background-surface-1)` | **top only** **`1px solid var(--color-border-accessible)`** | **No** left, right, or bottom outer border — those edges are owned by the datagrid table shell (`.contentRow` / `.gridWrap`) |
+| `PaginationRoot` (`ids-pagination` / `IdsPagination`) | `background="gray"` → `var(--color-background-surface-primary)` | **top only** **`1px solid var(--color-border-gray-neutral-base)`** | **No** left, right, or bottom outer border — those edges are owned by the datagrid table shell (`.contentRow` / `.gridWrap`) |
 | Pagination interior chrome | per pagination spec | per pagination spec | Per-page dropdown, page input, and nav controls keep their internal borders |
 
-Runtime contract: datagrid implementations pass `background="gray"`, **`embeddedInDatagrid={true}`** / `[embeddedInDatagrid]="true"`, which applies **`rootEmbedded`** — **`border: 0; border-top: 1px solid var(--color-border-accessible)`** on `PaginationRoot`.
+Runtime contract: datagrid implementations pass `background="gray"`, **`embeddedInDatagrid={true}`** / `[embeddedInDatagrid]="true"`, which applies **`rootEmbedded`** — **`border: 0; border-top: 1px solid var(--color-border-gray-neutral-base)`** on `PaginationRoot`.
 
 ### Spec Accurate Design defaults
 
@@ -208,15 +208,15 @@ All glyphs resolve through the shared **`Icon`** primitive (`storybook/src/compo
 
 | Slot | `shapeName` | Render size | Color / tint |
 |---|---|---|---|
-| First page | `double-chev-left` | `16×16` | Parent nav button: `var(--color-icon-brand-base)`; disabled: `var(--color-icon-disabled)` |
+| First page | `double-chev-left` | `16×16` | Parent nav button: `var(--color-icon-brand-base)`; disabled: `var(--color-icon-gray-disabled)` |
 | Previous page | `chev-left` | `16×16` | Same as first page |
 | Next page | `chev-right` | `16×16` | Same as first page |
 | Last page | `double-chev-right` | `16×16` | Same as first page |
-| Per-page dropdown caret | `arrow-drop-tri-caret` | `10×10` | `var(--color-icon-neutral)`; disabled: `var(--color-icon-disabled)` |
+| Per-page dropdown caret | `arrow-drop-tri-caret` | `10×10` | `var(--color-icon-gray-neutral-base)`; disabled: `var(--color-icon-gray-disabled)` |
 
 ### Rendering rules
 
-- **Navigation arrows:** wrap each `Icon` in a native `<button type="button">` with `aria-label`. Set button `color` to the semantic icon token; `Icon` inherits tint via `currentColor` (mask variant). Always render all four controls on multi-page views; use `disabled` + `var(--color-icon-disabled)` at boundaries — do not remove controls.
+- **Navigation arrows:** wrap each `Icon` in a native `<button type="button">` with `aria-label`. Set button `color` to the semantic icon token; `Icon` inherits tint via `currentColor` (mask variant). Always render all four controls on multi-page views; use `disabled` + `var(--color-icon-gray-disabled)` at boundaries — do not remove controls.
 - **Dropdown carets:** render inside the dropdown trigger button. Pass explicit `style={{ width: 10, height: 10 }}` on `Icon` — the primitive defaults to `16×16` inline and CSS classes alone cannot override that.
 - **Navigation size:** pass explicit `style={{ width: 16, height: 16 }}` on nav `Icon` instances for deterministic sizing across frameworks.
 - **Codegen:** when the target library provides a shared `Icon` (or equivalent), generators MUST compose all pagination glyphs through it with `shapeName` (or equivalent prop). Do not emit inline SVG paths, raw `<img>`, or per-component asset globs in pagination source.
@@ -301,9 +301,9 @@ Variant matrix:
   - `get_metadata`, `get_design_context`, `get_variable_defs` run on all nodes above.
 
 ## Implementation Notes
-- **Background variants (2026-06-19)**: Three `background` prop values — `gray` (default, `var(--color-background-surface-1)`), `white` (`var(--color-background-component)`), `none` (transparent). Matches Figma `Pagination - Main` property `Background=Gray | White | None`.
+- **Background variants (2026-06-19)**: Three `background` prop values — `gray` (default, `var(--color-background-surface-primary)`), `white` (`var(--color-background-surface-component)`), `none` (transparent). Matches Figma `Pagination - Main` property `Background=Gray | White | None`.
 - **Height (2026-06-19)**: Root uses `box-sizing: border-box` and `height: 48px` so total height including border is 48px.
 - **Caret icon (2026-06-19)**: Per-page dropdown caret (`arrow-drop-tri-caret`) must render at 10×10px via explicit `style={{ width: 10, height: 10 }}` on `Icon` (inline default is 16px).
 - **Page number (2026-06-19)**: Figma `.TextBox` (`11677:157819`) — numeric text input only; no page-number dropdown in IDS or Synapse.
-- **Navigation arrows (2026-06-19)**: First/previous/next/last controls always render on multi-page views; boundary positions use disabled styling instead of hiding controls. All four use shared `Icon` with `style={{ width: 16, height: 16 }}`; button `color` drives `var(--color-icon-brand-base)` / `var(--color-icon-disabled)`.
-- **Datagrid embed (2026-07-06)**: Pass **`embeddedInDatagrid`** when hosted in datagrid footer; **`rootEmbedded`** class sets `border: 0; border-top: 1px solid var(--color-border-accessible)` so shell owns left/right/bottom edges.
+- **Navigation arrows (2026-06-19)**: First/previous/next/last controls always render on multi-page views; boundary positions use disabled styling instead of hiding controls. All four use shared `Icon` with `style={{ width: 16, height: 16 }}`; button `color` drives `var(--color-icon-brand-base)` / `var(--color-icon-gray-disabled)`.
+- **Datagrid embed (2026-07-06)**: Pass **`embeddedInDatagrid`** when hosted in datagrid footer; **`rootEmbedded`** class sets `border: 0; border-top: 1px solid var(--color-border-gray-neutral-base)` so shell owns left/right/bottom edges.

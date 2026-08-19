@@ -97,42 +97,42 @@
 ### Colors
 
 **Button - Primary Style:**
-- Background (default): `var(--color-background-controls-brand-base, #0672cb)`
-- Background (hover): `var(--color-background-controls-brand-strong, #055fa9)`
-- Background (press): `var(--color-background-controls-brand-stronger, #044b86)`
-- Background (focus): `var(--color-background-controls-brand-base, #0672cb)`
+- Background (default): `var(--color-background-controls-base, #0672cb)`
+- Background (hover): `var(--color-background-controls-strong, #055fa9)`
+- Background (press): `var(--color-background-controls-stronger, #044b86)`
+- Background (focus): `var(--color-background-controls-base, #0672cb)`
 - Background (disabled): `var(--color-background-controls-disabled, #f4f4f4)`
-- Text (default/hover/press/focus): `var(--color-text-white, #ffffff)`
-- Text (disabled): `var(--color-text-disabled, #757575)`
-- Border: `var(--color-border-transparent-brand, rgba(255,255,255,0))`
+- Text (default/hover/press/focus): `var(--color-text-gray-white, #ffffff)`
+- Text (disabled): `var(--color-text-gray-disabled, #757575)`
+- Border: `var(--color-border-brand-transparent-brand, rgba(255,255,255,0))`
 - Border width: `var(--border-width-border-default, 1px)`
 
 **Button - Secondary Style:**
-- Background (default): `var(--color-background-controls-brand-lighter, #ebf4fb)`
-- Background (hover): `var(--color-background-controls-brand-light, #daeaf7)`
-- Background (press): `var(--color-background-controls-brand-base, #0672cb)`
-- Background (focus): `var(--color-background-controls-brand-lighter, #ebf4fb)`
+- Background (default): `var(--color-background-controls-lighter, #ebf4fb)`
+- Background (hover): `var(--color-background-controls-light, #daeaf7)`
+- Background (press): `var(--color-background-controls-base, #0672cb)`
+- Background (focus): `var(--color-background-controls-lighter, #ebf4fb)`
 - Background (disabled): `var(--color-background-controls-disabled, #f4f4f4)`
 - Text (default/hover/focus): `var(--color-text-brand-strong, #055fa9)`
-- Text (press): `var(--color-text-white, #ffffff)`
-- Text (disabled): `var(--color-text-disabled, #757575)`
+- Text (press): `var(--color-text-gray-white, #ffffff)`
+- Text (disabled): `var(--color-text-gray-disabled, #757575)`
 - Border: `var(--color-border-brand-base, #0672cb)`
 - Border width: `var(--border-width-border-default, 1px)`
 
 **Button - Tertiary Style:**
-- Background (default): `var(--color-background-component, transparent)`
+- Background (default): `var(--color-background-surface-component, transparent)`
 - Background (hover): `var(--color-background-gray-lighter, #f4f4f4)`
 - Background (press): `var(--color-background-gray-lighter, #f4f4f4)`
-- Background (focus): `var(--color-background-component, transparent)`
-- Background (disabled): `var(--color-background-component, transparent)`
+- Background (focus): `var(--color-background-surface-component, transparent)`
+- Background (disabled): `var(--color-background-surface-component, transparent)`
 - Text (default/hover/press/focus): `var(--color-text-brand-strong, #055fa9)`
-- Text (disabled): `var(--color-text-disabled, #757575)`
-- Border: `var(--color-border-transparent-brand, rgba(255,255,255,0))`
+- Text (disabled): `var(--color-text-gray-disabled, #757575)`
+- Border: `var(--color-border-brand-transparent-brand, rgba(255,255,255,0))`
 - Border width: `var(--border-width-border-default, 1px)`
 
 **Dropdown Icon:**
-- Color (default/hover/press/focus): `var(--color-icon-white, #ffffff)` for Primary, `var(--color-icon-brand-base, #0672cb)` for Secondary/Tertiary
-- Color (disabled): `var(--color-icon-disabled, #757575)`
+- Color (default/hover/press/focus): `var(--color-icon-gray-white, #ffffff)` for Primary, `var(--color-icon-brand-base, #0672cb)` for Secondary/Tertiary
+- Color (disabled): `var(--color-icon-gray-disabled, #757575)`
 
 **Leading Icon (optional):**
 - Icon name: `settings-gear-detailed`
@@ -140,15 +140,15 @@
 - Color: `currentColor` (inherits from button text color)
 
 **Dropdown Menu:**
-- Background: `var(--color-background-component, white)`
-- Border: `var(--color-border-accessible, #757575)`
+- Background: `var(--color-background-surface-component, white)`
+- Border: `var(--color-border-gray-neutral-base, #757575)`
 - Border width: `var(--border-width-border-default, 1px)`
 - Box shadow: `var(--shadow-shadow-4)`
 
 **Menu Option:**
-- Background (default): `var(--color-background-component, white)`
+- Background (default): `var(--color-background-surface-component, white)`
 - Background (hover): `var(--color-background-gray-lighter, #f4f4f4)`
-- Text (default): `var(--color-text-neutral, #4d4d4d)`
+- Text (default): `var(--color-text-gray-neutral, #4d4d4d)`
 - Text (hover): `var(--color-text-brand-strong, #055fa9)`
 
 ### Spacing
@@ -169,21 +169,21 @@
 
 | Variant | State | Background | Text | Border | Icon |
 |---------|-------|------------|------|--------|------|
-| **Primary - Medium** | default | `var(--color-background-controls-brand-base)` | `var(--color-text-white)` | `var(--color-border-transparent-brand)` | `var(--color-icon-white)` |
-| **Primary - Medium** | hover | `var(--color-background-controls-brand-strong)` | `var(--color-text-white)` | `var(--color-border-transparent-brand)` | `var(--color-icon-white)` |
-| **Primary - Medium** | press | `var(--color-background-controls-brand-stronger)` | `var(--color-text-white)` | `var(--color-border-transparent-brand)` | `var(--color-icon-white)` |
-| **Primary - Medium** | focus-visible | `var(--color-background-controls-brand-base)` | `var(--color-text-white)` | `var(--color-border-transparent-brand)` + focus ring | `var(--color-icon-white)` |
-| **Primary - Medium** | disabled | `var(--color-background-controls-disabled)` | `var(--color-text-disabled)` | `var(--color-border-transparent-brand)` | `var(--color-icon-disabled)` |
-| **Secondary - Medium** | default | `var(--color-background-controls-brand-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| **Secondary - Medium** | hover | `var(--color-background-controls-brand-light)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| **Secondary - Medium** | press | `var(--color-background-controls-brand-base)` | `var(--color-text-white)` | `var(--color-border-brand-base)` | `var(--color-icon-white)` |
-| **Secondary - Medium** | focus-visible | `var(--color-background-controls-brand-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` + focus ring | `var(--color-icon-brand-base)` |
-| **Secondary - Medium** | disabled | `var(--color-background-controls-disabled)` | `var(--color-text-disabled)` | `var(--color-border-disabled)` | `var(--color-icon-disabled)` |
-| **Tertiary - Medium** | default | `var(--color-background-component)` | `var(--color-text-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | hover | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | press | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | focus-visible | `var(--color-background-component)` | `var(--color-text-brand-strong)` | `var(--color-border-transparent-brand)` + focus ring | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | disabled | `var(--color-background-component)` | `var(--color-text-disabled)` | `var(--color-border-transparent-brand)` | `var(--color-icon-disabled)` |
+| **Primary - Medium** | default | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
+| **Primary - Medium** | hover | `var(--color-background-controls-strong)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
+| **Primary - Medium** | press | `var(--color-background-controls-stronger)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
+| **Primary - Medium** | focus-visible | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` + focus ring | `var(--color-icon-gray-white)` |
+| **Primary - Medium** | disabled | `var(--color-background-controls-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-disabled)` |
+| **Secondary - Medium** | default | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
+| **Secondary - Medium** | hover | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
+| **Secondary - Medium** | press | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-base)` | `var(--color-icon-gray-white)` |
+| **Secondary - Medium** | focus-visible | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` + focus ring | `var(--color-icon-brand-base)` |
+| **Secondary - Medium** | disabled | `var(--color-background-controls-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-border-gray-disabled)` | `var(--color-icon-gray-disabled)` |
+| **Tertiary - Medium** | default | `var(--color-background-surface-component)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-brand-base)` |
+| **Tertiary - Medium** | hover | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-brand-base)` |
+| **Tertiary - Medium** | press | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-brand-base)` |
+| **Tertiary - Medium** | focus-visible | `var(--color-background-surface-component)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` + focus ring | `var(--color-icon-brand-base)` |
+| **Tertiary - Medium** | disabled | `var(--color-background-surface-component)` | `var(--color-text-gray-disabled)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-disabled)` |
 
 **Size variants (applies to all styles):**
 - **Small:** height 24px, padding-y 6px
@@ -193,15 +193,15 @@
 **Dropdown Menu States:**
 | State | Background | Border | Box Shadow |
 |-------|------------|--------|------------|
-| Open | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--shadow-shadow-4)` |
+| Open | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--shadow-shadow-4)` |
 | Closed | N/A (not rendered) | N/A | N/A |
 
 **Menu Option States:**
 | State | Background | Text |
 |-------|------------|------|
-| Default | `var(--color-background-component)` | `var(--color-text-neutral)` |
+| Default | `var(--color-background-surface-component)` | `var(--color-text-gray-neutral)` |
 | Hover | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` |
-| Selected | `var(--color-background-controls-brand-lighter)` | `var(--color-text-brand-strong)` |
+| Selected | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 
@@ -380,8 +380,8 @@ DropdownButton (container)
 - Must have `aria-hidden="true"`
 
 **Dropdown Menu:**
-- Background: `var(--color-background-component)`
-- Border: `var(--border-width-border-default)` solid `var(--color-border-accessible)`
+- Background: `var(--color-background-surface-component)`
+- Border: `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`
 - Border-radius: `var(--menu-control-radius)`
 - Box-shadow: `var(--shadow-shadow-4)`
 - Position: Absolute, below trigger button
@@ -389,8 +389,8 @@ DropdownButton (container)
 
 **Menu Option:**
 - Padding: `var(--padding-16)` left, `var(--padding-24)` right, `var(--padding-10)` vertical
-- Background: `var(--color-background-component)` (default), `var(--color-background-gray-lighter)` (hover)
-- Text: `var(--color-text-neutral)` (default), `var(--color-text-brand-strong)` (hover)
+- Background: `var(--color-background-surface-component)` (default), `var(--color-background-gray-lighter)` (hover)
+- Text: `var(--color-text-gray-neutral)` (default), `var(--color-text-brand-strong)` (hover)
 - Cursor: Pointer (interactive), Not-allowed (disabled)
 
 ### Behavior contract

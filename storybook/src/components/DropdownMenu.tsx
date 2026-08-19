@@ -600,7 +600,7 @@ export function DropdownMenu({
                           <Icon
                             shapeName="shape-x-thick"
                             className={styles.searchClearIcon}
-                            color="var(--color-icon-accessible)"
+                            color="var(--color-icon-gray-neutral-accessible)"
                             style={{ width: 10, height: 10 }}
                           />
                         </button>
@@ -673,7 +673,11 @@ export function DropdownMenu({
                       shapeName="arrow-drop-tri-caret"
                       className={styles.showSelectedCaret}
                       color="var(--color-icon-brand-base)"
-                      style={{ width: 10, height: 10 }}
+                      style={{
+                        width: 10,
+                        height: 10,
+                        transform: isShowSelectedExpanded ? "rotate(180deg)" : undefined,
+                      }}
                     />
                   </button>
                 </div>

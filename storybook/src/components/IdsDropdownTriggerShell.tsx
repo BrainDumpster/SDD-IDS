@@ -8,7 +8,7 @@ export interface IdsDropdownTriggerShellProps {
   size?: IdsDropdownTriggerSize;
   disabled?: boolean;
   error?: boolean;
-  /** Demo-only: simulates Figma hover border (`var(--color-border-strong)`). */
+  /** Demo-only: simulates Figma hover border (`var(--color-border-gray-neutral-strong)`). */
   hover?: boolean;
   /** Demo-only: keyboard focus ring (`outline-offset: 5px`). */
   focusVisible?: boolean;

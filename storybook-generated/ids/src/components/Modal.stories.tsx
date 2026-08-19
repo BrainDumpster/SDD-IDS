@@ -63,9 +63,9 @@ export const SinglePageModalUsage: Story = {
           style={{
             minHeight: 220,
             border: "1px solid var(--color-border-brand-base)",
-            background: "var(--color-background-brand-lighter)",
+            background: "var(--color-background-brand-lighter-slate)",
             padding: 16,
-            color: "var(--color-text-neutral)",
+            color: "var(--color-text-gray-neutral)",
           }}
         >
           Single-page usage keeps one continuous content panel without tab/page switching.
@@ -115,3 +115,84 @@ export const MultiPageModalUsage: Story = {
     </IdsModal>
   ),
 };
+
+const specTokens = ["--color-border-gray-neutral-base", "--color-background-surface-component", "--color-text-gray-neutral-strong", "--color-text-gray-neutral", "--color-text-brand-strong", "--color-icon-gray-neutral-base", "--color-icon-alerting-critical-base", "--color-icon-alerting-minor-base", "--color-icon-alerting-major-base", "--color-icon-alerting-info-base", "--color-background-controls-base", "--color-text-gray-white", "--color-background-alerting-critical-base", "--color-background-overlay-1"] as const;
+const specTokenRefs = {"--color-border-gray-neutral-base": ["Layout & Measurements: - **Border:** `1px` solid `var(--color-border-gray-neutral-base)`.", "Tokens: - **Surface:** `var(--color-background-surface-component)`, `var(--color-border-gray-neutral-base)`", "States (Light Theme): | Single-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | Header only (no tabs) | sing...", "States (Light Theme): | Multi-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | Header + tabs (`active` top i...", "States (Dark Theme): | Single-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | header only | single content...", "States (Dark Theme): | Multi-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | header + tabs (tokenized acti..."], "--color-background-surface-component": ["Tokens: - **Surface:** `var(--color-background-surface-component)`, `var(--color-border-gray-neutral-base)`", "States (Light Theme): | Single-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | Header only (no tabs) | sing...", "States (Light Theme): | Multi-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | Header + tabs (`active` top i...", "States (Dark Theme): | Single-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | header only | single content...", "States (Dark Theme): | Multi-Page | `var(--color-background-surface-component)` + `var(--color-border-gray-neutral-base)` | header + tabs (tokenized acti..."], "--color-text-gray-neutral-strong": ["Tokens: - **Text:** `var(--color-text-gray-neutral-strong)` (title), `var(--color-text-gray-neutral)` (body), `var(--color-text-brand-s..."], "--color-text-gray-neutral": ["Tokens: - **Text:** `var(--color-text-gray-neutral-strong)` (title), `var(--color-text-gray-neutral)` (body), `var(--color-text-brand-s..."], "--color-text-brand-strong": ["Tokens: - **Text:** `var(--color-text-gray-neutral-strong)` (title), `var(--color-text-gray-neutral)` (body), `var(--color-text-brand-s..."], "--color-icon-gray-neutral-base": ["Tokens: - **Icons:** `var(--color-icon-gray-neutral-base)` (close), severity icons:"], "--color-icon-alerting-critical-base": ["Tokens: - Critical/Destructive: `var(--color-icon-alerting-critical-base)`"], "--color-icon-alerting-minor-base": ["Tokens: - Warning: `var(--color-icon-alerting-minor-base)`"], "--color-icon-alerting-major-base": ["Tokens: - Major: `var(--color-icon-alerting-major-base)`"], "--color-icon-alerting-info-base": ["Tokens: - Informational: `var(--color-icon-alerting-info-base)`"], "--color-background-controls-base": ["Tokens: - Primary: `var(--color-background-controls-base)` + `var(--color-text-gray-white)`"], "--color-text-gray-white": ["Tokens: - Primary: `var(--color-background-controls-base)` + `var(--color-text-gray-white)`", "Tokens: - Destructive primary: `var(--color-background-alerting-critical-base)` + `var(--color-text-gray-white)`"], "--color-background-alerting-critical-base": ["Tokens: - Destructive primary: `var(--color-background-alerting-critical-base)` + `var(--color-text-gray-white)`"], "--color-background-overlay-1": ["Tokens: - **Backdrop:** `var(--color-background-overlay-1)` (runtime token-backed overlay)"]} as Record<string, string[]>;
+
+export const TokenInspector: Story = {
+  render: () => (
+    <div className="sbTokenInspector">
+      <style>{
+        `
+        .sbTokenInspector {
+          display: grid;
+          gap: 8px;
+          max-width: 880px;
+        }
+        .sbTokenHeader {
+          font-size: 12px;
+          opacity: 0.8;
+        }
+        .sbTokenRow {
+          display: grid;
+          grid-template-columns: minmax(260px, 1fr) 72px 120px minmax(260px, 1fr);
+          align-items: start;
+          gap: 12px;
+          padding: 6px 8px;
+          border: 1px solid var(--color-border-neutral-light, #c5c5c5);
+          border-radius: 4px;
+          background: var(--color-background-surface-component, #ffffff);
+        }
+        .sbTokenCode {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+          font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .sbTokenSwatch {
+          width: 64px;
+          height: 20px;
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
+          border-radius: 2px;
+          background: transparent;
+        }
+        .sbTokenSample {
+          font-size: 12px;
+          white-space: nowrap;
+        }
+        .sbTokenRefs {
+          display: grid;
+          gap: 2px;
+          font-size: 11px;
+          line-height: 16px;
+          opacity: 0.9;
+        }
+        .sbTokenRef {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        `
+      }</style>
+      <div className="sbTokenHeader">Spec token inspector (name + live preview + where token is referenced in spec)</div>
+      {specTokens.map((token) => (
+        <div key={token} className="sbTokenRow">
+          <span className="sbTokenCode">{`var(${token})`}</span>
+          <span className="sbTokenSwatch" style={{ background: `var(${token})` }} />
+          <span className="sbTokenSample" style={{ color: `var(${token})` }}>Sample</span>
+          <div className="sbTokenRefs">
+            {(specTokenRefs[token] || []).slice(0, 3).map((ref, idx) => (
+              <div key={`${token}-${idx}`} className="sbTokenRef" title={ref}>{ref}</div>
+            ))}
+            {(specTokenRefs[token] || []).length === 0 ? <div className="sbTokenRef">No direct spec reference found</div> : null}
+            {(specTokenRefs[token] || []).length > 3 ? (
+              <div className="sbTokenRef">+{(specTokenRefs[token] || []).length - 3} more</div>
+            ) : null}
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};
+

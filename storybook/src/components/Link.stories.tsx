@@ -44,7 +44,7 @@ export const DarkBackgroundManual: Story = {
   },
   decorators: [
     (Story) => (
-      <div style={{ background: "var(--color-background-controls-brand-base)", padding: 16 }}>
+      <div style={{ background: "var(--color-background-controls-base)", padding: 16 }}>
         <Story />
       </div>
     ),
@@ -53,7 +53,7 @@ export const DarkBackgroundManual: Story = {
 
 export const StateMatrixWithIconManual: Story = {
   render: () => (
-    <div style={{ background: "var(--color-background-surface-1)", padding: 24 }}>
+    <div style={{ background: "var(--color-background-surface-primary)", padding: 24 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", columnGap: 56 }}>
         <h3 style={{ margin: "0 0 20px 0", fontWeight: 400, fontSize: 24, lineHeight: "32px" }}>Standalone</h3>
         <h3 style={{ margin: "0 0 20px 0", fontWeight: 400, fontSize: 24, lineHeight: "32px" }}>Inline</h3>
@@ -82,7 +82,7 @@ export const StateMatrixWithIconManual: Story = {
           <Link href="https://example.com" type="inline" demoState="press" showExternalLinkIcon>This is a link</Link>
           <Link href="https://example.com" type="inline" demoState="focus-visible" showExternalLinkIcon>This is a link</Link>
         </div>
-        <div style={{ background: "var(--color-background-controls-brand-base)", padding: "2px 18px", display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ background: "var(--color-background-controls-base)", padding: "2px 18px", display: "flex", flexDirection: "column", gap: 14 }}>
           <Link href="#" type="dark-bg" demoState="default">This is a link</Link>
           <Link href="#" type="dark-bg" demoState="hover">This is a link</Link>
           <Link href="#" type="dark-bg" demoState="press">This is a link</Link>

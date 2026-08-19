@@ -43,9 +43,9 @@ function warnMinorAlertIcon(raw: string): string {
   s = s.replace(/\swidth="[^"]*"/i, "");
   s = s.replace(/\sheight="[^"]*"/i, "");
   s = s.replace(/\sstyle="enable-background:[^"]*"/gi, "");
-  s = s.replace(/class="st0"/g, 'style="fill:var(--color-icon-black)"');
-  s = s.replace(/class="st1"/g, 'style="fill:var(--color-icon-black)"');
-  s = s.replace(/class="st2"/g, 'style="fill:var(--color-icon-white)"');
+  s = s.replace(/class="st0"/g, 'style="fill:var(--color-icon-gray-black)"');
+  s = s.replace(/class="st1"/g, 'style="fill:var(--color-icon-gray-black)"');
+  s = s.replace(/class="st2"/g, 'style="fill:var(--color-icon-gray-white)"');
   return s.trim();
 }
 
@@ -61,7 +61,7 @@ function stripIconRootDimensions(svg: string): string {
 /** What's New thumbnail hover: frame neutral, arrow brand (`27437:44169`). */
 function popoutWindowArrowIcon(raw: string): string {
   let s = stripIconRootDimensions(raw);
-  s = s.replace(/<path class="st0"/g, '<path style="fill:var(--color-icon-neutral)"');
+  s = s.replace(/<path class="st0"/g, '<path style="fill:var(--color-icon-gray-neutral-base)"');
   s = s.replace(/<polygon class="st0"/g, '<polygon style="fill:var(--color-icon-brand-base)"');
   return s.trim();
 }
@@ -70,7 +70,7 @@ function popoutWindowArrowIcon(raw: string): string {
 function popoutDoubleIcon(raw: string): string {
   let s = stripIconRootDimensions(raw);
   s = s.replace(/<path class="st0"/g, '<path style="fill:var(--color-border-brand-base)"');
-  s = s.replace(/<polygon class="st0"/g, '<polygon style="fill:var(--color-icon-neutral)"');
+  s = s.replace(/<polygon class="st0"/g, '<polygon style="fill:var(--color-icon-gray-neutral-base)"');
   return s.trim();
 }
 

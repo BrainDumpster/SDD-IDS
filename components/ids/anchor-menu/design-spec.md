@@ -21,7 +21,7 @@
 - **item** (`AnchorMenuItem` / `ids-anchor-menu-item`): one section row (`AnchorMenu-Element-Section`).
 - **link**: focusable control inside the item (`a` when `href` is present).
 - **activeIndicator** (`AnchorActiveIndicator` / `ids-anchor-active-indicator`): 4px brand left bar aligned to the active item (`get_design_context` Selected `border-l-4` on `11955:229728`).
-- Default left rail: 1.2px `var(--color-border-accessible)` on each unselected item (`11955:229730`).
+- Default left rail: 1.2px `var(--color-border-gray-neutral-base)` on each unselected item (`11955:229730`).
 - Focus ring: 2px brand outline on the item (`11955:230551`, `11955:230577`).
 
 ## Layout & Measurements
@@ -45,7 +45,7 @@
 | Item shell (`AnchorMenu-Element-Section`) | height | `40px` / `var(--scale-40)` | `11955:229709` children | `get_metadata` instance height `40` |
 | Item shell | padding | `8px 24px` → `var(--padding-padding-8)` / `var(--padding-padding-24)` | `11955:229729` | `get_design_context` `py-[8px] px-[24px]` |
 | Item shell | border-radius | `0` (square) | `11955:229730` | `get_variable_defs` — no radius variable; Unselected has no `rounded-*` |
-| Unselected left rail | width + color | `1.2px` `var(--color-border-accessible)` | `11955:229730` | `get_design_context` `border-l-[1.2px]`; `get_variable_defs` `--color-border-accessible` |
+| Unselected left rail | width + color | `1.2px` `var(--color-border-gray-neutral-base)` | `11955:229730` | `get_design_context` `border-l-[1.2px]`; `get_variable_defs` `--color-border-gray-neutral-base` |
 | Selected / hover left rail | width + color | `4px` `var(--color-border-brand-base)` | `11955:229728`, `11955:229732` | `get_design_context` `border-l-4`; `get_variable_defs` `--color-border-brand-base` |
 | Focus ring | border-radius | `4px` / `var(--corner-radius-radius-4)` | `11955:230577` | `get_design_context` `rounded-[4px]`; `get_variable_defs` on this node has no radius variable |
 | Focus ring | border | `2px` `var(--color-border-brand-base)` | `11955:230577` | `get_design_context` `border-2` |
@@ -58,16 +58,16 @@
 
 ## Tokens
 ### Colors
-- Brand base: `var(--color-background-controls-brand-base)` = #0672cb
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong text: `var(--color-text-neutral-strong)` (header)
+- Brand base: `var(--color-background-controls-base)` = #0672cb
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong text: `var(--color-text-gray-neutral-strong)` (header)
 - Brand strong text: `var(--color-text-brand-strong)` = #055fa9
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0672cb
 
 ### Typography
 - Body 1: Roboto Regular 16px/24px — header label and item labels (`get_variable_defs` `Body 1` on `11955:229729`)
-- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-neutral-strong)`.
+- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-gray-neutral-strong)`.
 
 ### Spacing / radius
 - `var(--padding-padding-8)`, `var(--padding-padding-12)`, `var(--padding-padding-24)`
@@ -78,10 +78,10 @@
 ## States (Light Theme)
 | Element | Background | Border | Text |
 |---|---|---|---|
-| Menu Container | transparent | none | `var(--color-text-neutral)` |
-| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
-| Anchor Item (Focus-visible) | transparent | `2px` `var(--color-border-brand-base)` focus ring; rail per selection | selected: `var(--color-text-brand-strong)`; else `var(--color-text-neutral)` |
+| Menu Container | transparent | none | `var(--color-text-gray-neutral)` |
+| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
+| Anchor Item (Focus-visible) | transparent | `2px` `var(--color-border-brand-base)` focus ring; rail per selection | selected: `var(--color-text-brand-strong)`; else `var(--color-text-gray-neutral)` |
 | Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
@@ -97,7 +97,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ## Interactions
 - Click anchor items to scroll to respective sections (`href` starting with `#` uses smooth `scrollIntoView`)
-- Hover thickens the left rail to `4px` brand; label stays `var(--color-text-neutral)` (`11955:229732`)
+- Hover thickens the left rail to `4px` brand; label stays `var(--color-text-gray-neutral)` (`11955:229732`)
 - Focus-visible ring uses brand color for keyboard navigation
 - Active item shows persistent `4px` brand rail + `var(--color-text-brand-strong)` (`11955:229728`)
 - Keyboard navigation: Arrow Up/Down between items, Enter to activate, Tab through links
@@ -180,10 +180,10 @@ Figma `11955:229709` (`AnchorMenu-Example`):
 
 ### Per-slot style contract
 - Root: `min-width: 200px`; `max-width: 300px`; `width: fit-content`; background transparent.
-- Header: Body 1; `padding: var(--padding-padding-12) 0`; `var(--color-text-neutral-strong)`; no text-transform.
+- Header: Body 1; `padding: var(--padding-padding-12) 0`; `var(--color-text-gray-neutral-strong)`; no text-transform.
 - Item link: height `var(--scale-40)`; `padding: var(--padding-padding-8) var(--padding-padding-24)`; `width: fit-content`; Body 1; square corners.
-- Default rail: `border-left: 1.2px solid var(--color-border-accessible)`.
-- Hover/active rail: `4px` `var(--color-border-brand-base)` overlay **centered on** the `1.2px` default rail (no layout shift). Hover label stays `var(--color-text-neutral)`; active label `var(--color-text-brand-strong)`.
+- Default rail: `border-left: 1.2px solid var(--color-border-gray-neutral-base)`.
+- Hover/active rail: `4px` `var(--color-border-brand-base)` overlay **centered on** the `1.2px` default rail (no layout shift). Hover label stays `var(--color-text-gray-neutral)`; active label `var(--color-text-brand-strong)`.
 - Focus-visible: `2px` `var(--color-border-brand-base)` ring, `var(--corner-radius-radius-4)`, inset `-4px -6px`.
 - No hardcoded colors in implementation; measurements `1.2px` / `4px` / `200px` / `300px` are Figma/spec literals (no token).
 
@@ -209,7 +209,7 @@ No image or icon assets.
 ### Validation checklist
 - [ ] Hierarchy is `ids-anchor-menu` → optional header → items → `ids-anchor-active-indicator`
 - [ ] Default rail `1.2px` accessible; hover/active `4px` brand
-- [ ] Hover text stays `var(--color-text-neutral)`
+- [ ] Hover text stays `var(--color-text-gray-neutral)`
 - [ ] Active text `var(--color-text-brand-strong)` + `aria-current="page"`
 - [ ] Focus-visible ring `2px` brand, radius `4px`, not clipped
 - [ ] Missing `href` does not navigate

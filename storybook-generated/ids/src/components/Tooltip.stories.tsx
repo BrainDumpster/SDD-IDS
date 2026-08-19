@@ -6,25 +6,190 @@ import "../../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTooltip as IdsTooltip } from "../../../../storybook/src/components/IdsTooltip";
 
-/**
- * Deterministic gate harness only. Canonical Spec Generated stories (composition API,
- * Angular parity) live in `storybook/src/components/IdsTooltip.stories.tsx`.
- */
 const meta: Meta<typeof IdsTooltip> = {
   title: "Spec Generated/IDS/Tooltip",
   component: IdsTooltip,
-  parameters: { layout: "centered", docs: { disable: true } },
+  parameters: { layout: "centered" },
+  args: {
+    content: "Tooltip body content",
+    title: "Tooltip title",
+    side: "top",
+    align: "center",
+    closable: false,
+  },
+  argTypes: {
+    title: { control: "text" },
+    content: { control: "text" },
+    side: { control: "select", options: ["top", "bottom", "left", "right"] },
+    align: { control: "select", options: ["start", "center", "end"] },
+    closable: { control: "boolean" },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof IdsTooltip>;
 
-export const LayoutTokens: Story = {
-  render: () => null,
+function TooltipStoryStyles() {
+  return (
+    <style>{
+      `
+      .sbTooltipCanvas {
+        display: flex;
+        min-height: 180px;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+      .sbTooltipRow {
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        min-height: 180px;
+      }
+      .sbTooltipGrid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        min-width: 860px;
+        max-width: 1100px;
+        padding: 8px;
+      }
+      .sbTooltipSideRow {
+        display: grid;
+        grid-template-columns: 88px repeat(3, minmax(220px, 1fr));
+        gap: 14px;
+        align-items: stretch;
+      }
+      .sbTooltipSideTitle {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        opacity: 0.9;
+        padding-left: 4px;
+      }
+      .sbTooltipCell {
+        display: grid;
+        gap: 10px;
+        justify-items: center;
+        align-content: center;
+        min-height: 120px;
+        padding: 8px;
+        border: 1px dashed var(--color-border-neutral-light, #c5c5c5);
+        border-radius: 6px;
+        background: var(--color-background-surface-component, #ffffff);
+      }
+      .sbTooltipLabel {
+        font-size: 12px;
+        opacity: 0.9;
+        text-transform: capitalize;
+      }
+      .sbTooltipTrigger {
+        padding: 7px 14px;
+        border: 1px solid var(--color-border-gray-neutral-base);
+        background: var(--color-background-surface-component);
+        color: var(--color-text-gray-neutral-strong);
+        border-radius: 2px;
+        font-size: 14px;
+      }
+      `
+    }</style>
+  );
+}
+
+export const Playground: Story = {
+  render: (args) => (
+    <div className="sbTooltipCanvas">
+      <TooltipStoryStyles />
+      <IdsTooltip {...args}>
+        <button type="button" className="sbTooltipTrigger">Hover / Focus me</button>
+      </IdsTooltip>
+    </div>
+  ),
 };
 
-const specTokens = ["--color-background-surface-2", "--color-border-accessible", "--color-text-neutral-strong", "--color-text-neutral"] as const;
-const specTokenRefs = {"--color-background-surface-2": ["Tokens: - Panel background: `var(--color-background-surface-2)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) |..."], "--color-border-accessible": ["Tokens: - Panel border + arrow stroke: `var(--color-border-accessible)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) |..."], "--color-text-neutral-strong": ["Tokens: - Header text: `var(--color-text-neutral-strong)`.", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved..."], "--color-text-neutral": ["Tokens: - Body text: `var(--color-text-neutral)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved..."]} as Record<string, string[]>;
+export const StandardAndClosable: Story = {
+  render: () => (
+    <div className="sbTooltipRow">
+      <TooltipStoryStyles />
+      <IdsTooltip
+        title="Standard"
+        content="Standard tooltip closes on leave/blur."
+        side="top"
+        align="center"
+      >
+        <button type="button" className="sbTooltipTrigger">Standard</button>
+      </IdsTooltip>
+      <IdsTooltip
+        title="Closable"
+        content="Closable tooltip stays open until close icon is clicked."
+        closable
+        side="top"
+        align="center"
+      >
+        <button type="button" className="sbTooltipTrigger">Closable</button>
+      </IdsTooltip>
+    </div>
+  ),
+};
+
+export const PlacementMatrix: Story = {
+  render: () => {
+    const sides = ["top", "bottom", "left", "right"] as const;
+    const aligns = ["start", "center", "end"] as const;
+    return (
+      <div className="sbTooltipGrid">
+        <TooltipStoryStyles />
+        {sides.map((side) => (
+          <div key={side} className="sbTooltipSideRow">
+            <div className="sbTooltipSideTitle">{side}</div>
+            {aligns.map((align) => (
+              <div key={`${side}-${align}`} className="sbTooltipCell">
+                <div className="sbTooltipLabel">{align}</div>
+                <IdsTooltip
+                  side={side}
+                  align={align}
+                  title="Tooltip"
+                  content={"Placement: " + side + "-" + align}
+                >
+                  <button type="button" className="sbTooltipTrigger">Trigger</button>
+                </IdsTooltip>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  },
+};
+
+export const BodyOnly: Story = {
+  render: () => (
+    <div className="sbTooltipCanvas">
+      <TooltipStoryStyles />
+      <IdsTooltip
+        content="Body-only tooltip content with no title."
+        side="right"
+        align="center"
+      >
+        <button type="button" className="sbTooltipTrigger">Body only</button>
+      </IdsTooltip>
+    </div>
+  ),
+};
+
+export const LayoutTokens: Story = {
+  render: () => (
+    <TooltipStoryStyles />
+  ),
+};
+
+const specTokens = ["--color-background-surface-secondary", "--color-border-gray-neutral-base", "--color-text-gray-neutral-strong", "--color-text-gray-neutral"] as const;
+const specTokenRefs = {"--color-background-surface-secondary": ["Tokens: - Panel background: `var(--color-background-surface-secondary)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) |..."], "--color-border-gray-neutral-base": ["Tokens: - Panel border + arrow stroke: `var(--color-border-gray-neutral-base)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) |..."], "--color-text-gray-neutral-strong": ["Tokens: - Header text: `var(--color-text-gray-neutral-strong)`.", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved..."], "--color-text-gray-neutral": ["Tokens: - Body text: `var(--color-text-gray-neutral)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved..."]} as Record<string, string[]>;
 
 export const TokenInspector: Story = {
   render: () => (
@@ -48,7 +213,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -60,7 +225,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }
@@ -102,3 +267,4 @@ export const TokenInspector: Story = {
     </div>
   ),
 };
+

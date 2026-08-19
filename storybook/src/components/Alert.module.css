@@ -166,45 +166,45 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   white-space: nowrap;
 }
 
 .globalRoot[data-severity="critical"] {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-transparent-critical);
-  color: var(--color-text-white);
-  --alert-icon-color: var(--color-icon-alerting-critical);
-  --icon-contrast-color: var(--color-icon-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-critical-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="warning-major"] {
-  background: var(--color-background-alerting-major);
-  border-color: var(--color-border-alerting-transparent-major);
-  color: var(--color-text-white);
-  --alert-icon-color: var(--color-icon-alerting-major);
-  --icon-contrast-color: var(--color-icon-white);
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-major-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="warning-minor"] {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-black);
-  --alert-icon-color: var(--color-icon-black);
-  --icon-contrast-color: var(--color-icon-black);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-gray-black);
+  --alert-icon-color: var(--color-icon-gray-black);
+  --icon-contrast-color: var(--color-icon-gray-black);
 }
 
 .globalRoot[data-severity="informational"] {
-  background: var(--color-background-alerting-info-1, var(--color-background-alerting-info));
-  border-color: var(--color-border-alerting-transparent-info);
-  color: var(--color-text-white);
-  --alert-icon-color: var(--color-icon-alerting-info);
-  --icon-contrast-color: var(--color-icon-white);
+  background: var(--color-background-alerting-info-1, var(--color-background-alerting-info-base));
+  border-color: var(--color-border-alerting-info-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-info-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="warning-major"] .globalDismissButton,
 .globalRoot[data-severity="warning-minor"] .globalDismissButton {
-  color: var(--color-icon-black);
+  color: var(--color-icon-gray-black);
 }
 
 .globalRoot[data-severity="warning-major"] .globalDismissIcon,
@@ -214,7 +214,7 @@
 
 .globalRoot[data-severity="critical"] .globalDismissButton,
 .globalRoot[data-severity="informational"] .globalDismissButton {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="critical"] .globalDismissIcon,
@@ -224,14 +224,14 @@
 
 .globalRoot[data-severity="critical"] .globalActionButton,
 .globalRoot[data-severity="informational"] .globalActionButton {
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .globalRoot[data-severity="warning-major"] .globalActionButton,
 .globalRoot[data-severity="warning-minor"] .globalActionButton {
-  border-color: var(--color-border-black);
-  color: var(--color-text-black);
+  border-color: var(--color-border-gray-black);
+  color: var(--color-text-gray-black);
 }
 
 .globalRoot[data-severity="critical"] .globalCarouselRail {
@@ -261,7 +261,7 @@
 }
 
 .globalRoot[data-severity="warning-minor"] .globalCarouselCount {
-  color: var(--color-text-black);
+  color: var(--color-text-gray-black);
 }
 
 /* ========== Inline (Figma InlineAlert — light “tint + inset rail”) ========== */
@@ -292,7 +292,7 @@
   /* --inline-rail is set per severity; fallbacks cover numbered alerting token names (info-1 / success-1). */
   background: var(
     --inline-rail,
-    var(--color-background-alerting-info, var(--color-background-alerting-info-1))
+    var(--color-background-alerting-info-base, var(--color-background-alerting-info-1))
   );
   pointer-events: none;
 }
@@ -447,7 +447,7 @@
   box-sizing: border-box;
   border: none;
   background: transparent;
-  color: var(--color-icon-black);
+  color: var(--color-icon-gray-black);
   cursor: pointer;
   padding: 10px 0 10px 20px;
   min-width: var(--scale-32);
@@ -470,25 +470,25 @@
 }
 
 .inlineRoot[data-severity="informational"] {
-  --inline-alert-icon: var(--color-icon-alerting-info, var(--color-icon-alerting-info-1));
-  --inline-rail: var(--color-background-alerting-info, var(--color-background-alerting-info-1));
+  --inline-alert-icon: var(--color-icon-alerting-info-base, var(--color-icon-alerting-info-1));
+  --inline-rail: var(--color-background-alerting-info-base, var(--color-background-alerting-info-1));
   background: var(--color-background-alerting-info-light);
-  border-color: var(--color-border-alerting-info-transparent);
+  border-color: var(--color-border-alerting-info-base-transparent);
 }
 
 .inlineRoot[data-severity="success"] {
-  --inline-alert-icon: var(--color-icon-alerting-success, var(--color-icon-alerting-success-1));
-  --inline-rail: var(--color-background-alerting-success, var(--color-background-alerting-success-1));
+  --inline-alert-icon: var(--color-icon-alerting-success-base, var(--color-icon-alerting-success-1));
+  --inline-rail: var(--color-background-alerting-success-base, var(--color-background-alerting-success-1));
   background: var(--color-background-alerting-success-light);
-  border-color: var(--color-border-alerting-success-transparent);
+  border-color: var(--color-border-alerting-success-base-transparent);
 }
 
 /* Warning-minor: 4px rail = solid minor fill + 1px inner edge (Figma warning-accessible stroke). */
 .inlineRoot[data-severity="warning-minor"] {
-  --inline-alert-icon: var(--color-icon-alerting-minor);
-  --inline-rail: var(--color-background-alerting-minor);
+  --inline-alert-icon: var(--color-icon-alerting-minor-base);
+  --inline-rail: var(--color-background-alerting-minor-base);
   background: var(--color-background-alerting-minor-light);
-  border-color: var(--color-border-alerting-minor-transparent);
+  border-color: var(--color-border-alerting-minor-base);
 }
 
 .inlineRoot[data-severity="warning-minor"]::before {
@@ -498,22 +498,22 @@
   top: -1px;
   bottom: -1px;
   width: 4px;
-  background: var(--color-background-alerting-minor);
+  background: var(--color-background-alerting-minor-base);
   border: 1px solid var(--color-border-alerting-warning-accessible, var(--color-border-alerting-minor-minor));
   box-sizing: border-box;
   pointer-events: none;
 }
 
 .inlineRoot[data-severity="warning-major"] {
-  --inline-alert-icon: var(--color-icon-alerting-major);
-  --inline-rail: var(--color-background-alerting-major);
+  --inline-alert-icon: var(--color-icon-alerting-major-base);
+  --inline-rail: var(--color-background-alerting-major-base);
   background: var(--color-background-alerting-major-light);
-  border-color: var(--color-border-alerting-major-transparent);
+  border-color: var(--color-border-alerting-major-base-transparent);
 }
 
 .inlineRoot[data-severity="critical"] {
-  --inline-alert-icon: var(--color-icon-alerting-critical);
-  --inline-rail: var(--color-background-alerting-critical);
+  --inline-alert-icon: var(--color-icon-alerting-critical-base);
+  --inline-rail: var(--color-background-alerting-critical-base);
   background: var(--color-background-alerting-critical-light);
-  border-color: var(--color-border-alerting-critical-transparent);
+  border-color: var(--color-border-alerting-critical-base-transparent);
 }

@@ -188,8 +188,8 @@ Angular uses **declarative child components** with **content projection**. The m
 - **Deterministic precedence** (codegen must implement in this order — **selected must rank above hover** so an active filter stays blue while hovered):
   1. **Press** (`:active` / pointer down): **`shapeName`** **`filter-solid`**, tint **`var(--color-icon-brand-stronger)`**.
   2. **Selected / filter applied** (menu **closed**, column has active filter criteria): **`filter-solid`**, tint **`var(--color-icon-brand-base)`**. Bind to a column-level flag (e.g. **`column.filterActive`**) driven by the app’s filter model. **This must be checked before hover** — otherwise hovering over an active filter icon resets it to neutral-strong.
-  3. **Hover** (pointer over toggle, or **keyboard focus** while closed): **`filter-solid`**, tint **`var(--color-icon-neutral-strong)`**.
-  4. **Default:** **`shapeName`** **`filter`**, tint **`var(--color-icon-neutral)`**.
+  3. **Hover** (pointer over toggle, or **keyboard focus** while closed): **`filter-solid`**, tint **`var(--color-icon-gray-neutral-strong)`**.
+  4. **Default:** **`shapeName`** **`filter`**, tint **`var(--color-icon-gray-neutral-base)`**.
 - **Menu open:** header shows a **38×38** placeholder (invisible spacer) so layout is stable; the **visible** funnel for “open” lives on **`FilterIconTab`** in the portaled menu (outline + neutral is acceptable for the **Selected with menu** variant per Figma dev readout).
 - **Focus-visible:** **`FilterToggle`** button gets a **1px** **`var(--color-border-brand-base)`** outline with **~2px** offset (keyboard), without changing the default/hover/press icon rules above.
 - **Pointer up** outside the originating control (e.g. release over portaled panel) must clear **press** state globally.
@@ -201,12 +201,12 @@ Angular uses **declarative child components** with **content projection**. The m
 - **Scroll viewport:** use **`scrollbar-gutter: auto`** on **`.bodyViewport`** (vertical scrollbar only when needed; avoid **`stable`** — it reserves a permanent right gutter). When a **detail panel** is attached, keep **`auto`** so no white strip appears beside **`SettingsColumn`**.
 
 ### L-frame geometry (invariant — all filter UIs)
-- **`FilterIconTab`:** width/height **38px** (same as header filter hit target). **Top + left + right** border **`1px`** **`var(--color-border-accessible)`**; **no** bottom border; **`margin-bottom: -1px`** overlap onto **`FilterPanel`**. Background **`var(--color-background-component)`**. Inner layout: **`display: inline-flex`**, **`align-items: center`**, **`justify-content: center`**. **Important — use `padding: 11px 11px 12px`** (not `12px`): the 3 visible borders (left 1px + right 1px + top 1px) consume space under `box-sizing: border-box`, so reducing side/top padding by 1px each restores the **14×14** icon content area (38 − 1 − 11 − 11 − 1 = 14px wide; 38 − 1 − 11 − 12 = 14px tall). Using `padding: 12px` leaves only a 12×13 content area and causes the icon to flex-shrink. **`Icon`** (**`shapeName="filter"`** or `"filter-solid"` when filter active; pass `style={{ maskSize: '14px 14px' }}` to prevent the SVG's 12:14 aspect ratio from rendering narrower than 14px under `mask-size: contain`).
+- **`FilterIconTab`:** width/height **38px** (same as header filter hit target). **Top + left + right** border **`1px`** **`var(--color-border-gray-neutral-base)`**; **no** bottom border; **`margin-bottom: -1px`** overlap onto **`FilterPanel`**. Background **`var(--color-background-surface-component)`**. Inner layout: **`display: inline-flex`**, **`align-items: center`**, **`justify-content: center`**. **Important — use `padding: 11px 11px 12px`** (not `12px`): the 3 visible borders (left 1px + right 1px + top 1px) consume space under `box-sizing: border-box`, so reducing side/top padding by 1px each restores the **14×14** icon content area (38 − 1 − 11 − 11 − 1 = 14px wide; 38 − 1 − 11 − 12 = 14px tall). Using `padding: 12px` leaves only a 12×13 content area and causes the icon to flex-shrink. **`Icon`** (**`shapeName="filter"`** or `"filter-solid"` when filter active; pass `style={{ maskSize: '14px 14px' }}` to prevent the SVG's 12:14 aspect ratio from rendering narrower than 14px under `mask-size: contain`).
 - **`FilterPanel`:** **Width is content-driven**, not a fixed pixel from Figma samples. Use **`width: max-content`** with a **floor** and **ceiling** so layouts stay usable:
   - **`min-width`:** product choice; Storybook uses **`200px`** minimum; dense search-only UIs may match Figma sample **~300px** by setting content min-width inside **`filterPanel`**.
   - **`max-width`:** cap to viewport (e.g. **`min(480px, calc(100vw - 24px))`**) for portaled/fixed menus.
 - **L top seam:** **No** full-width top border on the panel. Draw **only** the horizontal segment **`width: calc(100% - TAB)`** from **`left: 0`**, where **`TAB = 38px`** (must match **`FilterIconTab`** width). This leaves the strip under the tab **open** so the outer outline is one continuous **L**.
-- **Panel borders:** **left + bottom + right** **`1px`** **`var(--color-border-accessible)`**. **`overflow: clip`** on **`FilterPanelBody`** (inner slot), not on the shadow host. **Elevation — Shadow 1** (Figma **`44360:181713`**): `box-shadow: 0 2px 2px 0 <color>, 0 4px 4px 0 <color>` — geometry is **literal px**; colors from `--shadow-shadow-1-drop-shadow-2-color` and `--shadow-shadow-1-drop-shadow-4-color` (FLOAT y/blur tokens in theme are unitless and must not be passed directly to `box-shadow`).
+- **Panel borders:** **left + bottom + right** **`1px`** **`var(--color-border-gray-neutral-base)`**. **`overflow: clip`** on **`FilterPanelBody`** (inner slot), not on the shadow host. **Elevation — Shadow 1** (Figma **`44360:181713`**): `box-shadow: 0 2px 2px 0 <color>, 0 4px 4px 0 <color>` — geometry is **literal px**; colors from `--shadow-shadow-1-drop-shadow-2-color` and `--shadow-shadow-1-drop-shadow-4-color` (FLOAT y/blur tokens in theme are unitless and must not be passed directly to `box-shadow`).
 - **`FilterPanelBody`:** horizontal + vertical padding for inner widgets (Storybook: **`6px`** **`16px`**); keeps the **::before** top rule aligned to the **outer** top edge of **`FilterPanel`**.
 - **`FilterPanelBody` slot:** **`column.filterPanel`**. Search is **optional**. Checkbox lists must follow **`components/ids/checkbox/design-spec.md`**.
 
@@ -260,12 +260,12 @@ Date-only column filter: same preset radio matrix as **Date and Time**, but summ
 #### Layout
 
 - **Inner panel (`Multi-select Droddown`):** same chrome as date-time — **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot**; L-frame **`FilterPanel`** **`min-width` / `max-width` 480px** (content-driven; sample rows **`382px`** inner list width in Figma); **Shadow 1** on shell (`0 2px 2px` + `0 4px 4px` @ 8%, see L-frame baseline).
-- **Preset rows** (`37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`, `cursor: pointer`. Left: `16×16` radio + label (`gap: var(--spacing-space-8)`). Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
+- **Preset rows** (`37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`, `cursor: pointer`. Left: `16×16` radio + label (`gap: var(--spacing-space-8)`). Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
 - **Preset row states:**
-  - **hover:** background `var(--color-background-controls-brand-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
+  - **hover:** background `var(--color-background-controls-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
   - **focus (keyboard only):** `outline: 2px solid var(--color-border-brand-base); outline-offset: -2px` on the row. No focus ring on the radio root when row-level focus is present.
-  - **disabled:** radio border `var(--color-border-disabled)`, radio background `var(--color-background-disabled)`, dot `var(--color-icon-disabled)`, label color `var(--color-text-disabled)`, cursor `not-allowed`.
-- **Preset summary:** Body 3 Regular — `12px` / line-height `18px`, `var(--color-text-neutral)`, **date-only** strings, single line, no ellipsis.
+  - **disabled:** radio border `var(--color-border-gray-disabled)`, radio background `var(--color-background-disabled)`, dot `var(--color-icon-gray-disabled)`, label color `var(--color-text-gray-disabled)`, cursor `not-allowed`.
+- **Preset summary:** Body 3 Regular — `12px` / line-height `18px`, `var(--color-text-gray-neutral)`, **date-only** strings, single line, no ellipsis.
 - **Expanded blocks:** `padding-left: 40px`, `padding-right: var(--padding-padding-16)`, `padding-bottom: var(--padding-padding-8)`; custom range uses vertical `gap: var(--spacing-space-16)` between **Start** and **End** rows.
 - **Date picker row:** horizontal flex, `gap: var(--spacing-space-16)`; form label + `DatePicker-Main` (`flex: 1`). Sample inner width **`326px`** for specific-date block (`44370:145354`).
 
@@ -339,10 +339,10 @@ Simple inline search field rendered directly inside `FilterPanelBody`. Geometry 
 - **Panel width:** preferred **`300px`** (`FilterPanel` width / max; mark body with `data-text-filter`). When the right-anchored L-frame would spill past the datagrid left edge, **shrink** to `--ids-datagrid-filter-panel-max-width` (see **FilterMenuLayer** left-edge clamp) so the leading **`search-16`** icon stays visible.
 - **Row (`Search Box Properties`):** horizontal flex, **`align-items: center`**, **`height: 40px`**, **`box-sizing: border-box`**, **`padding: var(--padding-padding-6) var(--padding-padding-16)`** (6px / 16px). Outer **`itemSpacing`** = **`var(--spacing-space-none)`** (0) — do **not** use a flex `gap` between icon and input; spacing comes from the text frame’s left padding.
 - **Search icon:** shared **`Icon`** (`shapeName="search-16"`, default **`variant="mask"`**). Tint via CSS `color: var(--color-icon-brand-base)` on the icon class — SVG/mask fill uses **`currentColor`** (do not hardcode fill or pass a `color` prop). Size `16×16`.
-- **Text frame / input:** `flex: 1` wrap with `justify-content: space-between`; input padding owned by wrap **`padding: var(--padding-padding-4) 0 var(--padding-padding-4) var(--padding-padding-8)`**. Typography Body 2 Regular: `font-size: var(--font-size-body-2)`, `font-weight: 400`, `line-height: var(--font-line-height-line-height-20)`, color `var(--color-text-neutral)`.
-- **Placeholder:** `"Search"`, color `var(--color-text-neutral)`.
-- **Dismiss / clear button:** same contract as DropdownMenu / Combobox filter search — **visible only when `query` is non-empty**; hidden when empty. Trailing on the text frame. Shared **`Icon`** (`shapeName="ctrl-close-16"`, mask/`currentColor`), rendered `12×12`. Button sets `color: var(--color-icon-accessible)`; icon inherits via **`currentColor`**. `all: unset`, cursor pointer, `aria-label="Clear search"`. Click clears the query (and fires `onChange("")` when controlled).
-- **Border / radius:** Figma field uses `var(--border-width-border-default)` + `var(--color-border-accessible)` and **`Corner Radius/radius-none`**. Inside the shared L-frame, **do not** redraw a second outer border on the row — L-frame `FilterPanel` owns the shell stroke; the row supplies the **40px / 6×16 padding / icon+text inset** alignment only.
+- **Text frame / input:** `flex: 1` wrap with `justify-content: space-between`; input padding owned by wrap **`padding: var(--padding-padding-4) 0 var(--padding-padding-4) var(--padding-padding-8)`**. Typography Body 2 Regular: `font-size: var(--font-size-body-2)`, `font-weight: 400`, `line-height: var(--font-line-height-line-height-20)`, color `var(--color-text-gray-neutral)`.
+- **Placeholder:** `"Search"`, color `var(--color-text-gray-neutral)`.
+- **Dismiss / clear button:** same contract as DropdownMenu / Combobox filter search — **visible only when `query` is non-empty**; hidden when empty. Trailing on the text frame. Shared **`Icon`** (`shapeName="ctrl-close-16"`, mask/`currentColor`), rendered `12×12`. Button sets `color: var(--color-icon-gray-neutral-accessible)`; icon inherits via **`currentColor`**. `all: unset`, cursor pointer, `aria-label="Clear search"`. Click clears the query (and fires `onChange("")` when controlled).
+- **Border / radius:** Figma field uses `var(--border-width-border-default)` + `var(--color-border-gray-neutral-base)` and **`Corner Radius/radius-none`**. Inside the shared L-frame, **do not** redraw a second outer border on the row — L-frame `FilterPanel` owns the shell stroke; the row supplies the **40px / 6×16 padding / icon+text inset** alignment only.
 - **Behavior:** typing updates query immediately; empty query shows all rows (host filters via `onChange`). Clicking dismiss clears query. No selection controls.
 - **Filter model:** `query: string`; `filterActive` when `query` is non-empty.
 
@@ -362,24 +362,24 @@ Multiselect combobox filter with search, Select All / Clear All, and scrollable 
 
 #### Layout
 
-- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`. Min-width `186px`, max-width `700px`.
+- **Container:** `var(--color-background-surface-component)` background, `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`. Min-width `186px`, max-width `700px`.
 - **Container width:** `269px` (`FilterPanel` `min-width` / `max-width`).
-- **Search row:** `var(--padding-padding-8)` wrapper padding. Inner field: `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners per Figma `Search-Main`). Search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`). Text input left-padded `var(--padding-padding-8)`, `var(--padding-padding-4)` vertical, `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-accessible)`, cursor pointer, `aria-label="Clear search"`; click sets `searchQuery` to `""`. Hidden when empty.
-- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`. **Clear All** is right-aligned; row has no right padding — the button supplies `var(--padding-padding-16)` horizontal inset.
-  - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.md`.
-  - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
-  - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
+- **Search row:** `var(--padding-padding-8)` wrapper padding. Inner field: `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners per Figma `Search-Main`). Search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`). Text input left-padded `var(--padding-padding-8)`, `var(--padding-padding-4)` vertical, `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-gray-neutral-accessible)`, cursor pointer, `aria-label="Clear search"`; click sets `searchQuery` to `""`. Hidden when empty.
+- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`. **Clear All** is right-aligned; row has no right padding — the button supplies `var(--padding-padding-16)` horizontal inset.
+  - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-gray-neutral-base)`. Delegate to `components/ids/checkbox/design-spec.md`.
+  - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
+  - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-gray-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
 - **Option list:** scrollable, sample height `366px`, no bottom padding. Custom scrollbar (Figma decorative — use platform scrollbar).
-- **Option row:** `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis.
+- **Option row:** `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis.
 
 #### States (option row)
 
 | State | Background | Border | Text |
 |---|---|---|---|
-| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| hover | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| press | `var(--color-background-brand-light)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-| selected (multi) | `var(--color-background-component)` + checked checkbox | none | `var(--color-text-neutral)` |
+| default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| hover | `var(--color-background-brand-lighter-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| press | `var(--color-background-brand-light-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| selected (multi) | `var(--color-background-surface-component)` + checked checkbox | none | `var(--color-text-gray-neutral)` |
 
 #### Behavior
 
@@ -414,19 +414,19 @@ No Select All / Clear All row (single-select has no batch action).
 #### Layout
 
 - **Container width:** `269px` (`FilterPanel` `min-width` / `max-width`).
-- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; min-width `186px`, max-width `700px`, min-height `212px`.
-- **Search row:** identical to Combobox-Multiselect — `var(--padding-padding-8)` wrapper, bordered inner field with **no border-radius** (sharp corners per Figma `Search-Main`), search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`), text input `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-accessible)`, cursor pointer, `aria-label="Clear search"`; click clears. Hidden when empty.
+- **Container:** `var(--color-background-surface-component)` background, `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; min-width `186px`, max-width `700px`, min-height `212px`.
+- **Search row:** identical to Combobox-Multiselect — `var(--padding-padding-8)` wrapper, bordered inner field with **no border-radius** (sharp corners per Figma `Search-Main`), search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`), text input `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-gray-neutral-accessible)`, cursor pointer, `aria-label="Clear search"`; click clears. Hidden when empty.
 - **Option list:** scrollable, sample height `406px`, no bottom padding.
-- **Option row:** `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right padding, `var(--spacing-space-8)` gap. Min-height `40px`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis.
+- **Option row:** `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right padding, `var(--spacing-space-8)` gap. Min-height `40px`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis.
 
 #### States (option row)
 
 | State | Background | Border | Text |
 |---|---|---|---|
-| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| hover | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| press | `var(--color-background-brand-light)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-| selected | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| hover | `var(--color-background-brand-lighter-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| press | `var(--color-background-brand-light-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| selected | `var(--color-background-brand-lighter-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 
 #### Behavior
 
@@ -465,9 +465,9 @@ No search row. No Select All / Clear All row. Single-select semantics.
 
 #### Layout
 
-- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, Shadow 1 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`.
+- **Container:** `var(--color-background-surface-component)` background, `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` border, Shadow 1 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`.
 - **Options wrapper:** `var(--padding-padding-1)` horizontal padding.
-- **Option row** (`.Dropdown-SingleSelect-Elements-Options`): `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right, `var(--spacing-space-8)` gap. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis.
+- **Option row** (`.Dropdown-SingleSelect-Elements-Options`): `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right, `var(--spacing-space-8)` gap. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis.
 
 #### States (option row)
 
@@ -475,10 +475,10 @@ Delegate to **`components/ids/dropdown-single-select/design-spec.md`** States ta
 
 | State | Background | Border | Text |
 |---|---|---|---|
-| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| hover | `var(--color-background-controls-brand-lighter)` | brand emphasis rows | `var(--color-text-neutral)` |
+| default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| hover | `var(--color-background-controls-lighter)` | brand emphasis rows | `var(--color-text-gray-neutral)` |
 | selected | brand-lighter or tokenized selected row style | tokenized | `var(--color-text-brand-strong)` |
-| disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 
 #### Behavior
 
@@ -513,21 +513,21 @@ No search row.
 
 #### Layout
 
-- **Container:** `var(--color-background-component)` background, `var(--border-width-border-default)` solid `var(--color-border-accessible)` border, `var(--padding-padding-1)` horizontal padding, Shadow 1 elevation, `overflow: clip`. Sample width `269px`.
-- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347` / `44360:179348`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-accessible)`.
-  - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-accessible)`. Delegate to `components/ids/checkbox/design-spec.md`.
-  - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
-  - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal; pinned to the **right** edge of the row.
-- **Option row** (`.Dropdown-Elements-MultiSelect-Options`): `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, overflow ellipsis, `white-space: nowrap`.
+- **Container:** `var(--color-background-surface-component)` background, `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` border, `var(--padding-padding-1)` horizontal padding, Shadow 1 elevation, `overflow: clip`. Sample width `269px`.
+- **Select All / Clear All row:** `var(--padding-padding-8)` vertical / `var(--padding-padding-16)` left / **`0` right**; `justify-content: space-between` (Figma `44360:179347` / `44360:179348`). Bottom border `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`.
+  - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-gray-neutral-base)`. Delegate to `components/ids/checkbox/design-spec.md`.
+  - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
+  - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-gray-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal; pinned to the **right** edge of the row.
+- **Option row** (`.Dropdown-Elements-MultiSelect-Options`): `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis, `white-space: nowrap`.
 
 #### States (option row)
 
 | State | Background | Border | Text |
 |---|---|---|---|
-| default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| hover | `var(--color-background-brand-lighter)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| press | `var(--color-background-brand-light)` | inset `0 ±1px var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
-| selected (multi) | `var(--color-background-component)` + checked checkbox | none | `var(--color-text-neutral)` |
+| default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| hover | `var(--color-background-brand-lighter-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| press | `var(--color-background-brand-light-slate)` | inset `0 ±1px var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| selected (multi) | `var(--color-background-surface-component)` + checked checkbox | none | `var(--color-text-gray-neutral)` |
 
 #### Behavior
 
@@ -564,25 +564,25 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
 #### Layout
 
 - **Panel width:** `300px` minimum sample; content-driven within L-frame `max-width` rules.
-- **Operator rows** (`.DataGrid-Elements-Filter-Numeric`, `44367:182693`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `gap: var(--spacing-space-8)` between `16×16` radio and label, `cursor: pointer`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
+- **Operator rows** (`.DataGrid-Elements-Filter-Numeric`, `44367:182693`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `gap: var(--spacing-space-8)` between `16×16` radio and label, `cursor: pointer`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
 - **Operator row states:**
-  - **hover:** background `var(--color-background-controls-brand-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
+  - **hover:** background `var(--color-background-controls-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
   - **focus (keyboard only):** `outline: 2px solid var(--color-border-brand-base); outline-offset: -2px` on the row.
-  - **disabled:** radio border `var(--color-border-disabled)`, background `var(--color-background-disabled)`, dot `var(--color-icon-disabled)`, label `var(--color-text-disabled)`, cursor `not-allowed`.
+  - **disabled:** radio border `var(--color-border-gray-disabled)`, background `var(--color-background-disabled)`, dot `var(--color-icon-gray-disabled)`, label `var(--color-text-gray-disabled)`, cursor `not-allowed`.
 - **Operators** (single-select radio group, labels from Figma):
   1. `All` — no value inputs; clears numeric constraint.
   2. `Equals` / `Does not equal` / `Greater than` / `Greater than equal to` / `Less than` / `Less than equal to` — show one value block: `padding-left: 40px`, `padding-right: var(--padding-padding-16)`, `padding-bottom: var(--padding-padding-8)`, gap `16px` between rows.
-     - **Text field:** height `40px`, border `var(--border-width-border-default)` solid `var(--color-border-accessible)`, horizontal padding `var(--padding-padding-16)`, vertical padding `var(--padding-padding-8)`, `font-weight: 400`. Width: `242px` sample, flex `1` when unit dropdown present. Delegate states to `components/ids/text-box/design-spec.md`.
+     - **Text field:** height `40px`, border `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, horizontal padding `var(--padding-padding-16)`, vertical padding `var(--padding-padding-8)`, `font-weight: 400`. Width: `242px` sample, flex `1` when unit dropdown present. Delegate states to `components/ids/text-box/design-spec.md`.
      - **Value + helper group:** when unit dropdown present, wrap text field and helper text in a vertical flex group (`gap: var(--spacing-space-4)`) that takes `flex: 1` alongside the unit dropdown. Helper text belongs to the value field group, not to the entire row.
-     - **Helper text:** Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`, value `"Numeric value"`.
+     - **Helper text:** Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, value `"Numeric value"`.
   3. `Between` — two value blocks with helpers `"Starting value"` and `"Ending value"` (Figma `44370:145919` / `44370:145922`), gap `16px` between rows.
 - **Value + Unit row** (when `unitOptions` provided): flex row, `gap: 16px`, both children `flex: 1 1 0`. Text field (with helper) and unit dropdown share the `242px` container width equally. The unit dropdown is a sibling of the value+helper group, not of the text field alone.
 - **Unit dropdown (optional):** delegate to `components/ids/dropdown-single-select/design-spec.md` — field height `40px` (Large), padding `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, border/background/text tokens per that spec. Caret icon `arrow-drop-tri-caret`. Placeholder `"-Select-"`.
 
 #### Delegated specs
 
-- **Radio control:** `components/ids/radio-button/design-spec.md` — `16×16` control, dot `var(--color-icon-brand-base)`, selected border `var(--color-border-brand-base)`, hover border `var(--color-border-strong)`, focus-visible ring `1px var(--color-border-brand-base)` offset `2px`.
-- **Text field:** `components/ids/text-box/design-spec.md` — hover `var(--color-border-strong)`, focus `var(--color-border-brand-base)`, focus-visible outer ring `var(--color-border-brand-base)` offset `4px` with `border-radius: 4px`.
+- **Radio control:** `components/ids/radio-button/design-spec.md` — `16×16` control, dot `var(--color-icon-brand-base)`, selected border `var(--color-border-brand-base)`, hover border `var(--color-border-gray-neutral-strong)`, focus-visible ring `1px var(--color-border-brand-base)` offset `2px`.
+- **Text field:** `components/ids/text-box/design-spec.md` — hover `var(--color-border-gray-neutral-strong)`, focus `var(--color-border-brand-base)`, focus-visible outer ring `var(--color-border-brand-base)` offset `4px` with `border-radius: 4px`.
 - **Unit dropdown:** `components/ids/dropdown-single-select/design-spec.md` — all trigger and popup token contracts per that spec.
 
 #### Filter model
@@ -615,13 +615,13 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
 
 #### Layout
 
-- **Inner panel (`44360:181713` / `Multi-select Droddown`):** **`480px`** sample width (L-frame **`FilterPanel`** `min-width` / `max-width` **480px** for date-time columns); **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot** (not extra Storybook body padding); **`overflow: clip`**; full **`1px`** **`var(--color-border-accessible)`** on panel host + **Shadow 1** on L-frame shell (see L-frame baseline). Preset summaries and labels: **no ellipsis** — single line, panel width accommodates copy.
-- **Preset rows** (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`, `cursor: pointer`. Left cluster: `16×16` radio + label, `gap: var(--spacing-space-8)`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-neutral)`.
+- **Inner panel (`44360:181713` / `Multi-select Droddown`):** **`480px`** sample width (L-frame **`FilterPanel`** `min-width` / `max-width` **480px** for date-time columns); **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot** (not extra Storybook body padding); **`overflow: clip`**; full **`1px`** **`var(--color-border-gray-neutral-base)`** on panel host + **Shadow 1** on L-frame shell (see L-frame baseline). Preset summaries and labels: **no ellipsis** — single line, panel width accommodates copy.
+- **Preset rows** (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`, `cursor: pointer`. Left cluster: `16×16` radio + label, `gap: var(--spacing-space-8)`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
 - **Preset row states:**
-  - **hover:** background `var(--color-background-controls-brand-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
+  - **hover:** background `var(--color-background-controls-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
   - **focus (keyboard only):** `outline: 2px solid var(--color-border-brand-base); outline-offset: -2px` on the row. No focus ring on the radio root when row-level focus is present.
-  - **disabled:** radio border `var(--color-border-disabled)`, radio background `var(--color-background-disabled)`, dot `var(--color-icon-disabled)`, label color `var(--color-text-disabled)`, cursor `not-allowed`.
-- **Preset summary** (right column, visible when preset selected and not in expanded-only modes): Body 3 Regular — `font-size: var(--font-size-body-3)` / `12px`, `line-height: 18px`, `font-weight: 400`, `var(--color-text-neutral)`, **single line, no ellipsis** (panel width expands).
+  - **disabled:** radio border `var(--color-border-gray-disabled)`, radio background `var(--color-background-disabled)`, dot `var(--color-icon-gray-disabled)`, label color `var(--color-text-gray-disabled)`, cursor `not-allowed`.
+- **Preset summary** (right column, visible when preset selected and not in expanded-only modes): Body 3 Regular — `font-size: var(--font-size-body-3)` / `12px`, `line-height: 18px`, `font-weight: 400`, `var(--color-text-gray-neutral)`, **single line, no ellipsis** (panel width expands).
 - **Expanded blocks** (**Specific date** / **Custom range**): `padding-left: 40px`, `padding-right: var(--padding-padding-16)`, `padding-bottom: var(--padding-padding-8)`, vertical `gap: var(--spacing-space-16)` between rows.
 - **Date + Time row:** horizontal flex, `gap: var(--spacing-space-16)`, `align-items: flex-start`. Date field `flex: 1` (`min-width: 0`). Time field fixed **`177px`** width sample (Figma `TimePicker-Main` in filter context).
 - **Presets** (single-select radio group, labels from Figma):
@@ -666,13 +666,13 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
   - **Text column header layout** (Figma `Type=Text` on **37721:114663**, with inner **37721:114673** + filter **37721:114677**):
     - **Host row (`DatagridColumnHeaderContent`):** horizontal flex, **`align-items: center`**, **`padding-left: 16px`**, **`padding-top` / `padding-bottom: 0`** on the host (do **not** stack **`py-[5px]`** on the host **and** **`py-[9px]`** on the title row — that inflates the header past **`48px`**). **Total header cell height is `48px`** (Figma **`Grid height/Header`**).
     - **Title row (`37721:114673`):** **`flex: 1`**, **`min-width: 0`**, horizontal flex, **`gap: 12px`**, **`align-items: center`**, **`padding: 0 8px 0 0`** — **8px** right padding, **no** left padding on this frame (**`16px`** inset is the host **`padding-left`**). **Vertically center** title + sort in the **48px** header (avoids icons riding high vs. a padded-only inner band). Title text uses **20px** line box (**`Body 2 - Medium`**, **14/20**, weight **500**).
-    - **Column title text (`37721:114675`):** **`Body 2 - Medium`** — **`14px`** / **`20px`** line height, **`font-weight: 500`**, color **`var(--color-text-neutral-strong)`**, ellipsis + single line.
-    - **Sort icon (Figma `.Sort for table`, `37721:114646`):** use the shared **`Icon`** with **`shapeName`** **`col-sort-up-16`** / **`col-sort-down-16`**. Rendered size **12×12** — the icon button wrapper must also be **`12×12`** (no extra padding/margin that inflates the hit target). Carry a **`data-sorted`** attribute on the button when sorted so CSS selectors can target the active state. **Visual states:** Default → **`var(--color-icon-neutral)`**; Hover → **`var(--color-icon-neutral-strong)`**; Selected (sorted) → **`var(--color-icon-brand-base)`**; Selected+Hover → **`var(--color-icon-brand-stronger)`**. **Visibility:** always visible (product decision — Figma shows hide-on-default but implementation keeps icon always shown).
+    - **Column title text (`37721:114675`):** **`Body 2 - Medium`** — **`14px`** / **`20px`** line height, **`font-weight: 500`**, color **`var(--color-text-gray-neutral-strong)`**, ellipsis + single line.
+    - **Sort icon (Figma `.Sort for table`, `37721:114646`):** use the shared **`Icon`** with **`shapeName`** **`col-sort-up-16`** / **`col-sort-down-16`**. Rendered size **12×12** — the icon button wrapper must also be **`12×12`** (no extra padding/margin that inflates the hit target). Carry a **`data-sorted`** attribute on the button when sorted so CSS selectors can target the active state. **Visual states:** Default → **`var(--color-icon-gray-neutral-base)`**; Hover → **`var(--color-icon-gray-neutral-strong)`**; Selected (sorted) → **`var(--color-icon-brand-base)`**; Selected+Hover → **`var(--color-icon-brand-stronger)`**. **Visibility:** always visible (product decision — Figma shows hide-on-default but implementation keeps icon always shown).
     - **Filter icon:** use **`Icon`** with **`shapeName`** **`filter`** / **`filter-solid`** (**`assets/icons/filter.svg`**, **`assets/icons/filter-solid.svg`**) — **14×14** inside **`38×38`** control per **`37721:114635`** / **`37721:114677`**; cross-check the **Icons** / **Header Styling** area on the library page (e.g. annotation frame **`44551:229021`**) when auditing against Figma.
-    - **Filter (`.Filter for table`, `37721:114677`):** **`shrink-0`**, **`38×38`** outer frame, **`padding: 12px`** on the interactive wrapper (Figma `p-[12px]`), **`14×14`** icon viewport; **default** icon color **`var(--color-icon-neutral)`** (variable binding on default state). State/icon mapping for hover/selected/press remains from **`37721:114635`**.
-  - **`colorAndBorder=false` (minimal):** header cell fill **`var(--color-background-component)`**; **no** full-cell **top/bottom** rules on the default Text path in Figma; **leading column separator** only on **data** column headers: **1px** wide **`var(--color-border-light)`**, **24px** tall, **`top: 50%`**, **`transform: translateY(-50%)`**, **`left: 0`** (Figma vertical rail).
-  - **`colorAndBorder=true` (styled band):** header cell fill **`var(--color-background-gray-neutral-lighter)`**; **top** and **bottom** rules **`1px`** **`var(--color-border-light)`** across the cell; same **leading** **1px × 24px** centered **`var(--color-border-light)`** rail on data column headers.
-  - **`Selection` / `Column Customization` with `colorAndBorder=true`:** nested **`.Header: Styling`** in Figma uses **`var(--color-background-gray-neutral-lighter)`** with **top** + **bottom** **`var(--color-border-light)`** and **leading** **1px** **24px** rail; Selection + styled also shows a **full-height** **1px** trailing edge rule in the export (`37721:114685`) — implementations may mirror for pixel parity with checkbox/settings headers.
+    - **Filter (`.Filter for table`, `37721:114677`):** **`shrink-0`**, **`38×38`** outer frame, **`padding: 12px`** on the interactive wrapper (Figma `p-[12px]`), **`14×14`** icon viewport; **default** icon color **`var(--color-icon-gray-neutral-base)`** (variable binding on default state). State/icon mapping for hover/selected/press remains from **`37721:114635`**.
+  - **`colorAndBorder=false` (minimal):** header cell fill **`var(--color-background-surface-component)`**; **no** full-cell **top/bottom** rules on the default Text path in Figma; **leading column separator** only on **data** column headers: **1px** wide **`var(--color-border-gray-neutral-light)`**, **24px** tall, **`top: 50%`**, **`transform: translateY(-50%)`**, **`left: 0`** (Figma vertical rail).
+  - **`colorAndBorder=true` (styled band):** header cell fill **`var(--color-background-gray-neutral-lighter)`**; **top** and **bottom** rules **`1px`** **`var(--color-border-gray-neutral-light)`** across the cell; same **leading** **1px × 24px** centered **`var(--color-border-gray-neutral-light)`** rail on data column headers.
+  - **`Selection` / `Column Customization` with `colorAndBorder=true`:** nested **`.Header: Styling`** in Figma uses **`var(--color-background-gray-neutral-lighter)`** with **top** + **bottom** **`var(--color-border-gray-neutral-light)`** and **leading** **1px** **24px** rail; Selection + styled also shows a **full-height** **1px** trailing edge rule in the export (`37721:114685`) — implementations may mirror for pixel parity with checkbox/settings headers.
 - **Header affordance icon sizes:** **`SortToggle`** **`Icon`** **12×12** (Figma **`.Sort for table`**); **`FilterToggle`** **14×14** inside **`38×38`** padded control (Figma **`37721:114677`** / **`37721:114635`**); **`settings-gear`** **`Icon`** **16×16** (Figma / product alignment).
 - Row height baseline: **`40px`** — Figma variable **`Grid height/Cell`** (numeric `40`). **`components/ids-theme.css`** does not currently emit **`--grid-height-cell`**; implementations should use **`40px`** until a theme sync adds that alias.
 - **Row / cell body chrome (Figma `.Row/Cell: States and styling`, `37721:114580`):**
@@ -680,15 +680,15 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
   - **Figma variant axes:**
     - **`states`:** `Default` | `Hover` | `Selected` | `Selected and Press` | `Hover on read only table`
     - **`verticalBlueLine`:** `true` | `false` — when **`true`**, **Selected** and **Selected and Press** show a **leading vertical bar**; other states do **not** show the bar.
-    - **`background`:** `true` | `false` — when **`true`** in **Default**, row uses **`var(--color-background-component)`** fill; when **`false`**, skip that base fill layer (rare; use only when spec’d by product).
-    - **`showBorder`:** `true` | `false` — when **`true`**, draw **1px** bottom rule **`var(--color-border-light)`** across the row width.
+    - **`background`:** `true` | `false` — when **`true`** in **Default**, row uses **`var(--color-background-surface-component)`** fill; when **`false`**, skip that base fill layer (rare; use only when spec’d by product).
+    - **`showBorder`:** `true` | `false` — when **`true`**, draw **1px** bottom rule **`var(--color-border-gray-neutral-light)`** across the row width.
   - **Sample frame size:** `348×40` in Figma; **runtime width** is container-driven (`width: 100%`, `box-sizing: border-box`).
   - **Layer model (bottom → top):**
-    1. **Default:** full-area fill **`var(--color-background-component)`** when `background=true` / `rowBackgroundLayer` is on (Figma bound token).
+    1. **Default:** full-area fill **`var(--color-background-surface-component)`** when `background=true` / `rowBackgroundLayer` is on (Figma bound token).
     2. **Non-default states** (`Hover`, `Selected`, `Selected and Press`, `Hover on read only table`): full-bleed **overlay** `absolute; inset: 0` **above** the default fill (stack order must match Figma so borders/indicators sit correctly).
-    3. **Bottom border** (when `showBorder=true`): **`1px`** tall, **`var(--color-border-light)`**, pinned to **`bottom: 0`**, **`left: 0`**, **`right: 0`** (row divider).
+    3. **Bottom border** (when `showBorder=true`): **`1px`** tall, **`var(--color-border-gray-neutral-light)`**, pinned to **`bottom: 0`**, **`left: 0`**, **`right: 0`** (row divider).
     4. **Vertical selection accent** (when `verticalBlueLine=true` **and** `states` ∈ {`Selected`, `Selected and Press`}): **`4px`** wide bar, **`var(--color-border-brand-base)`**, **`left: 0`**, **`top: 0`**, **`bottom: 0`** (full row height), sits **above** row fill (Figma node name **“Vertical line”**).
-  - **HTML/CSS implementation note:** With **`border-collapse: collapse`**, **`background` on `<tr>` is unreliable** across browsers. Apply the **default** row fill **`var(--color-background-component)`** on **each body cell** (`<td>` / `DatagridCell`), not only on the row host, so the default state matches Figma; hover/selected overlays likewise apply per-cell (or an equivalent full-row paint that does not depend on `<tr>` background alone).
+  - **HTML/CSS implementation note:** With **`border-collapse: collapse`**, **`background` on `<tr>` is unreliable** across browsers. Apply the **default** row fill **`var(--color-background-surface-component)`** on **each body cell** (`<td>` / `DatagridCell`), not only on the row host, so the default state matches Figma; hover/selected overlays likewise apply per-cell (or an equivalent full-row paint that does not depend on `<tr>` background alone).
   - **Auto-layout note:** Figma dev export wraps overlays in **`flex-direction: column`** with **`gap: 10px`** between internal slots; preserve **visual** stacking (fill → overlay → rules → accent). Do **not** replace semantic row height with the gap value.
   - minimum data column width: `90px` (includes optional sort/filter affordances when present).
   - settings column width: `40px` fixed.
@@ -702,7 +702,7 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
   - **Settings column (`37721:114686` header variant, `37721:113997` / `37721:114944` grid column):**
     - **Column width:** **`40px`** (`<colgroup>` only; Figma **`37721:113997`** *Padding* slot width **40**, **`37721:114887`**).
     - **Header (`37721:114686` / `37721:114945`, `type=Column Customization`):** **`40px`** total column width; host height **`48px`**; **`padding-block: var(--selection-header, 16px)`**; **16×16** **`settings-gear`** (`37721:114688`) centered horizontally; same **`.Header: Styling`** top/bottom fill — **no** leading **`::before`** rail on this column.
-    - **Body (`37721:114944`):** **`40px`** wide × **`40px`** row height, **`padding-block: 12px`**, no icon; bottom **`var(--color-border-light)`** rule per row chrome.
+    - **Body (`37721:114944`):** **`40px`** wide × **`40px`** row height, **`padding-block: 12px`**, no icon; bottom **`var(--color-border-gray-neutral-light)`** rule per row chrome.
   - **Chrome width rule:** **`48px`** / **`40px`** on **`<colgroup>`**, matching **`th`/`td`**, and inner hosts — **16×16** controls only so **`16 + 16 + 16 = 48`** (header) fits in the selection column.
 - Horizontal scrolling:
   - scrollable region: data columns between leading pinned columns and trailing settings column.
@@ -732,7 +732,7 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
   - **Affordances do not shrink:** sort (**12×12** icon + hit target) and filter (**38×38** control) keep their sizes; **flex-shrink: 0** on those controls. Shrink comes from the **title** slot first.
   - **Long unbroken strings / URLs:** same ellipsis behavior; if product requires full value access, add **`title` attribute** (native tooltip) and/or a **popover** on focus/hover that does not change the header cell layout width.
   - **Minimum column width (`90px`)** still applies: at the minimum width, title may truncate aggressively; verify **no overlap** with sort/filter icons (increase min width for wide header chrome if needed).
-- Column boundary chrome (Figma): the **1px × 24px** **`var(--color-border-light)`** rail on the trailing edge of each data header (**decorative**).
+- Column boundary chrome (Figma): the **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail on the trailing edge of each data header (**decorative**).
 - **Optional column resize (Storybook / product):** when enabled, add a **transparent** trailing-edge hit target (e.g. **~10px** wide) aligned with that rail, **`cursor: col-resize`**, pointer capture, clamp width to **`minWidth`** (default **`90px`**) and a product max (Storybook: **640px**). Emit **`onColumnResize`** with the final width. **Column reorder** drag must **not** start from sort, filter, or resize controls (use **`preventDefault`** on **`dragstart`** or isolate **`draggable`** to the title strip only).
 - Column width cannot be reduced below min width (`90px`, or explicit per-column override via **`minWidth`** / resize clamp).
 - Row content overflow:
@@ -871,27 +871,27 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 | Spacer `<col>` before settings | Forbidden by **`37721:113987`** |
 ## Tokens
 - Background/surface:
-  - `var(--color-background-component)`
-  - `var(--color-background-surface-1)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-background-surface-primary)`
   - `var(--color-background-gray-neutral-lighter)`
-  - `var(--color-background-brand-lighter)`
-  - `var(--color-background-brand-light)`
+  - `var(--color-background-brand-lighter-slate)`
+  - `var(--color-background-brand-light-slate)`
 - Border:
-  - `var(--color-border-light)`
-  - `var(--color-border-accessible)`
+  - `var(--color-border-gray-neutral-light)`
+  - `var(--color-border-gray-neutral-base)`
   - `var(--color-border-brand-base)`
 - Text:
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-text-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
+  - `var(--color-text-gray-neutral)`
   - `var(--color-text-brand-strong)`
   - `var(--color-text-link-brand-base)`
-  - `var(--color-text-white)`
+  - `var(--color-text-gray-white)`
 - Icon:
-  - `var(--color-icon-neutral)`
+  - `var(--color-icon-gray-neutral-base)`
   - `var(--color-icon-brand-base)`
   - `var(--color-icon-brand-stronger)`
-  - `var(--color-icon-accessible)`
-  - `var(--color-icon-disabled)`
+  - `var(--color-icon-gray-neutral-accessible)`
+  - `var(--color-icon-gray-disabled)`
 - Column-freeze boundary bar (`37721:114144`, **`FreezePaneEdge`**):
   - **Width:** **`20px`**; **`flex-shrink: 0`**; **`align-self: stretch`** (full header+body height in Figma auto-layout; runtime: **`position: absolute`**, **`top: 0`**, **`bottom: 0`** on scroll host).
   - **`border-radius: 0`**
@@ -906,47 +906,47 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `DatagridHeader` (data columns, `colorAndBorder=false`) | default | **`var(--color-background-component)`** | **no** full-cell top/bottom in Figma Text path; **leading** **1px × 24px** **`var(--color-border-light)`** rail **`left: 0`**, vertically centered | header text `var(--color-text-neutral-strong)` |
-| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-light)`** **top** + **bottom**; **leading** **1px × 24px** **`var(--color-border-light)`** rail | header text `var(--color-text-neutral-strong)` |
-| `DatagridHeader` (Selection / settings, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** (nested chrome per Figma) | **top** + **bottom** **`var(--color-border-light)`**; inner rails per **`37721:114663`** | icons / checkbox per column spec |
-| `DatagridHeader` (Selection / settings, `colorAndBorder=false`) | default | **`var(--color-background-component)`** | **no** full-cell top/bottom on minimal path; inner rails per **`37721:114663`** where shown in Figma | icons / checkbox per column spec |
-| `DatagridRow` | default | **`var(--color-background-component)`** on **each body cell** (idle row; not `transparent` unless `rowBackgroundLayer` / Figma `background` is off) | bottom **1px** `var(--color-border-light)` when `showBorder=true` | `var(--color-text-neutral)` |
-| `DatagridRow` | hover (interactive grid) | overlay **`var(--color-background-brand-lighter)`** | bottom **1px** `var(--color-border-light)` when `showBorder=true` | unchanged unless product overrides |
-| `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-1)`** (distinct from brand hover) | bottom **1px** `var(--color-border-light)` when `showBorder=true` | unchanged unless product overrides |
-| `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter)`**; if `verticalBlueLine=true`, add **4px** leading bar **`var(--color-border-brand-base)`** full row height | bottom **1px** `var(--color-border-light)` when `showBorder=true` — **not** a full-width brand border | token-resolved |
-| `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light)`**; same optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-light)` when `showBorder=true` | token-resolved |
-| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-neutral)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
-| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
+| `DatagridHeader` (data columns, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom in Figma Text path; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail **`left: 0`**, vertically centered | header text `var(--color-text-gray-neutral-strong)` |
+| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-gray-neutral-light)`** **top** + **bottom**; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail | header text `var(--color-text-gray-neutral-strong)` |
+| `DatagridHeader` (Selection / settings, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** (nested chrome per Figma) | **top** + **bottom** **`var(--color-border-gray-neutral-light)`**; inner rails per **`37721:114663`** | icons / checkbox per column spec |
+| `DatagridHeader` (Selection / settings, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom on minimal path; inner rails per **`37721:114663`** where shown in Figma | icons / checkbox per column spec |
+| `DatagridRow` | default | **`var(--color-background-surface-component)`** on **each body cell** (idle row; not `transparent` unless `rowBackgroundLayer` / Figma `background` is off) | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | `var(--color-text-gray-neutral)` |
+| `DatagridRow` | hover (interactive grid) | overlay **`var(--color-background-brand-lighter-slate)`** | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
+| `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-primary)`** (distinct from brand hover) | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
+| `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter-slate)`**; if `verticalBlueLine=true`, add **4px** leading bar **`var(--color-border-brand-base)`** full row height | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` — **not** a full-width brand border | token-resolved |
+| `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light-slate)`**; same optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
+| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-gray-neutral-base)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
+| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-gray-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
 | `SortToggle` | selected (sorted column) | transparent | none | `var(--color-icon-brand-base)` (**`37721:114649`** / **`37721:114659`**); **12×12**; direction = **`col-sort-up-16`** (asc) or **`col-sort-down-16`** (desc) |
 | `SortToggle` | selected + hover | transparent | none | `var(--color-icon-brand-stronger)` (**`37721:114653`** / **`37721:114661`**); **12×12** |
-| `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-neutral)`**; **icon 14×14** |
-| `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-neutral)` (`14x14`) |
+| `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-gray-neutral-base)`**; **icon 14×14** |
+| `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-gray-neutral-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
-| `SettingsColumn` | default | header-aligned | `var(--color-border-light)` | **`Icon`** `settings-gear` in `var(--color-icon-neutral)` (`16x16`) |
-| `DatagridFooter` | default | **`var(--color-background-surface-1)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-accessible)` | per IDS Pagination spec |
+| `SettingsColumn` | default | header-aligned | `var(--color-border-gray-neutral-light)` | **`Icon`** `settings-gear` in `var(--color-icon-gray-neutral-base)` (`16x16`) |
+| `DatagridFooter` | default | **`var(--color-background-surface-primary)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-gray-neutral-base)` | per IDS Pagination spec |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `DatagridHeader` (data columns, `colorAndBorder=false`) | default | **`var(--color-background-component)`** | **no** full-cell top/bottom in Figma Text path; **leading** **1px × 24px** **`var(--color-border-light)`** rail **`left: 0`**, vertically centered | header text `var(--color-text-neutral-strong)` |
-| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-light)`** **top** + **bottom**; **leading** **1px × 24px** **`var(--color-border-light)`** rail | header text `var(--color-text-neutral-strong)` |
-| `DatagridHeader` (Selection / settings, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** (nested chrome per Figma) | **top** + **bottom** **`var(--color-border-light)`**; inner rails per **`37721:114663`** | icons / checkbox per column spec |
-| `DatagridHeader` (Selection / settings, `colorAndBorder=false`) | default | **`var(--color-background-component)`** | **no** full-cell top/bottom on minimal path; inner rails per **`37721:114663`** where shown in Figma | icons / checkbox per column spec |
-| `DatagridRow` | default | **`var(--color-background-component)`** on **each body cell** (idle row; not `transparent` unless `rowBackgroundLayer` is off) | bottom **1px** `var(--color-border-light)` when `showBorder=true` | `var(--color-text-neutral)` |
-| `DatagridRow` | hover (interactive grid) | overlay **`var(--color-background-brand-lighter)`** | bottom **1px** `var(--color-border-light)` when `showBorder=true` | unchanged unless product overrides |
-| `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-1)`** | bottom **1px** `var(--color-border-light)` when `showBorder=true` | unchanged unless product overrides |
-| `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter)`**; optional **4px** leading **`var(--color-border-brand-base)`** when `verticalBlueLine=true` | bottom **1px** `var(--color-border-light)` when `showBorder=true` | token-resolved |
-| `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light)`**; optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-light)` when `showBorder=true` | token-resolved |
-| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-neutral)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
-| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
+| `DatagridHeader` (data columns, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom in Figma Text path; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail **`left: 0`**, vertically centered | header text `var(--color-text-gray-neutral-strong)` |
+| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-gray-neutral-light)`** **top** + **bottom**; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail | header text `var(--color-text-gray-neutral-strong)` |
+| `DatagridHeader` (Selection / settings, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** (nested chrome per Figma) | **top** + **bottom** **`var(--color-border-gray-neutral-light)`**; inner rails per **`37721:114663`** | icons / checkbox per column spec |
+| `DatagridHeader` (Selection / settings, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom on minimal path; inner rails per **`37721:114663`** where shown in Figma | icons / checkbox per column spec |
+| `DatagridRow` | default | **`var(--color-background-surface-component)`** on **each body cell** (idle row; not `transparent` unless `rowBackgroundLayer` is off) | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | `var(--color-text-gray-neutral)` |
+| `DatagridRow` | hover (interactive grid) | overlay **`var(--color-background-brand-lighter-slate)`** | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
+| `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-primary)`** | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
+| `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter-slate)`**; optional **4px** leading **`var(--color-border-brand-base)`** when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
+| `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light-slate)`**; optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
+| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-gray-neutral-base)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
+| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-gray-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
 | `SortToggle` | selected (sorted column) | transparent | none | `var(--color-icon-brand-base)` (**`37721:114649`** / **`37721:114659`**); **12×12**; direction = **`col-sort-up-16`** (asc) or **`col-sort-down-16`** (desc) |
 | `SortToggle` | selected + hover | transparent | none | `var(--color-icon-brand-stronger)` (**`37721:114653`** / **`37721:114661`**); **12×12** |
-| `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-neutral)`**; **icon 14×14** |
-| `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-neutral)` (`14x14`) |
+| `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-gray-neutral-base)`**; **icon 14×14** |
+| `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-gray-neutral-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
 | `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
-| `SettingsColumn` | default | header-aligned | `var(--color-border-light)` | **`Icon`** `settings-gear` in `var(--color-icon-neutral)` (`16x16`) |
-| `DatagridFooter` | default | **`var(--color-background-surface-1)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-accessible)` | per IDS Pagination spec |
+| `SettingsColumn` | default | header-aligned | `var(--color-border-gray-neutral-light)` | **`Icon`** `settings-gear` in `var(--color-icon-gray-neutral-base)` (`16x16`) |
+| `DatagridFooter` | default | **`var(--color-background-surface-primary)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-gray-neutral-base)` | per IDS Pagination spec |
 
 Use the same semantic token names in both themes; **do not** hardcode hex — light/dark resolved values come from `components/ids-theme.css` (`html[data-design-system="ids"]` default vs `data-theme="dark"`).
 ## Interactions
@@ -973,7 +973,7 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - selection radio / sort / filter / resize controls use **`stopPropagation`** so they do not toggle the panel.
   - panel collapse via detail chrome still clears active row (parity with Angular `selectedRow` + `show` flag).
 - Column resize (optional — Storybook **`columnResizeEnabled`**):
-  - align the **pointer hit target** with the **trailing** header edge (same vertical band as the **1×24px** **`var(--color-border-light)`** rail); hit target may be a **transparent** strip (**~10px**) with **`cursor: col-resize`** so Figma still shows a single rail.
+  - align the **pointer hit target** with the **trailing** header edge (same vertical band as the **1×24px** **`var(--color-border-gray-neutral-light)`** rail); hit target may be a **transparent** strip (**~10px**) with **`cursor: col-resize`** so Figma still shows a single rail.
   - clamp widths to **`minWidth`** (default **90px** per column) and a product max; emit **`onColumnResize`** when the gesture completes (or continuously if product requires live layout).
 - Column reorder:
   - drag-and-drop header columns to rearrange order; **do not** start a column drag from **sort**, **filter**, or **resize** controls (see **Codegen → behavior**).
@@ -992,13 +992,13 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
 - Row click:
   - clicking row emits row click event and may open attached detail panel.
 - **Row hover / press (body, Figma `37721:114580`):**
-  - **Interactive table:** pointer hover applies **`var(--color-background-brand-lighter)`** overlay (same token as **Selected** idle fill — selection is reinforced by optional **vertical** accent, not by a darker fill alone).
-  - **Read-only table:** use **`Hover on read only table`** state — overlay **`var(--color-background-surface-1)`** (neutral band, not brand-tinted).
-  - **Selected + press:** overlay **`var(--color-background-brand-light)`** (darker than selected idle).
+  - **Interactive table:** pointer hover applies **`var(--color-background-brand-lighter-slate)`** overlay (same token as **Selected** idle fill — selection is reinforced by optional **vertical** accent, not by a darker fill alone).
+  - **Read-only table:** use **`Hover on read only table`** state — overlay **`var(--color-background-surface-primary)`** (neutral band, not brand-tinted).
+  - **Selected + press:** overlay **`var(--color-background-brand-light-slate)`** (darker than selected idle).
   - **`verticalBlueLine`:** when enabled, **only** **Selected** and **Selected and Press** render the **4px** **`var(--color-border-brand-base)`** leading indicator; other states omit it.
 - Footer:
   - Pagination slot attaches IDS Pagination behavior/component.
-  - **Footer background:** `var(--color-background-surface-1)` — both the `.footer` wrapper and the `IdsPagination` component use this token (`IdsPagination background="gray"`). Do **not** use `var(--color-background-component)` for the datagrid footer row.
+  - **Footer background:** `var(--color-background-surface-primary)` — both the `.footer` wrapper and the `IdsPagination` component use this token (`IdsPagination background="gray"`). Do **not** use `var(--color-background-surface-component)` for the datagrid footer row.
 ## Composition & API (runtime)
 
 Framework-agnostic types (map to TypeScript / Angular inputs / Vue props):
@@ -1087,7 +1087,7 @@ Generators **must** implement this block for **all** frameworks. Reference: `Ids
 |---|---|
 | `DatagridShell` (`.shell`) | **`width: 100%`**, **`height: 100%`**, **`min-height: 0`**, **`min-width: 0`** — fills parent container/page (**`37721:112482`**); height **not** driven by row count |
 | `DatagridGridWrap` (`.gridWrap`) | flex column, **`flex: 1`**, **`min-height: 0`**, **`width: 100%`** |
-| `DatagridFooter` | **`flex: 0 0 auto`** — outside vertical scroll clip; **`var(--color-background-surface-1)`** |
+| `DatagridFooter` | **`flex: 0 0 auto`** — outside vertical scroll clip; **`var(--color-background-surface-primary)`** |
 | Storybook / demo host | **`width: 100%`**, **`height: 100dvh`** (or **`100%`** of app shell), **`minHeight: 0`** — **no** arbitrary **`max-width`** on the grid host |
 
 #### Header / body split (vertical scroll)
@@ -1140,8 +1140,8 @@ DatagridScrollHost
 
 | State | `shapeName` | Token | Attribute / a11y |
 |---|---|---|---|
-| Default (unsorted or inactive col) | `col-sort-up-16` | `var(--color-icon-neutral)` | — |
-| Hover (not sorted) | unchanged shape | `var(--color-icon-neutral-strong)` | — |
+| Default (unsorted or inactive col) | `col-sort-up-16` | `var(--color-icon-gray-neutral-base)` | — |
+| Hover (not sorted) | unchanged shape | `var(--color-icon-gray-neutral-strong)` | — |
 | Selected asc | `col-sort-up-16` | `var(--color-icon-brand-base)` | **`data-sorted="true"`** on button; **`aria-sort="ascending"`** on **`th`** |
 | Selected desc | `col-sort-down-16` | `var(--color-icon-brand-base)` | **`data-sorted="true"`**; **`aria-sort="descending"`** |
 | Selected + hover | per direction | `var(--color-icon-brand-stronger)` | — |
@@ -1241,11 +1241,11 @@ div.gridScrollHost [flex column, position relative]
 
 | Slot | Size / layout | Tokens (default) |
 |---|---|---|
-| `DatagridColumnHeader` host | **48px** height, `pl: 16px` | bg/border per `headerColorAndBorder`; leading **1×24** rail `var(--color-border-light)` |
-| `ColumnTitle` | **14/20** medium, ellipsis | `var(--color-text-neutral-strong)` |
-| `SortToggle` | **12×12** icon, **20×20** button ok | default **`var(--color-icon-neutral)`**; hover (unsorted) **`var(--color-icon-neutral-strong)`**; sorted **`var(--color-icon-brand-base)`** + **`data-sorted="true"`**; sorted+hover **`var(--color-icon-brand-stronger)`** (Figma **`37721:114646`**) |
+| `DatagridColumnHeader` host | **48px** height, `pl: 16px` | bg/border per `headerColorAndBorder`; leading **1×24** rail `var(--color-border-gray-neutral-light)` |
+| `ColumnTitle` | **14/20** medium, ellipsis | `var(--color-text-gray-neutral-strong)` |
+| `SortToggle` | **12×12** icon, **20×20** button ok | default **`var(--color-icon-gray-neutral-base)`**; hover (unsorted) **`var(--color-icon-gray-neutral-strong)`**; sorted **`var(--color-icon-brand-base)`** + **`data-sorted="true"`**; sorted+hover **`var(--color-icon-brand-stronger)`** (Figma **`37721:114646`**) |
 | `FilterToggle` | **38×38**, **14×14** icon | see **States** + precedence |
-| `DatagridCell` | **40px** row, padding **10/12/10/16** | text `var(--color-text-neutral)`; bottom `var(--color-border-light)` |
+| `DatagridCell` | **40px** row, padding **10/12/10/16** | text `var(--color-text-gray-neutral)`; bottom `var(--color-border-gray-neutral-light)` |
 | `DatagridRow` hover | full-cell overlay | brand-lighter or `surface-1` if readOnly |
 | `DatagridRow` selected | full-cell overlay + optional **4px** left bar | `brand-lighter` / `brand-light` press |
 | `SettingsColumn` | **40px** fixed | header band matches `headerColorAndBorder` |
@@ -1272,14 +1272,14 @@ Variant matrix:
   - `sortState`: `asc | desc`
   - `rowState`: `default | hover | hover-readonly | selected | selected-press` (maps to Figma **`states`** on `.Row/Cell: States and styling`; **`hover-readonly`** ↔ **`Hover on read only table`**)
   - `rowVerticalIndicator` (Figma **`verticalBlueLine`**): `on | off` — when **`on`**, **Selected** / **Selected-press** show the **4px** leading **`var(--color-border-brand-base)`** bar; when **`off`**, selected rows use fill only.
-  - `rowShowBottomBorder` (Figma **`showBorder`**): `on | off` (default **`on`**) — **1px** bottom **`var(--color-border-light)`**
-  - `rowBackgroundLayer` (Figma **`background`**): `on | off` (default **`on`**) — toggles default **`var(--color-background-component)`** base fill
+  - `rowShowBottomBorder` (Figma **`showBorder`**): `on | off` (default **`on`**) — **1px** bottom **`var(--color-border-gray-neutral-light)`**
+  - `rowBackgroundLayer` (Figma **`background`**): `on | off` (default **`on`**) — toggles default **`var(--color-background-surface-component)`** base fill
   - `headerColorAndBorder` (Figma **`colorAndBorder`**): `on | off` (maps from boolean; default **`on`** / **`true`**)
   - `columnResizeEnabled` (product / Storybook): `on | off` (default **`off`**) — trailing-edge resize hit target + width state; Figma still shows only the **1×24** divider rail as visible chrome.
   - `freezeUntilColumnKey`: `string | null` — when set, enables **three-pane** freeze layout (see **Scroll & viewport blueprint**); inclusive freeze through this column key.
-  - **Column header chrome** (`DatagridColumnHeader` / `th`): **height `48px` total** (no **51px** drift); **host** **`padding-left: 16px`**, **`padding-top` / `bottom: 0`**; **title row** (**37721:114673**): **`padding: 0 8px 0 0`**, **`gap: 12px`**, **`align-items: center`** in **48px** row, title **20px** line box; **trailing column edge** draws the **1px × 24px** **`var(--color-border-light)`** rail (**decorative**); optional **transparent** resize strip when **`columnResizeEnabled`** (see **Layout → Resize**); **no** extra vertical rule **between** **sort** and **filter**; **filter** (**37721:114677**): **`38×38`**, **`padding: 12px`**, **14×14** **`Icon`**; **`colorAndBorder=true`**: fill **`var(--color-background-gray-neutral-lighter)`**, **1px** **`var(--color-border-light)`** **top** + **bottom**; **data** headers add **leading** **1px × 24px** **`var(--color-border-light)`** rail per **`37721:114663`**; **`colorAndBorder=false`**: fill **`var(--color-background-component)`**, same **leading** rail on data headers, **no** full-cell top/bottom on Text minimal path.
+  - **Column header chrome** (`DatagridColumnHeader` / `th`): **height `48px` total** (no **51px** drift); **host** **`padding-left: 16px`**, **`padding-top` / `bottom: 0`**; **title row** (**37721:114673**): **`padding: 0 8px 0 0`**, **`gap: 12px`**, **`align-items: center`** in **48px** row, title **20px** line box; **trailing column edge** draws the **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail (**decorative**); optional **transparent** resize strip when **`columnResizeEnabled`** (see **Layout → Resize**); **no** extra vertical rule **between** **sort** and **filter**; **filter** (**37721:114677**): **`38×38`**, **`padding: 12px`**, **14×14** **`Icon`**; **`colorAndBorder=true`**: fill **`var(--color-background-gray-neutral-lighter)`**, **1px** **`var(--color-border-gray-neutral-light)`** **top** + **bottom**; **data** headers add **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail per **`37721:114663`**; **`colorAndBorder=false`**: fill **`var(--color-background-surface-component)`**, same **leading** rail on data headers, **no** full-cell top/bottom on Text minimal path.
   - data columns honor min-width `90px`.
-  - **Body row chrome** (`DatagridRow` / body `td`): height **40px** (Figma **`Grid height/Cell`**); **idle** fill **`var(--color-background-component)`** on **each cell** (not `transparent` when `rowBackgroundLayer` is on); bottom divider **1px** **`var(--color-border-light)`** when `rowShowBottomBorder` is on; hover/selected/press fills and vertical accent per **States** tables and Figma **`37721:114580`**.
+  - **Body row chrome** (`DatagridRow` / body `td`): height **40px** (Figma **`Grid height/Cell`**); **idle** fill **`var(--color-background-surface-component)`** on **each cell** (not `transparent` when `rowBackgroundLayer` is on); bottom divider **1px** **`var(--color-border-gray-neutral-light)`** when `rowShowBottomBorder` is on; hover/selected/press fills and vertical accent per **States** tables and Figma **`37721:114580`**.
   - `SettingsColumn` width is fixed `40px` and pinned.
   - **Last data column** `<col>` uses **`width: auto`** (sole slack column); chrome **48**/**40** (Figma **`37721:113987`**).
   - selection column and settings column do not participate in horizontal scrolling.
@@ -1287,8 +1287,8 @@ Variant matrix:
   - title/value overflow uses ellipsis in constrained widths (see **Column title overflow** above).
   - **Sort** icons: **`Icon`** with **`shapeName`** **`col-sort-up-16`** / **`col-sort-down-16`** (files **`assets/icons/col-sort-up-16.svg`**, **`assets/icons/col-sort-down-16.svg`**); rendered box **12×12**; hit area may be larger (e.g. **20×20** button).
   - **FilterToggle** (`.Filter for table`, **`37721:114677`** / **`37721:114635`**): **38×38** control, **12px** padding, **14×14** **`Icon`**; state/**`shapeName`** mapping (see **States** tables):
-    - default: `filter` + **`var(--color-icon-neutral)`**
-    - hover (pointer or keyboard focus while closed): `filter-solid` + **`var(--color-icon-neutral)`**
+    - default: `filter` + **`var(--color-icon-gray-neutral-base)`**
+    - hover (pointer or keyboard focus while closed): `filter-solid` + **`var(--color-icon-gray-neutral-base)`**
     - selected (**`filterActive`** / applied criteria, menu closed): `filter-solid` + **`var(--color-icon-brand-base)`**
     - press (`:active` / pointer down): `filter-solid` + **`var(--color-icon-brand-stronger)`**
     - **Precedence (codegen):** press **>** hover|focus **>** filterActive **>** default; clear press on **global** `pointerup` / `pointercancel`.
@@ -1296,7 +1296,7 @@ Variant matrix:
 - Behavior contract:
   - **Shell layout:** `DatagridRoot` occupies the **container box** (**`37721:112482`**); **only** the **body row stack** scrolls vertically; **header** (and optional **footer** outside the scroll clip) remain **stable** in view.
   - sort toggles ascending/descending for active column.
-  - column resize (optional): pointer-drag on the trailing resize zone updates column widths (**`<col>`** / **`th`**/**`td`** as applicable), clamps to **`minWidth`**, emits **`onColumnResize`**; the **1×24** **`var(--color-border-light)`** rail remains the only **visible** divider (resize handle is non-painted or uses a subtle focus/hover affordance only).
+  - column resize (optional): pointer-drag on the trailing resize zone updates column widths (**`<col>`** / **`th`**/**`td`** as applicable), clamps to **`minWidth`**, emits **`onColumnResize`**; the **1×24** **`var(--color-border-gray-neutral-light)`** rail remains the only **visible** divider (resize handle is non-painted or uses a subtle focus/hover affordance only).
   - reorder emits updated column order; suppress **`dragstart`** when the event target is inside **sort**, **filter**, or **resize** controls so filters remain clickable.
   - settings popup controls column visibility and enforces always-visible columns.
   - row click toggles optional detail panel (open on first click, close on second click on same row); emits `onRowClick` with row key.
@@ -1321,9 +1321,9 @@ Variant matrix:
   - hidden column requested for non-hideable key -> ignore and keep visible.
 - Validation checklist:
   - [ ] table + treeview modes are both represented.
-  - [ ] Body row idle: **each** `td` uses **`var(--color-background-component)`** (not `transparent`) when `rowBackgroundLayer` is on.
-  - [ ] Body row hover (interactive): **`var(--color-background-brand-lighter)`**; read-only hover: **`var(--color-background-surface-1)`**.
-  - [ ] Body row selected: **`var(--color-background-brand-lighter)`**; selected+press: **`var(--color-background-brand-light)`**.
+  - [ ] Body row idle: **each** `td` uses **`var(--color-background-surface-component)`** (not `transparent`) when `rowBackgroundLayer` is on.
+  - [ ] Body row hover (interactive): **`var(--color-background-brand-lighter-slate)`**; read-only hover: **`var(--color-background-surface-primary)`**.
+  - [ ] Body row selected: **`var(--color-background-brand-lighter-slate)`**; selected+press: **`var(--color-background-brand-light-slate)`**.
   - [ ] When `rowVerticalIndicator` on: **4px** leading **`var(--color-border-brand-base)`** only for **selected** / **selected-press**; never for default/hover/hover-readonly.
   - [ ] **Chrome + slack (codegen-critical):** grow sole **`<col width="auto">`**; never **`width:0`**; with **`columnResizeEnabled`**, grow not fixed **`Npx`** in `<colgroup>` until user resize completes.
   - [ ] **Selection** **`th`** = **48px** in DevTools; inner host **`width:100%`** (no gap before Name divider); body **`12px 16px`** + **16×16** control.
@@ -1334,8 +1334,8 @@ Variant matrix:
   - [ ] **Settings** **`th`** = **40px**; **16×16** gear centered; **no** leading chrome `::before` divider; body **`padding-block: 12px`**.
   - [ ] Last data column absorbs extra width; no spacer column before `SettingsColumn`; no trailing white gutter when viewport is wider than sum of fixed columns (Figma **`37721:113987`**).
   - [ ] row click toggles detail panel open/closed when `detailsPanel: attached`; interactive controls do not bubble row click.
-  - [ ] Column header: **`colorAndBorder=true`** uses **`var(--color-background-gray-neutral-lighter)`** + **top/bottom** **`var(--color-border-light)`**; **`false`** uses **`var(--color-background-component)`** without full-cell top/bottom on Text path; data columns show **leading** **1px × 24px** **`var(--color-border-light)`** rail.
-  - [ ] Column header: **cell height exactly `48px`**; host **`pl-16`** only (no stacked host **`py-5`** + title **`py-9`**); title row **`pr-8`**, **`align-items: center`** in **48px** row, title **20px** line box; **no** divider **between** sort and filter; **trailing** **1×24** **`var(--color-border-light)`** column rail; optional **transparent** resize strip when **`columnResizeEnabled`**; filter **`37721:114677`** **38×38** **`p-12`** **14×14** **`Icon`**; sort/filter/settings use **`Icon`** + **`shapeName`** from **`assets/icons`**; **selection radio** + **settings** use **inner** flex wrappers for centering (**`th`/`td`** stay **`table-cell`**).
+  - [ ] Column header: **`colorAndBorder=true`** uses **`var(--color-background-gray-neutral-lighter)`** + **top/bottom** **`var(--color-border-gray-neutral-light)`**; **`false`** uses **`var(--color-background-surface-component)`** without full-cell top/bottom on Text path; data columns show **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail.
+  - [ ] Column header: **cell height exactly `48px`**; host **`pl-16`** only (no stacked host **`py-5`** + title **`py-9`**); title row **`pr-8`**, **`align-items: center`** in **48px** row, title **20px** line box; **no** divider **between** sort and filter; **trailing** **1×24** **`var(--color-border-gray-neutral-light)`** column rail; optional **transparent** resize strip when **`columnResizeEnabled`**; filter **`37721:114677`** **38×38** **`p-12`** **14×14** **`Icon`**; sort/filter/settings use **`Icon`** + **`shapeName`** from **`assets/icons`**; **selection radio** + **settings** use **inner** flex wrappers for centering (**`th`/`td`** stay **`table-cell`**).
   - [ ] **Scroll (split):** **`.headerBand`** fixed — **no** vertical scroll; **`.bodyViewport`** owns **`overflow-y: auto`**; horizontal scroll on **`.bodyViewport`** (unified) or **`.scrollablePane`** only (freeze).
   - [ ] **Horizontal scrollbar:** anchored to **bottom of body viewport** (above footer), not under last row — body panes use **`min-height: 100%`**.
   - [ ] **`scrollbar-gutter: auto`** on body viewport — **no** permanent right gutter strip beside settings column.
@@ -1418,24 +1418,24 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 
 **Sort icon**
 - **Wrapper size**: `12×12px` — do NOT use `20×20px`; a larger wrapper inflates the hit target and shifts layout
-- **Hover color**: use `var(--color-icon-neutral-strong)` on hover, `var(--color-icon-brand-stronger)` on selected+hover — add `.iconButton:hover .sortIcon` and `.iconButton[data-sorted="true"]:hover` rules in `IdsDataGrid.module.css`
+- **Hover color**: use `var(--color-icon-gray-neutral-strong)` on hover, `var(--color-icon-brand-stronger)` on selected+hover — add `.iconButton:hover .sortIcon` and `.iconButton[data-sorted="true"]:hover` rules in `IdsDataGrid.module.css`
 - **`data-sorted` attribute**: add `data-sorted={isSorted ? "true" : undefined}` to the sort `<button>` in `IdsDataGrid.tsx`; required for CSS `[data-sorted="true"]` selectors to work
 - **Visibility**: always visible — do NOT apply `opacity: 0` hide-on-default (product decision)
 
 **Filter icon**
-- **Hover color**: `var(--color-icon-neutral-strong)` — do NOT use `var(--color-icon-neutral)` (identical to default, no visual feedback)
+- **Hover color**: `var(--color-icon-gray-neutral-strong)` — do NOT use `var(--color-icon-gray-neutral-base)` (identical to default, no visual feedback)
 - **Selected vs hover priority**: in `resolveFilterToggleVisual`, check `resolveIdsDataGridColumnFilterActive()` BEFORE `filterHoverKey`/`filterFocusKey`; wrong order causes the icon to show gray instead of blue when an active filter column is hovered
 - **Size in open menu tab**: use `padding: 11px 11px 12px` on `.filterPopupIconTab`, NOT `padding: 12px` — the tab has 3×1px borders; with `box-sizing: border-box` and `padding: 12px` the content area is only 12×13px, causing the icon to flex-shrink below 14×14
 - **Mask size on filter icon**: the filter SVG has a 12:14 natural ratio; the `Icon` default `mask-size: contain` renders it 12px wide instead of 14×14. Fix: add `.filterIcon span, .filterPopupIconTab span { mask-size: 14px 14px !important; -webkit-mask-size: 14px 14px !important; }` in `IdsDataGrid.module.css` — applies to both the header toggle icon and the open-menu tab icon
 
 **Pagination / Footer**
-- **Background**: use `var(--color-background-surface-1)` for both the `.footer` wrapper in `IdsDataGrid.module.css` and the `IdsPagination` component via `background="gray"` prop in `IdsDataGrid.tsx` — do NOT use `var(--color-background-component)` for the datagrid footer row
-- **Border**: footer has top border `1px solid var(--color-border-accessible)`
+- **Background**: use `var(--color-background-surface-primary)` for both the `.footer` wrapper in `IdsDataGrid.module.css` and the `IdsPagination` component via `background="gray"` prop in `IdsDataGrid.tsx` — do NOT use `var(--color-background-surface-component)` for the datagrid footer row
+- **Border**: footer has top border `1px solid var(--color-border-gray-neutral-base)`
 
 **Filter panels — common issues**
 - **Font-weight**: all filter text elements (labels, inputs, options) use `font-weight: 400` — do NOT use `font-weight: 500`
 - **Search icon**: slug `search-16`, rendered `16×16px` with no wrapper styles (no display/align-items/justify-content on the icon itself)
-- **Dismiss/clear button**: icon slug `ctrl-close-16`, rendered `12×12px`, color `var(--color-icon-accessible)` — visible only when search query is non-empty; click clears. Same contract on Column Search, Combobox-SingleSelect, and Combobox-Multiselect filter search inputs (aligned with DropdownMenu search clear).
+- **Dismiss/clear button**: icon slug `ctrl-close-16`, rendered `12×12px`, color `var(--color-icon-gray-neutral-accessible)` — visible only when search query is non-empty; click clears. Same contract on Column Search, Combobox-SingleSelect, and Combobox-Multiselect filter search inputs (aligned with DropdownMenu search clear).
 
 **Date / Date and Time filters — preset row summary**
 - **Bug (fixed)**: `modeShowsSummary` incorrectly excluded `"all"` — correct guard is `mode !== "specific-date" && mode !== "custom-range"`. Do NOT add `mode !== "all"`.
@@ -1443,17 +1443,17 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 - **Hover tracking**: add `const [hoverMode, setHoverMode] = useState<Mode | null>(null)` in the panel component; attach `onMouseEnter={() => setHoverMode(mode)}` / `onMouseLeave={() => setHoverMode(null)}` to each `.optionRow` div.
 
 **Date / Date and Time / Numeric filters — option row states**
-- **hover**: `.optionRow:not(:has(.radioInput:disabled)):hover` — `background: var(--color-background-controls-brand-lighter)` + `box-shadow: inset 0 1px 0 0 var(--color-border-brand-base), inset 0 -1px 0 0 var(--color-border-brand-base)`. Exclude disabled rows via `:not(:has(.radioInput:disabled))`.
+- **hover**: `.optionRow:not(:has(.radioInput:disabled)):hover` — `background: var(--color-background-controls-lighter)` + `box-shadow: inset 0 1px 0 0 var(--color-border-brand-base), inset 0 -1px 0 0 var(--color-border-brand-base)`. Exclude disabled rows via `:not(:has(.radioInput:disabled))`.
 - **focus (keyboard only)**: `.optionRow:has(.radioInput:focus-visible)` — `outline: 2px solid var(--color-border-brand-base); outline-offset: -2px` on the row. Remove any `.radioRoot`-level focus ring — row-level ring supersedes it.
-- **disabled**: `.optionRow:has(.radioInput:disabled)` — radio: `border-color: var(--color-border-disabled)`, `background: var(--color-background-disabled)`; dot: `background: var(--color-icon-disabled)`; label: `color: var(--color-text-disabled)`, `cursor: not-allowed`.
+- **disabled**: `.optionRow:has(.radioInput:disabled)` — radio: `border-color: var(--color-border-gray-disabled)`, `background: var(--color-background-disabled)`; dot: `background: var(--color-icon-gray-disabled)`; label: `color: var(--color-text-gray-disabled)`, `cursor: not-allowed`.
 
 **Column Search filter**
 - **Figma:** `37822:91073` (L-frame) + search field **`37822:91077`** (Search Box Properties, Large 40px)
 - **Panel width**: preferred `300px`; clamp with `--ids-datagrid-filter-panel-max-width` so the menu stays inside the datagrid (Name / first columns)
 - **Row**: `width: 100%`; `height: 40px`; `padding: var(--padding-padding-6) var(--padding-padding-16)`; `align-items: center`; **no** flex gap (icon→text via input `padding-left: 8px`)
 - **Icon**: shared `Icon` `search-16` (mask + `currentColor`); CSS `color: var(--color-icon-brand-base)`
-- **Clear**: shared `Icon` `ctrl-close-16` `12×12` (mask + `currentColor`); button `color: var(--color-icon-accessible)` — only when query non-empty; click clears
-- **Input**: text/placeholder `var(--color-text-neutral)`
+- **Clear**: shared `Icon` `ctrl-close-16` `12×12` (mask + `currentColor`); button `color: var(--color-icon-gray-neutral-accessible)` — only when query non-empty; click clears
+- **Input**: text/placeholder `var(--color-text-gray-neutral)`
 
 **Multiselect / Single-select filters**
 - **Panel width**: `269px` (min-width/max-width)

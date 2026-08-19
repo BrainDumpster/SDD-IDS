@@ -80,7 +80,7 @@ const meta: Meta<typeof ChatInputBox> = {
         style={{
           width: 370,
           padding: storyDecoratorPadding,
-          background: "var(--color-background-surface-1)",
+          background: "var(--color-background-surface-primary)",
           boxSizing: "border-box",
         }}
       >
@@ -225,7 +225,7 @@ export const ElementStateMatrix: Story = {
             style={{
               margin: "0 0 8px",
               fontSize: 12,
-              color: "var(--color-text-neutral)",
+              color: "var(--color-text-gray-neutral)",
             }}
           >
             {caption} — {SYNAPSE_CHAT_INPUT_BOX_ELEMENT_STATE_NODES[state]}

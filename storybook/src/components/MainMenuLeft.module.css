@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 700px;
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
   padding-top: var(--padding-padding-8);
@@ -91,7 +91,7 @@
   display: inline-block;
   box-sizing: border-box;
   background-color: currentColor;
-  color: var(--color-icon-neutral-strong, #252525);
+  color: var(--color-icon-gray-neutral-strong, #252525);
 }
 
 .content {
@@ -129,11 +129,11 @@
 }
 
 .menuLeadButton:hover {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
 }
 
 .menuLeadButton:active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
 }
 
 .menuLeadButton:focus-visible {
@@ -182,8 +182,8 @@
   gap: var(--spacing-space-16);
   border-top: none;
   border-bottom: none;
-  border-left: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-right: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-left: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -195,7 +195,7 @@
   flex-shrink: 0;
   display: inline-block;
   background-color: currentColor;
-  color: var(--color-icon-neutral-strong, #252525);
+  color: var(--color-icon-gray-neutral-strong, #252525);
 }
 
 .primaryLabel {
@@ -204,7 +204,7 @@
   font-size: var(--font-size-body-1);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-24);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }
 
@@ -286,40 +286,40 @@
   height: 32px;
   border-top: none;
   border-bottom: none;
-  border-left: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-right: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-left: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: transparent;
   text-align: left;
   padding: var(--padding-padding-6, 6px) var(--padding-padding-58, 58px);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-weight: 400;
   cursor: pointer;
 }
 
 .secondaryRowSelected {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
   font-weight: 400;
 }
 
 .secondaryInteractive:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
 }
 
 .secondaryInteractive:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
 }
 
 .secondaryInteractive.secondaryRowSelected:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .secondaryInteractive.secondaryRowSelected:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .secondaryInteractive:focus-visible {
@@ -335,7 +335,7 @@
   min-height: 49px;
   max-height: 49px;
   flex-shrink: 0;
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   padding: var(--padding-padding-16) var(--padding-padding-24);
   display: flex;
   align-items: center;
@@ -374,7 +374,7 @@
   flex-shrink: 0;
   display: inline-block;
   box-sizing: border-box;
-  color: var(--color-icon-neutral, #616161);
+  color: var(--color-icon-gray-neutral-base, #616161);
 }
 
 .focusRing {
@@ -402,20 +402,20 @@
   top: 0;
   bottom: 0;
   width: calc(4px + var(--border-width-border-1));
-  background: var(--color-border-brand-base);
+  background: var(--color-border-brand-strong);
 }
 
 .selected .selectedInset {
   display: block;
 }
 
-/* IDS default: selected + selected-focus use brand-base inset. */
+/* IDS default: selected + selected-focus use brand-strong inset. */
 .stateSelected .selectedInset {
-  background: var(--color-border-brand-base);
+  background: var(--color-border-brand-strong);
 }
 
 .stateSelectedFocus .selectedInset {
-  background: var(--color-border-brand-base);
+  background: var(--color-border-brand-strong);
 }
 
 .stateDefault,
@@ -424,11 +424,11 @@
 }
 
 .stateHover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .statePress {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .statePress .primaryLabel,
@@ -443,7 +443,7 @@
 
 .stateSelected,
 .stateSelectedFocus {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .stateSelected .primaryIcon,
@@ -452,7 +452,7 @@
 }
 
 .secondaryParentSelected {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .secondaryParentSelected .primaryIcon {
@@ -480,20 +480,20 @@
 /* Synapse Figma `47807:8058` / `47807:8043` — controls fills; expanded selected inset brand-base. */
 .programmeSynapse .stateHover,
 .programmeSynapse .interactive:hover {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
 }
 
 .programmeSynapse .statePress,
 .programmeSynapse .interactive:active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
 }
 
 .programmeSynapse .stateSelected {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
 }
 
 .programmeSynapse .stateSelectedFocus {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .programmeSynapse.expanded .stateSelected .selectedInset {
@@ -502,7 +502,7 @@
 
 .programmeSynapse.collapsed .stateSelected .selectedInset,
 .programmeSynapse.collapsed .stateSelectedFocus .selectedInset {
-  background: var(--color-border-brand-base);
+  background: var(--color-border-brand-strong);
 }
 
 .programmeSynapse .stateSelected .primaryIcon,
@@ -520,22 +520,22 @@
 /* Synapse secondary — Figma `50512:84338` (selected), `50514:23038` (hover): no inset; neutral-strong label. */
 .programmeSynapse .secondaryRow {
   padding: 0 var(--padding-padding-16) 0 var(--padding-padding-58);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-weight: 400;
 }
 
 .programmeSynapse .secondaryRowSelected,
 .programmeSynapse .secondaryInteractive:hover,
 .programmeSynapse .secondaryInteractive.secondaryRowSelected:hover {
-  background: var(--color-background-controls-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-controls-lighter);
+  color: var(--color-text-gray-neutral-strong);
   font-weight: 400;
 }
 
 .programmeSynapse .secondaryInteractive:active,
 .programmeSynapse .secondaryInteractive.secondaryRowSelected:active {
-  background: var(--color-background-controls-brand-light);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-controls-light);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .programmeSynapse .secondaryInteractive.secondaryRowSelected:focus-visible {
@@ -543,8 +543,8 @@
 }
 
 .programmeSynapse .secondaryRowSnapshotHover {
-  background: var(--color-background-controls-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-controls-lighter);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 /* Secondary row with overflow trigger — Figma `50514:23038` composed usage. */
@@ -604,29 +604,29 @@
 }
 
 .programmeSynapse .secondaryRowWrap {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-weight: 400;
 }
 
 .programmeSynapse .secondaryRowWrap:hover,
 .programmeSynapse .secondaryRowWrap.secondaryRowSelected,
 .programmeSynapse .secondaryRowWrap.secondaryRowSelected:hover {
-  background: var(--color-background-controls-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-controls-lighter);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .programmeSynapse .secondaryRowWrap:active,
 .programmeSynapse .secondaryRowWrap.secondaryRowSelected:active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
 }
 
 .programmeSynapse .secondaryContextButton:hover {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
   color: var(--color-icon-brand-strong);
 }
 
 .programmeSynapse .secondaryContextButton:active {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
   color: var(--color-icon-brand-strong);
 }
 
@@ -637,12 +637,12 @@
 
 .programmeSynapse .secondaryContextButton:disabled {
   background: transparent;
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
   cursor: not-allowed;
 }
 
 .programmeSynapse .secondaryRowWrapSnapshotHover {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
 }
 
 .programmeSynapse .secondaryRowWrapSnapshotHover .secondaryContextButton,
@@ -652,17 +652,17 @@
 }
 
 .secondaryContextButtonStateHover {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
   color: var(--color-icon-brand-strong);
 }
 
 .secondaryContextButtonStatePress {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
   color: var(--color-icon-brand-strong);
 }
 
 .secondaryContextButtonStateDisabled {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
   cursor: not-allowed;
 }
 
@@ -672,11 +672,11 @@
 }
 
 .interactive:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .interactive:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .interactive:active .primaryLabel {

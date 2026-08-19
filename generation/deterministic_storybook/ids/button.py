@@ -20,36 +20,36 @@ def _ids_state_harness_css(focus_outline_width: str) -> str:
     """StateHarness overrides match components/ids/button/design-spec.md token tables."""
     return f"""
         .sbSimButton[data-sim-state="hover"][data-sim-variant="primary"]:not(:disabled) {{
-          background: var(--color-background-controls-brand-strong);
-          border-color: var(--color-border-transparent-brand);
+          background: var(--color-background-controls-strong);
+          border-color: var(--color-border-brand-transparent-brand);
         }}
         .sbSimButton[data-sim-state="press"][data-sim-variant="primary"]:not(:disabled) {{
-          background: var(--color-background-controls-brand-stronger);
-          border-color: var(--color-border-transparent-brand);
+          background: var(--color-background-controls-stronger);
+          border-color: var(--color-border-brand-transparent-brand);
         }}
         .sbSimButton[data-sim-state="hover"][data-sim-variant="secondary"]:not(:disabled) {{
-          background: var(--color-background-controls-brand-lighter);
+          background: var(--color-background-controls-lighter);
           border-color: var(--color-border-brand-base);
         }}
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {{
-          background: var(--color-background-controls-brand-light);
+          background: var(--color-background-controls-light);
           border-color: var(--color-border-brand-base);
         }}
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {{
-          background: var(--color-background-controls-brand-lighter);
+          background: var(--color-background-controls-lighter);
           border-color: var(--color-border-brand-base);
         }}
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {{
-          background: var(--color-background-controls-brand-light);
+          background: var(--color-background-controls-light);
           border-color: var(--color-border-brand-base);
         }}
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {{
           background: var(--color-background-alerting-critical-strong);
-          border-color: var(--color-border-alerting-transparent-critical);
+          border-color: var(--color-border-alerting-critical-transparent-base);
         }}
         .sbSimButton[data-sim-state="press"][data-sim-variant="destructive"]:not(:disabled) {{
           background: var(--color-background-alerting-critical-stronger);
-          border-color: var(--color-border-alerting-transparent-critical);
+          border-color: var(--color-border-alerting-critical-transparent-base);
         }}
         .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {{
           outline: {focus_outline_width} solid var(--color-border-brand-base);

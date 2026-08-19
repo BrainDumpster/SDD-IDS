@@ -20,40 +20,22 @@ def generate_ids_badge_story(
     import_path = "../../../../storybook/src/components/IdsBadge"
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
-import {{
-  BADGE_SPEC_ACCURATE_DEFAULTS,
-  BADGE_TYPES,
-  IDS_BADGE_DESIGN_SPEC_PATH,
-}} from "@component-contracts/ids/badge.contract";
-import {{ SPEC_ACCURATE_DESIGN_STORY }} from "@component-contracts/common/story-meta";
 import {{ IdsBadge as {component_name} }} from "{import_path}";
-
-const rowStyle = {{
-  display: "flex",
-  gap: 12,
-  alignItems: "center",
-  flexWrap: "wrap",
-}} as const;
 
 const meta: Meta<typeof {component_name}> = {{
   title: "{options.title_prefix}/Badge",
   component: {component_name},
-  parameters: {{
-    layout: "centered",
-    docs: {{
-      description: {{
-        component: `IDS Badge per ${{IDS_BADGE_DESIGN_SPEC_PATH}}.`,
-      }},
-    }},
-  }},
+  parameters: {{ layout: "centered" }},
   args: {{
-    value: BADGE_SPEC_ACCURATE_DEFAULTS.value,
-    type: BADGE_SPEC_ACCURATE_DEFAULTS.type,
-    ariaLabel: BADGE_SPEC_ACCURATE_DEFAULTS.ariaLabel,
+    value: 8,
+    type: "default",
   }},
   argTypes: {{
     value: {{ control: "text" }},
-    type: {{ control: "select", options: [...BADGE_TYPES] }},
+    type: {{
+      control: "select",
+      options: ["default", "critical", "warning", "disabled", "success"],
+    }},
     ariaLabel: {{ control: "text" }},
   }},
 }};
@@ -61,25 +43,25 @@ const meta: Meta<typeof {component_name}> = {{
 export default meta;
 type Story = StoryObj<typeof {component_name}>;
 
-export const SpecAccurateDesign: Story = {{
-  name: SPEC_ACCURATE_DESIGN_STORY,
+export const Playground: Story = {{
+  render: (args) => <{component_name} {{...args}} />,
 }};
 
 export const Types: Story = {{
   render: () => (
-    <div style={{rowStyle}}>
+    <div className="sbBadgeRow">
       <{component_name} value={{1}} type="default" />
       <{component_name} value={{4}} type="critical" />
       <{component_name} value={{12}} type="warning" />
-      <{component_name} value={{99}} type="success" />
       <{component_name} value={{7}} type="disabled" />
+      <{component_name} value={{99}} type="success" />
     </div>
   ),
 }};
 
 export const ContentSizing: Story = {{
   render: () => (
-    <div style={{rowStyle}}>
+    <div className="sbBadgeRow">
       <{component_name} value={{1}} type="default" />
       <{component_name} value={{12}} type="default" />
       <{component_name} value={{128}} type="default" />
@@ -88,63 +70,59 @@ export const ContentSizing: Story = {{
   ),
 }};
 
-export const LayoutGeometry: Story = {{
-  name: "Layout Geometry",
-  parameters: {{
-    docs: {{
-      description: {{
-        story:
-          "Single-digit badge: 18×18px content box + 1px border on each side = 20×20px total outer size.",
-      }},
-    }},
-  }},
+export const BackgroundShowcase: Story = {{
   render: () => (
-    <div style={{{{ display: "grid", gap: 16, fontFamily: "inherit" }}}}>
-      <div style={{{{ ...rowStyle, gap: 16 }}}}>
-        <{component_name} value={{1}} type="default" />
-        <{component_name} value={{12}} type="default" />
-        <{component_name} value={{128}} type="default" />
+    <div className="sbBadgeCol">
+      <div className="sbBadgeSurfaceBlue">
+        <{component_name} value={{3}} type="default" />
+        <{component_name} value={{8}} type="critical" />
+        <{component_name} value={{12}} type="warning" />
       </div>
-      <p style={{{{ margin: 0, fontSize: 12, color: "var(--color-text-subtle)", maxWidth: "36rem" }}}}>
-        Content box: <strong>18px</strong> × <strong>18px</strong> (single digit) · border{" "}
-        <strong>1px</strong> on all sides via <code>var(--border-width-border-1)</code> · total outer{" "}
-        <strong>20px</strong> × <strong>20px</strong> (<code>box-sizing: content-box</code>).
-      </p>
+      <div className="sbBadgeSurfaceGray">
+        <{component_name} value={{3}} type="default" />
+        <{component_name} value={{8}} type="critical" />
+        <{component_name} value={{12}} type="warning" />
+      </div>
     </div>
   ),
 }};
 
-export const BackgroundShowcase: Story = {{
+export const LayoutTokens: Story = {{
   render: () => (
-    <div style={{{{ display: "grid", gap: 12 }}}}>
-      <div
-        style={{{{
-          ...rowStyle,
-          padding: 12,
-          borderRadius: 6,
-          background: "var(--color-background-brand-base)",
-        }}}}
-      >
-        <{component_name} value={{3}} type="default" />
-        <{component_name} value={{8}} type="critical" />
-        <{component_name} value={{12}} type="warning" />
-      </div>
-      <div
-        style={{{{
-          ...rowStyle,
-          padding: 12,
-          borderRadius: 6,
-          background: "var(--color-background-gray-subtle)",
-          border: "1px solid var(--color-border-subtle)",
-          ["--ids-badge-warning-border-color" as string]:
-            "var(--color-border-alerting-minor-transparent)",
-        }}}}
-      >
-        <{component_name} value={{3}} type="default" />
-        <{component_name} value={{8}} type="critical" />
-        <{component_name} value={{12}} type="warning" />
-      </div>
-    </div>
+    <style>{{
+      `
+      .sbBadgeRow {{
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }}
+      .sbBadgeCol {{
+        display: grid;
+        gap: 12px;
+      }}
+      .sbBadgeSurfaceBlue {{
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 12px;
+        border-radius: 6px;
+        background: var(--color-background-brand-base);
+      }}
+      .sbBadgeSurfaceGray {{
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 12px;
+        border-radius: 6px;
+        background: var(--color-background-gray-subtle);
+        border: 1px solid var(--color-border-subtle);
+        --ids-badge-warning-border-color: var(--color-border-alerting-minor-base);
+      }}
+      `
+    }}</style>
   ),
 }};
 """

@@ -35,7 +35,7 @@
   flex: 1 1 auto;
   align-self: stretch;
   min-width: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   pointer-events: none;
 }
 
@@ -46,10 +46,10 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral);
-  background: var(--color-background-surface-2);
+  color: var(--color-text-gray-neutral);
+  background: var(--color-background-surface-secondary);
   border: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   cursor: pointer;
   transition: all 150ms ease;
   outline: none;
@@ -80,7 +80,7 @@
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .tabSecondary::after {
@@ -88,12 +88,12 @@
 }
 
 .tab:hover:not(.selected):not([data-disabled]) {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .tab:active:not(.selected):not([data-disabled]) {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
 }
 
@@ -119,7 +119,7 @@
   position: absolute;
   left: 0;
   width: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
   pointer-events: none;
   z-index: 0;
 }
@@ -139,18 +139,18 @@
 /* Primary selected: top brand-dark segment (inside 38px row — inset shadow, not border). */
 .tabPrimary.selected {
   border-bottom: none;
-  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
+  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong);
 }
 
 .tabPrimary.selected:focus-visible {
   border-radius: var(--corner-radius-radius-4);
   box-shadow:
-    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark),
+    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong),
     inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
 }
 
 .selected {
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   color: var(--color-text-brand-strong);
   /* Never draw the accessible baseline under the active tab (elevated or transparent). */
   border-bottom: none;
@@ -173,7 +173,7 @@
   left: 0;
   right: 0;
   height: var(--border-width-border-thick);
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-strong);
   pointer-events: none;
   bottom: 0;
 }
@@ -212,7 +212,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .closeIcon {
@@ -242,10 +242,10 @@
   gap: var(--component-gap-s, var(--spacing-space-8));
   padding: var(--padding-padding-8) var(--padding-padding-12);
   height: 38px;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   border: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
-  color: var(--color-text-neutral);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
   cursor: pointer;
   flex-shrink: 0;
   position: relative;
@@ -265,7 +265,7 @@
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .moreTriggerSecondary::after {
@@ -273,18 +273,18 @@
 }
 
 .moreTrigger:active:not(.moreTriggerSelected) {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
 }
 
 .moreTrigger:hover {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .moreTrigger[data-popup-open],
 .moreTrigger[data-popup-open]:hover {
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   color: var(--color-text-brand-strong);
 }
 
@@ -305,7 +305,7 @@
   left: 0;
   right: 0;
   height: var(--border-width-border-thick);
-  background: var(--color-border-brand-dark);
+  background: var(--color-border-brand-strong);
   pointer-events: none;
   bottom: 0;
 }
@@ -318,8 +318,8 @@
 }
 
 .moreMenu {
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
   box-shadow:
     var(--shadow-drop-shadow-8-x)
     var(--shadow-drop-shadow-8-y)
@@ -331,7 +331,7 @@
 
 .moreItem {
   padding: var(--padding-padding-8) var(--padding-padding-12);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
@@ -348,7 +348,7 @@
   width: auto;
   min-width: 56px;
   height: 38px;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -357,7 +357,7 @@
   cursor: pointer;
   color: var(--color-text-brand-strong);
   flex-shrink: 0;
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   position: relative;
 }
 
@@ -379,7 +379,7 @@
   position: absolute;
   left: 0;
   width: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
   pointer-events: none;
   z-index: 0;
 }
@@ -398,12 +398,12 @@
 
 .moreTriggerPrimary.moreTriggerSelected {
   border-bottom: none;
-  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark);
+  box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong);
 }
 
 .moreTriggerPrimary.moreTriggerSelected:focus-visible {
   box-shadow:
-    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-dark),
+    inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong),
     inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
 }
@@ -416,7 +416,7 @@
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .moreTrigger + .addButton::before {
@@ -428,7 +428,7 @@
 }
 
 .addButton:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
 }
 
@@ -450,7 +450,7 @@
      panel top border (it showed through transparent selected tabs). */
   padding: var(--padding-padding-16) 0;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
 }
 
@@ -469,9 +469,9 @@
   padding: var(--padding-padding-6) var(--padding-padding-8) var(--padding-padding-6)
     var(--padding-padding-16);
   gap: var(--spacing-space-8);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-bottom: none;
-  border-right: var(--border-width-border-1) solid var(--color-border-light);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }
 
 .programmeSynapse .tab::after {
@@ -479,12 +479,12 @@
 }
 
 .programmeSynapse .tab:hover:not([data-disabled]) {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
 }
 
 .programmeSynapse .tab.selected {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
   border-bottom: none;
   /* Figma `47804:187` / `47806:371` — selected tab has no trailing divider. */
@@ -520,9 +520,9 @@
   height: 32px;
   padding: var(--padding-padding-6) var(--padding-padding-8) var(--padding-padding-6)
     var(--padding-padding-16);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-bottom: none;
-  border-right: var(--border-width-border-1) solid var(--color-border-light);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }
 
 .programmeSynapse .moreTrigger::after {
@@ -530,14 +530,14 @@
 }
 
 .programmeSynapse .moreTrigger:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
 }
 
 .programmeSynapse .moreTrigger.moreTriggerSelected,
 .programmeSynapse .moreTrigger[data-popup-open],
 .programmeSynapse .moreTrigger[data-popup-open]:hover {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
   /* Figma `50736:251582` — selected overflow tab has no trailing divider. */
   border-right: none;
@@ -554,7 +554,7 @@
   max-width: 36px;
   height: 32px;
   padding: var(--padding-padding-6) var(--padding-padding-8);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-bottom: none;
 }
 
@@ -563,7 +563,7 @@
 }
 
 .programmeSynapse .addButton:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .programmeSynapse .addIcon {
