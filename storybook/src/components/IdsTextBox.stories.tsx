@@ -114,3 +114,55 @@ export const Password: Story = {
     </div>
   ),
 };
+
+export const ResponsiveTextInput: Story = {
+  name: "Responsive: Text Input",
+  render: () => (
+    <div
+      style={{
+        resize: "horizontal",
+        overflow: "auto",
+        width: 400,
+        minWidth: 70,
+        maxWidth: 720,
+        padding: 12,
+        border: "1px dashed var(--color-border-accessible)",
+        borderRadius: 8,
+      }}
+    >
+      <IdsTextBox
+        componentType="text-input"
+        labelPosition="top"
+        label="Label:"
+        placeholder="Drag the bottom-right handle to resize"
+        helperText="Field fills its container (min 70px, max 700px)."
+      />
+    </div>
+  ),
+};
+
+export const ResponsiveTextArea: Story = {
+  name: "Responsive: Text Area",
+  render: () => (
+    <div
+      style={{
+        resize: "horizontal",
+        overflow: "auto",
+        width: 400,
+        minWidth: 70,
+        maxWidth: 720,
+        padding: 12,
+        border: "1px dashed var(--color-border-accessible)",
+        borderRadius: 8,
+      }}
+    >
+      <IdsTextBox
+        componentType="text-area"
+        labelPosition="top"
+        label="Label:"
+        placeholder="Drag the bottom-right handle to resize"
+        helperText="Text area fills its container (min 70px, max 700px)."
+      />
+    </div>
+  ),
+};
