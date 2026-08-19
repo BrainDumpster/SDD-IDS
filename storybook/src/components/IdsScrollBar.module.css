@@ -66,7 +66,7 @@
 
 .thumb:hover,
 .thumb:focus-visible {
-  background: var(--color-text-neutral);
+  background: var(--color-text-gray-neutral);
 }
 
 .thumbVertical {

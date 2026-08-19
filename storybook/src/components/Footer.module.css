@@ -1,6 +1,6 @@
 .footer {
-  background: var(--color-background-surface-1);
-  border-top: var(--border-width-border-1) solid var(--color-border-lighter);
+  background: var(--color-background-surface-primary);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
   padding: var(--padding-padding-32) var(--padding-padding-24);
   font-family: inherit;
 }
@@ -27,7 +27,7 @@
 
 .link {
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-decoration: none;
   padding: var(--padding-padding-2) 0;
   border-radius: var(--corner-radius-radius-2);
@@ -47,7 +47,7 @@
 .copyright {
   margin-top: var(--spacing-space-24);
   padding-top: var(--padding-padding-16);
-  border-top: var(--border-width-border-1) solid var(--color-border-lighter);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
   font-size: var(--font-size-body-3);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }

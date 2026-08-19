@@ -591,7 +591,7 @@ export function IdsDualListBox({
                   shapeName={icon}
                   style={{ width: 16, height: 16 }}
                   color={
-                    isDefault ? "var(--color-icon-white)" : "var(--color-icon-disabled)"
+                    isDefault ? "var(--color-icon-gray-white)" : "var(--color-icon-gray-disabled)"
                   }
                 />
               </button>
@@ -924,7 +924,7 @@ function DualListBoxListItem({
               color={
                 isSelected || isDragging
                   ? "var(--color-icon-brand-base)"
-                  : "var(--color-icon-neutral)"
+                  : "var(--color-icon-gray-neutral-base)"
               }
             />
           </span>

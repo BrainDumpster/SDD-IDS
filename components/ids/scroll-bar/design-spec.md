@@ -90,8 +90,8 @@ Deterministic slot order (render order):
 |---|---|---|---|
 | `ScrollBarRoot` | default | `var(--color-background-gray-lighter)` | Always visible in Figma sample. |
 | `ScrollBarThumb` | default | `var(--color-background-gray-base)` | `#757575` in light theme. |
-| `ScrollBarThumb` | hover | `var(--color-text-neutral)` | Storybook implementation darkens the thumb on hover/focus. |
-| `ScrollBarThumb` | press | `var(--color-text-neutral)` | Thumb actively dragged (`cursor: grabbing`). |
+| `ScrollBarThumb` | hover | `var(--color-text-gray-neutral)` | Storybook implementation darkens the thumb on hover/focus. |
+| `ScrollBarThumb` | press | `var(--color-text-gray-neutral)` | Thumb actively dragged (`cursor: grabbing`). |
 | `ScrollBarThumb` | focus-visible | `var(--color-background-gray-base)` + focus ring | Add focus ring using system focus tokens. |
 | `ScrollBarDecrementButton` / `ScrollBarIncrementButton` | default | image icon | No state-specific icon color in Figma. |
 
@@ -201,7 +201,7 @@ All six combinations are valid in Figma. The `scrollThumb` value is **demo-only*
   - `cursor: grab`; `:active` → `cursor: grabbing`; `touch-action: none`.
   - Vertical: `width: 10px`, `height: 60px`, absolutely positioned with `left: 2px` and `top` computed from `position`.
   - Horizontal: `height: 10px`, `width: 60px`, `min-width: 16px`, `max-width: 220px`, absolutely positioned with `top: 2px` and `left` computed from `position`.
-  - Hover / `focus-visible` background: `var(--color-text-neutral)`.
+  - Hover / `focus-visible` background: `var(--color-text-gray-neutral)`.
 
 ### Behavior contract
 - `scrollThumb` is a **Storybook/QA initial-position hint** (`start` = 0, `middle` = 0.5, `end` = 1); production derives `position` from scroll offset.
@@ -237,7 +237,7 @@ All six combinations are valid in Figma. The `scrollThumb` value is **demo-only*
 - [ ] Thumb is draggable via pointer events with `setPointerCapture` and `touch-action: none`.
 - [ ] Arrow buttons move the thumb by `0.1` (10% of track) per click.
 - [ ] `scrollThumb` maps to initial `position`: `start = 0`, `middle = 0.5`, `end = 1`.
-- [ ] Thumb hover/focus uses `var(--color-text-neutral)`.
+- [ ] Thumb hover/focus uses `var(--color-text-gray-neutral)`.
 - [ ] Caret icons are `10px` × `10px` and rotated correctly per orientation.
 
 ## Source Mapping

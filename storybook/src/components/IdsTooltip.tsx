@@ -166,7 +166,7 @@ export function IdsTooltip({
                       >
                         <Icon
                           shapeName="ctrl-close-16"
-                          color="var(--color-icon-neutral)"
+                          color="var(--color-icon-gray-neutral-base)"
                           style={{ width: 12, height: 12 }}
                         />
                       </button>

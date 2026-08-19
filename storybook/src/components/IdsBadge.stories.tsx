@@ -64,7 +64,7 @@ export const BackgroundShowcaseManual: Story = {
           background: "var(--color-background-gray-subtle)",
           border: "1px solid var(--color-border-subtle)",
           ["--ids-badge-warning-border-color" as string]:
-            "var(--color-border-alerting-minor-transparent)",
+            "var(--color-border-alerting-minor-base)",
         }}
       >
         <IdsBadge value={3} type="default" />

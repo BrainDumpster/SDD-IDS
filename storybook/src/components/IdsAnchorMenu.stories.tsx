@@ -40,7 +40,7 @@ export const MiddleActive: Story = {
 export const WithPageContent: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 32, padding: 24 }}>
-      <div style={{ flex: 1, color: "var(--color-text-neutral-strong)" }}>
+      <div style={{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}>
         {specAccurateItems.map((item) => (
           <h2
             key={item.href}

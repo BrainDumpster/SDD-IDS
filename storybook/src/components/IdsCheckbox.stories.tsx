@@ -44,7 +44,7 @@ export const FigmaMainMatrix: Story = {
         gap: "12px 16px",
         alignItems: "center",
         fontSize: 12,
-        color: "var(--color-text-neutral-strong)",
+        color: "var(--color-text-gray-neutral-strong)",
       }}
     >
       <div />

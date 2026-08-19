@@ -1,9 +1,9 @@
 .root {
   position: relative;
   overflow: hidden;
-  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
   border-radius: var(--corner-radius-radius-4);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .viewport {
@@ -38,10 +38,10 @@
 .thumb {
   width: 100%;
   border-radius: var(--corner-radius-radius-4);
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   transition: background 150ms ease;
 }
 
 .thumb:hover {
-  background: var(--color-text-neutral);
+  background: var(--color-text-gray-neutral);
 }

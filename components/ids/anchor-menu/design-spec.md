@@ -28,12 +28,12 @@
 - Progress indicator height: 2px
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0672cb
-- Surface background: `var(--color-background-surface-1)` = #f4f4f4
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0672cb
+- Surface background: `var(--color-background-surface-primary)` = #f4f4f4
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
 - Brand strong text: `var(--color-text-brand-strong)` = #055fa9
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0672cb
 
 ### UI Palettes
@@ -43,7 +43,7 @@
 - Display 1/Default: Roboto Light 72px/88px (large anchor titles)
 - Header 5: Roboto Regular 24px/32px (anchor section headers)
 - Body 1: Roboto Regular 16px/24px (anchor menu items)
-- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-neutral-strong)`.
+- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-gray-neutral-strong)`.
 
 ### Token gaps and notes
 - All colors use semantic CSS custom properties for theme consistency
@@ -55,15 +55,15 @@
 ## States (Light Theme)
 | Element | Background | Border | Text |
 |---|---|---|---|
-| Menu Container | transparent | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#4d4d4d) |
+| Menu Container | transparent | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
 | Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-brand-strong)` (#055fa9) |
 | Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
-| Progress Indicator | `var(--color-background-controls-brand-base)` (#0672cb) | transparent | transparent |
+| Progress Indicator | `var(--color-background-controls-base)` (#0672cb) | transparent | transparent |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Surface tokens: `var(--color-background-surface-primary)` (#111619)
 - Text and border colors remain consistent via semantic variables
 - Active item uses brand colors for clear indication
 - Progress indicator maintains visibility

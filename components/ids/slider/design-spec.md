@@ -53,37 +53,37 @@ Verified slider tokens from `22459:38985` and `22505:177044`:
 - `var(--color-icon-brand-strong)` (hover marker)
 - `var(--color-icon-brand-stronger)` (press marker)
 - `var(--color-border-brand-base)` (focus ring)
-- `var(--color-icon-disabled)` (disabled marker/track)
+- `var(--color-icon-gray-disabled)` (disabled marker/track)
 - `var(--color-text-brand-base)` (enabled value-under-thumb text)
-- `var(--color-text-disabled)` (disabled value-under-thumb text)
+- `var(--color-text-gray-disabled)` (disabled value-under-thumb text)
 - `var(--color-background-gray-light)` (unselected rail and disabled unselected small marker fill surface)
-- `var(--color-border-disabled)` (unselected small marker border and disabled outlines)
-- `var(--color-text-white)` (marker inner/focus contrast asset in marker state component)
+- `var(--color-border-gray-disabled)` (unselected small marker border and disabled outlines)
+- `var(--color-text-gray-white)` (marker inner/focus contrast asset in marker state component)
 
 Supporting semantic tokens used by slider compositions:
-- `var(--color-background-component)`
-- `var(--color-border-accessible)`
+- `var(--color-background-surface-component)`
+- `var(--color-border-gray-neutral-base)`
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | Rail (`SliderRail`) | default | `var(--color-background-gray-light)` | none | n/a |
-| Rail (`SliderRail`) | disabled | `var(--color-icon-disabled)` | none | n/a |
+| Rail (`SliderRail`) | disabled | `var(--color-icon-gray-disabled)` | none | n/a |
 | Progress/Range segment | selected | `var(--color-icon-brand-base)` | none | n/a |
-| Progress/Range segment | disabled | `var(--color-icon-disabled)` | none | n/a |
+| Progress/Range segment | disabled | `var(--color-icon-gray-disabled)` | none | n/a |
 | Small marker (`8px`) | selected | `var(--color-icon-brand-base)` | none | n/a |
-| Small marker (`8px`) | not-selected | transparent (outline-only) | `var(--color-border-disabled)` | n/a |
-| Small marker (`8px`) | disabled selected | `var(--color-icon-disabled)` | `var(--color-icon-disabled)` | n/a |
-| Small marker (`8px`) | disabled not-selected | `var(--color-background-gray-light)` | `var(--color-icon-disabled)` | n/a |
+| Small marker (`8px`) | not-selected | transparent (outline-only) | `var(--color-border-gray-disabled)` | n/a |
+| Small marker (`8px`) | disabled selected | `var(--color-icon-gray-disabled)` | `var(--color-icon-gray-disabled)` | n/a |
+| Small marker (`8px`) | disabled not-selected | `var(--color-background-gray-light)` | `var(--color-icon-gray-disabled)` | n/a |
 | Large marker (`16px`) | default | `var(--color-icon-brand-base)` | none | value label `var(--color-text-brand-base)` |
 | Large marker (`16px`) | hover | `var(--color-icon-brand-strong)` | none | value label `var(--color-text-brand-base)` |
 | Large marker (`16px`) | press | `var(--color-icon-brand-stronger)` | none | value label `var(--color-text-brand-base)` |
 | Large marker (`16px`) | focus-visible | marker uses current interactive fill | outer ring `var(--color-border-brand-base)` | value label unchanged |
-| Large marker (`16px`) | disabled | `var(--color-icon-disabled)` | none | value label `var(--color-text-disabled)` |
-| Endpoint label (`SliderMinLabel`/`SliderMaxLabel`) | default | n/a | n/a | `var(--color-text-neutral)` |
+| Large marker (`16px`) | disabled | `var(--color-icon-gray-disabled)` | none | value label `var(--color-text-gray-disabled)` |
+| Endpoint label (`SliderMinLabel`/`SliderMaxLabel`) | default | n/a | n/a | `var(--color-text-gray-neutral)` |
 | Endpoint label (`SliderMinLabel`) | min-active | n/a | n/a | `var(--color-text-brand-base)` |
 | Endpoint label (`SliderMaxLabel`) | max-active | n/a | n/a | `var(--color-text-brand-base)` |
-| Value input (`32px`) | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Value input (`32px`) | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
+| Value input (`32px`) | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Value input (`32px`) | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 Dark theme uses the same structural state matrix and resolves all values through semantic tokens.
 
@@ -176,8 +176,8 @@ Dark theme uses the same structural state matrix and resolves all values through
 - `SliderTick` (small marker) uses `8px` visual dot style.
 - `SliderTick` not-selected state is outline-only (transparent fill + tokenized border).
 - Selected track segment and selected ticks use `var(--color-icon-brand-base)`.
-- Disabled rail/segment/ticks/thumbs use `var(--color-icon-disabled)`.
-- Value-under-thumb text maps to `var(--color-text-brand-base)` in enabled states and `var(--color-text-disabled)` when disabled.
+- Disabled rail/segment/ticks/thumbs use `var(--color-icon-gray-disabled)`.
+- Value-under-thumb text maps to `var(--color-text-brand-base)` in enabled states and `var(--color-text-gray-disabled)` when disabled.
 - Endpoint label color switches to `var(--color-text-brand-base)` when a thumb is exactly at that endpoint.
 - Range input mode uses two `32px` inputs and a centered separator slot (`"-"`).
 

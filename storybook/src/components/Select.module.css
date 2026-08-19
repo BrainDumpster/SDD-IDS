@@ -8,7 +8,7 @@
 .label {
   font-size: var(--font-size-body-2);
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
 }
 
@@ -20,10 +20,10 @@
   width: 100%;
   height: var(--scale-36);
   padding: 0 var(--padding-padding-12);
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   border-radius: var(--corner-radius-radius-4);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
   font-family: inherit;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -33,7 +33,7 @@
 }
 
 .trigger:hover:not(:disabled) {
-  border-color: var(--color-border-neutral);
+  border-color: var(--color-border-gray-neutral-base);
 }
 
 .trigger:focus-visible {
@@ -44,12 +44,12 @@
 .trigger:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .chevron {
   flex-shrink: 0;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   transition: transform 150ms ease;
 }
 
@@ -62,8 +62,8 @@
 }
 
 .popup {
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   border-radius: var(--corner-radius-radius-4);
   box-shadow: var(--shadow-drop-shadow-16-x) var(--shadow-drop-shadow-16-y) var(--shadow-drop-shadow-16-blur) var(--shadow-drop-shadow-16-color);
   padding: var(--padding-padding-4) 0;
@@ -78,14 +78,14 @@
   gap: var(--spacing-space-8);
   padding: var(--padding-padding-8) var(--padding-padding-12);
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   cursor: pointer;
   outline: none;
   transition: background 100ms ease;
 }
 
 .option[data-highlighted] {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .option[data-selected] {
@@ -93,7 +93,7 @@
 }
 
 .option:focus-visible {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .optionIndicator {
@@ -101,5 +101,5 @@
   align-items: center;
   justify-content: center;
   width: 16px;
-  color: var(--color-background-controls-brand-base);
+  color: var(--color-background-controls-base);
 }

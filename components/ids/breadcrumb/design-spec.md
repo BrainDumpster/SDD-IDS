@@ -25,15 +25,15 @@
 - List margin: 0px (no margin on breadcrumb list)
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Disabled text: `var(--color-text-disabled)` = #757575
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
+- Disabled text: `var(--color-text-gray-disabled)` = #757575
 - Brand strong text: `var(--color-text-brand-strong)` = #94c5ea
 - Brand stronger text: `var(--color-text-link-brand-stronger)` = #d9eaf8
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #4c9fdd
 
 ### Link Colors
@@ -41,8 +41,8 @@
 - Link brand strong: `var(--color-text-link-brand-strong)` = #94c5ea
 
 ### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #1e262c
-- Brand light: `var(--color-background-brand-light)` = #34414c
+- Brand lighter: `var(--color-background-brand-lighter-slate)` = #1e262c
+- Brand light: `var(--color-background-brand-light-slate)` = #34414c
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -51,7 +51,7 @@
 - Annotation: `var(--color-annotation)` = #f389c3
 
 ### Surfaces
-- Surface dark: `var(--color-background-surface-1)` = #111619
+- Surface dark: `var(--color-background-surface-primary)` = #111619
 
 ### Effects
 - Cards Drop Shadow: Drop shadow effect for elevation
@@ -71,14 +71,14 @@
 ## States (Light Theme)
 | State | Background | Border | Text (Breadcrumb Links) | Text (Current Page) | Separator |
 |---|---|---|---|---|---|
-| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) |
-| Hover | transparent | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
-| Press | transparent | transparent | `var(--color-text-link-brand-stronger)` (#d9eaf8) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
-| Focus | transparent | `var(--border-width-border-default, 1px) solid var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) |
-| Disabled | transparent | transparent | `var(--color-text-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |
+| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Hover | transparent | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Press | transparent | transparent | `var(--color-text-link-brand-stronger)` (#d9eaf8) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Focus | transparent | `var(--border-width-border-default, 1px) solid var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Disabled | transparent | transparent | `var(--color-text-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Surface tokens: `var(--color-background-surface-primary)` (#111619)
 - Text and border colors remain consistent via semantic variables
 - Current page uses neutral strong for clear indication
 ## Interactions

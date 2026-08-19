@@ -40,25 +40,25 @@ Optional slots:
   - line-height ratio in sample: `1.758`
 ## Tokens
 Required semantic tokens from Figma variable extraction:
-- `var(--color-text-white)` = `#ffffff`
-- `var(--color-text-black)` = `#252525`
-- `var(--color-background-controls-brand-base)` = `#0672CB`
-- `var(--color-background-alerting-critical)` = `#af0000`
-- `var(--color-background-alerting-minor)` = `#ffc700`
-- `var(--color-background-alerting-success)` = `#1b8500`
+- `var(--color-text-gray-white)` = `#ffffff`
+- `var(--color-text-gray-black)` = `#252525`
+- `var(--color-background-controls-base)` = `#0672CB`
+- `var(--color-background-alerting-critical-base)` = `#af0000`
+- `var(--color-background-alerting-minor-base)` = `#ffc700`
+- `var(--color-background-alerting-success-base)` = `#1b8500`
 - `var(--color-static-gray-500)` = `#757575`
-- `var(--color-border-white)` = `#ffffff`
-- `var(--color-border-alerting-minor-transparent)` = `#9c622e`
+- `var(--color-border-gray-white)` = `#ffffff`
+- `var(--color-border-alerting-minor-base)` = `#9c622e`
 - Optional host-context token for warning border showcase parity:
-  - `var(--ids-badge-warning-border-color)` -> defaults to `var(--color-border-white)`, can be overridden by host to `var(--color-border-alerting-minor-transparent)` in White/Gray showcase contexts.
+  - `var(--ids-badge-warning-border-color)` -> defaults to `var(--color-border-gray-white)`, can be overridden by host to `var(--color-border-alerting-minor-base)` in White/Gray showcase contexts.
 ## States (Light Theme)
 | Variant key (`Type`) | Background | Border | Text |
 |---|---|---|---|
-| Default | `var(--color-background-controls-brand-base)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
-| Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Default | `var(--color-background-controls-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
+| Critical | `var(--color-background-alerting-critical-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
+| Warning | `var(--color-background-alerting-minor-base)` | `var(--ids-badge-warning-border-color, var(--color-border-gray-white))` | `var(--color-text-gray-black)` |
+| Disabled | `var(--color-static-gray-500)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
+| Success | `var(--color-background-alerting-success-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
 
@@ -102,7 +102,7 @@ Per-slot style contract:
   - border-width: 1px
   - border-style: solid
   - border-radius: 100px
-  - warning border color should use `var(--ids-badge-warning-border-color, var(--color-border-white))` so host showcase context can override to `var(--color-border-alerting-minor-transparent)` without introducing a new runtime variant axis.
+  - warning border color should use `var(--ids-badge-warning-border-color, var(--color-border-gray-white))` so host showcase context can override to `var(--color-border-alerting-minor-base)` without introducing a new runtime variant axis.
   - horizontal padding: 5.5px per side (or closest deterministic tokenized fallback)
 - `BadgeContent`
   - single line text

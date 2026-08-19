@@ -45,13 +45,13 @@ Deterministic slot order for **`DualListBoxRoot`**:
 
 ## Layout & Measurements
 - **Runtime width:** container-driven (`width: 100%`, `box-sizing: border-box`); Figma sample assembly ~`724×459` (`12114:232557`, reference only).
-- **Root container (`.root`):** background `var(--color-background-component)`; border `var(--border-width-border-default, 1px) solid var(--color-border-accessible)`; padding `var(--padding-padding-24)` all sides.
+- **Root container (`.root`):** background `var(--color-background-surface-component)`; border `var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base)`; padding `var(--padding-padding-24)` all sides.
 - **`ListsParent`:** CSS grid — `grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr)`; `grid-template-rows: auto minmax(384px, 1fr)`; `column-gap: var(--spacing-space-24)`; `row-gap: var(--spacing-space-8)`.
 - **Pane header:** full width of column; `justify-content: space-between`; title start-aligned; **Total** end-aligned flush with list panel right edge (no extra header inset).
 - **List panel (`.DualListBox-Elements-ListItemGroup`):** `width: 100%` of column (responsive); `min-height: 384px` (sample); padding `var(--padding-padding-24)` top, `var(--padding-padding-32)` bottom, inline `var(--padding-padding-24)`; vertical gap between items `var(--spacing-space-8)`.
-- **Pane header row:** `justify-content: space-between`; title **Body 1** regular (`var(--font-size-body-1)` / `var(--line-height-body-1, 24px)`, `var(--color-text-neutral-strong)`); metrics **Body 2** regular, right-aligned (`Total: N` only in default Figma sample `12114:232557`).
-- **Empty panel:** dashed border `var(--color-border-accessible)`; placeholder **Body 2** regular, centered, user-defined per pane (defaults below).
-- **List item row:** width `100%` of panel; padding `var(--padding-padding-8)` inline start, `var(--padding-padding-16)` inline end, `var(--padding-padding-14)` block; `border-radius: 2px`; `border-width: var(--border-width-border-default, 1px)` solid `var(--color-border-accessible)`.
+- **Pane header row:** `justify-content: space-between`; title **Body 1** regular (`var(--font-size-body-1)` / `var(--line-height-body-1, 24px)`, `var(--color-text-gray-neutral-strong)`); metrics **Body 2** regular, right-aligned (`Total: N` only in default Figma sample `12114:232557`).
+- **Empty panel:** dashed border `var(--color-border-gray-neutral-base)`; placeholder **Body 2** regular, centered, user-defined per pane (defaults below).
+- **List item row:** width `100%` of panel; padding `var(--padding-padding-8)` inline start, `var(--padding-padding-16)` inline end, `var(--padding-padding-14)` block; `border-radius: 2px`; `border-width: var(--border-width-border-default, 1px)` solid `var(--color-border-gray-neutral-base)`.
 - **Item interior:** `gap: var(--spacing-space-8)` between drag handle and text; drag icon wrapper `16×16` with `var(--padding-padding-2)` block padding on icon rail.
 - **Item content block:** width `204px` (sample); **Body 2** regular (`var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`).
 - **Transfer column:** vertical `gap: var(--spacing-space-16)`; each button `padding: var(--padding-padding-12)` block, `var(--padding-padding-16)` inline; `border-radius: 2px`; icon `16×16`.
@@ -63,38 +63,38 @@ Deterministic slot order for **`DualListBoxRoot`**:
 ### Typography
 - **List item label:** Body 2 regular — `var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`.
 - **List item description (optional):** Body 2 — same size/line-height under label.
-- **Empty placeholder:** Body 2 regular — `var(--color-text-neutral)`.
-- **Metrics “Selected”:** Body 2 regular — `var(--color-text-neutral)`.
-- **Metrics “Total”:** Body 2 regular — `var(--color-text-neutral)`.
+- **Empty placeholder:** Body 2 regular — `var(--color-text-gray-neutral)`.
+- **Metrics “Selected”:** Body 2 regular — `var(--color-text-gray-neutral)`.
+- **Metrics “Total”:** Body 2 regular — `var(--color-text-gray-neutral)`.
 
 ### Surfaces, borders, icons
-- **List panel / item background:** `var(--color-background-component)`
-- **List item border:** `var(--color-border-accessible)`
-- **Empty panel border:** `var(--color-border-accessible)` (dashed in Figma)
-- **Selected list item background:** `var(--color-background-controls-brand-lighter)`
+- **List panel / item background:** `var(--color-background-surface-component)`
+- **List item border:** `var(--color-border-gray-neutral-base)`
+- **Empty panel border:** `var(--color-border-gray-neutral-base)` (dashed in Figma)
+- **Selected list item background:** `var(--color-background-controls-lighter)`
 - **Selected list item border:** `var(--color-border-brand-base)`
 - **Selected label text:** `var(--color-text-brand-strong)`
-- **Default label text:** `var(--color-text-neutral)`
-- **Drag handle icon:** `var(--color-icon-neutral)` (default/hover); press/active drag uses brand/neutral per **States**
-- **Transfer button Default (enabled):** `var(--color-background-controls-brand-base)`; `var(--color-border-transparent-brand)`; icon `var(--color-icon-white)`
-- **Transfer button Disabled:** `var(--color-background-gray-light)`; `var(--color-border-disabled)`; icon `var(--color-icon-disabled)`
+- **Default label text:** `var(--color-text-gray-neutral)`
+- **Drag handle icon:** `var(--color-icon-gray-neutral-base)` (default/hover); press/active drag uses brand/neutral per **States**
+- **Transfer button Default (enabled):** `var(--color-background-controls-base)`; `var(--color-border-brand-transparent-brand)`; icon `var(--color-icon-gray-white)`
+- **Transfer button Disabled:** `var(--color-background-gray-light)`; `var(--color-border-gray-disabled)`; icon `var(--color-icon-gray-disabled)`
 - **Scrollbar track/thumb:** `var(--color-background-gray-lighter)` / `var(--color-background-gray-base)`
 
 ## States (Light Theme)
 | Element | State | Background | Border | Text | Icon |
 | --- | --- | --- | --- | --- | --- |
-| List panel | default | `var(--color-background-component)` | `var(--color-border-accessible)` solid | — | — |
-| List panel | empty | transparent | `var(--color-border-accessible)` dashed | `var(--color-text-neutral)` placeholder | — |
-| List item | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` | `arrow-arrange` `var(--color-icon-neutral)` |
-| List item | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-neutral)` | `arrow-arrange` neutral |
-| List item | selected | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand + **`shape-check-thick`** brand (trailing) |
+| List panel | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` solid | — | — |
+| List panel | empty | transparent | `var(--color-border-gray-neutral-base)` dashed | `var(--color-text-gray-neutral)` placeholder | — |
+| List item | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` | `arrow-arrange` `var(--color-icon-gray-neutral-base)` |
+| List item | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` | `arrow-arrange` neutral |
+| List item | selected | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand + **`shape-check-thick`** brand (trailing) |
 | List item | focus-visible | component | brand outline (+2px offset) | neutral | neutral |
-| List item | drag with selection | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand; **hide** check while dragging |
-| List item | drag without selection | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand |
-| List item | drop indicator | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | — | preview slot before/after target row |
-| Transfer btn | **Default** (enabled, clickable) | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | — | `var(--color-icon-white)` |
-| Transfer btn | **Disabled** (inactive) | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | — | `var(--color-icon-disabled)` |
-| Metrics | default | — | — | `var(--color-text-neutral)` | — |
+| List item | drag with selection | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand; **hide** check while dragging |
+| List item | drag without selection | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `arrow-arrange` brand |
+| List item | drop indicator | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | — | preview slot before/after target row |
+| Transfer btn | **Default** (enabled, clickable) | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | — | `var(--color-icon-gray-white)` |
+| Transfer btn | **Disabled** (inactive) | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | — | `var(--color-icon-gray-disabled)` |
+| Metrics | default | — | — | `var(--color-text-gray-neutral)` | — |
 
 ## States (Dark Theme)
 
@@ -120,7 +120,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Drag-and-drop (reference implementation, `enableDragDrop` default `true`):**
   - Drag starts from **`arrow-arrange`** handle only.
   - Reorder within a pane or move across panes; drop position before/after target row (50% hit split).
-  - **Drag with selection** / **Drag without selection** use `var(--color-background-controls-brand-light)`; trailing **`shape-check-thick`** hidden while dragging.
+  - **Drag with selection** / **Drag without selection** use `var(--color-background-controls-light)`; trailing **`shape-check-thick`** hidden while dragging.
   - **Drop** preview row uses brand-light fill + brand border (Figma **Drop** / **Drag without selection** container).
   - Emits `onDragDrop({ itemId, from, to, toIndex })` and `onItemsChange`.
 - **Tooltips (optional per item):** when `tooltipTitle` and/or `tooltipDescription` are set, render **`IdsTooltip`** per `components/ids/tooltip/design-spec.md` (reference: `storybook/src/components/IdsTooltip.tsx`, wrapper `storybook/src/components/dualListBoxItemTooltip.tsx`):
@@ -253,7 +253,7 @@ Tooltip implementation MUST use the IDS Tooltip component contract in `component
 - **Selected pane:** empty — placeholder `Select items on the left to move`
 - **Transfer column:** **Move all right** Default (brand); other three Disabled (gray)
 - **Metrics:** header row `Total: 6` / `Total: 0` beside titles
-- Frame: horizontal layout, canvas `var(--color-background-surface-1)`, padding `16px`, max width ~`724px`
+- Frame: horizontal layout, canvas `var(--color-background-surface-primary)`, padding `16px`, max width ~`724px`
 - No per-item tooltips in primary story (strict Figma parity)
 - Theme: `components/ids-theme.css` only
 

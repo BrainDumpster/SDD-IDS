@@ -54,7 +54,7 @@ export type AlertProps =
 
 const globalSeverityToIcon: Record<AlertGlobalSeverity, { slug: string; variant: "img" | "mask" | "inline"; color?: string }> = {
   critical: { slug: "status-critical-square-solid-ko", variant: "img" },
-  "warning-major": { slug: "status-error-diamond-solid-ko", variant: "mask", color: "var(--color-icon-white)" },
+  "warning-major": { slug: "status-error-diamond-solid-ko", variant: "mask", color: "var(--color-icon-gray-white)" },
   "warning-minor": { slug: "status-warn-tri-solid", variant: "inline" },
   informational: { slug: "info-circ-solid-ko", variant: "img" },
 };

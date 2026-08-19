@@ -46,13 +46,13 @@
 - `var(--color-text-link-brand-stronger)` = `#003a65`
 - `var(--color-text-link-brand-lighter)` = `#ebf4fb`
 - `var(--color-text-link-brand-light)` = `#d9eaf8`
-- `var(--color-text-white)` = `#ffffff`
+- `var(--color-text-gray-white)` = `#ffffff`
 - `var(--color-border-brand-base)` = `#0076ce`
-- `var(--color-border-white)` = `#ffffff`
+- `var(--color-border-gray-white)` = `#ffffff`
 - `var(--color-icon-brand-base)` = `#0076ce`
 - `var(--color-icon-brand-strong)` = `#0062ab`
 - `var(--color-icon-brand-stronger)` = `#06528a`
-- `var(--color-icon-white)` = `#ffffff`
+- `var(--color-icon-gray-white)` = `#ffffff`
 
 ### Typography Tokens
 - `Body 2` and `Body 2 - Underline`: `Roboto Regular 14/20`, weight 400, letter spacing 0.
@@ -64,7 +64,7 @@
   - Hover/press: underline for all types.
 - `focusRing`:
   - Inline/Standalone: `1px solid var(--color-border-brand-base)`.
-  - Dark Bg: `1px solid var(--color-border-white)`.
+  - Dark Bg: `1px solid var(--color-border-gray-white)`.
 - `externalIcon`:
   - Icon asset: `pop-up-square-corner-big` (Figma component `44484:963`).
   - Size: exactly `16px x 16px`.
@@ -80,10 +80,10 @@
 | Inline | hover | `var(--color-text-link-brand-strong)` | yes | none |
 | Inline | press | `var(--color-text-link-brand-stronger)` | yes | none |
 | Inline | focus-visible | `var(--color-text-link-brand-base)` | yes | `1px solid var(--color-border-brand-base)` |
-| Dark Bg | default | `var(--color-text-white)` | yes | none |
+| Dark Bg | default | `var(--color-text-gray-white)` | yes | none |
 | Dark Bg | hover | `var(--color-text-link-brand-lighter)` | yes | none |
 | Dark Bg | press | `var(--color-text-link-brand-light)` | yes | none |
-| Dark Bg | focus-visible | `var(--color-text-white)` | yes | `1px solid var(--color-border-white)` |
+| Dark Bg | focus-visible | `var(--color-text-gray-white)` | yes | `1px solid var(--color-border-gray-white)` |
 
 ### Icon Color Matrix (`showExternalLinkIcon=true`)
 | Type | State | Icon Color Token |
@@ -96,10 +96,10 @@
 | Inline | hover | `var(--color-icon-brand-strong)` |
 | Inline | press | `var(--color-icon-brand-stronger)` |
 | Inline | focus-visible | `var(--color-icon-brand-base)` |
-| Dark Bg | default | `var(--color-icon-white)` |
-| Dark Bg | hover | `var(--color-icon-white)` |
-| Dark Bg | press | `var(--color-icon-white)` |
-| Dark Bg | focus-visible | `var(--color-icon-white)` |
+| Dark Bg | default | `var(--color-icon-gray-white)` |
+| Dark Bg | hover | `var(--color-icon-gray-white)` |
+| Dark Bg | press | `var(--color-icon-gray-white)` |
+| Dark Bg | focus-visible | `var(--color-icon-gray-white)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:

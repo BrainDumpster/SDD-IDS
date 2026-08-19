@@ -32,7 +32,7 @@
 - Field sizes:
   - `Large`: `40px` height, trigger padding `var(--padding-padding-10) var(--padding-padding-16)`.
   - `Small`: `32px` height, trigger padding `var(--padding-padding-6) var(--padding-padding-16)`.
-- `Label` (optional): sits to the **left** of the field on the same row, label-to-field gap `var(--spacing-space-16)` (16px). Typography `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight `400`; color `var(--color-text-neutral-strong)`. An optional trailing required indicator `*` shows only when the field is required. Two sizes track the field height: **Large** `40px` (vertical padding `var(--padding-padding-10)`), **Small** `32px` (vertical padding `var(--padding-padding-6)`). The label is **independent of the menu min/max width** (`186–700px`) — its width does not affect, and is not constrained by, the dropdown menu sizing.
+- `Label` (optional): sits to the **left** of the field on the same row, label-to-field gap `var(--spacing-space-16)` (16px). Typography `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight `400`; color `var(--color-text-gray-neutral-strong)`. An optional trailing required indicator `*` shows only when the field is required. Two sizes track the field height: **Large** `40px` (vertical padding `var(--padding-padding-10)`), **Small** `32px` (vertical padding `var(--padding-padding-6)`). The label is **independent of the menu min/max width** (`186–700px`) — its width does not affect, and is not constrained by, the dropdown menu sizing.
 - Field to helper/error gap: `var(--spacing-space-4)`.
 - Runtime width behavior:
   - sample width: `300px`
@@ -46,21 +46,21 @@
   - popup opens attached below trigger. It carries a **full 4-sided `1px` border**; a `-1px` vertical offset makes its top border overlap the field's bottom border so the two merge into a single line (attached-dropdown look). Detached usages keep the full border with no overlap.
   - drop shadow uses IDS shadow tokens.
   - search row wrapper padding: `var(--padding-padding-8)`.
-  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
+  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
   - search input wrap gap (input ↔ clear control): `var(--spacing-space-10)`.
   - popup min-height: `212px` (search only), `252px` (search + `SelectAllRow` + `ShowSelectedToggle` row).
   - option row padding: `var(--padding-padding-10) var(--padding-padding-16)` for **all types** (right inset is `16px`; single-select and multi-select share the same horizontal padding). Single-select text-only rows use `align-items: flex-start`; radio and multi rows use `align-items: center`.
   - option label truncates with an ellipsis (`overflow: hidden; text-overflow: ellipsis; white-space: nowrap`) when it exceeds the row width.
   - option row min-height: `40px` (Large) / `32px` (Small).
   - leading control (checkbox/radio) box: `16×16px`; left edge is flush with the `SelectAll` checkbox (no wrapper-centering offset).
-  - empty-search result row (`No results found`): **Body 2 - Medium** (weight `500`), `var(--color-text-neutral)`, `font-variation-settings: "wdth" 100`, padding `var(--padding-padding-10) var(--padding-padding-16)`; rendered as the sole list row.
+  - empty-search result row (`No results found`): **Body 2 - Medium** (weight `500`), `var(--color-text-gray-neutral)`, `font-variation-settings: "wdth" 100`, padding `var(--padding-padding-10) var(--padding-padding-16)`; rendered as the sole list row.
   - selected-content group in the field (optional count badge + value text): `gap: var(--spacing-space-4)`; when the field shows selected option(s) the group gets `padding-right: var(--padding-padding-16)`. Placeholder-only (nothing selected) has no right inset.
 - Multi-select summary selection element (Figma `12730:120314` collapsed, `12730:120315` expanded):
   - panel padding: `var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0` (top/bottom `8`, right `16`, left `0`).
   - header row: full width, `justify-content: space-between`, inner right inset `var(--padding-padding-8)`.
   - toggle label (`Show Selected` / `Hide Selected`): `var(--color-text-brand-strong)`, toggle padding `var(--padding-padding-2) var(--padding-padding-16)`.
   - caret (`arrow-drop-tri-caret`, Figma `9662:26612`): **10×10px** frame, `var(--color-icon-brand-base)`.
-  - row dismiss (`.Tag-Element-Close` / `shape-x-thick`, Figma `11666:90408`): **10×10px** frame, `var(--color-icon-accessible)`, **right-aligned** in header row.
+  - row dismiss (`.Tag-Element-Close` / `shape-x-thick`, Figma `11666:90408`): **10×10px** frame, `var(--color-icon-gray-neutral-accessible)`, **right-aligned** in header row.
   - expanded tag wrap (viewport): `gap: var(--spacing-space-4)`, padding `var(--padding-padding-8) var(--padding-padding-24) 0 var(--padding-padding-16)` (top `8`, right `24`, bottom `0`, left `16`).
   - the tag wrap caps at **3 rows** (`max-height: 100px` = top `8` + 3 × `28px` lg tag + 2 × `4px` row gap) then scrolls; the scroll area spans the full popup width so its overlay scrollbar aligns with the options list scrollbar.
   - the tag wrap uses `contain: inline-size` so the **wrapped tags do not drive the content-driven menu width** — the menu is sized by the options (each tag is a selected option, so the option list is always wide enough), and the tags simply wrap within that width. Without this, a flex-wrap container's `max-content` is the sum of all tags on one line, which would inflate the menu to `700px` even when each tag is short.
@@ -68,7 +68,7 @@
   - selected-count badge follows IDS badge geometry (`18px` height, pill radius). The badge does not shrink (`flex-shrink: 0`) so a 2-digit count never overlaps the value text.
 - Search dismiss control:
   - visible when query length `> 0`; right-aligned inside search field row.
-  - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-accessible)`.
+  - dismiss icon (`shape-x-thick`, same glyph as `.Tag-Element-Close`): **10×10px** frame, `var(--color-icon-gray-neutral-accessible)`.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -88,29 +88,29 @@
 
 ## Tokens
 - **Core field tokens**
-  - `var(--color-background-component)`
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-border-accessible)`
-  - `var(--color-border-strong)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
+  - `var(--color-border-gray-neutral-base)`
+  - `var(--color-border-gray-neutral-strong)`
   - `var(--color-border-brand-base)`
-  - `var(--color-text-disabled)`
+  - `var(--color-text-gray-disabled)`
   - `var(--color-background-gray-light)`
   - `var(--color-background-gray-lighter)`
 - **Interactive/selection tokens**
-  - `var(--color-background-brand-lighter)`
+  - `var(--color-background-brand-lighter-slate)`
   - `var(--color-text-brand-strong)`
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-border-transparent-brand)`
-  - `var(--color-text-white)`
+  - `var(--color-background-controls-base)`
+  - `var(--color-border-brand-transparent-brand)`
+  - `var(--color-text-gray-white)`
 - **Error tokens**
   - `var(--color-border-alerting-critical-base)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-text-critical)`
+  - `var(--color-icon-alerting-critical-base)`
+  - `var(--color-text-alerting-critical-base)`
 - **Icon tokens**
-  - `var(--color-icon-accessible)`
+  - `var(--color-icon-gray-neutral-accessible)`
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-white)`
+  - `var(--color-icon-gray-white)`
 - **Shape/space tokens**
   - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
@@ -122,21 +122,21 @@
 - **Scrollbar** (options list and Show Selected tag wrap)
   - **Overlay** scrollbar (Base UI `ScrollArea`) — absolutely positioned, does **not** take layout space, so option rows and tags keep their full width (a classic space-taking scrollbar would shorten them).
   - Always visible while the region overflows (not hover-reveal); hidden when there is no overflow.
-  - Thumb: `6px` wide, `var(--corner-radius-radius-4)`, `var(--color-border-light)` (→ `var(--color-text-neutral)` on hover).
+  - Thumb: `6px` wide, `var(--corner-radius-radius-4)`, `var(--color-border-gray-neutral-light)` (→ `var(--color-text-gray-neutral)` on hover).
 ## States (Light Theme)
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Field container | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` + `var(--color-icon-accessible)` |
-| Field container | hover | `var(--color-background-component)` | `var(--color-border-strong)` | neutral text |
-| Field container | selected/open | `var(--color-background-component)` | `var(--color-border-accessible)` | selected text stays neutral/brand per content state |
-| Field container | focus-visible | `var(--color-background-component)` | base border + outer focus ring `var(--color-border-brand-base)` | caret/text may shift to brand token |
-| Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
-| Field container | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | error icon/text tokenized critical |
-| Option row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Option row | hover | `var(--color-background-brand-lighter)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| Option row | press | `var(--color-background-brand-light)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Field container | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` + `var(--color-icon-gray-neutral-accessible)` |
+| Field container | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | neutral text |
+| Field container | selected/open | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | selected text stays neutral/brand per content state |
+| Field container | focus-visible | `var(--color-background-surface-component)` | base border + outer focus ring `var(--color-border-brand-base)` | caret/text may shift to brand token |
+| Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` |
+| Field container | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | error icon/text tokenized critical |
+| Option row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| Option row | hover | `var(--color-background-brand-lighter-slate)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Option row | press | `var(--color-background-brand-light-slate)` | row-emphasis top/bottom inset stroke `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Option row | focus-visible | current-state fill | focus indicator tokenized with `var(--color-border-brand-base)` | text/icon unchanged |
-| Option row | selected (single) | `var(--color-background-brand-lighter)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
+| Option row | selected (single) | `var(--color-background-brand-lighter-slate)` + emphasized row stroke | row-level highlight | `var(--color-text-brand-strong)` |
 | Option row | selected (multi) | component background with checked checkbox | none | neutral text + selected checkbox visuals |
 ## States (Dark Theme)
 Dark theme uses the same structural state matrix as Light Theme and resolves all visual values through semantic tokens. No hardcoded color literals are allowed in implementation contracts.
@@ -166,7 +166,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - typing in the search row filters the option list immediately by **case-insensitive substring (contains) match** on the option label (e.g. typing `c` shows options containing `c`, then `ca` narrows to those containing `ca`) — same match behavior as the datagrid combobox/multiselect filters. Section headers and dividers are hidden while a query is active.
   - when search query is non-empty, a right-aligned dismiss control (`shape-x-thick`, **10×10px** frame) clears the query.
   - when no option matches, the list shows a single `No results found` row (see Layout for typography/padding); nothing else is rendered.
-  - **Inline autocomplete (ghost text):** when the typed keyword is a **prefix of exactly one** selectable option, the remaining tail of that option's label renders as **greyed-out ghost text** immediately after the caret (the typed characters keep their normal `var(--color-text-neutral)` colour; the suggested tail uses `var(--color-static-gray-400)` = `#9E9E9E`, fixed in both light and dark). The ghost tail is a **non-committed suggestion**, not a text selection — nothing is highlighted. Accept it with `Tab`, `→` (caret at end), or `End`, which commits the full option label (preserving the option's own casing). Any further typing or deletion recomputes/clears the suggestion. Only computed on insertion — deleting never re-completes.
+  - **Inline autocomplete (ghost text):** when the typed keyword is a **prefix of exactly one** selectable option, the remaining tail of that option's label renders as **greyed-out ghost text** immediately after the caret (the typed characters keep their normal `var(--color-text-gray-neutral)` colour; the suggested tail uses `var(--color-static-gray-400)` = `#9E9E9E`, fixed in both light and dark). The ghost tail is a **non-committed suggestion**, not a text selection — nothing is highlighted. Accept it with `Tab`, `→` (caret at end), or `End`, which commits the full option label (preserving the option's own casing). Any further typing or deletion recomputes/clears the suggestion. Only computed on insertion — deleting never re-completes.
 - Option selection:
   - single-select commits the option and **closes** the popup.
   - multi-select toggles the option and **keeps the popup open** for further selection.
@@ -236,8 +236,8 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Field container must keep tokenized border/background/text for all states.
 - Focus-visible uses an outer ring tokenized with brand border color.
 - Menu rows use tokenized row padding and explicit interaction mapping:
-  - hover: `var(--color-background-brand-lighter)` + inset row emphasis strokes
-  - press: `var(--color-background-brand-light)` + inset row emphasis strokes + brand-strong text
+  - hover: `var(--color-background-brand-lighter-slate)` + inset row emphasis strokes
+  - press: `var(--color-background-brand-light-slate)` + inset row emphasis strokes + brand-strong text
   - focus-visible: visible focus indicator using brand-base border token
 - Multi-select checkbox uses `2px` corner token and control-brand tokens for checked state.
 
@@ -289,7 +289,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - **Top-side popup shadow suppression** — when Base UI flips/places the menu above the trigger (`data-side="top"`), `DropdownMenu.module.css` removes `box-shadow` from `.popup[data-side="top"]` so the menu does not cast a shadow onto the field or container below. The default `bottom` side keeps the standard `IDS Shadow 1` elevation.
 
 ### 2026-08-05
-- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
+- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-gray-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
 - **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; IME composition is deferred until `compositionend`; deletions always clear the suggestion.
 - **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0`. The caret does **not** rotate.
 - **Tooltip** — truncated field value is wrapped in the IDS Tooltip: single-select shows the full selected item, multi-select shows the full selected list via the badge tooltip. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
@@ -298,12 +298,12 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 ### 2026-07-25
 Design-level implementation contract for the shared component (`DropdownMenu.tsx` / `DropdownMenu.module.css`, `IdsDropdownTriggerShell.*`) and `ids-theme.css`. Shared with single-/multi-select — verify all three after edits.
 
-- **Popup border** — full 4-sided `1px` border (`var(--color-border-accessible)`); `sideOffset: -1` so the top border overlaps the field's bottom border into a single line.
+- **Popup border** — full 4-sided `1px` border (`var(--color-border-gray-neutral-base)`); `sideOffset: -1` so the top border overlaps the field's bottom border into a single line.
 - **`--padding-padding-24` token** — defined in `ids-theme.css` (`24px`, light + dark); drives the **Show Selected tag-wrap right inset** (`padding: 8 24 0 16`), not the single-select option.
 - **Single-select option** — `min-height: 40px`; padding `10 16 10 16`; text-only rows use `align-items: flex-start` (radio rows stay centered).
 - **Leading control (checkbox/radio)** — `16×16px`, left edge flush with the `Select All` checkbox.
 - **Search input wrap gap** — `var(--spacing-space-10)`.
-- **Empty-search row (`No results found`)** — Body 2 - Medium (`500`), `var(--color-text-neutral)`, `wdth 100`, padding `pl-16 pr-16 py-10`; rendered as the sole list row.
+- **Empty-search row (`No results found`)** — Body 2 - Medium (`500`), `var(--color-text-gray-neutral)`, `wdth 100`, padding `pl-16 pr-16 py-10`; rendered as the sole list row.
 - **Caret** — does **not** rotate when the popup opens; it stays pointing down.
 - **Popup min-height** — `212px` (search only) / `252px` (search + Select All + Show Selected). The `252px` applies only while the `Select All` row is shown; when it collapses (no results, or `<2` matches) the popup falls back to `212px`.
 - **Option list scroll** — caps at `maxVisibleItems` rows (default `6`); ≤6 no scroll, >6 scrolls.

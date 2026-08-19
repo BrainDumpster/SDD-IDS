@@ -34,7 +34,7 @@ interface CardProps {
   title?: string;
   /**
    * Secondary title shown inline after a `|` separator (Figma Dashboard-Element-Card
-   * `14093:123118` — Body 1 / `var(--color-text-neutral)`).
+   * `14093:123118` — Body 1 / `var(--color-text-gray-neutral)`).
    * Prefer `<CardSecondaryTitle>` or a string/node via this prop.
    */
   secondaryTitle?: ReactNode;
@@ -81,7 +81,7 @@ const SIZE_CLASS: Record<CardSize, string> = {
 
 /**
  * Optional secondary title (Figma Dashboard-Element-Card).
- * Rendered inline after `|` when used with `title` — Body 1 / `var(--color-text-neutral)`.
+ * Rendered inline after `|` when used with `title` — Body 1 / `var(--color-text-gray-neutral)`.
  */
 export function CardSecondaryTitle({
   children,

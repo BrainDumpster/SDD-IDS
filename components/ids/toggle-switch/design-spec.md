@@ -33,27 +33,27 @@ Deterministic slot order:
 Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` / symbol `8505:14390` — Off default rail reads as **neutral dark gray**; `get_variable_defs` may omit bound fills when the toggle is rasterized):
 
 - `track.off.background`: `var(--color-background-gray-neutral-dark)` — light `#616161`, dark `#616161` (Figma `Toggle=Off, State=Default` / MCP: dark gray rail; token added to IDS theme)
-- `track.off.border`: `var(--color-border-neutral)` — light `#4d4d4d`, dark `#8898a5`
+- `track.off.border`: `var(--color-border-gray-neutral-base)` — light `#4d4d4d`, dark `#8898a5`
 - `track.off.hover.background`: `var(--color-background-gray-neutral-light)` — light `#4d4d4d`, dark `#8898a5`
-- `track.off.hover.border`: `var(--color-border-strong)` — light `#252525`, dark `#b8c1c9`
+- `track.off.hover.border`: `var(--color-border-gray-neutral-strong)` — light `#252525`, dark `#b8c1c9`
 - `track.on.background`: `var(--color-background-brand-base)` — light `#0076ce`, dark `#4c9fdd`
 - `track.on.border`: `var(--color-border-brand-base)` — light `#0076ce`, dark `#4c9fdd`
 - `track.on.hover.background`: `var(--color-background-brand-strong)` — light `#0062ab`, dark `#94c5ea`
-- `track.on.hover.border`: `var(--color-border-brand-dark)` — light `#0062ab`, dark `#94c5ea`
+- `track.on.hover.border`: `var(--color-border-brand-strong)` — light `#0062ab`, dark `#94c5ea`
 - `track.disabled.background`: `var(--color-background-gray-light)`
 - `track.disabled.checked.background`: `var(--color-background-gray-light)`
-- `track.disabled.border`: `var(--color-border-disabled)` — light `#757575`, dark `#9e9e9e`
+- `track.disabled.border`: `var(--color-border-gray-disabled)` — light `#757575`, dark `#9e9e9e`
 
-- `thumb.default.background`: `var(--color-background-component)` (Figma binds knob fill to component surface; light `#ffffff`, dark `#111619`)
-- `thumb.off.default.border`: `var(--border-width-border-1)` solid `var(--color-border-neutral)`
-- `thumb.off.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-strong)`
+- `thumb.default.background`: `var(--color-background-surface-component)` (Figma binds knob fill to component surface; light `#ffffff`, dark `#111619`)
+- `thumb.off.default.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-base)`
+- `thumb.off.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-strong)`
 - `thumb.on.default.border`: `var(--border-width-border-1)` solid `var(--color-border-brand-base)`
-- `thumb.on.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-brand-dark)`
-- `thumb.disabled.background`: `var(--color-background-component)`
-- `thumb.disabled.border`: `var(--border-width-border-1)` solid `var(--color-border-disabled)`
+- `thumb.on.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-brand-strong)`
+- `thumb.disabled.background`: `var(--color-background-surface-component)`
+- `thumb.disabled.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-disabled)`
 
-- `label.default.text`: `var(--color-text-neutral)` — light `#4d4d4d`, dark `#8898a5`
-- `label.disabled.text`: `var(--color-text-disabled)` — light `#757575`, dark `#c5c5c5`
+- `label.default.text`: `var(--color-text-gray-neutral)` — light `#4d4d4d`, dark `#8898a5`
+- `label.disabled.text`: `var(--color-text-gray-disabled)` — light `#757575`, dark `#c5c5c5`
 
 - `focus.ring`: `var(--color-border-brand-base)` on a ring **outside** the track (e.g. pseudo-element `inset: -3px` around the `32x16` body); track border tokens **do not** switch to brand on focus-only (Figma uses a separate focus frame).
 - `focus.outlineWidth`: `var(--border-width-border-1)`
@@ -61,14 +61,14 @@ Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` /
 ## States (Light Theme)
 | State | Track Background | Track Border | Thumb (fill + border) | Label |
 |---|---|---|---|---|
-| Off / default | `var(--color-background-gray-neutral-dark)` | `var(--color-border-neutral)` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
-| Off / hover | `var(--color-background-gray-neutral-light)` | `var(--color-border-strong)` | fill `var(--color-background-component)`; border `var(--color-border-strong)` | `var(--color-text-neutral)` |
-| Off / focus-visible | `var(--color-background-gray-neutral-dark)` | `var(--color-border-neutral)` + outer `focus.ring` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
-| On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | fill `var(--color-background-component)`; border `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
-| On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-dark)` | fill `var(--color-background-component)`; border `var(--color-border-brand-dark)` | `var(--color-text-neutral)` |
-| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-component)`; border `var(--color-border-neutral)` | `var(--color-text-neutral)` |
-| Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | fill `var(--color-background-component)`; border `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-| Disabled / on | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | fill `var(--color-background-component)`; border `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| Off / default | `var(--color-background-gray-neutral-dark)` | `var(--color-border-gray-neutral-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Off / hover | `var(--color-background-gray-neutral-light)` | `var(--color-border-gray-neutral-strong)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-strong)` | `var(--color-text-gray-neutral)` |
+| Off / focus-visible | `var(--color-background-gray-neutral-dark)` | `var(--color-border-gray-neutral-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
+| On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-strong)` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-strong)` | `var(--color-text-gray-neutral)` |
+| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
+| Disabled / on | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:

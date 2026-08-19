@@ -36,13 +36,13 @@
   - root height is tied to page content region height (`height: 100%` of page container at runtime).
   - sample in Figma node `44333:174879` / `44333:174882`: `1024px`.
 - Borders:
-  - root border: `1px solid var(--color-border-accessible)`.
+  - root border: `1px solid var(--color-border-gray-neutral-base)`.
   - sections use same accessible border continuity as shown in source nodes.
   - **Host integration overlap**: when panel shares a border with its host container, the panel wrapper must be offset `−1px` on top/right/bottom (`margin: -1px -1px -1px 0`) so the two borders collapse into a single `1px` line. Figma token: `var(--spacing/space-minus-1, -1px)`.
 - Expanded mode composition:
   - toggle control area uses right-side placement (header for datagrid mode, footer for page mode).
-  - `DetailPanelHeader` (datagrid expanded): `min-height: 48px`, padding `14px 12px 14px 24px`, border-bottom `1px solid var(--color-border-accessible)`.
-  - `DetailPanelFooter` (page expanded): `min-height: 44px`, padding `14px 12px`, border-top `1px solid var(--color-border-accessible)`, toggle right-aligned.
+  - `DetailPanelHeader` (datagrid expanded): `min-height: 48px`, padding `14px 12px 14px 24px`, border-bottom `1px solid var(--color-border-gray-neutral-base)`.
+  - `DetailPanelFooter` (page expanded): `min-height: 44px`, padding `14px 12px`, border-top `1px solid var(--color-border-gray-neutral-base)`, toggle right-aligned.
   - body content area is scrollable when content exceeds available vertical space.
 - Collapsed mode composition:
   - icon-only rail of width `40px` with centered/edge-aligned toggle control per mode.
@@ -67,35 +67,35 @@
   - body must scroll internally without shifting header/footer/toggle placement.
 ## Tokens
 - Surface/background:
-  - `var(--color-background-component)`
-  - `var(--color-background-controls-brand-base)` (for nested actions shown in template content)
+  - `var(--color-background-surface-component)`
+  - `var(--color-background-controls-base)` (for nested actions shown in template content)
 - Border:
-  - `var(--color-border-accessible)`
-  - `var(--color-border-transparent-brand)`
+  - `var(--color-border-gray-neutral-base)`
+  - `var(--color-border-brand-transparent-brand)`
 - Text:
-  - `var(--color-text-neutral-strong)`
-  - `var(--color-text-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
+  - `var(--color-text-gray-neutral)`
   - `var(--color-text-brand-strong)`
-  - `var(--color-text-white)`
+  - `var(--color-text-gray-white)`
   - `var(--color-text-link-brand-base)`
 - Icon:
-  - `var(--color-icon-neutral)` (required for both expand/collapse toggle icons)
-  - toggle icon color MUST be token-driven via `currentColor`: set `color: var(--color-icon-neutral)` on the button element and render the icon with the default `mask` variant so the glyph inherits the token. Do NOT use a hardcoded CSS `filter` — a fixed filter does not track `[data-theme="dark"]`.
-  - `var(--color-icon-accessible)`
+  - `var(--color-icon-gray-neutral-base)` (required for both expand/collapse toggle icons)
+  - toggle icon color MUST be token-driven via `currentColor`: set `color: var(--color-icon-gray-neutral-base)` on the button element and render the icon with the default `mask` variant so the glyph inherits the token. Do NOT use a hardcoded CSS `filter` — a fixed filter does not track `[data-theme="dark"]`.
+  - `var(--color-icon-gray-neutral-accessible)`
 - Typography:
   - `Base Styles/Data Header` (14/20 medium)
   - `Body 2` (14/20 regular)
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `DetailPanelRoot` | expanded | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | text token-resolved |
-| `DetailPanelRoot` | collapsed | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | icon token-resolved |
-| `DetailPanelToggleButton` | default | transparent | none | `double-chev-right` or `double-chev-left` in `var(--color-icon-neutral)` |
-| `DetailPanelToggleButton` | hover | transparent | none | `var(--color-icon-neutral)` |
-| `DetailPanelToggleButton` | press | transparent | none | `var(--color-icon-neutral)` |
+| `DetailPanelRoot` | expanded | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text token-resolved |
+| `DetailPanelRoot` | collapsed | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | icon token-resolved |
+| `DetailPanelToggleButton` | default | transparent | none | `double-chev-right` or `double-chev-left` in `var(--color-icon-gray-neutral-base)` |
+| `DetailPanelToggleButton` | hover | transparent | none | `var(--color-icon-gray-neutral-base)` |
+| `DetailPanelToggleButton` | press | transparent | none | `var(--color-icon-gray-neutral-base)` |
 | `DetailPanelToggleButton` | focus-visible | transparent | focus outline/focus ring tokenized | icon unchanged |
-| `DetailPanelHeader` (datagrid expanded) | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | title `var(--color-text-neutral-strong)` |
-| `DetailPanelFooter` (page expanded) | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | icon `var(--color-icon-neutral)` |
+| `DetailPanelHeader` (datagrid expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | title `var(--color-text-gray-neutral-strong)` |
+| `DetailPanelFooter` (page expanded) | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | icon `var(--color-icon-gray-neutral-base)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -155,9 +155,9 @@ Variant matrix:
   - `toggleState`: `default | hover | press | focus-visible`
 - Per-slot style contract:
   - root width uses `398px` expanded and `40px` collapsed.
-  - root border uses `1px solid var(--color-border-accessible)`.
+  - root border uses `1px solid var(--color-border-gray-neutral-base)`.
   - toggle icon size is fixed `16px`.
-  - toggle icon color uses `var(--color-icon-neutral)`.
+  - toggle icon color uses `var(--color-icon-gray-neutral-base)`.
   - datagrid-expanded uses header+body; page-expanded uses body+footer.
 - Behavior contract:
   - toggle action is deterministic and idempotent (`onExpandedChange(!isExpanded)` once per activation).
@@ -186,7 +186,7 @@ Variant matrix:
   - [x] expanded/collapsed widths are exactly `398`/`40`.
   - [x] datagrid variant uses `Header + Body`; page variant uses `Body + Footer`.
   - [x] expanded icon is `double-chev-right`; collapsed icon is `double-chev-left`.
-  - [x] toggle icon color is `var(--color-icon-neutral)` in both variants.
+  - [x] toggle icon color is `var(--color-icon-gray-neutral-base)` in both variants.
   - [x] toggle click/keyboard activation correctly toggles panel state.
   - [x] root height tracks host container (datagrid/page) rather than fixed sample heights.
   - [x] light/dark state tables remain structurally parallel and token-driven.
@@ -196,7 +196,7 @@ Variant matrix:
 
 All validation checklist items verified and passing as of 2026-07-09.
 
-- **Toggle icon color** — Render via `<Icon shapeName={...} />` (default `mask` variant) and set `.toggleButton { color: var(--color-icon-neutral); }` so the glyph inherits color through `currentColor`, correctly tracking light/dark token values.
+- **Toggle icon color** — Render via `<Icon shapeName={...} />` (default `mask` variant) and set `.toggleButton { color: var(--color-icon-gray-neutral-base); }` so the glyph inherits color through `currentColor`, correctly tracking light/dark token values.
 - **Header and footer heights** — `DetailPanelHeader` uses `min-height: 48px`; `DetailPanelFooter` uses `min-height: 44px` — two separate CSS rules.
 - **Collapsed rail padding** — Datagrid rail: `var(--spacing-space-16, 16px) var(--padding-padding-12, 12px)` (toggle top-aligned); page rail: `var(--padding-padding-12, 12px)` (toggle bottom-aligned).
 - **Host border overlap** — Wrap the panel in `margin: -1px -1px -1px 0` so the panel border collapses onto the host border into a single `1px` line (Figma `space-minus-1`); left edge retains its `1px` as the divider against host content.

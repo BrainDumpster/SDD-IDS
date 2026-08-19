@@ -37,42 +37,42 @@
 }
 
 .default {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-white, #ffffff);
-  color: var(--color-text-white, #ffffff);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-gray-white, #ffffff);
+  color: var(--color-text-gray-white, #ffffff);
 }
 
 .controls {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .critical {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .warning {
-  background: var(--color-background-alerting-minor);
+  background: var(--color-background-alerting-minor-base);
   border-color: var(
     --ids-badge-warning-border-color,
-    var(--color-border-white)
+    var(--color-border-gray-white)
   );
-  color: var(--color-text-black);
+  color: var(--color-text-gray-black);
 }
 
 .disabled {
   background: var(--color-static-gray-500);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .success {
-  background: var(--color-background-alerting-success);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .badge:focus-visible {

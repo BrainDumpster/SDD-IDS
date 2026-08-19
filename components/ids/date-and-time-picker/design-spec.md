@@ -28,36 +28,36 @@
 - Focus ring: 2px offset from element
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Surface background: `var(--color-background-surface-2)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Disabled text: `var(--color-text-disabled)` = #757575
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Surface background: `var(--color-background-surface-secondary)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
+- Disabled text: `var(--color-text-gray-disabled)` = #757575
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Critical text: `var(--color-text-critical)` = #af0000
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Critical text: `var(--color-text-alerting-critical-base)` = #af0000
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- Strong border: `var(--color-border-strong)` = #252525
-- White border: `var(--color-border-white)` = #ffffff
-- Disabled border: `var(--color-border-disabled)` = #757575
+- Strong border: `var(--color-border-gray-neutral-strong)` = #252525
+- White border: `var(--color-border-gray-white)` = #ffffff
+- Disabled border: `var(--color-border-gray-disabled)` = #757575
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- White icon: `var(--color-icon-white)` = #ffffff
-- Accessible icon: `var(--color-icon-accessible)` = #757575
-- Disabled icon: `var(--color-icon-disabled)` = #757575
-- Info icon: `var(--color-icon-alerting-info)` = #005ece
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- White icon: `var(--color-icon-gray-white)` = #ffffff
+- Accessible icon: `var(--color-icon-gray-neutral-accessible)` = #757575
+- Disabled icon: `var(--color-icon-gray-disabled)` = #757575
+- Info icon: `var(--color-icon-alerting-info-base)` = #005ece
+- Critical icon: `var(--color-icon-alerting-critical-base)` = #af0000
 
 ### Background Colors
 - Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
 - Gray light: `var(--color-background-gray-light)` = #eaeaea
 - Gray base: `var(--color-background-gray-base)` = #757575
-- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
-- Brand light: `var(--color-background-controls-brand-light)` = #d9eaf8
+- Brand lighter: `var(--color-background-controls-lighter)` = #ebf4fb
+- Brand light: `var(--color-background-controls-light)` = #d9eaf8
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -68,7 +68,7 @@
 
 ### Alert Colors
 - Critical border: `var(--color-border-alerting-critical-base)` = #af0000
-- Info border: `var(--color-border-alerting-info-white)` = #005ece
+- Info border: `var(--color-border-alerting-info-base-white)` = #005ece
 
 ### Other Colors
 - Annotation: `Annotation` = #E8178A
@@ -92,17 +92,17 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Hover) | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
-| Input Field (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
-| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
-| Calendar Popup | `var(--color-background-surface-2)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Calendar Header | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Selected Date | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Today Date | `var(--color-background-controls-brand-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Hover Date | `var(--color-background-gray-lighter)` (#f4f4f4) | transparent | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Disabled Date | `var(--color-background-gray-light)` (#eaeaea) | transparent | `var(--color-text-disabled)` (#757575) | `var(--color-icon-disabled)` (#757575) |
+| Input Field (Default) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Input Field (Hover) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Input Field (Focus) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Input Field (Disabled) | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) | `var(--color-icon-gray-disabled)` (#757575) |
+| Input Field (Error) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical-base)` (#af0000) |
+| Calendar Popup | `var(--color-background-surface-secondary)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Calendar Header | `var(--color-background-brand-lighter-slate)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Selected Date | `var(--color-background-controls-base)` (#0076ce) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Today Date | `var(--color-background-controls-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Hover Date | `var(--color-background-gray-lighter)` (#f4f4f4) | transparent | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Disabled Date | `var(--color-background-gray-light)` (#eaeaea) | transparent | `var(--color-text-gray-disabled)` (#757575) | `var(--color-icon-gray-disabled)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables

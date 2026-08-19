@@ -32,7 +32,7 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-neutral-strong, #252525);
+  color: var(--color-text-gray-neutral-strong, #252525);
   white-space: nowrap;
 }
 
@@ -40,7 +40,7 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-critical, #af0000);
+  color: var(--color-text-alerting-critical-base, #af0000);
   white-space: nowrap;
 }
 
@@ -57,8 +57,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: var(--color-background-component, #fff);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-surface-component, #fff);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base, #757575);
   gap: var(--spacing-space-none, 0px);
   cursor: pointer;
   position: relative;
@@ -77,11 +77,11 @@
 }
 
 .fieldContainer:hover:not(.disabled):not(.error):not(.open) {
-  border-color: var(--color-border-strong, #252525);
+  border-color: var(--color-border-gray-neutral-strong, #252525);
 }
 
 .fieldContainer:has(.calendarIconBtn:hover):not(.disabled):not(.error):not(.open) {
-  border-color: var(--color-border-accessible, #757575);
+  border-color: var(--color-border-gray-neutral-base, #757575);
 }
 
 /* Pointer/click focus — blue border, no ring */
@@ -91,7 +91,7 @@
 
 /* Keyboard focus-visible only — outer ring via ::after so field border-radius stays square */
 .fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated) {
-  border-color: var(--color-border-accessible, #757575);
+  border-color: var(--color-border-gray-neutral-base, #757575);
 }
 
 .fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated)::after {
@@ -122,12 +122,12 @@
 
 .fieldContainer.disabled {
   background: var(--color-background-gray-light, #eaeaea);
-  border-color: var(--color-border-disabled, #757575);
+  border-color: var(--color-border-gray-disabled, #757575);
   cursor: not-allowed;
 }
 
 .fieldContainer.disabled:hover {
-  border-color: var(--color-border-disabled, #757575);
+  border-color: var(--color-border-gray-disabled, #757575);
 }
 
 .fieldContainer.error {
@@ -150,13 +150,13 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: 20px;
-  color: var(--color-text-neutral, #4d4d4d);
+  color: var(--color-text-gray-neutral, #4d4d4d);
   padding: 0;
   min-width: 1px;
 }
 
 .textInput::placeholder {
-  color: var(--color-text-disabled, #757575);
+  color: var(--color-text-gray-disabled, #757575);
   font-weight: 400;
 }
 
@@ -166,7 +166,7 @@
 }
 
 .textInput:disabled {
-  color: var(--color-text-disabled, #757575);
+  color: var(--color-text-gray-disabled, #757575);
   cursor: not-allowed;
 }
 
@@ -190,7 +190,7 @@
 }
 
 .calendarIconBtn:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  background: var(--color-background-controls-lighter, #ebf4fb);
   border-color: var(--color-border-brand-base, #0672cb);
   color: var(--color-icon-brand-base, #0672cb);
 }
@@ -206,7 +206,7 @@
 }
 
 .calendarIconBtn:disabled {
-  color: var(--color-icon-disabled, #757575);
+  color: var(--color-icon-gray-disabled, #757575);
   cursor: not-allowed;
 }
 
@@ -216,7 +216,7 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-neutral, #4d4d4d);
+  color: var(--color-text-gray-neutral, #4d4d4d);
   width: 100%;
 }
 
@@ -229,7 +229,7 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-critical, #af0000);
+  color: var(--color-text-alerting-critical-base, #af0000);
 }
 
 /* ── Calendar popup ── */
@@ -240,8 +240,8 @@
   z-index: 100;
   margin-top: -1px;
   box-sizing: border-box;
-  background: var(--color-background-surface-2, #fff);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-surface-secondary, #fff);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base, #757575);
   box-shadow:
     var(--shadow-shadow-2-drop-shadow-4-x, 0px) var(--shadow-shadow-2-drop-shadow-4-y, 4px) var(--shadow-shadow-2-drop-shadow-4-blur, 4px) var(--shadow-shadow-2-drop-shadow-4-spread, 0px) var(--shadow-shadow-2-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
     var(--shadow-shadow-2-drop-shadow-8-x, 0px) var(--shadow-shadow-2-drop-shadow-8-y, 8px) var(--shadow-shadow-2-drop-shadow-8-blur, 8px) var(--shadow-shadow-2-drop-shadow-8-spread, 0px) var(--shadow-shadow-2-drop-shadow-8-color, rgba(37, 37, 37, 0.08));
@@ -299,12 +299,12 @@
 }
 
 .dropdownButton:hover:not(:disabled):not(.menuOpen) {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  background: var(--color-background-controls-lighter, #ebf4fb);
   border-color: var(--color-border-brand-base, #0672cb);
 }
 
 .dropdownButton:active:not(:disabled):not(.menuOpen) {
-  background: var(--color-background-controls-brand-light, #daeaf7);
+  background: var(--color-background-controls-light, #daeaf7);
   border-color: var(--color-border-brand-base, #0672cb);
 }
 
@@ -354,7 +354,7 @@
 .navIcon {
   width: 12px;
   height: 12px;
-  color: var(--color-icon-neutral, #4d4d4d);
+  color: var(--color-icon-gray-neutral-base, #4d4d4d);
   flex-shrink: 0;
 }
 
@@ -374,7 +374,7 @@
   font-weight: 400;
   line-height: 14px;
   letter-spacing: 0.36px;
-  color: var(--color-text-neutral, #4d4d4d);
+  color: var(--color-text-gray-neutral, #4d4d4d);
   padding: 0 5px;
   box-sizing: border-box;
 }
@@ -416,7 +416,7 @@
   top: 50%;
   transform: translateY(-50%);
   height: 30px;
-  background: var(--color-background-brand-light, #daeaf7);
+  background: var(--color-background-brand-light-slate, #daeaf7);
   border-radius: var(--corner-radius-radius-2, 2px);
   z-index: 0;
   pointer-events: none;
@@ -436,13 +436,13 @@
 
 .dateCell.rangeStart:not(.unavailable) .dateCellContainer,
 .dateCell.rangeEnd:not(.unavailable) .dateCellContainer {
-  background: var(--color-background-controls-brand-base, #0672cb);
+  background: var(--color-background-controls-base, #0672cb);
   border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
 }
 
 .dateCell.rangeStart:not(.unavailable) .dateLabel,
 .dateCell.rangeEnd:not(.unavailable) .dateLabel {
-  color: var(--color-text-white, #fff);
+  color: var(--color-text-gray-white, #fff);
 }
 
 /* ── Date cell ── */
@@ -481,16 +481,16 @@
 
 /* Date cell states */
 .dateCell:hover:not(.unavailable):not(.selected):not(.rangeStart):not(.rangeEnd) .dateCellContainer {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  background: var(--color-background-controls-lighter, #ebf4fb);
   cursor: pointer;
 }
 
 .dateCell:active:not(.unavailable) .dateCellContainer {
-  background: var(--color-background-controls-brand-light, #daeaf7);
+  background: var(--color-background-controls-light, #daeaf7);
 }
 
 .dateCell.selected .dateCellContainer {
-  background: var(--color-background-controls-brand-base, #0672cb);
+  background: var(--color-background-controls-base, #0672cb);
   border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
 }
 
@@ -520,13 +520,13 @@
 /* Default / Adjacent Month — border on inner container */
 .dateCell.unavailable:not(:has(.todayType)) .dateCellContainer {
   background: var(--color-background-gray-lighter, #f4f4f4);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-disabled, #757575);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled, #757575);
 }
 
 /* Today — border on outer cell, inner bg only */
 .dateCell.unavailable:has(.todayType) {
   background: var(--color-background-gray-lighter, #f4f4f4);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-disabled, #757575);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled, #757575);
 }
 
 .dateCell.unavailable:has(.todayType) .dateCellContainer {
@@ -549,26 +549,26 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-neutral-strong, #252525);
+  color: var(--color-text-gray-neutral-strong, #252525);
   text-align: center;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .dateLabel.adjacentMonth {
-  color: var(--color-text-disabled, #757575);
+  color: var(--color-text-gray-disabled, #757575);
 }
 
 .dateCell:active:not(.unavailable) .dateLabel.adjacentMonth {
-  color: var(--color-text-neutral, #4d4d4d);
+  color: var(--color-text-gray-neutral, #4d4d4d);
 }
 
 .dateCell.selected .dateLabel {
-  color: var(--color-text-white, #fff);
+  color: var(--color-text-gray-white, #fff);
 }
 
 .dateCell.unavailable .dateLabel {
-  color: var(--color-text-disabled, #757575);
+  color: var(--color-text-gray-disabled, #757575);
   text-decoration: line-through;
   text-decoration-skip-ink: none;
   text-underline-position: from-font;
@@ -579,16 +579,16 @@
   width: 18px;
   height: 2px;
   border-radius: var(--corner-radius-radius-1, 1px);
-  background: var(--color-border-strong, #252525);
+  background: var(--color-border-gray-neutral-strong, #252525);
   flex-shrink: 0;
 }
 
 .dateCell.selected .todayIndicator {
-  background: var(--color-border-white, #fff);
+  background: var(--color-border-gray-white, #fff);
 }
 
 .dateCell.unavailable .todayIndicator {
-  background: var(--color-border-disabled, #757575);
+  background: var(--color-border-gray-disabled, #757575);
 }
 
 /* Focus ring (date cell) — sibling of container, positioned in .dateCell (32×32), inset -2px → 36×36 ring */
@@ -623,12 +623,12 @@
 }
 
 .todayLink:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  background: var(--color-background-controls-lighter, #ebf4fb);
   border-color: var(--color-border-brand-base, #0672cb);
 }
 
 .todayLink:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light, #daeaf7);
+  background: var(--color-background-controls-light, #daeaf7);
   border-color: var(--color-border-brand-base, #0672cb);
 }
 
@@ -663,7 +663,7 @@
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-neutral, #4d4d4d);
+  color: var(--color-text-gray-neutral, #4d4d4d);
   cursor: pointer;
   width: 100%;
   border: none;
@@ -674,7 +674,7 @@
 }
 
 .overlayOption:hover {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
+  background: var(--color-background-controls-lighter, #ebf4fb);
 }
 
 .overlayOption:focus,
@@ -683,8 +683,8 @@
 }
 
 .overlayOption.selectedOption {
-  background: var(--color-background-controls-brand-lighter, #ebf4fb);
-  color: var(--color-text-neutral-strong, #252525);
+  background: var(--color-background-controls-lighter, #ebf4fb);
+  color: var(--color-text-gray-neutral-strong, #252525);
   font-weight: 400;
 }
 

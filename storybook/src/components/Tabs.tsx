@@ -33,7 +33,7 @@ interface TabsProps {
   minTabWidth?: number;
   maxTabWidth?: number;
   variant?: "primary" | "secondary";
-  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-2)`. */
+  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-secondary)`. */
   surface?: TabsSurface;
   moreLabel?: string;
   /** `synapse` → Nav Tab chrome (32px, closable defaults, `shape-plus` add). */
@@ -193,7 +193,7 @@ export function Tabs({
                     icon={
                       <Icon
                         shapeName="ctrl-close-16"
-                        color="var(--color-icon-neutral)"
+                        color="var(--color-icon-gray-neutral-base)"
                         variant="mask"
                       />
                     }
