@@ -4,8 +4,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { FOOTER_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/footer.contract.js";
-import { IdsFooterComponent } from "../../../compiled/storybook-angular/src/components/ids-footer/ids-footer.component.js";
-import { IDS_FOOTER_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-footer/ids-footer.imports.js";
+import { IdsFooterComponent } from "../../../compiled/lib/angular/ids/footer/ids-footer.component.js";
+import { IDS_FOOTER_IMPORTS } from "../../../compiled/lib/angular/ids/footer/index.js";
 import {
   FOOTER_DISABLED_CONTROLS_TEMPLATE,
   FOOTER_DOCS_DESCRIPTION,

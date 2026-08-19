@@ -9,3 +9,9 @@ export const WIZARD_DEFAULTS = {
   title: "Header",
   showCloseButton: true,
 } as const;
+
+export const WIZARD_SPEC_ACCURATE_DEFAULTS = {
+  ...WIZARD_DEFAULTS,
+  mode: "inline",
+  size: "large",
+} as const;

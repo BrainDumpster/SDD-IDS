@@ -9,8 +9,8 @@ import {
   IDS_TEXT_BOX_STATE_OPTIONS,
   TEXT_BOX_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/text-box.contract.js";
-import { IdsTextBoxComponent } from "../../../compiled/storybook-angular/src/components/ids-text-box/ids-text-box.component.js";
-import { IDS_TEXT_BOX_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-text-box/ids-text-box.imports.js";
+import { IdsTextBoxComponent } from "../../../compiled/lib/angular/ids/text-box/ids-text-box.component.js";
+import { IDS_TEXT_BOX_IMPORTS } from "../../../compiled/lib/angular/ids/text-box/index.js";
 import {
   TEXT_BOX_COMPOSITION_DEMO_TEMPLATE,
   TEXT_BOX_DOCS_DESCRIPTION,

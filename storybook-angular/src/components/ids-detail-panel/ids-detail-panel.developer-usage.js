@@ -10,13 +10,18 @@ IDS Detail Panel — Angular 21 standalone API (\`storybook-angular\`, port **60
 
 \`\`\`
 ids-detail-panel [attachMode, expanded, …]
-  ids-detail-panel-header
-  ids-detail-panel-body
+  ids-detail-panel-content
+    ids-detail-panel-header
+      ids-detail-panel-title
+    ids-detail-panel-body
+    ids-detail-panel-footer
+  ids-detail-panel-collapsed-rail
+    ids-detail-panel-toggle-button
 \`\`\`
 
-Import \`IDS_DETAIL_PANEL_IMPORTS\` from \`ids-detail-panel.imports.ts\`.
+Datagrid expanded: header + title + body. Page expanded: body + footer. Always include collapsed rail + toggle.
 
-String prop \`title\` remains shorthand when \`ids-detail-panel-header\` is not projected.
+Import \`IDS_DETAIL_PANEL_IMPORTS\` from \`lib/angular/ids/detail-panel\`.
 
 ### API (\`ids-detail-panel\` root)
 
@@ -24,7 +29,7 @@ String prop \`title\` remains shorthand when \`ids-detail-panel-header\` is not 
 |-------|------|---------|-------|
 | \`attachMode\` | \`datagrid \\| page\` | \`datagrid\` | Toggle placement branch |
 | \`expanded\` | \`boolean\` | \`true\` | Expanded vs collapsed rail |
-| \`title\` | \`string\` | \`Details\` | Shorthand when header slot absent |
+| \`title\` | \`string\` | \`Details\` | Fallback label; prefer \`ids-detail-panel-title\` |
 | \`showHeader\` | \`boolean\` | \`true\` | Datagrid expanded header |
 | \`showFooter\` | \`boolean\` | \`true\` | Page expanded footer |
 | \`ariaLabelExpand\` | \`string\` | \`Expand details panel\` | Collapsed toggle label |
@@ -45,7 +50,7 @@ String prop \`title\` remains shorthand when \`ids-detail-panel-header\` is not 
 `.trim();
 
 export const DETAIL_PANEL_SOURCE_CODE = `import { Component } from "@angular/core";
-import { IDS_DETAIL_PANEL_IMPORTS } from "./ids-detail-panel/ids-detail-panel.imports";
+import { IDS_DETAIL_PANEL_IMPORTS } from "./detail-panel";
 import { DETAIL_PANEL_SPEC_ACCURATE_DEFAULTS } from "@component-contracts/ids/detail-panel.contract";
 
 @Component({
@@ -59,10 +64,18 @@ import { DETAIL_PANEL_SPEC_ACCURATE_DEFAULTS } from "@component-contracts/ids/de
       (opened)="onOpened()"
       (closed)="onClosed()"
     >
-      <ids-detail-panel-header>{{ title }}</ids-detail-panel-header>
-      <ids-detail-panel-body>
-        <p>Label: Single line content</p>
-      </ids-detail-panel-body>
+      <ids-detail-panel-content>
+        <ids-detail-panel-header>
+          <ids-detail-panel-title>{{ title }}</ids-detail-panel-title>
+        </ids-detail-panel-header>
+        <ids-detail-panel-body>
+          <p>Label: Single line content</p>
+        </ids-detail-panel-body>
+        <ids-detail-panel-footer />
+      </ids-detail-panel-content>
+      <ids-detail-panel-collapsed-rail>
+        <ids-detail-panel-toggle-button />
+      </ids-detail-panel-collapsed-rail>
     </ids-detail-panel>
   \`,
 })
@@ -87,14 +100,22 @@ export const DETAIL_PANEL_STORY_SOURCE_CODE = `<ids-detail-panel
   (opened)="onOpened()"
   (closed)="onClosed()"
 >
-  <ids-detail-panel-header>{{ title }}</ids-detail-panel-header>
-  <ids-detail-panel-body>
-    <div class="detail-panel-demo-content">
-      <div class="detail-panel-demo-heading">Section Header</div>
-      <div>Label: Single line content</div>
-      <div>Status: Warning</div>
-    </div>
-  </ids-detail-panel-body>
+  <ids-detail-panel-content>
+    <ids-detail-panel-header>
+      <ids-detail-panel-title>{{ title }}</ids-detail-panel-title>
+    </ids-detail-panel-header>
+    <ids-detail-panel-body>
+      <div class="detail-panel-demo-content">
+        <div class="detail-panel-demo-heading">Section Header</div>
+        <div>Label: Single line content</div>
+        <div>Status: Warning</div>
+      </div>
+    </ids-detail-panel-body>
+    <ids-detail-panel-footer />
+  </ids-detail-panel-content>
+  <ids-detail-panel-collapsed-rail>
+    <ids-detail-panel-toggle-button />
+  </ids-detail-panel-collapsed-rail>
 </ids-detail-panel>`;
 
 export const DETAIL_PANEL_COMPOSITION_DEMO_TEMPLATE = `
@@ -112,15 +133,27 @@ export const DETAIL_PANEL_COMPOSITION_DEMO_TEMPLATE = `
       (opened)="onOpened()"
       (closed)="onClosed()"
     >
-      <ids-detail-panel-header>{{ title }}</ids-detail-panel-header>
-      <ids-detail-panel-body>
-        <div class="detail-panel-demo-content">
-          <div class="detail-panel-demo-heading">Section Header</div>
-          <div>Label: Single line content</div>
-          <div>Status: Warning</div>
-          <div class="detail-panel-demo-overflow">Overflow sample content area</div>
-        </div>
-      </ids-detail-panel-body>
+      <ids-detail-panel-content>
+        @if (attachMode === 'datagrid') {
+          <ids-detail-panel-header>
+            <ids-detail-panel-title>{{ title }}</ids-detail-panel-title>
+          </ids-detail-panel-header>
+        }
+        <ids-detail-panel-body>
+          <div class="detail-panel-demo-content">
+            <div class="detail-panel-demo-heading">Section Header</div>
+            <div>Label: Single line content</div>
+            <div>Status: Warning</div>
+            <div class="detail-panel-demo-overflow">Overflow sample content area</div>
+          </div>
+        </ids-detail-panel-body>
+        @if (attachMode === 'page') {
+          <ids-detail-panel-footer />
+        }
+      </ids-detail-panel-content>
+      <ids-detail-panel-collapsed-rail>
+        <ids-detail-panel-toggle-button />
+      </ids-detail-panel-collapsed-rail>
     </ids-detail-panel>
   </div>
 </div>

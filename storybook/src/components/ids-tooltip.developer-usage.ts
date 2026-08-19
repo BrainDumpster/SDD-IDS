@@ -10,9 +10,13 @@ IDS Tooltip — React **composition** API (\`storybook/src/components/IdsTooltip
 
 \`\`\`
 IdsTooltip [side, arrowAlign, closable, …]
-  ← trigger (default child, e.g. Button)
-  IdsTooltipTitle?     ← optional header (Body 2 Medium)
-  IdsTooltipBody       ← required body copy / rich content
+  IdsTooltipTrigger
+  IdsTooltipPanel
+    IdsTooltipHeader
+      IdsTooltipTitle
+    IdsTooltipBody
+    IdsTooltipClose
+    IdsTooltipArrow
 \`\`\`
 
 String props (\`title\`, \`content\`) remain **shorthand** for Storybook controls when slots are not used.
@@ -57,9 +61,16 @@ export const TOOLTIP_MATRIX_CELL_STYLE = {
 };
 
 export const TOOLTIP_STORY_SOURCE_CODE = `<IdsTooltip side="top" arrowAlign="start" closable={false}>
-  <Button variant="secondary" size="lg">Hover over me</Button>
-  <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
-  <IdsTooltipBody>
-    Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.
-  </IdsTooltipBody>
+  <IdsTooltipTrigger>
+    <Button variant="secondary" size="lg">Hover over me</Button>
+  </IdsTooltipTrigger>
+  <IdsTooltipPanel>
+    <IdsTooltipHeader>
+      <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
+    </IdsTooltipHeader>
+    <IdsTooltipBody>
+      Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.
+    </IdsTooltipBody>
+    <IdsTooltipArrow />
+  </IdsTooltipPanel>
 </IdsTooltip>`;

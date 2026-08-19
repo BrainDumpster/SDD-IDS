@@ -45,19 +45,45 @@ export const ALERT_SPEC_ACCURATE_DEFAULTS = {
   message: ALERT_SPEC_ACCURATE_MESSAGE,
 } as const;
 
+/** Shared `ids-icon` / `Icon` binding for leading status glyphs (design-spec States). */
+export type AlertStatusIconBinding = {
+  shape: string;
+  variant: "img" | "mask" | "inline";
+  color?: string;
+};
+
+export const ALERT_GLOBAL_STATUS_ICON: Record<AlertGlobalSeverity, AlertStatusIconBinding> = {
+  critical: { shape: "status-critical-square-solid-ko", variant: "img" },
+  "warning-major": {
+    shape: "status-error-diamond-solid-ko",
+    variant: "mask",
+    color: "var(--color-icon-gray-white)",
+  },
+  "warning-minor": { shape: "status-warn-tri-solid", variant: "img" },
+  informational: { shape: "info-circ-solid-ko", variant: "img" },
+};
+
+export const ALERT_INLINE_STATUS_ICON: Record<AlertInlineSeverity, AlertStatusIconBinding> = {
+  informational: { shape: "info-circ-solid", variant: "img" },
+  success: { shape: "status-ok-circ-solid", variant: "img" },
+  "warning-minor": { shape: "status-warn-tri-solid", variant: "img" },
+  "warning-major": { shape: "status-error-diamond-solid", variant: "img" },
+  critical: { shape: "status-critical-square-solid", variant: "img" },
+};
+
 export const ALERT_GLOBAL_SEVERITY_ICON: Record<AlertGlobalSeverity, string> = {
-  critical: "status-critical-square",
-  "warning-major": "status-error-diamond",
-  "warning-minor": "status-warn-tri",
-  informational: "info-circ",
+  critical: ALERT_GLOBAL_STATUS_ICON.critical.shape,
+  "warning-major": ALERT_GLOBAL_STATUS_ICON["warning-major"].shape,
+  "warning-minor": ALERT_GLOBAL_STATUS_ICON["warning-minor"].shape,
+  informational: ALERT_GLOBAL_STATUS_ICON.informational.shape,
 };
 
 export const ALERT_INLINE_SEVERITY_ICON: Record<AlertInlineSeverity, string> = {
-  informational: "info-circ-solid",
-  success: "status-ok-circ-solid",
-  "warning-minor": "status-warn-tri-solid",
-  "warning-major": "status-error-diamond-solid",
-  critical: "status-critical-square-solid",
+  informational: ALERT_INLINE_STATUS_ICON.informational.shape,
+  success: ALERT_INLINE_STATUS_ICON.success.shape,
+  "warning-minor": ALERT_INLINE_STATUS_ICON["warning-minor"].shape,
+  "warning-major": ALERT_INLINE_STATUS_ICON["warning-major"].shape,
+  critical: ALERT_INLINE_STATUS_ICON.critical.shape,
 };
 
 /** Logical items for global multi-alert carousel demos (`AlertGroup` pattern). */

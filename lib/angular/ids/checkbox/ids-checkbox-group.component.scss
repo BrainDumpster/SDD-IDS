@@ -1,0 +1,17 @@
+:host {
+  display: inline-flex;
+}
+
+.group {
+  display: flex;
+  gap: var(--spacing-space-16);
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.horizontal {
+  flex-direction: row;
+  gap: var(--spacing-space-8);
+}

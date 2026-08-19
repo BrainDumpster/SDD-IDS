@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../component-contracts/common/story-meta";
@@ -16,7 +17,16 @@ import {
   TOOLTIP_STORY_CANVAS_STYLE,
   TOOLTIP_STORY_SOURCE_CODE,
 } from "./ids-tooltip.developer-usage";
-import { IdsTooltip, IdsTooltipBody, IdsTooltipTitle } from "./IdsTooltip";
+import {
+  IdsTooltip,
+  IdsTooltipArrow,
+  IdsTooltipBody,
+  IdsTooltipClose,
+  IdsTooltipHeader,
+  IdsTooltipPanel,
+  IdsTooltipTitle,
+  IdsTooltipTrigger,
+} from "./IdsTooltip";
 
 const TOOLTIP_PLACEMENTS = TOOLTIP_SIDES.flatMap((side) =>
   TOOLTIP_ARROW_ALIGNS.map((align) => ({
@@ -35,6 +45,32 @@ type PlaygroundArgs = {
   triggerLabel: string;
   tooltipClosed?: (reason: string) => void;
 };
+
+function compositionSlots(options: {
+  trigger: ReactNode;
+  title?: ReactNode;
+  body: ReactNode;
+  closable?: boolean;
+  emptyHeader?: boolean;
+}) {
+  return (
+    <>
+      <IdsTooltipTrigger>{options.trigger}</IdsTooltipTrigger>
+      <IdsTooltipPanel>
+        {options.title != null ? (
+          <IdsTooltipHeader>
+            <IdsTooltipTitle>{options.title}</IdsTooltipTitle>
+          </IdsTooltipHeader>
+        ) : options.emptyHeader ? (
+          <IdsTooltipHeader />
+        ) : null}
+        <IdsTooltipBody>{options.body}</IdsTooltipBody>
+        {options.closable ? <IdsTooltipClose /> : null}
+        <IdsTooltipArrow />
+      </IdsTooltipPanel>
+    </>
+  );
+}
 
 const meta: Meta<typeof IdsTooltip> = {
   title: "Spec Generated/IDS/Tooltip",
@@ -68,7 +104,7 @@ export const SpecAccurateDesign: Story = {
     docs: {
       description: {
         story:
-          "Spec Accurate Design: top · start · standard hover tooltip — composition with `IdsTooltipTitle` + `IdsTooltipBody`.",
+          "Spec Accurate Design: top · start · standard hover tooltip — composition with trigger, panel, header/title, body, and arrow.",
       },
       source: {
         type: "code",
@@ -85,11 +121,16 @@ export const SpecAccurateDesign: Story = {
         closable={args.closable}
         onClose={(reason) => args.tooltipClosed?.(reason)}
       >
-        <Button variant="secondary" size="lg">
-          {args.triggerLabel}
-        </Button>
-        {args.title ? <IdsTooltipTitle>{args.title}</IdsTooltipTitle> : null}
-        <IdsTooltipBody>{args.content}</IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              {args.triggerLabel}
+            </Button>
+          ),
+          title: args.title || undefined,
+          body: args.content,
+          closable: args.closable,
+        })}
       </IdsTooltip>
     </div>
   ),
@@ -109,10 +150,14 @@ export const NormalNoHeader: Story = {
   render: () => (
     <div style={TOOLTIP_STORY_CANVAS_STYLE}>
       <IdsTooltip side="top" arrowAlign="start">
-        <Button variant="secondary" size="lg">
-          Hover over me
-        </Button>
-        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              Hover over me
+            </Button>
+          ),
+          body: TOOLTIP_DEMO_BODY,
+        })}
       </IdsTooltip>
     </div>
   ),
@@ -123,11 +168,15 @@ export const WithHeader: Story = {
   render: () => (
     <div style={TOOLTIP_STORY_CANVAS_STYLE}>
       <IdsTooltip side="top" arrowAlign="center">
-        <Button variant="secondary" size="lg">
-          Hover over me
-        </Button>
-        <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
-        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              Hover over me
+            </Button>
+          ),
+          title: "Tooltip Title",
+          body: TOOLTIP_DEMO_BODY,
+        })}
       </IdsTooltip>
     </div>
   ),
@@ -146,11 +195,16 @@ export const Closable: Story = {
           console.log("[IDS Tooltip] closed", reason);
         }}
       >
-        <Button variant="secondary" size="lg">
-          Hover over me
-        </Button>
-        <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
-        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              Hover over me
+            </Button>
+          ),
+          title: "Tooltip Title",
+          body: TOOLTIP_DEMO_BODY,
+          closable: true,
+        })}
       </IdsTooltip>
     </div>
   ),
@@ -162,10 +216,16 @@ export const ClosableNoTitle: Story = {
   render: () => (
     <div style={TOOLTIP_STORY_CANVAS_STYLE}>
       <IdsTooltip side="top" arrowAlign="start" closable>
-        <Button variant="secondary" size="lg">
-          Hover over me
-        </Button>
-        <IdsTooltipBody>{TOOLTIP_DEMO_BODY}</IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              Hover over me
+            </Button>
+          ),
+          body: TOOLTIP_DEMO_BODY,
+          closable: true,
+          emptyHeader: true,
+        })}
       </IdsTooltip>
     </div>
   ),
@@ -176,18 +236,24 @@ export const RichContent: Story = {
   render: () => (
     <div style={TOOLTIP_STORY_CANVAS_STYLE}>
       <IdsTooltip side="right" arrowAlign="center">
-        <Button variant="secondary" size="lg">
-          Rich content
-        </Button>
-        <IdsTooltipTitle>Custom Content</IdsTooltipTitle>
-        <IdsTooltipBody>
-          <p style={{ margin: 0 }}>Any content can be rendered here.</p>
-          <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
-            <li>Text</li>
-            <li>Lists</li>
-            <li>Inline formatting</li>
-          </ul>
-        </IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              Rich content
+            </Button>
+          ),
+          title: "Custom Content",
+          body: (
+            <>
+              <p style={{ margin: 0 }}>Any content can be rendered here.</p>
+              <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+                <li>Text</li>
+                <li>Lists</li>
+                <li>Inline formatting</li>
+              </ul>
+            </>
+          ),
+        })}
       </IdsTooltip>
     </div>
   ),
@@ -203,13 +269,16 @@ export const ArrowMatrix: Story = {
       {TOOLTIP_PLACEMENTS.map((placement) => (
         <div key={placement.key} style={TOOLTIP_MATRIX_CELL_STYLE}>
           <IdsTooltip side={placement.side} arrowAlign={placement.align} closable>
-            <Button variant="secondary" size="lg">
-              {placement.key}
-            </Button>
-            <IdsTooltipTitle>Tooltip Title</IdsTooltipTitle>
-            <IdsTooltipBody>
-              {placement.side} - {placement.align}
-            </IdsTooltipBody>
+            {compositionSlots({
+              trigger: (
+                <Button variant="secondary" size="lg">
+                  {placement.key}
+                </Button>
+              ),
+              title: "Tooltip Title",
+              body: `${placement.side} - ${placement.align}`,
+              closable: true,
+            })}
           </IdsTooltip>
         </div>
       ))}
@@ -227,11 +296,16 @@ export const Playground: Story = {
         closable={args.closable}
         onClose={(reason) => args.tooltipClosed?.(reason)}
       >
-        <Button variant="secondary" size="lg">
-          {args.triggerLabel}
-        </Button>
-        {args.title ? <IdsTooltipTitle>{args.title}</IdsTooltipTitle> : null}
-        <IdsTooltipBody>{args.content}</IdsTooltipBody>
+        {compositionSlots({
+          trigger: (
+            <Button variant="secondary" size="lg">
+              {args.triggerLabel}
+            </Button>
+          ),
+          title: args.title || undefined,
+          body: args.content,
+          closable: args.closable,
+        })}
       </IdsTooltip>
     </div>
   ),

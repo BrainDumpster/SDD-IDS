@@ -8,8 +8,8 @@ import {
   DETAIL_PANEL_SPEC_ACCURATE_DEFAULTS,
   IDS_DETAIL_PANEL_DESIGN_SPEC_PATH,
 } from "../../../compiled/component-contracts/ids/detail-panel.contract.js";
-import { IdsDetailPanelComponent } from "../../../compiled/storybook-angular/src/components/ids-detail-panel/ids-detail-panel.component.js";
-import { IDS_DETAIL_PANEL_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-detail-panel/ids-detail-panel.imports.js";
+import { IdsDetailPanelComponent } from "../../../compiled/lib/angular/ids/detail-panel/ids-detail-panel.component.js";
+import { IDS_DETAIL_PANEL_IMPORTS } from "../../../compiled/lib/angular/ids/detail-panel/index.js";
 import {
   DETAIL_PANEL_COMPOSITION_DEMO_TEMPLATE,
   DETAIL_PANEL_DOCS_DESCRIPTION,
@@ -128,7 +128,15 @@ const collapsedFrameTemplate = `
         (opened)="onOpened()"
         (closed)="onClosed()"
       >
-        <ids-detail-panel-body><div>Details content</div></ids-detail-panel-body>
+        <ids-detail-panel-content>
+          <ids-detail-panel-header>
+            <ids-detail-panel-title>Details</ids-detail-panel-title>
+          </ids-detail-panel-header>
+          <ids-detail-panel-body><div>Details content</div></ids-detail-panel-body>
+        </ids-detail-panel-content>
+        <ids-detail-panel-collapsed-rail>
+          <ids-detail-panel-toggle-button />
+        </ids-detail-panel-collapsed-rail>
       </ids-detail-panel>
     </div>
     <div style="border:1px solid var(--color-border-gray-neutral-base);background:var(--color-background-surface-component);display:flex;">
@@ -139,7 +147,13 @@ const collapsedFrameTemplate = `
         (opened)="onOpened()"
         (closed)="onClosed()"
       >
-        <ids-detail-panel-body><div>Details content</div></ids-detail-panel-body>
+        <ids-detail-panel-content>
+          <ids-detail-panel-body><div>Details content</div></ids-detail-panel-body>
+          <ids-detail-panel-footer />
+        </ids-detail-panel-content>
+        <ids-detail-panel-collapsed-rail>
+          <ids-detail-panel-toggle-button />
+        </ids-detail-panel-collapsed-rail>
       </ids-detail-panel>
     </div>
   </div>

@@ -2,11 +2,28 @@ import { Tooltip as BaseTooltip } from "@base-ui-components/react/tooltip";
 import { useCallback, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
-import { IdsTooltipBody, IdsTooltipTitle, parseTooltipChildren } from "./ids-tooltip.slots";
+import {
+  IdsTooltipArrow,
+  IdsTooltipBody,
+  IdsTooltipClose,
+  IdsTooltipHeader,
+  IdsTooltipPanel,
+  IdsTooltipTitle,
+  IdsTooltipTrigger,
+  parseTooltipChildren,
+} from "./ids-tooltip.slots";
 import buttonStyles from "./Button.module.css";
 import styles from "./IdsTooltip.module.css";
 
-export { IdsTooltipBody, IdsTooltipTitle };
+export {
+  IdsTooltipArrow,
+  IdsTooltipBody,
+  IdsTooltipClose,
+  IdsTooltipHeader,
+  IdsTooltipPanel,
+  IdsTooltipTitle,
+  IdsTooltipTrigger,
+};
 
 /** Reference: `components/ids/tooltip/design-spec.md` */
 export interface IdsTooltipProps {

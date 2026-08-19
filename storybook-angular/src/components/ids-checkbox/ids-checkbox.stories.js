@@ -7,8 +7,8 @@ import {
   CHECKBOX_MATRIX_LABEL,
   CHECKBOX_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/checkbox.contract.js";
-import { IdsCheckboxComponent } from "../../../compiled/storybook-angular/src/components/ids-checkbox/ids-checkbox.component.js";
-import { IDS_CHECKBOX_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-checkbox/ids-checkbox.imports.js";
+import { IdsCheckboxComponent } from "../../../compiled/lib/angular/ids/checkbox/ids-checkbox.component.js";
+import { IDS_CHECKBOX_IMPORTS } from "../../../compiled/lib/angular/ids/checkbox/index.js";
 import {
   CHECKBOX_COMPOSITION_DEMO_TEMPLATE,
   CHECKBOX_DOCS_DESCRIPTION,

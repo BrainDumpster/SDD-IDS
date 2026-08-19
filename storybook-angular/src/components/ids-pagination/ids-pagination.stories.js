@@ -7,8 +7,8 @@ import {
   PAGINATION_DROPDOWN_STATES,
   PAGINATION_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/pagination.contract.js";
-import { IdsPaginationComponent } from "../../../compiled/storybook-angular/src/components/ids-pagination/ids-pagination.component.js";
-import { IDS_PAGINATION_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-pagination/ids-pagination.imports.js";
+import { IdsPaginationComponent } from "../../../compiled/lib/angular/ids/pagination/ids-pagination.component.js";
+import { IDS_PAGINATION_IMPORTS } from "../../../compiled/lib/angular/ids/pagination/index.js";
 
 const frameStyle = "padding: 20px; max-width: 960px;";
 const stackStyle = "padding: 20px; max-width: 960px; display: grid; gap: 20px;";

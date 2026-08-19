@@ -8,8 +8,8 @@ import {
   MODAL_MULTI_PAGE_DEMO_PAGES,
   MODAL_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/modal.contract.js";
-import { IdsModalComponent } from "../../../compiled/storybook-angular/src/components/ids-modal/ids-modal.component.js";
-import { IDS_MODAL_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-modal/ids-modal.imports.js";
+import { IdsModalComponent } from "../../../compiled/lib/angular/ids/modal/ids-modal.component.js";
+import { IDS_MODAL_IMPORTS } from "../../../compiled/lib/angular/ids/modal/index.js";
 import {
   MODAL_COMPOSITION_DEMO_TEMPLATE,
   MODAL_DOCS_DESCRIPTION,

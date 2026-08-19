@@ -8,8 +8,8 @@ import {
   TAG_TYPES,
   TAG_SIZES,
 } from "../../../compiled/component-contracts/ids/tag.contract.js";
-import { IdsTagComponent } from "../../../compiled/storybook-angular/src/components/ids-tag/ids-tag.component.js";
-import { IDS_TAG_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-tag/ids-tag.imports.js";
+import { IdsTagComponent } from "../../../compiled/lib/angular/ids/tag/ids-tag.component.js";
+import { IDS_TAG_IMPORTS } from "../../../compiled/lib/angular/ids/tag/index.js";
 
 /** @type {import("@storybook/angular").Meta<IdsTagComponent>} */
 const meta = {

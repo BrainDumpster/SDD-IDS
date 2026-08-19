@@ -5,8 +5,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { MAIN_MENU_LEFT_SPEC_ACCURATE_DEFAULTS, MAIN_MENU_LEFT_SPEC_ACCURATE_ITEMS } from "../../../compiled/component-contracts/ids/main-menu-left.contract.js";
-import { IdsMainMenuLeftComponent } from "../../../compiled/storybook-angular/src/components/ids-main-menu-left/ids-main-menu-left.component.js";
-import { IDS_MAIN_MENU_LEFT_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-main-menu-left/ids-main-menu-left.imports.js";
+import { IdsMainMenuLeftComponent } from "../../../compiled/lib/angular/ids/main-menu-left/ids-main-menu-left.component.js";
+import { IDS_MAIN_MENU_LEFT_IMPORTS } from "../../../compiled/lib/angular/ids/main-menu-left/index.js";
 import {
   MAIN_MENU_LEFT_COMPOSITION_DEMO_TEMPLATE,
   MAIN_MENU_LEFT_DOCS_DESCRIPTION,

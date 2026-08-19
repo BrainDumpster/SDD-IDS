@@ -30,6 +30,10 @@
     "../component-contracts/ids/badge.contract.ts",
     "../component-contracts/ids/text-box.contract.ts",
     "../component-contracts/ids/anchor-menu.contract.ts",
+    "../component-contracts/ids/dropdown-button.contract.ts",
+    "../component-contracts/ids/dual-list-box.contract.ts",
+    "../component-contracts/ids/toggle-switch.contract.ts",
+    "../component-contracts/ids/wizard.contract.ts",
     "../lib/angular/ids/**/*.ts"
   ]
 }

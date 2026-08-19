@@ -4,8 +4,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { SEGMENTED_BUTTON_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/segmented-button.contract.js";
-import { IdsSegmentedButtonsComponent } from "../../../compiled/storybook-angular/src/components/ids-segmented-button/ids-segmented-buttons.component.js";
-import { IDS_SEGMENTED_BUTTON_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-segmented-button/ids-segmented-button.imports.js";
+import { IdsSegmentedButtonsComponent } from "../../../compiled/lib/angular/ids/segmented-button/ids-segmented-buttons.component.js";
+import { IDS_SEGMENTED_BUTTON_IMPORTS } from "../../../compiled/lib/angular/ids/segmented-button/index.js";
 import {
   SEGMENTED_BUTTON_COMPOSITION_DEMO_TEMPLATE,
   SEGMENTED_BUTTON_DOCS_DESCRIPTION,

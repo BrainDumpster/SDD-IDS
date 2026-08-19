@@ -4,8 +4,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/radio-button.contract.js";
-import { IdsRadioButtonGroupComponent } from "../../../compiled/storybook-angular/src/components/ids-radio-button/ids-radio-button-group.component.js";
-import { IDS_RADIO_BUTTON_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-radio-button/ids-radio-button.imports.js";
+import { IdsRadioButtonGroupComponent } from "../../../compiled/lib/angular/ids/radio-button/ids-radio-button-group.component.js";
+import { IDS_RADIO_BUTTON_IMPORTS } from "../../../compiled/lib/angular/ids/radio-button/index.js";
 import {
   RADIO_BUTTON_COMPOSITION_DEMO_TEMPLATE,
   RADIO_BUTTON_DOCS_DESCRIPTION,

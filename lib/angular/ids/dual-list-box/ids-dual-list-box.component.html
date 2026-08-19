@@ -1,0 +1,127 @@
+<div class="ids-dual-list-box" role="group" [attr.aria-label]="ariaLabel">
+  <ids-dual-list-box-lists-parent>
+
+    <!-- row 1, col 1: available header -->
+    <ids-dual-list-box-available-pane-header [title]="availableTitle">
+      <ids-dual-list-box-available-metrics
+        [showMetrics]="showMetrics"
+        [metricsFormat]="metricsFormat"
+        [totalCount]="internalAvailableItems.length"
+        [selectedCount]="internalAvailableSelection.length"
+      />
+    </ids-dual-list-box-available-pane-header>
+
+    <!-- row 1, col 3: selected header -->
+    <ids-dual-list-box-selected-pane-header [title]="selectedTitle">
+      <ids-dual-list-box-selected-metrics
+        [showMetrics]="showMetrics"
+        [metricsFormat]="metricsFormat"
+        [totalCount]="internalSelectedItems.length"
+        [selectedCount]="internalSelectedSelection.length"
+      />
+    </ids-dual-list-box-selected-pane-header>
+
+    <!-- row 2, col 1: available list -->
+    <ids-dual-list-box-available-list-group
+      [empty]="availableIsEmpty"
+      [dragOver]="paneDragOver('available')"
+      [placeholder]="availablePlaceholder"
+      [ariaLabel]="availableTitle"
+      (dragOverEvent)="onPaneDragOver($event)"
+      (dropEvent)="onPaneDrop($event, 'available')"
+      (dragLeaveEvent)="onPaneDragLeave($event, 'available')"
+      (listKeydown)="onListKeydown($event, 'available')"
+      (listFocus)="onListFocus($event, 'available')"
+    >
+      @for (item of internalAvailableItems; track item.id) {
+        <ids-dual-list-box-list-item
+          [item]="item"
+          pane="available"
+          [itemId]="itemDomId('available', item.id)"
+          [selected]="isItemSelected('available', item.id)"
+          [focused]="isItemFocused('available', item.id)"
+          [dragging]="isItemDragging(item.id)"
+          [dragWithSelection]="isDragWithSelection(item.id)"
+          [dragEnabled]="enableDragDrop"
+          [showCheck]="isItemSelected('available', item.id) && !isItemDragging(item.id)"
+          [showDropBefore]="showDropBefore('available', item.id)"
+          [showDropAfter]="showDropAfter('available', item.id)"
+          [tooltipSide]="itemTooltipSide"
+          [tooltipArrowAlign]="itemTooltipArrowAlign"
+          (toggle)="toggleAvailable(item.id)"
+          (focusedChange)="focusItem('available', item.id)"
+          (dragStart)="onHandleDragStart($event, 'available', item.id, isItemSelected('available', item.id))"
+          (dragEnd)="onHandleDragEnd()"
+          (dragOverItem)="onItemDragOver($event, 'available', item.id)"
+          (dropOnItem)="onItemDrop($event, 'available', item.id)"
+        />
+      }
+    </ids-dual-list-box-available-list-group>
+
+    <!-- row 2, col 2: transfer buttons — vertically centred by grid-area -->
+    <ids-dual-list-box-transfer-button-group>
+      <ids-dual-list-box-move-all-right
+        icon="double-chev-right"
+        [label]="transferLabels.moveAllRight"
+        [enabled]="transferState('moveAllRight') === 'default'"
+        (pressed)="runTransfer('moveAllRight')"
+      />
+      <ids-dual-list-box-move-selected-right
+        icon="chev-right"
+        [label]="transferLabels.moveSelectedRight"
+        [enabled]="transferState('moveSelectedRight') === 'default'"
+        (pressed)="runTransfer('moveSelectedRight')"
+      />
+      <ids-dual-list-box-move-selected-left
+        icon="chev-left"
+        [label]="transferLabels.moveSelectedLeft"
+        [enabled]="transferState('moveSelectedLeft') === 'default'"
+        (pressed)="runTransfer('moveSelectedLeft')"
+      />
+      <ids-dual-list-box-move-all-left
+        icon="double-chev-left"
+        [label]="transferLabels.moveAllLeft"
+        [enabled]="transferState('moveAllLeft') === 'default'"
+        (pressed)="runTransfer('moveAllLeft')"
+      />
+    </ids-dual-list-box-transfer-button-group>
+
+    <!-- row 2, col 3: selected list -->
+    <ids-dual-list-box-selected-list-group
+      [empty]="selectedIsEmpty"
+      [dragOver]="paneDragOver('selected')"
+      [placeholder]="selectedPlaceholder"
+      [ariaLabel]="selectedTitle"
+      (dragOverEvent)="onPaneDragOver($event)"
+      (dropEvent)="onPaneDrop($event, 'selected')"
+      (dragLeaveEvent)="onPaneDragLeave($event, 'selected')"
+      (listKeydown)="onListKeydown($event, 'selected')"
+      (listFocus)="onListFocus($event, 'selected')"
+    >
+      @for (item of internalSelectedItems; track item.id) {
+        <ids-dual-list-box-list-item
+          [item]="item"
+          pane="selected"
+          [itemId]="itemDomId('selected', item.id)"
+          [selected]="isItemSelected('selected', item.id)"
+          [focused]="isItemFocused('selected', item.id)"
+          [dragging]="isItemDragging(item.id)"
+          [dragWithSelection]="isDragWithSelection(item.id)"
+          [dragEnabled]="enableDragDrop"
+          [showCheck]="isItemSelected('selected', item.id) && !isItemDragging(item.id)"
+          [showDropBefore]="showDropBefore('selected', item.id)"
+          [showDropAfter]="showDropAfter('selected', item.id)"
+          [tooltipSide]="itemTooltipSide"
+          [tooltipArrowAlign]="itemTooltipArrowAlign"
+          (toggle)="toggleSelected(item.id)"
+          (focusedChange)="focusItem('selected', item.id)"
+          (dragStart)="onHandleDragStart($event, 'selected', item.id, isItemSelected('selected', item.id))"
+          (dragEnd)="onHandleDragEnd()"
+          (dragOverItem)="onItemDragOver($event, 'selected', item.id)"
+          (dropOnItem)="onItemDrop($event, 'selected', item.id)"
+        />
+      }
+    </ids-dual-list-box-selected-list-group>
+
+  </ids-dual-list-box-lists-parent>
+</div>

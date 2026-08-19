@@ -1,4 +1,4 @@
-import { IdsDropdownComponent } from "../../../compiled/storybook-angular/src/components/ids-dropdown/ids-dropdown.component.js";
+import { IdsDropdownComponent } from "../../../compiled/lib/angular/ids/dropdown/ids-dropdown.component.js";
 import {
   dropdownStoryArgTypes,
   dropdownStoryDecorators,

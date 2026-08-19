@@ -27,8 +27,13 @@ import {
 } from "./ids-tooltip.developer-usage";
 import {
   SynapseTooltip,
+  SynapseTooltipArrow,
   SynapseTooltipBody,
+  SynapseTooltipClose,
+  SynapseTooltipHeader,
+  SynapseTooltipPanel,
   SynapseTooltipTitle,
+  SynapseTooltipTrigger,
 } from "./SynapseTooltip";
 
 const SYNAPSE_TOOLTIP_PLACEMENTS = TOOLTIP_SIDES.flatMap((side) =>
@@ -49,11 +54,39 @@ type PlaygroundArgs = {
   tooltipClosed?: (reason: string) => void;
 };
 
-function SynapseTooltipTrigger({ children }: { children: ReactNode }) {
+function StoryTriggerButton({ children }: { children: ReactNode }) {
   return (
     <button type="button" className="sbSynapseTooltipTrigger">
       {children}
     </button>
+  );
+}
+
+function compositionSlots(options: {
+  trigger: ReactNode;
+  title?: ReactNode;
+  body: ReactNode;
+  closable?: boolean;
+  emptyHeader?: boolean;
+}) {
+  return (
+    <>
+      <SynapseTooltipTrigger>
+        <StoryTriggerButton>{options.trigger}</StoryTriggerButton>
+      </SynapseTooltipTrigger>
+      <SynapseTooltipPanel>
+        {options.title != null ? (
+          <SynapseTooltipHeader>
+            <SynapseTooltipTitle>{options.title}</SynapseTooltipTitle>
+          </SynapseTooltipHeader>
+        ) : options.emptyHeader ? (
+          <SynapseTooltipHeader />
+        ) : null}
+        <SynapseTooltipBody>{options.body}</SynapseTooltipBody>
+        {options.closable ? <SynapseTooltipClose /> : null}
+        <SynapseTooltipArrow />
+      </SynapseTooltipPanel>
+    </>
   );
 }
 
@@ -110,7 +143,7 @@ const meta: Meta<typeof SynapseTooltip> = {
           `IDS baseline layout/anatomy: \`${SYNAPSE_TOOLTIP_IDS_BASELINE_SPEC_PATH}\` (Figma \`${SYNAPSE_TOOLTIP_SPEC_ACCURATE_NODE_ID}\`).`,
           `Synapse programme delta: \`${SYNAPSE_TOOLTIP_CONTROL_RADIUS_ALIAS}\` → 8px panel radius (Figma \`${SYNAPSE_TOOLTIP_MAIN_NODE_ID}\`).`,
           `Closable layout inherits IDS: \`${SYNAPSE_TOOLTIP_CLOSE_CONTENT_GAP_TOKEN}\` reserve + \`${SYNAPSE_TOOLTIP_CLOSE_ICON_SHAPE}\` at ${SYNAPSE_TOOLTIP_CLOSE_ICON_SIZE_PX}px via shared Icon.`,
-          "Composition: `SynapseTooltip` + `SynapseTooltipTitle` + `SynapseTooltipBody`. Theme: `components/synapse-theme.css`.",
+          "Composition: `SynapseTooltip` + `SynapseTooltipTrigger` + `SynapseTooltipPanel` (`Header`/`Title`, `Body`, `Close`, `Arrow`). Theme: `components/synapse-theme.css`.",
         ].join(" "),
       },
     },
@@ -135,7 +168,7 @@ export const SpecAccurateDesign: Story = {
   parameters: {
     docs: {
       description: {
-        story: `Figma variant \`${SYNAPSE_TOOLTIP_SPEC_ACCURATE_VARIANT_NODE_ID}\` within \`${SYNAPSE_TOOLTIP_SPEC_ACCURATE_NODE_ID}\` — composition with \`SynapseTooltipTitle\` + \`SynapseTooltipBody\`.`,
+        story: `Figma variant \`${SYNAPSE_TOOLTIP_SPEC_ACCURATE_VARIANT_NODE_ID}\` within \`${SYNAPSE_TOOLTIP_SPEC_ACCURATE_NODE_ID}\` — composition with trigger, panel, header/title, body, and arrow.`,
       },
     },
   },
@@ -149,9 +182,12 @@ export const SpecAccurateDesign: Story = {
           closable={args.closable}
           onClose={(reason) => args.tooltipClosed?.(reason)}
         >
-          <SynapseTooltipTrigger>{args.triggerLabel}</SynapseTooltipTrigger>
-          {args.title ? <SynapseTooltipTitle>{args.title}</SynapseTooltipTitle> : null}
-          <SynapseTooltipBody>{args.content}</SynapseTooltipBody>
+          {compositionSlots({
+            trigger: args.triggerLabel,
+            title: args.title || undefined,
+            body: args.content,
+            closable: args.closable,
+          })}
         </SynapseTooltip>
         <div className="sbSynapseTooltipRadiusEvidence">
           <span>
@@ -180,8 +216,10 @@ export const NormalNoHeader: Story = {
       <TooltipStoryStyles />
       <div style={TOOLTIP_STORY_CANVAS_STYLE}>
         <SynapseTooltip side="top" arrowAlign="start">
-          <SynapseTooltipTrigger>Hover over me</SynapseTooltipTrigger>
-          <SynapseTooltipBody>{SYNAPSE_TOOLTIP_SAMPLE_BODY}</SynapseTooltipBody>
+          {compositionSlots({
+            trigger: "Hover over me",
+            body: SYNAPSE_TOOLTIP_SAMPLE_BODY,
+          })}
         </SynapseTooltip>
       </div>
     </>
@@ -195,9 +233,11 @@ export const WithHeader: Story = {
       <TooltipStoryStyles />
       <div style={TOOLTIP_STORY_CANVAS_STYLE}>
         <SynapseTooltip side="top" arrowAlign="center">
-          <SynapseTooltipTrigger>Hover over me</SynapseTooltipTrigger>
-          <SynapseTooltipTitle>{SYNAPSE_TOOLTIP_SAMPLE_TITLE}</SynapseTooltipTitle>
-          <SynapseTooltipBody>{SYNAPSE_TOOLTIP_SAMPLE_BODY}</SynapseTooltipBody>
+          {compositionSlots({
+            trigger: "Hover over me",
+            title: SYNAPSE_TOOLTIP_SAMPLE_TITLE,
+            body: SYNAPSE_TOOLTIP_SAMPLE_BODY,
+          })}
         </SynapseTooltip>
       </div>
     </>
@@ -226,9 +266,12 @@ export const Closable: Story = {
             console.log("[Synapse Tooltip] closed", reason);
           }}
         >
-          <SynapseTooltipTrigger>Hover over me</SynapseTooltipTrigger>
-          <SynapseTooltipTitle>{SYNAPSE_TOOLTIP_SAMPLE_TITLE}</SynapseTooltipTitle>
-          <SynapseTooltipBody>{SYNAPSE_TOOLTIP_SAMPLE_BODY}</SynapseTooltipBody>
+          {compositionSlots({
+            trigger: "Hover over me",
+            title: SYNAPSE_TOOLTIP_SAMPLE_TITLE,
+            body: SYNAPSE_TOOLTIP_SAMPLE_BODY,
+            closable: true,
+          })}
         </SynapseTooltip>
       </div>
     </>
@@ -243,8 +286,12 @@ export const ClosableNoTitle: Story = {
       <TooltipStoryStyles />
       <div style={TOOLTIP_STORY_CANVAS_STYLE}>
         <SynapseTooltip side="top" arrowAlign="start" closable>
-          <SynapseTooltipTrigger>Hover over me</SynapseTooltipTrigger>
-          <SynapseTooltipBody>{SYNAPSE_TOOLTIP_SAMPLE_BODY}</SynapseTooltipBody>
+          {compositionSlots({
+            trigger: "Hover over me",
+            body: SYNAPSE_TOOLTIP_SAMPLE_BODY,
+            closable: true,
+            emptyHeader: true,
+          })}
         </SynapseTooltip>
       </div>
     </>
@@ -258,16 +305,20 @@ export const RichContent: Story = {
       <TooltipStoryStyles />
       <div style={TOOLTIP_STORY_CANVAS_STYLE}>
         <SynapseTooltip side="right" arrowAlign="center">
-          <SynapseTooltipTrigger>Rich content</SynapseTooltipTrigger>
-          <SynapseTooltipTitle>Custom Content</SynapseTooltipTitle>
-          <SynapseTooltipBody>
-            <p style={{ margin: 0 }}>Any content can be rendered here.</p>
-            <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
-              <li>Text</li>
-              <li>Lists</li>
-              <li>Inline formatting</li>
-            </ul>
-          </SynapseTooltipBody>
+          {compositionSlots({
+            trigger: "Rich content",
+            title: "Custom Content",
+            body: (
+            <>
+              <p style={{ margin: 0 }}>Any content can be rendered here.</p>
+              <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+                <li>Text</li>
+                <li>Lists</li>
+                <li>Inline formatting</li>
+              </ul>
+            </>
+            ),
+          })}
         </SynapseTooltip>
       </div>
     </>
@@ -286,11 +337,12 @@ export const ArrowMatrix: Story = {
         {SYNAPSE_TOOLTIP_PLACEMENTS.map((placement) => (
           <div key={placement.key} style={TOOLTIP_MATRIX_CELL_STYLE}>
             <SynapseTooltip side={placement.side} arrowAlign={placement.align} closable>
-              <SynapseTooltipTrigger>{placement.key}</SynapseTooltipTrigger>
-              <SynapseTooltipTitle>{SYNAPSE_TOOLTIP_SAMPLE_TITLE}</SynapseTooltipTitle>
-              <SynapseTooltipBody>
-                {placement.side} - {placement.align}
-              </SynapseTooltipBody>
+              {compositionSlots({
+                trigger: placement.key,
+                title: SYNAPSE_TOOLTIP_SAMPLE_TITLE,
+                body: `${placement.side} - ${placement.align}`,
+                closable: true,
+              })}
             </SynapseTooltip>
           </div>
         ))}
@@ -311,9 +363,12 @@ export const Playground: Story = {
           closable={args.closable}
           onClose={(reason) => args.tooltipClosed?.(reason)}
         >
-          <SynapseTooltipTrigger>{args.triggerLabel}</SynapseTooltipTrigger>
-          {args.title ? <SynapseTooltipTitle>{args.title}</SynapseTooltipTitle> : null}
-          <SynapseTooltipBody>{args.content}</SynapseTooltipBody>
+          {compositionSlots({
+            trigger: args.triggerLabel,
+            title: args.title || undefined,
+            body: args.content,
+            closable: args.closable,
+          })}
         </SynapseTooltip>
       </div>
     </>

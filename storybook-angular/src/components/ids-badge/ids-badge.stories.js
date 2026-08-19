@@ -7,7 +7,7 @@ import {
   BADGE_SPEC_ACCURATE_DEFAULTS,
   BADGE_TYPES,
 } from "../../../compiled/component-contracts/ids/badge.contract.js";
-import { IdsBadgeComponent } from "../../../compiled/storybook-angular/src/components/ids-badge/ids-badge.component.js";
+import { IdsBadgeComponent } from "../../../compiled/lib/angular/ids/badge/ids-badge.component.js";
 
 /** @type {import("@storybook/angular").Meta<IdsBadgeComponent>} */
 const meta = {

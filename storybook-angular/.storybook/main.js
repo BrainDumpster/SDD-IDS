@@ -100,6 +100,18 @@ const config = {
         compiledRoot,
         "component-contracts/ids/anchor-menu.contract.js",
       ),
+      "@component-contracts/ids/toggle-switch.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/toggle-switch.contract.js",
+      ),
+      "@component-contracts/ids/toast.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/toast.contract.js",
+      ),
+      "@component-contracts/ids/wizard.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/wizard.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 

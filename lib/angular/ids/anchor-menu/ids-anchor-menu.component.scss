@@ -19,6 +19,7 @@ ids-anchor-active-indicator {
   max-width: 300px;
   width: fit-content;
   background: transparent;
+  border-radius: 0;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
 }
 
@@ -37,6 +38,7 @@ ids-anchor-active-indicator {
   color: var(--color-text-gray-neutral-strong);
   text-transform: none;
   letter-spacing: normal;
+  border-radius: 0;
 }
 
 .ids-anchor-menu__list {
@@ -63,6 +65,7 @@ ids-anchor-active-indicator {
   border-radius: 0;
   background: transparent;
   cursor: pointer;
+  outline: none;
 }
 
 .ids-anchor-menu__link:hover {
@@ -77,11 +80,17 @@ ids-anchor-active-indicator {
   /* Padding-box origin: center 4px bar on 1.2px border-left rail. */
   left: calc((-1.2px - 4px) / 2);
   width: 4px;
+  border-radius: 0;
   background: var(--color-border-brand-base);
 }
 
 .ids-anchor-menu__link--active {
   color: var(--color-text-brand-strong);
+  border-left-color: transparent;
+}
+
+.ids-anchor-menu__link:focus:not(:focus-visible)::after {
+  content: none;
 }
 
 .ids-anchor-menu__link:focus-visible {
@@ -109,6 +118,7 @@ ids-anchor-active-indicator {
   display: block;
   width: 4px;
   height: var(--scale-40);
+  border-radius: 0;
   background: var(--color-border-brand-base);
   pointer-events: none;
 }

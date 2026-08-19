@@ -4,8 +4,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { ACCORDION_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/accordion.contract.js";
-import { IdsAccordionComponent } from "../../../compiled/storybook-angular/src/components/ids-accordion/ids-accordion.component.js";
-import { IDS_ACCORDION_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-accordion/ids-accordion.imports.js";
+import { IdsAccordionComponent } from "../../../compiled/lib/angular/ids/accordion/ids-accordion.component.js";
+import { IDS_ACCORDION_IMPORTS } from "../../../compiled/lib/angular/ids/accordion/index.js";
 import {
   ACCORDION_COMPOSITION_DEMO_TEMPLATE,
   ACCORDION_DOCS_DESCRIPTION,

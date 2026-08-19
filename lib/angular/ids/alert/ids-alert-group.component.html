@@ -1,0 +1,19 @@
+<div class="ids-alert-group">
+  <ng-content select="ids-alert-item" />
+
+  @if (!dismissed && activeItem; as item) {
+    <ids-alert
+      display="global"
+      [severity]="item.severity"
+      [carousel]="carousel"
+      [message]="item.resolvedMessage"
+      [linkLabel]="item.resolvedLinkLabel"
+      [linkHref]="item.resolvedLinkHref"
+      [actionLabel]="item.resolvedActionLabel"
+      [dismissible]="true"
+      (carouselPrevious)="previous()"
+      (carouselNext)="next()"
+      (dismiss)="onDismiss()"
+    />
+  }
+</div>

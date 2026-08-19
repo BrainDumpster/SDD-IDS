@@ -7,8 +7,8 @@ import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contract
 import {
   ALERT_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/alert.contract.js";
-import { IdsAlertComponent } from "../../../compiled/storybook-angular/src/components/ids-alert/ids-alert.component.js";
-import { IDS_ALERT_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-alert/ids-alert.imports.js";
+import { IdsAlertComponent } from "../../../compiled/lib/angular/ids/alert/ids-alert.component.js";
+import { IDS_ALERT_IMPORTS } from "../../../compiled/lib/angular/ids/alert/index.js";
 import {
   ALERT_COMPOSITION_DEMO_TEMPLATE,
   ALERT_DOCS_DESCRIPTION,

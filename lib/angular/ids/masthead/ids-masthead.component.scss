@@ -1,0 +1,69 @@
+/* Ported from storybook/src/components/Masthead.module.css */
+
+.ids-masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--scale-56);
+  padding: 0 var(--padding-padding-8) 0 0;
+  background: var(--color-background-masthead-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-transparent-base);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+/* Figma Product Info (`10130:29494` / `10130:29520`): left 16px, top 12.5px */
+.ids-masthead__left {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--spacing-space-8);
+  min-width: 0;
+  padding-top: 12.5px;
+  padding-left: var(--padding-padding-16);
+}
+
+.ids-masthead__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--scale-32);
+  height: var(--scale-32);
+  flex-shrink: 0;
+}
+
+.ids-masthead__product-name {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-gray-white);
+  font-size: var(--font-size-header-6);
+  line-height: var(--font-line-height-line-height-32);
+  font-weight: 400;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+.ids-masthead__actions {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 54px;
+  flex-shrink: 0;
+}
+
+.ids-masthead__icons-slot,
+.ids-masthead__app-launcher-slot,
+.ids-masthead__avatar-slot {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.ids-masthead__icons-slot {
+  gap: 0;
+}
+
+.ids-masthead__app-launcher-slot:not(:has(*)) {
+  display: none;
+}

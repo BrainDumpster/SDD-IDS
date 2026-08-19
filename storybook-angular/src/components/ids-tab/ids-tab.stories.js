@@ -3,8 +3,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { TAB_SPEC_ACCURATE_DEFAULTS, TAB_OVERFLOW_DEMO_WIDTH, TAB_SPEC_OVERFLOW_ITEMS } from "../../../compiled/component-contracts/ids/tab.contract.js";
-import { IdsTabComponent } from "../../../compiled/storybook-angular/src/components/ids-tab/ids-tab.component.js";
-import { IDS_TAB_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-tab/ids-tab.imports.js";
+import { IdsTabComponent } from "../../../compiled/lib/angular/ids/tab/ids-tab.component.js";
+import { IDS_TAB_IMPORTS } from "../../../compiled/lib/angular/ids/tab/index.js";
 import {
   TAB_COMPOSITION_DEMO_TEMPLATE,
   TAB_DOCS_DESCRIPTION,

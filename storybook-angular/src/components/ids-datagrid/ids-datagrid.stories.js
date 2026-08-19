@@ -3,8 +3,8 @@ import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
 import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contracts/common/story-meta.js";
 import { DATAGRID_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/datagrid.contract.js";
-import { IdsDatagridDemoHostComponent } from "../../../compiled/storybook-angular/src/components/ids-datagrid/ids-datagrid-demo-host.component.js";
-import { IDS_DATAGRID_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-datagrid/ids-datagrid.imports.js";
+import { IdsDatagridDemoHostComponent } from "../../../compiled/lib/angular/ids/datagrid/ids-datagrid-demo-host.component.js";
+import { IDS_DATAGRID_IMPORTS } from "../../../compiled/lib/angular/ids/datagrid/index.js";
 import {
   DATAGRID_DOCS_DESCRIPTION,
   DATAGRID_SOURCE_CODE,

@@ -1,6 +1,6 @@
 import { applicationConfig, moduleMetadata } from "@storybook/angular";
 import { provideZoneChangeDetection } from "@angular/core";
-import { IDS_DROPDOWN_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-dropdown/ids-dropdown.imports.js";
+import { IDS_DROPDOWN_IMPORTS } from "../../../compiled/lib/angular/ids/dropdown/index.js";
 import {
   DROPDOWN_DOCS_DESCRIPTION,
   DROPDOWN_SOURCE_CODE,

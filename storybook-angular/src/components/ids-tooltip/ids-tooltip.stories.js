@@ -7,8 +7,8 @@ import {
   TOOLTIP_SIDES,
   TOOLTIP_ARROW_ALIGNS,
 } from "../../../compiled/component-contracts/ids/tooltip.contract.js";
-import { IdsTooltipComponent } from "../../../compiled/storybook-angular/src/components/ids-tooltip/ids-tooltip.component.js";
-import { IDS_TOOLTIP_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-tooltip/ids-tooltip.imports.js";
+import { IdsTooltipComponent } from "../../../compiled/lib/angular/ids/tooltip/ids-tooltip.component.js";
+import { IDS_TOOLTIP_IMPORTS } from "../../../compiled/lib/angular/ids/tooltip/index.js";
 import {
   TOOLTIP_COMPOSITION_DEMO_TEMPLATE,
   TOOLTIP_DOCS_CANVAS_TEMPLATE,
@@ -76,7 +76,7 @@ export const SpecAccurateDesign = {
     docs: {
       description: {
         story:
-          "Spec Accurate Design: top · start · standard hover tooltip — composition with `ids-tooltip-title` + `ids-tooltip-body`.",
+          "Spec Accurate Design: top · start · standard hover tooltip — composition with trigger, panel, header/title, body, and arrow.",
       },
       source: {
         type: "code",
@@ -110,8 +110,13 @@ export const NormalNoHeader = {
     template: `
       <div style="display: flex; min-height: 180px; align-items: center; justify-content: center; padding: 32px; overflow: visible;">
         <ids-tooltip side="top" arrowAlign="start">
-          <ids-button variant="secondary" size="lg">Hover over me</ids-button>
-          <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+          <ids-tooltip-trigger>
+            <ids-button variant="secondary" size="lg">Hover over me</ids-button>
+          </ids-tooltip-trigger>
+          <ids-tooltip-panel>
+            <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+            <ids-tooltip-arrow />
+          </ids-tooltip-panel>
         </ids-tooltip>
       </div>
     `,
@@ -125,9 +130,16 @@ export const WithHeader = {
     template: `
       <div style="display: flex; min-height: 180px; align-items: center; justify-content: center; padding: 32px; overflow: visible;">
         <ids-tooltip side="top" arrowAlign="center">
-          <ids-button variant="secondary" size="lg">Hover over me</ids-button>
-          <ids-tooltip-title>Tooltip Title</ids-tooltip-title>
-          <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+          <ids-tooltip-trigger>
+            <ids-button variant="secondary" size="lg">Hover over me</ids-button>
+          </ids-tooltip-trigger>
+          <ids-tooltip-panel>
+            <ids-tooltip-header>
+              <ids-tooltip-title>Tooltip Title</ids-tooltip-title>
+            </ids-tooltip-header>
+            <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+            <ids-tooltip-arrow />
+          </ids-tooltip-panel>
         </ids-tooltip>
       </div>
     `,
@@ -147,9 +159,17 @@ export const Closable = {
     template: `
       <div style="display: flex; min-height: 180px; align-items: center; justify-content: center; padding: 32px; overflow: visible;">
         <ids-tooltip side="top" arrowAlign="end" [closable]="true" (closed)="onClose($event)">
-          <ids-button variant="secondary" size="lg">Hover over me</ids-button>
-          <ids-tooltip-title>Tooltip Title</ids-tooltip-title>
-          <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+          <ids-tooltip-trigger>
+            <ids-button variant="secondary" size="lg">Hover over me</ids-button>
+          </ids-tooltip-trigger>
+          <ids-tooltip-panel>
+            <ids-tooltip-header>
+              <ids-tooltip-title>Tooltip Title</ids-tooltip-title>
+            </ids-tooltip-header>
+            <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+            <ids-tooltip-close />
+            <ids-tooltip-arrow />
+          </ids-tooltip-panel>
         </ids-tooltip>
       </div>
     `,
@@ -164,8 +184,15 @@ export const ClosableNoTitle = {
     template: `
       <div style="display: flex; min-height: 180px; align-items: center; justify-content: center; padding: 32px; overflow: visible;">
         <ids-tooltip side="top" arrowAlign="start" [closable]="true">
-          <ids-button variant="secondary" size="lg">Hover over me</ids-button>
-          <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+          <ids-tooltip-trigger>
+            <ids-button variant="secondary" size="lg">Hover over me</ids-button>
+          </ids-tooltip-trigger>
+          <ids-tooltip-panel>
+            <ids-tooltip-header></ids-tooltip-header>
+            <ids-tooltip-body>${TOOLTIP_DEMO_BODY}</ids-tooltip-body>
+            <ids-tooltip-close />
+            <ids-tooltip-arrow />
+          </ids-tooltip-panel>
         </ids-tooltip>
       </div>
     `,
@@ -179,16 +206,23 @@ export const RichContent = {
     template: `
       <div style="display: flex; min-height: 180px; align-items: center; justify-content: center; padding: 32px; overflow: visible;">
         <ids-tooltip side="right" arrowAlign="center">
-          <ids-button variant="secondary" size="lg">Rich content</ids-button>
-          <ids-tooltip-title>Custom Content</ids-tooltip-title>
-          <ids-tooltip-body>
+          <ids-tooltip-trigger>
+            <ids-button variant="secondary" size="lg">Rich content</ids-button>
+          </ids-tooltip-trigger>
+          <ids-tooltip-panel>
+            <ids-tooltip-header>
+              <ids-tooltip-title>Custom Content</ids-tooltip-title>
+            </ids-tooltip-header>
+            <ids-tooltip-body>
             <p style="margin: 0;">Any content can be rendered here.</p>
             <ul style="margin: 8px 0 0; padding-left: 18px;">
               <li>Text</li>
               <li>Lists</li>
               <li>Inline formatting</li>
             </ul>
-          </ids-tooltip-body>
+            </ids-tooltip-body>
+            <ids-tooltip-arrow />
+          </ids-tooltip-panel>
         </ids-tooltip>
       </div>
     `,
@@ -224,9 +258,17 @@ export const ArrowMatrix = {
               [arrowAlign]="placement.align"
               [closable]="true"
             >
-              <ids-button variant="secondary" size="lg">{{ placement.key }}</ids-button>
-              <ids-tooltip-title>Tooltip Title</ids-tooltip-title>
-              <ids-tooltip-body>{{ placement.side }} - {{ placement.align }}</ids-tooltip-body>
+              <ids-tooltip-trigger>
+                <ids-button variant="secondary" size="lg">{{ placement.key }}</ids-button>
+              </ids-tooltip-trigger>
+              <ids-tooltip-panel>
+                <ids-tooltip-header>
+                  <ids-tooltip-title>Tooltip Title</ids-tooltip-title>
+                </ids-tooltip-header>
+                <ids-tooltip-body>{{ placement.side }} - {{ placement.align }}</ids-tooltip-body>
+                <ids-tooltip-close />
+                <ids-tooltip-arrow />
+              </ids-tooltip-panel>
             </ids-tooltip>
           </div>
         }

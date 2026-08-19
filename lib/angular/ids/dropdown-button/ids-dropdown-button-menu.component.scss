@@ -1,0 +1,26 @@
+ids-dropdown-button-menu {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1060;
+  /* overlap the trigger's bottom border by 1px — matches single-select sideOffset: -1 */
+  margin-top: -1px;
+  min-width: 100%;
+}
+
+.ids-dropdown-button__menu {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: var(--color-background-surface-component);
+  /* full 4-sided 1px border — top overlaps trigger bottom via margin-top: -1px */
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  /* 0px radius matching dropdown-menu-radius = radius-none (same as single-select menu) */
+  border-radius: var(--dropdown-menu-radius, 0);
+  box-shadow:
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 4px)
+    var(--shadow-shadow-4-drop-shadow-4-blur, 4px) var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+    var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+  overflow: clip;
+}
