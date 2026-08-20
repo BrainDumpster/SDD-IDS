@@ -15,7 +15,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
-- Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime width is container-driven.
+- Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime viewport width is `min(617px, calc(100% - 32px))` with `max-width: calc(100% - 32px)` so it stays responsive to its containing block (e.g., the Playground `60vw` resizable wrapper).
 - Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
   - `ContentGroup` (status icon + message) with `padding-top: var(--padding-padding-2)`

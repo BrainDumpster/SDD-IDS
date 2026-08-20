@@ -31,6 +31,8 @@ interface ToastSetupProps {
   children: ReactNode;
   position?: ToastPosition;
   duration?: number;
+  /** Maximum number of toasts displayed at once. Default is unlimited so all toast buttons remain interactive. */
+  limit?: number;
 }
 
 /**
@@ -41,9 +43,10 @@ export function ToastSetup({
   children,
   position = "top-right",
   duration = 8000,
+  limit = Number.MAX_SAFE_INTEGER,
 }: ToastSetupProps) {
   return (
-    <BaseToast.Provider timeout={duration}>
+    <BaseToast.Provider timeout={duration} limit={limit}>
       {children}
       <ToastViewport position={position} />
     </BaseToast.Provider>
