@@ -5,6 +5,7 @@ import {
   IDS_PAGINATION_DESIGN_SPEC_PATH,
   PAGINATION_BACKGROUND_OPTIONS,
   PAGINATION_DROPDOWN_STATES,
+  PAGINATION_RESPONSIVE_MODES,
   PAGINATION_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/pagination.contract.js";
 import { IdsPaginationComponent } from "../../../compiled/lib/angular/ids/pagination/ids-pagination.component.js";
@@ -41,13 +42,12 @@ const meta = {
     totalPages: { control: { type: "number", min: 1 } },
     pageSize: { control: "select", options: [10, 25, 50, 75, 100] },
     pageSizeOptions: { control: "object" },
-    pageOffsetOptions: { control: "object" },
     showPerPage: { control: "boolean" },
     showFirstLast: { control: "boolean" },
-    showPageOffset: { control: "boolean" },
     background: { control: "radio", options: PAGINATION_BACKGROUND_OPTIONS },
     dropdownState: { control: "select", options: PAGINATION_DROPDOWN_STATES },
-    pageOffsetDropdownState: { control: "select", options: PAGINATION_DROPDOWN_STATES },
+    responsiveMode: { control: "select", options: PAGINATION_RESPONSIVE_MODES },
+    collapseOrder: { control: "object" },
     disabled: { control: "boolean" },
     pageChange: { action: "pageChange" },
     pageSizeChange: { action: "pageSizeChange" },
@@ -88,13 +88,12 @@ export const SpecAccurateDesign = {
           [totalPages]="totalPages"
           [pageSize]="pageSize"
           [pageSizeOptions]="pageSizeOptions"
-          [pageOffsetOptions]="pageOffsetOptions"
           [showPerPage]="showPerPage"
           [showFirstLast]="showFirstLast"
-          [showPageOffset]="showPageOffset"
           [background]="background"
           [dropdownState]="dropdownState"
-          [pageOffsetDropdownState]="pageOffsetDropdownState"
+          [responsiveMode]="responsiveMode"
+          [collapseOrder]="collapseOrder"
           [disabled]="disabled"
           (pageChange)="onPageChange($event)"
           (pageSizeChange)="onPageSizeChange($event)"
@@ -172,17 +171,15 @@ export const PerPageDropdownOpen = {
 };
 
 /** @type {import("@storybook/angular").StoryObj<IdsPaginationComponent>} */
-export const PageOffsetDropdown = {
+export const ResponsiveCollapse = {
   render: () => ({
-    props: { pageOffsetOptions: [1, 2, 3, 4, 5, 8, 16] },
     template: `
-      <div style="${frameStyle}">
+      <div style="padding: 20px; max-width: 320px;">
         <ids-pagination
           [currentPage]="2"
           [totalPages]="16"
-          [showPageOffset]="true"
-          [pageOffsetOptions]="pageOffsetOptions"
-          pageOffsetDropdownState="expanded-below"
+          responsiveMode="auto"
+          [collapseOrder]="['results-per-page', 'page-input', 'first-last-buttons']"
         ></ids-pagination>
       </div>
     `,

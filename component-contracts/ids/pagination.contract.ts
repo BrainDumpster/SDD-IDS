@@ -8,20 +8,26 @@ export type IdsPaginationDropdownState =
   | "expanded-below"
   | "expanded-above";
 
+export type IdsPaginationResponsiveMode = "auto" | "keep-inline";
+
+export type IdsPaginationCollapseSlot =
+  | "results-per-page"
+  | "page-input"
+  | "first-last-buttons";
+
 export const PAGINATION_ROOT_PROP_KEYS = [
   "currentPage",
   "totalPages",
   "pageSize",
   "pageSizeOptions",
-  "pageOffsetOptions",
   "showPerPage",
   "showFirstLast",
-  "showPageOffset",
   "dropdownState",
-  "pageOffsetDropdownState",
   "background",
   "embeddedInDatagrid",
   "disabled",
+  "responsiveMode",
+  "collapseOrder",
 ] as const;
 
 export const PAGINATION_EVENT_KEYS = [
@@ -45,6 +51,17 @@ export const PAGINATION_DROPDOWN_STATES: IdsPaginationDropdownState[] = [
   "expanded-above",
 ];
 
+export const PAGINATION_COLLAPSE_SLOTS: IdsPaginationCollapseSlot[] = [
+  "results-per-page",
+  "page-input",
+  "first-last-buttons",
+];
+
+export const PAGINATION_RESPONSIVE_MODES: IdsPaginationResponsiveMode[] = [
+  "auto",
+  "keep-inline",
+];
+
 export const PAGINATION_SPEC_ACCURATE_DEFAULTS = {
   currentPage: 1,
   totalPages: 16,
@@ -52,11 +69,11 @@ export const PAGINATION_SPEC_ACCURATE_DEFAULTS = {
   pageSizeOptions: [25, 50, 75, 100] as const,
   showPerPage: true,
   showFirstLast: true,
-  showPageOffset: false,
   background: "gray" as IdsPaginationBackground,
   disabled: false,
   dropdownState: "collapsed" as IdsPaginationDropdownState,
-  pageOffsetDropdownState: "collapsed" as IdsPaginationDropdownState,
+  responsiveMode: "auto" as IdsPaginationResponsiveMode,
+  collapseOrder: ["results-per-page"] as IdsPaginationCollapseSlot[],
 };
 
 /** @deprecated Use PAGINATION_SPEC_ACCURATE_DEFAULTS */

@@ -12,6 +12,18 @@
   overflow: visible;
 }
 
+.ids-modal--layer-main {
+  z-index: 1001;
+}
+
+.ids-modal--layer-carousel {
+  z-index: 1003;
+}
+
+.ids-modal--layer-single-preview {
+  z-index: 1005;
+}
+
 .ids-modal::backdrop {
   background: var(--color-background-overlay-1);
 }
@@ -19,47 +31,58 @@
 .ids-modal__surface {
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
+  max-height: min(85vh, calc(100vh - var(--padding-padding-48, 48px)));
+  max-width: calc(100vw - var(--padding-padding-48, 48px));
   box-sizing: border-box;
   overflow: hidden;
-  --ids-modal-inset-inline: var(--padding-padding-24, 24px);
   background: var(--color-background-surface-component);
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  border-radius: var(--modal-control-radius);
+  border-radius: var(--corner-radius-radius-none, 0px);
   box-shadow:
-    var(--shadow-drop-shadow-32-x) var(--shadow-drop-shadow-32-y)
-    var(--shadow-drop-shadow-32-blur) var(--shadow-drop-shadow-32-color);
+    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y)
+      var(--shadow-drop-shadow-2-blur) var(--shadow-drop-shadow-2-spread)
+      var(--shadow-drop-shadow-2-color),
+    var(--shadow-drop-shadow-4-x) var(--shadow-drop-shadow-4-y)
+      var(--shadow-drop-shadow-4-blur) var(--shadow-drop-shadow-4-spread)
+      var(--shadow-drop-shadow-4-color),
+    var(--shadow-drop-shadow-8-x) var(--shadow-drop-shadow-8-y)
+      var(--shadow-drop-shadow-8-blur) var(--shadow-drop-shadow-8-spread)
+      var(--shadow-drop-shadow-8-color),
+    var(--shadow-drop-shadow-16-x) var(--shadow-drop-shadow-16-y)
+      var(--shadow-drop-shadow-16-blur) var(--shadow-drop-shadow-16-spread)
+      var(--shadow-drop-shadow-16-color);
   outline: none;
 }
 
 .ids-modal__surface--fullscreen {
-  width: calc(100vw - var(--padding-padding-48));
-  height: calc(100vh - var(--padding-padding-48));
-  max-height: none;
+  width: calc(100vw - var(--padding-padding-48, 48px));
+  height: calc(100vh - var(--padding-padding-48, 48px));
+  max-height: calc(100vh - var(--padding-padding-48, 48px));
 }
 
 .ids-modal--x-small {
-  width: min(640px, calc(100vw - var(--padding-padding-48)));
+  width: 640px;
 }
 
 .ids-modal--small {
-  width: min(960px, calc(100vw - var(--padding-padding-48)));
+  width: 960px;
 }
 
 .ids-modal--medium {
-  width: min(1280px, calc(100vw - var(--padding-padding-48)));
+  width: 1280px;
 }
 
 .ids-modal--large {
-  width: min(1600px, calc(100vw - var(--padding-padding-48)));
+  width: 1600px;
 }
 
 .ids-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacing-space-8);
   flex-shrink: 0;
-  padding: var(--padding-padding-24) var(--ids-modal-inset-inline) var(--padding-padding-8);
+  padding: var(--padding-padding-24) var(--padding-padding-24) var(--padding-padding-8);
 }
 
 .ids-modal__header-left {
@@ -69,8 +92,19 @@
   min-width: 0;
 }
 
+.ids-modal__header-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex-shrink: 0;
+}
+
 .ids-modal__severity-icon {
   display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   color: var(--color-icon-gray-neutral-base);
 }
@@ -82,14 +116,15 @@
   font-weight: 400;
   line-height: var(--font-line-height-line-height-32);
   color: var(--color-text-gray-neutral-strong);
+  min-width: 0;
 }
 
 .ids-modal__close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: var(--scale-32);
+  height: var(--scale-32);
   padding: 0;
   margin: 0;
   border: none;
@@ -108,7 +143,6 @@
 
 .ids-modal__description {
   margin: 0;
-  padding: var(--padding-padding-8) var(--ids-modal-inset-inline);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -116,51 +150,45 @@
   color: var(--color-text-gray-neutral);
 }
 
+.ids-modal__description--non-alerting,
+.ids-modal__description--informational {
+  padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24);
+}
+
+.ids-modal__description--warning,
+.ids-modal__description--major,
+.ids-modal__description--critical,
+.ids-modal__description--destructive {
+  padding: var(--padding-padding-8) var(--padding-padding-24);
+}
+
 .ids-modal__tabs {
   display: flex;
-  align-items: stretch;
+  flex-wrap: wrap;
   gap: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  padding: 0 var(--padding-padding-24);
   flex-shrink: 0;
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--padding-padding-8) 0 0;
-  overflow-x: auto;
 }
 
 .ids-modal__tab {
-  position: relative;
+  appearance: none;
   border: none;
-  background: var(--color-background-surface-secondary);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  padding: 9px var(--ids-modal-inset-inline);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
-  cursor: pointer;
-  white-space: nowrap;
-  flex: 0 1 auto;
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  border-bottom: var(--border-width-border-2) solid transparent;
+  margin-bottom: -1px;
 }
 
 .ids-modal__tab--active {
-  color: var(--color-text-brand-strong);
-  border-bottom-color: transparent;
-  z-index: 1;
-}
-
-.ids-modal__tab--active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--border-width-border-thick);
-  background: var(--color-border-brand-strong);
-  pointer-events: none;
-}
-
-.ids-modal__tab--active::after {
-  content: none;
+  color: var(--color-text-gray-neutral-strong);
+  border-bottom-color: var(--color-border-brand-base);
 }
 
 .ids-modal__tab:focus-visible {
@@ -169,16 +197,17 @@
 }
 
 .ids-modal__content {
+  position: relative;
   flex: 1 1 auto;
   min-height: 0;
   min-width: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  padding: var(--padding-padding-16) var(--ids-modal-inset-inline) var(--padding-padding-24);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral-strong);
+  padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24);
 }
 
 .ids-modal__content > * {
@@ -187,11 +216,11 @@
   min-width: 0;
 }
 
-.ids-modal__content--with-tabs {
-  padding: 0 var(--ids-modal-inset-inline) var(--padding-padding-24);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+.ids-modal__content--warning,
+.ids-modal__content--major,
+.ids-modal__content--critical,
+.ids-modal__content--destructive {
+  padding: var(--padding-padding-16) var(--padding-padding-24) 0;
 }
 
 .ids-modal__content--scrollable {
@@ -209,7 +238,6 @@
   flex: 1 1 auto;
   min-height: 120px;
   min-width: 0;
-  padding: var(--padding-padding-16) 0 0;
   overflow-wrap: anywhere;
   overflow-x: hidden;
 }
@@ -227,20 +255,31 @@
 .ids-modal__footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--padding-padding-16);
+  justify-content: flex-end;
+  gap: var(--padding-padding-12);
   flex-shrink: 0;
-  padding: var(--padding-padding-24) var(--ids-modal-inset-inline);
+  padding: var(--padding-padding-24);
 }
 
-.ids-modal__footer--bordered {
-  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+.ids-modal__footer-start {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .ids-modal__actions {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: flex-end;
   gap: var(--padding-padding-12);
   margin-left: auto;
+}
+
+.ids-modal__empty {
+  margin: 0;
+  padding: var(--padding-padding-16) var(--padding-padding-24);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  color: var(--color-text-gray-neutral);
 }

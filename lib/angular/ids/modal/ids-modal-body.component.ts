@@ -8,41 +8,53 @@ import {
   ViewEncapsulation,
   inject,
 } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { IDS_MODAL_CONTEXT } from "./ids-modal-context";
 
 /** Modal body slot — description + optional tabs + scrollable content region. */
 @Component({
   selector: "ids-modal-body",
   standalone: true,
+  imports: [CommonModule],
   styles: [`:host { display: contents; }`],
   template: `
     @if (resolvedDescription) {
-      <p [id]="modal.descriptionId" class="ids-modal__description">{{ resolvedDescription }}</p>
+      <p
+        [id]="modal.descriptionId"
+        [ngClass]="['ids-modal__description', modal.descriptionTypeClass]"
+      >
+        {{ resolvedDescription }}
+      </p>
+    }
+
+    @if (modal.showTabs) {
+      <nav class="ids-modal__tabs" aria-label="Modal pages">
+        @for (page of modal.pages; track page.id) {
+          <button
+            type="button"
+            class="ids-modal__tab"
+            [class.ids-modal__tab--active]="modal.isPageActive(page.id)"
+            [attr.aria-selected]="modal.isPageActive(page.id)"
+            role="tab"
+            (click)="modal.selectPage(page.id)"
+          >
+            {{ page.label }}
+          </button>
+        }
+      </nav>
     }
 
     <div
       #contentRef
-      class="ids-modal__content"
-      [class.ids-modal__content--scrollable]="modal.bodyScrollable"
-      [class.ids-modal__content--hidden]="!showContentShell"
-      [class.ids-modal__content--with-tabs]="modal.showTabs"
+      [ngClass]="[
+        'ids-modal__content',
+        modal.contentTypeClass,
+        modal.bodyScrollable ? 'ids-modal__content--scrollable' : '',
+        !showContentShell ? 'ids-modal__content--hidden' : '',
+      ]"
       (scroll)="modal.onContentScroll()"
     >
       @if (modal.showTabs) {
-        <nav class="ids-modal__tabs" aria-label="Modal pages">
-          @for (page of modal.pages; track page.id) {
-            <button
-              type="button"
-              class="ids-modal__tab"
-              [class.ids-modal__tab--active]="modal.isPageActive(page.id)"
-              [attr.aria-selected]="modal.isPageActive(page.id)"
-              role="tab"
-              (click)="modal.selectPage(page.id)"
-            >
-              {{ page.label }}
-            </button>
-          }
-        </nav>
         <div class="ids-modal__page-panel" role="tabpanel">
           {{ modal.activePageContent }}
         </div>

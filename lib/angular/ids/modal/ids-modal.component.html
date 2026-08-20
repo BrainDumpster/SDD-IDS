@@ -1,9 +1,10 @@
 <dialog
   #dialogRef
   class="ids-modal"
+  [ngClass]="layerClass"
   role="dialog"
   aria-modal="true"
-  [attr.aria-labelledby]="titleId"
+  [attr.aria-labelledby]="ariaLabelledBy"
   [attr.aria-describedby]="ariaDescribedBy"
   (cancel)="onDialogCancel($event)"
   (close)="onDialogClose()"
@@ -13,7 +14,11 @@
       <div class="ids-modal__header-left">
         @if (showSeverityIcon) {
           <span class="ids-modal__severity-icon" aria-hidden="true">
-            <ids-icon [shapeName]="severityIconSlug" [size]="24" />
+            <ids-icon
+              [shape]="severityIcon.shape"
+              [variant]="severityIcon.variant"
+              [size]="24"
+            />
           </span>
         }
 
@@ -24,48 +29,62 @@
         }
       </div>
 
-      @if (closable) {
-        <button
-          type="button"
-          class="ids-modal__close"
-          aria-label="Close"
-          (click)="closeModal()"
-        >
-          <ids-icon shapeName="shape-x" [size]="16" />
-        </button>
-      }
+      <div class="ids-modal__header-controls">
+        <ng-content select="ids-modal-close" />
+
+        @if (closable && !hasCloseSlot) {
+          <button
+            type="button"
+            class="ids-modal__close"
+            aria-label="Close"
+            (click)="closeModal()"
+          >
+            <ids-icon shapeName="shape-x" variant="img" [size]="16" />
+          </button>
+        }
+      </div>
     </header>
 
     <ng-content select="ids-modal-body" />
 
     @if (!hasBodySlot) {
       @if (showLegacyDescription) {
-        <p [id]="descriptionId" class="ids-modal__description">{{ description }}</p>
+        <p
+          [id]="descriptionId"
+          [ngClass]="['ids-modal__description', descriptionTypeClass]"
+        >
+          {{ description }}
+        </p>
+      }
+
+      @if (showTabs) {
+        <nav class="ids-modal__tabs" aria-label="Modal pages">
+          @for (page of pages; track page.id) {
+            <button
+              type="button"
+              class="ids-modal__tab"
+              [class.ids-modal__tab--active]="isPageActive(page.id)"
+              [attr.aria-selected]="isPageActive(page.id)"
+              role="tab"
+              (click)="selectPage(page.id)"
+            >
+              {{ page.label }}
+            </button>
+          }
+        </nav>
       }
 
       <div
         #legacyContentRef
-        class="ids-modal__content"
-        [class.ids-modal__content--scrollable]="bodyScrollable"
-        [class.ids-modal__content--hidden]="!showLegacyContentRegion"
-        [class.ids-modal__content--with-tabs]="showTabs"
+        [ngClass]="[
+          'ids-modal__content',
+          contentTypeClass,
+          bodyScrollable ? 'ids-modal__content--scrollable' : '',
+          !showLegacyContentRegion ? 'ids-modal__content--hidden' : '',
+        ]"
         (scroll)="onContentScroll()"
       >
         @if (showTabs) {
-          <nav class="ids-modal__tabs" aria-label="Modal pages">
-            @for (page of pages; track page.id) {
-              <button
-                type="button"
-                class="ids-modal__tab"
-                [class.ids-modal__tab--active]="isPageActive(page.id)"
-                [attr.aria-selected]="isPageActive(page.id)"
-                role="tab"
-                (click)="selectPage(page.id)"
-              >
-                {{ page.label }}
-              </button>
-            }
-          </nav>
           <div class="ids-modal__page-panel" role="tabpanel">
             {{ activePageContent }}
           </div>
@@ -82,12 +101,11 @@
     <ng-content select="ids-modal-footer" />
 
     @if (!hasFooterSlot) {
-      <footer
-        class="ids-modal__footer"
-        [class.ids-modal__footer--bordered]="showFooterBorder"
-      >
+      <footer class="ids-modal__footer">
         @if (footerCheckbox) {
-          <ids-checkbox [label]="footerCheckboxLabel" [showLabel]="true" />
+          <div class="ids-modal__footer-start">
+            <ids-checkbox [label]="footerCheckboxLabel" [showLabel]="true" />
+          </div>
         }
 
         <div class="ids-modal__actions">

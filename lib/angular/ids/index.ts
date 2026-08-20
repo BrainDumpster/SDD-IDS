@@ -74,6 +74,7 @@ export {
   IdsModalTitleComponent,
   IdsModalBodyComponent,
   IdsModalFooterComponent,
+  IdsModalCloseComponent,
 } from "./modal/index";
 export {
   IDS_MASTHEAD_IMPORTS,

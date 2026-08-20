@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -15,21 +16,55 @@ import { NgClass } from "@angular/common";
 import {
   PAGINATION_SPEC_ACCURATE_DEFAULTS,
   type IdsPaginationBackground,
+  type IdsPaginationCollapseSlot,
   type IdsPaginationDropdownState,
+  type IdsPaginationResponsiveMode,
 } from "@component-contracts/ids/pagination.contract";
 import { IdsIconComponent } from "../icon/ids-icon.component";
+
+const DEFAULT_COLLAPSE_ORDER: IdsPaginationCollapseSlot[] = ["results-per-page"];
+const COLLAPSE_SLOTS = new Set<IdsPaginationCollapseSlot>([
+  "results-per-page",
+  "page-input",
+  "first-last-buttons",
+]);
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-function normalizePositiveOptions(options: number[]): number[] {
+function normalizePageSizeOptions(options: number[] | undefined): number[] {
+  if (!options || options.length === 0) {
+    return [...PAGINATION_SPEC_ACCURATE_DEFAULTS.pageSizeOptions];
+  }
   const uniquePositive = Array.from(
     new Set(options.filter((value) => Number.isFinite(value) && value > 0)),
   );
-  return uniquePositive.length > 0 ? uniquePositive : [25, 50, 75, 100];
+  return uniquePositive.length > 0
+    ? uniquePositive
+    : [...PAGINATION_SPEC_ACCURATE_DEFAULTS.pageSizeOptions];
 }
 
+function resolveResponsiveMode(
+  value: IdsPaginationResponsiveMode | string | undefined,
+): IdsPaginationResponsiveMode {
+  return value === "keep-inline" ? "keep-inline" : "auto";
+}
+
+function resolveCollapseOrder(
+  value: IdsPaginationCollapseSlot[] | undefined,
+): IdsPaginationCollapseSlot[] {
+  if (!value || value.length === 0) return [...DEFAULT_COLLAPSE_ORDER];
+  const filtered = value.filter((slot) => COLLAPSE_SLOTS.has(slot));
+  return filtered.length > 0 ? filtered : [...DEFAULT_COLLAPSE_ORDER];
+}
+
+function defaultPageCountText(_currentPage: number, totalPages: number): string {
+  if (totalPages <= 1) return "1 page";
+  return `of ${totalPages}`;
+}
+
+type PerPageMenuPlacement = "below" | "above";
 type PaginationMenuPos = { top: number; left: number; width: number };
 
 @Component({
@@ -40,14 +75,18 @@ type PaginationMenuPos = { top: number; left: number; width: number };
   styleUrl: "./ids-pagination.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IdsPaginationComponent implements OnChanges, OnDestroy {
+export class IdsPaginationComponent implements OnChanges, AfterViewInit, OnDestroy {
   readonly navIconSize = 16;
   readonly caretIconSize = 10;
+  readonly caretIconShape = "arrow-drop-tri-caret";
+  readonly firstPageIconShape = "double-chev-left";
+  readonly previousPageIconShape = "chev-left";
+  readonly nextPageIconShape = "chev-right";
+  readonly lastPageIconShape = "double-chev-right";
 
+  @ViewChild("root") rootRef?: ElementRef<HTMLElement>;
   @ViewChild("perPageTrigger") perPageTrigger?: ElementRef<HTMLButtonElement>;
-  @ViewChild("perPageMenuLayer") perPageMenuLayer?: ElementRef<HTMLElement>;
-  @ViewChild("pageOffsetTrigger") pageOffsetTrigger?: ElementRef<HTMLButtonElement>;
-  @ViewChild("pageOffsetMenuLayer") pageOffsetMenuLayer?: ElementRef<HTMLElement>;
+  @ViewChild("perPageMenu") perPageMenu?: ElementRef<HTMLUListElement>;
 
   @Input() currentPage = PAGINATION_SPEC_ACCURATE_DEFAULTS.currentPage;
   @Input() totalPages = PAGINATION_SPEC_ACCURATE_DEFAULTS.totalPages;
@@ -55,18 +94,22 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   @Input() pageSizeOptions: number[] = [
     ...PAGINATION_SPEC_ACCURATE_DEFAULTS.pageSizeOptions,
   ];
-  @Input() pageOffsetOptions: number[] | null = null;
   @Input() showPerPage = PAGINATION_SPEC_ACCURATE_DEFAULTS.showPerPage;
+  /** When `false`, hides first/last nav buttons (Storybook override; React lib always shows unless responsively collapsed). */
   @Input() showFirstLast = PAGINATION_SPEC_ACCURATE_DEFAULTS.showFirstLast;
-  @Input() showPageOffset = PAGINATION_SPEC_ACCURATE_DEFAULTS.showPageOffset;
+  /** Demo/testing only — forces per-page menu open state and placement. */
   @Input() dropdownState: IdsPaginationDropdownState =
     PAGINATION_SPEC_ACCURATE_DEFAULTS.dropdownState;
-  @Input() pageOffsetDropdownState: IdsPaginationDropdownState =
-    PAGINATION_SPEC_ACCURATE_DEFAULTS.pageOffsetDropdownState;
   @Input() background: IdsPaginationBackground =
     PAGINATION_SPEC_ACCURATE_DEFAULTS.background;
   @Input() embeddedInDatagrid = false;
   @Input() disabled = PAGINATION_SPEC_ACCURATE_DEFAULTS.disabled;
+  @Input() responsiveMode: IdsPaginationResponsiveMode =
+    PAGINATION_SPEC_ACCURATE_DEFAULTS.responsiveMode;
+  @Input() collapseOrder: IdsPaginationCollapseSlot[] = [
+    ...PAGINATION_SPEC_ACCURATE_DEFAULTS.collapseOrder,
+  ];
+  @Input() summaryFormatter?: (currentPage: number, totalPages: number) => string;
 
   @Output() readonly pageChange = new EventEmitter<number>();
   @Output() readonly pageSizeChange = new EventEmitter<number>();
@@ -76,11 +119,12 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   @Output() readonly lastPageNavigate = new EventEmitter<void>();
 
   perPageMenuOpen = false;
-  pageOffsetMenuOpen = false;
+  menuPlacement: PerPageMenuPlacement = "below";
   pageInputValue = String(this.currentPage);
+  collapseLevel = 0;
   perPageMenuPos: PaginationMenuPos | null = null;
-  pageOffsetMenuPos: PaginationMenuPos | null = null;
 
+  private resizeObserver?: ResizeObserver;
   private overlayRepositionCleanup: (() => void) | null = null;
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
@@ -94,22 +138,13 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   }
 
   get safePageSizeOptions(): number[] {
-    return normalizePositiveOptions(this.pageSizeOptions);
+    return normalizePageSizeOptions(this.pageSizeOptions);
   }
 
   get safePageSize(): number {
     return this.safePageSizeOptions.includes(this.pageSize)
       ? this.pageSize
       : this.safePageSizeOptions[0];
-  }
-
-  get offsetOptions(): number[] {
-    if (this.pageOffsetOptions && this.pageOffsetOptions.length > 0) {
-      return normalizePositiveOptions(this.pageOffsetOptions).map((value) =>
-        clamp(value, 1, this.safeTotalPages),
-      );
-    }
-    return Array.from({ length: this.safeTotalPages }, (_, index) => index + 1);
   }
 
   get atFirstPage(): boolean {
@@ -120,18 +155,53 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
     return this.safeCurrentPage >= this.safeTotalPages;
   }
 
+  get isSinglePage(): boolean {
+    return this.safeTotalPages <= 1;
+  }
+
+  get resolvedResponsiveMode(): IdsPaginationResponsiveMode {
+    return resolveResponsiveMode(this.responsiveMode);
+  }
+
+  get resolvedCollapseOrder(): IdsPaginationCollapseSlot[] {
+    return resolveCollapseOrder(this.collapseOrder);
+  }
+
   get resolvedPerPageDropdownState(): IdsPaginationDropdownState {
     if (this.dropdownState !== "collapsed") {
       return this.dropdownState;
     }
-    return this.perPageMenuOpen ? "expanded-below" : "collapsed";
+    if (!this.perPageMenuOpen) return "collapsed";
+    return this.menuPlacement === "above" ? "expanded-above" : "expanded-below";
   }
 
-  get resolvedPageOffsetDropdownState(): IdsPaginationDropdownState {
-    if (this.pageOffsetDropdownState !== "collapsed") {
-      return this.pageOffsetDropdownState;
-    }
-    return this.pageOffsetMenuOpen ? "expanded-below" : "collapsed";
+  get collapsedSlots(): Set<IdsPaginationCollapseSlot> {
+    return new Set(this.resolvedCollapseOrder.slice(0, this.collapseLevel));
+  }
+
+  get renderResultsGroup(): boolean {
+    return this.showPerPage && !this.collapsedSlots.has("results-per-page");
+  }
+
+  get pageInputCollapsed(): boolean {
+    return this.collapsedSlots.has("page-input");
+  }
+
+  get firstLastCollapsed(): boolean {
+    return !this.showFirstLast || this.collapsedSlots.has("first-last-buttons");
+  }
+
+  get countText(): string {
+    return (
+      this.summaryFormatter?.(this.safeCurrentPage, this.safeTotalPages) ??
+      defaultPageCountText(this.safeCurrentPage, this.safeTotalPages)
+    );
+  }
+
+  get caretIconColor(): string {
+    return this.disabled
+      ? "var(--color-icon-gray-disabled)"
+      : "var(--color-icon-gray-neutral-base)";
   }
 
   get rootClass(): Record<string, boolean> {
@@ -146,16 +216,21 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   ngOnChanges(): void {
     this.pageInputValue = String(this.safeCurrentPage);
     if (this.resolvedPerPageDropdownState !== "collapsed") {
+      this.perPageMenuOpen = true;
       this.bindOverlayRepositionListeners();
-      this.scheduleOverlayPortalAndPosition("perPage");
+      this.scheduleOverlayPortalAndPosition();
     }
-    if (this.resolvedPageOffsetDropdownState !== "collapsed") {
-      this.bindOverlayRepositionListeners();
-      this.scheduleOverlayPortalAndPosition("pageOffset");
-    }
+    this.scheduleResponsiveCheck();
+  }
+
+  ngAfterViewInit(): void {
+    this.setupResponsiveObserver();
+    this.scheduleResponsiveCheck();
   }
 
   ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
     this.unbindOverlayRepositionListeners();
   }
 
@@ -212,11 +287,10 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
 
   togglePerPageMenu(): void {
     if (this.disabled) return;
-    this.closePageOffsetMenu();
     this.perPageMenuOpen = !this.perPageMenuOpen;
     if (this.perPageMenuOpen) {
       this.bindOverlayRepositionListeners();
-      this.scheduleOverlayPortalAndPosition("perPage");
+      this.scheduleOverlayPortalAndPosition();
     } else {
       this.closePerPageMenu();
     }
@@ -224,11 +298,10 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   }
 
   closePerPageMenu(): void {
+    if (this.dropdownState !== "collapsed") return;
     this.perPageMenuOpen = false;
     this.perPageMenuPos = null;
-    if (this.resolvedPageOffsetDropdownState === "collapsed") {
-      this.unbindOverlayRepositionListeners();
-    }
+    this.unbindOverlayRepositionListeners();
     this.cdr.markForCheck();
   }
 
@@ -237,60 +310,68 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
     this.closePerPageMenu();
   }
 
-  togglePageOffsetMenu(): void {
-    if (this.disabled) return;
-    this.closePerPageMenu();
-    this.pageOffsetMenuOpen = !this.pageOffsetMenuOpen;
-    if (this.pageOffsetMenuOpen) {
-      this.bindOverlayRepositionListeners();
-      this.scheduleOverlayPortalAndPosition("pageOffset");
-    } else {
-      this.closePageOffsetMenu();
+  @HostListener("document:keydown", ["$event"])
+  onDocumentKeydown(event: KeyboardEvent): void {
+    if (event.key !== "Escape" || this.resolvedPerPageDropdownState === "collapsed") {
+      return;
     }
-    this.cdr.markForCheck();
-  }
-
-  closePageOffsetMenu(): void {
-    this.pageOffsetMenuOpen = false;
-    this.pageOffsetMenuPos = null;
-    if (this.resolvedPerPageDropdownState === "collapsed") {
-      this.unbindOverlayRepositionListeners();
-    }
-    this.cdr.markForCheck();
-  }
-
-  selectPageOffset(page: number): void {
-    this.goToPage(page);
-    this.closePageOffsetMenu();
-  }
-
-  onPerPageTriggerBlur(event: FocusEvent): void {
-    const nextTarget = event.relatedTarget as HTMLElement | null;
-    if (nextTarget?.closest("[data-ids-pagination-per-page-menu]")) return;
     this.closePerPageMenu();
+    this.perPageTrigger?.nativeElement.focus();
   }
 
-  onPageOffsetTriggerBlur(event: FocusEvent): void {
-    const nextTarget = event.relatedTarget as HTMLElement | null;
-    if (nextTarget?.closest("[data-ids-pagination-page-offset-menu]")) return;
-    this.closePageOffsetMenu();
+  @HostListener("document:mousedown", ["$event"])
+  onDocumentMouseDown(event: MouseEvent): void {
+    if (this.resolvedPerPageDropdownState === "collapsed") return;
+    const target = event.target as Node | null;
+    if (!target) return;
+    if (this.perPageTrigger?.nativeElement.contains(target)) return;
+    if (this.perPageMenu?.nativeElement.contains(target)) return;
+    if ((target as HTMLElement).closest?.("[data-ids-pagination-per-page-menu]")) return;
+    this.closePerPageMenu();
   }
 
   @HostListener("window:resize")
   @HostListener("window:scroll")
   onViewportChange(): void {
     if (this.resolvedPerPageDropdownState !== "collapsed") {
+      this.syncMenuPlacement();
       this.updatePerPageMenuPos();
+      this.cdr.markForCheck();
     }
-    if (this.resolvedPageOffsetDropdownState !== "collapsed") {
-      this.updatePageOffsetMenuPos();
+  }
+
+  private syncMenuPlacement(): void {
+    if (this.dropdownState === "expanded-above") {
+      this.menuPlacement = "above";
+      return;
     }
-    this.cdr.markForCheck();
+    if (this.dropdownState === "expanded-below") {
+      this.menuPlacement = "below";
+      return;
+    }
+
+    const trigger = this.perPageTrigger?.nativeElement;
+    if (!trigger) {
+      this.menuPlacement = "below";
+      return;
+    }
+
+    const rect = trigger.getBoundingClientRect();
+    const viewportHeight = typeof window !== "undefined" ? window.innerHeight : rect.bottom + 200;
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const estimatedMenuHeight = Math.max(
+      this.perPageMenu?.nativeElement.offsetHeight ?? 0,
+      this.safePageSizeOptions.length * 40,
+    );
+
+    this.menuPlacement =
+      spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow ? "above" : "below";
   }
 
   private updatePerPageMenuPos(): void {
     const trigger = this.perPageTrigger?.nativeElement;
-    const menu = this.perPageMenuLayer?.nativeElement;
+    const menu = this.perPageMenu?.nativeElement;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
     const width = rect.width;
@@ -303,49 +384,23 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
     this.perPageMenuPos = { top: rect.top + rect.height - 1, left, width };
   }
 
-  private updatePageOffsetMenuPos(): void {
-    const trigger = this.pageOffsetTrigger?.nativeElement;
-    const menu = this.pageOffsetMenuLayer?.nativeElement;
-    if (!trigger) return;
-    const rect = trigger.getBoundingClientRect();
-    const width = rect.width;
-    const left = rect.left;
-    if (this.resolvedPageOffsetDropdownState === "expanded-above") {
-      const menuHeight = menu?.getBoundingClientRect().height ?? 0;
-      this.pageOffsetMenuPos = { top: rect.top + 1 - menuHeight, left, width };
-      return;
-    }
-    this.pageOffsetMenuPos = { top: rect.top + rect.height - 1, left, width };
-  }
-
   private portalToBody(el: HTMLElement | undefined): void {
     if (el && el.parentElement !== document.body) {
       document.body.appendChild(el);
     }
   }
 
-  private scheduleOverlayPortalAndPosition(kind: "perPage" | "pageOffset"): void {
+  private scheduleOverlayPortalAndPosition(): void {
     requestAnimationFrame(() => {
-      if (kind === "perPage" && this.resolvedPerPageDropdownState === "collapsed") return;
-      if (kind === "pageOffset" && this.resolvedPageOffsetDropdownState === "collapsed") return;
-
-      if (kind === "perPage") {
-        this.portalToBody(this.perPageMenuLayer?.nativeElement);
-        this.updatePerPageMenuPos();
-      } else {
-        this.portalToBody(this.pageOffsetMenuLayer?.nativeElement);
-        this.updatePageOffsetMenuPos();
-      }
+      if (this.resolvedPerPageDropdownState === "collapsed") return;
+      this.syncMenuPlacement();
+      this.portalToBody(this.perPageMenu?.nativeElement);
+      this.updatePerPageMenuPos();
       this.cdr.markForCheck();
 
       requestAnimationFrame(() => {
-        if (kind === "perPage" && this.resolvedPerPageDropdownState === "collapsed") return;
-        if (kind === "pageOffset" && this.resolvedPageOffsetDropdownState === "collapsed") return;
-        if (kind === "perPage") {
-          this.updatePerPageMenuPos();
-        } else {
-          this.updatePageOffsetMenuPos();
-        }
+        if (this.resolvedPerPageDropdownState === "collapsed") return;
+        this.updatePerPageMenuPos();
         this.cdr.markForCheck();
       });
     });
@@ -354,16 +409,10 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   private bindOverlayRepositionListeners(): void {
     if (this.overlayRepositionCleanup) return;
     const onUpdate = () => {
-      let changed = false;
-      if (this.resolvedPerPageDropdownState !== "collapsed") {
-        this.updatePerPageMenuPos();
-        changed = true;
-      }
-      if (this.resolvedPageOffsetDropdownState !== "collapsed") {
-        this.updatePageOffsetMenuPos();
-        changed = true;
-      }
-      if (changed) this.cdr.markForCheck();
+      if (this.resolvedPerPageDropdownState === "collapsed") return;
+      this.syncMenuPlacement();
+      this.updatePerPageMenuPos();
+      this.cdr.markForCheck();
     };
     window.addEventListener("resize", onUpdate);
     window.addEventListener("scroll", onUpdate, true);
@@ -377,5 +426,53 @@ export class IdsPaginationComponent implements OnChanges, OnDestroy {
   private unbindOverlayRepositionListeners(): void {
     this.overlayRepositionCleanup?.();
     this.overlayRepositionCleanup = null;
+  }
+
+  private setupResponsiveObserver(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
+
+    if (this.resolvedResponsiveMode !== "auto") {
+      this.collapseLevel = 0;
+      return;
+    }
+
+    const root = this.rootRef?.nativeElement;
+    if (!root || typeof ResizeObserver === "undefined") return;
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.collapseLevel = 0;
+      this.cdr.markForCheck();
+      requestAnimationFrame(() => this.checkResponsiveCollapse());
+    });
+    this.resizeObserver.observe(root);
+  }
+
+  private scheduleResponsiveCheck(): void {
+    requestAnimationFrame(() => {
+      if (this.resolvedResponsiveMode !== "auto") {
+        this.collapseLevel = 0;
+        this.cdr.markForCheck();
+        return;
+      }
+      this.collapseLevel = 0;
+      this.checkResponsiveCollapse();
+    });
+  }
+
+  private checkResponsiveCollapse(): void {
+    if (this.resolvedResponsiveMode !== "auto") return;
+    const root = this.rootRef?.nativeElement;
+    if (!root) return;
+    if (root.scrollWidth <= root.clientWidth + 1) {
+      this.cdr.markForCheck();
+      return;
+    }
+    const order = this.resolvedCollapseOrder;
+    if (this.collapseLevel < order.length) {
+      this.collapseLevel += 1;
+      this.cdr.markForCheck();
+      requestAnimationFrame(() => this.checkResponsiveCollapse());
+    }
   }
 }

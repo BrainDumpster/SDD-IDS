@@ -1,15 +1,11 @@
 <span
   [ngClass]="hostClasses"
-  [ngStyle]="hostStyles"
+  [ngStyle]="rootStyles"
   [attr.role]="title ? 'img' : 'presentation'"
   [attr.aria-label]="title || null"
   [attr.aria-hidden]="title ? null : 'true'"
 >
-  @if (variant === 'mask') {
-    <span class="ids-icon__mask" [ngStyle]="maskStyles" aria-hidden="true"></span>
-  }
-
-  @if (variant === 'img' && !missing) {
+  @if (variant === "img" && !missing) {
     <img
       class="ids-icon__img"
       [src]="iconUrl"
@@ -20,7 +16,7 @@
     />
   }
 
-  @if (variant === 'inline') {
+  @if (variant === "inline") {
     <svg
       class="ids-icon__svg"
       [attr.width]="resolvedSize"

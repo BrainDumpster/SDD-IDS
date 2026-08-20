@@ -9,12 +9,11 @@ import { IDS_MODAL_CONTEXT } from "./ids-modal-context";
   imports: [IdsCheckboxComponent],
   styles: [`:host { display: contents; }`],
   template: `
-    <footer
-      class="ids-modal__footer"
-      [class.ids-modal__footer--bordered]="modal.showFooterBorder"
-    >
+    <footer class="ids-modal__footer">
       @if (modal.footerCheckbox) {
-        <ids-checkbox [label]="modal.footerCheckboxLabel" [showLabel]="true" />
+        <div class="ids-modal__footer-start">
+          <ids-checkbox [label]="modal.footerCheckboxLabel" [showLabel]="true" />
+        </div>
       }
 
       <div class="ids-modal__actions">

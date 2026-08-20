@@ -12,10 +12,11 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-space-16);
+  width: 100%;
   height: 48px;
+  overflow: hidden;
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  padding: var(--padding-padding-8) calc(var(--padding-padding-16) * 2) var(--padding-padding-8)
-    var(--padding-padding-24);
+  padding: 0 calc(var(--padding-padding-16) * 2) 0 var(--padding-padding-24);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral-strong);
@@ -42,16 +43,20 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-space-16);
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .label {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
 }
 
 .dropdownWrap {
   position: relative;
+  flex-shrink: 0;
 }
 
 .dropdownTrigger {
@@ -59,63 +64,61 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-space-10);
+  box-sizing: border-box;
   width: 90px;
   height: 32px;
+  margin: 0;
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: 0;
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
-  padding: 6px var(--padding-padding-16);
+  padding: 0 var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
 }
 
 .dropdownTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-gray-neutral-strong);
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
 }
 
-.dropdownTrigger:focus-visible,
-.iconButton:focus-visible,
-.dropdownOption:focus-visible,
-.pageInput:focus-visible,
-.pageOffsetTrigger:focus-visible,
-.pageOffsetOption:focus-visible {
+.dropdownTrigger:focus-visible {
   outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
   outline-offset: 4px;
-  border-radius: 4px;
-}
-
-.dropdownTrigger:disabled,
-.iconButton:disabled {
-  cursor: not-allowed;
-}
-
-.dropdownTrigger:disabled ::ng-deep .caretIcon {
-  color: var(--color-icon-gray-disabled);
 }
 
 .dropdownTrigger:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-gray-disabled);
   background: var(--color-background-gray-lighter);
   border-color: var(--color-border-gray-disabled);
-  color: var(--color-text-gray-disabled);
 }
 
-::ng-deep .caretIcon {
-  color: var(--color-icon-gray-neutral-base);
+.dropdownTrigger ids-icon {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
 }
 
 /* Position (`fixed` + `top`/`left`/`width`) set inline when portaled to `document.body` */
 .dropdownMenu {
+  box-sizing: border-box;
   width: 90px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  border-top: none;
-  background: var(--color-background-surface-component);
-  list-style: none;
   margin: 0;
-  padding: 0 1px;
+  padding: 0;
+  list-style: none;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: 0;
+  background: var(--color-background-surface-component);
   overflow: clip;
   box-shadow:
-    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0)
+      var(--shadow-shadow-4-drop-shadow-4-y, 4px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 4px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
     0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
 }
 
@@ -139,16 +142,19 @@
 
 .dropdownOption {
   display: block;
-  width: 100%;
   box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
   border: 0;
   border-top: var(--border-width-border-default, 1px) solid transparent;
   border-bottom: var(--border-width-border-default, 1px) solid transparent;
+  border-radius: 0;
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
   text-align: left;
-  padding: 10px var(--padding-padding-24) 10px var(--padding-padding-16);
-  min-height: 40px;
+  padding: var(--padding-padding-10) var(--padding-padding-24)
+    var(--padding-padding-10) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
@@ -157,49 +163,81 @@
 .dropdownOption:hover {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-top-color: var(--color-border-brand-base-neutral);
+  border-bottom-color: var(--color-border-brand-base-neutral);
 }
 
 .dropdownOption:active {
   background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-top-color: var(--color-border-brand-base-neutral);
+  border-bottom-color: var(--color-border-brand-base-neutral);
+}
+
+.dropdownOption:focus-visible {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
 }
 
 .dropdownOptionSelected {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-top-color: var(--color-border-brand-base-neutral);
+  border-bottom-color: var(--color-border-brand-base-neutral);
 }
 
 .pageNavGroup {
   display: flex;
   align-items: center;
   gap: var(--spacing-space-16);
+  flex-shrink: 0;
+  margin-left: auto;
+  min-width: 0;
 }
 
 .iconButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: 16px;
   height: 16px;
-  border: 0;
+  margin: 0;
   padding: 0;
+  border: 0;
+  border-radius: 0;
   background: transparent;
   color: var(--color-icon-brand-base);
   cursor: pointer;
+  flex-shrink: 0;
+}
+
+.iconButton ids-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.iconButton:disabled ids-icon {
+  color: var(--color-icon-gray-disabled);
+}
+
+.iconButton:hover:not(:disabled) {
+  color: var(--color-icon-brand-base);
+}
+
+.iconButton:focus-visible {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
 }
 
 .iconButton:disabled {
   color: var(--color-icon-gray-disabled);
+  cursor: not-allowed;
 }
 
-::ng-deep .navIcon {
-  color: currentColor;
+.iconButtonCollapsed {
+  display: none;
 }
 
 .pageInputWrap {
@@ -209,139 +247,53 @@
   width: 40px;
   height: 32px;
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: 0;
   background: var(--color-background-surface-component);
   padding: 5px 0 6px;
+  flex-shrink: 0;
+}
+
+.pageInputWrapCollapsed {
+  display: none;
 }
 
 .pageInput {
+  box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  margin: 0;
+  padding: 0;
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: var(--color-text-gray-neutral);
   text-align: center;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  padding: 0;
 }
 
 .pageInput:focus {
   outline: 0;
 }
 
-.pageOffsetWrap {
-  position: relative;
+.pageInput:focus-visible {
+  outline: 0;
 }
 
-.pageOffsetTrigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-space-10);
-  width: 40px;
-  height: 32px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  background: var(--color-background-surface-component);
-  color: var(--color-text-gray-neutral);
-  padding: 5px 6px;
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
+.pageInputWrap:focus-within {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 4px;
 }
 
-.pageOffsetTrigger:hover:not(:disabled) {
-  border-color: var(--color-border-gray-neutral-strong);
-}
-
-.pageOffsetTrigger:disabled {
-  background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-gray-disabled);
+.pageInput:disabled {
+  cursor: not-allowed;
   color: var(--color-text-gray-disabled);
-}
-
-.pageOffsetTrigger:disabled ::ng-deep .pageOffsetCaretIcon {
-  color: var(--color-icon-gray-disabled);
-}
-
-::ng-deep .pageOffsetCaretIcon {
-  color: var(--color-icon-gray-neutral-base);
-}
-
-/* Position (`fixed` + `top`/`left`/`width`) set inline when portaled to `document.body` */
-.pageOffsetMenu {
-  width: 40px;
-  max-height: 160px;
-  overflow-y: auto;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  border-top: none;
-  background: var(--color-background-surface-component);
-  list-style: none;
-  margin: 0;
-  padding: 0 1px;
-  overflow-x: clip;
-  box-shadow:
-    0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
-    0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
-}
-
-.pageOffsetMenuPortaled {
-  z-index: 10000;
-}
-
-.pageOffsetMenuBelow {
-  border-top: none;
-}
-
-.pageOffsetMenuAbove {
-  border-bottom: none;
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-}
-
-.pageOffsetOptionWrap {
-  margin: 0;
-  padding: 0;
-}
-
-.pageOffsetOption {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border: 0;
-  border-top: var(--border-width-border-default, 1px) solid transparent;
-  border-bottom: var(--border-width-border-default, 1px) solid transparent;
-  background: var(--color-background-surface-component);
-  color: var(--color-text-gray-neutral);
-  text-align: right;
-  padding: 10px 6px;
-  min-height: 40px;
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
-}
-
-.pageOffsetOption:hover {
-  background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-gray-neutral);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-}
-
-.pageOffsetOption:active {
-  background: var(--color-background-brand-light-slate);
-  color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-}
-
-.pageOffsetOptionSelected {
-  background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
-  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
 }
 
 .countText {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
+  flex-shrink: 0;
 }

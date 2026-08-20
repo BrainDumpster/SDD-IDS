@@ -17,6 +17,13 @@ export const MODAL_DIALOG_TYPE_ICON = {
     major: "status-error-diamond-solid",
     informational: "info-circ-solid",
 };
+export const MODAL_DIALOG_STATUS_ICON = {
+    informational: { shape: MODAL_DIALOG_TYPE_ICON.informational, variant: "img" },
+    warning: { shape: MODAL_DIALOG_TYPE_ICON.warning, variant: "img" },
+    major: { shape: MODAL_DIALOG_TYPE_ICON.major, variant: "img" },
+    critical: { shape: MODAL_DIALOG_TYPE_ICON.critical, variant: "img" },
+    destructive: { shape: MODAL_DIALOG_TYPE_ICON.destructive, variant: "img" },
+};
 /** Dialog types that render a two-button footer (tertiary + primary). */
 export const MODAL_TWO_BUTTON_DIALOG_TYPES = [
     "warning",
@@ -35,7 +42,47 @@ export const MODAL_API_DEFAULTS = {
     fullScreen: false,
     enablePrimaryAction: true,
     enableTertiaryAction: true,
+    layer: "main",
 };
+/** Dialog types with reduced description/content padding (design-spec). */
+export const MODAL_ALERTING_DIALOG_TYPES = [
+    "warning",
+    "major",
+    "critical",
+    "destructive",
+];
+export const MODAL_FOOTER_CHECKBOX_LABEL = "Don't show again until the next update";
+/** Stacking z-index for multi-layer patterns (What's New). */
+export const MODAL_LAYER_Z_INDEX = {
+    main: { surface: 1001 },
+    carousel: { surface: 1003 },
+    "single-preview": { surface: 1005 },
+};
+export function resolveModalScenario(value) {
+    if (value === "wizard" || value === "custom") {
+        return "single-page";
+    }
+    if (value === "multi-page" || value === "dialog") {
+        return value;
+    }
+    return "single-page";
+}
+export function resolveModalType(value) {
+    if (value === "informational" ||
+        value === "warning" ||
+        value === "major" ||
+        value === "critical" ||
+        value === "destructive") {
+        return value;
+    }
+    return MODAL_API_DEFAULTS.type;
+}
+export function resolveModalSize(value) {
+    if (value === "x-small" || value === "small" || value === "medium" || value === "large") {
+        return value;
+    }
+    return MODAL_API_DEFAULTS.size;
+}
 export const MODAL_COMPOSITION_SLOT_ORDER = [
     "modalTitle",
     "modalBody",

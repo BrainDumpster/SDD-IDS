@@ -1,6 +1,14 @@
-<nav class="root" [ngClass]="rootClass" aria-label="Pagination">
-  @if (showPerPage) {
-    <div class="resultsGroup">
+<nav
+  #root
+  class="root"
+  [ngClass]="rootClass"
+  aria-label="Pagination"
+  data-ids="ids-pagination"
+  [attr.data-background]="background"
+  [attr.data-responsive-mode]="resolvedResponsiveMode"
+>
+  @if (renderResultsGroup) {
+    <div class="resultsGroup" data-ids="ids-pagination-results">
       <span class="label">Show:</span>
       <div class="dropdownWrap">
         <button
@@ -12,43 +20,38 @@
           [attr.aria-expanded]="resolvedPerPageDropdownState !== 'collapsed'"
           aria-label="Items per page"
           (click)="togglePerPageMenu()"
-          (blur)="onPerPageTriggerBlur($event)"
         >
           <span>{{ safePageSize }}</span>
           <ids-icon
-            shapeName="arrow-drop-tri-caret"
-            className="caretIcon"
+            [shape]="caretIconShape"
             [size]="caretIconSize"
             variant="mask"
+            [color]="caretIconColor"
           />
         </button>
       </div>
       <span class="label">per page</span>
     </div>
-  } @else {
-    <span></span>
   }
 
-  <div class="pageNavGroup">
-    @if (safeTotalPages <= 1) {
-      <span class="countText">1 page</span>
+  <div class="pageNavGroup" data-ids="ids-pagination-nav">
+    @if (isSinglePage) {
+      <span class="countText">{{ countText }}</span>
     } @else {
-      @if (showFirstLast) {
-        <button
-          class="iconButton"
-          type="button"
-          [disabled]="disabled || atFirstPage"
-          aria-label="First page"
-          (click)="onFirstPage()"
-        >
-          <ids-icon
-            shapeName="double-chev-left"
-            className="navIcon"
-            [size]="navIconSize"
-            variant="mask"
-          />
-        </button>
-      }
+      <button
+        class="iconButton"
+        [class.iconButtonCollapsed]="firstLastCollapsed"
+        type="button"
+        [disabled]="disabled || atFirstPage"
+        aria-label="First page"
+        (click)="onFirstPage()"
+      >
+        <ids-icon
+          [shape]="firstPageIconShape"
+          [size]="navIconSize"
+          variant="mask"
+        />
+      </button>
       <button
         class="iconButton"
         type="button"
@@ -57,47 +60,24 @@
         (click)="onPreviousPage()"
       >
         <ids-icon
-          shapeName="chev-left"
-          className="navIcon"
+          [shape]="previousPageIconShape"
           [size]="navIconSize"
           variant="mask"
         />
       </button>
-      @if (showPageOffset) {
-        <div class="pageOffsetWrap">
-          <button
-            #pageOffsetTrigger
-            class="pageOffsetTrigger"
-            type="button"
-            [disabled]="disabled"
-            aria-haspopup="listbox"
-            [attr.aria-expanded]="resolvedPageOffsetDropdownState !== 'collapsed'"
-            aria-label="Page offset"
-            (click)="togglePageOffsetMenu()"
-            (blur)="onPageOffsetTriggerBlur($event)"
-          >
-            <span>{{ safeCurrentPage }}</span>
-            <ids-icon
-              shapeName="arrow-drop-tri-caret"
-              className="pageOffsetCaretIcon"
-              [size]="caretIconSize"
-              variant="mask"
-            />
-          </button>
-        </div>
-      } @else {
-        <div class="pageInputWrap">
-          <input
-            class="pageInput"
-            [value]="pageInputValue"
-            aria-label="Current page"
-            (input)="onPageInputChange($any($event.target).value)"
-            (blur)="commitPageInput()"
-            (keydown)="onPageInputKeydown($event)"
-          />
-        </div>
-      }
-      <span class="countText">of {{ safeTotalPages }}</span>
+      <div class="pageInputWrap" [class.pageInputWrapCollapsed]="pageInputCollapsed">
+        <input
+          class="pageInput"
+          [value]="pageInputValue"
+          [disabled]="disabled"
+          inputmode="numeric"
+          aria-label="Current page"
+          (input)="onPageInputChange($any($event.target).value)"
+          (blur)="commitPageInput()"
+          (keydown)="onPageInputKeydown($event)"
+        />
+      </div>
+      <span class="countText">{{ countText }}</span>
       <button
         class="iconButton"
         type="button"
@@ -106,39 +86,37 @@
         (click)="onNextPage()"
       >
         <ids-icon
-          shapeName="chev-right"
-          className="navIcon"
+          [shape]="nextPageIconShape"
           [size]="navIconSize"
           variant="mask"
         />
       </button>
-      @if (showFirstLast) {
-        <button
-          class="iconButton"
-          type="button"
-          [disabled]="disabled || atLastPage"
-          aria-label="Last page"
-          (click)="onLastPage()"
-        >
-          <ids-icon
-            shapeName="double-chev-right"
-            className="navIcon"
-            [size]="navIconSize"
-            variant="mask"
-          />
-        </button>
-      }
+      <button
+        class="iconButton"
+        [class.iconButtonCollapsed]="firstLastCollapsed"
+        type="button"
+        [disabled]="disabled || atLastPage"
+        aria-label="Last page"
+        (click)="onLastPage()"
+      >
+        <ids-icon
+          [shape]="lastPageIconShape"
+          [size]="navIconSize"
+          variant="mask"
+        />
+      </button>
     }
   </div>
 </nav>
 
 @if (resolvedPerPageDropdownState !== "collapsed") {
   <ul
-    #perPageMenuLayer
+    #perPageMenu
     class="dropdownMenu dropdownMenuPortaled"
     [class.dropdownMenuAbove]="resolvedPerPageDropdownState === 'expanded-above'"
     [class.dropdownMenuBelow]="resolvedPerPageDropdownState === 'expanded-below'"
     data-ids-pagination-per-page-menu
+    [attr.data-placement]="menuPlacement"
     [style.position]="'fixed'"
     [style.top.px]="perPageMenuPos?.top ?? 0"
     [style.left.px]="perPageMenuPos?.left ?? 0"
@@ -158,38 +136,6 @@
           (click)="selectPageSize(option)"
         >
           {{ option }}
-        </button>
-      </li>
-    }
-  </ul>
-}
-
-@if (resolvedPageOffsetDropdownState !== "collapsed") {
-  <ul
-    #pageOffsetMenuLayer
-    class="pageOffsetMenu pageOffsetMenuPortaled"
-    [class.pageOffsetMenuAbove]="resolvedPageOffsetDropdownState === 'expanded-above'"
-    [class.pageOffsetMenuBelow]="resolvedPageOffsetDropdownState === 'expanded-below'"
-    data-ids-pagination-page-offset-menu
-    [style.position]="'fixed'"
-    [style.top.px]="pageOffsetMenuPos?.top ?? 0"
-    [style.left.px]="pageOffsetMenuPos?.left ?? 0"
-    [style.width.px]="pageOffsetMenuPos?.width ?? 40"
-    role="listbox"
-    aria-label="Page offsets"
-    (click)="$event.stopPropagation()"
-  >
-    @for (pageOffset of offsetOptions; track pageOffset) {
-      <li class="pageOffsetOptionWrap">
-        <button
-          type="button"
-          role="option"
-          class="pageOffsetOption"
-          [class.pageOffsetOptionSelected]="pageOffset === safeCurrentPage"
-          [attr.aria-selected]="pageOffset === safeCurrentPage"
-          (click)="selectPageOffset(pageOffset)"
-        >
-          {{ pageOffset }}
         </button>
       </li>
     }

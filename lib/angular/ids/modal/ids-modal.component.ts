@@ -10,6 +10,7 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild,
@@ -17,21 +18,30 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
+  MODAL_ALERTING_DIALOG_TYPES,
   MODAL_API_DEFAULTS,
-  MODAL_DIALOG_TYPE_ICON,
+  MODAL_DIALOG_STATUS_ICON,
+  MODAL_FOOTER_CHECKBOX_LABEL,
   MODAL_TWO_BUTTON_DIALOG_TYPES,
+  resolveModalScenario,
   type ModalDialogType,
+  type ModalLayer,
   type ModalPage,
   type ModalScenario,
   type ModalSize,
+  type ModalStatusIconBinding,
 } from "@component-contracts/ids/modal.contract";
 import { IdsButtonComponent } from "../button/ids-button.component";
 import { IdsCheckboxComponent } from "../checkbox/ids-checkbox.component";
 import { IdsIconComponent } from "../icon/ids-icon.component";
 import { IDS_MODAL_CONTEXT, type IdsModalContext } from "./ids-modal-context";
 import { IdsModalBodyComponent } from "./ids-modal-body.component";
+import { IdsModalCloseComponent } from "./ids-modal-close.component";
 import { IdsModalFooterComponent } from "./ids-modal-footer.component";
 import { IdsModalTitleComponent } from "./ids-modal-title.component";
+
+const FOCUSABLE =
+  'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
 @Component({
   selector: "ids-modal",
@@ -44,7 +54,7 @@ import { IdsModalTitleComponent } from "./ids-modal-title.component";
   providers: [{ provide: IDS_MODAL_CONTEXT, useExisting: IdsModalComponent }],
 })
 export class IdsModalComponent
-  implements IdsModalContext, AfterViewInit, AfterContentInit, OnChanges
+  implements IdsModalContext, AfterViewInit, AfterContentInit, OnChanges, OnDestroy
 {
   @ViewChild("dialogRef") dialogRef?: ElementRef<HTMLDialogElement>;
   @ViewChild("legacyContentRef") legacyContentRef?: ElementRef<HTMLElement>;
@@ -52,12 +62,14 @@ export class IdsModalComponent
   @ContentChild(IdsModalTitleComponent) titleSlot?: IdsModalTitleComponent;
   @ContentChild(IdsModalBodyComponent) bodySlot?: IdsModalBodyComponent;
   @ContentChild(IdsModalFooterComponent) footerSlot?: IdsModalFooterComponent;
+  @ContentChild(IdsModalCloseComponent) closeSlot?: IdsModalCloseComponent;
 
   @Input() open?: boolean;
   @Input() defaultOpen = false;
   @Input() scenario: ModalScenario = MODAL_API_DEFAULTS.scenario;
   @Input() type: ModalDialogType = MODAL_API_DEFAULTS.type;
   @Input() size: ModalSize = MODAL_API_DEFAULTS.size;
+  @Input() layer: ModalLayer = MODAL_API_DEFAULTS.layer;
   /** Shorthand when `ids-modal-title` is not projected. */
   @Input() title = "";
   /** Shorthand when `ids-modal-body` is not projected. */
@@ -74,6 +86,10 @@ export class IdsModalComponent
   @Input() tertiaryActionLabel?: string;
   @Input() enablePrimaryAction = MODAL_API_DEFAULTS.enablePrimaryAction;
   @Input() enableTertiaryAction = MODAL_API_DEFAULTS.enableTertiaryAction;
+  /** Override `aria-labelledby` (defaults to generated title id). */
+  @Input() labelledBy?: string;
+  /** Override `aria-describedby` (defaults when description is present). */
+  @Input() describedBy?: string;
 
   @Output() readonly openChange = new EventEmitter<boolean>();
   @Output() readonly closed = new EventEmitter<void>();
@@ -83,15 +99,17 @@ export class IdsModalComponent
 
   readonly titleId = `ids-modal-title-${Math.random().toString(36).slice(2, 9)}`;
   readonly descriptionId = `ids-modal-desc-${Math.random().toString(36).slice(2, 9)}`;
-  readonly footerCheckboxLabel = "Don't show again until the next update";
+  readonly footerCheckboxLabel = MODAL_FOOTER_CHECKBOX_LABEL;
 
   activePage = "";
   bodyScrollable = false;
   showScrollShadow = false;
 
-  private internalOpen = false;
   private hasLegacyBodyContent = false;
   private contentElement: HTMLElement | null = null;
+  private contentResizeObserver: ResizeObserver | null = null;
+  private focusTrapHandler: ((event: KeyboardEvent) => void) | null = null;
+  private previouslyFocused: HTMLElement | null = null;
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
 
@@ -121,6 +139,11 @@ export class IdsModalComponent
     }
   }
 
+  ngOnDestroy(): void {
+    this.teardownFocusTrap();
+    this.contentResizeObserver?.disconnect();
+  }
+
   get hasTitleSlot(): boolean {
     return Boolean(this.titleSlot);
   }
@@ -133,15 +156,16 @@ export class IdsModalComponent
     return Boolean(this.footerSlot);
   }
 
+  get hasCloseSlot(): boolean {
+    return Boolean(this.closeSlot);
+  }
+
   get controlled(): boolean {
     return this.open !== undefined;
   }
 
   get resolvedScenario(): ModalScenario {
-    if (this.scenario === "wizard" || this.scenario === "custom") {
-      return "single-page";
-    }
-    return this.scenario;
+    return resolveModalScenario(this.scenario);
   }
 
   get showSeverityIcon(): boolean {
@@ -149,18 +173,18 @@ export class IdsModalComponent
   }
 
   get severityIconSlug(): string {
+    return this.severityIcon.shape;
+  }
+
+  get severityIcon(): ModalStatusIconBinding {
     if (this.type === "non-alerting") {
-      return "";
+      return { shape: "", variant: "img" };
     }
-    return MODAL_DIALOG_TYPE_ICON[this.type];
+    return MODAL_DIALOG_STATUS_ICON[this.type];
   }
 
   get showTabs(): boolean {
     return this.resolvedScenario === "multi-page" && this.tabs && this.pages.length > 0;
-  }
-
-  get showFooterBorder(): boolean {
-    return this.resolvedScenario !== "dialog";
   }
 
   get showLegacyDescription(): boolean {
@@ -202,6 +226,21 @@ export class IdsModalComponent
     return page?.content ?? "";
   }
 
+  get descriptionTypeClass(): string {
+    return `ids-modal__description--${this.type}`;
+  }
+
+  get contentTypeClass(): string {
+    if (MODAL_ALERTING_DIALOG_TYPES.includes(this.type)) {
+      return `ids-modal__content--${this.type}`;
+    }
+    return "";
+  }
+
+  get layerClass(): string {
+    return `ids-modal--layer-${this.layer}`;
+  }
+
   get sizeClass(): string {
     return `ids-modal--${this.size}`;
   }
@@ -216,7 +255,14 @@ export class IdsModalComponent
       .join(" ");
   }
 
+  get ariaLabelledBy(): string {
+    return this.labelledBy ?? this.titleId;
+  }
+
   get ariaDescribedBy(): string | null {
+    if (this.describedBy) {
+      return this.describedBy;
+    }
     if (this.hasBodySlot && this.bodySlot?.resolvedDescription) {
       return this.descriptionId;
     }
@@ -228,6 +274,7 @@ export class IdsModalComponent
 
   registerContentElement(element: HTMLElement | null): void {
     this.contentElement = element;
+    this.observeContentElement(element);
     queueMicrotask(() => this.updateContentOverflow());
   }
 
@@ -236,8 +283,8 @@ export class IdsModalComponent
       this.openChange.emit(true);
       return;
     }
-    this.internalOpen = true;
     this.dialogRef?.nativeElement.showModal();
+    this.setupFocusTrap();
     this.cdr.markForCheck();
     queueMicrotask(() => {
       this.syncContentElement();
@@ -255,8 +302,8 @@ export class IdsModalComponent
       this.closed.emit();
       return;
     }
-    this.internalOpen = false;
     this.dialogRef?.nativeElement.close();
+    this.teardownFocusTrap();
     this.closed.emit();
     this.cdr.markForCheck();
   }
@@ -272,7 +319,7 @@ export class IdsModalComponent
       this.closed.emit();
       return;
     }
-    this.internalOpen = false;
+    this.teardownFocusTrap();
     this.closed.emit();
     this.cdr.markForCheck();
   }
@@ -280,9 +327,8 @@ export class IdsModalComponent
   onDialogClose(): void {
     if (this.controlled) {
       this.openChange.emit(false);
-    } else {
-      this.internalOpen = false;
     }
+    this.teardownFocusTrap();
     this.closed.emit();
     this.cdr.markForCheck();
   }
@@ -323,6 +369,7 @@ export class IdsModalComponent
       return;
     }
     this.contentElement = this.legacyContentRef?.nativeElement ?? null;
+    this.observeContentElement(this.contentElement);
   }
 
   private ensureActivePage(): void {
@@ -343,14 +390,10 @@ export class IdsModalComponent
     const shouldOpen = this.controlled ? Boolean(this.open) : this.defaultOpen;
     if (shouldOpen && !dialog.open) {
       dialog.showModal();
-      if (!this.controlled) {
-        this.internalOpen = true;
-      }
+      this.setupFocusTrap();
     } else if (!shouldOpen && dialog.open) {
       dialog.close();
-      if (!this.controlled) {
-        this.internalOpen = false;
-      }
+      this.teardownFocusTrap();
     }
     this.cdr.markForCheck();
   }
@@ -380,5 +423,65 @@ export class IdsModalComponent
       this.hasLegacyBodyContent = next;
       this.cdr.markForCheck();
     }
+  }
+
+  private observeContentElement(element: HTMLElement | null): void {
+    this.contentResizeObserver?.disconnect();
+    if (!element) {
+      this.contentResizeObserver = null;
+      return;
+    }
+    this.contentResizeObserver = new ResizeObserver(() => this.updateContentOverflow());
+    this.contentResizeObserver.observe(element);
+  }
+
+  private setupFocusTrap(): void {
+    const dialog = this.dialogRef?.nativeElement;
+    if (!dialog?.open) {
+      return;
+    }
+    this.teardownFocusTrap();
+    this.previouslyFocused = document.activeElement as HTMLElement | null;
+    const focusables = this.getFocusable(dialog);
+    (focusables[0] ?? dialog).focus();
+
+    this.focusTrapHandler = (event: KeyboardEvent) => {
+      if (event.key === "Tab") {
+        const items = this.getFocusable(dialog);
+        if (items.length === 0) {
+          event.preventDefault();
+          return;
+        }
+        const first = items[0];
+        const last = items[items.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (event.shiftKey) {
+          if (active === first || !dialog.contains(active)) {
+            event.preventDefault();
+            last.focus();
+          }
+        } else if (active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+        return;
+      }
+    };
+    document.addEventListener("keydown", this.focusTrapHandler);
+  }
+
+  private teardownFocusTrap(): void {
+    if (this.focusTrapHandler) {
+      document.removeEventListener("keydown", this.focusTrapHandler);
+      this.focusTrapHandler = null;
+    }
+    this.previouslyFocused?.focus?.();
+    this.previouslyFocused = null;
+  }
+
+  private getFocusable(container: HTMLElement): HTMLElement[] {
+    return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+      (el) => !el.hasAttribute("disabled") && el.tabIndex !== -1,
+    );
   }
 }

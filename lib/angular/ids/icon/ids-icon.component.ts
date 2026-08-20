@@ -25,7 +25,12 @@ import {
 export class IdsIconComponent {
   @Input() shape: string = ICON_SPEC_ACCURATE_DEFAULTS.shape;
   /** Alias for `shape` — used by templates that bind `[shapeName]`. */
-  @Input() set shapeName(value: string) { this.shape = value; }
+  @Input() set shapeName(value: string) {
+    this.shape = value;
+  }
+  get shapeName(): string {
+    return this.shape;
+  }
   @Input() color?: string = ICON_SPEC_ACCURATE_DEFAULTS.color;
   @Input() size: number | string = ICON_SPEC_ACCURATE_DEFAULTS.size;
   @Input() variant: IconVariant = ICON_SPEC_ACCURATE_DEFAULTS.variant;
@@ -100,13 +105,25 @@ export class IdsIconComponent {
       styles["color"] = this.color;
     }
 
-    return { ...styles, ...(this.style ?? {}) };
+    return styles;
   }
 
-  get maskStyles(): Record<string, string> {
+  get rootStyles(): Record<string, string> {
+    const styles: Record<string, string> = {
+      ...this.hostStyles,
+      ...(this.style ?? {}),
+    };
+
+    if (this.variant !== "mask" || !this.shape) {
+      return styles;
+    }
+
+    const maskUrl = `url(${this.iconUrl})`;
     return {
-      "mask-image": `url(${this.iconUrl})`,
-      "-webkit-mask-image": `url(${this.iconUrl})`,
+      ...styles,
+      backgroundColor: "var(--ids-icon-color, currentColor)",
+      "mask-image": maskUrl,
+      "-webkit-mask-image": maskUrl,
     };
   }
 }
