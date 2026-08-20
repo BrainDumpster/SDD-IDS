@@ -33,20 +33,20 @@ export class IdsTextBoxComponent implements OnChanges {
   @Input() size: TextBoxSize = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.size;
   /** Demo/testing override — runtime interaction still applies when not forced. */
   @Input() state: TextBoxState = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.state;
-  @Input() placeholder = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.placeholder;
+  @Input() placeholder: string = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.placeholder;
   @Input() value?: string;
   @Input() defaultValue = "";
-  @Input() disabled = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.disabled;
-  @Input() invalid = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.invalid;
+  @Input() disabled: boolean = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.disabled;
+  @Input() invalid: boolean = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.invalid;
   @Input() helperText = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.helperText;
   @Input() errorText = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.errorText;
-  @Input() showHelperText = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.showHelperText;
-  @Input() showIcon = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.showIcon;
+  @Input() showHelperText: boolean = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.showHelperText;
+  @Input() showIcon: boolean = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.showIcon;
   @Input() iconName = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.iconName;
   @Input() id?: string;
   @Input() name?: string;
   @Input() rows = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.rows;
-  @Input() inputType = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.inputType;
+  @Input() inputType: string = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.inputType;
   @Input() ariaLabel?: string;
   @Input() ariaDescribedBy?: string;
 

@@ -112,6 +112,14 @@ const config = {
         compiledRoot,
         "component-contracts/ids/wizard.contract.js",
       ),
+      "@component-contracts/ids/date-picker.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/date-picker.contract.js",
+      ),
+      "@component-contracts/ids/time-picker.contract": path.join(
+        compiledRoot,
+        "component-contracts/ids/time-picker.contract.js",
+      ),
       "@component-contracts": path.join(compiledRoot, "component-contracts"),
     };
 

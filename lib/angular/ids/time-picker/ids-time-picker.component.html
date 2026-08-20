@@ -1,0 +1,181 @@
+<div class="root" #rootRef (keydown)="handleRootKeyDown($event)">
+  @if (label) {
+    <div class="label" [class.labelSmall]="size === 'small'">
+      <div class="labelInner">
+        <span class="labelText">{{ label }}</span>
+        @if (required) {
+          <span class="labelRequired">*</span>
+        }
+      </div>
+    </div>
+  }
+  <div class="fieldGroup">
+    <div class="positionWrapper">
+      <div [class]="fieldClasses">
+        <input
+          type="text"
+          class="textInput"
+          [class.filled]="inputFilled"
+          [placeholder]="placeholder"
+          [value]="inputText"
+          [disabled]="disabled"
+          [attr.aria-label]="label || 'Time'"
+          (input)="onInput($event)"
+          (mousedown)="mouseActivated = true"
+          (blur)="onInputBlur()"
+        />
+        <button
+          type="button"
+          class="clockIconBtn"
+          [disabled]="disabled"
+          aria-label="Open time picker"
+          [attr.aria-expanded]="open"
+          (mousedown)="onClockMouseDown($event)"
+          (click)="toggleOpen($event)"
+        >
+          <ids-icon shape="time-clock-16" [size]="16" />
+        </button>
+      </div>
+
+      @if (open && !disabled) {
+        <div
+          class="timePopup"
+          [class.widePadding]="clockType === '24h' && !showSeconds"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Choose time"
+        >
+          <div class="timeColumn" role="group" aria-label="Hour">
+            <button
+              type="button"
+              class="arrowBtn arrowUp"
+              [disabled]="disabled"
+              aria-label="Increase Hour"
+              (click)="bumpHour(1)"
+            >
+              <ids-icon
+                shape="arrow-tri-down-solid"
+                color="var(--color-icon-gray-neutral-base)"
+                [size]="10"
+              />
+            </button>
+            <div class="valueCell" aria-live="polite">{{ hourDisplay }}</div>
+            <button
+              type="button"
+              class="arrowBtn"
+              [disabled]="disabled"
+              aria-label="Decrease Hour"
+              (click)="bumpHour(-1)"
+            >
+              <ids-icon
+                shape="arrow-tri-down-solid"
+                color="var(--color-icon-gray-neutral-base)"
+                [size]="10"
+              />
+            </button>
+          </div>
+          <div class="timeColumn" role="group" aria-label="Minute">
+            <button
+              type="button"
+              class="arrowBtn arrowUp"
+              [disabled]="disabled"
+              aria-label="Increase Minute"
+              (click)="bumpMinute(1)"
+            >
+              <ids-icon
+                shape="arrow-tri-down-solid"
+                color="var(--color-icon-gray-neutral-base)"
+                [size]="10"
+              />
+            </button>
+            <div class="valueCell" aria-live="polite">{{ pad2(minute) }}</div>
+            <button
+              type="button"
+              class="arrowBtn"
+              [disabled]="disabled"
+              aria-label="Decrease Minute"
+              (click)="bumpMinute(-1)"
+            >
+              <ids-icon
+                shape="arrow-tri-down-solid"
+                color="var(--color-icon-gray-neutral-base)"
+                [size]="10"
+              />
+            </button>
+          </div>
+          @if (showSeconds) {
+            <div class="timeColumn" role="group" aria-label="Second">
+              <button
+                type="button"
+                class="arrowBtn arrowUp"
+                [disabled]="disabled"
+                aria-label="Increase Second"
+                (click)="bumpSecond(1)"
+              >
+                <ids-icon
+                  shape="arrow-tri-down-solid"
+                  color="var(--color-icon-gray-neutral-base)"
+                  [size]="10"
+                />
+              </button>
+              <div class="valueCell" aria-live="polite">{{ pad2(second) }}</div>
+              <button
+                type="button"
+                class="arrowBtn"
+                [disabled]="disabled"
+                aria-label="Decrease Second"
+                (click)="bumpSecond(-1)"
+              >
+                <ids-icon
+                  shape="arrow-tri-down-solid"
+                  color="var(--color-icon-gray-neutral-base)"
+                  [size]="10"
+                />
+              </button>
+            </div>
+          }
+          @if (clockType === "12h") {
+            <div class="timeColumn" role="group" aria-label="AM or PM">
+              <button
+                type="button"
+                class="arrowBtn arrowUp"
+                [disabled]="disabled"
+                aria-label="Increase AM or PM"
+                (click)="togglePeriod()"
+              >
+                <ids-icon
+                  shape="arrow-tri-down-solid"
+                  color="var(--color-icon-gray-neutral-base)"
+                  [size]="10"
+                />
+              </button>
+              <div class="valueCell" aria-live="polite">{{ period }}</div>
+              <button
+                type="button"
+                class="arrowBtn"
+                [disabled]="disabled"
+                aria-label="Decrease AM or PM"
+                (click)="togglePeriod()"
+              >
+                <ids-icon
+                  shape="arrow-tri-down-solid"
+                  color="var(--color-icon-gray-neutral-base)"
+                  [size]="10"
+                />
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (error && errorMessage) {
+      <div class="errorMessage" role="alert">
+        <ids-icon shape="status-critical-square-solid" variant="img" [size]="16" />
+        <span>{{ errorMessage }}</span>
+      </div>
+    } @else if (showFormatHint) {
+      <span class="formatHint">{{ formatHint }}</span>
+    }
+  </div>
+</div>

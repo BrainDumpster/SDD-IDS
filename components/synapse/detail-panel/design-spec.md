@@ -13,8 +13,13 @@ Inherits IDS composition API (`IdsDetailPanel` / `SynapseDetailPanel`):
 
 ```
 SynapseDetailPanel [attachMode, isExpanded, …]
-  SynapseDetailPanel.Header
-  SynapseDetailPanel.Body
+  SynapseDetailPanel.Content
+    SynapseDetailPanel.Header
+      SynapseDetailPanel.Title
+    SynapseDetailPanel.Body
+    SynapseDetailPanel.Footer
+  SynapseDetailPanel.CollapsedRail
+    SynapseDetailPanel.ToggleButton
 ```
 
 Events: `onExpandedChange`, `onOpened`, `onClosed` (IDS parity).

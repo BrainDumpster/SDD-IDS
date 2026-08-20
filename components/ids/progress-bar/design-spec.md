@@ -9,7 +9,7 @@
 - Description: Determinate and indeterminate progress with optional label, inline percentage, helper row, and status-colored fills.
 - Status: active
 - Created: 2026-05-22
-- Updated: 2026-06-05
+- Updated: 2026-08-19
 - Primary Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev
 - Primary node id: `11067:54665`
 - Spec-accurate reference node: `11099:57210` (Determinate/regular, Thin, In Progress + helper)
@@ -19,6 +19,7 @@
 - Verified at: 2026-06-10
 - Storybook examples requested: yes
 - Storybook path: `storybook-generated/ids/src/components/ProgressBar.stories.tsx`
+- Angular Storybook path: `storybook-angular/src/components/ids-progress-bar/ids-progress-bar.stories.js`
 - Storybook title: `Spec Generated/IDS/Progress Bar`
 
 ## Anatomy
@@ -140,7 +141,11 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Do not show a status icon for `in-progress`.
 
 ## Composition & API (runtime)
-- Suggested runtime component: `IdsProgressBar` (`storybook/src/components/ProgressBar.tsx`).
+- Suggested runtime component: `IdsProgressBar`
+- Contract mirror: `component-contracts/ids/progress-bar.contract.ts`
+- React lib: `lib/react/ids/progress-bar`
+- Angular lib: `lib/angular/ids/progress-bar` (`ids-progress-bar`)
+- Storybook reference: `storybook/src/components/ProgressBar.tsx`
 
 ### Variants
 - `type`: `inline` | `with-label` | `indeterminate` (default `inline`)
@@ -223,9 +228,13 @@ See **Interactions → Accessibility**.
 |---|---|
 | Component map | `data/component-figma-map.json` → `Progress Bar` (`11067-54665`) |
 | Theme CSS | `components/ids-theme.css` |
+| Runtime contract | `component-contracts/ids/progress-bar.contract.ts` |
+| React lib | `lib/react/ids/progress-bar` |
+| Angular lib | `lib/angular/ids/progress-bar` |
 | Storybook implementation | `storybook/src/components/ProgressBar.tsx`, `ProgressBar.module.css`, `IdsProgressBar.tsx` |
-| Spec Generated stories | `storybook-generated/ids/src/components/ProgressBar.stories.tsx` |
-| Icon primitive | `storybook/src/components/Icon.tsx` |
+| Spec Generated stories (React) | `storybook-generated/ids/src/components/ProgressBar.stories.tsx` |
+| Spec Generated stories (Angular) | `storybook-angular/src/components/ids-progress-bar/ids-progress-bar.stories.js` |
+| Icon primitive | `storybook/src/components/Icon.tsx`; Angular `lib/angular/ids/icon` |
 | Figma MCP (2026-05-22) | `get_metadata(fileKey=VZJ48bbVYrIynw8DdSukWw, nodeId=11067:54665)` |
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57210)` — with-label thin in-progress |
 | Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57186)` — inline medium in-progress |
@@ -241,8 +250,11 @@ See **Interactions → Accessibility**.
 - **Corner radius**: Both the track (container) and indicator (progress fill bar) use `border-radius: var(--progress-bar-control-radius)` (IDS resolves to `var(--corner-radius-radius-none)` / 0 — sharp corners per Figma).
 
 **Helper status icons**
-- **Icon implementation**: Status icons render via the shared `Icon` component with `variant="img"` (full-color SVG assets, not mask tinting):
+- **Icon implementation**: Status icons render via the shared `Icon` / `ids-icon` primitive with `variant="img"` (full-color SVG assets, not mask tinting):
   - `completed-success` → `status-ok-circ-solid.svg`
   - `completed-warning` → `status-warn-tri-solid.svg`
   - `failed-error` → `status-critical-square-solid.svg`
-- Icons are **16px** and styled with the `helperIcon` class in the reference implementation (`ProgressBar.module.css`).
+- Icons are **16px**. Storybook CSS Modules use `helperIcon`; Angular lib uses `ids-progress-bar-helper-icon`; React lib composes `IdsHelper` + `IdsIcon`.
+
+**Lib ports**
+- React (`lib/react/ids/progress-bar`) and Angular (`lib/angular/ids/progress-bar`) share anatomy, tokens, `data-ids` slots, fallbacks, and determinate/indeterminate behavior. Neither lib depends on Base UI; `role="progressbar"` and `aria-valuemin` / `aria-valuemax` / `aria-valuenow` are applied on the root.

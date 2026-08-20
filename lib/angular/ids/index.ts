@@ -37,6 +37,18 @@ export {
   IdsButtonComponent,
 } from "./button/index";
 export {
+  IDS_SPINNER_IMPORTS,
+  IdsSpinnerComponent,
+} from "./spinner/index";
+export {
+  IDS_PROGRESS_BAR_IMPORTS,
+  IdsProgressBarComponent,
+} from "./progress-bar/index";
+export {
+  IDS_SLIDER_IMPORTS,
+  IdsSliderComponent,
+} from "./slider/index";
+export {
   IDS_CHECKBOX_IMPORTS,
   IdsCheckboxGroupComponent,
   IdsCheckboxComponent,
@@ -202,6 +214,14 @@ export {
   IdsToastViewDetailsActionComponent,
   IdsToastCloseActionComponent,
 } from "./toast/index";
+export {
+  IDS_DATE_PICKER_IMPORTS,
+  IdsDatePickerComponent,
+} from "./date-picker/index";
+export {
+  IDS_TIME_PICKER_IMPORTS,
+  IdsTimePickerComponent,
+} from "./time-picker/index";
 export {
   IDS_WIZARD_IMPORTS,
   IdsWizardComponent,
