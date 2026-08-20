@@ -89,7 +89,6 @@
 
 .ellipsis:hover {
   color: var(--color-text-link-brand-strong, #94c5ea);
-  background: var(--color-background-brand-lighter-slate, #1e262c);
   text-decoration: underline;
 }
 
