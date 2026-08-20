@@ -1,30 +1,10 @@
-<span
-  [ngClass]="hostClasses"
-  [ngStyle]="rootStyles"
-  [attr.role]="title ? 'img' : 'presentation'"
-  [attr.aria-label]="title || null"
-  [attr.aria-hidden]="title ? null : 'true'"
->
-  @if (variant === "img" && !missing) {
-    <img
-      class="ids-icon__img"
-      [src]="iconUrl"
-      [attr.alt]="title || ''"
-      [attr.width]="resolvedSize"
-      [attr.height]="resolvedSize"
-      (error)="onAssetError()"
-    />
-  }
-
-  @if (variant === "inline") {
-    <svg
-      class="ids-icon__svg"
-      [attr.width]="resolvedSize"
-      [attr.height]="resolvedSize"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <use [attr.href]="iconUrl + '#icon'"></use>
-    </svg>
-  }
-</span>
+@if (resolvedVariant === "img" && !missing) {
+  <img
+    class="ids-icon__img"
+    [src]="iconUrl"
+    [attr.alt]="title || ''"
+    [attr.width]="resolvedSize"
+    [attr.height]="resolvedSize"
+    (error)="onAssetError()"
+  />
+}

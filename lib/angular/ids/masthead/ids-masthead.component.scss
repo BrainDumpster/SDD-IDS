@@ -10,6 +10,8 @@
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-transparent-base);
   font-family: inherit;
   box-sizing: border-box;
+  width: 100%;
+  overflow: visible;
 }
 
 /* Figma Product Info (`10130:29494` / `10130:29520`): left 16px, top 12.5px */
@@ -50,6 +52,7 @@
   gap: 0;
   height: 54px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .ids-masthead__icons-slot,
@@ -58,12 +61,18 @@
   display: flex;
   align-items: center;
   height: 100%;
-}
-
-.ids-masthead__icons-slot {
   gap: 0;
+  overflow: visible;
 }
 
-.ids-masthead__app-launcher-slot:not(:has(*)) {
-  display: none;
+/* App Shell slot bridges — layout-transparent (React slot props equivalent). */
+.ids-masthead__icons-slot > [mastheadIcons],
+.ids-masthead__app-launcher-slot > [mastheadLauncher],
+.ids-masthead__avatar-slot > [mastheadAvatar],
+.ids-app-shell__slot-bridge {
+  display: contents;
+}
+
+.ids-masthead__logo[hidden] {
+  display: none !important;
 }

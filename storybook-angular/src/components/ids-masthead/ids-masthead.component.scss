@@ -10,6 +10,7 @@
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-transparent-base);
   font-family: inherit;
   box-sizing: border-box;
+  width: 100%;
 }
 
 /* Figma Product Info (`10130:29494` / `10130:29520`): left 16px, top 12.5px */
@@ -58,12 +59,19 @@
   display: flex;
   align-items: center;
   height: 100%;
-}
-
-.ids-masthead__icons-slot {
   gap: 0;
 }
 
-.ids-masthead__app-launcher-slot:not(:has(*)) {
+/* Omit empty projection slots (React omits unused Icons / AppLauncher / Avatar slots). */
+.ids-masthead__icons-slot:not(:has(*)),
+.ids-masthead__app-launcher-slot:not(:has(*)),
+.ids-masthead__avatar-slot:not(:has(*)) {
+  display: none;
+}
+
+/* Omit actions row when all three slots are empty. */
+.ids-masthead__actions:not(:has(.ids-masthead__icons-slot > *)):not(
+    :has(.ids-masthead__app-launcher-slot > *)
+  ):not(:has(.ids-masthead__avatar-slot > *)) {
   display: none;
 }

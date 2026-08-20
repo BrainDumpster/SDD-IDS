@@ -22,6 +22,7 @@
     "../component-contracts/ids/alert.contract.ts",
     "../component-contracts/ids/button.contract.ts",
     "../component-contracts/ids/badge.contract.ts",
+    "../component-contracts/ids/avatar.contract.ts",
     "../component-contracts/ids/checkbox.contract.ts",
     "../component-contracts/ids/radio-button.contract.ts",
     "../component-contracts/ids/tab.contract.ts",
@@ -47,6 +48,7 @@
     "../component-contracts/ids/spinner.contract.ts",
     "../component-contracts/ids/slider.contract.ts",
     "../component-contracts/ids/progress-bar.contract.ts",
+    "../component-contracts/ids/link.contract.ts",
     "../component-contracts/synapse/detail-panel.contract.ts"
   ]
 }

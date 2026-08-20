@@ -4,18 +4,10 @@
   [attr.aria-label]="computedAriaLabel"
   [attr.aria-expanded]="ariaExpanded ?? null"
 >
-  <span
-    class="ids-masthead-avatar__chip"
-    [class.ids-masthead-avatar__chip--photo]="!!imageSrc"
-  >
-    @if (imageSrc) {
-      <img class="ids-masthead-avatar__image" [src]="imageSrc" [alt]="imageAlt" />
-    } @else if (initials) {
-      {{ initials }}
-    } @else {
-      <span class="ids-masthead-avatar__icon" aria-hidden="true">
-        <ng-content select="ids-icon" />
-      </span>
-    }
-  </span>
+  <ids-avatar
+    [initials]="initials"
+    [icon]="icon"
+    [imageSrc]="imageSrc"
+    [imageAlt]="imageAlt"
+  />
 </button>

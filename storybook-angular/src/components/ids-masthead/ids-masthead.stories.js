@@ -6,9 +6,11 @@ import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contract
 import { MASTHEAD_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/masthead.contract.js";
 import { IdsMastheadComponent } from "../../../compiled/lib/angular/ids/masthead/ids-masthead.component.js";
 import { IDS_MASTHEAD_IMPORTS } from "../../../compiled/lib/angular/ids/masthead/index.js";
+import { IDS_APP_LAUNCHER_IMPORTS } from "../../../compiled/lib/angular/ids/app-launcher/index.js";
 import {
   MASTHEAD_COMPOSITION_DEMO_TEMPLATE,
   MASTHEAD_DOCS_DESCRIPTION,
+  MASTHEAD_LAUNCHER_PRODUCTS,
   MASTHEAD_SOURCE_CODE,
   MASTHEAD_STORY_SOURCE_CODE,
   MASTHEAD_USER_ICON_AVATAR_TEMPLATE,
@@ -26,7 +28,7 @@ const meta = {
       providers: [provideZoneChangeDetection()],
     }),
     moduleMetadata({
-      imports: [...IDS_MASTHEAD_IMPORTS],
+      imports: [...IDS_MASTHEAD_IMPORTS, ...IDS_APP_LAUNCHER_IMPORTS],
     }),
   ],
   parameters: {
@@ -54,6 +56,10 @@ const meta = {
 
 export default meta;
 
+const launcherProps = {
+  launcherProducts: MASTHEAD_LAUNCHER_PRODUCTS,
+};
+
 /** @type {import("@storybook/angular").StoryObj<IdsMastheadComponent>} */
 export const SpecAccurateDesign = {
   name: SPEC_ACCURATE_DESIGN_STORY,
@@ -71,7 +77,7 @@ export const SpecAccurateDesign = {
     },
   },
   render: (args) => ({
-    props: args,
+    props: { ...args, ...launcherProps },
     template: MASTHEAD_COMPOSITION_DEMO_TEMPLATE,
   }),
   args: {
@@ -87,7 +93,16 @@ export const SpecAccurateDesign = {
 
 /** @type {import("@storybook/angular").StoryObj<IdsMastheadComponent>} */
 export const WithAppLauncherExample = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Real `ids-app-launcher` in the masthead slot (`triggerVariant=\"masthead\"`, two products). Click waffle to open.",
+      },
+    },
+  },
   render: () => ({
+    props: launcherProps,
     template: MASTHEAD_WITH_APP_LAUNCHER_TEMPLATE,
   }),
 };
@@ -102,6 +117,7 @@ export const WithProductLogo = {
     },
   },
   render: () => ({
+    props: launcherProps,
     template: MASTHEAD_WITH_PRODUCT_LOGO_TEMPLATE,
   }),
 };
@@ -117,6 +133,7 @@ export const UserIconAvatar = {
     },
   },
   render: () => ({
+    props: launcherProps,
     template: MASTHEAD_USER_ICON_AVATAR_TEMPLATE,
   }),
 };

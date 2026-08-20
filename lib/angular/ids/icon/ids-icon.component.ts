@@ -1,28 +1,42 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, ViewEncapsulation } from "@angular/core";
-import { NgClass, NgStyle } from "@angular/common";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation,
+} from "@angular/core";
 import {
   ICON_SPEC_ACCURATE_DEFAULTS,
   type IconVariant,
 } from "@component-contracts/ids/icon.contract";
 
+/**
+ * IDS Icon — mask/img/inline (React IdsIcon parity).
+ *
+ * Mask URL is applied via native `style.setProperty` because Angular's style
+ * sanitizer strips `url(...)` from HostBinding / NgStyle (symptoms: solid
+ * colored squares instead of glyphs).
+ */
 @Component({
   selector: "ids-icon",
   standalone: true,
-  imports: [NgClass, NgStyle],
   templateUrl: "./ids-icon.component.html",
   styleUrl: "./ids-icon.component.scss",
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    "[class]": "className || ''",
-    "[style.color]": "color || null",
     "[attr.data-ids]": "'ids-icon'",
     "[attr.data-shape]": "shape",
-    "[attr.data-variant]": "variant",
+    "[attr.data-variant]": "resolvedVariant",
     "[attr.data-missing]": "missing ? 'true' : null",
   },
 })
-export class IdsIconComponent {
+export class IdsIconComponent implements OnInit, OnChanges {
   @Input() shape: string = ICON_SPEC_ACCURATE_DEFAULTS.shape;
   /** Alias for `shape` — used by templates that bind `[shapeName]`. */
   @Input() set shapeName(value: string) {
@@ -39,7 +53,32 @@ export class IdsIconComponent {
   @Input() style?: Record<string, string> = ICON_SPEC_ACCURATE_DEFAULTS.style;
   missing = false;
 
-  constructor(private readonly cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly host: ElementRef<HTMLElement>,
+  ) {}
+
+  ngOnInit(): void {
+    this.applyMaskStyles();
+  }
+
+  /** Inline without a registry → mask (matches React fallback). */
+  get resolvedVariant(): IconVariant {
+    if (this.variant === "inline") return "mask";
+    return this.variant;
+  }
+
+  @HostBinding("class")
+  get hostClassList(): string {
+    return [
+      "ids-icon",
+      `ids-icon--${this.resolvedVariant}`,
+      this.className,
+      this.missing ? "ids-icon--missing" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }
 
   @HostBinding("style.width")
   get hostWidth(): string {
@@ -52,28 +91,60 @@ export class IdsIconComponent {
   }
 
   @HostBinding("style.display")
-  readonly hostDisplay = "inline-flex";
+  get hostDisplay(): string {
+    return this.resolvedVariant === "mask" ? "inline-block" : "inline-flex";
+  }
 
   @HostBinding("style.flex-shrink")
   readonly hostFlexShrink = "0";
 
-  @HostBinding("style.align-items")
-  readonly hostAlignItems = "center";
+  @HostBinding("style.vertical-align")
+  readonly hostVerticalAlign = "middle";
 
-  @HostBinding("style.justify-content")
-  readonly hostJustifyContent = "center";
+  @HostBinding("style.box-sizing")
+  readonly hostBoxSizing = "border-box";
 
   @HostBinding("style.line-height")
   readonly hostLineHeight = "0";
 
-  @HostBinding("style.overflow")
-  readonly hostOverflow = "hidden";
+  @HostBinding("style.color")
+  get hostColor(): string | null {
+    return this.color || null;
+  }
 
-  @HostBinding("style.vertical-align")
-  readonly hostVerticalAlign = "middle";
+  @HostBinding("style.--ids-icon-color")
+  get hostIconColorVar(): string | null {
+    return this.color || null;
+  }
+
+  @HostBinding("style.background-color")
+  get hostBackgroundColor(): string | null {
+    if (this.resolvedVariant !== "mask" || !this.shape || this.missing) return null;
+    return "var(--ids-icon-color, currentColor)";
+  }
+
+  @HostBinding("attr.role")
+  get hostRole(): string {
+    return this.title ? "img" : "presentation";
+  }
+
+  @HostBinding("attr.aria-label")
+  get hostAriaLabel(): string | null {
+    return this.title || null;
+  }
+
+  @HostBinding("attr.aria-hidden")
+  get hostAriaHidden(): string | null {
+    return this.title ? null : "true";
+  }
+
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.applyMaskStyles();
+  }
 
   onAssetError(): void {
     this.missing = true;
+    this.applyMaskStyles();
     this.cdr.markForCheck();
   }
 
@@ -85,45 +156,32 @@ export class IdsIconComponent {
     return `/assets/icons/${this.shape}.svg`;
   }
 
-  get hostClasses(): Record<string, boolean> {
-    return {
-      "ids-icon": true,
-      [`ids-icon--${this.variant}`]: true,
-      ...(this.className ? { [this.className]: true } : {}),
-    };
-  }
+  /** Apply mask via DOM — Angular HostBinding sanitizes away `url(...)`. */
+  private applyMaskStyles(): void {
+    const el = this.host.nativeElement;
+    const useMask =
+      this.resolvedVariant === "mask" && Boolean(this.shape) && !this.missing;
 
-  get hostStyles(): Record<string, string> {
-    const size = this.resolvedSize;
-    const styles: Record<string, string> = {
-      width: size,
-      height: size,
-    };
-
-    if (this.color) {
-      styles["--ids-icon-color"] = this.color;
-      styles["color"] = this.color;
+    if (!useMask) {
+      el.style.removeProperty("mask-image");
+      el.style.removeProperty("-webkit-mask-image");
+      el.style.removeProperty("mask-size");
+      el.style.removeProperty("-webkit-mask-size");
+      el.style.removeProperty("mask-repeat");
+      el.style.removeProperty("-webkit-mask-repeat");
+      el.style.removeProperty("mask-position");
+      el.style.removeProperty("-webkit-mask-position");
+      return;
     }
 
-    return styles;
-  }
-
-  get rootStyles(): Record<string, string> {
-    const styles: Record<string, string> = {
-      ...this.hostStyles,
-      ...(this.style ?? {}),
-    };
-
-    if (this.variant !== "mask" || !this.shape) {
-      return styles;
-    }
-
-    const maskUrl = `url(${this.iconUrl})`;
-    return {
-      ...styles,
-      backgroundColor: "var(--ids-icon-color, currentColor)",
-      "mask-image": maskUrl,
-      "-webkit-mask-image": maskUrl,
-    };
+    const mask = `url("${this.iconUrl}")`;
+    el.style.setProperty("mask-image", mask);
+    el.style.setProperty("-webkit-mask-image", mask);
+    el.style.setProperty("mask-size", "contain");
+    el.style.setProperty("-webkit-mask-size", "contain");
+    el.style.setProperty("mask-repeat", "no-repeat");
+    el.style.setProperty("-webkit-mask-repeat", "no-repeat");
+    el.style.setProperty("mask-position", "center");
+    el.style.setProperty("-webkit-mask-position", "center");
   }
 }

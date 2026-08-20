@@ -132,7 +132,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - `target`: `"_self" | "_blank" | "_parent" | "_top"` (default: `"_self"`).
   - `rel`: `string` (default enforce `noopener noreferrer` when `target="_blank"`).
   - `disabled`: `boolean` (default: `false`; not shown in current Figma matrix but allowed for runtime safety).
-  - `onClick`: callback event.
+  - `onClick`: callback event (React). Angular maps to output `clicked`.
+  - `dataState`: `"default" | "hover" | "press" | "focus-visible"` — **demo/testing only**; sets `data-state` for forced visual state and MUST NOT block runtime hover/press/focus-visible interaction.
 - Accessibility contract:
   - Link-like navigation MUST use `<a>` with valid `href`.
   - Action-like usage MUST use `<button>` semantics.
@@ -185,6 +186,16 @@ Variant matrix:
   - Main state matrix node: `9628:25123`
   - With-icon matrix node: `43478:105167`
   - Verified state nodes: `9628:25157`, `9628:25134`, `9628:25132`, `12520:73205`, `9628:25159`, `12520:73193`, `12520:73195`, `12520:73207`, `9628:25130`, `12520:73197`, `12520:73199`, `12520:73209`
+- Runtime contract: `component-contracts/ids/link.contract.ts`
+- Reference implementations (API/style parity):
+  - React: `lib/react/ids/link/`
+  - Angular: `lib/angular/ids/link/`
+- Storybook (Angular lib examples): `storybook-angular/src/components/ids-link/`
+- External icon asset: `assets/icons/pop-up-square-corner-big.svg` (slug `pop-up-square-corner-big`, 16px via lib `IdsIcon`)
+- Layout tokens used by lib CSS (map Figma 8px / 14/20 / focus geometry):
+  - Gap: `var(--spacing-space-8)`
+  - Type: `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`
+  - Focus ring: `var(--border-width-border-1)` + `var(--corner-radius-radius-4)` with `var(--padding-padding-4)` / `var(--padding-padding-2)` offsets
 - Verification evidence:
   - Metadata structure: `get_metadata`
   - State/text/icon evidence: `get_design_context`

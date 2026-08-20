@@ -125,9 +125,8 @@ ids-main-menu-left-item-icon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  display: inline-block;
-  background-color: currentColor;
   color: var(--color-icon-gray-neutral-strong, #252525);
+  /* background + mask-image owned by ids-icon host */
 }
 
 .ids-main-menu-left__primary-label {
@@ -180,9 +179,8 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__chevron-icon {
   width: 14px;
   height: 14px;
-  display: inline-block;
-  background-color: currentColor;
   color: var(--color-icon-brand-strong, #0062ab);
+  /* background + mask-image owned by ids-icon host */
 }
 
 .ids-main-menu-left__secondary-section {

@@ -33,9 +33,17 @@ export {
   IdsBadgeComponent,
 } from "./badge/index";
 export {
+  IDS_AVATAR_IMPORTS,
+  IdsAvatarComponent,
+} from "./avatar/index";
+export {
   IDS_BUTTON_IMPORTS,
   IdsButtonComponent,
 } from "./button/index";
+export {
+  IDS_LINK_IMPORTS,
+  IdsLinkComponent,
+} from "./link/index";
 export {
   IDS_SPINNER_IMPORTS,
   IdsSpinnerComponent,
@@ -99,6 +107,28 @@ export {
   IdsFooterTimeGroupComponent,
   IdsFooterTimeZoneGroupComponent,
 } from "./footer/index";
+export {
+  IDS_APP_SHELL_IMPORTS,
+  IdsAppShellComponent,
+  IdsAppShellHeaderActionsComponent,
+  IdsAppShellPagePanelComponent,
+  IdsAppShellMastheadSlotComponent,
+  IdsAppShellBodyRowComponent,
+  IdsAppShellMainMenuSlotComponent,
+  IdsAppShellMainColumnComponent,
+  IdsAppShellPageHeaderComponent,
+  IdsAppShellPageTitleComponent,
+  IdsAppShellPageDescriptionComponent,
+  IdsAppShellBodyViewportComponent,
+  IdsAppShellBodyContentSlotComponent,
+  IdsAppShellFooterSlotComponent,
+  IdsAppShellDemoHostComponent,
+} from "./app-shell/index";
+export {
+  IDS_APP_LAUNCHER_IMPORTS,
+  IdsAppLauncherComponent,
+  APP_SHELL_SPEC_ACCURATE_LAUNCHER_PRODUCTS,
+} from "./app-launcher/index";
 export {
   IDS_TAG_IMPORTS,
   IdsTagsComponent,

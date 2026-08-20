@@ -1,5 +1,6 @@
 import {
-  AfterContentInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   Input,
@@ -17,7 +18,7 @@ import { IdsMastheadLogoComponent } from "./ids-masthead-logo.component";
     class: "ids-masthead-host",
   },
 })
-export class IdsMastheadComponent implements AfterContentInit {
+export class IdsMastheadComponent implements AfterContentChecked {
   @Input({ required: true }) productName!: string;
 
   @ContentChild(IdsMastheadLogoComponent)
@@ -26,7 +27,13 @@ export class IdsMastheadComponent implements AfterContentInit {
   /** True when a logo slot is projected (Figma `Show Product Icon=Yes`). */
   hasLogo = false;
 
-  ngAfterContentInit(): void {
-    this.hasLogo = !!this.logoSlot;
+  constructor(private readonly cdr: ChangeDetectorRef) {}
+
+  ngAfterContentChecked(): void {
+    const next = !!this.logoSlot;
+    if (next !== this.hasLogo) {
+      this.hasLogo = next;
+      this.cdr.markForCheck();
+    }
   }
 }

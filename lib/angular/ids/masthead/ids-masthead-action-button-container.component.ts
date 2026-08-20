@@ -10,6 +10,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
         display: inline-flex;
         align-items: center;
         gap: 0;
+        height: 100%;
       }
     `,
   ],
