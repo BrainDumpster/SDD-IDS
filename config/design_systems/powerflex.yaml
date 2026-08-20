@@ -1,0 +1,23 @@
+# PowerFlex Design System Configuration
+
+name: powerflex
+display_name: PowerFlex
+
+figma_file_key: "82bDP05ESsiiGe38p5TEQJ"
+figma_map_path: data/powerflex-component-figma-map.json
+
+theme_css_path: components/powerflex-theme.css
+root_spec_path: components/powerflex/root-spec.md
+components_dir: components/powerflex
+
+generated_storybook_dir: storybook-generated/powerflex
+storybookTitlePrefix: "Spec Generated/Powerflex"
+strict_storybook_gate: false
+
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.md
+baseline_theme_css_path: components/ids-theme.css
+
+program_components_dir: components/powerflex
+program_root_spec_path: components/powerflex/root-spec.md
+program_theme_css_path: components/powerflex-theme.css
