@@ -38,6 +38,8 @@ jobs:
 
       - name: Build React Storybook
         working-directory: ./storybook
+        env:
+          CI: true
         run: npm run build
 
       # --- 2. BUILD ANGULAR STORYBOOK ---
@@ -47,6 +49,8 @@ jobs:
 
       - name: Build Angular Storybook
         working-directory: ./storybook-angular
+        env:
+          CI: true
         run: npm run build
 
       # --- 3. MERGE OUTPUTS INTO A UNIFIED STRUCTURE ---

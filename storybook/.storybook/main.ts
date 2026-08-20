@@ -39,6 +39,8 @@ function warnOnNewSpecGeneratedStories(): Plugin {
 const config: StorybookConfig = {
   // Absolute globs keep Vite importer keys aligned with the story index (avoids
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
+  // Note: `Tab.stories.tsx` under storybook-generated is disabled
+  // (`Tab.stories.tsx.disabled`) — hand `IdsTabs.stories.tsx` owns those story IDs.
   stories: [
     path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
     path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),

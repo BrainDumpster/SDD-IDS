@@ -101,7 +101,8 @@ function TooltipStoryStyles() {
   );
 }
 
-export const Playground: Story = {
+export const ControlsPlayground: Story = {
+  name: "Controls Playground",
   render: (args) => (
     <div className="sbTooltipCanvas">
       <TooltipStoryStyles />
