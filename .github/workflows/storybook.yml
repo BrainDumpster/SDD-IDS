@@ -27,6 +27,9 @@ jobs:
           node-version: 24 
           cache: 'npm'
           # Caching configuration can be adjusted or repeated if paths share dependencies
+          cache-dependency-path: |
+            storybook/package-lock.json
+            storybook-angular/package-lock.json
 
       # --- 1. BUILD REACT STORYBOOK ---
       - name: Install React dependencies
