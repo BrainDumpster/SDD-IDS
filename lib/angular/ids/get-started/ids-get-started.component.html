@@ -1,0 +1,8 @@
+<ids-get-started-hero-header />
+<ids-get-started-container [synthesizedCards]="synthesizedCards" />
+@if (isOverflow && canScrollLeft) {
+  <ids-get-started-overflow-edge side="left" />
+}
+@if (isOverflow && canScrollRight) {
+  <ids-get-started-overflow-edge side="right" />
+}

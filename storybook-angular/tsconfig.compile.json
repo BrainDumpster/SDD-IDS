@@ -49,6 +49,7 @@
     "../component-contracts/ids/slider.contract.ts",
     "../component-contracts/ids/progress-bar.contract.ts",
     "../component-contracts/ids/link.contract.ts",
+    "../component-contracts/ids/get-started.contract.ts",
     "../component-contracts/synapse/detail-panel.contract.ts"
   ]
 }
