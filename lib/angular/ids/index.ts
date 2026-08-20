@@ -41,6 +41,33 @@ export {
   IdsButtonComponent,
 } from "./button/index";
 export {
+  IDS_CARD_IMPORTS,
+  IdsCardComponent,
+  IdsCardHeaderMenuComponent,
+  IdsCardSecondaryTitleComponent,
+  IdsCardTextContentComponent,
+  IdsCardKeyValueContentComponent,
+  IDS_DASHBOARD_CARD_OVERRIDE,
+  IdsDashboardCardHost,
+} from "./card/index";
+export type {
+  IdsCardAction,
+  IdsCardKeyValueItem,
+  IdsCardMenuOption,
+  IdsCardSize,
+} from "./card/index";
+export {
+  IDS_DASHBOARD_IMPORTS,
+  IdsDashboardComponent,
+  IdsDashboardGridComponent,
+  IdsDashboardItemComponent,
+  IDS_DASHBOARD_CONTEXT,
+} from "./dashboard/index";
+export type {
+  IdsDashboardRuntimeContext,
+  IdsDashboardSlotName,
+} from "./dashboard/index";
+export {
   IDS_LINK_IMPORTS,
   IdsLinkComponent,
 } from "./link/index";
