@@ -168,6 +168,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - multi-select toggles the option and **keeps the popup open** for further selection.
 - Single-select Clear All (`showClearAll`, Figma `348:140631`):
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the footer action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding: var(--padding-padding-2) var(--padding-padding-16)`, `radius-2`) but with a **bottom** border (not the footer's top border) since it sits at the top of the list.
+  - the Clear All row is **hidden while a search query is active** (same as the multi-select `SelectAllRow`), and reappears when the search is cleared.
   - clicking it clears the selection; the row then **auto-hides** (no value remains). It does **not** collapse the menu.
 - Menu sizing:
   - the option list shows up to **6 rows** before it scrolls; ≤6 options render with no scroll, >6 introduce a vertical scroll region.

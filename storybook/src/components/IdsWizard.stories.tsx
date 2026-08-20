@@ -34,6 +34,13 @@ const meta: Meta<WizardStoryArgs> = {
   argTypes: {
     mode: { control: "radio", options: WIZARD_MODE_OPTIONS },
     size: { control: "radio", options: WIZARD_SIZE_OPTIONS },
+    steps: { control: false, table: { disable: true } },
+    trigger: { control: false, table: { disable: true } },
+    onCancel: { control: false, table: { disable: true } },
+    onPrevious: { control: false, table: { disable: true } },
+    onNext: { control: false, table: { disable: true } },
+    onFinish: { control: false, table: { disable: true } },
+    onStepChange: { control: false, table: { disable: true } },
   },
 };
 

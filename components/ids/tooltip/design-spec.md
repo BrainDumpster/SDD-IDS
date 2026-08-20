@@ -62,6 +62,7 @@ Arrow geometry contract:
 - Trigger-to-tooltip spacing (with arrow): `16px` (runtime positioner `sideOffset`).
 
 Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`):
+- `TriggerAnchor` / `.trigger` (inline) and `.triggerBlock` (block): the trigger anchor element. `.triggerBlock` uses `display: block`, `width: 100%`, `min-width: 0` to fill the host row and remain shrinkable in flex layouts. The `BaseTooltip.Trigger` is rendered with a `render` prop so the `className` and `children` merge correctly.
 - `TooltipRoot` / `.popup`: transparent positioning shell (`overflow: visible`; no border/shadow).
 - `TooltipPanel` / `.panel`: bordered content surface (background, border, shadow, `box-sizing: border-box`).
 - `Arrow` / `.arrow`: absolute sibling above `.panel`; overlaps panel edge (no `::before`/`::after` border-notch masks).
@@ -142,6 +143,9 @@ Typography contract:
 - `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
 - `closeIconShapeName?: string` default `ctrl-close-16` (for icon component integration).
 - `hugContent?: boolean` (default `false`). When `true`, the tooltip popup width shrinks to fit its content instead of using the standard `240px` / `264px` fixed widths.
+- `triggerDisplay?: "inline" | "block"` (default `inline`). When `block`, the trigger anchor spans the full width of its container (e.g. for truncated dropdown option labels or dual-list rows) and uses `min-width: 0` so it does not force a wider flex parent.
+- `delay?: number` (default `600` ms, Base UI default). Open delay for standard hover tooltips; use `0` for immediate appearance.
+- `closeDelay?: number` (default `0` ms). Delay before closing when the pointer leaves the trigger.
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 Deterministic structure:

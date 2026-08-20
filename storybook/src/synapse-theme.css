@@ -589,6 +589,7 @@ body[data-design-system="synapse"] {
   --chat-input-textarea-max-height: 252px;
   --date-picker-control-radius: var(--corner-radius-radius-4);
   --date-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --modal-control-radius: var(--corner-radius-radius-16);
   --progress-bar-control-radius: var(--corner-radius-radius-2);
   --suggested-prompt-radius: var(--corner-radius-radius-8);
   --text-box-control-radius: var(--corner-radius-radius-4);

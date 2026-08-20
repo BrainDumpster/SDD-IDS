@@ -139,6 +139,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles open/close.
+  - when the popup opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
+  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, option rows, footer action).
   - `Escape` closes and returns focus to trigger.
 - Selection:
   - selecting an option sets exactly one selected value.
@@ -155,6 +157,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - emits action event on click.
 - Optional Clear All (`showClearAll`, Figma `348:140631`):
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding-2 / padding-16`, `radius-2`) but with a **bottom** border since it sits at the top of the list.
+  - the Clear All row is **hidden while a search query is active**, and reappears when the search is cleared.
   - clicking clears the selection; the row then auto-hides. It does **not** collapse the menu.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |

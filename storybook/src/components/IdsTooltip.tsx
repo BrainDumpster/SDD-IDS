@@ -24,6 +24,10 @@ export interface IdsTooltipProps {
   triggerDisplay?: "inline" | "block";
   /** When true, the tooltip popup shrinks to fit its content instead of using the standard 240px width. */
   hugContent?: boolean;
+  /** Open delay in ms. Default is Base UI's 600ms. */
+  delay?: number;
+  /** Close delay in ms. Default is 0. */
+  closeDelay?: number;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: "close-click" | "escape" | "programmatic") => void;
 }
@@ -38,6 +42,8 @@ export function IdsTooltip({
   closable = false,
   triggerDisplay = "inline",
   hugContent = false,
+  delay,
+  closeDelay,
   onOpenChange,
   onClose,
 }: IdsTooltipProps) {

@@ -17,6 +17,26 @@
   min-width: 0;
 }
 
+/* Base UI Menu.Trigger is the real focusable element; show the IDS focus ring
+   around the trigger shell (inset -5px) when keyboard focus is active.
+   `.triggerReset` has `all: unset`, so the pseudo-element draws the ring. */
+.triggerReset:focus-visible,
+.triggerReset[data-focus-visible] {
+  position: relative;
+  outline: none;
+}
+
+.triggerReset:focus-visible::after,
+.triggerReset[data-focus-visible]::after {
+  content: "";
+  position: absolute;
+  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
+  inset: -4px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+}
+
 .triggerMeasure {
   display: inline-flex;
   width: 100%;
@@ -45,6 +65,13 @@
   overflow: clip;
 }
 
+/* When Base UI flips/places the menu above the field, the drop shadow would
+   fall down onto the field/container. Suppress it for the top side so the
+   attached menu stays flush and does not overlay the container. */
+.popup[data-side="top"] {
+  box-shadow: none;
+}
+
 /* Detached menu (context menu, masthead help) — full border; not field-attached. */
 .popupStandalone {
   border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
@@ -70,6 +97,7 @@
 }
 
 .searchField {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -79,6 +107,17 @@
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: 0;
+}
+
+/* Outer focus ring: matches the IDS dropdown trigger focus ring
+   (`inset: -4px` = 2px offset, brand border, 4px radius). */
+.searchField[data-focus-visible="true"]::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .searchIcon {
@@ -205,6 +244,7 @@
   all: unset;
   display: inline-flex;
   align-items: center;
+  position: relative;
   gap: var(--spacing-space-8);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   color: var(--color-text-brand-strong);
@@ -262,6 +302,7 @@
   /* Cap at 3 rows of tags, then scroll: top (8) + 3 × 28px tag (lg) + 2 × 4px gap = 100px. */
   max-height: 100px;
   overflow-y: auto;
+  outline: none;
 }
 
 .showSelectedTags::-webkit-scrollbar {
@@ -284,6 +325,7 @@
   /* Hide the native scrollbar — the overlay scrollbar below draws on top
      without taking layout space, so option rows keep their full width. */
   scrollbar-width: none;
+  outline: none;
 }
 
 .optionsScrollViewport::-webkit-scrollbar {
@@ -338,6 +380,8 @@
 
 .clearAllButton {
   all: unset;
+  display: inline-flex;
+  align-items: center;
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -348,6 +392,19 @@
   color: var(--color-text-gray-disabled);
   cursor: not-allowed;
 }
+
+/* Select All checkbox focus matches IDS Checkbox focus-visible:
+   the control border becomes brand and a 1px brand outline sits 2px outside. */
+.selectAllButton:focus-visible .selectAllCheckbox {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.selectAllButton:focus-visible:not([data-checked="true"]) .selectAllCheckbox {
+  border-color: var(--color-border-brand-base);
+}
+
+
 
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
   background: var(--color-background-controls-base);
@@ -545,8 +602,26 @@
 .footerActionButton {
   display: inline-flex;
   align-items: center;
+  position: relative;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: var(--corner-radius-radius-2);
+}
+
+.clearAllButton:focus-visible .footerActionButton,
+.footerAction:focus-visible .footerActionButton,
+.clearAllAction:focus-visible .footerActionButton {
+  outline: none;
+}
+
+.clearAllButton:focus-visible .footerActionButton::after,
+.footerAction:focus-visible .footerActionButton::after,
+.clearAllAction:focus-visible .footerActionButton::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 /* Single-select Clear All: identical visual to the footer action button, but
