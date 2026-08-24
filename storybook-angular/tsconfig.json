@@ -23,6 +23,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
+    "../lib/shared/**/*.d.ts",
     "../component-contracts/common/**/*.ts",
     "../component-contracts/ids/button.contract.ts",
     "../component-contracts/ids/accordion.contract.ts",

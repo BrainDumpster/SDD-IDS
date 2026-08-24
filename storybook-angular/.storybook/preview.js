@@ -1,5 +1,11 @@
 import "zone.js";
 
+/**
+ * Shared sidebar roots live in `storybook-shared/sidebar.js`.
+ * Keep this `order` in sync — Storybook's indexer requires a plain serializable
+ * `storySort.order` (function closures / imported bindings break index.json).
+ */
+
 const THEME_STYLESHEETS = [
   "/components/ids-theme.css",
   "/components/dap-theme.css",
@@ -31,87 +37,17 @@ const preview = {
       autodocs: "tag",
     },
     options: {
-      storySort: (a, b) => {
-        const titleFrom = (entry) => {
-          if (Array.isArray(entry)) {
-            const [, meta] = entry;
-            return (meta && meta.title) || entry[0] || "";
-          }
-          const obj = entry || {};
-          return obj.title || obj.id || "";
-        };
-
-        const titleA = titleFrom(a);
-        const titleB = titleFrom(b);
-        const partsA = titleA.split("/");
-        const partsB = titleB.split("/");
-
-        const rootOrder = ["Foundations", "Components"];
-        const rootA = rootOrder.indexOf(partsA[0] ?? "");
-        const rootB = rootOrder.indexOf(partsB[0] ?? "");
-
-        if (rootA !== rootB) {
-          if (rootA === -1) return 1;
-          if (rootB === -1) return -1;
-          return rootA - rootB;
-        }
-
-        if (partsA[0] === "Foundations" && partsB[0] === "Foundations") {
-          const foundationsOrder = ["Icons", "Design tokens"];
-          const fa = foundationsOrder.indexOf(partsA[1] ?? "");
-          const fb = foundationsOrder.indexOf(partsB[1] ?? "");
-          if (fa !== fb) {
-            if (fa === -1) return 1;
-            if (fb === -1) return -1;
-            return fa - fb;
-          }
-          if ((partsA[1] ?? "") === "Design tokens" && (partsB[1] ?? "") === "Design tokens") {
-            const nameFrom = (entry) => {
-              if (Array.isArray(entry)) {
-                const [, meta] = entry;
-                return (meta && (meta.name || meta.story)) || "";
-              }
-              const obj = entry || {};
-              return obj.name || "";
-            };
-            const tokenPageOrder = [
-              "Overview",
-              "Modes",
-              "Primitives",
-              "Semantic",
-              "Components",
-            ];
-            const ta = tokenPageOrder.indexOf(nameFrom(a));
-            const tb = tokenPageOrder.indexOf(nameFrom(b));
-            if (ta !== tb) {
-              if (ta === -1) return 1;
-              if (tb === -1) return -1;
-              return ta - tb;
-            }
-          }
-        }
-
-        if (partsA[0] === "Components" && partsB[0] === "Components") {
-          const specGroupOrder = ["IDS", "DAP", "Synapse"];
-          const groupA = specGroupOrder.indexOf(partsA[1] ?? "");
-          const groupB = specGroupOrder.indexOf(partsB[1] ?? "");
-          if (groupA !== groupB) {
-            if (groupA === -1) return 1;
-            if (groupB === -1) return -1;
-            return groupA - groupB;
-          }
-        }
-
-        const maxLen = Math.max(partsA.length, partsB.length);
-        for (let i = 0; i < maxLen; i++) {
-          const segA = partsA[i] ?? "";
-          const segB = partsB[i] ?? "";
-          if (segA === segB) continue;
-          if (!segA) return -1;
-          if (!segB) return 1;
-          return segA.localeCompare(segB, undefined, { sensitivity: "base" });
-        }
-        return 0;
+      storySort: {
+        order: [
+          "Foundations",
+          [
+            "Icons",
+            "Design tokens",
+            ["Overview", "Modes", "Primitives", "Semantic", "Components"],
+          ],
+          "Components",
+          ["IDS", "DAP", "Synapse"],
+        ],
       },
     },
   },

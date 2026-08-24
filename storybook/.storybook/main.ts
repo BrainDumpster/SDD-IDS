@@ -143,6 +143,10 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  // Shared icons / images for Foundations + runtime `/assets` (same as Angular staticDirs).
+  staticDirs: [
+    { from: path.join(repoRoot, "assets"), to: "/assets" },
+  ],
   // Avoid babel react-docgen parsing `@types/*.d.ts` (ambient `const x: T` has no initializer).
   typescript: {
     reactDocgen: "react-docgen-typescript",

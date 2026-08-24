@@ -19,8 +19,8 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parent.parent
 THEME_CSS = PROJECT / "components" / "ids-theme.css"
-OUT_JSON = PROJECT / "storybook-angular" / "src" / "foundations" / "foundation-tokens.json"
-OUT_JS = PROJECT / "storybook-angular" / "src" / "foundations" / "foundation-tokens.js"
+OUT_JSON = PROJECT / "storybook-shared" / "foundations" / "foundation-tokens.json"
+OUT_JS = PROJECT / "storybook-shared" / "foundations" / "foundation-tokens.js"
 ICONS_DIR = PROJECT / "assets" / "icons"
 
 
