@@ -10,6 +10,7 @@ import { Badge } from "./Badge";
 import { DropdownMenu } from "./DropdownMenu";
 import { IdsButton } from "./IdsButton";
 import { Icon } from "./Icon";
+import { DropdownMenu } from "./DropdownMenu";
 
 export interface TabItem {
   id: string;

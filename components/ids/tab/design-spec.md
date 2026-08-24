@@ -94,6 +94,7 @@ Do **not** duplicate the light matrix. Selected-tab baseline rules are identical
 - Overflow (`More`) option:
   - When tabs cannot fit container width, trailing non-active tabs move into `More` dropdown.
   - Selecting a tab from dropdown makes it active.
+  - The overflow dropdown menu uses the IDS single-select `DropdownMenu` component.
   - On selection from dropdown, `More` trigger label becomes selected tab name.
   - If user later selects a visible in-viewport tab, trigger label returns to `More`.
   - Overflow trigger remains last item in tab row.
@@ -223,5 +224,6 @@ Runtime rules:
 - **Figma MCP evidence:** `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`, `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`.
 ## Implementation Notes
 - **Caret icon size:** Overflow trigger caret icon (`moreIcon`) is set to `var(--sizing-size-10, 10px)` width and height.
+- **Overflow menu component (IDS):** The IDS tabs overflow renders with `DropdownMenu` (`storybook/src/components/DropdownMenu.tsx`) configured as `selectionMode="single"`, `showSingleSelectRadio={false}`, `align="end"`, and `menuWidth="content"`.
 - **Selected baseline (Storybook reference):** `storybook/src/components/Tabs.module.css` — selected / overflow-selected use `border-bottom: none`; panel has no top border underlay; `.list::after` continues the row baseline. Required so Primary + dark + `surface=transparent` does not show a bottom line under the selected tab.
 - **Overflow menu component:** The `More` dropdown is implemented with the IDS `DropdownMenu` single-select component (`storybook/src/components/DropdownMenu.tsx`) using `triggerAsChild`, so the overflow tab keeps its original tab styling while the popup shares the standard IDS single-select dropdown behavior and visuals.
