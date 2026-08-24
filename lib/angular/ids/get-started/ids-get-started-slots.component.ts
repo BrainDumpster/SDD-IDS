@@ -14,6 +14,7 @@ import { CommonModule } from "@angular/common";
 import {
   GET_STARTED_HONEYCOMB_SRC,
 } from "@component-contracts/ids/get-started.contract";
+import { idsAssetUrl } from "../../../shared/ids-assets-base.js";
 import { IdsButtonComponent } from "../button/ids-button.component";
 import { IdsIconComponent } from "../icon/ids-icon.component";
 import { cx } from "../../shared/utils/cx";
@@ -95,7 +96,10 @@ export class IdsGetStartedHeroHoneycombComponent {
   ) {}
 
   get resolvedSrc(): string | undefined {
-    return this.src ?? this.host?.honeycombSrc ?? GET_STARTED_HONEYCOMB_SRC;
+    const raw = this.src ?? this.host?.honeycombSrc ?? GET_STARTED_HONEYCOMB_SRC;
+    if (!raw) return undefined;
+    if (/^(https?:|data:|blob:)/i.test(raw)) return raw;
+    return idsAssetUrl(raw);
   }
 }
 

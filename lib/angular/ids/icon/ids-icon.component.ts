@@ -14,6 +14,7 @@ import {
   ICON_SPEC_ACCURATE_DEFAULTS,
   type IconVariant,
 } from "@component-contracts/ids/icon.contract";
+import { idsAssetUrl } from "../../../shared/ids-assets-base.js";
 
 /**
  * IDS Icon — mask/img/inline (React IdsIcon parity).
@@ -153,7 +154,7 @@ export class IdsIconComponent implements OnInit, OnChanges {
   }
 
   get iconUrl(): string {
-    return `/assets/icons/${this.shape}.svg`;
+    return idsAssetUrl(`icons/${this.shape}.svg`);
   }
 
   /** Apply mask via DOM — Angular HostBinding sanitizes away `url(...)`. */

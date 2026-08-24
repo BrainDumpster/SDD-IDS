@@ -2,10 +2,22 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const packageRoot = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(packageRoot, "..");
 const compiledComponentRoots = [
   path.join(packageRoot, "compiled/storybook-angular/src/components"),
   path.join(packageRoot, "compiled/lib/angular/ids"),
 ];
+
+/** Shared runtime helper imported by compiled Angular components. */
+const sharedAssetsSrc = path.join(repoRoot, "lib/shared/ids-assets-base.js");
+const sharedAssetsDestDir = path.join(packageRoot, "compiled/lib/shared");
+if (fs.existsSync(sharedAssetsSrc)) {
+  fs.mkdirSync(sharedAssetsDestDir, { recursive: true });
+  fs.copyFileSync(
+    sharedAssetsSrc,
+    path.join(sharedAssetsDestDir, "ids-assets-base.js"),
+  );
+}
 
 function walk(dir, files = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

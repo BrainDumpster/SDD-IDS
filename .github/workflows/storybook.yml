@@ -61,6 +61,11 @@ jobs:
           # Move built files to explicit subfolders
           cp -r storybook/storybook-static public-site/react
           cp -r storybook-angular/storybook-static public-site/angular
+
+          # Shared assets once at site root (both Storybooks resolve via idsAssetUrl):
+          #   https://<org>.github.io/<repo>/assets/icons/...
+          # Local Storybook still serves the same folder via staticDirs → /assets
+          cp -r assets public-site/assets
           
           # Create a clean landing index.html file at the root
           cat << 'EOF' > public-site/index.html

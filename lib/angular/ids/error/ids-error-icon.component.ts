@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from "@angular/core";
 import { NgStyle } from "@angular/common";
 import { ERROR_ICON_SPEC_ACCURATE_DEFAULTS } from "@component-contracts/ids/error.contract";
+import { idsAssetUrl } from "../../../shared/ids-assets-base.js";
 
 @Component({
   selector: "ids-error-icon",
@@ -20,7 +21,7 @@ export class IdsErrorIconComponent {
   }
 
   get iconUrl(): string {
-    return `/assets/icons/${this.shape}.svg`;
+    return idsAssetUrl(`icons/${this.shape}.svg`);
   }
 
   get maskStyles(): Record<string, string> {

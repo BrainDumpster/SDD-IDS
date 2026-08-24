@@ -6,6 +6,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { idsAssetUrl } from "../../../lib/shared/ids-assets-base.js";
 import { CardHeaderOverflowMenu, type CardMenuOption } from "./CardHeaderMenu";
 import { Icon } from "./Icon";
 import styles from "./Card.module.css";
@@ -184,7 +185,7 @@ export function Card({
     typeof headerIcon === "string" &&
     /^[a-z0-9-]+$/.test(headerIcon) &&
     headerIcon.length > 0
-      ? `/assets/icons/${headerIcon}.svg`
+      ? idsAssetUrl(`icons/${headerIcon}.svg`)
       : undefined;
   const showHeaderIcon =
     showIcon &&
