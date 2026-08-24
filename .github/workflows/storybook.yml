@@ -66,6 +66,11 @@ jobs:
           #   https://<org>.github.io/<repo>/assets/icons/...
           # Local Storybook still serves the same folder via staticDirs → /assets
           cp -r assets public-site/assets
+
+          # Shared theme CSS at site root (Angular preview resolves via idsComponentsUrl):
+          #   https://<org>.github.io/<repo>/components/ids-theme.css
+          mkdir -p public-site/components
+          cp components/*.css public-site/components/
           
           # Create a clean landing index.html file at the root
           cat << 'EOF' > public-site/index.html
