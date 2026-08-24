@@ -43,8 +43,9 @@
 }
 
 .popup {
-  background: var(--color-background-component);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border-top: none;
   box-sizing: border-box;
   /* Default (container-driven): menu matches the trigger/field width so it
      tracks the field as its container resizes; long options truncate via
@@ -73,7 +74,7 @@
 
 /* Detached menu (context menu, masthead help) — full border; not field-attached. */
 .popupStandalone {
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-radius: var(--dropdown-menu-radius);
   width: auto !important;
   min-width: 186px !important;
@@ -102,8 +103,8 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: 0;
 }
@@ -138,11 +139,11 @@
   min-width: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .searchInput::placeholder {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 /* Holds the input plus the greyed-out ghost suggestion, overlaid in the same box. */
@@ -222,9 +223,12 @@
 .showSelectedPanel {
   width: 100%;
   box-sizing: border-box;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
+  /* Keep Show/Hide Selected from resizing content-driven popup max-content (avoids
+     Floating UI collision-shift “drift” when the tag panel mounts/unmounts). */
+  contain: inline-size;
 }
 
 .showSelectedHeader {
@@ -252,27 +256,30 @@
 
 .showSelectedCaret {
   flex-shrink: 0;
+  transition: transform 150ms ease;
 }
 
 .showSelectedToggle:focus-visible {
-  outline: none;
-}
-
-.showSelectedToggle:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius);
-  pointer-events: none;
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
 }
 
 .showSelectedTagsRoot {
   position: relative;
-  /* Extend past the panel's right padding so the overlay scrollbar sits at the
-     popup edge (aligned with the options list scrollbar). */
-  width: calc(100% + var(--padding-padding-16));
+  /* Stay within the panel content box. Do NOT use width: calc(100% + padding) —
+     that bleeds into content-driven popup max-content and shifts the menu on
+     expand/collapse. Overlay scrollbar is offset to the popup edge instead. */
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  contain: inline-size;
+  overflow: visible;
+}
+
+.showSelectedTagsRoot .optionsScrollbar {
+  /* Panel has padding-right 16px; pull the overlay thumb to the popup edge so it
+     still aligns with the options-list scrollbar (same visual as the old width bleed). */
+  right: calc(2px - var(--padding-padding-16));
 }
 
 .showSelectedTags {
@@ -342,11 +349,11 @@
 .optionsScrollThumb {
   width: 100%;
   border-radius: var(--corner-radius-radius-4);
-  background-color: var(--color-border-light);
+  background-color: var(--color-border-gray-neutral-light);
 }
 
 .optionsScrollThumb:hover {
-  background-color: var(--color-text-neutral);
+  background-color: var(--color-text-gray-neutral);
 }
 
 .selectAllClearAllRow {
@@ -355,9 +362,9 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
 }
 
 .selectAllButton {
@@ -365,7 +372,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
@@ -382,7 +389,7 @@
 }
 
 .clearAllButton:disabled {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
 }
 
@@ -400,24 +407,24 @@
 
 
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
-  color: var(--color-icon-white);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-icon-gray-white);
 }
 
 .selectAllButton[data-checked="true"]:hover .selectAllCheckbox,
 .selectAllButton[data-checked="true"]:active .selectAllCheckbox {
-  background: var(--color-background-controls-brand-strong);
-  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
 }
 
 .selectAllButton[data-indeterminate="true"] .selectAllCheckbox {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-color: var(--color-border-brand-base);
 }
 
 .selectAllButton:hover:not([data-checked="true"]) .selectAllCheckbox {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .item {
@@ -430,10 +437,10 @@
   width: 100%;
   box-sizing: border-box;
   border: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   text-align: left;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
   outline: none;
@@ -447,12 +454,10 @@
 }
 
 /* Option label truncates with an ellipsis when longer than the menu width
-   (popup is locked to the trigger width). It must be able to shrink. */
+   (popup is locked to the trigger width). Flex child must be able to shrink. */
 .itemLabel {
-  display: block;
   flex: 1 1 auto;
   min-width: 0;
-  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -466,12 +471,12 @@
   width: 100%;
   box-sizing: border-box;
   min-height: 40px;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 500;
   font-variation-settings: "wdth" 100;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .item[data-selection-mode="single"] {
@@ -486,30 +491,30 @@
 }
 
 .item:hover:not([data-disabled]) {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-highlighted] {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:hover:not([data-disabled]),
 .item[data-selection-mode="single"][data-highlighted]:not([data-disabled]) {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
   /* Top + bottom border only (no side borders); inset box-shadow is not clipped
      by the options scroll region the way a 0-offset outline is. */
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-focus-visible] {
@@ -532,7 +537,7 @@
 
 .item[data-disabled],
 .item:disabled {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
   background: var(--color-background-gray-lighter);
   box-shadow: none;
@@ -540,7 +545,7 @@
 
 .item[data-selection-mode="single"]:has(.radioOuter)[data-disabled],
 .item[data-selection-mode="single"]:has(.radioOuter):disabled {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   outline: none;
 }
 
@@ -548,8 +553,8 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter)):disabled {
   background: var(--color-background-gray-lighter);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-disabled),
-    inset 0 -1px 0 0 var(--color-border-disabled);
+    inset 0 1px 0 0 var(--color-border-gray-disabled),
+    inset 0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="false"][data-disabled],
@@ -557,15 +562,15 @@
   border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
   box-shadow:
     inset 0 -1px 0 0 var(--color-border-neutral-light),
-    0 -1px 0 0 var(--color-border-disabled);
+    0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
   padding: var(--padding-padding-6) var(--padding-padding-16);
-  border-top: var(--border-width-border-default) solid var(--color-border-accessible);
-  color: var(--color-text-neutral-strong);
+  border-top: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
 }
@@ -577,7 +582,7 @@
 .sectionDivider {
   width: 100%;
   height: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
 }
 
 .footerAction {
@@ -587,7 +592,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: var(--padding-padding-8) 0;
-  border-top: var(--border-width-border-default) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -629,7 +634,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: var(--padding-padding-8) 0;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -652,8 +657,8 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -664,18 +669,18 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-background-controls-brand-base);
+  background: var(--color-background-controls-base);
 }
 
 .checkboxOuter {
   width: 18px;
   height: 18px;
   border-radius: var(--corner-radius-radius-2);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   position: relative;
 }
 
@@ -704,72 +709,73 @@
   border-radius: 2px;
 }
 
-/* Focus ring wraps the whole row (matches single-select), not just the checkbox. */
-.item[data-selection-mode="multi"][data-focus-visible],
-.item[data-selection-mode="multi"]:focus-visible {
-  outline: 1px solid var(--color-border-brand-base);
-  outline-offset: -1px;
-  border-radius: var(--corner-radius-radius-4);
+.item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,
+.item[data-selection-mode="multi"]:focus-visible .checkboxOuter::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-2);
 }
 
 .item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .item[data-selected] .checkboxOuter {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
-  color: var(--color-icon-white);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-icon-gray-white);
 }
 
 .item[data-selected] {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected] {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   color: var(--color-text-brand-strong);
   outline: none;
   box-shadow: none;
 }
 
 .item[data-selection-mode="multi"][data-selected] {
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   box-shadow: none;
 }
 
 .item[data-selection-mode="multi"][data-indeterminate] .checkboxOuter {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-color: var(--color-border-brand-base);
 }
 
 .item:active:not([data-disabled]) {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:active:not([data-disabled]) {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */
@@ -777,13 +783,13 @@
 /* Unselected hover/press: control border strengthens. */
 .item:hover:not([data-disabled]) .radioOuter,
 .item:active:not([data-disabled]) .radioOuter {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .item:hover:not([data-disabled]) .checkboxOuter,
 .item:active:not([data-disabled]) .checkboxOuter {
-  border-color: var(--color-border-strong);
-  background: var(--color-background-component);
+  border-color: var(--color-border-gray-neutral-strong);
+  background: var(--color-background-surface-component);
 }
 
 /* Selected default: radio ring uses brand border. */
@@ -808,55 +814,55 @@
 /* Selected hover/press: radio ring follows strong border state. */
 .item[data-selected]:hover .radioOuter,
 .item[data-selected]:active .radioOuter {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 /* Selected hover/press for checkbox follows controls-brand-strong fill. */
 .item[data-selected]:hover .checkboxOuter,
 .item[data-selected]:active .checkboxOuter {
-  background: var(--color-background-controls-brand-strong);
-  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
 }
 
 .item[data-selection-mode="multi"][data-indeterminate]:hover .checkboxOuter,
 .item[data-selection-mode="multi"][data-indeterminate]:active .checkboxOuter {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 /* Figma parity: disabled selectable rows use component background + disabled controls/text. */
 .item[data-selectable="true"][data-disabled],
 .item[data-selectable="true"]:disabled {
-  background: var(--color-background-component);
-  color: var(--color-text-disabled);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-disabled);
 }
 
 .item[data-selectable="true"][data-disabled] .radioOuter,
 .item[data-selectable="true"]:disabled .radioOuter {
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
   background: var(--color-background-gray-lighter);
 }
 
 .item[data-selectable="true"][data-disabled] .radioInner,
 .item[data-selectable="true"]:disabled .radioInner {
-  background: var(--color-icon-disabled);
+  background: var(--color-icon-gray-disabled);
 }
 
 .item[data-selectable="true"][data-disabled] .checkboxOuter,
 .item[data-selectable="true"]:disabled .checkboxOuter {
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
   background: var(--color-background-gray-light);
-  color: var(--color-icon-inverse);
+  color: var(--color-icon-gray-inverse);
 }
 
 .item[data-selectable="true"][data-disabled][data-indeterminate] .checkboxOuter,
 .item[data-selectable="true"]:disabled[data-indeterminate] .checkboxOuter {
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="true"][data-disabled][data-indeterminate] .checkboxDash,
 .item[data-selectable="true"]:disabled[data-indeterminate] .checkboxDash {
-  background: var(--color-border-disabled);
+  background: var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="true"][data-disabled][data-selected] .checkboxOuter,

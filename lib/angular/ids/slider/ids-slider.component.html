@@ -1,0 +1,177 @@
+<div
+  [id]="resolvedId"
+  class="ids-slider-row"
+  data-ids="ids-slider-row"
+>
+  @if (hasMinLabel) {
+    <span
+      class="ids-slider-min-label"
+      data-ids="ids-slider-min-label"
+      [attr.data-active]="minActive ? 'true' : null"
+    >
+      {{ minLabel }}
+    </span>
+  }
+
+  <div class="ids-slider-rail-wrap" data-ids="ids-slider-rail-wrap">
+    <div
+      #railRef
+      class="ids-slider-control"
+      data-ids="ids-slider-control"
+      (pointerdown)="onRailPointerDown($event)"
+      (pointermove)="onRailPointerMove($event)"
+      (pointerup)="endDrag($event)"
+      (pointercancel)="endDrag($event)"
+    >
+      <div class="ids-slider-rail" data-ids="ids-slider-rail" aria-hidden="true">
+        @if (resolvedMode === "single") {
+          <div
+            class="ids-slider-progress"
+            data-ids="ids-slider-progress"
+            [style.width]="segmentWidth"
+          ></div>
+        } @else {
+          <div
+            class="ids-slider-range"
+            data-ids="ids-slider-range"
+            [style.left]="segmentLeft"
+            [style.width]="segmentWidth"
+          ></div>
+        }
+
+        @if (steppersOn && ticks.length > 0) {
+          <div
+            class="ids-slider-tick-list"
+            data-ids="ids-slider-tick-list"
+            aria-hidden="true"
+          >
+            @for (tick of ticks; track tick) {
+              <span
+                class="ids-slider-tick"
+                data-ids="ids-slider-tick"
+                [attr.data-selected]="isTickSelected(tick) ? 'true' : null"
+                [style.left]="percentStyle(tick)"
+              ></span>
+            }
+          </div>
+        }
+
+        <button
+          type="button"
+          class="ids-slider-thumb"
+          data-ids="ids-slider-thumb-min"
+          [style.left]="percentStyle(currentValues[0])"
+          role="slider"
+          [attr.aria-label]="thumbName(0)"
+          [attr.aria-valuemin]="resolvedMin"
+          [attr.aria-valuemax]="resolvedMax"
+          [attr.aria-valuenow]="currentValues[0]"
+          [attr.aria-disabled]="resolvedDisabled ? true : null"
+          [disabled]="resolvedDisabled"
+          [tabIndex]="resolvedDisabled ? -1 : 0"
+          (keydown)="onThumbKeyDown(0, $event)"
+          (pointerdown)="onThumbPointerDown(0, $event)"
+        ></button>
+
+        @if (resolvedMode === "range") {
+          <button
+            type="button"
+            class="ids-slider-thumb"
+            data-ids="ids-slider-thumb-max"
+            [style.left]="percentStyle(currentValues[1])"
+            role="slider"
+            [attr.aria-label]="thumbName(1)"
+            [attr.aria-valuemin]="resolvedMin"
+            [attr.aria-valuemax]="resolvedMax"
+            [attr.aria-valuenow]="currentValues[1]"
+            [attr.aria-disabled]="resolvedDisabled ? true : null"
+            [disabled]="resolvedDisabled"
+            [tabIndex]="resolvedDisabled ? -1 : 0"
+            (keydown)="onThumbKeyDown(1, $event)"
+            (pointerdown)="onThumbPointerDown(1, $event)"
+          ></button>
+        }
+
+        @if (showValueLabel) {
+          <div
+            class="ids-slider-value-label-layer"
+            data-ids="ids-slider-value-label-layer"
+            aria-hidden="true"
+          >
+            @for (v of currentValues; track $index) {
+              <span
+                class="ids-slider-value-label"
+                [attr.data-ids]="
+                  $index === 0
+                    ? 'ids-slider-value-label-min'
+                    : 'ids-slider-value-label-max'
+                "
+                [style.left]="percentStyle(v)"
+              >
+                {{ v }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (hasMaxLabel) {
+    <span
+      class="ids-slider-max-label"
+      data-ids="ids-slider-max-label"
+      [attr.data-active]="maxActive ? 'true' : null"
+    >
+      {{ maxLabel }}
+    </span>
+  }
+
+  @if (showValueInput) {
+    <div class="ids-slider-input-group" data-ids="ids-slider-input-group">
+      <div
+        class="ids-slider-value-input"
+        data-ids="ids-slider-value-input-min"
+      >
+        <ids-text-box
+          componentType="text-input"
+          size="small"
+          [showIcon]="false"
+          [showHelperText]="false"
+          inputType="number"
+          [value]="inputValueMin"
+          [disabled]="resolvedDisabled"
+          [placeholder]="''"
+          [ariaLabel]="thumbName(0)"
+          (valueChange)="onInputCommit(0, $event)"
+        />
+      </div>
+      @if (resolvedMode === "range") {
+        <span
+          class="ids-slider-input-separator"
+          data-ids="ids-slider-input-separator"
+          aria-hidden="true"
+        >
+          -
+        </span>
+        <div
+          class="ids-slider-value-input"
+          data-ids="ids-slider-value-input-max"
+        >
+          <ids-text-box
+            componentType="text-input"
+            size="small"
+            [showIcon]="false"
+            [showHelperText]="false"
+            inputType="number"
+            [value]="inputValueMax"
+            [disabled]="resolvedDisabled"
+            [placeholder]="''"
+            ariaLabel="Maximum value"
+            (valueChange)="onInputCommit(1, $event)"
+          />
+        </div>
+      }
+    </div>
+  }
+</div>

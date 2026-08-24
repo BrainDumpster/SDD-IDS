@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof IdsTextBox> = {
-  title: "Spec Generated/IDS/Text Box",
+  title: "Components/IDS/Text Box",
   component: IdsTextBox,
   argTypes: {
     componentType: { control: "select", options: ["text-input", "text-area"] },
@@ -79,7 +79,7 @@ export const SizeScaleManual: Story = {
 export const FocusBehavior: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12, maxWidth: 300 }}>
-      <p style={{ margin: 0, fontSize: 12, color: "var(--color-text-neutral)" }}>
+      <p style={{ margin: 0, fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
         Click inside input: active border only. Use Tab to see focus-visible outline.
       </p>
       <IdsTextBox value="Focus behavior demo" helperText="Helper text" />

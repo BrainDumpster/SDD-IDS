@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsBadge as IdsBadge } from "../../../../storybook/src/components/IdsBadge";
 
 const meta: Meta<typeof IdsBadge> = {
-  title: "Spec Generated/IDS/Badge",
+  title: "Components/IDS/Badge",
   component: IdsBadge,
   parameters: { layout: "centered" },
   args: {
@@ -103,7 +103,7 @@ export const LayoutTokens: Story = {
         border-radius: 6px;
         background: var(--color-background-gray-subtle);
         border: 1px solid var(--color-border-subtle);
-        --ids-badge-warning-border-color: var(--color-border-alerting-minor-transparent);
+        --ids-badge-warning-border-color: var(--color-border-alerting-minor-base);
       }
       `
     }</style>

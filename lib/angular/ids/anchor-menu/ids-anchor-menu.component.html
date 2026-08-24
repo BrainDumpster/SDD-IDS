@@ -1,0 +1,11 @@
+<nav
+  class="ids-anchor-menu"
+  [class.ids-anchor-menu--sticky]="sticky"
+  [attr.aria-label]="title"
+>
+  <ng-content select="ids-anchor-menu-header" />
+  <div class="ids-anchor-menu__list" role="list">
+    <ng-content select="ids-anchor-menu-item" />
+    <ng-content select="ids-anchor-active-indicator" />
+  </div>
+</nav>

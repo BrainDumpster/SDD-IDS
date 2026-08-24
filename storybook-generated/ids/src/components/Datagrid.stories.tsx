@@ -17,8 +17,15 @@ import { IdsDataGridViewModeStoryHost } from "../../../../storybook/src/componen
 import { IdsDataGridDateAndTimeFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateAndTimeFilterStoryHost";
 import { IdsDataGridDateFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateFilterStoryHost";
 import { IdsDataGridNumericFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridNumericFilterStoryHost";
+import { IdsDataGridCompositionStory } from "../../../../storybook/src/components/IdsDataGridCompositionStory";
+import {
+  DATAGRID_SPEC_ACCURATE_DEFAULTS,
+  DATAGRID_SPEC_COLUMNS,
+  DATAGRID_SPEC_ROWS,
+  IDS_DATAGRID_DESIGN_SPEC_PATH,
+} from "@component-contracts/ids/datagrid.contract";
 
-const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.md";
+const DESIGN_SPEC_PATH = IDS_DATAGRID_DESIGN_SPEC_PATH;
 
 /** Columns aligned to spec anatomy: sort (`col-sort-*-16`), filter (L-frame + `filterPanel`), settings column is grid-owned. */
 const specColumns: IdsDataGridColumn[] = [
@@ -213,32 +220,31 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
 /**
  * Defaults from `components/ids/datagrid/design-spec.md` (Codegen variant matrix + Figma `37721:112482` container height).
  */
-const specAccurateArgs: ComponentProps<typeof IdsDataGrid> = {
+const specAccurateArgs: ComponentProps<typeof IdsDataGridCompositionStory> = {
+  ...DATAGRID_SPEC_ACCURATE_DEFAULTS,
+  columns: DATAGRID_SPEC_COLUMNS,
+  rows: DATAGRID_SPEC_ROWS,
+  wireDefaultFilters: true,
+};
+
+/** Props-based host base for filter/freeze/treeview demos (aggregate API). */
+const hostGridBaseArgs: ComponentProps<typeof IdsDataGrid> = {
+  ...DATAGRID_SPEC_ACCURATE_DEFAULTS,
   columns: specColumns,
   rows: specRows,
-  viewMode: "table",
-  rowSelection: true,
-  selectionMode: "single",
-  showSingleSelectionRadio: true,
-  withDetailPanel: true,
-  pageSize: 6,
-  readOnly: false,
-  rowVerticalIndicator: true,
-  headerColorAndBorder: true,
-  columnResizeEnabled: true,
   expandableRows: false,
 };
 
-const meta: Meta<typeof IdsDataGrid> = {
-  title: "Spec Generated/IDS/Datagrid",
-  component: IdsDataGrid,
+const meta: Meta<typeof IdsDataGridCompositionStory> = {
+  title: "Components/IDS/Datagrid",
+  component: IdsDataGridCompositionStory,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component: [
           `Spec-driven IDS Datagrid. Source of truth: \`${DESIGN_SPEC_PATH}\`.`,
-          "Primary story uses spec defaults: `headerColorAndBorder` (Figma `colorAndBorder`), `rowVerticalIndicator` (`verticalBlueLine`), `rowSelection` + `selectionMode` + optional `showSingleSelectionRadio` (single mode only) + IDS Pagination footer, `columnResizeEnabled`, portaled L-frame filters (`37721:114635`), header `48px` / row `40px`, `Icon` + `shapeName` for sort/filter/settings.",
+          "Primary story uses **composition API** (`IdsDataGridComposed` + projected columns/rows) with spec defaults: `headerColorAndBorder` (Figma `colorAndBorder`), `rowVerticalIndicator` (`verticalBlueLine`), `rowSelection` + `selectionMode` + optional `showSingleSelectionRadio` (single mode only) + IDS Pagination footer, `columnResizeEnabled`, portaled L-frame filters (`37721:114635`), header `48px` / row `40px`, `Icon` + `shapeName` for sort/filter/settings.",
           "Use Storybook controls: **Selection mode** (`single` | `multiple`); in **single**, **Show single selection radio** toggles the 48px radio column. Row click activates the row / detail panel only — it does not toggle selection controls.",
         ].join(" "),
       },
@@ -272,9 +278,9 @@ const meta: Meta<typeof IdsDataGrid> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof IdsDataGrid>;
+type Story = StoryObj<typeof IdsDataGridCompositionStory>;
 
-function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
+function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGridCompositionStory>) {
   return (
     <div
       style={{
@@ -282,7 +288,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
         height: "100dvh",
         boxSizing: "border-box",
         padding: "clamp(8px, 2vw, 16px)",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -299,15 +305,22 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
           flexDirection: "column",
         }}
       >
-        <IdsDataGridDefaultStoryHost {...props} numericUnitOptions={DEMO_UNIT_OPTIONS} />
+        <IdsDataGridCompositionStory {...props} />
       </div>
     </div>
   );
 }
 
-/** Canonical reference: Figma Data Grid - Main (`37721:112482`) in a bounded container with spec default props. */
+/** Canonical reference: Figma Data Grid - Main (`37721:112482`) — composition API in a bounded container. */
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
+  render: (args) => <SpecAccurateFrame {...args} />,
+  args: specAccurateArgs,
+};
+
+/** Composition API markup (same defaults as Spec Accurate Design). */
+export const CompositionApi: Story = {
+  name: "Composition API",
   render: (args) => <SpecAccurateFrame {...args} />,
   args: specAccurateArgs,
 };
@@ -338,12 +351,29 @@ export const WithDetailPanel: Story = {
 
 /** Accordion-style expandable rows with inline detail content under each row. */
 export const ExpandableRows: Story = {
-  render: (args) => <SpecAccurateFrame {...args} />,
-  args: {
-    ...specAccurateArgs,
-    withDetailPanel: false,
-    expandableRows: true,
-  },
+  render: () => (
+    <div
+      style={{
+        width: "100%",
+        height: "100dvh",
+        boxSizing: "border-box",
+        padding: "clamp(8px, 2vw, 16px)",
+        background: "var(--color-background-surface-primary)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <IdsDataGridDefaultStoryHost
+          {...hostGridBaseArgs}
+          withDetailPanel={false}
+          expandableRows
+          numericUnitOptions={DEMO_UNIT_OPTIONS}
+        />
+      </div>
+    </div>
+  ),
 };
 
 const treeDemoColumns: IdsDataGridColumn[] = [
@@ -416,7 +446,7 @@ function TreeviewFrame(props: ComponentProps<typeof IdsDataGrid>) {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -438,7 +468,7 @@ function ViewModeToggleFrame(
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -629,7 +659,7 @@ export const DateColumnFilter: Story = {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -658,7 +688,7 @@ export const DateAndTimeColumnFilter: Story = {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -687,7 +717,7 @@ export const NumericColumnFilter: Story = {
         height: "100vh",
         boxSizing: "border-box",
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -709,37 +739,37 @@ export const NumericColumnFilter: Story = {
 };
 
 const specTokens = [
-  "--color-background-component",
-  "--color-background-surface-1",
+  "--color-background-surface-component",
+  "--color-background-surface-primary",
   "--color-background-gray-neutral-lighter",
-  "--color-background-brand-lighter",
-  "--color-background-brand-light",
-  "--color-border-light",
-  "--color-border-accessible",
+  "--color-background-brand-lighter-slate",
+  "--color-background-brand-light-slate",
+  "--color-border-gray-neutral-light",
+  "--color-border-gray-neutral-base",
   "--color-border-brand-base",
-  "--color-text-neutral-strong",
-  "--color-text-neutral",
-  "--color-icon-neutral",
+  "--color-text-gray-neutral-strong",
+  "--color-text-gray-neutral",
+  "--color-icon-gray-neutral-base",
   "--color-icon-brand-base",
   "--color-icon-brand-stronger",
 ] as const;
 
 const specTokenRefs: Record<string, string[]> = {
-  "--color-background-component": [
+  "--color-background-surface-component": [
     "Layout: default row fill on each body cell",
     "States: DatagridHeader colorAndBorder=false",
     "FilterMenu: FilterIconTab background",
   ],
-  "--color-background-surface-1": ["States: DatagridRow hover on read-only table"],
+  "--color-background-surface-primary": ["States: DatagridRow hover on read-only table"],
   "--color-background-gray-neutral-lighter": ["States: DatagridHeader colorAndBorder=true"],
-  "--color-background-brand-lighter": ["States: DatagridRow hover / selected"],
-  "--color-background-brand-light": ["States: DatagridRow selected and press"],
-  "--color-border-light": ["Layout: row bottom divider; header rails and band borders"],
-  "--color-border-accessible": ["Column filter L-frame outer border"],
+  "--color-background-brand-lighter-slate": ["States: DatagridRow hover / selected"],
+  "--color-background-brand-light-slate": ["States: DatagridRow selected and press"],
+  "--color-border-gray-neutral-light": ["Layout: row bottom divider; header rails and band borders"],
+  "--color-border-gray-neutral-base": ["Column filter L-frame outer border"],
   "--color-border-brand-base": ["Row vertical selection accent (4px leading bar)"],
-  "--color-text-neutral-strong": ["Layout: column title Body 2 - Medium"],
-  "--color-text-neutral": ["Layout: body cell text"],
-  "--color-icon-neutral": ["States: SortToggle default; FilterToggle default/hover"],
+  "--color-text-gray-neutral-strong": ["Layout: column title Body 2 - Medium"],
+  "--color-text-gray-neutral": ["Layout: body cell text"],
+  "--color-icon-gray-neutral-base": ["States: SortToggle default; FilterToggle default/hover"],
   "--color-icon-brand-base": ["States: SortToggle selected; FilterToggle selected"],
   "--color-icon-brand-stronger": ["States: FilterToggle press"],
 };
@@ -800,7 +830,7 @@ function ColumnFreezeStoryFrame({ children }: { children: React.ReactNode }) {
         height: "100dvh",
         boxSizing: "border-box",
         padding: "clamp(8px, 2vw, 16px)",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         display: "flex",
         flexDirection: "column",
         minHeight: 0,
@@ -814,7 +844,7 @@ function ColumnFreezeStoryFrame({ children }: { children: React.ReactNode }) {
           width: "100%",
           fontSize: 12,
           lineHeight: "16px",
-          color: "var(--color-text-neutral)",
+          color: "var(--color-text-gray-neutral)",
         }}
       >
         Frozen columns stay pinned on the left; remaining columns scroll horizontally. Resize the
@@ -903,7 +933,7 @@ export const ColumnFreezeTwoSections: Story = {
     </ColumnFreezeStoryFrame>
   ),
   args: {
-    ...specAccurateArgs,
+    ...hostGridBaseArgs,
     columns: twoSectionFreezeColumns,
     rows: twoSectionFreezeRows,
     selectionMode: "multiple",
@@ -932,7 +962,7 @@ export const ColumnFreeze: Story = {
     </ColumnFreezeStoryFrame>
   ),
   args: {
-    ...specAccurateArgs,
+    ...hostGridBaseArgs,
     columns: columnFreezeColumns,
     rows: columnFreezeRows,
     selectionMode: "multiple",
@@ -962,9 +992,9 @@ export const TokenInspector: Story = {
           align-items: start;
           gap: 12px;
           padding: 6px 8px;
-          border: 1px solid var(--color-border-light);
+          border: 1px solid var(--color-border-gray-neutral-light);
           border-radius: 4px;
-          background: var(--color-background-component);
+          background: var(--color-background-surface-component);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -973,7 +1003,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible);
+          border: 1px solid var(--color-border-gray-neutral-base);
           border-radius: 2px;
         }
         .sbTokenSample {

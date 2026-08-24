@@ -8,7 +8,7 @@
 | Design system | IDS |
 | Category | Navigation |
 | Status | **active** |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Description | Application header bar with required product name and **optional, host-composed** brand logo, utility actions (`iconsSlot` — search / action icons), App Launcher, and avatar. |
 | Theme CSS | `components/ids-theme.css` |
 | Figma file | [IDS Design Library](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library) |
@@ -16,9 +16,9 @@
 | Component set | `Masthead-Main` (`10130:29493`) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) |
 | Last verified | 2026-06-17 |
-| Reference implementation | `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css` |
-| Storybook path | `storybook-generated/ids/src/components/Masthead.stories.tsx` |
-| Storybook meta title | `Spec Generated/IDS/Masthead` |
+| Reference implementation | `lib/react/ids/masthead` (`Masthead` / `IdsMasthead` — not `MastheadRoot`); `storybook/src/components/Masthead.tsx` |
+| Storybook path | `storybook/src/components/lib-generated/Masthead.stories.tsx`; also `storybook-generated/ids/src/components/Masthead.stories.tsx` |
+| Storybook meta title | `Lib Generated/IDS/Masthead` / `Spec Generated/IDS/Masthead` |
 | Legacy exploration frame | [IDS with variables (exploration)](https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24736&m=dev) (`9054:24736`) — token reference only |
 
 ### Figma component variants (live-verified)
@@ -30,7 +30,21 @@
 | App Shell composed instance | `43478:46181` | in `43478:46307` | Full utility icon cluster + launcher + avatar |
 
 ## Anatomy
-- **MastheadRoot** — full-width header bar (`56px` height), brand background
+
+Root slot is **`Masthead`** (not `MastheadRoot`). Codegen must emit this deterministic child tree; the page shell uses `data-ids="IdsMasthead"` (Ids camelCase).
+
+```text
+Masthead
+  MastheadBrandSlot
+    MastheadLogo?
+    MastheadProductName
+  MastheadActionsRow?                 ← omit when icons / launcher / avatar are all empty
+    MastheadIconsSlot?
+    MastheadAppLauncherSlot?
+    MastheadAvatarSlot?
+```
+
+- **Masthead** — full-width header bar (`56px` height), brand background
 - **MastheadBrandSlot** (left): optional **host-composed** logo + required product name
 - **MastheadActionsRow** (right), fixed **slot order** left → right — **every slot is optional and host-defined**; omit any unused slot (row itself is omitted when all three are empty):
   1. **`iconsSlot`** — composed utility actions (search, action icons, dropdowns, badges — host-defined)
@@ -79,14 +93,14 @@ App Launcher (`grid-square-9-16`) and avatar remain **separate optional slots** 
 - Standard height: 56px (`--scale-56`)
 - Brand slot vertical alignment: product info block top offset ~12.5px from masthead top (Figma `10130:29520`)
 - Product logo (optional): **32×32px** (`var(--scale-32)`), **8px** gap (`var(--spacing-space-8)`) before product name when present
-- Product name: header-6 typography — `var(--font-size-header-6)` / `var(--font-line-height-line-height-32)`, `var(--color-text-white)`
+- Product name: header-6 typography — `var(--font-size-header-6)` / `var(--font-line-height-line-height-32)`, `var(--color-text-gray-white)`
 - Horizontal padding: 16px left, 8px right
-- Bottom border: `var(--border-width-border-1)` solid `var(--color-border-transparent-neutral)`
+- Bottom border: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-transparent-base)`
 - Border radius: 0 (full-width masthead)
-- Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
+- Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-gray-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
 - Action icon button: 16px × 16px icon, padding 19px 16px
 - Avatar chip: 32px × 32px circle (`var(--scale-32)`), button padding `11px` vertical / `var(--padding-padding-8)` horizontal
-- Avatar icon (icon variant): `user-single` slug, rendered at **16×16px** inside the 32×32 chip; color **`var(--color-icon-white)`** (#ffffff)
+- Avatar icon (icon variant): `user-single` slug, rendered at **16×16px** inside the 32×32 chip; color **`var(--color-icon-gray-white)`** (#ffffff)
 - Minimum width: Full viewport width
 - Badge dimensions: `height: 18px`, `min-width: 18px`, `border-radius: 100px`
 - Badge padding (digit-based): 1 digit → fixed `width: 18px` (no padding); 2 digits → `padding: 0 4px`; 3+ digits → `padding: 0 5.5px`
@@ -94,47 +108,47 @@ App Launcher (`grid-square-9-16`) and avatar remain **separate optional slots** 
 - Badge overflow: renders `"99+"` when `badgeCount > 99`
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Surface background: `var(--color-background-surface-1)` = #f4f4f4
-- Surface 2: `var(--color-background-surface-2)` = #ffffff
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Surface background: `var(--color-background-surface-primary)` = #f4f4f4
+- Surface 2: `var(--color-background-surface-secondary)` = #ffffff
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- White border: `var(--color-border-white)` = #ffffff
-- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+- White border: `var(--color-border-gray-white)` = #ffffff
+- Transparent neutral: `var(--color-border-gray-neutral-transparent-base)` = #ffffff00
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- Neutral strong icon: `var(--color-icon-gray-neutral-strong)` = #252525
 - Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
-- White icon: `var(--color-icon-white)` = #ffffff
+- White icon: `var(--color-icon-gray-white)` = #ffffff
 - Standard gray icon: `icon-standard-gray` = #616161
 - Dell Blue icon: `icon-DellBlue` = #0076CE
 - Status icons: green (#1B8500), red (#AF0000), yellow (#FFC700), orange (#ED6400)
 
 ### Background Colors
 - Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
-- Gray neutral alt: `var(--color-background-gray-neutral-alt)` = #eaeaea
+- Gray neutral alt: `var(--color-background-gray-neutral-light-alt)` = #eaeaea
 - Gray base: `var(--color-background-gray-base)` = #757575
 - Brand base: `var(--color-background-brand-base)` = #0076ce
-- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
-- Masthead brand base: `var(--color-background-masthead-brand-base)` = #0076ce
-- Masthead brand strong: `var(--color-background-masthead-brand-strong)` = #0062ab
-- Masthead brand stronger: `var(--color-background-masthead-brand-stronger)` = #06528a
+- Brand lighter: `var(--color-background-brand-lighter-slate)` = #ebf4fb
+- Masthead brand base: `var(--color-background-masthead-base)` = #0076ce
+- Masthead brand strong: `var(--color-background-masthead-strong)` = #0062ab
+- Masthead brand stronger: `var(--color-background-masthead-stronger)` = #06528a
 
 ### Alert Backgrounds
-- Success background: `var(--color-background-alerting-success)` = #1b8500
-- Critical background: `var(--color-background-alerting-critical)` = #af0000
+- Success background: `var(--color-background-alerting-success-base)` = #1b8500
+- Critical background: `var(--color-background-alerting-critical-base)` = #af0000
 
 ### Badge Tokens
-- Alerts badge background: `var(--color-background-alerting-critical)` = #af0000 (`badgeType="critical"`)
-- Jobs badge background: `var(--color-background-alerting-success)` = #1b8500 (`badgeType="success"`)
-- Badge border: `var(--color-border-white)` = #ffffff, `border-width: var(--border-width-border-1)`
-- Badge text color: `var(--color-text-white)` = #ffffff
+- Alerts badge background: `var(--color-background-alerting-critical-base)` = #af0000 (`badgeType="critical"`)
+- Jobs badge background: `var(--color-background-alerting-success-base)` = #1b8500 (`badgeType="success"`)
+- Badge border: `var(--color-border-gray-white)` = #ffffff, `border-width: var(--border-width-border-1)`
+- Badge text color: `var(--color-text-gray-white)` = #ffffff
 - Badge font size: `var(--font-size-body-3, 12px)`
 
 ### UI Palettes
@@ -177,23 +191,23 @@ App Launcher (`grid-square-9-16`) and avatar remain **separate optional slots** 
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Masthead Container | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-transparent-neutral)` (#ffffff00) bottom only | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Logo Section | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Masthead Container | `var(--color-background-masthead-base)` (#0076ce) | `var(--color-border-gray-neutral-transparent-base)` (#ffffff00) bottom only | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Logo Section | `var(--color-background-masthead-base)` (#0076ce) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
 | Product Logo (optional) | transparent | none | — | product icon slug at **32×32** via **Icon** (`variant="img"` for full-color Product Icons) |
-| Navigation Item (Default) | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Focus) | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) dashed inset | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Active / Pressed) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Open / aria-expanded) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Navigation Item (Open + Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| User Section (Default) | `var(--color-background-masthead-brand-base)` (#0076ce) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| User Section (Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| User Section (Open / aria-expanded) | `var(--color-background-masthead-brand-stronger)` (#06528a) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| User Section (Open + Hover) | `var(--color-background-masthead-brand-strong)` (#0062ab) | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Avatar Chip (Initials) | transparent | `var(--color-border-white)` (#ffffff) 1px ring | `var(--color-text-white)` (#ffffff) | — |
-| Avatar Chip (Icon) | transparent | `var(--color-border-white)` (#ffffff) 1px ring | — | `user-single` at 16×16, `var(--color-icon-white)` (#ffffff) |
-| Status Indicator (Success) | `var(--color-background-alerting-success)` (#1b8500) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-green` (#1B8500) |
-| Status Indicator (Critical) | `var(--color-background-alerting-critical)` (#af0000) | transparent | `var(--color-text-white)` (#ffffff) | `icon-status-red` (#AF0000) |
+| Navigation Item (Default) | `var(--color-background-masthead-base)` (#0076ce) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Navigation Item (Hover) | `var(--color-background-masthead-strong)` (#0062ab) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Navigation Item (Focus) | `var(--color-background-masthead-base)` (#0076ce) | `var(--color-border-gray-white)` (#ffffff) dashed inset | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Navigation Item (Active / Pressed) | `var(--color-background-masthead-stronger)` (#06528a) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Navigation Item (Open / aria-expanded) | `var(--color-background-masthead-stronger)` (#06528a) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Navigation Item (Open + Hover) | `var(--color-background-masthead-strong)` (#0062ab) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| User Section (Default) | `var(--color-background-masthead-base)` (#0076ce) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| User Section (Hover) | `var(--color-background-masthead-strong)` (#0062ab) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| User Section (Open / aria-expanded) | `var(--color-background-masthead-stronger)` (#06528a) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| User Section (Open + Hover) | `var(--color-background-masthead-strong)` (#0062ab) | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Avatar Chip (Initials) | transparent | `var(--color-border-gray-white)` (#ffffff) 1px ring | `var(--color-text-gray-white)` (#ffffff) | — |
+| Avatar Chip (Icon) | transparent | `var(--color-border-gray-white)` (#ffffff) 1px ring | — | `user-single` at 16×16, `var(--color-icon-gray-white)` (#ffffff) |
+| Status Indicator (Success) | `var(--color-background-alerting-success-base)` (#1b8500) | transparent | `var(--color-text-gray-white)` (#ffffff) | `icon-status-green` (#1B8500) |
+| Status Indicator (Critical) | `var(--color-background-alerting-critical-base)` (#af0000) | transparent | `var(--color-text-gray-white)` (#ffffff) | `icon-status-red` (#AF0000) |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -211,7 +225,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Hover / pressed / `aria-expanded` visual feedback uses Navigation Item and User Section rows in the state matrix below.
 - Search is never a Masthead built-in — host places a search field or icon trigger inside `iconsSlot` when needed.
 ### Accessibility
-- Focus ring: applies to action elements (icon buttons, avatar button) only — not the masthead container. Style: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset)
+- Focus ring: applies to action elements (icon buttons, avatar button) only — not the masthead container. Style: `var(--border-width-border-default)` dashed `var(--color-border-gray-white)`, `outline-offset: -1px` (inset)
 - Keyboard navigation: Arrow keys, Enter, Tab, Escape
 - Screen reader support: Proper ARIA attributes for navigation
 - High contrast: Meets WCAG AA standards with provided colors
@@ -294,9 +308,9 @@ Alternative: wrap any control in product markup inside `iconsSlot` (e.g. Angular
 ### `MastheadAvatar`
 
 - Figma source: `.Masthead-Element-UserInitials` (`10130:29944`) in IDS Design Library — variants `User Settings=Initials` (`10130:29943`) and `User Settings=Icon` (`10130:29945`)
-- Chip: 32×32 circle, `border: var(--border-width-border-1) solid var(--color-border-white)`, transparent fill on masthead brand background
+- Chip: 32×32 circle, `border: var(--border-width-border-1) solid var(--color-border-gray-white)`, transparent fill on masthead brand background
 - `initials?: string` — centered in chip; Figma sample `"DT"`
-- `icon?: RenderableNode` — icon variant; resolve **`user-single`** at **16×16** with **`var(--color-icon-white)`** via shared Icon primitive (see below)
+- `icon?: RenderableNode` — icon variant; resolve **`user-single`** at **16×16** with **`var(--color-icon-gray-white)`** via shared Icon primitive (see below)
 - `imageSrc?: string` — photo URL (fills full chip, no ring)
 - `imageAlt?: string`
 - Extends native `button` props — host wires `onClick` for account menu
@@ -329,7 +343,7 @@ Alternative: wrap any control in product markup inside `iconsSlot` (e.g. Angular
 ### Avatar icon variant (`User Settings=Icon`)
 - **Icon slug:** `user-single` (`assets/icons/user-single.svg`; Figma component `user-single`, node `44484:604`)
 - **Render size:** 16×16px
-- **Color token:** `var(--color-icon-white)` (#ffffff)
+- **Color token:** `var(--color-icon-gray-white)` (#ffffff)
 - **Do not** use `user-single-16`, raw `<img src="*.svg">`, or `imageSrc` for design-system SVG glyphs
 
 ### Avatar chip typography (initials)
@@ -366,7 +380,7 @@ Emit DOM/framework nodes in this order:
 
 | Order | Slot id | Notes |
 |---:|---|---|
-| 1 | `MastheadRoot` | `<header>` landmark |
+| 1 | `Masthead` | `<header>` landmark |
 | 2 | `MastheadBrandSlot` | logo (optional, host-composed) + product name (required) |
 | 3 | `MastheadActionsRow` | right-aligned flex row — emit only when at least one of slots 4–6 is present |
 | 4 | `MastheadIconsSlot` | `iconsSlot` projection — **optional, host-composed** (search / action icons / …) |
@@ -412,7 +426,7 @@ Use whenever codegen targets a stack that already ships an **Icon** (or equivale
 **When the target library exposes an Icon / glyph component**
 - **Prefer it** for all masthead monochrome glyphs (action buttons, avatar icon variant, app launcher trigger) instead of hand-rolling asset paths or per-component asset globs in Masthead.
 - Pass a **stable asset slug** via whatever prop the library uses (`shapeName`, `name`, `icon`, …). Slugs must match the **asset contract** table below.
-- Map **color** from this spec's state tables (`var(--color-icon-white)` on masthead chrome). Set on the interactive host (button) and/or the icon primitive per library convention.
+- Map **color** from this spec's state tables (`var(--color-icon-gray-white)` on masthead chrome). Set on the interactive host (button) and/or the icon primitive per library convention.
 - **Size:** action icons and avatar icon variant are **16×16px**; avatar chip ring remains **32×32px**.
 
 **When no Icon primitive exists**
@@ -442,7 +456,7 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - **Spec Generated** stories and `storybook/src/components/Masthead.tsx` compose masthead icons **through `Icon`** for visual proof against this spec. That component choice validates slug/size/token contracts; downstream app codegen may use a different Icon implementation as long as the logical contract holds.
 - Example (Storybook reference only):
   ```tsx
-  <Icon shapeName="user-single" color="var(--color-icon-white)" style={{ width: 16, height: 16 }} />
+  <Icon shapeName="user-single" color="var(--color-icon-gray-white)" style={{ width: 16, height: 16 }} />
   ```
 
 ### Validation checklist
@@ -456,7 +470,7 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - [x] Live Figma nodes `10130:29493`, `10130:29494`, `10130:29512`, App Shell instance `43478:46181` referenced in Source Mapping
 - [x] Reference implementation matches slot API (`Masthead.tsx`)
 - [x] Masthead monochrome icons resolve via shared Icon primitive (or documented slug fallback) — no ad-hoc `<img src>` for tintable SVGs in reference implementation
-- [x] Avatar icon variant uses slug `user-single` at 16×16 with `var(--color-icon-white)`
+- [x] Avatar icon variant uses slug `user-single` at 16×16 with `var(--color-icon-gray-white)`
 - [x] Optional product logo renders only when `logo` is provided; uses shared **Icon** at 32×32 (no raw `<img>` in consumers)
 - [ ] Automated visual regression across all Navigation Item states (manual Storybook QA)
 - [ ] Dark theme spot-check when programme theme overlays IDS masthead tokens
@@ -475,18 +489,18 @@ Masthead stories (`storybook-generated/ids/src/components/Masthead.stories.tsx`)
 
 | Slot | `shapeName` | Size | Color token |
 |---|---|---|---|
-| Help (default story) | `help-circ-16` | 16×16 | inherited `var(--color-icon-white)` from `.avatarAction` / `.actionIconButton` |
-| Avatar icon variant | `user-single` | 16×16 | `var(--color-icon-white)` |
+| Help (default story) | `help-circ-16` | 16×16 | inherited `var(--color-icon-gray-white)` from `.avatarAction` / `.actionIconButton` |
+| Avatar icon variant | `user-single` | 16×16 | `var(--color-icon-gray-white)` |
 | Product logo (optional) | `appic-dp-cloud-blue` | 32×32 | full-color glyph via `Icon variant="img"` |
-| App launcher trigger | `grid-square-9-16` | 16×16 | `var(--color-icon-white)` on masthead trigger |
+| App launcher trigger | `grid-square-9-16` | 16×16 | `var(--color-icon-gray-white)` on masthead trigger |
 
 The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); stories and reference Masthead code only pass **`shapeName`**, **`color`**, and **size**. Do not copy `Icon.tsx` internals into consumer apps — honor the logical contract above.
 
 ## Implementation Notes
 
 ### Icon color (framework-agnostic)
-- All masthead monochrome icons use **`var(--color-icon-white)`**, not `var(--color-text-white)`.
-- Interactive hosts (icon buttons, avatar button, app launcher masthead trigger) set `color: var(--color-icon-white)` so tintable glyphs inherit the correct token.
+- All masthead monochrome icons use **`var(--color-icon-gray-white)`**, not `var(--color-text-gray-white)`.
+- Interactive hosts (icon buttons, avatar button, app launcher masthead trigger) set `color: var(--color-icon-gray-white)` so tintable glyphs inherit the correct token.
 
 ### Action icons and badge rendering
 - Products compose action icons inside `iconsSlot`; the Figma sample slugs below are reference defaults for Storybook only (see **Icon primitive and asset delivery → Asset contract**):
@@ -503,7 +517,7 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 - The `.badgeWrapper` span uses `position: absolute; top: 12px; left: 23px; pointer-events: none` to float the badge over the icon. The parent `actionIconButton` is `position: relative` in `Masthead.module.css`.
 
 ### Button background in default state
-- All interactive buttons on the masthead (icon buttons, avatar, app launcher trigger) use `background: var(--color-background-masthead-brand-base)` in the default state, **not `transparent`**.
+- All interactive buttons on the masthead (icon buttons, avatar, app launcher trigger) use `background: var(--color-background-masthead-base)` in the default state, **not `transparent`**.
 - Although visually identical to transparent (since the parent masthead shares the same color), Figma specifies an explicit `masthead-brand-base` token for the default state.
 
 ### Open state (aria-expanded)
@@ -512,13 +526,13 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 - `[aria-expanded="true"]:hover` → `masthead-brand-strong` background (hover always wins over open state).
 
 ### Avatar icon vs photo
-- **Icon variant:** slug **`user-single`**, **16×16px**, **`var(--color-icon-white)`** via shared Icon primitive (Storybook: `Icon` + `shapeName`).
-- **Initials variant:** `initials` prop; text **`var(--color-text-white)`** inside 32×32 white ring.
+- **Icon variant:** slug **`user-single`**, **16×16px**, **`var(--color-icon-gray-white)`** via shared Icon primitive (Storybook: `Icon` + `shapeName`).
+- **Initials variant:** `initials` prop; text **`var(--color-text-gray-white)`** inside 32×32 white ring.
 - **Photo variant:** `imageSrc` for user photos — fills 32×32 chip (no ring).
 - Do not use `<img src="*.svg">` or `imageSrc` for design-system SVG glyphs.
 
 ### AppLauncher integration
-- Masthead trigger: `color: var(--color-icon-white)`; glyph slug **`grid-square-9-16`**, **16×16** — compose via shared **`Icon`** in Storybook reference (`AppLauncher.tsx`).
+- Masthead trigger: `color: var(--color-icon-gray-white)`; glyph slug **`grid-square-9-16`**, **16×16** — compose via shared **`Icon`** in Storybook reference (`AppLauncher.tsx`).
 
 ## Source Mapping
 
@@ -536,8 +550,9 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 | Exploration token frame (secondary) | `9054:24736` in file `VZJ48bbVYrIynw8DdSukWw` |
 | Verification method | Figma MCP — `get_metadata`, `get_design_context`, `get_variable_defs` |
 | Last live verification | 2026-06-19 |
+| Anatomy root rename | `MastheadRoot` → `Masthead` for codegen compound slots — **2026-08-17** |
 | Design spec path | `components/ids/masthead/design-spec.md` |
 | Component map entry | `data/component-figma-map.json` → component `Masthead` |
-| Storybook implementation | `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css`, `storybook-generated/ids/src/components/Masthead.stories.tsx` |
-| Shared Icon primitive | `storybook/src/components/Icon.tsx` (`config/design_systems/ids.yaml` → `codegen.react.icon_component_module`) |
+| Storybook implementation | `lib/react/ids/masthead`; `storybook/src/components/lib-generated/Masthead.stories.tsx`; also `storybook/src/components/Masthead.tsx` |
+| Shared Icon primitive | `lib/react/ids/icon` (`IdsIcon`); Storybook reference `storybook/src/components/Icon.tsx` |
 | Related pattern | [`components/ids/app-shell/design-spec.md`](../app-shell/design-spec.md) → `headerActions` → `iconsSlot` |

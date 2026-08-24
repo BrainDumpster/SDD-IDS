@@ -20,8 +20,12 @@
 | Storybook examples requested | yes |
 | Storybook path | `storybook-generated/ids/src/components/AppShell.stories.tsx` |
 | Storybook meta title | `Spec Generated/IDS/App Shell` |
+| Angular Storybook path | `storybook-angular/src/components/ids-app-shell-lib/ids-app-shell-lib.stories.js` |
+| Angular Storybook meta title | `Spec Generated/IDS/App Shell` |
 | Implementation guide | [`components/ids/app-shell/README.md`](./README.md) |
 | Reference implementation | `storybook/src/components/AppShell.tsx`, `storybook/src/components/AppShell.module.css` |
+| React library | `lib/react/ids/app-shell` |
+| Angular library | `lib/angular/ids/app-shell` |
 
 ### Composed child specifications (mandatory)
 
@@ -100,11 +104,11 @@ Optional Figma reference templates (not part of default anatomy — host chooses
 | `AppShellMastheadSlot` | `flex: 0 0 56px`, `width: 100%` |
 | `AppShellBodyRow` | `flex: 1 1 0%`, `min-height: 0`, `width: 100%`, `display: flex`, `flex-direction: row`, `align-items: stretch` |
 | `AppShellMainMenuSlot` | `flex: 0 0 auto`, `height: 100%`, `min-height: 0` — width follows Main Menu expanded/collapsed state |
-| `AppShellMainColumn` | `flex: 1 1 0%`, `min-width: 0`, `min-height: 0`, column flex, `background: var(--color-background-surface-1)` |
+| `AppShellMainColumn` | `flex: 1 1 0%`, `min-width: 0`, `min-height: 0`, column flex, `background: var(--color-background-surface-primary)` |
 | `AppShellBodyViewport` | `flex: 1 1 0%`, `min-height: 0`, `overflow-y: auto`, `width: 100%` |
 | `AppShellFooterSlot` | `flex: 0 0 auto`, `width: 100%` — outside vertical scroll clip of body viewport |
 
-Figma sample border on root (`var(--color-border-accessible)`) is **documentation chrome only**. Runtime/product shells **MUST omit** the outer root stroke and rely on child borders (Masthead, Main Menu, Footer).
+Figma sample border on root (`var(--color-border-gray-neutral-base)`) is **documentation chrome only**. Runtime/product shells **MUST omit** the outer root stroke and rely on child borders (Masthead, Main Menu, Footer).
 
 ### Page header (Figma nodes `43478:50553`, `43478:90803`, `43478:90930`, `43478:91086`)
 
@@ -115,8 +119,8 @@ Figma sample border on root (`var(--color-border-accessible)`) is **documentatio
 | Padding top | `var(--padding-padding-24)` |
 | Padding bottom | `var(--padding-padding-8)` |
 | Padding inline | `var(--padding-padding-24)` |
-| Title typography | Header 5 — `var(--font-size-header-5)` / `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-neutral-strong)` |
-| Description typography | Body 2 medium — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-neutral)` |
+| Title typography | Header 5 — `var(--font-size-header-5)` / `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-gray-neutral-strong)` |
+| Description typography | Body 2 medium — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-gray-neutral)` |
 | Page header presence | **Always** render `AppShellPageHeader` + `AppShellPageTitle` |
 | Description visibility | Render description when `page.description` is non-empty and `showPageDescription` / `page.showDescription` allow it; omit **description** only — never omit the page header |
 
@@ -162,17 +166,17 @@ Implementations MUST use the **scroll viewport split** (header + footer outside 
 
 ### Surfaces
 
-- `AppShellRoot` / main column background: `var(--color-background-surface-1)`
-- Composed Masthead: `var(--color-background-masthead-brand-base)` (see Masthead spec)
-- Composed Main Menu rail: `var(--color-background-component)` (see Main Menu / Left spec)
-- Composed Footer bar: `var(--color-background-surface-1)` (see Footer spec)
+- `AppShellRoot` / main column background: `var(--color-background-surface-primary)`
+- Composed Masthead: `var(--color-background-masthead-base)` (see Masthead spec)
+- Composed Main Menu rail: `var(--color-background-surface-component)` (see Main Menu / Left spec)
+- Composed Footer bar: `var(--color-background-surface-primary)` (see Footer spec)
 
 ### Typography (App Shell–owned slots only)
 
 | Slot | Tokens |
 |---|---|
-| `AppShellPageTitle` | `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-neutral-strong)` |
-| `AppShellPageDescription` | `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-neutral)` |
+| `AppShellPageTitle` | `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-gray-neutral-strong)` |
+| `AppShellPageDescription` | `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-gray-neutral)` |
 
 ### Spacing and padding
 
@@ -187,11 +191,11 @@ App Shell root and page-header slots are **static chrome** (no interactive state
 
 | Slot | State | Background | Border | Text |
 |---|---|---|---|---|
-| `AppShellRoot` | default | `var(--color-background-surface-1)` | none (product) | — |
-| `AppShellMainColumn` | default | `var(--color-background-surface-1)` | none | — |
+| `AppShellRoot` | default | `var(--color-background-surface-primary)` | none (product) | — |
+| `AppShellMainColumn` | default | `var(--color-background-surface-primary)` | none | — |
 | `AppShellPageHeader` | default | transparent | none | — |
-| `AppShellPageTitle` | default | transparent | none | `var(--color-text-neutral-strong)` |
-| `AppShellPageDescription` | default | transparent | none | `var(--color-text-neutral)` |
+| `AppShellPageTitle` | default | transparent | none | `var(--color-text-gray-neutral-strong)` |
+| `AppShellPageDescription` | default | transparent | none | `var(--color-text-gray-neutral)` |
 | `AppShellBodyViewport` | default | transparent | none | — |
 
 ## States (Dark Theme)
@@ -241,7 +245,7 @@ Composable wrapper for the Masthead icons region (left → right, before App Lau
 | Framework | Pattern |
 |---|---|
 | React | `<AppShell headerActions={<AppShellHeaderActions>…</AppShellHeaderActions>} />` |
-| Angular | `<ids-app-shell><ids-app-shell-header-actions>…</ids-app-shell-header-actions></ids-app-shell>` |
+| Angular | Prefer TemplateRef props matching React: `[headerActions]` / `[appLauncherSlot]` / `[avatarSlot]` on \`ids-app-shell\` (see \`lib/angular/ids/app-shell\`). Content projection of \`ids-app-shell-header-actions\` remains supported as a fallback. |
 | Vue / Lit | Named slot `header-actions` with default slot on wrapper component |
 
 **Optional primitives** (re-exported from Masthead spec for convenience inside `headerActions`):
@@ -551,12 +555,12 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 
 | Slot | Layout / size | Tokens |
 |---|---|---|
-| `AppShellRoot` | `100% × 100vh`, column flex, `overflow: hidden` | `background: var(--color-background-surface-1)` |
+| `AppShellRoot` | `100% × 100vh`, column flex, `overflow: hidden` | `background: var(--color-background-surface-primary)` |
 | `AppShellBodyRow` | row flex, `flex: 1`, `min-height: 0` | — |
-| `AppShellMainColumn` | column flex, `flex: 1`, `min-width: 0`, `min-height: 0` | `background: var(--color-background-surface-1)` |
+| `AppShellMainColumn` | column flex, `flex: 1`, `min-width: 0`, `min-height: 0` | `background: var(--color-background-surface-primary)` |
 | `AppShellPageHeader` | column, gap `var(--spacing-space-12)` | padding per Layout section |
-| `AppShellPageTitle` | content width | Header 5 — `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-neutral-strong)` |
-| `AppShellPageDescription` | content width, wrap | Body 2 medium — `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-neutral)` |
+| `AppShellPageTitle` | content width | Header 5 — `var(--font-size-header-5)`, `var(--font-line-height-line-height-32)`, `font-weight: 400`, `var(--color-text-gray-neutral-strong)` |
+| `AppShellPageDescription` | content width, wrap | Body 2 medium — `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, `font-weight: 500`, `var(--color-text-gray-neutral)` |
 | `AppShellBodyViewport` | `flex: 1`, `overflow-y: auto`, `min-height: 0` | — |
 | `AppShellBodyContentSlot` | `width: 100%`, `box-sizing: border-box` | padding `var(--padding-padding-24)` inline, `var(--padding-padding-16)` block |
 | `AppShellMastheadSlot` | `56px` height | delegate to Masthead spec |
@@ -646,3 +650,8 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 | Verification method | Figma MCP — `get_design_context`, `get_metadata` (confirmed nested Masthead + MainMenu-Left instances) |
 | Last live verification | 2026-07-13 |
 | Design spec path | `components/ids/app-shell/design-spec.md` |
+| React library path | `lib/react/ids/app-shell` |
+| Angular library path | `lib/angular/ids/app-shell` |
+| Angular masthead slots | `headerActions` / `appLauncherSlot` / `avatarSlot` as `TemplateRef` inputs (React prop parity); Spec Accurate demo: `ids-app-shell-demo-host` |
+| Angular Storybook | `storybook-angular/src/components/ids-app-shell-lib/` (`Spec Generated/IDS/App Shell`) on port **6007** |
+| App Shell Figma (1920) | [`43478:46307`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-46307&m=dev) — do not confuse with App Launcher main `13231:123761` |

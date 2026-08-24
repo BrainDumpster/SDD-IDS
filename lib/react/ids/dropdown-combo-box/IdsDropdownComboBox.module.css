@@ -1,0 +1,75 @@
+/**
+ * IDS Dropdown / Combo Box container layout tokens.
+ * Source: `components/ids/dropdown-combo-box/design-spec.md`
+ */
+
+.root {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.root[data-full-width="true"] {
+  width: 100%;
+}
+
+.fieldRow {
+  display: flex;
+  /* Label aligns to the control row only — helper/error sit under the control column. */
+  align-items: flex-start;
+  gap: var(--spacing-space-16);
+  min-width: 0;
+  width: 100%;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 40px;
+  padding: var(--padding-padding-10) 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.label[data-size="small"] {
+  height: 32px;
+  padding: var(--padding-padding-6) 0;
+}
+
+.combobox {
+  display: grid;
+  gap: var(--spacing-space-4);
+  min-width: 0;
+  width: max-content;
+  flex: 1 1 auto;
+}
+
+.combobox[data-full-width="true"] {
+  width: 100%;
+}
+
+.valueText {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badgeWrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.badgeTrigger {
+  display: inline-flex;
+}
+
+.optionsSlot {
+  display: none;
+}

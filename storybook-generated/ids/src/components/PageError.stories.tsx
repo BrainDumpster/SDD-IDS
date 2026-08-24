@@ -24,7 +24,7 @@ const specAccurateArgs: PageErrorStoryArgs = {
 };
 
 const meta: Meta<PageErrorStoryArgs> = {
-  title: "Spec Generated/IDS/Page Error",
+  title: "Components/IDS/Page Error",
   component: PageError as React.ComponentType<PageErrorStoryArgs>,
   parameters: {
     layout: "centered",
@@ -71,12 +71,12 @@ export const SpecAccurateDesign: Story = {
 };
 
 const specTokens = [
-  "--color-background-component",
-  "--color-text-neutral-strong",
-  "--color-text-neutral",
+  "--color-background-surface-component",
+  "--color-text-gray-neutral-strong",
+  "--color-text-gray-neutral",
   "--color-text-brand-strong",
   "--color-border-brand-base",
-  "--color-icon-disabled",
+  "--color-icon-gray-disabled",
   "--font-size-header-2",
   "--font-size-header-5",
   "--font-size-body-1",
@@ -97,12 +97,12 @@ const specTokens = [
 ] as const;
 
 const specTokenRefs: Record<string, string[]> = {
-  "--color-background-component": ["Layout & Measurements: root background", "States: root background"],
-  "--color-text-neutral-strong": ["Layout & Measurements: errorName, errorCode color", "Tokens: text"],
-  "--color-text-neutral": ["Layout & Measurements: probableCause, resolutions color", "Tokens: text"],
+  "--color-background-surface-component": ["Layout & Measurements: root background", "States: root background"],
+  "--color-text-gray-neutral-strong": ["Layout & Measurements: errorName, errorCode color", "Tokens: text"],
+  "--color-text-gray-neutral": ["Layout & Measurements: probableCause, resolutions color", "Tokens: text"],
   "--color-text-brand-strong": ["Layout & Measurements: action button label color", "Tokens: text"],
   "--color-border-brand-base": ["Layout & Measurements: action button border", "Tokens: borders"],
-  "--color-icon-disabled": ["Layout & Measurements: error icon color", "Tokens: icons"],
+  "--color-icon-gray-disabled": ["Layout & Measurements: error icon color", "Tokens: icons"],
   "--font-size-header-2": ["Layout & Measurements: errorName typography", "Tokens: typography"],
   "--font-size-header-5": ["Layout & Measurements: errorCode typography", "Tokens: typography"],
   "--font-size-body-1": ["Layout & Measurements: probableCause, resolutions typography", "Tokens: typography"],
@@ -144,7 +144,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -156,7 +156,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }

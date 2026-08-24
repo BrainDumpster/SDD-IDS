@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Tracker } from "./Tracker";
 
 const meta: Meta<typeof Tracker> = {
-  title: "Spec Generated/Synapse/Tracker",
+  title: "Components/Synapse/Tracker",
   component: Tracker,
 };
 

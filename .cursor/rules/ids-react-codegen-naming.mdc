@@ -1,0 +1,28 @@
+---
+description: IDS React codegen — public names are IdsCamelCase, not Compound.Slot
+alwaysApply: true
+---
+
+# IDS React component naming (codegen)
+
+When generating IDS React components (`lib/react/ids/<slug>/`, lib-generated Storybook):
+
+- **Public JSX names, CSS classes, and `data-ids` are `Ids` + PascalCase anatomy name.**
+  Root is `IdsAppShell`, not `AppShellRoot`. A slot is `IdsAppShellMastheadSlot`, not `AppShell.MastheadSlot`.
+- **Do not use dotted compound selection as the public API** (`AppShell.MastheadSlot`, `Masthead.BrandSlot`). Export each slot as its own `Ids…` identifier and use those names in stories, docs, and examples.
+- Keep `displayName` equal to the `Ids…` export (e.g. `IdsAppShellMastheadSlot`).
+- Selectors: `className={styles["IdsAppShellMastheadSlot"]}` and `data-ids="IdsAppShellMastheadSlot"` — same string, no kebab-case, no Base UI `data-slot`.
+
+```tsx
+// BAD — dotted compound as the selection
+<AppShell>
+  <AppShell.MastheadSlot />
+  <AppShell.BodyRow />
+</AppShell>
+
+// GOOD — Ids camelCase identifiers
+<IdsAppShell>
+  <IdsAppShellMastheadSlot />
+  <IdsAppShellBodyRow />
+</IdsAppShell>
+```

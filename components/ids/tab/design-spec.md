@@ -26,7 +26,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Secondary selected indicator placement:
   - transparent host: bottom border.
   - white host: bottom border.
-- Dividers/baseline use `1px` borders (`var(--border-width-border-1)` + `var(--color-border-accessible)`).
+- Dividers/baseline use `1px` borders (`var(--border-width-border-1)` + `var(--color-border-gray-neutral-base)`).
 - Primary tab side divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
 - Primary tab right divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
 - **Row baseline / selected bottom-border contract (mandatory for codegen):**
@@ -49,32 +49,32 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
   - `Body 2` (`14/20`) for tab labels.
   - `Body 1` (`16/24`) for section headings/examples.
 - **Tab shell**
-  - `var(--color-background-surface-2)` (white host / tab background)
-  - `var(--color-border-accessible)` (default divider/baseline)
+  - `var(--color-background-surface-secondary)` (white host / tab background)
+  - `var(--color-border-gray-neutral-base)` (default divider/baseline)
   - `var(--color-border-brand-base)` (focus ring)
-  - `var(--color-border-brand-dark)` (selected indicator)
+  - `var(--color-border-brand-strong)` (selected indicator)
 - **State backgrounds**
-  - `var(--color-background-brand-lighter)` (hover unselected)
-  - `var(--color-background-brand-light)` (press unselected)
+  - `var(--color-background-brand-lighter-slate)` (hover unselected)
+  - `var(--color-background-brand-light-slate)` (press unselected)
 - **Label text**
-  - `var(--color-text-neutral)` (unselected default/focus)
-  - `var(--color-text-neutral-strong)` (hover unselected)
+  - `var(--color-text-gray-neutral)` (unselected default/focus)
+  - `var(--color-text-gray-neutral-strong)` (hover unselected)
   - `var(--color-text-brand-strong)` (selected)
 - **Badges/alerts**
-  - `var(--color-background-alerting-critical)` for alert badge background
-  - `var(--color-text-white)` for badge text
+  - `var(--color-background-alerting-critical-base)` for alert badge background
+  - `var(--color-text-gray-white)` for badge text
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Primary | Selected | host-dependent (`transparent` or `var(--color-background-surface-2)`) | side divider `var(--color-border-accessible)` + top indicator `2px var(--color-border-brand-dark)`; **no accessible bottom baseline** (`border-bottom: none`) | `var(--color-text-brand-strong)` |
-| Primary | Unselected Default | host-dependent | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Primary | Unselected Hover | `var(--color-background-brand-lighter)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` |
-| Primary | Unselected Press | `var(--color-background-brand-light)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
+| Primary | Selected | host-dependent (`transparent` or `var(--color-background-surface-secondary)`) | side divider `var(--color-border-gray-neutral-base)` + top indicator `2px var(--color-border-brand-strong)`; **no accessible bottom baseline** (`border-bottom: none`) | `var(--color-text-brand-strong)` |
+| Primary | Unselected Default | host-dependent | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Primary | Unselected Hover | `var(--color-background-brand-lighter-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` |
+| Primary | Unselected Press | `var(--color-background-brand-light-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-brand-strong)` |
 | Primary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
-| Secondary | Selected | host-dependent (`transparent` or `var(--color-background-surface-2)`) | bottom indicator `2px var(--color-border-brand-dark)`; **no accessible bottom baseline** (`border-bottom: none`) | `var(--color-text-brand-strong)` |
-| Secondary | Unselected Default | host-dependent | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Secondary | Unselected Hover | `var(--color-background-brand-lighter)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` |
-| Secondary | Unselected Press | `var(--color-background-brand-light)` | baseline/divider `var(--color-border-accessible)` | `var(--color-text-brand-strong)` |
+| Secondary | Selected | host-dependent (`transparent` or `var(--color-background-surface-secondary)`) | bottom indicator `2px var(--color-border-brand-strong)`; **no accessible bottom baseline** (`border-bottom: none`) | `var(--color-text-brand-strong)` |
+| Secondary | Unselected Default | host-dependent | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Secondary | Unselected Hover | `var(--color-background-brand-lighter-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` |
+| Secondary | Unselected Press | `var(--color-background-brand-light-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-brand-strong)` |
 | Secondary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -114,7 +114,7 @@ Do **not** duplicate the light matrix. Selected-tab baseline rules are identical
 | `items` | Yes | Ordered tab items. Each item: `{ id, label, content, iconSlug?, badgeCount?, hasAlert?, closable?, disabled? }`. |
 | `type` | No | `"secondary"` (default) or `"primary"` tab style. |
 | `variant` | No | Backward-compatible alias of `type`; if both are provided, `type` wins. |
-| `surface` | No | `"elevated"` (default; opaque `var(--color-background-surface-2)` fills) or `"transparent"` (idle/selected fills clear). Maps to Figma `transparent` axis / codegen `hostBackground`. |
+| `surface` | No | `"elevated"` (default; opaque `var(--color-background-surface-secondary)` fills) or `"transparent"` (idle/selected fills clear). Maps to Figma `transparent` axis / codegen `hostBackground`. |
 | `activeItemId` | Yes (controlled) | Active tab id. |
 | `defaultActiveItemId` | No | Initial tab id for uncontrolled mode. |
 | `onActiveItemChange(id)` | Yes | Fired on click/keyboard/overflow selection. |
@@ -156,12 +156,12 @@ Runtime rules:
 
 ### Per-slot style contract
 - `TabItem`: `38px` height (`box-sizing: border-box`), `9px 24px` padding (`padding-right: var(--padding-padding-20)` when a `TabClose` is shown), `8px` internal gap between icon/label/badge, `var(--spacing-space-20)` gap between the tab content and the `TabClose` control.
-- `TabItem` unselected: `border-bottom` = `var(--border-width-border-1)` solid `var(--color-border-accessible)`.
+- `TabItem` unselected: `border-bottom` = `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-base)`.
 - `TabItem` selected: `border-bottom: none` (elevated **and** transparent). Do not rely on opaque fill to hide a baseline drawn elsewhere.
 - `TabLabel`: Body 2 tokenized typography.
 - `SelectedIndicator`: `2px`, placement depends on variant (`primary=top`, `secondary=bottom` in validated IDS examples).
 - `FocusRing`: `2px` brand border, tokenized.
-- `TabClose` (IDS tabs only): rendered as an `IdsButton` tertiary icon-only control (`variant="tertiary"`, `size="sm"`, `iconOnly`, `iconSlug="ctrl-close-16"`). The control is `24px` × `24px` (`var(--sizing-size-24)`) with `var(--padding-padding-4)` padding on all sides; the icon is tinted `var(--color-icon-neutral)`. Synapse tabs continue to use the previous `shape-x` 12px icon in a padded span.
+- `TabClose` (IDS tabs only): rendered as an `IdsButton` tertiary icon-only control (`variant="tertiary"`, `size="sm"`, `iconOnly`, `iconSlug="ctrl-close-16"`). The control is `24px` × `24px` (`var(--sizing-size-24)`) with `var(--padding-padding-4)` padding on all sides; the icon is tinted `var(--color-icon-gray-neutral-base)`. Synapse tabs continue to use the previous `shape-x` 12px icon in a padded span.
 - `OverflowTrigger`: same sizing and tab affordance as peer tab items; selected overflow trigger also uses `border-bottom: none`.
 - `AddTabTrigger`: visual parity with tab row controls; keeps accessible baseline.
 - `TabList` trailing filler: flex-grow pseudo/spacer with the same accessible `border-bottom` to continue the baseline past the last control.

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsBreadcrumb } from "./IdsBreadcrumb";
 
 const meta: Meta<typeof IdsBreadcrumb> = {
-  title: "Spec Generated/IDS/Breadcrumb",
+  title: "Components/IDS/Breadcrumb",
   component: IdsBreadcrumb,
   args: {
     items: [
@@ -12,6 +12,7 @@ const meta: Meta<typeof IdsBreadcrumb> = {
       { label: "Breadcrumb 3", href: "#" },
       { label: "Breadcrumb 4", href: "#" },
     ],
+    twoLines: false,
     truncate: false,
     maxVisibleItems: 4,
     showDropdown: false,
@@ -23,8 +24,9 @@ const meta: Meta<typeof IdsBreadcrumb> = {
     },
     currentPage: {
       control: "text",
-      description: "Current page text displayed on the second line",
+      description: "Current page text (for two-line variant)",
     },
+    twoLines: { control: "boolean", description: "Whether to use two-line layout" },
     truncate: { control: "boolean", description: "Whether to truncate with '...'" },
     maxVisibleItems: { control: "number", description: "Max items before truncation" },
     showDropdown: { control: "boolean", description: "Show dropdown on hover of '...'" },
@@ -45,11 +47,74 @@ export const Default: Story = {
   },
 };
 
+export const OneLineOneItem: Story = {
+  args: {
+    items: [
+      { label: "Breadcrumb 1", href: "#" },
+    ],
+    twoLines: false,
+    truncate: false,
+  },
+};
+
+export const OneLineTwoItems: Story = {
+  args: {
+    items: [
+      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 2", href: "#" },
+    ],
+    twoLines: false,
+    truncate: false,
+  },
+};
+
+export const OneLineThreeItems: Story = {
+  args: {
+    items: [
+      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 3", href: "#" },
+    ],
+    twoLines: false,
+    truncate: false,
+  },
+};
+
+export const OneLineFourItems: Story = {
+  args: {
+    items: [
+      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 3", href: "#" },
+      { label: "Breadcrumb 4", href: "#" },
+    ],
+    twoLines: false,
+    truncate: false,
+  },
+};
+
+export const OneLineFiveItemsTruncated: Story = {
+  args: {
+    items: [
+      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 3", href: "#" },
+      { label: "Breadcrumb 4", href: "#" },
+      { label: "Breadcrumb 5", href: "#" },
+    ],
+    twoLines: false,
+    truncate: true,
+    maxVisibleItems: 4,
+    showDropdown: true,
+  },
+};
+
 export const TwoLinesOneItem: Story = {
   args: {
     items: [
       { label: "Breadcrumb 1", href: "#" },
     ],
+    twoLines: true,
     currentPage: "Current Page",
     truncate: false,
   },
@@ -61,6 +126,7 @@ export const TwoLinesTwoItems: Story = {
       { label: "Breadcrumb 1", href: "#" },
       { label: "Breadcrumb 2", href: "#" },
     ],
+    twoLines: true,
     currentPage: "Current Page",
     truncate: false,
   },
@@ -73,6 +139,7 @@ export const TwoLinesThreeItems: Story = {
       { label: "Breadcrumb 2", href: "#" },
       { label: "Breadcrumb 3", href: "#" },
     ],
+    twoLines: true,
     currentPage: "Current Page",
     truncate: false,
   },
@@ -86,6 +153,7 @@ export const TwoLinesFourItems: Story = {
       { label: "Breadcrumb 3", href: "#" },
       { label: "Breadcrumb 4", href: "#" },
     ],
+    twoLines: true,
     currentPage: "Current Page",
     truncate: false,
   },
@@ -100,6 +168,7 @@ export const TwoLinesFiveItemsTruncated: Story = {
       { label: "Breadcrumb 4", href: "#" },
       { label: "Breadcrumb 5", href: "#" },
     ],
+    twoLines: true,
     currentPage: "Current Page",
     truncate: true,
     maxVisibleItems: 4,
@@ -111,40 +180,40 @@ export const VariantsMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 32 }}>
       <div>
-        <h3>Breadcrumb - 1 Item</h3>
+        <h3>One Line - 1 Item</h3>
         <IdsBreadcrumb
           items={[
             { label: "Breadcrumb 1", href: "#" },
           ]}
-          currentPage="Current Page"
+          twoLines={false}
           truncate={false}
         />
       </div>
       <div>
-        <h3>Breadcrumb - 2 Items</h3>
+        <h3>One Line - 2 Items</h3>
         <IdsBreadcrumb
           items={[
             { label: "Breadcrumb 1", href: "#" },
             { label: "Breadcrumb 2", href: "#" },
           ]}
-          currentPage="Current Page"
+          twoLines={false}
           truncate={false}
         />
       </div>
       <div>
-        <h3>Breadcrumb - 3 Items</h3>
+        <h3>One Line - 3 Items</h3>
         <IdsBreadcrumb
           items={[
             { label: "Breadcrumb 1", href: "#" },
             { label: "Breadcrumb 2", href: "#" },
             { label: "Breadcrumb 3", href: "#" },
           ]}
-          currentPage="Current Page"
+          twoLines={false}
           truncate={false}
         />
       </div>
       <div>
-        <h3>Breadcrumb - 4 Items</h3>
+        <h3>One Line - 4 Items</h3>
         <IdsBreadcrumb
           items={[
             { label: "Breadcrumb 1", href: "#" },
@@ -152,12 +221,12 @@ export const VariantsMatrix: Story = {
             { label: "Breadcrumb 3", href: "#" },
             { label: "Breadcrumb 4", href: "#" },
           ]}
-          currentPage="Current Page"
+          twoLines={false}
           truncate={false}
         />
       </div>
       <div>
-        <h3>Breadcrumb - 5 Items Truncated (hover on "...")</h3>
+        <h3>One Line - 5 Items Truncated (hover on "...")</h3>
         <IdsBreadcrumb
           items={[
             { label: "Breadcrumb 1", href: "#" },
@@ -166,6 +235,73 @@ export const VariantsMatrix: Story = {
             { label: "Breadcrumb 4", href: "#" },
             { label: "Breadcrumb 5", href: "#" },
           ]}
+          twoLines={false}
+          truncate={true}
+          maxVisibleItems={4}
+          showDropdown={true}
+        />
+      </div>
+      <div>
+        <h3>Two Lines - 1 Item</h3>
+        <IdsBreadcrumb
+          items={[
+            { label: "Breadcrumb 1", href: "#" },
+          ]}
+          twoLines={true}
+          currentPage="Current Page"
+          truncate={false}
+        />
+      </div>
+      <div>
+        <h3>Two Lines - 2 Items</h3>
+        <IdsBreadcrumb
+          items={[
+            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 2", href: "#" },
+          ]}
+          twoLines={true}
+          currentPage="Current Page"
+          truncate={false}
+        />
+      </div>
+      <div>
+        <h3>Two Lines - 3 Items</h3>
+        <IdsBreadcrumb
+          items={[
+            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 2", href: "#" },
+            { label: "Breadcrumb 3", href: "#" },
+          ]}
+          twoLines={true}
+          currentPage="Current Page"
+          truncate={false}
+        />
+      </div>
+      <div>
+        <h3>Two Lines - 4 Items</h3>
+        <IdsBreadcrumb
+          items={[
+            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 2", href: "#" },
+            { label: "Breadcrumb 3", href: "#" },
+            { label: "Breadcrumb 4", href: "#" },
+          ]}
+          twoLines={true}
+          currentPage="Current Page"
+          truncate={false}
+        />
+      </div>
+      <div>
+        <h3>Two Lines - 5 Items Truncated (hover on "...")</h3>
+        <IdsBreadcrumb
+          items={[
+            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 2", href: "#" },
+            { label: "Breadcrumb 3", href: "#" },
+            { label: "Breadcrumb 4", href: "#" },
+            { label: "Breadcrumb 5", href: "#" },
+          ]}
+          twoLines={true}
           currentPage="Current Page"
           truncate={true}
           maxVisibleItems={4}

@@ -1,0 +1,114 @@
+/**
+ * IDS Detail Panel styles — from components/ids/detail-panel/design-spec.md
+ * Theme: components/ids-theme.css
+ * Selectors: ids-detail-panel, ids-detail-panel-header, …
+ */
+
+.ids-detail-panel {
+  box-sizing: border-box;
+  height: 100%;
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ids-detail-panel-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ids-detail-panel-header {
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: var(--spacing-space-14, 14px) var(--padding-padding-12, 12px)
+    var(--spacing-space-14, 14px) var(--padding-padding-24, 24px);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-background-surface-component);
+  flex-shrink: 0;
+}
+
+.ids-detail-panel-footer {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: var(--spacing-space-14, 14px) var(--padding-padding-12, 12px);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--color-background-surface-component);
+  flex-shrink: 0;
+}
+
+.ids-detail-panel-title {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+  color: var(--color-text-gray-neutral-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.ids-detail-panel-controls {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ids-detail-panel-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--color-icon-gray-neutral-base);
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ids-detail-panel-toggle:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-detail-panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 24px;
+  box-sizing: border-box;
+  background: var(--color-background-surface-component);
+}
+
+.ids-detail-panel-collapsed-rail {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  background: var(--color-background-surface-component);
+}
+
+.ids-detail-panel-collapsed-rail--datagrid {
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: var(--spacing-space-16, 16px) var(--padding-padding-12, 12px);
+}
+
+.ids-detail-panel-collapsed-rail--page {
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--padding-padding-12, 12px);
+}

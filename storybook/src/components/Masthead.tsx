@@ -30,7 +30,7 @@ export interface MastheadActionIconButtonProps extends ComponentProps<"button"> 
 
 interface MastheadAvatarProps extends Omit<ComponentProps<"button">, "children"> {
   initials?: string;
-  /** User icon via shared Icon primitive — slug `user-single`, 16×16, `var(--color-icon-white)`. */
+  /** User icon via shared Icon primitive — slug `user-single`, 16×16, `var(--color-icon-gray-white)`. */
   icon?: ReactNode;
   imageSrc?: string;
   imageAlt?: string;

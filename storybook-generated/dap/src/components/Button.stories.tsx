@@ -57,7 +57,7 @@ function ButtonStoryStyles() {
 }
 
 const meta: Meta<typeof IdsButton> = {
-  title: "Spec Generated/DAP/Button",
+  title: "Components/DAP/Button",
   component: IdsButton,
   parameters: {
     layout: "centered",

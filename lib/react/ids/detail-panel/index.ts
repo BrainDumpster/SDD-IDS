@@ -1,0 +1,20 @@
+export {
+  IdsDetailPanel,
+  IdsDetailPanelContent,
+  IdsDetailPanelHeader,
+  IdsDetailPanelTitle,
+  IdsDetailPanelBody,
+  IdsDetailPanelFooter,
+  IdsDetailPanelCollapsedRail,
+  IdsDetailPanelToggleButton,
+  type IdsDetailPanelProps,
+  type IdsDetailPanelAttachMode,
+  type IdsDetailPanelContentProps,
+  type IdsDetailPanelHeaderProps,
+  type IdsDetailPanelTitleProps,
+  type IdsDetailPanelBodyProps,
+  type IdsDetailPanelFooterProps,
+  type IdsDetailPanelCollapsedRailProps,
+  type IdsDetailPanelToggleButtonProps,
+} from "./IdsDetailPanel";
+export { default } from "./IdsDetailPanel";

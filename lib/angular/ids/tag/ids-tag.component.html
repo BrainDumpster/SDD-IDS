@@ -1,0 +1,66 @@
+<span
+  class="ids-tag"
+  [ngClass]="[resolvedSize, typeClass, toneClass, type === 'clickable' && isSelected ? 'selected' : '']"
+  [attr.data-disabled]="disabled ? true : null"
+  [attr.data-focus]="focusVisible ? true : null"
+  [attr.data-error]="error ? true : null"
+  [attr.data-hover]="demoHover ? true : null"
+  [attr.role]="type === 'clickable' ? 'button' : null"
+  [attr.aria-pressed]="type === 'clickable' ? isSelected : null"
+  [attr.tabindex]="isClickable ? 0 : null"
+  (click)="onRootClick()"
+  (mousedown)="onEditableMouseDown($event)"
+>
+  @if (leadingIconSlug) {
+    <ids-icon [shapeName]="leadingIconSlug" [size]="10" className="leading-icon" />
+  }
+
+  @if (hasBadge) {
+    <span class="badge">{{ badgeValue }}</span>
+  }
+
+  @if (type === "editable") {
+    <span
+      #editableField
+      class="text-field"
+      [attr.tabindex]="isEditableFocusable ? 0 : null"
+      [attr.data-focus-on-text]="focusOnText ? true : null"
+    >
+      <span class="content">
+        @if (showLabel) {
+          <span class="prefix">
+            <span class="prefix-text">{{ prefixText }}</span>
+            <span class="prefix-colon">:</span>
+          </span>
+        }
+        <span class="label">{{ label }}</span>
+      </span>
+    </span>
+  } @else {
+    <span class="content">
+      @if (showLabel) {
+        <span class="prefix">
+          <span class="prefix-text">{{ prefixText }}</span>
+          <span class="prefix-colon">:</span>
+        </span>
+      }
+      <span class="label">{{ label }}</span>
+    </span>
+  }
+
+  @if (type === "badge" && hasBadge) {
+    <ids-icon shapeName="arrow-drop-tri-caret" [size]="10" className="menu-caret" />
+  }
+
+      @if (type === "editable") {
+    <button
+      type="button"
+      class="dismiss"
+      [disabled]="disabled"
+      [attr.aria-label]="'Remove ' + label"
+      (click)="onDismissClick($event)"
+    >
+      <ids-icon shapeName="shape-x" [size]="10" className="dismiss-icon" />
+    </button>
+  }
+</span>

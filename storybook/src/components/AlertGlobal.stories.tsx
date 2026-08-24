@@ -5,7 +5,7 @@ import { Alert } from "./Alert";
 import type { AlertGlobalSeverity } from "./Alert";
 
 const meta = {
-  title: "Spec Generated/IDS/Alert/Global Alert",
+  title: "Components/IDS/Alert/Global Alert",
   component: Alert,
   parameters: {
     docs: {

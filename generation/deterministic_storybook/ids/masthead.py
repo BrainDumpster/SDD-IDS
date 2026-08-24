@@ -37,7 +37,7 @@ const icon16 = {{ width: 16, height: 16 }} as const;
 
 const helpIcon = <Icon shapeName="help-circ-16" style={{icon16}} />;
 const userIcon = (
-  <Icon shapeName="user-single" color="var(--color-icon-white)" style={{icon16}} />
+  <Icon shapeName="user-single" color="var(--color-icon-gray-white)" style={{icon16}} />
 );
 
 const productLogo = (
