@@ -22,7 +22,7 @@ ids-app-shell
       page header / body / footer
 \`\`\`
 
-Open **Spec Generated → IDS → App Shell → Spec Accurate Design** on port **6007**. Load \`components/ids-theme.css\` (\`data-design-system="ids"\`).
+Open **Components → IDS → App Shell → Spec Accurate Design** on port **6007**. Load \`components/ids-theme.css\` (\`data-design-system="ids"\`).
 `.trim();
 
 export const APP_SHELL_LIB_SOURCE_CODE = `import { Component } from "@angular/core";

@@ -11,7 +11,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta} */
 const meta = {
-  title: "Spec Generated/IDS/App Shell",
+  title: "Components/IDS/App Shell",
   component: IdsAppShellDemoHostComponent,
   tags: ["autodocs"],
   decorators: [

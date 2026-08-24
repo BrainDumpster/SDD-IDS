@@ -17,7 +17,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsToastItemComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Toast",
+  title: "Components/IDS/Toast",
   component: IdsToastItemComponent,
   tags: ["autodocs"],
   decorators: [

@@ -26,7 +26,7 @@ export const SEGMENTED_BUTTON_ICON_MODES_SOURCE = `<SegmentedButtons type="icon"
 </SegmentedButtons>`;
 
 export const segmentedButtonMeta: Meta<typeof SegmentedButtons> = {
-  title: "Spec Generated/IDS/Segmented Button",
+  title: "Components/IDS/Segmented Button",
   component: SegmentedButtons,
   tags: ["autodocs"],
   parameters: {

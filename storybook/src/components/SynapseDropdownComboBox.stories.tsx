@@ -20,7 +20,7 @@ import {
 } from "./synapse-dropdown.developer-usage";
 
 const meta: Meta<typeof SynapseDropdown> = {
-  title: "Spec Generated/Synapse/Dropdown/Combo Box",
+  title: "Components/Synapse/Dropdown/Combo Box",
   component: SynapseDropdown,
   tags: ["autodocs"],
   parameters: {

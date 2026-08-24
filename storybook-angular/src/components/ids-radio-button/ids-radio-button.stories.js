@@ -15,7 +15,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsRadioButtonGroupComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Radio Button",
+  title: "Components/IDS/Radio Button",
   component: IdsRadioButtonGroupComponent,
   tags: ["autodocs"],
   decorators: [

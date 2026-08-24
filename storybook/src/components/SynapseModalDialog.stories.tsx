@@ -15,7 +15,7 @@ import {
 const synapseButtonProps = { programme: "synapse" as const, size: "lg" as const };
 
 const meta: Meta<typeof IdsModal> = {
-  title: "Spec Generated/Synapse/Modal/Dialog",
+  title: "Components/Synapse/Modal/Dialog",
   component: IdsModal,
   parameters: {
     layout: "centered",

@@ -15,7 +15,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsDropdownButtonComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Dropdown Button",
+  title: "Components/IDS/Dropdown Button",
   component: IdsDropdownButtonComponent,
   tags: ["autodocs"],
   decorators: [

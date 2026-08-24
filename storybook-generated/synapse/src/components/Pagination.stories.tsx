@@ -52,7 +52,7 @@ function StoryRow({ caption, children }: { caption: string; children: ReactNode 
 }
 
 const meta: Meta<typeof SynapsePagination> = {
-  title: "Spec Generated/Synapse/Pagination",
+  title: "Components/Synapse/Pagination",
   component: SynapsePagination,
   parameters: {
     layout: "padded",

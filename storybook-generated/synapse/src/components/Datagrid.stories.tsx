@@ -13,7 +13,7 @@ import { SPEC_ACCURATE_DESIGN_STORY } from "@component-contracts/common/story-me
 import { IdsDataGridCompositionStory } from "../../../../storybook/src/components/IdsDataGridCompositionStory";
 
 const meta: Meta<typeof IdsDataGridCompositionStory> = {
-  title: "Spec Generated/Synapse/Datagrid",
+  title: "Components/Synapse/Datagrid",
   component: IdsDataGridCompositionStory,
   parameters: {
     layout: "fullscreen",

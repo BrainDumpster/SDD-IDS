@@ -27,7 +27,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof About> = {
-  title: "Spec Generated/Synapse/About",
+  title: "Components/Synapse/About",
   component: About,
   parameters: {
     layout: "fullscreen",

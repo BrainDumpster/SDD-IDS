@@ -17,7 +17,7 @@ const specAccurateArgs: ComponentProps<typeof IdsProgressBar> = {
 };
 
 const meta: Meta<typeof IdsProgressBar> = {
-  title: "Spec Generated/IDS/Progress Bar",
+  title: "Components/IDS/Progress Bar",
   component: IdsProgressBar,
   parameters: {
     layout: "padded",

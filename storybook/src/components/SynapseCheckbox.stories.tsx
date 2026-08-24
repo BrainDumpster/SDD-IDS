@@ -74,7 +74,7 @@ const sharedCheckboxStoryStyles = `
 `;
 
 const meta: Meta<typeof SynapseCheckbox> = {
-  title: "Spec Generated/Synapse/Checkbox",
+  title: "Components/Synapse/Checkbox",
   component: SynapseCheckbox,
   parameters: {
     layout: "padded",

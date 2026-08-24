@@ -22,7 +22,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof SynapseTextInput> = {
-  title: "Spec Generated/Synapse/Text Input",
+  title: "Components/Synapse/Text Input",
   component: SynapseTextInput,
   parameters: {
     layout: "centered",

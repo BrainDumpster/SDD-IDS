@@ -11,7 +11,7 @@ import { IDS_AVATAR_IMPORTS } from "../../../compiled/lib/angular/ids/avatar/ind
 
 /** @type {import("@storybook/angular").Meta<IdsAvatarComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Avatar",
+  title: "Components/IDS/Avatar",
   component: IdsAvatarComponent,
   tags: ["autodocs"],
   decorators: [

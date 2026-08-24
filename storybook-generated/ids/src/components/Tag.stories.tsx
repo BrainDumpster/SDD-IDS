@@ -30,7 +30,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof IdsTag> = {
-  title: "Spec Generated/IDS/Tag",
+  title: "Components/IDS/Tag",
   component: IdsTag,
   parameters: {
     layout: "centered",

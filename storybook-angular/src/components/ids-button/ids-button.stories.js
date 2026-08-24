@@ -17,7 +17,7 @@ const DEMO_ICON = "settings-gear-detailed";
 
 /** @type {import("@storybook/angular").Meta<IdsButtonComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Button",
+  title: "Components/IDS/Button",
   component: IdsButtonComponent,
   tags: ["autodocs"],
   decorators: [

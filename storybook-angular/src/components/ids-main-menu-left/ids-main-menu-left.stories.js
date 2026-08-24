@@ -18,7 +18,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsMainMenuLeftComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Main Menu Left",
+  title: "Components/IDS/Main Menu Left",
   component: IdsMainMenuLeftComponent,
   tags: ["autodocs"],
   decorators: [

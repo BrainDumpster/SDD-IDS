@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Link as IdsLink } from "../../../../storybook/src/components/Link";
 
 const meta: Meta<typeof IdsLink> = {
-  title: "Spec Generated/IDS/Link",
+  title: "Components/IDS/Link",
   component: IdsLink,
   argTypes: {
     type: { control: "select", options: ["standalone", "inline", "dark-bg"] },

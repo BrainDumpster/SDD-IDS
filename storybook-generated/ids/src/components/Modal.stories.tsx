@@ -9,7 +9,7 @@ import { Tabs } from "../../../../storybook/src/components/Tabs";
 import { MODAL_FIGMA_BODY } from "../../../../component-contracts/ids/modal.contract";
 
 const meta: Meta<typeof IdsModal> = {
-  title: "Spec Generated/IDS/Modal",
+  title: "Components/IDS/Modal",
   component: IdsModal,
   parameters: { layout: "centered" },
 };

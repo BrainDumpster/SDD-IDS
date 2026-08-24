@@ -7,7 +7,7 @@ import { TextInput } from "./TextInput";
 import { MODAL_FIGMA_BODY } from "../../../component-contracts/ids/modal.contract";
 
 const meta: Meta<typeof IdsModal> = {
-  title: "Spec Generated/IDS/Modal/Dialog",
+  title: "Components/IDS/Modal/Dialog",
   component: IdsModal,
   parameters: { layout: "centered" },
 };

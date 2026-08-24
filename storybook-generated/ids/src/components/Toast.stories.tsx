@@ -23,7 +23,7 @@ interface ToastStoryArgs {
 }
 
 const meta: Meta<ToastStoryArgs> = {
-  title: "Spec Generated/IDS/Toast",
+  title: "Components/IDS/Toast",
   args: {
     variant: "info",
     message: "This is a temporary and brief notification following a user action.",

@@ -13,7 +13,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsToggleSwitchComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Toggle Switch",
+  title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitchComponent,
   tags: ["autodocs"],
   decorators: [

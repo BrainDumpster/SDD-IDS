@@ -20,7 +20,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsTextBoxComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Text Box",
+  title: "Components/IDS/Text Box",
   component: IdsTextBoxComponent,
   tags: ["autodocs"],
   decorators: [

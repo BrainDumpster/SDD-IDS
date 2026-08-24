@@ -36,7 +36,7 @@ const TOOLTIP_PLACEMENTS = TOOLTIP_SIDES.flatMap((side) =>
 
 /** @type {import("@storybook/angular").Meta<IdsTooltipComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Tooltip",
+  title: "Components/IDS/Tooltip",
   component: IdsTooltipComponent,
   tags: ["autodocs"],
   decorators: TOOLTIP_STORY_DECORATORS,

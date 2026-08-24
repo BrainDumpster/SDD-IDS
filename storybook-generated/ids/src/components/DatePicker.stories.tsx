@@ -17,7 +17,7 @@ function IdsThemeDecorator(Story: React.ComponentType) {
 }
 
 const meta: Meta<typeof IdsDatePicker> = {
-  title: "Spec Generated/IDS/Date Picker",
+  title: "Components/IDS/Date Picker",
   component: IdsDatePicker,
   parameters: { layout: "padded" },
   decorators: [IdsThemeDecorator],

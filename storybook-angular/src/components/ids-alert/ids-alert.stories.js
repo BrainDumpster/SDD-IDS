@@ -23,7 +23,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsAlertComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Alert",
+  title: "Components/IDS/Alert",
   component: IdsAlertComponent,
   tags: ["autodocs"],
   decorators: [

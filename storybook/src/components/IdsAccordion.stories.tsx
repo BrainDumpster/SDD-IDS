@@ -15,7 +15,7 @@ import {
  * Keep demo data and matrix defaults in the contract file so codegen QA can import the same shapes.
  */
 const meta: Meta<typeof IdsAccordion> = {
-  title: "Spec Generated/IDS/Accordion",
+  title: "Components/IDS/Accordion",
   component: IdsAccordion,
   parameters: {
     docs: {

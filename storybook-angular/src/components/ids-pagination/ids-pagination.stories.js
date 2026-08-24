@@ -18,7 +18,7 @@ const checkerboardStyle =
 
 /** @type {import("@storybook/angular").Meta<IdsPaginationComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Pagination",
+  title: "Components/IDS/Pagination",
   component: IdsPaginationComponent,
   tags: ["autodocs"],
   decorators: [

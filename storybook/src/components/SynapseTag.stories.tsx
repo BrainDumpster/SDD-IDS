@@ -21,7 +21,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof SynapseTag> = {
-  title: "Spec Generated/Synapse/Tag",
+  title: "Components/Synapse/Tag",
   component: SynapseTag,
   parameters: {
     layout: "centered",

@@ -15,7 +15,7 @@ import {
 } from "../spec-contracts/synapse-accordion.contract";
 
 const meta: Meta<typeof SynapseAccordion> = {
-  title: "Spec Generated/Synapse/Accordion",
+  title: "Components/Synapse/Accordion",
   component: SynapseAccordion,
   parameters: {
     layout: "padded",

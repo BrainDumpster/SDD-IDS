@@ -16,7 +16,7 @@ const DemoIcon = () => <Icon shapeName={DEMO_ICON_SLUG} variant="mask" />;
 const synapseButtonProps = { programme: "synapse" as const, size: "lg" as const };
 
 const meta: Meta<typeof Button> = {
-  title: "Spec Generated/Synapse/Button",
+  title: "Components/Synapse/Button",
   component: Button,
   parameters: {
     layout: "centered",

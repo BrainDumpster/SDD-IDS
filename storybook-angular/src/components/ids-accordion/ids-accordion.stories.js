@@ -15,7 +15,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsAccordionComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Accordion",
+  title: "Components/IDS/Accordion",
   component: IdsAccordionComponent,
   tags: ["autodocs"],
   decorators: [

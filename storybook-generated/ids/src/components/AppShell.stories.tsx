@@ -124,7 +124,7 @@ const specAccurateArgs: ComponentProps<typeof AppShell> = {
 };
 
 const meta: Meta<typeof AppShell> = {
-  title: "Spec Generated/IDS/App Shell",
+  title: "Components/IDS/App Shell",
   component: AppShell,
   parameters: {
     layout: "fullscreen",

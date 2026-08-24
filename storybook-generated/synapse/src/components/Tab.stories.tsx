@@ -51,7 +51,7 @@ const specAccurateArgs: ComponentProps<typeof SynapseTabs> = {
 };
 
 const meta: Meta<typeof SynapseTabs> = {
-  title: "Spec Generated/Synapse/Tab",
+  title: "Components/Synapse/Tab",
   component: SynapseTabs,
   parameters: {
     layout: "padded",

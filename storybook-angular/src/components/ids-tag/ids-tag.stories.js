@@ -13,7 +13,7 @@ import { IDS_TAG_IMPORTS } from "../../../compiled/lib/angular/ids/tag/index.js"
 
 /** @type {import("@storybook/angular").Meta<IdsTagComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Tag",
+  title: "Components/IDS/Tag",
   component: IdsTagComponent,
   tags: ["autodocs"],
   decorators: [

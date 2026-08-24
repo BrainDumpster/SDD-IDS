@@ -21,7 +21,7 @@ const optionsList = [
 ];
 
 const meta: Meta<typeof IdsAppLauncher> = {
-  title: "Spec Generated/IDS/App Launcher",
+  title: "Components/IDS/App Launcher",
   component: IdsAppLauncher,
   args: { triggerVariant: "masthead", sideOffset: 0, columns: 2 },
 };

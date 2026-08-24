@@ -9,7 +9,7 @@ import { DropdownMenu as IdsDropdownComboBox } from "../../../../storybook/src/c
 import { IdsDropdownTriggerShell } from "../../../../storybook/src/components/IdsDropdownTriggerShell";
 
 const meta: Meta<typeof IdsDropdownComboBox> = {
-  title: "Spec Generated/IDS/Dropdown/Combo Box",
+  title: "Components/IDS/Dropdown/Combo Box",
   component: IdsDropdownComboBox,
   parameters: { layout: "centered" },
 };

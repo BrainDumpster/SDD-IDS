@@ -1,4 +1,4 @@
-export const SPEC_GENERATED_ROOT = "Spec Generated";
+export const SPEC_GENERATED_ROOT = "Components";
 export const SPEC_ACCURATE_DESIGN_STORY = "Spec Accurate Design";
 export function specGeneratedTitle(programme, componentDisplayName) {
     return `${SPEC_GENERATED_ROOT}/${programme}/${componentDisplayName}`;

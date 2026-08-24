@@ -17,7 +17,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsSegmentedButtonsComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Segmented Button",
+  title: "Components/IDS/Segmented Button",
   component: IdsSegmentedButtonsComponent,
   tags: ["autodocs"],
   decorators: [

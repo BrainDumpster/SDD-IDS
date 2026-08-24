@@ -93,7 +93,7 @@ const sharedRadioStoryStyles = `
 `;
 
 const meta: Meta<typeof SynapseRadioButton> = {
-  title: "Spec Generated/Synapse/Radio Button",
+  title: "Components/Synapse/Radio Button",
   component: SynapseRadioButton,
   parameters: {
     layout: "padded",

@@ -107,7 +107,7 @@ function getSelectAllState(options: { label: string; disabled?: boolean }[], sel
 }
 
 const meta: Meta<typeof SynapseDropdown> = {
-  title: "Spec Generated/Synapse/Dropdown/Multi Select",
+  title: "Components/Synapse/Dropdown/Multi Select",
   component: SynapseDropdown,
   tags: ["autodocs"],
   parameters: {

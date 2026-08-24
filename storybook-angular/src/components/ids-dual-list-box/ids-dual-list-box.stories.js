@@ -15,7 +15,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsDualListBoxComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Dual List Box",
+  title: "Components/IDS/Dual List Box",
   component: IdsDualListBoxComponent,
   tags: ["autodocs"],
   decorators: [

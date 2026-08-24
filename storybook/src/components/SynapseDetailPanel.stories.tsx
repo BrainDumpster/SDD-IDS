@@ -15,7 +15,7 @@ import {
 import "../../../components/synapse-theme.css";
 
 const meta: Meta<typeof SynapseDetailPanel> = {
-  title: "Spec Generated/Synapse/Detail Panel",
+  title: "Components/Synapse/Detail Panel",
   component: SynapseDetailPanel,
   parameters: {
     layout: "fullscreen",

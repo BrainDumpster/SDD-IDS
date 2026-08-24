@@ -11,7 +11,7 @@ import { Button } from "../../../../storybook/src/components/Button";
 const DESIGN_SPEC_PATH = "components/ids/about/design-spec.md";
 
 const meta: Meta<typeof About> = {
-  title: "Spec Generated/IDS/About",
+  title: "Components/IDS/About",
   component: About,
   parameters: {
     layout: "centered",

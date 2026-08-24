@@ -14,7 +14,7 @@ import { IDS_SPINNER_IMPORTS } from "../../../compiled/lib/angular/ids/spinner/i
 
 /** @type {import("@storybook/angular").Meta<IdsSpinnerComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Spinner",
+  title: "Components/IDS/Spinner",
   component: IdsSpinnerComponent,
   tags: ["autodocs"],
   decorators: [

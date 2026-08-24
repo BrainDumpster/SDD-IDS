@@ -236,7 +236,7 @@ const hostGridBaseArgs: ComponentProps<typeof IdsDataGrid> = {
 };
 
 const meta: Meta<typeof IdsDataGridCompositionStory> = {
-  title: "Spec Generated/IDS/Datagrid",
+  title: "Components/IDS/Datagrid",
   component: IdsDataGridCompositionStory,
   parameters: {
     layout: "fullscreen",

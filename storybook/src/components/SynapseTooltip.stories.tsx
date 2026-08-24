@@ -130,7 +130,7 @@ function TooltipStoryStyles() {
 }
 
 const meta: Meta<typeof SynapseTooltip> = {
-  title: "Spec Generated/Synapse/Tooltip",
+  title: "Components/Synapse/Tooltip",
   component: SynapseTooltip,
   parameters: {
     layout: "centered",

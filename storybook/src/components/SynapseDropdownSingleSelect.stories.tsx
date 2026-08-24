@@ -26,7 +26,7 @@ import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical
 type Size = "small" | "large";
 
 const meta: Meta<typeof SynapseDropdown> = {
-  title: "Spec Generated/Synapse/Dropdown/Single Select",
+  title: "Components/Synapse/Dropdown/Single Select",
   component: SynapseDropdown,
   tags: ["autodocs"],
   parameters: {

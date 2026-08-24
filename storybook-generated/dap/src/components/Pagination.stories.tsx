@@ -42,7 +42,7 @@ function StoryRow({ caption, children }: { caption: string; children: ReactNode 
 }
 
 const meta: Meta<typeof IdsPagination> = {
-  title: "Spec Generated/DAP/Pagination",
+  title: "Components/DAP/Pagination",
   component: IdsPagination,
   parameters: {
     layout: "padded",

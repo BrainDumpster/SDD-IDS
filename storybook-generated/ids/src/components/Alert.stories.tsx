@@ -7,11 +7,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Alert as IdsAlert } from "../../../../storybook/src/components/Alert";
 
 /**
- * Deterministic gate harness only. Canonical Spec Generated stories (composition API,
+ * Deterministic gate harness only. Canonical Components stories (composition API,
  * variant matrix, Angular parity) live in `storybook/src/components/Alert.stories.tsx`.
  */
 const meta: Meta<typeof IdsAlert> = {
-  title: "Spec Generated/IDS/Alert/Overview",
+  title: "Components/IDS/Alert/Overview",
   component: IdsAlert,
   parameters: { layout: "padded", docs: { disable: true } },
 };

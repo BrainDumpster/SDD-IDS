@@ -4,6 +4,7 @@ const THEME_STYLESHEETS = [
   "/components/ids-theme.css",
   "/components/dap-theme.css",
   "/components/synapse-theme.css",
+  "/components/ids-foundations-docs.css",
 ];
 
 function ensureThemeStylesheets() {
@@ -45,7 +46,7 @@ const preview = {
         const partsA = titleA.split("/");
         const partsB = titleB.split("/");
 
-        const rootOrder = ["Spec Generated"];
+        const rootOrder = ["Foundations", "Components"];
         const rootA = rootOrder.indexOf(partsA[0] ?? "");
         const rootB = rootOrder.indexOf(partsB[0] ?? "");
 
@@ -55,7 +56,42 @@ const preview = {
           return rootA - rootB;
         }
 
-        if (partsA[0] === "Spec Generated" && partsB[0] === "Spec Generated") {
+        if (partsA[0] === "Foundations" && partsB[0] === "Foundations") {
+          const foundationsOrder = ["Icons", "Design tokens"];
+          const fa = foundationsOrder.indexOf(partsA[1] ?? "");
+          const fb = foundationsOrder.indexOf(partsB[1] ?? "");
+          if (fa !== fb) {
+            if (fa === -1) return 1;
+            if (fb === -1) return -1;
+            return fa - fb;
+          }
+          if ((partsA[1] ?? "") === "Design tokens" && (partsB[1] ?? "") === "Design tokens") {
+            const nameFrom = (entry) => {
+              if (Array.isArray(entry)) {
+                const [, meta] = entry;
+                return (meta && (meta.name || meta.story)) || "";
+              }
+              const obj = entry || {};
+              return obj.name || "";
+            };
+            const tokenPageOrder = [
+              "Overview",
+              "Modes",
+              "Primitives",
+              "Semantic",
+              "Components",
+            ];
+            const ta = tokenPageOrder.indexOf(nameFrom(a));
+            const tb = tokenPageOrder.indexOf(nameFrom(b));
+            if (ta !== tb) {
+              if (ta === -1) return 1;
+              if (tb === -1) return -1;
+              return ta - tb;
+            }
+          }
+        }
+
+        if (partsA[0] === "Components" && partsB[0] === "Components") {
           const specGroupOrder = ["IDS", "DAP", "Synapse"];
           const groupA = specGroupOrder.indexOf(partsA[1] ?? "");
           const groupB = specGroupOrder.indexOf(partsB[1] ?? "");

@@ -30,7 +30,7 @@ const modalSteps = [
 
 /** @type {import("@storybook/angular").Meta<IdsWizardComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Wizard",
+  title: "Components/IDS/Wizard",
   component: IdsWizardComponent,
   tags: ["autodocs"],
   decorators: [

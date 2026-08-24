@@ -73,7 +73,7 @@ function compositionSlots(options: {
 }
 
 const meta: Meta<typeof IdsTooltip> = {
-  title: "Spec Generated/IDS/Tooltip",
+  title: "Components/IDS/Tooltip",
   component: IdsTooltip,
   parameters: {
     layout: "centered",

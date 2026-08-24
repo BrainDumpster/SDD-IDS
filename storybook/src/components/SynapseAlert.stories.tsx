@@ -84,7 +84,7 @@ const specAccurateArgs: AlertControlArgs = {
 };
 
 const meta = {
-  title: "Spec Generated/Synapse/Alert",
+  title: "Components/Synapse/Alert",
   component: SynapseAlert,
   parameters: {
     layout: "padded",

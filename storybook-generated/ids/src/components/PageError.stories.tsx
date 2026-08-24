@@ -24,7 +24,7 @@ const specAccurateArgs: PageErrorStoryArgs = {
 };
 
 const meta: Meta<PageErrorStoryArgs> = {
-  title: "Spec Generated/IDS/Page Error",
+  title: "Components/IDS/Page Error",
   component: PageError as React.ComponentType<PageErrorStoryArgs>,
   parameters: {
     layout: "centered",

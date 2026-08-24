@@ -17,7 +17,7 @@ import {
 } from "../../../../storybook/src/components/IdsDetailPanel";
 
 const meta: Meta<typeof IdsDetailPanel> = {
-  title: "Spec Generated/IDS/Detail Panel",
+  title: "Components/IDS/Detail Panel",
   component: IdsDetailPanel,
   parameters: {
     layout: "fullscreen",

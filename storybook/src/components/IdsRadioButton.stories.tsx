@@ -4,7 +4,7 @@ import { useState } from "react";
 import { RadioButton } from "./RadioButton";
 
 const meta: Meta<typeof RadioButton> = {
-  title: "Spec Generated/IDS/Radio Button",
+  title: "Components/IDS/Radio Button",
   component: RadioButton,
   argTypes: {
     orientation: { control: "select", options: ["vertical", "horizontal"] },

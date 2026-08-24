@@ -17,7 +17,7 @@ const rowStyle = {
 } as const;
 
 const meta: Meta<typeof SynapseBadge> = {
-  title: "Spec Generated/Synapse/Badge",
+  title: "Components/Synapse/Badge",
   component: SynapseBadge,
   parameters: {
     layout: "centered",

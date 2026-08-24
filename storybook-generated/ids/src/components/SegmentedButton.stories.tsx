@@ -12,7 +12,7 @@ import {
 } from "../../../../storybook/src/components/SegmentedButton.story-definitions";
 
 const meta: Meta<typeof IdsSegmentedButton> = {
-  title: "Spec Generated/IDS/Segmented Button",
+  title: "Components/IDS/Segmented Button",
   component: IdsSegmentedButton,
   tags: ["autodocs"],
   parameters: {

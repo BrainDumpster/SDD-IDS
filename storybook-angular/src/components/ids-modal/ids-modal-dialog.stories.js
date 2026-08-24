@@ -12,7 +12,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsModalComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Modal/Dialog",
+  title: "Components/IDS/Modal/Dialog",
   component: IdsModalComponent,
   tags: ["autodocs"],
   decorators: [

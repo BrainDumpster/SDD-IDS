@@ -19,7 +19,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsCheckboxComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Checkbox",
+  title: "Components/IDS/Checkbox",
   component: IdsCheckboxComponent,
   tags: ["autodocs"],
   decorators: [

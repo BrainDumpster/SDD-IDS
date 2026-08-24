@@ -292,7 +292,7 @@ def main() -> int:
 
             spec_body = context.get("spec", "")
             det_options = DeterministicStorybookOptions(
-                title_prefix=f"Spec Generated/{story_title_system}",
+                title_prefix=f"Components/{story_title_system}",
                 include_state_harness=True,
                 component_prefix=component_prefix,
                 design_system_slug=design_system.lower(),

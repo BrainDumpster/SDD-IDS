@@ -25,7 +25,7 @@ const sampleBody = (label: string) => (
 );
 
 const meta: Meta<typeof IdsDashboard> = {
-  title: "Spec Generated/IDS/Dashboard",
+  title: "Components/IDS/Dashboard",
   component: IdsDashboard,
   parameters: {
     layout: "padded",

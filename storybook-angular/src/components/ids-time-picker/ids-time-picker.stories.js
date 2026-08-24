@@ -17,7 +17,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsTimePickerComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Time Picker",
+  title: "Components/IDS/Time Picker",
   component: IdsTimePickerComponent,
   tags: ["autodocs"],
   decorators: [

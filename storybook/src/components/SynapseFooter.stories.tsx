@@ -31,7 +31,7 @@ const specAccurateArgs: ComponentProps<typeof SynapseFooter> = {
 };
 
 const meta: Meta<typeof SynapseFooter> = {
-  title: "Spec Generated/Synapse/Footer",
+  title: "Components/Synapse/Footer",
   component: SynapseFooter,
   parameters: {
     layout: "fullscreen",

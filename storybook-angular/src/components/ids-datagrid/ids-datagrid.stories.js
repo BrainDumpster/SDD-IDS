@@ -13,7 +13,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsDatagridDemoHostComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Datagrid",
+  title: "Components/IDS/Datagrid",
   component: IdsDatagridDemoHostComponent,
   tags: ["autodocs"],
   decorators: [

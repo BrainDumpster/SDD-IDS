@@ -13,7 +13,7 @@ import {
 const synapseButtonProps = { programme: "synapse" as const, size: "lg" as const };
 
 const meta: Meta<typeof IdsModal> = {
-  title: "Spec Generated/Synapse/Modal",
+  title: "Components/Synapse/Modal",
   component: IdsModal,
   parameters: {
     layout: "centered",

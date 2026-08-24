@@ -17,7 +17,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsSliderComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Slider",
+  title: "Components/IDS/Slider",
   component: IdsSliderComponent,
   tags: ["autodocs"],
   decorators: [

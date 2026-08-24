@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsBadge as IdsBadge } from "../../../../storybook/src/components/IdsBadge";
 
 const meta: Meta<typeof IdsBadge> = {
-  title: "Spec Generated/IDS/Badge",
+  title: "Components/IDS/Badge",
   component: IdsBadge,
   parameters: { layout: "centered" },
   args: {

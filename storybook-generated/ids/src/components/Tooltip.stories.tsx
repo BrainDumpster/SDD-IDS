@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTooltip as IdsTooltip } from "../../../../storybook/src/components/IdsTooltip";
 
 const meta: Meta<typeof IdsTooltip> = {
-  title: "Spec Generated/IDS/Tooltip",
+  title: "Components/IDS/Tooltip",
   component: IdsTooltip,
   parameters: { layout: "centered" },
   args: {

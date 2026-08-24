@@ -15,7 +15,7 @@ import {
 } from "../spec-contracts/synapse-segmented-button.contract";
 
 const meta: Meta<typeof SynapseSegmentedButtons> = {
-  title: "Spec Generated/Synapse/Segmented Button",
+  title: "Components/Synapse/Segmented Button",
   component: SynapseSegmentedButtons,
   parameters: {
     layout: "centered",

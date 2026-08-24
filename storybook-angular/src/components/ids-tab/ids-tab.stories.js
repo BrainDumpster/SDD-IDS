@@ -15,7 +15,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsTabComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Tab",
+  title: "Components/IDS/Tab",
   component: IdsTabComponent,
   tags: ["autodocs"],
   decorators: [

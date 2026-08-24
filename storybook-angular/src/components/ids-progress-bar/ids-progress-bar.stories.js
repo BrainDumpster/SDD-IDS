@@ -20,7 +20,7 @@ import {
 
 /** @type {import("@storybook/angular").Meta<IdsProgressBarComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Progress Bar",
+  title: "Components/IDS/Progress Bar",
   component: IdsProgressBarComponent,
   tags: ["autodocs"],
   decorators: [

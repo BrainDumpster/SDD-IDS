@@ -11,7 +11,7 @@ import { IdsBadgeComponent } from "../../../compiled/lib/angular/ids/badge/ids-b
 
 /** @type {import("@storybook/angular").Meta<IdsBadgeComponent>} */
 const meta = {
-  title: "Spec Generated/IDS/Badge",
+  title: "Components/IDS/Badge",
   component: IdsBadgeComponent,
   tags: ["autodocs"],
   decorators: [
