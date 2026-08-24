@@ -1,4 +1,8 @@
 import "zone.js";
+import {
+  IDS_THEME_STYLESHEETS,
+  idsComponentsUrl,
+} from "../../lib/shared/ids-assets-base.js";
 
 /**
  * Shared sidebar roots live in `storybook-shared/sidebar.js`.
@@ -6,22 +10,16 @@ import "zone.js";
  * `storySort.order` (function closures / imported bindings break index.json).
  */
 
-const THEME_STYLESHEETS = [
-  "/components/ids-theme.css",
-  "/components/dap-theme.css",
-  "/components/synapse-theme.css",
-  "/components/ids-foundations-docs.css",
-];
-
 function ensureThemeStylesheets() {
-  for (const href of THEME_STYLESHEETS) {
-    if (document.querySelector(`link[data-ids-theme="${href}"]`)) {
+  for (const file of IDS_THEME_STYLESHEETS) {
+    const href = idsComponentsUrl(file);
+    if (document.querySelector(`link[data-ids-theme="${file}"]`)) {
       continue;
     }
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
-    link.setAttribute("data-ids-theme", href);
+    link.setAttribute("data-ids-theme", file);
     document.head.appendChild(link);
   }
 }
