@@ -1,4 +1,3 @@
-import { Menu } from "@base-ui-components/react/menu";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import chevDownIcon from "../../../assets/icons/chev-down.svg";
@@ -6,9 +5,9 @@ import shapePlusIcon from "../../../assets/icons/shape-plus.svg";
 import stateAddCircSolidIcon from "../../../assets/icons/state-add-circ-solid.svg";
 import arrowTriDownSolidIcon from "../../../assets/icons/arrow-tri-down-solid.svg";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
-import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
 import { Badge } from "./Badge";
+import { DropdownMenu } from "./DropdownMenu";
 import { IdsButton } from "./IdsButton";
 import { Icon } from "./Icon";
 
@@ -209,44 +208,44 @@ export function Tabs({
           ))}
 
           {hiddenTabs.length > 0 ? (
-            <Menu.Root>
-              <Menu.Trigger
-                className={[
-                  styles.moreTrigger,
-                  overflowLabel ? styles.moreTriggerSelected : "",
-                  variant === "primary"
-                    ? styles.moreTriggerPrimary
-                    : styles.moreTriggerSecondary,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-label="More tabs"
-              >
-                {overflowLabel ?? moreLabel}
-                <img
-                  src={isSynapse ? chevDownIcon : arrowTriDownSolidIcon}
-                  alt=""
-                  className={styles.moreIcon}
-                />
-              </Menu.Trigger>
-              <Menu.Portal>
-                <Menu.Positioner side="bottom" align="end" sideOffset={4}>
-                  <Menu.Popup
-                    className={isSynapse ? synapseMenuStyles.popup : styles.moreMenu}
-                  >
-                    {hiddenTabs.map((tab) => (
-                      <Menu.Item
-                        key={tab.id}
-                        className={isSynapse ? synapseMenuStyles.optionRow : styles.moreItem}
-                        onClick={() => handleHiddenTabSelect(tab.id, tab.label)}
-                      >
-                        {tab.label}
-                      </Menu.Item>
-                    ))}
-                  </Menu.Popup>
-                </Menu.Positioner>
-              </Menu.Portal>
-            </Menu.Root>
+            <DropdownMenu
+              triggerAsChild
+              trigger={
+                <button
+                  type="button"
+                  className={[
+                    styles.moreTrigger,
+                    overflowLabel ? styles.moreTriggerSelected : "",
+                    variant === "primary"
+                      ? styles.moreTriggerPrimary
+                      : styles.moreTriggerSecondary,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  aria-label="More tabs"
+                >
+                  {overflowLabel ?? moreLabel}
+                  <img
+                    src={isSynapse ? chevDownIcon : arrowTriDownSolidIcon}
+                    alt=""
+                    className={styles.moreIcon}
+                  />
+                </button>
+              }
+              items={hiddenTabs.map((tab) => ({
+                id: tab.id,
+                value: tab.id,
+                label: tab.label,
+                selectable: true,
+                onClick: () => handleHiddenTabSelect(tab.id, tab.label),
+              }))}
+              selectionMode="single"
+              selectedValues={[activeTabId]}
+              side="bottom"
+              align="end"
+              sideOffset={4}
+              menuWidth="content"
+            />
           ) : null}
 
           {showAddTab ? (

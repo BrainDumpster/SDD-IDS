@@ -224,3 +224,4 @@ Runtime rules:
 ## Implementation Notes
 - **Caret icon size:** Overflow trigger caret icon (`moreIcon`) is set to `var(--sizing-size-10, 10px)` width and height.
 - **Selected baseline (Storybook reference):** `storybook/src/components/Tabs.module.css` — selected / overflow-selected use `border-bottom: none`; panel has no top border underlay; `.list::after` continues the row baseline. Required so Primary + dark + `surface=transparent` does not show a bottom line under the selected tab.
+- **Overflow menu component:** The `More` dropdown is implemented with the IDS `DropdownMenu` single-select component (`storybook/src/components/DropdownMenu.tsx`) using `triggerAsChild`, so the overflow tab keeps its original tab styling while the popup shares the standard IDS single-select dropdown behavior and visuals.

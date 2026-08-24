@@ -64,6 +64,40 @@ export const SpecAccurateDesign: Story = {
     variant: "secondary",
     items: baseItems,
   },
+  render: (args) => {
+    const [items, setItems] = useState(args.items);
+
+    return (
+      <div
+        style={{
+          width: "60vw",
+          minWidth: 320,
+          maxWidth: 800,
+          resize: "horizontal",
+          overflow: "auto",
+          padding: 16,
+          border: "1px dashed var(--color-border-accessible)",
+        }}
+      >
+        <Tabs
+          {...args}
+          items={items}
+          onAddTab={() => {
+            const nextIndex = items.length + 1;
+            const id = `new-${nextIndex}`;
+            setItems((prev) => [
+              ...prev,
+              {
+                id,
+                label: `Tab ${nextIndex}`,
+                panel: `Dynamic tab content for Tab ${nextIndex}.`,
+              },
+            ]);
+          }}
+        />
+      </div>
+    );
+  },
 };
 
 export const PrimaryVariant: Story = {
