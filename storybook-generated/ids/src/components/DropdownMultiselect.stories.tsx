@@ -20,7 +20,7 @@ const options: Option[] = [
 ];
 
 const meta: Meta<typeof IdsDropdownMultiselect> = {
-  title: "Spec Generated/IDS/Dropdown/Multi Select",
+  title: "Components/IDS/Dropdown/Multi Select",
   component: IdsDropdownMultiselect,
   parameters: { layout: "centered" },
 };
@@ -78,14 +78,7 @@ export const Playground: Story = {
         showSelectAllClearAll
         selectAllChecked={selectAllChecked}
         selectAllIndeterminate={selectAllIndeterminate}
-        onSelectAllClick={() =>
-          setSelected((prev) => {
-            const allSelected = enabled.every((label) => prev.includes(label));
-            return allSelected
-              ? prev.filter((label) => !enabled.includes(label))
-              : Array.from(new Set([...prev, ...enabled]));
-          })
-        }
+        onSelectAllClick={() => setSelected(enabled)}
         onClearAllClick={() => setSelected([])}
         clearAllDisabled={selected.length === 0}
         defaultOpen

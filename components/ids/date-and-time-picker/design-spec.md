@@ -185,3 +185,7 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - Semantic mapping: CSS custom properties with `var(--)` prefix
 - Design source: Figma URL above
 - Component map entry: data/component-figma-map.json → component "Date and Time Picker" (category "Formelements"; node "11067-54547")
+- Time-only control (Timer / Time Picker) runtime spec: `components/ids/time-picker/design-spec.md`
+- React: `lib/react/ids/time-picker/`
+- Angular: `lib/angular/ids/time-picker/`
+- Angular stories: `storybook-angular/src/components/ids-time-picker/`

@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTextBox } from "../../../../storybook/src/components/IdsTextBox";
 
 const meta: Meta<typeof IdsTextBox> = {
-  title: "Spec Generated/IDS/Text Box",
+  title: "Components/IDS/Text Box",
   component: IdsTextBox,
   parameters: { layout: "centered" },
   argTypes: {

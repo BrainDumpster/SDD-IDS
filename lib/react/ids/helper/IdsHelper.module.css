@@ -1,0 +1,53 @@
+/**
+ * IDS Helper / Error message styles — shared across `lib/react/ids/*`.
+ * Selectors: ids-helper, ids-error, ids-helper-text, ids-error-text
+ */
+
+.ids-helper,
+.ids-error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  margin: 0;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.ids-helper {
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-error {
+  color: var(--color-text-alerting-critical-base);
+}
+
+.ids-helper[data-disabled="true"],
+.ids-error[data-disabled="true"] {
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-helper-icon,
+.ids-error-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.ids-helper-icon > *,
+.ids-error-icon > * {
+  width: 16px;
+  height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  display: block;
+}
+
+.ids-helper-text,
+.ids-error-text {
+  min-width: 0;
+}

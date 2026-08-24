@@ -146,8 +146,8 @@ SYNAPSE_BORDER_WIDTH_LEGACY_ALIASES: Dict[str, str] = {
 
 FIGMA_SIZES_COLLECTION_ID = "50960:24167"
 
-# Canonical variable definitions live in IDS Variables Library (not REST-exportable).
-# REST sync uses IDS Design Library, which subscribes to the published library.
+# Canonical variable definitions live in IDS Variables Library (REST `/variables/local`).
+# IDS Design Library is a published consumer; prefer the Variables Library for sync.
 IDS_VARIABLE_LIBRARY_KEY = "r0Ex6TumqcR3HINamsfXCV"
 IDS_REST_EXPORT_FILE_KEY = "0bHk3XhrjFhowgFkz9yLr4"
 
@@ -186,10 +186,18 @@ SYNAPSE_PROGRAMME_LAYOUT_ALIASES: Dict[str, str] = {
     "--chat-input-textarea-max-height": "252px",
 }
 
+# IDS component layout aliases — not Figma globals; square controls by default.
+IDS_LAYOUT_ALIASES: Dict[str, str] = {
+    "--modal-control-radius": "var(--corner-radius-radius-none)",
+    "--text-box-control-radius": "var(--corner-radius-radius-none)",
+    "--text-box-focus-ring-radius": "var(--corner-radius-radius-4)",
+    "--tooltip-control-radius": "var(--corner-radius-radius-none)",
+}
+
 IDS_COLLECTION_PROFILES: Tuple[CollectionSyncProfile, ...] = (
     CollectionSyncProfile("Primitive", mode="single", emit_bucket="primitive", prefer_local=True),
     CollectionSyncProfile(
-        "Tokens",
+        "Color Modes",
         mode="light_dark",
         emit_bucket="semantic",
         overlay=False,
@@ -200,18 +208,19 @@ IDS_COLLECTION_PROFILES: Tuple[CollectionSyncProfile, ...] = (
 
 IDS_CONFIG = ProgrammeThemeConfig(
     programme="ids",
-    figma_file_key=IDS_REST_EXPORT_FILE_KEY,
+    figma_file_key=IDS_VARIABLE_LIBRARY_KEY,
     output_paths=(PROJECT / "components" / "ids-theme.css",),
     figma_label="IDS Variables Library",
     collection_profiles=IDS_COLLECTION_PROFILES,
     css_emit_mode="ids_scoped",
     design_system_slug="ids",
     include_ids_shadow_aliases=True,
-    prefer_path_tokens=True,
+    # Prefer codeSyntax.WEB so Light/Lighter paths that share WEB names stay stable.
+    prefer_path_tokens=False,
     remap_border_width_tokens=True,
     header_extra=(
         f" * Canonical Figma file: IDS Variables Library ({IDS_VARIABLE_LIBRARY_KEY}).",
-        f" * REST export via IDS Design Library ({IDS_REST_EXPORT_FILE_KEY}).",
+        " * Token names from codeSyntax.WEB (path affinity resolves duplicate WEB names).",
         " * Scoped: html/body[data-design-system=\"ids\"] (+ [data-theme=\"dark\"]).",
         " * Import in Storybook/apps with data-design-system=\"ids\" on html/body.",
     ),
@@ -572,6 +581,43 @@ def _token_for_config(v: Dict[str, Any], config: ProgrammeThemeConfig) -> str:
     )
 
 
+_SCALE_SUFFIXES = ("stronger", "lighter", "strong", "light", "base")
+
+
+def _token_scale_suffix(token: str) -> str:
+    t = (token or "").lower()
+    for suffix in _SCALE_SUFFIXES:
+        if t.endswith("-" + suffix):
+            return suffix
+    return t.rsplit("-", 1)[-1] if t else ""
+
+
+def _path_last_segment(path_name: str) -> str:
+    parts = [
+        p.strip().lower().replace(" ", "-")
+        for p in (path_name or "").replace("\\", "/").split("/")
+        if p.strip()
+    ]
+    return parts[-1] if parts else ""
+
+
+def _code_syntax_collision_rank(path_name: str, token: str) -> Tuple[int, int, int, str]:
+    """Lower wins when several Figma vars share the same codeSyntax.WEB token."""
+    last = _path_last_segment(path_name)
+    suffix = _token_scale_suffix(token)
+    exact = 0 if last and last == suffix else 1
+    prefer = {
+        "base": 0,
+        "light": 1,
+        "strong": 1,
+        "lighter": 2,
+        "stronger": 2,
+        "light-alt": 3,
+    }.get(last, 5)
+    depth = (path_name or "").count("/")
+    return (exact, prefer, depth, path_name or "")
+
+
 def _store_light_dark_color(
     acc: Dict[str, Tuple[Optional[str], Optional[str]]],
     token: str,
@@ -579,8 +625,18 @@ def _store_light_dark_color(
     dk: Optional[str],
     *,
     overlay: bool,
+    ranks: Optional[Dict[str, Tuple[int, int, int, str]]] = None,
+    path_name: str = "",
 ) -> None:
+    rank = _code_syntax_collision_rank(path_name, token)
     if not overlay:
+        if ranks is not None:
+            prev_rank = ranks.get(token)
+            if prev_rank is not None and rank >= prev_rank:
+                return
+            ranks[token] = rank
+            acc[token] = (lt, dk)
+            return
         if token not in acc:
             acc[token] = (lt, dk)
         return
@@ -612,6 +668,7 @@ def _merge_profile_light_dark(
     if not lid or not did:
         return 0
     synced = 0
+    color_ranks: Dict[str, Tuple[int, int, int, str]] = {}
     for v in variables.values():
         if not isinstance(v, dict) or v.get("variableCollectionId") != cid:
             continue
@@ -624,8 +681,18 @@ def _merge_profile_light_dark(
             dk = _color_string_for_mode(v, did, vars_by_id)
             if lt is None and dk is None:
                 continue
-            _store_light_dark_color(colors_ld, token, lt, dk, overlay=profile.overlay)
-            synced += 1
+            before = colors_ld.get(token)
+            _store_light_dark_color(
+                colors_ld,
+                token,
+                lt,
+                dk,
+                overlay=profile.overlay,
+                ranks=None if profile.overlay else color_ranks,
+                path_name=v.get("name") or "",
+            )
+            if colors_ld.get(token) != before:
+                synced += 1
         elif rt == "FLOAT":
             fv = _float_for_mode(v, lid, vars_by_id)
             if fv is None:
@@ -929,7 +996,13 @@ def emit_theme_css(
         stat_bits = ", ".join(f"{name}={count}" for name, count in collection_stats.items())
         lines.append(f" * Synced variables: {stat_bits}.")
     lines.append(f" * Last REST sync: {now}")
-    lines.append(" * Strategy: full collection export (COLOR/FLOAT/STRING/BOOLEAN); Figma path → token name.")
+    if config.prefer_path_tokens:
+        lines.append(" * Strategy: full collection export (COLOR/FLOAT/STRING/BOOLEAN); Figma path → token name.")
+    else:
+        lines.append(
+            " * Strategy: full collection export (COLOR/FLOAT/STRING/BOOLEAN); "
+            "codeSyntax.WEB → token name."
+        )
     lines.append(" *")
     lines.append(" * Sync: python3 scripts/sync_programme_themes_from_figma.py")
     lines.append(" *        (or programme-specific sync_*.py)")
@@ -1012,6 +1085,9 @@ def emit_theme_css(
     if config.programme == "synapse":
         lines.append("  /* --- Programme layout aliases (ids-fork; reference Sizes tokens above) --- */")
         _emit_token_block(lines, SYNAPSE_PROGRAMME_LAYOUT_ALIASES)
+    elif config.programme == "ids":
+        lines.append("  /* --- Component layout aliases (programmes override same names) --- */")
+        _emit_token_block(lines, IDS_LAYOUT_ALIASES)
 
     lines.append("}")
     lines.append("")
@@ -1054,6 +1130,10 @@ def emit_theme_css(
     if config.include_ids_shadow_aliases:
         lines.append("  /* --- IDS dropdown shadow aliases (dark) --- */")
         lines.extend(_ids_shadow_alias_lines(shadow_geom))
+
+    if config.programme == "ids":
+        lines.append("  /* --- Component layout aliases (programmes override same names) --- */")
+        _emit_token_block(lines, IDS_LAYOUT_ALIASES)
 
     lines.append("}")
     lines.append("")

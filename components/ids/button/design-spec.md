@@ -260,6 +260,11 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
 
 Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
+| Consumer | Location |
+|---|---|
+| Storybook (Base UI reference) | `storybook/src/components/Button.tsx`, `IdsButton.tsx`, `IdsButton.stories.tsx` |
+| Lib React (no Base UI) | `lib/react/ids/button/` (`IdsButton.tsx`, `IdsButton.module.css`; selectors `ids-button`, …); stories: `storybook/src/components/lib-generated/Button.stories.tsx` |
+
 ## Implementation Notes
 
 **Typography**

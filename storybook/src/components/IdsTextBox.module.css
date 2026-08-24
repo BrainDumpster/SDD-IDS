@@ -137,7 +137,7 @@
 }
 
 .control[data-state="disabled"] .suffixIcon {
-  background-color: var(--color-icon-disabled);
+  background-color: var(--color-icon-gray-disabled);
 }
 
 .helperRow {

@@ -211,5 +211,6 @@ Use this section whenever codegen targets a stack that already ships an **Icon**
 | Figma token/state notes | `accordion.mdx` (extracted matrix aligned to `11067:54535` / `10962:891xx`) |
 | IDS Design Library (canonical colors / examples) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42156-108639&m=dev (`42156:108639`) |
 | Storybook implementation | `storybook/src/components/IdsAccordion.tsx`, `storybook/src/components/IdsAccordion.module.css`, `storybook/src/components/IdsAccordion.stories.tsx` |
+| Lib React implementation (no Base UI) | `lib/react/ids/accordion/` (`IdsAccordion.tsx`, `IdsAccordion.module.css`; selectors `ids-accordion`, `ids-accordion-header`, …); stories: `storybook/src/components/lib-generated/Accordion.stories.tsx` |
 | Shared Icon primitive (Storybook) | `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`) |
 | Runtime story / codegen contract | `storybook/src/spec-contracts/ids-accordion.contract.tsx` (mirrors this spec’s API + anatomy constants; stories import it) |

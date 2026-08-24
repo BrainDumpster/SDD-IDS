@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 300px;
+  width: 100%;
   max-width: 700px;
   min-width: 186px;
   min-height: 40px;
@@ -44,18 +44,13 @@
 .field[data-focus="true"]:not([data-disabled="true"])::after {
   content: "";
   position: absolute;
-  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
-  inset: -4px;
+  inset: -5px;
   border: var(--border-width-border-default) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
 }
 
-/* Menu open: square bottom edge so popup bottom radius meets field (Figma attached dropdown). */
-:global([data-popup-open]) .field {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
+/* Open-state field corners are set on Menu.Trigger in DropdownMenu.module.css. */
 
 .main {
   display: flex;
@@ -88,6 +83,11 @@
   color: var(--color-icon-gray-neutral-base);
   line-height: 0;
   transition: transform 150ms ease;
+}
+
+/* Menu open: caret flips to point up. */
+:global([data-popup-open]) .caretWrap {
+  transform: rotate(180deg);
 }
 
 .field[data-disabled="true"] .caretWrap {

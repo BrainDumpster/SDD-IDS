@@ -21,7 +21,7 @@ Designers own variables in **Figma collections**. The sync script exports **ever
 Configuration lives in `scripts/figma_theme_sync.py`:
 
 - `SYNAPSE_COLLECTION_PROFILES` — Primitive, Color Mode, Tokens, Sizes, Table density
-- `IDS_COLLECTION_PROFILES` — Primitive, Tokens, Sizes
+- `IDS_COLLECTION_PROFILES` — Primitive, Color Modes, Sizes
 
 To add a designer collection: append a `CollectionSyncProfile` and re-run sync.
 
@@ -47,7 +47,7 @@ python3 scripts/sync_programme_themes_from_figma.py --programme synapse --dry-ru
 | Programme | Figma file | Output |
 |-----------|------------|--------|
 | **synapse** | `Td1bnsvRj1PCGs9RVJkIvJ` | `components/synapse-theme.css`, `storybook/src/synapse-theme.css` |
-| **ids** | `0bHk3XhrjFhowgFkz9yLr4` (REST export of Variables Library) | `components/ids-theme.css` (`data-design-system="ids"`) |
+| **ids** | `r0Ex6TumqcR3HINamsfXCV` (IDS Variables Library) | `components/ids-theme.css` (`data-design-system="ids"`) |
 | **dap** | *(none — overlays IDS)* | Review `components/dap-theme.css` after IDS sync |
 
 ## Programme-specific scripts

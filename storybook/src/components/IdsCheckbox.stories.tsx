@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Checkbox } from "./Checkbox";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "Spec Generated/IDS/Checkbox",
+  title: "Components/IDS/Checkbox",
   component: Checkbox,
   argTypes: {
     disabled: { control: "boolean" },
@@ -20,16 +20,16 @@ type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
   args: {
-    label: "Accept terms and conditions",
+    label: "Option",
   },
 };
 
 export const SelectionStatesManual: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-      <Checkbox label="Unchecked" />
-      <Checkbox label="Checked" checked />
-      <Checkbox label="Partial" indeterminate />
+      <Checkbox label="Option" />
+      <Checkbox label="Option" checked />
+      <Checkbox label="Option" indeterminate />
     </div>
   ),
 };

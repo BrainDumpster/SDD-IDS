@@ -1,0 +1,267 @@
+/**
+ * IDS Tag styles — derived from components/ids/tag/design-spec.md
+ * Live Figma: file 0bHk3XhrjFhowgFkz9yLr4, primary node 42012:26686
+ * Theme: components/ids-theme.css
+ *
+ * Selectors: ids-tag, ids-tag-prefix-icon, ids-tag-label, ids-tag-badge,
+ *            ids-tag-editable-field, ids-tag-close, ids-tag-menu-caret
+ */
+
+.ids-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--spacing-space-8);
+  border-width: var(--border-width-border-default, var(--border-width-border-1));
+  border-style: solid;
+  border-color: var(--color-border-gray-neutral-base);
+  border-radius: var(--corner-radius-radius-20);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
+  margin: 0;
+  vertical-align: middle;
+  outline: none;
+}
+
+/* --- Size tracks (Layout & Measurements) --- */
+.ids-tag--small {
+  height: 20px;
+  padding: var(--padding-padding-none, 0) var(--padding-padding-8);
+}
+
+.ids-tag--large {
+  height: 28px;
+  padding: var(--padding-padding-4) var(--padding-padding-12);
+}
+
+/* Dismissible: right padding + label-to-close gap (Layout) */
+.ids-tag--dismissible {
+  padding-right: var(--padding-padding-8);
+  gap: var(--spacing-space-4);
+}
+
+/* --- Type: clickable (Figma 42065:39089 / 39088 / 39090 / 39091) --- */
+.ids-tag--clickable {
+  cursor: pointer;
+  border-color: var(--color-border-brand-base);
+  font-weight: 500;
+}
+
+/* --- Tone: alerting (Figma Alerting tags) --- */
+.ids-tag--tone-informational {
+  background: var(--color-background-alerting-info-base);
+  border-color: var(--color-border-alerting-info-base-white);
+  color: var(--color-text-gray-white);
+}
+
+.ids-tag--tone-success {
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-alerting-success-base-white);
+  color: var(--color-text-gray-white);
+}
+
+.ids-tag--tone-minor {
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-strong-transparent);
+  color: var(--color-text-gray-black);
+}
+
+.ids-tag--tone-major {
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-base-white);
+  color: var(--color-text-gray-black);
+}
+
+.ids-tag--tone-critical {
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-base-white);
+  color: var(--color-text-gray-white);
+}
+
+/* Clickable / selected after tone so interactive chrome wins (Figma clickable set) */
+.ids-tag--clickable:not(.ids-tag--selected):hover:not(.ids-tag--disabled):not([aria-disabled="true"]),
+.ids-tag--clickable:not(.ids-tag--selected)[data-hover]:not(.ids-tag--disabled) {
+  background: var(--color-background-controls-lighter);
+  border-color: var(--color-border-brand-base);
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-tag--selected {
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
+}
+
+.ids-tag--selected:hover:not(.ids-tag--disabled):not([aria-disabled="true"]),
+.ids-tag--selected[data-hover]:not(.ids-tag--disabled) {
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
+}
+
+/* --- Error (non-alerting read-only / editable / badge) --- */
+.ids-tag--error:not(.ids-tag--clickable) {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-alerting-critical-base);
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-tag--error:not(.ids-tag--clickable) .ids-tag-close {
+  color: var(--color-border-alerting-critical-base);
+}
+
+/* --- Disabled --- */
+.ids-tag--disabled,
+.ids-tag[aria-disabled="true"] {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+  pointer-events: none;
+  cursor: default;
+}
+
+.ids-tag--disabled.ids-tag--editable,
+.ids-tag--editable[aria-disabled="true"] {
+  background: var(--color-background-gray-lighter);
+}
+
+.ids-tag--disabled .ids-tag-label,
+.ids-tag[aria-disabled="true"] .ids-tag-label,
+.ids-tag--disabled .ids-tag-close,
+.ids-tag[aria-disabled="true"] .ids-tag-close,
+.ids-tag--disabled .ids-tag-menu-caret,
+.ids-tag[aria-disabled="true"] .ids-tag-menu-caret {
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-tag--disabled .ids-tag-close,
+.ids-tag[aria-disabled="true"] .ids-tag-close {
+  color: var(--color-icon-gray-disabled);
+}
+
+.ids-tag--disabled .ids-tag-badge,
+.ids-tag[aria-disabled="true"] .ids-tag-badge {
+  background: var(--color-static-gray-500);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
+}
+
+/* --- Focus-visible (Layout: 2px gap) --- */
+.ids-tag:focus-visible,
+.ids-tag--focus-visible {
+  outline: var(--border-width-border-default, var(--border-width-border-1)) solid
+    var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+/* --- Slots --- */
+.ids-tag-prefix-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
+  color: inherit;
+}
+
+.ids-tag-label {
+  user-select: none;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: inherit;
+  color: inherit;
+}
+
+.ids-tag-badge {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: var(--sizing-size-18);
+  height: var(--sizing-size-18);
+  padding: 0 var(--padding-padding-4);
+  border-radius: var(--corner-radius-radius-round);
+  border: var(--border-width-border-default, var(--border-width-border-1)) solid
+    var(--color-border-gray-white);
+  background: var(--color-background-alerting-info-base);
+  color: var(--color-text-gray-white);
+  font-size: var(--font-size-body-3);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.ids-tag-editable-field {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 20px;
+  padding: 0 var(--padding-padding-2);
+  border: var(--border-width-border-default, var(--border-width-border-1)) solid transparent;
+  border-radius: var(--corner-radius-radius-2);
+  outline: none;
+  color: inherit;
+}
+
+.ids-tag-editable-field:focus,
+.ids-tag-editable-field:focus-visible,
+.ids-tag--focus-on-text .ids-tag-editable-field {
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-tag-menu-caret {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
+  color: var(--color-icon-gray-neutral-accessible);
+}
+
+.ids-tag-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: var(--sizing-size-18);
+  height: var(--sizing-size-18);
+  margin: 0;
+  padding: var(--padding-padding-4);
+  border: none;
+  border-radius: var(--button-control-radius, var(--corner-radius-radius-2));
+  background: transparent;
+  color: var(--color-icon-gray-neutral-accessible);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.ids-tag-close:hover:not(:disabled) {
+  background: var(--color-background-controls-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.ids-tag-close:active:not(:disabled) {
+  background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.ids-tag-close:focus-visible:not(:disabled) {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: var(--button-focus-ring-offset, 2px);
+}
+
+.ids-tag-close:disabled {
+  color: var(--color-icon-gray-disabled);
+  cursor: default;
+  pointer-events: none;
+}

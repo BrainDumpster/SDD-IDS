@@ -17,8 +17,15 @@ import { IdsDataGridViewModeStoryHost } from "../../../../storybook/src/componen
 import { IdsDataGridDateAndTimeFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateAndTimeFilterStoryHost";
 import { IdsDataGridDateFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridDateFilterStoryHost";
 import { IdsDataGridNumericFilterStoryHost } from "../../../../storybook/src/components/IdsDataGridNumericFilterStoryHost";
+import { IdsDataGridCompositionStory } from "../../../../storybook/src/components/IdsDataGridCompositionStory";
+import {
+  DATAGRID_SPEC_ACCURATE_DEFAULTS,
+  DATAGRID_SPEC_COLUMNS,
+  DATAGRID_SPEC_ROWS,
+  IDS_DATAGRID_DESIGN_SPEC_PATH,
+} from "@component-contracts/ids/datagrid.contract";
 
-const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.md";
+const DESIGN_SPEC_PATH = IDS_DATAGRID_DESIGN_SPEC_PATH;
 
 /** Columns aligned to spec anatomy: sort (`col-sort-*-16`), filter (L-frame + `filterPanel`), settings column is grid-owned. */
 const specColumns: IdsDataGridColumn[] = [
@@ -213,32 +220,31 @@ const specRows: ComponentProps<typeof IdsDataGrid>["rows"] = [
 /**
  * Defaults from `components/ids/datagrid/design-spec.md` (Codegen variant matrix + Figma `37721:112482` container height).
  */
-const specAccurateArgs: ComponentProps<typeof IdsDataGrid> = {
+const specAccurateArgs: ComponentProps<typeof IdsDataGridCompositionStory> = {
+  ...DATAGRID_SPEC_ACCURATE_DEFAULTS,
+  columns: DATAGRID_SPEC_COLUMNS,
+  rows: DATAGRID_SPEC_ROWS,
+  wireDefaultFilters: true,
+};
+
+/** Props-based host base for filter/freeze/treeview demos (aggregate API). */
+const hostGridBaseArgs: ComponentProps<typeof IdsDataGrid> = {
+  ...DATAGRID_SPEC_ACCURATE_DEFAULTS,
   columns: specColumns,
   rows: specRows,
-  viewMode: "table",
-  rowSelection: true,
-  selectionMode: "single",
-  showSingleSelectionRadio: true,
-  withDetailPanel: true,
-  pageSize: 6,
-  readOnly: false,
-  rowVerticalIndicator: true,
-  headerColorAndBorder: true,
-  columnResizeEnabled: true,
   expandableRows: false,
 };
 
-const meta: Meta<typeof IdsDataGrid> = {
-  title: "Spec Generated/IDS/Datagrid",
-  component: IdsDataGrid,
+const meta: Meta<typeof IdsDataGridCompositionStory> = {
+  title: "Components/IDS/Datagrid",
+  component: IdsDataGridCompositionStory,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component: [
           `Spec-driven IDS Datagrid. Source of truth: \`${DESIGN_SPEC_PATH}\`.`,
-          "Primary story uses spec defaults: `headerColorAndBorder` (Figma `colorAndBorder`), `rowVerticalIndicator` (`verticalBlueLine`), `rowSelection` + `selectionMode` + optional `showSingleSelectionRadio` (single mode only) + IDS Pagination footer, `columnResizeEnabled`, portaled L-frame filters (`37721:114635`), header `48px` / row `40px`, `Icon` + `shapeName` for sort/filter/settings.",
+          "Primary story uses **composition API** (`IdsDataGridComposed` + projected columns/rows) with spec defaults: `headerColorAndBorder` (Figma `colorAndBorder`), `rowVerticalIndicator` (`verticalBlueLine`), `rowSelection` + `selectionMode` + optional `showSingleSelectionRadio` (single mode only) + IDS Pagination footer, `columnResizeEnabled`, portaled L-frame filters (`37721:114635`), header `48px` / row `40px`, `Icon` + `shapeName` for sort/filter/settings.",
           "Use Storybook controls: **Selection mode** (`single` | `multiple`); in **single**, **Show single selection radio** toggles the 48px radio column. Row click activates the row / detail panel only — it does not toggle selection controls.",
         ].join(" "),
       },
@@ -272,9 +278,9 @@ const meta: Meta<typeof IdsDataGrid> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof IdsDataGrid>;
+type Story = StoryObj<typeof IdsDataGridCompositionStory>;
 
-function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
+function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGridCompositionStory>) {
   return (
     <div
       style={{
@@ -299,15 +305,22 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsDataGrid>) {
           flexDirection: "column",
         }}
       >
-        <IdsDataGridDefaultStoryHost {...props} numericUnitOptions={DEMO_UNIT_OPTIONS} />
+        <IdsDataGridCompositionStory {...props} />
       </div>
     </div>
   );
 }
 
-/** Canonical reference: Figma Data Grid - Main (`37721:112482`) in a bounded container with spec default props. */
+/** Canonical reference: Figma Data Grid - Main (`37721:112482`) — composition API in a bounded container. */
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
+  render: (args) => <SpecAccurateFrame {...args} />,
+  args: specAccurateArgs,
+};
+
+/** Composition API markup (same defaults as Spec Accurate Design). */
+export const CompositionApi: Story = {
+  name: "Composition API",
   render: (args) => <SpecAccurateFrame {...args} />,
   args: specAccurateArgs,
 };
@@ -338,12 +351,29 @@ export const WithDetailPanel: Story = {
 
 /** Accordion-style expandable rows with inline detail content under each row. */
 export const ExpandableRows: Story = {
-  render: (args) => <SpecAccurateFrame {...args} />,
-  args: {
-    ...specAccurateArgs,
-    withDetailPanel: false,
-    expandableRows: true,
-  },
+  render: () => (
+    <div
+      style={{
+        width: "100%",
+        height: "100dvh",
+        boxSizing: "border-box",
+        padding: "clamp(8px, 2vw, 16px)",
+        background: "var(--color-background-surface-primary)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ flex: 1, minHeight: 0, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <IdsDataGridDefaultStoryHost
+          {...hostGridBaseArgs}
+          withDetailPanel={false}
+          expandableRows
+          numericUnitOptions={DEMO_UNIT_OPTIONS}
+        />
+      </div>
+    </div>
+  ),
 };
 
 const treeDemoColumns: IdsDataGridColumn[] = [
@@ -903,7 +933,7 @@ export const ColumnFreezeTwoSections: Story = {
     </ColumnFreezeStoryFrame>
   ),
   args: {
-    ...specAccurateArgs,
+    ...hostGridBaseArgs,
     columns: twoSectionFreezeColumns,
     rows: twoSectionFreezeRows,
     selectionMode: "multiple",
@@ -932,7 +962,7 @@ export const ColumnFreeze: Story = {
     </ColumnFreezeStoryFrame>
   ),
   args: {
-    ...specAccurateArgs,
+    ...hostGridBaseArgs,
     columns: columnFreezeColumns,
     rows: columnFreezeRows,
     selectionMode: "multiple",

@@ -44,7 +44,7 @@ const specAccurateArgs: ComponentProps<typeof SynapseLeftNav> = {
 };
 
 const meta: Meta<typeof SynapseLeftNav> = {
-  title: "Spec Generated/Synapse/Left Nav",
+  title: "Components/Synapse/Left Nav",
   component: SynapseLeftNav,
   parameters: {
     layout: "fullscreen",

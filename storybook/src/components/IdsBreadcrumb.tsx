@@ -10,8 +10,10 @@ interface BreadcrumbItem {
 interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
   /** Array of breadcrumb items */
   items: BreadcrumbItem[];
-  /** Current page text displayed on the second line */
+  /** Current page text (for two-line variant) */
   currentPage?: string;
+  /** Whether to use two-line layout */
+  twoLines?: boolean;
   /** Whether to truncate with "..." when items exceed maxVisibleItems */
   truncate?: boolean;
   /** Maximum number of items to show before truncating (default: 3) */
@@ -23,6 +25,7 @@ interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
 export function IdsBreadcrumb({
   items,
   currentPage,
+  twoLines = false,
   truncate = false,
   maxVisibleItems = 3,
   showDropdown = false,
@@ -89,7 +92,7 @@ export function IdsBreadcrumb({
                     </span>
                   )}
                 </>
-              ) : (
+              ) : twoLines && (
                 <span className={styles.separator} aria-hidden="true">
                   /
                 </span>
@@ -98,7 +101,7 @@ export function IdsBreadcrumb({
           );
         })}
       </ol>
-      {currentPage && (
+      {twoLines && currentPage && (
         <span className={styles.currentPage} aria-current="page">
           {currentPage}
         </span>

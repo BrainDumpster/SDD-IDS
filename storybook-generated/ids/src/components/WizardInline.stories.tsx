@@ -22,7 +22,7 @@ const baseStepContentStyle = {
 } as const;
 
 const meta: Meta<typeof IdsWizard> = {
-  title: "Spec Generated/IDS/Wizard Inline",
+  title: "Components/IDS/Wizard Inline",
   component: IdsWizard,
   parameters: {
     layout: "fullscreen",

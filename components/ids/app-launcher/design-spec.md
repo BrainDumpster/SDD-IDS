@@ -12,7 +12,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Status | **active** |
 | Version | 1.2.0 |
 | Created | 2026-06-05 |
-| Updated | 2026-07-29 |
+| Updated | 2026-08-17 |
 | Description | Popover app switcher — product tiles in 2-column grid, optional options/footer, masthead or default trigger |
 | Figma file | [IDS Design Library](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library) |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
@@ -24,6 +24,8 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Last verified | 2026-07-28 (impl fixes verified live in Storybook; see **Implementation Notes**) |
 | Theme CSS | `components/ids-theme.css` |
 | Shared implementation | `storybook/src/components/AppLauncher.tsx` (`programme="ids"` default) |
+| Lib React (no Base UI) | `lib/react/ids/app-launcher/` (`IdsAppLauncher` = **`AppLauncher`** root — not `AppLauncherRoot`; anatomy slots `IdsAppLauncherTrigger` …) |
+| Storybook (lib) | `storybook/src/components/lib-generated/AppLauncher.stories.tsx` |
 | Storybook | `storybook-generated/ids/src/components/AppLauncher.stories.tsx` |
 | Programme fork | `components/synapse/app-launcher/design-spec.md` (Synapse deltas) |
 
@@ -48,7 +50,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 
 Deterministic slot order. **3+ products:** column dividers are **separate flex siblings** between tiles so hover/press fill does not cover separators. **2 products (no options):** vertical separator is an **internal** `TileDividerRail` on the **leading** tile in each row (`13231:109518`); **no** external `AppLauncherColumnDivider`.
 
-1. `AppLauncherRoot` — popover root + portal (`@base-ui-components/react/popover` in reference impl)
+1. `AppLauncher` — popover root + portal (not `AppLauncherRoot`; lib: `IdsAppLauncher`)
 2. `AppLauncherTrigger` — `grid-square-9-16` (`16×16`); `default` or `masthead` variant
 3. `AppLauncherSurface` — bordered popover shell (`298px` or `150px` when 1 product)
 4. `ProductRegion` — stacked row groups
@@ -233,9 +235,10 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 | Component | Purpose |
 |---|---|
-| `AppLauncherProductTile` | Standalone tile for state-matrix stories |
+| `AppLauncherProductTile` | Standalone tile for state-matrix stories (`IdsAppLauncherProductTile`) |
 | `AppLauncherColumnDivider` | Vertical separator (`variant: solid \| dotted`) |
 | `AppLauncherRowDivider` | Horizontal row separator |
+| Compound anatomy | `IdsAppLauncher` (= `AppLauncher`) → Trigger → Surface → ProductRegion → ProductRowGroup → RowDivider? → ProductRow → ColumnDivider? → ProductTile → LabelCluster → ProductIcon? / ProductLabel → TileDividerRail? → OptionsRegion? → OptionRow[] → FooterAction? |
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
@@ -253,7 +256,7 @@ Emit slots in **Anatomy** order. Conditional branches (IDS):
 
 Ordered slot list:
 
-1. `AppLauncherRoot`
+1. `AppLauncher`
 2. `AppLauncherTrigger`
 3. `AppLauncherSurface`
 4. `ProductRegion`
@@ -364,6 +367,7 @@ _Updated 2026-07-29._
 | 3 products | `13231:124054` |
 | 4 products | `13231:123908` |
 | 8 products | `13231:123730` |
+| Lib React | `lib/react/ids/app-launcher/` (`IdsAppLauncher` = `AppLauncher`) |
 | Shared implementation | `storybook/src/components/AppLauncher.tsx` |
 | Storybook | `storybook-generated/ids/src/components/AppLauncher.stories.tsx` |
 | Programme fork | `components/synapse/app-launcher/design-spec.md` |

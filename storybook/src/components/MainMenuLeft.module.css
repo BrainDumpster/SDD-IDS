@@ -101,8 +101,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
-  margin-left: calc(-1 * var(--border-width-border-1));
-  margin-right: calc(-1 * var(--border-width-border-1));
 }
 
 /* Synapse “New Chat” — first row in `MainMenuList` (Figma above primaries, inside Menu). */
@@ -180,10 +178,8 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-space-16);
-  border-top: none;
-  border-bottom: none;
-  border-left: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  /* Side chrome is on `.root` only — per-row L/R borders break through the 8px block gap. */
+  border: none;
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -206,6 +202,46 @@
   line-height: var(--font-line-height-line-height-24);
   color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
+}
+
+.linkHost {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.linkHost > a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.linkHost a:focus-visible,
+.linkHost [role="link"]:focus-visible {
+  outline: none;
+}
+
+.collapsed .linkHost .primaryLabel {
+  display: none;
+}
+
+.collapsed .linkHost {
+  justify-content: center;
 }
 
 .actionButton {
@@ -234,16 +270,17 @@
   width: 100%;
 }
 
+.secondarySectionHidden {
+  display: none;
+}
+
 .secondaryRow {
   position: relative;
   z-index: 1;
   box-sizing: border-box;
   width: 100%;
   height: 32px;
-  border-top: none;
-  border-bottom: none;
-  border-left: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border: none;
   background: transparent;
   text-align: left;
   padding: var(--padding-padding-6, 6px) var(--padding-padding-58, 58px);
@@ -282,6 +319,10 @@
   outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: -1px;
   border-radius: var(--corner-radius-radius-4);
+}
+
+.secondaryInteractive.secondaryRowSelected:focus-visible {
+  box-shadow: inset 4px 0 0 0 var(--color-border-brand-strong);
 }
 
 .bottomToggle {
@@ -335,10 +376,11 @@
 
 .focusRing {
   position: absolute;
-  inset: 0 calc(-1 * var(--border-width-border-1));
+  inset: 0;
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .interactive:focus-visible {
@@ -354,10 +396,10 @@
 
 .selectedInset {
   position: absolute;
-  left: calc(-1 * var(--border-width-border-1));
+  left: 0;
   top: 0;
   bottom: 0;
-  width: calc(4px + var(--border-width-border-1));
+  width: 4px;
   background: var(--color-border-brand-strong);
 }
 
@@ -365,7 +407,7 @@
   display: block;
 }
 
-/* IDS default: selected + selected-focus use brand-strong inset. */
+/* IDS default: selected + selected-focus use brand-base inset. */
 .stateSelected .selectedInset {
   background: var(--color-border-brand-strong);
 }

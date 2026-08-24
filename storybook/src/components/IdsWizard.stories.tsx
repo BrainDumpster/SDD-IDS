@@ -10,15 +10,24 @@ import {
   WIZARD_SIZE_OPTIONS,
 } from "../spec-contracts/ids-wizard.contract";
 
-const meta: Meta<typeof IdsWizard> = {
+type WizardStoryArgs = {
+  mode?: "inline" | "modal";
+  size?: "medium" | "large" | "x-large" | "full-screen";
+  title?: string;
+  showCloseButton?: boolean;
+};
+
+const meta: Meta<WizardStoryArgs> = {
   title: "Spec Generated/IDS/Wizard",
-  component: IdsWizard,
   parameters: {
-    controls: { expanded: false },
+    // React nodes in `steps` must stay out of story args — Storybook prettyPrint2
+    // recurses on element fibers → Maximum call stack size exceeded.
+    controls: { disable: true },
+    actions: { disable: true },
     docs: {
       source: { type: "code" },
       description: {
-        component: `Spec-driven IDS Wizard aligned to \`${IDS_WIZARD_DESIGN_SPEC_PATH}\` and Figma node \`12690:246134\`.`,
+        component: `Spec-driven IDS Wizard aligned to \`${IDS_WIZARD_DESIGN_SPEC_PATH}\` and Figma node \`12690:246134\`. Prefer Lib Generated/IDS/Wizard for the design-spec React implementation.`,
       },
     },
   },
@@ -36,7 +45,7 @@ const meta: Meta<typeof IdsWizard> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof IdsWizard>;
+type Story = StoryObj<WizardStoryArgs>;
 
 const baseStepContentStyle = {
   border: "1px solid var(--color-border-brand-base)",
@@ -180,7 +189,10 @@ export const Default: Story = {
     return (
       <div style={{ padding: 24, background: "var(--color-background-surface-primary)", minHeight: 860 }}>
         <IdsWizard
-          {...args}
+          mode={args.mode}
+          size={args.size}
+          title={args.title ?? WIZARD_DEFAULTS.title}
+          showCloseButton={args.showCloseButton}
           steps={steps}
           onCancel={handleCancel}
           onPrevious={handlePrevious}
@@ -202,20 +214,23 @@ export const Modal: Story = {
   },
   render: (args) => {
     const [lastEvent, setLastEvent] = useState("No event");
-    const steps: IdsWizardStep[] = [
-      {
-        id: "m1",
-        label: "Step One",
-        pageTitle: "Modal Step One",
-        content: <div style={baseStepContentStyle}>Simple modal page content.</div>,
-      },
-      {
-        id: "m2",
-        label: "Step Two",
-        pageTitle: "Modal Step Two",
-        content: <div style={baseStepContentStyle}>Simple modal page content.</div>,
-      },
-    ];
+    const steps = useMemo<IdsWizardStep[]>(
+      () => [
+        {
+          id: "m1",
+          label: "Step One",
+          pageTitle: "Modal Step One",
+          content: <div style={baseStepContentStyle}>Simple modal page content.</div>,
+        },
+        {
+          id: "m2",
+          label: "Step Two",
+          pageTitle: "Modal Step Two",
+          content: <div style={baseStepContentStyle}>Simple modal page content.</div>,
+        },
+      ],
+      [],
+    );
 
     const handleCancel = useCallback((evt: { stepCode: string; stepId: string }) => {
       setLastEvent(`Cancel: ${evt.stepCode} (${evt.stepId})`);
@@ -233,7 +248,10 @@ export const Modal: Story = {
     return (
       <div style={{ padding: 24, minHeight: 300 }}>
         <IdsWizard
-          {...args}
+          mode={args.mode}
+          size={args.size}
+          title={args.title ?? WIZARD_DEFAULTS.title}
+          showCloseButton={args.showCloseButton}
           trigger={<Button>Open Wizard</Button>}
           steps={steps}
           onCancel={handleCancel}

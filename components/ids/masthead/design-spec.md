@@ -8,7 +8,7 @@
 | Design system | IDS |
 | Category | Navigation |
 | Status | **active** |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Description | Application header bar with required product name and **optional, host-composed** brand logo, utility actions (`iconsSlot` — search / action icons), App Launcher, and avatar. |
 | Theme CSS | `components/ids-theme.css` |
 | Figma file | [IDS Design Library](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library) |
@@ -16,9 +16,9 @@
 | Component set | `Masthead-Main` (`10130:29493`) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) |
 | Last verified | 2026-06-17 |
-| Reference implementation | `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css` |
-| Storybook path | `storybook-generated/ids/src/components/Masthead.stories.tsx` |
-| Storybook meta title | `Spec Generated/IDS/Masthead` |
+| Reference implementation | `lib/react/ids/masthead` (`Masthead` / `IdsMasthead` — not `MastheadRoot`); `storybook/src/components/Masthead.tsx` |
+| Storybook path | `storybook/src/components/lib-generated/Masthead.stories.tsx`; also `storybook-generated/ids/src/components/Masthead.stories.tsx` |
+| Storybook meta title | `Lib Generated/IDS/Masthead` / `Spec Generated/IDS/Masthead` |
 | Legacy exploration frame | [IDS with variables (exploration)](https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24736&m=dev) (`9054:24736`) — token reference only |
 
 ### Figma component variants (live-verified)
@@ -30,7 +30,21 @@
 | App Shell composed instance | `43478:46181` | in `43478:46307` | Full utility icon cluster + launcher + avatar |
 
 ## Anatomy
-- **MastheadRoot** — full-width header bar (`56px` height), brand background
+
+Root slot is **`Masthead`** (not `MastheadRoot`). Codegen must emit this deterministic child tree; the page shell uses `data-ids="IdsMasthead"` (Ids camelCase).
+
+```text
+Masthead
+  MastheadBrandSlot
+    MastheadLogo?
+    MastheadProductName
+  MastheadActionsRow?                 ← omit when icons / launcher / avatar are all empty
+    MastheadIconsSlot?
+    MastheadAppLauncherSlot?
+    MastheadAvatarSlot?
+```
+
+- **Masthead** — full-width header bar (`56px` height), brand background
 - **MastheadBrandSlot** (left): optional **host-composed** logo + required product name
 - **MastheadActionsRow** (right), fixed **slot order** left → right — **every slot is optional and host-defined**; omit any unused slot (row itself is omitted when all three are empty):
   1. **`iconsSlot`** — composed utility actions (search, action icons, dropdowns, badges — host-defined)
@@ -366,7 +380,7 @@ Emit DOM/framework nodes in this order:
 
 | Order | Slot id | Notes |
 |---:|---|---|
-| 1 | `MastheadRoot` | `<header>` landmark |
+| 1 | `Masthead` | `<header>` landmark |
 | 2 | `MastheadBrandSlot` | logo (optional, host-composed) + product name (required) |
 | 3 | `MastheadActionsRow` | right-aligned flex row — emit only when at least one of slots 4–6 is present |
 | 4 | `MastheadIconsSlot` | `iconsSlot` projection — **optional, host-composed** (search / action icons / …) |
@@ -536,8 +550,9 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 | Exploration token frame (secondary) | `9054:24736` in file `VZJ48bbVYrIynw8DdSukWw` |
 | Verification method | Figma MCP — `get_metadata`, `get_design_context`, `get_variable_defs` |
 | Last live verification | 2026-06-19 |
+| Anatomy root rename | `MastheadRoot` → `Masthead` for codegen compound slots — **2026-08-17** |
 | Design spec path | `components/ids/masthead/design-spec.md` |
 | Component map entry | `data/component-figma-map.json` → component `Masthead` |
-| Storybook implementation | `storybook/src/components/Masthead.tsx`, `storybook/src/components/Masthead.module.css`, `storybook-generated/ids/src/components/Masthead.stories.tsx` |
-| Shared Icon primitive | `storybook/src/components/Icon.tsx` (`config/design_systems/ids.yaml` → `codegen.react.icon_component_module`) |
+| Storybook implementation | `lib/react/ids/masthead`; `storybook/src/components/lib-generated/Masthead.stories.tsx`; also `storybook/src/components/Masthead.tsx` |
+| Shared Icon primitive | `lib/react/ids/icon` (`IdsIcon`); Storybook reference `storybook/src/components/Icon.tsx` |
 | Related pattern | [`components/ids/app-shell/design-spec.md`](../app-shell/design-spec.md) → `headerActions` → `iconsSlot` |

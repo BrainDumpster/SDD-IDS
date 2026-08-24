@@ -19,7 +19,11 @@
 | Verification method | Figma MCP (`get_screenshot`, `get_metadata`, `get_design_context`, `get_variable_defs`) — **2026-07-14** |
 | Nested specs | [`components/ids/card/design-spec.md`](../card/design-spec.md) — **must follow Card Border & divider contract** |
 | Storybook | `storybook-generated/ids/src/components/Dashboard.stories.tsx` — **`Spec Generated/IDS/Dashboard`** |
+| Storybook (Angular) | `storybook-angular/src/components/ids-dashboard/ids-dashboard.stories.js` — **`Spec Generated/IDS/Dashboard`** |
 | Reference implementation | `storybook/src/components/Dashboard.tsx`, `Dashboard.module.css` |
+| Reference implementation (React lib) | `lib/react/ids/dashboard` (`IdsDashboard`, `IdsDashboardGrid`, `IdsDashboardItem`) |
+| Reference implementation (Angular lib) | `lib/angular/ids/dashboard` (`ids-dashboard`, `ids-dashboard-grid`, `ids-dashboard-item`) |
+| Nested Card (Angular lib) | `lib/angular/ids/card` — consumes `--card-border-color` + `IDS_DASHBOARD_CARD_OVERRIDE` |
 | Deterministic generator | `generation/deterministic_storybook/ids/dashboard.py` (registry key `("ids", "dashboard")`) |
 
 ## Anatomy
@@ -124,8 +128,8 @@ On `DashboardRoot` stylesheet:
 
 | Spec concept | Runtime |
 |---|---|
-| `--card-border-color` | `Dashboard.module.css` on `.dashboard` |
-| `showDivider` injection | `Dashboard.tsx` — `cloneElement(card, { showDivider: showDividerInCard })` |
+| `--card-border-color` | React: `Dashboard.module.css` / `IdsDashboard.module.css` on root; Angular: `ids-dashboard.component.scss` on `.IdsDashboard` / `ids-dashboard` |
+| `showDivider` injection | React: `cloneElement(card, { showDivider: showDividerInCard })`; Angular: `IDS_DASHBOARD_CARD_OVERRIDE` → Card `effectiveShowDivider` |
 | Data attribute | `data-show-divider-in-card="true"|"false"` on root (QA) |
 
 ## Tokens
@@ -290,3 +294,7 @@ No Dashboard-owned assets. Nested Card icons / kebab follow Card design-spec.
 - Component map entry: `data/component-figma-map.json` → `"Dashboard"`
 - Nested Card: IDS Design Library Card nodes per Card Source Mapping
 - Cross-spec lock: [`card/design-spec.md`](../card/design-spec.md) → **Border & divider contract**
+- Runtime contract (React lib): `lib/react/ids/dashboard/`
+- Runtime contract (Angular lib): `lib/angular/ids/dashboard/`
+- Nested Card runtime (Angular): `lib/angular/ids/card/`
+- Storybook Angular: `storybook-angular/src/components/ids-dashboard/`

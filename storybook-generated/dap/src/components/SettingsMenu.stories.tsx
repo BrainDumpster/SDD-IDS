@@ -17,7 +17,7 @@ const sampleItems = [
 ];
 
 const meta: Meta<typeof DAPSettingsMenu> = {
-  title: "Spec Generated/DAP/Settings Menu",
+  title: "Components/DAP/Settings Menu",
   component: DAPSettingsMenu,
   parameters: { layout: "padded" },
 };

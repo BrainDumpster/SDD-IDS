@@ -1,0 +1,9 @@
+@if (dropdown.isOpen && !dropdown.disabled) {
+  <div
+    class="ids-dropdown-button__menu"
+    [id]="menuId"
+    role="menu"
+  >
+    <ng-content select="ids-dropdown-button-menu-item" />
+  </div>
+}

@@ -148,7 +148,7 @@ function FieldLabel({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Spec Generated/IDS/Dropdown/Combo Box",
+  title: "Components/IDS/Dropdown/Combo Box",
   component: DropdownMenu,
   parameters: {
     // Top-aligned (not vertically centered) so the open menu sits high on the
@@ -260,7 +260,7 @@ export const MultiSelectContractManual: Story = {
     ];
     const [selected, setSelected] = useState<string[]>(options.map((o) => o.label));
     const [searchQuery, setSearchQuery] = useState("");
-    const [showSelectedExpanded, setShowSelectedExpanded] = useState(false);
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
 
     // Single source of truth: update the selection state.
     const applySelection = (next: string[]) => {
@@ -344,7 +344,13 @@ export const MultiSelectContractManual: Story = {
           defaultOpen
         />
         <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
-          Resize the dashed box → the field clamps 186–700px; the menu grows to the widest option (up to 700, then truncates). Toggle Show/Hide Selected, dismiss tags, Select All toggles off when all visible are selected.
+          Choose one or more products
+        </div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
+          <strong>onSelection (csv):</strong> {selectionEvent.csv || "(empty)"}
+        </div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)", whiteSpace: "pre-wrap" }}>
+          <strong>onSelection (items):</strong> {JSON.stringify(selectionEvent.items)}
         </div>
 
       </div>
@@ -365,9 +371,66 @@ export const MultiSelectLongOption: Story = {
       { id: "o3", label: "Compute & Networking" },
       { id: "o4", label: "Security & Compliance" },
     ];
-    const [selected, setSelected] = useState<string[]>(options.map((o) => o.label));
-    const [searchQuery, setSearchQuery] = useState("");
-    const [showSelectedExpanded, setShowSelectedExpanded] = useState(false);
+
+    return (
+      <div style={{ width: 360, display: "grid", gap: 8 }}>
+        <DropdownMenu
+          selectionMode="single"
+          selectedValues={["Storage"]}
+          trigger={<ComboTrigger value="Storage" disabled />}
+          items={items}
+          disabled
+          showSearch
+        />
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
+          Component is disabled (no expand + disabled cursor)
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ErrorState: Story = {
+  render: () => {
+    const items = [
+      { id: "1", value: "Storage", label: "Storage", selectable: true },
+      { id: "2", value: "Compute", label: "Compute", selectable: true },
+    ];
+
+    return (
+      <div style={{ width: 360, display: "grid", gap: 8 }}>
+        <DropdownMenu
+          selectionMode="single"
+          trigger={<ComboTrigger placeholder="-Type or Select-" error />}
+          items={items}
+          showSearch
+        />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--spacing-space-8)",
+            color: "var(--color-text-alerting-critical-base)",
+            fontSize: "var(--font-size-body-2)",
+          }}
+        >
+          <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
+          Error message
+        </div>
+      </div>
+    );
+  },
+};
+
+export const MultiSelectShowSelectedPanel: Story = {
+  render: () => {
+    const options = Array.from({ length: 8 }, (_, i) => ({
+      id: `opt-${i + 1}`,
+      label: `Option ${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string[]>(["Option 1", "Option 2", "Option 4", "Option 6"]);
+    const [searchQuery, setSearchQuery] = useState("opt");
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
 
     const applySelection = (next: string[]) => {
       setSelected(next);
@@ -441,8 +504,8 @@ export const MultiSelectLongOption: Story = {
           onShowSelectedPanelClear={() => applySelection([])}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
-          The 360px field is narrower than the menu; the menu grows to the widest option and truncates at 700px. The selected long tag also truncates. Toggle Show/Hide Selected, dismiss tags, Select All toggles off when all visible are selected.
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
+          Toggle Show/Hide Selected; dismiss tags individually; search clear appears when query is non-empty.
         </div>
       </div>
     );

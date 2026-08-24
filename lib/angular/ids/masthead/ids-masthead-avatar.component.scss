@@ -1,0 +1,42 @@
+.ids-masthead-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Spec / React: 11px vertical — not --padding-padding-12 (12px). */
+  padding: 11px var(--padding-padding-8);
+  border: none;
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.ids-masthead-avatar:hover {
+  background-color: var(--color-background-masthead-strong);
+}
+
+.ids-masthead-avatar:active:not(:disabled),
+.ids-masthead-avatar[aria-pressed="true"],
+.ids-masthead-avatar[aria-expanded="true"] {
+  background-color: var(--color-background-masthead-stronger);
+}
+
+.ids-masthead-avatar[aria-expanded="true"]:hover {
+  background-color: var(--color-background-masthead-strong);
+}
+
+.ids-masthead-avatar:focus-visible {
+  outline: var(--border-width-border-default) dashed var(--color-border-gray-white);
+  outline-offset: -1px;
+  background-color: var(--color-background-masthead-base);
+}
+
+/* Chip visuals live on `ids-avatar`; keep button chrome only here. */
+.ids-masthead-avatar ids-avatar,
+.ids-masthead-avatar .ids-avatar-host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}

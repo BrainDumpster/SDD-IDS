@@ -44,13 +44,15 @@
 
 ## Anatomy
 
+Root slot is **`WhatsNew`** (compound alias; not `WhatsNewRoot`). DOM selectors use **Ids camelCase** (`data-ids="IdsWhatsNew"`, class `IdsWhatsNew`) — not Base UI `data-slot="WhatsNew"` / kebab `ids-whats-new`. Nested Modal and Dropdown keep their own `data-ids` (`ids-modal-surface`, `ids-dropdown-single-select`, …).
+
 ### Modal stack (runtime — authoritative)
 
 Three stacked IDS **Modal** layers (`IdsModal`). **Do not** replace the list body in-place.
 
 | Layer | When visible | Header title | Body height | Footer close dismisses |
 |---|---|---|---|---|
-| **Main (`WhatsNewRoot`)** | `open=true` | `title` (default `What's New`) | list (flex) | entire pattern |
+| **Main (`WhatsNew`)** | `open=true` | `title` (default `What's New`) | list (flex) | entire pattern |
 | **Carousel (`WhatsNewCarouselModal`)** | Thumbnail click | `section.title` | **up to 523px** (`.WhatsNew-Element-Content` `27437:44146`; flex remainder) | carousel only |
 | **Single preview (`WhatsNewSinglePreviewModal`)** | `popout-double` in carousel | `section.title` | **up to 523px** (Preview Single `27437:44163`; flex remainder) | single preview only |
 
@@ -63,12 +65,12 @@ Hosts may supply content via **(A) data props** (`sections[]`) or **(B) child co
 
 #### Root
 
-- **`WhatsNewRoot`** — main IDS **Modal** (`IdsModal`, `layer=main`); `open` default `true`; owns carousel + single-preview stack state, `dontShowAgain`, filter (when uncontrolled).
+- **`WhatsNew`** — main IDS **Modal** (`IdsModal`, `layer=main`); `open` default `true`; owns carousel + single-preview stack state, `dontShowAgain`, filter (when uncontrolled).
 
 #### Main list modal (deterministic child order)
 
 ```
-WhatsNewRoot
+WhatsNew
 ├── WhatsNewHeader                    (Figma header row — not in carousel)
 │   ├── WhatsNewTitle                 (Header 5; default "What's New")
 │   └── WhatsNewCloseButton           (shape-x 16×16)
@@ -135,12 +137,12 @@ WhatsNewSinglePreviewModal
 
 ### Main modal slots (summary)
 
-- `WhatsNewRoot` — main IDS **Modal** (`IdsModal`); **`open` defaults to `true`**
+- `WhatsNew` — main IDS **Modal** (`IdsModal`); **`open` defaults to `true`**
   - Shell: `Modal-Main` border + elevation
   - `WhatsNewHeader` — title row + close (always main copy)
     - `WhatsNewTitle` — **Header 5** (`What's New`)
     - `WhatsNewCloseButton` — shared **`Icon`** (`shape-x`, **`variant="img"`**, **`16×16`**)
-  - `WhatsNewSummary` — **Body 2** intro (`padding-bottom: 16px`); separate row below header (Figma `summary` **`27437:44104`**)
+  - `WhatsNewSummary` — **Body 2** intro (`padding-bottom: 16px`); separate row below header (Figma `summary` **`27437:44104`*
   - `WhatsNewBody` — list only; **only `WhatsNewSectionsScroll` scrolls vertically**
     - `WhatsNewVersionFilterRow` — **Version** + **Filter**; `border-bottom: 1px solid var(--color-border-gray-neutral-base)`
     - `WhatsNewSectionsScroll` → `WhatsNewSection` × *n*
@@ -410,7 +412,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 | Model | Role | Entry |
 |---|---|---|
-| **B — Child components (canonical)** | **Primary public API** for codegen and product hosts | `<WhatsNewRoot>` + `WhatsNewSection` / `WhatsNewThumbnail` / `WhatsNewDescription` / `WhatsNewImages` / `WhatsNewImage` |
+| **B — Child components (canonical)** | **Primary public API** for codegen and product hosts | `<WhatsNew>` + `WhatsNewSection` / `WhatsNewThumbnail` / `WhatsNewDescription` / `WhatsNewImages` / `WhatsNewImage` |
 | **A — Data props (convenience)** | CMS/JSON demos, Storybook shortcuts only | `sections?: WhatsNewSection[]` on root |
 
 **Codegen rule:** Implement and document **Model B** as the exported compound API (`IdsWhatsNew.Section`, `.Thumbnail`, `.Description`, `.Images`, `.Image`, …). Model A may exist as an internal normalizer or optional convenience wrapper; generated usage examples and tests must use child composition, not `sections[]`.
@@ -427,11 +429,11 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ### Child component API (composition model B)
 
-Framework names may vary (`WhatsNew.Section`, `ids-whats-new-section`, etc.); **slot semantics are fixed**:
+Framework names may vary (`WhatsNew.Section`, `IdsWhatsNewSection`, etc.); **slot semantics are fixed**. DOM identity is Ids camelCase (`data-ids="IdsWhatsNewSection"`), not kebab `ids-whats-new-section` or Base UI `data-slot`.
 
 ```typescript
 // --- Main shell ---
-interface WhatsNewRootProps {
+interface WhatsNewProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   dontShowAgain?: boolean;
@@ -509,7 +511,7 @@ interface WhatsNewImageProps {
 ### JSX composition example (model B)
 
 ```tsx
-<WhatsNewRoot open onOpenChange={setOpen} versionNumber="1.11.11.1">
+<WhatsNew open onOpenChange={setOpen} versionNumber="1.11.11.1">
   <WhatsNewHeader>
     <WhatsNewTitle>What's New</WhatsNewTitle>
     <WhatsNewCloseButton />
@@ -546,7 +548,7 @@ interface WhatsNewImageProps {
   </WhatsNewBody>
 
   <WhatsNewFooter />
-</WhatsNewRoot>
+</WhatsNew>
 ```
 
 `WhatsNewCarouselModal` / `WhatsNewSinglePreviewModal` are **internal** — hosts do not mount them; root opens them from thumbnail / expand interactions.
@@ -661,7 +663,7 @@ Exported compound components (names may be prefixed per framework, e.g. `IdsWhat
 
 | Export | Role |
 |---|---|
-| `WhatsNewRoot` / `IdsWhatsNew` | Main dialog + stack state |
+| `WhatsNew` / `IdsWhatsNew` | Main dialog + stack state |
 | `WhatsNewSection` | Repeatable list row |
 | `WhatsNewThumbnail` | List tile (`200×112.5`); opens carousel |
 | `WhatsNewSectionHeader` | Bookmark + title row |
@@ -673,7 +675,7 @@ Exported compound components (names may be prefixed per framework, e.g. `IdsWhat
 | `WhatsNewImage` | Single carousel slide (`src` or `children`) |
 | `WhatsNewHeader`, `WhatsNewTitle`, `WhatsNewSummary`, `WhatsNewBody`, `WhatsNewSectionsScroll`, `WhatsNewFooter` | Optional shell slots; root props may substitute defaults |
 
-Reference implementation: `storybook/src/components/IdsWhatsNew.tsx` + `IdsWhatsNew.compose.ts` (child walker).
+Reference implementation: `lib/react/ids/whats-new/IdsWhatsNew.tsx` (root is `WhatsNew`, not `WhatsNewRoot`). Selectors are Ids camelCase (`data-ids="IdsWhatsNew"`, `IdsWhatsNewHeader`, …).
 
 ### Deterministic structure
 
@@ -681,7 +683,7 @@ Reference implementation: `storybook/src/components/IdsWhatsNew.tsx` + `IdsWhats
 
 **Main (list):**
 
-1. `WhatsNewRoot`
+1. `WhatsNew`
 2. `WhatsNewHeader` → `WhatsNewTitle` + `WhatsNewCloseButton`
 3. `WhatsNewSummary`
 4. `WhatsNewBody` → `WhatsNewVersionFilterRow` (`WhatsNewVersion?` + `WhatsNewFilter`) → `WhatsNewSectionsScroll` → `WhatsNewSection[]`
@@ -783,6 +785,7 @@ Resolve from `assets/icons/<slug>.svg` via project `Icon` component. Do **not** 
 - [ ] Icons: `photos` `32×32`; `popout-window-arrow` hover (brand arrow only); `popout-double` expand (brand frame only); `chev-left`/`chev-right` nav
 - [ ] Strip trailing `32×103` viewport overlay (`27437:44208`) on overflow only; gradient via overflow vertical tokens + `corner-radius-radius-none`
 - [ ] Semantic tokens only; slot geometry cites live Figma nodes
+- [ ] Root slot is `WhatsNew` — not `WhatsNewRoot`. Selectors are Ids camelCase (`data-ids="IdsWhatsNew"`, `IdsWhatsNewHeader`, …) not Base UI `data-slot` / kebab `ids-whats-new`
 - [ ] **Canonical compound API exported** (`WhatsNewSection`, `WhatsNewThumbnail`, `WhatsNewDescription`, `WhatsNewImages`, `WhatsNewImage`)
 - [ ] Generated examples / Storybook primary story use **child composition**, not `sections[]`
 - [ ] `WhatsNewThumbnail` / `WhatsNewDescription` / `WhatsNewImage` slots wired for custom `children` overrides
@@ -797,6 +800,6 @@ Resolve from `assets/icons/<slug>.svg` via project `Icon` component. Do **not** 
 | Elements | `27437:44190` (list content), `27437:44198` (preview content), `27437:44182` (section header), `27437:44220` (filter), `27437:44168` (thumbnail states) |
 | Map entry | `data/component-figma-map.json` → `Whats New` |
 | Design spec path | `components/ids/whats-new/design-spec.md` |
-| Reference implementation | `storybook/src/components/IdsWhatsNew.tsx` (uses `storybook/src/components/IdsModal.tsx`) |
+| Reference implementation | `lib/react/ids/whats-new/IdsWhatsNew.tsx` (slots + `IdsModal` host); Storybook reference `storybook/src/components/IdsWhatsNew.tsx` |
 | Contract mirror | `storybook/src/spec-contracts/ids-whats-new.contract.ts` |
 | Verification | Figma MCP — session **2026-07-08** |

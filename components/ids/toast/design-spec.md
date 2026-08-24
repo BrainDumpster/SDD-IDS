@@ -11,21 +11,63 @@
 - Examples URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42903-139689&m=dev
 - Base URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=39484-7432&m=dev
 ## Anatomy
-Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
+Figma-verified slot order (examples frame `42903:139689`; representative instances `42903:139523` without View Details, `42903:139528` with View Details):
+
+1. `ToastViewport` — stack/queue host (`aria-live="polite"`, `aria-atomic="false"`)
+2. `ToastItem` (Figma layer `Toast`) — single notification root
+3. `Content` (Figma layer `Content`) — status icon + message group
+4. `IconContainer` (Figma layer `Icon Container`) — `16×16` status icon slot with `padding-block: var(--padding-padding-2)`
+5. `StatusIcon` (Figma layer `.Alerting icons`) — type-mapped `shapeName` glyph at `16×16`
+6. `Message` — body-2 notification text
+7. `ActionContainer` (Figma layer `Action Container`) — trailing actions
+8. `ViewDetailsAction?` (Figma layer `Link` when present) — optional View Details control
+9. `CloseAction?` (Figma layer `Close Icon`; runtime: IDS tertiary icon-only `Button` with `shape-x`) — optional dismiss
+
+### Slot hierarchy
+- `ToastViewport`
+  - repeated `ToastItem`
+    - `Content`
+      - `IconContainer` → `StatusIcon`
+      - `Message`
+    - `ActionContainer`
+      - `ViewDetailsAction?`
+      - `CloseAction?`
+
+Angular selectors (reference implementation):
+
+```
+ids-toast-viewport
+  ids-toast-item
+    ids-toast-icon-container
+    ids-toast-message
+    ids-toast-view-details-action
+    ids-toast-close-action
+```
 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
 - Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime width is container-driven.
 - Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-gray-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
-  - `ContentGroup` (status icon + message) with `padding-top: var(--padding-padding-2)`
-  - `ActionGroup` (optional view details button + close)
+  - `Content` (status icon + message) with `padding-top: var(--padding-padding-2)`
+  - `ActionContainer` (optional view details + close)
 - Content row: horizontal layout with icon/message gap exactly `8px`.
 - Action row: horizontal layout with view details/close gap exactly `var(--spacing-space-4)` (4px) when view details exists.
-- Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, contentGroup, and iconWrap).
+- Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, `Content`, and `IconContainer`).
 - Status icon slot: fixed `16x16` container with `padding-block: var(--padding-padding-2)` and `16x16` rendered icon (no scaling above slot size).
 - Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
 - View Details action: IDS small tertiary button with `View Details` text, uses IDS Button component `sm` size/padding, text color `var(--color-text-gray-white)`, matching close button hover/active colors.
+
+### Slot geometry (Figma-verified)
+
+| Slot | Property | Value | Evidence |
+|---|---|---|---|
+| `ToastItem` root | width (sample) | `516px` without View Details; `617px` with View Details | `get_metadata` `42903:139523` / `42903:139528` |
+| `ToastItem` root | height | `48px` | `get_metadata` `42903:139523` |
+| `ToastItem` root | `border-radius` | `var(--toast-control-radius)` → `var(--corner-radius-radius-2)` / `2px` | `get_design_context` `42903:139523` (`rounded-[2px]`); alias in `components/ids-theme.css` |
+| `ToastItem` root | inset border | `box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-white)` | `get_variable_defs` `42903:139523` (`var(--color-border-white)`); Layout inner-border rule |
+| `IconContainer` / `StatusIcon` | size | `16×16` | `get_metadata` / `get_design_context` Icon Container |
+| `CloseAction` glyph | size | `12×12` (`shape-x`); control shell `24×24` | Figma Close Icon `12×12`; Implementation Notes Button shell |
 ## Tokens
 
 ### Layout aliases (theme-resolvable)
@@ -68,20 +110,29 @@ Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolve
 - `Escape` dismisses focused toast item.
 ## Composition & API (runtime)
 
-### `ToastItem` (single notification)
-- `type`: `info | critical | major-warning | minor-warning | success` (default `info`).
-- `message`: string (required).
-- `duration`: number, default `8000` (host-configurable timeout input).
-- `closable`: boolean, default `true`.
-- `link`: optional structured view details object (see view details contract below).
-- `onClose`: emitted with item id/reason.
-- `onTimeout`: emitted when timer dismisses.
+Canonical API is **viewport + projected `ToastItem` children** (not an aggregate-only `items[]` list). Item slots are projected in Anatomy order. Item-level props remain on `ToastItem` when a slot is omitted (fallback chrome).
+
+Contract mirror: `component-contracts/ids/toast.contract.ts`.
 
 ### `ToastViewport` (stack + queue owner)
 - `position`: `top-left | top-center | top-right | bottom-left | bottom-center | bottom-right` (default `top-right`).
 - `maxVisible`: number (recommended default `3`).
 - `queueStrategy`: FIFO.
-- `items`: controlled list OR internal queue adapter.
+
+### `ToastItem` (single notification)
+- `id`: optional string included in close/timeout payloads.
+- `type`: `info | critical | major-warning | minor-warning | success` (default `info`).
+- `message`: string (required).
+- `duration`: number, default `8000`. `0` disables auto-dismiss. Invalid (`< 0` or NaN) → `8000`.
+- `closable`: boolean, default `true`.
+- `link`: optional structured view details object (see view details contract below).
+- `role`: `status` (default) or `alert`.
+- `className`: optional extra class on the item root.
+- `onClose`: emitted with `{ id?, reason }` (`close-click | timeout | programmatic`).
+- `onTimeout`: emitted with `{ id? }` when the timer dismisses.
+
+### Child-order diagram
+`ToastViewport` → repeated `ToastItem` → `IconContainer` → `Message` → optional `ViewDetailsAction` → optional `CloseAction`.
 
 Queue/stack behavior contract:
 1. New item is appended to queue.
@@ -105,9 +156,11 @@ Resolution rules:
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 ### Deterministic structure
-- `ToastViewport` -> repeated `ToastItem` -> `Content` + `ActionContainer`.
-- `Content` always renders icon + message.
-- `ActionContainer` renders optional `ViewDetailsAction`, then optional `CloseAction`.
+- `ToastViewport` -> repeated `ToastItem` -> `IconContainer` + `Message` + optional `ViewDetailsAction` + optional `CloseAction`.
+- `IconContainer` always renders the status icon for the resolved `type`.
+- `Message` renders projected text, or `message` when the slot is empty.
+- `ViewDetailsAction` renders when `link` is present (or the slot is projected with a label).
+- `CloseAction` renders when `closable` is true.
 
 ### Variant matrix
 - Supported types: `info`, `critical`, `major-warning`, `minor-warning`, `success`.
@@ -149,12 +202,20 @@ Resolution rules:
 - [ ] Layout uses `var(--toast-control-radius)` on toast root, not hardcoded px.
 - [ ] No hardcoded style values in generated code where token exists.
 ## Implementation Notes
+- **React / Angular parity:** React (`lib/react/ids/toast`) inlines Content / IconContainer / Message / ViewDetails / Close. Angular exposes the same slots as projected children (`ids-toast-icon-container`, `ids-toast-message`, `ids-toast-view-details-action`, `ids-toast-close-action`) and also supports React’s viewport `items[]` FIFO list. Shared helpers: `cx` (`lib/angular/shared/utils/cx.ts`), toast resolve functions (`ids-toast.utils.ts`). Escape dismiss reason is `close-click`. Item root border is `var(--color-border-gray-white)`; type tokens color the status icon. `routerLink` without `href` renders a tertiary button (same as React).
 - **Close button fix**: Replaced the bare close icon with the IDS `Button` component in `tertiary`/`iconOnly` mode, using `shape-x` rendered as a mask and sized to the fixed 24x24 Button token with `Padding/padding-6` on all sides.
 - **Status icon border fix (2025-05-25)**: Added 1px solid #FFFFFF border to all status icons (info-circ-solid, status-critical-square-solid, status-error-diamond-solid, status-warn-tri-solid, status-ok-circ-solid) in the base layer as specified in design spec.
 - **Toast border inside container fix (2025-05-25)**: Changed toast root border from outer border to inner border using CSS pseudo-element (::before) to ensure border is inside the container width, not outside.
 
 ## Source Mapping
 - Figma examples: `42903:139689` (toast variants with/without view details).
+- Representative instances: `42903:139523` (info, no View Details), `42903:139528` (info, with View Details).
 - Figma icon base: `39484:7432` (alerting icon family).
 - Active IDS map file: `data/component-figma-map.json`.
 - Suggested map alignment for Toast: example node `42903:139689`, base icon node `39484:7432`.
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`).
+- Last live verification: 2026-08-11 (session).
+- Runtime contract: `component-contracts/ids/toast.contract.ts`.
+- Angular reference implementation: `lib/angular/ids/toast/`.
+- React reference implementation: `lib/react/ids/toast/`.
+- Angular Storybook: `storybook-angular/src/components/ids-toast/` (does not replace existing React stories).

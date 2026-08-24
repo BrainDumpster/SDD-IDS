@@ -9,7 +9,7 @@ import { IdsScrollBar as IdsScrollBar } from "../../../../storybook/src/componen
 const DESIGN_SPEC_PATH = "components/ids/scroll-bar/design-spec.md";
 
 const meta: Meta<typeof IdsScrollBar> = {
-  title: "Spec Generated/IDS/Scroll Bar",
+  title: "Components/IDS/Scroll Bar",
   component: IdsScrollBar,
   parameters: {
     docs: {

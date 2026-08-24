@@ -12,7 +12,7 @@
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
 - Verified at: 2026-06-18
 - Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
-- Reference implementation: `storybook/src/components/RadioButton.tsx` (shared IDS baseline). Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
+- Reference implementation: Angular composition (`storybook-angular/src/components/ids-radio-button/`, `IDS_RADIO_BUTTON_IMPORTS`). React aggregate wrapper `storybook/src/components/RadioButton.tsx` maps `options[]` → items for legacy Storybook only. Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
 ## Anatomy
 - **groupRoot** (optional): semantic grouping wrapper for radio collections.
 - **root**: one radio row item (control + label).
@@ -91,28 +91,43 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - `Space`: select focused radio.
 - Disabled radios are skipped by selection changes and cannot be activated.
 ## Composition & API (runtime)
+Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts/ids/radio-button.contract.ts`.
 
-### Aggregate component (`RadioButton` — `storybook/src/components/RadioButton.tsx`)
+**Preferred pattern:** projected children inside a group wrapper — not an `options[]` prop.
+
+```
+RadioButtonGroup [name, value?, defaultValue?, disabled?, orientation?, id?]
+  RadioButton [value, label, disabled?, error?, helperText?, simulatedState?]
+  RadioButton …
+```
+
+Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`storybook-angular`, port 6007). Each `ids-radio-button` must be projected inside `ids-radio-button-group`.
+
+### Group (`RadioButtonGroup` / `groupRoot`)
 | Prop | Required | Behavior |
 |---|---|---|
 | `name` | Yes | Shared group id for single-selection behavior. |
-| `options` | Yes | Array of option objects (see below). |
-| `value` | No | Controlled selected value (string matching one option `value`). |
+| `value` | No | Controlled selected value (string matching one child `value`). |
 | `defaultValue` | No | Initial selected value when uncontrolled. |
 | `onChange(value)` | No | Fires with the new value when selection changes. |
-| `disabled` | No | When true, disables the entire group (merged with per-option `disabled`). |
+| `disabled` | No | When true, disables the entire group (merged with per-item `disabled`). |
 | `orientation` | No | `vertical` (default) or `horizontal`. |
 | `id` | No | Optional id prefix for assistive text ids. |
 
-### Option object (`options[]` items)
-| Field | Required | Behavior |
+Outputs (group): `onChange(value)` / `valueChange`.
+
+### Item (`RadioButton` / `root`)
+| Prop | Required | Behavior |
 |---|---|---|
 | `value` | Yes | Unique value within the group. |
 | `label` | Yes | Visible label for the option row. |
-| `disabled` | No | Disables this option only. |
+| `disabled` | No | Disables this option only (merged with group `disabled`). |
 | `error` | No | Error state: ring border shifts to `var(--color-border-gray-neutral-strong)`; label color unchanged; assistive text turns critical with icon. |
 | `helperText` | No | Helper or error line under the option row. |
 | `simulatedState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` for static matrices; not a substitute for real `:hover` / `:focus-visible` in production. |
+
+### Legacy aggregate (React Storybook only)
+`RadioButton` with `options[]` in `storybook/src/components/RadioButton.tsx` is a **convenience wrapper** that expands to the same group/item anatomy. New framework ports must use composition; do not add new `options[]`-first APIs.
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 - `groupRoot` (optional)
@@ -166,6 +181,9 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Primary extraction source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26737&m=dev`
 - Component/state matrix source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26730&m=dev`
 - Additional state validation board: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14225&m=dev`
+- Lib React implementation (no Base UI): `lib/react/ids/radio-button/` (`IdsRadioGroup`, `IdsRadioButton`, `IdsRadioLabel`; selectors `ids-radio-*`); stories: `storybook/src/components/lib-generated/RadioButton.stories.tsx`
+- Runtime story / codegen contract: `component-contracts/ids/radio-button.contract.ts`
+- Angular composition reference: `storybook-angular/src/components/ids-radio-button/` (`IDS_RADIO_BUTTON_IMPORTS`)
 
 ---
 

@@ -11,13 +11,24 @@
 - Spec status: Production-ready blueprint for framework-agnostic codegen
 ## Anatomy
 Deterministic slot order:
-1. `root` (label wrapper / control container)
-2. `input` (native checkbox input; visually hidden but focusable)
-3. `switch` (interactive visual switch rail)
-4. `track` (background rail)
-5. `thumb` (movable knob)
-6. `label` (optional visible text)
-7. `assistiveText` (optional helper/description, if product uses it)
+1. `root` (label wrapper / control container) — Angular: `ids-toggle-switch`
+2. `input` (native checkbox input; visually hidden but focusable) — Angular: `ids-toggle-switch-input`
+3. `switch` (interactive visual switch rail; implementation wrapper around track + thumb, not a public selector)
+4. `track` (background rail) — Angular: `ids-toggle-switch-track`
+5. `thumb` (movable knob) — Angular: `ids-toggle-switch-thumb`
+6. `label` (optional visible text) — Angular: `ids-toggle-switch-label`
+7. `assistiveText` (optional helper/description, if product uses it) — Angular: `ids-toggle-switch-assistive-text`
+
+Preferred projected-child order (Angular):
+
+```
+ids-toggle-switch
+  ids-toggle-switch-input
+  ids-toggle-switch-track
+  ids-toggle-switch-thumb
+  ids-toggle-switch-label
+  ids-toggle-switch-assistive-text
+```
 ## Layout & Measurements
 - Track width: `32px` (fixed visual body size)
 - Track height: `16px` (fixed visual body size)
@@ -88,17 +99,45 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Press state can reuse default state visuals unless product introduces explicit press token overrides.
 - Thumb transition must animate position and rail color change with a short duration (suggested `120ms-200ms`, ease-out).
 ## Composition & API (runtime)
-Required props:
-- `checked?: boolean` (controlled value)
-- `defaultChecked?: boolean` (uncontrolled initial value)
-- `onCheckedChange?: (checked: boolean) => void`
-- `disabled?: boolean` (default `false`)
-- `label?: string` (optional visible label)
-- `id?: string` (for label association)
-- `name?: string` (form integration)
-- `value?: string` (form integration)
-- `aria-label?: string` (required when visible label is absent)
-- `aria-describedby?: string` (optional helper text association)
+Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts/ids/toggle-switch.contract.ts`.
+
+**Preferred pattern:** projected children inside the root — not an aggregate `options[]` / `items[]` prop.
+
+```
+ToggleSwitch [checked?, defaultChecked?, disabled?, label?, id?, name?, value?, className?, aria-label?, aria-describedby?]
+  ToggleSwitchInput
+  ToggleSwitchTrack
+  ToggleSwitchThumb
+  ToggleSwitchLabel
+  ToggleSwitchAssistiveText
+```
+
+Angular reference selectors: `ids-toggle-switch` → `ids-toggle-switch-input` → `ids-toggle-switch-track` → `ids-toggle-switch-thumb` → `ids-toggle-switch-label` → `ids-toggle-switch-assistive-text` (`lib/angular/ids/toggle-switch/`, Storybook `storybook-angular`, port 6007). React reference: `storybook/src/components/ToggleSwitch.tsx` (single-control convenience wrapper).
+
+### Root (`ToggleSwitch` / `root`)
+| Prop / Input | Required | Behavior |
+|---|---|---|
+| `checked` | No (controlled) | Controlled on/off value. |
+| `defaultChecked` | No (uncontrolled) | Initial on/off value when `checked` is absent. Default `false`. |
+| `disabled` | No | Blocks pointer and keyboard toggles. Default `false`. |
+| `label` | No | Optional visible label when the label slot is omitted. |
+| `id` | No | Native input id / label association. |
+| `name` | No | Native form integration. |
+| `value` | No | Native form integration. |
+| `className` | No | Optional extra class on the root host. |
+| `aria-label` / `ariaLabel` | Required when visible label is absent | Accessible name. |
+| `aria-describedby` / `ariaDescribedBy` | No | Optional helper text association (merged with assistive-text slot id when that slot is projected). |
+
+Outputs (root): `onCheckedChange(checked)` (Angular: `(onCheckedChange)`).
+
+### Slots
+| Slot | Required | Behavior |
+|---|---|---|
+| `input` / `ids-toggle-switch-input` | Yes (canonical) | Native `input[type="checkbox"]`, visually hidden, still focusable. Root renders a fallback input when the slot is omitted. |
+| `track` / `ids-toggle-switch-track` | Yes (canonical) | Visual rail (`32x16`). Root renders a fallback track when omitted. |
+| `thumb` / `ids-toggle-switch-thumb` | Yes (canonical) | Visual knob (`16x16`), translated `16px` when checked. Root renders a fallback thumb when omitted. |
+| `label` / `ids-toggle-switch-label` | No | Visible associated text. If omitted, root `label` string is used when provided. |
+| `assistiveText` / `ids-toggle-switch-assistive-text` | No | Optional helper/description; associated via `aria-describedby`. |
 
 Behavioral requirements:
 - Support both controlled and uncontrolled patterns.
@@ -106,6 +145,15 @@ Behavioral requirements:
 - If `checked` is absent, internal state is allowed using `defaultChecked`.
 - Disabled state blocks pointer and keyboard toggles and emits no change events.
 ## Codegen Contract (Framework-Agnostic Blueprint)
+### Deterministic structure
+- `root` (`ids-toggle-switch`)
+  - `input` (`ids-toggle-switch-input`)
+  - `switch` (implementation wrapper for focus-ring geometry around the `32x16` body)
+    - `track` (`ids-toggle-switch-track`)
+    - `thumb` (`ids-toggle-switch-thumb`)
+  - optional `label` (`ids-toggle-switch-label`)
+  - optional `assistiveText` (`ids-toggle-switch-assistive-text`)
+
 Deterministic rendering contract:
 1. Render native checkbox input for accessibility and form interoperability.
 2. Bind visual `switch/track/thumb` to input state (`checked`, `disabled`, hover, focus-visible).
@@ -164,3 +212,21 @@ Validation checklist (pass/fail):
 - Primary extraction node (normalized): `42848:100536`
 - Supplemental annotation matrix node (labels only): `30632:149854`
 - Evidence used: Figma MCP `get_variable_defs` on `42848:100536` (dark matrix) + `8505:14389` (component set / light), and state-label annotations from `30632:149854`.
+- Runtime story / codegen contract: `component-contracts/ids/toggle-switch.contract.ts`
+- Angular composition reference: `lib/angular/ids/toggle-switch/` (`IDS_TOGGLE_SWITCH_IMPORTS`)
+- Angular Storybook: `storybook-angular/src/components/ids-toggle-switch/`
+- React convenience reference: `storybook/src/components/ToggleSwitch.tsx`
+
+---
+
+## Implementation Notes
+
+**Layout & structure**
+- **Switch body**: `32px × 16px` (`box-sizing: border-box`); focus ring uses `inset: -3px` around that body (`38px × 22px`).
+- **Thumb**: `16px × 16px`, `box-sizing: border-box`; checked position via `transform: translateX(16px)` (not layout reflow).
+- **Track / thumb radius**: `999px`.
+- **Label gap**: `var(--spacing-space-8)` between switch body and label.
+- **Label line-height**: `16px` in component sample rows.
+- **Motion**: thumb position and rail color `160ms` `ease-out` (within spec `120ms–200ms` ease-out).
+- **Angular host**: `ids-toggle-switch` provides context; `ids-toggle-switch-track` / `ids-toggle-switch-thumb` use `display: contents` so geometry lives on `__track` / `__thumb` inside the `switch` wrapper.
+- **Disabled cascade**: root `disabled` blocks input activation and change emission; no per-slot disabled prop.
