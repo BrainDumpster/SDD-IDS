@@ -5,7 +5,7 @@ import { IdsButton } from "./IdsButton";
 import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof Overlay> = {
-  title: "Spec Generated/Synapse/Overlay",
+  title: "Components/Synapse/Overlay",
   component: Overlay,
   argTypes: {
     width: { control: "text" },

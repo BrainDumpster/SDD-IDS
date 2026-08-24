@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsSpinner as IdsSpinner } from "../../../../storybook/src/components/IdsSpinner";
 
 const meta: Meta<typeof IdsSpinner> = {
-  title: "Spec Generated/IDS/Spinner",
+  title: "Components/IDS/Spinner",
   component: IdsSpinner,
   argTypes: {
     size: { control: "select", options: ["sm", "md", "lg"] },

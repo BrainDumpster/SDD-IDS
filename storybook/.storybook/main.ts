@@ -39,6 +39,8 @@ function warnOnNewSpecGeneratedStories(): Plugin {
 const config: StorybookConfig = {
   // Absolute globs keep Vite importer keys aligned with the story index (avoids
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
+  // Note: `Tab.stories.tsx` under storybook-generated is disabled
+  // (`Tab.stories.tsx.disabled`) — hand `IdsTabs.stories.tsx` owns those story IDs.
   stories: [
     path.join(storybookPackageRoot, "src/**/*.stories.@(ts|tsx)"),
     path.join(repoRoot, "storybook-generated/ids/src/**/*.stories.@(ts|tsx)"),
@@ -56,6 +58,7 @@ const config: StorybookConfig = {
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {
+          "@component-contracts": path.join(repoRoot, "component-contracts"),
           react: reactRoot,
           "react-dom": reactDomRoot,
           "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),
@@ -70,6 +73,7 @@ const config: StorybookConfig = {
           "react-dom",
           "react/jsx-runtime",
           "react/jsx-dev-runtime",
+          "@base-ui-components/react/accordion",
           "@base-ui-components/react/popover",
           "@base-ui-components/react/progress",
           "@base-ui-components/react/toggle-group",

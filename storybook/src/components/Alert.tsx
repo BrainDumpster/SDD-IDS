@@ -1,6 +1,15 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { parseAlertSlots, type ParsedAlertSlots } from "@component-contracts/ids/alert.react-bridge";
 import { Icon } from "./Icon";
 import styles from "./Alert.module.css";
+
+export {
+  AlertAction,
+  AlertItem,
+  AlertLink,
+  AlertMessage,
+  AlertTitle,
+} from "@component-contracts/ids/alert.react-bridge";
 
 export type AlertDisplay = "global" | "inline";
 
@@ -26,7 +35,8 @@ export interface AlertCarouselProps {
 }
 
 export interface AlertBaseProps {
-  message: string;
+  message?: string;
+  children?: ReactNode;
   linkLabel?: string;
   linkHref?: string;
   onLinkClick?: () => void;
@@ -69,28 +79,43 @@ const inlineSeverityToIcon: Record<AlertInlineSeverity, string> = {
 
 export function Alert(props: AlertProps) {
   const [dismissed, setDismissed] = useState(false);
+  const slots = parseAlertSlots(props.children);
 
   if (dismissed) return null;
 
   if (props.display === "global") {
-    return <AlertGlobalView {...props} onInternalDismiss={() => setDismissed(true)} />;
+    return (
+      <AlertGlobalView
+        {...props}
+        slots={slots}
+        onInternalDismiss={() => setDismissed(true)}
+      />
+    );
   }
 
-  return <AlertInlineView {...props} onInternalDismiss={() => setDismissed(true)} />;
+  return (
+    <AlertInlineView
+      {...props}
+      slots={slots}
+      onInternalDismiss={() => setDismissed(true)}
+    />
+  );
 }
 
 function AlertGlobalView(
   props: Extract<AlertProps, { display: "global" }> & {
+    slots: ParsedAlertSlots;
     onInternalDismiss: () => void;
   }
 ) {
   const {
     severity = "critical",
-    message,
-    linkLabel,
-    linkHref,
+    message: messageProp,
+    slots,
+    linkLabel: linkLabelProp,
+    linkHref: linkHrefProp,
     onLinkClick,
-    actionLabel,
+    actionLabel: actionLabelProp,
     onAction,
     dismissible,
     onDismiss,
@@ -98,10 +123,18 @@ function AlertGlobalView(
     onInternalDismiss,
   } = props;
 
+  const messageNode = slots.message || messageProp || slots.messageText;
+  const linkLabel = slots.linkLabel || linkLabelProp;
+  const linkHref = slots.linkHref || linkHrefProp;
+  const actionLabel = slots.actionLabel || actionLabelProp;
+
   const showAction = Boolean(actionLabel);
   const showLink = Boolean(linkLabel);
   const showCarousel = Boolean(carousel);
-  const showDismiss = (dismissible ?? true) && (severity !== "critical" || (showCarousel && !showAction));
+  const allowedDismiss = dismissible ?? true;
+  const showDismiss =
+    allowedDismiss &&
+    (severity !== "critical" || (showCarousel && !showAction));
   const counterText =
     showCarousel && carousel
       ? `${Math.max(1, carousel.currentItem)} of ${Math.max(1, carousel.totalItems)}`
@@ -123,7 +156,7 @@ function AlertGlobalView(
             aria-label="Previous alert"
             onClick={carousel.onPrevious}
           >
-            <Icon shapeName="chev-left-16" variant="img" className={styles.globalCarouselChevron} style={{ width: 12, height: 12 }} />
+            <Icon shapeName="chev-left-16" variant="img" size={12} className={styles.globalCarouselChevron} />
           </button>
           <span className={styles.globalCarouselCount}>{counterText}</span>
           <button
@@ -132,7 +165,7 @@ function AlertGlobalView(
             aria-label="Next alert"
             onClick={carousel.onNext}
           >
-            <Icon shapeName="chev-right-16" variant="img" className={styles.globalCarouselChevron} style={{ width: 12, height: 12 }} />
+            <Icon shapeName="chev-right-16" variant="img" size={12} className={styles.globalCarouselChevron} />
           </button>
         </div>
       ) : null}
@@ -147,7 +180,7 @@ function AlertGlobalView(
           />
         </div>
         <p className={styles.globalMessage}>
-          {message}
+          {messageNode}
           {showLink ? " " : null}
           {showLink ? (
             linkHref ? (
@@ -179,7 +212,12 @@ function AlertGlobalView(
               onDismiss?.();
             }}
           >
-            <Icon shapeName="shape-x" variant="img" className={styles.globalDismissIcon} style={{ width: 12, height: 12 }} />
+            <Icon
+              shapeName="shape-x"
+              variant="img"
+              size={12}
+              className={styles.globalDismissIcon}
+            />
           </button>
         ) : null}
       </div>
@@ -189,28 +227,37 @@ function AlertGlobalView(
 
 function AlertInlineView(
   props: Extract<AlertProps, { display: "inline" }> & {
+    slots: ParsedAlertSlots;
     onInternalDismiss: () => void;
   }
 ) {
   const {
     severity = "informational",
-    message,
-    title,
+    message: messageProp,
+    slots,
+    title: titleProp,
     density = "compact",
-    linkLabel,
-    linkHref,
+    linkLabel: linkLabelProp,
+    linkHref: linkHrefProp,
     onLinkClick,
-    actionLabel,
+    actionLabel: actionLabelProp,
     onAction,
     dismissible,
     onDismiss,
     onInternalDismiss,
   } = props;
 
+  const messageNode = slots.message || messageProp || slots.messageText;
+  const title = slots.title || titleProp;
+  const linkLabel = slots.linkLabel || linkLabelProp;
+  const linkHref = slots.linkHref || linkHrefProp;
+  const actionLabel = slots.actionLabel || actionLabelProp;
+
   const showTitle = density === "detailed" && Boolean(title);
   const showLink = Boolean(linkLabel);
   const showAction = Boolean(actionLabel);
-  const showDismiss = (dismissible ?? true) && severity !== "critical";
+  const allowedDismiss = dismissible ?? true;
+  const showDismiss = allowedDismiss && severity !== "critical";
 
   const densityClass =
     density === "detailed" ? styles.inlineDensityDetailed : styles.inlineDensityCompact;
@@ -248,7 +295,7 @@ function AlertInlineView(
             </div>
           ) : null}
           <p className={styles.inlineMessage}>
-            {message}
+            {messageNode}
             {showLink ? " " : null}
             {showLink ? (
               linkHref ? (
@@ -288,7 +335,7 @@ function AlertInlineView(
               }}
               aria-label="Dismiss alert"
             >
-              <Icon shapeName="shape-x" variant="img" className={styles.inlineCloseIcon} style={{ width: 12, height: 12 }} />
+              <Icon shapeName="shape-x" variant="img" size={12} />
             </button>
           ) : null}
         </div>

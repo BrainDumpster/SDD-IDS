@@ -72,7 +72,7 @@ const cardHostStyle = {
 };
 
 const meta: Meta<typeof IdsCard> = {
-  title: "Spec Generated/IDS/Card",
+  title: "Components/IDS/Card",
   component: IdsCard,
   parameters: {
     layout: "centered",

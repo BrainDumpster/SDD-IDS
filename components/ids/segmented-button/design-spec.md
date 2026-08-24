@@ -28,10 +28,12 @@
   - **Low res:** `No` in source set (treat as standard-density reference).
 - **Usage (from Figma description):** Segmented control / view switcher; mutually exclusive selection.
 ## Anatomy
-- **root:** outer grouping container with border, inner padding, horizontal flex layout, and gap between segment cells.
-- **segment** (one per option): interactive cell; exactly one segment is **selected** in the default single-select pattern.
-- **segmentLabel** (Text type): centered label text (`Body 2`).
-- **segmentIcon** (Icon type): centered icon **defined by the consumer** — either a **string slug** resolved against `assets/icons/<slug>.svg` or a **framework icon slot** (custom SVG/component/image). Figma’s list/tree/grid icons are **reference** implementations, not an exhaustive allowed list.
+- **groupRoot (`ids-segmented-buttons` / `SegmentedButtons`):** outer grouping container with border, inner padding, horizontal flex layout, and gap between segment cells. Props: `type`, `selected` / `defaultSelected`, `disabled`, `ariaLabel`.
+- **segment** (one per projected child): interactive cell; exactly one segment is **selected** in the default single-select pattern.
+- **segmentText (`ids-segmented-text` / `SegmentedText`):** text option — `value`, `label`, optional `ariaLabel`, `title`.
+- **segmentIcon (`ids-segmented-icon` / `SegmentedIcon`):** icon option — `value`, `shape` (icon slug), `ariaLabel`, optional `title`, `color`; renders via shared **`Icon`** (`shapeName={shape}`).
+- **segmentLabel** (Text type): centered label text (`Body 2`) — content of `segmentText`.
+- **segmentIconGlyph** (Icon type): centered icon glyph inside `segmentIcon`; `shape` slug → `assets/icons/<slug>.svg` via **`Icon`**, or optional `color` override.
 - **segmentBorder (logical):** per-segment uses a **1px solid transparent** border in default, hover, press, and selected (non-focus) states so layout does not shift when focus applies `var(--color-border-brand-base)`. **Do not** use `var(--color-border-brand-transparent-brand)` for this invisible edge in implementations that consume **Synapse/IDS dark** token maps: that token can resolve to a **visible** blue in dark mode; only **`:focus-visible`** (or equivalent) may switch the segment border color to `var(--color-border-brand-base)`.
 ## Layout & Measurements
 - **Root** (`SegmentedButton-Main`, Figma `8218:13149`)
@@ -175,9 +177,56 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Selection model:** default is **single-select** (like a coordinated radio group). Multi-select is **out of scope** unless a separate Figma component and matrix are provided.
 ## Composition & API (runtime)
 
-### Segment definition (framework-agnostic)
+### Composition (canonical Storybook / reference implementations)
 
-Each segment is a **`SegmentedButtonSegment`** object:
+Prefer **group + projected children** over aggregate `items[]`:
+
+```
+ids-segmented-buttons / SegmentedButtons [type, selected?, defaultSelected?, disabled?, ariaLabel?]
+  ids-segmented-text / SegmentedText [value, label, ariaLabel?, title?]     (when type="text")
+  ids-segmented-icon / SegmentedIcon [value, shape, ariaLabel, title?, color?]   (when type="icon")
+```
+
+**Contract mirror:** `component-contracts/ids/segmented-button.contract.ts`
+
+#### Group (`ids-segmented-buttons` / `SegmentedButtons`)
+
+| Prop / slot | Required | Behavior |
+|---|---|---|
+| `type` | Yes | `text` \| `icon` — must match Figma Type (counts differ per type). |
+| `selected` | controlled | Selected segment `value` (`string` \| `number`); coerced to string at runtime. |
+| `defaultSelected` | No | Uncontrolled initial selection. |
+| `onSelectedChange` / `selectedChange` | No | Emits newly selected `value` (string). |
+| `onChange` / `change` | No | Emits `value` plus **`meta`** (`{ type: "text"; label }` \| `{ type: "icon"; ariaLabel }`). |
+| `disabled` | No | Disables entire group. |
+| `ariaLabel` / `aria-labelledby` | Recommended | Root accessible name for the radiogroup. |
+
+#### Item — text (`ids-segmented-text` / `SegmentedText`)
+
+| Prop | Required | Behavior |
+|---|---|---|
+| `value` | Yes | Stable id; unique within group; equals `selected` when this segment is selected. |
+| `label` | Yes | Visible label (`Body 2`). |
+| `ariaLabel` | No | Accessible name; defaults to `label`. |
+| `title` | No | Native tooltip. |
+| `disabled` | No | Per-segment disable (merged with group `disabled`). |
+| `simulatedState` | No | Storybook / QA only: `hover` \| `press` \| `focus-visible`. |
+
+#### Item — icon (`ids-segmented-icon` / `SegmentedIcon`)
+
+| Prop | Required | Behavior |
+|---|---|---|
+| `value` | Yes | Stable id; unique within group. |
+| `shape` | Yes | Icon slug → `assets/icons/<shape>.svg`; rendered via **`Icon`** (`shapeName`). |
+| `ariaLabel` | Yes | Accessible name for icon-only segment. |
+| `title` | No | Native tooltip; defaults to `ariaLabel`. |
+| `color` | No | Optional CSS color on segment surface; state tokens apply when omitted. |
+| `disabled` | No | Per-segment disable. |
+| `simulatedState` | No | Storybook / QA only. |
+
+### Aggregate API (deprecated convenience)
+
+Each segment may also be described as a **`SegmentedButtonSegment`** object for aggregate `items[]` props (legacy `SegmentedButton` React component):
 
 | Field | Type | Required when | Description |
 |---|---|---|---|
@@ -266,10 +315,10 @@ Discriminate on `type`: ensures text rows carry `label`, icon rows carry `icon` 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 ### Deterministic structure
-1. `root` (group container)
-2. `segment[]` (in `items` order)
+1. `groupRoot` (`ids-segmented-buttons` / `SegmentedButtons`)
+2. `segmentText[]` **or** `segmentIcon[]` (projected children in visual order; mutually exclusive by `type`)
    - `segmentSurface` (hit target + visuals)
-   - optional `segmentLabel` **or** `segmentIcon` (mutually exclusive by `type`)
+   - `segmentLabel` (`segmentText`) **or** `segmentIconGlyph` (`segmentIcon` + `Icon`)
 
 ### Variant matrix
 - **Type × count:** `(text × 2..5)` ∪ `(icon × 2..3)`.
@@ -362,7 +411,10 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - **Icon height reference:** `8218:13156` (`Type=Icon, # Options=2`) — **39px** CSS `border-box` (Figma layer **70×37**); `42113:67622` (`# Options=3`) — **106×39** Dev Mode / layer **104×37**
 - **Component map:** `data/component-figma-map.json` → **Segmented Button** (`figmaUrl`, `fileKey`, `nodeId`, `textOptionNodeId`, `iconOptionNodeId`)
 - **Nested referenced in Dev Mode output:** `.Segemented Button Text` (`9015:20992`), `.SegementedButton-Element-OptionIcon` (`10148:29576`), `.SegementedButton-Element-Icons` (`10148:29563`)
-- **Storybook implementation:** `storybook/src/components/SegmentedButton.tsx`, `storybook/src/components/SegmentedButton.module.css`, `storybook/src/components/SegmentedButton.stories.tsx`
+- **Storybook implementation (React composition):** `storybook/src/components/SegmentedButtonComposition.tsx` (`SegmentedButtons`, `SegmentedText`, `SegmentedIcon`), `SegmentedButton.module.css`
+- **Storybook implementation (React aggregate — deprecated):** `storybook/src/components/SegmentedButton.tsx`
+- **Storybook implementation (Angular composition):** `storybook-angular/src/components/ids-segmented-button/` (`ids-segmented-buttons`, `ids-segmented-text`, `ids-segmented-icon`)
+- **Runtime contract:** `component-contracts/ids/segmented-button.contract.ts`
 - **Shared Icon primitive (Storybook):** `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`)
 - **Codegen Icon module (IDS React):** `config/design_systems/ids.yaml` → `codegen.react.icon_component_module`
 - **Extraction method:** Figma MCP on `42113:67348`, `42113:67622`, `8218:13149`, `8218:13150`, `8218:13156`, `9015:20992`, `10148:29576`, `10148:29585`, `11925:236070` (validated 2026-04-20; **state matrix 2026-06-15**; **icon variant geometry 2026-06-24** — text `8218:13150`: **34px** outer / **28px** segment row; icon `42113:67622`: **39px** CSS `border-box` (layer **37px**) / **33px** content row / **32px** cell width / **100px** content width (3 options); root **1px** `border-accessible`, **2px** `padding-2`, **2px** inter-segment gap; segment **8px** horizontal padding, **9.5px** vertical auto-layout; glyph **16×14**, no icon stroke).

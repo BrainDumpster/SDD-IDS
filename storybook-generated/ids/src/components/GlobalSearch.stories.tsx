@@ -766,7 +766,7 @@ function GlobalSearch({
 }
 
 const meta: Meta<typeof GlobalSearch> = {
-  title: "Spec Generated/IDS/Global Search",
+  title: "Components/IDS/Global Search",
   component: GlobalSearch,
   parameters: {
     layout: "centered",

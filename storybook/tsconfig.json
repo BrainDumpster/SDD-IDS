@@ -13,7 +13,10 @@
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "paths": {
+      "@component-contracts/*": ["../component-contracts/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "../component-contracts"]
 }

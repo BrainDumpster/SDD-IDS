@@ -11,6 +11,9 @@ import {
   SYNAPSE_PAGINATION_MAIN_NODE_ID,
   SYNAPSE_PAGINATION_SPEC_ACCURATE_NODE_ID,
 } from "../../../../storybook/src/spec-contracts/synapse-pagination.contract";
+import {
+  PAGINATION_DROPDOWN_STATES,
+} from "../../../../storybook/src/spec-contracts/ids-pagination.contract";
 
 const frameStyle = { padding: 20, maxWidth: 960 } as const;
 const stackStyle = { ...frameStyle, display: "grid", gap: 20 } as const;
@@ -49,7 +52,7 @@ function StoryRow({ caption, children }: { caption: string; children: ReactNode 
 }
 
 const meta: Meta<typeof SynapsePagination> = {
-  title: "Spec Generated/Synapse/Pagination",
+  title: "Components/Synapse/Pagination",
   component: SynapsePagination,
   parameters: {
     layout: "padded",
@@ -67,18 +70,28 @@ const meta: Meta<typeof SynapsePagination> = {
   argTypes: {
     background: { control: "radio", options: SYNAPSE_PAGINATION_BACKGROUND_OPTIONS },
     dropdownState: { control: "select", options: SYNAPSE_PAGINATION_DROPDOWN_STATES },
+    pageOffsetDropdownState: { control: "select", options: PAGINATION_DROPDOWN_STATES },
     currentPage: { control: { type: "number", min: 1 } },
     totalPages: { control: { type: "number", min: 1 } },
     pageSize: { control: "select", options: [25, 50, 75, 100] },
+    pageSizeOptions: { control: "object" },
+    pageOffsetOptions: { control: "object" },
     showPerPage: { control: "boolean" },
     showFirstLast: { control: "boolean" },
+    showPageOffset: { control: "boolean" },
     disabled: { control: "boolean" },
     onPageChange: { action: "onPageChange" },
     onPageSizeChange: { action: "onPageSizeChange" },
+    onFirstPageNavigate: { action: "onFirstPageNavigate" },
+    onPreviousPageNavigate: { action: "onPreviousPageNavigate" },
+    onNextPageNavigate: { action: "onNextPageNavigate" },
+    onLastPageNavigate: { action: "onLastPageNavigate" },
   },
   args: {
     ...SYNAPSE_PAGINATION_API_DEFAULTS,
+    pageSizeOptions: [...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions],
     dropdownState: "collapsed",
+    pageOffsetDropdownState: "collapsed",
     background: "gray",
     disabled: false,
   },
@@ -90,7 +103,7 @@ type Story = StoryObj<typeof SynapsePagination>;
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
   render: (args) => {
-    const [page, setPage] = useState(args.currentPage ?? 2);
+    const [page, setPage] = useState(args.currentPage ?? 1);
     const [pageSize, setPageSize] = useState(args.pageSize ?? 25);
 
     return (
@@ -113,7 +126,8 @@ export const BackgroundModes: Story = {
       <StoryRow caption='background="gray" (default) — var(--color-background-surface-1)'>
         <SynapsePagination
           {...SYNAPSE_PAGINATION_API_DEFAULTS}
-          currentPage={2}
+          pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
+          currentPage={1}
           totalPages={16}
           background="gray"
         />
@@ -121,7 +135,8 @@ export const BackgroundModes: Story = {
       <StoryRow caption='background="white" — var(--color-background-component)'>
         <SynapsePagination
           {...SYNAPSE_PAGINATION_API_DEFAULTS}
-          currentPage={2}
+          pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
+          currentPage={1}
           totalPages={16}
           background="white"
         />
@@ -130,7 +145,8 @@ export const BackgroundModes: Story = {
         <div style={checkerboardStyle}>
           <SynapsePagination
             {...SYNAPSE_PAGINATION_API_DEFAULTS}
-            currentPage={2}
+            pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
+            currentPage={1}
             totalPages={16}
             background="none"
           />
@@ -154,6 +170,7 @@ export const PageNavigationStates: Story = {
       <StoryRow caption="First page — « and ‹ disabled; › and » active">
         <SynapsePagination
           {...SYNAPSE_PAGINATION_API_DEFAULTS}
+          pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
           currentPage={1}
           totalPages={16}
         />
@@ -161,6 +178,7 @@ export const PageNavigationStates: Story = {
       <StoryRow caption="Middle page — all navigation icons active">
         <SynapsePagination
           {...SYNAPSE_PAGINATION_API_DEFAULTS}
+          pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
           currentPage={2}
           totalPages={16}
         />
@@ -168,6 +186,7 @@ export const PageNavigationStates: Story = {
       <StoryRow caption="Last page — « and ‹ active; › and » disabled">
         <SynapsePagination
           {...SYNAPSE_PAGINATION_API_DEFAULTS}
+          pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
           currentPage={16}
           totalPages={16}
         />
@@ -175,6 +194,7 @@ export const PageNavigationStates: Story = {
       <StoryRow caption='Single page — summary text "1 page" only'>
         <SynapsePagination
           {...SYNAPSE_PAGINATION_API_DEFAULTS}
+          pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
           currentPage={1}
           totalPages={1}
         />
@@ -188,9 +208,26 @@ export const PerPageDropdownOpen: Story = {
     <div style={frameStyle}>
       <SynapsePagination
         {...SYNAPSE_PAGINATION_API_DEFAULTS}
-        currentPage={2}
+        pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
+        currentPage={1}
         totalPages={16}
         dropdownState="expanded-below"
+      />
+    </div>
+  ),
+};
+
+export const PageOffsetDropdown: Story = {
+  render: () => (
+    <div style={frameStyle}>
+      <SynapsePagination
+        {...SYNAPSE_PAGINATION_API_DEFAULTS}
+        pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
+        currentPage={2}
+        totalPages={16}
+        showPageOffset
+        pageOffsetOptions={[1, 2, 3, 4, 5, 8, 16]}
+        pageOffsetDropdownState="expanded-below"
       />
     </div>
   ),
@@ -201,6 +238,7 @@ export const Disabled: Story = {
     <div style={frameStyle}>
       <SynapsePagination
         {...SYNAPSE_PAGINATION_API_DEFAULTS}
+        pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
         currentPage={2}
         totalPages={16}
         disabled
@@ -214,6 +252,7 @@ export const WithoutFirstLast: Story = {
     <div style={frameStyle}>
       <SynapsePagination
         {...SYNAPSE_PAGINATION_API_DEFAULTS}
+        pageSizeOptions={[...SYNAPSE_PAGINATION_API_DEFAULTS.pageSizeOptions]}
         currentPage={2}
         totalPages={16}
         showFirstLast={false}

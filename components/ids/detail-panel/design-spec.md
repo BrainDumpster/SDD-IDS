@@ -15,16 +15,33 @@
 - Component map baseline: `data/component-figma-map.json` entry exists for "Detail Panel"; this spec is upgraded to IDS Design Library nodes above.
 ## Anatomy
 - `DetailPanelRoot`
-- `DetailPanelContent`
-- Variant branch: `attachMode="datagrid"`
-  - expanded: `DetailPanelHeader` + `DetailPanelBody`
-  - collapsed: `DetailPanelCollapsedRail` (icon-only)
-- Variant branch: `attachMode="page"`
-  - expanded: `DetailPanelBody` + `DetailPanelFooter`
-  - collapsed: `DetailPanelCollapsedRail` (icon-only)
-- `DetailPanelToggleButton`
+- `DetailPanelContent` (expanded branch)
+  - `DetailPanelHeader` (`attachMode="datagrid"` expanded)
+    - `DetailPanelTitle`
+    - `DetailPanelToggleButton` (header chrome)
+  - `DetailPanelBody`
+  - `DetailPanelFooter` (`attachMode="page"` expanded)
+    - `DetailPanelToggleButton` (footer chrome)
+- `DetailPanelCollapsedRail` (collapsed branch)
+  - `DetailPanelToggleButton`
+- Toggle icons:
   - expanded icon: `double-chev-right` (`16x16`)
   - collapsed icon: `double-chev-left` (`16x16`)
+
+Angular composition (canonical child order):
+
+```
+ids-detail-panel
+  ids-detail-panel-content
+    ids-detail-panel-header
+      ids-detail-panel-title
+    ids-detail-panel-body
+    ids-detail-panel-footer
+  ids-detail-panel-collapsed-rail
+    ids-detail-panel-toggle-button
+```
+
+Datagrid expanded projects header + title + body (no footer). Page expanded projects body + footer (no header). Collapsed projects rail + toggle only.
 ## Layout & Measurements
 - Shared width behavior:
   - expanded width: `398px`
@@ -128,7 +145,7 @@ Dark table is structurally parallel to light; runtime must not hardcode color li
   - `onExpandedChange: (next: boolean) => void`
   - `body: RenderableContent`
 - Optional props:
-  - `title?: string` (default `"Details"` for datagrid mode header)
+  - `title?: string` (default `"Details"` for datagrid mode header — prefer `DetailPanelTitle` slot)
   - `showHeader?: boolean` (default `true` in datagrid mode)
   - `showFooter?: boolean` (default `true` in page mode)
   - `ariaLabelExpand?: string` (default `"Expand details panel"`)
@@ -137,14 +154,28 @@ Dark table is structurally parallel to light; runtime must not hardcode color li
   - `collapsedWidth?: number` (default `40`)
   - `expandedWidth?: number` (default `398`)
   - `id?: string` (for deterministic `aria-controls` linkage)
+
+Deterministic child order (projected):
+
+```
+DetailPanelRoot
+  DetailPanelContent
+    DetailPanelHeader
+      DetailPanelTitle
+    DetailPanelBody
+    DetailPanelFooter
+  DetailPanelCollapsedRail
+    DetailPanelToggleButton
+```
+
+Group vs item: root owns expand state + context; content/rail are exclusive visual branches; header/footer own a built-in toggle in expanded chrome; collapsed rail projects the toggle.
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
   1. `DetailPanelRoot`
-  2. conditional branch by `attachMode`
-     - datagrid/expanded: `DetailPanelHeader` + `DetailPanelBody`
-     - datagrid/collapsed: `DetailPanelCollapsedRail` + `DetailPanelToggleButton`
-     - page/expanded: `DetailPanelBody` + `DetailPanelFooter`
-     - page/collapsed: `DetailPanelCollapsedRail` + `DetailPanelToggleButton`
+  2. expanded: `DetailPanelContent`
+     - datagrid: `DetailPanelHeader` (`DetailPanelTitle` + `DetailPanelToggleButton`) → `DetailPanelBody`
+     - page: `DetailPanelBody` → `DetailPanelFooter` (`DetailPanelToggleButton`)
+  3. collapsed: `DetailPanelCollapsedRail` → `DetailPanelToggleButton`
 - Branch invariants:
   - datagrid expanded branch MUST include header.
   - page expanded branch MUST include footer.
@@ -213,3 +244,6 @@ All validation checklist items verified and passing as of 2026-07-09.
   - `get_metadata` on all four nodes (dimensions/structure)
   - `get_design_context` on all four nodes (layout + icon placement/sections)
   - `get_variable_defs` on expanded nodes (`44257:246888`, `44333:174879`) for token validation
+- Runtime contract: `component-contracts/ids/detail-panel.contract.ts`
+- Angular library: `lib/angular/ids/detail-panel/`
+- Angular Storybook: `storybook-angular/src/components/ids-detail-panel/`

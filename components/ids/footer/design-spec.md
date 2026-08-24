@@ -10,7 +10,7 @@
 - **Description:** Application status footer bar with optional host name, SWID (with copy), current date/time, and time-zone selector.
 - **Status:** active
 - **Created:** 2026-05-22
-- **Updated:** 2026-05-25
+- **Updated:** 2026-08-19
 - **Figma (validated):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38908-5818&m=dev
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
 - **Primary node:** `38908:5818` (component instance `Footer`)
@@ -19,7 +19,7 @@
 - **Storybook examples requested:** yes
 - **Storybook path:** `storybook-generated/ids/src/components/Footer.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
 - **Storybook meta title:** `Spec Generated/IDS/Footer`
-- **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-05-22)
+- **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-08-19)
 
 ## Anatomy
 Deterministic slot order (left → right):
@@ -31,6 +31,19 @@ Deterministic slot order (left → right):
 5. `FooterCopyControl` — icon-only control for SWID copy (`copy` icon, 14×14)
 6. `FooterTimeGroup` (optional) — `FooterTimeIcon` + `FooterDateTimeLabel`
 7. `FooterTimeZoneGroup` (optional) — single tertiary button with world-globe icon (size: small, variant: tertiary, iconSlug: world-globe)
+
+Angular composition selectors may map these slots 1:1 as:
+
+```html
+<ids-footer>
+  <ids-footer-left-region>
+    <ids-footer-host-name />
+    <ids-footer-swid-group />
+  </ids-footer-left-region>
+  <ids-footer-time-group />
+  <ids-footer-time-zone-group />
+</ids-footer>
+```
 
 ## Layout & Measurements
 - Root width is container-driven: `width: 100%`, `box-sizing: border-box`.
@@ -148,6 +161,20 @@ Visibility axes (boolean, default `true` — matches Figma `Footer` instance):
 | `onTimeZoneClick?()` | No | Fired when time-zone control activated |
 | `className` | No | Host layout hook on root |
 
+### Angular composition API
+Projected-child API for the Angular library port under `lib/angular/ids/footer/`:
+
+| Selector | Inputs | Outputs | Notes |
+| --- | --- | --- | --- |
+| `ids-footer` | `ariaLabel?` | — | Root landmark and flex container |
+| `ids-footer-left-region` | — | — | Required only when left content is present |
+| `ids-footer-host-name` | `hostname` | — | Applies 48-character truncation and tooltip title for overflow case |
+| `ids-footer-swid-group` | `swid`, `copyDisabled?` | `copySwid` | Emits SWID after copy activation or clipboard fallback failure |
+| `ids-footer-time-group` | `currentDateTime` | — | Display-only date/time text |
+| `ids-footer-time-zone-group` | `timeZoneLabel?`, `disabled?`, `ariaLabel?` | `timeZoneClick` | Renders world-globe icon plus button text |
+
+Child order remains deterministic and matches the slot order in **Anatomy**. Visibility in the Angular composition API is controlled by including or omitting the corresponding child selector rather than by root boolean props.
+
 ### Spec Accurate Design story defaults
 Reference sample aligned to Figma node `38908:5818`:
 
@@ -162,6 +189,8 @@ Reference sample aligned to Figma node `38908:5818`:
   showTimeZone: true,
 }
 ```
+
+Angular composition story uses the same values, mapped onto child component inputs.
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
@@ -179,8 +208,20 @@ FooterRoot
     FooterTimeZoneAction (tertiary button with world-globe icon)
 ```
 
+Angular library selector mapping:
+
+```
+ids-footer
+  [optional] ids-footer-left-region
+    [optional] ids-footer-host-name
+    [optional] ids-footer-swid-group
+  [optional] ids-footer-time-group
+  [optional] ids-footer-time-zone-group
+```
+
 ### Variant matrix
 - Visibility: `showHostname` × `showCurrentDateAndTime` × `showTimeZone` (each `true | false`; eight combinations; empty left region allowed when all left content off).
+- Angular composition port: omit `ids-footer-host-name`, `ids-footer-time-group`, or `ids-footer-time-zone-group` to represent the same visibility combinations without root boolean inputs.
 - Interactive states apply only to `FooterCopyControl` and `FooterTimeZoneAction`.
 - Root height remains **32px** for all visibility combinations.
 
@@ -217,7 +258,9 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 ### Fallback/error rules
 - Unknown visibility prop values → treat as `true` if boolean coercion fails.
 - Missing `swid` with `showSwid` implied by copy control → disable copy and set `aria-disabled="true"`.
+- Angular composition port: if `ids-footer-swid-group` is present with an empty `swid`, keep the group visible but disable copy.
 - Missing `timeZoneLabel` with `showTimeZone=true` → render action with fallback label `"Time zone"` (localized by host).
+- Angular composition port: if `ids-footer-time-zone-group` is present without `timeZoneLabel`, render the same `"Time zone"` fallback label.
 - Clipboard API failure → still fire `onCopySwid`; host shows error toast.
 - Unknown icon slug → omit icon; keep text/control usable.
 
@@ -237,6 +280,9 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 | Component map | `data/component-figma-map.json` → `Footer` (`38908:5818`, file `0bHk3XhrjFhowgFkz9yLr4`) |
 | Theme CSS | `components/ids-theme.css` |
 | Root spec | `components/ids/root-spec.md` |
-| Figma MCP (2026-05-22) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
+| Component contract | `component-contracts/ids/footer.contract.ts` |
+| Angular library port | `lib/angular/ids/footer/` |
+| Angular composition Storybook | `storybook-angular/src/components/ids-footer-lib/` |
+| Figma MCP (2026-08-19) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
 | Storybook implementation | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
 | Spec Generated story | `storybook/src/components/IdsFooter.stories.tsx` |

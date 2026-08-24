@@ -11,7 +11,28 @@
 - Examples URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=42903-139689&m=dev
 - Base URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=39484-7432&m=dev
 ## Anatomy
-Document component parts in deterministic order. Add one bullet per slot (root, label, icon, etc.).
+
+Deterministic slot order (projected children; optional branches omitted when absent):
+
+```
+ToastViewport (optional stack + FIFO queue)
+  ToastItem (repeated)
+    IconContainer          required — status icon (`shapeName` from type table)
+    Message                required — notification text
+    ViewDetailsAction      optional — when `link` is present
+    CloseAction            optional — when `closable` is true
+```
+
+Angular selectors (reference implementation):
+
+```
+ids-toast-viewport
+  ids-toast-item
+    ids-toast-icon-container
+    ids-toast-message
+    ids-toast-view-details-action
+    ids-toast-close-action
+```
 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
@@ -68,20 +89,29 @@ Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolve
 - `Escape` dismisses focused toast item.
 ## Composition & API (runtime)
 
-### `ToastItem` (single notification)
-- `type`: `info | critical | major-warning | minor-warning | success` (default `info`).
-- `message`: string (required).
-- `duration`: number, default `8000` (host-configurable timeout input).
-- `closable`: boolean, default `true`.
-- `link`: optional structured view details object (see view details contract below).
-- `onClose`: emitted with item id/reason.
-- `onTimeout`: emitted when timer dismisses.
+Canonical API is **viewport + projected `ToastItem` children** (not an aggregate-only `items[]` list). Item slots are projected in Anatomy order. Item-level props remain on `ToastItem` when a slot is omitted (fallback chrome).
+
+Contract mirror: `component-contracts/ids/toast.contract.ts`.
 
 ### `ToastViewport` (stack + queue owner)
 - `position`: `top-left | top-center | top-right | bottom-left | bottom-center | bottom-right` (default `top-right`).
 - `maxVisible`: number (recommended default `3`).
 - `queueStrategy`: FIFO.
-- `items`: controlled list OR internal queue adapter.
+
+### `ToastItem` (single notification)
+- `id`: optional string included in close/timeout payloads.
+- `type`: `info | critical | major-warning | minor-warning | success` (default `info`).
+- `message`: string (required).
+- `duration`: number, default `8000`. `0` disables auto-dismiss. Invalid (`< 0` or NaN) → `8000`.
+- `closable`: boolean, default `true`.
+- `link`: optional structured view details object (see view details contract below).
+- `role`: `status` (default) or `alert`.
+- `className`: optional extra class on the item root.
+- `onClose`: emitted with `{ id?, reason }` (`close-click | timeout | programmatic`).
+- `onTimeout`: emitted with `{ id? }` when the timer dismisses.
+
+### Child-order diagram
+`ToastViewport` → repeated `ToastItem` → `IconContainer` → `Message` → optional `ViewDetailsAction` → optional `CloseAction`.
 
 Queue/stack behavior contract:
 1. New item is appended to queue.
@@ -105,9 +135,11 @@ Resolution rules:
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 ### Deterministic structure
-- `ToastViewport` -> repeated `ToastItem` -> `Content` + `ActionContainer`.
-- `Content` always renders icon + message.
-- `ActionContainer` renders optional `ViewDetailsAction`, then optional `CloseAction`.
+- `ToastViewport` -> repeated `ToastItem` -> `IconContainer` + `Message` + optional `ViewDetailsAction` + optional `CloseAction`.
+- `IconContainer` always renders the status icon for the resolved `type`.
+- `Message` renders projected text, or `message` when the slot is empty.
+- `ViewDetailsAction` renders when `link` is present (or the slot is projected with a label).
+- `CloseAction` renders when `closable` is true.
 
 ### Variant matrix
 - Supported types: `info`, `critical`, `major-warning`, `minor-warning`, `success`.
@@ -149,6 +181,7 @@ Resolution rules:
 - [ ] Layout uses `var(--toast-control-radius)` on toast root, not hardcoded px.
 - [ ] No hardcoded style values in generated code where token exists.
 ## Implementation Notes
+- **React / Angular parity:** React (`lib/react/ids/toast`) inlines Content / IconContainer / Message / ViewDetails / Close. Angular exposes the same slots as projected children (`ids-toast-icon-container`, `ids-toast-message`, `ids-toast-view-details-action`, `ids-toast-close-action`) and also supports React’s viewport `items[]` FIFO list. Shared helpers: `cx` (`lib/angular/shared/utils/cx.ts`), toast resolve functions (`ids-toast.utils.ts`). Escape dismiss reason is `close-click`. Item root border is `var(--color-border-gray-white)`; type tokens color the status icon. `routerLink` without `href` renders a tertiary button (same as React).
 - **Close button fix**: Replaced the bare close icon with the IDS `Button` component in `tertiary`/`iconOnly` mode, using `shape-x` rendered as a mask and sized to the fixed 24x24 Button token with `Padding/padding-6` on all sides.
 - **Status icon border fix (2025-05-25)**: Added 1px solid #FFFFFF border to all status icons (info-circ-solid, status-critical-square-solid, status-error-diamond-solid, status-warn-tri-solid, status-ok-circ-solid) in the base layer as specified in design spec.
 - **Toast border inside container fix (2025-05-25)**: Changed toast root border from outer border to inner border using CSS pseudo-element (::before) to ensure border is inside the container width, not outside.
@@ -158,3 +191,7 @@ Resolution rules:
 - Figma icon base: `39484:7432` (alerting icon family).
 - Active IDS map file: `data/component-figma-map.json`.
 - Suggested map alignment for Toast: example node `42903:139689`, base icon node `39484:7432`.
+- Runtime contract: `component-contracts/ids/toast.contract.ts`.
+- Angular reference implementation: `lib/angular/ids/toast/`.
+- React reference implementation: `lib/react/ids/toast/` (branch `usr/muthu/lib`).
+- Angular Storybook: `storybook-angular/src/components/ids-toast/` (does not replace existing React stories).

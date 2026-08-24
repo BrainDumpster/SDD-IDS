@@ -549,6 +549,13 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --spacing-space-8: 8px;
   --spacing-space-minus-1: -1px;
   --spacing-space-none: 0px;
+  /* --- Component layout aliases (IDS defaults; programmes override in programme theme CSS) --- */
+  --card-control-radius: var(--corner-radius-radius-none);
+  --card-min-width: 430px;
+  --date-picker-control-radius: var(--corner-radius-radius-none);
+  --date-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --time-picker-control-radius: var(--corner-radius-radius-none);
+  --time-picker-focus-ring-radius: var(--corner-radius-radius-4);
 }
 
 /* ========================================================
@@ -1058,6 +1065,13 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --spacing-space-8: 8px;
   --spacing-space-minus-1: -1px;
   --spacing-space-none: 0px;
+  /* --- Component layout aliases (IDS defaults) --- */
+  --card-control-radius: var(--corner-radius-radius-none);
+  --card-min-width: 430px;
+  --date-picker-control-radius: var(--corner-radius-radius-none);
+  --date-picker-focus-ring-radius: var(--corner-radius-radius-4);
+  --time-picker-control-radius: var(--corner-radius-radius-none);
+  --time-picker-focus-ring-radius: var(--corner-radius-radius-4);
   /* --- IDS dropdown shadow aliases (dark) --- */
   --shadow-shadow-4-drop-shadow-4-blur: var(--shadow-drop-shadow-4-blur);
   --shadow-shadow-4-drop-shadow-4-color: var(--shadow-drop-shadow-4-color);

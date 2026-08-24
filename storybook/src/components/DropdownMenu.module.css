@@ -342,7 +342,7 @@
 .optionsScrollThumb {
   width: 100%;
   border-radius: var(--corner-radius-radius-4);
-  background-color: var(--color-border-light);
+  background-color: var(--color-border-gray-neutral-light);
 }
 
 .optionsScrollThumb:hover {

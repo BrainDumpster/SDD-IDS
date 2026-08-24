@@ -82,7 +82,7 @@ const headerActionsWrapperStyle: React.CSSProperties = {
 };
 
 const meta: Meta<typeof IdsMasthead> = {
-  title: "Spec Generated/IDS/Masthead",
+  title: "Components/IDS/Masthead",
   component: IdsMasthead,
   parameters: {
     layout: "fullscreen",

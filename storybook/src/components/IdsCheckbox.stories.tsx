@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Checkbox } from "./Checkbox";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "Spec Generated/IDS/Checkbox",
+  title: "Components/IDS/Checkbox",
   component: Checkbox,
   argTypes: {
     disabled: { control: "boolean" },

@@ -60,7 +60,7 @@ const formItems = [
 ];
 
 const meta: Meta<typeof IdsAccordion> = {
-  title: "Spec Generated/IDS/Accordion",
+  title: "Components/IDS/Accordion",
   component: IdsAccordion,
   parameters: { layout: "padded" },
   args: {

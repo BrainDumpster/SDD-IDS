@@ -311,6 +311,7 @@
 }
 
 .moreIcon {
+  flex-shrink: 0;
   width: var(--sizing-size-10, 10px);
   height: var(--sizing-size-10, 10px);
   display: block;

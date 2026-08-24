@@ -46,7 +46,7 @@ Scaffold: `scripts/design_spec_template.py` → `PROGRAMME_IDS_FORK_TEMPLATE` (`
 4. Build programme deltas table (layout, chrome, tokens, states, anatomy, API defaults).
 5. Write Synapse spec (Status `draft` → `active` when checklist passes).
 6. Implementation: shared component + `programme="synapse"` CSS and/or thin wrapper.
-7. Storybook: `Spec Generated/Synapse/<Name>` with **Spec Accurate Design** using Synapse Figma sample data.
+7. Storybook (**React only**): `Spec Generated/Synapse/<Name>` with **Spec Accurate Design** using Synapse Figma sample data (`storybook-generated/synapse/` or `storybook/src/components/`). Do **not** add Synapse examples under `storybook-angular/` unless explicitly requested.
 8. Update `data/synapse-component-figma-map.json` (`designSpecPath`, element node IDs).
 
 ## Theme vs spec
@@ -61,11 +61,11 @@ Scaffold: `scripts/design_spec_template.py` → `PROGRAMME_IDS_FORK_TEMPLATE` (`
 
 ## Storybook
 
-| Programme | Meta title |
-|-----------|------------|
-| Synapse | `Spec Generated/Synapse/<Component Display Name>` |
+| Programme | Meta title | Framework |
+|-----------|--------------|-----------|
+| Synapse | `Spec Generated/Synapse/<Component Display Name>` | **React only** (`storybook/` port 6006) |
 
-Import `components/synapse-theme.css` in the story file.
+Import `components/synapse-theme.css` in the React story file. **No Synapse Angular Storybook** — `storybook-angular/` (port 6007) is IDS/DAP only unless the user explicitly requests Synapse ports.
 
 ## Agent skill
 

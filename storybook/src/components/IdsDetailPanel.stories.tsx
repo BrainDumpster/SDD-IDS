@@ -4,7 +4,7 @@ import { IdsDetailPanel, type IdsDetailPanelAttachMode } from "./IdsDetailPanel"
 import "../../../components/ids-theme.css";
 
 const meta: Meta<typeof IdsDetailPanel> = {
-  title: "Spec Generated/IDS/Detail Panel",
+  title: "Components/IDS/Detail Panel",
   component: IdsDetailPanel,
   parameters: {
     layout: "fullscreen",

@@ -9,7 +9,7 @@
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
 - Main node: `12690:246134` (`WizardInline-Main`)
 - Variant nodes (MCP-verified): `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164`
-- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`, `get_design_context`) against nodes above in this session.
+- Last live verification: 2026-08-19 — Figma MCP `get_metadata` on `12690:246134` (`WizardInline-Main`, 1710×3777) containing variant symbols `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164` (each `1594×843`).
 - Runtime references used for API semantics:
   - https://clarity.design/documentation/wizard/api
   - https://clarity.design/documentation/wizard
@@ -43,12 +43,14 @@ Deterministic child structure (required order):
 - Footer belongs to the **content pane only** (right column) and is anchored at its bottom.
 - Steps pane continues full height beside the content pane/footer stack (left column is not shortened by footer).
 - Width behavior is container-driven in runtime; size presets are max-width constraints (`medium|large|x-large`) and must not clip right-side footer actions.
+- Height is container-driven (`height: 100%` of the parent) with sample min-height `843px`. `WizardPageContent` fills remaining content-pane height; footer stays anchored at the bottom of the content pane.
 - Header padding: `20px 24px` (right side includes close action spacing in sample).
 - Header has **no bottom divider line** in the verified sample.
 - Footer padding: `24px`; footer has top border.
 - Footer uses a 1px top border (`--color-border-gray-neutral-base`) and no shadow treatment.
 - Steps pane sample width: `256px`.
-- Step row padding: `8px 34px` with optional right-side status indicator.
+- Step row padding: `8px 34px` for leaf steps; parent-with-children uses `8px 28px 8px 14px` plus `chev-up-thick` 12px (Figma `13446:21486`) so the label still starts at 34px.
+- Status indicators are 16px (`shape-check` / warning / error slugs). Parent row: trailing edge (`margin-inline-start: auto`). Substep row: immediately after the label (`gap: 10px`).
 - Step rows are borderless in default state; only the pane separator and selected-row leading accent are visible.
 - Step active accent: 4px leading stripe style (tokenized brand strong color).
 - Content pane has page title block + body content block + optional inner scroll gradients.
@@ -62,6 +64,17 @@ Deterministic child structure (required order):
   - `x-large`: `1152px`
   - `full-screen`: viewport-constrained (`100vw/100vh` in modal; container fill in inline)
 - Modal mode uses backdrop and centered shell; modal wizard root uses **`border-radius: var(--modal-control-radius)`** (IDS theme: `var(--corner-radius-radius-none)` / 0); inline mode renders in normal document flow.
+
+### Slot geometry (Figma-verified)
+
+Evidence: MCP `get_metadata` on `12690:246134` and variant symbols listed in Metadata. Runtime uses tokens/props; frame size is sample-only.
+
+| Slot | Figma node | Width | Height | Padding | `border-radius` | Evidence |
+|---|---|---|---|---|---|---|
+| Wizard sample shell | `12690:246164` (`Size=One Size, Scroll Bar - Steps=Yes, Scroll Bar - Content=Yes`) | 1594 (sample) | 843 (sample) | — | `var(--modal-control-radius)` on **modal** root only; inline has no shell radius | metadata + Layout & Measurements |
+| WizardHeader | same sample | container | content | `20px 24px` | none (no header radius row in sample) | spec Layout |
+| WizardStepsPane | same sample | 256 | full body height | step rows `8px 34px` | none | spec Layout |
+| WizardFooter (content pane) | same sample | content pane width | content | `24px` | none; 1px top border `var(--color-border-gray-neutral-base)` | spec Layout |
 ## Tokens
 - Container/surfaces:
   - `var(--color-background-surface-component)`
@@ -135,6 +148,35 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - substep page: `Step 2a of 5`
 - Button events are emitted for `Cancel`, `Previous`, `Next`, and `Finish`.
 ## Composition & API (runtime)
+Canonical runtime API is **prop-driven `steps`** on the root (`Wizard` / `ids-wizard`). Optional **anatomy slots** (React `IdsWizardHeader`… / Angular `ids-wizard-header`…) may replace default chrome when a header or body slot is projected. Slot names match **Anatomy**. Navigation, progress, and footer enablement still come from `steps` + the outputs below.
+
+Child-order (prop-driven or projected):
+
+```
+Wizard
+  WizardHeader
+    WizardHeaderTitle
+    WizardCloseAction?
+  WizardBody
+    WizardStepsPane
+      WizardStepItem[]
+        WizardStepLabel
+        WizardStepStatusIndicator?
+        WizardSubstepList?
+          WizardSubstepItem[]
+            WizardStepLabel
+            WizardStepStatusIndicator?
+    WizardContentPane
+      WizardPageTitle
+      WizardPageContent
+      WizardFooter
+        WizardProgressLabel
+        WizardFooterActions
+          WizardCancelButton?
+          WizardPreviousButton?
+          WizardPrimaryButton
+```
+
 Main inputs:
 - `mode?: "inline" | "modal"` (default `"inline"`)
 - `size?: "medium" | "large" | "x-large" | "full-screen"` (default `"large"`)
@@ -148,7 +190,7 @@ Main inputs:
 - `id: string`
 - `label: string`
 - `pageTitle?: string`
-- `content?: Renderable` (required for leaf steps; optional for parent steps with children)
+- `content?: Renderable` (required for leaf steps; optional for parent steps with children). React: `ReactNode`. Angular: `string | TemplateRef`.
 - `status?: "none" | "success" | "warning" | "error"`
 - `statusIconSlug?: string | null` (optional; when `null`, suppress icon rendering even if `status` is set)
 - `isVisible?: boolean | ((ctx: WizardContext) => boolean)` (default `true`)
@@ -175,7 +217,7 @@ Outputs/events:
 - `stepCode` (e.g., `2`, `2a`)
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
-- Always render `WizardHeader`, `WizardBody`, `WizardFooter`.
+- Always render `WizardHeader`, `WizardBody`, `WizardFooter` (prop-driven default tree, or the same slots when projected).
 - `WizardStepsPane` left, `WizardContentPane` right.
 - Parent nodes with children render as grouping rows; leaf nodes map to content pages.
 
@@ -192,7 +234,7 @@ Per-slot style contract:
 - Header block must not introduce a dedicated bottom border.
 - Step rows must remain borderless; selected row highlight is the only row-level stroke treatment (4px leading accent).
 - Page titles must use `Header 5`; page body content defaults to `Body 2`.
-- Status indicators render on right side of step rows.
+- Status indicators render on the right of the label: parent rows pin the icon to the trailing edge of the steps pane; substep rows place the icon beside the label.
 - Footer progress text uses `Body 2`.
 
 Behavior contract:
@@ -216,6 +258,7 @@ Asset resolution and bundling:
   - `statusIconSlug` is optional per step; if omitted, defaults above are used from `status`
   - set `statusIconSlug: null` to render no status icon for that step
 - Optional close icon slug: `ctrl-close-16` (fallback to local close glyph if missing).
+- Parent-with-children expand glyph: `chev-up-thick` (12px; Figma `13446:21486`).
 
 Fallback/error rules:
 - If `initialStepId` is invalid, start at first visible leaf.
@@ -239,6 +282,19 @@ Validation checklist:
 | New unified IDS wizard spec target | `components/ids/wizard/design-spec.md` |
 | Figma canonical node | `12690:246134` (`WizardInline-Main`) |
 | Figma variant nodes | `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164` |
+| Figma step-element node | `13446:21486` (`Active Step=True, State=Success, Show Sub-Steps=True`) |
 | Live verification method | Figma MCP: `get_metadata`, `get_variable_defs`, `get_design_context` |
 | Runtime API reference | https://clarity.design/documentation/wizard/api |
 | Runtime behavior reference | https://clarity.design/documentation/wizard |
+| Contract mirror | `component-contracts/ids/wizard.contract.ts` |
+| React reference implementation | `lib/react/ids/wizard/` (`usr/muthu/lib`) |
+| Angular reference implementation | `lib/angular/ids/wizard/` |
+| Angular Storybook | `storybook-angular/src/components/ids-wizard/` |
+
+### Implementation Notes
+
+- Selectors: `ids-wizard`, `ids-wizard-header`, `ids-wizard-header-title`, `ids-wizard-close-action`, `ids-wizard-body`, `ids-wizard-steps-pane`, `ids-wizard-step-item`, `ids-wizard-step-label`, `ids-wizard-step-status-indicator`, `ids-wizard-substep-list`, `ids-wizard-substep-item`, `ids-wizard-content-pane`, `ids-wizard-page-title`, `ids-wizard-page-content`, `ids-wizard-footer`, `ids-wizard-progress-label`, `ids-wizard-footer-actions`, `ids-wizard-cancel-button`, `ids-wizard-previous-button`, `ids-wizard-primary-button`.
+- Modal overlay class: `ids-wizard-overlay` with `var(--color-background-surface-overlay)` (React lib CSS; no `@base-ui-components` dialog).
+- Close in modal is always shown; inline close follows `showCloseButton`.
+- Root `ids-wizard` and `WizardPageContent` are flex column fillers (`height: 100%` / `flex: 1`) so the shell uses the parent height.
+- Spec Accurate Design (Angular): `storybook-angular` → **Spec Generated/IDS/Wizard**.

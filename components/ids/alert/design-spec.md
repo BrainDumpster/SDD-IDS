@@ -107,7 +107,7 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 - **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: var(--scale-40); align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
 - **Detailed** (`density: detailed`): `min-height: 68px` (Figma reference frame `1000×68`; width remains container-driven); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
 - **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
-- **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message compact = **Body 2** `font-weight: 400`; message detailed = **Body 2** `font-weight: 500`; text color `var(--color-static-gray-900)`.
+- **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message (compact and detailed) = **Body 2** `font-weight: 400`; text color `var(--color-static-gray-900)`.
 - **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
 - **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, label `var(--color-text-brand-strong)`, `font-weight: 500`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
 - **Dismiss** icon (`Icon` component): visual size `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
@@ -184,7 +184,7 @@ Dismiss icon always uses `variant="mask"`.
 
 | Element | `font-weight` | `font-variation-settings` | Notes |
 |---|---|---|---|
-| Message (`.globalMessage`) | `500` | `'wdth' 100` | No explicit `font-family` override |
+| Message (`.globalMessage`) | `400` | `'wdth' 100` | No explicit `font-family` override |
 | Inline link / link button | `400` | `'wdth' 100` | — |
 | Action button label | `500` | `'wdth' 100` | — |
 | Carousel count | `400` | `'wdth' 100` | `white-space: nowrap` |

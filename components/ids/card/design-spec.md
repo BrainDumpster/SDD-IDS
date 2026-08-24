@@ -21,6 +21,8 @@
 | Verification method | Figma MCP (`get_screenshot`, `get_metadata`, `get_design_context`, `get_variable_defs`) — **2026-07-14** |
 | Storybook | `storybook-generated/ids/src/components/Card.stories.tsx` — title **`Spec Generated/IDS/Card`**, story **`Spec Accurate Design`** |
 | Reference implementation | `storybook/src/components/Card.tsx`, `Card.module.css`, `CardHeaderMenu.tsx` |
+| Reference implementation (React lib) | `lib/react/ids/card` |
+| Reference implementation (Angular lib) | `lib/angular/ids/card` (`ids-card`; Dashboard override via `IDS_DASHBOARD_CARD_OVERRIDE`) |
 | Deterministic generator | `generation/deterministic_storybook/ids/card.py` (registry key `("ids", "card")`) |
 | Composition dependencies | IDS Button (footer actions), IDS Dropdown menu / overlay pattern (kebab options), optional consumer Dropdown in `CardAdditionalFilter`, optional Key-value table instance in body |
 
@@ -465,3 +467,6 @@ CardRoot [data-card-size=span-1|span-2|span-3]
 
 - Component map entry: `data/component-figma-map.json` → component `"Card"` (category `"Patterns"`; primary node `"8381-14051"`)
 - Extraction path: Main board → primary variant `Show Buttons=Yes, Show Overflow menu=Yes` → header/body/footer shells → overflow element → content element templates
+- Runtime contract (React lib): `lib/react/ids/card/`
+- Runtime contract (Angular lib): `lib/angular/ids/card/`
+- Dashboard parent override: `IDS_DASHBOARD_CARD_OVERRIDE` (`showDividerInCard` wins over Card `showDivider`)

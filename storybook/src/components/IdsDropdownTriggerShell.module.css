@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 300px;
+  width: 100%;
   max-width: 700px;
   min-width: 186px;
   min-height: 40px;
@@ -51,11 +51,7 @@
   pointer-events: none;
 }
 
-/* Menu open: square bottom edge so popup bottom radius meets field (Figma attached dropdown). */
-:global([data-popup-open]) .field {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
+/* Open-state field corners are set on Menu.Trigger in DropdownMenu.module.css. */
 
 .main {
   display: flex;

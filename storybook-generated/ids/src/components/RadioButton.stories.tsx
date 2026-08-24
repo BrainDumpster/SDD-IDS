@@ -106,7 +106,7 @@ const sharedRadioStoryStyles = `
 `;
 
 const meta: Meta<typeof IdsRadioButton> = {
-  title: "Spec Generated/IDS/Radio Button",
+  title: "Components/IDS/Radio Button",
   component: IdsRadioButton,
   parameters: { layout: "padded" },
   decorators: [

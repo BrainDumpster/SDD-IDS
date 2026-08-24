@@ -9,7 +9,7 @@ import { IdsWizard as IdsWizard, type IdsWizardStep } from "../../../../storyboo
 import { Button } from "../../../../storybook/src/components/Button";
 
 const meta: Meta<typeof IdsWizard> = {
-  title: "Spec Generated/IDS/Wizard",
+  title: "Components/IDS/Wizard",
   component: IdsWizard,
   parameters: { layout: "fullscreen" },
 };

@@ -213,9 +213,31 @@
   font-weight: 400;
 }
 
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  min-height: 20px;
+}
+
+.prefix {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.prefixText {
+  font-weight: 500;
+}
+
+.prefixColon {
+  font-weight: 400;
+}
+
 .textField {
   display: inline-flex;
   align-items: center;
+  min-height: 20px;
   gap: 0;
   height: 20px;
   padding: 0 var(--padding-padding-2);
@@ -255,8 +277,16 @@
   border-color: var(--color-border-brand-base);
 }
 
-.editable[data-focus] .textField {
+.editable[data-focus] .textField,
+.editable .textField[data-focus-on-text] {
   border-color: var(--color-border-brand-base);
+}
+
+.leadingIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
 }
 
 .badge {
@@ -285,11 +315,6 @@
   flex-shrink: 0;
   width: var(--sizing-size-10);
   height: var(--sizing-size-10);
-}
-
-.editable .prefix,
-.typeBadge .prefix {
-  font-weight: 500;
 }
 
 .dismiss {

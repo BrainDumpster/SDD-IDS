@@ -8,7 +8,7 @@ import { useState } from "react";
 import { IdsToggleSwitch as IdsToggleSwitch } from "../../../../storybook/src/components/IdsToggleSwitch";
 
 const meta: Meta<typeof IdsToggleSwitch> = {
-  title: "Spec Generated/IDS/Toggle Switch",
+  title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
   argTypes: {
     disabled: { control: "boolean" },
