@@ -60,7 +60,7 @@ const NESTED_ITEMS: IdsDropdownButtonItem[] = [
 type DropdownProps = ComponentProps<typeof IdsDropdownButton>;
 
 const meta: Meta<typeof IdsDropdownButton> = {
-  title: "Lib Generated/IDS/Dropdown Button",
+  title: "Components/IDS/Dropdown Button",
   component: IdsDropdownButton,
   parameters: {
     layout: "centered",

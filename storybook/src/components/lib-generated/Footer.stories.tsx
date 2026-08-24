@@ -41,7 +41,7 @@ const frameStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsFooterProps> = {
-  title: "Lib Generated/IDS/Footer",
+  title: "Components/IDS/Footer",
   component: IdsFooter,
   parameters: {
     layout: "fullscreen",

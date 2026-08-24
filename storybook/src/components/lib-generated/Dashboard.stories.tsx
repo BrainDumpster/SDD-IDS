@@ -40,7 +40,7 @@ const sampleBody = (label: string) => (
 );
 
 const meta: Meta<IdsDashboardProps> = {
-  title: "Lib Generated/IDS/Dashboard",
+  title: "Components/IDS/Dashboard",
   component: IdsDashboard,
   parameters: {
     layout: "padded",

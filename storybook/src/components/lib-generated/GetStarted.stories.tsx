@@ -137,7 +137,7 @@ function CompoundCards({ cards }: { cards: IdsGetStartedCardInput[] }) {
 }
 
 const meta: Meta<IdsGetStartedProps> = {
-  title: "Lib Generated/IDS/Get Started",
+  title: "Components/IDS/Get Started",
   component: GetStarted,
   parameters: {
     layout: "fullscreen",

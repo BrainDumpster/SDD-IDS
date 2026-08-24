@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof IdsTextBox> = {
-  title: "Spec Generated/IDS/Text Box",
+  title: "Components/IDS/Text Box",
   component: IdsTextBox,
   argTypes: {
     componentType: { control: "select", options: ["text-input", "text-area"] },

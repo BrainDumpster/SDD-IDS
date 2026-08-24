@@ -143,7 +143,7 @@ function OpenPerPageMenuDemo(props: IdsPaginationProps) {
 }
 
 const meta: Meta<IdsPaginationProps> = {
-  title: "Lib Generated/IDS/Pagination",
+  title: "Components/IDS/Pagination",
   component: IdsPagination,
   parameters: {
     layout: "padded",

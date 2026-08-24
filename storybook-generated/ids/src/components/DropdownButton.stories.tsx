@@ -187,7 +187,7 @@ function DropdownButton({
 }
 
 const meta: Meta<typeof DropdownButton> = {
-  title: "Spec Generated/IDS/Dropdown Button",
+  title: "Components/IDS/Dropdown Button",
   component: DropdownButton,
   parameters: {
     layout: "centered",

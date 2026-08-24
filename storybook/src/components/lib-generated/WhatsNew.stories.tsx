@@ -123,7 +123,7 @@ function CompoundSections({
 }
 
 const meta: Meta<IdsWhatsNewProps> = {
-  title: "Lib Generated/IDS/Whats New",
+  title: "Components/IDS/Whats New",
   component: WhatsNew,
   parameters: {
     layout: "fullscreen",

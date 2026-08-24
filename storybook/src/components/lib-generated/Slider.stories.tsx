@@ -38,7 +38,7 @@ const frameStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsSliderProps> = {
-  title: "Lib Generated/IDS/Slider",
+  title: "Components/IDS/Slider",
   component: IdsSlider,
   parameters: {
     layout: "padded",

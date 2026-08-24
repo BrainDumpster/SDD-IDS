@@ -26,7 +26,7 @@ const specAccurateArgs: IdsToggleSwitchProps = {
 };
 
 const meta: Meta<IdsToggleSwitchProps> = {
-  title: "Lib Generated/IDS/Toggle Switch",
+  title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
   parameters: {
     layout: "padded",

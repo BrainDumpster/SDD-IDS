@@ -1,0 +1,80 @@
+/* Ported from storybook/src/components/Badge.module.css */
+
+.ids-badge {
+  --ids-badge-inner-size: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  height: var(--ids-badge-inner-size);
+  min-width: var(--ids-badge-inner-size);
+  border-width: var(--border-width-border-1);
+  border-style: solid;
+  border-radius: 100px;
+  font-family: var(--typography-font-style-primary, inherit);
+  white-space: nowrap;
+}
+
+.ids-badge__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: var(--font-size-body-3, 12px);
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+}
+
+.ids-badge--single-digit {
+  width: var(--ids-badge-inner-size);
+  min-width: var(--ids-badge-inner-size);
+  padding: 0;
+}
+
+.ids-badge--two-digits {
+  padding: 0 4px;
+}
+
+.ids-badge--three-plus-digits {
+  padding: 0 5.5px;
+}
+
+.ids-badge--default {
+  background: var(--color-background-alerting-info-base, #005ece);
+  border-color: var(--color-border-gray-white, #ffffff);
+  color: var(--color-text-gray-white, #ffffff);
+}
+
+.ids-badge--critical {
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
+}
+
+.ids-badge--warning {
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(
+    --ids-badge-warning-border-color,
+    var(--color-border-gray-white)
+  );
+  color: var(--color-text-gray-black);
+}
+
+.ids-badge--disabled {
+  background: var(--color-static-gray-500);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
+}
+
+.ids-badge--success {
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
+}
+
+.ids-badge:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}

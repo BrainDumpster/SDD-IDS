@@ -18,7 +18,7 @@ const specAccurateItems = [
 ] as const;
 
 const meta: Meta<typeof IdsAnchorMenu> = {
-  title: "Spec Generated/IDS/Anchor Menu",
+  title: "Components/IDS/Anchor Menu",
   component: IdsAnchorMenu,
   parameters: { layout: "padded" },
 };

@@ -83,7 +83,7 @@ const frameStyle: CSSProperties = {
 };
 
 const meta: Meta<typeof IdsDualListBox> = {
-  title: "Lib Generated/IDS/Dual List Box",
+  title: "Components/IDS/Dual List Box",
   component: IdsDualListBox,
   parameters: {
     layout: "padded",

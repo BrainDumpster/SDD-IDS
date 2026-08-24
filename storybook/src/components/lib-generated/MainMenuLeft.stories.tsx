@@ -68,7 +68,7 @@ const specAccurateArgs: ComponentProps<typeof IdsMainMenuLeft> = {
 };
 
 const meta: Meta<typeof IdsMainMenuLeft> = {
-  title: "Lib Generated/IDS/Main Menu Left",
+  title: "Components/IDS/Main Menu Left",
   component: IdsMainMenuLeft,
   parameters: {
     layout: "fullscreen",

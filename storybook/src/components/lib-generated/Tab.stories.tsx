@@ -52,7 +52,7 @@ const overflowItems: IdsTabItemInput[] = [
 ];
 
 const meta: Meta<IdsTabsProps> = {
-  title: "Lib Generated/IDS/Tab",
+  title: "Components/IDS/Tab",
   component: IdsTabs,
   parameters: {
     docs: {

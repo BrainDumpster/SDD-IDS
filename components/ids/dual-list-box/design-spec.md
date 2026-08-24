@@ -11,11 +11,12 @@
 - **Version:** 3.5.0
 - **Status:** active
 - **Created:** 2026-05-20
-- **Updated:** 2026-08-16
+- **Updated:** 2026-08-19
 - **Last verified:** 2026-05-20 (Figma MCP `12114:232557`, `12114:230677`; reference: keyboard nav + transfer labels)
 - **Storybook examples requested:** yes
-- **Generated Storybook:** `storybook/src/components/IdsDualListBox.stories.tsx` (title **`Spec Generated/IDS/Dual List Box`**, primary story **`Spec Accurate Design`**)
+- **Generated Storybook:** `storybook/src/components/IdsDualListBox.stories.tsx`, `storybook-angular/src/components/ids-dual-list-box/ids-dual-list-box.stories.js` (title **`Spec Generated/IDS/Dual List Box`**, primary story **`Spec Accurate Design`**)
 - **Implementation reference:** `lib/react/ids/dual-list-box/` (`IdsDualListBox` = DualListBoxRoot; anatomy slots `IdsDualListBoxListsParent` …); stories: `storybook/src/components/lib-generated/DualListBox.stories.tsx`. Legacy Storybook: `storybook/src/components/IdsDualListBox.tsx`.
+- **Angular library:** `lib/angular/ids/dual-list-box/`
 - **Primary Figma URL:** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-31229&m=dev
 - **Primary node id:** `22468:31229` (library instance slot; element nodes below carry measurable UI)
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
@@ -42,6 +43,16 @@ Deterministic child structure for **`DualListBoxRoot`**:
    3. **`SelectedPane`** — target list column (same inner structure as Available)
       - **`SelectedPaneHeader`** — user-defined title + “Total: N” on one row (`SelectedMetrics`)
       - **`SelectedListGroup`** — items or **empty placeholder** when `item count=0`
+
+### Angular selectors
+
+`ids-dual-list-box` → `ids-dual-list-box-lists-parent` → `ids-dual-list-box-available-pane` / `ids-dual-list-box-transfer-button-group` / `ids-dual-list-box-selected-pane`.
+
+- Available pane children: `ids-dual-list-box-available-pane-header`, `ids-dual-list-box-available-metrics`, `ids-dual-list-box-available-list-group`
+- Selected pane children: `ids-dual-list-box-selected-pane-header`, `ids-dual-list-box-selected-metrics`, `ids-dual-list-box-selected-list-group`
+- List row children: `ids-dual-list-box-list-item` → `ids-dual-list-box-drag-handle` + `ids-dual-list-box-item-content` + optional `ids-dual-list-box-selection-check`
+- Transfer buttons: `ids-dual-list-box-move-all-right`, `ids-dual-list-box-move-selected-right`, `ids-dual-list-box-move-selected-left`, `ids-dual-list-box-move-all-left`
+- Import array: `IDS_DUAL_LIST_BOX_IMPORTS`
 
 ## Layout & Measurements
 - **Runtime width:** container-driven (`width: 100%`, `box-sizing: border-box`); Figma sample assembly ~`724×459` (`12114:232557`, reference only).
@@ -219,6 +230,13 @@ interface DualListBoxProps {
 
 Tooltip implementation MUST use the IDS Tooltip component contract in `components/ids/tooltip/design-spec.md` (not native `title` attribute or ad-hoc popovers).
 
+### Angular runtime surface (`lib/angular/ids/dual-list-box/`)
+
+- Root selector: `ids-dual-list-box`
+- Inputs: `availableItems`, `selectedItems`, `availableTitle`, `selectedTitle`, `availablePlaceholder`, `selectedPlaceholder`, `moveSelectedRightTitle`, `moveSelectedLeftTitle`, `moveAllRightTitle`, `moveAllLeftTitle`, `availableSelection`, `selectedSelection`, `showMetrics`, `metricsFormat`, `enableDragDrop`, `itemTooltipSide`, `itemTooltipArrowAlign`, `ariaLabel`
+- Outputs: `availableSelectionChange`, `selectedSelectionChange`, `itemsChange`, `transfer`, `dragDrop`
+- Internal rendered selector hierarchy MUST follow **Angular selectors** under **Anatomy**
+
 **Pane copy defaults (overridable):**
 
 | Prop | Default |
@@ -335,6 +353,8 @@ Pane wrappers use `display: contents` so Header + ListGroup participate in `List
 | Instance slot (secondary) | `22468:33536` | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-33536&m=dev |
 
 - **Component map:** `data/component-figma-map.json` → `Dual List Box` (Form Elements)
+- **Angular library:** `lib/angular/ids/dual-list-box/`
+- **Angular Storybook:** `storybook-angular/src/components/ids-dual-list-box/ids-dual-list-box.stories.js`
 - **Intake session:** design-spec intake wizard, confirmed 2026-05-20
 - **Evidence:** Figma MCP `get_design_context` + `get_metadata` on `12114:232557` and element nodes (2026-05-20)
 - **Lib React:** `lib/react/ids/dual-list-box/` — named anatomy slots with `data-slot` matching this spec; stories `storybook/src/components/lib-generated/DualListBox.stories.tsx`

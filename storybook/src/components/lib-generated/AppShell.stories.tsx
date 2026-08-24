@@ -182,7 +182,7 @@ function NestedAppShell(props: IdsAppShellProps) {
 }
 
 const meta: Meta<IdsAppShellProps> = {
-  title: "Lib Generated/IDS/App Shell",
+  title: "Components/IDS/App Shell",
   component: IdsAppShell,
   parameters: {
     layout: "fullscreen",

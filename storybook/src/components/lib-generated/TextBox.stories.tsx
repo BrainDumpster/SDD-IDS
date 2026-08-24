@@ -42,7 +42,7 @@ function Box(
 }
 
 const meta: Meta<IdsTextBoxProps> = {
-  title: "Lib Generated/IDS/Text Box",
+  title: "Components/IDS/Text Box",
   component: IdsTextBox,
   parameters: {
     layout: "centered",

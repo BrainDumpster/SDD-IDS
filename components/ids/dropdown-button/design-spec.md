@@ -6,9 +6,9 @@
 - **Description:** A button that triggers a dropdown menu when clicked. Supports multiple button styles (Primary, Secondary, Tertiary), sizes (Small, Medium, Large), and states (Default, Hover, Press, Focus, Disabled). Supports optional leading icon (settings-gear-detailed) and icon-only variant with both leading icon and dropdown caret. Used as a trigger for dropdown menus and action lists.
 - **Status:** draft
 - **Created:** 2025-06-23
-- **Updated:** 2026-08-17
+- **Updated:** 2026-08-19
 - **Figma verification:** Figma MCP (get_design_context, get_metadata, get_variable_defs, get_screenshot)
-- **Verification date:** 2026-08-17
+- **Verification date:** 2026-08-19
 - **Figma file key:** 0bHk3XhrjFhowgFkz9yLr4
 - **Figma node IDs:** Main: 14737:165791, Button instance: 9662:26341, Icon-only (primary): 9662:26098, Icon-only (secondary): 9662:26087, Icon-only (tertiary): 9662:26076, With icon: 9662:26192, Dropdown menu: 14737:142851, Option hover (no radio): 29377:159478
 
@@ -69,9 +69,9 @@ dropdown
 ### Container measurements
 
 - **Trigger Button width:** Auto (based on content), min-width varies by size
-- **Dropdown Menu width:** 269px (fixed from Figma example)
-- **Dropdown Menu max-height:** Not specified in Figma (scrollable if needed)
-- **Gap between button and menu:** 0px (menu positioned flush below button)
+- **Dropdown Menu width:** `min-width: 100%` of trigger (content-driven); Figma example ~269px is reference only.
+- **Dropdown Menu max-height:** Not specified in Figma (scrollable if needed).
+- **Gap between button and menu:** `margin-top: -1px` so menu top border overlaps trigger bottom border into one line (matches single-select `sideOffset: -1`).
 
 ## Tokens
 
@@ -194,12 +194,17 @@ dropdown
 | Open | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--shadow-shadow-4)` |
 | Closed | N/A (not rendered) | N/A | N/A |
 
-**Menu Option States:**
+**Menu Option States** (Figma-verified `12380:16525`):
 | State | Background | Border | Text |
 |-------|------------|--------|------|
 | Default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
-| Hover | `var(--color-background-brand-lighter-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
-| Press | `var(--color-background-brand-light-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Press / Active | `var(--color-background-brand-light-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| Selected | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| Focus-visible | `var(--color-background-surface-component)` | absolute inset `::after`, `1px solid var(--color-border-brand-base)`, `border-radius: radius-4` | `var(--color-text-gray-neutral)` |
+| Disabled | `var(--color-background-gray-lighter)` | top+bottom `1px solid var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
+
+**Menu Option padding (Figma `12380:16525`):** `10px` vertical · `16px` left · `24px` right.
 
 ## States (Dark Theme)
 
@@ -251,9 +256,10 @@ All Dark theme states use the same `var(--...)` tokens as Light theme. The token
 - `medium` (default, height: 32px)
 - `large` (height: 40px)
 
-**Icon Only:**
-- `false` (default): Shows button label + dropdown icon
-- `true`: Shows only dropdown icon
+**Trigger content:**
+- `label-only` (default): label + dropdown caret
+- `with-leading-icon`: settings gear + label + dropdown caret
+- `icon-only`: settings gear + dropdown caret
 
 **State:**
 - `default` (default)
@@ -315,13 +321,23 @@ interface IdsDropdownButtonItem {
 - `onSelect`: Mode A — item selected (leaf)
 - `IdsDropdownMenuItem.onSelect`: Mode B — leaf item activated
 
+### Composition API (Angular / contract mirror)
+
+```text
+ids-dropdown-button [buttonStyle?, size?, disabled?, open?, defaultOpen?]
+  ids-dropdown-trigger [label?, iconOnly?, showLeadingIcon?, ariaLabel?]
+  ids-dropdown-button-menu
+    ids-dropdown-button-menu-item [value, label, disabled?]
+    ids-dropdown-button-menu-item …
+```
+
+Projected children are the canonical Angular runtime API. Aggregate `items[]` remains a React Mode A convenience only.
+Contract: `component-contracts/ids/dropdown-button.contract.ts`.
+
 **Spec Accurate Design story defaults:**
-- `buttonStyle`: 'primary'
-- `size`: 'medium'
-- `iconOnly`: false
-- `disabled`: false
-- `label`: 'Dropdown Button'
-- `items`: [{ id: '1', label: 'Option 1' }, { id: '2', label: 'Option 2' }, { id: '3', label: 'Option 3' }]
+- Root: `buttonStyle="primary"`, `size="medium"`, `disabled=false`
+- Trigger: `label="Dropdown Button"`, `showLeadingIcon=false`, `iconOnly=false`
+- Menu items: `Option 1`, `Option 2`, `Option 3`
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
@@ -353,6 +369,7 @@ IdsDropdownButton (`dropdown`)
 |------|--------|---------|-------------------|
 | buttonStyle | primary, secondary, tertiary | primary | `.dropdown-button--{style}` |
 | size | small, medium, large | medium | `.dropdown-button--{size}` |
+| showLeadingIcon | true, false | false | `.dropdown-button__trigger--with-icon` |
 | iconOnly | true, false | false | `.dropdown-button--icon-only` |
 | disabled | true, false | false | `.dropdown-button--disabled` |
 | open | true, false | false | `.dropdown-button--open` |
@@ -403,6 +420,9 @@ IdsDropdownButton (`dropdown`)
 - Click outside menu closes it
 - Escape key closes it
 - Tab/Shift+Tab closes it
+- Enter/Space on closed trigger opens the menu and focuses the first enabled item
+- Arrow Down on closed trigger opens the menu and focuses the first enabled item
+- Arrow Up on closed trigger opens the menu and focuses the last enabled item
 
 **Menu navigation:**
 - Arrow Down/Up moves focus between items
@@ -415,9 +435,10 @@ IdsDropdownButton (`dropdown`)
 - Visual opacity reduced via tokens
 
 **Controlled vs uncontrolled:**
-- If `open` prop is provided, component is controlled
-- If `onOpenChange` is provided, component reports state changes
-- If neither is provided, component manages internal state
+- If `open` input is provided, component is controlled
+- If `open` is absent, component manages internal open state from `defaultOpen`
+- `openChange` always reports requested state transitions
+- `selectionChange` emits `{ value, label }` for the activated item
 
 ### Accessibility contract
 
@@ -425,6 +446,7 @@ IdsDropdownButton (`dropdown`)
 - Trigger button: `aria-haspopup="true"`, `aria-expanded={open}`, `aria-controls={menuId}`
 - Menu: `role="menu"`, `aria-labelledby={buttonId}`
 - Menu items: `role="menuitem"`, `aria-disabled={disabled}`
+- Icon-only trigger: accessible name via `aria-label`
 
 **Keyboard interaction:**
 - All interactions must work without mouse
@@ -457,10 +479,11 @@ IdsDropdownButton (`dropdown`)
 ### Fallback/error rules
 
 **Missing label:**
-- If `label` is empty and `iconOnly` is false, render empty button with icon only
+- If `label` is empty and `iconOnly` is false, render the caret-only text slot as empty but preserve trigger sizing
+- If `iconOnly` is true, `ariaLabel` must provide the accessible name
 
 **Empty items:**
-- If `items` array is empty, render disabled button or show "No options" message
+- If no projected `ids-dropdown-button-menu-item` children exist, menu opens as an empty popup container with no synthetic placeholder row
 
 **Loading state:**
 - Not specified in Figma - use disabled state or loading spinner if needed
@@ -539,9 +562,16 @@ IdsDropdownButton (`dropdown`)
 
 **Verification Method:**
 - Method: Figma MCP
-- Tools: get_metadata, get_variable_defs
-- Date: 2026-08-17
-- Session: Align dropdown-button option hover with dropdown option hover states
+- Tools: get_design_context, get_metadata, get_variable_defs, get_screenshot
+- Date: 2026-08-19
+- Session: Angular dropdown-button implementation update + lib compound API alignment
+
+**Runtime contract path:**
+- `component-contracts/ids/dropdown-button.contract.ts`
+
+**Reference implementation path:**
+- `lib/react/ids/dropdown-button/`
+- `lib/angular/ids/dropdown-button/`
 
 **Supplemental Node IDs (for reference):**
 - Button variants (all styles × sizes × states): See metadata output for full list

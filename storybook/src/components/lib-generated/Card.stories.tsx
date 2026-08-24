@@ -80,7 +80,7 @@ const cardHostStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsCardProps> = {
-  title: "Lib Generated/IDS/Card",
+  title: "Components/IDS/Card",
   component: IdsCard,
   parameters: {
     layout: "centered",

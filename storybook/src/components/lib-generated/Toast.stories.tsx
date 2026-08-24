@@ -34,7 +34,7 @@ const TYPES: IdsToastType[] = [
 ];
 
 const meta: Meta<IdsToastItemProps> = {
-  title: "Lib Generated/IDS/Toast",
+  title: "Components/IDS/Toast",
   component: IdsToastItem,
   parameters: {
     layout: "padded",

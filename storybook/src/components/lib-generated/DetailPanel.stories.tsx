@@ -28,7 +28,7 @@ import {
 } from "../../../../lib/react/ids/detail-panel";
 
 const meta: Meta<IdsDetailPanelProps> = {
-  title: "Lib Generated/IDS/Detail Panel",
+  title: "Components/IDS/Detail Panel",
   component: IdsDetailPanel,
   parameters: {
     layout: "fullscreen",

@@ -16,7 +16,7 @@ import {
 } from "../../../../lib/react/ids/alert";
 
 const meta: Meta<IdsAlertProps> = {
-  title: "Lib Generated/IDS/Alert",
+  title: "Components/IDS/Alert",
   component: IdsAlert,
   parameters: {
     layout: "padded",

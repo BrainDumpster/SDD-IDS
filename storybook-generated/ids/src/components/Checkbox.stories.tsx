@@ -67,7 +67,7 @@ const sharedCheckboxStoryStyles = `
 `;
 
 const meta: Meta<typeof IdsCheckbox> = {
-  title: "Spec Generated/IDS/Checkbox",
+  title: "Components/IDS/Checkbox",
   component: IdsCheckbox,
   parameters: { layout: "padded" },
   decorators: [

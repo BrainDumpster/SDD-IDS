@@ -34,7 +34,7 @@ const longContent =
   "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.";
 
 const meta: Meta<TooltipProps> = {
-  title: "Lib Generated/IDS/Tooltip",
+  title: "Components/IDS/Tooltip",
   component: Tooltip,
   parameters: {
     layout: "centered",

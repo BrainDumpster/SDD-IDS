@@ -28,7 +28,7 @@ const specAccurateArgs: ComponentProps<typeof IdsTimePicker> = {
 };
 
 const meta: Meta<typeof IdsTimePicker> = {
-  title: "Lib Generated/IDS/Time Picker",
+  title: "Components/IDS/Time Picker",
   component: IdsTimePicker,
   parameters: {
     layout: "padded",

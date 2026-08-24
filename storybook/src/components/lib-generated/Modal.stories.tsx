@@ -26,7 +26,7 @@ import {
 } from "../../../../lib/react/ids/button";
 
 const meta: Meta<IdsModalProps> = {
-  title: "Lib Generated/IDS/Modal",
+  title: "Components/IDS/Modal",
   component: IdsModal,
   parameters: {
     layout: "centered",

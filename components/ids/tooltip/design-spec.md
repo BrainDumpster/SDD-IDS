@@ -15,13 +15,27 @@
   - `38201:109653..109673` (`Arrow Pointing=Right`, `Arrow Positioned=Start|Center|End`)
   - `38201:109683..109703` (`Arrow Pointing=Left`, `Arrow Positioned=Start|Center|End`)
 ## Anatomy
-- `TriggerAnchor`: element that owns tooltip visibility.
-- `TooltipRoot`: positioned wrapper for content and arrow.
-- `TooltipPanel`: bordered container with optional header and close action.
-- `Header` (optional): short title text; in `closable` mode the header slot is preserved (empty when title is absent) to maintain close-icon alignment and vertical rhythm.
-- `BodyContent` (required): free tooltip content region.
-- `CloseAction` (optional): `20×20` IDS tertiary icon-only button (`sizing/size-20`); all padding `padding/padding-4`; icon `ctrl-close-16` via shared `Icon` component at `12×12` (not inline SVG).
-- `Arrow` (required): directional pointer; supports side and alignment matrix.
+- `TooltipRoot` (`ids-tooltip`): host that owns open state, placement, and portal.
+- `TooltipTrigger` (`ids-tooltip-trigger`): element that owns tooltip visibility (hover/focus).
+- `TooltipPanel` (`ids-tooltip-panel`): bordered container (popup shell + surface).
+- `TooltipHeader` (`ids-tooltip-header`, optional): header chrome; in `closable` mode keep the slot (empty when title is absent) to maintain close-icon alignment and vertical rhythm.
+- `TooltipTitle` (`ids-tooltip-title`, optional): short title text inside the header.
+- `TooltipBody` (`ids-tooltip-body`, required): free tooltip content region.
+- `TooltipClose` (`ids-tooltip-close`, optional / required when `closable=true`): `20×20` IDS tertiary icon-only button (`sizing/size-20`); padding `padding/padding-4`; icon `ctrl-close-16` via shared `ids-icon` at `12×12` (not inline SVG). Sibling of header+body column — **not** nested inside `TooltipHeader`.
+- `TooltipArrow` (`ids-tooltip-arrow`, required): directional pointer; supports side and alignment matrix.
+
+Angular composition (canonical child order):
+
+```
+ids-tooltip
+  ids-tooltip-trigger
+  ids-tooltip-panel
+    ids-tooltip-header
+      ids-tooltip-title
+    ids-tooltip-body
+    ids-tooltip-close
+    ids-tooltip-arrow
+```
 ## Layout & Measurements
 - Top/bottom arrow variants:
   - outer sample size: `244x143`
@@ -133,30 +147,52 @@ Typography contract:
 - Arrow follows chosen `placement` side and `arrowAlign`.
 - Tooltip content is consumer-supplied and may be text or structured markup.
 ## Composition & API (runtime)
-- `content: string | ReactNode | TemplateRef | SlotContent` (required, framework-adapted).
-- `title?: string` (optional header).
+
+Deterministic child order (projected):
+
+```
+TooltipRoot
+  TooltipTrigger
+  TooltipPanel
+    TooltipHeader
+      TooltipTitle
+    TooltipBody
+    TooltipClose
+    TooltipArrow
+```
+
+Group vs item: root owns `side`, `arrowAlign`, `closable`, open state, and context; trigger owns pointer/focus; panel is the portaled popup; header/title/body/close/arrow are panel children.
+
+Root props:
 - `closable?: boolean` (default `false`).
 - `side?: "top" | "bottom" | "left" | "right"` (default `top`).
 - `arrowAlign?: "start" | "center" | "end"` (default `center`).
 - `open?: boolean` / `defaultOpen?: boolean`.
 - `onOpenChange?: (open: boolean) => void`.
 - `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
-- `closeIconShapeName?: string` default `ctrl-close-16` (for icon component integration).
+- `closeIconShapeName?: string` default `ctrl-close-16`.
 - `hugContent?: boolean` (default `false`). When `true`, the tooltip popup width shrinks to fit its content instead of using the standard `240px` / `264px` fixed widths.
-- `triggerDisplay?: "inline" | "block"` (default `inline`). When `block`, the trigger anchor spans the full width of its container (e.g. for truncated dropdown option labels or dual-list rows) and uses `min-width: 0` so it does not force a wider flex parent.
-- `delay?: number` (default `600` ms, Base UI default). Open delay for standard hover tooltips; use `0` for immediate appearance.
+- `triggerDisplay?: "inline" | "block"` (default `inline`). When `block`, the trigger anchor spans the full width of its container and uses `min-width: 0`.
+- `delay?: number` (default `600` ms). Open delay for standard hover tooltips; use `0` for immediate appearance.
 - `closeDelay?: number` (default `0` ms). Delay before closing when the pointer leaves the trigger.
+
+Slot rules:
+- `TooltipTrigger` is required (wraps the consumer trigger control).
+- `TooltipBody` is required.
+- `TooltipArrow` is always rendered.
+- `TooltipHeader` / `TooltipTitle` optional; omit both when there is no title and `closable=false`.
+- When `closable=true`, `TooltipClose` is required; keep `TooltipHeader` even if title is absent (empty header, one-line min-height).
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 Deterministic structure:
-1. `TriggerAnchor`
-2. `TooltipPortal` (if framework/library uses portaling)
-3. `TooltipRoot`
-4. `Arrow` (always rendered)
-5. `TooltipPanel`
+1. `TooltipRoot`
+2. `TooltipTrigger`
+3. `TooltipPortal` (if framework/library uses portaling)
+4. `TooltipPanel` (popup shell)
+5. `TooltipArrow` (always rendered; child of panel in composition, visually overlapping the panel edge)
 6. `Content` wrapper (`column` when `closable=false`; `row` when `closable=true`)
-7. When `closable=false`: optional `Header` → `BodyContent` (vertical stack inside `Content`)
-8. When `closable=true`: `ContentColumn` (optional `Header` → `BodyContent`, vertical stack, `padding-right: var(--padding-padding-4)`) + `CloseAction` (sibling, top-aligned)
+7. When `closable=false`: optional `TooltipHeader` (`TooltipTitle`) → `TooltipBody` (vertical stack)
+8. When `closable=true`: `ContentColumn` (`TooltipHeader` → `TooltipBody`, `padding-right: var(--padding-padding-4)`) + `TooltipClose` (sibling, top-aligned)
 
 Variant/option matrix:
 - Content mode: `header=false|true`.
@@ -214,9 +250,13 @@ Validation checklist (pass/fail):
   - Up: `38201:109623`, `38201:109633`, `38201:109643`
   - Right: `38201:109653`, `38201:109663`, `38201:109673`
   - Left: `38201:109683`, `38201:109693`, `38201:109703`
-- Last live verification: Figma MCP, file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593`, `38201:109653`, session 2026-06-15.
+- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`, `get_design_context`), file `0bHk3XhrjFhowgFkz9yLr4`, nodes `42636:14688`, `38201:109593` (Arrow Pointing=Down, Arrow Positioned=Start), session 2026-08-19.
+- Runtime contract: `component-contracts/ids/tooltip.contract.ts`
+- Angular library: `lib/angular/ids/tooltip/`
+- Angular Storybook: `storybook-angular/src/components/ids-tooltip/`
 
 ## Changelog
+- **2026-08-19**: Canonical composition is `TooltipRoot` → `TooltipTrigger` + `TooltipPanel` (`Header`/`Title`, `Body`, `Close`, `Arrow`). Angular reference: `lib/angular/ids/tooltip/`. Live Figma re-check: nodes `42636:14688`, `38201:109593`.
 - **2026-08-07**: Added `hugContent` runtime API and `.popupHug` style to let the popup width shrink to fit its content; default remains the standard `240px` (`popupStandard`) / `264px` (`popupClosable`) fixed widths. Synced from `storybook/src/components/IdsTooltip.tsx` and `IdsTooltip.module.css`.
 - **2026-07-27**: Preserved the `Header` slot in closable no-title tooltips (empty, one-line min-height) to maintain close-icon alignment and vertical rhythm; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.
 - **2026-07-27**: Updated closable tooltip `CloseAction` to a `20×20` IDS tertiary icon-only button with `padding/padding-4`, `sizing/size-20`, and close icon color `var(--color-icon-gray-neutral-base)`; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.

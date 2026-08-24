@@ -52,7 +52,7 @@
 - Field container: `padding-left: var(--padding-padding-16)`; no right padding (icon button provides trailing padding)
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
 - Field container corner radius: `var(--time-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
-- Clock icon button: render as `Button` `variant="tertiary"` `iconOnly`; size: `lg` for large time picker, `md` for small time picker (icon button has no small size); `margin: -1px -1px -1px 0` to overlap input field border
+- Clock icon button: trailing hit area, `align-self: stretch`, `margin: -1px -1px -1px 0` (overlaps field border). Hover fill + chrome: `border-radius: var(--time-picker-control-radius)` (IDS: square / `var(--corner-radius-radius-none)`; Figma Hover on icon `42159:132250`). Do **not** use `--button-control-radius` (Synapse 4px). Padding: `var(--padding-padding-12)` / `var(--padding-padding-16)` large; `var(--padding-padding-8)` / `var(--padding-padding-16)` small.
 - Time popup shell: `border-radius: 0` (square corners)
 - Field focus ring corner radius: `var(--time-picker-focus-ring-radius)` (`var(--corner-radius-radius-4)` in IDS theme)
 - Input width: container-driven (`width: 100%`); text `flex: 1 0 0`, `min-width: 1px`
@@ -264,7 +264,7 @@ TimePickerRoot
 | `FieldContainer.open` | border `var(--color-border-brand-base)` |
 | `FieldContainer.disabled` | bg `var(--color-background-gray-lighter)`; border `var(--color-border-gray-disabled)` |
 | `FieldContainer.error` | border `var(--color-border-alerting-critical-base)` |
-| `ClockIconTrigger` | icon `var(--color-icon-brand-base)`; transparent border default; hover brand-lighter + brand border |
+| `ClockIconTrigger` | icon `var(--color-icon-brand-base)`; transparent border default; hover bg `var(--color-background-controls-lighter)` + border `var(--color-border-brand-base)`; `border-radius: var(--time-picker-control-radius)` (IDS square) |
 | `FormatHint` | `var(--color-text-gray-neutral)` body-2 regular |
 | `TimePopup` | bg `var(--color-background-surface-secondary)`; border accessible; Shadow 2; padding 16px; right-aligned; `margin-top: -1px`; `border-radius: var(--time-picker-control-radius)` (bottom corners when attached) |
 | `ValueCell` | 32×32; text `var(--color-text-gray-neutral-strong)` 14px regular |
@@ -315,6 +315,7 @@ See **Interactions → Accessibility**. Minimum: dialog labeling, expanded on tr
 | Figma node | Description | Usage |
 |---|---|---|
 | `42159:132203` | `TimePicker-Main` | Full state × size matrix |
+| `42159:132250` | `TimePicker-Main` — Hover on icon | Clock hit-area hover fill; square IDS radius (`42159:132255`) |
 | `42159:132108` | `TimePicker-Element-Dropdown` | Popup columns, 12h/24h, seconds variants |
 | `42159:132173` | Dropdown 12h HH:MM | Default open popup layout |
 | `42159:132126` | Dropdown 24h HH:MM | Two-column layout |
@@ -325,13 +326,20 @@ See **Interactions → Accessibility**. Minimum: dialog labeling, expanded on tr
 
 **Verification:** Figma MCP `get_design_context` on `42159:132203` and `42159:132108`, file `0bHk3XhrjFhowgFkz9yLr4`, session 2026-05-26.
 
+| Runtime path | Role |
+|---|---|
+| `lib/react/ids/time-picker/` | React reference implementation |
+| `lib/angular/ids/time-picker/` | Angular implementation (parity with React) |
+| `storybook-angular/src/components/ids-time-picker/` | Angular Spec Generated stories |
+| `components/ids/date-and-time-picker/design-spec.md` | Family map entry (Date and Time Picker) |
+
 ## Implementation Notes
 Last updated: 2026-07-17
 
 - **Font-weight:** all text elements use `400`.
 - **Required indicator:** `required?: boolean` prop renders a `*` (`var(--color-text-alerting-critical-base)`) after the label.
 - **Label layout:** the label is optional; when present it sits to the left of the field (root is a `row` with gap 16px).
-- **Clock button:** shared tertiary `Button`, with a `-1px` margin so it overlaps the field border.
+- **Clock button:** trailing native icon button (same pattern as Date Picker calendar trigger). Hover fill uses `var(--time-picker-control-radius)` — square in IDS (Figma `42159:132250`). Not `--button-control-radius`.
 - **Field border:** keeps the accessible border when the clock button is hovered/focused.
 - **Text selection:** input has no selection highlight; selection is cleared when opening the popup.
 - **Column arrows:** use `var(--color-icon-gray-neutral-base)`.

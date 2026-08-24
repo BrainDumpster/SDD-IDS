@@ -47,7 +47,7 @@ const SECTION_OPTIONS: IdsDropdownSingleSelectOptionModel[] = [
 const sampleWidth: CSSProperties = { width: 300, maxWidth: "100%" };
 
 const meta: Meta<typeof IdsDropdownSingleSelect> = {
-  title: "Lib Generated/IDS/Dropdown Single Select",
+  title: "Components/IDS/Dropdown/Single Select",
   component: IdsDropdownSingleSelect,
   parameters: {
     layout: "fullscreen",

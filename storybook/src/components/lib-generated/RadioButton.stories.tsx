@@ -21,7 +21,7 @@ import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
 import { IdsIcon } from "../../../../lib/react/ids/icon";
 
 const meta: Meta<IdsRadioGroupProps> = {
-  title: "Lib Generated/IDS/Radio Button",
+  title: "Components/IDS/Radio Button",
   component: IdsRadioGroup,
   parameters: {
     docs: {

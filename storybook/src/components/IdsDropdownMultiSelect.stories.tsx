@@ -81,7 +81,7 @@ function MultiSelectTrigger({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Spec Generated/IDS/Dropdown/Multi Select",
+  title: "Components/IDS/Dropdown/Multi Select",
   component: DropdownMenu,
   parameters: { layout: "fullscreen" },
   decorators: [

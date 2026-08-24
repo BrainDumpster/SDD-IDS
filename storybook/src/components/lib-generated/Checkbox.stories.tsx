@@ -45,7 +45,7 @@ function Box(
 }
 
 const meta: Meta<IdsCheckboxProps> = {
-  title: "Lib Generated/IDS/Checkbox",
+  title: "Components/IDS/Checkbox",
   component: IdsCheckbox,
   parameters: {
     docs: {

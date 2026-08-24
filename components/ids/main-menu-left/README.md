@@ -17,6 +17,7 @@ Host apps supply a **user-defined** item tree (`items`, optional `children`), op
 | File | Role |
 |---|---|
 | `storybook/src/components/MainMenuLeft.tsx` | Nav rail: user `items` + optional `children`, collapse footer, optional `logo` |
+| `storybook-angular/src/components/ids-main-menu-left/` | Angular 21 standalone port + Storybook (port **6007**) |
 | `storybook/src/spec-contracts/ids-main-menu-left.contract.ts` | Design spec path constant for gates / codegen |
 | `storybook/src/components/MainMenuLeft.module.css` | **278px** expanded / **64px** collapsed widths, token-driven states |
 
@@ -51,7 +52,7 @@ python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --spec-
 |------|------|
 | `--component main-menu-left` | Target slug (matches `components/ids/main-menu-left/`) |
 | `--spec-only` | Disables RAG/retrieval context; gate runs on **layered specs + theme** only (faster, CI-friendly) |
-| `--deterministic-story` | Regenerates **`storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`** from `generation/deterministic_storybook/ids/main_menu_left.py` |
+| `--deterministic-story` | Regenerates React + Angular stories from `generation/spec_derived/main_menu_left_composition.py` (composition anatomy emitter) via `main_menu_left.py` / `main_menu_left_angular.py` |
 
 ### Outputs this updates
 

@@ -17,7 +17,7 @@ import { IdsDatePicker } from "../../../../lib/react/ids/date-picker";
 const DESIGN_SPEC_PATH = "components/ids/date-picker/design-spec.md";
 
 const meta: Meta<typeof IdsDatePicker> = {
-  title: "Lib Generated/IDS/Date Picker",
+  title: "Components/IDS/Date Picker",
   component: IdsDatePicker,
   parameters: {
     layout: "padded",

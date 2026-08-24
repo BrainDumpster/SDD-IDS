@@ -15,10 +15,18 @@ node_modules/
 **/storybook-angular/node_modules/
 storybook/storybook-static/
 storybook-angular/storybook-static/
+apps/design-spec-collab/storybook-static/
+apps/design-spec-collab/storybook-static.building/
+apps/design-spec-collab/backend/**/storybook-static/
+storybook-angular/compiled/
+storybook-angular/.angular/cache/
 .angular/
 **/.angular/
 .cache/
 **/.cache/
+
+# Figma MCP token dumps (assembled into compact-export, then ids-theme.css)
+storage/figma-exports/
 
 # Temporary workspace artifacts
 .tmp_*
@@ -27,3 +35,11 @@ storybook-angular/storybook-static/
 data/design-spec-intake/sessions/*
 !data/design-spec-intake/sessions/.gitkeep
 
+# Design-spec collab / portal runtime data (jobs, sessions, PR Storybook caches)
+apps/design-spec-collab/data/review_sessions/
+apps/design-spec-collab/data/jobs/
+apps/design-spec-collab/data/sessions/
+apps/design-spec-collab/data/collab_sessions/
+apps/design-spec-collab/data/storybook_pr_builds/
+apps/design-spec-portal/data/jobs/
+apps/design-spec-portal/*.json

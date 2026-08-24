@@ -135,9 +135,10 @@ export const StateHarness: Story = {{
               iconOnly
               size={{size}}
               variant={{variant}}
-              iconSlug="{icon_slug}"
               aria-label={{`${{variant}} icon button ${{size}}`}}
-            />
+            >
+              <Icon shapeName={{DEMO_ICON_SLUG}} variant="mask" />
+            </{component_name}>
           ))}}
         </div>
       ))}}
@@ -152,9 +153,10 @@ export const StateHarness: Story = {{
               iconOnly
               size={{size}}
               variant={{variant}}
-              iconSlug="{icon_slug}"
               aria-label={{`${{variant}} icon button ${{size}}`}}
-            />
+            >
+              <Icon shapeName={{DEMO_ICON_SLUG}} variant="mask" />
+            </{component_name}>
           ))}}
         </motionless>
       ))}}
@@ -165,12 +167,17 @@ export const StateHarness: Story = {{
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import type {{ ComponentProps }} from "react";
 {theme_import}
+import {{ BUTTON_SPEC_ACCURATE_DEFAULTS }} from "@component-contracts/ids/button.contract";
+import {{ SPEC_ACCURATE_DESIGN_STORY }} from "@component-contracts/common/story-meta";
+import {{ Icon }} from "../../../../storybook/src/components/Icon";
 import {{ {import_symbol} as {component_name} }} from "{import_path}";
 
 type Variant = {variant_union};
 type Size = {size_type};
 
 const DEMO_ICON_SLUG = "{icon_slug}";
+
+const DemoIcon = () => <Icon shapeName={{DEMO_ICON_SLUG}} variant="mask" />;
 
 function ButtonStoryStyles() {{
   return (
@@ -224,18 +231,16 @@ const meta: Meta<typeof {component_name}> = {{
     docs: {{
       description: {{
         component:
-          "IDS Button per components/ids/button/design-spec.md. Theme: components/ids-theme.css. Default size: large (lg). Icon slug resolves from assets/icons/<slug>.svg.",
+          "IDS Button per components/ids/button/design-spec.md. Composition API: optional leading `<Icon variant=\\\"mask\\\" />` + label `children`.",
       }},
     }},
   }},
   argTypes: {{
     variant: {{ control: "select", options: {variants_array} }},
     size: {{ control: "select", options: {size_options_json} }},
-    iconSlug: {{ control: "text" }},
     disabled: {{ control: "boolean" }},
     loading: {{ control: "boolean" }},
     iconOnly: {{ control: "boolean" }},
-    children: {{ control: "text" }},
   }},
   args: {{
     variant: "primary",
@@ -243,7 +248,6 @@ const meta: Meta<typeof {component_name}> = {{
     disabled: false,
     loading: false,
     iconOnly: false,
-    children: "Button",
   }},
 }};
 
@@ -267,15 +271,21 @@ function SimButton(
   );
 }}
 
-/** Canonical spec defaults: primary, large, interactive (Figma 41894:116183 / matrix 9662:25120). */
+/** Canonical spec defaults: primary, large, leading icon + label (Figma 41894:116183 / matrix 9662:25120). */
 export const SpecAccurateDesign: Story = {{
+  name: SPEC_ACCURATE_DESIGN_STORY,
+  render: (args) => (
+    <{component_name} {{...args}}>
+      <DemoIcon />
+      Button
+    </{component_name}>
+  ),
   args: {{
-    variant: "primary",
+    variant: BUTTON_SPEC_ACCURATE_DEFAULTS.variant,
     size: "{default_size}",
-    children: "Button",
-    disabled: false,
-    loading: false,
-    iconOnly: false,
+    disabled: BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
+    loading: BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
+    iconOnly: BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
   }},
 }};
 
@@ -284,8 +294,89 @@ export const Playground: Story = {{
     <{component_name}
       {{...args}}
       aria-label={{args.iconOnly ? (args["aria-label"] as string | undefined) ?? "Icon only button" : undefined}}
-      iconSlug={{args.iconOnly || args.iconSlug ? (args.iconSlug as string | undefined) ?? DEMO_ICON_SLUG : undefined}}
-    />
+    >
+      {{args.iconOnly ? <DemoIcon /> : (
+        <>
+          <DemoIcon />
+          Button
+        </>
+      )}}
+    </{component_name}>
+  ),
+}};
+
+export const StatesMatrix: Story = {{
+  render: () => (
+    <div style={{{{ display: "grid", gap: 12 }}}}>
+      <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap" }}}}>
+        <{component_name} variant="primary" size="{default_size}">Primary</{component_name}>
+        <{component_name} variant="secondary" size="{default_size}">Secondary</{component_name}>
+        <{component_name} variant="tertiary" size="{default_size}">Tertiary</{component_name}>
+        <{component_name} variant="destructive" size="{default_size}">Destructive</{component_name}>
+      </div>
+      <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap" }}}}>
+        <{component_name} variant="primary" size="{default_size}" disabled>Primary</{component_name}>
+        <{component_name} variant="secondary" size="{default_size}" disabled>Secondary</{component_name}>
+        <{component_name} variant="tertiary" size="{default_size}" disabled>Tertiary</{component_name}>
+        <{component_name} variant="destructive" size="{default_size}" disabled>Destructive</{component_name}>
+      </div>
+    </div>
+  ),
+}};
+
+export const SizeExamples: Story = {{
+  render: () => (
+    <div style={{{{ display: "grid", gap: 12 }}}}>
+      <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
+        <{component_name} variant="primary" size="{"small" if use_dap_sizes else "sm"}">Small</{component_name}>
+        <{component_name} variant="primary" size="{"medium" if use_dap_sizes else "md"}">Medium</{component_name}>
+        <{component_name} variant="primary" size="{"large" if use_dap_sizes else "lg"}">Large</{component_name}>
+      </div>
+      <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
+        <{component_name} variant="secondary" size="{"small" if use_dap_sizes else "sm"}">
+          <DemoIcon />
+          Small
+        </{component_name}>
+        <{component_name} variant="secondary" size="{"medium" if use_dap_sizes else "md"}">
+          <DemoIcon />
+          Medium
+        </{component_name}>
+        <{component_name} variant="secondary" size="{"large" if use_dap_sizes else "lg"}">
+          <DemoIcon />
+          Large
+        </{component_name}>
+      </div>
+      <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
+        <{component_name} variant="tertiary" size="{"medium" if use_dap_sizes else "md"}" iconOnly aria-label="Settings medium">
+          <DemoIcon />
+        </{component_name}>
+        <{component_name} variant="tertiary" size="{"large" if use_dap_sizes else "lg"}" iconOnly aria-label="Settings large">
+          <DemoIcon />
+        </{component_name}>
+      </div>
+    </div>
+  ),
+}};
+
+/** Body 2 typography from Figma (41894:116183 / 9662:25120): 14/20, weight 400, Roboto primary. */
+export const TypographyBody2: Story = {{
+  render: () => (
+    <div style={{{{ display: "grid", gap: 8 }}}}>
+      <{component_name} variant="primary" size="{default_size}">
+        Body 2 — 14/20 / 400
+      </{component_name}>
+      <p
+        style={{{{
+          margin: 0,
+          fontFamily: 'var(--typography-font-style-primary, "Roboto", sans-serif)',
+          fontSize: "var(--font-size-body-2)",
+          lineHeight: "var(--font-line-height-line-height-20)",
+          fontWeight: 400,
+        }}}}
+      >
+        Reference text using the same Body 2 tokens as the button label.
+      </p>
+    </div>
   ),
 }};
 
@@ -337,20 +428,37 @@ export const Loading: Story = {{
       <motionless className="sbVariantGrid">
         <{component_name} variant="primary" size="{default_size}" loading>Primary</{component_name}>
         <{component_name} variant="secondary" size="{default_size}" loading>Secondary</{component_name}>
+        <{component_name} variant="tertiary" size="{default_size}" loading>
+          <DemoIcon />
+          Tertiary
+        </{component_name}>
       </motionless>
     </motionless>
   ),
 }};
 
-export const IconWithLabel: Story = {{
+export const IconComposition: Story = {{
+  name: "Icon Composition",
   render: () => (
     <motionless>
       <ButtonStoryStyles />
       <motionless className="sbVariantGrid">
-        <{component_name} variant="primary" size="{default_size}" iconSlug={{DEMO_ICON_SLUG}}>Primary</{component_name}>
-        <{component_name} variant="secondary" size="{default_size}" iconSlug={{DEMO_ICON_SLUG}}>Secondary</{component_name}>
-        <{component_name} variant="tertiary" size="{default_size}" iconSlug={{DEMO_ICON_SLUG}}>Tertiary</{component_name}>
-        <{component_name} variant="destructive" size="{default_size}" iconSlug={{DEMO_ICON_SLUG}}>Destructive</{component_name}>
+        <{component_name} variant="primary" size="{default_size}">
+          <DemoIcon />
+          Primary
+        </{component_name}>
+        <{component_name} variant="secondary" size="{default_size}">
+          <DemoIcon />
+          Secondary
+        </{component_name}>
+        <{component_name} variant="tertiary" size="{default_size}">
+          <DemoIcon />
+          Tertiary
+        </{component_name}>
+        <{component_name} variant="destructive" size="{default_size}">
+          <DemoIcon />
+          Destructive
+        </{component_name}>
       </motionless>
     </motionless>
   ),

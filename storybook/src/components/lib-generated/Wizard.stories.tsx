@@ -38,7 +38,7 @@ import {
 type WizardStoryArgs = Pick<IdsWizardProps, "mode" | "size" | "title" | "showCloseButton">;
 
 const meta: Meta<WizardStoryArgs> = {
-  title: "Lib Generated/IDS/Wizard",
+  title: "Components/IDS/Wizard",
   parameters: {
     layout: "fullscreen",
     // Avoid Controls/docs serializing React-laden step trees (prettyPrint2 stack overflow).

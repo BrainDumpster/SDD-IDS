@@ -16,13 +16,10 @@
     "noUnusedParameters": false,
     "baseUrl": ".",
     "paths": {
-      "react": ["./node_modules/@types/react/index.d.ts"],
-      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime.d.ts"],
-      "react/jsx-dev-runtime": ["./node_modules/@types/react/jsx-dev-runtime.d.ts"],
-      "react-dom": ["./node_modules/@types/react-dom/index.d.ts"],
-      "react-dom/client": ["./node_modules/@types/react-dom/client.d.ts"],
-      "@base-ui-components/react/*": ["./node_modules/@base-ui-components/react/*"]
+      "@base-ui-components/react/*": ["./node_modules/@base-ui-components/react/*"],
+      "@component-contracts/*": ["../component-contracts/*"]
     }
   },
-  "include": ["src", "../lib", "src/global.d.ts"]
+  "include": ["src", "../lib", "../component-contracts", "src/global.d.ts"],
+  "exclude": ["node_modules"]
 }

@@ -30,7 +30,7 @@ const preview: Preview = {
         const partsA = titleA.split("/");
         const partsB = titleB.split("/");
 
-        const rootOrder = ["Spec Generated", "Lib Generated"];
+        const rootOrder = ["Components"];
         const rootA = rootOrder.indexOf(partsA[0] ?? "");
         const rootB = rootOrder.indexOf(partsB[0] ?? "");
 
@@ -40,10 +40,7 @@ const preview: Preview = {
           return rootA - rootB;
         }
 
-        if (
-          (partsA[0] === "Spec Generated" || partsA[0] === "Lib Generated") &&
-          partsA[0] === partsB[0]
-        ) {
+        if (partsA[0] === "Components" && partsB[0] === "Components") {
           const specGroupOrder = ["IDS", "DAP", "Synapse"];
           const groupA = specGroupOrder.indexOf(partsA[1] ?? "");
           const groupB = specGroupOrder.indexOf(partsB[1] ?? "");
@@ -90,7 +87,7 @@ const preview: Preview = {
       const resolvedTheme = theme === "dark" ? "dark" : "light";
       const title = context.title || "";
       const upperTitle = title.toUpperCase();
-      // Legacy folders (IDS/, DAP/), Spec Generated (IDS + DAP), Synapse defaults.
+      // Legacy folders (IDS/, DAP/), Components (IDS + DAP), Synapse defaults.
       const designSystem =
         upperTitle.includes("/DAP/") || upperTitle.startsWith("DAP/")
           ? "dap"

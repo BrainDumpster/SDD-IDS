@@ -20,8 +20,12 @@
 | Storybook examples requested | yes |
 | Storybook path | `storybook-generated/ids/src/components/AppShell.stories.tsx` |
 | Storybook meta title | `Spec Generated/IDS/App Shell` |
+| Angular Storybook path | `storybook-angular/src/components/ids-app-shell-lib/ids-app-shell-lib.stories.js` |
+| Angular Storybook meta title | `Spec Generated/IDS/App Shell` |
 | Implementation guide | [`components/ids/app-shell/README.md`](./README.md) |
 | Reference implementation | `storybook/src/components/AppShell.tsx`, `storybook/src/components/AppShell.module.css` |
+| React library | `lib/react/ids/app-shell` |
+| Angular library | `lib/angular/ids/app-shell` |
 
 ### Composed child specifications (mandatory)
 
@@ -241,7 +245,7 @@ Composable wrapper for the Masthead icons region (left → right, before App Lau
 | Framework | Pattern |
 |---|---|
 | React | `<AppShell headerActions={<AppShellHeaderActions>…</AppShellHeaderActions>} />` |
-| Angular | `<ids-app-shell><ids-app-shell-header-actions>…</ids-app-shell-header-actions></ids-app-shell>` |
+| Angular | Prefer TemplateRef props matching React: `[headerActions]` / `[appLauncherSlot]` / `[avatarSlot]` on \`ids-app-shell\` (see \`lib/angular/ids/app-shell\`). Content projection of \`ids-app-shell-header-actions\` remains supported as a fallback. |
 | Vue / Lit | Named slot `header-actions` with default slot on wrapper component |
 
 **Optional primitives** (re-exported from Masthead spec for convenience inside `headerActions`):
@@ -646,3 +650,8 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 | Verification method | Figma MCP — `get_design_context`, `get_metadata` (confirmed nested Masthead + MainMenu-Left instances) |
 | Last live verification | 2026-07-13 |
 | Design spec path | `components/ids/app-shell/design-spec.md` |
+| React library path | `lib/react/ids/app-shell` |
+| Angular library path | `lib/angular/ids/app-shell` |
+| Angular masthead slots | `headerActions` / `appLauncherSlot` / `avatarSlot` as `TemplateRef` inputs (React prop parity); Spec Accurate demo: `ids-app-shell-demo-host` |
+| Angular Storybook | `storybook-angular/src/components/ids-app-shell-lib/` (`Spec Generated/IDS/App Shell`) on port **6007** |
+| App Shell Figma (1920) | [`43478:46307`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-46307&m=dev) — do not confuse with App Launcher main `13231:123761` |

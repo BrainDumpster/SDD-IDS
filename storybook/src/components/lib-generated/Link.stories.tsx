@@ -22,7 +22,7 @@ const TYPES = ["standalone", "inline", "dark-bg"] as const;
 const STATES = ["default", "hover", "press", "focus-visible"] as const;
 
 const meta: Meta<IdsLinkProps> = {
-  title: "Lib Generated/IDS/Link",
+  title: "Components/IDS/Link",
   component: IdsLink,
   parameters: {
     layout: "centered",

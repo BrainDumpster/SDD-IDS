@@ -34,7 +34,7 @@ import {
 const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.md";
 
 const meta: Meta<IdsDatagridProps> = {
-  title: "Lib Generated/IDS/Datagrid",
+  title: "Components/IDS/Datagrid",
   component: IdsDatagrid,
   parameters: {
     layout: "fullscreen",

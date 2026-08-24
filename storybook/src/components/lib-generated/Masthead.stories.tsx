@@ -81,7 +81,7 @@ const sampleAppLauncher = (
 );
 
 const meta: Meta<IdsMastheadProps> = {
-  title: "Lib Generated/IDS/Masthead",
+  title: "Components/IDS/Masthead",
   component: Masthead,
   parameters: {
     layout: "fullscreen",

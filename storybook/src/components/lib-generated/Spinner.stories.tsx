@@ -28,7 +28,7 @@ const specAccurateArgs: IdsSpinnerProps = {
 };
 
 const meta: Meta<IdsSpinnerProps> = {
-  title: "Lib Generated/IDS/Spinner",
+  title: "Components/IDS/Spinner",
   component: IdsSpinner,
   parameters: {
     layout: "padded",

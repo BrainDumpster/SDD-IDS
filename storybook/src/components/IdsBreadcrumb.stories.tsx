@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsBreadcrumb } from "./IdsBreadcrumb";
 
 const meta: Meta<typeof IdsBreadcrumb> = {
-  title: "Spec Generated/IDS/Breadcrumb",
+  title: "Components/IDS/Breadcrumb",
   component: IdsBreadcrumb,
   args: {
     items: [

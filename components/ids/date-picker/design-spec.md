@@ -615,6 +615,12 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 | `8675:18321` | `chev-right-thick` | Next month icon |
 | `9662:25120` | `Button` | Button pattern reference |
 
+| Runtime path | Role |
+|---|---|
+| `lib/react/ids/date-picker/` | React reference implementation |
+| `lib/angular/ids/date-picker/` | Angular implementation (parity with React) |
+| `storybook-angular/src/components/ids-date-picker/` | Angular Spec Generated stories |
+
 ---
 
 ## Implementation Notes

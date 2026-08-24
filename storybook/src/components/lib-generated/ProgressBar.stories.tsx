@@ -36,7 +36,7 @@ const frameStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsProgressBarProps> = {
-  title: "Lib Generated/IDS/Progress Bar",
+  title: "Components/IDS/Progress Bar",
   component: IdsProgressBar,
   parameters: {
     layout: "padded",

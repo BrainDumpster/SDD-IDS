@@ -40,7 +40,7 @@ function Btn({
 }
 
 const meta: Meta<IdsButtonProps> = {
-  title: "Lib Generated/IDS/Button",
+  title: "Components/IDS/Button",
   component: IdsButton,
   parameters: {
     docs: {

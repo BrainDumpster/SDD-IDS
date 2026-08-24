@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import { RadioGroup } from "@base-ui-components/react/radio-group";
 import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
-import { IdsDetailPanel } from "./IdsDetailPanel";
+import { IdsDetailPanel, IdsDetailPanelBody, IdsDetailPanelHeader } from "./IdsDetailPanel";
 import { IdsPagination } from "./IdsPagination";
 import { IdsDataGridSelectionCheckbox } from "./IdsDataGridSelectionCheckbox";
 import { IdsDataGridSelectionRadio } from "./IdsDataGridSelectionRadio";
@@ -164,6 +164,8 @@ export interface IdsDataGridProps {
   showSingleSelectionRadio?: boolean;
   withDetailPanel?: boolean;
   pageSize?: number;
+  /** When set, drives footer pagination visibility and page count (server-side). Omit for client slice from `rows`. */
+  totalPages?: number | null;
   /** When true, row hover uses `surface-1` (Figma "Hover on read only table"); otherwise brand-lighter. */
   readOnly?: boolean;
   /** When true, selected rows show the 4px leading `brand-base` bar (Figma `verticalBlueLine`). */
@@ -224,6 +226,7 @@ export function IdsDataGrid({
   showSingleSelectionRadio = true,
   withDetailPanel = false,
   pageSize = 6,
+  totalPages: totalPagesInput = null,
   readOnly = false,
   rowVerticalIndicator = false,
   headerColorAndBorder = true,
@@ -549,8 +552,21 @@ export function IdsDataGrid({
     return next;
   }, [rows, sortKey, sortDirection]);
 
-  const totalPages = Math.max(1, Math.ceil(sortedRows.length / pageSize));
-  const visibleRows = sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const resolvedTotalPages =
+    totalPagesInput != null && Number.isFinite(totalPagesInput)
+      ? Math.max(1, Math.trunc(totalPagesInput))
+      : !pageSize || pageSize <= 0
+        ? 1
+        : Math.max(1, Math.ceil(sortedRows.length / pageSize));
+  const showPagination =
+    totalPagesInput != null && Number.isFinite(totalPagesInput)
+      ? totalPagesInput > 1
+      : !pageSize || pageSize <= 0
+        ? false
+        : sortedRows.length > pageSize;
+  const visibleRows = showPagination
+    ? sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    : sortedRows;
   const visibleRowIds = useMemo(() => visibleRows.map((row) => row.id), [visibleRows]);
 
   const activeRow = useMemo(
@@ -1258,6 +1274,7 @@ export function IdsDataGrid({
       ref={shellRef}
       className={styles.shell}
       data-with-detail-panel={withDetailPanel ? "true" : undefined}
+      data-header-styled={headerColorAndBorder ? "true" : "false"}
     >
       <div className={styles.topBar}>
         <span className={styles.modeLabel}>View: {viewMode}</span>
@@ -1278,13 +1295,16 @@ export function IdsDataGrid({
           ) : (
             tableViewport
           )}
-          <div className={styles.footer}>
-            <IdsPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
+          {showPagination ? (
+            <div className={styles.footer}>
+              <IdsPagination
+                currentPage={currentPage}
+                totalPages={resolvedTotalPages}
+                embeddedInDatagrid
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          ) : null}
         </div>
         {withDetailPanel ? (
           <IdsDetailPanel
@@ -1295,9 +1315,12 @@ export function IdsDataGrid({
               setDetailPanelOpen(next);
               if (!next) setActiveRowId(null);
             }}
-            title={activeRow ? String(activeRow.values.name ?? "Details") : "Details"}
-            body={
-              activeRow ? (
+          >
+            <IdsDetailPanelHeader>
+              {activeRow ? String(activeRow.values.name ?? "Details") : "Details"}
+            </IdsDetailPanelHeader>
+            <IdsDetailPanelBody>
+              {activeRow ? (
                 <div className={styles.detailBody}>
                   {visibleOrderedColumns.map((column) => (
                     <p key={column.key}>
@@ -1307,9 +1330,9 @@ export function IdsDataGrid({
                 </div>
               ) : (
                 <div className={styles.detailBody}>Select a row to view details.</div>
-              )
-            }
-          />
+              )}
+            </IdsDetailPanelBody>
+          </IdsDetailPanel>
         ) : null}
       </div>
       {typeof document !== "undefined" &&

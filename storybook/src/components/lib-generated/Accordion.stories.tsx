@@ -82,7 +82,7 @@ const formItems: IdsAccordionItemInput[] = [
 ];
 
 const meta: Meta<IdsAccordionProps> = {
-  title: "Lib Generated/IDS/Accordion",
+  title: "Components/IDS/Accordion",
   component: IdsAccordion,
   parameters: {
     docs: {

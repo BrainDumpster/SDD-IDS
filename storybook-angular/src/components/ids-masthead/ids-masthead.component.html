@@ -1,0 +1,22 @@
+<header class="ids-masthead">
+  <div class="ids-masthead__left">
+    @if (hasLogo) {
+      <div class="ids-masthead__logo">
+        <ng-content select="ids-masthead-logo, [mastheadLogo]" />
+      </div>
+    }
+    <div class="ids-masthead__product-name">{{ productName }}</div>
+  </div>
+
+  <div class="ids-masthead__actions">
+    <div class="ids-masthead__icons-slot">
+      <ng-content select="ids-masthead-action-button-container" />
+    </div>
+    <div class="ids-masthead__app-launcher-slot">
+      <ng-content select="[mastheadAppLauncher]" />
+    </div>
+    <div class="ids-masthead__avatar-slot">
+      <ng-content select="ids-masthead-avatar" />
+    </div>
+  </div>
+</header>

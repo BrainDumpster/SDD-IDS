@@ -1,7 +1,8 @@
 .root {
   box-sizing: border-box;
   display: inline-flex;
-  align-items: center;
+  min-width: min-content;
+  align-items: stretch;
   gap: var(--spacing-space-2);
   /* Figma SegmentedButton-Main: padding token is Padding/padding-2 (2px inset). */
   padding: var(--padding-padding-2);
@@ -11,23 +12,26 @@
 }
 
 .root[data-type="text"] .segmentText {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 1 1 auto;
+  min-width: min-content;
 }
 
 /* Text variant shell — Figma `8218:13150`: 34px total (1px border + 2px pad + 28px row + 2px pad + 1px border). */
 .root[data-type="text"] {
   box-sizing: border-box;
+  width: 100%;
+  min-width: min-content;
   height: 34px;
   min-height: 34px;
+  align-items: stretch;
 }
 
-/* Icon variant shell — Figma Dev Mode box model (`42113:67622`): 39px border-box
-   (1px border + 2px pad + 33px content + 2px pad + 1px border). Layer frame reports 37px. */
+/* Icon variant shell — Figma `8218:13495` / `8218:13156`: 37px border-box; segments 33px, vertically centered. */
 .root[data-type="icon"] {
   box-sizing: border-box;
-  height: 39px;
-  min-height: 39px;
+  height: 37px;
+  min-height: 37px;
+  align-items: center;
 }
 
 .segment {
@@ -45,9 +49,9 @@
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   outline: none;
-  /* Reserve 1px edge without layout shift — color toggles per state. */
-  border: var(--border-width-border-default) solid transparent;
-  box-shadow: none;
+  /* Invisible edge between segments — inset shadow avoids layout shift (preserves 37px icon shell). */
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   border-radius: var(--segmented-button-control-radius, var(--corner-radius-radius-2));
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
@@ -55,7 +59,7 @@
   transition:
     background-color 120ms ease,
     color 120ms ease,
-    border-color 120ms ease;
+    box-shadow 120ms ease;
 }
 
 .segmentText {
@@ -66,18 +70,17 @@
   white-space: nowrap;
 }
 
+/* Figma option icon cell `11925:235931`: 32×33px; glyph 16×14 centered (py ≈ 9.5px). */
 .segmentIcon {
   box-sizing: border-box;
   flex-shrink: 0;
+  align-self: center;
   min-width: var(--sizing-size-32);
   height: 33px;
   min-height: 33px;
   max-height: 33px;
   padding: 0 var(--padding-padding-8);
   line-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Icon segments: tint via segment `color` → Icon `currentColor` (not text tokens). */
@@ -92,83 +95,83 @@
 /* Unselected interactions — Figma: brand-lighter / brand-light on inactive segments (9015:20990 / 9015:20988). */
 .segment:not(.selected):hover {
   background: var(--color-background-brand-lighter-slate);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   color: var(--color-text-gray-neutral);
 }
 
 .segment:not(.selected):active {
   background: var(--color-background-brand-light-slate);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   color: var(--color-text-brand-strong);
 }
 
 .segment:not(.selected):focus-visible {
   background: var(--color-background-surface-component);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base);
   outline: none;
 }
 
-/* Storybook / visual QA — pin interaction styling (see StateMatrix stories). */
+/* Storybook / visual QA — pin interaction styling via simulatedState on segments. */
 .segment[data-simulated-state="hover"]:not(.selected) {
   background: var(--color-background-brand-lighter-slate);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   color: var(--color-text-gray-neutral);
 }
 
 .segment.selected[data-simulated-state="hover"] {
   background: var(--color-background-controls-strong) !important;
-  border-color: transparent !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
   color: var(--color-text-gray-white) !important;
 }
 
 .segment[data-simulated-state="press"]:not(.selected) {
   background: var(--color-background-brand-light-slate);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) transparent;
   color: var(--color-text-brand-strong);
 }
 
 .segment.selected[data-simulated-state="press"] {
   background: var(--color-background-controls-stronger) !important;
-  border-color: transparent !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
   color: var(--color-text-gray-white) !important;
 }
 
 .segment[data-simulated-state="focus-visible"]:not(.selected) {
   background: var(--color-background-surface-component);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base);
   outline: none;
 }
 
 .segment.selected[data-simulated-state="focus-visible"] {
   background: var(--color-background-controls-base) !important;
-  border-color: transparent !important;
+  box-shadow: none !important;
   outline: var(--border-width-border-default) dashed var(--color-border-gray-white) !important;
   outline-offset: calc(-1 * var(--border-width-border-default));
   color: var(--color-text-gray-white) !important;
 }
 
-/* Selected default — same-color edge (match fill, not border-brand-base; dark theme tokens differ). */
+/* Selected — Figma `10148:29585`: brand fill + same-color inset edge. */
 .selected {
   background: var(--color-background-controls-base) !important;
-  border-color: var(--color-background-controls-base) !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
   color: var(--color-text-gray-white) !important;
 }
 
 .segment.selected:hover {
   background: var(--color-background-controls-strong) !important;
-  border-color: transparent !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
   color: var(--color-text-gray-white) !important;
 }
 
 .segment.selected:active {
   background: var(--color-background-controls-stronger) !important;
-  border-color: transparent !important;
+  box-shadow: inset 0 0 0 var(--border-width-border-default) var(--color-border-brand-base) !important;
   color: var(--color-text-gray-white) !important;
 }
 
 .segment.selected:focus-visible {
   background: var(--color-background-controls-base) !important;
-  border-color: transparent !important;
+  box-shadow: none !important;
   outline: var(--border-width-border-default) dashed var(--color-border-gray-white);
   outline-offset: calc(-1 * var(--border-width-border-default));
   color: var(--color-text-gray-white) !important;

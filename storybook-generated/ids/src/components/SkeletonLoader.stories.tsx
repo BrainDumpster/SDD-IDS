@@ -8,7 +8,7 @@ import { IdsSkeletonLoader } from "../../../../storybook/src/components/IdsSkele
 const DESIGN_SPEC_PATH = "components/ids/skeleton-loader/design-spec.md";
 
 const meta: Meta<typeof IdsSkeletonLoader> = {
-  title: "Spec Generated/IDS/Skeleton Loader",
+  title: "Components/IDS/Skeleton Loader",
   component: IdsSkeletonLoader,
   parameters: {
     layout: "padded",

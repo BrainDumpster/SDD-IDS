@@ -26,7 +26,7 @@ const rowStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsTagProps> = {
-  title: "Lib Generated/IDS/Tag",
+  title: "Components/IDS/Tag",
   component: IdsTag,
   parameters: {
     layout: "centered",

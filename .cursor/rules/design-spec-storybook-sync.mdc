@@ -1,0 +1,67 @@
+---
+description: When design-spec.md changes (API, composition, variants), update Storybook examples across all applicable programmes in the same change
+globs: components/**/design-spec.md
+alwaysApply: false
+---
+
+# Design-Spec → Storybook Sync (all programmes)
+
+Apply when creating or updating any `components/<programme>/<slug>/design-spec.md`.
+
+**Bidirectional pair:** `.cursor/rules/composition-design-spec-sync.mdc` (implementation → spec). This rule is spec → Storybook.
+
+## When Storybook must update (same PR / session)
+
+Update Storybook when the spec change affects any of:
+
+- **Composition & API** — group + item split, projected children, deprecated `options[]` / `items[]`
+- **Anatomy** / **Codegen Contract → Deterministic structure**
+- **Variant/option matrix**, **States**, **Interactions**, or **Spec Accurate Design story defaults**
+- **component-contracts** referenced in **Source Mapping**
+- Programme **deltas** that change theme aliases, chrome, or story args
+
+Skip Storybook only when the edit is metadata-only (dates, Figma node ids, evidence notes) with zero runtime/API impact.
+
+## Programme × framework matrix
+
+| Programme | Spec path | React stories | Angular stories |
+|-----------|-----------|---------------|-----------------|
+| **IDS** | `components/ids/<slug>/` | `storybook-generated/ids/src/components/` · hand-maintained `storybook/src/components/` when cited in **Source Mapping** | `storybook-angular/src/components/ids-<slug>/` · `storybook-angular/src/generated/ids/` |
+| **DAP** | `components/DAP/<slug>/` | `storybook-generated/dap/` · `storybook/src/components/dap/` | `storybook-angular/src/generated/dap/` (when DAP stories exist) |
+| **Synapse** | `components/synapse/<slug>/` | `storybook-generated/synapse/` · `storybook/src/components/` (IDS-fork wrappers) | **No** — do not add under `storybook-angular/` unless explicitly requested |
+
+Meta title: `Spec Generated/<Programme>/<Display Name>`. Primary story: **Spec Accurate Design**.
+
+Resolve paths from `config/design_systems/<programme>.yaml` (`generated_storybook_dir`, `generated_angular_storybook_dir`) and the spec **Source Mapping** section.
+
+## Cascade across programmes
+
+1. **IDS baseline change** — update IDS Storybook (React + Angular when reference implementation exists).
+2. **IDS-fork programmes** (Synapse, DAP) — look up `data/programme-inheritance-registry.json` by `idsBaselineSlug`; update each entry’s `storybookPath`, `sharedImplementation`, or `programmeWrapper` when composition/API changed at IDS.
+3. **Programme-native spec** — update only that programme’s Storybook paths; do not touch IDS unless IDS baseline also changed.
+
+Synapse IDS-fork: inherit composition markup from IDS reference components; apply programme theme (`components/synapse-theme.css`) and deltas in programme stories — see `docs/design-spec-authoring-contract.md` → **Synapse (IDS-fork)**.
+
+## Required Storybook actions
+
+1. **Spec Accurate Design** story args/markup match **Composition & API (runtime)** and contracts in `component-contracts/<programme>/<slug>.contract.ts`.
+2. Composition examples use **group → projected items** (not aggregate-only) when the spec declares composition canonical.
+3. Import exactly one theme CSS per programme in React stories (`ids-theme.css` / `dap-theme.css` / `synapse-theme.css`).
+4. Regenerate when deterministic pipeline applies:
+   ```bash
+   DESIGN_SYSTEM=ids python3 scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story
+   DESIGN_SYSTEM=dap python3 scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story
+   ```
+   Add `--framework Angular` for IDS/DAP Angular generated stories. Synapse: React only.
+
+## Do not
+
+- Finalize a spec with composition/API changes while Storybook still shows legacy aggregate-only examples.
+- Update IDS Storybook but leave registered Synapse/DAP fork stories on the old API.
+- Add Synapse examples under `storybook-angular/` unless the user explicitly requested Angular Synapse ports.
+
+## References
+
+- `docs/design-spec-authoring-contract.md` → **Storybook**, **Composition pattern sync**
+- `.cursor/rules/design-spec-and-lit-workflow.mdc` → **Composition Pattern Sync**
+- `data/programme-inheritance-registry.json`

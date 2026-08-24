@@ -20,7 +20,7 @@ const options: Option[] = [
 ];
 
 const meta: Meta<typeof IdsDropdownMultiselect> = {
-  title: "Spec Generated/IDS/Dropdown/Multi Select",
+  title: "Components/IDS/Dropdown/Multi Select",
   component: IdsDropdownMultiselect,
   parameters: { layout: "centered" },
 };

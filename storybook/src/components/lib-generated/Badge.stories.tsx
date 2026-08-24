@@ -24,7 +24,7 @@ const rowStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsBadgeProps> = {
-  title: "Lib Generated/IDS/Badge",
+  title: "Components/IDS/Badge",
   component: IdsBadge,
   parameters: {
     layout: "centered",

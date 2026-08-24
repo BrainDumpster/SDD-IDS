@@ -46,7 +46,7 @@ const longItems: IdsStatusBarItemInput[] = [
 ];
 
 const meta: Meta<IdsStatusBarProps> = {
-  title: "Lib Generated/IDS/Status Bar",
+  title: "Components/IDS/Status Bar",
   component: IdsStatusBar,
   parameters: {
     docs: {

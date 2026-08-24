@@ -14,6 +14,7 @@
 - Label style verified on: `41895:299551` (unchecked + label), `41895:299550` (checked + label), component source `8505:14297` / text `8505:14299`
 - Variant axes covered: selection (`unselected | selected | partial`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
 ## Anatomy
+- **groupRoot** (optional): layout/semantic wrapper for multiple checkbox rows (`role="group"`). Checkboxes remain independently toggleable (not single-select).
 - **root**: clickable control row, aligns box + label.
 - **input**: native `input[type="checkbox"]` (visually hidden or visible depending on implementation).
 - **controlBox**: 16x16 visual square.
@@ -104,31 +105,58 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Label color remains `var(--color-text-gray-neutral)` in error state (only `assistiveText` turns critical).
 - Disabled blocks pointer + keyboard interactions and switches label to `var(--color-text-gray-disabled)`.
 ## Composition & API (runtime)
+Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts/ids/checkbox.contract.ts`.
+
+**Preferred pattern:** projected children inside a group wrapper — not an `options[]` prop.
+
+```
+CheckboxGroup [orientation?, disabled?, name?, idPrefix?]
+  Checkbox [label, checked?, defaultChecked?, indeterminate?, disabled?, error?, helperText?, …]
+  Checkbox …
+```
+
+Angular reference selectors: `ids-checkbox-group` → `ids-checkbox` (`storybook-angular`, port 6007). React reference: `storybook/src/components/Checkbox.tsx` (single item); group layout via composition or field wrapper.
+
+### Group (`CheckboxGroup` / `groupRoot`)
+| Prop / Input | Required | Behavior |
+|---|---|---|
+| `orientation` | No | `vertical` (default) or `horizontal`. Vertical gap: `var(--spacing-space-16)`; horizontal gap: `var(--spacing-space-8)`. |
+| `disabled` | No | When `true`, cascades to all child checkboxes (merged with per-item `disabled`). |
+| `name` | No | Optional shared form `name` for child inputs. |
+| `idPrefix` | No | Optional id prefix for child control/assistive ids. |
+
+### Item (`Checkbox` / `root`)
 | Prop / Slot | Required | Behavior |
 |---|---|---|
 | `checked` | No (controlled) | Controlled selection state. |
 | `defaultChecked` | No (uncontrolled) | Initial selection for uncontrolled usage. |
 | `indeterminate` | No | Enables mixed state visual and ARIA mapping. |
-| `disabled` | No | Locks interaction and applies disabled state tokens. |
+| `disabled` | No | Locks interaction and applies disabled state tokens (merged with group `disabled`). |
 | `label` | Yes | Visible, associated text. |
-| `name` / `value` | No | Native form integration. |
+| `name` / `value` | No | Native form integration (`name` falls back to group `name` when inside a group). |
 | `onChange(checked)` | No | Emits resolved checked value after toggle. |
 | `error` | No | Optional validation styling/assistive text mode. |
 | `helperText` | No | Secondary descriptive text. |
+| `simulateFocusVisible` | No | **Storybook/docs only** — static focus ring for matrices. |
+
+Outputs (item): `onChange(checked)` / `checkedChange`.
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
-- `root`
-  - `input`
-  - `controlBox`
-    - optional `indicator`
-  - `label`
-  - optional `assistiveText`
+- `groupRoot` (optional)
+  - repeated `checkboxItem`
+    - `root`
+      - `input`
+      - `controlBox`
+        - optional `indicator`
+      - `label`
+      - optional `assistiveText`
 
 ### Variant matrix
 - Selection: unchecked | checked | partial.
 - Interaction: default | hover | focus-visible | disabled.
 - Validation: default | error.
 - Mode: controlled | uncontrolled.
+- Group layout: standalone item | grouped list (independent toggles per item).
 
 ### Per-slot style contract
 - Control visual box remains 16x16 in all states, with 1px outer border (effective footprint 18x18).
@@ -179,12 +207,15 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Figma link used for extraction: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41895-299521&m=dev`
 - State annotation source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42151-53254&m=dev`
 - Lib React implementation (no Base UI): `lib/react/ids/checkbox/` (`IdsCheckbox.tsx`, `IdsCheckbox.module.css`; selectors `ids-checkbox`, …); stories: `storybook/src/components/lib-generated/Checkbox.stories.tsx`
+- Runtime story / codegen contract: `component-contracts/ids/checkbox.contract.ts`
+- Angular composition reference: `storybook-angular/src/components/ids-checkbox/` (`IDS_CHECKBOX_IMPORTS`)
 
 ---
 
 ## Implementation Notes
 
 **Layout & structure**
+- **Group gap**: vertical lists use `var(--spacing-space-16)` between items; horizontal lists use `var(--spacing-space-8)` between items.
 - **Wrapper min-height**: `20px` — matches the label line-height; do not set `44px` on the wrapper
 - **Label typography**: Body 2 Regular — `var(--typography-font-style-primary)`, `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, weight `400`, letter-spacing `0`
 - **Label color**: `var(--color-text-gray-neutral)` for all non-disabled states (including unchecked). Do not use `var(--color-text-gray-neutral-strong)` on the option label.

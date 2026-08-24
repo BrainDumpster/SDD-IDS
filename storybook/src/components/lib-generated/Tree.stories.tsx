@@ -70,7 +70,7 @@ const frameStyle: CSSProperties = {
 };
 
 const meta: Meta<typeof IdsTree> = {
-  title: "Lib Generated/IDS/Tree",
+  title: "Components/IDS/Tree",
   component: IdsTree,
   parameters: {
     layout: "padded",

@@ -11,7 +11,7 @@
 | Version | 1.3.0 |
 | Spec pattern | `ids-native` |
 | Created | 2026-07-09 |
-| Updated | 2026-08-17 |
+| Updated | 2026-08-20 |
 | Description | Full-page onboarding pattern — optional IDS Masthead, brand hero banner, horizontal configuration cards, optional overflow navigation, Skip action |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Component set (`GetStarted-Main`) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev — **`12189:233235`** |
@@ -21,8 +21,8 @@
 | Embedded Masthead instance | **`12189:231406`** (`Masthead-Main` inside **`12189:233185`**) |
 | Validated nodes | **`12189:233235`**, **`12189:233185`**, **`12189:233198`**, **`12189:233211`**, **`12189:233218`**, **`12189:233223`**, **`12189:233228`**, **`12189:231401`**, **`12189:231402`**, **`12189:231403`**, **`12189:231404`**, **`12189:231405`**, **`12023:228883`**, **`12023:228880`** (Not Completed), **`12023:228902`** (Completed), **`12023:228939`** (Required) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`, `disableCodeConnect: true`) — last live **2026-07-13** (Background `12189:231401` re-verified); primary set **2026-07-09** |
-| Reference implementation | `lib/react/ids/get-started` (`GetStarted` / `IdsGetStarted` — not `GetStartedRoot`); `storybook/src/components/IdsGetStarted.tsx` |
-| Storybook | `storybook/src/components/lib-generated/GetStarted.stories.tsx` (title **`Lib Generated/IDS/Get Started`**; primary story **`Spec Accurate Design`**); also `storybook/src/components/IdsGetStarted.stories.tsx` (**`Spec Generated/IDS/Get Started`**) |
+| Reference implementation | `lib/react/ids/get-started` (`GetStarted` / `IdsGetStarted` — not `GetStartedRoot`); `lib/angular/ids/get-started` (Angular); Storybook hand port `storybook/src/components/IdsGetStarted.tsx`, `IdsGetStarted.module.css` |
+| Storybook | React: `storybook/src/components/lib-generated/GetStarted.stories.tsx` (title **`Lib Generated/IDS/Get Started`**; primary story **`Spec Accurate Design`**); also `storybook/src/components/IdsGetStarted.stories.tsx` (**`Spec Generated/IDS/Get Started`**). Angular: `storybook-angular/src/components/ids-get-started/` (same meta title; imports lib via `compiled/lib/angular/ids/get-started`) |
 | Nested specs | `components/ids/button/design-spec.md` (Configure / Skip buttons — hover/press/focus-visible), `components/ids/masthead/design-spec.md` (embedded top chrome) |
 
 ### Masthead composition (Figma-verified)
@@ -602,3 +602,8 @@ Card / chrome icons: render via shared **`Icon`** (`shapeName`); icon box **`32�
 - Masthead instance: **`12189:231406`**
 - Overflow right: **`12189:232209`** on **`12189:233198`**; overflow left: **`42682:125703`** on **`12189:233211`**
 - Card element set: **`12023:228883`**
+- Runtime contract: `component-contracts/ids/get-started.contract.ts`
+- Reference implementation (React): `lib/react/ids/get-started/`
+- Reference implementation (Angular): `lib/angular/ids/get-started/`
+- Storybook (React): `storybook/src/components/IdsGetStarted.stories.tsx`
+- Storybook (Angular): `storybook-angular/src/components/ids-get-started/`

@@ -1,14 +1,16 @@
 .badge {
+  --ids-badge-inner-size: 18px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 18px;
-  min-width: 18px;
+  box-sizing: content-box;
+  height: var(--ids-badge-inner-size);
+  min-width: var(--ids-badge-inner-size);
   border-width: var(--border-width-border-1);
   border-style: solid;
   border-radius: 100px;
   font-family: var(--typography-font-style-primary, inherit);
-  box-sizing: border-box;
   white-space: nowrap;
 }
 
@@ -24,8 +26,9 @@
 }
 
 .singleDigit {
+  width: var(--ids-badge-inner-size);
+  min-width: var(--ids-badge-inner-size);
   padding: 0;
-  width: 18px;
 }
 
 .twoDigits {

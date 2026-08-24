@@ -44,7 +44,7 @@ const SECTION_OPTIONS: IdsDropdownMultiSelectOptionModel[] = [
 const sampleWidth: CSSProperties = { width: 300, maxWidth: "100%" };
 
 const meta: Meta<typeof IdsDropdownMultiSelect> = {
-  title: "Lib Generated/IDS/Dropdown Multiselect",
+  title: "Components/IDS/Dropdown/Multi Select",
   component: IdsDropdownMultiSelect,
   parameters: {
     layout: "fullscreen",

@@ -722,7 +722,6 @@ export function DropdownMenu({
                 <span className={styles.footerActionButton}>{footerActionLabel}</span>
               </button>
             ) : null}
-            </div>
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>

@@ -23,7 +23,7 @@ const baseStepContentStyle = {
 } as const;
 
 const meta: Meta<typeof IdsWizard> = {
-  title: "Spec Generated/IDS/Wizard Modal",
+  title: "Components/IDS/Wizard Modal",
   component: IdsWizard,
   parameters: {
     layout: "padded",

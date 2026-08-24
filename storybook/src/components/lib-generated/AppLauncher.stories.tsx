@@ -70,7 +70,7 @@ const mastheadFrame: CSSProperties = {
 };
 
 const meta: Meta<IdsAppLauncherProps> = {
-  title: "Lib Generated/IDS/App Launcher",
+  title: "Components/IDS/App Launcher",
   component: IdsAppLauncher,
   parameters: {
     docs: {

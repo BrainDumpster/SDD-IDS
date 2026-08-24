@@ -148,7 +148,7 @@ function FieldLabel({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Spec Generated/IDS/Dropdown/Combo Box",
+  title: "Components/IDS/Dropdown/Combo Box",
   component: DropdownMenu,
   parameters: {
     // Top-aligned (not vertically centered) so the open menu sits high on the

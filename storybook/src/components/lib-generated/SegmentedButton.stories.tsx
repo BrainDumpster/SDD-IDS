@@ -20,7 +20,7 @@ import {
 const DESIGN_SPEC_PATH = "components/ids/segmented-button/design-spec.md";
 
 const meta: Meta<typeof IdsSegmentedButton> = {
-  title: "Lib Generated/IDS/Segmented Button",
+  title: "Components/IDS/Segmented Button",
   component: IdsSegmentedButton,
   parameters: {
     layout: "centered",

@@ -14,17 +14,40 @@
 - Last verified: 2026-04-30 (current session)
 - Component map baseline: `data/component-figma-map.json` entry exists for "Detail Panel"; this spec is upgraded to IDS Design Library nodes above.
 ## Anatomy
-- `DetailPanel`
-- `DetailPanelContent`
+- `DetailPanel` / `DetailPanelRoot` (host)
+- `DetailPanelContent` (expanded branch)
+  - `DetailPanelHeader` (`attachMode="datagrid"` expanded)
+    - `DetailPanelTitle`
+    - `DetailPanelToggleButton` (header chrome)
+  - `DetailPanelBody`
+  - `DetailPanelFooter` (`attachMode="page"` expanded)
+    - `DetailPanelToggleButton` (footer chrome)
+- `DetailPanelCollapsedRail` (collapsed branch)
+  - `DetailPanelToggleButton`
 - Variant branch: `attachMode="datagrid"`
   - expanded: `DetailPanelHeader` + `DetailPanelBody`
   - collapsed: `DetailPanelCollapsedRail` (icon-only)
 - Variant branch: `attachMode="page"`
   - expanded: `DetailPanelBody` + `DetailPanelFooter`
   - collapsed: `DetailPanelCollapsedRail` (icon-only)
-- `DetailPanelToggleButton`
+- Toggle icons:
   - expanded icon: `double-chev-right` (`16x16`)
   - collapsed icon: `double-chev-left` (`16x16`)
+
+Angular composition (canonical child order):
+
+```
+ids-detail-panel
+  ids-detail-panel-content
+    ids-detail-panel-header
+      ids-detail-panel-title
+    ids-detail-panel-body
+    ids-detail-panel-footer
+  ids-detail-panel-collapsed-rail
+    ids-detail-panel-toggle-button
+```
+
+Datagrid expanded projects header + title + body (no footer). Page expanded projects body + footer (no header). Collapsed projects rail + toggle only.
 ## Layout & Measurements
 - Shared width behavior:
   - expanded width: `398px`
@@ -232,3 +255,6 @@ All validation checklist items verified and passing as of 2026-07-09.
   - `get_variable_defs` on expanded nodes (`44257:246888`, `44333:174879`) for token validation
 - Storybook reference: `storybook/src/components/IdsDetailPanel.tsx` / `IdsDetailPanel.stories.tsx`
 - Lib React implementation (no Base UI): `lib/react/ids/detail-panel/` (`IdsDetailPanel.tsx`, `IdsDetailPanel.module.css`; selectors `ids-detail-panel`, …); stories: `storybook/src/components/lib-generated/DetailPanel.stories.tsx`
+- Runtime contract: `component-contracts/ids/detail-panel.contract.ts`
+- Angular library: `lib/angular/ids/detail-panel/`
+- Angular Storybook: `storybook-angular/src/components/ids-detail-panel/`

@@ -47,7 +47,7 @@ function StoryRow({ caption, children }: { caption: string; children: React.Reac
 }
 
 const meta: Meta<typeof IdsPagination> = {
-  title: "Spec Generated/IDS/Pagination",
+  title: "Components/IDS/Pagination",
   component: IdsPagination,
   args: { ...defaults, dropdownState: "collapsed", pageOffsetDropdownState: "collapsed", background: "gray", disabled: false },
 };

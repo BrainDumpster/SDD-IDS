@@ -66,7 +66,7 @@ const sampleAppLauncher = (
 const sampleAvatar = <IdsMastheadAvatar initials="DT" aria-label="User settings" />;
 
 const meta: Meta<typeof IdsMasthead> = {
-  title: "Spec Generated/IDS/Masthead",
+  title: "Components/IDS/Masthead",
   component: IdsMasthead,
   parameters: {
     layout: "fullscreen",

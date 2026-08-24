@@ -64,7 +64,7 @@ type ComboProps = ComponentProps<typeof IdsDropdownComboBox>;
 const sampleWidth: CSSProperties = { width: 300, maxWidth: "100%" };
 
 const meta: Meta<typeof IdsDropdownComboBox> = {
-  title: "Lib Generated/IDS/Dropdown Combo Box",
+  title: "Components/IDS/Dropdown/Combo Box",
   component: IdsDropdownComboBox,
   parameters: {
     layout: "fullscreen",

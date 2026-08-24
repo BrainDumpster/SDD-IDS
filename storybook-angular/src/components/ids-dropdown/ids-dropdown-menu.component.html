@@ -1,0 +1,194 @@
+<button
+  type="button"
+  class="triggerReset"
+  [class.triggerFull]="fullWidth"
+  [disabled]="disabled"
+  [style.cursor]="disabled ? 'not-allowed' : 'pointer'"
+  (click)="toggleOpen()"
+  [attr.aria-expanded]="isOpen"
+  [attr.aria-describedby]="triggerAriaDescribedBy"
+  aria-haspopup="listbox"
+>
+  <span #triggerMeasure class="triggerMeasure">
+    <ng-content select="ids-dropdown-trigger-shell" />
+  </span>
+</button>
+
+@if (isOpen && !disabled) {
+  <div
+    class="positioner"
+    [class.positioner--align-end]="popupAlignment === 'end'"
+    [class.positioner--above]="popupPlacement === 'above'"
+    [ngStyle]="positionerStyle"
+  >
+    <div
+      class="popup"
+      [class.popup--above]="popupPlacement === 'above'"
+      [ngStyle]="popupStyle"
+      role="listbox"
+    >
+      @if (showSearch) {
+        <div class="searchRow">
+          <div class="searchField">
+            <ids-icon class="searchIcon" shapeName="search-16" variant="mask" [size]="16" />
+            <div class="searchInputWrap">
+              <input
+                class="searchInput"
+                type="text"
+                [value]="searchValue"
+                [placeholder]="searchPlaceholder"
+                (input)="onSearchInput($event)"
+                (keydown)="$event.stopPropagation()"
+              />
+              @if (showSearchClear) {
+                <button
+                  type="button"
+                  class="searchClearButton"
+                  aria-label="Clear search"
+                  (click)="onSearchClear()"
+                >
+                  <ids-icon shapeName="shape-x-thick" [size]="10" />
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (showSelectAllClearAll) {
+        <div class="selectAllClearAllRow">
+          <button
+            type="button"
+            class="selectAllButton"
+            [attr.data-checked]="selectAllChecked ? 'true' : null"
+            [attr.data-indeterminate]="selectAllIndeterminate ? 'true' : null"
+            (click)="onSelectAll()"
+          >
+            <span class="checkboxOuter selectAllCheckbox" aria-hidden="true">
+              @if (selectAllIndeterminate) {
+                <span class="checkboxDash"></span>
+              } @else if (selectAllChecked) {
+                <span class="checkboxTick"></span>
+              }
+            </span>
+            <span>{{ selectAllLabel }}</span>
+          </button>
+          <button
+            type="button"
+            class="clearAllButton"
+            [disabled]="clearAllDisabled"
+            (click)="onClearAll()"
+          >
+            {{ clearAllLabel }}
+          </button>
+        </div>
+      }
+
+      @if (showSelectedPanel && selectionMode === 'multi' && resolvedSelectedValues.length > 0) {
+        <div class="showSelectedPanel" [attr.data-expanded]="isShowSelectedExpanded ? 'true' : null">
+          <div class="showSelectedHeader">
+            <button
+              type="button"
+              class="showSelectedToggle"
+              [attr.aria-expanded]="isShowSelectedExpanded"
+              (click)="toggleShowSelectedExpanded()"
+            >
+              <span>{{ isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel }}</span>
+              <ids-icon
+                class="showSelectedCaret"
+                shapeName="arrow-drop-tri-caret"
+                [size]="10"
+                [style.transform]="isShowSelectedExpanded ? 'rotate(180deg)' : null"
+              />
+            </button>
+            <button
+              type="button"
+              class="showSelectedClear"
+              aria-label="Clear all selected items"
+              (click)="onPanelClear()"
+            >
+              <ids-icon shapeName="shape-x-thick" [size]="10" />
+            </button>
+          </div>
+          @if (isShowSelectedExpanded) {
+            <div class="showSelectedTags">
+              @for (tag of selectedTagItems; track tag.value) {
+                <ids-dropdown-tag
+                  [label]="tag.label"
+                  (dismiss)="removeSelectedTag.emit(tag.value)"
+                />
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <div class="optionsScrollRegion" [ngStyle]="optionsScrollStyle">
+        @for (item of resolvedItems; track item.id ?? $index) {
+          @if (item.kind === 'section') {
+            <div class="sectionHeader" role="presentation">{{ item.label }}</div>
+          } @else if (item.kind === 'divider') {
+            <div class="sectionDivider" role="presentation"></div>
+          } @else if (isSelectableItem(item)) {
+            <button
+              type="button"
+              class="item"
+              [disabled]="item.disabled"
+              [attr.data-disabled]="item.disabled ? 'true' : null"
+              data-selectable="true"
+              [attr.data-selection-mode]="selectionMode"
+              [attr.data-selected]="isItemSelected(item) ? 'true' : null"
+              [attr.data-indeterminate]="item.indeterminate ? 'true' : null"
+              [attr.role]="itemRole(item)"
+              [attr.aria-checked]="itemAriaChecked(item, isItemSelected(item))"
+              (click)="onItemClick(item, $event)"
+            >
+              @if (selectionMode === 'multi') {
+                <span class="leadingControl" aria-hidden="true">
+                  <span class="checkboxOuter">
+                    @if (item.indeterminate) {
+                      <span class="checkboxDash"></span>
+                    } @else if (isItemSelected(item)) {
+                      <span class="checkboxTick"></span>
+                    }
+                  </span>
+                </span>
+              }
+              @if (selectionMode === 'single' && showSingleSelectRadio) {
+                <span class="leadingControl" aria-hidden="true">
+                  <span class="radioOuter">
+                    @if (isItemSelected(item)) {
+                      <span class="radioInner"></span>
+                    }
+                  </span>
+                </span>
+              }
+              {{ item.label }}
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="item"
+              [disabled]="item.disabled"
+              data-selectable="false"
+              [attr.data-selected]="isItemSelected(item) ? 'true' : null"
+              (click)="onItemClick(item, $event)"
+            >
+              {{ item.label }}
+            </button>
+          }
+        }
+      </div>
+
+      @if (footerActionLabel) {
+        <button type="button" class="footerAction" (click)="onFooterAction()">
+          <span class="footerActionButton">{{ footerActionLabel }}</span>
+        </button>
+      }
+    </div>
+  </div>
+}
+
+<div #compositionSource class="composition-source" hidden aria-hidden="true">
+  <ng-content select="ids-dropdown-menu-group, ids-dropdown-menu-item, ids-dropdown-menu-footer" />
+</div>

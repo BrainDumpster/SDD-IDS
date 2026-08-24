@@ -1,0 +1,243 @@
+:host {
+  display: inline-flex;
+}
+
+.field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  cursor: pointer;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  line-height: var(--font-line-height-line-height-20);
+  min-height: 20px;
+}
+
+.field[data-density="datagrid"] .wrapper {
+  min-height: 0;
+  gap: 0;
+}
+
+.field[data-density="datagrid"] .root {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+.root {
+  width: 16px;
+  height: 16px;
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--checkbox-control-radius, var(--corner-radius-radius-2));
+  background: var(--color-background-surface-component);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 100ms ease;
+  cursor: inherit;
+  outline: none;
+  position: relative;
+  vertical-align: middle;
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.root:has(.input:hover:not(:disabled)) {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.root:has(.input:active:not(:disabled)) {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.root:has(.input:focus-visible) {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.rootSimulatedFocus {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.root[data-checked] {
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+}
+
+.root[data-checked="mixed"] {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-brand-base);
+}
+
+.root[data-checked]:has(.input:hover:not(:disabled)),
+.root[data-checked]:has(.input:active:not(:disabled)) {
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
+}
+
+.root[data-indeterminate] {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-brand-base);
+}
+
+.root[data-indeterminate]:has(.input:hover:not(:disabled)),
+.root[data-indeterminate]:has(.input:active:not(:disabled)) {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.root[data-disabled] {
+  cursor: not-allowed;
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-gray-disabled);
+}
+
+.root[data-disabled][data-checked] {
+  background: var(--color-background-gray-base);
+  border-color: transparent;
+}
+
+.root[data-disabled][data-indeterminate],
+.root[data-disabled][data-checked="mixed"] {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-gray-disabled);
+}
+
+.indicator {
+  color: var(--color-icon-gray-white);
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.indicator[data-indicator-type="check"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  clip-path: polygon(0 54%, 12% 42%, 39% 67%, 86% 18%, 100% 32%, 39% 94%);
+  transform: translate(-50%, calc(-50% - 0.5px));
+}
+
+.indicator[data-indicator-type="minus"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 2px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.root[data-disabled] .indicator {
+  color: var(--color-icon-gray-inverse);
+}
+
+.root[data-indeterminate] .indicator {
+  color: var(--color-icon-brand-base);
+}
+
+.root[data-checked="mixed"] .indicator {
+  color: var(--color-icon-brand-base);
+}
+
+.root[data-disabled][data-indeterminate] .indicator {
+  color: var(--color-icon-gray-disabled);
+}
+
+.root[data-disabled][data-checked="mixed"] .indicator {
+  color: var(--color-icon-gray-disabled);
+}
+
+.label {
+  user-select: none;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wrapper:has(.root[data-disabled]) {
+  cursor: not-allowed;
+}
+
+.root[data-disabled] + .label {
+  color: var(--color-text-gray-disabled);
+}
+
+.root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]) {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]):has(
+    .input:hover:not(:disabled)
+  ),
+.root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]):has(
+    .input:active:not(:disabled)
+  ) {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.assistiveText {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
+  margin: 0;
+}
+
+:host ::ng-deep .errorIcon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.assistiveTextError {
+  color: var(--color-text-alerting-critical-base);
+}
+
+.assistiveTextDisabled {
+  color: var(--color-text-gray-disabled);
+}

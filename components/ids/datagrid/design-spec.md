@@ -44,21 +44,37 @@
 - `DatagridHeader`
   - `SelectionColumn` (optional **48px** leading column — shown when `rowSelection` and (`selectionMode: multiple` or `selectionMode: single` with `showSingleSelectionRadio: true`); header select-all only when `multiple`)
   - repeated `DatagridColumnHeader`
+    - `DatagridColumnTitle` (projected label for the column header)
     - `DatagridColumnHeaderContent` (horizontal host: Figma **`37721:114663`** Text variant — **`pl-[16px]`**, **`items-center`**, **no extra vertical padding** on the host; **cell height is exactly `48px`**)
       - `DatagridColumnHeaderTitleRow` (Figma frame **`37721:114673`**: **`flex: 1`**, **`min-width: 0`**, **`gap: 12px`**, **`padding: 0 8px 0 0`** — **8px** right; **`align-items: center`** on the **48px** header track so **title + sort** match Figma’s **9+20+9** optical band without stacking extra host **`py`**; title line **20px** / **Body 2 - Medium**; optional **`SortToggle`**)
       - optional **`FilterToggle`** (Figma **`.Filter for table`** instance **`37721:114677`**: **`38×38`** hit target, **`padding: 12px`**, **`14×14`** icon — **sibling** of the title row, not inside **`37721:114673`**). Implement with the shared **`Icon`** component: **`shapeName`** = **`filter`** | **`filter-solid`** (slugs under **`assets/icons/*.svg`**); tint via **`color`** / ancestor **`color`** using **`var(--color-icon-...)`** tokens.
+    - optional **`DatagridFilter`** (filter panel body only — not header chrome)
       - optional **`FilterMenu`** (when the column filter is **open**): **`FilterIconTab`** + **`FilterPanel`** + **`FilterPanelBody`** (`column.filterPanel`) — see **Column filter menu (L-frame baseline)**.
       - optional **`ColumnResizeHandle`** (product / Storybook when **`columnResizeEnabled`**): transparent trailing-edge hit target co-located with the **1×24px** divider rail; **`cursor: col-resize`**; must not steal **`FilterToggle`** clicks.
   - **Last data column** (trailing column before settings): `<col width="auto">` (`.tableGrowCol`) — **only** slack column; settings `<col>` **`40px`** (Figma **`37721:113997`**).
   - `SettingsColumn` (always last visible chrome column, fixed width `40px`, **`Icon`** with **`shapeName="settings-gear"`**; sticky/pinned trailing; Figma *Padding* slot **`37721:113997`**)
 - `DatagridBody`
   - repeated `DatagridRow`
-  - repeated `DatagridCell`
+    - repeated `DatagridCell`
   - `RowSelectionCell` (optional)
 - `DatagridFooter`
   - `DatagridPaginationSlot` (IDS Pagination)
 - Optional side attachment:
-  - `DatagridDetailPanelSlot` (IDS Detail Panel datagrid variant)
+  - `DatagridDetailPanelSlot` (hosts IDS Detail Panel, datagrid attach mode)
+
+Angular composition (canonical child order):
+
+```
+ids-datagrid
+  ids-datagrid-column
+    ids-datagrid-column-title
+    ids-datagrid-filter
+  ids-datagrid-body
+    ids-datagrid-row
+      ids-datagrid-cell
+  ids-datagrid-footer
+  ids-datagrid-detail-panel
+```
 ### Framework-agnostic component tree
 
 Codegen emits **one or more table primitives** with **deterministic column order** per layout mode:
@@ -96,60 +112,51 @@ Child components / projection slots map to framework wrappers; **geometry, token
 4. `DatagridFooter` / `DatagridPaginationSlot` (outside vertical scroll clip)
 5. optional `DatagridDetailPanelSlot` — **sibling** of grid shell (`flex` row: grid **`flex: 1`** + panel fixed rail)
 
-### Angular composition (`def-dg` family) — validated mapping
+### Angular composition (`ids-datagrid` family) — canonical mapping
 
-Angular uses **declarative child components** with **content projection**. The mapping below is the **canonical** product shape; generated Angular must preserve **slot order** and **ownership**:
+Angular uses **declarative child components** with **content projection**. Column/row/cell children are **metadata + cell data** (grid host paints `<thead>` / `<tbody>`). Footer and detail panel are **layout slots**.
 
 ```html
-<def-new-dg-detail> <!-- optional; when detailsPanel attached -->
-  <def-dg
-    [rowSelection]="..."
-    [headerColorAndBorder]="..."
-    (rowSelectionChange)="..."
-  >
-    <!-- optional action bar / refresh — projected above grid -->
-    <def-dg-column *ngFor="let col of columns" [field]="col.key" [sortable]="..." [freezable]="...">
-      <ng-container defColumnTitle>{{ col.title }}</ng-container>
-      <def-datagrid-filter *ngIf="col.filterable">
-        <!-- ONE of (composed per column requirement):
-             def-dg-text-filter              — Default text search
-             def-dg-combobox-multiselect     — Combobox-Multiselect (search + checkboxes)
-             def-dg-combobox-singleselect    — Combobox-SingleSelect (search + option list)
-             def-dg-dropdown-singleselect    — Dropdown-SingleSelect (option list, no search)
-             def-dg-dropdown-multiselect     — Dropdown-MultiSelect (checkboxes, no search)
-             def-dg-numeric-filter           — Numeric (operator radio + value fields)
-             custom                          — any product-defined filter panel -->
-        <def-dg-text-filter />
-      </def-datagrid-filter>
-    </def-dg-column>
-    <def-datagrid-row *ngFor="let row of rows" (rowClick)="..." [selectable]="...">
-      <def-dg-cell *ngFor="let col of columns" [field]="col.key">
-        <!-- projected cell template -->
-      </def-dg-cell>
-    </def-datagrid-row>
-    <def-datagrid-footer>
-      <def-dg-pagination />
-    </def-datagrid-footer>
-  </def-dg>
-  <def-new-dg-detail-pane *ngIf="detailOpen">
-    <!-- row detail template -->
-  </def-new-dg-detail-pane>
-</def-new-dg-detail>
+<ids-datagrid
+  [rowSelection]="..."
+  [selectionMode]="..."
+  [withDetailPanel]="..."
+>
+  <ids-datagrid-column field="name" [sortable]="true" [filterable]="true">
+    <ids-datagrid-column-title>Name</ids-datagrid-column-title>
+    <ids-datagrid-filter>
+      <!-- inner filter UI only -->
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+  <ids-datagrid-body>
+    <ids-datagrid-row rowId="r-1">
+      <ids-datagrid-cell field="name" value="..." />
+    </ids-datagrid-row>
+  </ids-datagrid-body>
+  <ids-datagrid-footer />
+  <ids-datagrid-detail-panel>
+    <ids-detail-panel attachMode="datagrid" [expanded]="..." (expandedChange)="...">
+      <!-- see components/ids/detail-panel/design-spec.md -->
+    </ids-detail-panel>
+  </ids-datagrid-detail-panel>
+</ids-datagrid>
 ```
 
 | Spec slot | Angular element | Codegen notes |
 |---|---|---|
-| `DatagridRoot` | `<def-dg>` | Host table + scroll; owns selection model, column order, freeze, settings popup trigger |
-| `DatagridColumnHeader` | `<def-dg-column>` | Header title, sort, filter toggle, resize handle; **does not** own L-frame portal |
-| `FilterPanelBody` | child of `<def-datagrid-filter>` | Projected filter UI only (`def-dg-text-filter`, etc.) |
-| `DatagridRow` | `<def-datagrid-row>` | Row click, hover/selected state host |
-| `DatagridCell` | `<def-dg-cell>` | Cell projection; ellipsis on text |
-| `SelectionColumn` / `RowSelectionCell` | selection column templates | **single:** row radio, empty header; **multiple:** row checkbox + header select-all (IDS Checkbox **16×16**, indeterminate) |
-| `SettingsColumn` | grid-owned (not `def-dg-column`) | **40px** gear column; settings visibility popup from gear |
-| `DatagridFooter` | `<def-datagrid-footer>` + `<def-dg-pagination>` | Pagination below body scroll |
-| `DatagridDetailPanelSlot` | `<def-new-dg-detail>` + `<def-new-dg-detail-pane>` | Row click toggle; not a table column |
+| `DatagridRoot` | `<ids-datagrid>` | Host table + scroll; owns selection model, column order, freeze, settings popup trigger |
+| `DatagridColumnHeader` | `<ids-datagrid-column>` | Header chrome, sort, filter toggle, resize; **does not** own L-frame portal |
+| `DatagridColumnTitle` | `<ids-datagrid-column-title>` | Projected header label; `@Input() title` on column is fallback only |
+| `FilterPanelBody` | child of `<ids-datagrid-filter>` | Projected filter UI only |
+| `DatagridBody` | `<ids-datagrid-body>` | Row collection slot (data-only; not the scroll viewport DOM) |
+| `DatagridRow` | `<ids-datagrid-row>` | Row click, hover/selected state host |
+| `DatagridCell` | `<ids-datagrid-cell>` | Cell value; ellipsis on painted text |
+| `SelectionColumn` / `RowSelectionCell` | selection column templates | **single:** row radio, empty header; **multiple:** row checkbox + header select-all |
+| `SettingsColumn` | grid-owned (not a column child) | **40px** gear column; settings visibility popup from gear |
+| `DatagridFooter` | `<ids-datagrid-footer>` | Pagination host below body scroll (grid-owned IDS Pagination when `pageSize` / `totalPages` require it) |
+| `DatagridDetailPanelSlot` | `<ids-datagrid-detail-panel>` | Sibling of grid wrap; projects `<ids-detail-panel>`; row click toggle |
 
-**Assessment:** Angular child-component decomposition is **compatible** with framework-agnostic codegen **when** adapters treat `<def-dg-column>` as **metadata + projection** and keep **L-frame / colgroup / sticky / grow-column math** in the grid host (same as React `IdsDataGrid`). Do **not** push table-width or filter-portal logic into individual column components.
+**Assessment:** Angular child-component decomposition is **compatible** with framework-agnostic codegen **when** adapters treat `<ids-datagrid-column>` as **metadata + projection** and keep **L-frame / colgroup / sticky / grow-column math** in the grid host (same as React `IdsDataGrid`). Do **not** push table-width or filter-portal logic into individual column components.
 
 ### React reference implementation
 
@@ -1046,6 +1053,8 @@ interface DatagridProps {
 }
 ```
 
+Angular projected children (canonical): `ids-datagrid-column` (`ids-datagrid-column-title` + optional `ids-datagrid-filter`) → `ids-datagrid-body` (`ids-datagrid-row` → `ids-datagrid-cell`) → `ids-datagrid-footer` → optional `ids-datagrid-detail-panel`.
+
 ### Events (emit on user action)
 
 | Event | Payload | When |
@@ -1152,10 +1161,11 @@ DatagridScrollHost
 ### Deterministic structure
 
 1. `DatagridRoot` (`DatagridShell` → `DatagridGridWrap` → `DatagridScrollHost`)
-2. `DatagridHeaderBand` (`<thead>` tables / sections — portaled **`FilterMenuLayer`** per open filter)
-3. `DatagridBodyViewport` (`<tbody>` tables / sections — vertical scroll clip)
-4. optional `DatagridDetailPanelSlot` (sibling, not `<col>`)
-5. `DatagridFooter` (below scroll host)
+2. repeated `DatagridColumn` (`DatagridColumnTitle` + optional `DatagridFilter`) — metadata/projection only
+3. `DatagridHeaderBand` (`<thead>` tables / sections — portaled **`FilterMenuLayer`** per open filter)
+4. `DatagridBody` slot → painted `DatagridBodyViewport` (`<tbody>` tables / sections — vertical scroll clip)
+5. `DatagridFooter` (below scroll host; pagination slot)
+6. optional `DatagridDetailPanelSlot` (sibling of grid wrap, not `<col>`)
 
 ### DOM trees (HTML reference — adapters must preserve structure)
 
@@ -1380,6 +1390,8 @@ Variant matrix:
   - **Numeric filter:** `44360:182265` (`.Filter-Element-NumericFilter`); operator rows `44367:182693`; proof nodes `44360:182266`, `44367:182637`, `44370:145919`
 - Live verification evidence:
   - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; sort icon matrix **`37721:114646`** (symbols **`37721:114647`**–**`37721:114661`**) re-checked **`2026-06-05`** (Figma MCP); column freeze scenario **`37721:115949`** re-checked **`2026-06-05`**; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**); text filter search field **`37822:91077`** re-checked **`2026-07-28`** (Figma MCP `get_variable_defs` + REST + screenshot).
+- Angular library: `lib/angular/ids/datagrid/`
+- Angular Storybook: `storybook-angular/src/components/ids-datagrid/`
 ### Storybook generation contract
 
 **Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).

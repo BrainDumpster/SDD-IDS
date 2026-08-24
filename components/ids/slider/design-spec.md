@@ -12,7 +12,7 @@
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Component-map entry: `data/component-figma-map.json` -> `Slider` (legacy exploration link exists in map; this spec is validated against IDS Design Library nodes above).
 - Validated nodes: `22459:40319`, `22459:39022`, `22459:38985`, `22505:177044`, `42114:74026`
-- Last live verification: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in this session.
+- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`) 2026-08-19 (`22459:38985`, `22459:38992`, `22459:38998`).
 ## Anatomy
 Deterministic slider slots:
 1. `SliderRoot`
@@ -47,6 +47,17 @@ Element-part references from Figma:
 - Value labels are rendered below the corresponding thumb centerline.
 - Optional value input boxes (single/range) follow IDS compact text-input geometry: `32px` height with horizontal padding `var(--padding-padding-16)`.
 - Range value input mode renders two `32px` text boxes with a centered separator slot (`"-"`) between them.
+
+### Slot geometry (Figma-verified)
+| Slot | Property | Value | Figma evidence |
+|---|---|---|---|
+| Small marker (`SliderTick`) | visual diameter | `8px` | `.Slider-Element-Parts` `22459:38985` (`Markers-small` `22459:38986`) |
+| Large marker (`SliderThumb`) | size | `16px` × `16px` | spec parts matrix `22459:38985`; fill `var(--color-icon-brand-base)` on `22459:38992` (`get_variable_defs`) |
+| Track (`SliderRail`) | thickness | `4px` | `.Slider-Element-Parts` `22459:38985`; selected fill `var(--color-icon-brand-base)` on `22459:38998` (`get_variable_defs`) |
+| Range selector | sample width | `68px` (two 16px thumbs + selected rail) | `22459:39004` / `22459:39013` |
+| Focus halo | footprint | `22px` × `22px` | marker states `22505:177044` |
+| Value input | height | `32px` | compact text-input; padding `var(--padding-padding-16)` |
+
 ## Tokens
 Verified slider tokens from `22459:38985` and `22505:177044`:
 - `var(--color-icon-brand-base)` (selected marker/track)
@@ -150,6 +161,17 @@ Dark theme uses the same structural state matrix and resolves all values through
 | `maxLabel` | No | `string` | — | Optional right label. |
 | `onValueChange` | No | `(value: number \| [number, number]) => void` | — | Fires on value updates. |
 | `onValueCommit` | No | `(value: number \| [number, number]) => void` | — | Fires on pointer/key commit. |
+| `className` | No | `string` | — | Extra class on `SliderRoot` (React + Angular lib). |
+| `id` | No | `string` | generated | Root id. |
+
+Framework selectors:
+- Angular: `ids-slider` (`lib/angular/ids/slider`)
+- React: `IdsSlider` (`lib/react/ids/slider`)
+
+Contract mirror: `component-contracts/ids/slider.contract.ts`
+
+### Spec Accurate Design story defaults
+- `mode="single"`, `min=0`, `max=100`, `defaultValue=50`, `minLabel="0"`, `maxLabel="100"`, `showStepper=false`, `showValueLabel=true`
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 1. `SliderRoot`
@@ -224,4 +246,14 @@ Dark theme uses the same structural state matrix and resolves all values through
 | IDS slider parts (size/shape) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22459-38985&m=dev (`22459:38985`) |
 | IDS marker states | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22505-177044&m=dev (`22505:177044`) |
 | IDS slider section context | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42114-74026&m=dev (`42114:74026`) |
-| Live verification method | Figma MCP: `get_metadata`, `get_design_context`, `get_variable_defs` |
+| Live verification method | Figma MCP: `get_metadata`, `get_variable_defs` (2026-08-19) |
+| Runtime contract | `component-contracts/ids/slider.contract.ts` |
+| Angular reference | `lib/angular/ids/slider/` (`ids-slider`) |
+| React reference | `lib/react/ids/slider/` (`IdsSlider`) |
+| Angular Storybook | `storybook-angular/src/components/ids-slider/ids-slider.stories.js` (title `Spec Generated/IDS/Slider`) |
+
+### Implementation Notes
+- Value inputs compose IDS compact text-input: React `IdsTextBox` / Angular `ids-text-box` with `size="small"`, no suffix icon, no helper text, `inputType="number"`.
+- Range input separator is the literal `"-"` between the two compact fields.
+- `showStepper` and `showTicks` are OR’d; when either is true, snapping uses `stepperFrequency` (fallback `step`).
+- Unknown `mode` falls back to `single` (see Fallback/error rules).

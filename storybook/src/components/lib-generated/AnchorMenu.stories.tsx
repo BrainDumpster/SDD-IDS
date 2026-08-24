@@ -42,7 +42,7 @@ const specAccurateArgs: ComponentProps<typeof IdsAnchorMenu> = {
 };
 
 const meta: Meta<typeof IdsAnchorMenu> = {
-  title: "Lib Generated/IDS/Anchor Menu",
+  title: "Components/IDS/Anchor Menu",
   component: IdsAnchorMenu,
   parameters: {
     layout: "padded",
