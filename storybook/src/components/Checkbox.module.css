@@ -14,6 +14,8 @@
   font-weight: 400;
   color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+  font-variation-settings: "wdth" 100;
   min-height: 20px;
 }
 
@@ -173,6 +175,12 @@
 
 .label {
   user-select: none;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+  color: inherit;
 }
 
 .visuallyHidden {

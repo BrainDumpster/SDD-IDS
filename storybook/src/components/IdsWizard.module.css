@@ -27,7 +27,7 @@
 }
 
 .modalRoot {
-  border-radius: var(--modal-control-radius);
+  border-radius: var(--corner-radius-radius-none, 0px);
   overflow: hidden;
 }
 

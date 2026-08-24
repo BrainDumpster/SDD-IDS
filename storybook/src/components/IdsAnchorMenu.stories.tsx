@@ -1,6 +1,11 @@
+/**
+ * Spec Generated stories — thin wrapper over `lib/react/ids/anchor-menu`.
+ * Canonical Lib Generated stories: `lib-generated/AnchorMenu.stories.tsx`
+ * Spec: components/ids/anchor-menu/design-spec.md
+ */
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { IdsAnchorMenu } from "./IdsAnchorMenu";
+import { IdsAnchorMenu } from "../../../lib/react/ids/anchor-menu";
 
 /** Figma `AnchorMenu-Example` (`11955:229709`) — first section selected. */
 const specAccurateItems = [
@@ -51,7 +56,7 @@ export const WithPageContent: Story = {
           </h2>
         ))}
       </div>
-      <IdsAnchorMenu items={[...specAccurateItems]} />
+      <IdsAnchorMenu items={[...specAccurateItems]} sticky />
     </div>
   ),
 };

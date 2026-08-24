@@ -34,6 +34,15 @@
   outline: none;
 }
 
+/* Programme radius: class-bound so Synapse 16px cannot leak into IDS stories. */
+.popupIds {
+  border-radius: var(--corner-radius-radius-none, 0px);
+}
+
+.popupSynapse {
+  border-radius: var(--modal-control-radius, var(--corner-radius-radius-16));
+}
+
 .sm { width: 480px; }
 .lg { width: 640px; }
 .xl { width: 800px; }

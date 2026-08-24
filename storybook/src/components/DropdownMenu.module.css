@@ -45,6 +45,7 @@
 .popup {
   background: var(--color-background-surface-component);
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border-top: none;
   box-sizing: border-box;
   /* Default (container-driven): menu matches the trigger/field width so it
      tracks the field as its container resizes; long options truncate via
@@ -225,6 +226,9 @@
   border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
+  /* Keep Show/Hide Selected from resizing content-driven popup max-content (avoids
+     Floating UI collision-shift “drift” when the tag panel mounts/unmounts). */
+  contain: inline-size;
 }
 
 .showSelectedHeader {
@@ -252,27 +256,30 @@
 
 .showSelectedCaret {
   flex-shrink: 0;
+  transition: transform 150ms ease;
 }
 
 .showSelectedToggle:focus-visible {
-  outline: none;
-}
-
-.showSelectedToggle:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius);
-  pointer-events: none;
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 1px;
 }
 
 .showSelectedTagsRoot {
   position: relative;
-  /* Extend past the panel's right padding so the overlay scrollbar sits at the
-     popup edge (aligned with the options list scrollbar). */
-  width: calc(100% + var(--padding-padding-16));
+  /* Stay within the panel content box. Do NOT use width: calc(100% + padding) —
+     that bleeds into content-driven popup max-content and shifts the menu on
+     expand/collapse. Overlay scrollbar is offset to the popup edge instead. */
+  width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  contain: inline-size;
+  overflow: visible;
+}
+
+.showSelectedTagsRoot .optionsScrollbar {
+  /* Panel has padding-right 16px; pull the overlay thumb to the popup edge so it
+     still aligns with the options-list scrollbar (same visual as the old width bleed). */
+  right: calc(2px - var(--padding-padding-16));
 }
 
 .showSelectedTags {
@@ -355,7 +362,7 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
 }
@@ -447,12 +454,10 @@
 }
 
 /* Option label truncates with an ellipsis when longer than the menu width
-   (popup is locked to the trigger width). It must be able to shrink. */
+   (popup is locked to the trigger width). Flex child must be able to shrink. */
 .itemLabel {
-  display: block;
   flex: 1 1 auto;
   min-width: 0;
-  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -489,24 +494,27 @@
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-highlighted] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:hover:not([data-disabled]),
 .item[data-selection-mode="single"][data-highlighted]:not([data-disabled]) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  /* Top + bottom border only (no side borders); inset box-shadow is not clipped
+     by the options scroll region the way a 0-offset outline is. */
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-focus-visible] {
@@ -544,7 +552,9 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-disabled],
 .item[data-selection-mode="single"]:not(:has(.radioOuter)):disabled {
   background: var(--color-background-gray-lighter);
-  outline: 1px solid var(--color-border-gray-disabled);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-gray-disabled),
+    inset 0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="false"][data-disabled],
@@ -699,12 +709,13 @@
   border-radius: 2px;
 }
 
-/* Focus ring wraps the whole row (matches single-select), not just the checkbox. */
-.item[data-selection-mode="multi"][data-focus-visible],
-.item[data-selection-mode="multi"]:focus-visible {
-  outline: 1px solid var(--color-border-brand-base);
-  outline-offset: -1px;
-  border-radius: var(--corner-radius-radius-4);
+.item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,
+.item[data-selection-mode="multi"]:focus-visible .checkboxOuter::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-2);
 }
 
 .item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) {
@@ -728,8 +739,9 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
@@ -761,8 +773,9 @@
 .item[data-selection-mode="single"]:active:not([data-disabled]) {
   background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */

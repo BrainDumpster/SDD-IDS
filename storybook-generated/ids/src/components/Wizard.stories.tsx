@@ -8,14 +8,20 @@ import { useCallback, useState } from "react";
 import { IdsWizard as IdsWizard, type IdsWizardStep } from "../../../../storybook/src/components/IdsWizard";
 import { Button } from "../../../../storybook/src/components/Button";
 
-const meta: Meta<typeof IdsWizard> = {
-  title: "Components/IDS/Wizard",
-  component: IdsWizard,
-  parameters: { layout: "fullscreen" },
+const meta: Meta = {
+  title: "Spec Generated/IDS/Wizard",
+  parameters: {
+    layout: "fullscreen",
+    // Do not attach `component: IdsWizard` or put React step content in args —
+    // Storybook prettyPrint2 recurses on element fibers → Maximum call stack size exceeded.
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { type: "code" } },
+  },
 };
 
 export default meta;
-type Story = StoryObj<typeof IdsWizard>;
+type Story = StoryObj;
 
 const baseStepContentStyle = {
   border: "1px solid var(--color-border-brand-base)",
@@ -38,6 +44,7 @@ export const InlineDefault: Story = {
     return (
       <div style={{ padding: 24, background: "var(--color-background-surface-primary)", minHeight: 700 }}>
         <IdsWizard
+          title="Header"
           mode="inline"
           size="large"
           steps={steps}
@@ -59,6 +66,7 @@ export const ModalMode: Story = {
     return (
       <div style={{ padding: 24, minHeight: 300 }}>
         <IdsWizard
+          title="Header"
           mode="modal"
           size="medium"
           trigger={<Button>Open Wizard</Button>}

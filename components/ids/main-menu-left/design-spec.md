@@ -68,7 +68,7 @@ Figma slot mapping:
 - **Primary icon:** 16×16
 - **Chevron:** 14×14
 - **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-gray-neutral-base)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
-- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** has `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside the container. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-gray-neutral-base)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
+- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge; continuous through the `8px` list gap). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list. **`MainMenuList` stays inside the root** (no negative side margins) so hover/selected fills (`var(--color-background-brand-lighter-slate)`) end **flush inside** the right rail border (Figma `11099:56218` / Element-Primary fill `inset-0`). **Do not** paint left/right borders on primary/secondary rows — that breaks the rail stroke in the block gap. **`FocusRing`** uses `inset: 0` (inside the row). **`SelectedInset`** is `left: 0`, `width: 4px` with `var(--color-border-brand-strong)` (Figma inset bar inside the row).
 
 ## Tokens
 ### Surfaces and borders
@@ -209,7 +209,7 @@ ids-main-menu-left-group [groupId]
 | Name | Type | Notes |
 |------|------|-------|
 | `itemId` | `string` | Required — selection + `aria-current` key |
-| `level` | `'primary' \| 'secondary'` | Default `primary`; secondary uses 32px row (no icon slot) |
+| `level` | `'primary' | 'secondary'` | Default `primary`; secondary uses 32px row (no icon slot) |
 | `forceState` | `MainMenuLeftPrimaryState?` | Storybook matrix only (with root `forceStates`) |
 | `tooltip` | `string?` | Collapsed rail `title` / fallback label for events |
 | *(default slot)* | `linkHost` | Project `<a>`, `[routerLink]`, or `<button>` |
@@ -222,7 +222,6 @@ ids-main-menu-left-group [groupId]
 | `defaultExpanded` | `boolean?` | When `forceStates`: pins children list (`childrenMenu: "expanded"`) |
 
 ### User configuration model (legacy `items[]` adapter)
-
 All menu data is **host-defined**. Types mirror `storybook/src/components/MainMenuLeft.tsx` exports.
 
 **`MainMenuLeftLogo`** (optional)
@@ -319,7 +318,7 @@ Legacy adapter: `items[]` on root expands to the same tree at runtime (do not em
 | false | n/a | 64px icon-only primary rows |
 
 ### Per-slot style contract
-Resolve from **Tokens** and **States (Light Theme)** using `var(--...)` only.
+Resolve from **Tokens** and **States (Light Theme)** using `var(--...)` only
 
 ### Behavior contract
 See **Interactions**. Selection changes emit **`onSelected`** (`MainMenuLeftSelectionDetail`); activation (including logo) emits **`onNavigate`** (`MainMenuLeftNavigationTarget`).
@@ -358,8 +357,8 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 ### Bug fixes applied (2026-07-01)
 1. **Menu top padding missing** — Original bug: `.root` (MainMenuLeftRoot) was missing top padding. Fix: Added `padding-top: var(--padding-padding-8)`.
 2. **Font-weight incorrect** — Original bug: Primary label and secondary label font-weight were 500 instead of 400. Fix: Changed to `font-weight: 400` in `.primaryLabel`, `.secondaryRow`, and `.secondaryRowSelected`.
-3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-neutral-strong` instead of `color-icon-neutral`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-gray-neutral-base)`.
-4. **Row borders missing** — Original bug: Primary and secondary rows lacked left/right borders to stack above container border. Fix: Added left/right borders to `.primaryRow` and `.secondaryRow` with `color-border-accessible` and `z-index: 1`. `.content` uses `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside container. `.focusRing` uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. `.selectedInset` uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside. This creates the visual effect where row borders read as the rail edges along each row, aligning over the root borders rather than doubling.
+3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-gray-neutral-strong` instead of `color-icon-gray-neutral-base`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-gray-neutral-base)`.
+4. **Rail side border + highlight** — Side chrome on `MainMenuLeftRoot` only (continuous through the `8px` gap). `MainMenuList` must **not** use negative side margins — hover/selected backgrounds stay inside the right border (Figma Element-Primary fill). `SelectedInset` is `4px` at `left: 0` inside the row.
 
 ## Source Mapping
 - Design source: IDS Design Library `0bHk3XhrjFhowgFkz9yLr4`

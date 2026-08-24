@@ -1,0 +1,137 @@
+/**
+ * IDS Footer — CSS Modules from design-spec.
+ * Selectors: ids-footer-*
+ * Theme: components/ids-theme.css
+ */
+
+.ids-footer {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--color-background-surface-primary);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
+  font-family: inherit;
+}
+
+.ids-footer-left {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-24);
+  height: 100%;
+  padding-left: var(--padding-padding-16);
+  padding-right: var(--padding-padding-16);
+}
+
+.ids-footer-field {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  min-width: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.ids-footer-label {
+  font-weight: 500;
+  color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
+}
+
+.ids-footer-value {
+  color: var(--color-text-gray-neutral);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ids-footer-hostname {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: max-content;
+}
+
+.ids-footer-hostname-value {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  max-width: 48ch;
+}
+
+.ids-footer-hostname-text {
+  color: var(--color-text-gray-neutral);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 100%;
+  max-width: 48ch;
+}
+
+.ids-footer-hostname-tooltip {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ids-footer-swid-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.ids-footer-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--color-icon-brand-base);
+}
+
+.ids-footer-copy:disabled {
+  cursor: not-allowed;
+  color: var(--color-icon-gray-disabled);
+}
+
+.ids-footer-copy:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-footer-time-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  flex-shrink: 0;
+  padding: var(--padding-padding-4) var(--padding-padding-8) 3px var(--padding-padding-16);
+}
+
+.ids-footer-datetime {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  white-space: nowrap;
+}
+
+.ids-footer-timezone-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}

@@ -8,14 +8,14 @@
 - **Category:** Form Elements
 - **Spec path:** `components/ids/dual-list-box/design-spec.md`
 - **Description:** Two-pane list builder for moving items between an available pool and a selected pool, with vertical transfer controls and optional counts.
-- **Version:** 3.4.0
+- **Version:** 3.5.0
 - **Status:** active
 - **Created:** 2026-05-20
 - **Updated:** 2026-08-19
 - **Last verified:** 2026-05-20 (Figma MCP `12114:232557`, `12114:230677`; reference: keyboard nav + transfer labels)
 - **Storybook examples requested:** yes
 - **Generated Storybook:** `storybook/src/components/IdsDualListBox.stories.tsx`, `storybook-angular/src/components/ids-dual-list-box/ids-dual-list-box.stories.js` (title **`Spec Generated/IDS/Dual List Box`**, primary story **`Spec Accurate Design`**)
-- **Implementation reference:** `storybook/src/components/IdsDualListBox.tsx`, `storybook/src/components/IdsDualListBox.module.css`
+- **Implementation reference:** `lib/react/ids/dual-list-box/` (`IdsDualListBox` = DualListBoxRoot; anatomy slots `IdsDualListBoxListsParent` …); stories: `storybook/src/components/lib-generated/DualListBox.stories.tsx`. Legacy Storybook: `storybook/src/components/IdsDualListBox.tsx`.
 - **Angular library:** `lib/angular/ids/dual-list-box/`
 - **Primary Figma URL:** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-31229&m=dev
 - **Primary node id:** `22468:31229` (library instance slot; element nodes below carry measurable UI)
@@ -25,24 +25,24 @@
 
 ## Anatomy
 
-Deterministic slot order for **`DualListBoxRoot`**:
+Deterministic child structure for **`DualListBoxRoot`**:
 
 0. **`ListsParent`** — responsive wrapper (`display: grid`; columns `1fr | transfer | 1fr`; rows `header | list`)
-1. **`AvailablePane`** — source list column (grid column 1)
-   - **`AvailablePaneHeader`** — user-defined title (left) + **`AvailableMetrics`** “Total: N” (right, same row)
-   - **`AvailableListGroup`** (`.DualListBox-Elements-ListItemGroup`) — items or **empty placeholder**
-       - repeat **`ListItem`** (`.DualListBox-Elements-ListItem`, `12114:230677`)
-       - **`DragHandle`** — icon slug **`arrow-arrange`** (16×16); sole drag affordance for DnD
-       - **`ItemContent`** — `name` (+ optional `description`)
-       - optional **`SelectionCheck`** — icon slug **`shape-check-thick`** (16×16) when row selected and not dragging
-2. **`TransferButtonGroup`** (grid column 2, row 2 — vertically centered on list height only; does not shift when panes resize)
-   - **`MoveAllRight`** (`double-chev-right`)
-   - **`MoveSelectedRight`** (`chev-right`)
-   - **`MoveSelectedLeft`** (`chev-left`)
-   - **`MoveAllLeft`** (`double-chev-left`)
-3. **`SelectedPane`** — target list column (same inner structure as Available)
-   - **`SelectedPaneHeader`** — user-defined title + “Total: N” on one row
-   - **`SelectedListGroup`** — items or **empty placeholder** when `item count=0`
+   1. **`AvailablePane`** — source list column (grid column 1; `display: contents` so header + list join the parent grid)
+      - **`AvailablePaneHeader`** — user-defined title (left) + **`AvailableMetrics`** “Total: N” (right, same row)
+      - **`AvailableListGroup`** (`.DualListBox-Elements-ListItemGroup`) — items or **empty placeholder**
+          - repeat **`ListItem`** (`.DualListBox-Elements-ListItem`, `12114:230677`)
+              - **`DragHandle`** — icon slug **`arrow-arrange`** (16×16); sole drag affordance for DnD
+              - **`ItemContent`** — `name` (+ optional `description`)
+              - optional **`SelectionCheck`** — icon slug **`shape-check-thick`** (16×16) when row selected and not dragging
+   2. **`TransferButtonGroup`** (grid column 2, row 2 — vertically centered on list height only; does not shift when panes resize)
+      - **`MoveAllRight`** (`double-chev-right`)
+      - **`MoveSelectedRight`** (`chev-right`)
+      - **`MoveSelectedLeft`** (`chev-left`)
+      - **`MoveAllLeft`** (`double-chev-left`)
+   3. **`SelectedPane`** — target list column (same inner structure as Available)
+      - **`SelectedPaneHeader`** — user-defined title + “Total: N” on one row (`SelectedMetrics`)
+      - **`SelectedListGroup`** — items or **empty placeholder** when `item count=0`
 
 ### Angular selectors
 
@@ -278,7 +278,11 @@ Tooltip implementation MUST use the IDS Tooltip component contract in `component
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
 ### Deterministic structure
-Emit **`DualListBoxRoot`** containing **`AvailablePane`**, **`TransferButtonGroup`**, **`SelectedPane`** in that order. Each pane contains **`ListGroup`** → `ListItem` slots as in **Anatomy**.
+Emit **`DualListBoxRoot`** → **`ListsParent`** containing **`AvailablePane`**, **`TransferButtonGroup`**, **`SelectedPane`** in that order.
+
+Each pane contains **`PaneHeader`** (title + metrics) then **`ListGroup`** → `ListItem` slots as in **Anatomy**. `ListItem` child order is **`DragHandle`** → **`ItemContent`** → optional **`SelectionCheck`**. Transfer children are **`MoveAllRight`** → **`MoveSelectedRight`** → **`MoveSelectedLeft`** → **`MoveAllLeft`**.
+
+Pane wrappers use `display: contents` so Header + ListGroup participate in `ListsParent` CSS grid (`header | list` rows; transfer column stays on list row 2).
 
 ### Variant matrix
 | available count | selected count | Selected pane UI | Scrollbar |
@@ -327,6 +331,10 @@ Emit **`DualListBoxRoot`** containing **`AvailablePane`**, **`TransferButtonGrou
 - [x] Keyboard roving focus + arrows/Home/End/Escape in reference `IdsDualListBox`
 - [x] Transfer button `title` / `aria-label` (Angular hover-title parity)
 - [x] Empty pane `aria-live="polite"` on placeholder
+- [x] Deterministic child tree: `DualListBoxRoot` → `ListsParent` → `AvailablePane` / `TransferButtonGroup` / `SelectedPane`
+- [x] `ListItem` child order `DragHandle` → `ItemContent` → `SelectionCheck?`
+- [x] Transfer children `MoveAllRight` → `MoveSelectedRight` → `MoveSelectedLeft` → `MoveAllLeft`
+- [x] Lib React anatomy slots `lib/react/ids/dual-list-box/` + **Spec Accurate Design** / **Deterministic Anatomy** under `Lib Generated/IDS/Dual List Box`
 
 ## Source Mapping
 | Role | Figma node | URL |
@@ -349,3 +357,4 @@ Emit **`DualListBoxRoot`** containing **`AvailablePane`**, **`TransferButtonGrou
 - **Angular Storybook:** `storybook-angular/src/components/ids-dual-list-box/ids-dual-list-box.stories.js`
 - **Intake session:** design-spec intake wizard, confirmed 2026-05-20
 - **Evidence:** Figma MCP `get_design_context` + `get_metadata` on `12114:232557` and element nodes (2026-05-20)
+- **Lib React:** `lib/react/ids/dual-list-box/` — named anatomy slots with `data-slot` matching this spec; stories `storybook/src/components/lib-generated/DualListBox.stories.tsx`

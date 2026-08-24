@@ -96,10 +96,10 @@ Angular composition selectors may map these slots 1:1 as:
 | copy control | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 | copy control | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
 | datetime label | default | transparent | none | `var(--color-text-gray-neutral)` |
-| timezone action | default | transparent | none | tertiary button styles (uses Button component) |
-| timezone action | hover | transparent | none | tertiary button hover styles |
-| timezone action | focus-visible | transparent | focus ring from Button component | tertiary button focus styles |
-| timezone action | disabled | transparent | none | tertiary button disabled styles |
+| timezone action | default | transparent | none | `var(--color-text-brand-strong)` |
+| timezone action | hover | transparent | none | `var(--color-text-link-brand-base)` + underline |
+| timezone action | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits hover or default text token |
+| timezone action | disabled | transparent | none | `var(--color-text-gray-disabled)` |
 
 ## States (Dark Theme)
 
@@ -232,7 +232,8 @@ ids-footer
 - `FooterCopyControl`: 14px icon via Icon primitive slug `copy`, tint `var(--color-icon-brand-base)`.
 - `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-gray-neutral-base)`.
 - `FooterDateTimeLabel`: `var(--color-text-gray-neutral)`, Body 2 regular weight.
-- `FooterTimeZoneAction`: tertiary button (size: small, variant: tertiary) with iconSlug `world-globe`; uses Button component.
+- `FooterTimeZoneIcon`: slug `world-globe`, 16px, `var(--color-icon-brand-base)`.
+- `FooterTimeZoneAction`: `var(--color-text-brand-strong)`; hover `var(--color-text-link-brand-base)` with underline.
 
 ### Behavior contract
 - Copy writes `swid` prop to clipboard when enabled; always call `onCopySwid` on successful activation.

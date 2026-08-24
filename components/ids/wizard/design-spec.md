@@ -15,7 +15,7 @@
   - https://clarity.design/documentation/wizard
 ## Anatomy
 Main component:
-- `WizardRoot`
+- `Wizard`
 
 Deterministic child structure (required order):
 1. `WizardHeader`
@@ -37,6 +37,32 @@ Deterministic child structure (required order):
 17. `WizardCancelButton`
 18. `WizardPreviousButton`
 19. `WizardPrimaryButton` (`Next` or `Finish` or page-specific replacement)
+
+Composition nesting (deterministic):
+```
+Wizard
+  WizardHeader
+    WizardHeaderTitle
+    WizardCloseAction?
+  WizardBody
+    WizardStepsPane
+      WizardStepItem[]
+        WizardStepLabel
+        WizardStepStatusIndicator?
+        WizardSubstepList?
+          WizardSubstepItem[]
+            WizardStepLabel
+            WizardStepStatusIndicator?
+    WizardContentPane
+      WizardPageTitle
+      WizardPageContent
+      WizardFooter
+        WizardProgressLabel
+        WizardFooterActions
+          WizardCancelButton?
+          WizardPreviousButton?
+          WizardPrimaryButton
+```
 ## Layout & Measurements
 - Figma sample "one size" frame: `1594px x 843px` (sample only; runtime is token/prop driven).
 - Wizard body region is two columns (`steps pane` + `content pane`) with equal vertical span.
@@ -217,9 +243,11 @@ Outputs/events:
 - `stepCode` (e.g., `2`, `2a`)
 ## Codegen Contract (Framework-Agnostic Blueprint)
 Deterministic structure:
-- Always render `WizardHeader`, `WizardBody`, `WizardFooter` (prop-driven default tree, or the same slots when projected).
+- Root component name is `Wizard` (not `WizardRoot`).
+- Always render under `Wizard`: `WizardHeader`, `WizardBody`, and (inside `WizardContentPane`) `WizardFooter` (prop-driven default tree, or the same slots when projected).
 - `WizardStepsPane` left, `WizardContentPane` right.
 - Parent nodes with children render as grouping rows; leaf nodes map to content pages.
+- React Ids prefix: `IdsWizard` + anatomy slots (`IdsWizardHeader`, …) matching ## Anatomy nesting.
 
 Variant/options matrix:
 - mode: `inline | modal`
@@ -280,6 +308,7 @@ Validation checklist:
 |---|---|
 | Component map baseline | `data/component-figma-map.json` (`Wizard - Inline`, `Wizard - Modal`) |
 | New unified IDS wizard spec target | `components/ids/wizard/design-spec.md` |
+| Lib React (no Base UI) | `lib/react/ids/wizard/` (`IdsWizard` = `Wizard`; anatomy slots `IdsWizardHeader` …); stories: `storybook/src/components/lib-generated/Wizard.stories.tsx` |
 | Figma canonical node | `12690:246134` (`WizardInline-Main`) |
 | Figma variant nodes | `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164` |
 | Figma step-element node | `13446:21486` (`Active Step=True, State=Success, Show Sub-Steps=True`) |

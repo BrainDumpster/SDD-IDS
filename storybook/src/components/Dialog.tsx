@@ -91,8 +91,20 @@ export function Dialog({
 
   const popupClassName =
     variant === "about"
-      ? `${styles.popup} ${styles.popupAbout}`
-      : [styles.popup, styles[dialogSize]].filter(Boolean).join(" ");
+      ? [
+          styles.popup,
+          programme === "synapse" ? styles.popupSynapse : styles.popupIds,
+          styles.popupAbout,
+        ]
+          .filter(Boolean)
+          .join(" ")
+      : [
+          styles.popup,
+          programme === "synapse" ? styles.popupSynapse : styles.popupIds,
+          styles[dialogSize],
+        ]
+          .filter(Boolean)
+          .join(" ");
 
   const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
 

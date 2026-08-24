@@ -132,9 +132,7 @@ export function IdsTooltip({
           className={
             triggerDisplay === "block" ? styles.triggerBlock : styles.trigger
           }
-          delay={delay}
-          closeDelay={closeDelay}
-          render={(props) => <span {...props}>{props.children ?? children}</span>}
+          render={<span />}
         >
           {trigger}
         </BaseTooltip.Trigger>
