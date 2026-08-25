@@ -10,28 +10,34 @@ import React, { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  SEGMENTED_BUTTON_DOCS_DESCRIPTION,
+  SEGMENTED_BUTTON_SOURCE_CODE,
+} from "./ids-segmented-button.developer-usage";
+import {
   IdsSegmentedButton,
   IdsSegmentedIcon,
   IdsSegmentedText,
   type IdsSegmentedButtonChangeMeta,
   type IdsSegmentedSimulatedState,
-} from "../../../../lib/react/ids/segmented-button";
+} from "@ids/react/segmented-button";
 
 const DESIGN_SPEC_PATH = "components/ids/segmented-button/design-spec.md";
 
 const meta: Meta<typeof IdsSegmentedButton> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Segmented Button",
   component: IdsSegmentedButton,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Segmented Button from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Compound API: `IdsSegmentedButton` + `IdsSegmentedText` | `IdsSegmentedIcon`. " +
-          "`type`: text (2–5) | icon (2–3). Single-select radiogroup. " +
-          "Icon slugs via `IdsIcon` (`shape`). Theme: `components/ids-theme.css`. " +
-          "No `items[]`. No `@base-ui-components`. Disabled out of scope.",
+        component: SEGMENTED_BUTTON_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: SEGMENTED_BUTTON_SOURCE_CODE,
       },
     },
   },

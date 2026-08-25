@@ -11,11 +11,15 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TEXT_BOX_DOCS_DESCRIPTION,
+  TEXT_BOX_SOURCE_CODE,
+} from "./ids-text-box.developer-usage";
+import {
   IdsTextBox,
   type IdsTextBoxProps,
-} from "../../../../lib/react/ids/text-box";
-import { IdsError, IdsErrorText } from "../../../../lib/react/ids/error";
-import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
+} from "@ids/react/text-box";
+import { IdsError, IdsErrorText } from "@ids/react/error";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 
 function Box(
   props: IdsTextBoxProps & {
@@ -42,17 +46,20 @@ function Box(
 }
 
 const meta: Meta<IdsTextBoxProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Text Box",
   component: IdsTextBox,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Text Box from `components/ids/text-box/design-spec.md`. " +
-          "Projection: optional `IdsHelper` or `IdsError` (not both). " +
-          "Theme: `components/ids-theme.css` (`--text-box-control-radius`, `--text-box-focus-ring-radius`). " +
-          "No `@base-ui-components`.",
+        component: TEXT_BOX_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TEXT_BOX_SOURCE_CODE,
       },
     },
   },

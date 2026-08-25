@@ -13,9 +13,13 @@ import React, { type ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  PROGRESS_BAR_DOCS_DESCRIPTION,
+  PROGRESS_BAR_SOURCE_CODE,
+} from "./ids-progress-bar.developer-usage";
+import {
   IdsProgressBar,
   type IdsProgressBarProps,
-} from "../../../../lib/react/ids/progress-bar";
+} from "@ids/react/progress-bar";
 
 const DESIGN_SPEC_PATH = "components/ids/progress-bar/design-spec.md";
 
@@ -36,17 +40,20 @@ const frameStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsProgressBarProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Progress Bar",
   component: IdsProgressBar,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Progress Bar from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: ProgressRoot → MetaRow? → TrackRow → HelperRow?. " +
-          "Helper composes lib `IdsHelper` / `IdsHelperText` and `IdsIcon` (`variant=\"img\"`). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: PROGRESS_BAR_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: PROGRESS_BAR_SOURCE_CODE,
       },
     },
   },

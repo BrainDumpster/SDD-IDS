@@ -22,6 +22,10 @@ import React, { type ComponentProps, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DUAL_LIST_BOX_DOCS_DESCRIPTION,
+  DUAL_LIST_BOX_SOURCE_CODE,
+} from "./ids-dual-list-box.developer-usage";
+import {
   IdsDualListBox,
   IdsDualListBoxAvailableListGroup,
   IdsDualListBoxAvailablePane,
@@ -38,7 +42,7 @@ import {
   type DualListBoxDragDropDetail,
   type DualListBoxItem,
   type DualListBoxTransferDetail,
-} from "../../../../lib/react/ids/dual-list-box";
+} from "@ids/react/dual-list-box";
 
 const DESIGN_SPEC_PATH = "components/ids/dual-list-box/design-spec.md";
 const FIGMA_SPEC_ACCURATE_NODE = "12114:232557";
@@ -83,18 +87,20 @@ const frameStyle: CSSProperties = {
 };
 
 const meta: Meta<typeof IdsDualListBox> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Dual List Box",
   component: IdsDualListBox,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Dual List Box from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Root is `DualListBoxRoot` (`IdsDualListBox`). " +
-          "Deterministic anatomy: ListsParent → AvailablePane / TransferButtonGroup / SelectedPane. " +
-          `Primary story: Figma \`${FIGMA_SPEC_ACCURATE_NODE}\`. ` +
-          "Theme: `components/ids-theme.css`.",
+        component: DUAL_LIST_BOX_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DUAL_LIST_BOX_SOURCE_CODE,
       },
     },
   },

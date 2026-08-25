@@ -20,12 +20,16 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
-import { AppLauncher } from "../../../../lib/react/ids/app-launcher";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+import {
+  MASTHEAD_DOCS_DESCRIPTION,
+  MASTHEAD_SOURCE_CODE,
+} from "./ids-masthead.developer-usage";
+import { AppLauncher } from "@ids/react/app-launcher";
+import { IdsIcon } from "@ids/react/icon";
 import {
   Masthead,
   type IdsMastheadProps,
-} from "../../../../lib/react/ids/masthead";
+} from "@ids/react/masthead";
 
 const DESIGN_SPEC_PATH = "components/ids/masthead/design-spec.md";
 const icon16 = { width: 16, height: 16 } as const;
@@ -81,20 +85,20 @@ const sampleAppLauncher = (
 );
 
 const meta: Meta<IdsMastheadProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Masthead",
   component: Masthead,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Masthead from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Root is `Masthead` (`IdsMasthead`) — not `MastheadRoot`. " +
-          "Deterministic anatomy: BrandSlot (Logo?, ProductName) → ActionsRow? " +
-          "(IconsSlot?, AppLauncherSlot?, AvatarSlot?). " +
-          "Optional chrome is host-composed — no runtime defaults. " +
-          "Selectors: `data-ids=\"IdsMasthead\"` (Ids camelCase). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: MASTHEAD_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: MASTHEAD_SOURCE_CODE,
       },
     },
   },

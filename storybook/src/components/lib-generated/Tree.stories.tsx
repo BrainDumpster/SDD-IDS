@@ -13,12 +13,16 @@ import React, { type ComponentProps, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TREE_DOCS_DESCRIPTION,
+  TREE_SOURCE_CODE,
+} from "./ids-tree.developer-usage";
+import {
   IdsTree,
   IdsTreeItem,
   IdsTreeItemLabel,
   type IdsTreeNode,
   type TreeItemClickDetail,
-} from "../../../../lib/react/ids/tree";
+} from "@ids/react/tree";
 
 const DESIGN_SPEC_PATH = "components/ids/tree/design-spec.md";
 
@@ -70,17 +74,20 @@ const frameStyle: CSSProperties = {
 };
 
 const meta: Meta<typeof IdsTree> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Tree",
   component: IdsTree,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Tree from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: `IdsTree` + `IdsTreeItem` + `IdsTreeItemLabel`. " +
-          "Mode A: `items[]`. Mode B: nested markup. Root emits `onTreeItemClick`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: TREE_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TREE_SOURCE_CODE,
       },
     },
   },

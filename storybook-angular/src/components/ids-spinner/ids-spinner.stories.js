@@ -11,6 +11,10 @@ import {
 } from "../../../compiled/component-contracts/ids/spinner.contract.js";
 import { IdsSpinnerComponent } from "../../../compiled/lib/angular/ids/spinner/ids-spinner.component.js";
 import { IDS_SPINNER_IMPORTS } from "../../../compiled/lib/angular/ids/spinner/index.js";
+import {
+  SPINNER_DOCS_DESCRIPTION,
+  SPINNER_SOURCE_CODE,
+} from "./ids-spinner.developer-usage.js";
 
 /** @type {import("@storybook/angular").Meta<IdsSpinnerComponent>} */
 const meta = {
@@ -28,13 +32,14 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `Angular IDS Spinner from \`${IDS_SPINNER_DESIGN_SPEC_PATH}\` (` +
-          "`lib/angular/ids/spinner`). Anatomy: backdrop? → spinnerRoot → " +
-          "spinnerVisual (track + arc) → label. `size`: sm | md | lg · " +
-          "`mode`: inline | overlay · `labelVisibility`: sr-only | visible-below | " +
-          "visible-inline. CSS conic-gradient ring (no SVG). Theme: `components/ids-theme.css`.",
+        component: SPINNER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "typescript",
+        code: SPINNER_SOURCE_CODE,
       },
     },
   },

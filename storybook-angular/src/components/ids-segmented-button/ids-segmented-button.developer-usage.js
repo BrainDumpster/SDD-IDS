@@ -1,60 +1,49 @@
 /** Developer usage + Docs tab copy for IDS Segmented Button (Angular). */
 
 export const SEGMENTED_BUTTON_DOCS_DESCRIPTION = `
-IDS Segmented Button — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/segmented-button/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/segmented-button.contract.ts\`
+Grouped toggle buttons for mutually exclusive options.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-segmented-buttons\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`type\` | \`SegmentedButtonType\` | \`SEGMENTED_BUTTON_SPEC_ACCURATE_DE…\` |
+| \`defaultSelected\` | \`string \\| number\` | \`SEGMENTED_BUTTON_SPEC_ACCURATE_DE…\` |
+| \`disabled\` | \`—\` | \`SEGMENTED_BUTTON_SPEC_ACCURATE_DE…\` |
+| \`ariaLabel\` | \`string\` | \`SEGMENTED_BUTTON_SPEC_ACCURATE_DE…\` |
+
+### \`ids-segmented-icon\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`false\` |
+
+### \`ids-segmented-text\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`selectedChange\` | \`ids-segmented-buttons\` | \`string\` |
+| \`change\` | \`ids-segmented-buttons\` | \`{
+    value: string;
+    meta: SegmentedButto…\` |
+
+## API
+
+Import \`IDS_SEGMENTED_BUTTON_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/segmented-button\`).
+
+\`\`\`ts
+import { IDS_SEGMENTED_BUTTON_IMPORTS } from "@ids/angular/segmented-button";
 \`\`\`
-ids-segmented-buttons [type, selected?, defaultSelected?, disabled?, ariaLabel?]
-  ids-segmented-text [value, label, ariaLabel?, title?]   (when type="text")
-  ids-segmented-icon [value, shape, ariaLabel, title?, color?]   (when type="icon")
-\`\`\`
-
-Import \`IDS_SEGMENTED_BUTTON_IMPORTS\` from \`ids-segmented-button.imports.ts\`.
-
-### Group API
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`type\` | \`text\` | \`text\` \| \`icon\` |
-| \`selected\` | — | Controlled selected \`value\` (string or number) |
-| \`defaultSelected\` | \`option1\` | Uncontrolled initial selection |
-| \`disabled\` | \`false\` | Disables entire group |
-| \`ariaLabel\` | \`Segmented options\` | Radiogroup accessible name |
-
-| Output | Notes |
-|--------|-------|
-| \`selectedChange\` | Emits newly selected \`value\` (string) |
-| \`change\` | Emits \`{ value, meta }\` — \`meta.label\` (text) or \`meta.ariaLabel\` (icon) |
-
-### Item API (\`ids-segmented-text\`)
-
-| Input | Required | Notes |
-|-------|----------|-------|
-| \`value\` | Yes | Unique segment id (string or number) |
-| \`label\` | Yes | Visible label (Body 2) |
-| \`ariaLabel\` | No | Overrides default accessible name |
-| \`title\` | No | Native tooltip |
-| \`disabled\` | No | Per-segment disable |
-| \`simulatedState\` | No | Storybook only: \`hover\` \| \`press\` \| \`focus-visible\` |
-
-### Item API (\`ids-segmented-icon\`)
-
-| Input | Required | Notes |
-|-------|----------|-------|
-| \`value\` | Yes | Unique segment id |
-| \`shape\` | Yes | Icon slug → \`assets/icons/<shape>.svg\` via \`ids-icon\` |
-| \`ariaLabel\` | Yes | Accessible name (icon-only) |
-| \`title\` | No | Native tooltip |
-| \`color\` | No | Optional CSS color override; state tokens apply when omitted |
-| \`disabled\` | No | Per-segment disable |
-| \`simulatedState\` | No | Storybook only |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const SEGMENTED_BUTTON_SOURCE_CODE = `import { Component } from "@angular/core";

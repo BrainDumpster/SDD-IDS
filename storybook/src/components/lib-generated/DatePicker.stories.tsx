@@ -12,21 +12,29 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
-import { IdsDatePicker } from "../../../../lib/react/ids/date-picker";
+import {
+  DATE_PICKER_DOCS_DESCRIPTION,
+  DATE_PICKER_SOURCE_CODE,
+} from "./ids-date-picker.developer-usage";
+import { IdsDatePicker } from "@ids/react/date-picker";
 
 const DESIGN_SPEC_PATH = "components/ids/date-picker/design-spec.md";
 
 const meta: Meta<typeof IdsDatePicker> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Date Picker",
   component: IdsDatePicker,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Date Picker from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Sizes: large (40px) / small (32px). Range mode and unavailable dates per Figma. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: DATE_PICKER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DATE_PICKER_SOURCE_CODE,
       },
     },
   },

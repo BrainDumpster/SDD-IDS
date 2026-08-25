@@ -1,50 +1,44 @@
 /** Developer usage + Docs tab copy for IDS Checkbox (Angular). */
 
 export const CHECKBOX_DOCS_DESCRIPTION = `
-IDS Checkbox — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/checkbox/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/checkbox.contract.ts\`
+Binary or indeterminate selection control with group composition and helper/error text.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-checkbox\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`label\` | \`string\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.l…\` |
+| \`showLabel\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.s…\` |
+| \`simulateFocusVisible\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.s…\` |
+| \`defaultChecked\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.c…\` |
+| \`disabled\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.d…\` |
+| \`error\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.e…\` |
+| \`density\` | \`CheckboxDensity\` | \`"default"\` |
+
+### \`ids-checkbox-group\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`CHECKBOX_GROUP_SPEC_ACCURATE_DEFA…\` |
+| \`orientation\` | \`CheckboxGroupOrientation\` | \`CHECKBOX_GROUP_SPEC_ACCURATE_DEFA…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`checkedChange\` | \`ids-checkbox\` | \`boolean\` |
+
+## API
+
+Import \`IDS_CHECKBOX_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/checkbox\`).
+
+\`\`\`ts
+import { IDS_CHECKBOX_IMPORTS } from "@ids/angular/checkbox";
 \`\`\`
-ids-checkbox-group [orientation?, disabled?, name?, idPrefix?]
-  ids-checkbox [label, checked?, defaultChecked?, indeterminate?, disabled?, error?, helperText?]
-  ids-checkbox …
-\`\`\`
-
-Import \`IDS_CHECKBOX_IMPORTS\` from \`ids-checkbox.imports.ts\`.
-
-### Group API
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`orientation\` | \`vertical\` | \`vertical\` \| \`horizontal\` — \`spacing-space-16\` / \`spacing-space-8\` gap |
-| \`disabled\` | \`false\` | Cascades to all child checkboxes |
-| \`name\` | — | Optional shared form name |
-| \`idPrefix\` | — | Optional id prefix for child controls |
-
-### Item API (\`ids-checkbox\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`label\` | — | **Required** visible, associated text |
-| \`checked\` | — | Controlled selection state |
-| \`defaultChecked\` | \`false\` | Uncontrolled initial value |
-| \`indeterminate\` | \`false\` | Partial / mixed visual |
-| \`disabled\` | \`false\` | Item-level disable (merged with group) |
-| \`error\` | \`false\` | Validation styling on assistive text |
-| \`helperText\` | — | Secondary or error message |
-| \`simulateFocusVisible\` | \`false\` | Storybook/demo only |
-
-| Output | Notes |
-|--------|-------|
-| \`checkedChange\` | Emits resolved boolean after toggle |
-
-Standalone \`ids-checkbox\` (outside a group) remains supported for single-control demos.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const CHECKBOX_SOURCE_CODE = `import { Component } from "@angular/core";

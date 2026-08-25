@@ -16,11 +16,15 @@ import React, { type ComponentProps, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  MAIN_MENU_LEFT_DOCS_DESCRIPTION,
+  MAIN_MENU_LEFT_SOURCE_CODE,
+} from "./ids-main-menu-left.developer-usage";
+import {
   IdsMainMenuLeft,
   type MainMenuLeftNavigationTarget,
   type MainMenuLeftPrimaryItem,
   type MainMenuLeftSelectionDetail,
-} from "../../../../lib/react/ids/main-menu-left";
+} from "@ids/react/main-menu-left";
 
 const DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.md";
 
@@ -68,19 +72,20 @@ const specAccurateArgs: ComponentProps<typeof IdsMainMenuLeft> = {
 };
 
 const meta: Meta<typeof IdsMainMenuLeft> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Main Menu Left",
   component: IdsMainMenuLeft,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Main Menu/Left from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: MainMenuLeftRoot → PrimaryMenuLogo? → MainMenuList → " +
-          "MainMenuPrimaryItem / MainMenuSecondaryItem → ExpandCollapse. " +
-          "No separate child components (slots are internal; icons via `IdsIcon`). " +
-          "Expanded **278px** / collapsed **64px**. Theme: `components/ids-theme.css`. " +
-          "No `@base-ui-components`.",
+        component: MAIN_MENU_LEFT_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: MAIN_MENU_LEFT_SOURCE_CODE,
       },
     },
   },

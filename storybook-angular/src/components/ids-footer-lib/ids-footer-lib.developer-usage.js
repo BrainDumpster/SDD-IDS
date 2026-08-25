@@ -1,27 +1,43 @@
 /** Developer usage + Docs tab copy for IDS Footer (Angular library composition API). */
 
-import { FOOTER_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/footer.contract.js";
-
 export const FOOTER_LIB_DOCS_DESCRIPTION = `
-IDS Footer — Angular 21 standalone **composition** API. Library: \`lib/angular/ids/footer/\`. Storybook: \`storybook-angular\`, port **6007**.
+## Overview
 
-**Spec:** \`components/ids/footer/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/footer.contract.ts\`
+Composition footer API for Angular (slots and projected content).
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-footer\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`ariaLabel\` | \`—\` | \`"Application status"\` |
+
+### \`ids-footer-left-region\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`hostname\` | \`—\` | \`""\` |
+| \`swid\` | \`—\` | \`""\` |
+| \`copyDisabled\` | \`—\` | \`false\` |
+| \`currentDateTime\` | \`—\` | \`""\` |
+| \`timeZoneLabel\` | \`—\` | \`""\` |
+| \`disabled\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`copySwid\` | \`ids-footer-left-region\` | \`string\` |
+| \`timeZoneClick\` | \`ids-footer-left-region\` | \`void\` |
+
+## API
+
+Import \`IDS_FOOTER_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/footer\`).
+
+\`\`\`ts
+import { IDS_FOOTER_IMPORTS } from "@ids/angular/footer";
 \`\`\`
-ids-footer
-  ids-footer-left-region
-    ids-footer-host-name [hostname]
-    ids-footer-swid-group [swid, copyDisabled?]
-  ids-footer-time-group [currentDateTime]
-  ids-footer-time-zone-group [timeZoneLabel, disabled?]
-\`\`\`
-
-Import \`IDS_FOOTER_IMPORTS\` from \`lib/angular/ids\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const FOOTER_LIB_STORY_FRAME_STYLE = `

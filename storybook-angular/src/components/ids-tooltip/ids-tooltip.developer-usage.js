@@ -1,44 +1,38 @@
 /** Developer usage + Docs tab copy for IDS Tooltip (Angular, composition API). */
 
 export const TOOLTIP_DOCS_DESCRIPTION = `
-IDS Tooltip — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/tooltip/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/tooltip.contract.ts\`
+Contextual hover/focus tip with optional title, body, arrow, and close.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-tooltip\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`side\` | \`TooltipSide\` | \`TOOLTIP_API_DEFAULTS.side\` |
+| \`arrowAlign\` | \`TooltipArrowAlign\` | \`TOOLTIP_API_DEFAULTS.arrowAlign\` |
+| \`closable\` | \`—\` | \`TOOLTIP_API_DEFAULTS.closable\` |
+| \`triggerDisplay\` | \`"inline" \\| "block"\` | \`TOOLTIP_API_DEFAULTS.triggerDisplay\` |
+| \`hugContent\` | \`—\` | \`false\` |
+| \`defaultOpen\` | \`—\` | \`false\` |
+| \`closeIconShapeName\` | \`—\` | \`"ctrl-close-16"\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`openChange\` | \`ids-tooltip\` | \`boolean\` |
+| \`closed\` | \`ids-tooltip\` | \`TooltipCloseReason\` |
+
+## API
+
+Import \`IDS_TOOLTIP_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/tooltip\`).
+
+\`\`\`ts
+import { IDS_TOOLTIP_IMPORTS } from "@ids/angular/tooltip";
 \`\`\`
-ids-tooltip [side, arrowAlign, closable, …]
-  ids-tooltip-trigger
-  ids-tooltip-panel
-    ids-tooltip-header
-      ids-tooltip-title
-    ids-tooltip-body
-    ids-tooltip-close
-    ids-tooltip-arrow
-\`\`\`
-
-\`ids-tooltip-header\` / \`ids-tooltip-title\` are optional. \`ids-tooltip-close\` is required when \`closable=true\`. \`ids-tooltip-arrow\` is always required.
-
-Import \`IDS_TOOLTIP_IMPORTS\` from \`lib/angular/ids/tooltip\`.
-
-### Root API (\`ids-tooltip\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`side\` | \`top\` | \`top\` \\| \`bottom\` \\| \`left\` \\| \`right\` |
-| \`arrowAlign\` | \`center\` | \`start\` \\| \`center\` \\| \`end\` |
-| \`closable\` | \`false\` | Persistent until close / Escape |
-| \`triggerDisplay\` | \`inline\` | \`block\` for full-width row triggers |
-| \`hugContent\` | \`false\` | Shrink popup to content width |
-
-| Output | Notes |
-|--------|-------|
-| \`openChange\` | Visibility changed |
-| \`closed\` | User dismiss (\`close-click\` \\| \`escape\`) |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const TOOLTIP_SOURCE_CODE = `import { Component } from "@angular/core";

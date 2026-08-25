@@ -1,64 +1,48 @@
 /** Developer usage + Docs tab copy for IDS Modal (Angular). */
 
 export const MODAL_DOCS_DESCRIPTION = `
-IDS Modal — Angular 21 standalone API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/modal/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/modal.contract.ts\`
+Dialog overlay with header, description, content, tabs, and footer composition.
 
-### Anatomy (composition — preferred)
+## Props
 
+### \`ids-modal\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`defaultOpen\` | \`—\` | \`false\` |
+| \`scenario\` | \`ModalScenario\` | \`MODAL_API_DEFAULTS.scenario\` |
+| \`type\` | \`ModalDialogType\` | \`MODAL_API_DEFAULTS.type\` |
+| \`size\` | \`ModalSize\` | \`MODAL_API_DEFAULTS.size\` |
+| \`layer\` | \`ModalLayer\` | \`MODAL_API_DEFAULTS.layer\` |
+| \`title\` | \`—\` | \`""\` |
+| \`closable\` | \`—\` | \`MODAL_API_DEFAULTS.closable\` |
+| \`scrollBar\` | \`—\` | \`MODAL_API_DEFAULTS.scrollBar\` |
+| \`tabs\` | \`—\` | \`MODAL_API_DEFAULTS.tabs\` |
+| \`footerCheckbox\` | \`—\` | \`MODAL_API_DEFAULTS.footerCheckbox\` |
+| \`fullScreen\` | \`—\` | \`MODAL_API_DEFAULTS.fullScreen\` |
+| \`pages\` | \`ModalPage[]\` | \`[]\` |
+| \`primaryActionLabel\` | \`—\` | \`""\` |
+| \`enablePrimaryAction\` | \`—\` | \`MODAL_API_DEFAULTS.enablePrimaryA…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`openChange\` | \`ids-modal\` | \`boolean\` |
+| \`closed\` | \`ids-modal\` | \`void\` |
+| \`primaryAction\` | \`ids-modal\` | \`void\` |
+| \`tertiaryAction\` | \`ids-modal\` | \`void\` |
+| \`pageChange\` | \`ids-modal\` | \`string\` |
+
+## API
+
+Import \`IDS_MODAL_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/modal\`).
+
+\`\`\`ts
+import { IDS_MODAL_IMPORTS } from "@ids/angular/modal";
 \`\`\`
-ids-modal [scenario, type, size, closable, …]
-  ids-modal-title
-  ids-modal-body [description?]
-  ids-modal-footer
-    ids-button × n
-\`\`\`
-
-Import \`IDS_MODAL_IMPORTS\` from \`ids-modal.imports.ts\`.
-
-String props (\`title\`, \`description\`, \`primaryActionLabel\`) remain shorthand when slots are not projected.
-
-### API (\`ids-modal\` root)
-
-Root handles shell chrome (scenario, type, size, closable, scrollBar, tabs, pages, footerCheckbox). Project **title**, **body**, and **footer** via composition slots (preferred).
-
-| Input | Type | Default | Notes |
-|-------|------|---------|-------|
-| \`open\` | \`boolean\` | — | Controlled visibility |
-| \`defaultOpen\` | \`boolean\` | \`false\` | Uncontrolled initial state |
-| \`scenario\` | \`single-page \\| multi-page \\| dialog\` | \`dialog\` | Usage model |
-| \`type\` | dialog severity | \`non-alerting\` | Dialog scenario only |
-| \`size\` | \`x-small \\| small \\| medium \\| large\` | \`medium\` | Figma size matrix |
-| \`closable\` | \`boolean\` | \`true\` | Close icon + escape |
-| \`scrollBar\` | \`boolean\` | \`false\` | Scrollable content + gradient cue |
-| \`tabs\` | \`boolean\` | \`false\` | Multi-page tab strip |
-| \`pages\` | \`ModalPage[]\` | \`[]\` | Multi-page content |
-| \`footerCheckbox\` | \`boolean\` | \`false\` | Optional footer checkbox |
-| \`title\` | \`string\` | — | Shorthand when \`ids-modal-title\` absent |
-| \`description\` | \`string\` | — | Shorthand when \`ids-modal-body\` absent |
-| \`primaryActionLabel\` | \`string\` | — | Shorthand when \`ids-modal-footer\` absent |
-| \`tertiaryActionLabel\` | \`string\` | — | Shorthand tertiary when footer slot absent |
-
-| Output | Notes |
-|--------|-------|
-| \`openChange\` | Visibility changed |
-| \`closed\` | Modal closed |
-| \`primaryAction\` | Primary footer action |
-| \`tertiaryAction\` | Tertiary footer action |
-| \`pageChange\` | Multi-page tab selected |
-
-### Theme & assets
-
-- Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-- Close icon: \`assets/icons/shape-x.svg\`
-- Severity icons: \`status-critical-square-solid\`, \`status-warn-tri-solid\`, \`status-error-diamond-solid\`, \`info-circ-solid\`
-- Footer buttons use \`ids-button\` (IDS Button contract).
-
-### Keyboard
-
-Escape closes when \`closable=true\`. Native \`<dialog>\` provides focus trap when open.
 `.trim();
 
 export const MODAL_SOURCE_CODE = `import { Component } from "@angular/core";

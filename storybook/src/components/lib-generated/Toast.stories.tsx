@@ -13,12 +13,16 @@ import React, { useCallback, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TOAST_DOCS_DESCRIPTION,
+  TOAST_SOURCE_CODE,
+} from "./ids-toast.developer-usage";
+import {
   IdsToastItem,
   IdsToastViewport,
   type IdsToastItemProps,
   type IdsToastQueueItem,
   type IdsToastType,
-} from "../../../../lib/react/ids/toast";
+} from "@ids/react/toast";
 
 const DESIGN_SPEC_PATH = "components/ids/toast/design-spec.md";
 
@@ -34,17 +38,20 @@ const TYPES: IdsToastType[] = [
 ];
 
 const meta: Meta<IdsToastItemProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Toast",
   component: IdsToastItem,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Toast from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: ToastViewport → ToastItem → Content (IconContainer + Message) + " +
-          "ActionContainer (ViewDetailsAction? + CloseAction?). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: TOAST_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TOAST_SOURCE_CODE,
       },
     },
   },

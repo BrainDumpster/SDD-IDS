@@ -1,58 +1,78 @@
 /** Developer usage + Docs tab copy for IDS Dual List Box (Angular, composition-shaped runtime). */
 
 export const DUAL_LIST_BOX_DOCS_DESCRIPTION = `
-IDS Dual List Box — Angular 21 standalone runtime aligned to \`components/ids/dual-list-box/design-spec.md\`. Library: \`lib/angular/ids/dual-list-box/\`. Storybook: \`storybook-angular\`, port **6007**.
+## Overview
 
-**Spec:** \`components/ids/dual-list-box/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/dual-list-box.contract.ts\`
+Transfer list for moving items between available and selected panes.
 
-### Anatomy (rendered selector hierarchy)
+## Props
 
+### \`ids-dual-list-box\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`availableItems\` | \`DualListBoxItem[]\` | \`[]\` |
+| \`selectedItems\` | \`DualListBoxItem[]\` | \`[]\` |
+| \`availableTitle\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.availableT…\` |
+| \`selectedTitle\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.selectedTitle\` |
+| \`availablePlaceholder\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.availableP…\` |
+| \`selectedPlaceholder\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.selectedPl…\` |
+| \`moveSelectedRightTitle\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.moveSelect…\` |
+| \`moveSelectedLeftTitle\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.moveSelect…\` |
+| \`availableSelection\` | \`string[]\` | \`[]\` |
+| \`selectedSelection\` | \`string[]\` | \`[]\` |
+| \`showMetrics\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.showMetrics\` |
+| \`metricsFormat\` | \`DualListBoxMetricsFormat\` | \`DUAL_LIST_BOX_DEFAULTS.metricsFormat\` |
+| \`enableDragDrop\` | \`—\` | \`DUAL_LIST_BOX_DEFAULTS.enableDrag…\` |
+| \`itemTooltipSide\` | \`DualListBoxTooltipSide\` | \`DUAL_LIST_BOX_DEFAULTS.itemToolti…\` |
+
+### \`ids-dual-list-box-lists-parent\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`showMetrics\` | \`—\` | \`true\` |
+| \`metricsFormat\` | \`DualListBoxMetricsFormat\` | \`"total"\` |
+| \`totalCount\` | \`—\` | \`0\` |
+| \`selectedCount\` | \`—\` | \`0\` |
+| \`showMetrics\` | \`—\` | \`true\` |
+| \`metricsFormat\` | \`DualListBoxMetricsFormat\` | \`"total"\` |
+| \`totalCount\` | \`—\` | \`0\` |
+| \`selectedCount\` | \`—\` | \`0\` |
+| \`empty\` | \`—\` | \`false\` |
+| \`dragOver\` | \`—\` | \`false\` |
+| \`empty\` | \`—\` | \`false\` |
+| \`dragOver\` | \`—\` | \`false\` |
+| \`enabled\` | \`—\` | \`false\` |
+| \`selected\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`availableSelectionChange\` | \`ids-dual-list-box\` | \`string[]\` |
+| \`selectedSelectionChange\` | \`ids-dual-list-box\` | \`string[]\` |
+| \`itemsChange\` | \`ids-dual-list-box\` | \`DualListBoxItemsChangeDetail\` |
+| \`transfer\` | \`ids-dual-list-box\` | \`DualListBoxTransferDetail\` |
+| \`dragDrop\` | \`ids-dual-list-box\` | \`DualListBoxDragDropDetail\` |
+| \`dragOverEvent\` | \`ids-dual-list-box-lists-parent\` | \`DragEvent\` |
+| \`dropEvent\` | \`ids-dual-list-box-lists-parent\` | \`DragEvent\` |
+| \`dragLeaveEvent\` | \`ids-dual-list-box-lists-parent\` | \`DragEvent\` |
+| \`listKeydown\` | \`ids-dual-list-box-lists-parent\` | \`KeyboardEvent\` |
+| \`listFocus\` | \`ids-dual-list-box-lists-parent\` | \`FocusEvent\` |
+| \`dragOverEvent\` | \`ids-dual-list-box-lists-parent\` | \`DragEvent\` |
+| \`dropEvent\` | \`ids-dual-list-box-lists-parent\` | \`DragEvent\` |
+| \`dragLeaveEvent\` | \`ids-dual-list-box-lists-parent\` | \`DragEvent\` |
+| \`listKeydown\` | \`ids-dual-list-box-lists-parent\` | \`KeyboardEvent\` |
+| \`listFocus\` | \`ids-dual-list-box-lists-parent\` | \`FocusEvent\` |
+| \`pressed\` | \`ids-dual-list-box-lists-parent\` | \`void\` |
+
+## API
+
+Import \`IDS_DUAL_LIST_BOX_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/dual-list-box\`).
+
+\`\`\`ts
+import { IDS_DUAL_LIST_BOX_IMPORTS } from "@ids/angular/dual-list-box";
 \`\`\`
-ids-dual-list-box
-  ids-dual-list-box-lists-parent
-    ids-dual-list-box-available-pane
-      ids-dual-list-box-available-pane-header
-      ids-dual-list-box-available-list-group
-        ids-dual-list-box-list-item
-          ids-dual-list-box-drag-handle
-          ids-dual-list-box-item-content
-          ids-dual-list-box-selection-check
-    ids-dual-list-box-transfer-button-group
-      ids-dual-list-box-move-all-right
-      ids-dual-list-box-move-selected-right
-      ids-dual-list-box-move-selected-left
-      ids-dual-list-box-move-all-left
-    ids-dual-list-box-selected-pane
-      ids-dual-list-box-selected-pane-header
-      ids-dual-list-box-selected-list-group
-\`\`\`
-
-Import \`IDS_DUAL_LIST_BOX_IMPORTS\` from \`lib/angular/ids\`.
-
-### Root API (\`ids-dual-list-box\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`availableItems\` | \`[]\` | Available pane rows |
-| \`selectedItems\` | \`[]\` | Selected pane rows |
-| \`availableTitle\` | \`Available Items\` | Header label |
-| \`selectedTitle\` | \`Selected Items\` | Header label |
-| \`availablePlaceholder\` | Spec default | Empty available-pane copy |
-| \`selectedPlaceholder\` | Spec default | Empty selected-pane copy |
-| \`showMetrics\` | \`true\` | Header metrics |
-| \`metricsFormat\` | \`total\` | \`total\` \\| \`total-and-selected\` |
-| \`enableDragDrop\` | \`true\` | Drag from \`arrow-arrange\` only |
-
-| Output | Notes |
-|--------|-------|
-| \`availableSelectionChange\` | Emits selected ids in available pane |
-| \`selectedSelectionChange\` | Emits selected ids in selected pane |
-| \`itemsChange\` | Emits updated pane collections |
-| \`transfer\` | Emits action + moved ids |
-| \`dragDrop\` | Emits item id, source pane, target pane, and target index |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const DUAL_LIST_BOX_SOURCE_CODE = `import { Component } from "@angular/core";

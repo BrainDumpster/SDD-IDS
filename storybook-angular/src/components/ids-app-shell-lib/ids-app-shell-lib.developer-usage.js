@@ -1,28 +1,63 @@
 /** Developer usage + Docs tab copy for IDS App Shell (Angular library). */
 
 export const APP_SHELL_LIB_DOCS_DESCRIPTION = `
-IDS App Shell — Angular 21 standalone API. Library: \`lib/angular/ids/app-shell/\`. Storybook: \`storybook-angular\`, port **6007**.
+## Overview
 
-**Spec:** \`components/ids/app-shell/design-spec.md\` (Figma App Shell \`43478:46307\`, not App Launcher \`13231:123761\`)  
-**React parity:** \`lib/react/ids/app-shell\` — masthead chrome via props \`headerActions\` / \`appLauncherSlot\` / \`avatarSlot\`  
-**Angular parity:** same prop names as \`TemplateRef\` inputs on \`ids-app-shell\` (preferred). Nested \`ng-content\` into Masthead is fallback-only.  
-**App Launcher:** \`lib/angular/ids/app-launcher/\` (\`triggerVariant="masthead"\`)
+Application chrome layout: masthead, main menu, page header, content, and footer slots.
 
-### Anatomy (deterministic order)
+## Props
 
+### \`ids-app-shell\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`pages\` | \`IdsAppShellPage[]\` | \`[]\` |
+| \`menuItems\` | \`MainMenuLeftPrimaryItem[]\` | \`[]\` |
+| \`persistMenuExpanded\` | \`—\` | \`false\` |
+| \`mastheadProductName\` | \`—\` | \`""\` |
+| \`showFooterHostname\` | \`—\` | \`true\` |
+| \`showFooterDateTime\` | \`—\` | \`true\` |
+| \`showFooterTimeZone\` | \`—\` | \`true\` |
+| \`showPageDescription\` | \`—\` | \`true\` |
+| \`focusManagementOnNavigate\` | \`—\` | \`true\` |
+| \`pageTitleLevel\` | \`IdsAppShellPageTitleLevel\` | \`1\` |
+| \`breakpointPreset\` | \`IdsAppShellBreakpointPreset \\| string\` | \`"fluid"\` |
+
+### \`ids-app-shell-demo-host\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`breakpointPreset\` | \`IdsAppShellBreakpointPreset \\| string\` | \`"1920"\` |
+| \`defaultPageId\` | \`—\` | \`"dashboard"\` |
+| \`defaultMenuExpanded\` | \`—\` | \`true\` |
+| \`mastheadProductName\` | \`—\` | \`"Product Name"\` |
+| \`mastheadProductIconSlug\` | \`—\` | \`"shield-cloud"\` |
+| \`footerHostname\` | \`—\` | \`FOOTER_SPEC_ACCURATE_DEFAULTS.hos…\` |
+| \`footerSwid\` | \`—\` | \`FOOTER_SPEC_ACCURATE_DEFAULTS.swid\` |
+| \`footerCurrentDateTime\` | \`—\` | \`FOOTER_SPEC_ACCURATE_DEFAULTS.cur…\` |
+| \`footerTimeZoneLabel\` | \`—\` | \`FOOTER_SPEC_ACCURATE_DEFAULTS.tim…\` |
+| \`menuItems\` | \`MainMenuLeftPrimaryItem[]\` | \`APP_SHELL_SPEC_ACCURATE_MENU_ITEMS\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`pageChange\` | \`ids-app-shell\` | \`{
+    pageId: string;
+    page: IdsAppShellPa…\` |
+| \`navigate\` | \`ids-app-shell\` | \`MainMenuLeftNavigationTarget\` |
+| \`menuSelected\` | \`ids-app-shell\` | \`MainMenuLeftSelectionDetail\` |
+| \`menuExpandedChange\` | \`ids-app-shell\` | \`boolean\` |
+| \`copySwid\` | \`ids-app-shell\` | \`string\` |
+| \`timeZoneClick\` | \`ids-app-shell\` | \`void\` |
+
+## API
+
+Import \`IDS_APP_SHELL_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/app-shell\`).
+
+\`\`\`ts
+import { IDS_APP_SHELL_IMPORTS } from "@ids/angular/app-shell";
 \`\`\`
-ids-app-shell
-  IdsAppShellMastheadSlot → ids-masthead
-    [headerActions] TemplateRef → utility icons
-    [appLauncherSlot] TemplateRef → waffle + product dropdown
-    [avatarSlot] TemplateRef → avatar
-  ids-app-shell-body-row
-    ids-app-shell-main-menu-slot → ids-main-menu-left
-    ids-app-shell-main-column (main#main-content)
-      page header / body / footer
-\`\`\`
-
-Open **Components → IDS → App Shell → Spec Accurate Design** on port **6007**. Load \`components/ids-theme.css\` (\`data-design-system="ids"\`).
 `.trim();
 
 export const APP_SHELL_LIB_SOURCE_CODE = `import { Component } from "@angular/core";

@@ -3,6 +3,10 @@
 /* spec_hash: b9599151056352af1dae392b6067afcf5ed5920e45d855df625e60ee866d72f4 */
 import React from "react";
 import "../../../../components/ids-theme.css";
+import {
+  WIZARD_INLINE_DOCS_DESCRIPTION,
+  WIZARD_INLINE_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-wizard-inline.developer-usage";
 /* Gate coverage: default hover press focus-visible disabled */
 import type { Meta, StoryObj } from "@storybook/react";
 import { useCallback, useState } from "react";
@@ -22,17 +26,20 @@ const baseStepContentStyle = {
 } as const;
 
 const meta: Meta<typeof IdsWizard> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Wizard Inline",
   component: IdsWizard,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: [
-          `Spec-driven IDS Wizard (inline). Source: \`${DESIGN_SPEC_PATH}\`.`,
-          "Runtime: shared `IdsWizard` with `mode=\"inline\"`.",
-          "Theme: `components/ids-theme.css`.",
-        ].join(" "),
+        component: WIZARD_INLINE_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: WIZARD_INLINE_SOURCE_CODE,
       },
     },
   },

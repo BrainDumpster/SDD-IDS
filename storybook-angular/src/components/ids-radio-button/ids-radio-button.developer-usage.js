@@ -1,49 +1,41 @@
 /** Developer usage + Docs tab copy for IDS Radio Button (Angular). */
 
 export const RADIO_BUTTON_DOCS_DESCRIPTION = `
-IDS Radio Button — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/radio-button/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/radio-button.contract.ts\`
+Single-choice selection within a radio group.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-radio-button\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`false\` |
+| \`error\` | \`—\` | \`false\` |
+
+### \`ids-radio-button-group\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`name\` | \`—\` | \`RADIO_BUTTON_SPEC_ACCURATE_DEFAUL…\` |
+| \`defaultValue\` | \`—\` | \`RADIO_BUTTON_SPEC_ACCURATE_DEFAUL…\` |
+| \`disabled\` | \`—\` | \`RADIO_BUTTON_SPEC_ACCURATE_DEFAUL…\` |
+| \`orientation\` | \`RadioButtonOrientation\` | \`RADIO_BUTTON_SPEC_ACCURATE_DEFAUL…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`valueChange\` | \`ids-radio-button-group\` | \`string\` |
+
+## API
+
+Import \`IDS_RADIO_BUTTON_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/radio-button\`).
+
+\`\`\`ts
+import { IDS_RADIO_BUTTON_IMPORTS } from "@ids/angular/radio-button";
 \`\`\`
-ids-radio-button-group [name, value?, defaultValue?, disabled?, orientation?]
-  ids-radio-button [value, label, disabled?, error?, helperText?, simulatedState?]
-  ids-radio-button …
-\`\`\`
-
-Import \`IDS_RADIO_BUTTON_IMPORTS\` from \`ids-radio-button.imports.ts\`.
-
-### Group API
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`name\` | — | **Required** shared group id for single-selection |
-| \`value\` | — | Controlled selected value |
-| \`defaultValue\` | \`option1\` | Uncontrolled initial selection |
-| \`disabled\` | \`false\` | Disables entire group |
-| \`orientation\` | \`vertical\` | \`vertical\` \| \`horizontal\` |
-
-| Output | Notes |
-|--------|-------|
-| \`valueChange\` | Emits newly selected \`value\` |
-
-### Item API (\`ids-radio-button\`)
-
-| Input | Required | Notes |
-|-------|----------|-------|
-| \`value\` | Yes | Unique value within the group |
-| \`label\` | Yes | Visible label |
-| \`disabled\` | No | Per-option disable (merged with group) |
-| \`error\` | No | Strong border + critical assistive text |
-| \`helperText\` | No | Helper or error line |
-| \`simulatedState\` | No | Storybook only: \`hover\` \| \`focus-visible\` |
-
-\`ids-radio-button\` must be projected inside \`ids-radio-button-group\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const RADIO_BUTTON_SOURCE_CODE = `import { Component } from "@angular/core";

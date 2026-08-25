@@ -12,9 +12,13 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  BADGE_DOCS_DESCRIPTION,
+  BADGE_SOURCE_CODE,
+} from "./ids-badge.developer-usage";
+import {
   IdsBadge,
   type IdsBadgeProps,
-} from "../../../../lib/react/ids/badge";
+} from "@ids/react/badge";
 
 const rowStyle: React.CSSProperties = {
   display: "flex",
@@ -24,18 +28,20 @@ const rowStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsBadgeProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Badge",
   component: IdsBadge,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Badge from `components/ids/badge/design-spec.md`. " +
-          "Anatomy: BadgeRoot → BadgeContainer → BadgeContent. " +
-          "`type`: default | critical | warning | disabled | success. " +
-          "Values ≥ 999 display `1K` and reveal the full value via lib `IdsTooltip` (`hugContent`). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: BADGE_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: BADGE_SOURCE_CODE,
       },
     },
   },

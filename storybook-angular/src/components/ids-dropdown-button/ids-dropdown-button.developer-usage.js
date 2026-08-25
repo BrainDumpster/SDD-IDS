@@ -1,24 +1,50 @@
 /** Developer usage + Docs tab copy for IDS Dropdown Button (Angular, composition API). */
 
 export const DROPDOWN_BUTTON_DOCS_DESCRIPTION = `
-IDS Dropdown Button — Angular standalone **composition** API. Library: \`lib/angular/ids/dropdown-button/\`.
+## Overview
 
-**Spec:** \`components/ids/dropdown-button/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/dropdown-button.contract.ts\`
+Button that opens a menu of actions via composition slots.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-dropdown-button\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`buttonStyle\` | \`DropdownButtonStyle\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+| \`size\` | \`DropdownButtonSize\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+| \`disabled\` | \`boolean\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+| \`defaultOpen\` | \`boolean\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+
+### \`ids-dropdown-button-menu-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`false\` |
+
+### \`ids-dropdown-button-trigger\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`label\` | \`—\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+| \`showLeadingIcon\` | \`—\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+| \`iconOnly\` | \`—\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
+| \`ariaLabel\` | \`—\` | \`""\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`openChange\` | \`ids-dropdown-button\` | \`boolean\` |
+| \`selectionChange\` | \`ids-dropdown-button\` | \`IdsDropdownButtonSelection\` |
+
+## API
+
+Import \`IDS_DROPDOWN_BUTTON_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/dropdown-button\`).
+
+\`\`\`ts
+import { IDS_DROPDOWN_BUTTON_IMPORTS } from "@ids/angular/dropdown-button";
 \`\`\`
-ids-dropdown-button [buttonStyle?, size?, disabled?, open?, defaultOpen?]
-  ids-dropdown-button-trigger [label?, showLeadingIcon?, iconOnly?, ariaLabel?]
-  ids-dropdown-button-menu
-    ids-dropdown-button-menu-item [value, label, disabled?]
-    ids-dropdown-button-menu-item …
-\`\`\`
-
-Import \`IDS_DROPDOWN_BUTTON_IMPORTS\` from \`lib/angular/ids\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const DROPDOWN_BUTTON_SOURCE_CODE = `import { Component } from "@angular/core";

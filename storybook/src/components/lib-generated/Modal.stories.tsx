@@ -11,6 +11,10 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  MODAL_DOCS_DESCRIPTION,
+  MODAL_SOURCE_CODE,
+} from "./ids-modal.developer-usage";
+import {
   IdsModal,
   IdsModalClose,
   IdsModalContent,
@@ -19,23 +23,27 @@ import {
   IdsModalHeader,
   IdsModalTitle,
   type IdsModalProps,
-} from "../../../../lib/react/ids/modal";
+} from "@ids/react/modal";
 import {
   IdsButton,
   IdsButtonLabel,
-} from "../../../../lib/react/ids/button";
+} from "@ids/react/button";
 
 const meta: Meta<IdsModalProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Modal",
   component: IdsModal,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Modal from `components/ids/modal/design-spec.md`. " +
-          "Anatomy: overlay → surface → header → description? → tabs? → content? → footer. " +
-          "Compound slots or prop-driven chrome. Theme: `components/ids-theme.css`.",
+        component: MODAL_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: MODAL_SOURCE_CODE,
       },
     },
   },

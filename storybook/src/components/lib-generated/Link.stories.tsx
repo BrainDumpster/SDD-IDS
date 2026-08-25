@@ -12,9 +12,13 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  LINK_DOCS_DESCRIPTION,
+  LINK_SOURCE_CODE,
+} from "./ids-link.developer-usage";
+import {
   IdsLink,
   type IdsLinkProps,
-} from "../../../../lib/react/ids/link";
+} from "@ids/react/link";
 
 const DESIGN_SPEC_PATH = "components/ids/link/design-spec.md";
 
@@ -22,18 +26,20 @@ const TYPES = ["standalone", "inline", "dark-bg"] as const;
 const STATES = ["default", "hover", "press", "focus-visible"] as const;
 
 const meta: Meta<IdsLinkProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Link",
   component: IdsLink,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Link from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: root → label → externalIcon?. " +
-          "`type`: standalone | inline | dark-bg. " +
-          "External icon composes lib `IdsIcon` (`pop-up-square-corner-big`). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: LINK_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: LINK_SOURCE_CODE,
       },
     },
   },

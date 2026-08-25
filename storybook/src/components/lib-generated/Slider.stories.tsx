@@ -13,9 +13,13 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  SLIDER_DOCS_DESCRIPTION,
+  SLIDER_SOURCE_CODE,
+} from "./ids-slider.developer-usage";
+import {
   IdsSlider,
   type IdsSliderProps,
-} from "../../../../lib/react/ids/slider";
+} from "@ids/react/slider";
 
 const DESIGN_SPEC_PATH = "components/ids/slider/design-spec.md";
 
@@ -38,17 +42,20 @@ const frameStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsSliderProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Slider",
   component: IdsSlider,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Slider from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: SliderRoot → MinLabel? → Rail (segment / ticks / thumbs / value labels) → MaxLabel? → ValueInput(s)?. " +
-          "Value inputs compose lib `IdsTextBox` (`size=\"small\"`). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: SLIDER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: SLIDER_SOURCE_CODE,
       },
     },
   },

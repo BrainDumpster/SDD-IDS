@@ -4,6 +4,10 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
+import {
+  GLOBAL_SEARCH_DOCS_DESCRIPTION,
+  GLOBAL_SEARCH_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-global-search.developer-usage";
 
 interface SearchResult {
   id: string;
@@ -766,14 +770,20 @@ function GlobalSearch({
 }
 
 const meta: Meta<typeof GlobalSearch> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Global Search",
   component: GlobalSearch,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "IDS Global Search per components/ids/global-search/design-spec.md. Theme: components/ids-theme.css. Figma states: Empty, Recent, Loading, No Results, Keyword Results.",
+        component: GLOBAL_SEARCH_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: GLOBAL_SEARCH_SOURCE_CODE,
       },
     },
   },

@@ -1,43 +1,38 @@
 /** Developer usage + Docs tab copy for IDS Anchor Menu (Angular, composition API). */
 
 export const ANCHOR_MENU_DOCS_DESCRIPTION = `
-IDS Anchor Menu — Angular 21 standalone **composition** API. Library: \`lib/angular/ids/anchor-menu/\`. Storybook: \`storybook-angular\`, port **6007**.
+## Overview
 
-**Spec:** \`components/ids/anchor-menu/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/anchor-menu.contract.ts\`
+In-page navigation list that highlights the active section as the user scrolls.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-anchor-menu\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`title\` | \`—\` | \`ANCHOR_MENU_API_DEFAULTS.title\` |
+| \`sticky\` | \`—\` | \`ANCHOR_MENU_API_DEFAULTS.sticky\` |
+
+### \`ids-anchor-menu-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`active\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`itemClick\` | \`ids-anchor-menu\` | \`string\` |
+
+## API
+
+Import \`IDS_ANCHOR_MENU_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/anchor-menu\`).
+
+\`\`\`ts
+import { IDS_ANCHOR_MENU_IMPORTS } from "@ids/angular/anchor-menu";
 \`\`\`
-ids-anchor-menu [title?, sticky?]
-  ids-anchor-menu-header [title?]     ← optional
-  ids-anchor-menu-item [label, href, active?]
-  ids-anchor-menu-item …
-  ids-anchor-active-indicator
-\`\`\`
-
-Import \`IDS_ANCHOR_MENU_IMPORTS\` from \`lib/angular/ids\`.
-
-### Root API (\`ids-anchor-menu\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`title\` | \`On this page\` | \`aria-label\` on \`nav\`; header label fallback |
-| \`sticky\` | \`true\` | \`position: sticky\` |
-
-| Output | Notes |
-|--------|-------|
-| \`itemClick\` | Emits the item \`href\` after activation |
-
-### Item API (\`ids-anchor-menu-item\`)
-
-| Input | Required | Notes |
-|-------|----------|-------|
-| \`label\` | Yes | Visible Body 1 label |
-| \`href\` | Yes | Target; empty/missing disables navigation |
-| \`active\` | No | Initial selected item when true |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const ANCHOR_MENU_SOURCE_CODE = `import { Component } from "@angular/core";

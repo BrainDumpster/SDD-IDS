@@ -10,6 +10,10 @@ import {
 } from "../../../compiled/component-contracts/ids/pagination.contract.js";
 import { IdsPaginationComponent } from "../../../compiled/lib/angular/ids/pagination/ids-pagination.component.js";
 import { IDS_PAGINATION_IMPORTS } from "../../../compiled/lib/angular/ids/pagination/index.js";
+import {
+  PAGINATION_DOCS_DESCRIPTION,
+  PAGINATION_SOURCE_CODE,
+} from "./ids-pagination.developer-usage.js";
 
 const frameStyle = "padding: 20px; max-width: 960px;";
 const stackStyle = "padding: 20px; max-width: 960px; display: grid; gap: 20px;";
@@ -32,8 +36,14 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: `IDS Pagination per \`${IDS_PAGINATION_DESIGN_SPEC_PATH}\`. Angular standalone (\`storybook-angular\` port 6007).`,
+        component: PAGINATION_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "typescript",
+        code: PAGINATION_SOURCE_CODE,
       },
     },
   },

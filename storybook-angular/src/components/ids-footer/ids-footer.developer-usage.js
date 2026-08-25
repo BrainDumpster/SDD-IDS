@@ -1,16 +1,43 @@
 /** Developer usage + Docs tab copy for IDS Footer (Angular). */
 
-import { FOOTER_SPEC_ACCURATE_DEFAULTS } from "../../../compiled/component-contracts/ids/footer.contract.js";
-
 export const FOOTER_DOCS_DESCRIPTION = `
-IDS Footer — Angular 21 standalone application status bar (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/footer/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/footer.contract.ts\`
+Application footer with hostname and status/meta content.
 
-32px persistent shell strip with optional host name, SWID (+ copy), date/time, and time-zone action.
+## Props
 
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
+### \`ids-footer\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`ariaLabel\` | \`—\` | \`"Application status"\` |
+
+### \`ids-footer-left-region\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`hostname\` | \`—\` | \`""\` |
+| \`swid\` | \`—\` | \`""\` |
+| \`copyDisabled\` | \`—\` | \`false\` |
+| \`currentDateTime\` | \`—\` | \`""\` |
+| \`timeZoneLabel\` | \`—\` | \`""\` |
+| \`disabled\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`copySwid\` | \`ids-footer-left-region\` | \`string\` |
+| \`timeZoneClick\` | \`ids-footer-left-region\` | \`void\` |
+
+## API
+
+Import \`IDS_FOOTER_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/footer\`).
+
+\`\`\`ts
+import { IDS_FOOTER_IMPORTS } from "@ids/angular/footer";
+\`\`\`
 `.trim();
 
 export const FOOTER_STORY_FRAME_STYLE = `

@@ -12,9 +12,13 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  SPINNER_DOCS_DESCRIPTION,
+  SPINNER_SOURCE_CODE,
+} from "./ids-spinner.developer-usage";
+import {
   IdsSpinner,
   type IdsSpinnerProps,
-} from "../../../../lib/react/ids/spinner";
+} from "@ids/react/spinner";
 
 const DESIGN_SPEC_PATH = "components/ids/spinner/design-spec.md";
 
@@ -28,19 +32,20 @@ const specAccurateArgs: IdsSpinnerProps = {
 };
 
 const meta: Meta<IdsSpinnerProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Spinner",
   component: IdsSpinner,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Spinner from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: backdrop? → spinnerRoot → spinnerVisual (track + arc) → label. " +
-          "`size`: sm | md | lg · `mode`: inline | overlay · " +
-          "`labelVisibility`: sr-only | visible-below | visible-inline. " +
-          "CSS conic-gradient ring (no SVG). Theme: `components/ids-theme.css`. " +
-          "No `@base-ui-components`.",
+        component: SPINNER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: SPINNER_SOURCE_CODE,
       },
     },
   },

@@ -1,16 +1,39 @@
 /** Developer usage + Docs tab copy for IDS Time Picker (Angular). */
 
 export const TIME_PICKER_DOCS_DESCRIPTION = `
-IDS Time Picker — Angular 21 standalone (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/time-picker/design-spec.md\`  
-**Family map:** \`components/ids/date-and-time-picker/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/time-picker.contract.ts\`  
-**React parity:** \`lib/react/ids/time-picker\`
+Time-of-day selection control.
 
-Import \`IDS_TIME_PICKER_IMPORTS\` from \`lib/angular/ids/time-picker\`.
+## Props
 
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
+### \`ids-time-picker\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`value\` | \`string \\| null\` | \`null\` |
+| \`size\` | \`TimePickerSize\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`placeholder\` | \`—\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`required\` | \`—\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`formatHint\` | \`string\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`clockType\` | \`TimePickerClockType\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`showSeconds\` | \`—\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`disabled\` | \`—\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`error\` | \`—\` | \`TIME_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onChange\` | \`ids-time-picker\` | \`string \\| null\` |
+
+## API
+
+Import \`IDS_TIME_PICKER_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/time-picker\`).
+
+\`\`\`ts
+import { IDS_TIME_PICKER_IMPORTS } from "@ids/angular/time-picker";
+\`\`\`
 `.trim();
 
 export const TIME_PICKER_SOURCE_CODE = `import { Component } from "@angular/core";

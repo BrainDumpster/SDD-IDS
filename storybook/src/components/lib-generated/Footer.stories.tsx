@@ -13,9 +13,13 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  FOOTER_DOCS_DESCRIPTION,
+  FOOTER_SOURCE_CODE,
+} from "./ids-footer.developer-usage";
+import {
   IdsFooter,
   type IdsFooterProps,
-} from "../../../../lib/react/ids/footer";
+} from "@ids/react/footer";
 
 const DESIGN_SPEC_PATH = "components/ids/footer/design-spec.md";
 
@@ -41,17 +45,20 @@ const frameStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsFooterProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Footer",
   component: IdsFooter,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Footer from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: FooterRoot → LeftRegion (HostName? / SwidGroup?) → TimeGroup? → TimeZoneGroup?. " +
-          "Composes lib `IdsIcon`, `IdsButton` (tertiary/small + world-globe), and `IdsTooltip` for hostname truncation. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: FOOTER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: FOOTER_SOURCE_CODE,
       },
     },
   },

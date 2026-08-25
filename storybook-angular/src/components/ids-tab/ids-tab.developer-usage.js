@@ -1,58 +1,49 @@
 /** Developer usage + Docs tab copy for IDS Tab (Angular). */
 
 export const TAB_DOCS_DESCRIPTION = `
-IDS Tab — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/tab/design-spec.md\`  
-**Contract:** \`component-contracts/ids/tab.contract.ts\`  
-**Framework port notes:** \`storybook-angular/src/components/ids-tab/README.md\`
+Tabbed navigation with tab buttons and corresponding content panels.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-tab\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`type\` | \`TabType\` | \`TAB_SPEC_ACCURATE_DEFAULTS.type\` |
+| \`surface\` | \`TabSurface\` | \`TAB_SPEC_ACCURATE_DEFAULTS.surface\` |
+| \`defaultActiveItemId\` | \`—\` | \`TAB_SPEC_ACCURATE_DEFAULTS.defaul…\` |
+| \`allowAddTab\` | \`—\` | \`TAB_API_DEFAULTS.allowAddTab\` |
+| \`addTabLabel\` | \`—\` | \`TAB_API_DEFAULTS.addTabLabel\` |
+| \`moreLabel\` | \`—\` | \`TAB_API_DEFAULTS.moreLabel\` |
+| \`overflow\` | \`—\` | \`TAB_API_DEFAULTS.overflow\` |
+| \`minTabWidth\` | \`—\` | \`TAB_API_DEFAULTS.minTabWidth\` |
+| \`maxTabWidth\` | \`—\` | \`TAB_API_DEFAULTS.maxTabWidth\` |
+
+### \`ids-tab-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`hasAlert\` | \`—\` | \`false\` |
+| \`disabled\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`activeItemChange\` | \`ids-tab\` | \`string\` |
+| \`tabSelect\` | \`ids-tab\` | \`{ id: string; label: string }\` |
+| \`addTab\` | \`ids-tab\` | \`void\` |
+| \`overflowSelection\` | \`ids-tab\` | \`string\` |
+
+## API
+
+Import \`IDS_TAB_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/tab\`).
+
+\`\`\`ts
+import { IDS_TAB_IMPORTS } from "@ids/angular/tab";
 \`\`\`
-ids-tab [type, surface, activeItemId?, defaultActiveItemId?, allowAddTab?, overflow?, …]
-  ids-tab-item [itemId, label, iconSlug?, badgeCount?, disabled?]
-    ids-tab-panel
-  ids-tab-item …
-\`\`\`
-
-Import \`IDS_TAB_IMPORTS\` from \`ids-tab.imports.ts\`.
-
-### Root API (\`ids-tab\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`type\` | \`secondary\` | \`primary\` \| \`secondary\` (selected indicator placement) |
-| \`variant\` | — | Deprecated alias of \`type\`; \`type\` wins |
-| \`surface\` | \`elevated\` | \`elevated\` \| \`transparent\` host background |
-| \`activeItemId\` | — | Controlled active tab id |
-| \`defaultActiveItemId\` | \`overview\` | Uncontrolled initial tab |
-| \`allowAddTab\` | \`false\` | Shows add-tab affordance |
-| \`addTabLabel\` | \`Add Tab\` | Localized add action label |
-| \`overflow\` | \`true\` | Responsive \`More\` overflow |
-| \`moreLabel\` | \`More\` | Overflow trigger fallback label |
-
-| Output | Notes |
-|--------|-------|
-| \`activeItemChange\` | Emits selected tab \`itemId\` |
-| \`tabSelect\` | Emits \`{ id, label }\` with selected tab name |
-| \`addTab\` | Fired when add-tab action is triggered |
-| \`overflowSelection\` | Fired when a hidden tab is chosen from overflow |
-
-### Item API (\`ids-tab-item\`)
-
-| Input | Required | Notes |
-|-------|----------|-------|
-| \`itemId\` | Yes | Stable tab id (maps to spec \`id\`) |
-| \`label\` | Yes | Visible tab label (title case, 1–3 words) |
-| \`iconSlug\` | No | \`assets/icons/<slug>.svg\` |
-| \`badgeCount\` | No | Alert badge count |
-| \`disabled\` | No | Disables tab selection |
-| \`simulatedState\` | No | Storybook only: \`hover\` \| \`focus-visible\` |
-
-Each \`ids-tab-item\` must project an \`ids-tab-panel\` child.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const TAB_SOURCE_CODE = `import { Component } from "@angular/core";

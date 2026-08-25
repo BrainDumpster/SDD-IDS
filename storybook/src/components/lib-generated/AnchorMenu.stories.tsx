@@ -13,9 +13,13 @@ import React, { type ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  ANCHOR_MENU_DOCS_DESCRIPTION,
+  ANCHOR_MENU_SOURCE_CODE,
+} from "./ids-anchor-menu.developer-usage";
+import {
   IdsAnchorMenu,
   type IdsAnchorMenuItem,
-} from "../../../../lib/react/ids/anchor-menu";
+} from "@ids/react/anchor-menu";
 
 const DESIGN_SPEC_PATH = "components/ids/anchor-menu/design-spec.md";
 
@@ -42,17 +46,20 @@ const specAccurateArgs: ComponentProps<typeof IdsAnchorMenu> = {
 };
 
 const meta: Meta<typeof IdsAnchorMenu> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Anchor Menu",
   component: IdsAnchorMenu,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Anchor Menu from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Slots: AnchorMenuRoot → AnchorMenuHeader? → AnchorMenuItem[] + AnchorActiveIndicator. " +
-          "API: `items`, `title?`, `header?`, `sticky?`, `onItemClick?`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: ANCHOR_MENU_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: ANCHOR_MENU_SOURCE_CODE,
       },
     },
   },

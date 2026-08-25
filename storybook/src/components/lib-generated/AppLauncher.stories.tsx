@@ -27,6 +27,10 @@ import React, { type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  APP_LAUNCHER_DOCS_DESCRIPTION,
+  APP_LAUNCHER_SOURCE_CODE,
+} from "./ids-app-launcher.developer-usage";
+import {
   IdsAppLauncher,
   IdsAppLauncherColumnDivider,
   IdsAppLauncherLabelCluster,
@@ -44,7 +48,7 @@ import {
   type IdsAppLauncherOption,
   type IdsAppLauncherProduct,
   type IdsAppLauncherProps,
-} from "../../../../lib/react/ids/app-launcher";
+} from "@ids/react/app-launcher";
 
 const DESIGN_SPEC_PATH = "components/ids/app-launcher/design-spec.md";
 
@@ -70,17 +74,19 @@ const mastheadFrame: CSSProperties = {
 };
 
 const meta: Meta<IdsAppLauncherProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/App Launcher",
   component: IdsAppLauncher,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS App Launcher from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Root is `AppLauncher` (`IdsAppLauncher`) — not `AppLauncherRoot`. " +
-          "Deterministic anatomy: Trigger → Surface → ProductRegion → ProductRowGroup → " +
-          "RowDivider? → ProductRow → ColumnDivider? → ProductTile → LabelCluster → " +
-          "OptionsRegion?. Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: APP_LAUNCHER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: APP_LAUNCHER_SOURCE_CODE,
       },
     },
   },

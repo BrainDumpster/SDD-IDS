@@ -1,41 +1,54 @@
 /** Developer usage + Docs tab copy for IDS Get Started (Angular). */
 
 export const GET_STARTED_DOCS_DESCRIPTION = `
-IDS Get Started — Angular standalone API aligned to \`components/ids/get-started/design-spec.md\` and React \`lib/react/ids/get-started\`.
+## Overview
 
-**Contract defaults:** \`component-contracts/ids/get-started.contract.ts\`
+Onboarding hero with module cards, configure actions, and optional masthead.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-get-started\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`cards\` | \`IdsGetStartedCardInput[]\` | \`[]\` |
+| \`overflow\` | \`boolean\` | \`GET_STARTED_DEFAULTS.overflow\` |
+| \`sequential\` | \`boolean\` | \`GET_STARTED_DEFAULTS.sequential\` |
+| \`overflowPage\` | \`IdsGetStartedOverflowPage\` | \`GET_STARTED_DEFAULTS.overflowPage\` |
+| \`headerActionsDisabled\` | \`boolean\` | \`GET_STARTED_DEFAULTS.headerAction…\` |
+| \`productName\` | \`string\` | \`GET_STARTED_DEFAULTS.productName\` |
+| \`honeycombSrc\` | \`string\` | \`GET_STARTED_HONEYCOMB_SRC\` |
+
+### \`ids-get-started-hero-background\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`hasProjectedContent\` | \`—\` | \`false\` |
+| \`hasProjectedText\` | \`—\` | \`false\` |
+| \`hasProjectedText\` | \`—\` | \`false\` |
+| \`synthesizedCards\` | \`Array<{ card: IdsGetStartedCardInput\` | — |
+| \`synthesizedCards\` | \`IdsGetStartedCardTrackComponent["synthesizedCards"]\` | \`[]\` |
+| \`direction\` | \`IdsGetStartedOverflowDirection\` | \`"next"\` |
+| \`direction\` | \`IdsGetStartedOverflowDirection\` | \`"next"\` |
+| \`side\` | \`IdsGetStartedOverflowSide\` | \`"right"\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onConfigure\` | \`ids-get-started\` | \`IdsGetStartedCardInput\` |
+| \`configureModuleAction\` | \`ids-get-started\` | \`IdsGetStartedCardInput\` |
+| \`onSkip\` | \`ids-get-started\` | \`void\` |
+| \`launchModulesAction\` | \`ids-get-started\` | \`void\` |
+| \`onOverflowNavigate\` | \`ids-get-started\` | \`IdsGetStartedOverflowDirection\` |
+
+## API
+
+Import \`IDS_GET_STARTED_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/get-started\`).
+
+\`\`\`ts
+import { IDS_GET_STARTED_IMPORTS } from "@ids/angular/get-started";
 \`\`\`
-ids-get-started [title?, subtitle?, cards, overflow?, sequential?, overflowPage?, showMasthead?, …]
-  ids-get-started-hero-header
-    ids-get-started-hero-background
-    ids-get-started-hero-shadow-band
-    ids-get-started-hero-honeycomb
-    ids-get-started-masthead-slot?
-    ids-get-started-hero-title
-    ids-get-started-hero-subtitle
-  ids-get-started-container
-    ids-get-started-card-track
-      ids-get-started-card-anchor[]
-        ids-get-started-card-icon-badge
-        ids-get-started-card
-          ids-get-started-card-title-band
-          ids-get-started-card-content-panel
-            ids-get-started-card-description
-            ids-get-started-card-note?
-            ids-get-started-card-configure-button
-    ids-get-started-skip-button
-  ids-get-started-overflow-edge? (left / right)
-\`\`\`
-
-Prop-driven \`cards\` builds the same tree (React \`IdsGetStarted\` default).
-
-Import \`IDS_GET_STARTED_IMPORTS\` from \`lib/angular/ids/get-started\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-Ship \`assets/images/honeycomb.png\` with the package.
 `.trim();
 
 export const GET_STARTED_SOURCE_CODE = `import { Component } from "@angular/core";

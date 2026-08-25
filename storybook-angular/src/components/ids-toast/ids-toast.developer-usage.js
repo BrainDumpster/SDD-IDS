@@ -1,45 +1,56 @@
 /** Developer usage + Docs tab copy for IDS Toast (Angular). */
 
 export const TOAST_DOCS_DESCRIPTION = `
-IDS Toast — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/toast/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/toast.contract.ts\`
+Transient notification viewport and toast items with auto-dismiss.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-toast-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`type\` | \`IdsToastType \\| string\` | \`TOAST_API_DEFAULTS.type\` |
+| \`duration\` | \`number\` | \`TOAST_API_DEFAULTS.duration\` |
+| \`closable\` | \`boolean\` | \`TOAST_API_DEFAULTS.closable\` |
+| \`role\` | \`IdsToastRole\` | \`TOAST_API_DEFAULTS.role\` |
+
+### \`ids-toast-view-details-action\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`label\` | \`—\` | \`""\` |
+| \`href\` | \`—\` | \`""\` |
+
+### \`ids-toast-viewport\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`position\` | \`IdsToastPosition \\| string\` | \`TOAST_API_DEFAULTS.position\` |
+| \`maxVisible\` | \`—\` | \`TOAST_API_DEFAULTS.maxVisible\` |
+| \`queueStrategy\` | \`"FIFO"\` | \`TOAST_API_DEFAULTS.queueStrategy\` |
+| \`defaultItems\` | \`IdsToastQueueItem[]\` | \`[]\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onClose\` | \`ids-toast-item\` | \`{ id?: string; reason: IdsToastCloseReason }\` |
+| \`onTimeout\` | \`ids-toast-item\` | \`{ id?: string }\` |
+| \`onItemsChange\` | \`ids-toast-viewport\` | \`IdsToastQueueItem[]\` |
+| \`onItemClose\` | \`ids-toast-viewport\` | \`{
+    id: string;
+    reason: IdsToastCloseRe…\` |
+| \`onItemTimeout\` | \`ids-toast-viewport\` | \`{ id: string }\` |
+
+## API
+
+Import \`IDS_TOAST_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/toast\`).
+
+\`\`\`ts
+import { IDS_TOAST_IMPORTS } from "@ids/angular/toast";
 \`\`\`
-ids-toast-viewport [position?, maxVisible?, items? | projected ids-toast-item]
-  ids-toast-item [id?, type?, message, duration?, closable?, link?, role?, className?]
-    ids-toast-icon-container
-    ids-toast-message
-    ids-toast-view-details-action
-    ids-toast-close-action
-\`\`\`
-
-Matches React \`lib/react/ids/toast\` (internal slots there; Angular projects the same anatomy). Viewport also accepts React-style \`items[]\` FIFO.
-
-Import \`IDS_TOAST_IMPORTS\` from \`lib/angular/ids/toast\`.
-
-### Item API (\`ids-toast-item\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`id\` | — | Included in close/timeout payloads |
-| \`type\` | \`info\` | \`info \\| critical \\| major-warning \\| minor-warning \\| success\`; unknown → \`info\` |
-| \`message\` | required | Used when \`ids-toast-message\` has no projected text |
-| \`duration\` | \`8000\` | Host timeout ms. \`0\` disables auto-dismiss. Invalid → \`8000\` |
-| \`closable\` | \`true\` | When false, close action is not rendered |
-| \`link\` | — | View Details contract (\`label\`, \`href?\`, \`routerLink?\`, \`target?\`, \`onClick?\`) |
-| \`role\` | \`status\` | Allow \`alert\` when product rules require |
-| \`className\` | — | Extra class on the item host |
-
-| Output | Notes |
-|--------|-------|
-| \`onClose\` | \`{ id?, reason: close-click \\| timeout \\| programmatic }\` |
-| \`onTimeout\` | \`{ id? }\` when the timer dismisses the item |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const TOAST_SOURCE_CODE = `import { Component } from "@angular/core";

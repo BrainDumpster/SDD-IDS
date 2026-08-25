@@ -2,23 +2,30 @@
 /* component: skeleton-loader */
 import React from "react";
 import "../../../../components/ids-theme.css";
+import {
+  SKELETON_LOADER_DOCS_DESCRIPTION,
+  SKELETON_LOADER_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-skeleton-loader.developer-usage";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsSkeletonLoader } from "../../../../storybook/src/components/IdsSkeletonLoader";
 
 const DESIGN_SPEC_PATH = "components/ids/skeleton-loader/design-spec.md";
 
 const meta: Meta<typeof IdsSkeletonLoader> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Skeleton Loader",
   component: IdsSkeletonLoader,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: [
-          `Spec-driven IDS Skeleton Loader. Source of truth: \`${DESIGN_SPEC_PATH}\`.`,
-          "Figma: `11067:54669` — supports text, heading, avatar, image, button, card, list, table, and form skeletons.",
-          "Tokens: `components/ids-theme.css`.",
-        ].join(" "),
+        component: SKELETON_LOADER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: SKELETON_LOADER_SOURCE_CODE,
       },
     },
   },

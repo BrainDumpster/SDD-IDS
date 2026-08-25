@@ -14,9 +14,13 @@ import React, { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  PAGINATION_DOCS_DESCRIPTION,
+  PAGINATION_SOURCE_CODE,
+} from "./ids-pagination.developer-usage";
+import {
   IdsPagination,
   type IdsPaginationProps,
-} from "../../../../lib/react/ids/pagination";
+} from "@ids/react/pagination";
 
 const DESIGN_SPEC_PATH = "components/ids/pagination/design-spec.md";
 
@@ -143,19 +147,20 @@ function OpenPerPageMenuDemo(props: IdsPaginationProps) {
 }
 
 const meta: Meta<IdsPaginationProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Pagination",
   component: IdsPagination,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Pagination from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: PaginationRoot → ResultsPerPageGroup? → PageNavigationGroup " +
-          "(First / Prev / PageInput / PageCountText / Next / Last). " +
-          "Page number is a numeric text input (never a dropdown). " +
-          "Composes lib `IdsIcon`. Theme: `components/ids-theme.css`. " +
-          "No `@base-ui-components`.",
+        component: PAGINATION_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: PAGINATION_SOURCE_CODE,
       },
     },
   },

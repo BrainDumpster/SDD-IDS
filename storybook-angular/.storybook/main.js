@@ -64,6 +64,8 @@ const config = {
     );
     config.resolve.alias = {
       ...config.resolve.alias,
+      // Public package scope used in Docs examples (maps to compiled Angular IDS ports)
+      "@ids/angular": path.join(compiledRoot, "lib/angular/ids"),
       "@component-contracts/ids/accordion.contract": path.join(
         compiledRoot,
         "component-contracts/ids/accordion.contract.js",

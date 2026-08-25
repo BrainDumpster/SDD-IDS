@@ -14,7 +14,11 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+import {
+  STATUS_BAR_DOCS_DESCRIPTION,
+  STATUS_BAR_SOURCE_CODE,
+} from "./ids-status-bar.developer-usage";
+import { IdsIcon } from "@ids/react/icon";
 import {
   IdsStatusBar,
   IdsStatusBarContentViewport,
@@ -31,7 +35,7 @@ import {
   IdsStatusBarTotalItem,
   type IdsStatusBarItemInput,
   type IdsStatusBarProps,
-} from "../../../../lib/react/ids/status-bar";
+} from "@ids/react/status-bar";
 
 const longItems: IdsStatusBarItemInput[] = [
   { id: "critical", value: 10, category: "<Category>", label: "Critical", severity: "critical" },
@@ -46,17 +50,19 @@ const longItems: IdsStatusBarItemInput[] = [
 ];
 
 const meta: Meta<IdsStatusBarProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Status Bar",
   component: IdsStatusBar,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Status Bar from `components/ids/status-bar/design-spec.md`. " +
-          "Root slot is `StatusBar` (`IdsStatusBar`), not `StatusBarRoot`. " +
-          "Parts: TotalItem, ContentViewport, Item, ItemIconSlot, ItemValue, ItemMeta, " +
-          "ItemDivider, OverflowLayer / Left / Right, InventoryMainIcon, InventoryStatusBadge. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: STATUS_BAR_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: STATUS_BAR_SOURCE_CODE,
       },
     },
   },
