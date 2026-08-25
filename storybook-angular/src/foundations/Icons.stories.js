@@ -6,7 +6,7 @@ import {
   selectIcons,
   tokens,
 } from "../../../storybook-shared/foundations/foundations-render.js";
-import { foundationsDocsStory } from "./foundations-angular.js";
+import { renderFoundationsHtml } from "./foundations-angular.js";
 
 /**
  * Thin Angular CSF over shared Icons gallery HTML
@@ -36,6 +36,6 @@ export const Gallery = {
       resolveIconUrl: (slug) => idsAssetUrl(`icons/${slug}.svg`),
       componentHint: "<code>ids-icon</code> (<code>shapeName</code>)",
     });
-    return foundationsDocsStory(html).render();
+    return renderFoundationsHtml(html);
   },
 };

@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 300px;
+  width: 100%;
   max-width: 700px;
   min-width: 186px;
   min-height: 40px;

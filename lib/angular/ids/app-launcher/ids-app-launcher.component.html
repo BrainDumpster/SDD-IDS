@@ -24,12 +24,14 @@
       class="ids-app-launcher__popup"
       role="dialog"
       [attr.aria-label]="ariaLabel"
+      [attr.data-programme]="resolvedProgramme"
       [ngStyle]="popupStyle"
     >
       <div
         class="ids-app-launcher__surface"
         [class.ids-app-launcher__surface--two-product]="useTwoProductLayout"
         [class.ids-app-launcher__surface--single]="useSingleProductWidth"
+        [attr.data-programme]="resolvedProgramme"
       >
         @if (products.length > 0) {
           <div class="ids-app-launcher__product-region">

@@ -2,6 +2,7 @@
   all: unset;
   display: flex;
   box-sizing: border-box;
+  position: relative;
 }
 
 .triggerFull {
@@ -12,6 +13,19 @@
   display: block;
   width: 100%;
   box-sizing: border-box;
+}
+
+.triggerReset:focus-visible {
+  outline: none;
+}
+
+.triggerReset:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .popup {
@@ -50,6 +64,7 @@
 }
 
 .searchField {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -59,6 +74,16 @@
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: 0;
+}
+
+.searchField[data-focus-visible="true"]::after,
+.searchField:has(.searchInput:focus-visible)::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .searchIcon {
@@ -232,6 +257,15 @@
   cursor: not-allowed;
 }
 
+.selectAllButton:focus-visible .selectAllCheckbox {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.selectAllButton:focus-visible:not([data-checked="true"]) .selectAllCheckbox {
+  border-color: var(--color-border-brand-base);
+}
+
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
   background: var(--color-background-controls-base);
   border-color: var(--color-border-brand-transparent-brand);
@@ -387,8 +421,26 @@
 .footerActionButton {
   display: inline-flex;
   align-items: center;
+  position: relative;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: var(--corner-radius-radius-2);
+}
+
+.clearAllButton:focus-visible .footerActionButton,
+.footerAction:focus-visible .footerActionButton,
+.clearAllAction:focus-visible .footerActionButton {
+  outline: none;
+}
+
+.clearAllButton:focus-visible .footerActionButton::after,
+.footerAction:focus-visible .footerActionButton::after,
+.clearAllAction:focus-visible .footerActionButton::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 .leadingControl {
@@ -652,9 +704,8 @@
 .popup--above {
   border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-radius: var(--dropdown-menu-radius) var(--dropdown-menu-radius) 0 0;
-  box-shadow:
-    0 -2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
-    0 -4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+  /* Spec Accurate: suppress drop shadow when menu opens above the field. */
+  box-shadow: none;
 }
 
 .search-icon {

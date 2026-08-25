@@ -107,8 +107,11 @@
   border: none;
   border-radius: 0;
   padding: var(--padding-padding-1);
+  /* Shadow 4 stack = drop-shadow-2 + drop-shadow-4 (visual pair; keep shadow-4 semantic names). */
   box-shadow:
     inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
+      var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
     var(--shadow-shadow-4-drop-shadow-4-x) var(--shadow-shadow-4-drop-shadow-4-y)
       var(--shadow-shadow-4-drop-shadow-4-blur) var(--shadow-shadow-4-drop-shadow-4-spread)
       var(--shadow-shadow-4-drop-shadow-4-color);
@@ -458,4 +461,79 @@
 .ids-app-launcher-footer-action:focus-visible {
   outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: 2px;
+}
+
+/* ----- Synapse programme (label-cluster hover/press + inset focus; Spec Accurate parity) ----- */
+
+.ids-app-launcher-surface[data-programme="synapse"] {
+  --app-launcher-column-divider-color: var(
+    --color-border-neutral-light,
+    var(--color-border-gray-neutral-light)
+  );
+  gap: var(--spacing-space-1);
+}
+
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-region {
+  gap: var(--spacing-space-1);
+}
+
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:hover:not([data-state="press"]):not([data-state="selected"]),
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="hover"] {
+  background: var(--color-background-surface-secondary);
+  color: var(--color-icon-gray-neutral-strong, var(--color-icon-gray-neutral-base));
+}
+
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile:hover:not([data-state="press"]):not([data-state="selected"])
+  .ids-app-launcher-label-cluster,
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile[data-state="hover"]
+  .ids-app-launcher-label-cluster {
+  background: var(--color-background-brand-lighter-slate);
+}
+
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:active,
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="press"],
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="selected"] {
+  background: var(--color-background-surface-secondary);
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile:active
+  .ids-app-launcher-label-cluster,
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile[data-state="press"]
+  .ids-app-launcher-label-cluster,
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile[data-state="selected"]
+  .ids-app-launcher-label-cluster {
+  background: var(--color-background-brand-light-slate);
+}
+
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile:active
+  .ids-app-launcher-product-label,
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile[data-state="press"]
+  .ids-app-launcher-product-label,
+.ids-app-launcher-surface[data-programme="synapse"]
+  .ids-app-launcher-product-tile[data-state="selected"]
+  .ids-app-launcher-product-label {
+  color: var(--color-text-brand-strong);
+}
+
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:focus-visible,
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="focus"] {
+  outline: none;
+}
+
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:focus-visible::after,
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="focus"]::after {
+  content: "";
+  position: absolute;
+  inset: 2px 2px 2px 3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }

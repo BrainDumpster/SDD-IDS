@@ -24,9 +24,13 @@
   min-height: 0;
   align-items: stretch;
   gap: 0;
-  border: 1px solid var(--color-border-gray-neutral-light);
-  background: var(--color-background-surface-component);
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+.shell:not([data-with-detail-panel="true"]) .contentRow {
+  border: 1px solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
 }
 
 .gridWrap {
@@ -39,6 +43,12 @@
   height: 100%;
   background: var(--color-background-surface-component);
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+.shell[data-with-detail-panel="true"] .gridWrap {
+  border: 1px solid var(--color-border-gray-neutral-base);
+  margin-right: -1px;
 }
 
 .rowSelectionGroup {
@@ -1017,6 +1027,20 @@
   border-right: 0 !important;
   border-bottom: 0 !important;
   border-left: 1px solid var(--color-border-gray-neutral-light) !important;
+}
+
+/* Align detail-panel header band with datagrid column header row (48px + bottom rule). */
+.shell[data-with-detail-panel="true"] :global(.ids-detail-panel__header) {
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--color-border-gray-neutral-base);
+}
+
+.shell[data-header-styled="true"][data-with-detail-panel="true"] :global(.ids-detail-panel__header) {
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
 }
 
 .detailBody {

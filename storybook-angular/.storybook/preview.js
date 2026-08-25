@@ -37,6 +37,8 @@ const preview = {
     options: {
       storySort: {
         order: [
+          "Getting Started",
+          ["Installation"],
           "Foundations",
           [
             "Icons",

@@ -3,7 +3,10 @@
  * Add future common sections here (e.g. "Guidelines", "Resources") and wire
  * matching stories under `storybook-shared/<slug>/` + thin framework CSF wrappers.
  */
-export const SHARED_SIDEBAR_ROOTS = ["Foundations"];
+export const SHARED_SIDEBAR_ROOTS = ["Getting Started", "Foundations"];
+
+/** Sort order within Getting Started. */
+export const GETTING_STARTED_SECTION_ORDER = ["Installation"];
 
 /** Sort order within Foundations. */
 export const FOUNDATIONS_SECTION_ORDER = ["Icons", "Design tokens"];

@@ -27,6 +27,19 @@
   color: var(--color-text-gray-neutral);
 }
 
+/* Compact chrome for datagrid selection column (Figma `8505:14304`). */
+.ids-checkbox[data-density="datagrid"] .ids-checkbox-row {
+  min-height: 0;
+  gap: 0;
+}
+
+.ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
 .ids-checkbox[data-disabled="true"] .ids-checkbox-row {
   cursor: not-allowed;
   color: var(--color-text-gray-disabled);

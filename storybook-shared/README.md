@@ -1,16 +1,20 @@
 # Shared Storybook content (React + Angular)
 
-**Foundations** (and future common sections) live here once. Each Storybook only
-adds a thin CSF wrapper that injects the shared HTML.
+**Foundations** and **Getting Started** live here once. Each Storybook only
+adds a thin CSF wrapper that injects the shared (or framework-specific) HTML.
 
 ```
-storybook-shared/foundations/     ← tokens + HTML pages (source of truth)
-storybook/src/foundations/        ← React wrappers
-storybook-angular/src/foundations/← Angular wrappers
+storybook-shared/foundations/       ← tokens + HTML pages (source of truth)
+storybook-shared/getting-started/   ← Installation HTML (React + Angular variants)
+storybook/src/foundations/          ← React wrappers
+storybook/src/getting-started/      ← React wrappers
+storybook-angular/src/foundations/  ← Angular wrappers
+storybook-angular/src/getting-started/ ← Angular wrappers
 ```
 
 | Shared module | Sidebar |
 |---------------|---------|
+| `getting-started/` | **Getting Started** → Installation (framework-specific copy) |
 | `foundations/` | **Foundations** → Icons, Design tokens |
 | *(future)* | add name to `sidebar.js` + both `preview` `storySort.order` arrays |
 

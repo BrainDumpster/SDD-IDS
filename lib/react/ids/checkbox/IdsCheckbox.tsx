@@ -54,6 +54,8 @@ export interface IdsCheckboxProps
   onChange?: (checked: boolean) => void;
   /** Demo/testing visual override only. */
   dataState?: IdsCheckboxDataState;
+  /** Compact chrome for datagrid selection column (Figma 16×16). */
+  density?: "default" | "datagrid";
 }
 
 interface IdsCheckboxContextValue {
@@ -150,6 +152,7 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
     value,
     onChange,
     dataState,
+    density = "default",
     id: idProp,
     className,
     ...rest
@@ -221,6 +224,7 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
       <div
         className={cx(styles["ids-checkbox"], className)}
         data-ids="ids-checkbox"
+        data-density={density === "datagrid" ? "datagrid" : undefined}
         data-checked={showChecked ? "true" : "false"}
         data-indeterminate={showPartial ? "true" : "false"}
         data-disabled={isDisabled ? "true" : "false"}

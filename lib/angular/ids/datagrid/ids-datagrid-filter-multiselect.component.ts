@@ -12,6 +12,7 @@ import { IdsCheckboxComponent } from "../checkbox/ids-checkbox.component";
           <ids-checkbox
             [label]="option"
             [checked]="isSelected(option)"
+            density="datagrid"
             (checkedChange)="onToggle(option, $event)"
           />
         </div>
@@ -27,6 +28,7 @@ import { IdsCheckboxComponent } from "../checkbox/ids-checkbox.component";
         padding: 0;
         width: 100%;
         box-sizing: border-box;
+        background: var(--color-background-surface-component);
       }
 
       .filterOptionRow {
@@ -37,6 +39,22 @@ import { IdsCheckboxComponent } from "../checkbox/ids-checkbox.component";
         padding: var(--padding-padding-10) var(--padding-padding-16);
         box-sizing: border-box;
         background: var(--color-background-surface-component);
+        transition: background 80ms ease;
+        cursor: pointer;
+      }
+
+      .filterOptionRow:hover {
+        background: var(--color-background-brand-lighter-slate);
+        box-shadow:
+          inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+          inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+      }
+
+      .filterOptionRow:active {
+        background: var(--color-background-brand-light-slate);
+        box-shadow:
+          inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+          inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
       }
 
       .filterOptionRow ids-checkbox {

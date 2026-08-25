@@ -7,7 +7,9 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-space-8);
-  border: var(--border-width-border-1) solid transparent;
+  /* Inset stroke — Spec Accurate / Figma inside stroke; does not grow box size. */
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   border-radius: var(--button-control-radius);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-weight: 400;
@@ -60,6 +62,20 @@
   color: inherit;
 }
 
+.icon-slot > * {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 16px;
+  max-height: 16px;
+  box-sizing: border-box;
+}
+
+.icon-slot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 
 .label {
   display: inline-flex;
@@ -85,7 +101,7 @@
 
 .primary {
   background: var(--color-background-controls-base);
-  border-color: var(--color-border-brand-transparent-brand);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand);
   color: var(--color-text-gray-white);
 }
 
@@ -99,14 +115,14 @@
 
 .primary:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-gray-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
   color: var(--color-text-gray-disabled);
 }
 
 .secondary {
   background: transparent;
   color: var(--color-text-brand-strong);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
 
 .secondary:hover:not(:disabled) {
@@ -119,35 +135,36 @@
 
 .secondary:disabled {
   background: transparent;
-  border-color: var(--color-border-gray-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
   color: var(--color-text-gray-disabled);
 }
 
 .tertiary {
   background: transparent;
   color: var(--color-text-brand-strong);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
 
 .tertiary:hover:not(:disabled) {
   background: var(--color-background-controls-lighter);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
 
 .tertiary:active:not(:disabled) {
   background: var(--color-background-controls-light);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
 
 .tertiary:disabled {
   background: transparent;
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   color: var(--color-text-gray-disabled);
 }
 
 .danger {
   background: var(--color-background-alerting-critical-base);
-  border-color: var(--color-border-alerting-critical-transparent-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1)
+    var(--color-border-alerting-critical-transparent-base);
   color: var(--color-text-gray-white);
 }
 
@@ -161,7 +178,7 @@
 
 .danger:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-gray-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
   color: var(--color-text-gray-disabled);
 }
 
@@ -169,9 +186,18 @@
   cursor: not-allowed;
 }
 
+/* Focus ring — ::after so --button-focus-ring-radius applies (outline cannot). */
 .ids-button:focus-visible:not(:disabled) {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: var(--button-focus-ring-offset);
+  outline: none;
+}
+
+.ids-button:focus-visible:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 .loading {
