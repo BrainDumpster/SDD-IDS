@@ -11,13 +11,17 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  CHECKBOX_DOCS_DESCRIPTION,
+  CHECKBOX_SOURCE_CODE,
+} from "./ids-checkbox.developer-usage";
+import {
   IdsCheckbox,
   IdsCheckboxLabel,
   type IdsCheckboxProps,
-} from "../../../../lib/react/ids/checkbox";
-import { IdsError, IdsErrorText } from "../../../../lib/react/ids/error";
-import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+} from "@ids/react/checkbox";
+import { IdsError, IdsErrorText } from "@ids/react/error";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
+import { IdsIcon } from "@ids/react/icon";
 
 function Box(
   props: IdsCheckboxProps & {
@@ -45,18 +49,19 @@ function Box(
 }
 
 const meta: Meta<IdsCheckboxProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Checkbox",
   component: IdsCheckbox,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Checkbox from `components/ids/checkbox/design-spec.md`. " +
-          "Label style (Figma Body 2): `var(--typography-font-style-primary)`, " +
-          "`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight `400`, " +
-          "color `var(--color-text-gray-neutral)` (disabled → `var(--color-text-gray-disabled)`). " +
-          "Projection: `IdsCheckboxLabel` + optional `IdsHelper` / `IdsError`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: CHECKBOX_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: CHECKBOX_SOURCE_CODE,
       },
     },
   },

@@ -22,11 +22,15 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  WHATS_NEW_DOCS_DESCRIPTION,
+  WHATS_NEW_SOURCE_CODE,
+} from "./ids-whats-new.developer-usage";
+import {
   WhatsNew,
   type WhatsNewFilter,
   type IdsWhatsNewProps,
   type IdsWhatsNewSectionInput,
-} from "../../../../lib/react/ids/whats-new";
+} from "@ids/react/whats-new";
 
 const DESIGN_SPEC_PATH = "components/ids/whats-new/design-spec.md";
 
@@ -123,19 +127,20 @@ function CompoundSections({
 }
 
 const meta: Meta<IdsWhatsNewProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Whats New",
   component: WhatsNew,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS What's New from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Root is `WhatsNew` (`IdsWhatsNew`) — not `WhatsNewRoot`. " +
-          "Deterministic anatomy: Header → Title + CloseButton → Summary → Body → " +
-          "VersionFilterRow → SectionsScroll → Section (Thumbnail, SectionHeader, " +
-          "Description, Images) → Footer. Theme: `components/ids-theme.css`. " +
-          "No `@base-ui-components`.",
+        component: WHATS_NEW_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: WHATS_NEW_SOURCE_CODE,
       },
     },
   },

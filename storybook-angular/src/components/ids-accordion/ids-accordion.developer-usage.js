@@ -1,53 +1,40 @@
 /** Developer usage + Docs tab copy for IDS Accordion (Angular, composition API). */
 
 export const ACCORDION_DOCS_DESCRIPTION = `
-IDS Accordion — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/accordion/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/accordion.contract.ts\`
+Expandable panel group for sectioned content. Prefer composition children (\`ids-accordion\` → item → header/body/content).
 
-### Anatomy (deterministic child order)
+## Props
 
-\`\`\`
-ids-accordion
-  ids-accordion-item
-    ids-accordion-header          ← title projection + chevron (trigger surface)
-    ids-accordion-body
-      ids-accordion-content       ← inner content card
-      ids-accordion-meta          ← optional
-      ids-accordion-form-slot     ← optional (form variant)
-\`\`\`
-
-Import \`IDS_ACCORDION_IMPORTS\` from \`ids-accordion.imports.ts\` in any parent that renders this markup.
-
-### Root API (\`ids-accordion\`)
-
-| Input | Type | Default | Notes |
-|-------|------|---------|-------|
-| \`multiple\` | \`boolean\` | \`false\` | Single-expand when false |
-| \`defaultValue\` | \`string[]\` | \`[]\` | Initially open panel \`value\` ids |
-| \`chevronPosition\` | \`'left' \\| 'right'\` | \`'left'\` | Chevron slot on header |
-| \`variant\` | \`'default' \\| 'form'\` | \`'default'\` | Enables \`ids-accordion-form-slot\` projection |
-
-| Output | Type | Notes |
-|--------|------|-------|
-| \`valueChange\` | \`string[]\` | Emits open panel \`value\` ids after toggle |
-
-### Item API (\`ids-accordion-item\`)
+### \`ids-accordion\`
 
 | Input | Type | Default |
 |-------|------|---------|
-| \`value\` | \`string\` | required — unique panel id |
-| \`disabled\` | \`boolean\` | \`false\` |
+| \`multiple\` | \`—\` | \`false\` |
+| \`defaultValue\` | \`string[]\` | \`[]\` |
+| \`chevronPosition\` | \`AccordionChevronPosition\` | \`"left"\` |
+| \`variant\` | \`AccordionVariant\` | \`"default"\` |
 
-### Theme & assets
+### \`ids-accordion-item\`
 
-- Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-- Chevron icon: \`assets/icons/chev-down-thick.svg\` (mask tint via component styles).
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`false\` |
 
-### Keyboard
+## Events
 
-Arrow Up/Down, Home, End roving focus; Space/Enter toggles the focused panel.
+| Output | On | Payload |
+|--------|----|---------|
+| \`valueChange\` | \`ids-accordion\` | \`string[]\` |
+
+## API
+
+Import \`IDS_ACCORDION_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/accordion\`).
+
+\`\`\`ts
+import { IDS_ACCORDION_IMPORTS } from "@ids/angular/accordion";
+\`\`\`
 `.trim();
 
 export const ACCORDION_SOURCE_CODE = `import { Component } from "@angular/core";

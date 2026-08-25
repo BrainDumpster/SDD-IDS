@@ -10,6 +10,10 @@ import {
 } from "../../../compiled/component-contracts/ids/tag.contract.js";
 import { IdsTagComponent } from "../../../compiled/lib/angular/ids/tag/ids-tag.component.js";
 import { IDS_TAG_IMPORTS } from "../../../compiled/lib/angular/ids/tag/index.js";
+import {
+  TAG_DOCS_DESCRIPTION,
+  TAG_SOURCE_CODE,
+} from "./ids-tag.developer-usage.js";
 
 /** @type {import("@storybook/angular").Meta<IdsTagComponent>} */
 const meta = {
@@ -27,8 +31,14 @@ const meta = {
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: `IDS Tag per \`${IDS_TAG_DESIGN_SPEC_PATH}\`. Use \`ids-tags\` to lay out multiple projected \`ids-tag\` children.`,
+        component: TAG_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "typescript",
+        code: TAG_SOURCE_CODE,
       },
     },
   },

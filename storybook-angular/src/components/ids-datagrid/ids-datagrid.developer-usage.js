@@ -1,27 +1,70 @@
 /** Developer usage + Docs tab copy for IDS Datagrid (Angular composition). */
 
 export const DATAGRID_DOCS_DESCRIPTION = `
-IDS Datagrid — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/datagrid/design-spec.md\`  
-**Contract:** \`component-contracts/ids/datagrid.contract.ts\`
+Data table with sorting, filtering, selection, and column visibility.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-datagrid\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`rowSelection\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.r…\` |
+| \`selectionMode\` | \`DatagridSelectionMode\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.s…\` |
+| \`showSingleSelectionRadio\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.s…\` |
+| \`withDetailPanel\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.w…\` |
+| \`pageSize\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.p…\` |
+| \`totalPages\` | \`number \\| null\` | \`null\` |
+| \`readOnly\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.r…\` |
+| \`rowVerticalIndicator\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.r…\` |
+| \`headerColorAndBorder\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.h…\` |
+| \`columnResizeEnabled\` | \`—\` | \`DATAGRID_SPEC_ACCURATE_DEFAULTS.c…\` |
+
+### \`ids-datagrid-cell\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`value\` | \`string \\| number\` | \`""\` |
+
+### \`ids-datagrid-column-visibility-panel\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`hideableColumns\` | \`IdsDatagridColumnModel[]\` | \`[]\` |
+| \`hiddenColumnKeys\` | \`—\` | \`new Set<string>()\` |
+| \`validationMessage\` | \`string \\| null\` | \`null\` |
+
+### \`ids-datagrid-column\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`title\` | \`—\` | \`""\` |
+| \`sortable\` | \`—\` | \`false\` |
+| \`filterable\` | \`—\` | \`false\` |
+| \`filterActive\` | \`—\` | \`false\` |
+| \`columnHideable\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`columnVisibilityChange\` | \`ids-datagrid-column-visibility-panel\` | \`{
+    field: string;
+    visible: boolean;
+  }\` |
+| \`selectedValuesChange\` | \`ids-datagrid-filter-multiselect\` | \`string[]\` |
+| \`queryChange\` | \`ids-datagrid-filter-search-field\` | \`string\` |
+| \`selectedValueChange\` | \`ids-datagrid-filter-single-select\` | \`string \\| null\` |
+
+## API
+
+Import \`IDS_DATAGRID_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/datagrid\`).
+
+\`\`\`ts
+import { IDS_DATAGRID_IMPORTS } from "@ids/angular/datagrid";
 \`\`\`
-ids-datagrid
-  ids-datagrid-column [field, sortable?, filterable?, width?]
-    ids-datagrid-column-title
-    ids-datagrid-filter (optional)
-  ids-datagrid-body
-    ids-datagrid-row [rowId]
-      ids-datagrid-cell [field]
-  ids-datagrid-footer
-  ids-datagrid-detail-panel (optional)
-    ids-detail-panel
-\`\`\`
-
-Import \`IDS_DATAGRID_IMPORTS\` from \`lib/angular/ids/datagrid\`. Load \`components/ids-theme.css\` on the app root.
 `.trim();
 
 export const DATAGRID_SOURCE_CODE = `import { Component } from "@angular/core";

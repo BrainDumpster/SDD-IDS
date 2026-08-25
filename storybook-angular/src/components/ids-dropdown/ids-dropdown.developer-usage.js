@@ -1,36 +1,81 @@
 /** Developer usage + Docs tab copy for IDS Dropdown (Angular). */
 
 export const DROPDOWN_DOCS_DESCRIPTION = `
-IDS Dropdown — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Specs:** \`components/ids/dropdown-combo-box/design-spec.md\`, \`dropdown-single-select\`, \`dropdown-multiselect\`
+Composition dropdown for combobox and select modes (single/multi).
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-dropdown\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`mode\` | \`IdsDropdownMode\` | \`"single-select"\` |
+| \`disabled\` | \`—\` | \`false\` |
+| \`showSingleSelectRadio\` | \`—\` | \`false\` |
+| \`values\` | \`string[]\` | \`[]\` |
+| \`defaultValues\` | \`string[]\` | \`[]\` |
+
+### \`ids-dropdown-menu-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`disabled\` | \`—\` | \`false\` |
+
+### \`ids-dropdown-menu\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`items\` | \`IdsDropdownMenuItemModel[]\` | \`[]\` |
+| \`disabled\` | \`—\` | \`false\` |
+| \`selectionMode\` | \`IdsDropdownSelectionMode\` | \`"none"\` |
+| \`showSingleSelectRadio\` | \`—\` | \`false\` |
+| \`showSelectAllClearAll\` | \`—\` | \`false\` |
+| \`selectAllLabel\` | \`—\` | \`"Select All"\` |
+| \`clearAllLabel\` | \`—\` | \`"Clear All"\` |
+| \`selectAllChecked\` | \`—\` | \`false\` |
+| \`selectAllIndeterminate\` | \`—\` | \`false\` |
+| \`clearAllDisabled\` | \`—\` | \`false\` |
+| \`selectedValues\` | \`string[]\` | \`[]\` |
+| \`sideOffset\` | \`—\` | \`0\` |
+| \`matchTriggerWidth\` | \`—\` | \`true\` |
+| \`defaultOpen\` | \`—\` | \`false\` |
+
+### \`ids-dropdown-trigger-shell\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`size\` | \`IdsDropdownSize\` | \`"large"\` |
+| \`disabled\` | \`—\` | \`false\` |
+| \`error\` | \`—\` | \`false\` |
+| \`hover\` | \`—\` | \`false\` |
+| \`focusVisible\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`valueChange\` | \`ids-dropdown\` | \`string\` |
+| \`valuesChange\` | \`ids-dropdown\` | \`string[]\` |
+| \`selectionChange\` | \`ids-dropdown\` | \`string \\| string[]\` |
+| \`action\` | \`ids-dropdown-menu-footer\` | \`void\` |
+| \`openChange\` | \`ids-dropdown-menu\` | \`boolean\` |
+| \`searchValueChange\` | \`ids-dropdown-menu\` | \`string\` |
+| \`selectAllClick\` | \`ids-dropdown-menu\` | \`void\` |
+| \`clearAllClick\` | \`ids-dropdown-menu\` | \`void\` |
+| \`showSelectedExpandedChange\` | \`ids-dropdown-menu\` | \`boolean\` |
+| \`removeSelectedTag\` | \`ids-dropdown-menu\` | \`string\` |
+| \`showSelectedPanelClear\` | \`ids-dropdown-menu\` | \`void\` |
+| \`dismiss\` | \`ids-dropdown-tag\` | \`void\` |
+
+## API
+
+Import \`IDS_DROPDOWN_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/dropdown\`).
+
+\`\`\`ts
+import { IDS_DROPDOWN_IMPORTS } from "@ids/angular/dropdown";
 \`\`\`
-ids-dropdown [mode, value | values, disabled?]
-  ids-dropdown-menu [showSearch?, defaultOpen?, maxHeight?, showSelectAllClearAll?, …]
-    ids-dropdown-trigger-shell  → projected trigger (field + caret)
-    ids-dropdown-menu-group [groupName]?  → section header row
-      ids-dropdown-menu-item [value, label, disabled?]
-    ids-dropdown-menu-item …
-    ids-dropdown-menu-footer [actionLabel] (action)
-  ids-dropdown-helper  → helper text below field
-  ids-dropdown-error   → validation error below field
-\`\`\`
-
-Import \`IDS_DROPDOWN_IMPORTS\` from \`ids-dropdown.imports.ts\`.
-
-### Modes
-
-| \`mode\` | Selection | Search |
-|----------|-----------|--------|
-| \`combobox-single\` | single | optional \`[showSearch]\` on menu |
-| \`combobox-multi\` | multi | optional \`[showSearch]\` + show-selected panel |
-| \`single-select\` | single | — |
-| \`multi-select\` | multi | — |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const DROPDOWN_SOURCE_CODE = `import { Component } from "@angular/core";

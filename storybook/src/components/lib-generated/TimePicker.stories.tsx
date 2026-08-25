@@ -12,7 +12,11 @@
 import React, { useState, type ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
-import { IdsTimePicker } from "../../../../lib/react/ids/time-picker";
+import {
+  TIME_PICKER_DOCS_DESCRIPTION,
+  TIME_PICKER_SOURCE_CODE,
+} from "./ids-time-picker.developer-usage";
+import { IdsTimePicker } from "@ids/react/time-picker";
 
 const DESIGN_SPEC_PATH = "components/ids/time-picker/design-spec.md";
 
@@ -28,16 +32,20 @@ const specAccurateArgs: ComponentProps<typeof IdsTimePicker> = {
 };
 
 const meta: Meta<typeof IdsTimePicker> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Time Picker",
   component: IdsTimePicker,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Time Picker from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Matrix: size × clockType × showSeconds. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: TIME_PICKER_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TIME_PICKER_SOURCE_CODE,
       },
     },
   },

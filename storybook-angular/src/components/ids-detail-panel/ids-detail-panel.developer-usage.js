@@ -1,52 +1,41 @@
 /** Developer usage + Docs tab copy for IDS Detail Panel (Angular). */
 
 export const DETAIL_PANEL_DOCS_DESCRIPTION = `
-IDS Detail Panel — Angular 21 standalone API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/detail-panel/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/detail-panel.contract.ts\`
+Expandable side panel with header, body, footer, and collapsed rail.
 
-### Anatomy (composition — preferred)
+## Props
 
+### \`ids-detail-panel\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`attachMode\` | \`DetailPanelAttachMode\` | \`DETAIL_PANEL_API_DEFAULTS.attachMode\` |
+| \`expanded\` | \`boolean\` | \`DETAIL_PANEL_API_DEFAULTS.expanded\` |
+| \`title\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.title\` |
+| \`showHeader\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.showHeader\` |
+| \`showFooter\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.showFooter\` |
+| \`ariaLabelExpand\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.ariaLab…\` |
+| \`ariaLabelCollapse\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.ariaLab…\` |
+| \`collapsedWidth\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.collaps…\` |
+| \`expandedWidth\` | \`—\` | \`DETAIL_PANEL_API_DEFAULTS.expande…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`expandedChange\` | \`ids-detail-panel\` | \`boolean\` |
+| \`opened\` | \`ids-detail-panel\` | \`void\` |
+| \`closed\` | \`ids-detail-panel\` | \`void\` |
+
+## API
+
+Import \`IDS_DETAIL_PANEL_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/detail-panel\`).
+
+\`\`\`ts
+import { IDS_DETAIL_PANEL_IMPORTS } from "@ids/angular/detail-panel";
 \`\`\`
-ids-detail-panel [attachMode, expanded, …]
-  ids-detail-panel-content
-    ids-detail-panel-header
-      ids-detail-panel-title
-    ids-detail-panel-body
-    ids-detail-panel-footer
-  ids-detail-panel-collapsed-rail
-    ids-detail-panel-toggle-button
-\`\`\`
-
-Datagrid expanded: header + title + body. Page expanded: body + footer. Always include collapsed rail + toggle.
-
-Import \`IDS_DETAIL_PANEL_IMPORTS\` from \`lib/angular/ids/detail-panel\`.
-
-### API (\`ids-detail-panel\` root)
-
-| Input | Type | Default | Notes |
-|-------|------|---------|-------|
-| \`attachMode\` | \`datagrid \\| page\` | \`datagrid\` | Toggle placement branch |
-| \`expanded\` | \`boolean\` | \`true\` | Expanded vs collapsed rail |
-| \`title\` | \`string\` | \`Details\` | Fallback label; prefer \`ids-detail-panel-title\` |
-| \`showHeader\` | \`boolean\` | \`true\` | Datagrid expanded header |
-| \`showFooter\` | \`boolean\` | \`true\` | Page expanded footer |
-| \`ariaLabelExpand\` | \`string\` | \`Expand details panel\` | Collapsed toggle label |
-| \`ariaLabelCollapse\` | \`string\` | \`Collapse details panel\` | Expanded toggle label |
-| \`collapsedWidth\` | \`number\` | \`40\` | Collapsed rail width |
-| \`expandedWidth\` | \`number\` | \`398\` | Expanded panel width |
-
-| Output | Notes |
-|--------|-------|
-| \`expandedChange\` | \`(expanded: boolean)\` — panel state changed |
-| \`opened\` | Panel expanded |
-| \`closed\` | Panel collapsed |
-
-### Theme & assets
-
-- Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-- Toggle icons: \`double-chev-right\` (expanded), \`double-chev-left\` (collapsed)
 `.trim();
 
 export const DETAIL_PANEL_SOURCE_CODE = `import { Component } from "@angular/core";

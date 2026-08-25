@@ -14,17 +14,21 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DASHBOARD_DOCS_DESCRIPTION,
+  DASHBOARD_SOURCE_CODE,
+} from "./ids-dashboard.developer-usage";
+import {
   IdsCard,
   IdsCardSecondaryTitle,
   IdsCardTextContent,
   type IdsCardMenuOption,
-} from "../../../../lib/react/ids/card";
+} from "@ids/react/card";
 import {
   IdsDashboard,
   IdsDashboardGrid,
   IdsDashboardItem,
   type IdsDashboardProps,
-} from "../../../../lib/react/ids/dashboard";
+} from "@ids/react/dashboard";
 
 const DESIGN_SPEC_PATH = "components/ids/dashboard/design-spec.md";
 
@@ -40,23 +44,20 @@ const sampleBody = (label: string) => (
 );
 
 const meta: Meta<IdsDashboardProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Dashboard",
   component: IdsDashboard,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: [
-          `React IDS Dashboard from \`${DESIGN_SPEC_PATH}\`.`,
-          "Anatomy: IdsDashboard → IdsDashboardGrid → IdsDashboardItem+ → IdsCard.",
-          "Root selector is `IdsDashboard` (not DashboardRoot / IdsDashboardRoot).",
-          "Sets `--card-border-color: var(--color-border-gray-neutral-light)` for nested Cards.",
-          "Injects `showDivider` via `showDividerInCard` (default true).",
-          "Page title and page-level actions are owned by the host layout (not Dashboard).",
-          "Optional `enableDragAndDrop` (HTML5 reorder of IdsDashboardItem).",
-          "Card `size`: `span-1` | `span-2` | `span-3`.",
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
-        ].join(" "),
+        component: DASHBOARD_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DASHBOARD_SOURCE_CODE,
       },
     },
   },

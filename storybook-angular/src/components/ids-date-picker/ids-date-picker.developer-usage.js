@@ -1,15 +1,41 @@
 /** Developer usage + Docs tab copy for IDS Date Picker (Angular). */
 
 export const DATE_PICKER_DOCS_DESCRIPTION = `
-IDS Date Picker — Angular 21 standalone (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/date-picker/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/date-picker.contract.ts\`  
-**React parity:** \`lib/react/ids/date-picker\`
+Calendar-based date selection control.
 
-Import \`IDS_DATE_PICKER_IMPORTS\` from \`lib/angular/ids/date-picker\`.
+## Props
 
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
+### \`ids-date-picker\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`value\` | \`Date \\| null\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`size\` | \`DatePickerSize\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`required\` | \`—\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`dateFormat\` | \`string\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`formatHint\` | \`string\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`disabled\` | \`—\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`error\` | \`—\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`disabledDates\` | \`Date[]\` | \`[]\` |
+| \`rangeMode\` | \`—\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+| \`popupPortal\` | \`—\` | \`DATE_PICKER_SPEC_ACCURATE_DEFAULT…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onChange\` | \`ids-date-picker\` | \`Date \\| null\` |
+| \`onRangeChange\` | \`ids-date-picker\` | \`{ start: Date \\| null; end: Date \\| null }\` |
+
+## API
+
+Import \`IDS_DATE_PICKER_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/date-picker\`).
+
+\`\`\`ts
+import { IDS_DATE_PICKER_IMPORTS } from "@ids/angular/date-picker";
+\`\`\`
 `.trim();
 
 export const DATE_PICKER_SOURCE_CODE = `import { Component } from "@angular/core";

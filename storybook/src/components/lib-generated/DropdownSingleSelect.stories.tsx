@@ -10,13 +10,17 @@ import React, { useState, type ComponentProps, type CSSProperties } from "react"
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DROPDOWN_SINGLE_SELECT_DOCS_DESCRIPTION,
+  DROPDOWN_SINGLE_SELECT_SOURCE_CODE,
+} from "./ids-dropdown-single-select.developer-usage";
+import {
   IdsDropdownSingleSelect,
   IdsDropdownSingleSelectOptions,
   IdsDropdownSingleSelectOption,
   type IdsDropdownSingleSelectOptionModel,
-} from "../../../../lib/react/ids/dropdown-single-select";
-import { IdsError, IdsErrorText } from "../../../../lib/react/ids/error";
-import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
+} from "@ids/react/dropdown-single-select";
+import { IdsError, IdsErrorText } from "@ids/react/error";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 
 const DESIGN_SPEC_PATH = "components/ids/dropdown-single-select/design-spec.md";
 
@@ -47,16 +51,20 @@ const SECTION_OPTIONS: IdsDropdownSingleSelectOptionModel[] = [
 const sampleWidth: CSSProperties = { width: 300, maxWidth: "100%" };
 
 const meta: Meta<typeof IdsDropdownSingleSelect> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Dropdown/Single Select",
   component: IdsDropdownSingleSelect,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Dropdown Single-select from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: container → field/menu → options/option*; optional `IdsHelper` or `IdsError`. " +
-          "Theme: `components/ids-theme.css`.",
+        component: DROPDOWN_SINGLE_SELECT_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DROPDOWN_SINGLE_SELECT_SOURCE_CODE,
       },
     },
   },

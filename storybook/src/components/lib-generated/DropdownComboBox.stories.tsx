@@ -13,13 +13,17 @@ import React, { useState, type ComponentProps, type CSSProperties } from "react"
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DROPDOWN_COMBO_BOX_DOCS_DESCRIPTION,
+  DROPDOWN_COMBO_BOX_SOURCE_CODE,
+} from "./ids-dropdown-combo-box.developer-usage";
+import {
   IdsDropdownComboBox,
   IdsComboboxOptions,
   IdsComboboxOption,
   type IdsDropdownComboBoxOption,
-} from "../../../../lib/react/ids/dropdown-combo-box";
-import { IdsError, IdsErrorText } from "../../../../lib/react/ids/error";
-import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
+} from "@ids/react/dropdown-combo-box";
+import { IdsError, IdsErrorText } from "@ids/react/error";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 
 const DESIGN_SPEC_PATH = "components/ids/dropdown-combo-box/design-spec.md";
 
@@ -64,18 +68,20 @@ type ComboProps = ComponentProps<typeof IdsDropdownComboBox>;
 const sampleWidth: CSSProperties = { width: 300, maxWidth: "100%" };
 
 const meta: Meta<typeof IdsDropdownComboBox> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Dropdown/Combo Box",
   component: IdsDropdownComboBox,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Dropdown / Combo Box from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: `combobox-container` → `combobox` → `combobox-options` → `combobox-option*`; " +
-          "optional projected `IdsHelper` or `IdsError`. " +
-          "Modes: `combobox-single` | `combobox-multi`. " +
-          "Theme: `components/ids-theme.css`.",
+        component: DROPDOWN_COMBO_BOX_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DROPDOWN_COMBO_BOX_SOURCE_CODE,
       },
     },
   },

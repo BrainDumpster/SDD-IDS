@@ -32,10 +32,14 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  GET_STARTED_DOCS_DESCRIPTION,
+  GET_STARTED_SOURCE_CODE,
+} from "./ids-get-started.developer-usage";
+import {
   GetStarted,
   type IdsGetStartedCardInput,
   type IdsGetStartedProps,
-} from "../../../../lib/react/ids/get-started";
+} from "@ids/react/get-started";
 
 const DESIGN_SPEC_PATH = "components/ids/get-started/design-spec.md";
 
@@ -137,20 +141,20 @@ function CompoundCards({ cards }: { cards: IdsGetStartedCardInput[] }) {
 }
 
 const meta: Meta<IdsGetStartedProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Get Started",
   component: GetStarted,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Get Started from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Root is `GetStarted` (`IdsGetStarted`) — not `GetStartedRoot`. " +
-          "Deterministic anatomy: HeroHeader (Background, ShadowBand, Honeycomb, " +
-          "MastheadSlot, HeroTitle, HeroSubtitle) → Container (CardTrack → CardAnchor → " +
-          "CardIconBadge + Card → TitleBand + ContentPanel → Description, Note, " +
-          "ConfigureButton) → SkipButton → OverflowEdge (Gradient, Arrow, NavButton). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: GET_STARTED_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: GET_STARTED_SOURCE_CODE,
       },
     },
   },

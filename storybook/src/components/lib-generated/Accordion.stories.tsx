@@ -13,7 +13,13 @@
  */
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { SPEC_ACCURATE_DESIGN_STORY } from "../../../../component-contracts/common/story-meta";
 import "../../../../components/ids-theme.css";
+import {
+  ACCORDION_DOCS_DESCRIPTION,
+  ACCORDION_SOURCE_CODE,
+  ACCORDION_STORY_SOURCE_CODE,
+} from "./ids-accordion.developer-usage";
 import {
   IdsAccordion,
   IdsAccordionBody,
@@ -22,7 +28,7 @@ import {
   IdsAccordionItem,
   type IdsAccordionItemInput,
   type IdsAccordionProps,
-} from "../../../../lib/react/ids/accordion";
+} from "@ids/react/accordion";
 
 const demoItems: IdsAccordionItemInput[] = [
   {
@@ -84,15 +90,18 @@ const formItems: IdsAccordionItemInput[] = [
 const meta: Meta<IdsAccordionProps> = {
   title: "Components/IDS/Accordion",
   component: IdsAccordion,
+  tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Accordion from `components/ids/accordion/design-spec.md`. " +
-          "Parts: IdsAccordion, IdsAccordionItem, IdsAccordionHeader, IdsAccordionChevron, " +
-          "IdsAccordionBody/Panel, IdsAccordionContent. " +
-          "Selectors: `ids-accordion`, `ids-accordion-header`, …. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: ACCORDION_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: ACCORDION_SOURCE_CODE,
       },
     },
   },
@@ -104,9 +113,52 @@ const meta: Meta<IdsAccordionProps> = {
     defaultValue: ["network"],
   },
   argTypes: {
-    multiple: { control: "boolean" },
-    chevronPosition: { control: "radio", options: ["left", "right"] },
-    variant: { control: "radio", options: ["default", "form"] },
+    multiple: {
+      control: "boolean",
+      description: "When false, only one panel may be open.",
+      table: { category: "Props", defaultValue: { summary: "false" } },
+    },
+    defaultValue: {
+      control: "object",
+      description: "Uncontrolled initially open panel `value` ids.",
+      table: { category: "Props" },
+    },
+    value: {
+      control: false,
+      description: "Controlled open panel `value` ids.",
+      table: { category: "Props" },
+    },
+    chevronPosition: {
+      control: "radio",
+      options: ["left", "right"],
+      description: "Chevron placement on the header trigger.",
+      table: { category: "Props", defaultValue: { summary: "left" } },
+    },
+    variant: {
+      control: "radio",
+      options: ["default", "form"],
+      description: "Visual / layout variant.",
+      table: { category: "Props", defaultValue: { summary: "default" } },
+    },
+    items: {
+      control: false,
+      description: "Convenience API — builds composition parts from an array.",
+      table: { category: "Props" },
+    },
+    children: {
+      control: false,
+      description: "Composition API — project IdsAccordionItem children.",
+      table: { category: "Props" },
+    },
+    onValueChange: {
+      action: "onValueChange",
+      description: "Emits open panel `value` ids after toggle.",
+      table: { category: "Events" },
+    },
+    className: {
+      control: false,
+      table: { category: "Props" },
+    },
   },
 };
 
@@ -114,12 +166,60 @@ export default meta;
 type Story = StoryObj<IdsAccordionProps>;
 
 export const SpecAccurateDesign: Story = {
-  name: "Spec Accurate Design",
-  render: (args) => <IdsAccordion {...args} />,
+  name: SPEC_ACCURATE_DESIGN_STORY,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Spec Accurate Design: single-expand, first panel open (`network`), left chevron, default variant — composition markup.",
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: ACCORDION_STORY_SOURCE_CODE,
+      },
+    },
+  },
+  render: (args) => (
+    <IdsAccordion {...args} items={undefined} onValueChange={args.onValueChange}>
+      <IdsAccordionItem value="network" first>
+        <IdsAccordionHeader title="Network configuration" />
+        <IdsAccordionBody>
+          <IdsAccordionContent>
+            <p>Configure network policies and service endpoints for this workspace.</p>
+            <a href="#">Learn how network policies work</a>
+          </IdsAccordionContent>
+        </IdsAccordionBody>
+      </IdsAccordionItem>
+
+      <IdsAccordionItem value="security">
+        <IdsAccordionHeader title="Security controls" />
+        <IdsAccordionBody>
+          <IdsAccordionContent>
+            Manage access rules, authentication options, and audit controls.
+          </IdsAccordionContent>
+        </IdsAccordionBody>
+      </IdsAccordionItem>
+
+      <IdsAccordionItem value="integrations" disabled>
+        <IdsAccordionHeader title="Integrations" />
+        <IdsAccordionBody>
+          <IdsAccordionContent>Connect external systems and event pipelines.</IdsAccordionContent>
+        </IdsAccordionBody>
+      </IdsAccordionItem>
+    </IdsAccordion>
+  ),
 };
 
 export const NestedHierarchy: Story = {
   name: "Nested Hierarchy",
+  parameters: {
+    docs: {
+      description: {
+        story: "Explicit composition tree without the `items[]` convenience API.",
+      },
+    },
+  },
   render: () => (
     <IdsAccordion defaultValue={["network"]} chevronPosition="left">
       <IdsAccordionItem value="network" first>
@@ -182,6 +282,13 @@ export const WithFormContent: Story = {
 
 export const NestedGenericContent: Story = {
   name: "Nested Generic Content",
+  parameters: {
+    docs: {
+      description: {
+        story: "Form-like projected children inside IdsAccordionContent.",
+      },
+    },
+  },
   render: () => (
     <IdsAccordion defaultValue={["contact"]}>
       <IdsAccordionItem value="contact" first>

@@ -1,36 +1,35 @@
 /** Developer usage + Docs tab copy for IDS Link (Angular lib). */
 
 export const LINK_DOCS_DESCRIPTION = `
-IDS Link — Angular 21 standalone API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/link/design-spec.md\`  
-**Contract:** \`component-contracts/ids/link.contract.ts\`  
-**Lib:** \`lib/angular/ids/link\` (parity with \`lib/react/ids/link\`)
+Text link control styled with IDS semantic tokens.
 
-### Anatomy
+## Props
 
+### \`ids-link\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`label\` | \`string\` | \`LINK_RUNTIME_DEFAULTS.label\` |
+| \`type\` | \`IdsLinkType \\| string\` | \`LINK_RUNTIME_DEFAULTS.type\` |
+| \`showExternalLinkIcon\` | \`—\` | \`LINK_RUNTIME_DEFAULTS.showExterna…\` |
+| \`target\` | \`IdsLinkTarget\` | \`LINK_RUNTIME_DEFAULTS.target\` |
+| \`disabled\` | \`—\` | \`LINK_RUNTIME_DEFAULTS.disabled\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`clicked\` | \`ids-link\` | \`MouseEvent\` |
+
+## API
+
+Import \`IDS_LINK_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/link\`).
+
+\`\`\`ts
+import { IDS_LINK_IMPORTS } from "@ids/angular/link";
 \`\`\`
-ids-link [type, label, href?, showExternalLinkIcon?, target?, rel?, disabled?, dataState?]
-  root (<a> | <button>)
-    label
-    externalIcon?   ← ids-icon pop-up-square-corner-big @ 16px (mask)
-\`\`\`
-
-Import \`IDS_LINK_IMPORTS\` from \`lib/angular/ids/link\`. Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`type\` | \`standalone\` | \`standalone\` \\| \`inline\` \\| \`dark-bg\` (unknown → standalone) |
-| \`label\` | required | Empty → \`"Link"\` + dev warning |
-| \`href\` | — | Present → \`<a>\`; omitted → \`<button type="button">\` |
-| \`showExternalLinkIcon\` | \`false\` | Decorative external icon |
-| \`target\` | \`_self\` | When \`_blank\`, default \`rel="noopener noreferrer"\` |
-| \`disabled\` | \`false\` | Runtime safety (not in Figma matrix) |
-| \`dataState\` | — | Demo/testing only (\`data-state\`) |
-
-| Output | Notes |
-|--------|-------|
-| \`clicked\` | Maps design-spec / React \`onClick\` |
 `.trim();
 
 export const LINK_SOURCE_CODE = `import { Component } from "@angular/core";

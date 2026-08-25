@@ -1,23 +1,32 @@
 /** Developer usage + Docs tab copy for IDS Dashboard (Angular). */
 
 export const DASHBOARD_DOCS_DESCRIPTION = `
-IDS Dashboard — Angular standalone API aligned to \`components/ids/dashboard/design-spec.md\` and React \`lib/react/ids/dashboard\`.
+## Overview
 
-Wrapper surface for a responsive grid of IDS Cards (1 → 2 → 3 columns by viewport). Sets nested Card border color (\`--card-border-color\` → \`--color-border-gray-neutral-light\`) and injects \`showDivider\` via \`showDividerInCard\`. Page title and page-level actions are owned by the host layout — **not** Dashboard.
+Responsive grid of dashboard items for summary widgets and panels.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-dashboard\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`showDividerInCard\` | \`—\` | \`true\` |
+| \`enableDragAndDrop\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`cardsReorder\` | \`ids-dashboard\` | \`string[]\` |
+
+## API
+
+Import \`IDS_DASHBOARD_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/dashboard\`).
+
+\`\`\`ts
+import { IDS_DASHBOARD_IMPORTS } from "@ids/angular/dashboard";
 \`\`\`
-ids-dashboard [showDividerInCard?, enableDragAndDrop?, className?]
-  ids-dashboard-grid? (auto-provided when omitted)
-    ids-dashboard-item? → ids-card   OR   ids-card+ (tiles)
-\`\`\`
-
-Nested Card chrome follows Card design-spec except border color cascade + forced \`showDivider\` from Dashboard (\`IDS_DASHBOARD_CARD_OVERRIDE\`).
-
-Import \`IDS_DASHBOARD_IMPORTS\` from \`lib/angular/ids/dashboard\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const DASHBOARD_SOURCE_CODE = `import { Component } from "@angular/core";

@@ -15,18 +15,22 @@ import React, { useState, type ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DROPDOWN_BUTTON_DOCS_DESCRIPTION,
+  DROPDOWN_BUTTON_SOURCE_CODE,
+} from "./ids-dropdown-button.developer-usage";
+import {
   IdsDropdownButton,
   IdsDropdownTrigger,
   IdsDropdownMenu,
   IdsDropdownMenuItem,
   type IdsDropdownButtonItem,
-} from "../../../../lib/react/ids/dropdown-button";
+} from "@ids/react/dropdown-button";
 import {
   IdsButton,
   IdsButtonLabel,
   IdsButtonLeadingIcon,
-} from "../../../../lib/react/ids/button";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+} from "@ids/react/button";
+import { IdsIcon } from "@ids/react/icon";
 
 const DESIGN_SPEC_PATH = "components/ids/dropdown-button/design-spec.md";
 
@@ -60,17 +64,20 @@ const NESTED_ITEMS: IdsDropdownButtonItem[] = [
 type DropdownProps = ComponentProps<typeof IdsDropdownButton>;
 
 const meta: Meta<typeof IdsDropdownButton> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Dropdown Button",
   component: IdsDropdownButton,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Dropdown Button from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: `dropdown` → `trigger-slot` + `dropdown-menu` → `dropdown-menu-item*` " +
-          "(menu nestable under items). Popup uses shared Dropdown Combo Box menu styling. " +
-          "Theme: `components/ids-theme.css`.",
+        component: DROPDOWN_BUTTON_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DROPDOWN_BUTTON_SOURCE_CODE,
       },
     },
   },

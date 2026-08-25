@@ -13,13 +13,17 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  CARD_DOCS_DESCRIPTION,
+  CARD_SOURCE_CODE,
+} from "./ids-card.developer-usage";
+import {
   IdsCard,
   IdsCardKeyValueContent,
   IdsCardTextContent,
   type IdsCardAction,
   type IdsCardMenuOption,
   type IdsCardProps,
-} from "../../../../lib/react/ids/card";
+} from "@ids/react/card";
 
 const DESIGN_SPEC_PATH = "components/ids/card/design-spec.md";
 
@@ -80,18 +84,20 @@ const cardHostStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsCardProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Card",
   component: IdsCard,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Card from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: Card → CardHeader → CardBody → CardFooter?. " +
-          "Border & divider contract: `--card-border-color` cascade + `showDivider`. " +
-          "Composes lib `IdsIcon` (kebab `overflow-menu-dots` in `var(--color-icon-brand-base)`; key-value icons) and `IdsButton` tertiary for footer actions. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: CARD_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: CARD_SOURCE_CODE,
       },
     },
   },

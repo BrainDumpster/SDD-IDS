@@ -1,42 +1,37 @@
 /** Developer usage + Docs tab copy for IDS Button (Angular, composition API). */
 
-const DEMO_ICON = "settings-gear-detailed";
-
 export const BUTTON_DOCS_DESCRIPTION = `
-IDS Button — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/button/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/button.contract.ts\`
+Primary interactive control with variants, sizes, loading, and leading-icon projection.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-button\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`variant\` | \`ButtonVariant\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.var…\` |
+| \`size\` | \`ButtonSize\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.size\` |
+| \`disabled\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.dis…\` |
+| \`loading\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.loa…\` |
+| \`iconOnly\` | \`boolean\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.ico…\` |
+| \`ariaLabel\` | \`—\` | \`""\` |
+| \`type\` | \`"button" \\| "submit" \\| "reset"\` | \`"button"\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`clicked\` | \`ids-button\` | \`MouseEvent\` |
+
+## API
+
+Import \`IDS_BUTTON_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/button\`).
+
+\`\`\`ts
+import { IDS_BUTTON_IMPORTS } from "@ids/angular/button";
 \`\`\`
-ids-button [variant, size, disabled, loading, iconOnly?, ariaLabel?, type?]
-  ids-icon?                  ← optional leading icon (\`variant="mask"\` for token tint)
-  {{ label }}                ← default slot (text or inline markup)
-\`\`\`
-
-Import \`IDS_BUTTON_IMPORTS\` from \`ids-button.imports.ts\` (includes \`ids-icon\`).
-
-### Root API
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`variant\` | \`primary\` | \`primary\` \| \`secondary\` \| \`tertiary\` \| \`destructive\` |
-| \`size\` | \`lg\` | \`sm\` \| \`md\` \| \`lg\` |
-| \`disabled\` | \`false\` | Blocks interaction |
-| \`loading\` | \`false\` | Shows spinner; blocks interaction |
-| \`iconOnly\` | \`false\` | Icon-only layout; \`md\` / \`lg\` only |
-| \`ariaLabel\` | — | **Required** when \`iconOnly=true\` |
-| \`type\` | \`button\` | Native button type |
-
-| Output | Notes |
-|--------|-------|
-| \`clicked\` | Successful activation |
-
-**Leading icon:** project \`ids-icon\` with \`variant="mask"\` so \`var(--color-icon-*)\` tokens tint the glyph. Destructive buttons do not render a leading icon.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const BUTTON_SOURCE_CODE = `import { Component } from "@angular/core";

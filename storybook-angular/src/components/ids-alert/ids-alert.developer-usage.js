@@ -1,57 +1,68 @@
 /** Developer usage + Docs tab copy for IDS Alert (Angular, composition API). */
 
 export const ALERT_DOCS_DESCRIPTION = `
-IDS Alert — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/alert/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/alert.contract.ts\`
+Status messages for informational, success, warning, and critical feedback (inline or stacked).
 
-### Anatomy (deterministic child order)
+## Props
 
-**Single alert**
+### \`ids-alert\`
 
+| Input | Type | Default |
+|-------|------|---------|
+| \`display\` | \`AlertDisplay\` | \`ALERT_SPEC_ACCURATE_DEFAULTS.display\` |
+| \`severity\` | \`AlertGlobalSeverity \\| AlertInlineSeverity\` | \`ALERT_SPEC_ACCURATE_DEFAULTS.seve…\` |
+| \`message\` | \`string\` | \`ALERT_SPEC_ACCURATE_DEFAULTS.message\` |
+| \`title\` | \`—\` | \`""\` |
+| \`density\` | \`AlertDensity\` | \`ALERT_SPEC_ACCURATE_DEFAULTS.density\` |
+| \`link\` | \`AlertLinkInput \\| null\` | \`null\` |
+| \`linkLabel\` | \`—\` | \`""\` |
+| \`linkHref\` | \`—\` | \`""\` |
+| \`actionLabel\` | \`—\` | \`""\` |
+| \`dismissible\` | \`boolean \\| null\` | \`ALERT_SPEC_ACCURATE_DEFAULTS.dism…\` |
+| \`carousel\` | \`AlertCarouselInput \\| null\` | \`null\` |
+
+### \`ids-alert-action\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`label\` | \`—\` | \`""\` |
+
+### \`ids-alert-group\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`activeIndex\` | \`—\` | \`0\` |
+
+### \`ids-alert-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`message\` | \`—\` | \`""\` |
+| \`linkLabel\` | \`—\` | \`""\` |
+| \`linkHref\` | \`—\` | \`""\` |
+| \`actionLabel\` | \`—\` | \`""\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`action\` | \`ids-alert\` | \`void\` |
+| \`dismiss\` | \`ids-alert\` | \`void\` |
+| \`linkClick\` | \`ids-alert\` | \`MouseEvent\` |
+| \`carouselPrevious\` | \`ids-alert\` | \`void\` |
+| \`carouselNext\` | \`ids-alert\` | \`void\` |
+| \`activeIndexChange\` | \`ids-alert-group\` | \`number\` |
+| \`dismiss\` | \`ids-alert-group\` | \`void\` |
+
+## API
+
+Import \`IDS_ALERT_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/alert\`).
+
+\`\`\`ts
+import { IDS_ALERT_IMPORTS } from "@ids/angular/alert";
 \`\`\`
-ids-alert [display, severity, density, dismissible, carousel?]
-  ids-alert-message          ← required primary copy (Clarity .alert-text)
-  ids-alert-title?           ← inline detailed
-  ids-alert-link?            ← optional link after message
-  ids-alert-action?          ← optional outlined action (label input)
-\`\`\`
-
-**Global multi-alert group**
-
-\`\`\`
-ids-alert-group [activeIndex]
-  ids-alert-item [severity]  ← one per logical alert (hidden carriers)
-    ids-alert-message        ← required
-    ids-alert-link?          ← optional
-    ids-alert-action?        ← optional
-\`\`\`
-
-\`ids-alert-group\` renders **one** internal \`ids-alert\` banner and swaps the active item (maps to Clarity \`clr-alerts\` + pager).
-
-Import \`IDS_ALERT_IMPORTS\` from \`ids-alert.imports.ts\`.
-
-String props (\`message\`, \`title\`, \`linkLabel\`, \`actionLabel\`) remain as **shorthand** for Storybook controls when slots are not used.
-
-### Root API
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`display\` | \`inline\` | \`global\` \| \`inline\` |
-| \`severity\` | \`informational\` | Inline adds \`success\` |
-| \`density\` | \`compact\` | Inline only |
-| \`dismissible\` | \`true\` | Per spec dismiss rules |
-| \`carousel\` | — | Global only |
-
-| Output | Notes |
-|--------|-------|
-| \`action\` | Action button |
-| \`dismiss\` | Dismiss |
-| \`linkClick\` | Link activation |
-| \`carouselPrevious\` / \`carouselNext\` | Carousel |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const ALERT_SOURCE_CODE = `import { Component } from "@angular/core";

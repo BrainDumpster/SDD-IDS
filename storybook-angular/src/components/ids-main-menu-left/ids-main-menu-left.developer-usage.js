@@ -1,58 +1,63 @@
 /** Developer usage + Docs tab copy for IDS Main Menu/Left (Angular, composition API). */
 
 export const MAIN_MENU_LEFT_DOCS_DESCRIPTION = `
-IDS Main Menu/Left — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/main-menu-left/design-spec.md\`  
-**Contract:** \`component-contracts/ids/main-menu-left.contract.ts\`
+Left navigation rail with icon items, expansion, and active states.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-main-menu-left\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`items\` | \`MainMenuLeftPrimaryItem[] \\| null\` | \`null\` |
+| \`expanded\` | \`boolean\` | \`MAIN_MENU_LEFT_SPEC_ACCURATE_DEFA…\` |
+| \`defaultSelectedItemId\` | \`string \\| null\` | \`MAIN_MENU_LEFT_SPEC_ACCURATE_DEFA…\` |
+| \`forceStates\` | \`—\` | \`false\` |
+| \`ariaLabel\` | \`—\` | \`MAIN_MENU_LEFT_SPEC_ACCURATE_DEFA…\` |
+| \`compositionMode\` | \`—\` | \`false\` |
+
+### \`ids-main-menu-left-item\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`level\` | \`"primary" \\| "secondary"\` | \`"primary"\` |
+| \`tooltip\` | \`—\` | \`""\` |
+| \`defaultExpanded\` | \`—\` | \`false\` |
+
+### \`ids-main-menu-left-items-adapter\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`railExpanded\` | \`—\` | \`true\` |
+| \`forceStates\` | \`—\` | \`false\` |
+| \`selectedKey\` | \`string \\| null\` | \`null\` |
+| \`expandedChildrenKey\` | \`string \\| null\` | \`null\` |
+| \`selectedSecondaryParentKey\` | \`string \\| null\` | \`null\` |
+| \`selectedSecondaryKey\` | \`string \\| null\` | \`null\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`expandedChange\` | \`ids-main-menu-left\` | \`boolean\` |
+| \`selectedChange\` | \`ids-main-menu-left\` | \`MainMenuLeftSelectionDetail\` |
+| \`navigate\` | \`ids-main-menu-left\` | \`ReturnType<typeof buildNavigateTarget\` |
+| \`selectedKeyChange\` | \`ids-main-menu-left-items-adapter\` | \`string\` |
+| \`expandedChildrenKeyChange\` | \`ids-main-menu-left-items-adapter\` | \`string \\| null\` |
+| \`selectedSecondaryParentKeyChange\` | \`ids-main-menu-left-items-adapter\` | \`string \\| null\` |
+| \`selectedSecondaryKeyChange\` | \`ids-main-menu-left-items-adapter\` | \`string \\| null\` |
+| \`navigate\` | \`ids-main-menu-left-items-adapter\` | \`ReturnType<typeof buildNavigateTarget\` |
+| \`selectedChange\` | \`ids-main-menu-left-items-adapter\` | \`MainMenuLeftSelectionDetail\` |
+
+## API
+
+Import \`IDS_MAIN_MENU_LEFT_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/main-menu-left\`).
+
+\`\`\`ts
+import { IDS_MAIN_MENU_LEFT_IMPORTS } from "@ids/angular/main-menu-left";
 \`\`\`
-ids-main-menu-left [compositionMode]
-  [ids-main-menu-left-logo]?
-  ids-main-menu-left-item | ids-main-menu-left-group
-    ids-main-menu-left-item (primary)
-      <a routerLink> | <a href>
-        ids-main-menu-left-item-icon
-        label
-    ids-main-menu-left-children
-      ids-main-menu-left-item (secondary, level="secondary")
-        <a routerLink> | <a href> label
-\`\`\`
-
-Import \`IDS_MAIN_MENU_LEFT_IMPORTS\` from \`ids-main-menu-left.imports.ts\`.
-
-### Root (\`ids-main-menu-left\`)
-
-| Input | Notes |
-|-------|-------|
-| \`compositionMode\` | \`true\` — render projected items/groups (preferred for Storybook) |
-| \`items\` | Legacy data tree (omit when using composition) |
-| \`expanded\` / \`defaultSelectedItemId\` / \`forceStates\` | Same as spec |
-
-| Output | Notes |
-|--------|-------|
-| \`expandedChange\` | Rail collapse footer |
-| \`selectedChange\` | Active row changed |
-| \`navigate\` | Optional host hook (link hosts handle routing when projected) |
-
-### Item (\`ids-main-menu-left-item\`)
-
-| Input | Notes |
-|-------|-------|
-| \`itemId\` | Stable selection key (required) |
-| \`level\` | \`primary\` (default) or \`secondary\` |
-| \`forceState\` | Storybook matrix only |
-
-Project **one** interactive host per item: \`<a href>\`, \`<a routerLink>\`, or \`<button type="button">\`.
-
-### Group (\`ids-main-menu-left-group\`)
-
-| Input | Notes |
-|-------|-------|
-| \`groupId\` | Expansion + selection parent key |
-| \`defaultExpanded\` | Pins children open when \`forceStates\` (maps to \`childrenMenu\`) |
 `.trim();
 
 export const MAIN_MENU_LEFT_COMPOSITION_DEMO_TEMPLATE = `

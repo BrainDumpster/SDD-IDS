@@ -12,9 +12,13 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TOGGLE_SWITCH_DOCS_DESCRIPTION,
+  TOGGLE_SWITCH_SOURCE_CODE,
+} from "./ids-toggle-switch.developer-usage";
+import {
   IdsToggleSwitch,
   type IdsToggleSwitchProps,
-} from "../../../../lib/react/ids/toggle-switch";
+} from "@ids/react/toggle-switch";
 
 const DESIGN_SPEC_PATH = "components/ids/toggle-switch/design-spec.md";
 
@@ -26,17 +30,20 @@ const specAccurateArgs: IdsToggleSwitchProps = {
 };
 
 const meta: Meta<IdsToggleSwitchProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Toggle Switch from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: root → input → switch → track → thumb → label?. " +
-          "Matrix: checked × disabled × hasLabel (8 valid combinations). " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: TOGGLE_SWITCH_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TOGGLE_SWITCH_SOURCE_CODE,
       },
     },
   },

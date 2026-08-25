@@ -3,6 +3,10 @@
 /* spec_hash: 362eab1db0a68896f14a8a2e8425a47f91c4ee4dd7cf31cfb23815bf90b1e884 */
 import React from "react";
 import "../../../../components/ids-theme.css";
+import {
+  WIZARD_MODAL_DOCS_DESCRIPTION,
+  WIZARD_MODAL_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-wizard-modal.developer-usage";
 /* Gate coverage: default hover press focus-visible disabled */
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
@@ -23,17 +27,20 @@ const baseStepContentStyle = {
 } as const;
 
 const meta: Meta<typeof IdsWizard> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Wizard Modal",
   component: IdsWizard,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: [
-          `Spec-driven IDS Wizard (modal). Source: \`${DESIGN_SPEC_PATH}\`.`,
-          "Runtime: shared `IdsWizard` with `mode=\"modal\"`.",
-          "Theme: `components/ids-theme.css`.",
-        ].join(" "),
+        component: WIZARD_MODAL_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: WIZARD_MODAL_SOURCE_CODE,
       },
     },
   },

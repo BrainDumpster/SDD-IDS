@@ -11,13 +11,17 @@ import React, { useState, type ComponentProps, type CSSProperties } from "react"
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DROPDOWN_MULTISELECT_DOCS_DESCRIPTION,
+  DROPDOWN_MULTISELECT_SOURCE_CODE,
+} from "./ids-dropdown-multiselect.developer-usage";
+import {
   IdsDropdownMultiSelect,
   IdsDropdownMultiSelectOptions,
   IdsDropdownMultiSelectOption,
   type IdsDropdownMultiSelectOptionModel,
-} from "../../../../lib/react/ids/dropdown-multiselect";
-import { IdsError, IdsErrorText } from "../../../../lib/react/ids/error";
-import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
+} from "@ids/react/dropdown-multiselect";
+import { IdsError, IdsErrorText } from "@ids/react/error";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 
 const DESIGN_SPEC_PATH = "components/ids/dropdown-multiselect/design-spec.md";
 
@@ -44,16 +48,20 @@ const SECTION_OPTIONS: IdsDropdownMultiSelectOptionModel[] = [
 const sampleWidth: CSSProperties = { width: 300, maxWidth: "100%" };
 
 const meta: Meta<typeof IdsDropdownMultiSelect> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Dropdown/Multi Select",
   component: IdsDropdownMultiSelect,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Dropdown Multiselect from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Anatomy: container → field/menu → options/option*; optional `IdsHelper` or `IdsError`. " +
-          "Theme: `components/ids-theme.css`.",
+        component: DROPDOWN_MULTISELECT_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DROPDOWN_MULTISELECT_SOURCE_CODE,
       },
     },
   },

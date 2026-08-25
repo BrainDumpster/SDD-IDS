@@ -11,25 +11,33 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  RADIO_BUTTON_DOCS_DESCRIPTION,
+  RADIO_BUTTON_SOURCE_CODE,
+} from "./ids-radio-button.developer-usage";
+import {
   IdsRadioButton,
   IdsRadioGroup,
   IdsRadioLabel,
   type IdsRadioGroupProps,
-} from "../../../../lib/react/ids/radio-button";
-import { IdsError, IdsErrorText } from "../../../../lib/react/ids/error";
-import { IdsHelper, IdsHelperText } from "../../../../lib/react/ids/helper";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+} from "@ids/react/radio-button";
+import { IdsError, IdsErrorText } from "@ids/react/error";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
+import { IdsIcon } from "@ids/react/icon";
 
 const meta: Meta<IdsRadioGroupProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Radio Button",
   component: IdsRadioGroup,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Radio Button from `components/ids/radio-button/design-spec.md`. " +
-          "`IdsRadioGroup` + `IdsRadioButton` with projected `IdsRadioLabel` and optional " +
-          "`IdsHelper` / `IdsError`. Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: RADIO_BUTTON_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: RADIO_BUTTON_SOURCE_CODE,
       },
     },
   },

@@ -14,7 +14,9 @@
     "paths": {
       "@storybook/angular": ["node_modules/@storybook/angular"],
       "@storybook/*": ["node_modules/@storybook/*"],
-      "@component-contracts/*": ["../component-contracts/*"]
+      "@component-contracts/*": ["../component-contracts/*"],
+      "@ids/angular": ["compiled/lib/angular/ids"],
+      "@ids/angular/*": ["compiled/lib/angular/ids/*"]
     }
   },
   "angularCompilerOptions": {

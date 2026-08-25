@@ -3,18 +3,29 @@
 /* spec_hash: 4d30562a5103cfa411f9a70a89b402584d2cecfa33646cde9a3ac5658f38cecf */
 import React from "react";
 import "../../../../components/ids-theme.css";
+import {
+  SCROLL_BAR_DOCS_DESCRIPTION,
+  SCROLL_BAR_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-scroll-bar.developer-usage";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsScrollBar as IdsScrollBar } from "../../../../storybook/src/components/IdsScrollBar";
 
 const DESIGN_SPEC_PATH = "components/ids/scroll-bar/design-spec.md";
 
 const meta: Meta<typeof IdsScrollBar> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Scroll Bar",
   component: IdsScrollBar,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: `Spec-driven IDS Scroll Bar. Source of truth: ${DESIGN_SPEC_PATH}.`,
+        component: SCROLL_BAR_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: SCROLL_BAR_SOURCE_CODE,
       },
     },
   },

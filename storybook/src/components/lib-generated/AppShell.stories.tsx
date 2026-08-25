@@ -21,13 +21,17 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
-import { AppLauncher } from "../../../../lib/react/ids/app-launcher";
-import { IdsFooter } from "../../../../lib/react/ids/footer";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+import {
+  APP_SHELL_DOCS_DESCRIPTION,
+  APP_SHELL_SOURCE_CODE,
+} from "./ids-app-shell.developer-usage";
+import { AppLauncher } from "@ids/react/app-launcher";
+import { IdsFooter } from "@ids/react/footer";
+import { IdsIcon } from "@ids/react/icon";
 import {
   IdsMainMenuLeft,
   type MainMenuLeftPrimaryItem,
-} from "../../../../lib/react/ids/main-menu-left";
+} from "@ids/react/main-menu-left";
 import {
   IdsMasthead,
   IdsMastheadActionButtonContainer,
@@ -40,7 +44,7 @@ import {
   IdsMastheadIconsSlot,
   IdsMastheadLogo,
   IdsMastheadProductName,
-} from "../../../../lib/react/ids/masthead";
+} from "@ids/react/masthead";
 import {
   AppShellSpecAccurateAppLauncher,
   AppShellSpecAccurateHeaderActions,
@@ -59,7 +63,7 @@ import {
   IdsAppShellPageTitle,
   type AppShellPage,
   type IdsAppShellProps,
-} from "../../../../lib/react/ids/app-shell";
+} from "@ids/react/app-shell";
 
 const DESIGN_SPEC_PATH = "components/ids/app-shell/design-spec.md";
 
@@ -182,23 +186,20 @@ function NestedAppShell(props: IdsAppShellProps) {
 }
 
 const meta: Meta<IdsAppShellProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/App Shell",
   component: IdsAppShell,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS App Shell from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Root is `IdsAppShell` — not `AppShellRoot`. " +
-          "Public names are `Ids` camelCase (`IdsAppShellMastheadSlot`), not dotted compounds (`AppShell.MastheadSlot`). " +
-          "Deterministic anatomy: IdsAppShellMastheadSlot → IdsAppShellBodyRow → " +
-          "IdsAppShellMainMenuSlot + IdsAppShellMainColumn " +
-          "(IdsAppShellPageHeader → IdsAppShellPageTitle + IdsAppShellPageDescription?, " +
-          "IdsAppShellBodyViewport → IdsAppShellBodyContentSlot, IdsAppShellFooterSlot). " +
-          "Selectors: `data-ids=\"IdsAppShell\"`. " +
-          "Composes IdsMasthead, IdsMainMenuLeft, and IdsFooter — does not re-implement child chrome. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: APP_SHELL_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: APP_SHELL_SOURCE_CODE,
       },
     },
   },

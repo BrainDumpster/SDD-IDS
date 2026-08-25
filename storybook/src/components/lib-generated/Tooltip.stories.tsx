@@ -17,6 +17,10 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TOOLTIP_DOCS_DESCRIPTION,
+  TOOLTIP_SOURCE_CODE,
+} from "./ids-tooltip.developer-usage";
+import {
   Tooltip,
   TooltipBody,
   TooltipClose,
@@ -24,27 +28,30 @@ import {
   TooltipPanel,
   TooltipTrigger,
   type TooltipProps,
-} from "../../../../lib/react/ids/tooltip";
+} from "@ids/react/tooltip";
 import {
   IdsButton,
   IdsButtonLabel,
-} from "../../../../lib/react/ids/button";
+} from "@ids/react/button";
 
 const longContent =
   "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.";
 
 const meta: Meta<TooltipProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Tooltip",
   component: Tooltip,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Tooltip from `components/ids/tooltip/design-spec.md`. " +
-          "Anatomy: Tooltip → Trigger / Panel → Header? / Body / Close?. " +
-          "Arrow always rendered (12 side×align permutations). " +
-          "Theme: `components/ids-theme.css`.",
+        component: TOOLTIP_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TOOLTIP_SOURCE_CODE,
       },
     },
   },

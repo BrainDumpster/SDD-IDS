@@ -3,6 +3,10 @@
 /* spec_hash: 0b35ee44de744e15c7f30272bac353c0d014666b6452d98683813bba0919fd14 */
 /* Components — IDS Main Menu Top (design-spec intake wizard) */
 import "../../../../components/ids-theme.css";
+import {
+  MAIN_MENU_TOP_DOCS_DESCRIPTION,
+  MAIN_MENU_TOP_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-main-menu-top.developer-usage";
 /* Gate coverage: default hover press selected disabled focus-visible */
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { type ComponentProps } from "react";
@@ -70,19 +74,20 @@ const jobsMenuOptions = [
 ];
 
 const meta: Meta<typeof MainMenuTop> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Main Menu Top",
   component: MainMenuTop,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: [
-          `Spec-driven IDS Main Menu Top. Source: \`${DESIGN_SPEC_PATH}\`.`,
-          `Primary story: Figma \`${FIGMA_SPEC_ACCURATE_NODE}\`.`,
-          `Dropdown/submenu: Figma \`${FIGMA_USE_CASE_NODE}\` (square menu, shadow-4, accessible border).`,
-          "Composable: `MainMenuTop.Item` + `MainMenuTop.Menu` / `MenuItem` / `MenuGroup` / `Submenu`.",
-          "Theme: `components/ids-theme.css`.",
-        ].join(" "),
+        component: MAIN_MENU_TOP_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: MAIN_MENU_TOP_SOURCE_CODE,
       },
     },
   },

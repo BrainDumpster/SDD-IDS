@@ -94,7 +94,14 @@ function listStoryFiles(dir: string, ignoreBasenames?: Set<string>): string[] {
       continue;
     }
     if (!/\.stories\.(ts|tsx)$/.test(entry.name)) continue;
-    if (ignoreBasenames?.has(entry.name)) continue;
+    // Hide legacy hand ports by basename, but never hide canonical `lib-generated/` ports
+    // (same basenames as hand files: Link, Slider, Spinner, ToggleSwitch).
+    if (
+      ignoreBasenames?.has(entry.name) &&
+      !full.includes(`${path.sep}lib-generated${path.sep}`)
+    ) {
+      continue;
+    }
     out.push(full);
   }
   return out;
@@ -168,6 +175,8 @@ const config: StorybookConfig = {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {
           "@component-contracts": path.join(repoRoot, "component-contracts"),
+          // Public package scope used in Docs / Code Connect (maps to lib/react/ids/*)
+          "@ids/react": path.join(repoRoot, "lib/react/ids"),
           react: reactRoot,
           "react-dom": reactDomRoot,
           "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),

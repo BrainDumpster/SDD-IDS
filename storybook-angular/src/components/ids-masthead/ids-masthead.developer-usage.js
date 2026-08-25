@@ -1,74 +1,35 @@
 /** Developer usage + Docs tab copy for IDS Masthead (Angular, composition API). */
 
-import {
-  MASTHEAD_APP_LAUNCHER_ICON_SLUG,
-  MASTHEAD_HELP_ICON_SLUG,
-  MASTHEAD_PRODUCT_LOGO_SLUG,
-  MASTHEAD_USER_ICON_SLUG,
-} from "../../../compiled/component-contracts/ids/masthead.contract.js";
-
 export const MASTHEAD_DOCS_DESCRIPTION = `
-IDS Masthead — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/masthead/design-spec.md\`  
-**Contract:** \`component-contracts/ids/masthead.contract.ts\`  
-**App Launcher:** project \`ids-app-launcher\` with \`mastheadAppLauncher\` + \`triggerVariant="masthead"\` (see \`lib/angular/ids/app-launcher\`).
+Top application bar with brand, product name, icons, and avatar slots.
 
-### Anatomy (deterministic slot order)
+## Props
 
+### \`ids-masthead-action-icon-button\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`badgeType\` | \`BadgeType\` | \`"critical"\` |
+
+### \`ids-masthead-avatar\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`imageAlt\` | \`—\` | \`"User avatar"\` |
+
+## Events
+
+No dedicated \`@Output()\` events beyond standard DOM handlers.
+
+## API
+
+Import \`IDS_MASTHEAD_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/masthead\`).
+
+\`\`\`ts
+import { IDS_MASTHEAD_IMPORTS } from "@ids/angular/masthead";
 \`\`\`
-ids-masthead
-  [mastheadLogo]?                    ← optional 32×32 product logo (ids-icon variant="img")
-  productName                        ← required brand label
-  ids-masthead-action-button-container
-    ids-masthead-action-icon-button  ← projected ids-icon (16×16)
-  ids-app-launcher[mastheadAppLauncher]?  ← waffle + product dropdown
-  ids-masthead-avatar                ← initials | projected ids-icon | photo
-\`\`\`
-
-Import \`IDS_MASTHEAD_IMPORTS\` + \`IDS_APP_LAUNCHER_IMPORTS\` when using the launcher slot.
-
-### Root API (\`ids-masthead\`)
-
-| Input | Type | Required | Notes |
-|-------|------|----------|-------|
-| \`productName\` | \`string\` | yes | Brand title in left slot |
-
-### Action icon button (\`ids-masthead-action-icon-button\`)
-
-| Input | Type | Default | Notes |
-|-------|------|---------|-------|
-| \`ariaLabel\` | \`string\` | required | Accessible name |
-| \`badgeCount\` | \`number\` | — | Renders badge when > 0; caps at \`99+\` |
-| \`badgeType\` | badge union | \`critical\` | Use \`success\` for Jobs, \`critical\` for Alerts |
-| \`ariaExpanded\` | \`boolean\` | — | Open panel state |
-
-Project \`ids-icon\` at **16×16** (\`variant="mask"\` for monochrome glyphs).
-
-### Avatar (\`ids-masthead-avatar\` → \`ids-avatar\`)
-
-| Input | Type | Notes |
-|-------|------|-------|
-| \`initials\` | \`string\` | 32×32 white ring + centered body-2 text |
-| \`icon\` | \`string\` | Icon slug (e.g. \`${MASTHEAD_USER_ICON_SLUG}\`) — centered 16×16 |
-| \`imageSrc\` / \`imageAlt\` | \`string\` | Photo variant (fills chip) |
-| \`ariaLabel\` | \`string\` | Required accessible name |
-
-Standalone chip (no masthead chrome):
-
-\`\`\`html
-<ids-avatar [icon]="'${MASTHEAD_USER_ICON_SLUG}'"></ids-avatar>
-<ids-avatar [initials]="'JD'"></ids-avatar>
-\`\`\`
-
-Priority: \`imageSrc\` → \`icon\` → \`initials\`.
-
-### Theme & assets
-
-- Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
-- Monochrome masthead icons use \`var(--color-icon-gray-white)\` via host \`color\` + \`ids-icon variant="mask"\`.
-- Product logo: \`ids-icon shapeName="${MASTHEAD_PRODUCT_LOGO_SLUG}" variant="img" [size]="32"\`.
-- App Launcher trigger glyph: \`${MASTHEAD_APP_LAUNCHER_ICON_SLUG}\` (owned by \`ids-app-launcher\`).
 `.trim();
 
 export const MASTHEAD_SOURCE_CODE = `import { Component } from "@angular/core";

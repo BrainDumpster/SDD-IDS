@@ -19,15 +19,19 @@ import React, { useCallback, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  WIZARD_DOCS_DESCRIPTION,
+  WIZARD_SOURCE_CODE,
+} from "./ids-wizard.developer-usage";
+import {
   IdsWizard,
   type IdsWizardEventPayload,
   type IdsWizardProps,
   type IdsWizardStepInput,
-} from "../../../../lib/react/ids/wizard";
+} from "@ids/react/wizard";
 import {
   IdsButton,
   IdsButtonLabel,
-} from "../../../../lib/react/ids/button";
+} from "@ids/react/button";
 import {
   IDS_WIZARD_DESIGN_SPEC_PATH,
   WIZARD_DEFAULTS,
@@ -38,6 +42,7 @@ import {
 type WizardStoryArgs = Pick<IdsWizardProps, "mode" | "size" | "title" | "showCloseButton">;
 
 const meta: Meta<WizardStoryArgs> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Wizard",
   parameters: {
     layout: "fullscreen",
@@ -45,13 +50,14 @@ const meta: Meta<WizardStoryArgs> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { type: "code" },
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Wizard from \`${IDS_WIZARD_DESIGN_SPEC_PATH}\`. ` +
-          "Root is `Wizard` (`IdsWizard`), not `WizardRoot`. " +
-          "Deterministic anatomy composition for inline and modal modes. " +
-          "Theme: `components/ids-theme.css`.",
+        component: WIZARD_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: WIZARD_SOURCE_CODE,
       },
     },
   },

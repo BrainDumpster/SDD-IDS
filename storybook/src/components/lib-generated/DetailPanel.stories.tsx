@@ -16,6 +16,10 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DETAIL_PANEL_DOCS_DESCRIPTION,
+  DETAIL_PANEL_SOURCE_CODE,
+} from "./ids-detail-panel.developer-usage";
+import {
   IdsDetailPanel,
   IdsDetailPanelBody,
   IdsDetailPanelCollapsedRail,
@@ -25,20 +29,23 @@ import {
   IdsDetailPanelToggleButton,
   type IdsDetailPanelAttachMode,
   type IdsDetailPanelProps,
-} from "../../../../lib/react/ids/detail-panel";
+} from "@ids/react/detail-panel";
 
 const meta: Meta<IdsDetailPanelProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Detail Panel",
   component: IdsDetailPanel,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Detail Panel from `components/ids/detail-panel/design-spec.md`. " +
-          "Compound composition: Content / Header / Body / Footer / CollapsedRail / ToggleButton. " +
-          "`attachMode: datagrid | page`, expanded `398px` / collapsed `40px`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: DETAIL_PANEL_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DETAIL_PANEL_SOURCE_CODE,
       },
     },
   },

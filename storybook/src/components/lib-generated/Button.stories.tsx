@@ -11,12 +11,16 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  BUTTON_DOCS_DESCRIPTION,
+  BUTTON_SOURCE_CODE,
+} from "./ids-button.developer-usage";
+import {
   IdsButton,
   IdsButtonLabel,
   IdsButtonLeadingIcon,
   type IdsButtonProps,
-} from "../../../../lib/react/ids/button";
-import { IdsIcon } from "../../../../lib/react/ids/icon";
+} from "@ids/react/button";
+import { IdsIcon } from "@ids/react/icon";
 
 const DEMO_ICON = "settings-gear-detailed";
 
@@ -40,15 +44,19 @@ function Btn({
 }
 
 const meta: Meta<IdsButtonProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Button",
   component: IdsButton,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Button from `components/ids/button/design-spec.md`. " +
-          "Content projection only: `IdsButtonLeadingIcon` (project `IdsIcon`) + `IdsButtonLabel`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: BUTTON_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: BUTTON_SOURCE_CODE,
       },
     },
   },

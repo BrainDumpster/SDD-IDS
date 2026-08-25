@@ -14,13 +14,17 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TAB_DOCS_DESCRIPTION,
+  TAB_SOURCE_CODE,
+} from "./ids-tab.developer-usage";
+import {
   IdsTab,
   IdsTabButton,
   IdsTabContent,
   IdsTabs,
   type IdsTabItemInput,
   type IdsTabsProps,
-} from "../../../../lib/react/ids/tab";
+} from "@ids/react/tab";
 
 const baseItems: IdsTabItemInput[] = [
   {
@@ -52,16 +56,19 @@ const overflowItems: IdsTabItemInput[] = [
 ];
 
 const meta: Meta<IdsTabsProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Tab",
   component: IdsTabs,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Tab from `components/ids/tab/design-spec.md`. " +
-          "Composition: IdsTabs → IdsTab → IdsTabButton / IdsTabContent. " +
-          "Selectors: `ids-tabs`, `ids-tab-button`, `ids-tab-content`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: TAB_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TAB_SOURCE_CODE,
       },
     },
   },

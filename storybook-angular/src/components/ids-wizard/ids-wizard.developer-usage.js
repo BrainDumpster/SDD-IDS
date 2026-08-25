@@ -1,42 +1,65 @@
 /** Developer usage + Docs tab copy for IDS Wizard (Angular). */
 
 export const WIZARD_DOCS_DESCRIPTION = `
-IDS Wizard — Angular 21 standalone API aligned to \`components/ids/wizard/design-spec.md\` and React \`lib/react/ids/wizard\`.
+## Overview
 
-**Contract defaults:** \`component-contracts/ids/wizard.contract.ts\`
+Multi-step guided flow with steps pane, content, and footer actions.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-wizard\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`mode\` | \`IdsWizardMode\` | \`WIZARD_DEFAULTS.mode\` |
+| \`size\` | \`IdsWizardSize\` | \`WIZARD_DEFAULTS.size\` |
+| \`title\` | \`—\` | \`WIZARD_DEFAULTS.title\` |
+| \`steps\` | \`IdsWizardStepInput[]\` | \`[]\` |
+| \`showCloseButton\` | \`—\` | \`WIZARD_DEFAULTS.showCloseButton\` |
+| \`isPrimaryEnabled\` | \`boolean \\| ((ctx: IdsWizardContext)\` | \`> boolean) = true\` |
+
+### \`ids-wizard-demo-host\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`mode\` | \`IdsWizardMode\` | \`WIZARD_DEFAULTS.mode\` |
+| \`size\` | \`IdsWizardSize\` | \`WIZARD_DEFAULTS.size\` |
+| \`title\` | \`—\` | \`WIZARD_DEFAULTS.title\` |
+| \`showCloseButton\` | \`—\` | \`WIZARD_DEFAULTS.showCloseButton\` |
+
+### \`ids-wizard-header\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`active\` | \`—\` | \`false\` |
+| \`status\` | \`IdsWizardStepStatus\` | \`"none"\` |
+| \`hasChildren\` | \`—\` | \`false\` |
+| \`status\` | \`IdsWizardStepStatus\` | \`"none"\` |
+| \`align\` | \`"end" \\| "after-label"\` | \`"end"\` |
+| \`active\` | \`—\` | \`false\` |
+| \`status\` | \`IdsWizardStepStatus\` | \`"none"\` |
+| \`hasProjectedText\` | \`—\` | \`false\` |
+| \`hasProjectedText\` | \`—\` | \`false\` |
+| \`hasProjectedText\` | \`—\` | \`false\` |
+| \`hasProjectedText\` | \`—\` | \`false\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onCancel\` | \`ids-wizard\` | \`IdsWizardEventPayload\` |
+| \`onPrevious\` | \`ids-wizard\` | \`IdsWizardEventPayload\` |
+| \`onNext\` | \`ids-wizard\` | \`IdsWizardEventPayload\` |
+| \`onFinish\` | \`ids-wizard\` | \`IdsWizardEventPayload\` |
+| \`onStepChange\` | \`ids-wizard\` | \`IdsWizardEventPayload\` |
+
+## API
+
+Import \`IDS_WIZARD_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/wizard\`).
+
+\`\`\`ts
+import { IDS_WIZARD_IMPORTS } from "@ids/angular/wizard";
 \`\`\`
-ids-wizard [mode?, size?, title, steps, initialStepId?, showCloseButton?, isPrimaryEnabled?]
-  ids-wizard-header
-    ids-wizard-header-title
-    ids-wizard-close-action?
-  ids-wizard-body
-    ids-wizard-steps-pane
-      ids-wizard-step-item[]
-        ids-wizard-step-label
-        ids-wizard-step-status-indicator?
-        ids-wizard-substep-list?
-          ids-wizard-substep-item[]
-            ids-wizard-step-label
-            ids-wizard-step-status-indicator?
-    ids-wizard-content-pane
-      ids-wizard-page-title
-      ids-wizard-page-content
-      ids-wizard-footer
-        ids-wizard-progress-label
-        ids-wizard-footer-actions
-          ids-wizard-cancel-button?
-          ids-wizard-previous-button?
-          ids-wizard-primary-button
-\`\`\`
-
-Prop-driven \`steps\` builds the same tree (React \`IdsWizard\` default). Projecting \`ids-wizard-header\` / \`ids-wizard-body\` replaces chrome, matching React compound slots.
-
-Import \`IDS_WIZARD_IMPORTS\` from \`lib/angular/ids/wizard\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const WIZARD_SOURCE_CODE = `import { Component } from "@angular/core";

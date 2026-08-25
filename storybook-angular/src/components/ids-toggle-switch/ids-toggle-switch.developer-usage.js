@@ -1,44 +1,32 @@
 /** Developer usage + Docs tab copy for IDS Toggle Switch (Angular). */
 
 export const TOGGLE_SWITCH_DOCS_DESCRIPTION = `
-IDS Toggle Switch — Angular 21 standalone **composition** API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/toggle-switch/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/toggle-switch.contract.ts\`
+Binary on/off switch control.
 
-### Anatomy (deterministic child order)
+## Props
 
+### \`ids-toggle-switch\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`defaultChecked\` | \`—\` | \`TOGGLE_SWITCH_SPEC_ACCURATE_DEFAU…\` |
+| \`disabled\` | \`—\` | \`TOGGLE_SWITCH_SPEC_ACCURATE_DEFAU…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onCheckedChange\` | \`ids-toggle-switch\` | \`boolean\` |
+
+## API
+
+Import \`IDS_TOGGLE_SWITCH_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/toggle-switch\`).
+
+\`\`\`ts
+import { IDS_TOGGLE_SWITCH_IMPORTS } from "@ids/angular/toggle-switch";
 \`\`\`
-ids-toggle-switch [checked?, defaultChecked?, disabled?, label?, id?, name?, value?, className?, ariaLabel?, ariaDescribedBy?]
-  ids-toggle-switch-input
-  ids-toggle-switch-track
-  ids-toggle-switch-thumb
-  ids-toggle-switch-label
-  ids-toggle-switch-assistive-text
-\`\`\`
-
-Import \`IDS_TOGGLE_SWITCH_IMPORTS\` from \`lib/angular/ids/toggle-switch\`.
-
-### Root API (\`ids-toggle-switch\`)
-
-| Input | Default | Notes |
-|-------|---------|-------|
-| \`checked\` | — | Controlled on/off value |
-| \`defaultChecked\` | \`false\` | Uncontrolled initial value |
-| \`disabled\` | \`false\` | Blocks pointer and keyboard toggles |
-| \`label\` | — | Visible label when \`ids-toggle-switch-label\` is omitted |
-| \`id\` | generated | Native input id / label association |
-| \`name\` | — | Form integration |
-| \`value\` | — | Form integration |
-| \`className\` | — | Extra class on the root host |
-| \`ariaLabel\` | — | Required accessible name when visible label is absent |
-| \`ariaDescribedBy\` | — | Optional description id |
-
-| Output | Notes |
-|--------|-------|
-| \`onCheckedChange\` | Emits resolved boolean after a successful toggle |
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const TOGGLE_SWITCH_SOURCE_CODE = `import { Component } from "@angular/core";

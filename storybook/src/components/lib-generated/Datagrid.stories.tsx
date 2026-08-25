@@ -16,6 +16,10 @@ import React, { useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  DATAGRID_DOCS_DESCRIPTION,
+  DATAGRID_SOURCE_CODE,
+} from "./ids-datagrid.developer-usage";
+import {
   IdsDatagrid,
   IdsDatagridBody,
   IdsDatagridCell,
@@ -29,22 +33,25 @@ import {
   defaultIdsDatagridNumericFilterState,
   type IdsDatagridNumericFilterState,
   type IdsDatagridProps,
-} from "../../../../lib/react/ids/datagrid";
+} from "@ids/react/datagrid";
 
 const DESIGN_SPEC_PATH = "components/ids/datagrid/design-spec.md";
 
 const meta: Meta<IdsDatagridProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Datagrid",
   component: IdsDatagrid,
   parameters: {
     layout: "fullscreen",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          `React IDS Datagrid from \`${DESIGN_SPEC_PATH}\`. ` +
-          "Compound anatomy: IdsDatagrid → Column / Filter / Body / Row / Cell / Footer. " +
-          "Grid host owns L-frame, colgroup, freeze, and grow-column math. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: DATAGRID_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: DATAGRID_SOURCE_CODE,
       },
     },
   },

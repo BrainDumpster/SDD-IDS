@@ -3,6 +3,10 @@
 /* spec_hash: 615fca2c5c30ebfdaa581b337eab1701a71bf9169e6795964df5cf983d70ac75 */
 import React from "react";
 import "../../../../components/ids-theme.css";
+import {
+  ABOUT_DOCS_DESCRIPTION,
+  ABOUT_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-about.developer-usage";
 /* Gate coverage: default hover focus-visible */
 import type { Meta, StoryObj } from "@storybook/react";
 import { About } from "../../../../storybook/src/components/About";
@@ -11,17 +15,20 @@ import { Button } from "../../../../storybook/src/components/Button";
 const DESIGN_SPEC_PATH = "components/ids/about/design-spec.md";
 
 const meta: Meta<typeof About> = {
+  tags: ["autodocs"],
   title: "Components/IDS/About",
   component: About,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: [
-          `Spec-driven IDS About dialog. Source: \`${DESIGN_SPEC_PATH}\`.`,
-          "Modal About surface: product title, version, optional serial + copy, copyright paragraph, Close action.",
-          "Theme: `components/ids-theme.css`.",
-        ].join(" "),
+        component: ABOUT_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: ABOUT_SOURCE_CODE,
       },
     },
   },

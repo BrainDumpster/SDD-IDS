@@ -8,6 +8,10 @@ import {
   BADGE_TYPES,
 } from "../../../compiled/component-contracts/ids/badge.contract.js";
 import { IdsBadgeComponent } from "../../../compiled/lib/angular/ids/badge/ids-badge.component.js";
+import {
+  BADGE_DOCS_DESCRIPTION,
+  BADGE_SOURCE_CODE,
+} from "./ids-badge.developer-usage.js";
 
 /** @type {import("@storybook/angular").Meta<IdsBadgeComponent>} */
 const meta = {
@@ -25,9 +29,14 @@ const meta = {
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "IDS Badge per components/ids/badge/design-spec.md. Angular standalone (`storybook-angular` port 6007).",
+        component: BADGE_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "typescript",
+        code: BADGE_SOURCE_CODE,
       },
     },
   },

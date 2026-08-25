@@ -1,25 +1,38 @@
 /** Developer usage + Docs tab copy for IDS Slider (Angular). */
 
 export const SLIDER_DOCS_DESCRIPTION = `
-IDS Slider — Angular 21 standalone API (\`storybook-angular\`, port **6007**).
+## Overview
 
-**Spec:** \`components/ids/slider/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/slider.contract.ts\`  
-**React parity:** \`lib/react/ids/slider\`
+Numeric range input with single or dual thumbs.
 
-### Anatomy (deterministic slot order)
+## Props
 
+### \`ids-slider\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`mode\` | \`IdsSliderMode \\| string\` | \`SLIDER_RUNTIME_DEFAULTS.mode\` |
+| \`step\` | \`number\` | \`SLIDER_RUNTIME_DEFAULTS.step\` |
+| \`disabled\` | \`—\` | \`SLIDER_RUNTIME_DEFAULTS.disabled\` |
+| \`showStepper\` | \`—\` | \`SLIDER_RUNTIME_DEFAULTS.showStepper\` |
+| \`showTicks\` | \`—\` | \`SLIDER_RUNTIME_DEFAULTS.showTicks\` |
+| \`showValueLabel\` | \`—\` | \`SLIDER_RUNTIME_DEFAULTS.showValue…\` |
+| \`showValueInput\` | \`—\` | \`SLIDER_RUNTIME_DEFAULTS.showValue…\` |
+
+## Events
+
+| Output | On | Payload |
+|--------|----|---------|
+| \`onValueChange\` | \`ids-slider\` | \`IdsSliderValue\` |
+| \`onValueCommit\` | \`ids-slider\` | \`IdsSliderValue\` |
+
+## API
+
+Import \`IDS_SLIDER_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/slider\`).
+
+\`\`\`ts
+import { IDS_SLIDER_IMPORTS } from "@ids/angular/slider";
 \`\`\`
-ids-slider [mode, min, max, step, value?, defaultValue?, disabled, showStepper, showTicks, stepperFrequency, showValueLabel, showValueInput, minLabel, maxLabel]
-  SliderMinLabel?
-  SliderRail (+ progress/range, ticks, thumbs, value labels)
-  SliderMaxLabel?
-  SliderValueInputMin? (+ "-" + SliderValueInputMax? in range)
-\`\`\`
-
-Value inputs compose compact \`ids-text-box\` (\`size="small"\`, no icon/helper). Import \`IDS_SLIDER_IMPORTS\` from \`lib/angular/ids/slider\`.
-
-Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const SLIDER_SOURCE_CODE = `import { Component } from "@angular/core";

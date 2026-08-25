@@ -14,9 +14,13 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  TAG_DOCS_DESCRIPTION,
+  TAG_SOURCE_CODE,
+} from "./ids-tag.developer-usage";
+import {
   IdsTag,
   type IdsTagProps,
-} from "../../../../lib/react/ids/tag";
+} from "@ids/react/tag";
 
 const rowStyle: React.CSSProperties = {
   display: "flex",
@@ -26,18 +30,20 @@ const rowStyle: React.CSSProperties = {
 };
 
 const meta: Meta<IdsTagProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Tag",
   component: IdsTag,
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Tag from `components/ids/tag/design-spec.md`. " +
-          "Types: read-only | clickable | editable | badge. " +
-          "Sizes: small | large. Tones: none | informational | success | minor | major | critical. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`. " +
-          "TagDropdown is host-composed (detached); not rendered by IdsTag.",
+        component: TAG_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: TAG_SOURCE_CODE,
       },
     },
   },

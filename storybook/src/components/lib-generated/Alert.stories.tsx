@@ -9,23 +9,31 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import {
+  ALERT_DOCS_DESCRIPTION,
+  ALERT_SOURCE_CODE,
+} from "./ids-alert.developer-usage";
+import {
   IdsAlert,
   IdsAlertGroup,
   type IdsAlertItem,
   type IdsAlertProps,
-} from "../../../../lib/react/ids/alert";
+} from "@ids/react/alert";
 
 const meta: Meta<IdsAlertProps> = {
+  tags: ["autodocs"],
   title: "Components/IDS/Alert",
   component: IdsAlert,
   parameters: {
     layout: "padded",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component:
-          "React IDS Alert from `components/ids/alert/design-spec.md`. " +
-          "Unified `display: global | inline`. Multi-item global carousel via `IdsAlertGroup`. " +
-          "Theme: `components/ids-theme.css`. No `@base-ui-components`.",
+        component: ALERT_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: ALERT_SOURCE_CODE,
       },
     },
   },

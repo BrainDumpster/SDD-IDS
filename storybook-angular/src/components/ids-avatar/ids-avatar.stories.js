@@ -8,6 +8,10 @@ import {
 } from "../../../compiled/component-contracts/ids/avatar.contract.js";
 import { IdsAvatarComponent } from "../../../compiled/lib/angular/ids/avatar/ids-avatar.component.js";
 import { IDS_AVATAR_IMPORTS } from "../../../compiled/lib/angular/ids/avatar/index.js";
+import {
+  AVATAR_DOCS_DESCRIPTION,
+  AVATAR_SOURCE_CODE,
+} from "./ids-avatar.developer-usage.js";
 
 /** @type {import("@storybook/angular").Meta<IdsAvatarComponent>} */
 const meta = {
@@ -25,18 +29,14 @@ const meta = {
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: `
-IDS Avatar — circular chip with **centered** initials or icon.
-
-\`\`\`html
-<ids-avatar [icon]="'user-single'"></ids-avatar>
-<ids-avatar [initials]="'JD'"></ids-avatar>
-\`\`\`
-
-Priority: \`imageSrc\` → \`icon\` → \`initials\`.
-Chip: 32×32 · icon glyph: 16×16 · tokens from masthead User Settings chip.
-        `.trim(),
+        component: AVATAR_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "typescript",
+        code: AVATAR_SOURCE_CODE,
       },
     },
   },

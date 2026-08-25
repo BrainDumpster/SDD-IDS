@@ -1,23 +1,33 @@
 /** Developer usage + Docs tab copy for IDS Progress Bar (Angular). */
 
 export const PROGRESS_BAR_DOCS_DESCRIPTION = `
-IDS Progress Bar — Angular standalone API (\`storybook-angular\`).
+## Overview
 
-**Spec:** \`components/ids/progress-bar/design-spec.md\`  
-**Contract defaults:** \`component-contracts/ids/progress-bar.contract.ts\`  
-**React parity:** \`lib/react/ids/progress-bar\`
+Determinate or indeterminate progress indicator with optional label.
 
-### Anatomy (deterministic slot order)
+## Props
 
+### \`ids-progress-bar\`
+
+| Input | Type | Default |
+|-------|------|---------|
+| \`value\` | \`number \\| string\` | \`PROGRESS_BAR_RUNTIME_DEFAULTS.value\` |
+| \`showHelperText\` | \`boolean \\| string\` | \`PROGRESS_BAR_RUNTIME_DEFAULTS.sho…\` |
+| \`type\` | \`IdsProgressBarType \\| string\` | \`PROGRESS_BAR_RUNTIME_DEFAULTS.type\` |
+| \`thickness\` | \`IdsProgressBarThickness \\| string\` | \`PROGRESS_BAR_RUNTIME_DEFAULTS.thi…\` |
+| \`state\` | \`IdsProgressBarState \\| string\` | \`PROGRESS_BAR_RUNTIME_DEFAULTS.state\` |
+
+## Events
+
+No dedicated \`@Output()\` events beyond standard DOM handlers.
+
+## API
+
+Import \`IDS_PROGRESS_BAR_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/progress-bar\`).
+
+\`\`\`ts
+import { IDS_PROGRESS_BAR_IMPORTS } from "@ids/angular/progress-bar";
 \`\`\`
-ids-progress-bar [value, label, helperText, showHelperText, type, thickness, state]
-  ProgressMetaRow?          (with-label: label + %)
-  ProgressTrackRow          (track ± inline %)
-    ProgressTrack / trackBg / ProgressIndicator
-  ProgressHelperRow?        (status icon + helper text)
-\`\`\`
-
-Import \`IDS_PROGRESS_BAR_IMPORTS\` from \`lib/angular/ids/progress-bar\`. Load \`components/ids-theme.css\` on the app root (\`data-design-system="ids"\`).
 `.trim();
 
 export const PROGRESS_BAR_SOURCE_CODE = `import { Component } from "@angular/core";
