@@ -31,6 +31,25 @@
   flex-direction: column;
   overflow: hidden;
   background: var(--color-background-surface-component);
+  border: 1px solid var(--color-border-gray-neutral-base);
+  border-radius: 0;
+  box-shadow:
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 2px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 2px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 4px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 4px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 8px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 8px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 16px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 16px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08));
 }
 
 .IdsWhatsNew--preview {

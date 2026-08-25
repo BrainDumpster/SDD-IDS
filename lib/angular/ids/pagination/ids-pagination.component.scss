@@ -87,6 +87,7 @@
 .dropdownTrigger:focus-visible {
   outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
   outline-offset: 4px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .dropdownTrigger:disabled {
@@ -177,6 +178,7 @@
 .dropdownOption:focus-visible {
   outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
   outline-offset: 4px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .dropdownOptionSelected {
@@ -229,6 +231,7 @@
 .iconButton:focus-visible {
   outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
   outline-offset: 4px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .iconButton:disabled {
@@ -283,6 +286,7 @@
 .pageInputWrap:focus-within {
   outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
   outline-offset: 4px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .pageInput:disabled {

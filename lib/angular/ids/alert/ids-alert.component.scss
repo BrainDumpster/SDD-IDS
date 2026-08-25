@@ -229,7 +229,17 @@
   border-radius: 0;
   font-family: inherit;
   gap: var(--spacing-space-12);
-  box-shadow: inset 4px 0 0 0 var(--inline-rail, var(--color-background-alerting-info-base));
+}
+
+.ids-alert--inline::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  width: 4px;
+  background: var(--inline-rail, var(--color-background-alerting-info-base));
+  pointer-events: none;
 }
 
 .ids-alert__inline-main {
@@ -409,15 +419,12 @@
   --inline-rail: var(--color-background-alerting-minor-base);
   background: var(--color-background-alerting-minor-light);
   border-color: var(--color-border-alerting-minor-base);
-  box-shadow: none;
 }
 
 .ids-alert--inline[data-severity="warning-minor"]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
   width: 4px;
   background: linear-gradient(
     90deg,

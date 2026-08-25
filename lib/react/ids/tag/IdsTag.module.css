@@ -16,7 +16,7 @@
   border-width: var(--border-width-border-default, var(--border-width-border-1));
   border-style: solid;
   border-color: var(--color-border-gray-neutral-base);
-  border-radius: var(--corner-radius-radius-20);
+  border-radius: var(--corner-radius-radius-24);
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -31,12 +31,12 @@
 
 /* --- Size tracks (Layout & Measurements) --- */
 .ids-tag--small {
-  height: 20px;
+  min-height: 20px;
   padding: var(--padding-padding-none, 0) var(--padding-padding-8);
 }
 
 .ids-tag--large {
-  height: 28px;
+  min-height: 28px;
   padding: var(--padding-padding-4) var(--padding-padding-12);
 }
 
