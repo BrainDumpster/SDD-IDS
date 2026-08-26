@@ -1,5 +1,7 @@
 /** Developer usage + Docs tab copy for IDS Button (Angular, composition API). */
 
+const DEMO_ICON = "settings-gear-detailed";
+
 export const BUTTON_DOCS_DESCRIPTION = `
 ## Overview
 

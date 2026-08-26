@@ -2,6 +2,7 @@
   all: unset;
   display: flex;
   box-sizing: border-box;
+  position: relative;
 }
 
 .triggerFull {
@@ -12,6 +13,19 @@
   display: block;
   width: 100%;
   box-sizing: border-box;
+}
+
+.triggerReset:focus-visible {
+  outline: none;
+}
+
+.triggerReset:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .popup {
@@ -50,6 +64,7 @@
 }
 
 .searchField {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -61,10 +76,21 @@
   border-radius: 0;
 }
 
+.searchField[data-focus-visible="true"]::after,
+.searchField:has(.searchInput:focus-visible)::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+}
+
 .searchIcon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  /* Match React: tint via background + CSS mask (Figma Search-Main → brand icon). */
   background: var(--color-icon-brand-base);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: contain;
@@ -91,7 +117,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-space-8);
+  gap: var(--spacing-space-10);
   flex: 1 1 auto;
   min-width: 0;
   padding-left: var(--padding-padding-8);
@@ -197,6 +223,21 @@
   box-sizing: border-box;
 }
 
+.noResults {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
+  background: var(--color-background-surface-component);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+  font-variation-settings: "wdth" 100;
+  color: var(--color-text-gray-neutral);
+}
+
 .selectAllClearAllRow {
   display: flex;
   align-items: center;
@@ -230,6 +271,15 @@
 .clearAllButton:disabled {
   color: var(--color-text-gray-disabled);
   cursor: not-allowed;
+}
+
+.selectAllButton:focus-visible .selectAllCheckbox {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.selectAllButton:focus-visible:not([data-checked="true"]) .selectAllCheckbox {
+  border-color: var(--color-border-brand-base);
 }
 
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
@@ -276,32 +326,41 @@
 }
 
 .item[data-selection-mode="single"] {
-  padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10) var(--padding-padding-16);
-  min-height: 44px;
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  min-height: 40px;
+}
+
+/* Figma single-select text-only option aligns content to the top (items-start).
+   Radio rows keep center alignment so the control lines up with the label. */
+.item[data-selection-mode="single"]:not(:has(.radioOuter)) {
+  align-items: flex-start;
 }
 
 .item:hover:not([data-disabled]) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-highlighted] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base),
-    inset 0 -1px 0 0 var(--color-border-brand-base);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:hover:not([data-disabled]),
 .item[data-selection-mode="single"][data-highlighted]:not([data-disabled]) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  /* Top + bottom border only (no side borders); inset box-shadow is not clipped
+     by the options scroll region the way a 0-offset outline is. */
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-focus-visible] {
@@ -339,7 +398,9 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-disabled],
 .item[data-selection-mode="single"]:not(:has(.radioOuter)):disabled {
   background: var(--color-background-gray-lighter);
-  outline: 1px solid var(--color-border-gray-disabled);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-gray-disabled),
+    inset 0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="false"][data-disabled],
@@ -387,23 +448,51 @@
 .footerActionButton {
   display: inline-flex;
   align-items: center;
+  position: relative;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: var(--corner-radius-radius-2);
 }
 
+/* Single-select Clear All (Figma / React parity): below search, bottom border. */
+.clearAllAction {
+  all: unset;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--padding-padding-8) 0;
+  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.clearAllButton:focus-visible .footerActionButton,
+.footerAction:focus-visible .footerActionButton,
+.clearAllAction:focus-visible .footerActionButton {
+  outline: none;
+}
+
+.clearAllButton:focus-visible .footerActionButton::after,
+.footerAction:focus-visible .footerActionButton::after,
+.clearAllAction:focus-visible .footerActionButton::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
+}
+
 .leadingControl {
   display: inline-flex;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   pointer-events: none;
-}
-
-.item[data-selection-mode="single"] .leadingControl {
-  width: 16px;
-  height: 16px;
 }
 
 .radioOuter {
@@ -492,8 +581,9 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
@@ -525,8 +615,9 @@
 .item[data-selection-mode="single"]:active:not([data-disabled]) {
   background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  outline: 1px solid var(--color-border-brand-base-neutral);
-  box-shadow: none;
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */
@@ -652,9 +743,8 @@
 .popup--above {
   border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-radius: var(--dropdown-menu-radius) var(--dropdown-menu-radius) 0 0;
-  box-shadow:
-    0 -2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
-    0 -4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+  /* Spec Accurate: suppress drop shadow when menu opens above the field. */
+  box-shadow: none;
 }
 
 .search-icon {

@@ -1,4 +1,5 @@
 import { IdsBadgeComponent } from "../badge/ids-badge.component";
+import { IDS_TOOLTIP_IMPORTS } from "../tooltip";
 import { IdsDropdownComponent } from "./ids-dropdown.component";
 import { IdsDropdownErrorComponent } from "./ids-dropdown-error.component";
 import { IdsDropdownHelperComponent } from "./ids-dropdown-helper.component";
@@ -20,6 +21,7 @@ export const IDS_DROPDOWN_IMPORTS = [
   IdsDropdownErrorComponent,
   IdsDropdownTagComponent,
   IdsBadgeComponent,
+  ...IDS_TOOLTIP_IMPORTS,
 ] as const;
 
 export {

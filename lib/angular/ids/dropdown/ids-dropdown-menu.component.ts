@@ -20,6 +20,7 @@ import {
   inject,
 } from "@angular/core";
 import { Subscription } from "rxjs";
+import { idsAssetUrl } from "../../../shared/ids-assets-base.js";
 import { IdsIconComponent } from "../icon/ids-icon.component";
 import { IDS_DROPDOWN_CONTEXT } from "./ids-dropdown-context";
 import { IdsDropdownMenuFooterComponent } from "./ids-dropdown-menu-footer.component";
@@ -32,6 +33,12 @@ import type { IdsDropdownMenuItemModel, IdsDropdownSelectionMode } from "./ids-d
 /** IDS field + menu minimum width (Figma / design-spec). */
 const DROPDOWN_MENU_MIN_WIDTH_PX = 186;
 const VIEWPORT_EDGE_PADDING_PX = 8;
+/** Figma attached-dropdown: overlap popup top border with field bottom border. */
+const DEFAULT_SIDE_OFFSET_PX = -1;
+/** Option row min-height (large) — used for `maxVisibleItems` scroll math. */
+const OPTION_ROW_HEIGHT_PX = 40;
+
+let listboxIdCounter = 0;
 
 type PopupHorizontalAlign = "start" | "end";
 type PopupPlacement = "below" | "above";
@@ -64,6 +71,7 @@ export class IdsDropdownMenuComponent
 
   @ViewChild("triggerMeasure") triggerMeasure?: ElementRef<HTMLElement>;
   @ViewChild("compositionSource") compositionSource?: ElementRef<HTMLElement>;
+  @ViewChild("searchIconEl") searchIconEl?: ElementRef<HTMLElement>;
 
   @ContentChild(IdsDropdownTriggerShellComponent) triggerShell?: IdsDropdownTriggerShellComponent;
   @ContentChildren(IdsDropdownMenuGroupComponent, { descendants: false })
@@ -77,8 +85,13 @@ export class IdsDropdownMenuComponent
 
   @Input() disabled = false;
   @Input() selectionMode: IdsDropdownSelectionMode = "none";
+  /** @deprecated Prefer `showRadio` (React/spec name). */
   @Input() showSingleSelectRadio = false;
+  /** Spec/React alias for radio option visuals. When set, wins over `showSingleSelectRadio`. */
+  @Input() showRadio?: boolean | null;
   @Input() showSelectAllClearAll = false;
+  /** Spec/React: single-select Clear All row below search when a value is selected. */
+  @Input() showClearAll = false;
   @Input() selectAllLabel = "Select All";
   @Input() clearAllLabel = "Clear All";
   @Input() selectAllChecked = false;
@@ -86,12 +99,29 @@ export class IdsDropdownMenuComponent
   @Input() clearAllDisabled = false;
   @Input() selectedValues: string[] = [];
   @Input() maxHeight?: number;
-  @Input() sideOffset = 0;
+  /**
+   * Spec/React: option rows shown before the list scrolls. Default `6`.
+   * Overridden when `maxHeight` is set explicitly.
+   */
+  @Input() maxVisibleItems = 6;
+  @Input() sideOffset = DEFAULT_SIDE_OFFSET_PX;
+  /** @deprecated Prefer `menuWidth` (React/spec name). */
   @Input() matchTriggerWidth = true;
+  /**
+   * Spec/React menu width mode.
+   * `"trigger"` (default) = match field width; `"content"` = grow to widest option.
+   * When set, overrides `matchTriggerWidth`.
+   */
+  @Input() menuWidth?: "trigger" | "content" | string;
   @Input() defaultOpen = false;
+  /** @deprecated Prefer `searchable` (React/spec name). */
   @Input() showSearch = false;
+  /** Spec/React alias — enables search row. When set, wins over `showSearch`. */
+  @Input() searchable?: boolean | null;
   @Input() searchValue = "";
   @Input() searchPlaceholder = "Search";
+  /** Spec/React: empty-search row label. */
+  @Input() noResultsLabel = "No results found";
   @Input() showSelectedPanel = false;
   @Input() showSelectedExpanded?: boolean;
   @Input() defaultShowSelectedExpanded = false;
@@ -100,16 +130,39 @@ export class IdsDropdownMenuComponent
   @Input() fullWidth = true;
   /** Space-separated id refs — set by `ids-dropdown` when helper/error slots register. */
   @Input() describedBy = "";
+  /** Spec/React a11y — forwarded to the trigger button. */
+  @Input() ariaLabel?: string;
+  @Input() ariaInvalid = false;
+  @Input() listboxId = `ids-dropdown-listbox-${++listboxIdCounter}`;
 
   get triggerAriaDescribedBy(): string | null {
     const ids = this.dropdown?.describedByIds() || this.describedBy;
     return ids || null;
   }
 
+  /** Resolved radio visibility (React `showRadio` preferred). */
+  get resolvedShowRadio(): boolean {
+    return this.showRadio ?? this.showSingleSelectRadio;
+  }
+
+  /** Resolved search row visibility (React `searchable` preferred). */
+  get resolvedSearchable(): boolean {
+    return this.searchable ?? this.showSearch;
+  }
+
+  /** Resolved trigger-width matching (React `menuWidth` preferred). */
+  get resolvedMatchTriggerWidth(): boolean {
+    if (this.menuWidth === "content") return false;
+    if (this.menuWidth === "trigger") return true;
+    return this.matchTriggerWidth;
+  }
+
   @Output() readonly openChange = new EventEmitter<boolean>();
   @Output() readonly searchValueChange = new EventEmitter<string>();
-  @Output() readonly selectAllClick = new EventEmitter<void>();
-  @Output() readonly clearAllClick = new EventEmitter<void>();
+  /** Emits visible option values while filtering; `undefined` when no filter (React parity). */
+  @Output() readonly selectAllClick = new EventEmitter<string[] | undefined>();
+  /** Emits visible option values while filtering; `undefined` when no filter (React parity). */
+  @Output() readonly clearAllClick = new EventEmitter<string[] | undefined>();
   @Output() readonly showSelectedExpandedChange = new EventEmitter<boolean>();
   @Output() readonly removeSelectedTag = new EventEmitter<string>();
   @Output() readonly showSelectedPanelClear = new EventEmitter<void>();
@@ -145,18 +198,22 @@ export class IdsDropdownMenuComponent
     if (changes["items"]) {
       this.rebuildResolvedItems();
     }
+    if (changes["selectedValues"]) {
+      this.syncTriggerShellFilled();
+    }
   }
 
   ngAfterContentInit(): void {
     if (this.dropdown) {
       this.selectionMode = this.dropdown.selectionMode;
-      this.showSingleSelectRadio = this.dropdown.showSingleSelectRadio;
+      this.showSingleSelectRadio = this.dropdown.resolvedShowRadio;
       this.selectedValues = [...this.dropdown.selectedValues];
       this.disabled = this.dropdown.disabled;
     }
 
     this.bindGroupListeners();
     this.rebuildResolvedItems();
+    this.syncTriggerShellFilled();
 
     this.groupQuery.changes.subscribe(() => {
       this.bindGroupListeners();
@@ -167,18 +224,20 @@ export class IdsDropdownMenuComponent
 
   ngAfterViewInit(): void {
     const el = this.triggerMeasure?.nativeElement;
-    if (!el || !this.matchTriggerWidth) {
-      return;
-    }
-    const updateLayout = () => this.updatePopupLayout();
-    updateLayout();
-    this.resizeObserver = new ResizeObserver(updateLayout);
-    this.resizeObserver.observe(el);
-    const field = el.querySelector(".field");
-    if (field instanceof HTMLElement) {
-      this.resizeObserver.observe(field);
+    if (el && this.resolvedMatchTriggerWidth) {
+      const updateLayout = () => this.updatePopupLayout();
+      updateLayout();
+      this.resizeObserver = new ResizeObserver(updateLayout);
+      this.resizeObserver.observe(el);
+      const field = el.querySelector(".field");
+      if (field instanceof HTMLElement) {
+        this.resizeObserver.observe(field);
+      }
     }
     this.rebuildResolvedItems();
+    if (this.isOpen) {
+      queueMicrotask(() => this.applySearchIconMask());
+    }
   }
 
   ngOnDestroy(): void {
@@ -211,6 +270,96 @@ export class IdsDropdownMenuComponent
     return Boolean(this.searchValue?.length);
   }
 
+  get hasSearchQuery(): boolean {
+    return (this.searchValue ?? "").trim().length > 0;
+  }
+
+  /** Filtered options (case-insensitive contains) — sections/dividers hidden while searching. */
+  get displayedItems(): IdsDropdownMenuItemModel[] {
+    if (!this.resolvedSearchable || !this.hasSearchQuery) {
+      return this.resolvedItems;
+    }
+    const query = this.searchValue.trim().toLowerCase();
+    return this.resolvedItems.filter((item) => {
+      if (item.kind === "section" || item.kind === "divider") {
+        return false;
+      }
+      return item.label.toLowerCase().includes(query);
+    });
+  }
+
+  get showNoResults(): boolean {
+    return this.resolvedSearchable && this.hasSearchQuery && this.displayedItems.length === 0;
+  }
+
+  get optionRowCount(): number {
+    return this.displayedItems.filter(
+      (item) => item.kind !== "section" && item.kind !== "divider",
+    ).length;
+  }
+
+  /** Select All / Clear All row — hidden while searching if fewer than 2 matches. */
+  get showSelectAllRow(): boolean {
+    return this.showSelectAllClearAll && (!this.hasSearchQuery || this.optionRowCount >= 2);
+  }
+
+  /**
+   * Single-select Clear All (spec `showClearAll`): below search when a value is
+   * selected; hidden while a search query is active (Figma / React parity).
+   */
+  get showSingleClearAllRow(): boolean {
+    return (
+      this.selectionMode === "single" &&
+      this.showClearAll &&
+      this.resolvedSelectedValues.length > 0 &&
+      !this.hasSearchQuery
+    );
+  }
+
+  get showSelectedPanelVisible(): boolean {
+    return (
+      this.showSelectedPanel &&
+      this.selectionMode === "multi" &&
+      this.resolvedSelectedValues.length > 0 &&
+      !this.showNoResults
+    );
+  }
+
+  get visibleSelectableValues(): string[] {
+    return this.displayedItems
+      .filter((item) => item.kind !== "section" && item.kind !== "divider" && item.selectable)
+      .map((item) => item.value ?? item.label);
+  }
+
+  get effectiveSelectAllChecked(): boolean {
+    if (!this.hasSearchQuery) {
+      return this.selectAllChecked;
+    }
+    const visible = this.visibleSelectableValues;
+    return (
+      visible.length > 0 &&
+      visible.every((value) => this.resolvedSelectedValues.includes(value))
+    );
+  }
+
+  get effectiveSelectAllIndeterminate(): boolean {
+    if (!this.hasSearchQuery) {
+      return this.selectAllIndeterminate;
+    }
+    const visible = this.visibleSelectableValues;
+    const some = visible.some((value) => this.resolvedSelectedValues.includes(value));
+    return some && !this.effectiveSelectAllChecked;
+  }
+
+  get effectiveClearAllDisabled(): boolean {
+    if (!this.hasSearchQuery) {
+      return this.clearAllDisabled;
+    }
+    return !this.visibleSelectableValues.some((value) =>
+      this.resolvedSelectedValues.includes(value),
+    );
+  }
+
   get selectedTagItems(): { value: string; label: string }[] {
     return this.resolvedSelectedValues.map((value) => {
       const item = this.resolvedItems.find((entry) => entry.value === value || entry.label === value);
@@ -219,24 +368,27 @@ export class IdsDropdownMenuComponent
   }
 
   get effectivePopupWidth(): number | undefined {
-    if (!this.matchTriggerWidth || !this.triggerWidth) {
+    if (!this.resolvedMatchTriggerWidth || !this.triggerWidth) {
       return undefined;
     }
     return Math.max(this.triggerWidth, DROPDOWN_MENU_MIN_WIDTH_PX);
   }
 
   get popupStyle(): Record<string, string> {
+    const style: Record<string, string> = {};
     const width = this.effectivePopupWidth;
-    if (!width) {
-      return {};
+    if (width) {
+      const px = `${width}px`;
+      style.width = px;
+      style.minWidth = px;
+      style.maxWidth = px;
+      style["--dropdown-trigger-width"] = px;
     }
-    const px = `${width}px`;
-    return {
-      width: px,
-      minWidth: px,
-      maxWidth: px,
-      "--dropdown-trigger-width": px,
-    };
+    // Combobox popup min-height (Figma): search only 212; search + Select All 252.
+    if (this.resolvedSearchable) {
+      style.minHeight = this.showSelectAllRow ? "252px" : "212px";
+    }
+    return style;
   }
 
   get positionerStyle(): Record<string, string> | undefined {
@@ -255,10 +407,12 @@ export class IdsDropdownMenuComponent
   }
 
   get optionsScrollStyle(): Record<string, string> | undefined {
-    if (!this.maxHeight) {
-      return undefined;
+    const threshold = this.maxVisibleItems;
+    const effectiveMaxHeight = this.maxHeight ?? threshold * OPTION_ROW_HEIGHT_PX;
+    if (this.optionRowCount > threshold || this.maxHeight != null) {
+      return { maxHeight: `${effectiveMaxHeight}px`, overflowY: "auto" };
     }
-    return { maxHeight: `${this.maxHeight}px`, overflowY: "auto" };
+    return undefined;
   }
 
   @HostListener("document:click", ["$event"])
@@ -294,7 +448,10 @@ export class IdsDropdownMenuComponent
     this.isOpen = next;
     this.openChange.emit(next);
     if (next) {
-      queueMicrotask(() => this.updatePopupLayout());
+      queueMicrotask(() => {
+        this.updatePopupLayout();
+        this.applySearchIconMask();
+      });
     }
     this.cdr.markForCheck();
   }
@@ -313,11 +470,33 @@ export class IdsDropdownMenuComponent
   }
 
   onSelectAll(): void {
-    this.selectAllClick.emit();
+    this.selectAllClick.emit(this.hasSearchQuery ? this.visibleSelectableValues : undefined);
   }
 
   onClearAll(): void {
-    this.clearAllClick.emit();
+    this.clearAllClick.emit(this.hasSearchQuery ? this.visibleSelectableValues : undefined);
+    // Multi-select Clear All collapses the menu (Figma combo-box / React parity).
+    // Single-select Clear All keeps the menu open (spec).
+    if (this.selectionMode === "multi") {
+      this.setOpen(false);
+    }
+  }
+
+  /** Apply search glyph mask via DOM — Angular sanitizes `url(...)` in bindings. */
+  private applySearchIconMask(): void {
+    const el = this.searchIconEl?.nativeElement;
+    if (!el) {
+      return;
+    }
+    const mask = `url("${idsAssetUrl("icons/search-16.svg")}")`;
+    el.style.setProperty("mask-image", mask);
+    el.style.setProperty("-webkit-mask-image", mask);
+    el.style.setProperty("mask-size", "contain");
+    el.style.setProperty("-webkit-mask-size", "contain");
+    el.style.setProperty("mask-repeat", "no-repeat");
+    el.style.setProperty("-webkit-mask-repeat", "no-repeat");
+    el.style.setProperty("mask-position", "center");
+    el.style.setProperty("-webkit-mask-position", "center");
   }
 
   onFooterAction(): void {
@@ -444,7 +623,7 @@ export class IdsDropdownMenuComponent
   }
 
   private updatePopupLayout(): void {
-    if (!this.matchTriggerWidth) {
+    if (!this.resolvedMatchTriggerWidth) {
       return;
     }
 
@@ -473,6 +652,16 @@ export class IdsDropdownMenuComponent
     if (changed) {
       this.cdr.markForCheck();
     }
+  }
+
+  /** Keep trigger shell `filled` in sync with selection (React parity). */
+  syncTriggerShellFilled(): void {
+    if (!this.triggerShell) {
+      return;
+    }
+    this.triggerShell.filled = this.resolvedSelectedValues.length > 0;
+    this.triggerShell.cdr.markForCheck();
+    this.cdr.markForCheck();
   }
 
   private resolvePopupAlignment(

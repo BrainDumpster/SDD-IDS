@@ -12,45 +12,67 @@ Composition dropdown for combobox and select modes (single/multi).
 | Input | Type | Default |
 |-------|------|---------|
 | \`mode\` | \`IdsDropdownMode\` | \`"single-select"\` |
-| \`disabled\` | \`—\` | \`false\` |
-| \`showSingleSelectRadio\` | \`—\` | \`false\` |
+| \`disabled\` | \`boolean\` | \`false\` |
+| \`showRadio\` | \`boolean\` | \`false\` (React/spec; preferred) |
+| \`showSingleSelectRadio\` | \`boolean\` | \`false\` (legacy alias of \`showRadio\`) |
+| \`value\` | \`string\` | — |
 | \`values\` | \`string[]\` | \`[]\` |
+| \`defaultValue\` | \`string\` | — |
 | \`defaultValues\` | \`string[]\` | \`[]\` |
 
 ### \`ids-dropdown-menu-item\`
 
 | Input | Type | Default |
 |-------|------|---------|
-| \`disabled\` | \`—\` | \`false\` |
+| \`value\` | \`string\` | required |
+| \`label\` | \`string\` | required |
+| \`disabled\` | \`boolean\` | \`false\` |
 
 ### \`ids-dropdown-menu\`
 
 | Input | Type | Default |
 |-------|------|---------|
+| \`searchable\` | \`boolean\` | \`false\` (React/spec; preferred) |
+| \`showSearch\` | \`boolean\` | \`false\` (legacy alias of \`searchable\`) |
+| \`showClearAll\` | \`boolean\` | \`false\` (single-select Clear All below search) |
+| \`showSelectAllClearAll\` | \`boolean\` | \`false\` (multiselect Select All / Clear All row) |
+| \`selectAllLabel\` | \`string\` | \`"Select All"\` |
+| \`clearAllLabel\` | \`string\` | \`"Clear All"\` |
+| \`clearAllDisabled\` | \`boolean\` | \`false\` |
+| \`maxVisibleItems\` | \`number\` | \`6\` (React/spec — rows before scroll) |
+| \`noResultsLabel\` | \`string\` | \`"No results found"\` |
+| \`searchPlaceholder\` | \`string\` | \`"Search"\` |
+| \`ariaLabel\` | \`string\` | — (trigger aria-label) |
+| \`ariaInvalid\` | \`boolean\` | \`false\` |
+| \`listboxId\` | \`string\` | auto-generated |
+| \`showRadio\` | \`boolean\` | \`false\` (React/spec; preferred) |
+| \`showSingleSelectRadio\` | \`boolean\` | \`false\` (legacy alias of \`showRadio\`) |
+| \`menuWidth\` | \`"trigger" \\| "content"\` | \`"trigger"\` (React/spec; preferred) |
+| \`matchTriggerWidth\` | \`boolean\` | \`true\` (legacy alias of \`menuWidth\`) |
 | \`items\` | \`IdsDropdownMenuItemModel[]\` | \`[]\` |
-| \`disabled\` | \`—\` | \`false\` |
+| \`disabled\` | \`boolean\` | \`false\` |
 | \`selectionMode\` | \`IdsDropdownSelectionMode\` | \`"none"\` |
-| \`showSingleSelectRadio\` | \`—\` | \`false\` |
-| \`showSelectAllClearAll\` | \`—\` | \`false\` |
-| \`selectAllLabel\` | \`—\` | \`"Select All"\` |
-| \`clearAllLabel\` | \`—\` | \`"Clear All"\` |
-| \`selectAllChecked\` | \`—\` | \`false\` |
-| \`selectAllIndeterminate\` | \`—\` | \`false\` |
-| \`clearAllDisabled\` | \`—\` | \`false\` |
+| \`selectAllChecked\` | \`boolean\` | \`false\` |
+| \`selectAllIndeterminate\` | \`boolean\` | \`false\` |
 | \`selectedValues\` | \`string[]\` | \`[]\` |
-| \`sideOffset\` | \`—\` | \`0\` |
-| \`matchTriggerWidth\` | \`—\` | \`true\` |
-| \`defaultOpen\` | \`—\` | \`false\` |
+| \`sideOffset\` | \`number\` | \`-1\` |
+| \`defaultOpen\` | \`boolean\` | \`false\` |
+| \`showSelectedPanel\` | \`boolean\` | \`false\` |
+| \`fullWidth\` | \`boolean\` | \`true\` |
 
 ### \`ids-dropdown-trigger-shell\`
 
 | Input | Type | Default |
 |-------|------|---------|
 | \`size\` | \`IdsDropdownSize\` | \`"large"\` |
-| \`disabled\` | \`—\` | \`false\` |
-| \`error\` | \`—\` | \`false\` |
-| \`hover\` | \`—\` | \`false\` |
-| \`focusVisible\` | \`—\` | \`false\` |
+| \`disabled\` | \`boolean\` | \`false\` |
+| \`error\` | \`boolean\` | \`false\` |
+| \`hover\` | \`boolean\` | \`false\` |
+| \`focusVisible\` | \`boolean\` | \`false\` |
+| \`filled\` | \`boolean\` | \`false\` |
+| \`showSelectedBadge\` | \`boolean\` | \`true\` (React/spec — count badge when selected) |
+| \`showSelectedTooltip\` | \`boolean\` | \`true\` (React/spec — summary tooltip on badge) |
+| \`selectedLabels\` | \`string[]\` | \`[]\` (drives badge count + tooltip body) |
 
 ## Events
 
@@ -62,8 +84,8 @@ Composition dropdown for combobox and select modes (single/multi).
 | \`action\` | \`ids-dropdown-menu-footer\` | \`void\` |
 | \`openChange\` | \`ids-dropdown-menu\` | \`boolean\` |
 | \`searchValueChange\` | \`ids-dropdown-menu\` | \`string\` |
-| \`selectAllClick\` | \`ids-dropdown-menu\` | \`void\` |
-| \`clearAllClick\` | \`ids-dropdown-menu\` | \`void\` |
+| \`selectAllClick\` | \`ids-dropdown-menu\` | \`string[] \\| undefined\` (visible values while filtering) |
+| \`clearAllClick\` | \`ids-dropdown-menu\` | \`string[] \\| undefined\` (visible values while filtering) |
 | \`showSelectedExpandedChange\` | \`ids-dropdown-menu\` | \`boolean\` |
 | \`removeSelectedTag\` | \`ids-dropdown-menu\` | \`string\` |
 | \`showSelectedPanelClear\` | \`ids-dropdown-menu\` | \`void\` |
@@ -88,7 +110,7 @@ import { IDS_DROPDOWN_IMPORTS } from "./ids-dropdown/ids-dropdown.imports";
   imports: [...IDS_DROPDOWN_IMPORTS],
   template: \`
     <ids-dropdown mode="combobox-single" [value]="selected" (valueChange)="selected = $event">
-      <ids-dropdown-menu [showSearch]="true" [maxHeight]="220">
+      <ids-dropdown-menu [searchable]="true" [maxHeight]="220">
         <ids-dropdown-trigger-shell>
           <span>{{ selected || 'Select product' }}</span>
         </ids-dropdown-trigger-shell>
@@ -108,7 +130,7 @@ bootstrapApplication(AppComponent, {
 });`;
 
 export const DROPDOWN_STORY_SOURCE_CODE = `<ids-dropdown mode="combobox-single" [value]="selected" (valueChange)="selected = $event">
-  <ids-dropdown-menu [showSearch]="true" [defaultOpen]="true">
+  <ids-dropdown-menu [searchable]="true" [defaultOpen]="true">
     <ids-dropdown-trigger-shell>
       <span>{{ selected || 'Select' }}</span>
     </ids-dropdown-trigger-shell>
@@ -120,7 +142,7 @@ export const DROPDOWN_STORY_SOURCE_CODE = `<ids-dropdown mode="combobox-single" 
 
 export const DROPDOWN_COMPOSITION_DEMO_TEMPLATE = `
 <ids-dropdown mode="combobox-single" [value]="selected" (valueChange)="selected = $event">
-  <ids-dropdown-menu [showSearch]="true" [defaultOpen]="true" [maxHeight]="220">
+  <ids-dropdown-menu [searchable]="true" [defaultOpen]="true" [maxHeight]="220">
     <ids-dropdown-trigger-shell>
       <span>{{ selected || 'Select product' }}</span>
     </ids-dropdown-trigger-shell>
