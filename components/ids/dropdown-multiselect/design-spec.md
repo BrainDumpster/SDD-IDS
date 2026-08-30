@@ -163,6 +163,10 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Badge + tooltip:
   - selected count badge updates with selected length.
   - tooltip content shows selected summary/details when enabled.
+- Field hover tooltip:
+  - when the `FieldContainer` is hovered, an `IdsTooltip` is shown (e.g. when the field value is truncated or a selected summary is requested).
+  - the tooltip uses the IDS Tooltip `Header` slot as a section header, followed by `BodyContent` for the full value or selected summary.
+  - section header style follows the dropdown `SectionHeaderRow` contract: top border `var(--color-border-accessible)`, text `var(--color-text-neutral)`, vertical padding `var(--padding-padding-6)`.
 - Optional action row:
   - user-defined label
   - emits explicit action event.
@@ -284,6 +288,11 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ---
 
 ## Implementation Notes
+
+### 2026-08-30
+- **Field text tooltip with section header (multi-select)** — `IdsDropdownMultiSelect.stories.tsx` `FieldValue` wraps the truncated selected list in `IdsTooltip` with `title="${selectedCount} Items"` (matching the badge tooltip) and `content` as the full comma-separated selected list. Tooltip only renders when `scrollWidth > clientWidth`.
+- **Show Selected panel above Select All / Clear All** — `IdsDropdownMultiSelect.stories.tsx` multi-select stories with `showSelectedPanel` also pass `showSelectedFirst` so the `Show Selected / Hide Selected` toggle is rendered before the `Select All | Clear All` row.
+- **Options list 1px inset padding** — `DropdownMenu.module.css` `.optionsScrollViewport` now has `padding-inline: 1px` so the option rows sit 1px inside the menu border, matching the App Launcher options list.
 
 ### 2026-08-13
 - **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.

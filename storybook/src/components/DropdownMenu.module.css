@@ -315,6 +315,8 @@
   box-sizing: border-box;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* App Launcher parity: the options list sits 1px inside the menu border. */
+  padding-inline: 1px;
   /* Hide the native scrollbar — the overlay scrollbar below draws on top
      without taking layout space, so option rows keep their full width. */
   scrollbar-width: none;

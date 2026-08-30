@@ -16,7 +16,15 @@ type UserOption = { id: string; label: string; disabled?: boolean };
  * selection (Figma combo-box behavior: "if truncated, tooltip displays the
  * selected item" / "tooltip reveals the list of selected items").
  */
-function TruncatingValue({ text, tooltip }: { text: string; tooltip?: string }) {
+function TruncatingValue({
+  text,
+  tooltip,
+  tooltipTitle,
+}: {
+  text: string;
+  tooltip?: string;
+  tooltipTitle?: string;
+}) {
   const [truncated, setTruncated] = useState(false);
   const observerRef = useRef<ResizeObserver | null>(null);
 
@@ -35,14 +43,20 @@ function TruncatingValue({ text, tooltip }: { text: string; tooltip?: string }) 
   const valueSpan = (
     <span
       ref={measureRef}
-      style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+      style={{
+        display: "block",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        cursor: "pointer",
+      }}
     >
       {text}
     </span>
   );
 
   return truncated && tooltip ? (
-    <IdsTooltip side="top" arrowAlign="start" content={tooltip} triggerDisplay="block">
+    <IdsTooltip side="top" arrowAlign="start" title={tooltipTitle} content={tooltip} triggerDisplay="block">
       {valueSpan}
     </IdsTooltip>
   ) : (
@@ -88,11 +102,9 @@ function ComboTrigger({
       left={
         badgeVisible ? (
           <>
-            {/* Badge carries the tooltip revealing the selected list (Figma 4k),
-                so the list text itself doesn't need a second tooltip.
-                `flexShrink: 0` keeps the badge at its natural size — `.main`'s
-                `min-width: 0` (needed for the list truncation) would otherwise
-                let a 2+ digit badge shrink and overlap the text. */}
+            {/* Badge and truncated text each get a tooltip. The text tooltip
+                uses a section header so the full selected list is available on
+                hover even when the badge is not targeted. */}
             <span style={{ display: "inline-flex", flexShrink: 0 }}>
               <IdsTooltip side="top" arrowAlign="start" title={`${selectedCount} Items`} content={value ?? ""}>
                 <span style={{ display: "inline-flex" }}>
@@ -100,7 +112,7 @@ function ComboTrigger({
                 </span>
               </IdsTooltip>
             </span>
-            <TruncatingValue text={value || placeholder} />
+            <TruncatingValue text={value || placeholder} tooltip={value} tooltipTitle={`${selectedCount} Items`} />
           </>
         ) : (
           <TruncatingValue text={value || placeholder} tooltip={value} />
@@ -337,6 +349,7 @@ export const MultiSelectContractManual: Story = {
           }
           clearAllDisabled={selected.length === 0}
           showSelectedPanel
+          showSelectedFirst
           showSelectedExpanded={showSelectedExpanded}
           onShowSelectedExpandedChange={setShowSelectedExpanded}
           onRemoveSelectedTag={(value) => applySelection(selected.filter((entry) => entry !== value))}
@@ -435,6 +448,7 @@ export const MultiSelectLongOption: Story = {
           }
           clearAllDisabled={selected.length === 0}
           showSelectedPanel
+          showSelectedFirst
           showSelectedExpanded={showSelectedExpanded}
           onShowSelectedExpandedChange={setShowSelectedExpanded}
           onRemoveSelectedTag={(value) => applySelection(selected.filter((entry) => entry !== value))}

@@ -277,6 +277,11 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - [ ] Accessibility semantics and keyboard behavior pass parity checks.
 ## Implementation Notes
 
+### 2026-08-30
+- **Field text tooltip with section header (multi-select)** — `IdsDropdownComboBox.stories.tsx` `TruncatingValue` now accepts a `tooltipTitle` and renders an `IdsTooltip` on the truncated field text with the same `${selectedCount} Items` header as the badge. The tooltip only appears when the text is actually cut off.
+- **Show Selected panel above Select All / Clear All** — `IdsDropdownComboBox.stories.tsx` multi-select stories pass `showSelectedFirst` to `DropdownMenu` so the `Show Selected / Hide Selected` toggle is rendered before the `Select All | Clear All` row.
+- **Options list 1px inset padding** — `DropdownMenu.module.css` `.optionsScrollViewport` now has `padding-inline: 1px` so the option rows sit 1px inside the menu border, matching the App Launcher options list.
+
 ### 2026-08-13
 - **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
 - **Cross-section keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags); `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags. `Tab` still traverses every tabbable control.
