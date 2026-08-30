@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "./Button";
 import { Icon } from "./Icon";
 import styles from "./IdsTimePicker.module.css";
 
@@ -8,6 +9,7 @@ export interface IdsTimePickerProps {
   size?: "large" | "small";
   placeholder?: string;
   label?: string;
+  required?: boolean;
   formatHint?: string;
   clockType?: "12h" | "24h";
   showSeconds?: boolean;
@@ -71,13 +73,13 @@ function TimeColumn({
   return (
     <div className={styles.timeColumn} role="group" aria-label={label}>
       <button type="button" className={`${styles.arrowBtn} ${styles.arrowUp}`} onClick={onUp} disabled={disabled} aria-label={`Increase ${label}`}>
-        <Icon shapeName="arrow-tri-down-solid" style={{ width: 10, height: 10 }} />
+        <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
       <div className={styles.valueCell} aria-live="polite">
         {display}
       </div>
       <button type="button" className={styles.arrowBtn} onClick={onDown} disabled={disabled} aria-label={`Decrease ${label}`}>
-        <Icon shapeName="arrow-tri-down-solid" style={{ width: 10, height: 10 }} />
+        <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
     </div>
   );
@@ -89,6 +91,7 @@ export function IdsTimePicker({
   size = "large",
   placeholder = "HH:MM AM/PM",
   label,
+  required = false,
   formatHint = "HH:MM AM/PM",
   clockType = "12h",
   showSeconds = false,
@@ -195,7 +198,14 @@ export function IdsTimePicker({
 
   return (
     <div className={styles.root} ref={rootRef} onKeyDown={handleKeyDown}>
-      {label && <span className={styles.label}>{label}</span>}
+      {label && (
+        <div className={`${styles.label}${size === "small" ? ` ${styles.labelSmall}` : ""}`}>
+          <div className={styles.labelInner}>
+            <span className={styles.labelText}>{label}</span>
+            {required && <span className={styles.labelRequired}>*</span>}
+          </div>
+        </div>
+      )}
       <div className={styles.fieldGroup}>
         <div className={styles.positionWrapper}>
           <div className={fieldClasses}>
@@ -213,18 +223,27 @@ export function IdsTimePicker({
             disabled={disabled}
             aria-label={label || "Time"}
           />
-          <button
+          <Button
             type="button"
-            className={`${styles.clockIconBtn} ${error ? styles.error : ""}`}
+            variant="tertiary"
+            size={size === "large" ? "lg" : "md"}
+            iconOnly
+            icon={<Icon shapeName="time-clock-16" style={{ width: 16, height: 16 }} />}
+            onMouseDown={() => {
+              if (!disabled) {
+                window.getSelection()?.removeAllRanges();
+              }
+            }}
             onClick={() => {
-              if (!disabled) setOpen((v) => !v);
+              if (!disabled) {
+                setOpen((v) => !v);
+              }
             }}
             disabled={disabled}
             aria-label="Open time picker"
             aria-expanded={open}
-          >
-            <Icon shapeName="time-clock-16" style={{ width: 16, height: 16 }} />
-          </button>
+            className={styles.clockButton}
+          />
         </div>
 
         {open && !disabled && (

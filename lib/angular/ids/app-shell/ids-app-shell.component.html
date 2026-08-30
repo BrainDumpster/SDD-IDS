@@ -1,0 +1,49 @@
+<div
+  #shellRoot
+  [class]="rootClass"
+  data-ids="IdsAppShell"
+  [attr.data-breakpoint-preset]="resolvedBreakpointPreset"
+>
+  <div class="IdsAppShellMastheadSlot" data-ids="IdsAppShellMastheadSlot">
+    <ids-masthead [productName]="resolvedMastheadProductName">
+      @if (resolvedMastheadProductIconSlug) {
+        <ids-masthead-logo>
+          <span class="IdsAppShellMastheadLogo" aria-hidden="true">
+            <ids-icon
+              [shape]="resolvedMastheadProductIconSlug"
+              variant="img"
+              [size]="32"
+            />
+          </span>
+        </ids-masthead-logo>
+      }
+
+      <!--
+        Bridge wrappers live in AppShell's view as Masthead content (React iconsSlot / appLauncherSlot / avatarSlot).
+        TemplateRef inputs avoid fragile nested ng-content; projection remains as a fallback.
+      -->
+      <div mastheadIcons class="ids-app-shell__slot-bridge">
+        @if (headerActions) {
+          <ng-container *ngTemplateOutlet="headerActions" />
+        }
+        <ng-content select="ids-app-shell-header-actions, ids-masthead-action-button-container" />
+      </div>
+
+      <div mastheadLauncher class="ids-app-shell__slot-bridge">
+        @if (appLauncherSlot) {
+          <ng-container *ngTemplateOutlet="appLauncherSlot" />
+        }
+        <ng-content select="ids-app-launcher, [mastheadAppLauncher]" />
+      </div>
+
+      <div mastheadAvatar class="ids-app-shell__slot-bridge">
+        @if (avatarSlot) {
+          <ng-container *ngTemplateOutlet="avatarSlot" />
+        }
+        <ng-content select="ids-masthead-avatar" />
+      </div>
+    </ids-masthead>
+  </div>
+
+  <ids-app-shell-body-row />
+</div>

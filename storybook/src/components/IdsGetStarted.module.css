@@ -1,15 +1,24 @@
 .shell {
   --gs-card-width: 321px;
   --gs-hero-height: 272px;
+  /* Figma Overflow `12189:232209` on `12189:233198`: y=275 (Header ends y=272) */
+  --gs-overflow-top: 275px;
   --gs-masthead-height: 56px;
+  --gs-hero-card-gap: 80px;
+  --gs-overflow-width: 157px;
+  /* Badge: 16px pad + 32px icon + 16px pad = 64px; half protrudes above card top border */
+  --gs-icon-badge-size: 64px;
+  --gs-icon-badge-half: 32px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: 0;
   width: 100%;
   min-height: 100%;
-  background: var(--color-background-surface-1);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-primary);
+  color: var(--color-text-gray-neutral);
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .hero {
@@ -17,16 +26,21 @@
   flex: 0 0 auto;
   width: 100%;
   height: var(--gs-hero-height);
+  /* Above Overflow so banner + bottom shadow (`12189:232065`) are never covered */
+  z-index: 5;
   filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.25));
 }
 
+/* Brand fill — Figma `Bachground color` `12189:231402` */
 .heroBackground {
   position: absolute;
   inset: 0;
-  background: var(--color-background-masthead-brand-base);
-  overflow: hidden;
+  background: var(--color-background-masthead-base);
+  border-radius: var(--corner-radius-radius-none, 0);
+  z-index: 0;
 }
 
+/* Figma `Shadow` `12189:231403` — under honeycomb (Background paint order) */
 .heroShadowBand {
   position: absolute;
   left: 0;
@@ -34,6 +48,37 @@
   top: 251px;
   height: 21px;
   background: linear-gradient(to bottom, rgba(37, 37, 37, 0), rgba(0, 0, 0, 0.2));
+  pointer-events: none;
+  z-index: 0;
+}
+
+/*
+ * Figma `HoneyComb 1` `12189:231404` inside Background `12189:231401`.
+ * Hero banner only (not Masthead). White hex lines on transparent @ opacity 0.15.
+ * Do NOT use Dev Mode `lightgray` fallback — it washes brand blue through transparent PNG.
+ */
+.heroHoneycomb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--gs-hero-height);
+  border-radius: var(--corner-radius-radius-none, 0);
+  opacity: 0.15;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.heroHoneycombImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
   pointer-events: none;
 }
 
@@ -47,8 +92,9 @@
   align-items: center;
   gap: var(--spacing-space-16, 16px);
   text-align: center;
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   max-width: min(654px, calc(100% - 48px));
+  z-index: 1;
 }
 
 .heroTitle {
@@ -73,7 +119,13 @@
   left: 0;
   right: 0;
   height: var(--gs-masthead-height);
+  /* Opaque brand strip so honeycomb stays under hero banner only, not Masthead chrome */
+  background: var(--color-background-masthead-base);
   z-index: 2;
+}
+
+.mastheadSlotActionsDisabled {
+  pointer-events: none;
 }
 
 .container {
@@ -82,14 +134,19 @@
   align-items: center;
   gap: var(--spacing-space-32, 32px);
   width: 100%;
+  margin-top: var(--gs-hero-card-gap);
   padding: 0 var(--padding-padding-16, 16px) var(--padding-padding-24, 24px);
   box-sizing: border-box;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
 }
 
 .cardViewport {
   position: relative;
   width: 100%;
   max-width: 100%;
+  overflow: visible;
 }
 
 .cardTrack {
@@ -97,30 +154,69 @@
   flex-direction: row;
   align-items: flex-start;
   gap: var(--spacing-space-24, 24px);
-  overflow-x: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
-  padding: 40px 0 8px;
-  scrollbar-width: thin;
+  /*
+   * Reserve space for icon badge above card tops without shifting card border down.
+   * Native scrollbar is always hidden — overflow affordance is left/right overlays only.
+   */
+  padding-top: var(--gs-icon-badge-half);
+  margin-top: calc(-1 * var(--gs-icon-badge-half));
+  padding-bottom: var(--padding-padding-8, 8px);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cardTrack::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.cardTrackOverflow {
+  overflow-x: auto;
 }
 
 .cardTrackNoOverflow {
-  overflow-x: visible;
+  overflow-x: hidden;
   justify-content: center;
   flex-wrap: nowrap;
 }
 
-.card {
+.cardAnchor {
   position: relative;
   flex: 0 0 var(--gs-card-width);
   width: var(--gs-card-width);
+  overflow: visible;
+  isolation: isolate;
+}
+
+.card {
+  position: relative;
+  width: 100%;
   min-height: 514px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-radius: var(--corner-radius-radius-8, 8px);
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
   box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Mask top border segment behind icon so badge reads as sitting on the card edge */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--gs-icon-badge-size) + 4px);
+  height: calc(var(--gs-icon-badge-half) + 2px);
+  background: var(--color-background-surface-primary);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .cardTitleBand {
@@ -157,45 +253,49 @@
   margin: 0;
   font-size: var(--font-size-body-2, 14px);
   line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-critical);
+  color: var(--color-text-alerting-critical-base);
 }
 
 .iconBadge {
   position: absolute;
-  top: -33px;
-  left: calc(50% + 0.5px);
-  transform: translateX(-50%);
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: var(--gs-icon-badge-size);
+  height: var(--gs-icon-badge-size);
   padding: var(--padding-padding-16, 16px);
   border-radius: var(--corner-radius-radius-round, 999999px);
   box-sizing: border-box;
+  pointer-events: none;
 }
 
 .iconBadgeIncomplete {
-  background: var(--color-background-surface-2);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-surface-secondary);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
 }
 
 .iconBadgeCompleted {
-  background: var(--color-icon-alerting-success);
+  background: var(--color-icon-alerting-success-base);
   border: none;
 }
 
 .cardIcon {
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-accessible);
 }
 
 .cardIconCompleted {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 
 .contentPanel {
   width: 100%;
   box-sizing: border-box;
-  background: var(--color-background-surface-2);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-surface-secondary);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-radius: var(--corner-radius-radius-8, 8px);
   padding: var(--padding-padding-24, 24px);
   display: flex;
@@ -215,14 +315,14 @@
   font-family: var(--typography-font-style-primary, Roboto, sans-serif);
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .note {
   margin: 0;
   font-size: var(--font-size-body-2, 14px);
   line-height: var(--font-line-height-line-height-25, 25px);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .noteLabel {
@@ -243,15 +343,15 @@
 
 .configureButtonEnabled,
 .skipButtonEnabled {
-  background: var(--color-background-controls-brand-base);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-transparent-brand);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
 }
 
 .configureButtonDisabled {
   background: var(--color-background-gray-lighter);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
 }
 
@@ -262,52 +362,86 @@
 
 .skipButtonDisabled {
   background: var(--color-background-gray-lighter);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
 }
 
 .overflowEdge {
+  /*
+   * Figma Overflow `12189:232209` on variant `12189:233198`:
+   *   x=1763, y=275, w=157, h=720 (parent 1920×995)
+   * Arrow `12189:232211` Dev Mode:
+   *   width 157 (= 137 content + padding-10×2)
+   *   height 720 (= 700 content + padding-10×2)
+   *   padding: var(--padding-padding-10, 10px)
+   *   display: flex; justify-content: center; align-items: center; gap: space-10
+   */
   position: absolute;
-  bottom: 0;
-  width: 157px;
-  height: 100%;
+  top: var(--gs-overflow-top);
+  width: var(--gs-overflow-width);
+  height: 720px;
   pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 3;
+  box-sizing: border-box;
 }
 
 .overflowEdgeRight {
+  /* Flush with Header/banner right edge — Figma `right-0` on root */
   right: 0;
+  left: auto;
 }
 
 .overflowEdgeLeft {
+  /* Page 2 `42682:125703`: left edge + rotate(180deg) */
   left: 0;
+  right: auto;
   transform: rotate(180deg);
+  transform-origin: center center;
 }
 
 .overflowGradient {
+  /* Figma Gradient host `12189:232210`: h=720; runtime width fills Overflow parent (157) */
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 129px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 720px;
   background: linear-gradient(
     to right,
-    var(--color-gradient-overflow-horizontal-start) 0%,
+    var(--color-gradient-overflow-horizontal-end) 0%,
     var(--color-gradient-overflow-horizontal-middle) 46.146%,
-    var(--color-gradient-overflow-horizontal-end) 100%
+    var(--color-gradient-overflow-horizontal-start) 100%
   );
+  pointer-events: none;
 }
 
+/* Arrow `12189:232211` — Dev Mode: height 720, padding 10, flex center; width fills Overflow parent */
+.overflowArrow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: 720px;
+  padding: var(--padding-padding-10, 10px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-space-10, 10px);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+/* Chevron instance `12189:232212`: x=100.5, y=344, 32×32 inside Arrow */
 .overflowNavButton {
   position: absolute;
   left: 100.5px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 344px;
+  z-index: 1;
   width: 32px;
   height: 32px;
   padding: 0;
+  margin: 0;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -315,7 +449,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-accessible);
+  flex-shrink: 0;
 }
 
 .overflowNavButton:focus-visible {

@@ -43,7 +43,7 @@ const sharedCheckboxStoryStyles = `
     text-transform: uppercase;
     opacity: 0.72;
     padding-bottom: 6px;
-    border-bottom: 1px solid var(--color-border-accessible, #757575);
+    border-bottom: 1px solid var(--color-border-gray-neutral-base, #757575);
   }
   .sbHarnessTitle {
     font-size: 12px;
@@ -67,7 +67,7 @@ const sharedCheckboxStoryStyles = `
 `;
 
 const meta: Meta<typeof IdsCheckbox> = {
-  title: "Spec Generated/IDS/Checkbox",
+  title: "Components/IDS/Checkbox",
   component: IdsCheckbox,
   parameters: { layout: "padded" },
   decorators: [

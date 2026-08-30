@@ -23,13 +23,13 @@
   font-size: var(--font-size-body-2);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .value {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .inlineRow {
@@ -49,7 +49,7 @@
   width: 36px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   text-align: left;
 }
 
@@ -81,7 +81,7 @@
   inset: 0;
   z-index: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--progress-bar-control-radius);
   background: var(--color-background-gray-light);
   clip-path: inset(0 0 0 var(--progress-clip, 0%));
@@ -113,17 +113,17 @@
 }
 
 .completed-success .indicator {
-  background: var(--color-background-alerting-success);
+  background: var(--color-background-alerting-success-base);
   border-color: var(--color-border-alerting-success-base);
 }
 
 .completed-warning .indicator {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
 }
 
 .failed-error .indicator {
-  background: var(--color-background-alerting-critical);
+  background: var(--color-background-alerting-critical-base);
   border-color: var(--color-border-alerting-critical-base);
 }
 
@@ -141,7 +141,7 @@
 }
 
 .root[data-value-full="true"].completed-warning .indicator {
-  border-right-color: var(--color-border-alerting-minor-transparent);
+  border-right-color: var(--color-border-alerting-minor-base);
 }
 
 .root[data-value-full="true"].failed-error .indicator {
@@ -157,7 +157,7 @@
   margin: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-align: left;
 }
 

@@ -1,0 +1,49 @@
+<div class="field" [attr.data-density]="density">
+  <label class="wrapper">
+    <span
+      class="root"
+      [class.rootSimulatedFocus]="simulateFocusVisible"
+      [attr.data-checked]="dataChecked"
+      [attr.data-disabled]="resolvedDisabled ? '' : null"
+      [attr.data-indeterminate]="indeterminate ? '' : null"
+      [attr.data-error]="error ? 'true' : null"
+    >
+      <input
+        #checkboxInput
+        type="checkbox"
+        class="input"
+        [id]="resolvedId"
+        [name]="resolvedName"
+        [value]="value"
+        [checked]="resolvedChecked"
+        [disabled]="resolvedDisabled"
+        [attr.aria-checked]="ariaChecked"
+        [attr.aria-invalid]="error || null"
+        [attr.aria-describedby]="assistiveId"
+        (change)="onInputChange($event)"
+      />
+      @if (showIndicator) {
+        <span class="indicator" [attr.data-indicator-type]="indicatorType"></span>
+      }
+    </span>
+    <span [class]="showLabel ? 'label' : 'visuallyHidden'">{{ label }}</span>
+  </label>
+  @if (helperText) {
+    <div
+      [id]="assistiveId"
+      class="assistiveText"
+      [class.assistiveTextError]="error"
+      [class.assistiveTextDisabled]="resolvedDisabled"
+    >
+      @if (error && !resolvedDisabled) {
+        <ids-icon
+          shapeName="status-critical-square-solid"
+          variant="img"
+          className="errorIcon"
+          [size]="16"
+        />
+      }
+      {{ helperText }}
+    </div>
+  }
+</div>

@@ -1,0 +1,242 @@
+/**
+ * IDS Button styles — derived from components/ids/button/design-spec.md
+ * Selectors: ids-button, ids-button-leading-icon, ids-button-label
+ * Theme: components/ids-theme.css
+ * Control stroke: inset box-shadow (inside stroke; does not grow box size).
+ */
+
+.ids-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8);
+  box-sizing: border-box;
+  min-width: 56px;
+  max-width: 320px;
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  border-radius: var(--button-control-radius);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+  transition: background-color 150ms ease, box-shadow 150ms ease, color 150ms ease;
+  position: relative;
+  white-space: nowrap;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Sizes (total box height includes inside stroke) --- */
+.ids-button--small {
+  height: var(--scale-24, 24px);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+}
+
+.ids-button--medium {
+  height: var(--scale-32, 32px);
+  padding: var(--padding-padding-6) var(--padding-padding-16);
+}
+
+.ids-button--large {
+  height: var(--scale-40, 40px);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+}
+
+.ids-button--icon-only.ids-button--medium {
+  height: var(--scale-32, 32px);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+  min-width: unset;
+}
+
+.ids-button--icon-only.ids-button--large {
+  height: var(--scale-40, 40px);
+  padding: var(--padding-padding-12) var(--padding-padding-16);
+  min-width: unset;
+}
+
+/* --- Leading icon / label slots --- */
+.ids-button-leading-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.ids-button-leading-icon > * {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 16px;
+  max-height: 16px;
+  box-sizing: border-box;
+}
+
+.ids-button-label {
+  display: inline-block;
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+/* Icon color per variant (inherits into IdsIcon via currentColor) */
+.ids-button--primary .ids-button-leading-icon,
+.ids-button--destructive .ids-button-leading-icon {
+  color: var(--color-icon-gray-white);
+}
+
+.ids-button--secondary .ids-button-leading-icon,
+.ids-button--tertiary .ids-button-leading-icon {
+  color: var(--color-icon-brand-base);
+}
+
+.ids-button:disabled .ids-button-leading-icon,
+.ids-button--disabled .ids-button-leading-icon {
+  color: var(--color-icon-gray-disabled);
+}
+
+/* --- Variants --- */
+.ids-button--primary {
+  background: var(--color-background-controls-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
+}
+
+.ids-button--primary:hover:not(:disabled),
+.ids-button--primary[data-state="hover"] {
+  background: var(--color-background-controls-strong);
+}
+
+.ids-button--primary:active:not(:disabled),
+.ids-button--primary[data-state="press"] {
+  background: var(--color-background-controls-stronger);
+}
+
+.ids-button--primary:disabled,
+.ids-button--primary.ids-button--disabled,
+.ids-button--primary[data-state="disabled"] {
+  background: var(--color-background-gray-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-button--secondary {
+  background: transparent;
+  color: var(--color-text-brand-strong);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.ids-button--secondary:hover:not(:disabled),
+.ids-button--secondary[data-state="hover"] {
+  background: var(--color-background-controls-lighter);
+}
+
+.ids-button--secondary:active:not(:disabled),
+.ids-button--secondary[data-state="press"] {
+  background: var(--color-background-controls-light);
+}
+
+.ids-button--secondary:disabled,
+.ids-button--secondary.ids-button--disabled,
+.ids-button--secondary[data-state="disabled"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-button--tertiary {
+  background: transparent;
+  color: var(--color-text-brand-strong);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+}
+
+.ids-button--tertiary:hover:not(:disabled),
+.ids-button--tertiary[data-state="hover"] {
+  background: var(--color-background-controls-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.ids-button--tertiary:active:not(:disabled),
+.ids-button--tertiary[data-state="press"] {
+  background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.ids-button--tertiary:disabled,
+.ids-button--tertiary.ids-button--disabled,
+.ids-button--tertiary[data-state="disabled"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-button--destructive {
+  background: var(--color-background-alerting-critical-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1)
+    var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
+}
+
+.ids-button--destructive:hover:not(:disabled),
+.ids-button--destructive[data-state="hover"] {
+  background: var(--color-background-alerting-critical-strong);
+}
+
+.ids-button--destructive:active:not(:disabled),
+.ids-button--destructive[data-state="press"] {
+  background: var(--color-background-alerting-critical-stronger);
+}
+
+.ids-button--destructive:disabled,
+.ids-button--destructive.ids-button--disabled,
+.ids-button--destructive[data-state="disabled"] {
+  background: var(--color-background-gray-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-button:disabled,
+.ids-button--disabled,
+.ids-button[data-state="disabled"] {
+  cursor: not-allowed;
+}
+
+/* Focus ring — outer brand outline; tertiary keeps state border (no forced brand inset). */
+.ids-button:focus-visible:not(:disabled),
+.ids-button[data-state="focus-visible"] {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: var(--button-focus-ring-offset);
+}
+
+/* Loading */
+.ids-button--loading {
+  cursor: wait;
+}
+
+.ids-button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ids-button-spin 0.6s linear infinite;
+  position: absolute;
+}
+
+.ids-button-label--hidden,
+.ids-button-leading-icon--hidden {
+  visibility: hidden;
+}
+
+@keyframes ids-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

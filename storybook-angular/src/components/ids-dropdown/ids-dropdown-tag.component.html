@@ -1,0 +1,6 @@
+<span class="tag editable">
+  <span class="label">{{ label }}</span>
+  <button type="button" class="dismiss" [attr.aria-label]="'Remove ' + label" (click)="dismiss.emit()">
+    <ids-icon shapeName="shape-x-thick" [size]="10" />
+  </button>
+</span>

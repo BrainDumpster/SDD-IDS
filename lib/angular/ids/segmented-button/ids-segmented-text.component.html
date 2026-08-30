@@ -1,0 +1,18 @@
+<button
+  type="button"
+  class="ids-segmented-buttons__segment ids-segmented-buttons__segment--text"
+  [class.ids-segmented-buttons__segment--selected]="isSelected"
+  [id]="optionId"
+  role="radio"
+  [attr.aria-checked]="isSelected"
+  [attr.aria-label]="ariaLabel || label"
+  [attr.title]="title || null"
+  [disabled]="isDisabled"
+  [attr.data-simulated-state]="simulatedStateAttr"
+  [tabIndex]="tabIndex"
+  (click)="onSelect()"
+  (keydown)="onKeydown($event)"
+  (focus)="onFocus()"
+>
+  {{ label }}
+</button>

@@ -14,7 +14,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof SuggestedPrompt> = {
-  title: "Spec Generated/Synapse/Chat and Layout/Suggested Prompt",
+  title: "Components/Synapse/Chat and Layout/Suggested Prompt",
   component: SuggestedPrompt,
   parameters: {
     layout: "centered",

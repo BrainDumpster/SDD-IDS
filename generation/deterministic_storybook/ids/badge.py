@@ -65,7 +65,7 @@ export const ContentSizing: Story = {{
       <{component_name} value={{1}} type="default" />
       <{component_name} value={{12}} type="default" />
       <{component_name} value={{128}} type="default" />
-      <{component_name} value={{"999+"}} type="default" ariaLabel="Nine hundred ninety nine plus notifications" />
+      <{component_name} value={{999}} type="default" ariaLabel="999 notifications" />
     </div>
   ),
 }};
@@ -119,7 +119,7 @@ export const LayoutTokens: Story = {{
         border-radius: 6px;
         background: var(--color-background-gray-subtle);
         border: 1px solid var(--color-border-subtle);
-        --ids-badge-warning-border-color: var(--color-border-alerting-minor-transparent);
+        --ids-badge-warning-border-color: var(--color-border-alerting-minor-base);
       }}
       `
     }}</style>

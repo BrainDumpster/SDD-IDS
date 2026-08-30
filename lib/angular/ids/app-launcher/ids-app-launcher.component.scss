@@ -1,0 +1,562 @@
+/**
+ * IDS App Launcher styles — from components/ids/app-launcher/design-spec.md
+ * Ported from storybook/src/components/AppLauncher.module.css
+ */
+
+.ids-app-launcher-host {
+  display: inline-flex;
+  align-items: stretch;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.ids-app-launcher {
+  display: inline-flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.ids-app-launcher__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.ids-app-launcher__trigger:hover {
+  background: var(--color-background-gray-lighter);
+}
+
+.ids-app-launcher__trigger:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-app-launcher__trigger-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.ids-app-launcher__trigger--masthead {
+  width: auto;
+  height: auto;
+  padding-top: 19px;
+  padding-right: var(--padding-padding-16);
+  padding-bottom: 19px;
+  padding-left: var(--padding-padding-16);
+  border: none;
+  border-radius: 0;
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
+}
+
+.ids-app-launcher__trigger--masthead:hover {
+  background: var(--color-background-masthead-strong);
+}
+
+.ids-app-launcher__trigger--masthead:active {
+  background: var(--color-background-masthead-stronger);
+}
+
+.ids-app-launcher__trigger--masthead[data-state="open"],
+.ids-app-launcher__trigger--masthead[aria-expanded="true"] {
+  background: var(--color-background-masthead-stronger);
+}
+
+.ids-app-launcher__trigger--masthead[data-state="open"]:hover,
+.ids-app-launcher__trigger--masthead[aria-expanded="true"]:hover {
+  background: var(--color-background-masthead-strong);
+}
+
+.ids-app-launcher__trigger--masthead[data-state="open"]:active,
+.ids-app-launcher__trigger--masthead[aria-expanded="true"]:active {
+  background: var(--color-background-masthead-stronger);
+}
+
+.ids-app-launcher__trigger--masthead:focus-visible {
+  outline: var(--border-width-border-1) dashed var(--color-border-gray-white);
+  outline-offset: -1px;
+}
+
+/* Base UI Popover.Popup shell — portaled to body; position via fixed inline styles. */
+.ids-app-launcher__popup {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  position: fixed;
+  z-index: 10000;
+}
+
+.ids-app-launcher__surface {
+  --app-launcher-divider-inset: var(--padding-padding-16);
+  --app-launcher-row-divider-width: 262px;
+  --app-launcher-tile-height: 125px;
+  --app-launcher-column-divider-height: 110px;
+  --app-launcher-column-divider-inset-block: 7px;
+  --app-launcher-column-divider-color: var(--color-border-gray-neutral-base);
+  --separator-inset: var(--app-launcher-divider-inset);
+  box-sizing: border-box;
+  background: var(--color-background-surface-secondary);
+  border: none;
+  border-radius: 0;
+  padding: var(--padding-padding-1);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+    var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
+      var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
+    var(--shadow-drop-shadow-4-x) var(--shadow-drop-shadow-4-y) var(--shadow-drop-shadow-4-blur)
+      var(--shadow-drop-shadow-4-spread) var(--shadow-drop-shadow-4-color);
+  width: 298px;
+  max-width: calc(100vw - 24px);
+  position: relative;
+  z-index: 1000;
+}
+
+.ids-app-launcher__surface--two-product {
+  padding: var(--padding-padding-1);
+}
+
+.ids-app-launcher__product-region {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-block: 0;
+  width: 100%;
+}
+
+.ids-app-launcher__product-row-group {
+  width: 100%;
+}
+
+.ids-app-launcher__product-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* Figma parity: when a row has a single odd tile, center it within 2-column width. */
+.ids-app-launcher__product-row--single {
+  justify-content: center;
+}
+
+/* Separate flex child between tiles — hover fill must not cover this track. */
+.ids-app-launcher__column-divider {
+  flex: 0 0 1px;
+  width: 1px;
+  align-self: stretch;
+  min-height: var(--app-launcher-tile-height);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  position: relative;
+  pointer-events: none;
+}
+
+/* Dotted vertical: 110px stroke, 7px inset top/bottom within 125px tile. */
+.ids-app-launcher__column-divider::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: var(--app-launcher-column-divider-inset-block);
+  height: var(--app-launcher-column-divider-height);
+  border-inline-start: var(--border-width-border-1) dashed
+    var(--app-launcher-column-divider-color);
+}
+
+.ids-app-launcher__column-divider--solid {
+  flex: 0 0 1px;
+  width: 1px;
+  align-self: stretch;
+  min-height: var(--app-launcher-tile-height);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  position: relative;
+  pointer-events: none;
+}
+
+/* Solid vertical (2-product): full 125px tile height, edge to edge. */
+.ids-app-launcher__column-divider--solid::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  width: 0;
+  border-inline-start: var(--border-width-border-1) solid
+    var(--app-launcher-column-divider-color);
+}
+
+/* Horizontal row separator: 262px stroke, 16px inset left/right, centered in parent. */
+.ids-app-launcher__row-divider {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-inline: var(--app-launcher-divider-inset);
+  flex-shrink: 0;
+  margin: 0;
+  border: none;
+  pointer-events: none;
+}
+
+.ids-app-launcher__row-divider::before {
+  content: "";
+  width: var(--app-launcher-row-divider-width);
+  height: 0;
+  flex-shrink: 0;
+  border-top: var(--border-width-border-1) dashed var(--app-launcher-column-divider-color);
+}
+
+/* ---------- AppLauncherProductTile ---------- */
+
+.ids-app-launcher__tile {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 148px;
+  min-height: 125px;
+  height: 125px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: var(--color-background-surface-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 150ms ease;
+  font-family: inherit;
+  color: var(--color-icon-gray-neutral-strong);
+  position: relative;
+}
+
+.ids-app-launcher__tile:hover {
+  background: var(--color-background-brand-lighter-slate);
+}
+
+.ids-app-launcher__tile:active {
+  background: var(--color-background-brand-light-slate);
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-app-launcher__tile:active .ids-app-launcher__app-name {
+  color: var(--color-text-brand-strong);
+}
+
+.ids-app-launcher__tile:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+/* 2-product: horizontal tile shell + internal dotted rail on leading tile (`13231:109518`). */
+.ids-app-launcher__tile--two-product {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.ids-app-launcher__tile--two-product .ids-app-launcher__label-stack {
+  flex: 1 1 auto;
+  width: 147px;
+  min-width: 0;
+}
+
+.ids-app-launcher__tile-rail {
+  flex: 0 0 1px;
+  width: 1px;
+  align-self: stretch;
+  position: relative;
+  pointer-events: none;
+}
+
+.ids-app-launcher__tile-rail--solid::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0;
+  border-inline-start: var(--border-width-border-1) solid
+    var(--app-launcher-column-divider-color);
+}
+
+.ids-app-launcher__tile-rail--dotted::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: var(--app-launcher-column-divider-inset-block);
+  height: var(--app-launcher-column-divider-height);
+  border-inline-start: var(--border-width-border-1) dashed
+    var(--app-launcher-column-divider-color);
+}
+
+.ids-app-launcher__label-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-12);
+  width: 100%;
+  height: 100%;
+  padding: var(--padding-padding-28) 0;
+  box-sizing: border-box;
+}
+
+.ids-app-launcher__label-stack--no-icon {
+  gap: 0;
+  padding: var(--padding-padding-52) 0;
+}
+
+.ids-app-launcher__icon-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.ids-app-launcher__product-icon-img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* Default product tile: inline SVG uses `currentColor` from `.ids-app-launcher__tile`. */
+.ids-app-launcher__default-product-icon {
+  display: block;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.ids-app-launcher__app-name {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-family: inherit;
+  font-weight: 400;
+  color: var(--color-text-gray-neutral-strong);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 111px;
+  margin: 0;
+}
+
+/* ---------- AppLauncherOptionsList ---------- */
+
+.ids-app-launcher__options {
+  box-sizing: border-box;
+  background: var(--color-background-surface-component);
+  border-top: none;
+  width: 295px;
+  margin-inline: auto;
+  padding-inline: var(--padding-padding-1);
+  padding-block-end: var(--padding-padding-16);
+  overflow: hidden;
+}
+
+/* Figma `AppLauncher-Main` (e.g. `42266:95081`): `gap-px` after row divider + `py-[16px]` on menu options wrapper before rows. */
+.ids-app-launcher__options--separator {
+  position: relative;
+  padding-block-start: calc(var(--padding-padding-1) + var(--padding-padding-16));
+}
+
+.ids-app-launcher__options--separator::before {
+  content: "";
+  position: absolute;
+  inset-inline: var(--separator-inset);
+  inset-block-start: 0;
+  border-top: var(--border-width-border-1) dashed var(--app-launcher-column-divider-color);
+  pointer-events: none;
+}
+
+/* Options-only launcher: no separator above list (nothing above it in the surface). */
+.ids-app-launcher__surface > .ids-app-launcher__options:first-child {
+  border-top: none;
+}
+
+.ids-app-launcher__options-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ids-app-launcher__option-item {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10)
+    var(--padding-padding-16);
+  border: none;
+  background: var(--color-background-surface-component);
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
+  text-align: start;
+  cursor: pointer;
+  transition: background 80ms ease;
+}
+
+.ids-app-launcher__option-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ids-app-launcher__option-item:hover {
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+}
+
+.ids-app-launcher__option-item:active {
+  background: var(--color-background-brand-light-slate);
+  color: var(--color-text-brand-strong);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+}
+
+.ids-app-launcher__option-item:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.ids-app-launcher__options-footer {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-8) 0;
+  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.ids-app-launcher__footer-action {
+  margin: 0;
+  margin-inline-start: var(--padding-padding-16);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-brand-strong);
+  cursor: pointer;
+  text-align: start;
+}
+
+.ids-app-launcher__footer-action:hover {
+  text-decoration: underline;
+}
+
+.ids-app-launcher__footer-action:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+/* ----- Synapse programme (`13231:123761`, `13231:109521`) ----- */
+
+.ids-app-launcher__surface--single {
+  width: 150px;
+}
+
+.ids-app-launcher--synapse.ids-app-launcher__surface {
+  --app-launcher-column-divider-color: var(--color-border-neutral-light);
+  gap: var(--spacing-space-1);
+  border-color: var(--color-border-neutral-light);
+}
+
+.ids-app-launcher__tile--synapse {
+  position: relative;
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:hover {
+  background: var(--color-background-surface-secondary);
+  color: var(--color-icon-gray-neutral-strong, var(--color-icon-gray-neutral-base));
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:hover .ids-app-launcher__label-stack {
+  background: var(--color-background-brand-lighter-slate);
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:active {
+  background: var(--color-background-surface-secondary);
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:active .ids-app-launcher__label-stack {
+  background: var(--color-background-brand-light-slate);
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:active .ids-app-launcher__app-name {
+  color: var(--color-text-brand-strong);
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:focus-visible {
+  outline: none;
+}
+
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 2px 2px 2px 3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+}
+
+/* Storybook / spec state matrix (demo-only forced states). */
+.ids-app-launcher__tile--synapse[data-state="hover"] .ids-app-launcher__label-stack,
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="hover"] .ids-app-launcher__label-stack {
+  background: var(--color-background-brand-lighter-slate);
+}
+
+.ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__label-stack,
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__label-stack {
+  background: var(--color-background-brand-light-slate);
+}
+
+.ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__app-name,
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__app-name {
+  color: var(--color-text-brand-strong);
+}
+
+.ids-app-launcher__tile--synapse[data-state="press"],
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="press"] {
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-app-launcher__tile--synapse[data-state="focus"]::after,
+.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="focus"]::after {
+  content: "";
+  position: absolute;
+  inset: 2px 2px 2px 3px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+}

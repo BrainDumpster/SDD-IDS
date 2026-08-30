@@ -1,6 +1,11 @@
+/**
+ * Spec Generated stories — thin wrapper over `lib/react/ids/anchor-menu`.
+ * Canonical Lib Generated stories: `lib-generated/AnchorMenu.stories.tsx`
+ * Spec: components/ids/anchor-menu/design-spec.md
+ */
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { IdsAnchorMenu } from "./IdsAnchorMenu";
+import { IdsAnchorMenu } from "../../../lib/react/ids/anchor-menu";
 
 /** Figma `AnchorMenu-Example` (`11955:229709`) — first section selected. */
 const specAccurateItems = [
@@ -13,7 +18,7 @@ const specAccurateItems = [
 ] as const;
 
 const meta: Meta<typeof IdsAnchorMenu> = {
-  title: "Spec Generated/IDS/Anchor Menu",
+  title: "Components/IDS/Anchor Menu",
   component: IdsAnchorMenu,
   parameters: { layout: "padded" },
 };
@@ -40,7 +45,7 @@ export const MiddleActive: Story = {
 export const WithPageContent: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 32, padding: 24 }}>
-      <div style={{ flex: 1, color: "var(--color-text-neutral-strong)" }}>
+      <div style={{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}>
         {specAccurateItems.map((item) => (
           <section
             key={item.href}

@@ -100,6 +100,7 @@ Execute in order:
 10. Add **`### Slot geometry (Figma-verified)`** under Layout & Measurements (`get_variable_defs` on cited nodes for radius rows).
 11. Set **Status: draft** until validation checklist passes; do not mark `active` with TBD.
 12. Optionally save `data/design-spec-intake/sessions/<slug>-<YYYYMMDD>.yaml` with collected answers (audit only).
+13. **If step 8 = Storybook yes:** complete **Storybook follow-up** (deterministic generator + `strict_spec_storybook_gate.py --deterministic-story` + Spec Accurate Design) before ending the run phase.
 
 ---
 
@@ -241,6 +242,7 @@ The `design-spec.md` is the **single source of truth** for spec-driven codegen. 
 - [ ] No UI / chrome in the spec that was not observed in Main / Elements / States (or a cited reused DS component)
 - [ ] Demo-only props are labeled; production path does not depend on them
 - [ ] Spec Accurate Design defaults (if Storybook requested) are written in the spec, not only in the story file
+- [ ] If Storybook requested: deterministic generator registered + gate `--deterministic-story` passed; story under `storybook-generated/...` with **Spec Accurate Design**
 - [ ] Parent/child composition documented when component is nested or data-driven
 - [ ] Validation checklist items are pass/fail and cover geometry, API, states, and a11y
 
@@ -250,26 +252,70 @@ After intake, run **design-spec-blueprint** hardening (`validate_spec_geometry_g
 
 ## Storybook follow-up (when step 8 = yes)
 
-After `design-spec.md` is written, generate or update Storybook using the **Spec Accurate Design** principle under the **Spec Generated** group.
+After `design-spec.md` is written, the agent **must** produce Spec Accurate Design examples. This is not optional polish — it locks the runtime API for codegen.
 
-**Production reuse rule:** The Storybook component file must export the same **canonical runtime API** documented in **Composition & API (runtime)**. Stories demonstrate that API with Figma-accurate defaults — they do not introduce a parallel or simplified prop surface. Production apps import the same component module as Spec Accurate Design.
+**Production reuse rule:** The Storybook component module must export the same **canonical runtime API** documented in **Composition & API (runtime)**. Stories demonstrate that API with Figma-accurate defaults — they do not invent a parallel or simplified prop surface. Production apps import the same module as Spec Accurate Design.
 
-**Meta title:** `Spec Generated/{DisplayName}/<Component Display Name>` — use programme `display_name` from yaml (e.g. `IDS`, `DAP`, `Synapse`).
+### Mandatory outcomes
 
-**Primary story (required):**
+| Item | Contract |
+|------|----------|
+| Meta title | `Spec Generated/{DisplayName}/<Component Display Name>` — programme `display_name` from yaml (e.g. `IDS`, `DAP`, `Synapse`) |
+| Primary story name | **Spec Accurate Design** |
+| Export name | `SpecAccurateDesign` |
+| Args / layout | Match **`### Spec Accurate Design story defaults`** in the design-spec; tokens via `var(--...)` only |
+| Props | Canonical Runtime API names only (`items`, `showDivider`, etc.) — no undocumented story-only aliases |
+| Theme import | Exactly one: programme `{theme_css_path}` (e.g. `components/ids-theme.css`) |
+| Output path | Prefer `storybook-generated/<programme>/src/components/<PascalName>.stories.tsx` |
 
-- Story **name:** `Spec Accurate Design`
-- Export name: `SpecAccurateDesign` (camelCase convention)
-- Args and layout must match the spec (especially any **`### Spec Accurate Design story defaults`** in **Composition & API**); use `var(--...)` only
-- Story args must use **canonical** prop names from Runtime API (`children`, `items`, `name` — not legacy or story-only aliases unless documented as aliases)
+**Do not** place spec-driven examples under generic groups (e.g. `Components/...`) or ship Spec Generated without a Spec Accurate Design story.
 
-**Theme import** in the `.stories.tsx` file: programme `{theme_css_path}` only (one import).
+### Agent must follow — deterministic Storybook generation
 
-**Do not** place spec-driven examples under generic groups (e.g. `Components/...`) or omit the Spec Accurate Design story.
+When Storybook = **yes**, do this **in order** (do not stop at a hand-authored `storybook/src/**/*.stories.tsx` unless the gate path fails and you document why):
 
-**Implementation:** use `generation/deterministic_storybook/` patterns and `scripts/strict_spec_storybook_gate.py` when available.
+1. **Document in the design-spec (before/with stories):**
+   - `### Spec Accurate Design story defaults` under **Composition & API**
+   - Metadata bullets: **Storybook path** + **Deterministic generator** path
+   - Validation checklist item for Spec Accurate Design under Spec Generated
+
+2. **Implement or update runtime component** under `storybook/src/components/` (canonical API matching the spec). Stories import this module — they are not a second component.
+
+3. **Add / update deterministic generator** (required for regenerate parity):
+   - File: `generation/deterministic_storybook/ids/<slug_with_underscores>.py` (or programme equivalent under the same package layout)
+   - Export `generate_ids_<slug>_story(...)` (or programme-prefixed name) that returns the full `.stories.tsx` source
+   - Register in `generation/deterministic_storybook/engine.py` → `REGISTRY[("<programme>", "<kebab-slug>")]`
+   - Prefer emitting into `storybook-generated/<programme>/...`; avoid leaving a second Spec Generated title under `storybook/src/` (delete or retitle hand duplicates)
+
+4. **Run the gate to write + validate stories:**
+   ```bash
+   DESIGN_SYSTEM=<programme> python3 scripts/strict_spec_storybook_gate.py \
+     --component <kebab-slug> \
+     --spec-only \
+     --deterministic-story
+   ```
+   - Exit must be **STRICT GATE PASSED** (fix coverage, theme import, overflow tokens when present in the spec)
+   - Output: `storybook-generated/<programme>/src/components/<PascalSlug>.stories.tsx`
+
+5. **Confirm Spec Accurate Design:**
+   - Export `SpecAccurateDesign` with `name: "Spec Accurate Design"`
+   - Args ⊆ Runtime API + match story-defaults section
+   - If Storybook is already running and new generated files do not resolve (`importers[path] is not a function`), restart Storybook (`pnpm dev:clean` / stop port 6006 + restart)
+
+### What “regenerate” means
+
+Once the generator is registered, **any agent** (or CI) can re-run the same gate command and rewrite the Spec Accurate Design stories from the deterministic recipe **without** hand-editing `storybook-generated/...`. Spec prose changes that affect story defaults must update **both** the design-spec story-defaults section **and** the generator (or the generator’s seed story), then re-run the gate.
+
+### Forbidden
+
+- Spec Generated stories that omit **Spec Accurate Design**
+- Hand-only stories under `storybook/src` with no `REGISTRY` entry when Storybook was requested at intake
+- Story-only APIs that diverge from **Composition & API → Runtime API**
+- Soft “I’ll add Storybook later” for intake where step 8 was **yes** — complete generator + gate in the same run phase
 
 Record generated story path in spec **Metadata**. Add validation checklist item for Spec Accurate Design under Spec Generated.
+
+**Reference patterns:** `generation/deterministic_storybook/ids/main_menu_left.py`, `ids/footer.py`, `ids/about.py`; gate entry: `scripts/strict_spec_storybook_gate.py`.
 
 ---
 

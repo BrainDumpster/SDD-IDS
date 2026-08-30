@@ -2,10 +2,10 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
-  border: var(--border-width-border-default) solid var(--color-border-accessible);
+  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   border-radius: var(--corner-radius-radius-24);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
   white-space: nowrap;
   font-family: inherit;
 }
@@ -21,6 +21,11 @@
 .readOnly.sm {
   box-sizing: border-box;
   height: 20px;
+}
+
+.readOnly.lg {
+  box-sizing: border-box;
+  height: 28px;
 }
 
 .lg {
@@ -57,105 +62,115 @@
   gap: var(--spacing-space-8);
 }
 
+.dismissible {
+  padding-right: var(--padding-padding-8);
+  gap: var(--spacing-space-4);
+}
+
 .tag[data-disabled] {
   pointer-events: none;
 }
 
-.tag[data-error] {
-  border-color: var(--color-border-alerting-critical-base);
+.tag[data-error]:not(.clickable) {
+  background: var(--color-background-surface-component) !important;
+  border-color: var(--color-border-alerting-critical-base) !important;
+  color: var(--color-text-gray-neutral) !important;
 }
 
-.tag[data-focus] {
+.tag[data-focus],
+.tag:focus-visible {
   outline: var(--border-width-border-default) solid var(--color-border-brand-base);
 }
 
 /* IDS programme: 2px focus gap */
-.programmeIds[data-focus] {
+.programmeIds[data-focus],
+.programmeIds:focus-visible {
   outline-offset: 2px;
 }
 
 /* Synapse programme (`12715:251521`): 4px focus gap. */
-.programmeSynapse[data-focus] {
+.programmeSynapse[data-focus],
+.programmeSynapse:focus-visible {
   outline-offset: 4px;
 }
 
 /* Tone + emphasis */
 .tone_non-alerting.emphasis_light {
-  background: var(--color-background-component);
-  border-color: var(--color-border-accessible);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
 }
 
 /* Read-only alerting: Figma `38910:51200` / `AlertingTags` — border uses *-white tokens (same hue in light, ring in dark). */
 .tone_info.emphasis_light {
-  background: var(--color-background-alerting-info);
-  border-color: var(--color-border-alerting-info-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-info-base);
+  border-color: var(--color-border-alerting-info-base-white);
+  color: var(--color-text-gray-white);
 }
 
 .tone_success.emphasis_light {
-  background: var(--color-background-alerting-success);
-  border-color: var(--color-border-alerting-success-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-alerting-success-base-white);
+  color: var(--color-text-gray-white);
 }
 
 .tone_minor.emphasis_light {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-black);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-gray-black);
 }
 
 .tone_major.emphasis_light {
-  background: var(--color-background-alerting-major);
-  border-color: var(--color-border-alerting-major-white);
-  color: var(--color-text-black);
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-base-white);
+  color: var(--color-text-gray-black);
 }
 
 .tone_critical.emphasis_light {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-critical-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-base-white);
+  color: var(--color-text-gray-white);
 }
 
 .tone_info.emphasis_strong {
-  background: var(--color-background-alerting-info);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-info-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .tone_success.emphasis_strong {
-  background: var(--color-background-alerting-success);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .tone_minor.emphasis_strong {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-black);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-gray-black);
 }
 
 .tone_major.emphasis_strong {
-  background: var(--color-background-alerting-major);
-  border-color: var(--color-border-white);
-  color: var(--color-text-black);
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-black);
 }
 
 .tone_critical.emphasis_strong {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .clickable.selected {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
 }
 
 .clickable.tone_non-alerting:not(.selected) {
-  background: var(--color-background-component);
-  color: var(--color-text-neutral);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
 }
 
 .clickable:not(.selected) {
@@ -165,20 +180,20 @@
 /* Figma `42065:39258` / `42065:39261` — clickable hover on neutral outline + selected fill */
 .clickable.tone_non-alerting:not(.selected):hover:not([data-disabled]),
 .clickable.tone_non-alerting:not(.selected)[data-hover]:not([data-disabled]) {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
   border-color: var(--color-border-brand-base);
 }
 
 .clickable.selected:hover:not([data-disabled]),
 .clickable.selected[data-hover]:not([data-disabled]) {
-  background: var(--color-background-controls-brand-strong);
-  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
 }
 
 .tag[data-disabled] {
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .tag[data-disabled].editable {
@@ -187,7 +202,7 @@
 
 .tag[data-disabled] .label,
 .tag[data-disabled] .prefix {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .label,
@@ -198,15 +213,60 @@
   font-weight: 400;
 }
 
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  min-height: 20px;
+}
+
+.prefix {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.prefixText {
+  font-weight: 500;
+}
+
+.prefixColon {
+  font-weight: 400;
+}
+
 .textField {
   display: inline-flex;
   align-items: center;
+  min-height: 20px;
   gap: 0;
   height: 20px;
   padding: 0 var(--padding-padding-2);
   border: var(--border-width-border-default) solid transparent;
   border-radius: var(--corner-radius-radius-2);
   outline: none;
+}
+
+/* Opt-in max-width truncation (set via the `maxWidth` prop). The label
+   ellipsizes; the dismiss/badge/caret keep their size. */
+.truncated {
+  min-width: 0;
+}
+
+.truncated .textField {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.truncated .label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncated .badge,
+.truncated .dismiss,
+.truncated .menuCaret {
+  flex-shrink: 0;
 }
 
 .editable .textField:focus-visible {
@@ -217,8 +277,16 @@
   border-color: var(--color-border-brand-base);
 }
 
-.editable[data-focus] .textField {
+.editable[data-focus] .textField,
+.editable .textField[data-focus-on-text] {
   border-color: var(--color-border-brand-base);
+}
+
+.leadingIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
 }
 
 .badge {
@@ -227,9 +295,9 @@
   height: var(--sizing-size-18);
   padding: 0 var(--padding-padding-4);
   border-radius: 999px;
-  border: var(--border-width-border-default) solid var(--color-border-white);
+  border: var(--border-width-border-default) solid var(--color-border-gray-white);
   background: var(--color-background-alerting-info-1);
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -239,7 +307,7 @@
 
 .tag[data-disabled] .badge {
   background: var(--color-static-gray-500);
-  border-color: var(--color-border-white);
+  border-color: var(--color-border-gray-white);
 }
 
 .menuCaret {
@@ -249,27 +317,39 @@
   height: var(--sizing-size-10);
 }
 
-.editable .prefix,
-.typeBadge .prefix {
-  font-weight: 500;
-}
-
 .dismiss {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 10px;
-  height: 10px;
+  width: var(--sizing-size-18);
+  height: var(--sizing-size-18);
+  box-sizing: border-box;
   border: none;
+  border-radius: var(--button-control-radius);
   background: transparent;
   color: inherit;
-  padding: 0;
+  padding: var(--padding-padding-4);
   cursor: pointer;
+}
+
+.dismiss:hover:not(:disabled) {
+  background: var(--color-background-controls-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.dismiss:active:not(:disabled) {
+  background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+
+.dismiss:focus-visible:not(:disabled) {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: var(--button-focus-ring-offset);
 }
 
 /* Synapse `11666:90413` — close icon hover. */
 .programmeSynapse .dismiss:hover:not(:disabled) {
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 /* Synapse Light critical (`50724:303493`). */

@@ -129,6 +129,8 @@ export function SegmentedButton(props: SegmentedButtonProps) {
             key={item.value}
             value={item.value}
             data-simulated-state={item.simulatedState}
+            data-composite-item-active={item.value === groupValue[0] ? "" : undefined}
+            tabIndex={0}
             className={(state) =>
               [
                 styles.segment,
@@ -154,6 +156,8 @@ export function SegmentedButton(props: SegmentedButtonProps) {
           value={item.value}
           aria-label={item.ariaLabel}
           data-simulated-state={item.simulatedState}
+          data-composite-item-active={item.value === groupValue[0] ? "" : undefined}
+          tabIndex={0}
           className={(state) =>
             [
               styles.segment,

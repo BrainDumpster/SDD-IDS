@@ -28,7 +28,7 @@
   font-size: var(--font-size-body-1);
   line-height: var(--font-line-height-line-height-24);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   word-break: break-word;
 }
 

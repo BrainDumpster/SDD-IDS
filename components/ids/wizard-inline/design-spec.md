@@ -1,6 +1,8 @@
 # Wizard - Inline Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/WizardInline.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/wizard_inline.py`
 - Component: Wizard - Inline
 - Category: Modals and Wizards
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54625&m=dev
@@ -27,42 +29,42 @@
 - Compact density: 36px for compact mode
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Surface background: `var(--color-background-surface-1)` = #f4f4f4
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Surface background: `var(--color-background-surface-primary)` = #f4f4f4
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
 - Link brand text: `var(--color-text-link-brand-base)` = #0062ab
-- Disabled text: `var(--color-text-disabled)` = #757575
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Disabled text: `var(--color-text-gray-disabled)` = #757575
+- White text: `var(--color-text-gray-white)` = #ffffff
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- Brand dark border: `var(--color-border-brand-dark)` = #0062ab
-- White border: `var(--color-border-white)` = #ffffff
-- Disabled border: `var(--color-border-disabled)` = #757575
-- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
-- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+- Brand dark border: `var(--color-border-brand-strong)` = #0062ab
+- White border: `var(--color-border-gray-white)` = #ffffff
+- Disabled border: `var(--color-border-gray-disabled)` = #757575
+- Transparent brand: `var(--color-border-brand-transparent-brand)` = #ffffff00
+- Transparent neutral: `var(--color-border-gray-neutral-transparent-base)` = #ffffff00
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- Neutral strong icon: `var(--color-icon-gray-neutral-strong)` = #252525
 - Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
-- Accessible icon: `var(--color-icon-accessible)` = #757575
-- Disabled icon: `var(--color-icon-disabled)` = #757575
-- White icon: `var(--color-icon-white)` = #ffffff
+- Accessible icon: `var(--color-icon-gray-neutral-accessible)` = #757575
+- Disabled icon: `var(--color-icon-gray-disabled)` = #757575
+- White icon: `var(--color-icon-gray-white)` = #ffffff
 - Standard gray icon: `icon-standard-gray` = #616161
 - Status yellow icon: `icon-status-yellow` = #FFC700
 
 ### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Brand lighter: `var(--color-background-brand-lighter-slate)` = #ebf4fb
 - Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
 - Gray light: `var(--color-background-gray-light)` = #eaeaea
 - Gray base: `var(--color-background-gray-base)` = #757575
-- Success background: `var(--color-background-alerting-success)` = #1b8500
-- Masthead brand: `var(--color-background-masthead-brand-base)` = #0076ce
+- Success background: `var(--color-background-alerting-success-base)` = #1b8500
+- Masthead brand: `var(--color-background-masthead-base)` = #0076ce
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -103,18 +105,18 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Wizard Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `icon-standard-gray` (#616161) |
-| Step Indicator | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `icon-standard-gray` (#616161) |
-| Active Step | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Completed Step | `var(--color-background-alerting-success)` (#1b8500) | `var(--color-background-alerting-success)` (#1b8500) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Step Header | `var(--color-background-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `Header 5` (Roboto Regular 24px/32px) | `var(--color-icon-brand-base)` (#0076ce) |
-| Previous Button | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Next/Finish Button | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Cancel Button | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Validation Error | `var(--color-background-gray-lighter)` (#f4f4f4) | `icon-status-yellow` (#FFC700) | `var(--color-text-neutral)` (#4d4d4d) | `icon-status-yellow` (#FFC700) |
+| Wizard Container | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral-strong)` (#252525) | `icon-standard-gray` (#616161) |
+| Step Indicator | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `icon-standard-gray` (#616161) |
+| Active Step | `var(--color-background-controls-base)` (#0076ce) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Completed Step | `var(--color-background-alerting-success-base)` (#1b8500) | `var(--color-background-alerting-success-base)` (#1b8500) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Step Header | `var(--color-background-brand-lighter-slate)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) | `Header 5` (Roboto Regular 24px/32px) | `var(--color-icon-brand-base)` (#0076ce) |
+| Previous Button | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Next/Finish Button | `var(--color-background-controls-base)` (#0076ce) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Cancel Button | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Validation Error | `var(--color-background-gray-lighter)` (#f4f4f4) | `icon-status-yellow` (#FFC700) | `var(--color-text-gray-neutral)` (#4d4d4d) | `icon-status-yellow` (#FFC700) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#f4f4f4)
+- Surface tokens: `var(--color-background-surface-primary)` (#f4f4f4)
 - Text and border colors remain consistent via semantic variables
 - Step indicators maintain visibility in dark theme
 - Buttons adapt to dark theme

@@ -11,7 +11,7 @@
   font-size: var(--font-size-body-1);
   line-height: var(--font-line-height-line-height-24);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   text-transform: none;
   letter-spacing: normal;
   margin-bottom: 0;
@@ -34,17 +34,17 @@
   width: 100%;
   padding: var(--padding-padding-8) var(--padding-padding-24);
   font-size: var(--font-size-body-1);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-decoration: none;
   position: relative;
-  border-left: 1.2px solid var(--color-border-accessible);
+  border-left: 1.2px solid var(--color-border-gray-neutral-base);
   transition: color 150ms ease, border-color 150ms ease;
   line-height: var(--font-line-height-line-height-24);
   box-sizing: border-box;
 }
 
 .link:hover {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .link:hover::before {

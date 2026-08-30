@@ -1,6 +1,8 @@
 # Tree Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/Tree.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/tree.py`
 - **Component:** Tree
 - **Design system:** IDS
 - **Category:** Navigation
@@ -71,13 +73,13 @@
 - **Badge label:** `12px` centered (Figma caption scale on badge).
 
 ### Colors and surfaces
-- **Default row label:** `var(--color-text-neutral)`
+- **Default row label:** `var(--color-text-gray-neutral)`
 - **Selected row label:** `var(--color-text-brand-strong)`
-- **Selected row background:** `var(--color-background-brand-lighter)`
+- **Selected row background:** `var(--color-background-brand-lighter-slate)`
 - **Selected leading indicator:** `var(--color-border-brand-base)` (4px inset start edge)
-- **Badge fill:** `var(--color-background-controls-brand-base)`
-- **Badge text:** `var(--color-text-white)`
-- **Badge border:** `var(--color-border-white)`
+- **Badge fill:** `var(--color-background-controls-base)`
+- **Badge text:** `var(--color-text-gray-white)`
+- **Badge border:** `var(--color-border-gray-white)`
 - **Chevron / default folder icon:** neutral icon tokens per theme (Figma default uses neutral folder glyph)
 
 ### Spacing and shape
@@ -90,13 +92,13 @@
 ## States (Light Theme)
 | Row type | State | Background | Border / indicator | Text | Icon / chevron |
 | --- | --- | --- | --- | --- | --- |
-| Branch (`levelTree` 1–6) | default | transparent | none | `var(--color-text-neutral)` | chevron + optional folder |
-| Branch | hover | `var(--color-background-gray-lighter)` | none | `var(--color-text-neutral)` | chevron + optional folder |
-| Branch | selected | `var(--color-background-brand-lighter)` | 4px inset start `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | chevron + optional folder |
+| Branch (`levelTree` 1–6) | default | transparent | none | `var(--color-text-gray-neutral)` | chevron + optional folder |
+| Branch | hover | `var(--color-background-gray-lighter)` | none | `var(--color-text-gray-neutral)` | chevron + optional folder |
+| Branch | selected | `var(--color-background-brand-lighter-slate)` | 4px inset start `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | chevron + optional folder |
 | Branch | focus-visible | prior row background | `var(--color-border-brand-base)` outline (2px) | prior text token | prior icon token |
-| Leaf (`levelTree` *-leaf) | default | transparent | none | `var(--color-text-neutral)` | optional folder; no chevron |
-| Leaf | hover | `var(--color-background-gray-lighter)` | none | `var(--color-text-neutral)` | optional folder |
-| Leaf | selected | `var(--color-background-brand-lighter)` | 4px inset start `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | optional folder |
+| Leaf (`levelTree` *-leaf) | default | transparent | none | `var(--color-text-gray-neutral)` | optional folder; no chevron |
+| Leaf | hover | `var(--color-background-gray-lighter)` | none | `var(--color-text-gray-neutral)` | optional folder |
+| Leaf | selected | `var(--color-background-brand-lighter-slate)` | 4px inset start `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | optional folder |
 | Leaf | focus-visible | prior row background | `var(--color-border-brand-base)` outline (2px) | prior text token | prior icon token |
 
 ## States (Dark Theme)
@@ -215,7 +217,7 @@ React reference: `IdsTree` + `IdsTreeItem` + `IdsTreeItemLabel` in `storybook/sr
 
 - **Mode A** `items`: six siblings `row-1` … `row-6`, label `"Text"`, `badgeCount: 1`
 - `defaultSelectedId: "row-2"`; `showIcon: true`, `showBadge: true`
-- Frame: `maxWidth: 320px`, padding `16px`, `var(--color-background-surface-1)`
+- Frame: `maxWidth: 320px`, padding `16px`, `var(--color-background-surface-primary)`
 - Theme: `components/ids-theme.css` only
 - **Figma sample node:** `18571:102051` (`Tree nodes=6`, 260×240)
 - Additional stories: **WithHierarchy**, **SelectedBranchRow**, **WithoutBadgeOrIcon**, **DeclarativeMarkup**, **LabelBadgeSpacing**
@@ -242,7 +244,7 @@ Emit **`Tree`** (root) + **`TreeItem`** (+ **`TreeItemLabel`** slot). Support **
 ### Per-slot style contract
 - Indentation: map `depth` 1–6 to padding tokens in **Layout & Measurements**.
 - Default vs selected: apply **States (Light Theme)** token columns only.
-- Badge: `var(--color-background-controls-brand-base)` + `var(--color-text-white)` when `badgeCount` present and `showBadge` allows.
+- Badge: `var(--color-background-controls-base)` + `var(--color-text-gray-white)` when `badgeCount` present and `showBadge` allows.
 - **LabelCluster** required for correct label/badge spacing.
 
 ### Behavior contract
@@ -265,8 +267,8 @@ Emit **`Tree`** (root) + **`TreeItem`** (+ **`TreeItemLabel`** slot). Support **
 
 ### Validation checklist
 - [x] Row padding and per-level indentation match Figma (16 / 36 / 56 / 76 / 96 / 116 / 136 px start padding)
-- [x] Selected row uses `var(--color-background-brand-lighter)` and 4px inset start indicator
-- [x] Default label `var(--color-text-neutral)`; selected label `var(--color-text-brand-strong)`
+- [x] Selected row uses `var(--color-background-brand-lighter-slate)` and 4px inset start indicator
+- [x] Default label `var(--color-text-gray-neutral)`; selected label `var(--color-text-brand-strong)`
 - [x] Leaf rows omit expand chevron
 - [x] Badge 8px after label inside LabelCluster (not row trailing edge)
 - [x] Icon and badge slots optional (`showIcon` / `showBadge` / per-row overrides)

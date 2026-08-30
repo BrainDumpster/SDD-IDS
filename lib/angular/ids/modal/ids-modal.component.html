@@ -1,0 +1,134 @@
+<dialog
+  #dialogRef
+  class="ids-modal"
+  [ngClass]="layerClass"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="ariaLabelledBy"
+  [attr.aria-describedby]="ariaDescribedBy"
+  (cancel)="onDialogCancel($event)"
+  (close)="onDialogClose()"
+>
+  <div [class]="surfaceClass">
+    <header class="ids-modal__header">
+      <div class="ids-modal__header-left">
+        @if (showSeverityIcon) {
+          <span class="ids-modal__severity-icon" aria-hidden="true">
+            <ids-icon
+              [shape]="severityIcon.shape"
+              [variant]="severityIcon.variant"
+              [size]="24"
+            />
+          </span>
+        }
+
+        <ng-content select="ids-modal-title" />
+
+        @if (!hasTitleSlot) {
+          <h2 [id]="titleId" class="ids-modal__title">{{ title }}</h2>
+        }
+      </div>
+
+      <div class="ids-modal__header-controls">
+        <ng-content select="ids-modal-close" />
+
+        @if (closable && !hasCloseSlot) {
+          <button
+            type="button"
+            class="ids-modal__close"
+            aria-label="Close"
+            (click)="closeModal()"
+          >
+            <ids-icon shapeName="shape-x" variant="img" [size]="16" />
+          </button>
+        }
+      </div>
+    </header>
+
+    <ng-content select="ids-modal-body" />
+
+    @if (!hasBodySlot) {
+      @if (showLegacyDescription) {
+        <p
+          [id]="descriptionId"
+          [ngClass]="['ids-modal__description', descriptionTypeClass]"
+        >
+          {{ description }}
+        </p>
+      }
+
+      @if (showTabs) {
+        <nav class="ids-modal__tabs" aria-label="Modal pages">
+          @for (page of pages; track page.id) {
+            <button
+              type="button"
+              class="ids-modal__tab"
+              [class.ids-modal__tab--active]="isPageActive(page.id)"
+              [attr.aria-selected]="isPageActive(page.id)"
+              role="tab"
+              (click)="selectPage(page.id)"
+            >
+              {{ page.label }}
+            </button>
+          }
+        </nav>
+      }
+
+      <div
+        #legacyContentRef
+        [ngClass]="[
+          'ids-modal__content',
+          contentTypeClass,
+          bodyScrollable ? 'ids-modal__content--scrollable' : '',
+          !showLegacyContentRegion ? 'ids-modal__content--hidden' : '',
+        ]"
+        (scroll)="onContentScroll()"
+      >
+        @if (showTabs) {
+          <div class="ids-modal__page-panel" role="tabpanel">
+            {{ activePageContent }}
+          </div>
+        } @else {
+          <ng-content />
+        }
+      </div>
+    }
+
+    @if (showScrollShadow) {
+      <div class="ids-modal__scroll-shadow" aria-hidden="true"></div>
+    }
+
+    <ng-content select="ids-modal-footer" />
+
+    @if (!hasFooterSlot) {
+      <footer class="ids-modal__footer">
+        @if (footerCheckbox) {
+          <div class="ids-modal__footer-start">
+            <ids-checkbox [label]="footerCheckboxLabel" [showLabel]="true" />
+          </div>
+        }
+
+        <div class="ids-modal__actions">
+          @if (showTertiaryAction) {
+            <ids-button
+              variant="tertiary"
+              size="lg"
+              [disabled]="!enableTertiaryAction"
+              (clicked)="onTertiaryClick()"
+            >
+              {{ tertiaryActionLabel }}
+            </ids-button>
+          }
+          <ids-button
+            [variant]="primaryButtonVariant"
+            size="lg"
+            [disabled]="!enablePrimaryAction"
+            (clicked)="onPrimaryClick()"
+          >
+            {{ primaryActionLabel }}
+          </ids-button>
+        </div>
+      </footer>
+    }
+  </div>
+</dialog>

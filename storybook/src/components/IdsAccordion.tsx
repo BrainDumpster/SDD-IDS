@@ -1,24 +1,9 @@
 import { Accordion as BaseAccordion } from "@base-ui-components/react/accordion";
-import type { ReactNode } from "react";
+import type { IdsAccordionItem, IdsAccordionProps } from "@component-contracts/ids/accordion.react-bridge";
 import { Icon } from "./Icon";
 import styles from "./IdsAccordion.module.css";
 
-export interface IdsAccordionItem {
-  value: string;
-  title: string;
-  content: ReactNode;
-  disabled?: boolean;
-  meta?: ReactNode;
-  formSlot?: ReactNode;
-}
-
-export interface IdsAccordionProps {
-  items: IdsAccordionItem[];
-  multiple?: boolean;
-  defaultValue?: string[];
-  variant?: "default" | "form";
-  chevronPosition?: "left" | "right";
-}
+export type { IdsAccordionItem, IdsAccordionProps };
 
 export function IdsAccordion({
   items,
