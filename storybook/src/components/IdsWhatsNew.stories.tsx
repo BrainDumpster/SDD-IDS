@@ -12,7 +12,7 @@ import {
 import { IdsWhatsNew } from "./IdsWhatsNew";
 
 const meta: Meta<typeof IdsWhatsNew> = {
-  title: "Spec Generated/IDS/Whats New",
+  title: "Components/IDS/Whats New",
   component: IdsWhatsNew,
   parameters: {
     layout: "fullscreen",

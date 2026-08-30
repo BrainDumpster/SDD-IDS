@@ -21,8 +21,8 @@
   position: relative;
   flex: 1;
   min-width: 0;
-  border: var(--border-width-border-1) solid var(--color-border-disabled);
-  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-disabled);
+  background: var(--color-background-surface-component);
 }
 
 .content {
@@ -44,7 +44,7 @@
   align-items: center;
   gap: var(--spacing-space-8);
   flex-shrink: 0;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .item {
@@ -52,7 +52,7 @@
 }
 
 .totalItem {
-  border: var(--border-width-border-1) solid var(--color-border-disabled);
+  border: var(--border-width-border-1) solid var(--color-border-gray-disabled);
 }
 
 .divider {
@@ -61,7 +61,7 @@
   transform: translateY(-50%);
   width: 1px;
   height: 56px;
-  border-right: 1px dashed var(--color-border-disabled);
+  border-right: 1px dashed var(--color-border-gray-disabled);
   pointer-events: none;
   z-index: 2;
 }
@@ -120,7 +120,7 @@
 }
 
 .value {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
@@ -144,7 +144,7 @@
 }
 
 .category {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
 }
@@ -165,30 +165,30 @@
 }
 
 .default {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .press,
 .selected {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .disabled {
-  background: var(--color-background-component-light);
+  background: var(--color-background-surface-component-light);
 }
 
 .disabled .value,
 .disabled .category,
 .disabled .label {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .disabled .icon {
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-accessible);
 }
 
 .overflowLayer {
@@ -220,8 +220,8 @@
 
 .left {
   left: 0;
-  border-right: var(--border-width-border-1) solid var(--color-border-disabled);
-  background: var(--color-background-component);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-disabled);
+  background: var(--color-background-surface-component);
 }
 
 .left::after {
@@ -235,8 +235,8 @@
 
 .right {
   right: 0;
-  border-left: var(--border-width-border-1) solid var(--color-border-disabled);
-  background: var(--color-background-component);
+  border-left: var(--border-width-border-1) solid var(--color-border-gray-disabled);
+  background: var(--color-background-surface-component);
 }
 
 .right::after {

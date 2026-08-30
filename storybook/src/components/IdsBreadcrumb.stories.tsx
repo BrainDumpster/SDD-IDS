@@ -1,9 +1,27 @@
 import "../../../components/ids-theme.css";
+import {
+  BREADCRUMB_DOCS_DESCRIPTION,
+  BREADCRUMB_SOURCE_CODE,
+} from "./ids-breadcrumb.developer-usage";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsBreadcrumb } from "./IdsBreadcrumb";
 
 const meta: Meta<typeof IdsBreadcrumb> = {
-  title: "Spec Generated/IDS/Breadcrumb",
+  tags: ["autodocs"],
+  parameters: {
+    docs: {
+      canvas: { sourceState: "open" },
+      description: {
+        component: BREADCRUMB_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: BREADCRUMB_SOURCE_CODE,
+      },
+    },
+  },
+  title: "Components/IDS/Breadcrumb",
   component: IdsBreadcrumb,
   args: {
     items: [

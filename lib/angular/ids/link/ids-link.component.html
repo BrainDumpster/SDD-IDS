@@ -1,0 +1,57 @@
+@if (isAnchor) {
+  <a
+    [class]="rootClass"
+    data-ids="ids-link"
+    [attr.data-type]="resolvedType"
+    [attr.data-state]="stateAttr || null"
+    [attr.data-external-icon]="showExternalLinkIcon ? 'true' : null"
+    [attr.href]="resolvedHref || null"
+    [attr.target]="resolvedTarget || null"
+    [attr.rel]="resolvedRel || null"
+    [attr.aria-disabled]="disabled ? 'true' : null"
+    [attr.tabindex]="disabled ? -1 : null"
+    (click)="onActivate($event)"
+  >
+    <span class="ids-link-label" data-ids="ids-link-label">{{ resolvedLabel }}</span>
+    @if (showExternalLinkIcon) {
+      <span
+        class="ids-link-external-icon"
+        data-ids="ids-link-external-icon"
+        aria-hidden="true"
+      >
+        <ids-icon
+          [shape]="externalIconShape"
+          [size]="externalIconSize"
+          variant="mask"
+        />
+      </span>
+    }
+  </a>
+} @else {
+  <button
+    type="button"
+    [class]="rootClass"
+    data-ids="ids-link"
+    [attr.data-type]="resolvedType"
+    [attr.data-state]="stateAttr || null"
+    [attr.data-external-icon]="showExternalLinkIcon ? 'true' : null"
+    [disabled]="disabled"
+    [attr.aria-disabled]="disabled ? 'true' : null"
+    (click)="onActivate($event)"
+  >
+    <span class="ids-link-label" data-ids="ids-link-label">{{ resolvedLabel }}</span>
+    @if (showExternalLinkIcon) {
+      <span
+        class="ids-link-external-icon"
+        data-ids="ids-link-external-icon"
+        aria-hidden="true"
+      >
+        <ids-icon
+          [shape]="externalIconShape"
+          [size]="externalIconSize"
+          variant="mask"
+        />
+      </span>
+    }
+  </button>
+}

@@ -1,14 +1,16 @@
 .badge {
+  --ids-badge-inner-size: 18px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 18px;
-  min-width: 18px;
+  box-sizing: content-box;
+  height: var(--ids-badge-inner-size);
+  min-width: var(--ids-badge-inner-size);
   border-width: var(--border-width-border-1);
   border-style: solid;
   border-radius: 100px;
   font-family: var(--typography-font-style-primary, inherit);
-  box-sizing: border-box;
   white-space: nowrap;
 }
 
@@ -24,8 +26,9 @@
 }
 
 .singleDigit {
+  width: var(--ids-badge-inner-size);
+  min-width: var(--ids-badge-inner-size);
   padding: 0;
-  width: 18px;
 }
 
 .twoDigits {
@@ -37,42 +40,42 @@
 }
 
 .default {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-white, #ffffff);
-  color: var(--color-text-white, #ffffff);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-gray-white, #ffffff);
+  color: var(--color-text-gray-white, #ffffff);
 }
 
 .controls {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .critical {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .warning {
-  background: var(--color-background-alerting-minor);
+  background: var(--color-background-alerting-minor-base);
   border-color: var(
     --ids-badge-warning-border-color,
-    var(--color-border-white)
+    var(--color-border-gray-white)
   );
-  color: var(--color-text-black);
+  color: var(--color-text-gray-black);
 }
 
 .disabled {
   background: var(--color-static-gray-500);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .success {
-  background: var(--color-background-alerting-success);
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .badge:focus-visible {

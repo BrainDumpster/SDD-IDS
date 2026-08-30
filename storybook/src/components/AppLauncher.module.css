@@ -5,10 +5,10 @@
   width: 36px;
   height: 36px;
   padding: 0;
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   border-radius: var(--corner-radius-radius-4);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
   cursor: pointer;
   transition: background 150ms ease;
 }
@@ -39,35 +39,35 @@
   padding-left: var(--padding-padding-16);
   border: none;
   border-radius: 0;
-  background: var(--color-background-masthead-brand-base);
-  color: var(--color-icon-white);
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
 }
 
 .triggerMasthead:hover {
-  background: var(--color-background-masthead-brand-strong);
+  background: var(--color-background-masthead-strong);
 }
 
 .triggerMasthead:active {
-  background: var(--color-background-masthead-brand-stronger);
+  background: var(--color-background-masthead-stronger);
 }
 
 .triggerMasthead[data-state="open"],
 .triggerMasthead[aria-expanded="true"] {
-  background: var(--color-background-masthead-brand-stronger);
+  background: var(--color-background-masthead-stronger);
 }
 
 .triggerMasthead[data-state="open"]:hover,
 .triggerMasthead[aria-expanded="true"]:hover {
-  background: var(--color-background-masthead-brand-strong);
+  background: var(--color-background-masthead-strong);
 }
 
 .triggerMasthead[data-state="open"]:active,
 .triggerMasthead[aria-expanded="true"]:active {
-  background: var(--color-background-masthead-brand-stronger);
+  background: var(--color-background-masthead-stronger);
 }
 
 .triggerMasthead:focus-visible {
-  outline: var(--border-width-border-1) dashed var(--color-border-white);
+  outline: var(--border-width-border-1) dashed var(--color-border-gray-white);
   outline-offset: -1px;
 }
 
@@ -87,15 +87,15 @@
   --app-launcher-tile-height: 125px;
   --app-launcher-column-divider-height: 110px;
   --app-launcher-column-divider-inset-block: 7px;
-  --app-launcher-column-divider-color: var(--color-border-accessible);
+  --app-launcher-column-divider-color: var(--color-border-gray-neutral-base);
   --separator-inset: var(--app-launcher-divider-inset);
   box-sizing: border-box;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   border: none;
   border-radius: 0;
   padding: var(--padding-padding-1);
   box-shadow:
-    inset 0 0 0 var(--border-width-border-1) var(--color-border-accessible),
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
       var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
     var(--shadow-drop-shadow-4-x) var(--shadow-drop-shadow-4-y) var(--shadow-drop-shadow-4-blur)
@@ -218,21 +218,21 @@
   padding: 0;
   border: none;
   border-radius: 0;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   cursor: pointer;
   text-decoration: none;
   transition: background 150ms ease;
   font-family: inherit;
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
   position: relative;
 }
 
 .appTile:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .appTile:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-icon-brand-strong);
 }
 
@@ -333,7 +333,7 @@
   line-height: var(--font-line-height-line-height-20);
   font-family: inherit;
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -346,7 +346,7 @@
 
 .optionsRegion {
   box-sizing: border-box;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-top: none;
   width: 295px;
   margin-inline: auto;
@@ -389,11 +389,11 @@
   padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10)
     var(--padding-padding-16);
   border: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   font-family: inherit;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-align: start;
   cursor: pointer;
   transition: background 80ms ease;
@@ -408,19 +408,19 @@
 }
 
 .optionItem:hover {
-  background: var(--color-background-brand-lighter);
-  color: var(--color-text-neutral);
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .optionItem:active {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
 .optionItem:focus-visible {
@@ -476,21 +476,21 @@
 }
 
 .programmeSynapse .programmeSynapseTile:hover {
-  background: var(--color-background-surface-2);
-  color: var(--color-icon-neutral-strong, var(--color-icon-neutral));
+  background: var(--color-background-surface-secondary);
+  color: var(--color-icon-gray-neutral-strong, var(--color-icon-gray-neutral-base));
 }
 
 .programmeSynapse .programmeSynapseTile:hover .labelStack {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .programmeSynapse .programmeSynapseTile:active {
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   color: var(--color-icon-brand-strong);
 }
 
 .programmeSynapse .programmeSynapseTile:active .labelStack {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .programmeSynapse .programmeSynapseTile:active .appName {
@@ -513,12 +513,12 @@
 /* Storybook / spec state matrix (demo-only forced states). */
 .programmeSynapseTile[data-state="hover"] .labelStack,
 .programmeSynapse .programmeSynapseTile[data-state="hover"] .labelStack {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .programmeSynapseTile[data-state="press"] .labelStack,
 .programmeSynapse .programmeSynapseTile[data-state="press"] .labelStack {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .programmeSynapseTile[data-state="press"] .appName,

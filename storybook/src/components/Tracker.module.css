@@ -24,7 +24,7 @@
 }
 
 .active {
-  background: var(--color-background-controls-brand-base);
+  background: var(--color-background-controls-base);
 }
 
 .pending {
@@ -56,5 +56,5 @@
 }
 
 .label_pending {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }

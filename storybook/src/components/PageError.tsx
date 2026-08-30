@@ -46,7 +46,7 @@ export function PageError({
       aria-labelledby="page-error-name"
     >
       <div className={styles.iconSlot} aria-hidden="true">
-        <Icon shapeName={iconName} color="var(--color-icon-disabled, #757575)" style={{ width: 80, height: 80 }} />
+        <Icon shapeName={iconName} color="var(--color-icon-gray-disabled, #757575)" style={{ width: 80, height: 80 }} />
       </div>
       <div className={styles.content}>
         {children || (

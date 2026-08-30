@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsTooltip as IdsTooltip } from "../../../../storybook/src/components/IdsTooltip";
 
 const meta: Meta<typeof IdsTooltip> = {
-  title: "Spec Generated/IDS/Tooltip",
+  title: "Components/IDS/Tooltip",
   component: IdsTooltip,
   parameters: { layout: "centered" },
   args: {
@@ -81,7 +81,7 @@ function TooltipStoryStyles() {
         padding: 8px;
         border: 1px dashed var(--color-border-neutral-light, #c5c5c5);
         border-radius: 6px;
-        background: var(--color-background-component, #ffffff);
+        background: var(--color-background-surface-component, #ffffff);
       }
       .sbTooltipLabel {
         font-size: 12px;
@@ -90,9 +90,9 @@ function TooltipStoryStyles() {
       }
       .sbTooltipTrigger {
         padding: 7px 14px;
-        border: 1px solid var(--color-border-accessible);
-        background: var(--color-background-component);
-        color: var(--color-text-neutral-strong);
+        border: 1px solid var(--color-border-gray-neutral-base);
+        background: var(--color-background-surface-component);
+        color: var(--color-text-gray-neutral-strong);
         border-radius: 2px;
         font-size: 14px;
       }
@@ -101,7 +101,8 @@ function TooltipStoryStyles() {
   );
 }
 
-export const Playground: Story = {
+export const ControlsPlayground: Story = {
+  name: "Controls Playground",
   render: (args) => (
     <div className="sbTooltipCanvas">
       <TooltipStoryStyles />
@@ -188,8 +189,8 @@ export const LayoutTokens: Story = {
   ),
 };
 
-const specTokens = ["--color-background-surface-2", "--color-border-accessible", "--color-text-neutral-strong", "--color-text-neutral"] as const;
-const specTokenRefs = {"--color-background-surface-2": ["Tokens: - Panel background: `var(--color-background-surface-2)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) |..."], "--color-border-accessible": ["Tokens: - Panel border + arrow stroke: `var(--color-border-accessible)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved) |..."], "--color-text-neutral-strong": ["Tokens: - Header text: `var(--color-text-neutral-strong)`.", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved..."], "--color-text-neutral": ["Tokens: - Body text: `var(--color-text-neutral)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-2)` | `var(--color-border-accessible)` | header `var(--color-text-neu...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-2)` (dark-resolved) | `var(--color-border-accessible)` (dark-resolved..."]} as Record<string, string[]>;
+const specTokens = ["--color-background-surface-secondary", "--color-border-gray-neutral-base", "--color-text-gray-neutral-strong", "--color-text-gray-neutral"] as const;
+const specTokenRefs = {"--color-background-surface-secondary": ["Tokens: - Panel background: `var(--color-background-surface-secondary)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) |..."], "--color-border-gray-neutral-base": ["Tokens: - Panel border + arrow stroke: `var(--color-border-gray-neutral-base)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Light Theme): | Closable | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header/body as above; close ico...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved...", "States (Dark Theme): | Closable | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved) |..."], "--color-text-gray-neutral-strong": ["Tokens: - Header text: `var(--color-text-gray-neutral-strong)`.", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved..."], "--color-text-gray-neutral": ["Tokens: - Body text: `var(--color-text-gray-neutral)`.", "States (Light Theme): | Standard (no title) | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | body `var(--color-te...", "States (Light Theme): | With header | `var(--color-background-surface-secondary)` | `var(--color-border-gray-neutral-base)` | header `var(--color-text-neu...", "States (Dark Theme): | Standard (no title) | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-...", "States (Dark Theme): | With header | `var(--color-background-surface-secondary)` (dark-resolved) | `var(--color-border-gray-neutral-base)` (dark-resolved..."]} as Record<string, string[]>;
 
 export const TokenInspector: Story = {
   render: () => (
@@ -213,7 +214,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -225,7 +226,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }

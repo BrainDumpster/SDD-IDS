@@ -138,7 +138,7 @@ export function IdsFooter({
           <Icon
             shapeName="time-clock"
             variant="mask"
-            color="var(--color-icon-neutral)"
+            color="var(--color-icon-gray-neutral-base)"
             style={{ width: 16, height: 16 }}
           />
           <span className={styles.dateTime}>{currentDateTime}</span>

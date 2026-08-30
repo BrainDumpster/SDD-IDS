@@ -10,7 +10,7 @@
 - **Description:** Application status footer bar with optional host name, SWID (with copy), current date/time, and time-zone selector.
 - **Status:** active
 - **Created:** 2026-05-22
-- **Updated:** 2026-05-25
+- **Updated:** 2026-08-19
 - **Figma (validated):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38908-5818&m=dev
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
 - **Primary node:** `38908:5818` (component instance `Footer`)
@@ -19,7 +19,7 @@
 - **Storybook examples requested:** yes
 - **Storybook path:** `storybook-generated/ids/src/components/Footer.stories.tsx` (main story glob — avoids `importers[path]` after hot-add under `storybook-generated/`)
 - **Storybook meta title:** `Spec Generated/IDS/Footer`
-- **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-05-22)
+- **Live verification:** Figma MCP — `get_design_context` + `get_variable_defs` on `38908:5818` (session 2026-08-19)
 
 ## Anatomy
 Deterministic slot order (left → right):
@@ -32,11 +32,24 @@ Deterministic slot order (left → right):
 6. `FooterTimeGroup` (optional) — `FooterTimeIcon` + `FooterDateTimeLabel`
 7. `FooterTimeZoneGroup` (optional) — single tertiary button with world-globe icon (size: small, variant: tertiary, iconSlug: world-globe)
 
+Angular composition selectors may map these slots 1:1 as:
+
+```html
+<ids-footer>
+  <ids-footer-left-region>
+    <ids-footer-host-name />
+    <ids-footer-swid-group />
+  </ids-footer-left-region>
+  <ids-footer-time-group />
+  <ids-footer-time-zone-group />
+</ids-footer>
+```
+
 ## Layout & Measurements
 - Root width is container-driven: `width: 100%`, `box-sizing: border-box`.
 - Root height: **32px** (fixed bar height in Figma sample `38908:5818`).
 - Root layout: horizontal flex, `align-items: center`, main axis packs optional right groups toward the **end** (`justify-content: flex-end`); left region still consumes free space on the start side.
-- Root border: `var(--border-width-border-1)` solid `var(--color-border-light)` on all sides (Figma frame uses full perimeter stroke).
+- Root border: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-light)` on all sides (Figma frame uses full perimeter stroke).
 - Root padding: none on root; inner regions carry horizontal padding.
 - **Left region:** `padding-left` / `padding-right` `var(--padding-padding-16)`; gap between host and SWID groups `var(--spacing-space-24)`; items vertically centered.
 - **Host name block:** content-driven width; truncates at **48 characters** with ellipsis; Figma sample text area ~277px.
@@ -48,16 +61,16 @@ Deterministic slot order (left → right):
 
 ## Tokens
 ### Typography
-- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-neutral-strong)`; gap to values via `var(--spacing-space-2)`
-- Host/SWID values: same size/line-height, regular weight, `var(--color-text-neutral)`
-- Date/time label: Body 2, regular weight, `var(--color-text-neutral)`
+- Label prefixes (`Host Name:`, `SWID:`): `var(--font-size-body-2)`, `var(--font-line-height-line-height-20)`, medium weight, `var(--color-text-gray-neutral-strong)`; gap to values via `var(--spacing-space-2)`
+- Host/SWID values: same size/line-height, regular weight, `var(--color-text-gray-neutral)`
+- Date/time label: Body 2, regular weight, `var(--color-text-gray-neutral)`
 - Time zone action label: Body 2, regular weight, `var(--color-text-brand-strong)`
 
 ### Colors and surfaces
-- Bar background: `var(--color-background-surface-1)`
-- Bar border: `var(--color-border-light)`
+- Bar background: `var(--color-background-surface-primary)`
+- Bar border: `var(--color-border-gray-neutral-light)`
 - Copy icon (default/interactive): `var(--color-icon-brand-base)`
-- Time clock icon: `var(--color-icon-neutral)`
+- Time clock icon: `var(--color-icon-gray-neutral-base)`
 - World globe icon: `var(--color-icon-brand-base)` (matches brand treatment of time-zone group)
 
 ### Spacing
@@ -73,20 +86,20 @@ Deterministic slot order (left → right):
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 | --- | --- | --- | --- | --- |
-| root | default | `var(--color-background-surface-1)` | `var(--border-width-border-1)` `var(--color-border-light)` | — |
-| host label | default | transparent | none | `var(--color-text-neutral-strong)` |
-| host value | default | transparent | none | `var(--color-text-neutral)` |
-| swid label | default | transparent | none | `var(--color-text-neutral-strong)` |
-| swid value | default | transparent | none | `var(--color-text-neutral)` |
+| root | default | `var(--color-background-surface-primary)` | `var(--border-width-border-1)` `var(--color-border-gray-neutral-light)` | — |
+| host label | default | transparent | none | `var(--color-text-gray-neutral-strong)` |
+| host value | default | transparent | none | `var(--color-text-gray-neutral)` |
+| swid label | default | transparent | none | `var(--color-text-gray-neutral-strong)` |
+| swid value | default | transparent | none | `var(--color-text-gray-neutral)` |
 | copy control | default | transparent | none | `var(--color-icon-brand-base)` |
 | copy control | hover | transparent | none | `var(--color-icon-brand-base)` |
 | copy control | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| copy control | disabled | transparent | none | `var(--color-icon-disabled)` |
-| datetime label | default | transparent | none | `var(--color-text-neutral)` |
-| timezone action | default | transparent | none | tertiary button styles (uses Button component) |
-| timezone action | hover | transparent | none | tertiary button hover styles |
-| timezone action | focus-visible | transparent | focus ring from Button component | tertiary button focus styles |
-| timezone action | disabled | transparent | none | tertiary button disabled styles |
+| copy control | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
+| datetime label | default | transparent | none | `var(--color-text-gray-neutral)` |
+| timezone action | default | transparent | none | `var(--color-text-brand-strong)` |
+| timezone action | hover | transparent | none | `var(--color-text-link-brand-base)` + underline |
+| timezone action | focus-visible | transparent | focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)` | inherits hover or default text token |
+| timezone action | disabled | transparent | none | `var(--color-text-gray-disabled)` |
 
 ## States (Dark Theme)
 
@@ -148,6 +161,20 @@ Visibility axes (boolean, default `true` — matches Figma `Footer` instance):
 | `onTimeZoneClick?()` | No | Fired when time-zone control activated |
 | `className` | No | Host layout hook on root |
 
+### Angular composition API
+Projected-child API for the Angular library port under `lib/angular/ids/footer/`:
+
+| Selector | Inputs | Outputs | Notes |
+| --- | --- | --- | --- |
+| `ids-footer` | `ariaLabel?` | — | Root landmark and flex container |
+| `ids-footer-left-region` | — | — | Required only when left content is present |
+| `ids-footer-host-name` | `hostname` | — | Applies 48-character truncation and tooltip title for overflow case |
+| `ids-footer-swid-group` | `swid`, `copyDisabled?` | `copySwid` | Emits SWID after copy activation or clipboard fallback failure |
+| `ids-footer-time-group` | `currentDateTime` | — | Display-only date/time text |
+| `ids-footer-time-zone-group` | `timeZoneLabel?`, `disabled?`, `ariaLabel?` | `timeZoneClick` | Renders world-globe icon plus button text |
+
+Child order remains deterministic and matches the slot order in **Anatomy**. Visibility in the Angular composition API is controlled by including or omitting the corresponding child selector rather than by root boolean props.
+
 ### Spec Accurate Design story defaults
 Reference sample aligned to Figma node `38908:5818`:
 
@@ -162,6 +189,8 @@ Reference sample aligned to Figma node `38908:5818`:
   showTimeZone: true,
 }
 ```
+
+Angular composition story uses the same values, mapped onto child component inputs.
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
@@ -179,19 +208,32 @@ FooterRoot
     FooterTimeZoneAction (tertiary button with world-globe icon)
 ```
 
+Angular library selector mapping:
+
+```
+ids-footer
+  [optional] ids-footer-left-region
+    [optional] ids-footer-host-name
+    [optional] ids-footer-swid-group
+  [optional] ids-footer-time-group
+  [optional] ids-footer-time-zone-group
+```
+
 ### Variant matrix
 - Visibility: `showHostname` × `showCurrentDateAndTime` × `showTimeZone` (each `true | false`; eight combinations; empty left region allowed when all left content off).
+- Angular composition port: omit `ids-footer-host-name`, `ids-footer-time-group`, or `ids-footer-time-zone-group` to represent the same visibility combinations without root boolean inputs.
 - Interactive states apply only to `FooterCopyControl` and `FooterTimeZoneAction`.
 - Root height remains **32px** for all visibility combinations.
 
 ### Per-slot style contract
-- `FooterRoot`: background `var(--color-background-surface-1)`; border `var(--border-width-border-1)` `var(--color-border-light)`; height 32px; flex end alignment; width 100%.
+- `FooterRoot`: background `var(--color-background-surface-primary)`; border `var(--border-width-border-1)` `var(--color-border-gray-neutral-light)`; height 32px; flex end alignment; width 100%.
 - `FooterLeftRegion`: flex 1 0 0; gap `var(--spacing-space-24)`; horizontal padding `var(--padding-padding-16)`.
-- `FooterHostName` / SWID labels: `var(--color-text-neutral-strong)`; values `var(--color-text-neutral)`.
+- `FooterHostName` / SWID labels: `var(--color-text-gray-neutral-strong)`; values `var(--color-text-gray-neutral)`.
 - `FooterCopyControl`: 14px icon via Icon primitive slug `copy`, tint `var(--color-icon-brand-base)`.
-- `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-neutral)`.
-- `FooterDateTimeLabel`: `var(--color-text-neutral)`, Body 2 regular weight.
-- `FooterTimeZoneAction`: tertiary button (size: small, variant: tertiary) with iconSlug `world-globe`; uses Button component.
+- `FooterTimeIcon`: slug `time-clock`, 16px, `var(--color-icon-gray-neutral-base)`.
+- `FooterDateTimeLabel`: `var(--color-text-gray-neutral)`, Body 2 regular weight.
+- `FooterTimeZoneIcon`: slug `world-globe`, 16px, `var(--color-icon-brand-base)`.
+- `FooterTimeZoneAction`: `var(--color-text-brand-strong)`; hover `var(--color-text-link-brand-base)` with underline.
 
 ### Behavior contract
 - Copy writes `swid` prop to clipboard when enabled; always call `onCopySwid` on successful activation.
@@ -217,7 +259,9 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 ### Fallback/error rules
 - Unknown visibility prop values → treat as `true` if boolean coercion fails.
 - Missing `swid` with `showSwid` implied by copy control → disable copy and set `aria-disabled="true"`.
+- Angular composition port: if `ids-footer-swid-group` is present with an empty `swid`, keep the group visible but disable copy.
 - Missing `timeZoneLabel` with `showTimeZone=true` → render action with fallback label `"Time zone"` (localized by host).
+- Angular composition port: if `ids-footer-time-zone-group` is present without `timeZoneLabel`, render the same `"Time zone"` fallback label.
 - Clipboard API failure → still fire `onCopySwid`; host shows error toast.
 - Unknown icon slug → omit icon; keep text/control usable.
 
@@ -237,6 +281,9 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 | Component map | `data/component-figma-map.json` → `Footer` (`38908:5818`, file `0bHk3XhrjFhowgFkz9yLr4`) |
 | Theme CSS | `components/ids-theme.css` |
 | Root spec | `components/ids/root-spec.md` |
-| Figma MCP (2026-05-22) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
+| Component contract | `component-contracts/ids/footer.contract.ts` |
+| Angular library port | `lib/angular/ids/footer/` |
+| Angular composition Storybook | `storybook-angular/src/components/ids-footer-lib/` |
+| Figma MCP (2026-08-19) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |
 | Storybook implementation | `storybook/src/components/IdsFooter.tsx`, `storybook/src/components/IdsFooter.module.css` |
 | Spec Generated story | `storybook/src/components/IdsFooter.stories.tsx` |

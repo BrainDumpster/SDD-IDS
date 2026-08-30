@@ -15,7 +15,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof RecommendationFeedback> = {
-  title: "Spec Generated/Synapse/Chat and Layout/Recommendation Feedback",
+  title: "Components/Synapse/Chat and Layout/Recommendation Feedback",
   component: RecommendationFeedback,
   parameters: {
     layout: "centered",

@@ -1,4 +1,4 @@
-/* Spec Generated — Synapse Main Menu Top (IDS-fork) */
+/* Components — Synapse Main Menu Top (IDS-fork) */
 import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { type ComponentProps } from "react";
@@ -69,7 +69,7 @@ const jobsMenuOptions = [
 ];
 
 const meta: Meta<typeof MainMenuTop> = {
-  title: "Spec Generated/Synapse/Main Menu Top",
+  title: "Components/Synapse/Main Menu Top",
   component: MainMenuTop,
   parameters: {
     layout: "padded",

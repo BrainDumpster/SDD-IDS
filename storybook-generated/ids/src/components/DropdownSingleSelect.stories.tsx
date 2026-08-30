@@ -19,7 +19,7 @@ const options: Option[] = [
 ];
 
 const meta: Meta<typeof IdsDropdownSingleSelect> = {
-  title: "Spec Generated/IDS/Dropdown/Single Select",
+  title: "Components/IDS/Dropdown/Single Select",
   component: IdsDropdownSingleSelect,
   parameters: { layout: "centered" },
   argTypes: {
@@ -108,7 +108,7 @@ export const States: Story = {
   ),
 };
 
-const specTokens = ["--padding-padding-16", "--padding-padding-10", "--padding-padding-6", "--padding-padding-1", "--padding-padding-24", "--border-width-border-default", "--color-background-component", "--color-border-accessible", "--color-border-strong", "--color-border-brand-base", "--color-border-disabled", "--color-text-neutral", "--color-text-neutral-strong", "--color-text-disabled", "--color-background-gray-lighter", "--color-background-controls-brand-lighter", "--color-background-controls-brand-base", "--color-background-controls-brand-strong", "--color-text-brand-strong", "--color-border-transparent-brand", "--color-icon-white", "--color-icon-accessible", "--color-icon-neutral", "--color-icon-disabled", "--color-border-alerting-critical-base", "--color-icon-alerting-critical", "--color-text-critical", "--corner-radius-radius-2", "--corner-radius-radius-4", "--spacing-space-8"] as const;
+const specTokens = ["--padding-padding-16", "--padding-padding-10", "--padding-padding-6", "--padding-padding-1", "--padding-padding-24", "--border-width-border-default", "--color-background-surface-component", "--color-border-gray-neutral-base", "--color-border-gray-neutral-strong", "--color-border-brand-base", "--color-border-gray-disabled", "--color-text-gray-neutral", "--color-text-gray-neutral-strong", "--color-text-gray-disabled", "--color-background-gray-lighter", "--color-background-controls-lighter", "--color-background-controls-base", "--color-background-controls-strong", "--color-text-brand-strong", "--color-border-brand-transparent-brand", "--color-icon-gray-white", "--color-icon-gray-neutral-accessible", "--color-icon-gray-neutral-base", "--color-icon-gray-disabled", "--color-border-alerting-critical-base", "--color-icon-alerting-critical-base", "--color-text-alerting-critical-base", "--corner-radius-radius-2", "--corner-radius-radius-4", "--spacing-space-8"] as const;
 const specTokenRefs = {
   "--padding-padding-16": ["Layout: field + option horizontal padding"],
   "--padding-padding-10": ["Layout: large field vertical padding, option vertical padding"],
@@ -116,27 +116,27 @@ const specTokenRefs = {
   "--padding-padding-1": ["Geometry: caret horizontal padding"],
   "--padding-padding-24": ["Geometry: option right padding"],
   "--border-width-border-default": ["Geometry: field + menu border width (1px)"],
-  "--color-background-component": ["States: field default/hover/show-dropdown/focus/error bg", "States: option default bg"],
-  "--color-border-accessible": ["States: field default/show-dropdown/focus-visible (inner) border"],
-  "--color-border-strong": ["States: field hover border"],
+  "--color-background-surface-component": ["States: field default/hover/show-dropdown/focus/error bg", "States: option default bg"],
+  "--color-border-gray-neutral-base": ["States: field default/show-dropdown/focus-visible (inner) border"],
+  "--color-border-gray-neutral-strong": ["States: field hover border"],
   "--color-border-brand-base": ["States: field focus-visible outer ring"],
-  "--color-border-disabled": ["States: field disabled border"],
-  "--color-text-neutral": ["States: field default/hover/show-dropdown/focus/error text", "States: option default/hover text"],
-  "--color-text-neutral-strong": ["Tokens: label text"],
-  "--color-text-disabled": ["States: field disabled text"],
+  "--color-border-gray-disabled": ["States: field disabled border"],
+  "--color-text-gray-neutral": ["States: field default/hover/show-dropdown/focus/error text", "States: option default/hover text"],
+  "--color-text-gray-neutral-strong": ["Tokens: label text"],
+  "--color-text-gray-disabled": ["States: field disabled text"],
   "--color-background-gray-lighter": ["States: field disabled bg", "States: option disabled bg"],
-  "--color-background-controls-brand-lighter": ["States: option hover bg"],
-  "--color-background-controls-brand-base": ["States: radio/checkbox selected fill"],
-  "--color-background-controls-brand-strong": ["States: radio/checkbox selected hover fill"],
+  "--color-background-controls-lighter": ["States: option hover bg"],
+  "--color-background-controls-base": ["States: radio/checkbox selected fill"],
+  "--color-background-controls-strong": ["States: radio/checkbox selected hover fill"],
   "--color-text-brand-strong": ["States: option selected text"],
-  "--color-border-transparent-brand": ["States: checkbox selected border"],
-  "--color-icon-white": ["States: checkbox selected tick colour"],
-  "--color-icon-accessible": ["Asset: caret (legacy)"],
-  "--color-icon-neutral": ["Asset: caret default/hover/focus/show-dropdown/error"],
-  "--color-icon-disabled": ["Asset: caret disabled"],
+  "--color-border-brand-transparent-brand": ["States: checkbox selected border"],
+  "--color-icon-gray-white": ["States: checkbox selected tick colour"],
+  "--color-icon-gray-neutral-accessible": ["Asset: caret (legacy)"],
+  "--color-icon-gray-neutral-base": ["Asset: caret default/hover/focus/show-dropdown/error"],
+  "--color-icon-gray-disabled": ["Asset: caret disabled"],
   "--color-border-alerting-critical-base": ["States: field error border"],
-  "--color-icon-alerting-critical": ["States: error icon colour"],
-  "--color-text-critical": ["States: error text colour"],
+  "--color-icon-alerting-critical-base": ["States: error icon colour"],
+  "--color-text-alerting-critical-base": ["States: error text colour"],
   "--corner-radius-radius-2": ["Geometry: checkbox corner radius"],
   "--corner-radius-radius-4": ["Geometry: focus ring border-radius"],
   "--spacing-space-8": ["Geometry: option gap, label gap"],
@@ -164,7 +164,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -176,7 +176,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }

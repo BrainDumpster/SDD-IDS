@@ -1,31 +1,20 @@
 import { Accordion as BaseAccordion } from "@base-ui-components/react/accordion";
-import type { ReactNode } from "react";
+import type { IdsAccordionItem, IdsAccordionProps } from "@component-contracts/ids/accordion.react-bridge";
 import { Icon } from "./Icon";
 import styles from "./IdsAccordion.module.css";
 
-export interface IdsAccordionItem {
-  value: string;
-  title: string;
-  content: ReactNode;
-  meta?: ReactNode;
-}
-
-export interface IdsAccordionProps {
-  items: IdsAccordionItem[];
-  multiple?: boolean;
-  defaultValue?: string[];
-  chevronPosition?: "left" | "right";
-}
+export type { IdsAccordionItem, IdsAccordionProps };
 
 export function IdsAccordion({
   items,
   multiple = false,
   defaultValue,
+  variant = "default",
   chevronPosition = "left",
 }: IdsAccordionProps) {
   return (
     <BaseAccordion.Root
-      className={styles.root}
+      className={[styles.root, variant === "form" ? styles.rootForm : ""].filter(Boolean).join(" ")}
       multiple={multiple}
       defaultValue={defaultValue}
     >
@@ -33,6 +22,7 @@ export function IdsAccordion({
         <BaseAccordion.Item
           key={item.value}
           value={item.value}
+          disabled={item.disabled}
           className={styles.item}
           data-first={index === 0 ? "true" : "false"}
         >
@@ -43,21 +33,18 @@ export function IdsAccordion({
                   styles.trigger,
                   chevronPosition === "left" ? styles.triggerLeft : styles.triggerRight,
                   state.open ? styles.open : "",
+                  item.disabled ? styles.disabled : "",
                 ]
                   .filter(Boolean)
                   .join(" ")
               }
             >
               {chevronPosition === "left" ? (
-                <div className={styles.iconFrame}>
-                  <Icon shapeName="chev-down-thick" className={styles.icon} />
-                </div>
+                <Icon shapeName="chev-down-thick" className={styles.icon} />
               ) : null}
               <span className={styles.title}>{item.title}</span>
               {chevronPosition === "right" ? (
-                <div className={styles.iconFrame}>
-                  <Icon shapeName="chev-down-thick" className={styles.icon} />
-                </div>
+                <Icon shapeName="chev-down-thick" className={styles.icon} />
               ) : null}
             </BaseAccordion.Trigger>
           </BaseAccordion.Header>
@@ -66,6 +53,9 @@ export function IdsAccordion({
               <div className={styles.contentCard}>{item.content}</div>
             </div>
             {item.meta ? <div className={styles.meta}>{item.meta}</div> : null}
+            {variant === "form" && item.formSlot ? (
+              <div className={styles.formSlot}>{item.formSlot}</div>
+            ) : null}
           </BaseAccordion.Panel>
         </BaseAccordion.Item>
       ))}

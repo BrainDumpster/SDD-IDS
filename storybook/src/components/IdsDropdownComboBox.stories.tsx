@@ -124,7 +124,7 @@ function ComboTrigger({
 
 /**
  * Optional field `Label`. Sits to the LEFT of the field on the same row; body-2
- * / weight 400 / `--color-text-neutral-strong`. Two sizes track the field height:
+ * / weight 400 / `--color-text-gray-neutral-strong`. Two sizes track the field height:
  * Large 40px (`--padding-padding-10` top/bottom), Small 32px (`--padding-padding-6`).
  * The trailing `*` (required indicator) is optional.
  */
@@ -149,7 +149,7 @@ function FieldLabel({
         fontSize: "var(--font-size-body-2)",
         lineHeight: "var(--font-line-height-line-height-20)",
         fontWeight: 400,
-        color: "var(--color-text-neutral-strong)",
+        color: "var(--color-text-gray-neutral-strong)",
         whiteSpace: "nowrap",
       }}
     >
@@ -160,7 +160,7 @@ function FieldLabel({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Spec Generated/IDS/Dropdown/Combo Box",
+  title: "Components/IDS/Dropdown/Combo Box",
   component: DropdownMenu,
   parameters: {
     // Top-aligned (not vertically centered) so the open menu sits high on the
@@ -229,11 +229,11 @@ export const SingleSelectContractManual: Story = {
           }}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>{helperText}</div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>{helperText}</div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           <strong>onSelection (csv):</strong> {selectionEvent.csv}
         </div>
-        <div style={{ fontSize: 12, color: "var(--color-text-neutral)", whiteSpace: "pre-wrap" }}>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)", whiteSpace: "pre-wrap" }}>
           <strong>onSelection (item):</strong> {JSON.stringify(selectionEvent.item)}
         </div>
       </div>
@@ -272,7 +272,7 @@ export const MultiSelectContractManual: Story = {
     ];
     const [selected, setSelected] = useState<string[]>(options.map((o) => o.label));
     const [searchQuery, setSearchQuery] = useState("");
-    const [showSelectedExpanded, setShowSelectedExpanded] = useState(false);
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
 
     // Single source of truth: update the selection state.
     const applySelection = (next: string[]) => {
@@ -306,7 +306,7 @@ export const MultiSelectContractManual: Story = {
           resize: "horizontal",
           overflow: "auto",
           padding: 16,
-          border: "1px dashed var(--color-border-accessible)",
+          border: "1px dashed var(--color-border-gray-neutral-base)",
           display: "grid",
           gap: 8,
         }}
@@ -356,8 +356,14 @@ export const MultiSelectContractManual: Story = {
           onShowSelectedPanelClear={() => applySelection([])}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
-          Resize the dashed box → the field clamps 186–700px; the menu grows to the widest option (up to 700, then truncates). Toggle Show/Hide Selected, dismiss tags, Select All toggles off when all visible are selected.
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
+          Choose one or more products
+        </div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
+          <strong>onSelection (csv):</strong> {selectionEvent.csv || "(empty)"}
+        </div>
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)", whiteSpace: "pre-wrap" }}>
+          <strong>onSelection (items):</strong> {JSON.stringify(selectionEvent.items)}
         </div>
 
       </div>
@@ -378,9 +384,66 @@ export const MultiSelectLongOption: Story = {
       { id: "o3", label: "Compute & Networking" },
       { id: "o4", label: "Security & Compliance" },
     ];
-    const [selected, setSelected] = useState<string[]>(options.map((o) => o.label));
-    const [searchQuery, setSearchQuery] = useState("");
-    const [showSelectedExpanded, setShowSelectedExpanded] = useState(false);
+
+    return (
+      <div style={{ width: 360, display: "grid", gap: 8 }}>
+        <DropdownMenu
+          selectionMode="single"
+          selectedValues={["Storage"]}
+          trigger={<ComboTrigger value="Storage" disabled />}
+          items={items}
+          disabled
+          showSearch
+        />
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
+          Component is disabled (no expand + disabled cursor)
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ErrorState: Story = {
+  render: () => {
+    const items = [
+      { id: "1", value: "Storage", label: "Storage", selectable: true },
+      { id: "2", value: "Compute", label: "Compute", selectable: true },
+    ];
+
+    return (
+      <div style={{ width: 360, display: "grid", gap: 8 }}>
+        <DropdownMenu
+          selectionMode="single"
+          trigger={<ComboTrigger placeholder="-Type or Select-" error />}
+          items={items}
+          showSearch
+        />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--spacing-space-8)",
+            color: "var(--color-text-alerting-critical-base)",
+            fontSize: "var(--font-size-body-2)",
+          }}
+        >
+          <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
+          Error message
+        </div>
+      </div>
+    );
+  },
+};
+
+export const MultiSelectShowSelectedPanel: Story = {
+  render: () => {
+    const options = Array.from({ length: 8 }, (_, i) => ({
+      id: `opt-${i + 1}`,
+      label: `Option ${i + 1}`,
+    }));
+    const [selected, setSelected] = useState<string[]>(["Option 1", "Option 2", "Option 4", "Option 6"]);
+    const [searchQuery, setSearchQuery] = useState("opt");
+    const [showSelectedExpanded, setShowSelectedExpanded] = useState(true);
 
     const applySelection = (next: string[]) => {
       setSelected(next);
@@ -408,7 +471,7 @@ export const MultiSelectLongOption: Story = {
         style={{
           width: 360,
           padding: 16,
-          border: "1px dashed var(--color-border-accessible)",
+          border: "1px dashed var(--color-border-gray-neutral-base)",
           display: "grid",
           gap: 8,
         }}
@@ -455,8 +518,8 @@ export const MultiSelectLongOption: Story = {
           onShowSelectedPanelClear={() => applySelection([])}
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
-          The 360px field is narrower than the menu; the menu grows to the widest option and truncates at 700px. The selected long tag also truncates. Toggle Show/Hide Selected, dismiss tags, Select All toggles off when all visible are selected.
+        <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
+          Toggle Show/Hide Selected; dismiss tags individually; search clear appears when query is non-empty.
         </div>
       </div>
     );
@@ -503,7 +566,7 @@ export const Truncation: Story = {
           showSearch
           defaultOpen
         />
-        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>Time zone</div>
+        <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>Time zone</div>
       </div>
     );
   },
@@ -584,7 +647,7 @@ export const DisabledAndErrorStates: Story = {
             disabled
             showSearch
           />
-          <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-neutral)" }}>
+          <div style={{ fontSize: "var(--font-size-body-2)", color: "var(--color-text-gray-neutral)" }}>
             Component is disabled (no expand + disabled cursor)
           </div>
         </div>
@@ -600,7 +663,7 @@ export const DisabledAndErrorStates: Story = {
               display: "flex",
               alignItems: "center",
               gap: "var(--spacing-space-8)",
-              color: "var(--color-text-critical)",
+              color: "var(--color-text-alerting-critical-base)",
               fontSize: "var(--font-size-body-2)",
             }}
           >

@@ -15,9 +15,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-radius: var(--modal-control-radius);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   box-shadow:
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
       var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
@@ -32,6 +32,15 @@
   flex-direction: column;
   max-height: 85vh;
   outline: none;
+}
+
+/* Programme radius: class-bound so Synapse 16px cannot leak into IDS stories. */
+.popupIds {
+  border-radius: var(--corner-radius-radius-none, 0px);
+}
+
+.popupSynapse {
+  border-radius: var(--modal-control-radius, var(--corner-radius-radius-16));
 }
 
 .sm { width: 480px; }
@@ -79,7 +88,7 @@
   font-size: var(--font-size-header-5);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-32);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   margin: 0;
 }
 
@@ -87,14 +96,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--scale-32);
-  height: var(--scale-32);
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
   border-radius: var(--corner-radius-radius-4);
   border: none;
   background: transparent;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   cursor: pointer;
-  transition: background 100ms ease;
+  line-height: 0;
 }
 
 .close:focus-visible {
@@ -114,7 +125,7 @@
   padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-8);
   margin: 0;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
 }
 
@@ -137,7 +148,7 @@
   min-height: 0;
   overflow-y: auto;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
 }
 
@@ -165,10 +176,31 @@
 .footer {
   padding: var(--padding-padding-24);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--padding-padding-12);
+  gap: var(--padding-padding-16);
   flex-shrink: 0;
+}
+
+.footerBordered {
+  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--padding-padding-12);
+  margin-left: auto;
+}
+
+.footerCheckbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
 }
 
 /* ----- About pattern (Synapse) — shell inside Dialog ----- */
@@ -198,7 +230,7 @@
   flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   box-shadow:
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
       var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
