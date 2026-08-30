@@ -8,6 +8,7 @@
   border-bottom: var(--border-width-border-1) solid var(--color-border-transparent-neutral);
   font-family: inherit;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .left {
@@ -15,6 +16,7 @@
   align-items: center;
   gap: var(--spacing-space-8);
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .logo {
@@ -27,8 +29,7 @@
 }
 
 .productName {
-  display: flex;
-  align-items: center;
+  display: block;
   color: var(--color-text-white);
   font-size: var(--font-size-header-6);
   line-height: var(--font-line-height-line-height-32);
@@ -36,6 +37,12 @@
   white-space: nowrap;
   margin: 0;
   padding: 0;
+  width: 100%;
+  max-width: 45ch;
+  min-width: 1ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 auto;
 }
 
 .actions {
@@ -44,6 +51,7 @@
   gap: 0;
   height: 54px;
   flex-shrink: 0;
+  margin-left: var(--spacing-space-16, 16px);
 }
 
 .iconsSlot {

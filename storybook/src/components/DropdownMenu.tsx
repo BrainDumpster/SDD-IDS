@@ -176,7 +176,7 @@ export function DropdownMenu({
         </span>
       </Menu.Trigger>
       <Menu.Portal>
-        <Menu.Positioner sideOffset={sideOffset} alignment="start" style={positionerStyle}>
+        <Menu.Positioner sideOffset={sideOffset} align="start" style={positionerStyle}>
           <Menu.Popup className={styles.popup} style={popupStyle}>
             {showSearch ? (
               <>
@@ -197,7 +197,11 @@ export function DropdownMenu({
                         value={searchValue}
                         placeholder={searchPlaceholder}
                         onChange={(event) => onSearchValueChange?.(event.target.value)}
-                        onKeyDown={(event) => event.stopPropagation()}
+                        onKeyDown={(event) => {
+                          if (!["Escape", "ArrowUp", "ArrowDown"].includes(event.key)) {
+                            event.stopPropagation();
+                          }
+                        }}
                       />
                       {showSearchClear ? (
                         <button

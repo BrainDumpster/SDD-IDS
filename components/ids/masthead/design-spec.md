@@ -22,8 +22,10 @@
 - Standard height: 56px (`--scale-56`)
 - Brand slot vertical alignment: product info block top offset ~12.5px from masthead top (Figma `10130:29520`)
 - Product logo (optional): **32×32px** (`var(--scale-32)`), **8px** gap (`var(--spacing-space-8)`) before product name when present
-- Product name: header-6 typography — `var(--font-size-header-6)` / `var(--font-line-height-line-height-32)`, `var(--color-text-white)`
+- Product name: header-6 typography — `var(--font-size-header-6)` / `var(--font-line-height-line-height-32)`, `var(--color-text-white)`; truncates with `text-overflow: ellipsis` when longer than **45ch**; keeps a minimum of **1ch** visible; `white-space: nowrap` and `overflow: hidden`
+- Action group spacing: **16px** between the brand/product-name area and the right action group (`margin-left: var(--spacing-space-16, 16px)`)
 - Horizontal padding: 16px left, 8px right
+- Masthead overflow: `overflow: hidden` to prevent horizontal scrolling in the masthead area; content truncates instead of scroll
 - Bottom border: `var(--border-width-border-1)` solid `var(--color-border-transparent-neutral)`
 - Border radius: 0 (full-width masthead)
 - Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
@@ -151,7 +153,7 @@
 - Search functionality within masthead (optional)
 ### Accessibility
 - Focus ring: applies to action elements (icon buttons, avatar button) only — not the masthead container. Style: `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` (inset)
-- Keyboard navigation: Arrow keys, Enter, Tab, Escape
+- Keyboard navigation: `Tab` focuses action items in order; `ArrowLeft` / `ArrowRight` move focus between masthead action buttons (toolbar pattern, wrapping at ends); `Home` focuses the first action; `End` focuses the last action; `Enter` / `Space` activates the focused button; `Escape` closes an open dropdown/panel
 - Screen reader support: Proper ARIA attributes for navigation
 - High contrast: Meets WCAG AA standards with provided colors
 - Semantic HTML: Use header element with nav landmarks
@@ -298,15 +300,15 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 
 ### Validation checklist
 - [ ] Implement masthead navigation functionality
-- [ ] Add proper focus management
-- [ ] Test keyboard navigation (Arrows, Enter, Tab, Escape)
+- [x] Add proper focus management
+- [x] Test keyboard navigation (Arrows, Enter, Tab, Escape)
 - [ ] Verify ARIA attributes and roles
 - [ ] Test hover and focus states
 - [ ] Implement user menu functionality
 - [ ] Add status indicators
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
-- [ ] Test responsive behavior
+- [x] Test responsive behavior
 - [ ] Masthead monochrome icons resolve via shared Icon primitive (or documented slug fallback) — no ad-hoc `<img src>` for tintable SVGs in reference implementation
 - [ ] Avatar icon variant uses slug `user-single` at 16×16 with `var(--color-icon-white)`
 - [ ] Optional product logo renders only when `logo` is provided; uses shared **Icon** at 32×32 (no raw `<img>` in consumers)
@@ -364,6 +366,12 @@ The **`Icon`** component owns rendering mechanics (`mask` / `inline` / `img`); s
 
 ### AppLauncher integration
 - Masthead trigger: `color: var(--color-icon-white)`; glyph slug **`grid-square-9-16`**, **16×16** — compose via shared **`Icon`** in Storybook reference (`AppLauncher.tsx`).
+
+### Product name and keyboard behavior
+- `productName` renders as an ellipsized single-line label with `max-width: 45ch` and `min-width: 1ch`; when the supplied `productName` is a string longer than 45 characters, the component wraps it in an `IdsTooltip` showing the full name on hover/focus
+- The brand area and action group are separated by **16px**, and the left brand slot grows (`flex: 1 1 auto`) while the action group stays fixed (`flex-shrink: 0`)
+- The action group container has `role="toolbar"` and `aria-label="Masthead actions"`; arrow-key focus management cycles through focusable buttons (icon buttons, app launcher trigger, avatar)
+- Masthead root uses `overflow: hidden` so long content truncates rather than causing horizontal scroll
 
 ## Source Mapping
 - Figma component: Masthead (9054-24736) — exploration file; avatar element verified against IDS Design Library `.Masthead-Element-UserInitials` (`10130:29944`, file `0bHk3XhrjFhowgFkz9yLr4`)
