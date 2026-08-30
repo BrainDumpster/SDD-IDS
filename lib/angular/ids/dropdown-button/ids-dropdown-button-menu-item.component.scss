@@ -1,0 +1,67 @@
+ids-dropdown-button-menu-item {
+  display: block;
+}
+
+.ids-dropdown-button__menu-item {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 40px;
+  /* Figma node 12380:16525: 10px vertical, 16px left, 24px right */
+  padding: var(--padding-padding-10, 10px) var(--padding-padding-24, 24px)
+    var(--padding-padding-10, 10px) var(--padding-padding-16, 16px);
+  gap: var(--spacing-space-8, 8px);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
+  cursor: pointer;
+  position: relative;
+}
+
+/* hover — top + bottom border, brand-lighter-slate bg */
+.ids-dropdown-button__menu-item:hover:not(:disabled) {
+  background: var(--color-background-brand-lighter-slate);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  color: var(--color-text-gray-neutral);
+}
+
+/* press / active — top + bottom border, brand-light-slate bg, brand text */
+.ids-dropdown-button__menu-item:active:not(:disabled) {
+  background: var(--color-background-brand-light-slate);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-brand-base-neutral);
+  color: var(--color-text-brand-strong);
+}
+
+/* focus-visible — absolute inset overlay with radius-4, no outline */
+.ids-dropdown-button__menu-item:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4, 4px);
+  pointer-events: none;
+}
+
+/* disabled */
+.ids-dropdown-button__menu-item:disabled {
+  background: var(--color-background-gray-lighter);
+  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled);
+  border-bottom: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+  cursor: not-allowed;
+}
+
+.ids-dropdown-button__menu-item-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,2 +1,2 @@
-export { Dialog as SynapseModal } from "./Dialog";
-export type { DialogVariant as SynapseModalVariant } from "./Dialog";
+export { IdsModal as SynapseModal, IdsModal } from "./IdsModal";
+export type { IdsModalProps as SynapseModalProps } from "./IdsModal";

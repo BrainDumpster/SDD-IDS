@@ -1,65 +1,46 @@
 import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import type React from "react";
-import { useMemo, useState } from "react";
-import { SynapseDropdownMenu } from "./SynapseDropdownMenu";
-import { SynapseDropdownTriggerShell } from "./SynapseDropdownTriggerShell";
+import { useState } from "react";
+import {
+  SynapseDropdown,
+  SynapseDropdownMenu,
+  SynapseDropdownMenuFooter,
+  SynapseDropdownMenuGroup,
+  SynapseDropdownMenuItem,
+  SynapseDropdownError,
+  SynapseDropdownHelper,
+  SynapseDropdownTriggerShell,
+} from "./SynapseDropdown";
 import {
   SYNAPSE_DROPDOWN_SINGLE_SELECT_FIELD_STATES_MATRIX_NODE_ID,
   SYNAPSE_DROPDOWN_SINGLE_SELECT_IDS_BASELINE_SPEC_PATH,
   SYNAPSE_DROPDOWN_SINGLE_SELECT_MAIN_NODE_ID,
 } from "../spec-contracts/synapse-dropdown-single-select.contract";
+import {
+  SYNAPSE_DROPDOWN_DOCS_DESCRIPTION,
+  SYNAPSE_DROPDOWN_STORY_SOURCE,
+} from "./synapse-dropdown.developer-usage";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 
 type Size = "small" | "large";
-type Option = { id: string; label: string };
 
-function SingleSelectTrigger({
-  value,
-  placeholder = "Select",
-  size = "large",
-  disabled = false,
-  error = false,
-  hover = false,
-  focusVisible = false,
-}: {
-  value?: string;
-  placeholder?: string;
-  size?: Size;
-  disabled?: boolean;
-  error?: boolean;
-  hover?: boolean;
-  focusVisible?: boolean;
-}) {
-  return (
-    <SynapseDropdownTriggerShell
-      size={size}
-      disabled={disabled}
-      error={error}
-      hover={hover}
-      focusVisible={focusVisible}
-      left={
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {value ?? placeholder}
-        </span>
-      }
-    />
-  );
-}
-
-const meta: Meta<typeof SynapseDropdownMenu> = {
-  title: "Spec Generated/Synapse/Dropdown/Single Select",
-  component: SynapseDropdownMenu,
+const meta: Meta<typeof SynapseDropdown> = {
+  title: "Components/Synapse/Dropdown/Single Select",
+  component: SynapseDropdown,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     docs: {
+      canvas: { sourceState: "open" },
       description: {
         component: [
-          `Spec-driven Synapse Dropdown Single Select (IDS-fork). IDS baseline: \`${SYNAPSE_DROPDOWN_SINGLE_SELECT_IDS_BASELINE_SPEC_PATH}\`.`,
+          SYNAPSE_DROPDOWN_DOCS_DESCRIPTION,
+          `IDS baseline: \`${SYNAPSE_DROPDOWN_SINGLE_SELECT_IDS_BASELINE_SPEC_PATH}\`.`,
           `Figma set: \`${SYNAPSE_DROPDOWN_SINGLE_SELECT_MAIN_NODE_ID}\`; field matrix: \`${SYNAPSE_DROPDOWN_SINGLE_SELECT_FIELD_STATES_MATRIX_NODE_ID}\`.`,
-          "Theme: `components/synapse-theme.css`.",
-        ].join(" "),
+        ].join("\n\n"),
       },
+      source: { type: "code", language: "tsx", code: SYNAPSE_DROPDOWN_STORY_SOURCE },
     },
   },
   argTypes: {
@@ -68,26 +49,10 @@ const meta: Meta<typeof SynapseDropdownMenu> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SynapseDropdownMenu>;
+type Story = StoryObj<typeof SynapseDropdown>;
 
-function useSingleSelectItems(
-  options: Option[],
-  onSelect: (label: string) => void
-) {
-  return useMemo(
-    () =>
-      options.map((option) => ({
-        id: option.id,
-        value: option.label,
-        label: option.label,
-        selectable: true,
-        onClick: () => onSelect(option.label),
-      })),
-    [options, onSelect]
-  );
-}
-
-export const MainScenarios: Story = {
+export const CompositionApi: Story = {
+  name: "Composition API",
   args: { showSingleSelectRadio: true },
   render: ({ showSingleSelectRadio = true }) => {
     const [smallValue, setSmallValue] = useState("Option 2");
@@ -96,118 +61,96 @@ export const MainScenarios: Story = {
     const [actionValue, setActionValue] = useState("Option 2");
     const [actionEvent, setActionEvent] = useState("None");
 
-    const smallItems = useSingleSelectItems(
-      [
-        { id: "s1", label: "Option 1" },
-        { id: "s2", label: "Option 2" },
-        { id: "s3", label: "Option 3" },
-        { id: "s4", label: "Option 4" },
-        { id: "s5", label: "Option 5" },
-      ],
-      setSmallValue
-    );
-
-    const overflowingItems = useSingleSelectItems(
-      Array.from({ length: 12 }, (_, i) => ({ id: `o${i + 1}`, label: `Option ${i + 1}` })),
-      setOverflowValue
-    );
-
-    const disabledOptionItems = [
-      { id: "do-1", value: "Option 1", label: "Option 1", selectable: true, onClick: () => setSmallValue("Option 1") },
-      { id: "do-2", value: "Option 2", label: "Option 2", selectable: true, onClick: () => setSmallValue("Option 2") },
-      { id: "do-3", value: "Option 3", label: "Option 3", selectable: true, disabled: true, onClick: () => setSmallValue("Option 3") },
-      { id: "do-4", value: "Option 4", label: "Option 4", selectable: true, onClick: () => setSmallValue("Option 4") },
-    ];
-
-    const sectionItems = [
-      { id: "h1", label: "Section Title", kind: "section" as const },
-      ...useSingleSelectItems(
-        [
-          { id: "a1", label: "Option 1" },
-          { id: "a2", label: "Option 2" },
-          { id: "a3", label: "Option 3" },
-        ],
-        setSectionValue
-      ),
-      { id: "h2", label: "Section Title", kind: "section" as const },
-      ...useSingleSelectItems(
-        [
-          { id: "b1", label: "Option 4" },
-          { id: "b2", label: "Option 5" },
-          { id: "b3", label: "Option 6" },
-        ],
-        setSectionValue
-      ),
-    ];
-
-    const actionItems = [
-      ...useSingleSelectItems(
-        Array.from({ length: 12 }, (_, i) => ({
-          id: `c${i + 1}`,
-          label: `Option ${i + 1}`,
-        })),
-        setActionValue
-      ),
-    ];
-
     return (
       <div style={{ width: 1300, display: "grid", gap: 12 }}>
         <a href="#" style={{ fontSize: 16, lineHeight: "24px", color: "var(--color-text-brand-base)" }}>
           Learn how to align form elements.
         </a>
         <div style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
-          <div style={{ display: "grid", gap: 6, width: 300 }}>
+          <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Small menu</div>
-            <SynapseDropdownMenu
-              trigger={<SingleSelectTrigger value={smallValue} />}
-              items={disabledOptionItems}
-              selectionMode="single"
-              selectedValues={[smallValue]}
+            <SynapseDropdown
+              mode="single-select"
+              value={smallValue}
+              onValueChange={setSmallValue}
               showSingleSelectRadio={showSingleSelectRadio}
-              defaultOpen
-              maxHeight={220}
-            />
+            >
+              <SynapseDropdownMenu defaultOpen maxHeight={220}>
+                <SynapseDropdownTriggerShell left={<span>{smallValue}</span>} />
+                <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+                <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+                <SynapseDropdownMenuItem value="Option 3" label="Option 3" disabled />
+                <SynapseDropdownMenuItem value="Option 4" label="Option 4" />
+              </SynapseDropdownMenu>
+            </SynapseDropdown>
           </div>
-          <div style={{ display: "grid", gap: 6, width: 300 }}>
+
+          <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Overflowing menu</div>
-            <SynapseDropdownMenu
-              trigger={<SingleSelectTrigger value={overflowValue} />}
-              items={overflowingItems}
-              selectionMode="single"
-              selectedValues={[overflowValue]}
+            <SynapseDropdown
+              mode="single-select"
+              value={overflowValue}
+              onValueChange={setOverflowValue}
               showSingleSelectRadio={showSingleSelectRadio}
-              defaultOpen
-              maxHeight={220}
-            />
+            >
+              <SynapseDropdownMenu defaultOpen maxHeight={220}>
+                <SynapseDropdownTriggerShell left={<span>{overflowValue}</span>} />
+                {Array.from({ length: 12 }, (_, i) => (
+                  <SynapseDropdownMenuItem
+                    key={i}
+                    value={`Option ${i + 1}`}
+                    label={`Option ${i + 1}`}
+                  />
+                ))}
+              </SynapseDropdownMenu>
+            </SynapseDropdown>
           </div>
-          <div style={{ display: "grid", gap: 6, width: 300 }}>
+
+          <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Section header</div>
-            <SynapseDropdownMenu
-              trigger={<SingleSelectTrigger value={sectionValue} />}
-              items={sectionItems}
-              selectionMode="single"
-              selectedValues={[sectionValue]}
+            <SynapseDropdown
+              mode="single-select"
+              value={sectionValue}
+              onValueChange={setSectionValue}
               showSingleSelectRadio={showSingleSelectRadio}
-              defaultOpen
-              maxHeight={220}
-            />
+            >
+              <SynapseDropdownMenu defaultOpen maxHeight={220}>
+                <SynapseDropdownTriggerShell left={<span>{sectionValue}</span>} />
+                <SynapseDropdownMenuGroup groupName="Section Title">
+                  <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+                  <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+                  <SynapseDropdownMenuItem value="Option 3" label="Option 3" />
+                </SynapseDropdownMenuGroup>
+                <SynapseDropdownMenuGroup groupName="Section Title">
+                  <SynapseDropdownMenuItem value="Option 4" label="Option 4" />
+                  <SynapseDropdownMenuItem value="Option 5" label="Option 5" />
+                  <SynapseDropdownMenuItem value="Option 6" label="Option 6" />
+                </SynapseDropdownMenuGroup>
+              </SynapseDropdownMenu>
+            </SynapseDropdown>
           </div>
-          <div style={{ display: "grid", gap: 6, width: 300 }}>
+
+          <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Action button</div>
-            <SynapseDropdownMenu
-              trigger={<SingleSelectTrigger value={actionValue} />}
-              items={actionItems}
-              selectionMode="single"
-              selectedValues={[actionValue]}
+            <SynapseDropdown
+              mode="single-select"
+              value={actionValue}
+              onValueChange={setActionValue}
               showSingleSelectRadio={showSingleSelectRadio}
-              footerActionLabel="Action"
-              onFooterActionClick={() => setActionEvent("Action clicked")}
-              defaultOpen
-              maxHeight={180}
-            />
-            <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
-              <strong>onActionClick:</strong> {actionEvent}
-            </div>
+            >
+              <SynapseDropdownMenu defaultOpen maxHeight={180}>
+                <SynapseDropdownTriggerShell left={<span>{actionValue}</span>} />
+                {Array.from({ length: 12 }, (_, i) => (
+                  <SynapseDropdownMenuItem
+                    key={i}
+                    value={`Option ${i + 1}`}
+                    label={`Option ${i + 1}`}
+                  />
+                ))}
+                <SynapseDropdownMenuFooter actionLabel="Action" onAction={() => setActionEvent("Action clicked")} />
+              </SynapseDropdownMenu>
+              <SynapseDropdownHelper>onActionClick: {actionEvent}</SynapseDropdownHelper>
+            </SynapseDropdown>
           </div>
         </div>
       </div>
@@ -215,11 +158,7 @@ export const MainScenarios: Story = {
   },
 };
 
-/**
- * Field States Matrix — matches Figma component matrix `11099:58099`.
- * Columns: Size Large (Empty / Filled) × Size Small (Empty / Filled).
- * Rows: Default, Hover, Show Selected, Focus, Disabled, Error.
- */
+/** Field States Matrix — matches Figma component matrix `11099:58099` (trigger shell + helper/error only). */
 export const FieldStatesMatrix: Story = {
   render: () => {
     const annotationStyle: React.CSSProperties = {
@@ -324,7 +263,6 @@ export const FieldStatesMatrix: Story = {
 
     return (
       <div style={{ display: "grid", gap: 24, padding: 24 }}>
-        {/* Column headers */}
         <div style={{ display: "flex", gap: 12, paddingLeft: 118 }}>
           <div style={{ ...colHeaderStyle, width: 240 }}>Size: Large(40) — Empty</div>
           <div style={{ ...colHeaderStyle, width: 240 }}>Size: Large(40) — Filled</div>
@@ -369,40 +307,34 @@ export const FieldStatesMatrix: Story = {
 export const OptionalRadioButton: Story = {
   render: () => {
     const [selected, setSelected] = useState("Option 2");
-    const options = useSingleSelectItems(
-      [
-        { id: "r1", label: "Option 1" },
-        { id: "r2", label: "Option 2" },
-        { id: "r3", label: "Option 3" },
-      ],
-      setSelected
-    );
-
     return (
       <div style={{ width: 640, display: "flex", gap: 20 }}>
         <div style={{ width: 300, display: "grid", gap: 6 }}>
           <div style={{ color: "var(--annotation)", fontSize: 14 }}>Radio: Off (default)</div>
-          <SynapseDropdownMenu
-            trigger={<SingleSelectTrigger value={selected} />}
-            items={options}
-            selectionMode="single"
-            selectedValues={[selected]}
-            showSingleSelectRadio={false}
-            defaultOpen
-            maxHeight={220}
-          />
+          <SynapseDropdown mode="single-select" value={selected} onValueChange={setSelected}>
+            <SynapseDropdownMenu defaultOpen maxHeight={220}>
+              <SynapseDropdownTriggerShell left={<span>{selected}</span>} />
+              <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+              <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+              <SynapseDropdownMenuItem value="Option 3" label="Option 3" />
+            </SynapseDropdownMenu>
+          </SynapseDropdown>
         </div>
         <div style={{ width: 300, display: "grid", gap: 6 }}>
           <div style={{ color: "var(--annotation)", fontSize: 14 }}>Radio: On (user input)</div>
-          <SynapseDropdownMenu
-            trigger={<SingleSelectTrigger value={selected} />}
-            items={options}
-            selectionMode="single"
-            selectedValues={[selected]}
+          <SynapseDropdown
+            mode="single-select"
+            value={selected}
+            onValueChange={setSelected}
             showSingleSelectRadio
-            defaultOpen
-            maxHeight={220}
-          />
+          >
+            <SynapseDropdownMenu defaultOpen maxHeight={220}>
+              <SynapseDropdownTriggerShell left={<span>{selected}</span>} />
+              <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+              <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+              <SynapseDropdownMenuItem value="Option 3" label="Option 3" />
+            </SynapseDropdownMenu>
+          </SynapseDropdown>
         </div>
       </div>
     );
@@ -413,28 +345,50 @@ export const DisabledOptionState: Story = {
   args: { showSingleSelectRadio: true },
   render: ({ showSingleSelectRadio = true }) => {
     const [selected, setSelected] = useState("Option 2");
-    const items = [
-      { id: "dso-1", value: "Option 1", label: "Option 1", selectable: true, onClick: () => setSelected("Option 1") },
-      { id: "dso-2", value: "Option 2", label: "Option 2", selectable: true, onClick: () => setSelected("Option 2") },
-      { id: "dso-3", value: "Option 3", label: "Option 3", selectable: true, disabled: true, onClick: () => setSelected("Option 3") },
-      { id: "dso-4", value: "Option 4", label: "Option 4", selectable: true, onClick: () => setSelected("Option 4") },
-    ];
-
     return (
       <div style={{ width: 320, display: "grid", gap: 8 }}>
-        <SynapseDropdownMenu
-          trigger={<SingleSelectTrigger value={selected} />}
-          items={items}
-          selectionMode="single"
-          selectedValues={[selected]}
+        <SynapseDropdown
+          mode="single-select"
+          value={selected}
+          onValueChange={setSelected}
           showSingleSelectRadio={showSingleSelectRadio}
-          defaultOpen
-          maxHeight={220}
-        />
+        >
+          <SynapseDropdownMenu defaultOpen maxHeight={220}>
+            <SynapseDropdownTriggerShell left={<span>{selected}</span>} />
+            <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+            <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+            <SynapseDropdownMenuItem value="Option 3" label="Option 3" disabled />
+            <SynapseDropdownMenuItem value="Option 4" label="Option 4" />
+          </SynapseDropdownMenu>
+        </SynapseDropdown>
         <span style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
           Option 3 is disabled at option level.
         </span>
       </div>
     );
   },
+};
+
+export const HelperError: Story = {
+  name: "Helper + Error",
+  render: () => (
+    <div style={{ width: 332, display: "grid", gap: 16 }}>
+      <SynapseDropdown mode="single-select" value="Option 2">
+        <SynapseDropdownMenu defaultOpen maxHeight={220}>
+          <SynapseDropdownTriggerShell left={<span>Option 2</span>} />
+          <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+          <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+        </SynapseDropdownMenu>
+        <SynapseDropdownHelper>Helper text</SynapseDropdownHelper>
+      </SynapseDropdown>
+
+      <SynapseDropdown mode="single-select">
+        <SynapseDropdownMenu>
+          <SynapseDropdownTriggerShell error left={<span>-Select-</span>} />
+          <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+        </SynapseDropdownMenu>
+        <SynapseDropdownError>Error message</SynapseDropdownError>
+      </SynapseDropdown>
+    </div>
+  ),
 };

@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import {
   defaultIdsDataGridDateTimeFilterState,
   formatIdsDataGridDateTimeFilterSummary,
@@ -19,7 +19,7 @@ export interface IdsDataGridTypeDateAndTimeFilterPanelProps {
 }
 
 function modeShowsSummary(mode: IdsDataGridDateTimeFilterMode): boolean {
-  return mode !== "all" && mode !== "specific-date" && mode !== "custom-range";
+  return mode !== "specific-date" && mode !== "custom-range";
 }
 
 /**
@@ -34,6 +34,7 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
 }: IdsDataGridTypeDateAndTimeFilterPanelProps) {
   const slug = groupLabel.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const groupName = `${slug}-datetime-filter`;
+  const [hoverMode, setHoverMode] = useState<IdsDataGridDateTimeFilterMode | null>(null);
 
   const setMode = (mode: IdsDataGridDateTimeFilterMode) => {
     if (mode === "all") {
@@ -57,14 +58,20 @@ export function IdsDataGridTypeDateAndTimeFilterPanel({
       {IDS_DATAGRID_DATETIME_FILTER_MODES.map((mode) => {
         const checked = state.mode === mode;
         const inputId = `${slug}-mode-${mode}`;
-        const showSummary = checked && modeShowsSummary(mode);
-        const summary = showSummary ? formatIdsDataGridDateTimeFilterSummary(state) : null;
+        const isHovered = hoverMode === mode;
+        const showSummary = (checked || isHovered) && modeShowsSummary(mode);
+        const summaryState: IdsDataGridDateTimeFilterState = checked ? state : { ...state, mode };
+        const summary = showSummary ? formatIdsDataGridDateTimeFilterSummary(summaryState) : null;
         const showSpecific = checked && mode === "specific-date";
         const showCustom = checked && mode === "custom-range";
 
         return (
           <div key={mode}>
-            <div className={styles.optionRow}>
+            <div
+              className={styles.optionRow}
+              onMouseEnter={() => setHoverMode(mode)}
+              onMouseLeave={() => setHoverMode(null)}
+            >
               <label
                 className={styles.optionLabel}
                 htmlFor={inputId}

@@ -1,0 +1,55 @@
+/*
+ * PowerFlex Design System — Global Theme Tokens
+ * Thin wrapper around the IDS theme that imports the donor palette and scales,
+ * then overrides PowerFlex-specific semantic values for components.
+ * Import in Storybook/apps with data-design-system="powerflex" on html/body.
+ */
+
+@import url('./ids-theme.css');
+
+/* ========================================================
+   LIGHT THEME (PowerFlex overrides)
+   ======================================================== */
+
+html[data-design-system="powerflex"],
+body[data-design-system="powerflex"] {
+  /* PowerFlex brand — sampled from the toggle component set (file 82bDP05ESsiiGe38p5TEQJ) */
+  --color-background-controls-brand-base: #0076ce;
+  --color-background-controls-brand-strong: #005da4;
+  --color-background-controls-brand-stronger: #00447c;
+
+  --color-border-brand-base: #0076ce;
+  --color-border-brand-dark: #005da4;
+
+  /* PowerFlex gray ramps mapped to semantic slots */
+  --color-background-gray-light: #eeeeee;
+  --color-background-gray-base: #888888;
+  --color-background-gray-strong: #333333;
+  --color-background-gray-lighter: #f4f4f4;
+
+  /* Toggle component layout aliases */
+  --toggle-control-radius: var(--corner-radius-radius-round);
+  --toggle-focus-ring-offset: 3px;
+  --toggle-thumb-offset: 2px;
+}
+
+/* ========================================================
+   DARK THEME (PowerFlex overrides)
+   ======================================================== */
+
+html[data-design-system="powerflex"][data-theme="dark"],
+body[data-design-system="powerflex"][data-theme="dark"] {
+  /* Lighter brand tints for dark surfaces */
+  --color-background-controls-brand-base: #4c9ede;
+  --color-background-controls-brand-strong: #3a8bc7;
+  --color-background-controls-brand-stronger: #2a6fa3;
+
+  --color-border-brand-base: #4c9ede;
+  --color-border-brand-dark: #3a8bc7;
+
+  /* Dark-mode grays */
+  --color-background-gray-light: #4d4d4d;
+  --color-background-gray-base: #9e9e9e;
+  --color-background-gray-strong: #b8c1c9;
+  --color-background-gray-lighter: #393939;
+}

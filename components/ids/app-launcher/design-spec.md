@@ -10,9 +10,9 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Design system | IDS |
 | Category | Components / Navigation |
 | Status | **active** |
-| Version | 1.1.0 |
+| Version | 1.2.0 |
 | Created | 2026-06-05 |
-| Updated | 2026-06-05 |
+| Updated | 2026-08-17 |
 | Description | Popover app switcher — product tiles in 2-column grid, optional options/footer, masthead or default trigger |
 | Figma file | [IDS Design Library](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library) |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
@@ -21,9 +21,11 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Main component set | [`13231:123761`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-123761&m=dev) (`AppLauncher-Main`) |
 | Element states | [`13231:109521`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-109521&m=dev) (`AppLauncher-Element`) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) |
-| Last verified | 2026-06-05 |
+| Last verified | 2026-07-28 (impl fixes verified live in Storybook; see **Implementation Notes**) |
 | Theme CSS | `components/ids-theme.css` |
 | Shared implementation | `storybook/src/components/AppLauncher.tsx` (`programme="ids"` default) |
+| Lib React (no Base UI) | `lib/react/ids/app-launcher/` (`IdsAppLauncher` = **`AppLauncher`** root — not `AppLauncherRoot`; anatomy slots `IdsAppLauncherTrigger` …) |
+| Storybook (lib) | `storybook/src/components/lib-generated/AppLauncher.stories.tsx` |
 | Storybook | `storybook-generated/ids/src/components/AppLauncher.stories.tsx` |
 | Programme fork | `components/synapse/app-launcher/design-spec.md` (Synapse deltas) |
 
@@ -37,7 +39,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | 2 products (no options) | `13231:124200` | `298×127`; **internal** dotted tile rail on **leading** tile (`13231:109518`; `110px` / `7px` inset) |
 | 3 products | `13231:124054` | `298×254`; dotted column + row dividers |
 | 4 products | `13231:123908` | `298×254` |
-| 8 products | `13231:123730` | `298×416` |
+| 8 products | `13231:123730` | `298×448`; largest variant renders **4 product tiles + options menu** (not 8 tiles) |
 | Tile default | `13231:109520` | `148×125` |
 | Tile hover | `13231:109522` | full-tile `brand-lighter` fill |
 | Tile press | `14141:255626` | full-tile `brand-light` fill; brand-strong text/icon |
@@ -48,7 +50,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 
 Deterministic slot order. **3+ products:** column dividers are **separate flex siblings** between tiles so hover/press fill does not cover separators. **2 products (no options):** vertical separator is an **internal** `TileDividerRail` on the **leading** tile in each row (`13231:109518`); **no** external `AppLauncherColumnDivider`.
 
-1. `AppLauncherRoot` — popover root + portal (`@base-ui-components/react/popover` in reference impl)
+1. `AppLauncher` — popover root + portal (not `AppLauncherRoot`; lib: `IdsAppLauncher`)
 2. `AppLauncherTrigger` — `grid-square-9-16` (`16×16`); `default` or `masthead` variant
 3. `AppLauncherSurface` — bordered popover shell (`298px` or `150px` when 1 product)
 4. `ProductRegion` — stacked row groups
@@ -73,11 +75,11 @@ Deterministic slot order. **3+ products:** column dividers are **separate flex s
 
 | Property | Value |
 |---|---|
-| Width (2+ products) | **`298px`** content (+ `1px` padding) |
+| Width (2+ products) | fixed **`298px`** (`box-sizing: border-box`); content area `296px` = two `148px` tiles |
 | Width (1 product, no options) | **`150px`** |
 | Tile footprint | **`148×125`** per `.AppLauncher-Element` |
-| Surface padding | **`var(--padding-padding-1)`** |
-| Border | `var(--border-width-border-1)` `var(--color-border-accessible)` |
+| Padding | **`1px`** all sides |
+| Border | **`1px`** `var(--color-border-gray-neutral-base)`, drawn as an inset box-shadow (does not consume layout) so `298px − 2px padding = 296px` content |
 | Shadow | Shadow 4 token stack (`drop-shadow` pair) |
 
 ### Product tile
@@ -86,7 +88,9 @@ Deterministic slot order. **3+ products:** column dividers are **separate flex s
 |---|---|
 | Tile size | `148×125` |
 | Icon slot | **`32×32`** |
+| Icon color | **`currentColor`** — inherits tile color: `var(--color-icon-gray-neutral-strong)` (default/hover), `var(--color-icon-brand-strong)` (press). Asset SVG must use `fill: currentColor`, **not a hardcoded fill** |
 | Label max width | **`111px`**; Body 2; ellipsis |
+| Label padding | **`28px 0`** (icon variant); **`52px 0`** (no-icon). Horizontal padding is `0` (Figma `padding-none`) |
 | Tile fill (hover/press) | **Full `148×125` footprint**; divider siblings unchanged |
 
 ### `AppLauncherColumnDivider` (IDS, 3+ products)
@@ -95,7 +99,7 @@ Deterministic slot order. **3+ products:** column dividers are **separate flex s
 |---|---|---|---|
 | **dotted** | `productCount ≥ 3` | **`110px`** dotted stroke | **`7px`** top and bottom within `125px` tile block |
 
-Token: `var(--color-border-accessible)`.
+Token: `var(--color-border-gray-neutral-base)`.
 
 ### `TileDividerRail` (IDS, 2 products, no options)
 
@@ -104,7 +108,7 @@ Token: `var(--color-border-accessible)`.
 | Placement | Internal trailing slot on **leading** tile in each row (`13231:109518`) |
 | Stroke | **`110px`** dotted |
 | Inset | **`7px`** top and bottom within `125px` tile block |
-| Token | `var(--color-border-accessible)` |
+| Token | `var(--color-border-gray-neutral-base)` |
 | External column divider | **Not emitted** between tiles when `productCount === 2` ∧ `!options` |
 
 ### `AppLauncherRowDivider`
@@ -114,39 +118,41 @@ Token: `var(--color-border-accessible)`.
 | Stroke width | **`262px`** dotted |
 | Horizontal inset | `var(--padding-padding-16)` left and right |
 | Alignment | centered in parent row group |
-| Token | `var(--color-border-accessible)` |
+| Token | `var(--color-border-gray-neutral-base)` |
 
 ### Options region
 
 | Property | Value |
 |---|---|
-| Block width (detail node) | **`295px`** |
-| Option row padding | `10px 16px` |
-| Row contract | mirrors IDS dropdown-combo-box option rows |
+| Block width | **`295px`**, centered within the `298px` surface (`margin-inline: auto`); option rows fill the block |
+| Options list block padding | **`16px`** bottom (`var(--padding-padding-16)`); `1px` left/right |
+| Option row padding | `10px 24px 10px 16px` (top/bottom `10`, left `16`, right `24`) |
+| Option text overflow | single-line — truncates on the **first line** with an ellipsis (`text-overflow: ellipsis`; `white-space: nowrap`) |
+| Row contract | mirrors `Dropdown-SingleSelect-Elements-Options` (`337:180199`) — **re-implemented locally in App Launcher, not reusing `DropdownMenu`** |
 
 ## Tokens
 
 ### Surface + borders
-- `var(--color-background-surface-2)` — launcher surface, default tile shell
-- `var(--color-background-component)` — options row default
-- `var(--color-border-accessible)` — surface border, column/row dividers
-- `var(--color-border-brand-neutral)` — options row hover/press emphasis stroke
+- `var(--color-background-surface-secondary)` — launcher surface, default tile shell
+- `var(--color-background-surface-component)` — options row default
+- `var(--color-border-gray-neutral-base)` — surface border, column/row dividers
+- `var(--color-border-brand-base-neutral)` — options row hover/press emphasis stroke
 - `var(--border-width-border-1)` — surface, dividers
 - `var(--border-width-border-2)` — tile focus outline
 - `var(--padding-padding-1)` — surface inset
 - `var(--padding-padding-16)` — row divider horizontal inset
 
 ### Text + icon
-- `var(--color-text-neutral-strong)` — default tile label
-- `var(--color-text-neutral)` — options rows
+- `var(--color-text-gray-neutral-strong)` — default tile label
+- `var(--color-text-gray-neutral)` — options rows
 - `var(--color-text-brand-strong)` — press/selected tile label and options press
-- `var(--color-text-white)` — masthead trigger icon
-- `var(--color-icon-neutral-strong)` — default tile icon
+- `var(--color-text-gray-white)` — masthead trigger icon
+- `var(--color-icon-gray-neutral-strong)` — default tile icon
 - `var(--color-icon-brand-strong)` — press/selected tile icon
 
 ### Interactive backgrounds
-- `var(--color-background-brand-lighter)` — tile/options hover
-- `var(--color-background-brand-light)` — tile/options press/selected
+- `var(--color-background-brand-lighter-slate)` — tile/options hover
+- `var(--color-background-brand-light-slate)` — tile/options press/selected
 
 ### Shadows
 - `var(--shadow-shadow-4-drop-shadow-4-x)`
@@ -159,15 +165,15 @@ Token: `var(--color-border-accessible)`.
 
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Launcher surface | default | `var(--color-background-surface-2)` | `1px var(--color-border-accessible)` | n/a |
-| Product tile | default | `var(--color-background-surface-2)` | dividers: `var(--color-border-accessible)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
-| Product tile | hover | `var(--color-background-brand-lighter)` (full tile) | dividers unchanged (separate elements) | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
-| Product tile | press/selected | `var(--color-background-brand-light)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
-| Product tile | focus | `var(--color-background-surface-2)` | `outline: var(--border-width-border-2) var(--color-border-brand-base)`; `outline-offset: -2px` | neutral strong |
-| Product tile | no-icon | `var(--color-background-surface-2)` | dividers unchanged | `var(--color-text-neutral-strong)` only |
-| Options row | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| Options row | hover | `var(--color-background-brand-lighter)` | inset top/bottom `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| Options row | press | `var(--color-background-brand-light)` | inset top/bottom `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Launcher surface | default | `var(--color-background-surface-secondary)` | `1px var(--color-border-gray-neutral-base)` | n/a |
+| Product tile | default | `var(--color-background-surface-secondary)` | dividers: `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
+| Product tile | hover | `var(--color-background-brand-lighter-slate)` (full tile) | dividers unchanged (separate elements) | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
+| Product tile | press/selected | `var(--color-background-brand-light-slate)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
+| Product tile | focus | `var(--color-background-surface-secondary)` | `outline: var(--border-width-border-2) var(--color-border-brand-base)`; `outline-offset: -2px` | neutral strong |
+| Product tile | no-icon | `var(--color-background-surface-secondary)` | dividers unchanged | `var(--color-text-gray-neutral-strong)` only |
+| Options row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| Options row | hover | `var(--color-background-brand-lighter-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Options row | press | `var(--color-background-brand-light-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 
@@ -229,9 +235,10 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 | Component | Purpose |
 |---|---|
-| `AppLauncherProductTile` | Standalone tile for state-matrix stories |
+| `AppLauncherProductTile` | Standalone tile for state-matrix stories (`IdsAppLauncherProductTile`) |
 | `AppLauncherColumnDivider` | Vertical separator (`variant: solid \| dotted`) |
 | `AppLauncherRowDivider` | Horizontal row separator |
+| Compound anatomy | `IdsAppLauncher` (= `AppLauncher`) → Trigger → Surface → ProductRegion → ProductRowGroup → RowDivider? → ProductRow → ColumnDivider? → ProductTile → LabelCluster → ProductIcon? / ProductLabel → TileDividerRail? → OptionsRegion? → OptionRow[] → FooterAction? |
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 
@@ -249,7 +256,7 @@ Emit slots in **Anatomy** order. Conditional branches (IDS):
 
 Ordered slot list:
 
-1. `AppLauncherRoot`
+1. `AppLauncher`
 2. `AppLauncherTrigger`
 3. `AppLauncherSurface`
 4. `ProductRegion`
@@ -334,6 +341,18 @@ Resolve via shared `Icon` component (`import.meta.glob` on `assets/icons/*.svg` 
 - [x] Storybook reference: `storybook-generated/ids/src/components/AppLauncher.stories.tsx`
 - [x] Synapse fork documented at `components/synapse/app-launcher/design-spec.md`
 
+## Implementation Notes
+
+_Updated 2026-07-29._
+
+- **Product icon color** — the product icon inherits the tile color via `currentColor`: `var(--color-icon-gray-neutral-strong)` for default and hover, `var(--color-icon-brand-strong)` for press. The icon asset uses `fill: currentColor` so it tracks theme and state (light `#252525`, dark `#b8c1c9`, press `#055fa9`).
+- **Label padding** — label cluster is `28px 0` (icon variant) / `52px 0` (no-icon); horizontal padding is `0`.
+- **Surface width & border** — fixed **`298px`** with **`1px`** padding; the `1px` border is an inset box-shadow (not `border`) so it does not consume layout, leaving `296px` content (two `148px` tiles). Never stretches with option text. The options menu is a **`295px`** block centered within it (`margin-inline: auto`); option rows are **`293px`** (`1px` inset each side).
+- **Options list padding** — `16px` above the first option row and below the last.
+- **Option text overflow** — long option text truncates on the **first line** with an ellipsis (single line, no wrap).
+- **Option row** — follows the `Dropdown-SingleSelect-Elements-Options` contract as a standalone element (not a shared dropdown component).
+- **Demo matrix** — demo panels keep their natural height (grid `align-items: start`); the products-plus-options variant shows `4` products + `4` options.
+
 ## Source Mapping
 
 | Property | Value |
@@ -348,6 +367,7 @@ Resolve via shared `Icon` component (`import.meta.glob` on `assets/icons/*.svg` 
 | 3 products | `13231:124054` |
 | 4 products | `13231:123908` |
 | 8 products | `13231:123730` |
+| Lib React | `lib/react/ids/app-launcher/` (`IdsAppLauncher` = `AppLauncher`) |
 | Shared implementation | `storybook/src/components/AppLauncher.tsx` |
 | Storybook | `storybook-generated/ids/src/components/AppLauncher.stories.tsx` |
 | Programme fork | `components/synapse/app-launcher/design-spec.md` |

@@ -46,7 +46,7 @@ const specAccurateArgs: ComponentProps<typeof IdsMainMenuLeft> = {
 };
 
 const meta: Meta<typeof IdsMainMenuLeft> = {
-  title: "Spec Generated/IDS/Main Menu Left",
+  title: "Components/IDS/Main Menu Left",
   component: IdsMainMenuLeft,
   parameters: {
     layout: "fullscreen",
@@ -73,7 +73,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
         height: "100vh",
         boxSizing: "border-box",
         display: "flex",
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
         minHeight: 0,
       }}
     >
@@ -83,7 +83,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
           flex: 1,
           minWidth: 0,
           padding: 24,
-          color: "var(--color-text-neutral-strong)",
+          color: "var(--color-text-gray-neutral-strong)",
           fontSize: 14,
         }}
       >
@@ -117,7 +117,7 @@ export const PrimaryStateSnapshotMatrix: Story = {
         flexDirection: "column",
         gap: 8,
         padding: 16,
-        background: "var(--color-background-surface-1)",
+        background: "var(--color-background-surface-primary)",
       }}
     >
       <IdsMainMenuLeft
@@ -210,7 +210,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -222,7 +222,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }

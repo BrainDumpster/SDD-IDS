@@ -1,0 +1,152 @@
+.breadcrumbContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4, 4px);
+  align-items: flex-start;
+  padding: var(--padding-padding-none, 0px);
+  margin: 0;
+  position: relative;
+}
+
+.breadcrumbList {
+  display: flex;
+  gap: var(--spacing-space-8, 8px);
+  align-items: flex-start;
+  padding: var(--padding-padding-none, 0px);
+  margin: 0;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.breadcrumbItem {
+  display: flex;
+  gap: var(--spacing-space-8, 8px);
+  align-items: center;
+  padding: var(--padding-padding-none, 0px);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.breadcrumbLink {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-weight: 400;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-link-brand-base, #055fa9);
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  flex-shrink: 0;
+  border-radius: var(--corner-radius-radius-2, 4px);
+  padding: 0;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-text-link-brand-strong, #94c5ea);
+  background: var(--color-background-brand-lighter-slate, #1e262c);
+  text-decoration: underline;
+}
+
+.breadcrumbLink:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #4c9fdd);
+  outline-offset: 2px;
+  color: var(--color-text-link-brand-strong, #94c5ea);
+  background: var(--color-background-brand-lighter-slate, #1e262c);
+}
+
+.separator {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-weight: 400;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-gray-neutral, #4d4d4d);
+  white-space: nowrap;
+  position: relative;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.currentPage {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-weight: 400;
+  font-size: var(--font-size-header-5, 24px);
+  line-height: var(--font-line-height-line-height-32, 32px);
+  color: var(--color-text-gray-neutral-strong, #252525);
+  white-space: nowrap;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ellipsis {
+  color: var(--color-text-link-brand-base, #055fa9);
+  cursor: pointer;
+  position: relative;
+}
+
+.ellipsis:hover {
+  color: var(--color-text-link-brand-strong, #94c5ea);
+  background: var(--color-background-brand-lighter-slate, #1e262c);
+  text-decoration: underline;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  background: var(--color-background-surface-component, white);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base, #757575);
+  border-radius: var(--corner-radius-radius-2, 4px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-none, 0px);
+  align-items: flex-start;
+  overflow: hidden;
+  padding: var(--padding-padding-none, 0px);
+  box-shadow: var(--shadow-shadow-4-drop-shadow-4-x, 0px) var(--shadow-shadow-4-drop-shadow-4-y, 4px) var(--shadow-shadow-4-drop-shadow-4-blur, 4px) var(--shadow-shadow-4-drop-shadow-4-spread, 0px) var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
+              var(--shadow-shadow-4-drop-shadow-4-x, 0px) var(--shadow-shadow-4-drop-shadow-4-y, 2px) var(--shadow-shadow-4-drop-shadow-4-blur, 2px) var(--shadow-shadow-4-drop-shadow-4-spread, 0px) var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
+  z-index: 1000;
+  min-width: 120px;
+}
+
+.dropdownOptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-none, 0px);
+  align-items: flex-start;
+  padding: 0 var(--padding-padding-1, 1px);
+  width: 100%;
+}
+
+.dropdownOption {
+  background: var(--color-background-surface-component, white);
+  display: flex;
+  gap: var(--spacing-space-8, 8px);
+  align-items: center;
+  padding: var(--padding-padding-10, 10px) var(--padding-padding-16, 16px);
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--color-text-gray-neutral, #4d4d4d);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: var(--font-line-height-line-height-20, 20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownOption:hover {
+  background: var(--color-background-brand-lighter-slate, #1e262c);
+  color: var(--color-text-link-brand-strong, #94c5ea);
+}
+
+.dropdownOption:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base, #4c9fdd);
+  outline-offset: -2px;
+}

@@ -1,0 +1,23 @@
+<header class="ids-masthead">
+  <div class="ids-masthead__left">
+    <!-- Always project logo slot (avoid @if + ng-content drop). Hide when unused. -->
+    <div class="ids-masthead__logo" [hidden]="!hasLogo">
+      <ng-content select="ids-masthead-logo, [mastheadLogo]" />
+    </div>
+    <div class="ids-masthead__product-name">{{ productName }}</div>
+  </div>
+
+  <div class="ids-masthead__actions">
+    <div class="ids-masthead__icons-slot">
+      <ng-content
+        select="[mastheadIcons], ids-masthead-action-button-container, ids-app-shell-header-actions"
+      />
+    </div>
+    <div class="ids-masthead__app-launcher-slot">
+      <ng-content select="[mastheadLauncher], [mastheadAppLauncher], ids-app-launcher" />
+    </div>
+    <div class="ids-masthead__avatar-slot">
+      <ng-content select="[mastheadAvatar], ids-masthead-avatar" />
+    </div>
+  </div>
+</header>

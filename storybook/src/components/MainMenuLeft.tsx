@@ -3,6 +3,14 @@ import {
   LeftNavSecondaryContextMenu,
   type LeftNavSecondaryContextMenuOption,
 } from "./LeftNavSecondaryContextMenu";
+import {
+  MainMenuLeftChildren,
+  MainMenuLeftGroup,
+  MainMenuLeftItem,
+  MainMenuLeftItemIcon,
+  MainMenuLeftLogoSlot,
+} from "./MainMenuLeft.compose";
+import { MainMenuLeftContext, type MainMenuLeftContextValue } from "./MainMenuLeftContext";
 import styles from "./MainMenuLeft.module.css";
 import { Icon } from "./Icon";
 import { IdsTooltip } from "./IdsTooltip";
@@ -337,6 +345,7 @@ export function MainMenuLeft({
   expanded = true,
   onExpandedChange,
   items,
+  children,
   defaultSelectedItemId,
   defaultExpandedChildrenItemId,
   defaultSelectedSecondaryItemId,
@@ -348,28 +357,25 @@ export function MainMenuLeft({
   ariaLabel = "Main menu left",
   programme = "ids",
   menuLead,
-}: MainMenuLeftProps) {
+}: MainMenuLeftRootProps) {
+  const useComposition = items === undefined;
   const controlled = onExpandedChange !== undefined;
   const [internalExpanded, setInternalExpanded] = useState(expanded);
   useEffect(() => {
-    if (!controlled) {
-      setInternalExpanded(expanded);
-    }
+    if (!controlled) setInternalExpanded(expanded);
   }, [expanded, controlled]);
 
-  const isExpanded = controlled ? (expanded ?? true) : internalExpanded;
+  const railExpanded = controlled ? (expanded ?? true) : internalExpanded;
 
   const setRailExpanded = (next: boolean) => {
-    if (!controlled) {
-      setInternalExpanded(next);
-    }
+    if (!controlled) setInternalExpanded(next);
     onExpandedChange?.(next);
   };
 
   const [selectedKey, setSelectedKey] = useState<string | null>(() =>
-    resolveInitialSelectedKey(items, defaultSelectedItemId),
+    resolveInitialSelectedKey(items ?? [], defaultSelectedItemId),
   );
-  const [expandedChildrenKey, setExpandedChildrenKey] = useState<string | null>(
+  const [expandedGroupId, setExpandedGroupId] = useState<string | null>(
     () => defaultExpandedChildrenItemId ?? null,
   );
   const [selectedSecondaryParentKey, setSelectedSecondaryParentKey] = useState<string | null>(
@@ -419,41 +425,49 @@ export function MainMenuLeft({
   };
 
   return (
-    <nav
-      className={[
-        styles.root,
-        isExpanded ? styles.expanded : styles.collapsed,
-        programme === "synapse" ? styles.programmeSynapse : "",
-        programme === "synapse" && isExpanded ? styles.programmeSynapseExpanded : "",
-        programme === "synapse" && !isExpanded ? styles.programmeSynapseCollapsed : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      aria-label={ariaLabel}
-    >
-      {logo ? (
-        <div className={styles.logoSlot}>
-          {logo.link ? (
-            <button
-              type="button"
-              className={styles.logoButton}
-              title={logo.tooltip ?? logo.alt}
-              aria-label={logo.alt}
-              onClick={() =>
-                onNavigate?.(
-                  buildNavigateTarget("__logo__", logo.alt, undefined, logo.link, {}),
-                )
-              }
-            >
-              <LogoMark logo={logo} />
-            </button>
+    <MainMenuLeftContext.Provider value={contextValue}>
+      <nav
+        className={[
+          styles.root,
+          railExpanded ? styles.expanded : styles.collapsed,
+          programme === "synapse" ? styles.programmeSynapse : "",
+          programme === "synapse" && railExpanded ? styles.programmeSynapseExpanded : "",
+          programme === "synapse" && !railExpanded ? styles.programmeSynapseCollapsed : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        aria-label={ariaLabel}
+      >
+        {logo ? <MainMenuLeftLogoFromData logo={logo} onNavigate={onNavigate} /> : null}
+
+        <div className={styles.content}>
+          {menuLead && (railExpanded || programme === "synapse") ? (
+            <MenuLeadBlock menuLead={menuLead} railExpanded={railExpanded} />
+          ) : null}
+
+          {useComposition ? (
+            children
           ) : (
-            <div className={styles.logoStatic} role="img" aria-label={logo.alt} title={logo.tooltip}>
-              <LogoMark logo={logo} />
-            </div>
+            <MainMenuLeftItemsAdapter
+              items={items ?? []}
+              railExpanded={railExpanded}
+              forceStates={forceStates}
+              selectedKey={selectedKey}
+              expandedChildrenKey={expandedGroupId}
+              selectedSecondaryParentKey={selectedSecondaryParentKey}
+              selectedSecondaryKey={selectedSecondaryKey}
+              programme={programme}
+              onNavigate={onNavigate}
+              onSelected={onSelected}
+              onSecondaryContextMenu={onSecondaryContextMenu}
+              getSecondaryContextMenuOptions={getSecondaryContextMenuOptions}
+              setSelectedKey={setSelectedKey}
+              setExpandedChildrenKey={setExpandedGroupId}
+              setSelectedSecondaryParentKey={setSelectedSecondaryParentKey}
+              setSelectedSecondaryKey={setSelectedSecondaryKey}
+            />
           )}
         </div>
-      ) : null}
 
       <div className={styles.content} ref={contentRef}>
         {menuLead && (isExpanded || programme === "synapse") ? (
@@ -465,23 +479,223 @@ export function MainMenuLeft({
               .filter(Boolean)
               .join(" ")}
           >
+            <Icon
+              shapeName={railExpanded ? "double-chev-left" : "double-chev-right"}
+              className={styles.bottomToggleIcon}
+              style={{ width: 16, height: 16, flexShrink: 0 }}
+            />
+          </button>
+        </div>
+      </nav>
+    </MainMenuLeftContext.Provider>
+  );
+}
+
+function MainMenuLeftLogoFromData({
+  logo,
+  onNavigate,
+}: {
+  logo: MainMenuLeftLogo;
+  onNavigate?: (target: MainMenuLeftNavigationTarget) => void;
+}) {
+  if (logo.link) {
+    return (
+      <div className={styles.logoSlot}>
+        <button
+          type="button"
+          className={styles.logoButton}
+          title={logo.tooltip ?? logo.alt}
+          aria-label={logo.alt}
+          onClick={() =>
+            onNavigate?.(buildNavigateTarget("__logo__", logo.alt, undefined, logo.link, {}))
+          }
+        >
+          <LogoMark logo={logo} />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <MainMenuLeftLogoSlot
+      alt={logo.alt}
+      src={logo.src}
+      iconName={logo.iconName}
+      tooltip={logo.tooltip}
+    />
+  );
+}
+
+function LogoMark({ logo }: { logo: MainMenuLeftLogo }) {
+  if (logo.src) {
+    return <img src={logo.src} alt="" className={styles.logoImg} width={32} height={32} />;
+  }
+  if (logo.iconName) {
+    return <Icon shapeName={logo.iconName} className={styles.logoIcon} />;
+  }
+  return null;
+}
+
+function MenuLeadBlock({
+  menuLead,
+  railExpanded,
+}: {
+  menuLead: NonNullable<MainMenuLeftProps["menuLead"]>;
+  railExpanded: boolean;
+}) {
+  return (
+    <div
+      className={[styles.menuLeadBlock, !railExpanded ? styles.menuLeadBlockCollapsed : ""]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <button
+        type="button"
+        className={[
+          styles.menuLeadButton,
+          !railExpanded ? styles.menuLeadButtonCollapsed : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        title={menuLead.label ?? "New Chat"}
+        aria-label={menuLead.label ?? "New Chat"}
+        onClick={() => menuLead.onAction?.()}
+      >
+        <span className={styles.menuLeadIcon} aria-hidden="true">
+          <Icon shapeName="shape-plus" style={{ width: 16, height: 16 }} />
+        </span>
+        {railExpanded ? (
+          <span className={styles.menuLeadLabel}>{menuLead.label ?? "New Chat"}</span>
+        ) : null}
+      </button>
+    </div>
+  );
+}
+
+interface ItemsAdapterProps {
+  items: MainMenuLeftPrimaryItem[];
+  railExpanded: boolean;
+  forceStates: boolean;
+  selectedKey: string | null;
+  expandedChildrenKey: string | null;
+  selectedSecondaryParentKey: string | null;
+  selectedSecondaryKey: string | null;
+  programme: "ids" | "synapse";
+  onNavigate?: MainMenuLeftProps["onNavigate"];
+  onSelected?: MainMenuLeftProps["onSelected"];
+  onSecondaryContextMenu?: MainMenuLeftProps["onSecondaryContextMenu"];
+  getSecondaryContextMenuOptions?: MainMenuLeftProps["getSecondaryContextMenuOptions"];
+  setSelectedKey: (key: string) => void;
+  setExpandedChildrenKey: (key: string | null) => void;
+  setSelectedSecondaryParentKey: (key: string | null) => void;
+  setSelectedSecondaryKey: (key: string | null) => void;
+}
+
+function MainMenuLeftItemsAdapter({
+  items,
+  railExpanded,
+  forceStates,
+  selectedKey,
+  expandedChildrenKey,
+  selectedSecondaryParentKey,
+  selectedSecondaryKey,
+  programme,
+  onNavigate,
+  onSelected,
+  onSecondaryContextMenu,
+  getSecondaryContextMenuOptions,
+  setSelectedKey,
+  setExpandedChildrenKey,
+  setSelectedSecondaryParentKey,
+  setSelectedSecondaryKey,
+}: ItemsAdapterProps) {
+  return (
+    <>
+      {items.map((item, itemIndex) => {
+        const itemId = resolvePrimaryId(item, itemIndex);
+        const hasForcedState = forceStates && Boolean(item.state);
+        const state = hasForcedState
+          ? item.state!
+          : selectedKey === itemId
+            ? "selected"
+            : "default";
+        const isSelected = state === "selected" || state === "selected-focus";
+        const isFocused = state === "default-focus" || state === "selected-focus";
+        const childList = item.children ?? [];
+        const hasChildren = childList.length > 0;
+        const showChildrenList =
+          railExpanded &&
+          hasChildren &&
+          (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
+        const showChevron = railExpanded && hasChildren;
+        const primaryIconName = item.iconName ?? "home";
+        const hasSelectedSecondary = selectedSecondaryParentKey === itemId;
+        const showSelectedInset = hasForcedState
+          ? state === "selected" || state === "selected-focus"
+          : hasChildren
+            ? hasSelectedSecondary
+            : selectedKey === itemId;
+        const primaryLabel = primaryDisplayName(item);
+        const primaryTitle = item.tooltip ?? primaryLabel;
+        const secondaryContextMenuEnabled =
+          programme === "synapse" && Boolean(item.childrenContextMenu);
+
+        return (
+          <div key={itemId} className={styles.itemBlock}>
             <button
               type="button"
+              title={primaryTitle}
+              onClick={() => {
+                if (hasForcedState) return;
+                setSelectedKey(itemId);
+                onNavigate?.(
+                  buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
+                    href: item.href,
+                    routeRef: item.routeRef,
+                  }),
+                );
+                onSelected?.(
+                  buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
+                    href: item.href,
+                    routeRef: item.routeRef,
+                  }),
+                );
+                if (!hasChildren) {
+                  setSelectedSecondaryParentKey(null);
+                  setSelectedSecondaryKey(null);
+                  return;
+                }
+                if (!railExpanded) return;
+                setExpandedChildrenKey(expandedChildrenKey === itemId ? null : itemId);
+                if (expandedChildrenKey === itemId) {
+                  setSelectedSecondaryParentKey(null);
+                  setSelectedSecondaryKey(null);
+                }
+              }}
               className={[
-                styles.menuLeadButton,
-                !isExpanded ? styles.menuLeadButtonCollapsed : "",
+                styles.primaryRow,
+                !hasForcedState ? styles.interactive : "",
+                styles[`state${toPascalState(state)}`],
+                hasSelectedSecondary ? styles.secondaryParentSelected : "",
+                showSelectedInset ? styles.selected : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
-              title={menuLead.label ?? "New Chat"}
-              aria-label={menuLead.label ?? "New Chat"}
-              onClick={() => menuLead.onAction?.()}
+              aria-current={
+                isSelected && !(hasChildren && hasSelectedSecondary) ? "page" : undefined
+              }
+              aria-expanded={showChevron ? showChildrenList : undefined}
             >
-              <span className={styles.menuLeadIcon} aria-hidden="true">
-                <Icon shapeName="shape-plus" style={{ width: 16, height: 16 }} />
-              </span>
-              {isExpanded ? (
-                <span className={styles.menuLeadLabel}>{menuLead.label ?? "New Chat"}</span>
+              <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
+              {railExpanded ? <span className={styles.primaryLabel}>{primaryLabel}</span> : null}
+              {showChevron ? (
+                <Icon
+                  shapeName={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
+                  className={styles.chevronIcon}
+                />
+              ) : null}
+              {isFocused ? <span className={styles.focusRing} aria-hidden="true" /> : null}
+              {showSelectedInset ? (
+                <span className={styles.selectedInset} aria-hidden="true" />
               ) : null}
             </button>
           </div>
@@ -674,33 +888,36 @@ export function MainMenuLeft({
                 {showSelectedInset ? <span className={styles.selectedInset} aria-hidden="true" /> : null}
               </button>
 
-              {showChildrenList ? (
-                <div className={styles.secondarySection}>
-                  {childList.map((child, childIndex) => {
-                    const childId = resolveSecondaryId(child, itemId, childIndex);
-                    const childLabel = secondaryDisplayName(child);
-                    const isSecondarySelected =
-                      selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId;
+            {showChildrenList ? (
+              <div className={styles.secondarySection}>
+                {childList.map((child, childIndex) => {
+                  const childId = resolveSecondaryId(child, itemId, childIndex);
+                  const childLabel = secondaryDisplayName(child);
+                  const isSecondarySelected =
+                    selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId;
 
-                    const activateSecondary = () => {
-                      // Navigating to a secondary row makes it the current page, so
-                      // clear any stale primary selection (the parent still reads as
-                      // active via `hasSelectedSecondary`).
-                      setSelectedKey(null);
-                      setSelectedSecondaryParentKey(itemId);
-                      setSelectedSecondaryKey(childId);
-                      onNavigate?.(
-                        buildNavigateTarget(childId, childLabel, itemId, child.link, {
-                          href: child.href,
-                          routeRef: child.routeRef,
-                        }),
-                      );
-                      onSelected?.(
-                        buildSelectionDetail("secondary", childId, itemId, childLabel, child.link, {
-                          href: child.href,
-                          routeRef: child.routeRef,
-                        }),
-                      );
+                  const activateSecondary = () => {
+                    setSelectedSecondaryParentKey(itemId);
+                    setSelectedSecondaryKey(childId);
+                    onNavigate?.(
+                      buildNavigateTarget(childId, childLabel, itemId, child.link, {
+                        href: child.href,
+                        routeRef: child.routeRef,
+                      }),
+                    );
+                    onSelected?.(
+                      buildSelectionDetail("secondary", childId, itemId, childLabel, child.link, {
+                        href: child.href,
+                        routeRef: child.routeRef,
+                      }),
+                    );
+                  };
+
+                  if (secondaryContextMenuEnabled) {
+                    const contextMenuDetail: MainMenuLeftSecondaryContextMenuDetail = {
+                      parentItemId: itemId,
+                      childId,
+                      name: childLabel,
                     };
 
                     const handleSecondaryKeyDown = (
@@ -812,14 +1029,13 @@ export function MainMenuLeft({
                     }
 
                     return (
-                      <button
+                      <div
                         key={childId}
                         type="button"
                         data-item-id={childId}
                         data-parent-id={itemId}
                         className={[
-                          styles.secondaryRow,
-                          styles.secondaryInteractive,
+                          styles.secondaryRowWrap,
                           isSecondarySelected ? styles.secondaryRowSelected : "",
                         ]
                           .filter(Boolean)
@@ -836,48 +1052,34 @@ export function MainMenuLeft({
                         />
                       </button>
                     );
-                  })}
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
-      </div>
+                  }
 
-      <div className={styles.bottomToggle}>
-        <button
-          type="button"
-          className={styles.bottomToggleButton}
-          aria-label={isExpanded ? "Collapse navigation" : "Expand navigation"}
-          onClick={() => {
-            setRailExpanded(!isExpanded);
-            setExpandedChildrenKey(null);
-          }}
-        >
-          <Icon
-            shapeName={isExpanded ? "double-chev-left" : "double-chev-right"}
-            className={styles.bottomToggleIcon}
-            style={{ width: 16, height: 16, flexShrink: 0 }}
-          />
-        </button>
-      </div>
-    </nav>
+                  return (
+                    <button
+                      key={childId}
+                      type="button"
+                      title={child.tooltip ?? childLabel}
+                      className={[
+                        styles.secondaryRow,
+                        styles.secondaryInteractive,
+                        isSecondarySelected ? styles.secondaryRowSelected : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      aria-current={isSecondarySelected ? "page" : undefined}
+                      onClick={activateSecondary}
+                    >
+                      {childLabel}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
+    </>
   );
 }
 
-function LogoMark({ logo }: { logo: MainMenuLeftLogo }) {
-  if (logo.src) {
-    return <img src={logo.src} alt="" className={styles.logoImg} width={32} height={32} />;
-  }
-  if (logo.iconName) {
-    return <Icon shapeName={logo.iconName} className={styles.logoIcon} />;
-  }
-  return null;
-}
-
-function toPascal(value: MainMenuLeftPrimaryState): string {
-  return value
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join("");
-}
+export type MainMenuLeftProps = MainMenuLeftRootProps;

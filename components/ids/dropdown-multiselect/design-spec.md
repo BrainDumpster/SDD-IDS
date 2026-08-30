@@ -41,12 +41,15 @@
 - Option rows:
   - tokenized visual rhythm (`10px` vertical, `16px` horizontal)
   - minimum hit area: `44px`.
-- Menu width:
-  - sample `300px`
-  - runtime contract: matches trigger width unless host overrides.
+- `Label` (optional): sits to the **left** of the field on the same row, label-to-field gap `var(--spacing-space-16)` (16px). Typography `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight `400`; color `var(--color-text-gray-neutral-strong)`. An optional trailing required indicator `*` shows only when the field is required. Two sizes track the field height: **Large** `40px` (vertical padding `var(--padding-padding-10)`), **Small** `32px` (vertical padding `var(--padding-padding-6)`). The label is **independent of the menu min/max width** (`186–700px`) — its width does not affect, and is not constrained by, the dropdown menu sizing.
+- Menu width (`menuWidth` prop; min `186px`, max `700px`, left-aligned to trigger via `--anchor-width`):
+  - `"trigger"` (default): menu = trigger/field width, tracks a resizing container; long labels truncate.
+  - `"content"`: menu grows to the widest option/tag (clamped `[trigger, 700px]`), then the content truncates.
+- Truncation: option label and the field value truncate with an ellipsis; a truncated field value is wrapped in the IDS Tooltip (the badge tooltip reveals the full selected list).
+- Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-gray-neutral-light)`.
 - Search row (when `searchable`):
   - wrapper padding: `var(--padding-padding-8)`.
-  - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-accessible)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
+  - inner field (`Search-Main`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners; Figma `29393:141946`).
 - `SelectAllClearAllRow`:
   - fixed/stable row above options
   - not scrollable with options list
@@ -55,6 +58,7 @@
   - scrollable region for long sets (overflow menu variants).
 - Selected count badge:
   - uses IDS Badge size/shape contract (`18px` pill).
+  - badge does **not** shrink (`flex-shrink: 0`) so a 2-digit count never overlaps the value text; the value text (not the badge) absorbs the truncation.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -74,29 +78,29 @@
 
 ## Tokens
 - Field/menu tokens:
-  - `var(--color-background-component)`
-  - `var(--color-border-accessible)` (field default/show-dropdown border; menu border; section header border)
-  - `var(--color-border-strong)` (field hover border)
+  - `var(--color-background-surface-component)`
+  - `var(--color-border-gray-neutral-base)` (field default/show-dropdown border; menu border; section header border)
+  - `var(--color-border-gray-neutral-strong)` (field hover border)
   - `var(--color-border-brand-base)` (field focus ring; option focus inset border)
-  - `var(--color-border-disabled)` (field disabled border; caret disabled color; disabled checkbox border)
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)` (label text)
-  - `var(--color-text-disabled)`
+  - `var(--color-border-gray-disabled)` (field disabled border; caret disabled color; disabled checkbox border)
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)` (label text)
+  - `var(--color-text-gray-disabled)`
   - `var(--color-background-gray-lighter)` (disabled field background)
 - Selection tokens:
-  - `var(--color-background-brand-lighter)` (option hover background)
-  - `var(--color-border-brand-neutral)` (option hover/press border)
-  - `var(--color-background-controls-brand-lighter)`
-  - `var(--color-background-controls-brand-base)` (checkbox selected fill)
-  - `var(--color-background-controls-brand-strong)` (checkbox selected hover/press fill)
+  - `var(--color-background-brand-lighter-slate)` (option hover background)
+  - `var(--color-border-brand-base-neutral)` (option hover/press border)
+  - `var(--color-background-controls-lighter)`
+  - `var(--color-background-controls-base)` (checkbox selected fill)
+  - `var(--color-background-controls-strong)` (checkbox selected hover/press fill)
   - `var(--color-text-brand-strong)`
-  - `var(--color-border-transparent-brand)` (checkbox selected border)
-  - `var(--color-icon-white)` (checkbox tick)
-  - `var(--color-icon-inverse)`
+  - `var(--color-border-brand-transparent-brand)` (checkbox selected border)
+  - `var(--color-icon-gray-white)` (checkbox tick)
+  - `var(--color-icon-gray-inverse)`
 - Error tokens:
   - `var(--color-border-alerting-critical-base)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-text-critical)`
+  - `var(--color-icon-alerting-critical-base)`
+  - `var(--color-text-alerting-critical-base)`
 - Geometry/spacing:
   - `var(--dropdown-control-radius)` (field shell; IDS → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (IDS → `var(--corner-radius-radius-4)`)
@@ -115,19 +119,19 @@
 | Field container | hover | component | strong border | neutral text |
 | Field container | show-dropdown | component | accessible border | neutral text |
 | Field container | focus-visible | component | brand border + focus ring | neutral text |
-| Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | disabled text/icon |
+| Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | disabled text/icon |
 | Field container | error | component | critical border | critical helper/icon |
 | Option row | default | component | none | neutral/strong text per checkbox spec |
-| Option row | hover | `var(--color-background-brand-lighter)` | `outline: 1px solid var(--color-border-brand-neutral)` | neutral text |
+| Option row | hover | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base-neutral)` | neutral text |
 | Option row | selected (multi) | component | none | checkbox selected + neutral text |
 | Option row | indeterminate | component | none | checkbox dash token state |
-| Option row | disabled | `var(--color-background-component)` | none (checkbox always present; checkbox control itself shows disabled state) | disabled text |
-| SelectAll row | default | component | `var(--color-border-accessible)` bottom | neutral text + checkbox |
-| SelectAll row | hover (checkbox unchecked/indeterminate) | component | `var(--color-border-accessible)` bottom | checkbox border → `var(--color-border-strong)` |
-| SelectAll row | hover (checkbox checked) | component | `var(--color-border-accessible)` bottom | checkbox fill → `var(--color-background-controls-brand-strong)` |
+| Option row | disabled | `var(--color-background-surface-component)` | none (checkbox always present; checkbox control itself shows disabled state) | disabled text |
+| SelectAll row | default | component | `var(--color-border-gray-neutral-base)` bottom | neutral text + checkbox |
+| SelectAll row | hover (checkbox unchecked/indeterminate) | component | `var(--color-border-gray-neutral-base)` bottom | checkbox border → `var(--color-border-gray-neutral-strong)` |
+| SelectAll row | hover (checkbox checked) | component | `var(--color-border-gray-neutral-base)` bottom | checkbox fill → `var(--color-background-controls-strong)` |
 | ClearAll action | default | transparent | none | brand-strong |
 | ClearAll action | disabled | transparent | none | disabled text |
-| Option row (disabled) | checkbox control | `var(--color-background-gray-light)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| Option row (disabled) | checkbox control | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 Dark theme must preserve the same state matrix and resolve values through semantic IDS tokens only.
 
@@ -139,19 +143,21 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles menu.
+  - when the menu opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
+  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, select all, clear all, option rows, footer action).
   - `Escape` closes menu and restores trigger focus.
 - Option selection:
   - clicking option toggles inclusion in selected set.
   - disabled options cannot be toggled.
 - `Select All`:
-  - selects all currently visible and enabled options (post-filter semantics).
+  - **toggles** the currently-visible enabled options (post-filter): selects them if not all are selected; if every visible option is already selected, clicking again **deselects** the visible scope. Does **not** collapse the menu.
   - checkbox state:
     - checked when all visible enabled options selected
     - indeterminate when partial
     - unchecked when none.
 - `Clear All`:
-  - clears entire selected set
-  - disabled when selected count is zero.
+  - clears the selected set **and collapses the menu**.
+  - while filtering, clears only the currently-visible options (off-filter selections kept); disabled when selected count is zero (or none visibly selected while filtering).
 - Search:
   - filters visible options in real time; source options remain unchanged.
 - Badge + tooltip:
@@ -160,6 +166,12 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Optional action row:
   - user-defined label
   - emits explicit action event.
+- Keyboard navigation:
+  - `ArrowUp`/`ArrowDown` on a selectable option row move focus to the previous/next enabled `data-selectable` row; stops at the ends of the list.
+  - `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags). `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags.
+  - `Enter` / `Space` toggles the focused option.
+  - `ScrollArea.Viewport` elements use `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable. `searchClearButton` is part of the tab order.
+
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -170,6 +182,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
 | `errorText` | No | `string` | User-defined error text. |
 | `disabled` | No | `boolean` | Blocks trigger/menu interactions. |
 | `searchable` | No | `boolean` | Enables search row. |
+| `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default) = trigger width; `"content"` = grow to widest option/tag, clamped `[trigger, 700px]`. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical options. |
 | `value` | No | `string[]` | Controlled selected values. |
 | `onChange` | No | `(values: string[] \| optionObject[]) => void` | Payload strategy app-defined. |
@@ -270,46 +283,44 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ---
 
 ## Implementation Notes
-> Last updated: 2026-06-15.
 
-**Focus ring must not add border-radius to the field element.**
-The field is square in all states including focus. The ring has `border-radius: var(--corner-radius-radius-4)` and a 4px gap from the field border. Implementation: `IdsDropdownTriggerShell.module.css` — use `::after` pseudo-element (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`) instead of `outline` + `border-radius` on the element itself.
+### Design spec errors fixed (2026-07-01)
+- **Disabled checkbox control background incorrect** — Original spec: checkbox control background used `var(--color-background-gray-lighter)`. Fix: Updated to `var(--color-background-gray-light)` for disabled checkbox control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light) }`. Same fix applies to the indeterminate+disabled case.
+- **SelectAll/ClearAll row bottom border incorrect** — Original spec: row separator used `var(--color-border-neutral-light)`. Fix: Updated to `var(--color-border-gray-neutral-base)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-gray-neutral-base) }`.
+- **SelectAll checkbox hover border missing** — Original spec: hover behavior for unchecked and indeterminate Select All checkbox was not defined. Fix: Added hover state to strengthen border to `var(--color-border-gray-neutral-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-brand-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-gray-neutral-strong) }`.
+- **Section header border and text color incorrect** — Original spec: used `color-border-neutral-light` for border and `color-text-gray-neutral-strong` for text. Fix: Updated to `var(--color-border-gray-neutral-base)` for `border-top` and `var(--color-text-gray-neutral)` for text. Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-gray-neutral-base); color: var(--color-text-gray-neutral) }`.
 
-**Caret disabled color is `var(--color-border-disabled)`, not `var(--color-icon-disabled)`.**
-Both tokens resolve to the same value in light mode but differ in dark mode. Implementation: `IdsDropdownTriggerShell.module.css` — `.field[data-disabled] .caretWrap { color: var(--color-border-disabled) }`.
+### Design spec errors fixed (2026-07-25)
+- **Menu popup** — full 4-sided `1px` border, with `sideOffset: -1` so the top border overlaps the field's bottom border into a single line. Implementation: `DropdownMenu.module.css` `.popup`; `DropdownMenu.tsx` `sideOffset` default `-1`.
+- **Leading control (checkbox)** — `16×16px`, left edge flush with the `Select All` checkbox. Implementation: `DropdownMenu.module.css` — `.leadingControl { width: 16px; height: 16px }`.
+- **Caret** — rotates `180°` while the popup is open. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .caretWrap { transform: rotate(180deg) }`.
+- **`Select All`** — selects only the visible (filtered) options, added to any off-filter selections; its checked/indeterminate state reflects the visible set; the row is hidden when `<2` options match. Implementation: `DropdownMenu.tsx` — `visibleSelectableValues`, `effectiveSelectAllChecked/Indeterminate`, `showSelectAllRow`; callback receives `visibleValues?`.
+- **`Clear All`** — while filtering, clears only the visible options (keeps off-filter selections) and is disabled when none are visibly selected; with no filter, clears all. The popup closes after `Clear All` is clicked. Implementation: `DropdownMenu.tsx` — `effectiveClearAllDisabled`; callback receives `visibleValues?`; `setOpen(false)` on click.
+- **`Show Selected` panel** — defaults collapsed (`Show Selected`); has no dismiss (X) control; auto-hides when nothing is selected. Implementation: `DropdownMenu.tsx` — `defaultShowSelectedExpanded = false` (`onShowSelectedPanelClear` deprecated).
+- **Option selection** — multi-select keeps the popup open for continued selection (single-select closes on commit). Implementation: `DropdownMenu.tsx` — `onClick` closes only when `selectionMode !== "multi"`.
 
-**Font weight for all text elements is 400 (regular).**
-Do not set `font-weight` explicitly in component CSS — browser default (400) is correct. Implementation: `IdsDropdownTriggerShell.module.css`, `DropdownMenu.module.css` — no `font-weight` on `.field`, `.item`, `.sectionHeader`, `.footerAction`.
+### Implementation updates (2026-08-05)
 
-**Option hover/press borders must use `outline`, not `box-shadow: inset`.**
-`box-shadow` is not clipped by `overflow: clip` on the popup container, causing the border to visually overlap the popup's outer border on the first and last rows. `outline` is clipped correctly. Implementation: `DropdownMenu.module.css` — `outline: 1px solid var(--color-border-brand-neutral)` on hover and press states (not `box-shadow: inset`).
+- **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-gray-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownMultiSelect` wrapper and does not constrain the menu width.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup) while the caret rotates `180°`. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field` and `:global([data-popup-open]) .caretWrap`.
+- **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip; the selected-count badge also uses an IDS Tooltip to reveal the full selected list. Both only show when the content is actually cut off. Implementation: `IdsDropdownTriggerShell` / `SelectedCountBadge` uses `components/ids/tooltip/design-spec.md`.
+- **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
+- **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.
+- **Filled field content group** — selected-count badge + value with `gap: var(--spacing-space-4)`; the group gets `padding-right: var(--padding-padding-16)` when a selection is shown. Implementation: `IdsDropdownTriggerShell.module.css` — `.main` and `.field[data-filled="true"] .main`.
+- **Trigger width** — `width: max-content` so the popup tracks the field width, not a wider container. Implementation: `DropdownMenu.module.css` — `.triggerReset`.
+- **Show Selected tag wrap `contain: inline-size`** — wrapped tags do not drive the content-driven menu width; the menu is sized by the option list, and tags simply wrap within that width. Implementation: `DropdownMenu.module.css` — `.showSelectedTags` `contain: inline-size`.
 
-**Option focus state requires an inset ring.**
-Spec defines a 1px inset border using `var(--color-border-brand-base)` with `border-radius: var(--corner-radius-radius-4)`. Was previously suppressed with `outline: none`. Implementation: `DropdownMenu.module.css` — `.item:focus-visible { outline: 1px solid var(--color-border-brand-base); outline-offset: -1px; border-radius: var(--corner-radius-radius-4) }`.
+### 2026-07-25
+- **Menu popup** — full 4-sided `1px` border, with `sideOffset: -1` so the top border overlaps the field's bottom border into a single line. Implementation: `DropdownMenu.module.css` `.popup`; `DropdownMenu.tsx` `sideOffset` default `-1`.
+- **Leading control (checkbox)** — `16×16px`, left edge flush with the `Select All` checkbox. Implementation: `DropdownMenu.module.css` — `.leadingControl { width: 16px; height: 16px }`.
+- **Caret** — does **not** rotate when the popup opens; it stays pointing down.
+- **`Select All`** — selects only the visible (filtered) options, added to any off-filter selections; its checked/indeterminate state reflects the visible set; the row is hidden when `<2` options match. Implementation: `DropdownMenu.tsx` — `visibleSelectableValues`, `effectiveSelectAllChecked/Indeterminate`, `showSelectAllRow`; callback receives `visibleValues?`.
+- **`Clear All`** — while filtering, clears only the visible options (keeps off-filter selections) and is disabled when none are visibly selected; with no filter, clears all. The popup stays open after `Clear All` is clicked. Implementation: `DropdownMenu.tsx` — `effectiveClearAllDisabled`; callback receives `visibleValues?`.
+- **`Show Selected` panel** — defaults collapsed (`Show Selected`); has no dismiss (X) control; auto-hides when nothing is selected. Implementation: `DropdownMenu.tsx` — `defaultShowSelectedExpanded = false` (`onShowSelectedPanelClear` deprecated).
+- **Option selection** — multi-select keeps the popup open for continued selection (single-select closes on commit). Implementation: `DropdownMenu.tsx` — `onClick` closes only when `selectionMode !== "multi"`.
 
-**Checkbox must not show its own focus ring when the option row is focused.**
-Only the row-level inset ring should appear. Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="multi"]:focus-visible .checkboxOuter::after { content: none }`.
-
-**Selected option row: component background, no row outline.**
-Multi-select option rows always have a checkbox; the checkbox fill conveys selection visually. The row itself must use `var(--color-background-component)` with neutral text and no row-level outline. Do NOT apply `var(--color-background-brand-lighter)` + outline to multi rows. Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="multi"][data-selected]` overrides the base selected rule (`background: component; color: text-neutral; outline: none`).
-
-**Disabled option row: component background, no row outline.**
-A disabled multi-select row always has a checkbox. Use `var(--color-background-component)` with disabled text. The `gray-lighter` background + disabled border applies only to single-select rows without a leading control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled]:has(.checkboxOuter)` → `background: var(--color-background-component)`.
-
-**Disabled checkbox control background was `gray-lighter`; correct value is `gray-light`.**
-The checkbox control (not the row) in a disabled option row must use `var(--color-background-gray-light)` as background and `var(--color-text-disabled)` as color (for icon/text inside). Was incorrectly set to `var(--color-background-gray-lighter)`. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light); color: var(--color-text-disabled) }`. Same fix applies to the indeterminate+disabled case.
-
-**SelectAll/ClearAll row bottom border was `color-border-neutral-light`; correct value is `color-border-accessible`.**
-The row separator must use `var(--color-border-accessible)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-accessible) }`.
-
-**SelectAll checkbox hover border was missing.**
-On hover, the unchecked and indeterminate Select All checkbox must strengthen its border to `var(--color-border-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-strong) }`.
-
-**Disabled field must not show helper text.**
-The disabled state suppresses helper/validation text — it is not applicable when the field is disabled. Implementation: `IdsDropdownMultiSelect.stories.tsx` — remove helper text span from the disabled state example in `StatesAndDetails`.
-
-**Section header border and text color were incorrect.**
-Spec uses `var(--color-border-accessible)` for `border-top` and `var(--color-text-neutral)` for text (not `color-border-neutral-light` / `color-text-neutral-strong`). Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-accessible); color: var(--color-text-neutral) }`.
-
-**Footer action row requires an inner button wrapper.**
-Outer row padding is `var(--padding-padding-8) 0` (no horizontal padding). The label sits inside a `<span>` wrapper with `padding: var(--padding-padding-2) var(--padding-padding-16); border-radius: var(--corner-radius-radius-2)`. Implementation: `DropdownMenu.module.css` `.footerAction` + `.footerActionButton`; `DropdownMenu.tsx` wraps `footerActionLabel` in `<span className={styles.footerActionButton}>`.
+### 2026-07-01
+- **Disabled checkbox control background incorrect** — Original spec: checkbox control background used `var(--color-background-gray-lighter)`. Fix: Updated to `var(--color-background-gray-light)` for disabled checkbox control. Implementation: `DropdownMenu.module.css` — `.item[data-selectable="true"][data-disabled] .checkboxOuter { background: var(--color-background-gray-light) }`. Same fix applies to the indeterminate+disabled case.
+- **SelectAll/ClearAll row bottom border incorrect** — Original spec: row separator used `var(--color-border-neutral-light)`. Fix: Updated to `var(--color-border-gray-neutral-base)` to match section header and footer action borders. Implementation: `DropdownMenu.module.css` — `.selectAllClearAllRow { border-bottom: ... var(--color-border-gray-neutral-base) }`.
+- **SelectAll checkbox hover border missing** — Original spec: hover behavior for unchecked and indeterminate Select All checkbox was not defined. Fix: Added hover state to strengthen border to `var(--color-border-gray-neutral-strong)` (matching option-row checkbox hover behavior). Checked hover keeps `var(--color-border-brand-transparent-brand)`. Implementation: `DropdownMenu.module.css` — `.selectAllButton:not([data-checked="true"]):hover .selectAllCheckbox { border-color: var(--color-border-gray-neutral-strong) }`.
+- **Section header border and text color incorrect** — Original spec: used `color-border-neutral-light` for border and `color-text-neutral-strong` for text. Fix: Updated to `var(--color-border-gray-neutral-base)` for `border-top` and `var(--color-text-gray-neutral)` for text. Implementation: `DropdownMenu.module.css` — `.sectionHeader { border-top: ... var(--color-border-gray-neutral-base); color: var(--color-text-gray-neutral) }`.

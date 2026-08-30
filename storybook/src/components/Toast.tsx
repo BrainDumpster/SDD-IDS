@@ -1,6 +1,7 @@
 import { Toast as BaseToast } from "@base-ui-components/react/toast";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import { Button } from "./Button";
 import styles from "./Toast.module.css";
 
 export type ToastVariant =
@@ -66,6 +67,7 @@ function ToastViewport({ position }: { position: ToastPosition }) {
             key={toast.id}
             toast={toast}
             className={`${styles.root} ${styles[variant]}`}
+            tabIndex={-1}
           >
             <div className={styles.contentGroup}>
               <div className={styles.iconWrap}>
@@ -79,19 +81,28 @@ function ToastViewport({ position }: { position: ToastPosition }) {
             </div>
             <div className={styles.actionsGroup}>
               {showLink ? (
-                <BaseToast.Action
-                  className={styles.link}
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  className={styles.linkButton}
                   onClick={() => {
                     onLinkClick?.();
                   }}
                 >
-                  <span>{linkLabel}</span>
-                </BaseToast.Action>
+                  {linkLabel}
+                </Button>
               ) : null}
               {closable ? (
-                <BaseToast.Close className={styles.close} aria-label="Close">
-                  <CloseIcon />
-                </BaseToast.Close>
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  iconOnly
+                  icon={<Icon shapeName="shape-x" variant="mask" color="var(--color-icon-gray-white)" style={{ width: "100%", height: "100%" }} />}
+                  aria-label="Close"
+                  type="button"
+                  className={styles.closeButton}
+                  onClick={() => toastManager.close(toast.id)}
+                />
               ) : (
                 <span className={styles.closePlaceholder} aria-hidden="true" />
               )}
@@ -115,7 +126,4 @@ function VariantIcon({ variant }: { variant: ToastVariant }) {
   return <Icon shapeName={iconByVariant[variant]} variant="img" className={styles.variantIcon} />;
 }
 
-function CloseIcon() {
-  return <Icon shapeName="shape-x" variant="img" className={styles.closeIcon} />;
-}
 

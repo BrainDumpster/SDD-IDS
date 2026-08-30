@@ -1,13 +1,19 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import chevDownIcon from "../../../assets/icons/chev-down.svg";
 import shapePlusIcon from "../../../assets/icons/shape-plus.svg";
 import stateAddCircSolidIcon from "../../../assets/icons/state-add-circ-solid.svg";
-import arrowTriDownSolidIcon from "../../../assets/icons/arrow-tri-down-solid.svg";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
+import { Icon } from "./Icon";
+import { Badge } from "./Badge";
+import {
+  computeTabOverflowMenuItems,
+  computeTabOverflowVisibleCount,
+  TAB_OVERFLOW_MORE_ICON_SIZE_PX,
+  TAB_OVERFLOW_MORE_ICON_SLUG,
+} from "../../../component-contracts/ids/tab.contract";
 
 export interface TabItem {
   id: string;
@@ -16,6 +22,7 @@ export interface TabItem {
   icon?: ReactNode;
   closable?: boolean;
   disabled?: boolean;
+  badgeCount?: number;
 }
 
 export type TabsSurface = "elevated" | "transparent";
@@ -29,7 +36,7 @@ interface TabsProps {
   minTabWidth?: number;
   maxTabWidth?: number;
   variant?: "primary" | "secondary";
-  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-2)`. */
+  /** Figma `transparent` axis: idle fills clear vs `var(--color-background-surface-secondary)`. */
   surface?: TabsSurface;
   moreLabel?: string;
   /** `synapse` → Nav Tab chrome (32px, closable defaults, `shape-plus` add). */
@@ -71,14 +78,17 @@ export function Tabs({
     if (!list) return;
     const recomputeVisibleCount = () => {
       const available = list.clientWidth;
-      const moreWidth = 84;
-      const addWidth = showAddTab ? (isSynapse ? 36 : Math.min(220, Math.max(56, 36 + addTabLabel.length * 8))) : 0;
-      const perTab = Math.max(minTabWidth, 80);
-      const maxVisible = Math.max(
-        1,
-        Math.floor((available - addWidth - moreWidth) / perTab),
+      setVisibleCount(
+        computeTabOverflowVisibleCount({
+          containerWidth: available,
+          itemCount: tabs.length,
+          overflow: true,
+          allowAddTab: showAddTab,
+          addTabLabel,
+          minTabWidth,
+          addTabReservePx: showAddTab && isSynapse ? 36 : undefined,
+        }),
       );
-      setVisibleCount(Math.min(maxVisible, tabs.length));
     };
 
     recomputeVisibleCount();
@@ -94,6 +104,11 @@ export function Tabs({
       hiddenTabs: tabs.slice(visibleCount),
     };
   }, [tabs, visibleCount]);
+
+  const overflowMenuTabs = useMemo(
+    () => computeTabOverflowMenuItems(hiddenTabs, activeTabId),
+    [hiddenTabs, activeTabId],
+  );
 
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
 
@@ -154,6 +169,9 @@ export function Tabs({
               <span className={styles.tabInner}>
                 {item.icon ? <span className={styles.tabIcon}>{item.icon}</span> : null}
                 <span className={styles.tabLabel}>{item.label}</span>
+                {item.badgeCount !== undefined && item.badgeCount > 0 ? (
+                  <Badge value={item.badgeCount} />
+                ) : null}
               </span>
               {(item.closable ?? isSynapse) ? (
                 <span
@@ -194,9 +212,9 @@ export function Tabs({
                 aria-label="More tabs"
               >
                 {overflowLabel ?? moreLabel}
-                <img
-                  src={isSynapse ? chevDownIcon : arrowTriDownSolidIcon}
-                  alt=""
+                <Icon
+                  shapeName={TAB_OVERFLOW_MORE_ICON_SLUG}
+                  size={TAB_OVERFLOW_MORE_ICON_SIZE_PX}
                   className={styles.moreIcon}
                 />
               </Menu.Trigger>
@@ -205,7 +223,7 @@ export function Tabs({
                   <Menu.Popup
                     className={isSynapse ? synapseMenuStyles.popup : styles.moreMenu}
                   >
-                    {hiddenTabs.map((tab) => (
+                    {overflowMenuTabs.map((tab) => (
                       <Menu.Item
                         key={tab.id}
                         className={isSynapse ? synapseMenuStyles.optionRow : styles.moreItem}

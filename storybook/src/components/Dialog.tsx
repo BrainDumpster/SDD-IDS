@@ -91,8 +91,20 @@ export function Dialog({
 
   const popupClassName =
     variant === "about"
-      ? `${styles.popup} ${styles.popupAbout}`
-      : [styles.popup, styles[dialogSize]].filter(Boolean).join(" ");
+      ? [
+          styles.popup,
+          programme === "synapse" ? styles.popupSynapse : styles.popupIds,
+          styles.popupAbout,
+        ]
+          .filter(Boolean)
+          .join(" ")
+      : [
+          styles.popup,
+          programme === "synapse" ? styles.popupSynapse : styles.popupIds,
+          styles[dialogSize],
+        ]
+          .filter(Boolean)
+          .join(" ");
 
   const triggerRender = trigger != null && isValidElement(trigger) ? (trigger as ReactNode) : undefined;
 
@@ -216,7 +228,14 @@ export function Dialog({
               </div>
 
               {description ? (
-                <BaseDialog.Description className={styles.description}>
+                <BaseDialog.Description
+                  className={[
+                    styles.description,
+                    styles[`description${normalizeDialogType(dialogType)}`],
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
                   {description}
                 </BaseDialog.Description>
               ) : null}
@@ -226,6 +245,7 @@ export function Dialog({
                   ref={bodyRef}
                   className={[
                     styles.body,
+                    styles[`body${normalizeDialogType(dialogType)}`],
                     bodyScrollable ? styles.bodyScrollable : "",
                   ]
                     .filter(Boolean)
@@ -237,9 +257,7 @@ export function Dialog({
 
               {showBodyScrollShadow ? (
                 <div className={styles.contentScrollShadow} aria-hidden="true" />
-              ) : (
-                <div className={styles.contentSeparator} aria-hidden="true" />
-              )}
+              ) : null}
 
               <div className={styles.footer}>
                 {showTertiary ? (

@@ -1,0 +1,82 @@
+.root {
+  position: relative;
+  display: flex;
+  padding: 2px;
+  background: var(--color-background-gray-lighter);
+  box-sizing: border-box;
+}
+
+.vertical {
+  width: 14px;
+  height: 300px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.horizontal {
+  width: 302px;
+  height: 14px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.track {
+  position: absolute;
+  inset: 2px;
+  background: var(--color-background-gray-lighter);
+  z-index: 0;
+}
+
+.button {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-background-gray-base);
+  cursor: pointer;
+}
+
+.icon {
+  width: 10px;
+  height: 10px;
+  display: block;
+}
+
+.thumb {
+  position: absolute;
+  z-index: 2;
+  border-radius: var(--corner-radius-radius-8);
+  background: var(--color-background-gray-base);
+  cursor: grab;
+  touch-action: none;
+}
+
+.thumb:active {
+  cursor: grabbing;
+}
+
+.thumb:hover,
+.thumb:focus-visible {
+  background: var(--color-text-gray-neutral);
+}
+
+.thumbVertical {
+  width: 10px;
+  height: 60px;
+}
+
+.thumbHorizontal {
+  height: 10px;
+  width: 60px;
+  min-width: 16px;
+  max-width: 220px;
+}

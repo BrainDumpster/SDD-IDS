@@ -10,7 +10,7 @@ import { IdsMastheadDap as DAPMastheadDap } from "../../../../storybook/src/comp
 /* Gate coverage tokens: default hover press focus-visible (from spec state tables) */
 
 const meta: Meta<typeof DAPMastheadDap> = {
-  title: "Spec Generated/DAP/Masthead",
+  title: "Components/DAP/Masthead",
   component: DAPMastheadDap,
   parameters: { layout: "fullscreen" },
 };
