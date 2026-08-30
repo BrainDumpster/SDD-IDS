@@ -1,1 +1,5 @@
-export { AnchorMenu as IdsAnchorMenu } from "./AnchorMenu";
+export {
+  IdsAnchorMenu,
+  type IdsAnchorMenuProps,
+  type IdsAnchorMenuItem,
+} from "../../../lib/react/ids/anchor-menu";

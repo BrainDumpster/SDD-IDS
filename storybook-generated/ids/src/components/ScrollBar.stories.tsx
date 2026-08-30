@@ -3,18 +3,29 @@
 /* spec_hash: 4d30562a5103cfa411f9a70a89b402584d2cecfa33646cde9a3ac5658f38cecf */
 import React from "react";
 import "../../../../components/ids-theme.css";
+import {
+  SCROLL_BAR_DOCS_DESCRIPTION,
+  SCROLL_BAR_SOURCE_CODE,
+} from "../../../../storybook/src/components/ids-scroll-bar.developer-usage";
 import type { Meta, StoryObj } from "@storybook/react";
 import { IdsScrollBar as IdsScrollBar } from "../../../../storybook/src/components/IdsScrollBar";
 
 const DESIGN_SPEC_PATH = "components/ids/scroll-bar/design-spec.md";
 
 const meta: Meta<typeof IdsScrollBar> = {
-  title: "Spec Generated/IDS/Scroll Bar",
+  tags: ["autodocs"],
+  title: "Components/IDS/Scroll Bar",
   component: IdsScrollBar,
   parameters: {
     docs: {
+      canvas: { sourceState: "open" },
       description: {
-        component: `Spec-driven IDS Scroll Bar. Source of truth: ${DESIGN_SPEC_PATH}.`,
+        component: SCROLL_BAR_DOCS_DESCRIPTION,
+      },
+      source: {
+        type: "code",
+        language: "tsx",
+        code: SCROLL_BAR_SOURCE_CODE,
       },
     },
   },
@@ -59,8 +70,8 @@ export const VariantMatrix: Story = {
   ),
 };
 
-const specTokens = ["--button-control-radius", "--corner-radius-radius-4", "--color-background-gray-lighter", "--color-background-gray-base", "--corner-radius-radius-8", "--color-text-neutral"] as const;
-const specTokenRefs = {"--button-control-radius": ["Theming Mechanism: | **IDS component spec** | References component aliases in Layout & Measurements and Codegen Contract | `border-radiu..."], "--corner-radius-radius-4": ["Theming Mechanism: | **Programme theme CSS** | Redefines alias values (`components/synapse-theme.css`, `components/dap-theme.css`) | `--..."], "--color-background-gray-lighter": ["Layout & Measurements: - Vertical: `14px` wide \u00d7 `300px` tall, `padding: 2px`, `border: 0` (no visible border), `background: var(--color-bac...", "Layout & Measurements: - Horizontal: `302px` wide \u00d7 `14px` tall, `padding: 2px`, `border: 0`, `background: var(--color-background-gray-light...", "Layout & Measurements: - Fills the padded area (`width: 100%`, `height: 100%`) with the same `var(--color-background-gray-lighter)` background.", "Layout & Measurements: | `ScrollBarRoot` | background | `var(--color-background-gray-lighter)` | `11099:57443`, `11099:57459` | `get_variabl...", "Tokens: - `ScrollBarRoot` / `ScrollBarTrack` background: `var(--color-background-gray-lighter)` \u2014 Figma resolves to `#f4f4f4`...", "Tokens: - `var(--color-background-gray-lighter)` and `var(--color-background-gray-base)` are semantic color tokens.", "States (Light Theme): | `ScrollBarRoot` | default | `var(--color-background-gray-lighter)` | Always visible in Figma sample. |", "Codegen Contract (Framework-Agnostic Blueprint): - `background: var(--color-background-gray-lighter)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] `ScrollBarRoot` / `ScrollBarTrack` use `var(--color-background-gray-lighter)`."], "--color-background-gray-base": ["Layout & Measurements: - Vertical: `width: 10px`, `height: 60px`, `border-radius: 8px`, `background: var(--color-background-gray-base)`.", "Layout & Measurements: - Horizontal: `height: 10px`, `width: 60px`, `min-width: 16px`, `max-width: 220px`, `border-radius: 8px`, `background...", "Layout & Measurements: | `ScrollBarThumb` | background | `var(--color-background-gray-base)` | `11099:57446`, `11099:57462` | `get_variable_...", "Tokens: - `ScrollBarThumb` background: `var(--color-background-gray-base)` \u2014 Figma resolves to `#757575` in light theme.", "Tokens: - `var(--color-background-gray-lighter)` and `var(--color-background-gray-base)` are semantic color tokens.", "States (Light Theme): | `ScrollBarThumb` | default | `var(--color-background-gray-base)` | `#757575` in light theme. |", "States (Light Theme): | `ScrollBarThumb` | focus-visible | `var(--color-background-gray-base)` + focus ring | Add focus ring using system f...", "Codegen Contract (Framework-Agnostic Blueprint): - `background: var(--color-background-gray-base)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] `ScrollBarThumb` uses `var(--color-background-gray-base)` and `var(--corner-radius-radius-8)`."], "--corner-radius-radius-8": ["Layout & Measurements: | `ScrollBarThumb` | border-radius | `var(--corner-radius-radius-8)` (`8px`) | `11099:57446`, `11099:57462` | `get_va...", "Codegen Contract (Framework-Agnostic Blueprint): - `border-radius: var(--corner-radius-radius-8)` (`8px`).", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] `ScrollBarThumb` uses `var(--color-background-gray-base)` and `var(--corner-radius-radius-8)`."], "--color-text-neutral": ["States (Light Theme): | `ScrollBarThumb` | hover | `var(--color-text-neutral)` | Storybook implementation darkens the thumb on hover/focus. |", "States (Light Theme): | `ScrollBarThumb` | press | `var(--color-text-neutral)` | Thumb actively dragged (`cursor: grabbing`). |", "Codegen Contract (Framework-Agnostic Blueprint): - Hover / `focus-visible` background: `var(--color-text-neutral)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] Thumb hover/focus uses `var(--color-text-neutral)`."]} as Record<string, string[]>;
+const specTokens = ["--button-control-radius", "--corner-radius-radius-4", "--color-background-gray-lighter", "--color-background-gray-base", "--corner-radius-radius-8", "--color-text-gray-neutral"] as const;
+const specTokenRefs = {"--button-control-radius": ["Theming Mechanism: | **IDS component spec** | References component aliases in Layout & Measurements and Codegen Contract | `border-radiu..."], "--corner-radius-radius-4": ["Theming Mechanism: | **Programme theme CSS** | Redefines alias values (`components/synapse-theme.css`, `components/dap-theme.css`) | `--..."], "--color-background-gray-lighter": ["Layout & Measurements: - Vertical: `14px` wide \u00d7 `300px` tall, `padding: 2px`, `border: 0` (no visible border), `background: var(--color-bac...", "Layout & Measurements: - Horizontal: `302px` wide \u00d7 `14px` tall, `padding: 2px`, `border: 0`, `background: var(--color-background-gray-light...", "Layout & Measurements: - Fills the padded area (`width: 100%`, `height: 100%`) with the same `var(--color-background-gray-lighter)` background.", "Layout & Measurements: | `ScrollBarRoot` | background | `var(--color-background-gray-lighter)` | `11099:57443`, `11099:57459` | `get_variabl...", "Tokens: - `ScrollBarRoot` / `ScrollBarTrack` background: `var(--color-background-gray-lighter)` \u2014 Figma resolves to `#f4f4f4`...", "Tokens: - `var(--color-background-gray-lighter)` and `var(--color-background-gray-base)` are semantic color tokens.", "States (Light Theme): | `ScrollBarRoot` | default | `var(--color-background-gray-lighter)` | Always visible in Figma sample. |", "Codegen Contract (Framework-Agnostic Blueprint): - `background: var(--color-background-gray-lighter)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] `ScrollBarRoot` / `ScrollBarTrack` use `var(--color-background-gray-lighter)`."], "--color-background-gray-base": ["Layout & Measurements: - Vertical: `width: 10px`, `height: 60px`, `border-radius: 8px`, `background: var(--color-background-gray-base)`.", "Layout & Measurements: - Horizontal: `height: 10px`, `width: 60px`, `min-width: 16px`, `max-width: 220px`, `border-radius: 8px`, `background...", "Layout & Measurements: | `ScrollBarThumb` | background | `var(--color-background-gray-base)` | `11099:57446`, `11099:57462` | `get_variable_...", "Tokens: - `ScrollBarThumb` background: `var(--color-background-gray-base)` \u2014 Figma resolves to `#757575` in light theme.", "Tokens: - `var(--color-background-gray-lighter)` and `var(--color-background-gray-base)` are semantic color tokens.", "States (Light Theme): | `ScrollBarThumb` | default | `var(--color-background-gray-base)` | `#757575` in light theme. |", "States (Light Theme): | `ScrollBarThumb` | focus-visible | `var(--color-background-gray-base)` + focus ring | Add focus ring using system f...", "Codegen Contract (Framework-Agnostic Blueprint): - `background: var(--color-background-gray-base)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] `ScrollBarThumb` uses `var(--color-background-gray-base)` and `var(--corner-radius-radius-8)`."], "--corner-radius-radius-8": ["Layout & Measurements: | `ScrollBarThumb` | border-radius | `var(--corner-radius-radius-8)` (`8px`) | `11099:57446`, `11099:57462` | `get_va...", "Codegen Contract (Framework-Agnostic Blueprint): - `border-radius: var(--corner-radius-radius-8)` (`8px`).", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] `ScrollBarThumb` uses `var(--color-background-gray-base)` and `var(--corner-radius-radius-8)`."], "--color-text-gray-neutral": ["States (Light Theme): | `ScrollBarThumb` | hover | `var(--color-text-gray-neutral)` | Storybook implementation darkens the thumb on hover/focus. |", "States (Light Theme): | `ScrollBarThumb` | press | `var(--color-text-gray-neutral)` | Thumb actively dragged (`cursor: grabbing`). |", "Codegen Contract (Framework-Agnostic Blueprint): - Hover / `focus-visible` background: `var(--color-text-gray-neutral)`.", "Codegen Contract (Framework-Agnostic Blueprint): - [ ] Thumb hover/focus uses `var(--color-text-gray-neutral)`."]} as Record<string, string[]>;
 
 export const TokenInspector: Story = {
   render: () => (
@@ -84,7 +95,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -96,7 +107,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }

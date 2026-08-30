@@ -1,0 +1,10 @@
+.error {
+  margin: var(--spacing-space-4) 0 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-alerting-critical-base);
+  font-weight: 400;
+}

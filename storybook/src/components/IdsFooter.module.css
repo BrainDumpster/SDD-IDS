@@ -6,8 +6,8 @@
   align-items: center;
   justify-content: flex-end;
   overflow: hidden;
-  background: var(--color-background-surface-1);
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  background: var(--color-background-surface-primary);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   font-family: inherit;
 }
 
@@ -34,12 +34,12 @@
 
 .label {
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }
 
 .value {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -61,7 +61,7 @@
 }
 
 .hostnameText {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -121,7 +121,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   white-space: nowrap;
 }
 
@@ -151,7 +151,7 @@
 }
 
 .timeZoneButton:disabled {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
   text-decoration: none;
 }

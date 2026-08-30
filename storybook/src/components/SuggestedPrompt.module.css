@@ -14,7 +14,7 @@
 }
 
 .root:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .root:focus {
@@ -42,7 +42,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   word-break: break-word;
 }
 

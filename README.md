@@ -706,9 +706,11 @@ Use this workflow when you want deterministic, repeatable generation from `desig
    - Generated stories now include a **TokenInspector** section (token name + live resolved preview) for designer-friendly review.
 
 6. **Build Storybook as final gate**
-   - `cd storybook && pnpm build`
+   - React: `cd storybook && pnpm build`
+   - Angular: `cd storybook-angular && npm run build`
    - or from root via gate:
-     - `python scripts/strict_spec_storybook_gate.py --all --spec-only --deterministic-story --build-storybook`
+     - `python scripts/strict_spec_storybook_gate.py --component button --framework React --spec-only --deterministic-story --build-storybook`
+     - `python scripts/strict_spec_storybook_gate.py --component button --framework Angular --spec-only --deterministic-story --build-storybook`
 
 7. **Generate framework code (agent-driven) using same layered inputs**
    - Use:
@@ -993,13 +995,32 @@ GitHub Enterprise MDX
 
 ## Storybook
 
-46 Synapse component implementations with CSS Modules, used as the source of truth for token extraction:
+Isolated Storybook packages per framework (separate `node_modules`, separate ports):
+
+| Framework | Package | Port | Generated stories |
+|-----------|---------|------|-------------------|
+| React | `storybook/` | 6006 | `storybook-generated/<programme>/` (IDS, DAP, **Synapse**) |
+| Angular | `storybook-angular/` | 6007 | `storybook-angular/src/generated/<programme>/` (**IDS, DAP only** — no Synapse unless explicitly requested) |
+
+Shared component API contracts: `component-contracts/` (types, defaults, sample data).
 
 ```bash
+# React
 cd storybook
 pnpm install
-pnpm dev        # dev server
-pnpm build      # production build
+pnpm dev        # http://localhost:6006
+
+# Angular
+cd storybook-angular
+npm install
+npm run dev     # http://localhost:6007
+
+# Generate Angular spec story (example: IDS Button)
+python scripts/strict_spec_storybook_gate.py --component button --framework Angular --spec-only --deterministic-story
+
+# Build gates
+cd storybook && pnpm build
+cd storybook-angular && npm run build
 ```
 
 ## Environment

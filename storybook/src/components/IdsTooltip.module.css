@@ -5,6 +5,7 @@
 
 .triggerBlock {
   display: block;
+  min-width: 0;
   width: 100%;
   cursor: default;
 }
@@ -25,9 +26,9 @@
   z-index: 0;
   box-sizing: border-box;
   width: 100%;
-  background: var(--color-background-surface-2);
-  color: var(--color-text-neutral);
-  border: var(--border-width-border-default) solid var(--color-border-accessible);
+  background: var(--color-background-surface-secondary);
+  color: var(--color-text-gray-neutral);
+  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   border-radius: var(--tooltip-control-radius);
   box-shadow: 1px 1px 3px rgba(37, 37, 37, 0.25);
 }
@@ -60,12 +61,12 @@
 }
 
 .arrowFill {
-  fill: var(--color-background-surface-2);
+  fill: var(--color-background-surface-secondary);
 }
 
 .arrowStroke {
   fill: none;
-  stroke: var(--color-border-accessible);
+  stroke: var(--color-border-gray-neutral-base);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
   stroke-linecap: butt;
@@ -226,14 +227,14 @@
 }
 
 .title {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 500;
 }
 
 .body {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
@@ -249,7 +250,7 @@
   justify-content: center;
   border: none;
   background: transparent;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   padding: 0;
   cursor: pointer;
 }

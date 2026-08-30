@@ -29,7 +29,7 @@
 
 .label {
   align-items: center;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   display: flex;
   flex-shrink: 0;
   font-size: var(--font-size-body-2);
@@ -55,7 +55,7 @@
 }
 
 .requiredMark {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .infoIcon {
@@ -68,8 +68,8 @@
 
 .control {
   align-items: center;
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--text-box-control-radius);
   display: flex;
   gap: var(--spacing-space-10);
@@ -101,11 +101,11 @@
 }
 
 .control:hover:not([data-state="disabled"]):not([data-state="error"]) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .control[data-state="hover"] {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .control[data-state="selected"] {
@@ -118,7 +118,7 @@
 
 .control[data-state="focus"],
 .control[data-focus-modality="keyboard"]:has(.value:focus):not([data-state="disabled"]):not([data-state="error"]) {
-  border-color: var(--color-border-accessible);
+  border-color: var(--color-border-gray-neutral-base);
 }
 
 .control[data-state="focus"]::after,
@@ -146,7 +146,7 @@
 .value {
   background: transparent;
   border: none;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   flex: 1 1 auto;
   font-family: inherit;
   font-size: var(--font-size-body-2);
@@ -157,12 +157,12 @@
 }
 
 .value::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .control[data-state="disabled"] .value,
 .control[data-state="disabled"] .value::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .suffixIcon {
@@ -170,7 +170,7 @@
   width: 16px;
   flex: 0 0 auto;
   display: block;
-  background-color: var(--color-icon-neutral);
+  background-color: var(--color-icon-gray-neutral-base);
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -180,7 +180,7 @@
 }
 
 .control[data-state="disabled"] .suffixIcon {
-  background-color: var(--color-icon-disabled);
+  background-color: var(--color-icon-gray-disabled);
 }
 
 .passwordToggle {

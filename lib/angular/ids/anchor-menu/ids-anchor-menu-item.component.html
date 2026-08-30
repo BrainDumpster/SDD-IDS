@@ -1,0 +1,14 @@
+<a
+  class="ids-anchor-menu__link"
+  [class.ids-anchor-menu__link--active]="isActive"
+  role="listitem"
+  [attr.href]="canNavigate ? href : null"
+  [attr.aria-current]="isActive ? 'page' : null"
+  [attr.aria-disabled]="canNavigate ? null : 'true'"
+  [tabIndex]="tabIndex"
+  (click)="onClick($event)"
+  (keydown)="onKeydown($event)"
+  (focus)="onFocus()"
+>
+  {{ label }}
+</a>

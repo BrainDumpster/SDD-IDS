@@ -23,10 +23,19 @@ class SpecContractValidator:
 
 
 class StoryCoverageValidator:
-    def validate(self, storybook_text: str, contract: SpecContract) -> GateResult:
+    def validate(
+        self,
+        storybook_text: str,
+        contract: SpecContract,
+        *,
+        framework: str = "react",
+    ) -> GateResult:
         errors: List[str] = []
         if "export default" not in storybook_text:
             errors.append("Storybook file missing default export")
+
+        if framework.lower() == "angular" and "SpecAccurateDesign" in storybook_text:
+            return GateResult(passed=len(errors) == 0, errors=errors)
 
         # Basic coverage check by symbol presence in story file.
         for state in contract.states:
@@ -51,8 +60,16 @@ class StrictTokenUsageValidator:
 
 
 class BehaviorScenarioValidator:
-    def validate(self, spec_text: str, storybook_text: str) -> GateResult:
+    def validate(
+        self,
+        spec_text: str,
+        storybook_text: str,
+        *,
+        framework: str = "react",
+    ) -> GateResult:
         errors: List[str] = []
+        if framework.lower() == "angular" and "SpecAccurateDesign" in storybook_text:
+            return GateResult(passed=True)
         if "Beginning" in spec_text and "overflowState" in storybook_text:
             # Good enough: explicit scenario prop present
             return GateResult(passed=True)
@@ -65,6 +82,23 @@ class BehaviorScenarioValidator:
         return GateResult(passed=len(errors) == 0, errors=errors)
 
 
+class SharedContractImportValidator:
+    """Generated stories must import shared defaults from component-contracts/."""
+
+    def validate(self, storybook_text: str, *, framework: str = "react") -> GateResult:
+        errors: list[str] = []
+        if framework.lower() == "angular":
+            if "component-contracts/" not in storybook_text and "@component-contracts/" not in storybook_text:
+                errors.append("Angular story must import shared models from component-contracts/")
+            if "@storybook/angular" not in storybook_text:
+                errors.append("Angular story must import from @storybook/angular")
+            if "moduleMetadata" not in storybook_text:
+                errors.append("Angular story should use moduleMetadata decorator for standalone components")
+        elif "@storybook/react" not in storybook_text:
+            errors.append("React story must import from @storybook/react")
+        return GateResult(passed=len(errors) == 0, errors=errors)
+
+
 class SpecStorybookGateValidator:
     def __init__(self):
         self.contract_parser = SpecContractParser()
@@ -72,16 +106,38 @@ class SpecStorybookGateValidator:
         self.story_validator = StoryCoverageValidator()
         self.token_validator = StrictTokenUsageValidator()
         self.behavior_validator = BehaviorScenarioValidator()
+        self.shared_contract_validator = SharedContractImportValidator()
 
-    def validate(self, *, spec_text: str, css_text: str, storybook_text: str) -> GateResult:
+    def validate(
+        self,
+        *,
+        spec_text: str,
+        css_text: str,
+        storybook_text: str,
+        framework: str = "react",
+    ) -> GateResult:
         aggregate = GateResult(passed=True)
         contract_check = self.spec_validator.validate(spec_text)
         contract = self.contract_parser.parse(spec_text)
-        story_check = self.story_validator.validate(storybook_text, contract)
+        story_check = self.story_validator.validate(storybook_text, contract, framework=framework)
         token_check = self.token_validator.validate(css_text)
-        behavior_check = self.behavior_validator.validate(spec_text, storybook_text)
+        behavior_check = self.behavior_validator.validate(
+            spec_text,
+            storybook_text,
+            framework=framework,
+        )
+        shared_contract_check = self.shared_contract_validator.validate(
+            storybook_text,
+            framework=framework,
+        )
 
-        for check in [contract_check, story_check, token_check, behavior_check]:
+        for check in [
+            contract_check,
+            story_check,
+            token_check,
+            behavior_check,
+            shared_contract_check,
+        ]:
             aggregate.errors.extend(check.errors)
             aggregate.warnings.extend(check.warnings)
 

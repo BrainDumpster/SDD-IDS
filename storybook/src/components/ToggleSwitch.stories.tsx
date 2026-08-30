@@ -4,7 +4,7 @@ import { useState } from "react";
 import { IdsToggleSwitch } from "./IdsToggleSwitch";
 
 const meta: Meta<typeof IdsToggleSwitch> = {
-  title: "Spec Generated/IDS/Toggle Switch",
+  title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
   argTypes: {
     disabled: { control: "boolean" },
@@ -61,7 +61,7 @@ export const ControlledManual: Story = {
           checked={checked}
           onCheckedChange={setChecked}
         />
-        <span style={{ color: "var(--color-text-neutral)" }}>
+        <span style={{ color: "var(--color-text-gray-neutral)" }}>
           Checked: {checked ? "true" : "false"}
         </span>
       </div>

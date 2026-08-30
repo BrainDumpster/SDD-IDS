@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Alert } from "./Alert";
 
 const meta = {
-  title: "Spec Generated/IDS/Alert/Inline Alert",
+  title: "Components/IDS/Alert/Inline Alert",
   component: Alert,
   parameters: {
     docs: {

@@ -3,10 +3,14 @@
   box-sizing: border-box;
 }
 
+.rootForm {
+  background: var(--color-background-surface-component);
+}
+
 .item {
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   margin-top: calc(-1 * var(--border-width-border-1));
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .item[data-first="true"] {
@@ -30,8 +34,8 @@
   border: 0;
   cursor: pointer;
   text-align: left;
-  background: var(--color-background-component);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .triggerLeft {
@@ -70,16 +74,16 @@
   flex-shrink: 0;
   vertical-align: middle;
   background-color: currentColor;
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-base);
   transition: transform 120ms ease;
 }
 
 .trigger:hover {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .trigger:hover .icon {
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .trigger:focus-visible {
@@ -93,26 +97,26 @@
 .open,
 .trigger[data-panel-open],
 .item[data-open] .trigger {
-  background-color: var(--color-background-brand-lighter);
+  background-color: var(--color-background-brand-lighter-slate);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-brand-lighter) 4px,
-    var(--color-background-brand-lighter) 100%
+    var(--color-background-brand-lighter-slate) 4px,
+    var(--color-background-brand-lighter-slate) 100%
   );
 }
 
 .open:hover,
 .trigger[data-panel-open]:hover,
 .item[data-open] .trigger:hover {
-  background-color: var(--color-background-brand-light);
+  background-color: var(--color-background-brand-light-slate);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-brand-light) 4px,
-    var(--color-background-brand-light) 100%
+    var(--color-background-brand-light-slate) 4px,
+    var(--color-background-brand-light-slate) 100%
   );
 }
 
@@ -120,7 +124,7 @@
 .trigger[data-panel-open] .icon,
 .item[data-open] .trigger .icon {
   transform: rotate(180deg);
-  color: var(--color-icon-accessible);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .panel {
@@ -131,7 +135,7 @@
 .content {
   padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-16)
     calc(var(--padding-padding-32) + var(--padding-padding-8));
-  background-color: var(--color-background-component);
+  background-color: var(--color-background-surface-component);
 }
 
 /* Expanded body: no border-top under header (IDS); left highlighter via gradient only. */
@@ -141,20 +145,22 @@
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-component) 4px,
-    var(--color-background-component) 100%
+    var(--color-background-surface-component) 4px,
+    var(--color-background-surface-component) 100%
   );
 }
 
 .item[data-open] .meta,
-.panel[data-open] > .meta {
-  background-color: var(--color-background-component);
+.item[data-open] .formSlot,
+.panel[data-open] > .meta,
+.panel[data-open] > .formSlot {
+  background-color: var(--color-background-surface-component);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-component) 4px,
-    var(--color-background-component) 100%
+    var(--color-background-surface-component) 4px,
+    var(--color-background-surface-component) 100%
   );
 }
 
@@ -168,8 +174,14 @@
 .meta {
   padding: 0 var(--padding-padding-24) var(--padding-padding-16)
     calc(var(--padding-padding-32) + var(--padding-padding-8));
-  background-color: var(--color-background-component);
+  background-color: var(--color-background-surface-component);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
+}
+
+.formSlot {
+  padding: 0 var(--padding-padding-24) var(--padding-padding-16)
+    calc(var(--padding-padding-32) + var(--padding-padding-8));
+  background-color: var(--color-background-surface-component);
 }

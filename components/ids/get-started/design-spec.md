@@ -8,10 +8,10 @@
 | Design system | IDS |
 | Category | Patterns |
 | Status | active |
-| Version | 1.2.0 |
+| Version | 1.3.0 |
 | Spec pattern | `ids-native` |
 | Created | 2026-07-09 |
-| Updated | 2026-07-13 |
+| Updated | 2026-08-20 |
 | Description | Full-page onboarding pattern — optional IDS Masthead, brand hero banner, horizontal configuration cards, optional overflow navigation, Skip action |
 | File key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Component set (`GetStarted-Main`) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev — **`12189:233235`** |
@@ -21,8 +21,8 @@
 | Embedded Masthead instance | **`12189:231406`** (`Masthead-Main` inside **`12189:233185`**) |
 | Validated nodes | **`12189:233235`**, **`12189:233185`**, **`12189:233198`**, **`12189:233211`**, **`12189:233218`**, **`12189:233223`**, **`12189:233228`**, **`12189:231401`**, **`12189:231402`**, **`12189:231403`**, **`12189:231404`**, **`12189:231405`**, **`12023:228883`**, **`12023:228880`** (Not Completed), **`12023:228902`** (Completed), **`12023:228939`** (Required) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`, `disableCodeConnect: true`) — last live **2026-07-13** (Background `12189:231401` re-verified); primary set **2026-07-09** |
-| Reference implementation | `storybook/src/components/IdsGetStarted.tsx`, `IdsGetStarted.module.css` |
-| Storybook | `storybook/src/components/IdsGetStarted.stories.tsx` (title **`Spec Generated/IDS/Get Started`**; primary story **`Spec Accurate Design`**) |
+| Reference implementation | `lib/react/ids/get-started` (`GetStarted` / `IdsGetStarted` — not `GetStartedRoot`); `lib/angular/ids/get-started` (Angular); Storybook hand port `storybook/src/components/IdsGetStarted.tsx`, `IdsGetStarted.module.css` |
+| Storybook | React: `storybook/src/components/lib-generated/GetStarted.stories.tsx` (title **`Lib Generated/IDS/Get Started`**; primary story **`Spec Accurate Design`**); also `storybook/src/components/IdsGetStarted.stories.tsx` (**`Spec Generated/IDS/Get Started`**). Angular: `storybook-angular/src/components/ids-get-started/` (same meta title; imports lib via `compiled/lib/angular/ids/get-started`) |
 | Nested specs | `components/ids/button/design-spec.md` (Configure / Skip buttons — hover/press/focus-visible), `components/ids/masthead/design-spec.md` (embedded top chrome) |
 
 ### Masthead composition (Figma-verified)
@@ -45,10 +45,12 @@ Pass full Masthead configuration through optional `mastheadProps` (or `mastheadS
 
 ## Anatomy
 
-- `GetStartedRoot` — page shell (`surface-1` background)
+Root slot is **`GetStarted`** (compound alias; not `GetStartedRoot`). DOM selectors use **Ids camelCase** (`data-ids="IdsGetStarted"`, class `IdsGetStarted`) — not Base UI `data-slot="GetStarted"` / kebab `ids-get-started`.
+
+- `GetStarted` — page shell (`surface-1` background)
 - `GetStartedMastheadSlot` (optional) — embedded **`Masthead-Main`** (`12189:231406`, **`56px`** band, absolute top of hero)
 - `GetStartedHeroHeader` — **`272px`** brand hero (Figma **Background** `12189:231401`)
-  - `GetStartedHeroBackground` — fill `var(--color-background-masthead-brand-base)` (`12189:231402`)
+  - `GetStartedHeroBackground` — fill `var(--color-background-masthead-base)` (`12189:231402`)
   - `GetStartedHeroShadowBand` — **`21px`** @ **`top: 251px`**, gradient `rgba(37,37,37,0)` → `rgba(0,0,0,0.2)` (`12189:231403`) — **under** honeycomb
   - `GetStartedHeroHoneycomb` — **hero banner only** (not Masthead); Figma **`HoneyComb 1`** `12189:231404`
     - **Asset:** `assets/images/honeycomb.png` (Figma export; white hex lines on transparent)
@@ -56,8 +58,8 @@ Pass full Masthead configuration through optional `mastheadProps` (or `mastheadS
     - **Do not** use Dev Mode `lightgray` background fallback — it washes brand blue through the transparent PNG
   - `Light` (`12189:231405`) — empty in Figma; no runtime layer
   - `GetStartedMastheadSlot` — opaque brand strip above Background so Masthead never shows the honeycomb
-  - `GetStartedHeroTitle` — **Header 1** (`48px` / **`58px`** line-height), `var(--color-text-white)`
-  - `GetStartedHeroSubtitle` — **Header 6** (`18px` / **`25px`** line-height), `var(--color-text-white)`
+  - `GetStartedHeroTitle` — **Header 1** (`48px` / **`58px`** line-height), `var(--color-text-gray-white)`
+  - `GetStartedHeroSubtitle` — **Header 6** (`18px` / **`25px`** line-height), `var(--color-text-gray-white)`
 - `GetStartedContainer` — card row + Skip (`gap: var(--spacing-space-32, 32px)`)
   - `GetStartedCardTrack` — horizontal card row (`gap: var(--spacing-space-24, 24px)`); scrollbar **hidden** when overflowing
   - `GetStartedSkipButton` — IDS Button primary or disabled per sequential/page rules; label from `skipButtonText` (default **Skip**)
@@ -67,9 +69,9 @@ Pass full Masthead configuration through optional `mastheadProps` (or `mastheadS
   - `GetStartedOverflowNavButton` — `double-chev-right` **`32×32`** at **`left: 100.5px; top: 344px`**
 - `GetStartedCard` (`.GetStarted-Element-CardState`) — per Figma element **`12023:228883`**; wrapped in `GetStartedCardAnchor` for icon-on-border positioning
   - `GetStartedCardIconBadge` — absolutely centered on anchor top edge (`translateY(-50%)`); **64×64px** outer, **32×32** glyph
-  - `GetStartedCardTitleBand` — **`padding: 58px 10px 24px`**, title **Header 6** `var(--color-text-brand-strong)`; optional **`Required`** label **`var(--color-text-critical)`**
-  - `GetStartedCardContentPanel` — `var(--color-background-surface-2)`, border `var(--color-border-accessible)`, **`padding: 24px`**, **`radius: 8px`**
-    - `GetStartedCardDescription` — **Body 1** `var(--color-text-neutral)`
+  - `GetStartedCardTitleBand` — **`padding: 58px 10px 24px`**, title **Header 6** `var(--color-text-brand-strong)`; optional **`Required`** label **`var(--color-text-alerting-critical-base)`**
+  - `GetStartedCardContentPanel` — `var(--color-background-surface-secondary)`, border `var(--color-border-gray-neutral-base)`, **`padding: 24px`**, **`radius: 8px`**
+    - `GetStartedCardDescription` — **Body 1** `var(--color-text-gray-neutral)`
     - `GetStartedCardNote` — **Body 2** with **Note:** medium prefix + regular instruction copy
     - `GetStartedCardConfigureButton` — full-width; **compose IDS Button** primary/disabled; label from `actionButtonText` (default **Configure**)
 
@@ -141,7 +143,7 @@ Pass full Masthead configuration through optional `mastheadProps` (or `mastheadS
 **Line diagram — right overlay (page 1):**
 
 ```text
-GetStartedRoot (1920×995)  position:relative
+GetStarted (1920×995)  position:relative
 │
 ├── Header / Hero          y=0 … 272     z-index ABOVE overflow
 │   ├── Brand fill (`12189:231402`)
@@ -186,7 +188,7 @@ Same 157×720 box at top:275px, but:
 **DOM order:**
 
 ```text
-GetStartedRoot
+GetStarted
   GetStartedHeroHeader (+ MastheadSlot?)
   GetStartedContainer
     GetStartedCardTrack → cards[]
@@ -233,44 +235,44 @@ GetStartedRoot
 | Hero title | **Header 1** | `var(--font-size-header-1, 48px)` / `var(--font-line-height-line-height-58, 58px)` |
 | Hero subtitle | **Header 6** | `var(--font-size-header-6, 18px)` / `var(--font-line-height-line-height-25, 25px)` |
 | Card title | **Header 6** | `var(--font-size-header-6, 18px)` / `var(--font-line-height-line-height-25, 25px)` — `var(--color-text-brand-strong)` |
-| Required label | **Body 2** | `var(--font-size-body-2, 14px)` / `var(--font-line-height-line-height-20, 20px)` — `var(--color-text-critical)` |
+| Required label | **Body 2** | `var(--font-size-body-2, 14px)` / `var(--font-line-height-line-height-20, 20px)` — `var(--color-text-alerting-critical-base)` |
 | Description | **Body 1** | `var(--font-size-body-1, 16px)` / `var(--font-line-height-line-height-24, 24px)` |
 | Note / buttons | **Body 2** | `var(--font-size-body-2, 14px)` / `var(--font-line-height-line-height-20, 20px)` |
 
 ### Colors
 
-- `var(--color-background-surface-1)` — page background
-- `var(--color-background-masthead-brand-base)` — hero + masthead
-- `var(--color-background-surface-2)` — card content panel + incomplete icon badge fill
-- `var(--color-background-controls-brand-base)` — primary Configure / enabled Skip
+- `var(--color-background-surface-primary)` — page background
+- `var(--color-background-masthead-base)` — hero + masthead
+- `var(--color-background-surface-secondary)` — card content panel + incomplete icon badge fill
+- `var(--color-background-controls-base)` — primary Configure / enabled Skip
 - `var(--color-background-gray-lighter)` — disabled Configure / disabled Skip
-- `var(--color-text-white)` — hero copy, primary button labels
+- `var(--color-text-gray-white)` — hero copy, primary button labels
 - `var(--color-text-brand-strong)` — card titles
-- `var(--color-text-neutral)` — body copy
-- `var(--color-text-critical)` — Required label
-- `var(--color-text-disabled)` — disabled button labels
-- `var(--color-border-accessible)` — card borders
-- `var(--color-border-disabled)` — disabled button borders
-- `var(--color-border-transparent-brand)` — primary button border
-- `var(--color-icon-accessible)` — incomplete/required icon tint
-- `var(--color-icon-alerting-success)` — completed badge background
-- `var(--color-icon-white)` — completed check icon
+- `var(--color-text-gray-neutral)` — body copy
+- `var(--color-text-alerting-critical-base)` — Required label
+- `var(--color-text-gray-disabled)` — disabled button labels
+- `var(--color-border-gray-neutral-base)` — card borders
+- `var(--color-border-gray-disabled)` — disabled button borders
+- `var(--color-border-brand-transparent-brand)` — primary button border
+- `var(--color-icon-gray-neutral-accessible)` — incomplete/required icon tint
+- `var(--color-icon-alerting-success-base)` — completed badge background
+- `var(--color-icon-gray-white)` — completed check icon
 - Overflow gradient: `var(--color-gradient-overflow-horizontal-start)`, `var(--color-gradient-overflow-horizontal-middle)` (**`46.146%`**), `var(--color-gradient-overflow-horizontal-end)`
 
 ## States (Light Theme)
 
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| `GetStartedCard` shell | Not Completed | `var(--color-background-surface-1)` | `1px var(--color-border-accessible)` | title `var(--color-text-brand-strong)` |
-| `GetStartedCard` shell | Completed | `var(--color-background-surface-1)` | `1px var(--color-border-accessible)` | title `var(--color-text-brand-strong)` |
-| `GetStartedCard` shell | Required | `var(--color-background-surface-1)` | `1px var(--color-border-accessible)` | title + **Required** `var(--color-text-critical)` |
-| `GetStartedCardIconBadge` | Not Completed / Required | `var(--color-background-surface-2)` | `1px var(--color-border-accessible)` | icon `var(--color-icon-accessible)` |
-| `GetStartedCardIconBadge` | Completed | `var(--color-icon-alerting-success)` | none | `shape-check-thick` `var(--color-icon-white)` |
-| `GetStartedCardContentPanel` | all | `var(--color-background-surface-2)` | `1px var(--color-border-accessible)` | body `var(--color-text-neutral)` |
-| `GetStartedCardConfigureButton` | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
-| `GetStartedCardConfigureButton` | disabled (sequential lock) | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
-| `GetStartedSkipButton` | enabled | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` |
-| `GetStartedSkipButton` | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` |
+| `GetStartedCard` shell | Not Completed | `var(--color-background-surface-primary)` | `1px var(--color-border-gray-neutral-base)` | title `var(--color-text-brand-strong)` |
+| `GetStartedCard` shell | Completed | `var(--color-background-surface-primary)` | `1px var(--color-border-gray-neutral-base)` | title `var(--color-text-brand-strong)` |
+| `GetStartedCard` shell | Required | `var(--color-background-surface-primary)` | `1px var(--color-border-gray-neutral-base)` | title + **Required** `var(--color-text-alerting-critical-base)` |
+| `GetStartedCardIconBadge` | Not Completed / Required | `var(--color-background-surface-secondary)` | `1px var(--color-border-gray-neutral-base)` | icon `var(--color-icon-gray-neutral-accessible)` |
+| `GetStartedCardIconBadge` | Completed | `var(--color-icon-alerting-success-base)` | none | `shape-check-thick` `var(--color-icon-gray-white)` |
+| `GetStartedCardContentPanel` | all | `var(--color-background-surface-secondary)` | `1px var(--color-border-gray-neutral-base)` | body `var(--color-text-gray-neutral)` |
+| `GetStartedCardConfigureButton` | enabled | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` |
+| `GetStartedCardConfigureButton` | disabled (sequential lock) | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
+| `GetStartedSkipButton` | enabled | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` |
+| `GetStartedSkipButton` | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 
 ## States (Dark Theme)
 
@@ -454,7 +456,7 @@ Placeholder copy for description/note matches Figma element **`12023:228880`** (
 
 Required DOM order (codegen must emit this sequence):
 
-1. `GetStartedRoot` (`position: relative`)
+1. `GetStarted` (`position: relative`)
 2. `GetStartedHeroHeader` (`height: 272px`; `z-index` **>** OverflowEdge)
    1. `GetStartedHeroBackground` — brand fill only
    2. `GetStartedHeroShadowBand` — under honeycomb
@@ -462,7 +464,14 @@ Required DOM order (codegen must emit this sequence):
    4. `GetStartedMastheadSlot?` — when `showMasthead=true`; opaque; compose Masthead
    5. `GetStartedHeroTitle` + `GetStartedHeroSubtitle`
 3. `GetStartedContainer`
-   1. `GetStartedCardTrack` → `GetStartedCardAnchor` → `GetStartedCard`[] (icon badge + title band + content panel + Configure)
+   1. `GetStartedCardTrack` → `GetStartedCardAnchor`[]
+      1. `GetStartedCardIconBadge`
+      2. `GetStartedCard`
+         1. `GetStartedCardTitleBand` (title + optional Required)
+         2. `GetStartedCardContentPanel`
+            1. `GetStartedCardDescription`
+            2. `GetStartedCardNote?`
+            3. `GetStartedCardConfigureButton`
    2. `GetStartedSkipButton`
 4. `GetStartedOverflowEdge?` (absolute on Root; **after** Container; only when `overflow=true` and scroll metrics require it)
    1. `GetStartedOverflowGradient` (`width: 100%`)
@@ -490,7 +499,7 @@ Per-card `cardState`: `not-completed | completed | required` (independent of axe
 |---|---|
 | Hero background | Figma Background `12189:231401`: brand fill → shadow → honeycomb `@0.15` + `object-cover` (no `lightgray`); Masthead opaque above |
 | Hero title / subtitle | White text tokens; gap `var(--spacing-space-16, 16px)`; title Header 1; subtitle Header 6 |
-| Card shell | `width: 321px`, `border-radius: var(--corner-radius-radius-8, 8px)`, `border: 1px var(--color-border-accessible)`, `background: var(--color-background-surface-1)` |
+| Card shell | `width: 321px`, `border-radius: var(--corner-radius-radius-8, 8px)`, `border: 1px var(--color-border-gray-neutral-base)`, `background: var(--color-background-surface-primary)` |
 | Icon badge | Outer `64×64`; glyph `32×32`; `top: 0; left: 50%; transform: translate(-50%, -50%)`; round radius token |
 | Content panel | `padding: 24px`, inner vertical `gap: 120px` between body group and button; surface-2 + accessible border |
 | Body group | `gap: 28px` between description and note |
@@ -542,7 +551,7 @@ Card / chrome icons: render via shared **`Icon`** (`shapeName`); icon box **`32�
 
 **Hero background paint order (bottom → top)** — Figma Background `12189:231401`:
 
-1. Brand fill — `var(--color-background-masthead-brand-base)` (`12189:231402`)
+1. Brand fill — `var(--color-background-masthead-base)` (`12189:231402`)
 2. Shadow band — `21px` at `top: 251px` (`12189:231403`)
 3. **`honeycomb.png`** — wrapper `opacity: 0.15`; `<img object-fit: cover>` (`12189:231404`); **hero only**
 4. Masthead (optional) — opaque brand strip; **no honeycomb styles**
@@ -579,15 +588,22 @@ Card / chrome icons: render via shared **`Icon`** (`shapeName`); icon box **`32�
 - [ ] Runtime API: `onConfigure` emits full card; `onSkip` for bottom action; `skipButtonText` default **Skip**
 - [ ] Legacy aliases documented (`bannerTitle`, `launchButtonText`, `configureModuleAction`, etc.)
 - [ ] All colors/spacing use `var(--...)` — no hardcoded hex in implementation
-- [ ] Spec Accurate Design story under `Spec Generated/IDS/Get Started`
+- [ ] Spec Accurate Design story under `Spec Generated/IDS/Get Started` and `Lib Generated/IDS/Get Started`
+- [ ] Root slot is `GetStarted` — not `GetStartedRoot`. Selectors are Ids camelCase (`data-ids="IdsGetStarted"`, `IdsGetStartedHeroHeader`, …) not Base UI `data-slot` / kebab `ids-get-started`
 
 ## Source Mapping
 
 - Component map: `data/component-figma-map.json` → **Get Started**
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Live verification: Figma MCP — primary variants **2026-07-09**; Background `12189:231401` (+ `231402`–`231405`) re-verified **2026-07-13**
+- Anatomy root rename (`GetStartedRoot` → `GetStarted`) for codegen compound slots — **2026-08-17**
 - Primary variant: **`12189:233185`**; component set: **`12189:233235`**
 - Hero Background: **`12189:231401`**
 - Masthead instance: **`12189:231406`**
 - Overflow right: **`12189:232209`** on **`12189:233198`**; overflow left: **`42682:125703`** on **`12189:233211`**
 - Card element set: **`12023:228883`**
+- Runtime contract: `component-contracts/ids/get-started.contract.ts`
+- Reference implementation (React): `lib/react/ids/get-started/`
+- Reference implementation (Angular): `lib/angular/ids/get-started/`
+- Storybook (React): `storybook/src/components/IdsGetStarted.stories.tsx`
+- Storybook (Angular): `storybook-angular/src/components/ids-get-started/`

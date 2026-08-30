@@ -10,7 +10,7 @@
 | Category | Patterns |
 | Status | draft |
 | Version | 1.1.0 |
-| Description | Wrapper surface for a responsive grid of IDS Cards (1 → 2 → 3 columns by viewport); optional card drag-reorder. Sets nested Card border color (`--card-border-color` → `--color-border-light`) and injects `showDivider` via `showDividerInCard`. Page title and page-level actions are owned by the host layout — **not** Dashboard. |
+| Description | Wrapper surface for a responsive grid of IDS Cards (1 → 2 → 3 columns by viewport); optional card drag-reorder. Sets nested Card border color (`--card-border-color` → `--color-border-gray-neutral-light`) and injects `showDivider` via `showDividerInCard`. Page title and page-level actions are owned by the host layout — **not** Dashboard. |
 | Theme CSS | `components/ids-theme.css` |
 | Updated | 2026-07-14 — nested Card border + divider injection anti-drift |
 | Figma | _Canonical Dashboard page:_ https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44523-285905&m=dev — **`44523:285905`** |
@@ -19,7 +19,11 @@
 | Verification method | Figma MCP (`get_screenshot`, `get_metadata`, `get_design_context`, `get_variable_defs`) — **2026-07-14** |
 | Nested specs | [`components/ids/card/design-spec.md`](../card/design-spec.md) — **must follow Card Border & divider contract** |
 | Storybook | `storybook-generated/ids/src/components/Dashboard.stories.tsx` — **`Spec Generated/IDS/Dashboard`** |
+| Storybook (Angular) | `storybook-angular/src/components/ids-dashboard/ids-dashboard.stories.js` — **`Spec Generated/IDS/Dashboard`** |
 | Reference implementation | `storybook/src/components/Dashboard.tsx`, `Dashboard.module.css` |
+| Reference implementation (React lib) | `lib/react/ids/dashboard` (`IdsDashboard`, `IdsDashboardGrid`, `IdsDashboardItem`) |
+| Reference implementation (Angular lib) | `lib/angular/ids/dashboard` (`ids-dashboard`, `ids-dashboard-grid`, `ids-dashboard-item`) |
+| Nested Card (Angular lib) | `lib/angular/ids/card` — consumes `--card-border-color` + `IDS_DASHBOARD_CARD_OVERRIDE` |
 | Deterministic generator | `generation/deterministic_storybook/ids/dashboard.py` (registry key `("ids", "dashboard")`) |
 
 ## Anatomy
@@ -45,7 +49,7 @@ flowchart TD
 
 | Region | Contract |
 |---|---|
-| Root | `width: 100%`; padding `16px 24px` (tighter padding below `sm`); outer border `var(--color-border-accessible)`; **`border-radius: 0`**; fill `var(--color-background-surface-1)`; **sets `--card-border-color: var(--color-border-light)`** |
+| Root | `width: 100%`; padding `16px 24px` (tighter padding below `sm`); outer border `var(--color-border-gray-neutral-base)`; **`border-radius: 0`**; fill `var(--color-background-surface-primary)`; **sets `--card-border-color: var(--color-border-gray-neutral-light)`** |
 | Grid | Responsive tracks (IDS breakpoints from `config/design_systems/ids.yaml`): see below; gap `16px` |
 | Item span | Card `size` maps to tracks; on fewer columns, oversized spans clamp to full row |
 
@@ -64,8 +68,8 @@ Grid uses `minmax(0, 1fr)` so cards shrink with the viewport. Card `--card-min-w
 | Slot / layer | Property | Token / contract | Figma node | Live evidence |
 | --- | --- | --- | --- | --- |
 | `DashboardRoot` | `border-radius` | `0` / `var(--corner-radius-radius-none)` | TBD | Draft — pending Dashboard Figma; square matches IDS Card shell |
-| `DashboardRoot` | `border` | `var(--border-width-border-default)` × `var(--color-border-accessible)` | TBD | Dashboard chrome only (not nested Card) |
-| Nested Card shells + body seams | `border` / body dividers | `var(--color-border-light)` via `--card-border-color` | Card / Dashboard-Element-Card | Dashboard **must** set `--card-border-color`; Card consumes cascade (see Card Border & divider contract) |
+| `DashboardRoot` | `border` | `var(--border-width-border-default)` × `var(--color-border-gray-neutral-base)` | TBD | Dashboard chrome only (not nested Card) |
+| Nested Card shells + body seams | `border` / body dividers | `var(--color-border-gray-neutral-light)` via `--card-border-color` | Card / Dashboard-Element-Card | Dashboard **must** set `--card-border-color`; Card consumes cascade (see Card Border & divider contract) |
 
 ### Nested Card border & divider contract (anti-drift — mandatory)
 
@@ -76,15 +80,15 @@ Dashboard **does not** restyle Card borders in isolation. It **configures** Card
 On `DashboardRoot` stylesheet:
 
 ```css
---card-border-color: var(--color-border-light);
+--card-border-color: var(--color-border-gray-neutral-light);
 ```
 
 | Applies to | Effect |
 |---|---|
-| Nested `CardRoot` outer border | Resolves to `var(--color-border-light)` |
+| Nested `CardRoot` outer border | Resolves to `var(--color-border-gray-neutral-light)` |
 | Nested `CardBody` `border-top` / `border-bottom` (when seams shown) | Same light token |
 
-**Do not** set nested Card borders to `var(--color-border-accessible)` inside Dashboard. **Do not** hardcode `#c5c5c5`. Dashboard root chrome **keeps** `accessible`; only nested Cards use `light`.
+**Do not** set nested Card borders to `var(--color-border-gray-neutral-base)` inside Dashboard. **Do not** hardcode `#c5c5c5`. Dashboard root chrome **keeps** `accessible`; only nested Cards use `light`.
 
 #### 2. Divider injection (`showDividerInCard`)
 
@@ -105,7 +109,7 @@ On `DashboardRoot` stylesheet:
 
 | Dashboard context | Nested Card outer border | Nested body seams |
 |---|---|---|
-| Always (any `showDividerInCard`) | `--color-border-light` via `--card-border-color` | Color also light when seams show |
+| Always (any `showDividerInCard`) | `--color-border-gray-neutral-light` via `--card-border-color` | Color also light when seams show |
 | `showDividerInCard=true`, no footer | light outer | light `border-top` only |
 | `showDividerInCard=true`, with footer | light outer | light top + bottom |
 | `showDividerInCard=false`, any footer | light outer | **no** body seams |
@@ -115,7 +119,7 @@ On `DashboardRoot` stylesheet:
 | Forbidden | Required |
 |---|---|
 | Dashboard `title` / kebab / overflow-menu props | Omit — host owns page chrome |
-| Nested Cards with accessible borders inside Dashboard | Set `--card-border-color: var(--color-border-light)` |
+| Nested Cards with accessible borders inside Dashboard | Set `--card-border-color: var(--color-border-gray-neutral-light)` |
 | Assuming Card default dividers without injection when `showDividerInCard=false` | Always inject `showDivider` onto Card children |
 | Painting Dashboard-level internal card dividers as separate CSS (duplicate Card seams) | Rely on Card `showDivider` only |
 | Changing Card fill / radius only in Dashboard CSS | Nested visual chrome stays per Card design-spec except color cascade + divider prop |
@@ -124,8 +128,8 @@ On `DashboardRoot` stylesheet:
 
 | Spec concept | Runtime |
 |---|---|
-| `--card-border-color` | `Dashboard.module.css` on `.dashboard` |
-| `showDivider` injection | `Dashboard.tsx` — `cloneElement(card, { showDivider: showDividerInCard })` |
+| `--card-border-color` | React: `Dashboard.module.css` / `IdsDashboard.module.css` on root; Angular: `ids-dashboard.component.scss` on `.IdsDashboard` / `ids-dashboard` |
+| `showDivider` injection | React: `cloneElement(card, { showDivider: showDividerInCard })`; Angular: `IDS_DASHBOARD_CARD_OVERRIDE` → Card `effectiveShowDivider` |
 | Data attribute | `data-show-divider-in-card="true"|"false"` on root (QA) |
 
 ## Tokens
@@ -134,9 +138,9 @@ On `DashboardRoot` stylesheet:
 
 | Use | Token | Notes |
 |---|---|---|
-| Dashboard root fill | `var(--color-background-surface-1)` | Dashboard chrome |
-| Dashboard outer border | `var(--color-border-accessible)` | Dashboard chrome only |
-| Nested Card outer + body seams | `var(--color-border-light)` via `--card-border-color` | **Required** host override |
+| Dashboard root fill | `var(--color-background-surface-primary)` | Dashboard chrome |
+| Dashboard outer border | `var(--color-border-gray-neutral-base)` | Dashboard chrome only |
+| Nested Card outer + body seams | `var(--color-border-gray-neutral-light)` via `--card-border-color` | **Required** host override |
 | Nested Card fill / typography / footer | Per Card Tokens | Do not re-token in Dashboard |
 
 ### Spacing
@@ -150,15 +154,15 @@ On `DashboardRoot` stylesheet:
 
 | Area | State | Background | Border | Text/Icon |
 | --- | --- | --- | --- | --- |
-| `DashboardRoot` | default | `var(--color-background-surface-1)` | `var(--color-border-accessible)` | — |
-| Nested `CardRoot` | default (in Dashboard) | per Card | `var(--color-border-light)` | — |
+| `DashboardRoot` | default | `var(--color-background-surface-primary)` | `var(--color-border-gray-neutral-base)` | — |
+| Nested `CardRoot` | default (in Dashboard) | per Card | `var(--color-border-gray-neutral-light)` | — |
 | Nested `CardBody` seams | `showDividerInCard=true` | per Card | light top (+ bottom if footer) | — |
 | Nested `CardBody` seams | `showDividerInCard=false` | per Card | `none` / `none` | — |
 | Drag drop target | `enableDragAndDrop` + drag-over | — | dashed brand outline on **item** (not Card border rewrite) | — |
 
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` live in `components/ids-theme.css` (including `--color-border-light` dark value).
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` live in `components/ids-theme.css` (including `--color-border-gray-neutral-light` dark value).
 
 ## Interactions
 
@@ -214,7 +218,7 @@ Story **`showDividerInCard false`** exists under Spec Generated/IDS/Dashboard fo
 
 ```
 DashboardRoot
-  [--card-border-color: var(--color-border-light)]
+  [--card-border-color: var(--color-border-gray-neutral-light)]
   [data-show-divider-in-card]
 └── DashboardGrid (1 / 2 / 3 columns by viewport)
     └── DashboardItem+ → Card (size span-1|2|3, showDivider=showDividerInCard)
@@ -233,7 +237,7 @@ DashboardRoot
 
 | Slot | Styles |
 |---|---|
-| `DashboardRoot` | surface-1; **accessible** outer border; radius 0; padding 16/24; **`--card-border-color: var(--color-border-light)`** |
+| `DashboardRoot` | surface-1; **accessible** outer border; radius 0; padding 16/24; **`--card-border-color: var(--color-border-gray-neutral-light)`** |
 | `DashboardGrid` | 1 / 2 / 3 equal columns by breakpoint; gap 16; `minmax(0, 1fr)` |
 | `DashboardItem` | applies Card `size` → `grid-column` with clamp-to-full-row on smaller breakpoints; drag outline when enabled |
 | Nested `Card` | Full Card design-spec **except** border color cascade + forced `showDivider` from Dashboard |
@@ -241,7 +245,7 @@ DashboardRoot
 ### Behavior contract
 
 1. Mount grid of Cards only (no page title; no dashboard kebab).
-2. Always set `--card-border-color: var(--color-border-light)` on root.
+2. Always set `--card-border-color: var(--color-border-gray-neutral-light)` on root.
 3. Always inject `showDivider={showDividerInCard}` onto each Card child (default `true`).
 4. Optional drag (`enableDragAndDrop`): reorder item keys without changing Card identity.
 5. Card size controls column span at `≥ lg`; smaller viewports reflow per **Responsive breakpoints**.
@@ -264,12 +268,12 @@ No Dashboard-owned assets. Nested Card icons / kebab follow Card design-spec.
 | Unknown Card `size` | Treat as `span-1` |
 | Non-Card children | Still grid-wrapped; span defaults to 1; no `showDivider` injection |
 | `showDividerInCard` undefined | Treat as `true` |
-| Missing theme tokens | Keep `var(--color-border-light)` / cascade expression — never hex |
+| Missing theme tokens | Keep `var(--color-border-gray-neutral-light)` / cascade expression — never hex |
 
 ### Validation checklist
 
 - [ ] Dashboard is grid-only; **no** `title` or kebab / overflow-menu props
-- [ ] `DashboardRoot` sets `--card-border-color: var(--color-border-light)`
+- [ ] `DashboardRoot` sets `--card-border-color: var(--color-border-gray-neutral-light)`
 - [ ] Nested Cards use light outer + light body seams (when dividers on) — **not** accessible
 - [ ] `showDividerInCard` defaults `true`; when `false`, each Card receives `showDivider={false}`
 - [ ] Nested Card with footer + `showDividerInCard=true` → body top **and** bottom light seams
@@ -290,3 +294,7 @@ No Dashboard-owned assets. Nested Card icons / kebab follow Card design-spec.
 - Component map entry: `data/component-figma-map.json` → `"Dashboard"`
 - Nested Card: IDS Design Library Card nodes per Card Source Mapping
 - Cross-spec lock: [`card/design-spec.md`](../card/design-spec.md) → **Border & divider contract**
+- Runtime contract (React lib): `lib/react/ids/dashboard/`
+- Runtime contract (Angular lib): `lib/angular/ids/dashboard/`
+- Nested Card runtime (Angular): `lib/angular/ids/card/`
+- Storybook Angular: `storybook-angular/src/components/ids-dashboard/`

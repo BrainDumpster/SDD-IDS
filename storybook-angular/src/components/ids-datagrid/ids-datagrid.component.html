@@ -1,0 +1,277 @@
+<div
+  class="shell"
+  [attr.data-with-detail-panel]="withDetailPanel ? 'true' : null"
+  [attr.data-header-styled]="headerColorAndBorder ? 'true' : 'false'"
+>
+  <div class="contentRow">
+    <div class="gridWrap">
+      <div class="gridScrollHost">
+        <div class="headerBand">
+          <div class="headerBandTrack" #headerTrack>
+            <table
+              class="grid"
+              [attr.data-header-styled]="headerColorAndBorder ? 'true' : 'false'"
+              [style.width.%]="100"
+              [style.minWidth.px]="minTableWidthPx"
+            >
+              <colgroup>
+                @if (showSelectionColumn) {
+                  <col [style.width.px]="selectionColWidth" />
+                }
+                @for (column of visibleColumns; track column.field) {
+                  <col
+                    [style.width.px]="columnWidth(column)"
+                    [class.tableGrowCol]="isGrowColumn(column.field) && growColPinnedWidthPx == null"
+                  />
+                }
+                <col [style.width.px]="settingsColWidth" />
+              </colgroup>
+              <thead>
+                <tr>
+                  @if (showSelectionColumn) {
+                    <th
+                      class="headerCell selectionColumn headerSelectionColumn"
+                      [class.headerColorBand]="headerColorAndBorder"
+                      scope="col"
+                    ></th>
+                  }
+                  @for (column of visibleColumns; track column.field) {
+                    <th
+                      class="headerCell headerDataCell"
+                      [class.headerColorBand]="headerColorAndBorder"
+                      scope="col"
+                    >
+                      <div class="headerCellRow">
+                        <div class="headerTitleRow">
+                          <button
+                            type="button"
+                            class="titleButton"
+                            (click)="column.sortable ? toggleSort(column.field) : null"
+                          >
+                            <span class="headerTitle" [title]="column.title">{{ column.title }}</span>
+                          </button>
+                          @if (column.sortable) {
+                            <button
+                              type="button"
+                              class="iconButton"
+                              [attr.data-sorted]="sortKey === column.field ? 'true' : null"
+                              [attr.aria-label]="'Sort by ' + column.title"
+                              (click)="toggleSort(column.field)"
+                            >
+                              <ids-icon
+                                [shapeName]="sortKey === column.field && sortDirection === 'desc' ? 'col-sort-down-16' : 'col-sort-up-16'"
+                                className="sortIcon"
+                                [size]="12"
+                              />
+                            </button>
+                          }
+                        </div>
+                        @if (column.filterable) {
+                          <div class="filterAnchor" #filterAnchor>
+                            @if (openFilterField !== column.field) {
+                              <button
+                                type="button"
+                                class="filterToggleButton"
+                                [attr.data-filter-active]="column.filterActive ? 'true' : null"
+                                [attr.aria-expanded]="openFilterField === column.field"
+                                [attr.aria-label]="'Filter ' + column.title"
+                                (click)="onFilterPress(column.field, filterAnchor, $event)"
+                              >
+                                <ids-icon
+                                  [shapeName]="column.filterActive ? 'filter-solid' : 'filter'"
+                                  className="filterIcon"
+                                  [size]="14"
+                                />
+                              </button>
+                            } @else {
+                              <div class="filterAnchorOpenSpacer" aria-hidden="true"></div>
+                            }
+                          </div>
+                        }
+                      </div>
+                      <span class="columnHeaderDivider" aria-hidden="true"></span>
+                      @if (columnResizeEnabled) {
+                        <button
+                          type="button"
+                          class="columnResizeHandle"
+                          [attr.aria-label]="'Resize ' + column.title + ' column'"
+                          (pointerdown)="startColumnResize(column.field, $event)"
+                        ></button>
+                      }
+                    </th>
+                  }
+                  <th
+                    class="headerCell settingsColumn"
+                    [class.headerColorBand]="headerColorAndBorder"
+                    scope="col"
+                  >
+                    <div class="settingsHeaderInner" #settingsAnchor>
+                      <button
+                        type="button"
+                        class="settingsToggleButton"
+                        aria-label="Column settings"
+                        aria-haspopup="dialog"
+                        [attr.aria-expanded]="settingsMenuOpen"
+                        [disabled]="hideableColumns.length === 0"
+                        (click)="toggleSettingsMenu($event)"
+                      >
+                        <ids-icon
+                          shapeName="settings-gear"
+                          className="settingsIcon"
+                          [class.settingsIconActive]="settingsMenuOpen"
+                          [size]="16"
+                        />
+                      </button>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+        <div class="bodyViewport" #bodyViewport (scroll)="syncHeaderScroll()">
+          <div class="bodyContent">
+            <table
+              class="grid"
+              [attr.data-header-styled]="headerColorAndBorder ? 'true' : 'false'"
+              [style.width.%]="100"
+              [style.minWidth.px]="minTableWidthPx"
+            >
+              <colgroup>
+                @if (showSelectionColumn) {
+                  <col [style.width.px]="selectionColWidth" />
+                }
+                @for (column of visibleColumns; track column.field) {
+                  <col
+                    [style.width.px]="columnWidth(column)"
+                    [class.tableGrowCol]="isGrowColumn(column.field) && growColPinnedWidthPx == null"
+                  />
+                }
+                <col [style.width.px]="settingsColWidth" />
+              </colgroup>
+              <tbody>
+                @for (row of pagedRows; track row.rowId) {
+                  <tr
+                    class="bodyRow"
+                    [attr.data-selected]="isRowSelected(row.rowId) ? 'true' : null"
+                    [attr.data-readonly]="readOnly ? 'true' : null"
+                    [attr.data-vertical-indicator]="rowVerticalIndicator ? 'true' : null"
+                    (click)="onRowClick(row.rowId)"
+                  >
+                    @if (showSelectionColumn) {
+                      <td class="bodyCell selectionColumn rowSelectionCell">
+                        <div class="selectionRowContent">
+                          @if (selectionMode === 'single') {
+                            <input
+                              type="radio"
+                              class="selectionRadio"
+                              [name]="selectionGroupName"
+                              [value]="row.rowId"
+                              [checked]="selectedRowId === row.rowId"
+                              [attr.aria-label]="'Select row ' + row.rowId"
+                              (click)="$event.stopPropagation()"
+                              (change)="onSingleSelect(row.rowId)"
+                            />
+                          }
+                        </div>
+                      </td>
+                    }
+                    @for (column of visibleColumns; track column.field) {
+                      <td class="bodyCell">
+                        <span class="cellText">{{ row.cells.get(column.field) }}</span>
+                      </td>
+                    }
+                    <td class="bodyCell settingsColumn"></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      @if (showPagination) {
+        <div class="footer">
+          <ids-pagination
+            [currentPage]="currentPage"
+            [totalPages]="resolvedTotalPages"
+            background="gray"
+            [embeddedInDatagrid]="true"
+            (pageChange)="setPage($event)"
+          />
+        </div>
+      }
+    </div>
+    @if (withDetailPanel) {
+      <ids-detail-panel
+        class="detailPanel"
+        attachMode="datagrid"
+        [expanded]="detailPanelOpen"
+        (expandedChange)="onDetailPanelExpandedChange($event)"
+      >
+        <ids-detail-panel-header>{{ detailTitle }}</ids-detail-panel-header>
+        <ids-detail-panel-body>
+          <div class="detailBody">
+            @if (activeRow; as row) {
+              @for (column of visibleColumns; track column.field) {
+                <p><b>{{ column.title }}:</b> {{ row.cells.get(column.field) }}</p>
+              }
+            } @else {
+              <p>Select a row to view details.</p>
+            }
+          </div>
+        </ids-detail-panel-body>
+      </ids-detail-panel>
+    }
+  </div>
+</div>
+
+@if (openFilterField && filterMenuPos) {
+  <div
+    #filterMenuLayer
+    class="filterMenuLayer"
+    data-ids-datagrid-filter-menu
+    [style.position]="'fixed'"
+    [style.top.px]="filterMenuPos.top"
+    [style.right.px]="filterMenuPos.right"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      type="button"
+      class="filterPopupIconTab"
+      [attr.aria-label]="'Filter ' + openFilterTitle"
+      (click)="closeFilter()"
+    >
+      <ids-icon shapeName="filter-solid" className="filterIcon" [size]="14" />
+    </button>
+    <div class="filterPopupPanel">
+      <div class="filterPopupPanelBody">
+        @if (openFilterTemplate) {
+          <ng-container [ngTemplateOutlet]="openFilterTemplate" />
+        }
+      </div>
+    </div>
+  </div>
+}
+
+@if (settingsMenuOpen && hideableColumns.length > 0 && settingsMenuPos) {
+  <div
+    #settingsMenuLayer
+    class="settingsMenuLayer"
+    data-ids-datagrid-settings-menu
+    [style.position]="'fixed'"
+    [style.top.px]="settingsMenuPos.top"
+    [style.right.px]="settingsMenuPos.right"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="settingsPopupPanel" role="dialog" aria-label="Column visibility">
+      <div class="settingsPopupPanelBody">
+        <ids-datagrid-column-visibility-panel
+          [hideableColumns]="hideableColumns"
+          [hiddenColumnKeys]="hiddenColumnKeys"
+          [validationMessage]="columnVisibilityValidation"
+          (columnVisibilityChange)="onColumnVisibilityChange($event.field, $event.visible)"
+        />
+      </div>
+    </div>
+  </div>
+}

@@ -1,4 +1,6 @@
-/* Figma CardFilter trigger `15718:197453` — padding 8px 16px, radius-2, icon 16×16 */
+/* Figma CardFilter trigger `15718:197453` — padding 8px 16px, radius-2, icon 16×16.
+ * Icon color: `var(--color-icon-brand-base)`.
+ */
 .kebabTrigger {
   all: unset;
   box-sizing: border-box;
@@ -9,13 +11,13 @@
   gap: var(--spacing-space-8, 8px);
   padding: var(--padding-padding-8, 8px) var(--padding-padding-16, 16px);
   border-radius: var(--corner-radius-radius-2, 2px);
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-brand-base);
   cursor: pointer;
   outline: none;
 }
 
 .kebabTrigger:hover {
-  background: var(--color-background-brand-lighter, #ebf4fb);
+  background: var(--color-background-brand-lighter-slate, #ebf4fb);
 }
 
 .kebabTrigger:focus-visible {
@@ -25,7 +27,7 @@
 }
 
 .kebabTrigger[data-popup-open] {
-  background: var(--color-background-brand-lighter, #ebf4fb);
+  background: var(--color-background-brand-lighter-slate, #ebf4fb);
 }
 
 .kebabIcon {
@@ -33,4 +35,5 @@
   pointer-events: none;
   width: 16px;
   height: 16px;
+  color: var(--color-icon-brand-base);
 }

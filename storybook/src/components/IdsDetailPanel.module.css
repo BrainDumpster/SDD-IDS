@@ -1,8 +1,8 @@
 .root {
   box-sizing: border-box;
   height: 100%;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -12,22 +12,22 @@
   box-sizing: border-box;
   min-height: 48px;
   padding: var(--spacing-space-14, 14px) var(--padding-padding-12, 12px) var(--spacing-space-14, 14px) var(--padding-padding-24, 24px);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .footer {
   box-sizing: border-box;
   min-height: 44px;
   padding: var(--spacing-space-14, 14px) var(--padding-padding-12, 12px);
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .title {
@@ -35,7 +35,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .controls {
@@ -47,7 +47,7 @@
 .toggleButton {
   border: 0;
   background: transparent;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   padding: 0;
   width: 16px;
   height: 16px;
@@ -65,14 +65,14 @@
   overflow: auto;
   padding: 24px;
   box-sizing: border-box;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .collapsedRail {
   height: 100%;
   box-sizing: border-box;
   display: flex;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .collapsedRailDatagrid {

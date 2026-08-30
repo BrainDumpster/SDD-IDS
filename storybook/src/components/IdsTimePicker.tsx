@@ -73,13 +73,13 @@ function TimeColumn({
   return (
     <div className={styles.timeColumn} role="group" aria-label={label}>
       <button type="button" className={`${styles.arrowBtn} ${styles.arrowUp}`} onClick={onUp} disabled={disabled} aria-label={`Increase ${label}`}>
-        <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-neutral)" style={{ width: 10, height: 10 }} />
+        <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
       <div className={styles.valueCell} aria-live="polite">
         {display}
       </div>
       <button type="button" className={styles.arrowBtn} onClick={onDown} disabled={disabled} aria-label={`Decrease ${label}`}>
-        <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-neutral)" style={{ width: 10, height: 10 }} />
+        <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
     </div>
   );

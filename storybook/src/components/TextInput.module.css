@@ -10,20 +10,20 @@
 }
 
 .label {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
 }
 
 .required {
-  color: var(--color-text-critical);
+  color: var(--color-text-alerting-critical-base);
   margin-left: 2px;
 }
 
 .control {
   align-items: center;
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--corner-radius-radius-4);
   display: flex;
   gap: var(--spacing-space-10);
@@ -47,11 +47,11 @@
 }
 
 .control:hover:not([data-state="disabled"]):not([data-state="error"]) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .control[data-state="hover"] {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .control[data-state="selected"] {
@@ -79,7 +79,7 @@
 .value {
   background: transparent;
   border: none;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   flex: 1 1 auto;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -89,16 +89,16 @@
 }
 
 .value::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .control[data-state="disabled"] .value,
 .control[data-state="disabled"] .value::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .suffixIcon {
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   height: 16px;
   width: 16px;
 }
@@ -112,7 +112,7 @@
 }
 
 .helperText {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   height: 1.25rem;
   line-height: 1.25rem;
@@ -124,7 +124,7 @@
 }
 
 .errorText {
-  color: var(--color-text-critical);
+  color: var(--color-text-alerting-critical-base);
   font-size: var(--font-size-body-2);
   height: 1.25rem;
   line-height: 1.25rem;

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Stepper } from "./Stepper";
 
 const meta: Meta<typeof Stepper> = {
-  title: "Spec Generated/Synapse/Stepper",
+  title: "Components/Synapse/Stepper",
   component: Stepper,
   argTypes: {
     orientation: {

@@ -57,7 +57,7 @@ export const Controlled: Story = {{
     return (
       <div style={{{{ display: "grid", gap: 8 }}}}>
         <{component_name} label="Enable alerts" checked={{checked}} onCheckedChange={{setChecked}} />
-        <span style={{{{ color: "var(--color-text-neutral)" }}}}>Checked: {{checked ? "true" : "false"}}</span>
+        <span style={{{{ color: "var(--color-text-gray-neutral)" }}}}>Checked: {{checked ? "true" : "false"}}</span>
       </div>
     );
   }},

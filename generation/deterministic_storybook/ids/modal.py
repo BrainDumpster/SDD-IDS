@@ -107,7 +107,7 @@ export const SingleAndMultiPageUsage: Story = {{
         tertiaryButtonName="Cancel"
         enableTertiaryButtton
       >
-        <div style={{{{ minHeight: 120, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter)", padding: 16 }}}}>
+        <div style={{{{ minHeight: 120, border: "1px solid var(--color-border-brand-base)", background: "var(--color-background-brand-lighter-slate)", padding: 16 }}}}>
           single page modal swap content
         </div>
       </{component_name}>

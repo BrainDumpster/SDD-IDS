@@ -32,7 +32,33 @@ Produce deterministic, production-ready specs that can generate components acros
 
 Do not add extra top-level `##` headings; use `###` under the nearest parent.
 
-Reference implementations: `components/ids/alert/design-spec.md`, `components/ids/accordion/design-spec.md`.
+Reference implementations: `components/ids/alert/design-spec.md`, `components/ids/accordion/design-spec.md`, `components/ids/checkbox/design-spec.md`, `components/ids/radio-button/design-spec.md`.
+
+## Composition API (group + projected children)
+
+When a component uses a **group wrapper + item children** (not a single monolithic component or aggregate `options[]` prop):
+
+### Document in the spec (same change as code)
+
+| Section | Content |
+|---------|---------|
+| `## Anatomy` | `groupRoot` (optional/required) + item row anatomy |
+| `## Composition & API (runtime)` | Separate **Group** and **Item** API tables; child-order diagram; contract mirror path |
+| `### Deterministic structure` | `groupRoot` → repeated `*Item` → per-item slots |
+| `## Source Mapping` | `component-contracts/...` + reference implementation path |
+| `## Implementation Notes` | Group gap tokens, disabled cascade, framework selectors |
+
+### Authoring rules
+
+- **Preferred API:** projected children (`<Group><Item/><Item/></Group>`), not `options[]` / `items[]` props, unless documented as legacy-only (e.g. React convenience wrapper).
+- **Group vs item props:** group owns shared state (`value`, `name`, `orientation`, group `disabled`); items own row props (`label`, `value`, per-item `error`, `helperText`).
+- **Synapse IDS-fork:** inherit composition from `components/ids/<slug>/design-spec.md`; update `components/synapse/<slug>/design-spec.md` **Composition & API** and **Deterministic structure** in the same change (see `docs/design-spec-authoring-contract.md` → **Synapse (IDS-fork)**).
+- **Contracts:** add or update `component-contracts/<programme>/<slug>.contract.ts` with group defaults; reference from spec **Composition & API**.
+- **Storybook:** composition stories must match spec selectors and anatomy order.
+
+### Completion gate
+
+Before marking implementation done, verify `design-spec.md` reflects the composition API. Run **design-spec-blueprint** production-ready checklist for API sections even when Figma nodes are unchanged.
 
 ## Required `###` subsections under Codegen Contract
 
@@ -116,7 +142,13 @@ When generating or updating Storybook for a component with `Storybook examples r
 - Meta `title`: `Spec Generated/IDS/<Name>` or `Spec Generated/DAP/<Name>` (not `Components/...`).
 - Primary story **name**: `Spec Accurate Design` — canonical spec → UI parity for codegen/QA.
 - Import one programme theme CSS; story args must match spec **Composition & API** and any **Spec Accurate Design story defaults** section.
+- **Composition markup:** when stories use group + projected children, update **Anatomy**, **Composition & API**, **Codegen structure**, and **Source Mapping** in `design-spec.md` in the same change (`docs/design-spec-authoring-contract.md` → **Composition pattern sync**).
+- **Synapse:** generate **React** stories only (`storybook-generated/synapse/`); do not add Synapse under `storybook-angular/` unless explicitly requested.
 - See `docs/design-spec-authoring-contract.md` and `generation/deterministic_storybook/helpers.py`.
+
+## User-facing completion (chat)
+
+When spec work or a design-check fix is **done**, close with a **compact summary** (3–6 lines): what shipped, key paths changed, how to verify. No detailed report, Figma dump, or full checklist in chat — see `.cursor/rules/compact-task-completion.mdc`.
 
 ## Production-Ready Definition
 
@@ -127,3 +159,4 @@ A spec is production-ready only when:
 - Codegen Contract is testable and internally consistent (concrete contracts, not only cross-refs).
 - Source mapping is explicit and reproducible.
 - When Storybook was requested: **Spec Accurate Design** exists under **Spec Generated/<programme>/...** and references this spec path.
+- When a composition API (group + items) exists: spec **Anatomy**, **Composition & API**, **Codegen structure**, and **Source Mapping** match the implementation.

@@ -24,15 +24,30 @@ Optional slots:
 - `BadgeLeadingIcon` (optional icon+text composition when required by consuming component)
 - `BadgeSrOnlyText` (assistive-only contextual label)
 ## Layout & Measurements
-- Geometry from Figma sample variants:
-  - Height: `18px`
-  - Horizontal padding: `5.5px` per side (runtime may use nearest tokenized equivalent if sub-pixel values are unsupported)
-  - Border width: `1px`
+- Geometry from Figma sample variants (node `11446:99237` single-digit **Default**):
+  - **Content box (inner):** `18px` × `18px` minimum for single-digit counts (`box-sizing: content-box`)
+  - **Border:** `var(--border-width-border-1)` (`1px`) on all sides, drawn **outside** the `18px` content box
+  - **Total outer size (single digit):** `20px` × `20px` (`18px` content + `1px` border per edge)
+  - Horizontal padding (multi-digit, inside content box): `5.5px` per side (two-digit fallback `4px` per side)
   - Radius: `100px` (pill)
 - Content alignment:
   - center/center inside pill
   - single-line text only
-- Badge is shrink-to-content with minimum practical width defined by content + horizontal padding.
+- Badge is shrink-to-content with minimum **content** width/height `18px` for single-digit counts; grows with content + horizontal padding for multi-digit values.
+
+### Slot geometry (Figma-verified)
+| Slot | Property | Value | Figma evidence |
+|---|---|---|---|
+| `BadgeContainer` | `box-sizing` | `content-box` | `18px` inner + `1px` border per edge → `20px` outer (single digit) |
+| `BadgeContainer` | `height` (content) | `18px` | `11446:99237` inner fill target |
+| `BadgeContainer` | `min-width` (content, single digit) | `18px` | circular single-count pill |
+| `BadgeContainer` | `border-width` | `var(--border-width-border-1)` | `get_design_context` `border border-solid` |
+| `BadgeContainer` | total outer (single digit) | `20px` × `20px` | `18px` + `1px` border each side |
+| `BadgeContainer` | `border-radius` | `100px` | `rounded-[100px]` |
+| `BadgeContainer` | `padding-inline` (1 digit) | `0` | centered glyph in `18×18` frame |
+| `BadgeContainer` | `padding-inline` (2 digits) | `4px` per side | implementation parity with wider samples |
+| `BadgeContainer` | `padding-inline` (3+ digits) | `5.5px` per side | `px-[5.5px]` in `11446:99238` family |
+| `BadgeContent` | `font-size` | `var(--font-size-body-3)` (`12px`) | `text-[12px]` |
 - Typography for content:
   - font family: `Roboto`
   - weight: `400`
@@ -40,25 +55,25 @@ Optional slots:
   - line-height ratio in sample: `1.758`
 ## Tokens
 Required semantic tokens from Figma variable extraction:
-- `var(--color-text-white)` = `#ffffff`
-- `var(--color-text-black)` = `#252525`
-- `var(--color-background-controls-brand-base)` = `#0672CB`
-- `var(--color-background-alerting-critical)` = `#af0000`
-- `var(--color-background-alerting-minor)` = `#ffc700`
-- `var(--color-background-alerting-success)` = `#1b8500`
+- `var(--color-text-gray-white)` = `#ffffff`
+- `var(--color-text-gray-black)` = `#252525`
+- `var(--color-background-controls-base)` = `#0672CB`
+- `var(--color-background-alerting-critical-base)` = `#af0000`
+- `var(--color-background-alerting-minor-base)` = `#ffc700`
+- `var(--color-background-alerting-success-base)` = `#1b8500`
 - `var(--color-static-gray-500)` = `#757575`
-- `var(--color-border-white)` = `#ffffff`
-- `var(--color-border-alerting-minor-transparent)` = `#9c622e`
+- `var(--color-border-gray-white)` = `#ffffff`
+- `var(--color-border-alerting-minor-base)` = `#9c622e`
 - Optional host-context token for warning border showcase parity:
-  - `var(--ids-badge-warning-border-color)` -> defaults to `var(--color-border-white)`, can be overridden by host to `var(--color-border-alerting-minor-transparent)` in White/Gray showcase contexts.
+  - `var(--ids-badge-warning-border-color)` -> defaults to `var(--color-border-gray-white)`, can be overridden by host to `var(--color-border-alerting-minor-base)` in White/Gray showcase contexts.
 ## States (Light Theme)
 | Variant key (`Type`) | Background | Border | Text |
 |---|---|---|---|
-| Default | `var(--color-background-controls-brand-base)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Critical | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Warning | `var(--color-background-alerting-minor)` | `var(--ids-badge-warning-border-color, var(--color-border-white))` | `var(--color-text-black)` |
-| Disabled | `var(--color-static-gray-500)` | `var(--color-border-white)` | `var(--color-text-white)` |
-| Success | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` |
+| Default | `var(--color-background-controls-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
+| Critical | `var(--color-background-alerting-critical-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
+| Warning | `var(--color-background-alerting-minor-base)` | `var(--ids-badge-warning-border-color, var(--color-border-gray-white))` | `var(--color-text-gray-black)` |
+| Disabled | `var(--color-static-gray-500)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
+| Success | `var(--color-background-alerting-success-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` |
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
 
@@ -98,11 +113,13 @@ Per-slot style contract:
 - `BadgeContainer`
   - display: inline-flex
   - align-items / justify-content: center
-  - height: 18px
-  - border-width: 1px
+  - `box-sizing: content-box`
+  - height: `18px` (content box)
+  - min-width: `18px` (content box minimum for single-digit)
+  - border-width: `var(--border-width-border-1)` (outside content box)
   - border-style: solid
   - border-radius: 100px
-  - warning border color should use `var(--ids-badge-warning-border-color, var(--color-border-white))` so host showcase context can override to `var(--color-border-alerting-minor-transparent)` without introducing a new runtime variant axis.
+  - warning border color should use `var(--ids-badge-warning-border-color, var(--color-border-gray-white))` so host showcase context can override to `var(--color-border-alerting-minor-base)` without introducing a new runtime variant axis.
   - horizontal padding: 5.5px per side (or closest deterministic tokenized fallback)
 - `BadgeContent`
   - single line text

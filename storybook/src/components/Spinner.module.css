@@ -19,7 +19,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
 }
 
 .spinner::before {
@@ -68,12 +68,12 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .onBrandBackgroundOverride .labelInline,
 .onBrandBackgroundOverride .labelBelow {
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
 }
 
 .labelBelow {

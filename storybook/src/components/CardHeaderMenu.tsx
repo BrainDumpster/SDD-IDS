@@ -82,6 +82,7 @@ export function CardHeaderOverflowMenu({
         <Icon
           shapeName="overflow-menu-dots"
           className={styles.kebabIcon}
+          color="var(--color-icon-brand-base)"
           style={{ width: 16, height: 16 }}
         />
       </Menu.Trigger>

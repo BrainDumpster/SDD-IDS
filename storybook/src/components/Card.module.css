@@ -21,10 +21,10 @@
    */
   min-width: min(100%, var(--card-min-width, 430px));
   max-width: 100%;
-  background: var(--color-background-surface-2);
-  /* Default accessible; Dashboard sets `--card-border-color: var(--color-border-light)`. */
+  background: var(--color-background-surface-secondary);
+  /* Default accessible; Dashboard sets `--card-border-color: var(--color-border-gray-neutral-light)`. */
   border: var(--border-width-border-default, 1px) solid
-    var(--card-border-color, var(--color-border-accessible));
+    var(--card-border-color, var(--color-border-gray-neutral-base));
   border-radius: 0;
   font-family: inherit;
   overflow: hidden;
@@ -41,7 +41,10 @@
   flex-shrink: 0;
 }
 
-/* Figma Card Title `8381:14246` — padding 12px 8px 12px 24px */
+/* Figma Card Title `8381:14246` — padding 12px 8px 12px 24px.
+ * When kebab is shown, drop header padding-right: CardFilter trigger
+ * `padding-right: 16px` is the end inset (Dashboard-Element-Card `14093:123117`).
+ */
 .header {
   display: flex;
   align-items: center;
@@ -49,6 +52,10 @@
   padding: var(--padding-padding-12, 12px) var(--padding-padding-8, 8px)
     var(--padding-padding-12, 12px) var(--padding-padding-24, 24px);
   min-height: 56px;
+}
+
+.header[data-has-overflow-menu="true"] {
+  padding-right: 0;
 }
 
 .headerRow {
@@ -80,7 +87,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .headerIconImage {
@@ -92,7 +99,7 @@
 .title {
   font-size: var(--font-size-header-6, 18px);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   margin: 0;
   line-height: var(--font-line-height-line-height-25, 25px);
 }
@@ -114,7 +121,7 @@
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -126,7 +133,7 @@
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .secondaryTitle {
@@ -134,7 +141,7 @@
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -146,7 +153,7 @@
   font-size: var(--font-size-body-2, 14px);
   line-height: var(--font-line-height-line-height-20, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-align: right;
   white-space: nowrap;
 }
@@ -193,11 +200,11 @@
   gap: var(--spacing-space-10, 10px);
   flex: 1 1 auto;
   padding: var(--padding-padding-16, 16px) var(--padding-padding-24, 24px);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   min-height: 0;
-  background: var(--color-background-surface-2);
+  background: var(--color-background-surface-secondary);
   border-top: var(--border-width-border-default, 1px) solid
-    var(--card-border-color, var(--color-border-accessible));
+    var(--card-border-color, var(--color-border-gray-neutral-base));
   border-bottom: none;
 }
 
@@ -210,7 +217,7 @@
 /* Body‖footer seam only when footer is rendered and showDivider */
 .bodyWithFooter {
   border-bottom: var(--border-width-border-default, 1px) solid
-    var(--card-border-color, var(--color-border-accessible));
+    var(--card-border-color, var(--color-border-gray-neutral-base));
 }
 
 /* Figma Card Footer `8381:14252` — padding 16px 24px */
@@ -243,12 +250,12 @@
 }
 
 .footerAction:focus-visible {
-  outline: 2px solid var(--color-border-brand-dark, #055fa9);
+  outline: 2px solid var(--color-border-brand-strong, #055fa9);
   outline-offset: 2px;
 }
 
 .footerAction:disabled {
-  color: var(--color-text-disabled, #757575);
+  color: var(--color-text-gray-disabled, #757575);
   cursor: not-allowed;
 }
 
@@ -267,7 +274,7 @@
   font-size: var(--font-size-body-1);
   line-height: var(--font-line-height-line-height-24);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .textParagraph {
@@ -276,7 +283,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 /* --- Content Type=Key Value Pair (`15718:220110`) --- */
@@ -303,7 +310,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }
 
@@ -316,7 +323,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .keyValueIcon {
@@ -324,5 +331,5 @@
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }

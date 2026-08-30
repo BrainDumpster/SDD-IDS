@@ -1,0 +1,9 @@
+<p class="error" [id]="errorId">
+  <ids-icon shapeName="status-critical-square-solid" variant="img" [size]="16" />
+  <span>
+    @if (text) {
+      {{ text }}
+    }
+    <ng-content />
+  </span>
+</p>

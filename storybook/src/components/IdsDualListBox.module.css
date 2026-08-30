@@ -3,8 +3,8 @@
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-24);
-  background: var(--color-background-component);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
 }
 
 /* Parent for both list columns + transfer controls (Figma assembly). */
@@ -49,7 +49,7 @@
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--line-height-body-1, 24px);
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }
 
@@ -69,7 +69,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .metricsTotalValue {
@@ -80,14 +80,14 @@
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .metricsDivider {
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .listGroup {
@@ -99,8 +99,8 @@
   min-height: 384px;
   box-sizing: border-box;
   padding: var(--padding-padding-24) var(--padding-padding-24) var(--padding-padding-32);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
-  background: var(--color-background-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
   overflow: hidden;
 }
 
@@ -138,7 +138,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   width: 100%;
 }
 
@@ -155,9 +155,9 @@
   box-sizing: border-box;
   padding: var(--padding-padding-14) var(--padding-padding-16) var(--padding-padding-14)
     var(--padding-padding-8);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-accessible);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-radius: 2px;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   cursor: pointer;
   text-align: left;
   font: inherit;
@@ -168,7 +168,7 @@
 .listItem:hover:not(.listItemDragging):not(.listItemDragWithSelection):not(
     .listItemDragWithoutSelection
   ) {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
   border-color: var(--color-border-brand-base);
 }
 
@@ -183,7 +183,7 @@
 }
 
 .listItemSelected {
-  background: var(--color-background-controls-brand-lighter);
+  background: var(--color-background-controls-lighter);
   border-color: var(--color-border-brand-base);
 }
 
@@ -195,7 +195,7 @@
 /* Figma `12114:230677` — Drag wth selection */
 .listItemDragWithSelection,
 .listItemDragWithoutSelection {
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
   border-color: var(--color-border-brand-base);
 }
 
@@ -257,7 +257,7 @@
   min-height: 48px;
   border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
   border-radius: 2px;
-  background: var(--color-background-controls-brand-light);
+  background: var(--color-background-controls-light);
 }
 
 .itemContent {
@@ -273,7 +273,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .itemDescription {
@@ -282,7 +282,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -313,8 +313,8 @@
 
 .transferBtnDefault {
   cursor: pointer;
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
 }
 
 .transferBtnDefault:disabled {
@@ -325,7 +325,7 @@
 .transferBtn:disabled.transferBtnDisabled {
   cursor: not-allowed;
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
 }
 
 .transferBtn:focus-visible {

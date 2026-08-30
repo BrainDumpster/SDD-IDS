@@ -1,0 +1,174 @@
+<div class="root" #rootRef (keydown)="handleRootKeyDown($event)">
+  @if (label) {
+    <div class="label" [class.labelSmall]="size === 'small'">
+      <div class="labelInner">
+        <span class="labelText">{{ label }}</span>
+        @if (required) {
+          <span class="labelRequired">*</span>
+        }
+      </div>
+    </div>
+  }
+  <div class="inputGroup">
+    <div class="positionWrapper" #anchorRef>
+      <div [class]="fieldClasses">
+        <input
+          type="text"
+          class="textInput"
+          [placeholder]="effectivePlaceholder"
+          [value]="inputText"
+          [disabled]="disabled"
+          [attr.aria-label]="label || 'Date'"
+          (input)="onInput($event)"
+          (mousedown)="mouseActivated = true"
+          (blur)="handleInputBlur()"
+        />
+        <button
+          type="button"
+          class="calendarIconBtn"
+          [class.error]="error"
+          [disabled]="disabled"
+          aria-label="Open calendar"
+          [attr.aria-expanded]="open"
+          (mousedown)="$event.stopPropagation()"
+          (click)="toggleOpen($event)"
+        >
+          <ids-icon shape="calendar-simple-16" [size]="16" />
+        </button>
+      </div>
+
+      @if (open && !disabled) {
+        <div
+          #calendarPopupRef
+          [class]="calendarPopupClasses"
+          [ngStyle]="calendarPopupStyle"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Choose date"
+        >
+          <div class="calendarHeader">
+            <div class="headerDropdowns">
+              <button
+                type="button"
+                class="dropdownButton"
+                [class.menuOpen]="monthDropdownOpen"
+                (click)="toggleMonthDropdown()"
+              >
+                {{ monthNames[viewMonth] }}
+                <ids-icon shape="arrow-drop-tri-caret" className="caretIcon" [size]="10" />
+                @if (monthDropdownOpen) {
+                  <div class="overlayDropdown">
+                    @for (name of monthNames; track name; let i = $index) {
+                      <button
+                        type="button"
+                        class="overlayOption"
+                        [class.selectedOption]="i === viewMonth"
+                        (click)="selectMonth(i, $event)"
+                      >
+                        {{ name }}
+                      </button>
+                    }
+                  </div>
+                }
+              </button>
+              <button
+                type="button"
+                class="dropdownButton yearBtn"
+                [class.menuOpen]="yearDropdownOpen"
+                (click)="toggleYearDropdown()"
+              >
+                {{ viewYear }}
+                <ids-icon shape="arrow-drop-tri-caret" className="caretIcon" [size]="10" />
+                @if (yearDropdownOpen) {
+                  <div class="overlayDropdown">
+                    @for (yr of yearRange; track yr) {
+                      <button
+                        type="button"
+                        class="overlayOption"
+                        [class.selectedOption]="yr === viewYear"
+                        (click)="selectYear(yr, $event)"
+                      >
+                        {{ yr }}
+                      </button>
+                    }
+                  </div>
+                }
+              </button>
+            </div>
+            <div class="navButtons">
+              <button type="button" class="navBtn" aria-label="Previous month" (click)="prevMonth()">
+                <ids-icon shape="chev-left-thick" className="navIcon" [size]="12" />
+              </button>
+              <button type="button" class="navBtn" aria-label="Next month" (click)="nextMonth()">
+                <ids-icon shape="chev-right-thick" className="navIcon" [size]="12" />
+              </button>
+            </div>
+          </div>
+
+          <div class="dateSection">
+            <div class="dateContent" role="grid" aria-label="Calendar">
+              <div class="weekDayRow">
+                @for (d of weekdays; track d) {
+                  <span class="weekDayLabel">{{ d }}</span>
+                }
+              </div>
+              <div class="dateGrid">
+                @for (row of calendarGrid; track $index) {
+                  <div class="dateRow" role="row">
+                    @if (computeRangeBar(row); as bar) {
+                      <div
+                        class="rangeBar"
+                        [class.fullRow]="bar.isFullRow"
+                        [class.forward]="!bar.isFullRow && bar.isForward"
+                        [class.reverse]="!bar.isFullRow && !bar.isForward"
+                        [ngStyle]="{ left: bar.left + 'px', width: bar.width + 'px' }"
+                      ></div>
+                    }
+                    @for (cell of row; track cell.year + '-' + cell.month + '-' + cell.day) {
+                      <div
+                        [class]="cellClasses(cell)"
+                        role="gridcell"
+                        [attr.aria-selected]="cellAriaSelected(cell)"
+                        [attr.aria-disabled]="isDateDisabled(cellDate(cell))"
+                        [attr.tabindex]="isDateDisabled(cellDate(cell)) ? -1 : 0"
+                        (click)="onCellClick(cell)"
+                        (mouseenter)="onCellMouseEnter(cell)"
+                        (mouseleave)="onCellMouseLeave()"
+                        (keydown)="onCellKeyDown($event, cell)"
+                      >
+                        <div class="dateCellContainer" [class.todayType]="isToday(cell)">
+                          <span class="dateLabel" [class.adjacentMonth]="isAdjacentMonth(cell)">
+                            {{ cell.day }}
+                          </span>
+                          @if (isToday(cell)) {
+                            <div class="todayIndicator"></div>
+                          }
+                        </div>
+                        <div class="focusRing"></div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+            <button type="button" class="todayLink" (click)="goToday()">Today</button>
+          </div>
+        </div>
+      }
+    </div>
+    @if (formatHint && !error) {
+      <span class="formatHint">{{ formatHint }}</span>
+    }
+    @if (error && errorMessage) {
+      <span class="errorMessage">
+        <ids-icon
+          shape="status-critical-square-solid"
+          variant="img"
+          [size]="16"
+          [style]="{ flexShrink: '0' }"
+        />
+        {{ errorMessage }}
+      </span>
+    }
+  </div>
+</div>

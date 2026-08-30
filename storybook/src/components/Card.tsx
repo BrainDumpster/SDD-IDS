@@ -6,6 +6,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { idsAssetUrl } from "../../../lib/shared/ids-assets-base.js";
 import { CardHeaderOverflowMenu, type CardMenuOption } from "./CardHeaderMenu";
 import { Icon } from "./Icon";
 import styles from "./Card.module.css";
@@ -34,7 +35,7 @@ interface CardProps {
   title?: string;
   /**
    * Secondary title shown inline after a `|` separator (Figma Dashboard-Element-Card
-   * `14093:123118` — Body 1 / `var(--color-text-neutral)`).
+   * `14093:123118` — Body 1 / `var(--color-text-gray-neutral)`).
    * Prefer `<CardSecondaryTitle>` or a string/node via this prop.
    */
   secondaryTitle?: ReactNode;
@@ -81,7 +82,7 @@ const SIZE_CLASS: Record<CardSize, string> = {
 
 /**
  * Optional secondary title (Figma Dashboard-Element-Card).
- * Rendered inline after `|` when used with `title` — Body 1 / `var(--color-text-neutral)`.
+ * Rendered inline after `|` when used with `title` — Body 1 / `var(--color-text-gray-neutral)`.
  */
 export function CardSecondaryTitle({
   children,
@@ -184,7 +185,7 @@ export function Card({
     typeof headerIcon === "string" &&
     /^[a-z0-9-]+$/.test(headerIcon) &&
     headerIcon.length > 0
-      ? `/assets/icons/${headerIcon}.svg`
+      ? idsAssetUrl(`icons/${headerIcon}.svg`)
       : undefined;
   const showHeaderIcon =
     showIcon &&
@@ -264,7 +265,11 @@ export function Card({
       aria-describedby={secondaryNode != null ? secondaryId : undefined}
     >
       {hasHeader && (
-        <div className={styles.header} data-card-header>
+        <div
+          className={styles.header}
+          data-card-header
+          data-has-overflow-menu={showMenu ? "true" : "false"}
+        >
           {header != null ? (
             trailing != null ? (
               <div className={styles.headerRow}>

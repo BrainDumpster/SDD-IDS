@@ -12,8 +12,10 @@
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+  font-variation-settings: "wdth" 100;
   min-height: 20px;
 }
 
@@ -34,9 +36,9 @@
 .root {
   width: 16px;
   height: 16px;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--checkbox-control-radius, var(--corner-radius-radius-2));
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -49,13 +51,13 @@
 }
 
 .root:hover:not([data-disabled]) {
-  background: var(--color-background-component);
-  border-color: var(--color-border-strong);
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .root:active:not([data-disabled]) {
-  background: var(--color-background-component);
-  border-color: var(--color-border-strong);
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .root:focus-visible {
@@ -70,53 +72,53 @@
 }
 
 .root[data-checked] {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
 }
 
 .root[data-checked="mixed"] {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-color: var(--color-border-brand-base);
 }
 
 .root[data-checked]:hover:not([data-disabled]),
 .root[data-checked]:active:not([data-disabled]) {
-  background: var(--color-background-controls-brand-strong);
-  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
 }
 
 .root[data-indeterminate] {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-color: var(--color-border-brand-base);
 }
 
 .root[data-indeterminate]:hover:not([data-disabled]),
 .root[data-indeterminate]:active:not([data-disabled]) {
-  background: var(--color-background-component);
-  border-color: var(--color-border-strong);
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .root[data-disabled] {
   cursor: not-allowed;
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
 }
 
 /* Checked + disabled: Figma `8505:14361` / `8505:14371` — gray fill only, no visible stroke (1px border stays for 18×18 footprint). */
 .root[data-disabled][data-checked] {
   background: var(--color-background-gray-base);
-  /* Spec: no visible stroke; `transparent` avoids dark theme `--color-border-transparent-brand` resolving to opaque brand. */
+  /* Spec: no visible stroke; `transparent` avoids dark theme `--color-border-brand-transparent-brand` resolving to opaque brand. */
   border-color: transparent;
 }
 
 .root[data-disabled][data-indeterminate],
 .root[data-disabled][data-checked="mixed"] {
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
 }
 
 .indicator {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
   position: absolute;
   inset: 0;
   display: inline-flex;
@@ -152,7 +154,7 @@
 }
 
 .root[data-disabled] .indicator {
-  color: var(--color-icon-inverse);
+  color: var(--color-icon-gray-inverse);
 }
 
 .root[data-indeterminate] .indicator {
@@ -164,15 +166,21 @@
 }
 
 .root[data-disabled][data-indeterminate] .indicator {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .root[data-disabled][data-checked="mixed"] .indicator {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 .label {
   user-select: none;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+  color: inherit;
 }
 
 .visuallyHidden {
@@ -192,16 +200,16 @@
 }
 
 .root[data-disabled] + .label {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]):hover:not([data-disabled]),
 .root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]):active:not([data-disabled]) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .assistiveText {
@@ -210,7 +218,7 @@
   gap: var(--spacing-space-8);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   margin: 0;
 }
 
@@ -222,9 +230,9 @@
 }
 
 .assistiveTextError {
-  color: var(--color-text-critical);
+  color: var(--color-text-alerting-critical-base);
 }
 
 .assistiveTextDisabled {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }

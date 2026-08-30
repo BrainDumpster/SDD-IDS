@@ -122,6 +122,48 @@ Production-ready specs must pass `SpecContractParser.validate_slot_geometry_gate
 - State names: `default | hover | press | focus-visible | disabled`.
 - Avoid TBD, “usually”, “maybe” without a rule.
 
+- When Storybook was requested: **Spec Accurate Design** exists under **Spec Generated/<programme>/...** and references this spec path.
+- When a composition API was introduced: **Anatomy**, **Composition & API**, **Codegen structure**, and **Source Mapping** document group + item contracts (no implementation-only drift).
+
+## Composition pattern sync (implementation ↔ spec)
+
+**Mandatory:** Any change that introduces or modifies a composition API (group wrapper + projected item components) must update the corresponding `design-spec.md` in the **same change**.
+
+### What to update
+
+| Spec section | Update |
+|--------------|--------|
+| `## Anatomy` | `groupRoot` + item slots |
+| `## Composition & API (runtime)` | Group table + Item table; child-order diagram; link `component-contracts/...` |
+| `### Deterministic structure` | `groupRoot` → `*Item[]` → item anatomy |
+| `## Source Mapping` | Contract path + implementation reference (e.g. `storybook-angular/src/components/ids-<slug>/`) |
+| `## Implementation Notes` | Group spacing tokens, cascade rules, framework selectors |
+
+### Examples (IDS)
+
+| Component | Group | Item |
+|-----------|-------|------|
+| Accordion | `ids-accordion` | `ids-accordion-item` (+ header/body) |
+| Checkbox | `ids-checkbox-group` | `ids-checkbox` |
+| Radio Button | `ids-radio-button-group` | `ids-radio-button` |
+
+### Synapse (IDS-fork)
+
+When Synapse reuses an IDS component family (`spec pattern: ids-fork`), **do not duplicate** full group/item API tables unless Synapse adds programme-only props. Instead:
+
+1. Update IDS baseline spec first (composition API, contracts, reference implementation).
+2. Update `components/synapse/<slug>/design-spec.md` **Composition & API** → **IDS inheritance resolution** to cite IDS group + item tables.
+3. Update **Deterministic structure** to inherit `groupRoot` → `*Item[]` from IDS.
+4. Apply Synapse programme deltas only (typically theme aliases in **Codegen Contract → Programme override rules**).
+
+Reference: [`components/synapse/checkbox/design-spec.md`](../components/synapse/checkbox/design-spec.md), [`components/synapse/radio-button/design-spec.md`](../components/synapse/radio-button/design-spec.md), [`docs/design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
+
+### Legacy aggregate APIs
+
+If React Storybook still exposes `options[]` (e.g. `RadioButton.tsx`), document it under **Legacy aggregate** in the spec and state that composition is canonical for new ports.
+
+Reference: `.cursor/rules/composition-design-spec-sync.mdc`, `.cursor/skills/design-spec-blueprint/SKILL.md`.
+
 ## Production-ready gate
 
 A spec is production-ready only when:
@@ -131,6 +173,7 @@ A spec is production-ready only when:
 - Codegen Contract is testable (concrete, not only “see above”).
 - Source mapping is explicit and reproducible.
 - Live Figma evidence is documented.
+- If the component uses a composition API (group + items), **Composition & API**, **Anatomy**, **Codegen structure**, and **Source Mapping** match the implementation (see **Composition pattern sync** above).
 
 New specs should use **Status: draft** until the validation checklist passes.
 
@@ -146,9 +189,23 @@ When the user requests Storybook examples (intake wizard question 7 = `yes`), ge
 | DAP | `Spec Generated/DAP/<Component Display Name>` |
 | Synapse | `Spec Generated/Synapse/<Component Display Name>` |
 
-Output path pattern: `storybook-generated/<programme>/src/components/<Component>.stories.tsx`
+Output path pattern (React): `storybook-generated/<programme>/src/components/<Component>.stories.tsx`
 
-Import exactly one theme CSS in the story file: `components/ids-theme.css` (IDS), `components/dap-theme.css` (DAP), or `components/synapse-theme.css` (Synapse).
+Output path pattern (Angular): `storybook-angular/src/generated/<programme>/src/components/<Component>.stories.ts` — **IDS and DAP only** (see below).
+
+### Programme × framework matrix
+
+| Programme | React Storybook (`storybook/` / `storybook-generated/`) | Angular Storybook (`storybook-angular/`) |
+|-----------|--------------------------------------------------------|------------------------------------------|
+| IDS | Yes | Yes |
+| DAP | Yes | Yes (when requested) |
+| **Synapse** | **Yes** (canonical reference implementation) | **No** — do not add Synapse stories, components, or generated paths under `storybook-angular/` unless explicitly requested |
+
+Synapse **Spec Generated** examples live in React only: `storybook-generated/synapse/` or `storybook/src/components/` (IDS-fork shared components + `components/synapse-theme.css`). Synapse specs may cite React paths in **Source Mapping**; omit Angular reference implementation paths.
+
+Shared API defaults and types live in `component-contracts/` (framework-agnostic). React and Angular stories import `BUTTON_SPEC_ACCURATE_DEFAULTS` (and per-component equivalents) from that folder.
+
+Import exactly one theme CSS in **React** story files: `components/ids-theme.css` (IDS), `components/dap-theme.css` (DAP), or `components/synapse-theme.css` (Synapse). **Angular** Storybook loads themes via `storybook-angular/.storybook/preview.js` (static `/components/*-theme.css` links).
 
 IDS-fork programme components use the programme story path and theme; see [`design-spec-programme-inheritance.md`](design-spec-programme-inheritance.md) and Synapse examples in [`design-spec-synapse-ids-fork.md`](design-spec-synapse-ids-fork.md).
 
