@@ -8,7 +8,7 @@ import {
 } from "../spec-contracts/synapse-anchor-menu.contract";
 
 const meta: Meta<typeof SynapseAnchorMenu> = {
-  title: "Spec Generated/Synapse/Anchor Menu",
+  title: "Components/Synapse/Anchor Menu",
   component: SynapseAnchorMenu,
   parameters: {
     layout: "padded",

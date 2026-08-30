@@ -97,7 +97,7 @@ function TooltipStoryStyles() {{
         padding: 8px;
         border: 1px dashed var(--color-border-neutral-light, #c5c5c5);
         border-radius: 6px;
-        background: var(--color-background-component, #ffffff);
+        background: var(--color-background-surface-component, #ffffff);
       }}
       .sbTooltipLabel {{
         font-size: 12px;
@@ -106,9 +106,9 @@ function TooltipStoryStyles() {{
       }}
       .sbTooltipTrigger {{
         padding: 7px 14px;
-        border: 1px solid var(--color-border-accessible);
-        background: var(--color-background-component);
-        color: var(--color-text-neutral-strong);
+        border: 1px solid var(--color-border-gray-neutral-base);
+        background: var(--color-background-surface-component);
+        color: var(--color-text-gray-neutral-strong);
         border-radius: 2px;
         font-size: 14px;
       }}

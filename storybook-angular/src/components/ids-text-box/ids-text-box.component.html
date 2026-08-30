@@ -1,0 +1,76 @@
+<div class="ids-text-box">
+  <div
+    class="ids-text-box__control"
+    [class.ids-text-box__control--large]="!isTextArea && size === 'large'"
+    [class.ids-text-box__control--small]="!isTextArea && size === 'small'"
+    [class.ids-text-box__control--text-area]="isTextArea"
+    [attr.data-state]="visualState"
+    [attr.data-focus-modality]="focusModality"
+    [attr.data-focused]="isFocused ? '' : null"
+    (pointerdown)="onPointerDown()"
+  >
+    @if (isTextArea) {
+      <textarea
+        class="ids-text-box__value"
+        [id]="resolvedId"
+        [name]="name"
+        [rows]="rows"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [value]="resolvedValue"
+        [attr.aria-label]="ariaLabel || null"
+        [attr.aria-invalid]="computedInvalid ? 'true' : 'false'"
+        [attr.aria-describedby]="describedBy || null"
+        (keydown)="onKeyDown($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        (input)="onInput($event)"
+      ></textarea>
+    } @else {
+      <input
+        class="ids-text-box__value"
+        [id]="resolvedId"
+        [name]="name"
+        [type]="inputType"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [value]="resolvedValue"
+        [attr.aria-label]="ariaLabel || null"
+        [attr.aria-invalid]="computedInvalid ? 'true' : 'false'"
+        [attr.aria-describedby]="describedBy || null"
+        (keydown)="onKeyDown($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        (input)="onInput($event)"
+      />
+    }
+
+    @if (showIcon) {
+      <ids-icon
+        [shapeName]="iconName"
+        variant="img"
+        className="ids-text-box__suffix-icon"
+        [size]="16"
+      />
+    }
+  </div>
+
+  @if (shouldRenderHelper) {
+    <div class="ids-text-box__helper-row" [id]="helperId">
+      @if (computedInvalid) {
+        <ids-icon
+          shapeName="status-critical-square-solid"
+          variant="img"
+          className="ids-text-box__error-icon"
+          [size]="16"
+        />
+      }
+      <p
+        class="ids-text-box__helper-copy"
+        [class.ids-text-box__helper-copy--error]="computedInvalid"
+      >
+        {{ helperCopy }}
+      </p>
+    </div>
+  }
+</div>

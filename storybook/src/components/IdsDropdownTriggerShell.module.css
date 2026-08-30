@@ -5,14 +5,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 300px;
+  width: 100%;
   max-width: 700px;
   min-width: 186px;
   min-height: 40px;
   box-sizing: border-box;
-  border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-accessible));
-  background: var(--trigger-bg, var(--color-background-component));
-  color: var(--trigger-fg, var(--color-text-neutral));
+  border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-gray-neutral-base));
+  background: var(--trigger-bg, var(--color-background-surface-component));
+  color: var(--trigger-fg, var(--color-text-gray-neutral));
   padding: var(--trigger-py, var(--padding-padding-10)) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -29,8 +29,8 @@
 .field[data-disabled="true"] {
   cursor: not-allowed;
   background: var(--color-background-gray-lighter);
-  --trigger-border: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  --trigger-border: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .field[data-error="true"]:not([data-disabled="true"]) {
@@ -38,7 +38,7 @@
 }
 
 .field[data-hover="true"]:not([data-disabled="true"]):not([data-error="true"]) {
-  --trigger-border: var(--color-border-strong);
+  --trigger-border: var(--color-border-gray-neutral-strong);
 }
 
 .field[data-focus="true"]:not([data-disabled="true"])::after {
@@ -50,11 +50,7 @@
   pointer-events: none;
 }
 
-/* Menu open: square bottom edge so popup bottom radius meets field (Figma attached dropdown). */
-:global([data-popup-open]) .field {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
+/* Open-state field corners are set on Menu.Trigger in DropdownMenu.module.css. */
 
 .main {
   display: flex;
@@ -64,15 +60,36 @@
   gap: var(--spacing-space-4);
 }
 
+/* Let the value/text child shrink below its content width so a caller's
+   `text-overflow: ellipsis` actually triggers. Flex items default to
+   `min-width: auto` (won't shrink past content), which silently disables
+   truncation of long selected values (e.g. long timezone labels in a combo
+   box). Badges/icons keep their intrinsic size because the flexible text
+   child absorbs the shrink first. */
+.main > * {
+  min-width: 0;
+}
+
+/* Field showing selected option(s): 16px between content and caret. */
+.field[data-filled="true"] .main {
+  padding-right: var(--padding-padding-16);
+}
+
 .caretWrap {
   flex-shrink: 0;
   display: inline-flex;
   align-items: flex-start;
   padding: 5px var(--padding-padding-1);
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   line-height: 0;
+  transition: transform 150ms ease;
+}
+
+/* Menu open: caret flips to point up. */
+:global([data-popup-open]) .caretWrap {
+  transform: rotate(180deg);
 }
 
 .field[data-disabled="true"] .caretWrap {
-  color: var(--color-border-disabled);
+  color: var(--color-border-gray-disabled);
 }

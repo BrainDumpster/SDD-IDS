@@ -1,0 +1,246 @@
+:host {
+  display: contents;
+}
+
+.ids-modal {
+  border: none;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  background: transparent;
+  overflow: visible;
+}
+
+.ids-modal::backdrop {
+  background: var(--color-background-overlay-1);
+}
+
+.ids-modal__surface {
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  --ids-modal-inset-inline: var(--padding-padding-24, 24px);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--modal-control-radius);
+  box-shadow:
+    var(--shadow-drop-shadow-32-x) var(--shadow-drop-shadow-32-y)
+    var(--shadow-drop-shadow-32-blur) var(--shadow-drop-shadow-32-color);
+  outline: none;
+}
+
+.ids-modal__surface--fullscreen {
+  width: calc(100vw - var(--padding-padding-48));
+  height: calc(100vh - var(--padding-padding-48));
+  max-height: none;
+}
+
+.ids-modal--x-small {
+  width: min(640px, calc(100vw - var(--padding-padding-48)));
+}
+
+.ids-modal--small {
+  width: min(960px, calc(100vw - var(--padding-padding-48)));
+}
+
+.ids-modal--medium {
+  width: min(1280px, calc(100vw - var(--padding-padding-48)));
+}
+
+.ids-modal--large {
+  width: min(1600px, calc(100vw - var(--padding-padding-48)));
+}
+
+.ids-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: var(--padding-padding-24) var(--ids-modal-inset-inline) var(--padding-padding-8);
+}
+
+.ids-modal__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-padding-16);
+  min-width: 0;
+}
+
+.ids-modal__severity-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-icon-gray-neutral-base);
+}
+
+.ids-modal__title {
+  margin: 0;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-header-5);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-32);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
+  color: var(--color-icon-gray-neutral-base);
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.ids-modal__close:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.ids-modal__description {
+  margin: 0;
+  padding: var(--padding-padding-8) var(--ids-modal-inset-inline);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-modal__tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--padding-padding-8) 0 0;
+  overflow-x: auto;
+}
+
+.ids-modal__tab {
+  position: relative;
+  border: none;
+  background: var(--color-background-surface-secondary);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  padding: 9px var(--ids-modal-inset-inline);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
+  cursor: pointer;
+  white-space: nowrap;
+  flex: 0 1 auto;
+}
+
+.ids-modal__tab--active {
+  color: var(--color-text-brand-strong);
+  border-bottom-color: transparent;
+  z-index: 1;
+}
+
+.ids-modal__tab--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--border-width-border-thick);
+  background: var(--color-border-brand-strong);
+  pointer-events: none;
+}
+
+.ids-modal__tab--active::after {
+  content: none;
+}
+
+.ids-modal__tab:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.ids-modal__content {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding: var(--padding-padding-16) var(--ids-modal-inset-inline) var(--padding-padding-24);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-modal__content > * {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.ids-modal__content--with-tabs {
+  padding: 0 var(--ids-modal-inset-inline) var(--padding-padding-24);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ids-modal__content--scrollable {
+  overflow-y: auto;
+}
+
+.ids-modal__content--hidden {
+  display: none;
+  padding: 0;
+  min-height: 0;
+}
+
+.ids-modal__page-panel {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-height: 120px;
+  min-width: 0;
+  padding: var(--padding-padding-16) 0 0;
+  overflow-wrap: anywhere;
+  overflow-x: hidden;
+}
+
+.ids-modal__scroll-shadow {
+  height: 19px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-gradient-overflow-vertical-end, rgba(255, 255, 255, 0)) 0%,
+    var(--color-gradient-overflow-vertical-start, rgba(182, 182, 182, 0.4)) 100%
+  );
+}
+
+.ids-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--padding-padding-16);
+  flex-shrink: 0;
+  padding: var(--padding-padding-24) var(--ids-modal-inset-inline);
+}
+
+.ids-modal__footer--bordered {
+  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.ids-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--padding-padding-12);
+  margin-left: auto;
+}

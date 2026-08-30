@@ -14,17 +14,17 @@
   border: none;
   border-radius: var(--corner-radius-radius-4);
   background: transparent;
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   cursor: pointer;
   transition: background 150ms ease;
 }
 
 .trigger:hover {
-  background: var(--color-background-masthead-brand-strong);
+  background: var(--color-background-masthead-strong);
 }
 
 .trigger:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-text-white);
+  outline: var(--border-width-border-2) solid var(--color-text-gray-white);
   outline-offset: 2px;
 }
 
@@ -35,8 +35,8 @@
   gap: var(--spacing-space-8);
   height: var(--scale-32);
   padding: 0 var(--padding-padding-8);
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   border-radius: var(--corner-radius-radius-4);
   min-width: 240px;
   box-shadow:
@@ -53,7 +53,7 @@
 
 .inputIcon {
   flex-shrink: 0;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .input {
@@ -62,14 +62,14 @@
   background: transparent;
   font-family: inherit;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   outline: none;
   line-height: var(--font-line-height-line-height-20);
   min-width: 0;
 }
 
 .input::placeholder {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 /* Webkit search cancel button removal */
@@ -86,7 +86,7 @@
   border: none;
   border-radius: var(--corner-radius-radius-2);
   background: transparent;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   cursor: pointer;
   padding: 0;
   flex-shrink: 0;
@@ -94,8 +94,8 @@
 }
 
 .closeButton:hover {
-  background: var(--color-background-surface-1);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-surface-primary);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .closeButton:focus-visible {

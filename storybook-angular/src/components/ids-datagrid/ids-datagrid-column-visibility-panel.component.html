@@ -1,0 +1,22 @@
+<div class="root" role="group" aria-label="Show or hide columns" data-column-visibility-panel>
+  <ul class="optionList">
+    @for (column of hideableColumns; track column.field) {
+      <li class="optionItem">
+        <div class="checkboxHost">
+          <ids-checkbox
+            [id]="'ids-datagrid-col-vis-' + column.field"
+            [label]="column.title"
+            [checked]="!hiddenColumnKeys.has(column.field)"
+            (checkedChange)="onVisibilityChange(column.field, $event)"
+          />
+        </div>
+      </li>
+    }
+  </ul>
+  @if (validationMessage) {
+    <div class="validation" role="alert">
+      <ids-icon shapeName="status-critical-square-solid" [size]="16" />
+      <span class="validationText">{{ validationMessage }}</span>
+    </div>
+  }
+</div>

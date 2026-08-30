@@ -1,0 +1,15 @@
+<div
+  class="field"
+  [attr.data-size]="size === 'small' ? 'small' : null"
+  [attr.data-disabled]="disabled || null"
+  [attr.data-error]="error || null"
+  [attr.data-hover]="hover || null"
+  [attr.data-focus]="focusVisible || null"
+>
+  <div class="main">
+    <ng-content />
+  </div>
+  <span class="caret-wrap" aria-hidden="true">
+    <ids-icon shapeName="arrow-drop-tri-caret" [size]="10" />
+  </span>
+</div>

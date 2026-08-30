@@ -1,6 +1,8 @@
 # Status Bar Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/StatusBar.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/status_bar.py`
 - Component: Status Bar
 - Design System: IDS
 - Category: Patterns and Templates
@@ -16,21 +18,46 @@
   - dark-mode overflow/state board: `43206:189637`
 - Last live verification: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in this session.
 ## Anatomy
-1. `StatusBarRoot`
-2. optional `StatusBarTotalItem`
-3. `StatusBarContentViewport`
-4. repeated `StatusBarItem`
-5. `StatusBarItemIconSlot`
-6. `StatusBarItemValue`
-7. `StatusBarItemMeta` (`category` + `label`)
-8. `StatusBarItemDivider` (separate element)
-9. optional `StatusBarOverflowLayer` (must sit above text/icons)
-10. optional `StatusBarOverflowLeft`
-11. optional `StatusBarOverflowRight`
+Main component:
+- `StatusBar`
 
-Inventory-only nested anatomy:
+Deterministic child structure (required order):
+1. `StatusBarTotalItem` (optional — only when `total` is provided)
+2. `StatusBarContentViewport`
+3. repeated `StatusBarItem`
+4. `StatusBarItemIconSlot`
+5. `StatusBarItemValue`
+6. `StatusBarItemMeta` (`category` + `label`)
+7. `StatusBarItemDivider` (separate element; not an item border)
+8. `StatusBarOverflowLayer` (optional — only when `total` exists; must sit above text/icons)
+9. `StatusBarOverflowLeft` (optional)
+10. `StatusBarOverflowRight` (optional)
+
+Inventory-only nested anatomy (inside `StatusBarItemIconSlot`):
 - `InventoryMainIcon` (default icon `docs-bundle`)
 - optional `InventoryStatusBadge` (severity icon overlay)
+
+Composition nesting (deterministic):
+```
+StatusBar
+  StatusBarTotalItem?
+    StatusBarItemDivider          (left edge)
+    StatusBarItemValue
+    StatusBarItemMeta             (optional category + label)
+    StatusBarItemDivider          (right edge)
+  StatusBarContentViewport
+    StatusBarItem[]
+      StatusBarItemDivider?       (left edge on first item)
+      StatusBarItemIconSlot
+        InventoryMainIcon?        (inventory)
+        InventoryStatusBadge?     (inventory + severity)
+      StatusBarItemValue
+      StatusBarItemMeta
+      StatusBarItemDivider        (right edge)
+    StatusBarOverflowLayer?       (total present + overflow)
+      StatusBarOverflowLeft?
+      StatusBarOverflowRight?
+```
 ## Layout & Measurements
 - Primary variants:
   - `Status Bar - Large`: total bar height `77px`
@@ -54,16 +81,16 @@ Inventory-only nested anatomy:
   - label uses `18px/25px` in large variant and `16px/24px` in small variant
   - category text uses `14px/20px`
 - Borders and separators:
-  - container border: `1px` using `var(--color-border-disabled)`
+  - container border: `1px` using `var(--color-border-gray-disabled)`
   - divider is a separate element (not a simple item border) to match design overlays.
-  - divider geometry: `1px` width, `56px` height, dashed stroke using `var(--color-border-disabled)`.
+  - divider geometry: `1px` width, `56px` height, dashed stroke using `var(--color-border-gray-disabled)`.
   - divider placement: vertically centered, rendered at slot edges as needed (including total item edges).
 - Overflow layer:
   - overlay controls width: `64px` each side
   - must be above status items (`positioned layer over content`)
   - layer frame follows content bounds using `inset: -1px` in implementation.
   - gradient mask from `var(--color-gradient-overflow-horizontal-inverse-start)` to `var(--color-gradient-overflow-horizontal-inverse-end)`
-  - left arrow icon: `check-left-thick`
+  - left arrow icon: `chev-left-thick`
   - right arrow icon: `chev-right-thick`
   - overflow scenarios:
     - `Beginning`: show right arrow only
@@ -74,25 +101,25 @@ Inventory-only nested anatomy:
   - when `total` is omitted, item strip stays static (no overflow arrows).
 ## Tokens
 - Surfaces and borders:
-  - `var(--color-background-component)`
-  - `var(--color-background-component-light)`
-  - `var(--color-border-disabled)`
-  - `var(--color-border-accessible)`
+  - `var(--color-background-surface-component)`
+  - `var(--color-background-surface-component-light)`
+  - `var(--color-border-gray-disabled)`
+  - `var(--color-border-gray-neutral-base)`
 - Text:
-  - `var(--color-text-neutral)`
-  - `var(--color-text-neutral-strong)`
+  - `var(--color-text-gray-neutral)`
+  - `var(--color-text-gray-neutral-strong)`
   - `var(--color-text-brand-base)`
-  - `var(--color-text-disabled)`
+  - `var(--color-text-gray-disabled)`
 - Icons:
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-neutral)`
-  - `var(--color-icon-alerting-critical)`
-  - `var(--color-icon-alerting-minor)`
-  - `var(--color-icon-alerting-success)`
-  - `var(--color-icon-inverse)`
+  - `var(--color-icon-gray-neutral-base)`
+  - `var(--color-icon-alerting-critical-base)`
+  - `var(--color-icon-alerting-minor-base)`
+  - `var(--color-icon-alerting-success-base)`
+  - `var(--color-icon-gray-inverse)`
 - Interaction fills:
-  - `var(--color-background-brand-lighter)`
-  - `var(--color-background-brand-light)`
+  - `var(--color-background-brand-lighter-slate)`
+  - `var(--color-background-brand-light-slate)`
   - `var(--color-background-brand-base)`
 - Overflow gradients:
   - `var(--color-gradient-overflow-horizontal-inverse-start)`
@@ -104,21 +131,21 @@ MCP variable evidence confirms:
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter)` | same divider | text preserved |
-| item | press | `var(--color-background-brand-light)` | same divider | text preserved |
-| item | selected | `var(--color-background-brand-light)` | same divider | text preserved |
-| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)`, icons use accessible/disabled tone |
-| overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
+| item | default | `var(--color-background-surface-component)` | right divider `var(--color-border-gray-disabled)` | value `var(--color-text-gray-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter-slate)` | same divider | text preserved |
+| item | press | `var(--color-background-brand-light-slate)` | same divider | text preserved |
+| item | selected | `var(--color-background-brand-light-slate)` | same divider | text preserved |
+| item | disabled | `var(--color-background-surface-component-light)` | same divider | `var(--color-text-gray-disabled)`, icons use accessible/disabled tone |
+| overflow button | default | `var(--color-background-surface-component)` | side border `var(--color-border-gray-disabled)` | `var(--color-icon-brand-base)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| item | default | `var(--color-background-component)` | right divider `var(--color-border-disabled)` | value `var(--color-text-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter)` | same divider | semantic token resolution |
-| item | press | `var(--color-background-brand-light)` | same divider | semantic token resolution |
-| item | selected | `var(--color-background-brand-light)` | same divider | semantic token resolution |
-| item | disabled | `var(--color-background-component-light)` | same divider | `var(--color-text-disabled)` and accessible icons |
-| overflow button | default | `var(--color-background-component)` | side border `var(--color-border-disabled)` | `var(--color-icon-brand-base)` |
+| item | default | `var(--color-background-surface-component)` | right divider `var(--color-border-gray-disabled)` | value `var(--color-text-gray-neutral)`, label `var(--color-text-brand-base)` |
+| item | hover | `var(--color-background-brand-lighter-slate)` | same divider | semantic token resolution |
+| item | press | `var(--color-background-brand-light-slate)` | same divider | semantic token resolution |
+| item | selected | `var(--color-background-brand-light-slate)` | same divider | semantic token resolution |
+| item | disabled | `var(--color-background-surface-component-light)` | same divider | `var(--color-text-gray-disabled)` and accessible icons |
+| overflow button | default | `var(--color-background-surface-component)` | side border `var(--color-border-gray-disabled)` | `var(--color-icon-brand-base)` |
 ## Interactions
 - Item interactions support `default | hover | press | selected | disabled`.
 - Overflow controls:
@@ -143,56 +170,75 @@ MCP variable evidence confirms:
 - `totalLabel?: string` (default `"Total"`)
 - `totalCategory?: string` (optional, e.g. `"Alerts"`)
 ## Codegen Contract (Framework-Agnostic Blueprint)
-- Deterministic structure:
-  - `StatusBarRoot`
-  - optional `StatusBarTotalItem`
+### Deterministic structure
+Render order is locked to **Anatomy**. Framework roots map `StatusBar` (not `StatusBarRoot`) — React `IdsStatusBar`, same child slot names with the programme prefix.
+
+Required tree:
+- `StatusBar`
+  - optional `StatusBarTotalItem` → `StatusBarItemDivider` (left) + `StatusBarItemValue` + `StatusBarItemMeta` + `StatusBarItemDivider` (right)
   - `StatusBarContentViewport`
-  - repeated `StatusBarItem`
-  - optional `StatusBarOverflowLayer` with `StatusBarOverflowLeft` + `StatusBarOverflowRight`
-Variant matrix:
-  - type: `status-large | status-small | inventory`
-  - item state: `default | hover | press | selected | disabled`
-  - content density: `less | more` (from Figma `# items`)
-  - total presence: `with-total | no-total`
-  - overflow mode: `none | beginning | middle | end`
-- Icon mapping contract:
-  - critical -> `status-critical-square-solid`
-  - warning -> `status-warn-tri-solid`
-  - success -> `status-ok-circ-solid`
-  - in-progress -> `state-progress-circle`
-  - scheduled -> `state-standby-clock-solid`
-  - inventory default -> `docs-bundle` (override allowed)
-  - overflow left -> `check-left-thick`
-  - overflow right -> `chev-right-thick`
-- Per-slot style contract:
-  - all colors/spacing/typography must resolve via semantic tokens.
-  - no hardcoded visual literals except documented measurement samples above.
-- Behavior contract:
-  - overflow layer must be rendered above item content.
-  - overflow behavior is active only when `total` exists.
-  - overflow scenario mapping must match Figma (`Beginning | Middle | End`) based on scroll position.
-  - demo/testing may force overflow scenario explicitly (`beginning | middle | end`) to validate visual states.
-- Accessibility contract:
-  - root uses section/landmark semantics with label.
-  - overflow controls are buttons with descriptive `aria-label`.
-  - disabled items must be non-interactive and visually distinct.
-- Fallback/error rules:
-  - missing `items` -> generate mode-specific defaults.
-  - missing inventory `iconShapeName` -> use `docs-bundle`.
-  - unknown severity -> do not crash; render without severity icon and use provided `label`.
-- Validation checklist:
-  - [ ] All three variants render with correct heights.
-  - [ ] Item states match tokenized backgrounds.
-  - [ ] Total item shows dashed dividers on both left and right edges even with full border.
-  - [ ] Content group shows first-item left divider and last-item right divider.
-  - [ ] Overflow arrows appear only with total + overflow.
-  - [ ] Overflow scenario visuals match:
-    - Beginning => right arrow only
-    - Middle => both arrows
-    - End => left arrow only
-  - [ ] Left/right arrows use required icon slugs.
-  - [ ] Inventory supports default and user-defined icon.
-  - [ ] Light/dark both render via semantic tokens.
+    - repeated `StatusBarItem` → optional leading `StatusBarItemDivider` (first item) + `StatusBarItemIconSlot` + `StatusBarItemValue` + `StatusBarItemMeta` + trailing `StatusBarItemDivider`
+    - optional `StatusBarOverflowLayer` → `StatusBarOverflowLeft?` + `StatusBarOverflowRight?`
+
+Prop-driven `items` / `total` MUST emit this same tree. Compound children MAY replace chrome when `StatusBarContentViewport` (and optional `StatusBarTotalItem`) are projected.
+
+### Variant matrix
+- type: `status-large | status-small | inventory`
+- item state: `default | hover | press | selected | disabled`
+- content density: `less | more` (from Figma `# items`)
+- total presence: `with-total | no-total`
+- overflow mode: `none | beginning | middle | end`
+
+### Icon mapping contract
+- critical -> `status-critical-square-solid`
+- warning -> `status-warn-tri-solid`
+- success -> `status-ok-circ-solid`
+- in-progress -> `state-progress-circle`
+- scheduled -> `state-standby-clock-solid`
+- inventory default -> `docs-bundle` (override allowed)
+- overflow left -> `chev-left-thick` (asset slug; Figma label may read `check-left-thick`)
+- overflow right -> `chev-right-thick`
+
+### Per-slot style contract
+- all colors/spacing/typography must resolve via semantic tokens.
+- no hardcoded visual literals except documented measurement samples above.
+
+### Behavior contract
+- overflow layer must be rendered above item content.
+- overflow behavior is active only when `total` exists.
+- overflow scenario mapping must match Figma (`Beginning | Middle | End`) based on scroll position.
+- demo/testing may force overflow scenario explicitly (`beginning | middle | end`) to validate visual states.
+
+### Accessibility contract
+- root uses section/landmark semantics with label.
+- overflow controls are buttons with descriptive `aria-label`.
+- disabled items must be non-interactive and visually distinct.
+
+### Asset resolution + bundling contract
+- Icons resolve from `assets/icons/<slug>.svg` via the shared Icon primitive (`IdsIcon` in React).
+- Severity glyphs use the full-color (`img`) variant; inventory `docs-bundle` and overflow chevrons use the tintable mask variant.
+- Overflow left slug is `chev-left-thick`; overflow right slug is `chev-right-thick`.
+- Missing inventory `iconShapeName` resolves to `docs-bundle`. Unknown severity renders no severity icon.
+
+### Fallback/error rules
+- missing `items` -> generate mode-specific defaults.
+- missing inventory `iconShapeName` -> use `docs-bundle`.
+- unknown severity -> do not crash; render without severity icon and use provided `label`.
+
+### Validation checklist
+- [ ] All three variants render with correct heights.
+- [ ] Item states match tokenized backgrounds.
+- [ ] Total item shows dashed dividers on both left and right edges even with full border.
+- [ ] Content group shows first-item left divider and last-item right divider.
+- [ ] Overflow arrows appear only with total + overflow.
+- [ ] Overflow scenario visuals match:
+  - Beginning => right arrow only
+  - Middle => both arrows
+  - End => left arrow only
+- [ ] Left/right arrows use required icon slugs.
+- [ ] Inventory supports default and user-defined icon.
+- [ ] Light/dark both render via semantic tokens.
+- [ ] Anatomy order matches Deterministic structure (`StatusBar` root, not `StatusBarRoot`).
 ## Source Mapping
 - Component map source: `data/component-figma-map.json` (`Status Bar`)
 - Figma nodes used:

@@ -1,18 +1,28 @@
 import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { IdsBadge } from "./IdsBadge";
-import { SynapseDropdownMenu } from "./SynapseDropdownMenu";
+import {
+  SynapseDropdown,
+  SynapseDropdownMenu,
+  SynapseDropdownMenuFooter,
+  SynapseDropdownMenuGroup,
+  SynapseDropdownMenuItem,
+  SynapseDropdownError,
+  SynapseDropdownHelper,
+  SynapseDropdownTriggerShell,
+} from "./SynapseDropdown";
 import { SynapseTooltip } from "./SynapseTooltip";
-import { SynapseDropdownTriggerShell } from "./SynapseDropdownTriggerShell";
 import {
   SYNAPSE_DROPDOWN_MULTISELECT_IDS_BASELINE_SPEC_PATH,
   SYNAPSE_DROPDOWN_MULTISELECT_MAIN_NODE_ID,
 } from "../spec-contracts/synapse-dropdown-multiselect.contract";
-import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
+import {
+  SYNAPSE_DROPDOWN_DOCS_DESCRIPTION,
+  SYNAPSE_DROPDOWN_STORY_SOURCE,
+} from "./synapse-dropdown.developer-usage";
 
 type Size = "small" | "large";
-type Option = { id: string; label: string; disabled?: boolean };
 
 function MultiSelectTrigger({
   placeholder = "-Select-",
@@ -37,11 +47,12 @@ function MultiSelectTrigger({
 }) {
   const selectedCount = selectedLabels.length;
   const showBadge = showSelectedBadge && selectedCount > 0;
-  const listText = selectedCount === 0
-    ? placeholder
-    : hideSelectionList
-      ? "Items selected"
-      : selectedLabels.join(", ");
+  const listText =
+    selectedCount === 0
+      ? placeholder
+      : hideSelectionList
+        ? "Items selected"
+        : selectedLabels.join(", ");
 
   return (
     <SynapseDropdownTriggerShell
@@ -82,52 +93,11 @@ function MultiSelectTrigger({
   );
 }
 
-const meta: Meta<typeof SynapseDropdownMenu> = {
-  title: "Spec Generated/Synapse/Dropdown/Multi Select",
-  component: SynapseDropdownMenu,
-  parameters: {
-    layout: "centered",
-    docs: {
-      description: {
-        component: [
-          `Spec-driven Synapse Dropdown Multiselect (IDS-fork). IDS baseline: \`${SYNAPSE_DROPDOWN_MULTISELECT_IDS_BASELINE_SPEC_PATH}\`.`,
-          `Figma set: \`${SYNAPSE_DROPDOWN_MULTISELECT_MAIN_NODE_ID}\`.`,
-          "Theme: `components/synapse-theme.css`.",
-        ].join(" "),
-      },
-    },
-  },
-};
-
-export default meta;
-type Story = StoryObj<typeof SynapseDropdownMenu>;
-
-function useMultiItems(
-  options: Option[],
-  selected: string[],
-  setSelected: (next: string[]) => void
-) {
-  return options.map((option) => ({
-    id: option.id,
-    value: option.label,
-    label: option.label,
-    selectable: true,
-    disabled: option.disabled,
-    onClick: () => {
-      if (option.disabled) return;
-      const next = selected.includes(option.label)
-        ? selected.filter((value) => value !== option.label)
-        : [...selected, option.label];
-      setSelected(next);
-    },
-  }));
-}
-
-function getAllEnabledLabels(options: Option[]) {
+function getAllEnabledLabels(options: { label: string; disabled?: boolean }[]) {
   return options.filter((option) => !option.disabled).map((option) => option.label);
 }
 
-function getSelectAllState(options: Option[], selected: string[]) {
+function getSelectAllState(options: { label: string; disabled?: boolean }[], selected: string[]) {
   const enabled = getAllEnabledLabels(options);
   const selectedEnabledCount = enabled.filter((label) => selected.includes(label)).length;
   return {
@@ -136,46 +106,84 @@ function getSelectAllState(options: Option[], selected: string[]) {
   };
 }
 
-export const MainScenarios: Story = {
+const meta: Meta<typeof SynapseDropdown> = {
+  title: "Components/Synapse/Dropdown/Multi Select",
+  component: SynapseDropdown,
+  tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+    docs: {
+      canvas: { sourceState: "open" },
+      description: {
+        component: [
+          SYNAPSE_DROPDOWN_DOCS_DESCRIPTION,
+          `IDS baseline: \`${SYNAPSE_DROPDOWN_MULTISELECT_IDS_BASELINE_SPEC_PATH}\`.`,
+          `Figma set: \`${SYNAPSE_DROPDOWN_MULTISELECT_MAIN_NODE_ID}\`.`,
+        ].join("\n\n"),
+      },
+      source: { type: "code", language: "tsx", code: SYNAPSE_DROPDOWN_STORY_SOURCE },
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof SynapseDropdown>;
+
+function MultiSelectMenuItems({ count }: { count: number }) {
+  return Array.from({ length: count }, (_, i) => (
+    <SynapseDropdownMenuItem key={i} value={`Option ${i + 1}`} label={`Option ${i + 1}`} />
+  ));
+}
+
+export const CompositionApi: Story = {
+  name: "Composition API",
   render: () => {
     const [smallSelected, setSmallSelected] = useState<string[]>([]);
-    const [visibleSelected, setVisibleSelected] = useState<string[]>(["Option 1", "Option 2", "Option 5", "Option 6"]);
-    const [hiddenSelected, setHiddenSelected] = useState<string[]>(["Option 1", "Option 2", "Option 5", "Option 6"]);
+    const [visibleSelected, setVisibleSelected] = useState<string[]>([
+      "Option 1",
+      "Option 2",
+      "Option 5",
+      "Option 6",
+    ]);
+    const [hiddenSelected, setHiddenSelected] = useState<string[]>([
+      "Option 1",
+      "Option 2",
+      "Option 5",
+      "Option 6",
+    ]);
     const [sectionSelected, setSectionSelected] = useState<string[]>(["Option 2"]);
     const [actionSelected, setActionSelected] = useState<string[]>(["Option 2"]);
     const [actionEvent, setActionEvent] = useState("None");
 
-    const smallOptions = Array.from({ length: 6 }, (_, i) => ({ id: `s-${i + 1}`, label: `Option ${i + 1}` }));
-    const longOptions = Array.from({ length: 12 }, (_, i) => ({ id: `l-${i + 1}`, label: `Option ${i + 1}` }));
-    const sectionOptions = [
-      { id: "sec-1", label: "Option 1" },
-      { id: "sec-2", label: "Option 2" },
-      { id: "sec-3", label: "Option 3" },
-      { id: "sec-4", label: "Option 4" },
-      { id: "sec-5", label: "Option 5" },
-      { id: "sec-6", label: "Option 6" },
-    ];
-    const sectionItems = [
-      ...useMultiItems(
-        [
-          { id: "sec-1", label: "Option 1" },
-          { id: "sec-2", label: "Option 2" },
-          { id: "sec-3", label: "Option 3" },
-        ],
-        sectionSelected,
-        setSectionSelected
-      ),
-      { id: "h-1", label: "Section Title", kind: "section" as const },
-      ...useMultiItems(
-        [
-          { id: "sec-4", label: "Option 4" },
-          { id: "sec-5", label: "Option 5" },
-          { id: "sec-6", label: "Option 6" },
-        ],
-        sectionSelected,
-        setSectionSelected
-      ),
-    ];
+    const smallOptions = Array.from({ length: 6 }, (_, i) => ({ label: `Option ${i + 1}` }));
+    const longOptions = Array.from({ length: 12 }, (_, i) => ({ label: `Option ${i + 1}` }));
+    const sectionOptions = Array.from({ length: 6 }, (_, i) => ({ label: `Option ${i + 1}` }));
+
+    const renderMultiMenu = (
+      selected: string[],
+      setSelected: (next: string[]) => void,
+      options: { label: string; disabled?: boolean }[],
+      extra?: { footer?: boolean; maxHeight?: number },
+    ) => {
+      const state = getSelectAllState(options, selected);
+      return (
+        <SynapseDropdownMenu
+          defaultOpen
+          maxHeight={extra?.maxHeight ?? 220}
+          showSelectAllClearAll
+          selectAllChecked={state.checked}
+          selectAllIndeterminate={state.indeterminate}
+          onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
+          onClearAllClick={() => setSelected([])}
+          clearAllDisabled={selected.length === 0}
+          footerActionLabel={extra?.footer ? "Action" : undefined}
+          onFooterActionClick={extra?.footer ? () => setActionEvent("Action clicked") : undefined}
+        >
+          <MultiSelectTrigger selectedLabels={selected} />
+          <MultiSelectMenuItems count={options.length} />
+        </SynapseDropdownMenu>
+      );
+    };
 
     return (
       <div style={{ width: 1350, display: "grid", gap: 16 }}>
@@ -185,97 +193,100 @@ export const MainScenarios: Story = {
         <div style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
           <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>No items selected</div>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={smallSelected} />}
-              items={useMultiItems(smallOptions, smallSelected, setSmallSelected)}
-              selectionMode="multi"
-              selectedValues={smallSelected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(smallOptions, smallSelected).checked}
-              selectAllIndeterminate={getSelectAllState(smallOptions, smallSelected).indeterminate}
-              onSelectAllClick={() => setSmallSelected(getAllEnabledLabels(smallOptions))}
-              onClearAllClick={() => setSmallSelected([])}
-              clearAllDisabled={smallSelected.length === 0}
-              defaultOpen
-              maxHeight={220}
-            />
+            <SynapseDropdown mode="multi-select" values={smallSelected} onValuesChange={setSmallSelected}>
+              {renderMultiMenu(smallSelected, setSmallSelected, smallOptions)}
+            </SynapseDropdown>
           </div>
 
           <div style={{ width: 300, display: "grid", gap: 6 }}>
-            <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Items selected and selection list is visible</div>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={visibleSelected} />}
-              items={useMultiItems(longOptions, visibleSelected, setVisibleSelected)}
-              selectionMode="multi"
-              selectedValues={visibleSelected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(longOptions, visibleSelected).checked}
-              selectAllIndeterminate={getSelectAllState(longOptions, visibleSelected).indeterminate}
-              onSelectAllClick={() => setVisibleSelected(getAllEnabledLabels(longOptions))}
-              onClearAllClick={() => setVisibleSelected([])}
-              clearAllDisabled={visibleSelected.length === 0}
-              defaultOpen
-              maxHeight={220}
-            />
+            <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>
+              Items selected and selection list is visible
+            </div>
+            <SynapseDropdown mode="multi-select" values={visibleSelected} onValuesChange={setVisibleSelected}>
+              <SynapseDropdownMenu
+                defaultOpen
+                maxHeight={220}
+                showSelectAllClearAll
+                selectAllChecked={getSelectAllState(longOptions, visibleSelected).checked}
+                selectAllIndeterminate={getSelectAllState(longOptions, visibleSelected).indeterminate}
+                onSelectAllClick={() => setVisibleSelected(getAllEnabledLabels(longOptions))}
+                onClearAllClick={() => setVisibleSelected([])}
+                clearAllDisabled={visibleSelected.length === 0}
+              >
+                <MultiSelectTrigger selectedLabels={visibleSelected} />
+                <MultiSelectMenuItems count={12} />
+              </SynapseDropdownMenu>
+            </SynapseDropdown>
           </div>
 
           <div style={{ width: 300, display: "grid", gap: 6 }}>
-            <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Items selected and selection list is hidden</div>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={hiddenSelected} hideSelectionList />}
-              items={useMultiItems(longOptions, hiddenSelected, setHiddenSelected)}
-              selectionMode="multi"
-              selectedValues={hiddenSelected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(longOptions, hiddenSelected).checked}
-              selectAllIndeterminate={getSelectAllState(longOptions, hiddenSelected).indeterminate}
-              onSelectAllClick={() => setHiddenSelected(getAllEnabledLabels(longOptions))}
-              onClearAllClick={() => setHiddenSelected([])}
-              clearAllDisabled={hiddenSelected.length === 0}
-              defaultOpen
-              maxHeight={220}
-            />
+            <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>
+              Items selected and selection list is hidden
+            </div>
+            <SynapseDropdown mode="multi-select" values={hiddenSelected} onValuesChange={setHiddenSelected}>
+              <SynapseDropdownMenu
+                defaultOpen
+                maxHeight={220}
+                showSelectAllClearAll
+                selectAllChecked={getSelectAllState(longOptions, hiddenSelected).checked}
+                selectAllIndeterminate={getSelectAllState(longOptions, hiddenSelected).indeterminate}
+                onSelectAllClick={() => setHiddenSelected(getAllEnabledLabels(longOptions))}
+                onClearAllClick={() => setHiddenSelected([])}
+                clearAllDisabled={hiddenSelected.length === 0}
+              >
+                <MultiSelectTrigger selectedLabels={hiddenSelected} hideSelectionList />
+                <MultiSelectMenuItems count={12} />
+              </SynapseDropdownMenu>
+            </SynapseDropdown>
           </div>
 
           <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Section headers</div>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={sectionSelected} />}
-              items={sectionItems}
-              selectionMode="multi"
-              selectedValues={sectionSelected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(sectionOptions, sectionSelected).checked}
-              selectAllIndeterminate={getSelectAllState(sectionOptions, sectionSelected).indeterminate}
-              onSelectAllClick={() => setSectionSelected(getAllEnabledLabels(sectionOptions))}
-              onClearAllClick={() => setSectionSelected([])}
-              clearAllDisabled={sectionSelected.length === 0}
-              defaultOpen
-              maxHeight={220}
-            />
+            <SynapseDropdown mode="multi-select" values={sectionSelected} onValuesChange={setSectionSelected}>
+              <SynapseDropdownMenu
+                defaultOpen
+                maxHeight={220}
+                showSelectAllClearAll
+                selectAllChecked={getSelectAllState(sectionOptions, sectionSelected).checked}
+                selectAllIndeterminate={getSelectAllState(sectionOptions, sectionSelected).indeterminate}
+                onSelectAllClick={() => setSectionSelected(getAllEnabledLabels(sectionOptions))}
+                onClearAllClick={() => setSectionSelected([])}
+                clearAllDisabled={sectionSelected.length === 0}
+              >
+                <MultiSelectTrigger selectedLabels={sectionSelected} />
+                <SynapseDropdownMenuGroup groupName="Section Title">
+                  <SynapseDropdownMenuItem value="Option 1" label="Option 1" />
+                  <SynapseDropdownMenuItem value="Option 2" label="Option 2" />
+                  <SynapseDropdownMenuItem value="Option 3" label="Option 3" />
+                </SynapseDropdownMenuGroup>
+                <SynapseDropdownMenuGroup groupName="Section Title">
+                  <SynapseDropdownMenuItem value="Option 4" label="Option 4" />
+                  <SynapseDropdownMenuItem value="Option 5" label="Option 5" />
+                  <SynapseDropdownMenuItem value="Option 6" label="Option 6" />
+                </SynapseDropdownMenuGroup>
+              </SynapseDropdownMenu>
+            </SynapseDropdown>
           </div>
 
           <div style={{ width: 300, display: "grid", gap: 6 }}>
             <div style={{ color: "var(--annotation)", fontSize: 24, lineHeight: "32px" }}>Action button</div>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={actionSelected} />}
-              items={useMultiItems(longOptions, actionSelected, setActionSelected)}
-              selectionMode="multi"
-              selectedValues={actionSelected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(longOptions, actionSelected).checked}
-              selectAllIndeterminate={getSelectAllState(longOptions, actionSelected).indeterminate}
-              onSelectAllClick={() => setActionSelected(getAllEnabledLabels(longOptions))}
-              onClearAllClick={() => setActionSelected([])}
-              clearAllDisabled={actionSelected.length === 0}
-              footerActionLabel="Action"
-              onFooterActionClick={() => setActionEvent("Action clicked")}
-              defaultOpen
-              maxHeight={180}
-            />
-            <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
-              <strong>onActionClick:</strong> {actionEvent}
-            </div>
+            <SynapseDropdown mode="multi-select" values={actionSelected} onValuesChange={setActionSelected}>
+              <SynapseDropdownMenu
+                defaultOpen
+                maxHeight={180}
+                showSelectAllClearAll
+                selectAllChecked={getSelectAllState(longOptions, actionSelected).checked}
+                selectAllIndeterminate={getSelectAllState(longOptions, actionSelected).indeterminate}
+                onSelectAllClick={() => setActionSelected(getAllEnabledLabels(longOptions))}
+                onClearAllClick={() => setActionSelected([])}
+                clearAllDisabled={actionSelected.length === 0}
+              >
+                <MultiSelectTrigger selectedLabels={actionSelected} />
+                <MultiSelectMenuItems count={12} />
+                <SynapseDropdownMenuFooter actionLabel="Action" onAction={() => setActionEvent("Action clicked")} />
+              </SynapseDropdownMenu>
+              <SynapseDropdownHelper>onActionClick: {actionEvent}</SynapseDropdownHelper>
+            </SynapseDropdown>
           </div>
         </div>
       </div>
@@ -287,79 +298,83 @@ export const StatesAndDetails: Story = {
   render: () => {
     const [selected, setSelected] = useState<string[]>(["Option 1", "Option 2", "Option 5", "Option 6"]);
     const options = [
-      { id: "1", label: "Option 1" },
-      { id: "2", label: "Option 2" },
-      { id: "3", label: "Option 3", disabled: true },
-      { id: "4", label: "Option 4" },
-      { id: "5", label: "Option 5" },
-      { id: "6", label: "Option 6" },
+      { label: "Option 1" },
+      { label: "Option 2" },
+      { label: "Option 3", disabled: true },
+      { label: "Option 4" },
+      { label: "Option 5" },
+      { label: "Option 6" },
     ];
+    const selectAll = getSelectAllState(options, selected);
+
+    const menuProps = {
+      showSelectAllClearAll: true as const,
+      selectAllChecked: selectAll.checked,
+      selectAllIndeterminate: selectAll.indeterminate,
+      onSelectAllClick: () => setSelected(getAllEnabledLabels(options)),
+      onClearAllClick: () => setSelected([]),
+      clearAllDisabled: selected.length === 0,
+    };
 
     return (
       <div style={{ width: 980, display: "grid", gap: 16 }}>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
-          <SynapseDropdownMenu
-            trigger={<MultiSelectTrigger selectedLabels={[]} size="large" hover />}
-            items={useMultiItems(options, selected, setSelected)}
-            selectionMode="multi"
-            selectedValues={selected}
-            showSelectAllClearAll
-            selectAllChecked={getSelectAllState(options, selected).checked}
-            selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-            onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
-            onClearAllClick={() => setSelected([])}
-            clearAllDisabled={selected.length === 0}
-          />
-          <SynapseDropdownMenu
-            trigger={<MultiSelectTrigger selectedLabels={selected} size="small" focusVisible />}
-            items={useMultiItems(options, selected, setSelected)}
-            selectionMode="multi"
-            selectedValues={selected}
-            showSelectAllClearAll
-            selectAllChecked={getSelectAllState(options, selected).checked}
-            selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-            onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
-            onClearAllClick={() => setSelected([])}
-            clearAllDisabled={selected.length === 0}
-          />
+          <SynapseDropdown mode="multi-select" values={selected} onValuesChange={setSelected}>
+            <SynapseDropdownMenu {...menuProps}>
+              <MultiSelectTrigger selectedLabels={[]} size="large" hover />
+              {options.map((option) => (
+                <SynapseDropdownMenuItem
+                  key={option.label}
+                  value={option.label}
+                  label={option.label}
+                  disabled={option.disabled}
+                />
+              ))}
+            </SynapseDropdownMenu>
+          </SynapseDropdown>
+          <SynapseDropdown mode="multi-select" values={selected} onValuesChange={setSelected}>
+            <SynapseDropdownMenu {...menuProps}>
+              <MultiSelectTrigger selectedLabels={selected} size="small" focusVisible />
+              {options.map((option) => (
+                <SynapseDropdownMenuItem
+                  key={option.label}
+                  value={option.label}
+                  label={option.label}
+                  disabled={option.disabled}
+                />
+              ))}
+            </SynapseDropdownMenu>
+          </SynapseDropdown>
         </div>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-          <div style={{ width: 300, display: "grid", gap: 4 }}>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={selected} disabled />}
-              items={useMultiItems(options, selected, setSelected)}
-              selectionMode="multi"
-              selectedValues={selected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(options, selected).checked}
-              selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-              onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
-              onClearAllClick={() => setSelected([])}
-              clearAllDisabled={selected.length === 0}
-              disabled
-            />
-            <span style={{ color: "var(--color-text-neutral)", fontSize: 14, lineHeight: "20px" }}>
-              Helper text
-            </span>
-          </div>
-          <div style={{ width: 300, display: "grid", gap: 4 }}>
-            <SynapseDropdownMenu
-              trigger={<MultiSelectTrigger selectedLabels={selected} error />}
-              items={useMultiItems(options, selected, setSelected)}
-              selectionMode="multi"
-              selectedValues={selected}
-              showSelectAllClearAll
-              selectAllChecked={getSelectAllState(options, selected).checked}
-              selectAllIndeterminate={getSelectAllState(options, selected).indeterminate}
-              onSelectAllClick={() => setSelected(getAllEnabledLabels(options))}
-              onClearAllClick={() => setSelected([])}
-              clearAllDisabled={selected.length === 0}
-            />
-            <span style={{ color: "var(--color-text-critical)", fontSize: 14, lineHeight: "20px", display: "flex", alignItems: "center", gap: 8 }}>
-              <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
-              Error message
-            </span>
-          </div>
+          <SynapseDropdown mode="multi-select" values={selected} onValuesChange={setSelected} disabled>
+            <SynapseDropdownMenu {...menuProps} disabled>
+              <MultiSelectTrigger selectedLabels={selected} disabled />
+              {options.map((option) => (
+                <SynapseDropdownMenuItem
+                  key={option.label}
+                  value={option.label}
+                  label={option.label}
+                  disabled={option.disabled}
+                />
+              ))}
+            </SynapseDropdownMenu>
+            <SynapseDropdownHelper>Helper text</SynapseDropdownHelper>
+          </SynapseDropdown>
+          <SynapseDropdown mode="multi-select" values={selected} onValuesChange={setSelected}>
+            <SynapseDropdownMenu {...menuProps}>
+              <MultiSelectTrigger selectedLabels={selected} error />
+              {options.map((option) => (
+                <SynapseDropdownMenuItem
+                  key={option.label}
+                  value={option.label}
+                  label={option.label}
+                  disabled={option.disabled}
+                />
+              ))}
+            </SynapseDropdownMenu>
+            <SynapseDropdownError>Error message</SynapseDropdownError>
+          </SynapseDropdown>
         </div>
       </div>
     );

@@ -5,23 +5,26 @@ import { IdsTooltip } from "./IdsTooltip";
 import styles from "./Masthead.module.css";
 
 interface MastheadProps extends ComponentProps<"header"> {
-  /** Optional product logo — render via shared Icon only (32×32); omitted when not supplied. */
+  /** Optional product logo — host-composed via shared Icon (32×32); omit when unused. */
   logo?: ReactNode;
   /** Required product title text/content, e.g. "Synapse". */
   productName: ReactNode;
-  /** Optional user-defined icon slot (e.g. help/status icons). */
+  /**
+   * Optional host-composed utility region (search, action icons, dropdowns, badges).
+   * Masthead does not ship a fixed icon list — omit for none.
+   */
   iconsSlot?: ReactNode;
-  /** Optional app launcher slot; usually <AppLauncher />. */
+  /** Optional host-composed App Launcher; omit when unused. */
   appLauncherSlot?: ReactNode;
-  /** Trailing avatar slot (initials or user icon). */
-  avatarSlot: ReactNode;
+  /** Optional host-composed avatar / account control; omit when unused. */
+  avatarSlot?: ReactNode;
 }
 
 interface MastheadActionButtonContainerProps extends ComponentProps<"div"> {
   children: ReactNode;
 }
 
-interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
+export interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
   icon: ReactNode;
   badgeCount?: number;
   badgeType?: "default" | "controls" | "critical" | "warning" | "disabled" | "success";
@@ -29,7 +32,7 @@ interface MastheadActionIconButtonProps extends ComponentProps<"button"> {
 
 interface MastheadAvatarProps extends Omit<ComponentProps<"button">, "children"> {
   initials?: string;
-  /** User icon via shared Icon primitive — slug `user-single`, 16×16, `var(--color-icon-white)`. */
+  /** User icon via shared Icon primitive — slug `user-single`, 16×16, `var(--color-icon-gray-white)`. */
   icon?: ReactNode;
   imageSrc?: string;
   imageAlt?: string;

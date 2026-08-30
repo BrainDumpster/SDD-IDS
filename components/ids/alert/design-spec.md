@@ -102,12 +102,12 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 - Sample widths from refetched matrix node:
   - Compact row references: `1057px` (`42903:139071` family), runtime still container-driven.
   - Detailed row references: `631px` (`42903:139032` family), runtime still container-driven.
-- **Accent rail treatment:** default is `box-shadow: inset 4px 0 0 0 var(--inline-rail)` where `--inline-rail` is the severity solid alerting background token.  
-  `warning-minor` uses a dedicated `::before` pseudo-element with the same solid minor fill plus warning-accessible edge stroke token.
+- **Accent rail treatment:** all severities use a `::before` pseudo-element (`position: absolute; left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) so the rail sits on top of the border in both light and dark mode. `box-shadow: inset` must not be used — in dark mode the border tokens are opaque and would cover the rail.
+  `warning-minor` overrides `::before` to add `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides of the rail, with `box-sizing: border-box`.
 - **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: var(--scale-40); align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
 - **Detailed** (`density: detailed`): `min-height: 68px` (Figma reference frame `1000×68`; width remains container-driven); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
 - **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
-- **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message compact = **Body 2** `font-weight: 400`; message detailed = **Body 2** `font-weight: 500`; text color `var(--color-static-gray-900)`.
+- **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message (compact and detailed) = **Body 2** `font-weight: 400`; text color `var(--color-static-gray-900)`.
 - **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
 - **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, label `var(--color-text-brand-strong)`, `font-weight: 500`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
 - **Dismiss** icon (`Icon` component): visual size `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
@@ -115,8 +115,8 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 #### Detailed all-details scenario (`11946:230644`) visual checklist
 
 - Sample frame size: `1000 x 68` (reference only; runtime remains container-driven width).
-- Root surface: `border: 1px solid var(--color-border-alerting-critical-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
-- Inset rail: `box-shadow: inset 4px 0 0 0 var(--color-background-alerting-critical)`.
+- Root surface: `border: 1px solid var(--color-border-alerting-critical-base-transparent)`, `background: var(--color-background-alerting-critical-light)`, `padding-left: 20px`, no corner radius.
+- Inset rail: `::before` pseudo-element `left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--color-background-alerting-critical-base)`.
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
 - Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) aligned to content row top (`12px` via action-only negative margin); dismiss icon at trailing cluster `16px` top inset (unchanged); **gap between action and dismiss: `var(--spacing-space-16)`** when both are in the trailing cluster; link behavior/appearance follows inline link contract and does not change other visual attributes.
@@ -132,15 +132,15 @@ Chevron tinting: white on `critical`, `warning-major`, `informational` rails; bl
 
 ### Inline — severity surfaces (Figma “light tint + solid rail”)
 
-Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from canonical `components/ids-theme.css` used by Storybook and generated outputs); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info)`).
+Per-instance semantics from Figma variables (`get_variable_defs` on `42903:139522` / instance exports): root fill uses **`*-light`** alerting backgrounds; root border uses **`*-transparent`** alerting border tokens (semantic names; resolved values come from canonical `components/ids-theme.css` used by Storybook and generated outputs); inset rail uses the **solid** alerting background for that severity (e.g. `var(--color-background-alerting-info-base)`).
 
 | Severity | Background | Border | Inset rail (4px) | Leading icon (`shapeName`, `16x16`) + color |
 |---|---|---|---|---|
-| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-transparent)` | `var(--color-background-alerting-info)` | `info-circ-solid` + `var(--color-icon-alerting-info)` |
-| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-transparent)` | `var(--color-background-alerting-success)` | `status-ok-circ-solid` + `var(--color-icon-alerting-success)` |
-| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-background-alerting-minor)` (+ warning-accessible edge `Color/Border/Alerting/Warning-Accessible` on explicit rail layer) | `status-warn-tri-solid` + `var(--color-icon-alerting-minor)` |
-| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `status-error-diamond-solid` + `var(--color-icon-alerting-major)` |
-| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `status-critical-square-solid` + `var(--color-icon-alerting-critical)` |
+| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-base-transparent)` | `var(--color-background-alerting-info-base)` | `info-circ-solid` + `var(--color-icon-alerting-info-base)` |
+| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-base-transparent)` | `var(--color-background-alerting-success-base)` | `status-ok-circ-solid` + `var(--color-icon-alerting-success-base)` |
+| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-base)` | `var(--color-background-alerting-minor-base)` (+ warning-accessible edge `Color/Border/Alerting/Warning-Accessible` on explicit rail layer) | `status-warn-tri-solid` + `var(--color-icon-alerting-minor-base)` |
+| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-base-transparent)` | `var(--color-background-alerting-major-base)` | `status-error-diamond-solid` + `var(--color-icon-alerting-major-base)` |
+| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-base-transparent)` | `var(--color-background-alerting-critical-base)` | `status-critical-square-solid` + `var(--color-icon-alerting-critical-base)` |
 
 Inline **message link** and **outlined action** use **static brand** tokens above, not legacy “slate” border/background pairs.
 ## States (Light Theme)
@@ -151,13 +151,13 @@ Structural states follow **`density`** (compact vs detailed) and optional slots 
 
 | Severity | Root background | Root border | Inset rail | Title / body text | Icon | Link | Action border | Action label |
 |---|---|---|---|---|---|---|---|---|
-| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-transparent)` | `var(--color-background-alerting-info)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-info)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-transparent)` | `var(--color-background-alerting-success)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-success)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-transparent)` | `var(--color-background-alerting-minor)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-minor)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-transparent)` | `var(--color-background-alerting-major)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-major)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-transparent)` | `var(--color-background-alerting-critical)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| informational | `var(--color-background-alerting-info-light)` | `var(--color-border-alerting-info-base-transparent)` | `var(--color-background-alerting-info-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-info-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| success | `var(--color-background-alerting-success-light)` | `var(--color-border-alerting-success-base-transparent)` | `var(--color-background-alerting-success-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-success-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| warning-minor | `var(--color-background-alerting-minor-light)` | `var(--color-border-alerting-minor-base)` | `var(--color-background-alerting-minor-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-minor-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| warning-major | `var(--color-background-alerting-major-light)` | `var(--color-border-alerting-major-base-transparent)` | `var(--color-background-alerting-major-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-major-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
+| critical | `var(--color-background-alerting-critical-light)` | `var(--color-border-alerting-critical-base-transparent)` | `var(--color-background-alerting-critical-base)` | `var(--color-static-gray-900)` | `var(--color-icon-alerting-critical-base)` | `var(--color-static-brand-500)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
 
-**Dismiss** control: `Icon` component tinted with `var(--color-icon-black)` on default surface; hover/focus per **Interactions**.
+**Dismiss** control: `Icon` component tinted with `var(--color-icon-gray-black)` on default surface; hover/focus per **Interactions**.
 
 **Detailed all-details scenario:** a detailed inline alert may concurrently render title + body/message + inline link + outlined action + dismiss icon. This is a valid composition and should be represented in generated examples/tests.
 
@@ -167,14 +167,14 @@ Root row + carousel rail row per severity (informational, warning-major, warning
 
 | Severity | Text color | Status icon `shapeName` | Icon `variant` | Icon notes | Dismiss icon color |
 |---|---|---|---|---|---|
-| `critical` | `var(--color-text-white)` | `status-critical-square-solid-ko` | `img` | — | `var(--color-icon-white)` |
-| `warning-major` | `var(--color-text-black)` | `status-error-diamond-solid-ko` | `mask` | `color="var(--color-icon-white)"` | `var(--color-icon-black)` |
-| `warning-minor` | `var(--color-text-black)` | `status-warn-tri-solid` | `inline` | SVG injected via `iconInlineRegistry.ts`; `.st0`/`.st1` (triangle) → `var(--color-icon-black)`, `.st2` (exclamation) → `var(--color-icon-white)` | `var(--color-icon-black)` |
-| `informational` | `var(--color-text-white)` | `info-circ-solid-ko` | `img` | — | `var(--color-icon-white)` |
+| `critical` | `var(--color-text-gray-white)` | `status-critical-square-solid-ko` | `img` | — | `var(--color-icon-gray-white)` |
+| `warning-major` | `var(--color-text-gray-black)` | `status-error-diamond-solid-ko` | `mask` | `color="var(--color-icon-gray-white)"` | `var(--color-icon-gray-black)` |
+| `warning-minor` | `var(--color-text-gray-black)` | `status-warn-tri-solid` | `inline` | SVG injected via `iconInlineRegistry.ts`; `.st0`/`.st1` (triangle) → `var(--color-icon-gray-black)`, `.st2` (exclamation) → `var(--color-icon-gray-white)` | `var(--color-icon-gray-black)` |
+| `informational` | `var(--color-text-gray-white)` | `info-circ-solid-ko` | `img` | — | `var(--color-icon-gray-white)` |
 
 Dismiss icon always uses `variant="mask"`.
 
-**Carousel count color:** the count text lives inside the carousel rail (strong background token), so its color is **independent of the root message text color**. All severities use `var(--color-text-white)` for the count — including `warning-major` whose root message text is `var(--color-text-black)`.
+**Carousel count color:** the count text lives inside the carousel rail (strong background token), so its color is **independent of the root message text color**. All severities use `var(--color-text-gray-white)` for the count — including `warning-major` whose root message text is `var(--color-text-gray-black)`.
 
 **`showDismiss` logic (global):** `(dismissible ?? true) && (severity !== "critical" || (showCarousel && !showAction))`.
 - Non-critical severities: always show dismiss unless `dismissible={false}`.
@@ -184,7 +184,7 @@ Dismiss icon always uses `variant="mask"`.
 
 | Element | `font-weight` | `font-variation-settings` | Notes |
 |---|---|---|---|
-| Message (`.globalMessage`) | `500` | `'wdth' 100` | No explicit `font-family` override |
+| Message (`.globalMessage`) | `400` | `'wdth' 100` | No explicit `font-family` override |
 | Inline link / link button | `400` | `'wdth' 100` | — |
 | Action button label | `500` | `'wdth' 100` | — |
 | Carousel count | `400` | `'wdth' 100` | `white-space: nowrap` |
@@ -280,10 +280,10 @@ Deterministic structure:
 
 **`Alert` — inline (`display="inline"`):**
 
-1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `box-shadow` (not a separate DOM rail node)
+1. `AlertRoot` (`role="alert"`) — full-width row; **4px inset leading rail** via `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) — not `box-shadow`, which renders behind the border and is hidden in dark mode
 2. `ContentRow` (`inlineMain`) — `flex: 1 1 auto`, `gap: var(--spacing-space-8)`
    - `LeadingIcon` — shared `Icon` at `16×16`; vertical nudge `4px` (detailed) or `2px` (compact)
-   - `ContentBlock` — column, no gap; `padding-right: var(--padding-padding-16)`
+   - `ContentBlock` — column, `gap: var(--spacing-space-4)` (between title row and message); `padding-right: var(--padding-padding-16)`
      - optional `TitleRow` (`density="detailed"` + `title` present): flex row `gap: 4px` containing `Title` + optional `ActionButton`
      - optional `Title` only (detailed, no action)
      - `Message` (required)
@@ -313,7 +313,7 @@ Asset resolution + bundling contract:
 
 - Resolve icons from `assets/icons/<shapeName>.svg` (or project bundler equivalent).
 - Global status icons and inline solid icons use the slug map in **Tokens / States → Global**; carousel chevrons use `chev-left-16` / `chev-right-16`.
-- **Do not embed standalone inline `<svg>` factories** in generated Alert modules. Exception: `warning-minor` global uses `variant="inline"` routed through the shared `Icon` component + `iconInlineRegistry.ts` — this is acceptable because it still composes through the system `Icon` primitive; the registry handles SVG injection and class-based tinting (`.st0`/`.st1` → `var(--color-icon-black)`, `.st2` → `var(--color-icon-white)`).
+- **Do not embed standalone inline `<svg>` factories** in generated Alert modules. Exception: `warning-minor` global uses `variant="inline"` routed through the shared `Icon` component + `iconInlineRegistry.ts` — this is acceptable because it still composes through the system `Icon` primitive; the registry handles SVG injection and class-based tinting (`.st0`/`.st1` → `var(--color-icon-gray-black)`, `.st2` → `var(--color-icon-gray-white)`).
 
 Behavior contract:
 
@@ -355,7 +355,7 @@ Validation checklist:
 - [ ] Icons use shared `Icon` + canonical slugs from **States → Global** table; no standalone inline SVG factories (warning-minor `variant="inline"` via `iconInlineRegistry.ts` is acceptable — it routes through the shared `Icon` primitive).
 - [ ] Link contract supports `href` and `routerLink` without ambiguity.
 - [ ] Global carousel uses **1-based** `currentItem` in API and labeled prev/next controls.
-- [ ] Inline inset rail uses `box-shadow` 4px + severity solid token; `warning-minor` edge case documented.
+- [ ] Inline inset rail uses `::before` pseudo-element (`left: -1px; top: -1px; bottom: -1px; width: 4px`) + severity solid token; `warning-minor` adds `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides.
 - [ ] Light/dark state tables remain parallel (same `var(--...)` names).
 - [ ] Dismiss hit target ≥ `32×32` on inline and global.
 - [ ] Inline trailing cluster: `var(--spacing-space-16)` gap between outlined action and dismiss when both present (compact + detailed).
@@ -390,6 +390,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - `storybook/src/components/Alert.tsx` — unified implementation (`display` prop)
 - `storybook/src/components/Alert.stories.tsx` — **IDS/Alert** (single entry; global vs inline via `display`)
 - `storybook/src/components/GlobalAlert.tsx` / `InlineAlert.tsx` — optional thin re-exports for app code; not separate Storybook entries
+- Lib React implementation (no Base UI): `lib/react/ids/alert/` (`IdsAlert.tsx`, `IdsAlertGroup.tsx`, `IdsAlert.module.css`; selectors `ids-alert-global`, `ids-alert-inline`, …); stories: `storybook/src/components/lib-generated/Alert.stories.tsx`
 
 ---
 
@@ -404,15 +405,15 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Dismiss button**: `padding: var(--padding-padding-10); margin: calc(-1 * var(--padding-padding-10))` — creates `var(--scale-32)` hit area around the `var(--scale-12)` icon; negative margin cancels the padding for layout so surrounding spacing is unaffected
 
 **Colors**
-- **Dismiss icon** — critical & informational: `color: var(--color-icon-white)` + `filter: brightness(0) invert(1)` on icon; warning-major & warning-minor: `color: var(--color-icon-black)` + `filter: none`
-- **Action button** — critical & informational: `border-color: var(--color-border-white); color: var(--color-text-white)`; warning-major & warning-minor: `border-color: var(--color-border-black); color: var(--color-text-black)`
-- **Warning-minor root color**: set `color: var(--color-text-black)` on root — warning-minor background is light enough to require black text throughout. Warning-major root uses `color: var(--color-text-white)` (white text on orange); only its action button and dismiss are overridden to black via per-severity selectors
-- **Carousel count**: `color: var(--color-text-white)` for critical, warning-major, and informational (dark rail backgrounds). Override to `color: var(--color-text-black)` for warning-minor — its rail background (`color-background-alerting-minor-strong`) is light, matching the black chevron treatment
+- **Dismiss icon** — critical & informational: `color: var(--color-icon-gray-white)` + `filter: brightness(0) invert(1)` on icon; warning-major & warning-minor: `color: var(--color-icon-gray-black)` + `filter: none`
+- **Action button** — critical & informational: `border-color: var(--color-border-gray-white); color: var(--color-text-gray-white)`; warning-major & warning-minor: `border-color: var(--color-border-gray-black); color: var(--color-text-gray-black)`
+- **Warning-minor root color**: set `color: var(--color-text-gray-black)` on root — warning-minor background is light enough to require black text throughout. Warning-major root uses `color: var(--color-text-gray-white)` (white text on orange); only its action button and dismiss are overridden to black via per-severity selectors
+- **Carousel count**: `color: var(--color-text-gray-white)` for critical, warning-major, and informational (dark rail backgrounds). Override to `color: var(--color-text-gray-black)` for warning-minor — its rail background (`color-background-alerting-minor-strong`) is light, matching the black chevron treatment
 
 **Icons**
 - **Critical**: `status-critical-square-solid-ko`, `variant="img"` — white fill, X cutout reveals red background
-- **Warning-major**: `status-error-diamond-solid-ko`, `variant="mask"`, `color="var(--color-icon-white)"` — diamond masked white, dash cutout reveals orange
-- **Warning-minor**: `status-warn-tri-solid`, `variant="inline"` — register in `iconInlineRegistry.ts` via `warnMinorAlertIcon()`: strip `<style>` block, apply `fill:var(--color-icon-black)` to `.st0`/`.st1` (triangle), `fill:var(--color-icon-white)` to `.st2` (exclamation), strip root `<svg>` `width`/`height` only
+- **Warning-major**: `status-error-diamond-solid-ko`, `variant="mask"`, `color="var(--color-icon-gray-white)"` — diamond masked white, dash cutout reveals orange
+- **Warning-minor**: `status-warn-tri-solid`, `variant="inline"` — register in `iconInlineRegistry.ts` via `warnMinorAlertIcon()`: strip `<style>` block, apply `fill:var(--color-icon-gray-black)` to `.st0`/`.st1` (triangle), `fill:var(--color-icon-gray-white)` to `.st2` (exclamation), strip root `<svg>` `width`/`height` only
 - **Informational**: `info-circ-solid-ko`, `variant="img"` — white fill, i-mark cutout reveals blue background
 
 **Typography**
@@ -429,7 +430,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 **Layout & structure**
 - **Root**: `display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-space-12); width: 100%; box-sizing: border-box; padding-left: var(--padding-padding-20)`. Density class adds `min-height`: compact → `var(--scale-40)`; detailed → `68px`
 - **`.inlineMain`**: `flex: 1 1 auto; display: flex; align-items: flex-start; gap: var(--spacing-space-8)`. Compact adds `padding-block: var(--padding-padding-10); padding-right: var(--padding-padding-8)`; detailed adds `padding-block: var(--padding-padding-12)`
-- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding-right: var(--padding-padding-16)` — no gap between title row and message
+- **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-space-4); padding-right: var(--padding-padding-16)` — `spacing-4` between title row and message
 - **`.inlineTitleRow`** (detailed + title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title: `flex: 1 1 auto; min-width: 0`; action button: `flex-shrink: 0`
 - **`.inlineTrailing`**: `display: flex; flex-shrink: 0; align-items: flex-start; justify-content: flex-end; gap: var(--spacing-space-16)`
 - **Compact `.inlineTrailing`**: `align-items: center; height: var(--scale-40); padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16)`
@@ -447,9 +448,13 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Text color**: `var(--color-text-brand-strong)`
 
 **Severity tokens**
-- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; `box-shadow: inset 4px 0 0 0 var(--inline-rail)` for all except warning-minor
-- **Warning-minor rail**: uses `::before` pseudo-element with `position: absolute; left: 0; top: 0; bottom: 0; width: 4px` instead of `box-shadow` (Figma warning-accessible stroke requirement); `box-shadow: none` on root
+- **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; rail rendered via `::before` (`left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) for all severities
+- **Warning-minor rail**: same `::before` positioning but overrides `background` to `var(--color-background-alerting-minor-base)` and adds `border: 1px solid var(--color-border-alerting-warning-accessible); box-sizing: border-box`
 
 **Dismiss visibility logic**
 - `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props
+
+**2026-08-09**
+- `.inlineText`: vertical gap between the title row (title + optional action) and the message changed `0` → `var(--spacing-space-4)`; visible only in `density="detailed"` (title present), `compact` (message-only) unchanged. Source: `storybook/src/components/Alert.module.css`.
+- Spec synced to code: **Anatomy → Component composition** (`ContentBlock` gap) and the `.inlineText` note above updated to `var(--spacing-space-4)`.
 

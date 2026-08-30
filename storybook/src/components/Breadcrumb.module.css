@@ -38,13 +38,13 @@
 }
 
 .separator {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   display: flex;
   align-items: center;
   user-select: none;
 }
 
 .current {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-weight: 500;
 }

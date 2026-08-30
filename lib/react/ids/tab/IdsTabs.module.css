@@ -1,0 +1,456 @@
+/**
+ * IDS Tab — styles from `components/ids/tab/design-spec.md`.
+ * Selectors: ids-tabs, ids-tab, ids-tab-button, ids-tab-content, …
+ */
+
+.ids-tabs {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ids-tabs[data-surface="transparent"] .ids-tab-button,
+.ids-tabs[data-surface="transparent"] .ids-tabs-overflow-trigger,
+.ids-tabs[data-surface="transparent"] .ids-tabs-add {
+  background: transparent;
+}
+
+.ids-tabs[data-surface="transparent"] .ids-tab-button[aria-selected="true"],
+.ids-tabs[data-surface="transparent"] .ids-tabs-overflow-trigger[data-selected="true"],
+.ids-tabs[data-surface="transparent"] .ids-tabs-overflow-trigger[aria-expanded="true"],
+.ids-tabs[data-surface="transparent"] .ids-tabs-overflow-trigger[aria-expanded="true"]:hover {
+  background: transparent;
+}
+
+.ids-tabs-list-wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.ids-tabs[data-overflow="false"] .ids-tabs-list-wrap {
+  overflow-x: auto;
+}
+
+.ids-tabs-list {
+  display: flex;
+  /* stretch keeps row geometry stable when selection toggles borders */
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Continue the row baseline past the last tab/control (selected tabs omit bottom border). */
+.ids-tabs-list::after {
+  content: "";
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  pointer-events: none;
+}
+
+.ids-tab-button {
+  box-sizing: border-box;
+  height: 38px;
+  padding: 9px 24px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  background: var(--color-background-surface-secondary);
+  border: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  cursor: pointer;
+  /* Do not transition border/padding — that animates the selection jump. */
+  transition: background-color 150ms ease, color 150ms ease;
+  outline: none;
+  white-space: nowrap;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-20);
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  position: relative;
+}
+
+.ids-tab-button--has-close {
+  padding-right: var(--padding-padding-20);
+}
+
+.ids-tab-button-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Primary side dividers */
+.ids-tab-button--primary::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 1px;
+  height: 24px;
+  transform: translateY(-50%);
+  background: var(--color-border-gray-neutral-base);
+}
+
+.ids-tab-button--primary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  background: var(--color-border-gray-neutral-base);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ids-tab-button--primary:not([aria-selected="true"])::before {
+  top: 50%;
+  height: 24px;
+  transform: translateY(-50%);
+}
+
+.ids-tab-button--primary[aria-selected="true"]::before {
+  top: 2px;
+  height: 36px;
+  transform: none;
+}
+
+.ids-tab-button:hover:not([aria-selected="true"]):not(:disabled) {
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-tab-button:active:not([aria-selected="true"]):not(:disabled) {
+  background: var(--color-background-brand-light-slate);
+  color: var(--color-text-brand-strong);
+}
+
+.ids-tab-button:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: calc(var(--border-width-border-2) * -1);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.ids-tab-button--secondary:focus-visible {
+  height: var(--sizing-size-34, 34px);
+  margin: var(--spacing-space-2, 2px) 0;
+}
+
+.ids-tab-button--primary:focus-visible {
+  height: var(--sizing-size-36, 36px);
+  margin: var(--spacing-space-1, 1px) 0;
+}
+
+.ids-tab-button[aria-selected="true"] {
+  background: var(--color-background-surface-secondary);
+  color: var(--color-text-brand-strong);
+  /* Spec: selected uses border-bottom: none (not transparent). Replace the
+     removed 1px border with padding so the label box stays 38px-stable. */
+  border-bottom: none;
+  padding-bottom: calc(9px + var(--border-width-border-1));
+  z-index: 1;
+}
+
+.ids-tab-button[aria-selected="true"]::after {
+  top: 0;
+  height: 100%;
+  transform: none;
+}
+
+/* Primary selected: top 2px brand indicator (inset, inside 38px row). */
+.ids-tab-button--primary[aria-selected="true"] {
+  border-bottom: none;
+  box-shadow: inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong);
+}
+
+.ids-tab-button--primary[aria-selected="true"]:focus-visible {
+  border-radius: var(--corner-radius-radius-4);
+  box-shadow:
+    inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong),
+    inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
+}
+
+/* Secondary selected: bottom 2px brand indicator replaces accessible baseline. */
+.ids-tab-button--secondary[aria-selected="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--border-width-border-2, 2px);
+  background: var(--color-border-brand-strong);
+  pointer-events: none;
+  bottom: 0;
+}
+
+.ids-tab-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ids-tab-button-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Unknown iconSlug: hide icon slot (design-spec fallback). */
+.ids-tab-button-icon:has([data-missing="true"]) {
+  display: none;
+}
+
+.ids-tab-button-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.ids-tab-button-close {
+  box-sizing: border-box;
+  width: var(--sizing-size-24) !important;
+  min-width: var(--sizing-size-24) !important;
+  height: var(--sizing-size-24) !important;
+  min-height: var(--sizing-size-24) !important;
+  padding: var(--padding-padding-4) !important;
+}
+
+.ids-tabs-overflow-trigger {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  padding: 9px 24px;
+  height: 38px;
+  background: var(--color-background-surface-secondary);
+  border: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.ids-tabs-overflow-trigger--primary::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 1px;
+  height: 24px;
+  transform: translateY(-50%);
+  background: var(--color-border-gray-neutral-base);
+}
+
+.ids-tabs-overflow-trigger--primary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  background: var(--color-border-gray-neutral-base);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ids-tabs-overflow-trigger--primary:not([data-selected="true"])::before {
+  top: 50%;
+  height: 24px;
+  transform: translateY(-50%);
+}
+
+.ids-tabs-overflow-trigger--primary[data-selected="true"]::before {
+  top: 2px;
+  height: 36px;
+  transform: none;
+}
+
+.ids-tabs-overflow-trigger:hover {
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-tabs-overflow-trigger:active:not([data-selected="true"]) {
+  background: var(--color-background-brand-light-slate);
+  color: var(--color-text-brand-strong);
+}
+
+.ids-tabs-overflow-trigger[aria-expanded="true"],
+.ids-tabs-overflow-trigger[aria-expanded="true"]:hover {
+  background: var(--color-background-surface-secondary);
+  color: var(--color-text-brand-strong);
+}
+
+.ids-tabs[data-surface="transparent"] .ids-tabs-overflow-trigger[aria-expanded="true"],
+.ids-tabs[data-surface="transparent"] .ids-tabs-overflow-trigger[aria-expanded="true"]:hover {
+  background: transparent;
+}
+
+.ids-tabs-overflow-trigger[data-selected="true"] {
+  color: var(--color-text-brand-strong);
+  border-bottom: none;
+  padding-bottom: calc(9px + var(--border-width-border-1));
+  z-index: 1;
+}
+
+.ids-tabs-overflow-trigger--secondary[data-selected="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--border-width-border-2, 2px);
+  background: var(--color-border-brand-strong);
+  pointer-events: none;
+  bottom: 0;
+}
+
+.ids-tabs-overflow-trigger--primary[data-selected="true"] {
+  border-bottom: none;
+  padding-bottom: calc(9px + var(--border-width-border-1));
+  box-shadow: inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong);
+}
+
+.ids-tabs-overflow-trigger:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.ids-tabs-overflow-trigger--primary[data-selected="true"]:focus-visible {
+  box-shadow:
+    inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong),
+    inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.ids-tabs-overflow-icon {
+  width: var(--sizing-size-10, 10px);
+  height: var(--sizing-size-10, 10px);
+  display: block;
+  flex-shrink: 0;
+}
+
+.ids-tabs-overflow-menu {
+  position: absolute;
+  z-index: 20;
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
+  box-shadow:
+    var(--shadow-drop-shadow-8-x) var(--shadow-drop-shadow-8-y)
+    var(--shadow-drop-shadow-8-blur) var(--shadow-drop-shadow-8-color);
+  min-width: 160px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ids-tabs-overflow-item {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: var(--padding-padding-8) var(--padding-padding-12);
+  color: var(--color-text-gray-neutral-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ids-tabs-overflow-item:hover,
+.ids-tabs-overflow-item[data-highlighted="true"] {
+  background: var(--color-background-n-tabs-x-hover);
+}
+
+.ids-tabs-add {
+  all: unset;
+  box-sizing: border-box;
+  width: auto;
+  min-width: 56px;
+  height: 38px;
+  background: var(--color-background-surface-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 24px;
+  cursor: pointer;
+  color: var(--color-text-brand-strong);
+  flex-shrink: 0;
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  position: relative;
+  font-family: inherit;
+}
+
+.ids-tabs-add--primary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 24px;
+  transform: translateY(-50%);
+  background: var(--color-border-gray-neutral-base);
+}
+
+.ids-tabs-overflow-trigger + .ids-tabs-add::before {
+  display: none;
+}
+
+.ids-tabs-add:hover {
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-brand-strong);
+}
+
+.ids-tabs-add:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.ids-tabs-add-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.ids-tabs-add-label {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-brand-strong);
+  white-space: nowrap;
+}
+
+/* Active panel: no border-top underlay (design-spec baseline contract). */
+.ids-tab-content {
+  padding: var(--padding-padding-16) 0;
+  font-size: var(--font-size-body-2);
+  color: var(--color-text-gray-neutral-strong);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+/* Offscreen measure row for overflow width calculation */
+.ids-tabs-measure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  height: 0;
+  overflow: hidden;
+}

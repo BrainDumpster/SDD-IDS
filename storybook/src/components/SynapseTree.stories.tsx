@@ -1,4 +1,4 @@
-/* Spec Generated — Synapse Tree (IDS-fork) */
+/* Components — Synapse Tree (IDS-fork) */
 import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { type ComponentProps } from "react";
@@ -29,7 +29,7 @@ const specAccurateArgs: ComponentProps<typeof SynapseTree> = {
 };
 
 const meta: Meta<typeof SynapseTree> = {
-  title: "Spec Generated/Synapse/Tree",
+  title: "Components/Synapse/Tree",
   component: SynapseTree,
   parameters: {
     layout: "padded",

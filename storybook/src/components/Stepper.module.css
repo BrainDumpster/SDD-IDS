@@ -76,9 +76,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: var(--border-width-border-2) solid var(--color-border-accessible);
-  background: var(--color-background-component);
-  color: var(--color-text-white);
+  border: var(--border-width-border-2) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-white);
   z-index: 1;
   transition: all 150ms ease;
 }
@@ -86,7 +86,7 @@
 .label {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-family: inherit;
   font-weight: 400;
   text-align: left;
@@ -109,9 +109,9 @@
 .number {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-family: inherit;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-weight: 500;
 }
 
@@ -130,5 +130,5 @@
 .circleCompleted {
   border-color: var(--color-background-brand-base);
   background: var(--color-background-brand-base);
-  color: var(--color-icon-inverse);
+  color: var(--color-icon-gray-inverse);
 }

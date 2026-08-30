@@ -1,0 +1,148 @@
+/* Ported from storybook/src/components/IdsTextBox.module.css */
+
+.ids-text-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+  width: 100%;
+  max-width: 300px;
+}
+
+.ids-text-box__control {
+  align-items: center;
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--text-box-control-radius);
+  display: flex;
+  gap: var(--spacing-space-10);
+  padding: 0 var(--padding-padding-16);
+  position: relative;
+  width: 100%;
+}
+
+.ids-text-box__control--large {
+  height: 40px;
+}
+
+.ids-text-box__control--small {
+  height: 32px;
+}
+
+.ids-text-box__control--text-area {
+  align-items: flex-start;
+  min-height: 126px;
+  padding-bottom: var(--padding-padding-10);
+  padding-top: 9px;
+}
+
+.ids-text-box__control:hover:not([data-state="disabled"]):not([data-state="error"]) {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.ids-text-box__control[data-state="hover"] {
+  border-color: var(--color-border-gray-neutral-strong);
+
+  ::ng-deep .ids-text-box__suffix-icon {
+    opacity: 0.92;
+  }
+}
+
+.ids-text-box__control[data-state="selected"] {
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-text-box__control[data-state="focus"],
+.ids-text-box__control[data-focus-modality="pointer"][data-focused]:not([data-state="disabled"]):not(
+    [data-state="error"]
+  ) {
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-text-box__control[data-focus-modality="keyboard"][data-focused]:not([data-state="disabled"]):not(
+    [data-state="error"]
+  ) {
+  border-color: var(--color-border-gray-neutral-base);
+}
+
+.ids-text-box__control[data-state="focus"]::after,
+.ids-text-box__control[data-focus-modality="keyboard"][data-focused]:not([data-state="disabled"]):not(
+    [data-state="error"]
+  )::after {
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--text-box-focus-ring-radius);
+  content: "";
+  inset: -5px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.ids-text-box__control[data-focus-modality="pointer"][data-focused]:not([data-state="disabled"]):not(
+    [data-state="error"]
+  )::after {
+  content: none;
+}
+
+.ids-text-box__control[data-state="disabled"] {
+  background: var(--color-background-gray-light);
+
+  ::ng-deep .ids-text-box__suffix-icon {
+    opacity: 0.6;
+  }
+}
+
+.ids-text-box__control[data-state="error"] {
+  border-color: var(--color-border-alerting-critical-base);
+}
+
+.ids-text-box__value {
+  background: transparent;
+  border: none;
+  color: var(--color-text-gray-neutral);
+  flex: 1 1 auto;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  min-width: 0;
+  outline: none;
+  resize: none;
+}
+
+.ids-text-box__value::placeholder {
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-text-box__control[data-state="disabled"] .ids-text-box__value,
+.ids-text-box__control[data-state="disabled"] .ids-text-box__value::placeholder {
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-text-box__suffix-icon {
+  height: 16px;
+  width: 16px;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.ids-text-box__helper-row {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-space-8);
+  min-height: 20px;
+}
+
+.ids-text-box__helper-copy {
+  color: var(--color-text-gray-neutral);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  margin: 0;
+}
+
+.ids-text-box__helper-copy--error {
+  color: var(--color-text-alerting-critical-base);
+}
+
+.ids-text-box__error-icon {
+  height: 16px;
+  width: 16px;
+  flex: 0 0 auto;
+  display: block;
+}

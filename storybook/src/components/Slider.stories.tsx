@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { IdsSlider } from "./IdsSlider";
 
 const meta: Meta<typeof IdsSlider> = {
-  title: "Spec Generated/IDS/Slider",
+  title: "Components/IDS/Slider",
   component: IdsSlider,
   argTypes: {
     min: { control: "number" },

@@ -24,6 +24,9 @@ export interface TagProps {
   closable?: boolean;
   badgeCount?: number;
   visualState?: VisualState;
+  /** Optional max width for the tag; the label truncates with an ellipsis when
+   *  it exceeds this. Opt-in — unset tags keep their intrinsic width. */
+  maxWidth?: number | string;
   onClick?: () => void;
   onSelectedChange?: (selected: boolean) => void;
   onTextFocus?: () => void;
@@ -45,6 +48,7 @@ export function Tag({
   closable = false,
   badgeCount,
   visualState = "default",
+  maxWidth,
   onClick,
   onSelectedChange,
   onTextFocus,
@@ -62,6 +66,7 @@ export function Tag({
   const isSelected = isSelectedControlled ? selected : internalSelected;
   const isInteractiveClickable = clickable && !disabled;
   const isEditableFocusable = editable && !disabled;
+  const isBadgeFocusable = isBadgeType && !disabled;
   const typeClassName =
     type === "badge" ? styles.typeBadge : type === "clickable" ? styles.clickable : type === "editable" ? styles.editable : styles.readOnly;
 
@@ -122,16 +127,19 @@ export function Tag({
         styles[`tone_${tone}`],
         styles[`emphasis_${emphasis}`],
         clickable && isSelected ? styles.selected : "",
+        (closable || editable) ? styles.dismissible : "",
+        maxWidth != null ? styles.truncated : "",
       ]
         .filter(Boolean)
         .join(" ")}
+      style={maxWidth != null ? { maxWidth } : undefined}
       data-disabled={disabled || undefined}
       data-focus={visualState === "focus" || undefined}
       data-error={visualState === "error" || undefined}
       data-hover={visualState === "hover" || undefined}
       role={clickable ? "button" : undefined}
       aria-pressed={clickable ? isSelected : undefined}
-      tabIndex={isInteractiveClickable ? 0 : undefined}
+      tabIndex={isInteractiveClickable ? 0 : isBadgeFocusable ? 0 : undefined}
       onClick={handleRootClick}
       onMouseDown={handleEditableMouseDown}
     >
@@ -157,7 +165,8 @@ export function Tag({
         <Icon
           shapeName="arrow-drop-tri-caret"
           className={styles.menuCaret}
-          color={disabled ? "var(--color-icon-disabled)" : "var(--color-icon-accessible)"}
+          color={disabled ? "var(--color-icon-gray-disabled)" : "var(--color-icon-gray-neutral-accessible)"}
+          style={{ width: 10, height: 10 }}
         />
       ) : null}
       {(closable || editable) && (
@@ -171,14 +180,11 @@ export function Tag({
           aria-label={`Remove ${label}`}
           type="button"
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-            <path
-              d="M8 2L2 8M2 2L8 8"
-              stroke="currentColor"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Icon
+            shapeName="shape-x-thick"
+            color={disabled ? "var(--color-icon-gray-disabled)" : "var(--color-icon-gray-neutral-accessible)"}
+            style={{ width: 10, height: 10 }}
+          />
         </button>
       )}
     </span>

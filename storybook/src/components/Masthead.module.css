@@ -4,8 +4,8 @@
   justify-content: space-between;
   height: var(--scale-56);
   padding: 0 var(--padding-padding-8) 0 var(--padding-padding-16);
-  background: var(--color-background-masthead-brand-base);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-transparent-neutral);
+  background: var(--color-background-masthead-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-transparent-base);
   font-family: inherit;
   box-sizing: border-box;
   overflow: hidden;
@@ -81,8 +81,8 @@
   height: var(--scale-24);
   border: none;
   padding: 0;
-  background: var(--color-background-masthead-brand-base);
-  color: var(--color-icon-white);
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
   border-radius: var(--corner-radius-radius-4);
   opacity: 1;
   cursor: pointer;
@@ -90,11 +90,11 @@
 }
 
 .iconButton:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .iconButton:focus-visible {
-  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline: var(--border-width-border-default) dashed var(--color-border-gray-white);
   outline-offset: -1px;
 }
 
@@ -115,31 +115,31 @@
   padding-left: var(--padding-padding-16);
   border: none;
   border-radius: 0;
-  background: var(--color-background-masthead-brand-base);
-  color: var(--color-icon-white);
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
   box-sizing: border-box;
   cursor: pointer;
   transition: background-color 120ms ease, opacity 120ms ease;
 }
 
 .actionIconButton:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .actionIconButton:active:not(:disabled),
 .actionIconButton[aria-pressed="true"],
 .actionIconButton[aria-expanded="true"] {
-  background-color: var(--color-background-masthead-brand-stronger);
+  background-color: var(--color-background-masthead-stronger);
 }
 
 .actionIconButton[aria-expanded="true"]:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .actionIconButton:focus-visible {
-  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline: var(--border-width-border-default) dashed var(--color-border-gray-white);
   outline-offset: -1px;
-  background-color: var(--color-background-masthead-brand-base);
+  background-color: var(--color-background-masthead-base);
 }
 
 .actionIconGlyph {
@@ -148,6 +148,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.badgeWrapper {
+  position: absolute;
+  top: 12px;
+  left: 23px;
+  pointer-events: none;
 }
 
 .avatarAction {
@@ -159,31 +166,31 @@
   padding-bottom: 11px;
   padding-left: var(--padding-padding-8);
   border: none;
-  background: var(--color-background-masthead-brand-base);
-  color: var(--color-icon-white);
+  background: var(--color-background-masthead-base);
+  color: var(--color-icon-gray-white);
   box-sizing: border-box;
   cursor: pointer;
   transition: background-color 120ms ease;
 }
 
 .avatarAction:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .avatarAction:active:not(:disabled),
 .avatarAction[aria-pressed="true"],
 .avatarAction[aria-expanded="true"] {
-  background-color: var(--color-background-masthead-brand-stronger);
+  background-color: var(--color-background-masthead-stronger);
 }
 
 .avatarAction[aria-expanded="true"]:hover {
-  background-color: var(--color-background-masthead-brand-strong);
+  background-color: var(--color-background-masthead-strong);
 }
 
 .avatarAction:focus-visible {
-  outline: var(--border-width-border-default) dashed var(--color-border-white);
+  outline: var(--border-width-border-default) dashed var(--color-border-gray-white);
   outline-offset: -1px;
-  background-color: var(--color-background-masthead-brand-base);
+  background-color: var(--color-background-masthead-base);
 }
 
 .avatarChip {
@@ -194,8 +201,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: var(--border-width-border-1) solid var(--color-border-white);
-  color: var(--color-text-white);
+  border: var(--border-width-border-1) solid var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
   font-size: var(--font-size-body-2);
   font-weight: 400;
   font-variation-settings: "wdth" 100;

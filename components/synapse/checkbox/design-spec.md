@@ -88,11 +88,14 @@ Inherit IDS **Interactions**, error/assistive-text rules, and **Accessibility** 
 
 ### IDS inheritance resolution
 
-Codegen **MUST** resolve props, events, and variant axes from IDS **Composition & API (runtime)** in [`components/ids/checkbox/design-spec.md`](../ids/checkbox/design-spec.md) (`checked`, `defaultChecked`, `indeterminate`, `disabled`, `label`, `error`, `helperText`, `onChange`, etc.).
+Codegen **MUST** resolve the **group + projected item** composition API from IDS **Composition & API (runtime)** in [`components/ids/checkbox/design-spec.md`](../ids/checkbox/design-spec.md):
 
-### Synapse-only runtime flags
+- **Group** (`CheckboxGroup` / `groupRoot`): `orientation`, group-level `disabled`, optional shared `name` / `idPrefix`
+- **Item** (`ids-checkbox` / single checkbox row): `checked`, `defaultChecked`, `indeterminate`, `disabled`, `label`, `error`, `helperText`, `onCheckedChange`, etc.
 
-None. Programme typography is applied via `components/synapse-theme.css` (`--checkbox-label-font-weight`).
+Synapse adds **no** group- or item-level props beyond IDS. Programme typography is applied via `components/synapse-theme.css` (`--checkbox-label-font-weight`).
+
+**IDS-fork note:** When IDS baseline adopts composition (e.g. `ids-checkbox-group` → `ids-checkbox`), Synapse specs inherit that API shape; update this section to point at the IDS group/item tables — do not document a flat `options[]` API as canonical.
 
 ### Storybook defaults
 
@@ -115,7 +118,7 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 
 ### Deterministic structure
 
-Inherit IDS slot order: `root` → `input` → `controlBox` → optional `indicator` → `label` → optional `assistiveText`.
+Inherit IDS: optional `groupRoot` → repeated `checkboxItem` → `root` → `input` → `controlBox` → optional `indicator` → `label` → optional `assistiveText`.
 
 ### Variant matrix
 

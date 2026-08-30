@@ -1,0 +1,343 @@
+/**
+ * IDS Dual List Box styles — derived from components/ids/dual-list-box/design-spec.md
+ * Selectors: ids-dual-list-box, ids-dual-list-box-lists-parent, …
+ * Theme: import components/ids-theme.css at the application / story root.
+ */
+
+.ids-dual-list-box {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-24);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+}
+
+/* Anatomy: ListsParent — columns 1fr | transfer | 1fr; rows header | list */
+.ids-dual-list-box-lists-parent {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(384px, 1fr);
+  column-gap: var(--spacing-space-24);
+  row-gap: var(--spacing-space-8);
+}
+
+/*
+ * Anatomy: AvailablePane / SelectedPane wrap Header + ListGroup.
+ * `display: contents` lets those children participate in ListsParent grid
+ * without inventing extra grid tracks.
+ */
+.ids-dual-list-box-available-pane,
+.ids-dual-list-box-selected-pane {
+  display: contents;
+}
+
+.ids-dual-list-box-pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.ids-dual-list-box-pane-header--available {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.ids-dual-list-box-pane-header--selected {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.ids-dual-list-box-pane-title {
+  margin: 0;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--line-height-body-1, 24px);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
+}
+
+.ids-dual-list-box-metrics {
+  margin: 0;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--spacing-space-4);
+  min-width: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ids-dual-list-box-metrics-total,
+.ids-dual-list-box-metrics-selected,
+.ids-dual-list-box-metrics-divider {
+  font-size: var(--font-size-body-2);
+  line-height: var(--line-height-body-2, 20px);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-dual-list-box-metrics-total-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.ids-dual-list-box-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 100%;
+  min-width: 0;
+  min-height: 384px;
+  box-sizing: border-box;
+  padding: var(--padding-padding-24) var(--padding-padding-24) var(--padding-padding-32);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
+  overflow: hidden;
+}
+
+.ids-dual-list-box-list-group--available {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.ids-dual-list-box-list-group--selected {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.ids-dual-list-box-list-group--empty {
+  border-style: dashed;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.ids-dual-list-box-list-group--drag-over {
+  outline: var(--border-width-border-2, 2px) dashed var(--color-border-brand-base);
+  outline-offset: -2px;
+}
+
+.ids-dual-list-box-list-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter);
+}
+
+.ids-dual-list-box-list-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.ids-dual-list-box-list-scroll::-webkit-scrollbar-track {
+  background: var(--color-background-gray-lighter);
+}
+
+.ids-dual-list-box-list-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-background-gray-base);
+}
+
+.ids-dual-list-box-empty-placeholder {
+  margin: 0;
+  padding-top: var(--padding-padding-8);
+  text-align: center;
+  font-size: var(--font-size-body-2);
+  line-height: var(--line-height-body-2, 20px);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  width: 100%;
+}
+
+.ids-dual-list-box-list-item-wrap {
+  width: 100%;
+}
+
+.ids-dual-list-box-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-14) var(--padding-padding-16) var(--padding-padding-14)
+    var(--padding-padding-8);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: 2px;
+  background: var(--color-background-surface-component);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  position: relative;
+}
+
+.ids-dual-list-box-list-item:hover:not(.ids-dual-list-box-list-item--dragging):not(
+    .ids-dual-list-box-list-item--drag-with-selection
+  ):not(.ids-dual-list-box-list-item--drag-without-selection) {
+  background: var(--color-background-controls-lighter);
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-dual-list-box-list-item:focus-visible,
+.ids-dual-list-box-list-item--focused {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-dual-list-box-list-item-wrap:focus-within
+  .ids-dual-list-box-list-item:not(:focus-visible) {
+  outline: none;
+}
+
+.ids-dual-list-box-list-item--selected {
+  background: var(--color-background-controls-lighter);
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-dual-list-box-list-item--selected .ids-dual-list-box-item-name {
+  color: var(--color-text-brand-strong);
+  font-weight: 400;
+}
+
+.ids-dual-list-box-list-item--drag-with-selection,
+.ids-dual-list-box-list-item--drag-without-selection {
+  background: var(--color-background-controls-light);
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-dual-list-box-list-item--drag-with-selection .ids-dual-list-box-item-name,
+.ids-dual-list-box-list-item--drag-without-selection .ids-dual-list-box-item-name {
+  color: var(--color-text-brand-strong);
+  font-weight: 400;
+}
+
+.ids-dual-list-box-list-item--dragging {
+  opacity: 0.45;
+}
+
+.ids-dual-list-box-drag-handle {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-2) 0;
+  flex-shrink: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.ids-dual-list-box-drag-handle:active {
+  cursor: grabbing;
+}
+
+.ids-dual-list-box-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ids-dual-list-box-item-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-body-2);
+  line-height: var(--line-height-body-2, 20px);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+}
+
+.ids-dual-list-box-item-description {
+  display: block;
+  margin-top: var(--spacing-space-4);
+  font-size: var(--font-size-body-2);
+  line-height: var(--line-height-body-2, 20px);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ids-dual-list-box-selection-check {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+}
+
+.ids-dual-list-box-drop-preview {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.ids-dual-list-box-drop-preview-inner {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-radius: 2px;
+  background: var(--color-background-controls-light);
+}
+
+/* Anatomy: TransferButtonGroup — grid column 2, row 2 (list height only) */
+.ids-dual-list-box-transfer-group {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16);
+  align-self: center;
+  justify-self: center;
+  flex-shrink: 0;
+}
+
+.ids-dual-list-box-transfer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 40px;
+  padding: var(--padding-padding-12) var(--padding-padding-16);
+  border-radius: 2px;
+  border: var(--border-width-border-default, 1px) solid transparent;
+  box-sizing: border-box;
+}
+
+.ids-dual-list-box-transfer-btn--default {
+  cursor: pointer;
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+}
+
+.ids-dual-list-box-transfer-btn--default:disabled {
+  cursor: not-allowed;
+}
+
+.ids-dual-list-box-transfer-btn--disabled,
+.ids-dual-list-box-transfer-btn:disabled.ids-dual-list-box-transfer-btn--disabled {
+  cursor: not-allowed;
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-gray-disabled);
+}
+
+.ids-dual-list-box-transfer-btn:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}

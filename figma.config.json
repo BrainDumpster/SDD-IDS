@@ -1,0 +1,28 @@
+{
+  "codeConnect": {
+    "include": ["code-connect/**/*.figma.ts"],
+    "exclude": ["**/node_modules/**", "**/storybook/**"],
+    "parser": "react",
+    "label": "React",
+    "language": "jsx",
+    "importPaths": {
+      "lib/react/ids/accordion/*": "@ids/react/accordion",
+      "lib/react/ids/button/*": "@ids/react/button",
+      "lib/react/ids/*": "@ids/react"
+    },
+    "paths": {
+      "@ids/react/accordion": ["lib/react/ids/accordion"],
+      "@ids/react/button": ["lib/react/ids/button"],
+      "@ids/react": ["lib/react/ids"]
+    },
+    "documentUrlSubstitutions": {
+      "<FIGMA_IDS_LIBRARY>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-",
+      "<FIGMA_IDS_ACCORDION>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-?node-id=50749-40683",
+      "<FIGMA_IDS_ACCORDION_ITEM>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-?node-id=50746-40397",
+      "<FIGMA_IDS_ACCORDION_HEADER>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-?node-id=50746-40408",
+      "<FIGMA_IDS_ACCORDION_BODY>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-?node-id=50741-40251",
+      "<FIGMA_IDS_ACCORDION_CONTENT>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-?node-id=50741-40247",
+      "<FIGMA_IDS_BUTTON>": "https://www.figma.com/design/6I5uVnFWrfhpa5nZ49JGL5/IDS-Design-Library--teddygram-?node-id=50751-40685"
+    }
+  }
+}
