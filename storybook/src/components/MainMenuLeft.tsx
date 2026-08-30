@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   LeftNavSecondaryContextMenu,
   type LeftNavSecondaryContextMenuOption,
 } from "./LeftNavSecondaryContextMenu";
 import styles from "./MainMenuLeft.module.css";
 import { Icon } from "./Icon";
+import { IdsTooltip } from "./IdsTooltip";
 
 export type MainMenuLeftContextMenuOption = LeftNavSecondaryContextMenuOption;
 
@@ -265,6 +266,72 @@ function resolveInitialSelectedKey(
   return null;
 }
 
+interface ClampedLabelProps {
+  text: string;
+  tooltip: string;
+  wrapperClassName: string;
+  textClassName: string;
+}
+
+function ClampedLabel({
+  text,
+  tooltip,
+  wrapperClassName,
+  textClassName,
+}: ClampedLabelProps) {
+  const [element, setElement] = useState<HTMLSpanElement | null>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const [isWrapped, setIsWrapped] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!element) return;
+
+    const check = () => {
+      setIsTruncated(
+        element.scrollHeight > element.clientHeight + 1 ||
+          element.scrollWidth > element.clientWidth + 1,
+      );
+      setIsWrapped(element.clientHeight > 32);
+    };
+
+    check();
+
+    let observer: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(check);
+      observer.observe(element);
+    }
+
+    return () => observer?.disconnect();
+  }, [text, element]);
+
+  const label = (
+    <span ref={setElement} className={textClassName}>
+      {text}
+    </span>
+  );
+
+  return (
+    <span
+      className={wrapperClassName}
+      data-wrapped={isWrapped ? "true" : undefined}
+    >
+      {isTruncated ? (
+        <IdsTooltip
+          content={tooltip}
+          triggerDisplay="block"
+          side="right"
+          arrowAlign="start"
+        >
+          {label}
+        </IdsTooltip>
+      ) : (
+        label
+      )}
+    </span>
+  );
+}
+
 export function MainMenuLeft({
   logo,
   expanded = true,
@@ -312,6 +379,45 @@ export function MainMenuLeft({
     () => defaultSelectedSecondaryItemId?.childId ?? null,
   );
 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const getFocusableButtons = () => {
+    const container = contentRef.current;
+    if (!container) return [];
+    return Array.from(
+      container.querySelectorAll<HTMLButtonElement>(
+        'button:not([tabindex="-1"])',
+      ),
+    );
+  };
+
+  const moveFocus = (delta: number) => {
+    const buttons = getFocusableButtons();
+    const active = document.activeElement as HTMLButtonElement | null;
+    if (!active) return;
+    const index = buttons.indexOf(active);
+    if (index === -1) return;
+    const nextIndex = index + delta;
+    if (nextIndex >= 0 && nextIndex < buttons.length) {
+      buttons[nextIndex].focus();
+    }
+  };
+
+  const focusFirst = () => {
+    const buttons = getFocusableButtons();
+    buttons[0]?.focus();
+  };
+
+  const focusLast = () => {
+    const buttons = getFocusableButtons();
+    buttons[buttons.length - 1]?.focus();
+  };
+
+  const focusParent = (parentItemId: string) => {
+    contentRef.current
+      ?.querySelector<HTMLButtonElement>(`[data-item-id="${parentItemId}"]`)
+      ?.focus();
+  };
+
   return (
     <nav
       className={[
@@ -349,7 +455,7 @@ export function MainMenuLeft({
         </div>
       ) : null}
 
-      <div className={styles.content}>
+      <div className={styles.content} ref={contentRef}>
         {menuLead && (isExpanded || programme === "synapse") ? (
           <div
             className={[
@@ -415,39 +521,124 @@ export function MainMenuLeft({
           const secondaryContextMenuEnabled =
             programme === "synapse" && Boolean(item.childrenContextMenu);
 
+          const openPrimary = () => {
+            if (hasForcedState) return;
+
+            if (hasChildren && isExpanded) {
+              if (!showChildrenList) {
+                // Open the sub-menu.
+                setExpandedChildrenKey(itemId);
+              }
+              return;
+            }
+
+            setSelectedKey(itemId);
+            onNavigate?.(
+              buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
+                href: item.href,
+                routeRef: item.routeRef,
+              }),
+            );
+            onSelected?.(
+              buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
+                href: item.href,
+                routeRef: item.routeRef,
+              }),
+            );
+            setSelectedSecondaryParentKey(null);
+            setSelectedSecondaryKey(null);
+          };
+
+          const togglePrimary = () => {
+            if (hasForcedState) return;
+
+            // Parent rows (with children) act as sub-menu accordions when the
+            // rail is expanded. Expanding/collapsing only toggles the sub-menu —
+            // it must not navigate or change the active selection, so the user
+            // stays on the current page. Navigation comes from the secondary rows.
+            if (hasChildren && isExpanded) {
+              setExpandedChildrenKey((prev) => (prev === itemId ? null : itemId));
+              return;
+            }
+
+            setSelectedKey(itemId);
+            onNavigate?.(
+              buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
+                href: item.href,
+                routeRef: item.routeRef,
+              }),
+            );
+            onSelected?.(
+              buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
+                href: item.href,
+                routeRef: item.routeRef,
+              }),
+            );
+            setSelectedSecondaryParentKey(null);
+            setSelectedSecondaryKey(null);
+          };
+
+          const handlePrimaryKeyDown = (
+            event: React.KeyboardEvent<HTMLButtonElement>,
+          ) => {
+            if (hasForcedState) return;
+
+            switch (event.key) {
+              case "ArrowUp":
+                event.preventDefault();
+                moveFocus(-1);
+                break;
+              case "ArrowDown":
+                event.preventDefault();
+                moveFocus(1);
+                break;
+              case "Home":
+                event.preventDefault();
+                focusFirst();
+                break;
+              case "End":
+                event.preventDefault();
+                focusLast();
+                break;
+              case "ArrowRight":
+                if (hasChildren && isExpanded) {
+                  event.preventDefault();
+                  if (!showChildrenList) {
+                    setExpandedChildrenKey(itemId);
+                    setTimeout(() => moveFocus(1), 0);
+                  } else {
+                    moveFocus(1);
+                  }
+                }
+                break;
+              case "ArrowLeft":
+                if (showChildrenList) {
+                  event.preventDefault();
+                  setExpandedChildrenKey(null);
+                }
+                break;
+              case "Escape":
+                if (showChildrenList) {
+                  event.preventDefault();
+                  setExpandedChildrenKey(null);
+                }
+                break;
+              case "Enter":
+              case " ":
+                event.preventDefault();
+                openPrimary();
+                break;
+            }
+          };
+
           return (
             <div key={itemId} className={styles.itemBlock}>
               <button
                 type="button"
-                title={primaryTitle}
-                onClick={() => {
-                  if (hasForcedState) return;
-
-                  // Parent rows (with children) act as sub-menu accordions when the
-                  // rail is expanded. Expanding/collapsing only toggles the sub-menu —
-                  // it must not navigate or change the active selection, so the user
-                  // stays on the current page. Navigation comes from the secondary rows.
-                  if (hasChildren && isExpanded) {
-                    setExpandedChildrenKey((prev) => (prev === itemId ? null : itemId));
-                    return;
-                  }
-
-                  setSelectedKey(itemId);
-                  onNavigate?.(
-                    buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
-                      href: item.href,
-                      routeRef: item.routeRef,
-                    }),
-                  );
-                  onSelected?.(
-                    buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
-                      href: item.href,
-                      routeRef: item.routeRef,
-                    }),
-                  );
-                  setSelectedSecondaryParentKey(null);
-                  setSelectedSecondaryKey(null);
-                }}
+                data-item-id={itemId}
+                title={!isExpanded ? primaryTitle : undefined}
+                onClick={togglePrimary}
+                onKeyDown={handlePrimaryKeyDown}
                 className={[
                   styles.primaryRow,
                   !hasForcedState ? styles.interactive : "",
@@ -464,7 +655,14 @@ export function MainMenuLeft({
                 tabIndex={hasForcedState ? -1 : undefined}
               >
                 <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
-                {isExpanded ? <span className={styles.primaryLabel}>{primaryLabel}</span> : null}
+                {isExpanded ? (
+                  <ClampedLabel
+                    text={primaryLabel}
+                    tooltip={item.tooltip ?? primaryLabel}
+                    wrapperClassName={styles.primaryLabel}
+                    textClassName={styles.primaryLabelText}
+                  />
+                ) : null}
                 {showChevron ? (
                   <Icon
                     shapeName={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
@@ -505,6 +703,43 @@ export function MainMenuLeft({
                       );
                     };
 
+                    const handleSecondaryKeyDown = (
+                      event: React.KeyboardEvent<HTMLButtonElement>,
+                    ) => {
+                      switch (event.key) {
+                        case "ArrowUp":
+                          event.preventDefault();
+                          moveFocus(-1);
+                          break;
+                        case "ArrowDown":
+                          event.preventDefault();
+                          moveFocus(1);
+                          break;
+                        case "Home":
+                          event.preventDefault();
+                          focusFirst();
+                          break;
+                        case "End":
+                          event.preventDefault();
+                          focusLast();
+                          break;
+                        case "ArrowLeft":
+                          event.preventDefault();
+                          focusParent(itemId);
+                          break;
+                        case "Escape":
+                          event.preventDefault();
+                          setExpandedChildrenKey(null);
+                          setTimeout(() => focusParent(itemId), 0);
+                          break;
+                        case "Enter":
+                        case " ":
+                          event.preventDefault();
+                          activateSecondary();
+                          break;
+                      }
+                    };
+
                     if (secondaryContextMenuEnabled) {
                       const contextMenuDetail: MainMenuLeftSecondaryContextMenuDetail = {
                         parentItemId: itemId,
@@ -528,12 +763,19 @@ export function MainMenuLeft({
                         >
                           <button
                             type="button"
-                            title={child.tooltip ?? childLabel}
+                            data-item-id={childId}
+                            data-parent-id={itemId}
                             className={styles.secondaryRowLabel}
                             aria-current={isSecondarySelected ? "page" : undefined}
                             onClick={activateSecondary}
+                            onKeyDown={handleSecondaryKeyDown}
                           >
-                            {childLabel}
+                            <ClampedLabel
+                              text={childLabel}
+                              tooltip={child.tooltip ?? childLabel}
+                              wrapperClassName={styles.secondaryRowLabelInner}
+                              textClassName={styles.secondaryRowLabelText}
+                            />
                           </button>
                           {resolvedContextMenuOptions.length > 0 ? (
                             <LeftNavSecondaryContextMenu
@@ -573,7 +815,8 @@ export function MainMenuLeft({
                       <button
                         key={childId}
                         type="button"
-                        title={child.tooltip ?? childLabel}
+                        data-item-id={childId}
+                        data-parent-id={itemId}
                         className={[
                           styles.secondaryRow,
                           styles.secondaryInteractive,
@@ -583,8 +826,14 @@ export function MainMenuLeft({
                           .join(" ")}
                         aria-current={isSecondarySelected ? "page" : undefined}
                         onClick={activateSecondary}
+                        onKeyDown={handleSecondaryKeyDown}
                       >
-                        {childLabel}
+                        <ClampedLabel
+                          text={childLabel}
+                          tooltip={child.tooltip ?? childLabel}
+                          wrapperClassName={styles.secondaryLabel}
+                          textClassName={styles.secondaryLabelText}
+                        />
                       </button>
                     );
                   })}

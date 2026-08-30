@@ -10,9 +10,9 @@
 }
 
 .expanded {
-  width: 278px;
-  min-width: 278px;
-  max-width: 278px;
+  width: 100%;
+  min-width: 256px;
+  max-width: 356px;
 }
 
 .collapsed {
@@ -178,7 +178,7 @@
   min-height: 40px;
   padding: var(--padding-padding-8) var(--padding-padding-24);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-space-16);
   border-top: none;
   border-bottom: none;
@@ -196,16 +196,42 @@
   display: inline-block;
   background-color: currentColor;
   color: var(--color-icon-neutral-strong, #252525);
+  align-self: center;
+}
+
+/* When the primary label wraps to two lines, align the icon to the top
+   and add 4px vertical padding so the 16x16 icon is optically centered
+   on the first 24px text line. The 24px total height is forced with
+   !important to override the Icon component's inline 16px height. */
+.primaryRow:has(.primaryLabel[data-wrapped="true"]) .primaryIcon {
+  align-self: flex-start;
+  height: var(--font-line-height-line-height-24, 24px) !important;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  box-sizing: border-box;
 }
 
 .primaryLabel {
   flex: 1;
   min-width: 0;
+  display: block;
+  color: var(--color-text-neutral-strong);
+  cursor: pointer;
+}
+
+.primaryLabelText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
   font-size: var(--font-size-body-1);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-24);
-  color: var(--color-text-neutral-strong);
-  white-space: nowrap;
+  color: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
 .actionButton {
@@ -228,6 +254,19 @@
   display: inline-block;
   background-color: currentColor;
   color: var(--color-icon-brand-strong, #0062ab);
+  align-self: center;
+}
+
+/* When the primary label wraps to two lines, align the chevron to the top
+   and add 4px vertical padding so the chevron is optically centered
+   on the first 24px text line. The 24px total height is forced with
+   !important to override the Icon component's inline height. */
+.primaryRow:has(.primaryLabel[data-wrapped="true"]) .chevronIcon {
+  align-self: flex-start;
+  height: var(--font-line-height-line-height-24, 24px) !important;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  box-sizing: border-box;
 }
 
 .secondarySection {
@@ -239,7 +278,8 @@
   z-index: 1;
   box-sizing: border-box;
   width: 100%;
-  height: 32px;
+  min-height: 32px;
+  height: auto;
   border-top: none;
   border-bottom: none;
   border-left: var(--border-width-border-1) solid var(--color-border-accessible);
@@ -252,6 +292,31 @@
   color: var(--color-text-neutral);
   font-weight: 400;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.secondaryLabel {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  color: inherit;
+  cursor: pointer;
+}
+
+.secondaryLabelText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
 .secondaryRowSelected {
@@ -507,7 +572,8 @@
 .secondaryRowWrap {
   box-sizing: border-box;
   width: 100%;
-  height: 32px;
+  min-height: 32px;
+  height: auto;
   display: flex;
   align-items: center;
   gap: var(--spacing-space-8);
@@ -518,6 +584,8 @@
 .secondaryRowLabel {
   flex: 1;
   min-width: 0;
+  height: auto;
+  min-height: 0;
   border: none;
   background: transparent;
   text-align: left;
@@ -529,8 +597,31 @@
   font-weight: inherit;
   cursor: pointer;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  white-space: normal;
+}
+
+.secondaryRowLabelInner {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  color: inherit;
+  cursor: pointer;
+}
+
+.secondaryRowLabelText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 100%;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
 .secondaryContextButton {
