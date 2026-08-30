@@ -17,11 +17,12 @@
 - Standard height: Auto (based on content)
 - Header text line box height: `24px` (`Body 1` rhythm)
 - Header container vertical padding: `12px` top and `12px` bottom (no horizontal padding)
-- Item height: 40px
+- Item height: 40px minimum (1 line); 64px when clamped to 2 lines
 - Item width: hug content (`fit-content`)
+- Long text: wrap up to 2 lines, then `…` ellipsis; `IdsTooltip` is shown on hover only for labels that are truncated
 - Section-item padding: `8px` top/bottom and `24px` left/right
 - Item border radius: 0 (square); focus ring radius: `6px` outer / `4px` inner
-- Focus ring: `2px` brand border hugging the item, inset `-4px` top/bottom and `-6px` left/right (total item + ring height `48px`)
+- Focus ring: `1px` brand border hugging the item, inset `-3px` top/bottom and `-5px` left/right
 - Minimum width: 200px
 - Maximum width: 300px
 - Item spacing: 0 (adjacent)
@@ -60,6 +61,7 @@
 | Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#4d4d4d) |
 | Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-brand-strong)` (#055fa9) |
 | Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
+| Anchor Item (Active + Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
 | Progress Indicator | `var(--color-background-controls-brand-base)` (#0672cb) | transparent | transparent |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
@@ -73,12 +75,12 @@
 - Focus ring uses brand color for keyboard navigation
 - Active item shows persistent selection state
 - Progress indicator shows scroll position
-- Keyboard navigation: Arrow keys, Enter, Tab
+- Keyboard navigation: Tab to focus, ArrowUp/ArrowDown to move between items, Enter/Space to activate
 - Smooth scrolling to sections
 - Scroll spy updates active item based on scroll position
 ### Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Arrow keys, Enter, Tab
+- Focus ring: 1px brand color border
+- Keyboard navigation: Tab to focus, ArrowUp/ArrowDown to move between items, Enter/Space to activate
 - Screen reader support: Proper ARIA attributes for navigation
 - High contrast: Meets WCAG AA standards with provided colors
 - Semantic HTML: Use nav element with proper landmarks
@@ -134,6 +136,13 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
+## Implementation Notes
+- Last updated: 2026-08-30
+- `AnchorMenu.module.css`: `max-width: 300px` on root; labels wrap to 2 lines via `-webkit-line-clamp` and `line-clamp`; `IdsTooltip` only renders for labels where `scrollHeight > clientHeight`.
+- Focus ring uses `var(--border-width-border-1)` with `inset: -3px -5px`.
+- `AnchorMenu.tsx`: keeps `active` text `var(--color-text-brand-strong)` on hover (`active:hover`); supports `Tab` to focus, `ArrowUp`/`ArrowDown` to move focus, `Enter` to follow link, `Space` to trigger click.
+- `IdsAnchorMenu.stories.tsx`: `WithPageContent` uses real `<section>` content, sticky Anchor Menu, and body-level scrolling for `scrollIntoView` behavior.
+
 ## Source Mapping
 - Figma component: Anchor Menu (11067-54486)
 - Variable collection: UI Palettes, Typography tokens
