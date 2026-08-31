@@ -27,6 +27,7 @@ import React, {
   type ComponentProps,
   type ReactElement,
 } from "react";
+import { createPortal } from "react-dom";
 import { IdsIcon } from "../icon";
 import styles from "./IdsPagination.module.css";
 
@@ -78,6 +79,23 @@ const COLLAPSE_SLOTS = new Set<IdsPaginationCollapseSlot>([
 ]);
 
 type PerPageMenuPlacement = "below" | "above";
+type PaginationMenuPos = { top: number; left: number; width: number };
+
+function computePerPageMenuPos(
+  trigger: HTMLElement | null,
+  menu: HTMLElement | null,
+  placement: PerPageMenuPlacement,
+): PaginationMenuPos | null {
+  if (!trigger) return null;
+  const rect = trigger.getBoundingClientRect();
+  const width = rect.width;
+  const left = rect.left;
+  if (placement === "above") {
+    const menuHeight = menu?.getBoundingClientRect().height ?? 0;
+    return { top: rect.top + 1 - menuHeight, left, width };
+  }
+  return { top: rect.top + rect.height - 1, left, width };
+}
 
 function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
@@ -173,6 +191,8 @@ export function IdsPagination({
   const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
   const [menuPlacement, setMenuPlacement] =
     useState<PerPageMenuPlacement>("below");
+  const [perPageMenuPos, setPerPageMenuPos] =
+    useState<PaginationMenuPos | null>(null);
   const [collapseLevel, setCollapseLevel] = useState(0);
 
   useEffect(() => {
@@ -203,12 +223,14 @@ export function IdsPagination({
 
   const closePerPageMenu = useCallback(() => {
     setPerPageMenuOpen(false);
+    setPerPageMenuPos(null);
   }, []);
 
-  const updateMenuPlacement = useCallback(() => {
+  const syncPerPageOverlay = useCallback(() => {
     const trigger = triggerRef.current;
     if (!trigger) {
       setMenuPlacement("below");
+      setPerPageMenuPos(null);
       return;
     }
     const rect = trigger.getBoundingClientRect();
@@ -220,11 +242,14 @@ export function IdsPagination({
       menuRef.current?.offsetHeight ?? 0,
       safePageSizeOptions.length * 40,
     );
-    if (spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow) {
-      setMenuPlacement("above");
-      return;
-    }
-    setMenuPlacement("below");
+    const nextPlacement: PerPageMenuPlacement =
+      spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow
+        ? "above"
+        : "below";
+    setMenuPlacement(nextPlacement);
+    setPerPageMenuPos(
+      computePerPageMenuPos(trigger, menuRef.current, nextPlacement),
+    );
   }, [safePageSizeOptions.length]);
 
   const togglePerPageMenu = useCallback(() => {
@@ -233,9 +258,25 @@ export function IdsPagination({
   }, [disabled]);
 
   useLayoutEffect(() => {
-    if (!perPageMenuOpen) return;
-    updateMenuPlacement();
-  }, [perPageMenuOpen, updateMenuPlacement]);
+    if (!perPageMenuOpen) {
+      setPerPageMenuPos(null);
+      return;
+    }
+    syncPerPageOverlay();
+    const frame = requestAnimationFrame(() => {
+      syncPerPageOverlay();
+    });
+    const onReposition = () => {
+      syncPerPageOverlay();
+    };
+    window.addEventListener("resize", onReposition);
+    window.addEventListener("scroll", onReposition, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", onReposition);
+      window.removeEventListener("scroll", onReposition, true);
+    };
+  }, [perPageMenuOpen, syncPerPageOverlay]);
 
   useEffect(() => {
     if (!perPageMenuOpen) return;
@@ -315,181 +356,195 @@ export function IdsPagination({
         : styles.rootGray;
 
   return (
-    <nav
-      {...rest}
-      ref={rootRef}
-      aria-label={ariaLabel}
-      className={cx(styles.root, rootBackgroundClass, className)}
-      data-ids="ids-pagination"
-      data-background={background}
-      data-responsive-mode={responsiveMode}
-    >
-      {renderResultsGroup ? (
-        <div
-          className={styles.resultsGroup}
-          data-ids="ids-pagination-results"
-        >
-          <span className={styles.label}>Show:</span>
-          <div className={styles.dropdownWrap}>
-            <button
-              ref={triggerRef}
-              type="button"
-              className={styles.dropdownTrigger}
-              disabled={disabled}
-              aria-haspopup="listbox"
-              aria-expanded={perPageMenuOpen}
-              aria-controls={perPageMenuOpen ? menuId : undefined}
-              aria-label="Items per page"
-              onClick={togglePerPageMenu}
-            >
-              <span>{safePageSize}</span>
-              <IdsIcon
-                shape="arrow-drop-tri-caret"
-                className={styles.caretIcon}
-                size={10}
-                color="currentColor"
-                style={{ width: 10, height: 10 }}
-              />
-            </button>
-            {perPageMenuOpen ? (
-              <ul
-                ref={menuRef}
-                id={menuId}
-                className={cx(
-                  styles.dropdownMenu,
-                  menuPlacement === "above"
-                    ? styles.dropdownMenuAbove
-                    : styles.dropdownMenuBelow,
-                )}
-                role="listbox"
-                aria-label="Items per page options"
-                data-placement={menuPlacement}
-              >
-                {safePageSizeOptions.map((option) => {
-                  const selected = option === safePageSize;
-                  return (
-                    <li key={option} className={styles.dropdownOptionWrap}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selected}
-                        className={cx(
-                          styles.dropdownOption,
-                          selected && styles.dropdownOptionSelected,
-                        )}
-                        onClick={() => {
-                          onPageSizeChange?.(option);
-                          closePerPageMenu();
-                        }}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : null}
-          </div>
-          <span className={styles.label}>per page</span>
-        </div>
-      ) : null}
-
-      <div className={styles.pageNavGroup} data-ids="ids-pagination-nav">
-        {isSinglePage ? (
-          <span className={styles.countText}>{countText}</span>
-        ) : (
-          <>
-            <button
-              type="button"
-              className={cx(
-                styles.iconButton,
-                firstLastCollapsed && styles.iconButtonCollapsed,
-              )}
-              onClick={() => goToPage(1)}
-              disabled={disabled || atFirstPage}
-              aria-label="First page"
-            >
-              <IdsIcon
-                shape="double-chev-left"
-                size={16}
-                color="currentColor"
-                style={{ width: 16, height: 16 }}
-              />
-            </button>
-            <button
-              type="button"
-              className={styles.iconButton}
-              onClick={() => goToPage(safeCurrentPage - 1)}
-              disabled={disabled || atFirstPage}
-              aria-label="Previous page"
-            >
-              <IdsIcon
-                shape="chev-left"
-                size={16}
-                color="currentColor"
-                style={{ width: 16, height: 16 }}
-              />
-            </button>
-            <div
-              className={cx(
-                styles.pageInputWrap,
-                pageInputCollapsed && styles.pageInputWrapCollapsed,
-              )}
-            >
-              <input
-                className={styles.pageInput}
-                value={pageInputValue}
+    <>
+      <nav
+        {...rest}
+        ref={rootRef}
+        aria-label={ariaLabel}
+        className={cx(styles.root, rootBackgroundClass, className)}
+        data-ids="ids-pagination"
+        data-background={background}
+        data-responsive-mode={responsiveMode}
+      >
+        {renderResultsGroup ? (
+          <div
+            className={styles.resultsGroup}
+            data-ids="ids-pagination-results"
+          >
+            <span className={styles.label}>Show:</span>
+            <div className={styles.dropdownWrap}>
+              <button
+                ref={triggerRef}
+                type="button"
+                className={styles.dropdownTrigger}
                 disabled={disabled}
-                inputMode="numeric"
-                aria-label="Current page"
-                onChange={(event) =>
-                  setPageInputValue(event.target.value.replace(/[^\d]/g, ""))
-                }
-                onBlur={commitPageInput}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    commitPageInput();
-                    event.currentTarget.blur();
-                  }
-                }}
-              />
+                aria-haspopup="listbox"
+                aria-expanded={perPageMenuOpen}
+                aria-controls={perPageMenuOpen ? menuId : undefined}
+                aria-label="Items per page"
+                onClick={togglePerPageMenu}
+              >
+                <span>{safePageSize}</span>
+                <IdsIcon
+                  shape="arrow-drop-tri-caret"
+                  className={styles.caretIcon}
+                  size={10}
+                  color="currentColor"
+                  style={{ width: 10, height: 10 }}
+                />
+              </button>
             </div>
+            <span className={styles.label}>per page</span>
+          </div>
+        ) : null}
+
+        <div className={styles.pageNavGroup} data-ids="ids-pagination-nav">
+          {isSinglePage ? (
             <span className={styles.countText}>{countText}</span>
-            <button
-              type="button"
-              className={styles.iconButton}
-              onClick={() => goToPage(safeCurrentPage + 1)}
-              disabled={disabled || atLastPage}
-              aria-label="Next page"
-            >
-              <IdsIcon
-                shape="chev-right"
-                size={16}
-                color="currentColor"
-                style={{ width: 16, height: 16 }}
-              />
-            </button>
-            <button
-              type="button"
+          ) : (
+            <>
+              <button
+                type="button"
+                className={cx(
+                  styles.iconButton,
+                  firstLastCollapsed && styles.iconButtonCollapsed,
+                )}
+                onClick={() => goToPage(1)}
+                disabled={disabled || atFirstPage}
+                aria-label="First page"
+              >
+                <IdsIcon
+                  shape="double-chev-left"
+                  size={16}
+                  color="currentColor"
+                  style={{ width: 16, height: 16 }}
+                />
+              </button>
+              <button
+                type="button"
+                className={styles.iconButton}
+                onClick={() => goToPage(safeCurrentPage - 1)}
+                disabled={disabled || atFirstPage}
+                aria-label="Previous page"
+              >
+                <IdsIcon
+                  shape="chev-left"
+                  size={16}
+                  color="currentColor"
+                  style={{ width: 16, height: 16 }}
+                />
+              </button>
+              <div
+                className={cx(
+                  styles.pageInputWrap,
+                  pageInputCollapsed && styles.pageInputWrapCollapsed,
+                )}
+              >
+                <input
+                  className={styles.pageInput}
+                  value={pageInputValue}
+                  disabled={disabled}
+                  inputMode="numeric"
+                  aria-label="Current page"
+                  onChange={(event) =>
+                    setPageInputValue(event.target.value.replace(/[^\d]/g, ""))
+                  }
+                  onBlur={commitPageInput}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      commitPageInput();
+                      event.currentTarget.blur();
+                    }
+                  }}
+                />
+              </div>
+              <span className={styles.countText}>{countText}</span>
+              <button
+                type="button"
+                className={styles.iconButton}
+                onClick={() => goToPage(safeCurrentPage + 1)}
+                disabled={disabled || atLastPage}
+                aria-label="Next page"
+              >
+                <IdsIcon
+                  shape="chev-right"
+                  size={16}
+                  color="currentColor"
+                  style={{ width: 16, height: 16 }}
+                />
+              </button>
+              <button
+                type="button"
+                className={cx(
+                  styles.iconButton,
+                  firstLastCollapsed && styles.iconButtonCollapsed,
+                )}
+                onClick={() => goToPage(safeTotalPages)}
+                disabled={disabled || atLastPage}
+                aria-label="Last page"
+              >
+                <IdsIcon
+                  shape="double-chev-right"
+                  size={16}
+                  color="currentColor"
+                  style={{ width: 16, height: 16 }}
+                />
+              </button>
+            </>
+          )}
+        </div>
+      </nav>
+      {perPageMenuOpen && typeof document !== "undefined"
+        ? createPortal(
+            <ul
+              ref={menuRef}
+              id={menuId}
               className={cx(
-                styles.iconButton,
-                firstLastCollapsed && styles.iconButtonCollapsed,
+                styles.dropdownMenu,
+                styles.dropdownMenuPortaled,
+                menuPlacement === "above"
+                  ? styles.dropdownMenuAbove
+                  : styles.dropdownMenuBelow,
               )}
-              onClick={() => goToPage(safeTotalPages)}
-              disabled={disabled || atLastPage}
-              aria-label="Last page"
+              role="listbox"
+              aria-label="Items per page options"
+              data-ids-pagination-per-page-menu
+              data-placement={menuPlacement}
+              style={{
+                position: "fixed",
+                top: perPageMenuPos?.top ?? 0,
+                left: perPageMenuPos?.left ?? 0,
+                width: perPageMenuPos?.width ?? 90,
+              }}
+              onClick={(event) => event.stopPropagation()}
             >
-              <IdsIcon
-                shape="double-chev-right"
-                size={16}
-                color="currentColor"
-                style={{ width: 16, height: 16 }}
-              />
-            </button>
-          </>
-        )}
-      </div>
-    </nav>
+              {safePageSizeOptions.map((option) => {
+                const selected = option === safePageSize;
+                return (
+                  <li key={option} className={styles.dropdownOptionWrap}>
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={selected}
+                      className={cx(
+                        styles.dropdownOption,
+                        selected && styles.dropdownOptionSelected,
+                      )}
+                      onClick={() => {
+                        onPageSizeChange?.(option);
+                        closePerPageMenu();
+                      }}
+                    >
+                      {option}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>,
+            document.body,
+          )
+        : null}
+    </>
   );
 }
 
