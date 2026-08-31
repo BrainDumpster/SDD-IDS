@@ -1,5 +1,5 @@
-import { useState } from "react";
 import type { ComponentProps } from "react";
+import { DropdownMenu } from "./DropdownMenu";
 import styles from "./IdsBreadcrumb.module.css";
 
 interface BreadcrumbItem {
@@ -16,7 +16,7 @@ interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
   twoLines?: boolean;
   /** Whether to truncate with "..." when items exceed maxVisibleItems */
   truncate?: boolean;
-  /** Maximum number of items to show before truncating (default: 4) */
+  /** Maximum number of items to show before truncating (default: 3) */
   maxVisibleItems?: number;
   /** Whether to show dropdown menu on hover of "..." */
   showDropdown?: boolean;
@@ -27,13 +27,11 @@ export function IdsBreadcrumb({
   currentPage,
   twoLines = false,
   truncate = false,
-  maxVisibleItems = 4,
+  maxVisibleItems = 3,
   showDropdown = false,
   className,
   ...rest
 }: IdsBreadcrumbProps) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const shouldTruncate = truncate && items.length > maxVisibleItems;
   const visibleItems = shouldTruncate
     ? [items[0], items[items.length - 1]]
@@ -61,34 +59,32 @@ export function IdsBreadcrumb({
                     /
                   </span>
                   {shouldTruncate && index === 0 && (
-                    <span
-                      className={[styles.breadcrumbLink, styles.ellipsis].join(" ")}
-                      onMouseEnter={() => showDropdown && setDropdownOpen(true)}
-                      onMouseLeave={() => setDropdownOpen(false)}
-                      aria-haspopup={showDropdown ? "true" : undefined}
-                      aria-expanded={showDropdown ? dropdownOpen : undefined}
-                    >
-                      ...
-                      {showDropdown && dropdownOpen && (
-                        <div
-                          className={styles.dropdownMenu}
-                          onMouseEnter={() => setDropdownOpen(true)}
-                          onMouseLeave={() => setDropdownOpen(false)}
-                        >
-                          <div className={styles.dropdownOptions}>
-                            {hiddenItems.map((hiddenItem, hiddenIndex) => (
-                              <a
-                                key={hiddenIndex}
-                                href={hiddenItem.href ?? "#"}
-                                className={styles.dropdownOption}
-                              >
-                                {hiddenItem.label}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </span>
+                    showDropdown ? (
+                      <DropdownMenu
+                        trigger={
+                          <span
+                            className={[styles.breadcrumbLink, styles.ellipsis].join(" ")}
+                            aria-label="Collapsed breadcrumbs"
+                          >
+                            ...
+                          </span>
+                        }
+                        items={hiddenItems.map((hiddenItem) => ({
+                          label: hiddenItem.label,
+                          onClick: () => {
+                            window.location.href = hiddenItem.href ?? "#";
+                          },
+                        }))}
+                        selectionMode="none"
+                        menuWidth="content"
+                      />
+                    ) : (
+                      <span
+                        className={[styles.breadcrumbLink, styles.ellipsis].join(" ")}
+                      >
+                        ...
+                      </span>
+                    )
                   )}
                   {shouldTruncate && index === 0 && (
                     <span className={styles.separator} aria-hidden="true">
