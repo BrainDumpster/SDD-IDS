@@ -205,8 +205,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -237,7 +237,7 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding-right: var(--padding-padding-8);
+  padding: 0 var(--padding-padding-8);
 }
 
 .showSelectedToggle {
@@ -246,7 +246,7 @@
   align-items: center;
   position: relative;
   gap: var(--spacing-space-8);
-  padding: var(--padding-padding-2) var(--padding-padding-16);
+  padding: var(--padding-padding-2) var(--padding-padding-8);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -322,6 +322,8 @@
   box-sizing: border-box;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* App Launcher parity: the options list sits 1px inside the menu border. */
+  padding-inline: 1px;
   /* Hide the native scrollbar — the overlay scrollbar below draws on top
      without taking layout space, so option rows keep their full width. */
   scrollbar-width: none;
@@ -362,9 +364,22 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  background: var(--color-background-surface-component);
+  padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+}
+
+/* Wrapper around the Select All / Clear All row, single Clear All, and Show
+   Selected panel. Default is layout-transparent (`display: contents`) so the
+   rows flow exactly as before; `showSelectedFirst` flips their visual order via
+   flex column-reverse (the Show Selected panel renders above the controls). */
+.menuControls {
+  display: contents;
+}
+
+.menuControlsReversed {
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .selectAllButton {
@@ -603,7 +618,7 @@
   display: inline-flex;
   align-items: center;
   position: relative;
-  padding: var(--padding-padding-2) var(--padding-padding-16);
+  padding: var(--padding-padding-2) var(--padding-padding-8);
   border-radius: var(--corner-radius-radius-2);
 }
 
@@ -633,12 +648,18 @@
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: var(--padding-padding-8) 0;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-8);
+  border-bottom: var(--border-width-border-default) solid var(--color-border-accessible);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
+}
+
+/* Right-aligned single-select Clear All (clearAllAlign="right"). */
+.clearAllAction[data-align="right"] {
+  justify-content: flex-end;
+  padding-right: var(--padding-padding-16);
 }
 
 /* 16px = the control size (checkbox/radio), so it aligns left with the Select All
