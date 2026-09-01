@@ -434,6 +434,44 @@
   },
   {
     "category": "Alerts and Notifications",
+    "component": "Toast (test)",
+    "group": "DAP",
+    "designSpecPath": "components/DAP/toast-test/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=10823-74993&m=dev",
+    "nodeId": "10823:74993",
+    "fileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "dapDesignLibraryFigmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=10823-74993&m=dev",
+    "dapDesignLibraryFileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "dapDesignLibraryNodeId": "10823:74993",
+    "contentNodeId": "39484:7445",
+    "iconWrapperNodeId": "43339:4093",
+    "iconInstanceId": "44506:257677",
+    "actionContainerNodeId": "10823:75000",
+    "linkInstanceId": "13607:248619",
+    "closeIconNodeId": "10823:75002",
+    "specPattern": "standalone"
+  },
+  {
+    "category": "Alerts and Notifications",
+    "component": "Toast (test2)",
+    "group": "DAP",
+    "designSpecPath": "components/DAP/toast-test2/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=10823-74993&m=dev",
+    "nodeId": "10823:74993",
+    "fileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "dapDesignLibraryFigmaUrl": "https://www.figma.com/design/HIbl2AgqTSdR9STZueMvTH/DAP-Design-Library?node-id=10823-74993&m=dev",
+    "dapDesignLibraryFileKey": "HIbl2AgqTSdR9STZueMvTH",
+    "dapDesignLibraryNodeId": "10823:74993",
+    "contentNodeId": "39484:7445",
+    "iconWrapperNodeId": "43339:4093",
+    "iconInstanceId": "44506:257677",
+    "actionContainerNodeId": "10823:75000",
+    "linkInstanceId": "13607:248619",
+    "closeIconNodeId": "10823:75002",
+    "specPattern": "standalone"
+  },
+  {
+    "category": "Alerts and Notifications",
     "component": "Tooltip",
     "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42636-14688&m=dev",
     "nodeId": "42636-14688",
@@ -449,245 +487,290 @@
   },
   {
     "category": "Loading and Progress",
-    "component": "Skeleton Loader",
+    "component": "Spinner",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-58972&m=dev",
+    "nodeId": "11099-58972",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainShowcaseNodeId": "11099:58972"
+  },
+  {
+    "category": "Loading and Progress",
+    "component": "Skeleton",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54673&m=dev",
+    "nodeId": "11067-54673"
+  },
+  {
+    "category": "Data Display",
+    "component": "Card",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42139-67348&m=dev",
+    "nodeId": "42139-67348",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainShowcaseNodeId": "42139:67348"
+  },
+  {
+    "category": "Data Display",
+    "component": "Carousel",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54649&m=dev",
+    "nodeId": "11067-54649"
+  },
+  {
+    "category": "Data Display",
+    "component": "Timeline",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54653&m=dev",
+    "nodeId": "11067-54653"
+  },
+  {
+    "category": "Data Display",
+    "component": "Stepper",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54657&m=dev",
+    "nodeId": "11067-54657"
+  },
+  {
+    "category": "Data Display",
+    "component": "List",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54661&m=dev",
+    "nodeId": "11067-54661"
+  },
+  {
+    "category": "Data Display",
+    "component": "Tile",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev",
+    "nodeId": "11067-54665"
+  },
+  {
+    "category": "Data Display",
+    "component": "Avatar",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42140-67348&m=dev",
+    "nodeId": "42140-67348",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainShowcaseNodeId": "42140:67348"
+  },
+  {
+    "category": "Data Display",
+    "component": "Chip",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42012-26686&m=dev",
+    "nodeId": "42012-26686",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainShowcaseNodeId": "42012:26686"
+  },
+  {
+    "category": "Data Display",
+    "component": "Divider",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42141-67348&m=dev",
+    "nodeId": "42141-67348",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainShowcaseNodeId": "42141:67348"
+  },
+  {
+    "category": "Data Display",
+    "component": "Expansion Panel",
     "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54669&m=dev",
     "nodeId": "11067-54669"
   },
   {
-    "category": "Loading and Progress",
-    "component": "Spinner",
+    "category": "Data Display",
+    "component": "Rating",
     "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54673&m=dev",
     "nodeId": "11067-54673"
-  },  
+  },
   {
-    "category": "Patterns and Templates",
-    "component": "App Shell",
-    "designSpecPath": "components/ids/app-shell/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-46307&m=dev",
-    "nodeId": "43478-46307",
+    "category": "Data Display",
+    "component": "Tree View",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=18571-102012&m=dev",
+    "nodeId": "18571-102012",
     "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "componentSetNodeId": "43478-90797",
-    "breakpointNodeIds": {
-      "1920": "43478-46307",
-      "1600": "43478-90798",
-      "1366": "43478-90925",
-      "1024": "43478-91081"
-    },
-    "contentTemplatesNodeId": "43478-87315"
+    "mainShowcaseNodeId": "18571:102012"
   },
   {
-    "category": "Patterns and Templates",
-    "component": "App Shell",
-    "designSpecPath": "components/ids/app-shell/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-46307&m=dev",
-    "nodeId": "43478-46307",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "componentSetNodeId": "43478-90797",
-    "breakpointNodeIds": {
-      "1920": "43478-46307",
-      "1600": "43478-90798",
-      "1366": "43478-90925",
-      "1024": "43478-91081"
-    },
-    "contentTemplatesNodeId": "43478-87315"
+    "category": "Data Display",
+    "component": "Table",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=16008-130403&m=dev",
+    "nodeId": "16008-130403"
   },
   {
-    "category": "Patterns and Templates",
-    "component": "About",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=30680-10863&m=dev",
-    "nodeId": "30680-10863"
+    "category": "Data Display",
+    "component": "Data Grid",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=37721-112481&m=dev",
+    "nodeId": "37721-112481"
   },
   {
-    "category": "Patterns",
-    "component": "Dashboard",
-    "designSpecPath": "components/ids/dashboard/design-spec.md",
-    "specPattern": "ids-native",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44523-285905&m=dev",
-    "nodeId": "44523-285905",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "mainComponentSetNodeId": "44523:285905",
-    "elementNodes": {
-      "pageTitle": "44523-285919",
-      "cardDefault": "14093-123116",
-      "cardTitleContent": "14093-123118",
-      "contentTypes": "14093-123636"
-    },
-    "notes": "Wrapper around IDS Cards; title Header 5; card Title|Secondary Body 1"
+    "category": "Data Display",
+    "component": "Pivot Table",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54677&m=dev",
+    "nodeId": "11067-54677"
   },
   {
-    "category": "Patterns",
-    "component": "Card",
-    "designSpecPath": "components/ids/card/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8381-14051&m=dev",
-    "nodeId": "8381-14051",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "specPattern": "ids-native",
-    "mainComponentSetNodeId": "8381:14051",
-    "elementNodes": {
-      "overflowMenu": "15718-197531",
-      "content": "15718-220135",
-      "contentText": "15718-219736",
-      "contentKeyValue": "15718-220110"
-    },
-    "variantNodes": {
-      "buttonsYesOverflowYes": "8381-14245",
-      "buttonsYesOverflowNo": "8381-14305",
-      "buttonsNoOverflowYes": "15718-197984",
-      "buttonsNoOverflowNo": "15718-197994"
-    }
+    "category": "Data Display",
+    "component": "Gantt Chart",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54681&m=dev",
+    "nodeId": "11067-54681"
   },
   {
-    "category": "Patterns and Templates",
-    "component": "Login",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=38428-117113&m=dev",
-    "nodeId": "38428-117113"
+    "category": "Data Display",
+    "component": "Calendar",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54685&m=dev",
+    "nodeId": "11067-54685"
   },
   {
-    "category": "Patterns and Templates",
-    "component": "Splash Screen",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=9054-24755&m=dev",
-    "nodeId": "9054-24755"
+    "category": "Data Display",
+    "component": "Kanban",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54689&m=dev",
+    "nodeId": "11067-54689"
   },
   {
-    "category": "Patterns and Templates",
-    "component": "Status Bar",
-    "designSpecPath": "components/ids/status-bar/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=15412-10699&m=dev",
-    "nodeId": "15412-10699",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "elementsSmallNodeId": "15412-9261",
-    "elementsInventoryNodeId": "15405-9692",
-    "overflowArrowsNodeId": "18544-13477",
-    "overflowContainerNodeId": "18544-13502",
-    "variationsNodeId": "43206-189639"
+    "category": "Data Display",
+    "component": "Heatmap",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54693&m=dev",
+    "nodeId": "11067-54693"
   },
   {
-    "category": "Patterns",
-    "component": "Whats New",
-    "designSpecPath": "components/ids/whats-new/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=27437-44073&m=dev",
-    "nodeId": "27437-44073",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "mainComponentSetNodeId": "27437-44073",
-    "newestNodeId": "27437-44094",
-    "bookmarkedNodeId": "27437-44074",
-    "previewMultipleNodeId": "27437-44134",
-    "previewSingleNodeId": "27437-44151",
-    "elementContentMainNodeId": "27437-44190",
-    "elementContentPreviewNodeId": "27437-44198",
-    "elementThumbnailsStatesNodeId": "27437-44168",
-    "elementSectionHeaderNodeId": "27437-44182",
-    "elementFilterNodeId": "27437-44220",
-    "elementNodeIds": [
-      "27437-44190",
-      "27437-44198",
-      "27437-44174",
-      "27437-44169",
-      "27437-44182",
-      "27437-44220"
-    ],
-    "stateNodeIds": [
-      "27437-44168"
-    ]
+    "category": "Data Display",
+    "component": "Treemap",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54697&m=dev",
+    "nodeId": "11067-54697"
   },
   {
-    "category": "Form Elements",
-    "component": "Date Picker",
-    "designSpecPath": "components/ids/date-picker/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132058&m=dev",
-    "nodeId": "42159-132058",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "elementNodes": {
-      "date": "42159-132767",
-      "range": "42159-132639",
-      "calendarDefault": "42159-132612",
-      "calendarSelected": "42159-132585",
-      "calendarRange": "42159-132558",
-      "calendarMonthDropdown": "42159-132514",
-      "calendarYearDropdown": "42159-132470"
-    }
+    "category": "Data Display",
+    "component": "Sankey Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54701&m=dev",
+    "nodeId": "11067-54701"
   },
   {
-    "category": "Form Elements",
-    "component": "Time Picker",
-    "designSpecPath": "components/ids/time-picker/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132203&m=dev",
-    "nodeId": "42159-132203",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "mainComponentNodeId": "42159:132203",
-    "elementNodes": {
-      "timeDropdown": "42159-132108"
-    },
-    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132203&m=dev",
-    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "idsDesignLibraryNodeId": "42159-132203"
+    "category": "Data Display",
+    "component": "Chord Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54705&m=dev",
+    "nodeId": "11067-54705"
   },
   {
-    "category": "Patterns",
-    "component": "Get Started",
-    "specPattern": "ids-native",
-    "designSpecPath": "components/ids/get-started/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233185&m=dev",
-    "nodeId": "12189-233185",
-    "mainComponentSetNodeId": "12189-233235",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=12189-233235&m=dev",
-    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "idsDesignLibraryNodeId": "12189-233235",
-    "elementCardStateNodeId": "12023-228883",
-    "elementNodes": {
-      "cardElementSet": "12023-228883",
-      "cardNotCompleted": "12023-228880",
-      "cardCompleted": "12023-228902",
-      "cardRequired": "12023-228939"
-    },
-    "variantNodes": {
-      "singlePage": "12189-233185",
-      "overflowPage1": "12189-233198",
-      "overflowPage2": "12189-233211",
-      "sequentialSinglePage": "12189-233218",
-      "sequentialOverflowPage1": "12189-233223",
-      "sequentialOverflowPage2": "12189-233228"
-    },
-    "mastheadInstanceNodeId": "12189-231406"
+    "category": "Data Display",
+    "component": "Network Graph",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54709&m=dev",
+    "nodeId": "11067-54709"
   },
   {
-    "category": "Patterns and Templates",
-    "component": "Dashboard Widget",
-    "designSpecPath": "components/ids/dashboard-widget/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=14093-123116&m=dev",
-    "nodeId": "14093-123116",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "idsDesignLibraryFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=14093-123116&m=dev",
-    "idsDesignLibraryFileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "idsDesignLibraryNodeId": "14093-123116",
-    "elementNodes": {
-      "dashboardElementContent": "14093-123636"
-    },
-    "variantNodes": {
-      "swapContent": "14093-123640",
-      "jobs": "14093-123624",
-      "capacity": "14093-123637",
-      "protection": "14093-123638",
-      "alerts": "14093-123639",
-      "compliance": "14093-124293"
-    }
-  },
-   {
-    "category": "Patterns and Templates",
-    "component": "Page Error",
-    "designSpecPath": "components/ids/page-error/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=26744-12102&m=dev",
-    "nodeId": "26744-12102",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4"
+    "category": "Data Display",
+    "component": "Force Directed Graph",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54713&m=dev",
+    "nodeId": "11067-54713"
   },
   {
-    "category": "Navigation",
-    "component": "Scroll Bar",
-    "designSpecPath": "components/ids/scroll-bar/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-57442&m=dev",
-    "nodeId": "11099-57442",
-    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "mainComponentNodeId": "11099-57442"
+    "category": "Data Display",
+    "component": "Geographic Map",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54717&m=dev",
+    "nodeId": "11067-54717"
+  },
+  {
+    "category": "Data Display",
+    "component": "Flowchart",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54721&m=dev",
+    "nodeId": "11067-54721"
+  },
+  {
+    "category": "Data Display",
+    "component": "Organization Chart",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54725&m=dev",
+    "nodeId": "11067-54725"
+  },
+  {
+    "category": "Data Display",
+    "component": "Mind Map",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54729&m=dev",
+    "nodeId": "11067-54729"
+  },
+  {
+    "category": "Data Display",
+    "component": "Timeline (Vertical)",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54733&m=dev",
+    "nodeId": "11067-54733"
+  },
+  {
+    "category": "Data Display",
+    "component": "Process Flow",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54737&m=dev",
+    "nodeId": "11067-54737"
+  },
+  {
+    "category": "Data Display",
+    "component": "Workflow Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54741&m=dev",
+    "nodeId": "11067-54741"
+  },
+  {
+    "category": "Data Display",
+    "component": "State Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54745&m=dev",
+    "nodeId": "11067-54745"
+  },
+  {
+    "category": "Data Display",
+    "component": "Sequence Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54749&m=dev",
+    "nodeId": "11067-54749"
+  },
+  {
+    "category": "Data Display",
+    "component": "Entity Relationship Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54753&m=dev",
+    "nodeId": "11067-54753"
+  },
+  {
+    "category": "Data Display",
+    "component": "Class Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54757&m=dev",
+    "nodeId": "11067-54757"
+  },
+  {
+    "category": "Data Display",
+    "component": "Component Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54761&m=dev",
+    "nodeId": "11067-54761"
+  },
+  {
+    "category": "Data Display",
+    "component": "Deployment Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54765&m=dev",
+    "nodeId": "11067-54765"
+  },
+  {
+    "category": "Data Display",
+    "component": "Package Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54769&m=dev",
+    "nodeId": "11067-54769"
+  },
+  {
+    "category": "Data Display",
+    "component": "Object Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54773&m=dev",
+    "nodeId": "11067-54773"
+  },
+  {
+    "category": "Data Display",
+    "component": "Activity Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54777&m=dev",
+    "nodeId": "11067-54777"
+  },
+  {
+    "category": "Data Display",
+    "component": "Use Case Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54781&m=dev",
+    "nodeId": "11067-54781"
+  },
+  {
+    "category": "Data Display",
+    "component": "Communication Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54785&m=dev",
+    "nodeId": "11067-54785"
+  },
+  {
+    "category": "Data Display",
+    "component": "Timing Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54789&m=dev",
+    "nodeId": "11067-54789"
+  },
+  {
+    "category": "Data Display",
+    "component": "Interaction Overview Diagram",
+    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54793&m=dev",
+    "nodeId": "11067-54793"
   }
 ]
