@@ -50,7 +50,7 @@
 .ids-tag--clickable {
   cursor: pointer;
   border-color: var(--color-border-brand-base);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* --- Tone: alerting (Figma Alerting tags) --- */
@@ -110,10 +110,6 @@
   background: var(--color-background-surface-component);
   border-color: var(--color-border-alerting-critical-base);
   color: var(--color-text-gray-neutral);
-}
-
-.ids-tag--error:not(.ids-tag--clickable) .ids-tag-close {
-  color: var(--color-border-alerting-critical-base);
 }
 
 /* --- Disabled --- */
@@ -210,10 +206,16 @@
   color: inherit;
 }
 
-.ids-tag-editable-field:focus,
-.ids-tag-editable-field:focus-visible,
+.ids-tag-editable-field:focus-within,
 .ids-tag--focus-on-text .ids-tag-editable-field {
   border-color: var(--color-border-brand-base);
+}
+
+.ids-tag-editable-field .ids-tag-label {
+  user-select: text;
+  cursor: text;
+  outline: none;
+  min-width: 0;
 }
 
 .ids-tag-menu-caret {
