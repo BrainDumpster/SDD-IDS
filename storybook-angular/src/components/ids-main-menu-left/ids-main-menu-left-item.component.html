@@ -5,7 +5,7 @@
     [attr.aria-current]="
       isPrimary
         ? root.primaryAriaCurrent(itemId, groupId, forceState)
-        : isSecondary && root.isSecondarySelected(itemId, groupId ?? '')
+        : isSecondary && isSecondaryRowSelected
           ? 'page'
           : null
     "
@@ -23,7 +23,7 @@
         [size]="14"
       />
     }
-    @if (isPrimary && root.isPrimaryFocused(itemId, forceState)) {
+    @if (showFocusRing) {
       <span class="ids-main-menu-left__focus-ring" aria-hidden="true"></span>
     }
     @if (isPrimary && root.showPrimaryInset(itemId, groupId, forceState)) {

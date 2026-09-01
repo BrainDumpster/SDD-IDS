@@ -25,6 +25,14 @@ import {
   type MainMenuLeftPrimaryItem,
   type MainMenuLeftSelectionDetail,
 } from "@ids/react/main-menu-left";
+import {
+  MainMenuLeft as CompositionMainMenuLeft,
+  MainMenuLeftChildren,
+  MainMenuLeftGroup,
+  MainMenuLeftItem,
+  MainMenuLeftItemIcon,
+} from "../MainMenuLeft";
+import composeStyles from "../MainMenuLeft.module.css";
 
 const DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.md";
 
@@ -188,6 +196,54 @@ export const PrimaryStateSnapshotMatrix: Story = {
           },
         ]}
       />
+    </div>
+  ),
+};
+
+/** Secondary-row states for visual QA (`forceStates`, Figma `12016:227537` / `12016:227542`). */
+export const SecondaryStateSnapshotMatrix: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: 16,
+        height: "100vh",
+        boxSizing: "border-box",
+        background: "var(--color-background-surface-primary)",
+      }}
+    >
+      <CompositionMainMenuLeft expanded forceStates>
+        <MainMenuLeftGroup groupId="secondary-focus-matrix" defaultExpanded={true}>
+          <MainMenuLeftItem itemId="secondary-parent">
+            <a href="#">
+              <MainMenuLeftItemIcon shapeName="network-share" />
+              <span className={composeStyles.primaryLabel}>Infrastructure</span>
+            </a>
+          </MainMenuLeftItem>
+          <MainMenuLeftChildren>
+            <MainMenuLeftItem itemId="sec-default" level="secondary" forceState="default">
+              <a href="#">Default</a>
+            </MainMenuLeftItem>
+            <MainMenuLeftItem itemId="sec-hover" level="secondary" forceState="hover">
+              <a href="#">Hover</a>
+            </MainMenuLeftItem>
+            <MainMenuLeftItem itemId="sec-press" level="secondary" forceState="press">
+              <a href="#">Press</a>
+            </MainMenuLeftItem>
+            <MainMenuLeftItem itemId="sec-selected" level="secondary" forceState="selected">
+              <a href="#">Selected</a>
+            </MainMenuLeftItem>
+            <MainMenuLeftItem itemId="sec-default-focus" level="secondary" forceState="default-focus">
+              <a href="#">Default focus</a>
+            </MainMenuLeftItem>
+            <MainMenuLeftItem itemId="sec-selected-focus" level="secondary" forceState="selected-focus">
+              <a href="#">Selected focus</a>
+            </MainMenuLeftItem>
+          </MainMenuLeftChildren>
+        </MainMenuLeftGroup>
+      </CompositionMainMenuLeft>
     </div>
   ),
 };

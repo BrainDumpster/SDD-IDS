@@ -40,14 +40,42 @@ export class IdsMainMenuLeftItemComponent {
     return this.group?.groupId;
   }
 
+  get isForcedFocus(): boolean {
+    return (
+      Boolean(this.root.forceStates && this.forceState) &&
+      (this.forceState === "default-focus" || this.forceState === "selected-focus")
+    );
+  }
+
+  get isForcedSelected(): boolean {
+    return (
+      Boolean(this.root.forceStates && this.forceState) &&
+      (this.forceState === "selected" || this.forceState === "selected-focus")
+    );
+  }
+
+  get showFocusRing(): boolean {
+    if (this.isPrimary) return this.root.isPrimaryFocused(this.itemId, this.forceState);
+    return this.isForcedFocus;
+  }
+
+  get isSecondaryRowSelected(): boolean {
+    return (
+      this.isForcedSelected ||
+      Boolean(this.groupId && this.root.isSecondarySelected(this.itemId, this.groupId))
+    );
+  }
+
   get rowClasses(): string[] {
     if (this.isSecondary) {
       return [
         "ids-main-menu-left__secondary-row",
-        "ids-main-menu-left__secondary-row--interactive",
-        this.root.isSecondarySelected(this.itemId, this.groupId ?? "")
-          ? "ids-main-menu-left__secondary-row--selected"
+        !(this.root.forceStates && this.forceState)
+          ? "ids-main-menu-left__secondary-row--interactive"
           : "",
+        this.isSecondaryRowSelected ? "ids-main-menu-left__secondary-row--selected" : "",
+        this.forceState === "hover" ? "ids-main-menu-left__secondary-row--state-Hover" : "",
+        this.forceState === "press" ? "ids-main-menu-left__secondary-row--state-Press" : "",
       ].filter(Boolean);
     }
     return [
@@ -87,11 +115,12 @@ export class IdsMainMenuLeftItemComponent {
       this.root.onSecondaryActivate(this.itemId, this.groupId, label);
       return;
     }
-    this.root.onPrimaryActivate(this.itemId, label, this.groupId);
-    if (this.groupId) {
+    if (this.isPrimary && this.groupId && this.root.railExpanded) {
       event.preventDefault();
       this.root.toggleGroup(this.groupId);
+      return;
     }
+    this.root.onPrimaryActivate(this.itemId, label, this.groupId);
   }
 }
 
