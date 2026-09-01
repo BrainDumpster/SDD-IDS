@@ -1,0 +1,3 @@
+# Storybook glob pattern for discovering stories
+# This file represents the glob pattern used in Storybook configuration
+# Pattern: storybook-generated/*/src/**/*.stories.@(ts|tsx)
