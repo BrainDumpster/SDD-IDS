@@ -187,11 +187,13 @@
 }
 
 /* Focus ring — ::after so --button-focus-ring-radius applies (outline cannot). */
-.ids-button:focus-visible:not(:disabled) {
+.ids-button:focus-visible:not(:disabled),
+.ids-button[data-state="focus-visible"] {
   outline: none;
 }
 
-.ids-button:focus-visible:not(:disabled)::after {
+.ids-button:focus-visible:not(:disabled)::after,
+.ids-button[data-state="focus-visible"]::after {
   content: "";
   position: absolute;
   inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));

@@ -112,10 +112,12 @@
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand);
   color: var(--color-text-gray-white);
 }
-.primary:hover:not(:disabled) {
+.primary:hover:not(:disabled),
+.primary[data-state="hover"] {
   background: var(--color-background-controls-strong);
 }
-.primary:active:not(:disabled) {
+.primary:active:not(:disabled),
+.primary[data-state="press"] {
   background: var(--color-background-controls-stronger);
 }
 .primary:disabled {
@@ -129,10 +131,12 @@
   color: var(--color-text-brand-strong);
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
-.secondary:hover:not(:disabled) {
+.secondary:hover:not(:disabled),
+.secondary[data-state="hover"] {
   background: var(--color-background-controls-lighter);
 }
-.secondary:active:not(:disabled) {
+.secondary:active:not(:disabled),
+.secondary[data-state="press"] {
   background: var(--color-background-controls-light);
 }
 .secondary:disabled {
@@ -146,11 +150,13 @@
   color: var(--color-text-brand-strong);
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.tertiary:hover:not(:disabled) {
+.tertiary:hover:not(:disabled),
+.tertiary[data-state="hover"] {
   background: var(--color-background-controls-lighter);
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
-.tertiary:active:not(:disabled) {
+.tertiary:active:not(:disabled),
+.tertiary[data-state="press"] {
   background: var(--color-background-controls-light);
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
@@ -179,10 +185,12 @@
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-critical-transparent-base);
   color: var(--color-text-gray-white);
 }
-.danger:hover:not(:disabled) {
+.danger:hover:not(:disabled),
+.danger[data-state="hover"] {
   background: var(--color-background-alerting-critical-strong);
 }
-.danger:active:not(:disabled) {
+.danger:active:not(:disabled),
+.danger[data-state="press"] {
   background: var(--color-background-alerting-critical-stronger);
 }
 .danger:disabled {
@@ -196,12 +204,14 @@
   cursor: not-allowed;
 }
 
-/* Focus: outer ring 1px brand, offset from --button-focus-ring-offset (IDS default outline) */
-.button:focus-visible:not(:disabled) {
+/* Focus: outer ring 1px brand, 4px radius, 2px offset (Figma 9662:26377) */
+.button:focus-visible:not(:disabled),
+.button[data-state="focus-visible"] {
   outline: none;
 }
 
-.button:focus-visible:not(:disabled)::after {
+.button:focus-visible:not(:disabled)::after,
+.button[data-state="focus-visible"]::after {
   content: "";
   position: absolute;
   inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
