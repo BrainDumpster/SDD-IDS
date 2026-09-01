@@ -44,6 +44,17 @@ Unified specification for **Global** (application banner) and **Inline** (contex
 | Verification method | `get_metadata` + `get_design_context` (Figma MCP) |
 | Last Figma re-fetch | 2026-05-06 |
 | Codegen blueprint verification | 2026-05-18 (Figma MCP `get_metadata` on global `11067:54641`, inline matrix `42903:139522`; structure aligned to `storybook/src/components/Alert.tsx`) |
+
+### Compact inline — action + dismiss (`11946:230315`)
+
+| Property | Value |
+|---|---|
+| Figma file key | `0bHk3XhrjFhowgFkz9yLr4` |
+| Validated node | `11946:230315` |
+| Source URL | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11946-230315&m=dev |
+| Scenario intent | **Compact** `warning-minor` inline with message-only body, **outlined action** + **dismiss (×)** in trailing cluster — canonical reference for action/dismiss spacing and dismiss hit-target geometry |
+| Verification method | `get_design_context` (Figma MCP) |
+| Last Figma re-fetch | 2026-09-01 |
 ## Anatomy
 
 ### Component composition
@@ -106,11 +117,11 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
   `warning-minor` overrides `::before` to add `border: 1px solid var(--color-border-alerting-warning-accessible)` on all 4 sides of the rail, with `box-sizing: border-box`.
 - **Compact** (`density: compact`): root `min-height: var(--scale-40)`; content row `padding-block: var(--padding-padding-10)`; text block (`inlineText`) `padding-right: var(--padding-padding-16)`; trailing cluster `height: var(--scale-40); align-items: center; padding: var(--padding-padding-8) var(--padding-padding-16)`.
 - **Detailed** (`density: detailed`): `min-height: 68px` (Figma reference frame `1000×68`; width remains container-driven); content row `padding-block: var(--padding-padding-12)`; text block `padding-right: var(--padding-padding-16)`; trailing `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`; **outlined action** aligns with content row top (`12px` from alert root) via `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` — **dismiss (x) is not offset** and remains at trailing `16px` top inset; action button may render inline with title (`gap: 4px`) inside the title row when `density="detailed"` + `title` present (see **Implementation Notes**).
-- **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap.
+- **Trailing cluster gap (action ↔ dismiss):** when both **outlined action** and **dismiss** render inside `TrailingControls` / `.inlineTrailing`, horizontal gap is **`var(--spacing-space-16)`** (**16px**) for **both** compact and detailed densities (Figma compact `11946:230315`, `11946:230538`; detailed with both controls `42903:139032`). Applies regardless of `data-has-action`; single-child trailing rows ignore gap. **Do not** add extra left padding on the dismiss control — symmetric dismiss padding + negative margin preserves the 16px flex gap (see **Implementation Notes → Dismiss button**).
 - **Typography:** title = **Body 1** — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` / `font-weight: 500`; message (compact and detailed) = **Body 2** `font-weight: 400`; text color `var(--color-static-gray-900)`.
 - **Inline link** in message: `var(--color-static-brand-500)`, underlined (inherits shared link utility).
-- **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, label `var(--color-text-brand-strong)`, `font-weight: 500`, `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`.
-- **Dismiss** icon (`Icon` component): visual size `var(--scale-12)`; keep **minimum** hit target `var(--scale-32)` for accessibility.
+- **Action** (when present): **outlined** control — `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, label `var(--color-text-brand-strong)`, `font-weight: 400` (Body 2 regular per Figma `11946:230315`; reuses IDS Button small outlined geometry), `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`, `font-size: var(--font-size-body-2)` / `line-height: var(--font-line-height-line-height-20)`, `white-space: nowrap`.
+- **Dismiss** icon (`Icon` component, `shape-x`, `12×12`): visual size `var(--scale-12)`; **minimum** hit target `var(--scale-32)` via symmetric `padding: var(--padding-padding-10)` + `margin: calc(-1 * var(--padding-padding-10))` on the dismiss button (negative margin must not consume the 16px trailing-cluster gap).
 
 #### Detailed all-details scenario (`11946:230644`) visual checklist
 
@@ -120,6 +131,16 @@ Framework-agnostic slot trees and optional branches are defined in **Codegen Con
 - Content row: `gap: 8px`, `padding-block: 12px`; icon slot renders `status-critical-square-solid` at `16x16`.
 - Text block: title uses Body 1 (`16/24`), message uses Body 2 (`14/20`), message color `var(--color-static-gray-900)`.
 - Trailing controls: outlined action button (`padding 2/16`, radius `2`, border brand-base, label brand-strong) aligned to content row top (`12px` via action-only negative margin); dismiss icon at trailing cluster `16px` top inset (unchanged); **gap between action and dismiss: `var(--spacing-space-16)`** when both are in the trailing cluster; link behavior/appearance follows inline link contract and does not change other visual attributes.
+
+#### Compact action + dismiss scenario (`11946:230315`) visual checklist
+
+- Sample frame size: `1000 × 40` (reference only; runtime remains container-driven width).
+- Root surface: `warning-minor` light background, minor border token, `padding-left: 20px`, inset `::before` rail (4px minor base + warning-accessible edge).
+- Content row: `gap: 8px`, `padding-block: 10px`; leading icon `status-warn-tri-solid` at `16×16`.
+- Message: Body 2 (`14/20`), `font-weight: 400`, `var(--color-static-gray-900)`.
+- Trailing cluster: `height: 40px`, `align-items: center`, `padding: 8px 16px`, `gap: 16px` between outlined action and dismiss.
+- Outlined action: border `var(--color-border-brand-base)`, label `var(--color-text-brand-strong)`, Body 2 regular (`font-weight: 400`).
+- Dismiss: `shape-x` at `12×12`; button uses symmetric `10px` padding + `-10px` margin for `32×32` hit target without widening the action↔dismiss gap.
 ## Tokens
 
 ### Global — severity surfaces (banner)
@@ -433,7 +454,7 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **`.inlineText`**: `flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-space-4); padding-right: var(--padding-padding-16)` — `spacing-4` between title row and message
 - **`.inlineTitleRow`** (detailed + title): `display: flex; align-items: flex-start; gap: 4px; width: 100%`. Title: `flex: 1 1 auto; min-width: 0`; action button: `flex-shrink: 0`
 - **`.inlineTrailing`**: `display: flex; flex-shrink: 0; align-items: flex-start; justify-content: flex-end; gap: var(--spacing-space-16)`
-- **Compact `.inlineTrailing`**: `align-items: center; height: var(--scale-40); padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16)`
+- **Compact `.inlineTrailing`**: `align-items: center; height: var(--scale-40); padding: var(--padding-padding-8) var(--padding-padding-16)`
 - **Detailed `.inlineTrailing`**: `align-items: flex-start; padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0`
 - **Detailed trailing action offset**: `margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16))` on `.inlineTrailing .inlineActionOutlined` only — dismiss (x) position unchanged
 - **Action button placement**: `showTitle && showAction` → render action inside `.inlineTitleRow` (detailed only); otherwise render in `.inlineTrailing`
@@ -441,11 +462,13 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - **Dismiss button**: `padding: var(--padding-padding-10); margin: calc(-1 * var(--padding-padding-10))` — `var(--scale-32)` hit area around `var(--scale-12)` icon; negative margin keeps surrounding spacing unaffected
 
 **Typography**
-- **All text elements** (title, message, action button): `font-weight: 400`
+- **Title** (detailed only): Body 1, `font-weight: 500`
+- **Message** and **inline action button label**: Body 2, `font-weight: 400`
 
 **Action button tokens**
 - **Border**: `var(--color-border-brand-base)`
 - **Text color**: `var(--color-text-brand-strong)`
+- **Label weight**: `400` (Figma `11946:230315`; geometry from IDS Button small outlined)
 
 **Severity tokens**
 - **`--inline-rail`** and **`--inline-alert-icon`**: set per severity via `data-severity` attribute; rail rendered via `::before` (`left: -1px; top: -1px; bottom: -1px; width: 4px; background: var(--inline-rail)`) for all severities
@@ -453,6 +476,9 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 
 **Dismiss visibility logic**
 - `showDismiss` = `(dismissible ?? true) && severity !== "critical"` — critical inline never shows dismiss regardless of action or other props
+
+**2026-09-01**
+- Added compact validation node `11946:230315` (warning-minor + action + dismiss). Clarified inline action label `font-weight: 400` (was `500` in Layout). Compact trailing right padding aligned to `var(--padding-padding-16)` (Implementation Notes had `17px`). Dismiss hit-target rule explicit: symmetric padding + negative margin must not consume the 16px action↔dismiss gap.
 
 **2026-08-09**
 - `.inlineText`: vertical gap between the title row (title + optional action) and the message changed `0` → `var(--spacing-space-4)`; visible only in `density="detailed"` (title present), `compact` (message-only) unchanged. Source: `storybook/src/components/Alert.module.css`.

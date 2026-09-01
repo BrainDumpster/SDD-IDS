@@ -1,0 +1,112 @@
+/* ============================================================
+   Segmented Button — IDS Design System
+   ============================================================ */
+
+.segmented-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  background: var(--color-background-component, #ffffff);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  border-radius: var(--corner-radius-radius-2, 2px);
+  gap: var(--spacing-space-2, 2px);
+  font-family: "Roboto", sans-serif;
+}
+
+/* --- Segment -------------------------------------------- */
+.segmented-button__segment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border-width-border-1, 1px) solid transparent;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.segmented-button__segment:focus-visible {
+  outline: none;
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+/* --- Type: Text ----------------------------------------- */
+.segmented-button--text .segmented-button__segment {
+  height: 32px;
+  padding: var(--padding-padding-4, 4px) var(--padding-padding-8, 8px);
+  flex: 1 1 0%;
+}
+
+.segmented-button--text .segmented-button__label {
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Type: Icon ---------------------------------------- */
+.segmented-button--icon .segmented-button__segment {
+  height: 32px;
+  padding: var(--padding-padding-8, 8px) var(--padding-padding-8, 8px);
+}
+
+.segmented-button--icon .segmented-button__icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- States: Selected ---------------------------------- */
+.segmented-button__segment--selected {
+  background: var(--color-background-controls-brand-base, #0076ce);
+  border-color: transparent;
+}
+
+.segmented-button--text .segmented-button__segment--selected .segmented-button__label {
+  color: var(--color-text-white, #ffffff);
+}
+
+.segmented-button--icon .segmented-button__segment--selected .segmented-button__icon {
+  color: var(--color-icon-white, #ffffff);
+}
+
+.segmented-button__segment--selected:focus-visible {
+  border-color: var(--color-border-brand-base, #0076ce);
+}
+
+/* --- States: Unselected -------------------------------- */
+.segmented-button__segment:not(.segmented-button__segment--selected) {
+  background: var(--color-background-component, #ffffff);
+}
+
+.segmented-button__segment:not(.segmented-button__segment--selected):hover {
+  background: var(--color-background-brand-lighter, #ebf4fb);
+}
+
+.segmented-button__segment:not(.segmented-button__segment--selected):active {
+  background: var(--color-background-brand-light, #d9eaf8);
+}
+
+.segmented-button--text .segmented-button__segment:not(.segmented-button__segment--selected):active .segmented-button__label {
+  color: var(--color-text-brand-strong, #0062ab);
+}
+
+.segmented-button--icon .segmented-button__segment:not(.segmented-button__segment--selected) {
+  color: var(--color-icon-brand-base, #0076ce);
+}
+
+/* --- States: Disabled ---------------------------------- */
+.segmented-button__segment--disabled {
+  background: var(--color-background-gray-light, #eaeaea);
+  border-color: var(--color-border-disabled, #757575);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.segmented-button__segment--disabled .segmented-button__label,
+.segmented-button__segment--disabled .segmented-button__icon {
+  color: var(--color-text-disabled, #757575);
+}

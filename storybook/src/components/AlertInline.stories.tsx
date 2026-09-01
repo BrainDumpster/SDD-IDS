@@ -62,6 +62,19 @@ export const InlineWarningMinor: Story = {
   },
 };
 
+/** Figma `11946:230315` — compact warning-minor with outlined action + dismiss (16px gap). */
+export const InlineWarningMinorWithActionAndDismiss: Story = {
+  args: {
+    display: "inline",
+    severity: "warning-minor",
+    density: "compact",
+    message:
+      "This is an page-level alert that communicates a warning (minor) message. It may include actions.",
+    actionLabel: "Action",
+    dismissible: true,
+  },
+};
+
 export const InlineWarningMajor: Story = {
   args: {
     display: "inline",
@@ -125,8 +138,14 @@ export const InlineVariantMatrix: Story = {
       <Alert display="inline" severity="warning-minor" message="Warning minor inline." dismissible />
       <Alert display="inline" severity="warning-major" message="Warning major inline." dismissible />
       <Alert display="inline" severity="critical" message="Critical inline." dismissible />
-      <Alert display="inline" severity="informational" message="With link." linkLabel="Learn more" dismissible />
-      <Alert display="inline" severity="critical" message="With action." actionLabel="Resolve now" dismissible={false} />
+      <Alert display="inline" severity="warning-minor" message="With link." linkLabel="Learn more" dismissible />
+      <Alert
+        display="inline"
+        severity="warning-minor"
+        message="This is an page-level alert that communicates a warning (minor) message. It may include actions."
+        actionLabel="Action"
+        dismissible
+      />
       <Alert
         display="inline"
         severity="warning-major"

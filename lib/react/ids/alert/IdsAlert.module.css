@@ -401,8 +401,9 @@
 
 .ids-alert-inline[data-density="compact"] .ids-alert-inline-trailing {
   align-items: center;
-  height: 40px;
-  padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
+  box-sizing: border-box;
+  height: var(--scale-40);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing {
@@ -416,6 +417,7 @@
 }
 
 .ids-alert-inline-action {
+  box-sizing: border-box;
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
@@ -426,6 +428,7 @@
   font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -434,19 +437,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   border: none;
   background: transparent;
   color: var(--color-icon-gray-black);
   cursor: pointer;
-  padding: 10px;
-  margin: -10px;
+  padding: var(--padding-padding-10);
+  margin: calc(-1 * var(--padding-padding-10));
 }
 
 .ids-alert-inline-dismiss-icon {
   width: var(--scale-12);
   height: var(--scale-12);
-  /* mask glyph: tint from dismiss button `color` */
-  background-color: currentColor;
+  display: block;
   object-fit: contain;
 }
 

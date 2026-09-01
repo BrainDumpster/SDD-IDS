@@ -158,6 +158,14 @@ export const GlobalAlertGroup: Story = {
 
 export const InlineCompactStates: Story = {
   name: "Inline Compact States",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Compact inline matrix including Figma `11946:230315` warning-minor row with outlined action + dismiss.",
+      },
+    },
+  },
   render: () => (
     <div style={{ display: "grid", gap: 16 }}>
       <IdsAlert
@@ -178,8 +186,8 @@ export const InlineCompactStates: Story = {
         display="inline"
         density="compact"
         severity="warning-minor"
-        message="Warning minor inline alert."
-        actionLabel="Resolve"
+        message="This is an page-level alert that communicates a warning (minor) message. It may include actions."
+        actionLabel="Action"
         dismissible
       />
       <IdsAlert

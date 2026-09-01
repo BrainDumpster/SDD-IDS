@@ -176,8 +176,8 @@ export const ALERT_INLINE_COMPACT_TEMPLATE = `
   <ids-alert display="inline" density="compact" severity="success" [dismissible]="true">
     <ids-alert-message>Success inline alert.</ids-alert-message>
   </ids-alert>
-  <ids-alert display="inline" density="compact" severity="warning-minor" [dismissible]="true" actionLabel="Resolve">
-    <ids-alert-message>Warning minor inline alert.</ids-alert-message>
+  <ids-alert display="inline" density="compact" severity="warning-minor" [dismissible]="true" actionLabel="Action">
+    <ids-alert-message>This is an page-level alert that communicates a warning (minor) message. It may include actions.</ids-alert-message>
   </ids-alert>
   <ids-alert display="inline" density="compact" severity="critical">
     <ids-alert-message>Critical inline alert (no dismiss per spec).</ids-alert-message>

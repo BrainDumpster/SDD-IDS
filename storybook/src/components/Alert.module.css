@@ -426,6 +426,7 @@
 }
 
 .inlineActionOutlined {
+  box-sizing: border-box;
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
@@ -436,6 +437,7 @@
   font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -443,15 +445,14 @@
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   box-sizing: border-box;
   border: none;
   background: transparent;
   color: var(--color-icon-gray-black);
   cursor: pointer;
-  padding: 10px 0 10px 20px;
-  min-width: var(--scale-32);
-  min-height: var(--scale-32);
+  padding: var(--padding-padding-10);
+  margin: calc(-1 * var(--padding-padding-10));
 }
 
 .inlineClose:focus-visible,
