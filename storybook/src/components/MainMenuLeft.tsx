@@ -204,28 +204,36 @@ export function MainMenuLeft({
       },
       hasSelectedSecondaryInGroup: (groupId) => selectedSecondaryParentKey === groupId,
       primaryAriaCurrent: (itemId, groupId, forced) => {
-        const isSelected =
-          getPrimaryState(itemId, forced) === "selected" ||
-          getPrimaryState(itemId, forced) === "selected-focus";
+        const state = getPrimaryState(itemId, forced);
+        const isLeafSelected = state === "selected" || state === "selected-focus";
         const hasSelectedSecondary = groupId
           ? selectedSecondaryParentKey === groupId
           : false;
-        return isSelected && !(groupId && hasSelectedSecondary) ? "page" : undefined;
+        const childrenVisible = groupId
+          ? railExpanded && isGroupExpanded(groupId)
+          : false;
+        if (
+          (isLeafSelected && !hasSelectedSecondary) ||
+          (hasSelectedSecondary && !childrenVisible)
+        ) {
+          return "page";
+        }
+        return undefined;
       },
       isSecondarySelected: (itemId, parentGroupId) =>
         selectedSecondaryParentKey === parentGroupId && selectedSecondaryKey === itemId,
       onPrimaryActivate: (itemId, label, groupId) => {
+        if (groupId && railExpanded) return;
         setSelectedKey(itemId);
         onNavigate?.(buildNavigateTarget(itemId, label, undefined, undefined, {}));
         onSelected?.(
           buildSelectionDetail("primary", itemId, undefined, label, undefined, {}),
         );
-        if (!groupId) {
-          setSelectedSecondaryParentKey(null);
-          setSelectedSecondaryKey(null);
-        }
+        setSelectedSecondaryParentKey(null);
+        setSelectedSecondaryKey(null);
       },
       onSecondaryActivate: (itemId, parentGroupId, label) => {
+        setSelectedKey(null);
         setSelectedSecondaryParentKey(parentGroupId);
         setSelectedSecondaryKey(itemId);
         onNavigate?.(buildNavigateTarget(itemId, label, parentGroupId, undefined, {}));
@@ -466,6 +474,9 @@ function MainMenuLeftItemsAdapter({
           : hasChildren
             ? hasSelectedSecondary
             : selectedKey === itemId;
+        const primaryIsCurrentPage =
+          (isSelected && !hasSelectedSecondary) ||
+          (hasSelectedSecondary && !showChildrenList);
         const primaryLabel = primaryDisplayName(item);
         const primaryTitle = item.tooltip ?? primaryLabel;
         const secondaryContextMenuEnabled =
@@ -478,6 +489,12 @@ function MainMenuLeftItemsAdapter({
               title={primaryTitle}
               onClick={() => {
                 if (hasForcedState) return;
+
+                if (hasChildren && railExpanded) {
+                  setExpandedChildrenKey(expandedChildrenKey === itemId ? null : itemId);
+                  return;
+                }
+
                 setSelectedKey(itemId);
                 onNavigate?.(
                   buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
@@ -491,17 +508,8 @@ function MainMenuLeftItemsAdapter({
                     routeRef: item.routeRef,
                   }),
                 );
-                if (!hasChildren) {
-                  setSelectedSecondaryParentKey(null);
-                  setSelectedSecondaryKey(null);
-                  return;
-                }
-                if (!railExpanded) return;
-                setExpandedChildrenKey(expandedChildrenKey === itemId ? null : itemId);
-                if (expandedChildrenKey === itemId) {
-                  setSelectedSecondaryParentKey(null);
-                  setSelectedSecondaryKey(null);
-                }
+                setSelectedSecondaryParentKey(null);
+                setSelectedSecondaryKey(null);
               }}
               className={[
                 styles.primaryRow,
@@ -512,10 +520,9 @@ function MainMenuLeftItemsAdapter({
               ]
                 .filter(Boolean)
                 .join(" ")}
-              aria-current={
-                isSelected && !(hasChildren && hasSelectedSecondary) ? "page" : undefined
-              }
+              aria-current={primaryIsCurrentPage ? "page" : undefined}
               aria-expanded={showChevron ? showChildrenList : undefined}
+              tabIndex={hasForcedState ? -1 : undefined}
             >
               <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
               {railExpanded ? <span className={styles.primaryLabel}>{primaryLabel}</span> : null}
@@ -540,6 +547,7 @@ function MainMenuLeftItemsAdapter({
                     selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId;
 
                   const activateSecondary = () => {
+                    setSelectedKey(null);
                     setSelectedSecondaryParentKey(itemId);
                     setSelectedSecondaryKey(childId);
                     onNavigate?.(

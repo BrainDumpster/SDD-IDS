@@ -34,12 +34,13 @@ ids-accordion-form-slot {
 
 .ids-accordion__trigger {
   width: 100%;
-  height: var(--scale-40);
+  height: auto;
+  min-height: var(--scale-40);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: var(--spacing-space-8);
-  padding: var(--padding-padding-12) var(--padding-padding-16);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
   border: 0;
   cursor: pointer;
   text-align: left;
@@ -59,7 +60,14 @@ ids-accordion-form-slot {
 .ids-accordion__title {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  font-weight: 500;
+  font-weight: 400;
+  max-width: 900px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ids-accordion__icon {
@@ -80,8 +88,10 @@ ids-accordion-form-slot {
 }
 
 .ids-accordion__trigger:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 0;
+  border-radius: var(--corner-radius-radius-4);
+  background: transparent;
 }
 
 .ids-accordion__trigger--disabled,

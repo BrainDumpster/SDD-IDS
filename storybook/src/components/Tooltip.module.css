@@ -105,7 +105,8 @@
 
 .arrow[data-side="left"][data-align="end"],
 .arrow[data-side="right"][data-align="end"] {
-  top: calc(100% - 26px) !important;
+  top: auto !important;
+  bottom: 8px !important;
 }
 
 .popup::before,

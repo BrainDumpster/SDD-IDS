@@ -10,10 +10,11 @@
 - Primary node id: `42012:26686`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
+- Spec sync (implementation parity): 2026-08-31 — error close icon, clickable weight, tone scope, editable focus surface
 ## Anatomy
 - `TagRoot`
 - `TagLabel`
-- `TagPrefixIcon?` (alerting state icon or badge-leading icon)
+- `TagPrefixIcon?` (read-only alerting glyph via `leadingIconSlug`; ignored for other `type` values)
 - `TagBadge?` (count or status chip)
 - `TagDropdown?` (detached dropdown menu surfaced by `TagBadge` trigger)
 - `TagCloseButton?` (tertiary icon-only button for dismiss/edit mode)
@@ -33,6 +34,7 @@
 - Tag shape remains pill-like with fully rounded ends.
 - Focus outline gap (outline offset from tag edge): `2px`.
 - Text field focus ring height: `20px` for editable tags.
+- Editable `TagEditableField` width is **intrinsic to label text** (same as read-only label chip); do not apply input default widths that expand the pill.
 ## Tokens
 - Core neutral tokens:
   - `var(--color-background-surface-component)`
@@ -63,17 +65,17 @@
   - `var(--color-text-gray-white)`
   - `var(--color-border-gray-white)`
 - Typography:
-  - `Body 2` for tag labels
-  - `Body 2 - Medium` for emphasized/clickable states
+  - `Body 2` (`font-weight: 400`) for all tag labels, including clickable, editable, and badge types
 - Custom text colors:
   - `var(--color-text-gray-black)` for Major and Minor tone text color
 ## States (Light Theme)
+Alerting `tone` values (`informational` … `critical`) apply **only** when `type=read-only`. Other types always render non-alerting (`tone=none`) regardless of input.
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-accessible)` |
-| TagRoot (read-only, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, close icon critical |
-| TagRoot (editable, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, close icon critical |
-| TagRoot (badge, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, close icon critical |
+| TagRoot (read-only, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`; `TagCloseButton` icon stays `var(--color-icon-gray-neutral-accessible)` |
+| TagRoot (editable, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`; `TagCloseButton` icon stays `var(--color-icon-gray-neutral-accessible)` |
+| TagRoot (badge, non-alerting) | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)` |
 | TagRoot (read-only/clickable/badge) | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | text/icon `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | TagRoot (clickable, selected=false) | default | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | text/icon brand-dark |
 | TagRoot (clickable, selected=false) | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | same as default (hover emphasis only) |
@@ -86,9 +88,9 @@
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | TagRoot (read-only, non-alerting) | default | `var(--color-background-surface-primary)`/semantic tag base | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-white)` or semantic neutral-light |
-| TagRoot (read-only, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
-| TagRoot (editable, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
-| TagRoot (badge, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light, close icon critical |
+| TagRoot (read-only, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light; `TagCloseButton` icon stays accessible neutral (not recolored to critical) |
+| TagRoot (editable, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light; `TagCloseButton` icon stays accessible neutral (not recolored to critical) |
+| TagRoot (badge, non-alerting) | error | semantic dark surface | `var(--color-border-alerting-critical-base)` | text semantic neutral-light |
 | TagRoot (read-only/clickable/badge) | disabled | semantic disabled surface | `var(--color-border-gray-disabled)` | text/icon disabled |
 | TagRoot (clickable, selected=false) | default | dark brand-slate token | `var(--color-border-brand-base)` | text/icon brand-light |
 | TagRoot (clickable, selected=true) | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | text/icon inverse |
@@ -99,7 +101,7 @@
 ## Interactions
 - `read-only`: non-interactive label chip.
 - `clickable`: toggles selection (`selected=true|false`).
-- `editable/dismissible`: clicking the editable tag body behaves like an input activation surface and moves focus to the inner text field; close action removes tag.
+- `editable/dismissible`: clicking the label or editable body focuses `TagEditableField` (text cursor / caret via `contenteditable` or equivalent focusable text surface); inner field shows brand border on `:focus-within`; tag pill width stays intrinsic to label text; close action removes tag.
 - `badge`: supports optional leading info icon and badge count segment; the badge can trigger a detached dropdown menu (`TagDropdown`) with a full border.
 - Hover states apply where interaction is enabled (clickable and close button).
 - Focus-visible is keyboard-driven and uses outer ring.
@@ -107,7 +109,7 @@
 ## Composition & API (runtime)
 - `type: "read-only" | "clickable" | "editable" | "badge"`
 - `size: "small" | "large"` (defaults: read-only -> small, others -> large; read-only also supports large for non-alerting tags)
-- `tone: "none" | "informational" | "success" | "minor" | "major" | "critical"`
+- `tone: "none" | "informational" | "success" | "minor" | "major" | "critical"` (**read-only only**; ignored → `none` for clickable, editable, and badge)
 - `selected?: boolean` (clickable only; default `false`)
 - `disabled?: boolean` (default `false`)
 - `error?: boolean` (read-only/editable/badge variants)
@@ -115,7 +117,7 @@
 - `focusOnText?: boolean` (editable only)
 - `label: string`
 - `badgeValue?: string | number` (badge only)
-- `leadingIconSlug?: string | null`
+- `leadingIconSlug?: string | null` (read-only only; ignored for other `type` values)
 - `closeIconSlug?: string` (default `shape-x-thick`)
 - `onClick?: () => void` (clickable)
 - `onDismiss?: () => void` (editable/dismissible)
@@ -131,18 +133,19 @@
 - Variant matrix (all supported axes):
   - `type`: read-only | clickable | editable | badge
   - `size`: small | large
-  - `tone`: none | informational | success | minor | major | critical
+  - `tone`: none | informational | success | minor | major | critical (**read-only only**)
   - `state`: default | hover | focus-visible | error | disabled
   - `selected`: true | false (clickable only)
   - `focusOnText`: true | false (editable only)
 - Per-slot style contract:
   - `TagRoot` owns pill geometry, border, surface, and padding.
-  - `TagLabel` always uses Body 2 scale.
-  - `TagCloseButton` is a tertiary icon-only button using `shape-x-thick`, sized `var(--sizing-size-18)`, with `var(--padding-padding-4)` padding, border-radius `var(--button-control-radius)`, icon color `var(--color-icon-gray-neutral-accessible)` (disabled uses `var(--color-icon-gray-disabled)`), hover/press backgrounds `var(--color-background-controls-lighter)` / `var(--color-background-controls-light)` with `var(--color-border-brand-base)` inset border, and a focus-visible outer ring `var(--color-border-brand-base)`.
+  - `TagLabel` always uses Body 2 scale (`font-weight: 400`), including clickable tags.
+  - `TagEditableField` wraps the editable label in a `20px`-tall focus ring; label is focusable (`role="textbox"`, text cursor), uses intrinsic text width (no expanded input default width), and shows border `var(--color-border-brand-base)` on focus / `focusOnText`.
+  - `TagCloseButton` is a tertiary icon-only button using `shape-x-thick`, sized `var(--sizing-size-18)`, with `var(--padding-padding-4)` padding, border-radius `var(--button-control-radius)`, icon color `var(--color-icon-gray-neutral-accessible)` in all non-disabled states including `error=true` (disabled uses `var(--color-icon-gray-disabled)`), hover/press backgrounds `var(--color-background-controls-lighter)` / `var(--color-background-controls-light)` with `var(--color-border-brand-base)` inset border, and a focus-visible outer ring `var(--color-border-brand-base)`.
   - `TagBadge` uses compact filled mini-chip treatment. When used as a dropdown trigger, the dropdown (`TagDropdown`) is a detached/standalone menu offset from `TagRoot` by `var(--spacing-space-1)` with a full border of `var(--border-width-border-default)` on all sides and `var(--dropdown-menu-radius)` corners.
 - Behavior contract:
   - clickable toggles selected state and emits `onSelectionChange`.
-  - editable tag body click focuses `TagEditableField` (input-like behavior) before text editing.
+  - editable tag body / label click focuses `TagEditableField` (text cursor + caret; input-like activation) before text editing; field width must not grow beyond intrinsic label width.
   - dismissible emits `onDismiss` and is removable by host list logic.
   - disabled state blocks all emitted events.
   - focus-visible ring appears for keyboard focus with `2px` outline gap.
@@ -150,6 +153,7 @@
   - interactive variants use `button` semantics (or role/button + keyboard parity).
   - selected clickable tags expose `aria-pressed`.
   - dismiss controls expose `aria-label` with tag text context.
+  - editable `TagEditableField` exposes `role="textbox"` and label context via `aria-label`.
   - disabled uses `disabled`/`aria-disabled` consistently.
 - Asset resolution + bundling:
   - close icon defaults to `assets/icons/shape-x-thick.svg`.
@@ -161,12 +165,18 @@
   - unknown `tone` -> `none`
   - if `badgeValue` provided while `type !== "badge"`, ignore `badgeValue`
   - if `selected=true` while `type !== "clickable"`, ignore `selected`
+  - if `tone !== "none"` while `type !== "read-only"`, coerce to `none` (alerting tones are read-only only)
+  - if `leadingIconSlug` provided while `type !== "read-only"`, ignore `leadingIconSlug`
 - Validation checklist (pass/fail):
   - [ ] all type variants render valid slot order
   - [ ] clickable selected/unselected tokens match spec
   - [ ] disabled blocks click/dismiss/selection events
   - [ ] focus-visible ring appears in keyboard path only
   - [ ] editable focus-on-text path shows field border token
+  - [ ] editable label click shows text cursor/caret without expanding tag width
+  - [ ] error state keeps `TagCloseButton` icon at `var(--color-icon-gray-neutral-accessible)`
+  - [ ] alerting `tone` and `leadingIconSlug` render only for `type=read-only`
+  - [ ] clickable label uses Body 2 weight 400 (not medium/500)
   - [ ] badge variant handles icon + count + label layout
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Tag"`.
@@ -178,3 +188,8 @@
   - Editable/dismissible set: `38910:51235`
   - Tags-with-badge set: `38910:57339`
 - Legacy exploration evidence also checked for close-icon states: file key `VZJ48bbVYrIynw8DdSukWw`, node `11067:54649`.
+- Runtime contract mirror: `component-contracts/ids/tag.contract.ts`
+- Reference implementations:
+  - React: `lib/react/ids/tag/`
+  - Angular: `lib/angular/ids/tag/`
+  - Storybook: `storybook/src/components/lib-generated/Tag.stories.tsx`, `storybook-angular/src/components/ids-tag/ids-tag.stories.js`

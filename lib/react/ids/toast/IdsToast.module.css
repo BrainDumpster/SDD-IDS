@@ -71,6 +71,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: var(--spacing-space-32);
   box-sizing: border-box;
   width: 100%;
   min-height: 48px;

@@ -40,7 +40,7 @@
   - Glyph size: `16×16` via shared `Icon` component (`style={{ width: 16, height: 16 }}`)
   - Order (when `showFirstLast` is true): `double-chev-left`, `chev-left`, `PageInput`, `of {totalPages}`, `chev-right`, `double-chev-right`
 - Page input (`PageInput` / Figma `.TextBox` node `11677:157819`):
-  - Width: `40px`
+  - Width: `52px`
   - Height: `32px`
   - Padding: `5px/6px` vertical, `0px` horizontal
   - Text alignment: `center`
@@ -56,6 +56,7 @@
 - Results-per-page dropdown menu:
   - Width tracks trigger (`90px` in sample)
   - Opens above or below trigger
+  - Render portaled above ancestor stacking/overflow contexts (`position: fixed` on `document.body`, high `z-index`)
   - Option row padding: `10px` vertical, `16px` left, `24px` right
   - Border radius: `0` (square corners)
 ### Responsiveness
@@ -253,6 +254,7 @@ Variant matrix:
   - Recompute navigation disabled states on every `currentPage`/`totalPages` update.
   - Preserve keyboard focus after page changes where possible.
   - Per-page menu selects and closes deterministically.
+  - Per-page menu is portaled to `document.body` (`position: fixed`, high `z-index`) so it stacks above the pagination container and ancestor overflow clipping.
   - In `responsiveMode="auto"`, adapt layout using the responsive order defined in `## Responsiveness`.
   - Do not alter semantic states or icon mapping during responsive transitions.
 - Accessibility contract:
@@ -305,5 +307,7 @@ Variant matrix:
 - **Height (2026-06-19)**: Root uses `box-sizing: border-box` and `height: 48px` so total height including border is 48px.
 - **Caret icon (2026-06-19)**: Per-page dropdown caret (`arrow-drop-tri-caret`) must render at 10×10px via explicit `style={{ width: 10, height: 10 }}` on `Icon` (inline default is 16px).
 - **Page number (2026-06-19)**: Figma `.TextBox` (`11677:157819`) — numeric text input only; no page-number dropdown in IDS or Synapse.
+- **Page input width (2026-08-31)**: `PageInput` control width is `52px` (height remains `32px`).
+- **Per-page menu stacking (2026-08-31)**: Portal the results-per-page menu to `document.body` with `position: fixed` and high `z-index` so it paints above the pagination root (and parent overflow/clipping contexts). Reposition on scroll/resize.
 - **Navigation arrows (2026-06-19)**: First/previous/next/last controls always render on multi-page views; boundary positions use disabled styling instead of hiding controls. All four use shared `Icon` with `style={{ width: 16, height: 16 }}`; button `color` drives `var(--color-icon-brand-base)` / `var(--color-icon-gray-disabled)`.
 - **Datagrid embed (2026-07-06)**: Pass **`embeddedInDatagrid`** when hosted in datagrid footer; **`rootEmbedded`** class sets `border: 0; border-top: 1px solid var(--color-border-gray-neutral-base)` so shell owns left/right/bottom edges.

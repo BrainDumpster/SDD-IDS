@@ -1,3 +1,4 @@
+import { NgClass } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +8,6 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import { NgClass } from "@angular/common";
 import {
   TAG_DEMO_HOVER_DEFAULT,
   TAG_SPEC_ACCURATE_DEFAULTS,
@@ -87,8 +87,12 @@ export class IdsTagComponent {
     return this.type === "editable" && !this.disabled;
   }
 
+  get resolvedTone(): TagTone {
+    return this.type === "read-only" ? this.tone : "none";
+  }
+
   get toneClass(): string {
-    return `tone-${toneToCssClass(this.tone)}`;
+    return `tone-${toneToCssClass(this.resolvedTone)}`;
   }
 
   get typeClass(): string {
@@ -117,18 +121,6 @@ export class IdsTagComponent {
     if (this.isEditableFocusable) {
       this.editableField?.nativeElement.focus();
     }
-  }
-
-  onEditableMouseDown(event: MouseEvent): void {
-    if (!this.isEditableFocusable) {
-      return;
-    }
-    const target = event.target as HTMLElement;
-    if (target.closest("button")) {
-      return;
-    }
-    event.preventDefault();
-    this.editableField?.nativeElement.focus();
   }
 
   onDismissClick(event: MouseEvent): void {

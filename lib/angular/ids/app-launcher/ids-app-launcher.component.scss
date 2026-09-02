@@ -114,12 +114,14 @@
   border: none;
   border-radius: 0;
   padding: var(--padding-padding-1);
+  /* Shadow 4 stack = drop-shadow-2 + drop-shadow-4 (visual pair; keep shadow-4 semantic names). */
   box-shadow:
     inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
       var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
-    var(--shadow-drop-shadow-4-x) var(--shadow-drop-shadow-4-y) var(--shadow-drop-shadow-4-blur)
-      var(--shadow-drop-shadow-4-spread) var(--shadow-drop-shadow-4-color);
+    var(--shadow-shadow-4-drop-shadow-4-x) var(--shadow-shadow-4-drop-shadow-4-y)
+      var(--shadow-shadow-4-drop-shadow-4-blur) var(--shadow-shadow-4-drop-shadow-4-spread)
+      var(--shadow-shadow-4-drop-shadow-4-color);
   width: 298px;
   max-width: calc(100vw - 24px);
   position: relative;
@@ -479,49 +481,51 @@
   outline-offset: 2px;
 }
 
-/* ----- Synapse programme (`13231:123761`, `13231:109521`) ----- */
+/* ----- Synapse programme (label-cluster hover/press + inset focus; Spec Accurate parity) ----- */
 
 .ids-app-launcher__surface--single {
   width: 150px;
 }
 
-.ids-app-launcher--synapse.ids-app-launcher__surface {
-  --app-launcher-column-divider-color: var(--color-border-neutral-light);
+.ids-app-launcher__surface[data-programme="synapse"] {
+  --app-launcher-column-divider-color: var(
+    --color-border-neutral-light,
+    var(--color-border-gray-neutral-light)
+  );
   gap: var(--spacing-space-1);
-  border-color: var(--color-border-neutral-light);
 }
 
-.ids-app-launcher__tile--synapse {
-  position: relative;
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__product-region {
+  gap: var(--spacing-space-1);
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:hover {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:hover {
   background: var(--color-background-surface-secondary);
   color: var(--color-icon-gray-neutral-strong, var(--color-icon-gray-neutral-base));
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:hover .ids-app-launcher__label-stack {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:hover .ids-app-launcher__label-stack {
   background: var(--color-background-brand-lighter-slate);
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:active {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:active {
   background: var(--color-background-surface-secondary);
   color: var(--color-icon-brand-strong);
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:active .ids-app-launcher__label-stack {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:active .ids-app-launcher__label-stack {
   background: var(--color-background-brand-light-slate);
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:active .ids-app-launcher__app-name {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:active .ids-app-launcher__app-name {
   color: var(--color-text-brand-strong);
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:focus-visible {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:focus-visible {
   outline: none;
 }
 
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse:focus-visible::after {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile:focus-visible::after {
   content: "";
   position: absolute;
   inset: 2px 2px 2px 3px;
@@ -531,28 +535,23 @@
 }
 
 /* Storybook / spec state matrix (demo-only forced states). */
-.ids-app-launcher__tile--synapse[data-state="hover"] .ids-app-launcher__label-stack,
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="hover"] .ids-app-launcher__label-stack {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile[data-state="hover"] .ids-app-launcher__label-stack {
   background: var(--color-background-brand-lighter-slate);
 }
 
-.ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__label-stack,
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__label-stack {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile[data-state="press"] .ids-app-launcher__label-stack {
   background: var(--color-background-brand-light-slate);
 }
 
-.ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__app-name,
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="press"] .ids-app-launcher__app-name {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile[data-state="press"] .ids-app-launcher__app-name {
   color: var(--color-text-brand-strong);
 }
 
-.ids-app-launcher__tile--synapse[data-state="press"],
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="press"] {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile[data-state="press"] {
   color: var(--color-icon-brand-strong);
 }
 
-.ids-app-launcher__tile--synapse[data-state="focus"]::after,
-.ids-app-launcher--synapse .ids-app-launcher__tile--synapse[data-state="focus"]::after {
+.ids-app-launcher__surface[data-programme="synapse"] .ids-app-launcher__tile[data-state="focus"]::after {
   content: "";
   position: absolute;
   inset: 2px 2px 2px 3px;

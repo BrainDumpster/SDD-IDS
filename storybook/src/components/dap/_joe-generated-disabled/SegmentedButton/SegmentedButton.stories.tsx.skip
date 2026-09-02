@@ -1,0 +1,235 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
+import "../tokens.css";
+import SegmentedButton from "./SegmentedButton";
+
+/**
+ * Joe-Generated SegmentedButton (regenerated from MDX) — uses only:
+ * - storybook/src/components/dap/joe-generated/SegmentedButton/SegmentedButton.tsx
+ * - storybook/src/components/dap/joe-generated/SegmentedButton/SegmentedButton.css
+ * - storybook/src/components/dap/joe-generated/tokens.css
+ * Spec MDX: components/DAP/joe-generated/SegmentedButton/segmented-button.mdx
+ *
+ * Previous: SegmentedButton.previous.tsx / .css (ignored by these stories).
+ * Icons: `/assets/icons/<slug>.svg` via Storybook staticDirs.
+ */
+const ICONS_BASE = "/assets/icons";
+
+const meta: Meta<typeof SegmentedButton> = {
+  title: "Spec Generated/DAP/Joe-Generated/SegmentedButton",
+  component: SegmentedButton,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component:
+          "Joe-generated DAP SegmentedButton regenerated from `segmented-button.mdx`. Previous copy: `SegmentedButton.previous.tsx` / `.css` (ignored).",
+      },
+    },
+  },
+  argTypes: {
+    type: { control: "select", options: ["text", "icon"] },
+    disabled: { control: "boolean" },
+    value: { control: "text" },
+    selectedValue: { control: "text" },
+    defaultValue: { control: "text" },
+    ariaLabel: { control: "text" },
+    iconsBasePath: { control: "text" },
+    onChange: { action: "onChange" },
+  },
+  args: {
+    type: "text",
+    disabled: false,
+    ariaLabel: "Segmented control",
+    iconsBasePath: ICONS_BASE,
+    defaultValue: "day",
+    items: [
+      { value: "day", label: "Day" },
+      { value: "week", label: "Week" },
+      { value: "month", label: "Month" },
+    ],
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof SegmentedButton>;
+
+/** MDX default: text, 3 options, single-select */
+export const Default: Story = {
+  args: {
+    type: "text",
+    defaultValue: "day",
+    ariaLabel: "Time range",
+    items: [
+      { value: "day", label: "Day" },
+      { value: "week", label: "Week" },
+      { value: "month", label: "Month" },
+    ],
+  },
+};
+
+/** Text × 2 (MDX # Options 2–5) */
+export const TextTwoOptions: Story = {
+  args: {
+    type: "text",
+    defaultValue: "list",
+    ariaLabel: "View mode",
+    items: [
+      { value: "list", label: "List" },
+      { value: "grid", label: "Grid" },
+    ],
+  },
+};
+
+/** Text × 5 */
+export const TextFiveOptions: Story = {
+  args: {
+    type: "text",
+    defaultValue: "one",
+    ariaLabel: "Five options",
+    items: [
+      { value: "one", label: "One" },
+      { value: "two", label: "Two" },
+      { value: "three", label: "Three" },
+      { value: "four", label: "Four" },
+      { value: "five", label: "Five" },
+    ],
+  },
+};
+
+/** Icon × 3 — Figma reference slugs */
+export const IconThreeOptions: Story = {
+  args: {
+    type: "icon",
+    defaultValue: "list",
+    ariaLabel: "View switcher",
+    iconsBasePath: ICONS_BASE,
+    items: [
+      { value: "list", icon: "view-hamburger", ariaLabel: "List view" },
+      { value: "tree", icon: "nav-tree", ariaLabel: "Tree view" },
+      { value: "grid", icon: "view-sort-grid-solid", ariaLabel: "Grid view" },
+    ],
+  },
+};
+
+/** Icon × 2 */
+export const IconTwoOptions: Story = {
+  args: {
+    type: "icon",
+    defaultValue: "list",
+    ariaLabel: "List or grid",
+    iconsBasePath: ICONS_BASE,
+    items: [
+      { value: "list", icon: "view-hamburger", ariaLabel: "List view" },
+      { value: "grid", icon: "view-sort-grid-solid", ariaLabel: "Grid view" },
+    ],
+  },
+};
+
+/** Custom IconSlot (ReactNode) — no slug resolution */
+export const IconCustomSlot: Story = {
+  args: {
+    type: "icon",
+    defaultValue: "a",
+    ariaLabel: "Custom icon slots",
+    items: [
+      {
+        value: "a",
+        ariaLabel: "Option A",
+        icon: (
+          <svg width={16} height={16} viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="2" y="2" width="12" height="12" fill="currentColor" rx="2" />
+          </svg>
+        ),
+      },
+      {
+        value: "b",
+        ariaLabel: "Option B",
+        icon: (
+          <svg width={16} height={16} viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" fill="currentColor" />
+          </svg>
+        ),
+      },
+    ],
+  },
+};
+
+/** Root disabled */
+export const DisabledGroup: Story = {
+  args: {
+    type: "text",
+    disabled: true,
+    defaultValue: "day",
+    ariaLabel: "Disabled segmented control",
+    items: [
+      { value: "day", label: "Day" },
+      { value: "week", label: "Week" },
+      { value: "month", label: "Month" },
+    ],
+  },
+};
+
+/** Per-segment disabled (arrow-key skips) */
+export const MixedDisabledSegments: Story = {
+  args: {
+    type: "text",
+    defaultValue: "day",
+    ariaLabel: "Mixed disabled segments",
+    items: [
+      { value: "day", label: "Day" },
+      { value: "week", label: "Week", disabled: true },
+      { value: "month", label: "Month" },
+    ],
+  },
+};
+
+/** Controlled value + onChange meta */
+export const Controlled: Story = {
+  render: function ControlledStory() {
+    const [value, setValue] = useState("week");
+    const [lastMeta, setLastMeta] = useState<string>("");
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <SegmentedButton
+          type="text"
+          value={value}
+          ariaLabel="Controlled time range"
+          items={[
+            { value: "day", label: "Day" },
+            { value: "week", label: "Week" },
+            { value: "month", label: "Month" },
+          ]}
+          onChange={(next, meta) => {
+            setValue(next);
+            setLastMeta(JSON.stringify(meta));
+          }}
+        />
+        <span style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+          value={value}
+          {lastMeta ? ` · meta=${lastMeta}` : ""}
+        </span>
+      </div>
+    );
+  },
+};
+
+/** selectedValue alias (controlled) */
+export const SelectedValueAlias: Story = {
+  render: function SelectedValueAliasStory() {
+    const [value, setValue] = useState("month");
+    return (
+      <SegmentedButton
+        type="text"
+        selectedValue={value}
+        ariaLabel="Using selectedValue alias"
+        items={[
+          { value: "day", label: "Day" },
+          { value: "week", label: "Week" },
+          { value: "month", label: "Month" },
+        ]}
+        onChange={(next) => setValue(next)}
+      />
+    );
+  },
+};

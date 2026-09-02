@@ -156,3 +156,12 @@ export const MAIN_MENU_LEFT_PRIMARY_STATE_MATRIX: MainMenuLeftPrimaryItem[] = [
     state: "selected-focus",
   },
 ];
+
+export const MAIN_MENU_LEFT_SECONDARY_STATE_MATRIX: MainMenuLeftPrimaryItem[] = [
+  { id: "sec-default", name: "Default", state: "default" },
+  { id: "sec-hover", name: "Hover", state: "hover" },
+  { id: "sec-press", name: "Press", state: "press" },
+  { id: "sec-selected", name: "Selected", state: "selected" },
+  { id: "sec-default-focus", name: "Default focus", state: "default-focus" },
+  { id: "sec-selected-focus", name: "Selected focus", state: "selected-focus" },
+];

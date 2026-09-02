@@ -56,8 +56,10 @@ export const TOOLTIP_MATRIX_GRID_STYLE = {
 export const TOOLTIP_MATRIX_CELL_STYLE = {
   display: "flex",
   justifyContent: "center",
-  padding: "48px 8px",
+  alignItems: "center",
+  padding: "72px 48px",
   overflow: "visible",
+  minHeight: 200,
 };
 
 export const TOOLTIP_STORY_SOURCE_CODE = `<IdsTooltip side="top" arrowAlign="start" closable={false}>

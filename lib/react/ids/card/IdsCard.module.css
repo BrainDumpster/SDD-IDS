@@ -207,8 +207,43 @@
 }
 
 .ids-card-footer-action {
-  /* Tighten tertiary button chrome to CardAction Body 2 link-style sample. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8, 8px);
   min-width: unset;
+  padding: var(--padding-padding-2, 2px) var(--padding-padding-16, 16px);
+  border: none;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  background: transparent;
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ids-card-footer .ids-card-footer-action:hover:not(:disabled) {
+  background: transparent;
+  box-shadow: none;
+  text-decoration: underline;
+}
+
+.ids-card-footer .ids-card-footer-action:focus-visible {
+  outline: 2px solid var(--color-border-brand-strong, #055fa9);
+  outline-offset: 2px;
+}
+
+.ids-card-footer .ids-card-footer-action:focus-visible::after {
+  content: none;
+}
+
+.ids-card-footer .ids-card-footer-action:disabled {
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-text-gray-disabled, #757575);
+  cursor: not-allowed;
 }
 
 /* --- Content Type=Text (`15718:219736`) --- */

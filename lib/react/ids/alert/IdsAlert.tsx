@@ -310,6 +310,7 @@ function IdsAlertInlineView(
       data-display="inline"
       data-severity={severity}
       data-density={density}
+      data-action-in-title={actionInTitleRow ? "true" : "false"}
       role="alert"
     >
       <div className={styles["ids-alert-inline-main"]}>
@@ -371,9 +372,8 @@ function IdsAlertInlineView(
             >
               <IdsIcon
                 shape="shape-x"
-                variant="mask"
+                variant="img"
                 size={12}
-                color="currentColor"
                 className={styles["ids-alert-inline-dismiss-icon"]}
               />
             </button>

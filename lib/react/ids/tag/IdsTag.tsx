@@ -135,7 +135,7 @@ export function IdsTag({
 }: IdsTagProps): ReactElement {
   const type = resolveType(typeProp);
   const size = resolveSize(sizeProp, type);
-  const tone = resolveTone(toneProp);
+  const tone = type === "read-only" ? resolveTone(toneProp) : "none";
 
   const isClickable = type === "clickable";
   const isEditable = type === "editable";
@@ -178,17 +178,6 @@ export function IdsTag({
     [disabled, handleSelectionToggle, isClickable],
   );
 
-  const handleEditableMouseDown = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
-      if (disabled || !isEditable) return;
-      const target = event.target as HTMLElement;
-      if (target.closest("button")) return;
-      event.preventDefault();
-      editableFieldRef.current?.focus();
-    },
-    [disabled, isEditable],
-  );
-
   const handleDismiss = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
@@ -223,7 +212,9 @@ export function IdsTag({
   );
 
   const prefixIcon =
-    leadingIconSlug != null && leadingIconSlug !== "" ? (
+    type === "read-only" &&
+    leadingIconSlug != null &&
+    leadingIconSlug !== "" ? (
       <span
         className={styles["ids-tag-prefix-icon"]}
         data-ids="ids-tag-prefix-icon"
@@ -260,14 +251,23 @@ export function IdsTag({
 
   const editableField = isEditable ? (
     <span
-      ref={editableFieldRef}
       className={styles["ids-tag-editable-field"]}
       data-ids="ids-tag-editable-field"
-      tabIndex={disabled ? undefined : 0}
-      onFocus={() => setTextFocused(true)}
-      onBlur={() => setTextFocused(false)}
     >
-      {labelNode}
+      <span
+        ref={editableFieldRef}
+        className={styles["ids-tag-label"]}
+        data-ids="ids-tag-editable-input"
+        contentEditable={disabled ? false : true}
+        suppressContentEditableWarning
+        role="textbox"
+        tabIndex={disabled ? undefined : 0}
+        aria-label={label}
+        onFocus={() => setTextFocused(true)}
+        onBlur={() => setTextFocused(false)}
+      >
+        {label}
+      </span>
     </span>
   ) : null;
 
@@ -296,7 +296,6 @@ export function IdsTag({
     : isEditable
       ? {
           onClick: handleRootClick,
-          onMouseDown: handleEditableMouseDown,
         }
       : isBadge && !disabled
         ? {

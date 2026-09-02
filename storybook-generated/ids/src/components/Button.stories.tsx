@@ -97,12 +97,14 @@ function SimButton(
     simVariant?: Variant;
   },
 ) {
-  const { simState = "default", simVariant, className, ...rest } = props;
+  const { simState = "default", simVariant, className, disabled, ...rest } = props;
   return (
     <IdsButton
       {...rest}
+      disabled={disabled || simState === "disabled"}
       data-sim-state={simState}
       data-sim-variant={simVariant ?? (rest.variant as Variant | undefined) ?? "primary"}
+      data-state={simState !== "default" && simState !== "disabled" ? simState : undefined}
       className={["sbSimButton", className].filter(Boolean).join(" ")}
     />
   );
@@ -243,10 +245,6 @@ export const StateHarness: Story = {
         .sbSimButton[data-sim-state="press"][data-sim-variant="destructive"]:not(:disabled) {
           background: var(--color-background-alerting-critical-stronger);
           box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-critical-transparent-base);
-        }
-        .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {
-          outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-          outline-offset: var(--button-focus-ring-offset);
         }
 
       `}</style>

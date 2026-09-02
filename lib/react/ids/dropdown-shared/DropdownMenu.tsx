@@ -239,9 +239,13 @@ export function DropdownMenu({
   // only keep it when at least 2 options match the query.
   const showSelectAllRow = showSelectAllClearAll && (!hasSearchQuery || optionRowCount >= 2);
 
-  // Single-select Clear All row: visible whenever a value is selected.
+  // Single-select Clear All: below search when a value is selected; hidden while
+  // a search query is active (spec / Figma parity with multi SelectAllRow).
   const showSingleClearAllRow =
-    selectionMode === "single" && showClearAll && selectedValues.length > 0;
+    selectionMode === "single" &&
+    showClearAll &&
+    selectedValues.length > 0 &&
+    !hasSearchQuery;
 
   // Values of the options currently visible (respecting the search filter).
   const visibleSelectableValues = displayedItems

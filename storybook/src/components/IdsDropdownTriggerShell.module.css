@@ -82,13 +82,9 @@
   padding: 5px var(--padding-padding-1);
   color: var(--color-icon-gray-neutral-base);
   line-height: 0;
-  transition: transform 150ms ease;
 }
 
-/* Menu open: caret flips to point up. */
-:global([data-popup-open]) .caretWrap {
-  transform: rotate(180deg);
-}
+/* Caret stays down-pointing while open (Figma show-dropdown / matrix). */
 
 .field[data-disabled="true"] .caretWrap {
   color: var(--color-border-gray-disabled);

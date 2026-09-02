@@ -106,9 +106,6 @@
 }
 
 .dropdownMenu {
-  position: absolute;
-  left: 0;
-  z-index: 2;
   box-sizing: border-box;
   width: 90px;
   margin: 0;
@@ -129,12 +126,18 @@
       var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
 }
 
+.dropdownMenuPortaled {
+  z-index: 10000;
+}
+
 .dropdownMenuBelow {
-  top: calc(100% - 1px);
+  border-top: none;
 }
 
 .dropdownMenuAbove {
-  bottom: calc(100% - 1px);
+  border-bottom: none;
+  border-top: var(--border-width-border-default, 1px) solid
+    var(--color-border-gray-neutral-base);
 }
 
 .dropdownOptionWrap {
@@ -237,7 +240,7 @@
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
-  width: 40px;
+  width: 52px;
   height: 32px;
   border: var(--border-width-border-default, 1px) solid
     var(--color-border-gray-neutral-base);

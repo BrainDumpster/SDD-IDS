@@ -190,7 +190,8 @@
 
 .ids-tooltip-arrow[data-side="left"][data-align="end"],
 .ids-tooltip-arrow[data-side="right"][data-align="end"] {
-  top: calc(100% - 18px) !important;
+  top: auto !important;
+  bottom: 8px !important;
 }
 
 .ids-tooltip-arrow[data-side="left"][data-align="end"] {
@@ -198,7 +199,7 @@
 }
 
 .ids-tooltip-arrow[data-side="right"][data-align="end"] {
-  left: -3px !important;
+  left: -5px !important;
 }
 
 .ids-tooltip-content {

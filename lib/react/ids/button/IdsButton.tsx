@@ -213,14 +213,19 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
 ) {
   const variant = resolveVariant(variantProp);
   const size = resolveSize(sizeProp);
+  const isDestructive = variant === "destructive";
+  /** Spec Accurate: destructive never shows a leading icon / icon-only chrome. */
+  const resolvedIconOnly = isDestructive ? false : iconOnly;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
 
   const { projectedIcon, projectedLabel } = partitionProjectedChildren(children);
 
   const iconSlot =
-    projectedIcon && loading
-      ? React.cloneElement(projectedIcon, { hidden: true })
-      : projectedIcon;
+    !isDestructive && projectedIcon
+      ? loading
+        ? React.cloneElement(projectedIcon, { hidden: true })
+        : projectedIcon
+      : null;
 
   const labelSlot =
     projectedLabel && loading
@@ -230,7 +235,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const hasIcon = iconSlot != null;
   const hasLabel = labelSlot != null;
 
-  if (iconOnly) {
+  if (resolvedIconOnly) {
     if (!ariaLabel) {
       throw new Error("IdsButton: `ariaLabel` is required when `iconOnly` is true.");
     }
@@ -238,9 +243,6 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       throw new Error(
         "IdsButton: project `IdsButtonLeadingIcon` when `iconOnly` is true.",
       );
-    }
-    if (size === "small") {
-      throw new Error("IdsButton: `iconOnly` is not supported for size `small`.");
     }
   } else if (!hasLabel) {
     throw new Error(
@@ -310,13 +312,13 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       data-variant={variant}
       data-size={size}
       data-state={dataState && dataState !== "default" ? dataState : undefined}
-      data-icon-only={iconOnly ? "true" : undefined}
+      data-icon-only={resolvedIconOnly ? "true" : undefined}
       data-loading={loading ? "true" : undefined}
       className={cx(
         styles["ids-button"],
         variantClass[variant],
         sizeClass[size],
-        iconOnly && styles["ids-button--icon-only"],
+        resolvedIconOnly && styles["ids-button--icon-only"],
         loading && styles["ids-button--loading"],
         isDisabled && styles["ids-button--disabled"],
         className,
@@ -332,7 +334,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
     >
       {loading ? <span className={styles["ids-button-spinner"]} aria-hidden="true" /> : null}
 
-      {iconOnly ? (
+      {resolvedIconOnly ? (
         hasIcon ? iconSlot : null
       ) : (
         <>

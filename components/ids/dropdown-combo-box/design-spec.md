@@ -153,7 +153,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Trigger interaction:
   - click/`Enter`/`Space` toggles popup open/close.
   - `Escape` closes popup and restores focus to trigger.
-  - the caret indicator rotates `180°` while the popup is open (attached-dropdown affordance).
+  - the caret indicator stays down-pointing while the popup is open (Figma show-dropdown — no 180° flip).
 - Keyboard list navigation:
   - `ArrowUp`/`ArrowDown` moves active option.
   - `Enter` commits active option in single-select mode.
@@ -294,7 +294,7 @@ Design-level implementation contract for the shared component (`DropdownMenu.tsx
 - **Leading control (checkbox/radio)** — `16×16px`, left edge flush with the `Select All` checkbox.
 - **Search input wrap gap** — `var(--spacing-space-10)`.
 - **Empty-search row (`No results found`)** — Body 2 - Medium (`500`), `var(--color-text-gray-neutral)`, `wdth 100`, padding `pl-16 pr-16 py-10`; rendered as the sole list row.
-- **Caret** — rotates `180°` while the popup is open (`[data-popup-open]`).
+- **Caret** — stays down-pointing while the popup is open (Figma show-dropdown / matrix — no 180° flip).
 - **Popup min-height** — `212px` (search only) / `252px` (search + Select All + Show Selected). The `252px` applies only while the `Select All` row is shown; when it collapses (no results, or `<2` matches) the popup falls back to `212px`.
 - **Option list scroll** — caps at `maxVisibleItems` rows (default `6`); ≤6 no scroll, >6 scrolls.
 - **Search filter** — case-insensitive substring (contains) match on the option label; sections/dividers hidden while filtering.
@@ -309,7 +309,7 @@ Design-level implementation contract for the shared component (`DropdownMenu.tsx
 
 - **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-gray-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
 - **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; IME composition is deferred until `compositionend`; deletions always clear the suggestion.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` and the caret to rotate `180°`.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0`. Caret direction is unchanged (still down).
 - **Tooltip** — truncated field value is wrapped in the IDS Tooltip: single-select shows the full selected item, multi-select shows the full selected list via the badge tooltip. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
 - **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. The selected tag wrap uses `contain: inline-size` so wrapped tags do not inflate the menu width. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth` and `.showSelectedTags` `contain: inline-size`.
 

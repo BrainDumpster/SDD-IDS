@@ -275,6 +275,12 @@
   font-family: inherit;
 }
 
+/* Detailed + title: action lives in the title row; text padding-right (16) is the only
+   action↔dismiss gap (Figma `11946:230988`). Root gap must stay 0 so spacing is not 28px. */
+.ids-alert-inline[data-action-in-title="true"] {
+  gap: 0;
+}
+
 /* Rail sits on top of the border via ::before (box-shadow inset renders behind border,
    which is transparent in light mode but opaque in dark mode). */
 .ids-alert-inline::before {
@@ -338,7 +344,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-space-4);
+  /* Figma detailed `11946:230988`: title row (24) then message at y=24 — no extra gap */
+  gap: 0;
   padding-right: var(--padding-padding-16);
 }
 
@@ -401,13 +408,21 @@
 
 .ids-alert-inline[data-density="compact"] .ids-alert-inline-trailing {
   align-items: center;
-  height: 40px;
-  padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
+  box-sizing: border-box;
+  height: var(--scale-40);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing {
   align-items: flex-start;
+  box-sizing: border-box;
   padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
+}
+
+/* Figma Close frame `41757:42773`: height 44 when trailing is dismiss-only (action in title row) */
+.ids-alert-inline[data-density="detailed"][data-action-in-title="true"] .ids-alert-inline-trailing,
+.ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing[data-has-action="false"] {
+  height: 44px;
 }
 
 .ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing .ids-alert-inline-action {
@@ -415,7 +430,12 @@
   margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
 }
 
+.ids-alert-inline[data-action-in-title="true"] .ids-alert-inline-trailing .ids-alert-inline-action {
+  margin-top: 0;
+}
+
 .ids-alert-inline-action {
+  box-sizing: border-box;
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
@@ -426,6 +446,7 @@
   font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -434,19 +455,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   border: none;
   background: transparent;
   color: var(--color-icon-gray-black);
   cursor: pointer;
-  padding: 10px;
-  margin: -10px;
+  padding: var(--padding-padding-10);
+  margin: calc(-1 * var(--padding-padding-10));
 }
 
 .ids-alert-inline-dismiss-icon {
   width: var(--scale-12);
   height: var(--scale-12);
-  /* mask glyph: tint from dismiss button `color` */
-  background-color: currentColor;
+  display: block;
   object-fit: contain;
 }
 

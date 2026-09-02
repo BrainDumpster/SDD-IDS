@@ -9,9 +9,11 @@
 - Primary node id: `41894:116183`
 - States matrix URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-25120&m=dev
 - States matrix node id: `9662:25120`
+- Focus state reference URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26377&m=dev
+- Focus state node id: `9662:26377` (Primary Large, Focus — control + outer ring)
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-06-18
+- Verified at: 2026-09-01 (focus ring geometry re-verified on `9662:26377`; prior full matrix `2026-06-18`)
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
 - `ButtonLabel` (optional for icon-only mode)
@@ -42,6 +44,20 @@ Deterministic order:
   - ring offset from control edge: `var(--button-focus-ring-offset)`
   - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
   - Render via `::after`, not `outline` — see Implementation Notes → Focus ring for the technique and the offset compensation.
+
+### Slot geometry (Figma-verified)
+
+| Slot / layer | Property | Token / contract | Figma node | Live evidence |
+| --- | --- | --- | --- | --- |
+| `ButtonRoot` | `border-radius` | `var(--button-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | `9662:26377` | MCP `get_variable_defs` → `Corner Radius/radius-2` = 2 |
+| Focus ring (`::after`) | `border-radius` | `var(--button-focus-ring-radius)` → `var(--corner-radius-radius-4)` (**4px**) | `9662:26379` (`focus` overlay) | MCP `get_variable_defs` → `Corner Radius/radius-4` = 4; MCP `get_design_context` → `rounded-[4px]` on focus layer |
+| Focus ring (`::after`) | gap to control edge | `var(--button-focus-ring-offset)` (**2px**) | `9662:26379` | MCP `get_design_context` → focus layer `inset-[-3px]` on 1px stroke control (= 2px gap + 1px ring stroke compensation) |
+| Focus ring (`::after`) | stroke | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `9662:26379` | MCP `get_variable_defs` → `Border Width/border-default` = 1, `var(--color-border-brand-base)` = `#0672cb` |
+
+**Geometry authoring rules (mandatory):**
+- Document **control shell** and **focus ring** separately — radii differ (2px vs 4px).
+- Theme aliases (`--button-control-radius`, `--button-focus-ring-radius`, `--button-focus-ring-offset`) are **implementation wiring only** after Figma values are verified; resolved alias values must match this table.
+- Aliases **must** be defined in `components/ids-theme.css` (light + dark blocks). Referencing an alias in component CSS without a theme definition is a spec violation even when the Tokens table documents the intended value.
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, font-weight: `400`) for button text.
@@ -210,7 +226,8 @@ Variant matrix:
 - Validation checklist:
   - [ ] All variant x size x state combinations resolve tokenized styles.
   - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
-  - [ ] Aliases defined in `components/ids-theme.css` and documented in Tokens.
+  - [ ] Aliases defined in `components/ids-theme.css` (both light and dark selectors) and documented in Tokens — **grep theme file before marking ready**.
+  - [ ] Focus ring uses `::after` + `var(--button-focus-ring-radius)`; **no** CSS `outline` / `outline-offset` on the control or in StateHarness demos.
   - [ ] Programme fork deltas list alias overrides when values differ (Synapse/DAP).
   - [ ] Icon slug path resolution works and gracefully handles missing slugs.
   - [ ] Disabled/loading modes prevent output events.
@@ -248,8 +265,10 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
 - Figma MCP calls used:
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:26377)` — focus ring geometry
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:26377)` — `Corner Radius/radius-2`, `Corner Radius/radius-4`
 ### Storybook proof and codegen consumers
 
 **Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
@@ -281,7 +300,12 @@ Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 - The `1px` control border is an **inside stroke** — render it with `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>` (or `outline`), never CSS `border`. Under the global `box-sizing: border-box`, a real `border` adds `+2px` to every size.
 - On focus, `tertiary` keeps its control border **by state** (transparent in the default state) — only the outer ring is blue. Do not force a brand-base inner border on `tertiary` focus (secondary's base already has one; tertiary's does not).
 
-**Focus ring (added 2026-07-21)**
+**Focus ring (added 2026-07-21; re-verified 2026-09-01 on `9662:26377`)**
 - Corrected to match Figma: IDS `--button-focus-ring-offset` `3px` → `2px`, and the ring corner radius now resolves to `--button-focus-ring-radius` (`4px`) instead of following the `2px` control radius.
 - Don't use CSS `outline` (it inherits the control's `border-radius`, but the ring radius must differ). Render the ring as an absolutely-positioned `::after` (`outline: none` on the control) with `border` + `border-radius: var(--button-focus-ring-radius)`.
 - Offset: `inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)))`. The `+ border-width` is needed because `::after`'s `inset` positions the ring's **outer** edge (the `border` draws inward), whereas the offset is defined as the gap to the ring's **inner** edge. Plain `-offset` leaves the gap short by 1px. (With `outline` this compensation wasn't needed — `outline-offset` measures to the inner edge directly — but `outline` can't carry its own radius, hence `::after`.)
+
+**Theme alias drift (2026-09-01 regression note)**
+- The spec documented `--button-control-radius`, `--button-focus-ring-radius`, and `--button-focus-ring-offset` in the Tokens table and Codegen Contract, but those aliases were absent from `components/ids-theme.css` while other layout aliases (card, date-picker, …) were present. Component CSS referenced the correct alias names, so styles silently failed (invalid `border-radius` / focus ring). **Fix:** define all three aliases in `ids-theme.css`; do not rely on the Tokens table alone.
+- Generated **StateHarness** stories overrode focus with CSS `outline` / `outline-offset` despite this spec — that produced a ring with the **control** radius (2px), not `--button-focus-ring-radius` (4px). **Fix:** drive demo focus via `data-state="focus-visible"` and the component `::after` ring.
+- Keep `lib/angular/ids/button` and `lib/react/ids/button` as canonical ports; legacy Storybook copies must not diverge on focus technique.

@@ -113,13 +113,7 @@ export class IdsMainMenuLeftComponent implements OnInit, OnChanges, IdsMainMenuL
 
   toggleGroup(groupId: string): void {
     if (!this.railExpanded) return;
-    if (this.expandedGroupId === groupId) {
-      this.expandedGroupId = null;
-      this.selectedSecondaryParentKey = null;
-      this.selectedSecondaryKey = null;
-    } else {
-      this.expandedGroupId = groupId;
-    }
+    this.expandedGroupId = this.expandedGroupId === groupId ? null : groupId;
   }
 
   getPrimaryState(itemId: string, forced?: MainMenuLeftPrimaryState): MainMenuLeftPrimaryState {
@@ -161,9 +155,17 @@ export class IdsMainMenuLeftComponent implements OnInit, OnChanges, IdsMainMenuL
     groupId?: string,
     forced?: MainMenuLeftPrimaryState,
   ): string | null {
-    const isSelected = this.isPrimarySelected(itemId, forced);
+    const state = this.getPrimaryState(itemId, forced);
+    const isLeafSelected = state === "selected" || state === "selected-focus";
     const hasSelectedSecondary = groupId ? this.hasSelectedSecondaryInGroup(groupId) : false;
-    return isSelected && !(groupId && hasSelectedSecondary) ? "page" : null;
+    const childrenVisible = groupId ? this.isGroupChildrenVisible(groupId) : false;
+    if (
+      (isLeafSelected && !hasSelectedSecondary) ||
+      (hasSelectedSecondary && !childrenVisible)
+    ) {
+      return "page";
+    }
+    return null;
   }
 
   isSecondarySelected(itemId: string, parentGroupId: string): boolean {
@@ -175,18 +177,18 @@ export class IdsMainMenuLeftComponent implements OnInit, OnChanges, IdsMainMenuL
 
   onPrimaryActivate(itemId: string, label: string, groupId?: string): void {
     if (this.forceStates) return;
+    if (groupId && this.railExpanded) return;
     this.selectedKey = itemId;
     this.navigate.emit(buildNavigateTarget(itemId, label, undefined, undefined, {}));
     this.selectedChange.emit(
       buildSelectionDetail("primary", itemId, undefined, label, undefined, {}),
     );
-    if (!groupId) {
-      this.selectedSecondaryParentKey = null;
-      this.selectedSecondaryKey = null;
-    }
+    this.selectedSecondaryParentKey = null;
+    this.selectedSecondaryKey = null;
   }
 
   onSecondaryActivate(itemId: string, parentGroupId: string, label: string): void {
+    this.selectedKey = null;
     this.selectedSecondaryParentKey = parentGroupId;
     this.selectedSecondaryKey = itemId;
     this.navigate.emit(buildNavigateTarget(itemId, label, parentGroupId, undefined, {}));

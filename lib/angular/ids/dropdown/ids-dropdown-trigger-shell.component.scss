@@ -75,6 +75,25 @@
   gap: var(--spacing-space-4);
 }
 
+.badgeWrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.badgeTrigger {
+  display: inline-flex;
+}
+
+/* Let the value/text child shrink so text-overflow ellipsis can trigger. */
+.main > * {
+  min-width: 0;
+}
+
+/* Field showing selected option(s): 16px between content and caret. */
+.field[data-filled="true"] .main {
+  padding-right: var(--padding-padding-16);
+}
+
 .caret-wrap {
   flex-shrink: 0;
   display: inline-flex;
@@ -83,6 +102,8 @@
   color: var(--color-icon-gray-neutral-base);
   line-height: 0;
 }
+
+/* Caret stays down-pointing while open (Figma show-dropdown / matrix). */
 
 .field[data-disabled="true"] .caret-wrap {
   color: var(--color-border-gray-disabled);

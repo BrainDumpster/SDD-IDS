@@ -111,7 +111,13 @@ function SelectionCheckbox({
 }) {
   return (
     <div className={styles.selectionHost} onClick={onClick} data-ids="ids-datagrid-selection-checkbox">
-      <IdsCheckbox id={id} checked={checked} indeterminate={indeterminate} onChange={onChange}>
+      <IdsCheckbox
+        id={id}
+        checked={checked}
+        indeterminate={indeterminate}
+        density="datagrid"
+        onChange={onChange}
+      >
         <IdsCheckboxLabel>
           <span className={styles.visuallyHidden}>{label}</span>
         </IdsCheckboxLabel>
@@ -1379,6 +1385,7 @@ export function IdsDatagrid({
       className={cx(styles.shell, className)}
       data-ids="ids-datagrid"
       data-with-detail-panel={showDetail ? "true" : undefined}
+      data-header-styled={headerColorAndBorder ? "true" : "false"}
       style={
         {
           ["--datagrid-selection-col-width" as string]: "48px",

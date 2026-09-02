@@ -205,3 +205,28 @@
   margin: 0;
   color: var(--color-text-gray-neutral-strong, #4d4d4d);
 }
+
+.ids-foundations__group p {
+  margin: 0 0 12px;
+  max-width: 72ch;
+  color: var(--color-text-gray-neutral-strong, #4d4d4d);
+}
+
+.ids-foundations__code {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  border: 1px solid var(--color-border-gray-neutral-light, #eaeaea);
+  border-radius: var(--corner-radius-radius-4, 4px);
+  background: var(--color-background-gray-neutral-lighter, #f4f4f4);
+  color: var(--color-text-gray-neutral-stronger, #252525);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.ids-foundations__code code {
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre;
+}

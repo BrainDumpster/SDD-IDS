@@ -554,6 +554,9 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --spacing-space-minus-1: -1px;
   --spacing-space-none: 0px;
   /* --- Component layout aliases (IDS defaults; programmes override in programme theme CSS) --- */
+  --button-control-radius: var(--corner-radius-radius-2);
+  --button-focus-ring-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-offset: 2px;
   --card-control-radius: var(--corner-radius-radius-none);
   --card-min-width: 430px;
   --date-picker-control-radius: var(--corner-radius-radius-none);
@@ -1081,6 +1084,9 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --spacing-space-minus-1: -1px;
   --spacing-space-none: 0px;
   /* --- Component layout aliases (IDS defaults; programmes override in programme theme CSS) --- */
+  --button-control-radius: var(--corner-radius-radius-2);
+  --button-focus-ring-radius: var(--corner-radius-radius-4);
+  --button-focus-ring-offset: 2px;
   --card-control-radius: var(--corner-radius-radius-none);
   --card-min-width: 430px;
   --date-picker-control-radius: var(--corner-radius-radius-none);
