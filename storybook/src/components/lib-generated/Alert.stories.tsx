@@ -210,16 +210,24 @@ export const InlineCompactStates: Story = {
 
 export const InlineDetailedAllDetails: Story = {
   name: "Inline Detailed All Details",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Figma `11946:230988`: detailed title + message; outlined action in the title row; dismiss alone in trailing (16px top, 17px right, 12×12 glyph).",
+      },
+    },
+  },
   render: () => (
     <IdsAlert
       display="inline"
       density="detailed"
-      severity="critical"
-      title="Sync failed for workspace records"
-      message="The latest sync attempt did not complete. Review connection settings and retry."
-      linkLabel="Open diagnostics"
+      severity="warning-minor"
+      title="Alert Title"
+      message="This is an page-level alert that communicates a warning (minor) message. It may include actions or a "
+      linkLabel="link to another page."
       linkHref="#"
-      actionLabel="Retry sync"
+      actionLabel="Action"
       dismissible
     />
   ),

@@ -244,9 +244,17 @@ ids-main-menu-left-item-icon {
 }
 
 .ids-main-menu-left__secondary-row--interactive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: calc(-1 * var(--border-width-border-1));
+  outline: none;
+}
+
+.ids-main-menu-left__secondary-row--interactive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .ids-main-menu-left__bottom-toggle {
@@ -294,7 +302,9 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__focus-ring {
   position: absolute;
-  inset: 0;
+  /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
+     No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
+  inset: 0 var(--border-width-border-1);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -302,9 +312,17 @@ ids-main-menu-left-item-icon {
 }
 
 .ids-main-menu-left__primary-row--interactive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: calc(-1 * var(--border-width-border-1));
+  outline: none;
+}
+
+.ids-main-menu-left__primary-row--interactive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .ids-main-menu-left__selected-inset {

@@ -280,6 +280,12 @@
   font-family: inherit;
 }
 
+/* Detailed + title: action lives in the title row; text padding-right (16) is the only
+   action↔dismiss gap (Figma `11946:230988`). Root gap must stay 0 so spacing is not 28px. */
+.inlineRoot[data-action-in-title="true"] {
+  gap: 0;
+}
+
 /* Rail sits on top of the border via ::before (box-shadow inset renders behind border,
    which is transparent in light mode but opaque in dark mode). */
 .inlineRoot::before {
@@ -343,7 +349,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-space-4);
+  /* Figma detailed `11946:230988`: title row (24) then message at y=24 — no extra gap */
+  gap: 0;
   padding-right: var(--padding-padding-16);
 }
 
@@ -417,12 +424,23 @@
 
 .inlineRoot[data-density="detailed"] .inlineTrailing {
   align-items: flex-start;
+  box-sizing: border-box;
   padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
+}
+
+/* Figma Close frame `41757:42773`: height 44 when trailing is dismiss-only (action in title row) */
+.inlineRoot[data-density="detailed"][data-action-in-title="true"] .inlineTrailing,
+.inlineRoot[data-density="detailed"] .inlineTrailing[data-has-action="false"] {
+  height: 44px;
 }
 
 .inlineRoot[data-density="detailed"] .inlineTrailing .inlineActionOutlined {
   /* Align action top with content row padding-block (12px); close (x) stays at trailing 16px inset */
   margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
+}
+
+.inlineRoot[data-action-in-title="true"] .inlineTrailing .inlineActionOutlined {
+  margin-top: 0;
 }
 
 .inlineActionOutlined {
@@ -451,6 +469,7 @@
   background: transparent;
   color: var(--color-icon-gray-black);
   cursor: pointer;
+  /* 12×12 glyph; expand hit target without shifting layout (Figma Close is bare 12×12 at y=16) */
   padding: var(--padding-padding-10);
   margin: calc(-1 * var(--padding-padding-10));
 }

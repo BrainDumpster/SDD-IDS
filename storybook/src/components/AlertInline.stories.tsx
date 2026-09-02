@@ -116,6 +116,21 @@ export const InlineDetailedLayout: Story = {
   },
 };
 
+/** Figma `11946:230988` — detailed title + message; action in title row; close at 16px top inset. */
+export const InlineDetailedTitleActionDismiss: Story = {
+  args: {
+    display: "inline",
+    severity: "warning-minor",
+    density: "detailed",
+    title: "Alert Title",
+    message:
+      "This is an page-level alert that communicates a warning (minor) message. It may include actions or a ",
+    linkLabel: "link to another page.",
+    actionLabel: "Action",
+    dismissible: true,
+  },
+};
+
 export const InlineDetailedWithLinkActionDismiss: Story = {
   args: {
     display: "inline",

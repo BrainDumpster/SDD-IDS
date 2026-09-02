@@ -231,6 +231,12 @@
   gap: var(--spacing-space-12);
 }
 
+/* Detailed + title: action lives in the title row; text padding-right (16) is the only
+   action↔dismiss gap (Figma `11946:230988`). Root gap must stay 0 so spacing is not 28px. */
+.ids-alert--inline[data-action-in-title="true"] {
+  gap: 0;
+}
+
 .ids-alert--inline::before {
   content: "";
   position: absolute;
@@ -290,7 +296,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-space-4);
+  /* Figma detailed `11946:230988`: title row (24) then message at y=24 — no extra gap */
+  gap: 0;
   padding-right: var(--padding-padding-16);
 }
 
@@ -298,7 +305,7 @@
   margin: 0;
   font-size: var(--font-size-body-1);
   line-height: var(--font-line-height-line-height-24);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-static-gray-900);
 }
 
@@ -338,11 +345,23 @@
 }
 
 .ids-alert--inline-detailed .ids-alert__inline-trailing {
+  align-items: flex-start;
+  box-sizing: border-box;
   padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
+}
+
+/* Figma Close frame `41757:42773`: height 44 when trailing is dismiss-only (action in title row) */
+.ids-alert--inline[data-action-in-title="true"] .ids-alert__inline-trailing,
+.ids-alert--inline-detailed .ids-alert__inline-trailing[data-has-action="false"] {
+  height: 44px;
 }
 
 .ids-alert--inline-detailed .ids-alert__inline-action {
   margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
+}
+
+.ids-alert--inline[data-action-in-title="true"] .ids-alert__inline-action {
+  margin-top: 0;
 }
 
 .ids-alert__inline-action {

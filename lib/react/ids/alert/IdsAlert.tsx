@@ -310,6 +310,7 @@ function IdsAlertInlineView(
       data-display="inline"
       data-severity={severity}
       data-density={density}
+      data-action-in-title={actionInTitleRow ? "true" : "false"}
       role="alert"
     >
       <div className={styles["ids-alert-inline-main"]}>

@@ -269,6 +269,7 @@ function AlertInlineView(
       className={[styles.inlineRoot, densityClass].filter(Boolean).join(" ")}
       data-severity={severity}
       data-density={density}
+      data-action-in-title={actionInTitleRow ? "true" : "false"}
       role="alert"
     >
       <div className={styles.inlineMain}>

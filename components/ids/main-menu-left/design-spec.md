@@ -50,7 +50,10 @@ Figma slot mapping:
    - `PrimaryLabel` — Body 1 medium (hidden when collapsed)
    - `PrimaryChevron` — 14×14 `chev-right-thick` / `chev-down-thick` when `children` exist (expanded only)
    - `SelectedInset` — primary only; **4px** leading bar `var(--color-border-brand-base)`; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))` (PR #82 — bar extends into rail border zone)
-   - `FocusRing` — 1px `var(--color-border-brand-base)` (`var(--corner-radius-radius-4)`). Keyboard focus: `outline` + `outline-offset: calc(-1 * var(--border-width-border-1))` on `.interactive:focus-visible` / `.secondaryInteractive:focus-visible`. Snapshot matrix rows use a `.focusRing` span with `inset: 0` (forced states use `tabIndex={-1}`). **No** secondary selected-focus `box-shadow` inset bar.
+   - `FocusRing` — 1px `var(--color-border-brand-base)` (`var(--corner-radius-radius-4)`).
+     - **Assembled rail (primary + secondary):** absolute ring with `inset: 0 var(--border-width-border-1)` — **1px gap** between the Main Menu L/R rail border and the focus ring (flush top/bottom). Applies to Default-Focus and Selected-Focus.
+     - **No drop-shadow** in that gap (Figma Selected-Focus has only an **inset** 4px selected bar via `SelectedInset` / `inset 4px 0 0 0`, not an outer/drop shadow).
+     - Keyboard focus uses the same geometry via `::after`. Snapshot matrix rows use a `.focusRing` / `__focus-ring` span; forced states use `tabIndex={-1}`. **No** secondary selected-focus inset bar.
 5. `MainMenuSecondaryList` — optional, under expanded primary row when `children` exist
    - `MainMenuSecondaryItem` — `.MainMenu-Left-Element-Secondary` (32px row)
 6. `ExpandCollapse` — footer control; **16×16** icon (`double-chev-left` when expanded / `double-chev-right` when collapsed)
@@ -69,12 +72,11 @@ Figma slot mapping:
 - **Chevron:** 14×14
 - **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-gray-neutral-base)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
 - **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge; continuous through the `8px` list gap). Isolated Element-Primary / Element-Secondary frames (`278px`) also bind **left + right** strokes of that token — that is the **same rail chrome**, not a second pair of row borders. **Do not** paint additional left/right borders on primary/secondary rows in the assembled rail (doubles the stroke and breaks the `8px` block gap). **`ExpandCollapse`** uses **`border-top` only**. **`MainMenuList` stays inside the root** (no negative side margins) so hover/selected fills end flush inside the rail stroke.
-- **Focus (PR #82 implementation):**
-  - **Primary & secondary keyboard focus:** `outline: var(--border-width-border-1) solid var(--color-border-brand-base)`; `outline-offset: calc(-1 * var(--border-width-border-1))`; `border-radius: var(--corner-radius-radius-4)`.
-  - **Secondary Default-Focus** (`12016:227537`): transparent fill; gray L/R stay visible; text `var(--color-text-gray-neutral)`; **no** 4px selected bar.
-  - **Secondary Selected-Focus** (`12016:227542`): fill `var(--color-background-brand-lighter-slate)`; text `var(--color-text-brand-strong)`; **no** 4px selected bar; **no** inset `box-shadow`.
-  - **Primary Default-Focus** (`12016:227840`): transparent fill; **no** 4px bar.
-  - **Primary Selected-Focus** (`12016:227912`): fill `var(--color-background-brand-lighter-slate)` + **4px** `SelectedInset` `var(--color-border-brand-base)` + focus ring.
+- **Focus (Figma-verified):**
+  - **Secondary Default-Focus** (`12016:227537`): focus ring `inset: 0 1px` — **1px** gap between rail L/R border and blue ring; ring flush on top/bottom; transparent fill; text `var(--color-text-gray-neutral)`; **no** 4px selected bar; **no drop-shadow** in the gap.
+  - **Secondary Selected-Focus** (`12016:227542`): fill `var(--color-background-brand-lighter-slate)`; text `var(--color-text-brand-strong)`; same L/R 1px focus inset; **no** 4px bar; **no** drop-shadow.
+  - **Primary Default-Focus** (`12016:227840`) / **Selected-Focus** (`12016:227912`): in the **assembled rail**, same `inset: 0 1px` focus gap as secondary (isolated Figma frames paint L/R strokes on the element and use `left/right: -1px` over those strokes; rail chrome is on the root instead). Selected-Focus adds **4px** `SelectedInset` (`var(--color-border-brand-base)`) — Figma expresses this as `inset 4px 0 0 0` shadow, **not** a drop-shadow in the focus gap.
+  - Keyboard focus: `::after` (or snapshot `.focusRing`) with `inset: 0 var(--border-width-border-1)`.
 - **`SelectedInset`:** primary only; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))`, `var(--color-border-brand-base)`.
 
 ## Tokens
@@ -106,7 +108,7 @@ Figma slot mapping:
 | Press | * | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
 | Selected | Collapsed | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
 | Selected | Expanded | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
-| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (`outline-offset: -1px`); no 4px bar | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (`inset: 0 1px` L/R gap); no 4px bar; no drop-shadow | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
 | Selected-Focus | * | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` **plus** focus ring | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
 
 ### Primary icon-only (`.MainMenu-Left-Element-PrimaryIcon`, collapsed)
@@ -125,7 +127,7 @@ Figma slot mapping:
 | Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
 | Press | `var(--color-background-brand-light-slate)` | `var(--color-text-brand-strong)` |
 | Selected | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
-| Default-Focus | transparent; focus ring `var(--color-border-brand-base)` (`outline-offset: -1px`); **no** 4px bar | `var(--color-text-gray-neutral)` |
+| Default-Focus | transparent; focus ring `var(--color-border-brand-base)` (`inset: 0 1px` — 1px gap from rail L/R border); **no** 4px bar | `var(--color-text-gray-neutral)` |
 | Selected-Focus | `var(--color-background-brand-lighter-slate)`; focus ring only; **no** 4px bar | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
@@ -359,7 +361,7 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 1. **Selected inset** — `var(--color-border-brand-base)`; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))`; primary rows only (secondary never gets the 4px bar).
 2. **Expand behavior** — parent rows (with `children`, expanded rail) only toggle the sub-menu; no navigate/select; secondary activation clears primary `selectedKey`.
 3. **Parent selected-context** — `.secondaryParentSelected` reads fully selected (brand-lighter bg, brand-strong label, brand icon/chevron, 4px inset when a secondary child is active); parent takes `aria-current="page"` when its selected child is hidden.
-4. **Focus ring** — keyboard focus via `outline` + `outline-offset: calc(-1 * var(--border-width-border-1))` on primary/secondary interactive rows; snapshot matrix uses `.focusRing` (`inset: 0`); forced-state rows use `tabIndex={-1}`; **no** secondary selected-focus inset `box-shadow`.
+4. **Focus ring** — primary + secondary in the rail: `inset: 0 var(--border-width-border-1)` (1px gap from Main Menu L/R border; **no drop-shadow** in the gap). Selected-Focus keeps the solid 4px `SelectedInset` only. Keyboard via `::after`; snapshot `.focusRing`; forced-state rows use `tabIndex={-1}`.
 
 ### Bug fixes applied (2026-07-01)
 1. **Menu top padding missing** — Original bug: `.root` (MainMenuLeftRoot) was missing top padding. Fix: Added `padding-top: var(--padding-padding-8)`.
@@ -376,4 +378,5 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 - React composition: `storybook/src/components/MainMenuLeft.tsx`, `MainMenuLeft.compose.tsx`
 - Composition codegen: `generation/spec_derived/main_menu_left_composition.py` (deterministic Item | Group emitter)
 - Angular composition: `storybook-angular/src/components/ids-main-menu-left/` (`IDS_MAIN_MENU_LEFT_IMPORTS`)
+- **Evidence (repo session):** 2026-09-02 — Figma MCP `get_design_context` + `get_metadata` + pixel screenshot on secondary Default-Focus `12016:227537` (1px gap: gray@0, white@1, blue@2) and primary Default-Focus `12016:227840` (`left/right: -1px`)
 - **Evidence (repo session):** 2026-09-01 — Figma MCP `get_design_context` + `get_variable_defs` + `get_metadata` on secondary/primary focus variants (file `0bHk3XhrjFhowgFkz9yLr4`)

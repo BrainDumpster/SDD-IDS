@@ -131,12 +131,12 @@ export const InlineCompactStates = {
 
 /** @type {import("@storybook/angular").StoryObj<IdsAlertComponent>} */
 export const InlineDetailedAllDetails = {
-  name: "Inline Detailed / All Details (Figma 11946:230644)",
+  name: "Inline Detailed / Title + Action + Dismiss (Figma 11946:230988)",
   parameters: {
     docs: {
       description: {
         story:
-          "Detailed critical inline: title + message + link + outlined action. Critical inline never shows dismiss.",
+          "Detailed warning-minor: title + message + link; outlined action in the title row; dismiss alone in trailing (matches Figma close frame).",
       },
       source: {
         type: "code",

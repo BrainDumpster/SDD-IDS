@@ -328,9 +328,18 @@
 }
 
 .secondaryInteractive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: calc(-1 * var(--border-width-border-1));
+  outline: none;
+}
+
+/* Secondary Default-Focus `12016:227537`: 1px gap from rail L/R border; flush top/bottom. */
+.secondaryInteractive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .bottomToggle {
@@ -382,10 +391,13 @@
   color: var(--color-icon-gray-neutral-base, #616161);
 }
 
-/* PR #82 — snapshot focus ring + keyboard focus on primary rows. */
+/* Focus ring — Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu
+   L/R border (gray @ x=0, gap @ x=1, blue @ x=2). No drop-shadow in the gap.
+   Primary isolated frames use left/right -1px over their own L/R strokes; in the rail those
+   strokes live on the root, so primary uses the same 1px inset as secondary. */
 .focusRing {
   position: absolute;
-  inset: 0;
+  inset: 0 var(--border-width-border-1);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -393,9 +405,17 @@
 }
 
 .interactive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: calc(-1 * var(--border-width-border-1));
+  outline: none;
+}
+
+.interactive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .primaryRow:not(.interactive):focus,
@@ -543,8 +563,17 @@
 }
 
 .programmeSynapse .secondaryInteractive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: calc(-1 * var(--border-width-border-1));
+  outline: none;
+}
+
+.programmeSynapse .secondaryInteractive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .programmeSynapse .secondaryInteractive.secondaryRowSelected:focus-visible {
