@@ -1,0 +1,35 @@
+{
+  "description": "iDRAC component to Figma node mapping for design spec verification and code generation",
+  "version": "1.0.0",
+  "lastUpdated": "2026-09-02",
+  "components": [
+    {
+      "slug": "deviceimage",
+      "displayName": "DeviceImage",
+      "designSpecPath": "components/idrac/deviceimage/design-spec.md",
+      "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library",
+      "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+      "nodeId": "41894:116183",
+      "mainComponentSetNodeId": "41894:116183",
+      "specPattern": "standalone",
+      "elements": {
+        "primaryContainer": "41894:116183",
+        "buttonSmall": "41894:116184",
+        "buttonMedium": "41894:116189",
+        "buttonLarge": "41894:116194",
+        "focusRing": "I41894:116184;9662:25245",
+        "textElement": "I41894:116184;9662:25244"
+      },
+      "states": {
+        "default": "41894:116184",
+        "hover": "41894:116185",
+        "focus": "41894:116184",
+        "active": "41894:116189",
+        "disabled": "41894:116195"
+      },
+      "verificationMethod": "Figma REST API",
+      "lastVerified": "2026-09-02",
+      "status": "draft"
+    }
+  ]
+}
