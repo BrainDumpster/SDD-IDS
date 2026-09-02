@@ -1,0 +1,23 @@
+/*
+ * iDRAC Design System — Global Theme Tokens
+ * Programme foundation: inherits from IDS baseline
+ * Scoped: html/body[data-design-system="idrac"] (+ [data-theme="dark"])
+ * Import in Storybook/apps with data-design-system="idrac" on html/body.
+ */
+
+@import "../ids-theme.css";
+
+/* ========================================================
+   iDRAC PROGRAMME OVERRIDES
+   Add iDRAC-specific token overrides here when needed.
+   Currently inherits all tokens from IDS baseline.
+   ======================================================== */
+
+html[data-design-system="idrac"], body[data-design-system="idrac"] {
+  /* iDRAC-specific token overrides can be added here */
+  /* Example: --color-background-brand-base: #custom-color; */
+}
+
+html[data-design-system="idrac"][data-theme="dark"], body[data-design-system="idrac"][data-theme="dark"] {
+  /* iDRAC-specific dark theme overrides can be added here */
+}
