@@ -209,7 +209,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 ### Behavior & guidelines
 
 - Default `programme` is **`ids`** (or omit prop).
-- Masthead: `triggerVariant="masthead"`, `sideOffset={0}` (implementation coerces minimum **`1px`** offset).
+- Masthead: `triggerVariant="masthead"`, `sideOffset={1}` (default for masthead; popup's top border sits right below the masthead's 1px bottom border, accounting for the 1px gap from the 54px trigger to the 56px masthead bottom).
 - Host **`components/ids-theme.css`** at application root.
 - Programme forks: load Synapse spec when `programme="synapse"` — see `components/synapse/app-launcher/design-spec.md`.
 
@@ -224,7 +224,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 | `footerAction` | `{ label, onClick }` | Optional footer CTA |
 | `columns` | `number` | default **`2`** |
 | `triggerVariant` | `"default"` \| `"masthead"` | default **`"default"`** |
-| `sideOffset` | `number` | default **`8`**; masthead coerces **`≥1`** |
+| `sideOffset` | `number` | default **`8`** (default trigger) / **`1`** (masthead trigger); `1` places the popup's top border right below the masthead's 1px bottom border |
 | `open` | `boolean?` | Controlled open state |
 | `defaultOpen` | `boolean?` | Uncontrolled initial open |
 | `onOpenChange` | `(open: boolean) => void` | Open-state callback |

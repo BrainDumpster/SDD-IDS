@@ -29,11 +29,14 @@ import React, {
   createContext,
   useContext,
   useMemo,
+  useRef,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
+  type KeyboardEvent,
   type ReactNode,
 } from "react";
 import { IdsBadge, type IdsBadgeType } from "../badge";
+import { IdsTooltip } from "../tooltip";
 import {
   collectMainSlots,
   findSlotElement,
@@ -190,11 +193,22 @@ export function IdsMastheadProductName({ children, className }: IdsMastheadProdu
   const ctx = useMasthead("Masthead.ProductName");
   const content = children ?? ctx.productName;
   if (content == null || content === false || content === "") return null;
-  return (
+  const productNameSlot = (
     <div className={cx(s.productName, className)} data-ids="IdsMastheadProductName">
       {content}
     </div>
   );
+  if (typeof content === "string" && content.length > 45) {
+    return (
+      <IdsTooltip side="bottom" hugContent>
+        <IdsTooltip.Trigger display="block">{productNameSlot}</IdsTooltip.Trigger>
+        <IdsTooltip.Panel>
+          <IdsTooltip.Body>{content}</IdsTooltip.Body>
+        </IdsTooltip.Panel>
+      </IdsTooltip>
+    );
+  }
+  return productNameSlot;
 }
 IdsMastheadProductName.displayName = "IdsMastheadProductName";
 markMastheadSlot(IdsMastheadProductName, "product-name");
@@ -256,13 +270,61 @@ export function IdsMastheadAvatarSlot({ children, className }: IdsMastheadAvatar
 IdsMastheadAvatarSlot.displayName = "IdsMastheadAvatarSlot";
 markMastheadSlot(IdsMastheadAvatarSlot, "avatar-slot");
 
-export function IdsMastheadActionsRow({ children, className, ...rest }: IdsMastheadActionsRowProps) {
+export function IdsMastheadActionsRow({
+  children,
+  className,
+  onKeyDown,
+  "aria-label": ariaLabel,
+  ...rest
+}: IdsMastheadActionsRowProps) {
   useMasthead("Masthead.ActionsRow");
+  const actionsRef = useRef<HTMLDivElement>(null);
+
   const icons = findSlotElement(children, "icons") ?? <IdsMastheadIconsSlot />;
   const launcher = findSlotElement(children, "app-launcher") ?? <IdsMastheadAppLauncherSlot />;
   const avatar = findSlotElement(children, "avatar-slot") ?? <IdsMastheadAvatarSlot />;
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      onKeyDown?.(event);
+      return;
+    }
+    const container = actionsRef.current;
+    if (!container) return;
+    const active = document.activeElement as HTMLElement | null;
+    if (!active || !container.contains(active)) {
+      onKeyDown?.(event);
+      return;
+    }
+    const focusables = Array.from(
+      container.querySelectorAll<HTMLElement>("button:not([disabled])"),
+    );
+    const index = focusables.indexOf(active);
+    if (index < 0) {
+      onKeyDown?.(event);
+      return;
+    }
+    event.preventDefault();
+    let nextIndex = index;
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % focusables.length;
+    else if (event.key === "ArrowLeft")
+      nextIndex = (index - 1 + focusables.length) % focusables.length;
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = focusables.length - 1;
+    focusables[nextIndex]?.focus();
+    onKeyDown?.(event);
+  }
+
   return (
-    <div className={cx(s.actions, className)} data-ids="IdsMastheadActionsRow" {...rest}>
+    <div
+      ref={actionsRef}
+      className={cx(s.actions, className)}
+      data-ids="IdsMastheadActionsRow"
+      {...rest}
+      role="toolbar"
+      aria-label={ariaLabel ?? "Masthead actions"}
+      onKeyDown={handleKeyDown}
+    >
       {icons}
       {launcher}
       {avatar}
