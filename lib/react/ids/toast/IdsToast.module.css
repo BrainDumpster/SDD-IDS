@@ -1,0 +1,246 @@
+/**
+ * IDS Toast — CSS Modules from components/ids/toast/design-spec.md
+ * Theme: components/ids-theme.css
+ */
+
+/* -------------------------------------------------------------------------- */
+/* ToastViewport                                                              */
+/* -------------------------------------------------------------------------- */
+
+.ids-toast-viewport {
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: min(617px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  outline: none;
+  pointer-events: none;
+}
+
+.ids-toast-viewport > * {
+  pointer-events: auto;
+}
+
+.ids-toast-viewport[data-position="top-left"] {
+  top: var(--padding-padding-16);
+  left: var(--padding-padding-16);
+}
+
+.ids-toast-viewport[data-position="top-center"] {
+  top: var(--padding-padding-16);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ids-toast-viewport[data-position="top-right"] {
+  top: var(--padding-padding-16);
+  right: var(--padding-padding-16);
+}
+
+.ids-toast-viewport[data-position="bottom-left"] {
+  bottom: var(--padding-padding-16);
+  left: var(--padding-padding-16);
+}
+
+.ids-toast-viewport[data-position="bottom-center"] {
+  bottom: var(--padding-padding-16);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ids-toast-viewport[data-position="bottom-right"] {
+  bottom: var(--padding-padding-16);
+  right: var(--padding-padding-16);
+}
+
+.ids-toast-viewport[data-position^="top-"] {
+  flex-direction: column;
+}
+
+.ids-toast-viewport[data-position^="bottom-"] {
+  flex-direction: column-reverse;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ToastItem root                                                             */
+/* -------------------------------------------------------------------------- */
+
+.ids-toast-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-space-32);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: var(--padding-padding-14) var(--padding-padding-16) var(--padding-padding-14)
+    var(--padding-padding-24);
+  background: var(--color-static-gray-900);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-white);
+  border-radius: var(--toast-control-radius);
+  color: var(--color-static-gray-white);
+  font-family: inherit;
+}
+
+.ids-toast-item[data-type="info"] {
+  --ids-toast-status-icon-color: var(--color-icon-alerting-info-base);
+}
+
+.ids-toast-item[data-type="critical"] {
+  --ids-toast-status-icon-color: var(--color-icon-alerting-critical-base);
+}
+
+.ids-toast-item[data-type="major-warning"] {
+  --ids-toast-status-icon-color: var(--color-icon-alerting-major-base);
+}
+
+.ids-toast-item[data-type="minor-warning"] {
+  --ids-toast-status-icon-color: var(--color-icon-alerting-minor-base);
+}
+
+.ids-toast-item[data-type="success"] {
+  --ids-toast-status-icon-color: var(--color-icon-alerting-success-base);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Content                                                                    */
+/* -------------------------------------------------------------------------- */
+
+.ids-toast-content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-8);
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: var(--padding-padding-2);
+}
+
+.ids-toast-icon-container {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-block: var(--padding-padding-2);
+  color: var(--ids-toast-status-icon-color);
+}
+
+.ids-toast-status-icon {
+  width: var(--scale-16);
+  height: var(--scale-16);
+  display: block;
+  object-fit: contain;
+}
+
+.ids-toast-message {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--typography-font-style-primary), sans-serif;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-static-gray-white);
+}
+
+/* -------------------------------------------------------------------------- */
+/* ActionContainer                                                            */
+/* -------------------------------------------------------------------------- */
+
+.ids-toast-action-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-4);
+  flex-shrink: 0;
+}
+
+/* View Details — IDS small tertiary button surface overrides for toast chrome */
+.ids-toast-view-details {
+  flex-shrink: 1;
+  min-width: 0;
+  color: var(--color-text-gray-white);
+  background: transparent;
+  border: none;
+}
+
+.ids-toast-view-details:hover:not(:disabled) {
+  background: var(--ui-palette-brand-900);
+  color: var(--color-text-gray-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.ids-toast-view-details:active:not(:disabled) {
+  background: var(--ui-palette-brand-800);
+  color: var(--color-text-gray-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.ids-toast-view-details-anchor {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--scale-24, 24px);
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  font-family: var(--typography-font-style-primary), sans-serif;
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-white);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: var(--button-control-radius, var(--corner-radius-radius-none));
+  cursor: pointer;
+}
+
+.ids-toast-view-details-anchor:hover {
+  background: var(--ui-palette-brand-900);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.ids-toast-view-details-anchor:active {
+  background: var(--ui-palette-brand-800);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.ids-toast-view-details-anchor:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-controls-base, var(--ui-palette-brand-400));
+  outline-offset: 2px;
+}
+
+/* Close — tertiary icon-only fixed 24×24, padding-6, shape-x 12×12 */
+.ids-toast-close {
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
+  min-height: var(--sizing-size-24);
+  min-width: var(--sizing-size-24);
+  padding: var(--padding-padding-6);
+  box-sizing: border-box;
+  color: var(--color-icon-gray-white);
+  background: transparent;
+  border: none;
+}
+
+.ids-toast-close:hover:not(:disabled) {
+  background: var(--ui-palette-brand-900);
+  color: var(--color-icon-gray-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.ids-toast-close:active:not(:disabled) {
+  background: var(--ui-palette-brand-800);
+  color: var(--color-icon-gray-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
+}
+
+.ids-toast-close :global([data-ids="ids-button-leading-icon"]) {
+  width: 100%;
+  height: 100%;
+}
+
+.ids-toast-close-icon {
+  width: 12px;
+  height: 12px;
+}

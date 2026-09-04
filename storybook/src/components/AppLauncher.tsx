@@ -166,7 +166,7 @@ export function AppLauncherOptionsList({
                 className={styles.optionItem}
                 onClick={opt.onSelect}
               >
-                {opt.label}
+                <span className={styles.optionLabel}>{opt.label}</span>
               </button>
             </li>
           ))}
@@ -392,7 +392,7 @@ export function AppLauncher({
           color={
             triggerVariant === "masthead"
               ? undefined
-              : "var(--color-text-neutral-strong)"
+              : "var(--color-text-gray-neutral-strong)"
           }
         />
       </Popover.Trigger>

@@ -8,7 +8,7 @@ import {
 } from "./IdsGetStarted";
 
 const meta: Meta<typeof IdsGetStarted> = {
-  title: "Spec Generated/IDS/Get Started",
+  title: "Components/IDS/Get Started",
   component: IdsGetStarted,
   parameters: { layout: "fullscreen" },
 };
@@ -22,7 +22,7 @@ const SAMPLE_NOTE =
   "This is where quick instructions for finding the SupportAssist feature within the product would be placed.";
 
 /** Figma single-page sample cards — `12189:233185` */
-export const specCards: IdsGetStartedCard[] = [
+const specCards: IdsGetStartedCard[] = [
   {
     id: "support-assist",
     title: "SupportAssist",
@@ -67,8 +67,11 @@ export const specCards: IdsGetStartedCard[] = [
 
 function StoryFrame(props: IdsGetStartedProps) {
   return (
-    <div style={{ width: "100%", height: "100dvh", minHeight: 0 }}>
-      <IdsGetStarted {...props} />
+    <div style={{ width: "100%", height: "100dvh", minHeight: 0, overflow: "auto" }}>
+      {/* Figma single-page frame is 1920 — keep Spec Accurate Design wide enough for 5 cards */}
+      <div style={{ minWidth: props.overflow ? undefined : 1800, height: "100%" }}>
+        <IdsGetStarted {...props} />
+      </div>
     </div>
   );
 }
@@ -76,7 +79,7 @@ function StoryFrame(props: IdsGetStartedProps) {
 /** Figma `Overflow=False, Sequential=False, Single-Page` — `12189:233185` */
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
-  render: () => <StoryFrame cards={specCards} />,
+  render: () => <StoryFrame cards={specCards} overflow={false} />,
 };
 
 /** Figma card element states — `12023:228883` */
@@ -132,26 +135,42 @@ const overflowCards: IdsGetStartedCard[] = [
   },
 ];
 
-/** Figma `Overflow=True, Sequential=False, Page 1 of 2` — `12189:233198` */
+/** Figma `Overflow=True` page 1 — right-edge overlay visible while more cards remain (`12189:233198`) */
 export const OverflowPageOne: Story = {
+  name: "Overflow — more cards",
   render: () => (
     <div style={{ width: "100%", height: "100dvh" }}>
       <div style={{ width: "min(1100px, 100%)", height: "100%", margin: "0 auto" }}>
-        <IdsGetStarted cards={overflowCards} overflow overflowPage="page1" />
+        <IdsGetStarted cards={overflowCards} overflow />
       </div>
     </div>
   ),
 };
 
-/** Figma `Overflow=True, Sequential=False, Page 2 of 2` — `12189:233211` */
-export const OverflowPageTwo: Story = {
-  render: () => (
-    <div style={{ width: "100%", height: "100dvh" }}>
+/** Last card fully in view — right overlay hidden; left overlay shown when scrolled (`12189:233211`) */
+function OverflowEndFrame() {
+  const hostRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const track = hostRef.current?.querySelector("[data-gs-card-track]") as HTMLElement | null;
+    if (!track) return;
+    track.scrollLeft = track.scrollWidth;
+    track.dispatchEvent(new Event("scroll"));
+  }, []);
+
+  return (
+    <div ref={hostRef} style={{ width: "100%", height: "100dvh" }}>
       <div style={{ width: "min(1100px, 100%)", height: "100%", margin: "0 auto" }}>
-        <IdsGetStarted cards={overflowCards} overflow overflowPage="page2" />
+        <IdsGetStarted cards={overflowCards} overflow />
       </div>
     </div>
-  ),
+  );
+}
+
+/** Figma left-edge overflow — overlay at left when first cards are off-screen (`12189:233211`) */
+export const OverflowPageTwo: Story = {
+  name: "Overflow — left edge",
+  render: () => <OverflowEndFrame />,
 };
 
 /** Figma `Overflow=False, Sequential=True, Single-Page` — `12189:233218` */
@@ -161,7 +180,7 @@ export const SequentialSinglePage: Story = {
   ),
 };
 
-/** Figma `Overflow=True, Sequential=True, Page 1 of 2` — `12189:233223` */
+/** Figma `Overflow=True, Sequential=True` — right overlay while more cards remain (`12189:233223`) */
 export const SequentialOverflowPageOne: Story = {
   render: () => (
     <div style={{ width: "100%", height: "100dvh" }}>

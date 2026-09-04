@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "lib": ["ES2022", "dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@storybook/angular": ["node_modules/@storybook/angular"],
+      "@storybook/*": ["node_modules/@storybook/*"],
+      "@component-contracts/*": ["../component-contracts/*"],
+      "@ids/angular": ["compiled/lib/angular/ids"],
+      "@ids/angular/*": ["compiled/lib/angular/ids/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "../lib/shared/**/*.d.ts",
+    "../component-contracts/common/**/*.ts",
+    "../component-contracts/ids/button.contract.ts",
+    "../component-contracts/ids/accordion.contract.ts",
+    "../component-contracts/ids/alert.contract.ts",
+    "../component-contracts/ids/badge.contract.ts",
+    "../component-contracts/ids/text-box.contract.ts",
+    "../component-contracts/ids/anchor-menu.contract.ts",
+    "../component-contracts/ids/dropdown-button.contract.ts",
+    "../component-contracts/ids/dual-list-box.contract.ts",
+    "../component-contracts/ids/toggle-switch.contract.ts",
+    "../component-contracts/ids/wizard.contract.ts",
+    "../lib/angular/ids/**/*.ts"
+  ]
+}

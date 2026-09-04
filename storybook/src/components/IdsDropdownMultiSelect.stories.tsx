@@ -1,6 +1,6 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { IdsBadge } from "./IdsBadge";
 import { DropdownMenu } from "./DropdownMenu";
 import { IdsTooltip } from "./IdsTooltip";
@@ -9,6 +9,59 @@ import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical
 
 type Size = "small" | "large";
 type Option = { id: string; label: string; disabled?: boolean };
+
+function FieldValue({
+  children,
+  tooltip,
+  tooltipTitle,
+}: {
+  children: string;
+  tooltip?: string;
+  tooltipTitle?: string;
+}) {
+  const [truncated, setTruncated] = useState(false);
+  const observerRef = useRef<ResizeObserver | null>(null);
+
+  const measureRef = useCallback((el: HTMLSpanElement | null) => {
+    observerRef.current?.disconnect();
+    if (!el) return;
+    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
+    check();
+    observerRef.current = new ResizeObserver(check);
+    observerRef.current.observe(el);
+  }, []);
+
+  const text = (
+    <span
+      ref={measureRef}
+      style={{
+        display: "block",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        width: "100%",
+        cursor: "pointer",
+      }}
+    >
+      {children}
+    </span>
+  );
+
+  return truncated && tooltip ? (
+    <IdsTooltip
+      title={tooltipTitle}
+      content={tooltip}
+      side="top"
+      arrowAlign="start"
+      triggerDisplay="block"
+      delay={0}
+    >
+      {text}
+    </IdsTooltip>
+  ) : (
+    text
+  );
+}
 
 function MultiSelectTrigger({
   placeholder = "-Select-",
@@ -46,31 +99,29 @@ function MultiSelectTrigger({
       error={error}
       hover={hover}
       focusVisible={focusVisible}
+      filled={selectedCount > 0}
       left={
         <>
           {showBadge ? (
-            <IdsTooltip
-              side="top"
-              align="start"
-              title={`${selectedCount} Items`}
-              content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
-            >
-              <span style={{ display: "inline-flex" }}>
-                <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
-              </span>
-            </IdsTooltip>
+            <span style={{ display: "inline-flex", flexShrink: 0 }}>
+              <IdsTooltip
+                side="top"
+                align="start"
+                title={`${selectedCount} Items`}
+                content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
+              >
+                <span style={{ display: "inline-flex" }}>
+                  <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
+                </span>
+              </IdsTooltip>
+            </span>
           ) : null}
-          <span
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              flex: "1 1 auto",
-              minWidth: 0,
-            }}
+          <FieldValue
+            tooltipTitle={`${selectedCount} Items`}
+            tooltip={selectedCount > 0 ? selectedLabels.join(", ") : undefined}
           >
             {listText}
-          </span>
+          </FieldValue>
         </>
       }
     />
@@ -78,9 +129,18 @@ function MultiSelectTrigger({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Spec Generated/IDS/Dropdown/Multi Select",
+  title: "Components/IDS/Dropdown/Multi Select",
   component: DropdownMenu,
-  parameters: { layout: "centered" },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      // Headroom above the trigger so the badge tooltip (side="top") points UP
+      // instead of Base UI flipping it below onto the open menu.
+      <div style={{ display: "flex", justifyContent: "center", padding: "120px 16px 32px" }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
@@ -183,7 +243,6 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setSmallSelected([])}
               clearAllDisabled={smallSelected.length === 0}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -204,13 +263,13 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setVisibleSelected([])}
               clearAllDisabled={visibleSelected.length === 0}
               showSelectedPanel
-              defaultShowSelectedExpanded
+              showSelectedFirst
+              defaultShowSelectedExpanded={false}
               onRemoveSelectedTag={(value) =>
                 setVisibleSelected((prev) => prev.filter((entry) => entry !== value))
               }
               onShowSelectedPanelClear={() => setVisibleSelected([])}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -231,13 +290,13 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setHiddenSelected([])}
               clearAllDisabled={hiddenSelected.length === 0}
               showSelectedPanel
+              showSelectedFirst
               defaultShowSelectedExpanded={false}
               onRemoveSelectedTag={(value) =>
                 setHiddenSelected((prev) => prev.filter((entry) => entry !== value))
               }
               onShowSelectedPanelClear={() => setHiddenSelected([])}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -255,7 +314,6 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setSectionSelected([])}
               clearAllDisabled={sectionSelected.length === 0}
               defaultOpen
-              maxHeight={220}
             />
           </div>
 
@@ -277,7 +335,7 @@ export const MainScenarios: Story = {
               defaultOpen
               maxHeight={180}
             />
-            <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+            <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
               <strong>onActionClick:</strong> {actionEvent}
             </div>
           </div>
@@ -342,7 +400,7 @@ export const StatesAndDetails: Story = {
               clearAllDisabled={selected.length === 0}
               disabled
             />
-            <span style={{ color: "var(--color-text-neutral)", fontSize: 14, lineHeight: "20px" }}>
+            <span style={{ color: "var(--color-text-gray-neutral)", fontSize: 14, lineHeight: "20px" }}>
               Helper text
             </span>
           </div>
@@ -359,7 +417,7 @@ export const StatesAndDetails: Story = {
               onClearAllClick={() => setSelected([])}
               clearAllDisabled={selected.length === 0}
             />
-            <span style={{ color: "var(--color-text-critical)", fontSize: 14, lineHeight: "20px", display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "var(--color-text-alerting-critical-base)", fontSize: 14, lineHeight: "20px", display: "flex", alignItems: "center", gap: 8 }}>
               <img src={statusCriticalSquareSolidIcon} alt="" aria-hidden="true" width={16} height={16} />
               Error message
             </span>

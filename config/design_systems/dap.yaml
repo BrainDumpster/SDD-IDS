@@ -26,6 +26,8 @@ program_theme_css_path: components/dap-theme.css
 framework_layer: ""
 root_spec_path: components/DAP/root-spec.md
 generated_storybook_dir: storybook-generated/dap
+generated_angular_storybook_dir: storybook-angular/src/generated/dap
+angular_storybook_dir: storybook-angular
 strict_storybook_gate: false
 
 breakpoints:

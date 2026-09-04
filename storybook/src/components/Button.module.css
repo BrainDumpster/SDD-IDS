@@ -3,7 +3,11 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-space-8);
-  border: var(--border-width-border-1) solid transparent;
+  /* Use box-shadow instead of border so the stroke does not add to layout height/width.
+     Figma auto-layout frames use inside strokes which don't expand frame bounds;
+     box-shadow: inset is the CSS equivalent. */
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   border-radius: var(--button-control-radius);
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-weight: 400;
@@ -60,7 +64,7 @@
 
 /* Icon colors per variant */
 .primary .iconSlot {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 .secondary .iconSlot,
 .tertiary .iconSlot,
@@ -68,12 +72,12 @@
   color: var(--color-icon-brand-base);
 }
 .danger .iconSlot {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 
 /* Disabled: all variants */
 .button:disabled .iconSlot {
-  color: var(--color-icon-disabled);
+  color: var(--color-icon-gray-disabled);
 }
 
 /* Leading icon: Figma `9662:25505` uses a 16×16 frame; fill slot when child omits size (e.g. legacy nodes). */
@@ -104,87 +108,95 @@
 
 /* Variants */
 .primary {
-  background: var(--color-background-controls-brand-base);
-  border-color: var(--color-border-transparent-brand);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
 }
-.primary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-strong);
+.primary:hover:not(:disabled),
+.primary[data-state="hover"] {
+  background: var(--color-background-controls-strong);
 }
-.primary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-stronger);
+.primary:active:not(:disabled),
+.primary[data-state="press"] {
+  background: var(--color-background-controls-stronger);
 }
 .primary:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .secondary {
   background: transparent;
   color: var(--color-text-brand-strong);
-  border-color: var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
-.secondary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter);
+.secondary:hover:not(:disabled),
+.secondary[data-state="hover"] {
+  background: var(--color-background-controls-lighter);
 }
-.secondary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light);
+.secondary:active:not(:disabled),
+.secondary[data-state="press"] {
+  background: var(--color-background-controls-light);
 }
 .secondary:disabled {
   background: transparent;
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 .tertiary {
   background: transparent;
   color: var(--color-text-brand-strong);
-  border-color: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.tertiary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter);
-  border-color: var(--color-border-brand-base);
+.tertiary:hover:not(:disabled),
+.tertiary[data-state="hover"] {
+  background: var(--color-background-controls-lighter);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
-.tertiary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light);
-  border-color: var(--color-border-brand-base);
+.tertiary:active:not(:disabled),
+.tertiary[data-state="press"] {
+  background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
 .tertiary:disabled {
   background: transparent;
-  border-color: transparent;
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  color: var(--color-text-gray-disabled);
 }
 
 .ghost {
   background: transparent;
-  color: var(--color-text-neutral-strong);
-  border-color: transparent;
+  color: var(--color-text-gray-neutral-strong);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
 .ghost:hover:not(:disabled) {
   background: var(--color-background-gray-lighter);
 }
 .ghost:disabled {
   background: transparent;
-  border-color: transparent;
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  color: var(--color-text-gray-disabled);
 }
 
 .danger {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-transparent-critical);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
 }
-.danger:hover:not(:disabled) {
+.danger:hover:not(:disabled),
+.danger[data-state="hover"] {
   background: var(--color-background-alerting-critical-strong);
 }
-.danger:active:not(:disabled) {
+.danger:active:not(:disabled),
+.danger[data-state="press"] {
   background: var(--color-background-alerting-critical-stronger);
 }
 .danger:disabled {
   background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
 }
 
 /* States */
@@ -192,10 +204,20 @@
   cursor: not-allowed;
 }
 
-/* Focus: outer ring 1px brand, offset from --button-focus-ring-offset (IDS default outline) */
-.button:focus-visible:not(:disabled) {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: var(--button-focus-ring-offset);
+/* Focus: outer ring 1px brand, 4px radius, 2px offset (Figma 9662:26377) */
+.button:focus-visible:not(:disabled),
+.button[data-state="focus-visible"] {
+  outline: none;
+}
+
+.button:focus-visible:not(:disabled)::after,
+.button[data-state="focus-visible"]::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 .programmeSynapse:focus-visible:not(:disabled) {
@@ -211,22 +233,7 @@
   pointer-events: none;
 }
 
-.primary:focus-visible:not(:disabled) {
-  border-color: var(--color-border-transparent-brand);
-}
-
-.secondary:focus-visible:not(:disabled),
-.tertiary:focus-visible:not(:disabled) {
-  border-color: var(--color-border-brand-base);
-}
-
-.danger:focus-visible:not(:disabled) {
-  border-color: var(--color-border-alerting-transparent-critical);
-}
-
-.ghost:focus-visible:not(:disabled) {
-  border-color: transparent;
-}
+/* box-shadow already set per-variant above; focus-visible only needs the outer outline ring */
 
 /* Loading */
 .loading {
@@ -243,6 +250,11 @@
 }
 .labelHidden {
   visibility: hidden;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
 }
 @keyframes spin {
   to { transform: rotate(360deg); }

@@ -24,6 +24,8 @@ program_theme_css_path: components/synapse-theme.css
 
 framework_layer: base-ui
 generated_storybook_dir: storybook-generated/synapse
+generated_angular_storybook_dir: storybook-angular/src/generated/synapse
+angular_storybook_dir: storybook-angular
 strict_storybook_gate: false
 
 root_spec_path: components/synapse/root-spec.md

@@ -1,0 +1,108 @@
+<div class="ids-app-launcher" data-ids="IdsAppLauncher">
+  <button
+    #triggerBtn
+    type="button"
+    class="ids-app-launcher__trigger"
+    [class.ids-app-launcher__trigger--masthead]="triggerVariant === 'masthead'"
+    [attr.aria-label]="ariaLabel"
+    [attr.aria-expanded]="open"
+    [attr.data-state]="open ? 'open' : 'closed'"
+    (click)="toggle()"
+  >
+    <ids-icon
+      className="ids-app-launcher__trigger-icon"
+      [shape]="triggerIcon"
+      [variant]="triggerVariant === 'masthead' ? 'mask' : 'inline'"
+      [size]="16"
+      [color]="triggerIconColor"
+    />
+  </button>
+
+  @if (open) {
+    <div
+      #popupPanel
+      class="ids-app-launcher__popup"
+      role="dialog"
+      [attr.aria-label]="ariaLabel"
+      [attr.data-programme]="resolvedProgramme"
+      [ngStyle]="popupStyle"
+    >
+      <div
+        class="ids-app-launcher__surface"
+        [class.ids-app-launcher__surface--two-product]="useTwoProductLayout"
+        [class.ids-app-launcher__surface--single]="useSingleProductWidth"
+        [attr.data-programme]="resolvedProgramme"
+      >
+        @if (products.length > 0) {
+          <div class="ids-app-launcher__product-region">
+            @for (row of rows; track $index; let rowIndex = $index) {
+              <div class="ids-app-launcher__product-row-group">
+                @if (rowIndex > 0) {
+                  <div class="ids-app-launcher__row-divider" aria-hidden="true"></div>
+                }
+                <div
+                  class="ids-app-launcher__product-row"
+                  [class.ids-app-launcher__product-row--single]="row.length === 1 && columns === 2"
+                >
+                  @for (product of row; track product.id || product.name; let cellIndex = $index) {
+                    @if (cellIndex > 0 && !useTwoProductInternalRail) {
+                      <div class="ids-app-launcher__column-divider" aria-hidden="true"></div>
+                    }
+                    @if (product.href) {
+                      <a
+                        class="ids-app-launcher__tile"
+                        [class.ids-app-launcher__tile--two-product]="useTwoProductInternalRail"
+                        [href]="product.href"
+                        (click)="onProductActivate(product, $event)"
+                      >
+                        <ng-container
+                          *ngTemplateOutlet="tileInner; context: { product: product, cellIndex: cellIndex }"
+                        />
+                      </a>
+                    } @else {
+                      <button
+                        type="button"
+                        class="ids-app-launcher__tile"
+                        [class.ids-app-launcher__tile--two-product]="useTwoProductInternalRail"
+                        (click)="onProductActivate(product)"
+                      >
+                        <ng-container
+                          *ngTemplateOutlet="tileInner; context: { product: product, cellIndex: cellIndex }"
+                        />
+                      </button>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+<ng-template #tileInner let-product="product" let-cellIndex="cellIndex">
+  <div
+    class="ids-app-launcher__label-stack"
+    [class.ids-app-launcher__label-stack--no-icon]="isNoIcon(product)"
+  >
+    @if (!isNoIcon(product)) {
+      <div class="ids-app-launcher__icon-slot">
+        <ids-icon
+          className="ids-app-launcher__default-product-icon"
+          [shape]="productIconSlug(product)"
+          variant="mask"
+          [size]="32"
+        />
+      </div>
+    }
+    <span class="ids-app-launcher__app-name">{{ product.name }}</span>
+  </div>
+  @if (useTwoProductInternalRail && cellIndex === 0) {
+    <span
+      class="ids-app-launcher__tile-rail ids-app-launcher__tile-rail--dotted"
+      aria-hidden="true"
+    ></span>
+  }
+</ng-template>

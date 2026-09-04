@@ -33,14 +33,41 @@ function isSameDay(a: Date | null, b: Date | null) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
-function formatDate(d: Date) {
+function formatDate(d: Date, format: string = "MM-DD-YYYY") {
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
-  return `${mm}/${dd}/${d.getFullYear()}`;
+  const yyyy = d.getFullYear();
+
+  if (format === "DD/MM/YYYY") {
+    return `${dd}/${mm}/${yyyy}`;
+  }
+  if (format === "YYYY-MM-DD") {
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  // Default: MM-DD-YYYY
+  return `${mm}-${dd}-${yyyy}`;
 }
 
-function parseDate(s: string): Date | null {
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+function parseDate(s: string, format: string = "MM-DD-YYYY"): Date | null {
+  let m: RegExpMatchArray | null;
+
+  if (format === "DD/MM/YYYY") {
+    m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) return null;
+    const d = new Date(+m[3], +m[2] - 1, +m[1]);
+    if (isNaN(d.getTime())) return null;
+    return d;
+  }
+  if (format === "YYYY-MM-DD") {
+    m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (!m) return null;
+    const d = new Date(+m[1], +m[2] - 1, +m[3]);
+    if (isNaN(d.getTime())) return null;
+    return d;
+  }
+
+  // Default: MM-DD-YYYY
+  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
   if (!m) return null;
   const d = new Date(+m[3], +m[1] - 1, +m[2]);
   if (isNaN(d.getTime())) return null;
@@ -53,6 +80,9 @@ export interface IdsDatePickerProps {
   size?: "large" | "small";
   placeholder?: string;
   label?: string;
+  required?: boolean;
+  /** Date format for input text display/parsing (e.g., "MM-DD-YYYY", "DD/MM/YYYY", "YYYY-MM-DD"). Default: "MM-DD-YYYY". */
+  dateFormat?: string;
   /** Date format hint displayed below the input (e.g. "MM-DD-YYYY"). Always shown unless empty string. */
   formatHint?: string;
   helperText?: string;
@@ -85,8 +115,10 @@ export function IdsDatePicker({
   value = null,
   onChange,
   size = "large",
-  placeholder = "MM/DD/YYYY",
+  placeholder,
   label,
+  required = false,
+  dateFormat = "MM-DD-YYYY",
   formatHint = "MM-DD-YYYY",
   helperText,
   disabled = false,
@@ -106,9 +138,10 @@ export function IdsDatePicker({
   const today = useMemo(() => new Date(), []);
   const [internalValue, setInternalValue] = useState<Date | null>(value);
   const [open, setOpen] = useState(forceOpen ?? false);
-  const [inputText, setInputText] = useState(value ? formatDate(value) : "");
+  const [inputText, setInputText] = useState(value ? formatDate(value, dateFormat) : "");
   const [viewMonth, setViewMonth] = useState(value?.getMonth() ?? today.getMonth());
   const [viewYear, setViewYear] = useState(value?.getFullYear() ?? today.getFullYear());
+  const effectivePlaceholder = placeholder ?? dateFormat;
   const [monthDropdownOpen, setMonthDropdownOpen] = useState(false);
   const [yearDropdownOpen, setYearDropdownOpen] = useState(false);
 
@@ -128,9 +161,9 @@ export function IdsDatePicker({
   useEffect(() => {
     if (value !== undefined) {
       setInternalValue(value);
-      setInputText(value ? formatDate(value) : "");
+      setInputText(value ? formatDate(value, dateFormat) : "");
     }
-  }, [value]);
+  }, [value, dateFormat]);
 
   useEffect(() => {
     if (forceOpen !== undefined) setOpen(forceOpen);
@@ -154,11 +187,11 @@ export function IdsDatePicker({
         return;
       }
       setInternalValue(d);
-      setInputText(formatDate(d));
+      setInputText(formatDate(d, dateFormat));
       setOpen(false);
       onChange?.(d);
     },
-    [onChange, rangeMode, rangeStart, rangeEnd, onRangeChange],
+    [onChange, rangeMode, rangeStart, rangeEnd, onRangeChange, dateFormat],
   );
 
   const isInRange = useCallback(
@@ -293,7 +326,7 @@ export function IdsDatePicker({
 
   const handleInputBlur = () => {
     if (inputText.trim()) {
-      const d = parseDate(inputText);
+      const d = parseDate(inputText, dateFormat);
       if (d && !isDateDisabled(d)) {
         selectDate(d);
         setViewMonth(d.getMonth());
@@ -415,16 +448,14 @@ export function IdsDatePicker({
         <div className={styles.headerDropdowns}>
           <button
             type="button"
-            className={styles.dropdownButton}
+            className={`${styles.dropdownButton}${monthDropdownOpen ? ` ${styles.menuOpen}` : ""}`}
             onClick={() => {
               setMonthDropdownOpen((v) => !v);
               setYearDropdownOpen(false);
             }}
           >
             {MONTH_NAMES[viewMonth]}
-            <svg className={styles.caretIcon} viewBox="0 0 10 10">
-              <path d="M2 3.5L5 7L8 3.5" fill="currentColor" />
-            </svg>
+            <Icon shapeName="arrow-drop-tri-caret" className={styles.caretIcon} style={{ width: 10, height: 10 }} />
             {monthDropdownOpen && (
               <div className={styles.overlayDropdown}>
                 {MONTH_NAMES.map((name, i) => (
@@ -446,16 +477,14 @@ export function IdsDatePicker({
           </button>
           <button
             type="button"
-            className={`${styles.dropdownButton} ${styles.yearBtn}`}
+            className={`${styles.dropdownButton} ${styles.yearBtn}${yearDropdownOpen ? ` ${styles.menuOpen}` : ""}`}
             onClick={() => {
               setYearDropdownOpen((v) => !v);
               setMonthDropdownOpen(false);
             }}
           >
             {viewYear}
-            <svg className={styles.caretIcon} viewBox="0 0 10 10">
-              <path d="M2 3.5L5 7L8 3.5" fill="currentColor" />
-            </svg>
+            <Icon shapeName="arrow-drop-tri-caret" className={styles.caretIcon} style={{ width: 10, height: 10 }} />
             {yearDropdownOpen && (
               <div className={styles.overlayDropdown}>
                 {yearRange.map((yr) => (
@@ -627,53 +656,62 @@ export function IdsDatePicker({
 
   return (
     <div className={styles.root} ref={rootRef} onKeyDown={handleKeyDown}>
-      {label && <span className={styles.label}>{label}</span>}
-      <div className={styles.positionWrapper} ref={anchorRef}>
-        <div className={fieldClasses}>
-          <input
-            type="text"
-            className={styles.textInput}
-            placeholder={placeholder}
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onMouseDown={() => setMouseActivated(true)}
-            onBlur={() => { setMouseActivated(false); handleInputBlur(); }}
-            disabled={disabled}
-            aria-label={label || "Date"}
-          />
-          <button
-            type="button"
-            className={`${styles.calendarIconBtn} ${error ? styles.error : ""}`}
-            onClick={() => {
-              if (!disabled) setOpen((v) => !v);
-            }}
-            disabled={disabled}
-            aria-label="Open calendar"
-            aria-expanded={open}
-          >
-            <Icon shapeName="calendar-simple-16" style={{ width: 16, height: 16 }} />
-          </button>
+      {label && (
+        <div className={`${styles.label}${size === "small" ? ` ${styles.labelSmall}` : ""}`}>
+          <div className={styles.labelInner}>
+            <span className={styles.labelText}>{label}</span>
+            {required && <span className={styles.labelRequired}>*</span>}
+          </div>
         </div>
-
-        {!popupPortal && calendarPopup}
-        {popupPortal &&
-          open &&
-          !disabled &&
-          typeof document !== "undefined" &&
-          calendarPopup &&
-          createPortal(calendarPopup, document.body)}
-      </div>
-      {formatHint && <span className={styles.formatHint}>{formatHint}</span>}
-      {error && errorMessage && (
-        <span className={styles.errorMessage}>
-          <Icon
-            shapeName="status-critical-square-solid"
-            variant="img"
-            style={{ width: 16, height: 16, flexShrink: 0 }}
-          />
-          {errorMessage}
-        </span>
       )}
+      <div className={styles.inputGroup}>
+        <div className={styles.positionWrapper} ref={anchorRef}>
+          <div className={fieldClasses}>
+            <input
+              type="text"
+              className={styles.textInput}
+              placeholder={effectivePlaceholder}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onMouseDown={() => setMouseActivated(true)}
+              onBlur={() => { setMouseActivated(false); handleInputBlur(); }}
+              disabled={disabled}
+              aria-label={label || "Date"}
+            />
+            <button
+              type="button"
+              className={`${styles.calendarIconBtn} ${error ? styles.error : ""}`}
+              onClick={() => {
+                if (!disabled) setOpen((v) => !v);
+              }}
+              disabled={disabled}
+              aria-label="Open calendar"
+              aria-expanded={open}
+            >
+              <Icon shapeName="calendar-simple-16" style={{ width: 16, height: 16 }} />
+            </button>
+          </div>
+
+          {!popupPortal && calendarPopup}
+          {popupPortal &&
+            open &&
+            !disabled &&
+            typeof document !== "undefined" &&
+            calendarPopup &&
+            createPortal(calendarPopup, document.body)}
+        </div>
+        {formatHint && !error && <span className={styles.formatHint}>{formatHint}</span>}
+        {error && errorMessage && (
+          <span className={styles.errorMessage}>
+            <Icon
+              shapeName="status-critical-square-solid"
+              variant="img"
+              style={{ width: 16, height: 16, flexShrink: 0 }}
+            />
+            {errorMessage}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

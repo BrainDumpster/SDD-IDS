@@ -2,6 +2,8 @@
 # Time Picker Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/TimePicker.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/time_picker.py`
 - Component: Time Picker
 - Design System: IDS
 - Category: Form Elements
@@ -9,14 +11,14 @@
 - Description: Form control for selecting a time of day via text input and scroll-column dropdown (12h/24h, optional seconds).
 - Status: draft
 - Created: 2026-05-26
-- Updated: 2026-05-26
+- Updated: 2026-07-16
 - Figma design (overview): `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42159-132203&m=dev`
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
 - Primary node: `42159:132203` (`TimePicker-Main` — states × sizes matrix)
 - Element nodes:
   - Time dropdown: `42159:132108` (`TimePicker-Element-Dropdown` — 12h/24h × seconds variants)
 - Storybook examples requested: yes
-- Storybook path: `storybook/src/components/TimePicker.stories.tsx`
+- Storybook path: `storybook-generated/ids/src/components/TimePicker.stories.tsx`
 - Storybook title: `Spec Generated/IDS/Time Picker`
 - Verification method: Figma MCP (`get_design_context`)
 - Last verified: 2026-05-26
@@ -24,12 +26,12 @@
 ## Anatomy
 
 ### Input field
-1. `TimePickerRoot` — flex column, `gap: var(--spacing-space-4)` (4px) between `Label` and field group
-2. optional `Label`
+1. `TimePickerRoot` — flex row, `gap: 16px` between `Label` and field group
+2. optional `Label` — flex row with `labelInner` wrapper containing `labelText` and optional `labelRequired` asterisk; padding: `var(--padding-padding-10)` vertical for large, `var(--padding-padding-6)` for small
 3. `FieldGroup` — flex column, `gap: var(--spacing-space-4)` (4px), `isolate` (Figma "Date and time picker")
 4. `FieldContainer` — text input + clock icon trigger (z-index: 2)
 5. `TextInput` — editable time value or placeholder
-6. `ClockIconTrigger` — `time-clock-16` button (opens/closes time popup)
+6. `ClockIconTrigger` — tertiary icon-only `Button` with `time-clock-16` icon (opens/closes time popup)
 7. `FormatHint` — always-visible format text directly below `FieldContainer` with **4px** gap (`var(--spacing-space-4)`); use `<span>` not `<p>` (no default paragraph margin); z-index: 1
 8. optional `ValidationError` (`status-critical-square-solid` icon + error message)
 
@@ -50,19 +52,19 @@
 - Field container: `padding-left: var(--padding-padding-16)`; no right padding (icon button provides trailing padding)
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
 - Field container corner radius: `var(--time-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
-- Clock icon button: `padding: var(--padding-padding-12) var(--padding-padding-16)` (large), `var(--padding-padding-8) var(--padding-padding-16)` (small), `border-radius: var(--time-picker-control-radius)` on icon hit area
-- Time popup shell: `border-radius: var(--time-picker-control-radius)` (IDS theme: square); when attached below field, top corners `0` and field bottom corners flatten on open
+- Clock icon button: trailing hit area, `align-self: stretch`, `margin: -1px -1px -1px 0` (overlaps field border). Hover fill + chrome: `border-radius: var(--time-picker-control-radius)` (IDS: square / `var(--corner-radius-radius-none)`; Figma Hover on icon `42159:132250`). Do **not** use `--button-control-radius` (Synapse 4px). Padding: `var(--padding-padding-12)` / `var(--padding-padding-16)` large; `var(--padding-padding-8)` / `var(--padding-padding-16)` small.
+- Time popup shell: `border-radius: 0` (square corners)
 - Field focus ring corner radius: `var(--time-picker-focus-ring-radius)` (`var(--corner-radius-radius-4)` in IDS theme)
 - Input width: container-driven (`width: 100%`); text `flex: 1 0 0`, `min-width: 1px`
-- Placeholder: Roboto Regular (400), 14px/20px, `var(--color-text-disabled)`
-- Filled value: Roboto Medium (500), 14px/20px, `var(--color-text-neutral)` (#4d4d4d)
-- Format hint: Roboto Medium (500), body-2, `var(--color-text-neutral)`, always below field
+- Placeholder: Roboto Regular (400), 14px/20px, `var(--color-text-gray-disabled)`
+- Filled value: Roboto Regular (400), 14px/20px, `var(--color-text-gray-neutral)` (#4d4d4d)
+- Format hint: Roboto Regular (400), body-2, `var(--color-text-gray-neutral)`, always below field
 - Root-to-hint gap: `var(--spacing-space-4)` (4px)
 - Validation error row: `gap: var(--spacing-space-8)` between icon and message; icon `status-critical-square-solid` 16×16, `variant="img"`
 
 ### Time popup (`42159:132108`)
 - Position: `absolute`, `right: 0`, `top: 100%`, `margin-top: -1px` (attached to input — 1px overlap with field bottom edge)
-- When open: input border `var(--color-border-brand-base)`; popup full `1px` `var(--color-border-accessible)` border on all sides
+- When open: input border `var(--color-border-brand-base)`; popup full `1px` `var(--color-border-gray-neutral-base)` border on all sides
 - Padding: `var(--padding-padding-16)` (16px); 24h-only layout may use `px: var(--padding-padding-40)` per Figma variant
 - Column gap: `var(--spacing-space-16)` (16px) between columns
 - Column width: `34px` per column
@@ -89,26 +91,27 @@
 | `--time-picker-focus-ring-radius` | `var(--corner-radius-radius-4)` |
 
 ### Input field
-- `var(--color-background-component)` — field background
-- `var(--color-border-accessible)` — default border
-- `var(--color-border-strong)` — hover border (text field)
+- `var(--color-background-surface-component)` — field background
+- `var(--color-border-gray-neutral-base)` — default border
+- `var(--color-border-gray-neutral-strong)` — hover border (text field)
 - `var(--color-border-brand-base)` — pointer-focus / open / selected border
-- `var(--color-text-neutral-strong)` — placeholder override when needed
-- `var(--color-text-neutral)` — filled value text
-- `var(--color-text-disabled)` — placeholder, disabled text
+- `var(--color-text-gray-neutral-strong)` — placeholder override when needed
+- `var(--color-text-gray-neutral)` — filled value text
+- `var(--color-text-gray-disabled)` — placeholder, disabled text
 - `var(--color-background-gray-lighter)` — disabled field background (Figma `TimePicker-Main` disabled)
-- `var(--color-border-disabled)` — disabled border
+- `var(--color-border-gray-disabled)` — disabled border
 - `var(--color-icon-brand-base)` — clock icon default
-- `var(--color-icon-disabled)` — clock icon disabled
-- `var(--color-background-controls-brand-lighter)` — icon hover bg; selected filled value highlight
+- `var(--color-icon-gray-disabled)` — clock icon disabled
+- `var(--color-background-controls-lighter)` — icon hover bg; selected filled value highlight
 - `var(--color-border-alerting-critical-base)` — error border
-- `var(--color-text-critical)` — error message
-- `var(--color-icon-alerting-critical)` — error icon (use `status-critical-square-solid` asset)
+- `var(--color-text-alerting-critical-base)` — error message
+- `var(--color-icon-alerting-critical-base)` — error icon (use `status-critical-square-solid` asset)
 
 ### Time popup
-- `var(--color-background-surface-2)` — popup surface
-- `var(--color-border-accessible)` — popup border
-- `var(--color-text-neutral-strong)` — column value text
+- `var(--color-background-surface-secondary)` — popup surface
+- `var(--color-border-gray-neutral-base)` — popup border
+- `var(--color-text-gray-neutral-strong)` — column value text
+- `var(--color-icon-gray-neutral-base)` — column increment/decrement arrows
 
 ### Icons
 - `time-clock-16` — 16×16px trailing trigger
@@ -121,23 +124,23 @@
 
 | State | Background | Border | Text | Icon | Notes |
 |---|---|---|---|---|---|
-| Default (empty) | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` (placeholder) | `var(--color-icon-brand-base)` | Format hint always visible |
-| Default (filled) | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` Medium | `var(--color-icon-brand-base)` | Example value `09:30 PM` |
-| Hover (text field) | `var(--color-background-component)` | `var(--color-border-strong)` | (unchanged) | (unchanged) | Container border only |
-| Hover on icon | `var(--color-background-component)` | `var(--color-border-accessible)` | (unchanged) | `var(--color-icon-brand-base)` | Icon: bg `var(--color-background-controls-brand-lighter)`, border `var(--color-border-brand-base)` |
-| Pointer-focused / Selected (empty) | `var(--color-background-component)` | `var(--color-border-brand-base)` | — | `var(--color-icon-brand-base)` | Cursor in field; placeholder hidden on focus; **no** outer ring on click |
-| Keyboard-focused on text field | `var(--color-background-component)` | `var(--color-border-accessible)` | (unchanged) | (unchanged) | Outer ring on container: `inset: -5px`, `1px solid var(--color-border-brand-base)`, `border-radius: 4px` (Figma) |
-| Focused on icon | `var(--color-background-component)` | `var(--color-border-accessible)` | (unchanged) | (unchanged) | Ring on icon only: `inset: -3px`, `border-radius: 4px` |
-| Disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` | `var(--color-icon-disabled)` | No hover on field or icon |
-| Selected with dropdown | `var(--color-background-component)` | `var(--color-border-brand-base)` | per content | `var(--color-icon-brand-base)` | Popup open; `margin-top: -1px` attaches popup to input; format hint stays below field |
-| Selected (filled, editing) | `var(--color-background-component)` | `var(--color-border-brand-base)` | value on `var(--color-background-controls-brand-lighter)` | `var(--color-icon-brand-base)` | Active text selection highlight |
-| Error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | `var(--color-text-neutral-strong)` | `var(--color-icon-brand-base)` | Error row replaces format hint position in stack |
+| Default (empty) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` (placeholder) | `var(--color-icon-brand-base)` | Format hint always visible |
+| Default (filled) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` Regular | `var(--color-icon-brand-base)` | Example value `09:30 PM` |
+| Hover (text field) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | (unchanged) | (unchanged) | Container border only |
+| Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | `var(--color-icon-brand-base)` | Icon: bg `var(--color-background-controls-lighter)`, border `var(--color-border-brand-base)` |
+| Pointer-focused / Selected (empty) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | — | `var(--color-icon-brand-base)` | Cursor in field; placeholder hidden on focus; **no** outer ring on click |
+| Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | (unchanged) | Outer ring on container: `inset: -5px`, `1px solid var(--color-border-brand-base)`, `border-radius: 4px` (Figma) |
+| Focused on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | (unchanged) | Ring on icon only: `inset: -3px`, `border-radius: 4px` |
+| Disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-icon-gray-disabled)` | No hover on field or icon |
+| Selected with dropdown | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | per content | `var(--color-icon-brand-base)` | Popup open; `margin-top: -1px` attaches popup to input; format hint stays below field |
+| Selected (filled, editing) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | value on `var(--color-background-controls-lighter)` | `var(--color-icon-brand-base)` | Text selection background: transparent (no highlight); clear selection on button click |
+| Error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Error row replaces format hint position in stack |
 
 ### Time column value cell states
 | State | Background | Border | Text |
 |---|---|---|---|
-| Default | transparent | none | `var(--color-text-neutral-strong)` |
-| Selected (in scroll list) | transparent | none | `var(--color-text-neutral-strong)` centered in 32×32 cell |
+| Default | transparent | none | `var(--color-text-gray-neutral-strong)` |
+| Selected (in scroll list) | transparent | none | `var(--color-text-gray-neutral-strong)` centered in 32×32 cell |
 
 ## States (Dark Theme)
 
@@ -202,6 +205,7 @@ Same semantic `var(--...)` tokens as **States (Light Theme)**. Resolved dark val
 | `size` | `'large' \| 'small'` | `'large'` | Field height |
 | `placeholder` | `string` | `'HH:MM AM/PM'` | Input placeholder |
 | `label` | `string` | — | Optional label |
+| `required` | `boolean` | `false` | Show required asterisk (`*`) after label text |
 | `formatHint` | `string` | `'HH:MM AM/PM'` | Hint below field |
 | `clockType` | `'12h' \| '24h'` | `'12h'` | 12- or 24-hour dropdown |
 | `showSeconds` | `boolean` | `false` | Show seconds column |
@@ -253,17 +257,17 @@ TimePickerRoot
 ### Per-slot style contract
 | Slot | Tokens / rules |
 |---|---|
-| `FieldContainer` | bg `var(--color-background-component)`; border `1px solid var(--color-border-accessible)`; no border-radius |
-| `FieldContainer:hover` (not icon) | border `var(--color-border-strong)` |
+| `FieldContainer` | bg `var(--color-background-surface-component)`; border `1px solid var(--color-border-gray-neutral-base)`; no border-radius |
+| `FieldContainer:hover` (not icon) | border `var(--color-border-gray-neutral-strong)` |
 | `FieldContainer:focus-within` (pointer) | border `var(--color-border-brand-base)`; no outline |
-| `FieldContainer:focus-visible` (keyboard, not mouseActivated) | border `var(--color-border-accessible)`; outline `1px solid var(--color-border-brand-base)`, offset `3px`, radius `3px` |
+| `FieldContainer:focus-visible` (keyboard, not mouseActivated) | border `var(--color-border-gray-neutral-base)`; outline `1px solid var(--color-border-brand-base)`, offset `3px`, radius `3px` |
 | `FieldContainer.open` | border `var(--color-border-brand-base)` |
-| `FieldContainer.disabled` | bg `var(--color-background-gray-lighter)`; border `var(--color-border-disabled)` |
+| `FieldContainer.disabled` | bg `var(--color-background-gray-lighter)`; border `var(--color-border-gray-disabled)` |
 | `FieldContainer.error` | border `var(--color-border-alerting-critical-base)` |
-| `ClockIconTrigger` | icon `var(--color-icon-brand-base)`; transparent border default; hover brand-lighter + brand border |
-| `FormatHint` | `var(--color-text-neutral)` body-2 medium |
-| `TimePopup` | bg `var(--color-background-surface-2)`; border accessible; Shadow 2; padding 16px; right-aligned; `margin-top: -1px`; `border-radius: var(--time-picker-control-radius)` (bottom corners when attached) |
-| `ValueCell` | 32×32; text `var(--color-text-neutral-strong)` 14px regular |
+| `ClockIconTrigger` | icon `var(--color-icon-brand-base)`; transparent border default; hover bg `var(--color-background-controls-lighter)` + border `var(--color-border-brand-base)`; `border-radius: var(--time-picker-control-radius)` (IDS square) |
+| `FormatHint` | `var(--color-text-gray-neutral)` body-2 regular |
+| `TimePopup` | bg `var(--color-background-surface-secondary)`; border accessible; Shadow 2; padding 16px; right-aligned; `margin-top: -1px`; `border-radius: var(--time-picker-control-radius)` (bottom corners when attached) |
+| `ValueCell` | 32×32; text `var(--color-text-gray-neutral-strong)` 14px regular |
 
 ### Behavior contract
 | Behavior | Rule |
@@ -311,6 +315,7 @@ See **Interactions → Accessibility**. Minimum: dialog labeling, expanded on tr
 | Figma node | Description | Usage |
 |---|---|---|
 | `42159:132203` | `TimePicker-Main` | Full state × size matrix |
+| `42159:132250` | `TimePicker-Main` — Hover on icon | Clock hit-area hover fill; square IDS radius (`42159:132255`) |
 | `42159:132108` | `TimePicker-Element-Dropdown` | Popup columns, 12h/24h, seconds variants |
 | `42159:132173` | Dropdown 12h HH:MM | Default open popup layout |
 | `42159:132126` | Dropdown 24h HH:MM | Two-column layout |
@@ -320,3 +325,22 @@ See **Interactions → Accessibility**. Minimum: dialog labeling, expanded on tr
 | `9662:25120` | `Button` | Icon hit-area pattern |
 
 **Verification:** Figma MCP `get_design_context` on `42159:132203` and `42159:132108`, file `0bHk3XhrjFhowgFkz9yLr4`, session 2026-05-26.
+
+| Runtime path | Role |
+|---|---|
+| `lib/react/ids/time-picker/` | React reference implementation |
+| `lib/angular/ids/time-picker/` | Angular implementation (parity with React) |
+| `storybook-angular/src/components/ids-time-picker/` | Angular Spec Generated stories |
+| `components/ids/date-and-time-picker/design-spec.md` | Family map entry (Date and Time Picker) |
+
+## Implementation Notes
+Last updated: 2026-07-17
+
+- **Font-weight:** all text elements use `400`.
+- **Required indicator:** `required?: boolean` prop renders a `*` (`var(--color-text-alerting-critical-base)`) after the label.
+- **Label layout:** the label is optional; when present it sits to the left of the field (root is a `row` with gap 16px).
+- **Clock button:** trailing native icon button (same pattern as Date Picker calendar trigger). Hover fill uses `var(--time-picker-control-radius)` — square in IDS (Figma `42159:132250`). Not `--button-control-radius`.
+- **Field border:** keeps the accessible border when the clock button is hovered/focused.
+- **Text selection:** input has no selection highlight; selection is cleared when opening the popup.
+- **Column arrows:** use `var(--color-icon-gray-neutral-base)`.
+- **Time popup:** border-radius is `0` (square corners).

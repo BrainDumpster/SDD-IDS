@@ -1,6 +1,8 @@
 # Main Menu Top Design Spec
 
 ## Metadata
+- **Storybook path:** `storybook-generated/ids/src/components/MainMenuTop.stories.tsx`
+- **Deterministic generator:** `generation/deterministic_storybook/ids/main_menu_top.py`
 - **Component:** Main Menu Top
 - **Design system:** IDS
 - **Category:** Navigation
@@ -26,7 +28,7 @@
 
 Deterministic slot order for **`MainMenuTopRoot`** (`nav`, horizontal):
 
-1. **`MainMenuTopBar`** — full-width bar on `var(--color-background-surface-1)`
+1. **`MainMenuTopBar`** — full-width bar on `var(--color-background-surface-primary)`
 2. Repeat **`MainMenuTopItem`** (`.MainMenu-Top-Element-Primary`) per option:
    - **`ItemContainer`** — icon + label cluster (`gap: var(--spacing-space-16)`)
    - **`ItemIcon`** — 18×18 (`assets/icons/<slug>.svg`; Figma sample uses `home`)
@@ -39,15 +41,15 @@ Deterministic slot order for **`MainMenuTopRoot`** (`nav`, horizontal):
 - **Runtime width:** `width: 100%`, `box-sizing: border-box`; Figma sample bar `1496×40` (reference only).
 - **Bar:** `display: flex`; `align-items: center`; `min-height: 40px`; `gap: var(--spacing-space-16)` between items; horizontal padding `var(--padding-padding-12)`.
 - **Item (Large):** fixed height `40px`; `align-items: center`; `justify-content: center`; padding `0` block / `var(--padding-padding-12)` inline; inner cluster gap `var(--spacing-space-16)`; gap `var(--spacing-space-8)` before chevron; icon + label vertically centered as a row.
-- **Selected underline:** `inset 0 -2px 0 var(--color-border-brand-dark)` (box-shadow) inside the 40px hit target so content stays vertically centered (not an external `border-bottom` that shifts layout).
+- **Selected underline:** `inset 0 -2px 0 var(--color-border-brand-strong)` (box-shadow) inside the 40px hit target so content stays vertically centered (not an external `border-bottom` that shifts layout).
 - **Item (Small):** fixed height `36px`; `align-items: center`; padding `0` block / `var(--padding-padding-8)` inline; typography Body 2.
 - **Icon:** `18×18`; **chevron:** `12×12`.
-- **Selected indicator:** inset `2px` bottom `var(--color-border-brand-dark)` via `box-shadow` on the item hit target (Large and Small).
+- **Selected indicator:** inset `2px` bottom `var(--color-border-brand-strong)` via `box-shadow` on the item hit target (Large and Small).
 - **Focus ring (Default-Focus / Selected-Focus):** `4px` outline `var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`; height `40px` sample on Large item.
 - **Dropdown panel (`.Menu-Single-Select-DD`):** min-width **181px** (Figma sample); `sideOffset` **10px** below trigger; **horizontal alignment:** dropdown center aligned to the triggering top-menu item (`align: center` on positioner); Shadow 1 elevation stack (same as dropdown-single-select `MenuPopup`).
 - **Option row:** min-height **40px**; padding `var(--padding-padding-10)` × `var(--padding-padding-16)`; Body 2 typography — per `dropdown-single-select` option contract.
 - **Submenu flyout:** same width/token rules as parent menu; **4px** gap from parent panel (`MAIN_MENU_TOP_SUBMENU_SIDE_OFFSET`); default opens **`right`**; flips to **`left`** when viewport space is insufficient. Chevron on submenu row must match **rendered** side (`chev-right-thick` / `chev-left-thick`) by reading positioner `data-side` after flip (not prediction-only).
-- **Masthead menu panel (Figma `42136:57466`):** **`border-radius: 0`**; border `var(--color-border-accessible)`; dual **shadow-4** stack; inner padding `var(--padding-padding-1)`; option rows `padding: 10px 24px 10px 16px` (no rounded corners).
+- **Masthead menu panel (Figma `42136:57466`):** **`border-radius: 0`**; border `var(--color-border-gray-neutral-base)`; dual **shadow-4** stack; inner padding `var(--padding-padding-1)`; option rows `padding: 10px 24px 10px 16px` (no rounded corners).
 - **Container:** `width: 100%`, `overflow: visible` at desktop; bar `width: 100%`, `flex-wrap: wrap` (reference implementation). Horizontal scroll on narrow viewports (`overflow-x: auto`, `flex-wrap: nowrap` under `768px`).
 
 ## Tokens
@@ -56,30 +58,30 @@ Deterministic slot order for **`MainMenuTopRoot`** (`nav`, horizontal):
 - **Small label:** Body 2 medium — `var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`, weight 500.
 
 ### Surfaces, borders, icons
-- **Bar background:** `var(--color-background-surface-1)`
-- **Item default text:** `var(--color-text-neutral-strong)`
-- **Item default icon:** `var(--color-icon-neutral-strong)` (Figma neutral icon on default row)
-- **Hover / press background:** `var(--color-background-brand-lighter)` / `var(--color-background-brand-light)`
+- **Bar background:** `var(--color-background-surface-primary)`
+- **Item default text:** `var(--color-text-gray-neutral-strong)`
+- **Item default icon:** `var(--color-icon-gray-neutral-strong)` (Figma neutral icon on default row)
+- **Hover / press background:** `var(--color-background-brand-lighter-slate)` / `var(--color-background-brand-light-slate)`
 - **Hover / press / selected text:** `var(--color-text-brand-strong)`
 - **Hover / press / selected icon:** `var(--color-icon-brand-strong)` (selected may use `var(--color-icon-brand-base)` per product parity)
-- **Selected underline:** `var(--color-border-brand-dark)`
+- **Selected underline:** `var(--color-border-brand-strong)`
 - **Focus outline:** `var(--color-border-brand-base)`
 - **Chevron:** `var(--color-icon-brand-strong)` when active; neutral on default row
-- **Dropdown menu** (masthead / main-menu-top panel): `var(--color-background-component)`, border `var(--color-border-accessible)`, shadow-4 stack, option hover `var(--color-background-brand-lighter)` with brand inset borders; selected row text `var(--color-text-neutral)` (brand-strong for top-bar selection only)
+- **Dropdown menu** (masthead / main-menu-top panel): `var(--color-background-surface-component)`, border `var(--color-border-gray-neutral-base)`, shadow-4 stack, option hover `var(--color-background-brand-lighter-slate)` with brand inset borders; selected row text `var(--color-text-gray-neutral)` (brand-strong for top-bar selection only)
 
 ## States (Light Theme)
 | Element | State | Background | Border / indicator | Text | Icon |
 | --- | --- | --- | --- | --- | --- |
-| Bar | default | `var(--color-background-surface-1)` | — | — | — |
-| Item (Large) | default | transparent | none | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Item (Large) | hover | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Item (Large) | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Item (Large) | selected | transparent | inset `2px` bottom `var(--color-border-brand-dark)` (box-shadow) | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Bar | default | `var(--color-background-surface-primary)` | — | — | — |
+| Item (Large) | default | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Item (Large) | hover | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Item (Large) | press | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Item (Large) | selected | transparent | inset `2px` bottom `var(--color-border-brand-strong)` (box-shadow) | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
 | Item (Large) | focus-visible | transparent | `var(--color-border-brand-base)` outline (4px) | prior text token | prior icon token |
 | Item (Small) | default / hover / press / selected / focus-visible | same semantic mapping as Large with Small typography tokens | Small selected uses same bottom border | per row | per row |
-| Item + menu open (not selected) | show-dropdown | `var(--color-background-brand-lighter)` | **no underline** | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Item selected | selected | transparent | `2px` bottom `var(--color-border-brand-dark)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Menu option row | default / hover / selected | per dropdown-single-select | per dropdown-single-select | `var(--color-text-neutral)` / brand-strong when selected | — |
+| Item + menu open (not selected) | show-dropdown | `var(--color-background-brand-lighter-slate)` | **no underline** | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Item selected | selected | transparent | `2px` bottom `var(--color-border-brand-strong)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Menu option row | default / hover / selected | per dropdown-single-select | per dropdown-single-select | `var(--color-text-gray-neutral)` / brand-strong when selected | — |
 | Submenu parent row | default / hover | per dropdown-single-select | — | neutral / brand on hover | trailing chevron neutral or brand |
 
 ## States (Dark Theme)
@@ -207,7 +209,7 @@ Story: **`Spec Generated/IDS/Main Menu Top` → `Spec Accurate Design`** (`story
 | Contract field | Value |
 | --- | --- |
 | Figma node | `10189:30280` (`MainMenu-Top-Main`, 1496×40 sample) |
-| Bar surface | `var(--color-background-surface-1)` |
+| Bar surface | `var(--color-background-surface-primary)` |
 | Size | `Large` |
 | Item count | 8 |
 | Item label | `"Menu Option"` |
@@ -228,7 +230,7 @@ Emit **`MainMenuTopRoot`** (`nav`) → **`MainMenuTopBar`** → repeat **`MainMe
 ### Variant matrix
 | size | dropdown | icon | Selected UI |
 | --- | --- | --- | --- |
-| Large | true | true | bottom border `var(--color-border-brand-dark)` |
+| Large | true | true | bottom border `var(--color-border-brand-strong)` |
 | Large | false | true | same |
 | Small | * | * | same with Body 2 tokens |
 
@@ -262,7 +264,7 @@ Emit **`MainMenuTopRoot`** (`nav`) → **`MainMenuTopBar`** → repeat **`MainMe
 ### Validation checklist
 - [x] Bar `surface-1` background and `16px` inter-item gap (`10189:30280`)
 - [x] Large item padding 8/12 and 40px min-height
-- [x] Selected item uses bottom border `var(--color-border-brand-dark)` (plain items + menu-open state)
+- [x] Selected item uses bottom border `var(--color-border-brand-strong)` (plain items + menu-open state)
 - [x] Hover/press use brand-lighter / brand-light fills
 - [x] Icon 18px + chevron 12px slugs documented
 - [x] Token-only colors in reference implementation

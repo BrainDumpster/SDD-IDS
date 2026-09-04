@@ -1,0 +1,142 @@
+/**
+ * IDS Radio Button styles — derived from components/ids/radio-button/design-spec.md
+ * Selectors: ids-radio-group, ids-radio-button, ids-radio-control, ids-radio-label
+ * Theme: components/ids-theme.css
+ */
+
+.ids-radio-group {
+  display: flex;
+  gap: var(--spacing-space-16);
+}
+
+.ids-radio-group--vertical {
+  flex-direction: column;
+}
+
+.ids-radio-group--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ids-radio-button {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.ids-radio-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  cursor: pointer;
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  line-height: var(--font-line-height-line-height-20);
+  min-height: 20px;
+}
+
+.ids-radio-button[data-disabled="true"] .ids-radio-row {
+  cursor: not-allowed;
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-radio-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ids-radio-control {
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-radius: 50%;
+  background: var(--color-background-surface-component);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 100ms ease, border-color 100ms ease;
+  position: relative;
+  outline: none;
+  padding: 0;
+}
+
+/* Hover on full row hit target */
+.ids-radio-row:hover:not([data-disabled="true"]) .ids-radio-control,
+.ids-radio-button[data-state="hover"] .ids-radio-control {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.ids-radio-row:active:not([data-disabled="true"]) .ids-radio-control,
+.ids-radio-button[data-state="press"] .ids-radio-control {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.ids-radio-button[data-checked="true"] .ids-radio-control {
+  border-color: var(--color-border-brand-base);
+}
+
+.ids-radio-button[data-checked="true"] .ids-radio-row:hover:not([data-disabled="true"]) .ids-radio-control,
+.ids-radio-button[data-checked="true"][data-state="hover"] .ids-radio-control,
+.ids-radio-button[data-checked="true"] .ids-radio-row:active:not([data-disabled="true"]) .ids-radio-control,
+.ids-radio-button[data-checked="true"][data-state="press"] .ids-radio-control {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.ids-radio-input:focus-visible + .ids-radio-control,
+.ids-radio-button[data-state="focus-visible"] .ids-radio-control {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-radio-button[data-disabled="true"] .ids-radio-control {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-gray-disabled);
+}
+
+/* Error: unselected ring uses neutral-strong (not critical). */
+.ids-radio-button[data-error="true"]:not([data-checked="true"]) .ids-radio-control {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.ids-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-icon-brand-base);
+  transform: scale(0);
+  transition: transform 100ms ease, background-color 100ms ease;
+}
+
+.ids-radio-button[data-checked="true"] .ids-radio-dot {
+  transform: scale(1);
+}
+
+.ids-radio-button[data-checked="true"] .ids-radio-row:hover:not([data-disabled="true"]) .ids-radio-dot,
+.ids-radio-button[data-checked="true"][data-state="hover"] .ids-radio-dot,
+.ids-radio-button[data-checked="true"] .ids-radio-row:active:not([data-disabled="true"]) .ids-radio-dot,
+.ids-radio-button[data-checked="true"][data-state="press"] .ids-radio-dot {
+  background: var(--color-icon-brand-strong);
+}
+
+.ids-radio-button[data-disabled="true"][data-checked="true"] .ids-radio-dot {
+  background: var(--color-icon-gray-disabled);
+}
+
+.ids-radio-label {
+  user-select: none;
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}

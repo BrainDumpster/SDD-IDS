@@ -1,0 +1,134 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import "../tokens.css";
+import Toast from "./Toast";
+
+/**
+ * Joe-Generated Toast — uses only:
+ * - storybook/src/components/dap/joe-generated/Toast/Toast.tsx
+ * - storybook/src/components/dap/joe-generated/Toast/Toast.css (imported by Toast.tsx)
+ * - storybook/src/components/dap/joe-generated/tokens.css
+ * Spec MDX: components/DAP/joe-generated/Toast/toast.mdx
+ */
+const meta: Meta<typeof Toast> = {
+  title: "Spec Generated/DAP/Joe-Generated/Toast",
+  component: Toast,
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        component:
+          "Joe-generated DAP Toast. Implementation: `storybook/src/components/dap/joe-generated/Toast/Toast.tsx` + `Toast.css`. Tokens: `storybook/src/components/dap/joe-generated/tokens.css`. Spec MDX: `components/DAP/joe-generated/Toast/toast.mdx`.",
+      },
+    },
+  },
+  argTypes: {
+    type: {
+      control: "select",
+      options: [
+        "info",
+        "critical",
+        "major-warning",
+        "minor-warning",
+        "success",
+      ],
+    },
+    message: { control: "text" },
+    duration: { control: "number" },
+    closable: { control: "boolean" },
+    onClose: { action: "onClose" },
+    onTimeout: { action: "onTimeout" },
+  },
+  args: {
+    type: "info",
+    message: "Toast notification message",
+    duration: 0,
+    closable: true,
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Toast>;
+
+export const Default: Story = {
+  args: {
+    type: "info",
+    message: "Toast notification message",
+    duration: 0,
+    closable: true,
+  },
+};
+
+export const AllTypes: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 12, maxWidth: 617 }}>
+      {(
+        [
+          "info",
+          "critical",
+          "major-warning",
+          "minor-warning",
+          "success",
+        ] as const
+      ).map((type) => (
+        <Toast
+          key={type}
+          type={type}
+          message={`${type} toast message`}
+          duration={0}
+          closable={true}
+        />
+      ))}
+    </div>
+  ),
+};
+
+export const WithLink: Story = {
+  args: {
+    type: "info",
+    message: "Toast with optional link action",
+    duration: 0,
+    closable: true,
+    link: { label: "Learn more", href: "https://example.com", target: "_blank" },
+  },
+};
+
+export const LinkButtonOnly: Story = {
+  args: {
+    type: "success",
+    message: "Toast with button-style link (onClick only)",
+    duration: 0,
+    closable: true,
+    link: {
+      label: "Take action",
+      onClick: () => undefined,
+    },
+  },
+};
+
+export const NotClosable: Story = {
+  args: {
+    type: "critical",
+    message: "Critical toast without close control",
+    duration: 0,
+    closable: false,
+  },
+};
+
+export const CriticalWithLink: Story = {
+  args: {
+    type: "critical",
+    message: "Critical toast with link and dismiss",
+    duration: 0,
+    closable: true,
+    link: { label: "View details", href: "https://example.com" },
+  },
+};
+
+export const AutoDismiss: Story = {
+  args: {
+    type: "info",
+    message: "Auto-dismisses after 8s (hover pauses timer)",
+    duration: 8000,
+    closable: true,
+  },
+};

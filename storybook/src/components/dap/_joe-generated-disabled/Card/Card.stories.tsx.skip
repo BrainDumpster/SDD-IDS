@@ -1,0 +1,238 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
+import "../tokens.css";
+import Card from "./Card";
+
+/**
+ * Joe-Generated Card (regenerated from MDX) — uses only:
+ * - storybook/src/components/dap/joe-generated/Card/Card.tsx
+ * - storybook/src/components/dap/joe-generated/Card/Card.css (imported by Card.tsx)
+ * - storybook/src/components/dap/joe-generated/tokens.css
+ * Spec MDX: components/DAP/joe-generated/Card/card.mdx
+ *
+ * Previous implementation preserved at Card.previous.tsx / Card.previous.css (not used by stories).
+ */
+
+const meta: Meta<typeof Card> = {
+  title: "Spec Generated/DAP/Joe-Generated/Card",
+  component: Card,
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        component:
+          "Joe-generated DAP Card regenerated from `components/DAP/joe-generated/Card/card.mdx`. Implementation: `Card.tsx` + `Card.css`. Previous copy: `Card.previous.tsx` / `Card.previous.css` (ignored by these stories).",
+      },
+    },
+  },
+  argTypes: {
+    variant: {
+      control: "select",
+      options: [
+        "default",
+        "interactive",
+        "selected",
+        "disabled",
+        "elevated",
+        "bordered",
+        "compact",
+        "media",
+      ],
+    },
+    elevated: { control: "boolean" },
+    bordered: { control: "boolean" },
+    compact: { control: "boolean" },
+    selected: { control: "boolean" },
+    interactive: { control: "boolean" },
+    disabled: { control: "boolean" },
+    ariaLabel: { control: "text" },
+    onClick: { action: "onClick" },
+  },
+  args: {
+    variant: "default",
+    header: "Card header",
+    children: "Body content uses Body 1 typography and groups related information.",
+    footer: "Optional footer",
+    elevated: false,
+    bordered: false,
+    compact: false,
+    selected: false,
+    interactive: false,
+    disabled: false,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: "100%", maxWidth: 360 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export default meta;
+type Story = StoryObj<typeof Card>;
+
+/** MDX Default — standard content card */
+export const Default: Story = {
+  args: {
+    variant: "default",
+    header: "Workload summary",
+    children: "Use cards to group related content with clear hierarchy.",
+    footer: undefined,
+  },
+};
+
+/** MDX Interactive — clickable + hover/focus */
+export const Interactive: Story = {
+  args: {
+    variant: "interactive",
+    header: "Selectable resource",
+    children: "Hover for brand border. Focus-visible uses a 2px brand ring with 2px offset.",
+    footer: "Press Enter or Space",
+    ariaLabel: "Selectable resource card",
+  },
+};
+
+/** MDX Selected */
+export const Selected: Story = {
+  args: {
+    variant: "selected",
+    header: "Selected card",
+    children: "Brand light background, brand border, brand-strong text.",
+  },
+};
+
+/** MDX Disabled */
+export const Disabled: Story = {
+  args: {
+    variant: "disabled",
+    header: "Disabled card",
+    children: "Non-interactive; gray background and disabled text tokens.",
+  },
+};
+
+/** MDX Elevated */
+export const Elevated: Story = {
+  args: {
+    variant: "elevated",
+    header: "Elevated card",
+    children: "Uses elevation shadow while keeping default surface tokens.",
+  },
+};
+
+/** MDX Bordered */
+export const Bordered: Story = {
+  args: {
+    variant: "bordered",
+    header: "Bordered card",
+    children: "Prominent 2px border width.",
+  },
+};
+
+/** MDX Compact */
+export const Compact: Story = {
+  args: {
+    variant: "compact",
+    header: "Compact card",
+    children: "Reduced padding and minimum height.",
+    footer: "Footer",
+  },
+};
+
+/** MDX Media — image/media area */
+export const Media: Story = {
+  args: {
+    variant: "media",
+    media: (
+      <img
+        src="/assets/icons/card-info.svg"
+        alt=""
+        style={{
+          width: "100%",
+          height: 140,
+          objectFit: "contain",
+          background: "var(--color-background-gray-lighter)",
+        }}
+      />
+    ),
+    header: "Media card",
+    children: "Optional media slot above header/content.",
+    footer: undefined,
+  },
+};
+
+/** Interactive + elevated composition */
+export const InteractiveElevated: Story = {
+  args: {
+    variant: "interactive",
+    elevated: true,
+    header: "Interactive elevated",
+    children: "Stackable modifiers: interactive + elevated.",
+    ariaLabel: "Interactive elevated card",
+  },
+};
+
+/** Interactive selected (controlled via selected prop) */
+export const InteractiveSelected: Story = {
+  render: function InteractiveSelectedStory(args) {
+    const [selected, setSelected] = React.useState(true);
+    return (
+      <Card
+        {...args}
+        selected={selected}
+        onClick={() => setSelected((value) => !value)}
+      />
+    );
+  },
+  args: {
+    variant: "interactive",
+    header: "Toggle selection",
+    children: "Click to toggle selected state (aria-pressed).",
+    footer: undefined,
+    ariaLabel: "Toggle selection card",
+  },
+};
+
+/** Anatomy: header + content + footer */
+export const WithFooterActions: Story = {
+  args: {
+    variant: "default",
+    header: "With footer",
+    children: "Footer slot for actions or meta.",
+    footer: (
+      <span style={{ color: "var(--color-text-link-brand-strong)" }}>View details</span>
+    ),
+  },
+};
+
+/** Grid spacing reference (MDX: 16px card spacing) */
+export const CardGrid: Story = {
+  decorators: [
+    (Story) => (
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+          gap: 16,
+          width: "100%",
+          maxWidth: 720,
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
+  render: () => (
+    <>
+      <Card header="One" variant="default">
+        First card in a 16px gap grid.
+      </Card>
+      <Card header="Two" variant="elevated">
+        Second card.
+      </Card>
+      <Card header="Three" variant="bordered">
+        Third card.
+      </Card>
+    </>
+  ),
+};

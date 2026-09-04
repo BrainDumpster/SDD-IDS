@@ -1,0 +1,14 @@
+:host {
+  display: inline-flex;
+}
+
+.ids-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-8);
+  align-items: center;
+}
+
+.ids-tags--nowrap {
+  flex-wrap: nowrap;
+}

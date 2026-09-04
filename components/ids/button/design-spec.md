@@ -9,9 +9,11 @@
 - Primary node id: `41894:116183`
 - States matrix URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-25120&m=dev
 - States matrix node id: `9662:25120`
+- Focus state reference URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26377&m=dev
+- Focus state node id: `9662:26377` (Primary Large, Focus — control + outer ring)
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-06-18
+- Verified at: 2026-09-01 (focus ring geometry re-verified on `9662:26377`; prior full matrix `2026-06-18`)
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
 - `ButtonLabel` (optional for icon-only mode)
@@ -36,10 +38,26 @@ Deterministic order:
   - `medium`: height `32px`, vertical padding `8px`
   - `large`: height `40px`, vertical padding `12px`
 - Icon glyph size: `16px x 16px`.
+- Control border (`1px`) is an **inside stroke** and must NOT add to the control's height/width. The size signatures above are total box dimensions, stroke included. Do not use CSS `border` when `box-sizing: border-box` is active globally — render the stroke via `box-shadow: inset` (or `outline`) so heights stay exact.
 - Focus ring geometry (focus-visible):
   - outer ring stroke: `var(--border-width-border-1)`
   - ring offset from control edge: `var(--button-focus-ring-offset)`
   - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
+  - Render via `::after`, not `outline` — see Implementation Notes → Focus ring for the technique and the offset compensation.
+
+### Slot geometry (Figma-verified)
+
+| Slot / layer | Property | Token / contract | Figma node | Live evidence |
+| --- | --- | --- | --- | --- |
+| `ButtonRoot` | `border-radius` | `var(--button-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | `9662:26377` | MCP `get_variable_defs` → `Corner Radius/radius-2` = 2 |
+| Focus ring (`::after`) | `border-radius` | `var(--button-focus-ring-radius)` → `var(--corner-radius-radius-4)` (**4px**) | `9662:26379` (`focus` overlay) | MCP `get_variable_defs` → `Corner Radius/radius-4` = 4; MCP `get_design_context` → `rounded-[4px]` on focus layer |
+| Focus ring (`::after`) | gap to control edge | `var(--button-focus-ring-offset)` (**2px**) | `9662:26379` | MCP `get_design_context` → focus layer `inset-[-3px]` on 1px stroke control (= 2px gap + 1px ring stroke compensation) |
+| Focus ring (`::after`) | stroke | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `9662:26379` | MCP `get_variable_defs` → `Border Width/border-default` = 1, `var(--color-border-brand-base)` = `#0672cb` |
+
+**Geometry authoring rules (mandatory):**
+- Document **control shell** and **focus ring** separately — radii differ (2px vs 4px).
+- Theme aliases (`--button-control-radius`, `--button-focus-ring-radius`, `--button-focus-ring-offset`) are **implementation wiring only** after Figma values are verified; resolved alias values must match this table.
+- Aliases **must** be defined in `components/ids-theme.css` (light + dark blocks). Referencing an alias in component CSS without a theme definition is a spec violation even when the Tokens table documents the intended value.
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, font-weight: `400`) for button text.
@@ -50,77 +68,77 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 |---|---|
 | `--button-control-radius` | `var(--corner-radius-radius-2)` |
 | `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` |
-| `--button-focus-ring-offset` | `3px` |
+| `--button-focus-ring-offset` | `2px` |
 
 - Core primary tokens:
-  - `var(--color-background-controls-brand-base)`
-  - `var(--color-background-controls-brand-strong)`
-  - `var(--color-background-controls-brand-stronger)`
-  - `var(--color-border-transparent-brand)`
-  - `var(--color-text-white)`
+  - `var(--color-background-controls-base)`
+  - `var(--color-background-controls-strong)`
+  - `var(--color-background-controls-stronger)`
+  - `var(--color-border-brand-transparent-brand)`
+  - `var(--color-text-gray-white)`
 - Secondary/tertiary tokens:
-  - `var(--color-background-controls-brand-lighter)`
-  - `var(--color-background-controls-brand-light)`
+  - `var(--color-background-controls-lighter)`
+  - `var(--color-background-controls-light)`
   - `var(--color-border-brand-base)`
   - `var(--color-text-brand-strong)`
 - Destructive tokens:
-  - `var(--color-background-alerting-critical)`
+  - `var(--color-background-alerting-critical-base)`
   - `var(--color-background-alerting-critical-strong)`
   - `var(--color-background-alerting-critical-stronger)`
-  - `var(--color-border-alerting-transparent-critical)`
+  - `var(--color-border-alerting-critical-transparent-base)`
 - Disabled tokens:
   - `var(--color-background-gray-lighter)`
-  - `var(--color-border-disabled)`
-  - `var(--color-text-disabled)`
-  - `var(--color-icon-disabled)`
+  - `var(--color-border-gray-disabled)`
+  - `var(--color-text-gray-disabled)`
+  - `var(--color-icon-gray-disabled)`
 - Icon tokens:
   - `var(--color-icon-brand-base)`
-  - `var(--color-icon-white)`
+  - `var(--color-icon-gray-white)`
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| primary | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | press | `var(--color-background-controls-brand-stronger)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| primary | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | press | `var(--color-background-controls-stronger)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | primary | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
 | secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | disabled | transparent | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| secondary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | secondary | focus-visible | same as current interactive base state | control border `var(--color-border-brand-base)` + outer brand focus outline | text/icon unchanged |
 | tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | disabled | transparent | transparent | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| tertiary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | tertiary | focus-visible | same as current interactive base state | control border by state + outer brand focus outline | text/icon unchanged |
-| destructive | default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | destructive | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
 ## States (Dark Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| primary | default | `var(--color-background-controls-brand-base)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | hover | `var(--color-background-controls-brand-strong)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | press | `var(--color-background-controls-brand-stronger)` | `var(--color-border-transparent-brand)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| primary | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | press | `var(--color-background-controls-stronger)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | primary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
 | secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | disabled | transparent | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| secondary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | secondary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
 | tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | hover | `var(--color-background-controls-brand-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | press | `var(--color-background-controls-brand-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | disabled | transparent | transparent | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| tertiary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | tertiary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
-| destructive | default | `var(--color-background-alerting-critical)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-transparent-critical)` | `var(--color-text-white)` / `var(--color-icon-white)` |
-| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-disabled)` | `var(--color-text-disabled)` / `var(--color-icon-disabled)` |
+| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | destructive | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
 ## Interactions
 - Trigger: pointer click, `Enter`, and `Space`.
@@ -168,7 +186,7 @@ Variant matrix:
   - states: `default | hover | press | focus-visible | disabled`
 - Per-slot style contract:
   - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
-  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-white)`; disabled (all variants) → `var(--color-icon-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
+  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-gray-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-gray-white)`; disabled (all variants) → `var(--color-icon-gray-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
   - `ButtonLabel`: `Body 2` (`14/20`, font-weight: `400`).
 ### Theme & programme resolution
 - Generators **must** emit component layout aliases (`var(--button-control-radius)`, `var(--button-focus-ring-radius)`, `var(--button-focus-ring-offset)`), never raw `px` or programme-specific scale token names in component CSS.
@@ -208,7 +226,8 @@ Variant matrix:
 - Validation checklist:
   - [ ] All variant x size x state combinations resolve tokenized styles.
   - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
-  - [ ] Aliases defined in `components/ids-theme.css` and documented in Tokens.
+  - [ ] Aliases defined in `components/ids-theme.css` (both light and dark selectors) and documented in Tokens — **grep theme file before marking ready**.
+  - [ ] Focus ring uses `::after` + `var(--button-focus-ring-radius)`; **no** CSS `outline` / `outline-offset` on the control or in StateHarness demos.
   - [ ] Programme fork deltas list alias overrides when values differ (Synapse/DAP).
   - [ ] Icon slug path resolution works and gracefully handles missing slugs.
   - [ ] Disabled/loading modes prevent output events.
@@ -232,10 +251,10 @@ The spec-generated Button stories (`storybook-generated/ids/src/components/Butto
 - **Icon asset**: All icons use `assets/icons/settings-gear-detailed.svg`
 - **Icon variant**: All icons use `variant="mask"` (mask-based coloring)
 - **Color token mapping**:
-  - `primary` variant (default/hover/press states): `var(--color-icon-white)`
+  - `primary` variant (default/hover/press states): `var(--color-icon-gray-white)`
   - `secondary` variant (default/hover/press states): `var(--color-icon-brand-base)`
   - `tertiary` variant (default/hover/press states): `var(--color-icon-brand-base)`
-  - All variants (disabled state): `var(--color-icon-disabled)`
+  - All variants (disabled state): `var(--color-icon-gray-disabled)`
 
 This implementation aligns with the **States (Light Theme)** and **States (Dark Theme)** tables above, which specify icon colors per variant and state.
 
@@ -246,8 +265,10 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
 - Figma MCP calls used:
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:26377)` — focus ring geometry
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
   - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
+  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:26377)` — `Corner Radius/radius-2`, `Corner Radius/radius-4`
 ### Storybook proof and codegen consumers
 
 **Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
@@ -258,14 +279,33 @@ This implementation aligns with the **States (Light Theme)** and **States (Dark 
 
 Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
 
+| Consumer | Location |
+|---|---|
+| Storybook (Base UI reference) | `storybook/src/components/Button.tsx`, `IdsButton.tsx`, `IdsButton.stories.tsx` |
+| Lib React (no Base UI) | `lib/react/ids/button/` (`IdsButton.tsx`, `IdsButton.module.css`; selectors `ids-button`, …); stories: `storybook/src/components/lib-generated/Button.stories.tsx` |
+
 ## Implementation Notes
 
 **Typography**
 - **Label font-weight**: `400` — do NOT use `500`; `Body 2` spec is `14/20` at weight `400`.
 
 **Icon color**
-- **Primary button icon**: `var(--color-icon-white)` — do NOT use `var(--color-icon-brand-base)`.
-- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-white)`.
+- **Primary button icon**: `var(--color-icon-gray-white)` — do NOT use `var(--color-icon-brand-base)`.
+- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-gray-white)`.
 
 **Icon rendering**
 - **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.
+
+**Control border (added 2026-07-17)**
+- The `1px` control border is an **inside stroke** — render it with `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>` (or `outline`), never CSS `border`. Under the global `box-sizing: border-box`, a real `border` adds `+2px` to every size.
+- On focus, `tertiary` keeps its control border **by state** (transparent in the default state) — only the outer ring is blue. Do not force a brand-base inner border on `tertiary` focus (secondary's base already has one; tertiary's does not).
+
+**Focus ring (added 2026-07-21; re-verified 2026-09-01 on `9662:26377`)**
+- Corrected to match Figma: IDS `--button-focus-ring-offset` `3px` → `2px`, and the ring corner radius now resolves to `--button-focus-ring-radius` (`4px`) instead of following the `2px` control radius.
+- Don't use CSS `outline` (it inherits the control's `border-radius`, but the ring radius must differ). Render the ring as an absolutely-positioned `::after` (`outline: none` on the control) with `border` + `border-radius: var(--button-focus-ring-radius)`.
+- Offset: `inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)))`. The `+ border-width` is needed because `::after`'s `inset` positions the ring's **outer** edge (the `border` draws inward), whereas the offset is defined as the gap to the ring's **inner** edge. Plain `-offset` leaves the gap short by 1px. (With `outline` this compensation wasn't needed — `outline-offset` measures to the inner edge directly — but `outline` can't carry its own radius, hence `::after`.)
+
+**Theme alias drift (2026-09-01 regression note)**
+- The spec documented `--button-control-radius`, `--button-focus-ring-radius`, and `--button-focus-ring-offset` in the Tokens table and Codegen Contract, but those aliases were absent from `components/ids-theme.css` while other layout aliases (card, date-picker, …) were present. Component CSS referenced the correct alias names, so styles silently failed (invalid `border-radius` / focus ring). **Fix:** define all three aliases in `ids-theme.css`; do not rely on the Tokens table alone.
+- Generated **StateHarness** stories overrode focus with CSS `outline` / `outline-offset` despite this spec — that produced a ring with the **control** radius (2px), not `--button-focus-ring-radius` (4px). **Fix:** drive demo focus via `data-state="focus-visible"` and the component `::after` ring.
+- Keep `lib/angular/ids/button` and `lib/react/ids/button` as canonical ports; legacy Storybook copies must not diverge on focus technique.

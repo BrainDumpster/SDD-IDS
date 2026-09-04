@@ -5,7 +5,7 @@ import { IdsButton } from "./IdsButton";
 import { IdsTextBox } from "./IdsTextBox";
 
 const meta: Meta<typeof Overlay> = {
-  title: "Spec Generated/Synapse/Overlay",
+  title: "Components/Synapse/Overlay",
   component: Overlay,
   argTypes: {
     width: { control: "text" },
@@ -22,7 +22,7 @@ export const SpecAccurateDesign: Story = {
     title: "Details Panel",
     children: (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <p style={{ margin: 0, color: "var(--color-text-neutral)" }}>
+        <p style={{ margin: 0, color: "var(--color-text-gray-neutral)" }}>
           This is a slide-in panel from the right side of the screen.
           It&apos;s useful for viewing details or editing forms without leaving the
           current page context.
@@ -44,7 +44,7 @@ export const Default: Story = {
     title: "Details Panel",
     children: (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <p style={{ margin: 0, color: "var(--color-text-neutral)" }}>
+        <p style={{ margin: 0, color: "var(--color-text-gray-neutral)" }}>
           This is a slide-in panel from the right side of the screen.
           It's useful for viewing details or editing forms without leaving the
           current page context.
@@ -67,7 +67,7 @@ export const WidePanel: Story = {
     width: "560px",
     children: (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <p style={{ margin: 0, color: "var(--color-text-neutral)" }}>
+        <p style={{ margin: 0, color: "var(--color-text-gray-neutral)" }}>
           A wider panel for more complex content layouts.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>

@@ -1,0 +1,69 @@
+@for (item of items; track resolveItemId(item, $index); let itemIndex = $index) {
+  @let itemId = resolveItemId(item, itemIndex);
+  @let childList = item.children ?? [];
+  @let hasForcedState = forceStates && !!item.state;
+  @let showChildren =
+    railExpanded &&
+    childList.length > 0 &&
+    (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
+  @let showChevron = railExpanded && childList.length > 0;
+  @let hasSelectedSecondary = selectedSecondaryParentKey === itemId;
+  @let showInset =
+    hasForcedState
+      ? item.state === "selected" || item.state === "selected-focus"
+      : childList.length > 0
+        ? hasSelectedSecondary
+        : selectedKey === itemId;
+
+  <div class="ids-main-menu-left__item-block">
+    <button
+      type="button"
+      class="ids-main-menu-left__primary-row"
+      [ngClass]="[
+        stateClass(item, itemId),
+        !hasForcedState ? 'ids-main-menu-left__primary-row--interactive' : '',
+        hasSelectedSecondary ? 'ids-main-menu-left__primary-row--secondary-parent-selected' : '',
+        showInset ? 'ids-main-menu-left__primary-row--selected' : '',
+      ]"
+      [attr.title]="item.tooltip ?? primaryLabel(item)"
+      (click)="onPrimaryClick(item, itemId)"
+    >
+      <ids-icon
+        className="ids-main-menu-left__primary-icon"
+        [shapeName]="item.iconName ?? 'home'"
+        variant="mask"
+        [size]="16"
+      />
+      @if (railExpanded) {
+        <span class="ids-main-menu-left__primary-label">{{ primaryLabel(item) }}</span>
+      }
+      @if (showChevron) {
+        <ids-icon
+          className="ids-main-menu-left__chevron-icon"
+          [shapeName]="showChildren ? 'chev-down-thick' : 'chev-right-thick'"
+          variant="mask"
+          [size]="14"
+        />
+      }
+    </button>
+
+    @if (showChildren) {
+      <div class="ids-main-menu-left__secondary-section">
+        @for (child of childList; track trackSecondary(child, $index); let childIndex = $index) {
+          @let childId = resolveChildId(child, itemId, childIndex);
+          <button
+            type="button"
+            class="ids-main-menu-left__secondary-row ids-main-menu-left__secondary-row--interactive"
+            [class.ids-main-menu-left__secondary-row--selected]="
+              selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId
+            "
+            [attr.title]="child.tooltip ?? secondaryLabel(child)"
+            (click)="onSecondaryClick(itemId, child, childId)"
+          >
+            {{ secondaryLabel(child) }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

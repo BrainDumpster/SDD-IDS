@@ -1,11 +1,11 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
+import { SPEC_ACCURATE_DESIGN_STORY } from "../../../component-contracts/common/story-meta";
 import { IdsAccordion } from "./IdsAccordion";
 import {
   ACCORDION_API_DEFAULTS,
+  ACCORDION_SPEC_ACCURATE_DEFAULTS,
   ACCORDION_SPEC_DEMO_ITEMS,
-  ACCORDION_SPEC_DISABLED_ITEM,
-  ACCORDION_SPEC_FORM_ITEMS,
   IDS_ACCORDION_DESIGN_SPEC_PATH,
 } from "../spec-contracts/ids-accordion.contract";
 
@@ -15,7 +15,7 @@ import {
  * Keep demo data and matrix defaults in the contract file so codegen QA can import the same shapes.
  */
 const meta: Meta<typeof IdsAccordion> = {
-  title: "Spec Generated/IDS/Accordion",
+  title: "Components/IDS/Accordion",
   component: IdsAccordion,
   parameters: {
     docs: {
@@ -33,6 +33,18 @@ const meta: Meta<typeof IdsAccordion> = {
 export default meta;
 type Story = StoryObj<typeof IdsAccordion>;
 
+/** Canonical spec defaults — lives in-package so Storybook can import this CSF reliably. */
+export const SpecAccurateDesign: Story = {
+  name: SPEC_ACCURATE_DESIGN_STORY,
+  args: {
+    items: ACCORDION_SPEC_DEMO_ITEMS,
+    multiple: ACCORDION_SPEC_ACCURATE_DEFAULTS.multiple,
+    defaultValue: [...ACCORDION_SPEC_ACCURATE_DEFAULTS.defaultValue],
+    chevronPosition: ACCORDION_SPEC_ACCURATE_DEFAULTS.chevronPosition,
+    variant: ACCORDION_SPEC_ACCURATE_DEFAULTS.variant,
+  },
+};
+
 export const Default: Story = {};
 
 export const FirstOpen: Story = {
@@ -48,12 +60,6 @@ export const MultipleOpen: Story = {
   },
 };
 
-export const WithDisabledItem: Story = {
-  args: {
-    items: [...ACCORDION_SPEC_DEMO_ITEMS, ACCORDION_SPEC_DISABLED_ITEM],
-  },
-};
-
 export const ChevronLeft: Story = {
   args: {
     chevronPosition: "left",
@@ -63,13 +69,5 @@ export const ChevronLeft: Story = {
 export const ChevronRight: Story = {
   args: {
     chevronPosition: "right",
-  },
-};
-
-export const AccordionWithForm: Story = {
-  args: {
-    chevronPosition: "left",
-    variant: "form",
-    items: ACCORDION_SPEC_FORM_ITEMS,
   },
 };

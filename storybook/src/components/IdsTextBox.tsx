@@ -41,6 +41,9 @@ export interface IdsTextBoxProps {
   componentType?: IdsTextBoxType;
   size?: IdsTextBoxSize;
   state?: IdsTextBoxState;
+  label?: string;
+  showLabel?: boolean;
+  required?: boolean;
   placeholder?: string;
   value?: string;
   defaultValue?: string;
@@ -64,6 +67,9 @@ export function IdsTextBox({
   componentType = "text-input",
   size = "large",
   state = "default",
+  label,
+  showLabel = true,
+  required = false,
   placeholder = "Placeholder Text",
   value,
   defaultValue,
@@ -92,10 +98,13 @@ export function IdsTextBox({
     : computedInvalid
       ? "error"
       : state;
+  const shouldRenderLabel = showLabel && Boolean(label);
   const shouldRenderHelper = showHelperText && (computedInvalid || Boolean(helperText));
   const helperCopy = computedInvalid ? errorText : helperText;
   const suffixIconUrl = showIcon ? resolveIconUrl(iconName) : undefined;
   const errorIconUrl = resolveIconUrl("status-critical-square-solid");
+  const describedBy =
+    [ariaDescribedBy, shouldRenderHelper ? helperId : undefined].filter(Boolean).join(" ") || undefined;
 
   const commonProps = {
     id: inputId,
@@ -106,13 +115,14 @@ export function IdsTextBox({
     defaultValue,
     "aria-label": ariaLabel,
     "aria-invalid": computedInvalid ? "true" : "false",
-    "aria-describedby": shouldRenderHelper ? ariaDescribedBy ?? helperId : ariaDescribedBy,
+    "aria-required": required ? "true" : undefined,
+    "aria-describedby": describedBy,
     onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       onValueChange?.(event.target.value);
     },
   };
 
-  return (
+  const fieldGroup = (
     <div className={styles.root}>
       <div
         className={[
@@ -138,7 +148,13 @@ export function IdsTextBox({
             {...commonProps}
           />
         )}
-        {suffixIconUrl ? <img src={suffixIconUrl} alt="" aria-hidden="true" className={styles.suffixIcon} /> : null}
+        {suffixIconUrl ? (
+          <span
+            aria-hidden="true"
+            className={styles.suffixIcon}
+            style={{ maskImage: `url(${suffixIconUrl})`, WebkitMaskImage: `url(${suffixIconUrl})` }}
+          />
+        ) : null}
       </div>
 
       {shouldRenderHelper ? (
@@ -149,6 +165,24 @@ export function IdsTextBox({
           <p className={computedInvalid ? styles.errorText : styles.helperText}>{helperCopy}</p>
         </div>
       ) : null}
+    </div>
+  );
+
+  if (!shouldRenderLabel) {
+    return fieldGroup;
+  }
+
+  return (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor={inputId}>
+        {label}
+        {required ? (
+          <span className={styles.requiredMark} aria-hidden="true">
+            *
+          </span>
+        ) : null}
+      </label>
+      {fieldGroup}
     </div>
   );
 }

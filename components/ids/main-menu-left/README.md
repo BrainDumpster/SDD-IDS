@@ -17,6 +17,7 @@ Host apps supply a **user-defined** item tree (`items`, optional `children`), op
 | File | Role |
 |---|---|
 | `storybook/src/components/MainMenuLeft.tsx` | Nav rail: user `items` + optional `children`, collapse footer, optional `logo` |
+| `storybook-angular/src/components/ids-main-menu-left/` | Angular 21 standalone port + Storybook (port **6007**) |
 | `storybook/src/spec-contracts/ids-main-menu-left.contract.ts` | Design spec path constant for gates / codegen |
 | `storybook/src/components/MainMenuLeft.module.css` | **278px** expanded / **64px** collapsed widths, token-driven states |
 
@@ -31,7 +32,7 @@ Storybook title: **`Spec Generated/IDS/Main Menu Left`**
 
 | Story | Purpose |
 |---|---|
-| **Spec Accurate Design** | Canonical expanded nav from Figma `11099:56218`: Dashboard selected (`defaultSelectedItemId`), Infrastructure with `children` + `childrenMenu: "collapsed"`; `100vh` host + `var(--color-background-surface-1)` canvas |
+| **Spec Accurate Design** | Canonical expanded nav from Figma `11099:56218`: Dashboard selected (`defaultSelectedItemId`), Infrastructure with `children` + `childrenMenu: "collapsed"`; `100vh` host + `var(--color-background-surface-primary)` canvas |
 | **Collapsed** | Initial **64px** icon-only rail |
 | **PrimaryStateSnapshotMatrix** | `forceStates` snapshots: `default`, `hover`, `press`, `selected`, `default-focus`, `selected-focus` |
 | **TokenInspector** | Live `var(--...)` preview + spec references (appended by strict gate) |
@@ -51,7 +52,7 @@ python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --spec-
 |------|------|
 | `--component main-menu-left` | Target slug (matches `components/ids/main-menu-left/`) |
 | `--spec-only` | Deprecated: specs/theme-only is now the default (kept for backward compatibility) |
-| `--deterministic-story` | Regenerates **`storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`** from `generation/deterministic_storybook/ids/main_menu_left.py` |
+| `--deterministic-story` | Regenerates React + Angular stories from `generation/spec_derived/main_menu_left_composition.py` (composition anatomy emitter) via `main_menu_left.py` / `main_menu_left_angular.py` |
 
 ### Outputs this updates
 
@@ -80,5 +81,5 @@ The full state matrix lives under **States (Light Theme)** in the design spec. *
 
 - Expanded rail width: **278px**; collapsed: **64px** (Figma-verified 2026-05-19).
 - Primary row **40px** min-height; secondary row **32px** with **58px** left padding.
-- Selected primary: **4px** brand inset (`selectedInset`); secondary selected + focus uses inset bar per module CSS.
+- Selected primary: **4px** brand inset (`selectedInset`, `var(--color-border-brand-base)`); secondary selected/focus has **no** inset bar (PR #82).
 - Icons: shared `Icon` with slugs from `assets/icons/` (for example `home`, `nav-tree`, `reports`, `settings-gear`, `double-chev-left`).

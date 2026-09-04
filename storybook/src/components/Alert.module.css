@@ -121,6 +121,8 @@
 }
 
 .globalCarouselButton {
+  width: auto;
+  height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -134,10 +136,8 @@
 
 .globalDismissIcon,
 .globalCarouselChevron {
-  width: 12px;
-  height: 12px;
-  display: inline-block;
-  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
 }
 
 .globalDismissButton:focus-visible,
@@ -166,55 +166,55 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
   white-space: nowrap;
 }
 
 .globalRoot[data-severity="critical"] {
-  background: var(--color-background-alerting-critical);
-  border-color: var(--color-border-alerting-transparent-critical);
-  color: var(--color-text-white);
-  --alert-icon-color: var(--color-icon-alerting-critical);
-  --icon-contrast-color: var(--color-icon-white);
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-critical-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="warning-major"] {
-  background: var(--color-background-alerting-major);
-  border-color: var(--color-border-alerting-transparent-major);
-  color: var(--color-text-white);
-  --alert-icon-color: var(--color-icon-alerting-major);
-  --icon-contrast-color: var(--color-icon-white);
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-major-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="warning-minor"] {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
-  color: var(--color-text-black);
-  --alert-icon-color: var(--color-icon-black);
-  --icon-contrast-color: var(--color-icon-black);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-gray-black);
+  --alert-icon-color: var(--color-icon-gray-black);
+  --icon-contrast-color: var(--color-icon-gray-black);
 }
 
 .globalRoot[data-severity="informational"] {
-  background: var(--color-background-alerting-info-1, var(--color-background-alerting-info));
-  border-color: var(--color-border-alerting-transparent-info);
-  color: var(--color-text-white);
-  --alert-icon-color: var(--color-icon-alerting-info);
-  --icon-contrast-color: var(--color-icon-white);
+  background: var(--color-background-alerting-info-1, var(--color-background-alerting-info-base));
+  border-color: var(--color-border-alerting-info-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-info-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="warning-major"] .globalDismissButton,
 .globalRoot[data-severity="warning-minor"] .globalDismissButton {
-  color: var(--color-icon-black);
+  color: var(--color-icon-gray-black);
 }
 
 .globalRoot[data-severity="warning-major"] .globalDismissIcon,
 .globalRoot[data-severity="warning-minor"] .globalDismissIcon {
-  filter: none;
+  filter: brightness(0);
 }
 
 .globalRoot[data-severity="critical"] .globalDismissButton,
 .globalRoot[data-severity="informational"] .globalDismissButton {
-  color: var(--color-icon-white);
+  color: var(--color-icon-gray-white);
 }
 
 .globalRoot[data-severity="critical"] .globalDismissIcon,
@@ -224,14 +224,14 @@
 
 .globalRoot[data-severity="critical"] .globalActionButton,
 .globalRoot[data-severity="informational"] .globalActionButton {
-  border-color: var(--color-border-white);
-  color: var(--color-text-white);
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
 }
 
 .globalRoot[data-severity="warning-major"] .globalActionButton,
 .globalRoot[data-severity="warning-minor"] .globalActionButton {
-  border-color: var(--color-border-black);
-  color: var(--color-text-black);
+  border-color: var(--color-border-gray-black);
+  color: var(--color-text-gray-black);
 }
 
 .globalRoot[data-severity="critical"] .globalCarouselRail {
@@ -261,7 +261,7 @@
 }
 
 .globalRoot[data-severity="warning-minor"] .globalCarouselCount {
-  color: var(--color-text-black);
+  color: var(--color-text-gray-black);
 }
 
 /* ========== Inline (Figma InlineAlert — light “tint + inset rail”) ========== */
@@ -278,12 +278,29 @@
   border: var(--border-width-border-1) solid transparent;
   border-radius: 0;
   font-family: inherit;
+}
+
+/* Detailed + title: action lives in the title row; text padding-right (16) is the only
+   action↔dismiss gap (Figma `11946:230988`). Root gap must stay 0 so spacing is not 28px. */
+.inlineRoot[data-action-in-title="true"] {
+  gap: 0;
+}
+
+/* Rail sits on top of the border via ::before (box-shadow inset renders behind border,
+   which is transparent in light mode but opaque in dark mode). */
+.inlineRoot::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  width: 4px;
   /* --inline-rail is set per severity; fallbacks cover numbered alerting token names (info-1 / success-1). */
-  box-shadow: inset 4px 0 0 0
-    var(
-      --inline-rail,
-      var(--color-background-alerting-info, var(--color-background-alerting-info-1))
-    );
+  background: var(
+    --inline-rail,
+    var(--color-background-alerting-info-base, var(--color-background-alerting-info-1))
+  );
+  pointer-events: none;
 }
 
 .inlineMain {
@@ -332,6 +349,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  /* Figma detailed `11946:230988`: title row (24) then message at y=24 — no extra gap */
   gap: 0;
   padding-right: var(--padding-padding-16);
 }
@@ -395,13 +413,25 @@
 
 .inlineRoot[data-density="compact"] .inlineTrailing {
   align-items: center;
-  height: 40px;
-  padding: var(--padding-padding-8) 17px var(--padding-padding-8) var(--padding-padding-16);
+  box-sizing: border-box;
+  height: var(--scale-40);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+}
+
+.inlineRoot[data-density="compact"] .inlineTrailing[data-has-action="true"] {
+  padding: var(--padding-padding-8) var(--padding-padding-16);
 }
 
 .inlineRoot[data-density="detailed"] .inlineTrailing {
   align-items: flex-start;
+  box-sizing: border-box;
   padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
+}
+
+/* Figma Close frame `41757:42773`: height 44 when trailing is dismiss-only (action in title row) */
+.inlineRoot[data-density="detailed"][data-action-in-title="true"] .inlineTrailing,
+.inlineRoot[data-density="detailed"] .inlineTrailing[data-has-action="false"] {
+  height: 44px;
 }
 
 .inlineRoot[data-density="detailed"] .inlineTrailing .inlineActionOutlined {
@@ -409,7 +439,12 @@
   margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
 }
 
+.inlineRoot[data-action-in-title="true"] .inlineTrailing .inlineActionOutlined {
+  margin-top: 0;
+}
+
 .inlineActionOutlined {
+  box-sizing: border-box;
   min-height: 24px;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
@@ -420,6 +455,7 @@
   font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -428,18 +464,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   border: none;
   background: transparent;
-  color: var(--color-icon-black);
+  color: var(--color-icon-gray-black);
   cursor: pointer;
-  padding: 10px;
-  margin: -10px;
-}
-
-.inlineCloseIcon {
-  width: var(--scale-12);
-  height: var(--scale-12);
-  object-fit: contain;
+  /* 12×12 glyph; expand hit target without shifting layout (Figma Close is bare 12×12 at y=16) */
+  padding: var(--padding-padding-10);
+  margin: calc(-1 * var(--padding-padding-10));
 }
 
 .inlineClose:focus-visible,
@@ -458,53 +490,50 @@
 }
 
 .inlineRoot[data-severity="informational"] {
-  --inline-alert-icon: var(--color-icon-alerting-info, var(--color-icon-alerting-info-1));
-  --inline-rail: var(--color-background-alerting-info, var(--color-background-alerting-info-1));
+  --inline-alert-icon: var(--color-icon-alerting-info-base, var(--color-icon-alerting-info-1));
+  --inline-rail: var(--color-background-alerting-info-base, var(--color-background-alerting-info-1));
   background: var(--color-background-alerting-info-light);
-  border-color: var(--color-border-alerting-info-transparent);
+  border-color: var(--color-border-alerting-info-base-transparent);
 }
 
 .inlineRoot[data-severity="success"] {
-  --inline-alert-icon: var(--color-icon-alerting-success, var(--color-icon-alerting-success-1));
-  --inline-rail: var(--color-background-alerting-success, var(--color-background-alerting-success-1));
+  --inline-alert-icon: var(--color-icon-alerting-success-base, var(--color-icon-alerting-success-1));
+  --inline-rail: var(--color-background-alerting-success-base, var(--color-background-alerting-success-1));
   background: var(--color-background-alerting-success-light);
-  border-color: var(--color-border-alerting-success-transparent);
+  border-color: var(--color-border-alerting-success-base-transparent);
 }
 
 /* Warning-minor: 4px rail = solid minor fill + 1px inner edge (Figma warning-accessible stroke). */
 .inlineRoot[data-severity="warning-minor"] {
-  --inline-alert-icon: var(--color-icon-alerting-minor);
-  --inline-rail: var(--color-background-alerting-minor);
+  --inline-alert-icon: var(--color-icon-alerting-minor-base);
+  --inline-rail: var(--color-background-alerting-minor-base);
   background: var(--color-background-alerting-minor-light);
-  border-color: var(--color-border-alerting-minor-transparent);
-  box-shadow: none;
+  border-color: var(--color-border-alerting-minor-base);
 }
 
 .inlineRoot[data-severity="warning-minor"]::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
   width: 4px;
-  background: linear-gradient(
-    90deg,
-    var(--color-background-alerting-minor) 0 75%,
-    var(--color-border-alerting-warning-accessible, var(--color-border-alerting-minor-minor)) 75% 100%
-  );
+  background: var(--color-background-alerting-minor-base);
+  border: 1px solid var(--color-border-alerting-warning-accessible, var(--color-border-alerting-minor-minor));
+  box-sizing: border-box;
   pointer-events: none;
 }
 
 .inlineRoot[data-severity="warning-major"] {
-  --inline-alert-icon: var(--color-icon-alerting-major);
-  --inline-rail: var(--color-background-alerting-major);
+  --inline-alert-icon: var(--color-icon-alerting-major-base);
+  --inline-rail: var(--color-background-alerting-major-base);
   background: var(--color-background-alerting-major-light);
-  border-color: var(--color-border-alerting-major-transparent);
+  border-color: var(--color-border-alerting-major-base-transparent);
 }
 
 .inlineRoot[data-severity="critical"] {
-  --inline-alert-icon: var(--color-icon-alerting-critical);
-  --inline-rail: var(--color-background-alerting-critical);
+  --inline-alert-icon: var(--color-icon-alerting-critical-base);
+  --inline-rail: var(--color-background-alerting-critical-base);
   background: var(--color-background-alerting-critical-light);
-  border-color: var(--color-border-alerting-critical-transparent);
+  border-color: var(--color-border-alerting-critical-base-transparent);
 }

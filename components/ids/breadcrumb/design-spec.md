@@ -10,8 +10,8 @@
 - Individual breadcrumb items (links)
 - Separator characters (/) between items
 - Ellipsis (...) for truncated paths
-- Dropdown menu for truncated links (shown on hover)
-- Current page text (two-line variant only, displayed below breadcrumb trail)
+- The overflow menu uses the IDS DropdownMenu component with all truncated links
+- Current page text (displayed below breadcrumb trail)
 - Focus ring for keyboard navigation
 ## Layout & Measurements
 - Standard height: 32px
@@ -25,15 +25,15 @@
 - List margin: 0px (no margin on breadcrumb list)
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
-- Disabled text: `var(--color-text-disabled)` = #757575
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
+- Disabled text: `var(--color-text-gray-disabled)` = #757575
 - Brand strong text: `var(--color-text-brand-strong)` = #94c5ea
 - Brand stronger text: `var(--color-text-link-brand-stronger)` = #d9eaf8
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #4c9fdd
 
 ### Link Colors
@@ -41,8 +41,8 @@
 - Link brand strong: `var(--color-text-link-brand-strong)` = #94c5ea
 
 ### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #1e262c
-- Brand light: `var(--color-background-brand-light)` = #34414c
+- Brand lighter: `var(--color-background-brand-lighter-slate)` = #1e262c
+- Brand light: `var(--color-background-brand-light-slate)` = #34414c
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -51,7 +51,7 @@
 - Annotation: `var(--color-annotation)` = #f389c3
 
 ### Surfaces
-- Surface dark: `var(--color-background-surface-1)` = #111619
+- Surface dark: `var(--color-background-surface-primary)` = #111619
 
 ### Effects
 - Cards Drop Shadow: Drop shadow effect for elevation
@@ -71,14 +71,14 @@
 ## States (Light Theme)
 | State | Background | Border | Text (One Line) | Text (Two Lines Current Page) | Separator |
 |---|---|---|---|---|---|
-| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
-| Hover | `var(--color-background-brand-lighter)` (#1e262c) | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
-| Focus | `var(--color-background-brand-lighter)` (#1e262c) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-neutral)` (#4d4d4d) |
-| Current (Two Lines) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) |
-| Disabled | transparent | transparent | `var(--color-text-disabled)` (#757575) | N/A | `var(--color-text-disabled)` (#757575) |
+| Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Hover | `var(--color-background-brand-lighter-slate)` (#1e262c) | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Focus | `var(--color-background-brand-lighter-slate)` (#1e262c) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Current (Two Lines) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Disabled | transparent | transparent | `var(--color-text-gray-disabled)` (#757575) | N/A | `var(--color-text-gray-disabled)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Surface tokens: `var(--color-background-surface-primary)` (#111619)
 - Text and border colors remain consistent via semantic variables
 - Current page uses neutral strong for clear indication
 ## Interactions
@@ -88,7 +88,7 @@
 - In two-line variant, current page is displayed below breadcrumb trail with larger typography
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
-- Truncated breadcrumbs show dropdown on hover of "..."
+- Truncated breadcrumbs reveal the IDS DropdownMenu when the "..." ellipsis is clicked or keyboard-activated
 ### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
@@ -101,8 +101,9 @@
 ### Behavior & guidelines
 - Use breadcrumbs to show navigation hierarchy
 - Overflow pattern: breadcrumb shows full path up to 4 items (could be less based on screen size)
-- From 5 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
-- Hovering on "..." displays a dropdown menu with all truncated links
+- From 4 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
+- The ellipsis uses the same link color and hover/focus/press styling as the other breadcrumb links
+- Clicking or keyboard-activating the "..." ellipsis opens the IDS DropdownMenu (single-select dropdown) with all truncated links
 - Use proper separator characters (/ > »)
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement

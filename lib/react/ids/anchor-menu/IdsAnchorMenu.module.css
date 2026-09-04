@@ -1,0 +1,122 @@
+/**
+ * IDS Anchor Menu styles — derived from components/ids/anchor-menu/design-spec.md
+ * Theme: components/ids-theme.css
+ * Slots: AnchorMenuRoot, AnchorMenuHeader?, AnchorMenuItem, AnchorActiveIndicator
+ */
+
+.ids-anchor-menu {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  min-width: 200px;
+  max-width: 300px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--color-text-gray-neutral);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+}
+
+.ids-anchor-menu--sticky {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+}
+
+/* AnchorMenuHeader */
+.ids-anchor-menu-header {
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--padding-padding-12) 0;
+  font-size: var(--font-size-body-1);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-24);
+  color: var(--color-text-gray-neutral-strong);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.ids-anchor-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ids-anchor-menu-item {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+/* AnchorMenuItem + AnchorActiveIndicator (left border) */
+.ids-anchor-menu-link {
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  width: fit-content;
+  min-height: 40px;
+  margin: 0;
+  padding: var(--padding-padding-8) var(--padding-padding-24);
+  border: none;
+  border-left: 1.2px solid var(--color-border-gray-neutral-base);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-gray-neutral);
+  font-family: inherit;
+  font-size: var(--font-size-body-1);
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-24);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.ids-anchor-menu-link:hover:not([aria-disabled="true"]) {
+  color: var(--color-text-gray-neutral);
+}
+
+/* Hover / Active — left indicator 4px brand (AnchorActiveIndicator) */
+.ids-anchor-menu-link:hover:not([aria-disabled="true"])::before,
+.ids-anchor-menu-link[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 4px;
+  background: var(--color-border-brand-base);
+  pointer-events: none;
+}
+
+.ids-anchor-menu-link[aria-current="page"] {
+  color: var(--color-text-brand-strong);
+  border-left-color: var(--color-border-brand-base);
+}
+
+/* Focus ring — 2px brand, inset -4px / -6px, radius 6px outer */
+.ids-anchor-menu-link:focus-visible {
+  color: var(--color-text-brand-strong);
+  outline: none;
+}
+
+.ids-anchor-menu-link:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px -6px;
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-6);
+  pointer-events: none;
+}
+
+.ids-anchor-menu-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  pointer-events: none;
+}

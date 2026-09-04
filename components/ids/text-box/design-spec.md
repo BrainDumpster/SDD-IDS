@@ -11,6 +11,9 @@
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
 ## Anatomy
+- `TextBoxField` (outer wrapper; only rendered when a label is present, lays label left of the field group)
+- `TextBoxLabel` (**optional** form label; `<label>` linked to the input via `for`/`id`)
+- `TextBoxRequiredMark` (**optional** `*` shown when `required`, inside the label)
 - `TextBoxRoot` (field wrapper)
 - `TextBoxControl` (input/textarea container)
 - `TextBoxInput` (single-line `<input>`)
@@ -32,6 +35,10 @@
 - Vertical spacing:
   - control to helper row: `4px`
   - helper row icon-to-text gap: `8px`
+- Label (optional; left position only):
+  - label and field group in a row, gap `16px`, aligned to top
+  - label vertical padding: `10px` top and bottom; label text-to-`*` gap: `2px`
+  - label text is single-line (`nowrap`)
 - Control corner radius: **`var(--text-box-control-radius)`** (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Text area padding aligns to sample: `9px` top and `10px` bottom.
 - Trailing icon size: `16px x 16px`.
@@ -47,36 +54,37 @@ Programmes override these **same alias names** in programme theme CSS. Component
 | `--text-box-focus-ring-radius` | `var(--corner-radius-radius-4)` |
 
 - Surface/background:
-  - `var(--color-background-component)` (default)
+  - `var(--color-background-surface-component)` (default)
   - `var(--color-background-gray-light)` (disabled)
 - Border:
-  - `var(--color-border-accessible)` (default)
-  - `var(--color-border-strong)` (hover)
+  - `var(--color-border-gray-neutral-base)` (default)
+  - `var(--color-border-gray-neutral-strong)` (hover)
   - `var(--color-border-brand-base)` (selected)
   - `var(--color-border-brand-base)` (focus outline)
   - `var(--color-border-alerting-critical-base)` (error)
 - Text:
-  - `var(--color-text-neutral)` (input value, helper text)
-  - `var(--color-text-disabled)` (disabled value/placeholder)
-  - `var(--color-text-critical)` (error message)
+  - `var(--color-text-gray-neutral)` (input value, helper text)
+  - `var(--color-text-gray-neutral-strong)` (label text and required `*`)
+  - `var(--color-text-gray-disabled)` (disabled value/placeholder)
+  - `var(--color-text-alerting-critical-base)` (error message)
 - Icon:
-  - `var(--color-icon-neutral)` (default suffix icon)
-  - `var(--color-icon-neutral)` (hover suffix icon)
-  - `var(--color-icon-disabled)` (disabled suffix icon)
-  - `var(--color-icon-alerting-critical)` (error icon)
+  - `var(--color-icon-gray-neutral-base)` (default suffix icon)
+  - `var(--color-icon-gray-neutral-base)` (hover suffix icon)
+  - `var(--color-icon-gray-disabled)` (disabled suffix icon)
+  - `var(--color-icon-alerting-critical-base)` (error icon)
 - Typography:
   - input/helper/error text: Body 2 (`14/20`)
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| TextBoxControl | default | `var(--color-background-component)` | `var(--color-border-accessible)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | hover | `var(--color-background-component)` | `var(--color-border-strong)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | selected | `var(--color-background-component)` | `var(--color-border-brand-base)` | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | focus-visible | `var(--color-background-component)` | control border `var(--color-border-accessible)` + outer outline `var(--color-border-brand-base)` (radius `var(--text-box-focus-ring-radius)`) | text `var(--color-text-neutral)`, icon `var(--color-icon-neutral)` |
-| TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | text `var(--color-text-disabled)`, icon `var(--color-icon-disabled)` |
-| TextBoxControl | error | `var(--color-background-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-neutral)`, helper row icon/text critical |
-| TextBoxHelperRow | helper | transparent | none | `var(--color-text-neutral)` |
-| TextBoxHelperRow | error | transparent | none | icon `var(--color-icon-alerting-critical)`, text `var(--color-text-critical)` |
+| TextBoxControl | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
+| TextBoxControl | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
+| TextBoxControl | selected | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
+| TextBoxControl | focus-visible | `var(--color-background-surface-component)` | control border `var(--color-border-gray-neutral-base)` + outer outline `var(--color-border-brand-base)` (radius `var(--text-box-focus-ring-radius)`) | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
+| TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-disabled)`, icon `var(--color-icon-gray-disabled)` |
+| TextBoxControl | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, helper row icon/text critical |
+| TextBoxHelperRow | helper | transparent | none | `var(--color-text-gray-neutral)` |
+| TextBoxHelperRow | error | transparent | none | icon `var(--color-icon-alerting-critical-base)`, text `var(--color-text-alerting-critical-base)` |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -93,13 +101,16 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Click/focus places caret in input/textarea.
 - Hover updates control border from accessible to strong.
 - Pointer focus (click inside input) is treated as active/selected visual: control border `var(--color-border-brand-base)` with no outline.
-- Keyboard focus-visible keeps control border `var(--color-border-accessible)` and draws an outer 1px `var(--color-border-brand-base)` ring with `var(--text-box-focus-ring-radius)`.
+- Keyboard focus-visible keeps control border `var(--color-border-gray-neutral-base)` and draws an outer 1px `var(--color-border-brand-base)` ring with `var(--text-box-focus-ring-radius)`.
 - Disabled removes interaction and uses disabled text/icon/background tokens.
 - Error state keeps control interactive (unless separately disabled) and shows critical helper row.
 - Demo/testing mode may force visual states with `data-state`; this must not block runtime pointer/keyboard behavior.
 ## Composition & API (runtime)
 - `componentType: "text-input" | "text-area"` (default `"text-input"`)
 - `size: "large" | "small"` (default `"large"`; `small` valid for text-input)
+- `label?: string` (**optional**; when omitted no label renders and output is the bare field group)
+- `showLabel?: boolean` (default `true`; toggles label visibility when `label` is set)
+- `required?: boolean` (default `false`; renders the `*` mark and sets `aria-required`)
 - `state: "default" | "hover" | "selected" | "focus" | "disabled" | "error"` (default `"default"`; demo override)
 - `value?: string` / `defaultValue?: string`
 - `placeholder?: string`
@@ -140,11 +151,13 @@ Variant matrix:
   - `invalid || errorText` activates error helper row styling.
   - runtime focus semantics:
     - pointer focus (`:focus:not(:focus-visible)`) -> active border only (`var(--color-border-brand-base)`), no outline ring
-    - keyboard focus (`:focus-visible`) -> control border `var(--color-border-accessible)` + visible outer focus ring (`var(--text-box-focus-ring-radius)`)
+    - keyboard focus (`:focus-visible`) -> control border `var(--color-border-gray-neutral-base)` + visible outer focus ring (`var(--text-box-focus-ring-radius)`)
 - Accessibility contract:
   - input/textarea must expose `aria-invalid` when invalid.
-  - helper/error row must be linked via `aria-describedby`.
-  - keyboard operations use native input semantics.
+  - a visible label must be programmatically linked to the input via `for`/`id`; `aria-label` is the fallback when no visible label is shown (placeholder is never the label).
+  - `required` exposes `aria-required`.
+  - helper/error row must be linked via `aria-describedby`, combined with any caller-provided `aria-describedby` (not replaced by it).
+  - keyboard operations use native input semantics (Tab/Shift-Tab tab stops, arrow keys within the field, typing on focus with no extra action).
 - Asset resolution + bundling:
   - suffix icon is user-defined via `iconName` and resolves from `assets/icons/<slug>.svg` (default `mail`).
   - error helper icon slug is `status-critical-square-solid` and resolves from `assets/icons/status-critical-square-solid.svg`.

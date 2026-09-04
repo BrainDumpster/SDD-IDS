@@ -3,6 +3,8 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from generation.spec_inheritance_resolver import SpecInheritanceResolver
+
 
 def _load_json_safe(path_str: str):
     p = Path(path_str)
@@ -54,6 +56,17 @@ class ComponentContextCompiler:
             else (self._resolve_optional_path(config.theme_css_path) if config else None)
         )
         self._inherits_marker = "<!-- ds:inherits root-spec -->"
+        programme_name = config.name if config else "ids"
+        self._inheritance_resolver: Optional[SpecInheritanceResolver] = None
+        if programme_name and programme_name.lower() != "ids":
+            self._inheritance_resolver = SpecInheritanceResolver(
+                project_root=self._project_root,
+                programme=programme_name,
+                figma_map_path=config.figma_map_path if config else None,
+                alias_path=config.alias_path if config else None,
+                baseline_components_dir=config.baseline_components_dir if config else "components/ids",
+                programme_components_dir=config.program_components_dir if config else None,
+            )
 
     def _resolve_optional_path(self, relative_path: Optional[str]) -> Optional[Path]:
         if not relative_path:
@@ -79,23 +92,50 @@ class ComponentContextCompiler:
             "content": text,
         }
 
+    def resolve_spec_inheritance(self, component: str) -> Optional[Dict[str, Any]]:
+        if self._inheritance_resolver is None:
+            return None
+        resolution = self._inheritance_resolver.resolve(component)
+        return resolution.to_dict()
+
     def load_layered_specs(self, component: str) -> List[Dict[str, Any]]:
-        baseline_component_path = self._baseline_components_dir / component / "design-spec.md"
-        program_component_path = self._program_components_dir / component / "design-spec.md"
-        baseline_spec_exists = baseline_component_path.is_file()
-        program_spec_exists = program_component_path.is_file()
-        # Program-only slugs (e.g. DAP `settings-menu`) may have no baseline copy under `components/ids`.
-        ids_component_required = baseline_spec_exists or not program_spec_exists
+        inheritance = self.resolve_spec_inheritance(component)
+        if inheritance:
+            baseline_component_path = (
+                self._project_root / inheritance["ids_baseline_spec_path"]
+                if inheritance.get("ids_baseline_spec_path")
+                else None
+            )
+            program_component_path = self._project_root / inheritance["programme_spec_path"]
+            pattern = inheritance.get("pattern", "standalone")
+            ids_component_required = (
+                pattern == "ids-fork" and bool(inheritance.get("ids_baseline_spec_path"))
+            )
+        else:
+            baseline_component_path = self._baseline_components_dir / component / "design-spec.md"
+            program_component_path = self._program_components_dir / component / "design-spec.md"
+            baseline_spec_exists = baseline_component_path.is_file()
+            program_spec_exists = program_component_path.is_file()
+            ids_component_required = baseline_spec_exists or not program_spec_exists
 
         layers = [
             self._spec_layer("ids_root", self._baseline_root_spec_path, required=True),
-            self._spec_layer("ids_component", baseline_component_path, required=ids_component_required),
         ]
+        if baseline_component_path:
+            layers.append(
+                self._spec_layer(
+                    "ids_component",
+                    baseline_component_path,
+                    required=ids_component_required,
+                )
+            )
 
         if self._program_root_spec_path and self._program_root_spec_path != self._baseline_root_spec_path:
             layers.append(self._spec_layer("program_root_delta", self._program_root_spec_path))
 
-        if program_component_path != baseline_component_path:
+        if program_component_path and (
+            not baseline_component_path or program_component_path != baseline_component_path
+        ):
             layers.append(self._spec_layer("program_component_delta", program_component_path))
 
         return layers
@@ -180,6 +220,13 @@ class ComponentContextCompiler:
 
         anatomy = self.registry.get(component, {}).get("anatomy", [])
 
+        inheritance = self.resolve_spec_inheritance(component)
+        layer_precedence = (
+            inheritance.get("layer_precedence")
+            if inheritance
+            else "program_component_delta > program_root_delta > ids_component > ids_root"
+        )
+
         return {
             "component": component,
             "request": request,
@@ -187,7 +234,8 @@ class ComponentContextCompiler:
             "spec_layers": spec_layers,
             "theme_layers": theme_layers,
             "theme_css": theme_css,
-            "layer_precedence": "program_component_delta > program_root_delta > ids_component > ids_root",
+            "spec_inheritance": inheritance,
+            "layer_precedence": layer_precedence,
             "validation_issues": validation_issues,
             "tokens": tokens,
             "rules": "",

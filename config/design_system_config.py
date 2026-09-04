@@ -83,6 +83,8 @@ class DesignSystemConfig:
     interaction_templates_path: str = ""
     layout_cache_path: str = ""
     generated_storybook_dir: str = "storybook-generated"
+    generated_angular_storybook_dir: str = "storybook-generated-angular"
+    angular_storybook_dir: str = "storybook-angular"
     strict_storybook_gate: bool = False
 
     # Framework options
@@ -161,6 +163,10 @@ def load_design_system(name: str) -> DesignSystemConfig:
         interaction_templates_path=data.get("interaction_templates_path", ""),
         layout_cache_path=data.get("layout_cache_path", ""),
         generated_storybook_dir=data.get("generated_storybook_dir", "storybook-generated"),
+        generated_angular_storybook_dir=data.get(
+            "generated_angular_storybook_dir", "storybook-generated-angular"
+        ),
+        angular_storybook_dir=data.get("angular_storybook_dir", "storybook-angular"),
         strict_storybook_gate=bool(data.get("strict_storybook_gate", False)),
         framework_options=data.get("framework_options", []),
         typography=data.get("typography", {}),

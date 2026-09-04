@@ -15,7 +15,7 @@ import {
 } from "../spec-contracts/synapse-thinking.contract";
 
 const meta: Meta<typeof Thinking> = {
-  title: "Spec Generated/Synapse/Chat and Layout/Thinking",
+  title: "Components/Synapse/Chat and Layout/Thinking",
   component: Thinking,
   parameters: {
     layout: "centered",

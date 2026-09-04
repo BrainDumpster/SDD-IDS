@@ -14,7 +14,7 @@
 }
 
 .modeLabel {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: 14px;
 }
 
@@ -24,9 +24,13 @@
   min-height: 0;
   align-items: stretch;
   gap: 0;
-  border: 1px solid var(--color-border-light);
-  background: var(--color-background-component);
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+.shell:not([data-with-detail-panel="true"]) .contentRow {
+  border: 1px solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
 }
 
 .gridWrap {
@@ -37,8 +41,14 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+.shell[data-with-detail-panel="true"] .gridWrap {
+  border: 1px solid var(--color-border-gray-neutral-base);
+  margin-right: -1px;
 }
 
 .rowSelectionGroup {
@@ -132,7 +142,7 @@
   align-self: stretch;
   min-height: 100%;
   z-index: 3;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .tableSplitRow {
@@ -162,7 +172,7 @@
   min-height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .scrollablePane {
@@ -174,7 +184,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   z-index: 1;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 /*
@@ -277,15 +287,15 @@
 
 /* Figma `.Column Header` `37721:114663` — `colorAndBorder` */
 .grid[data-header-styled="true"] .headerCell {
-  border-top: 1px solid var(--color-border-light);
-  border-bottom: 1px solid var(--color-border-light);
+  border-top: 1px solid var(--color-border-gray-neutral-light);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
   background: var(--color-background-gray-neutral-lighter);
 }
 
 .grid[data-header-styled="false"] .headerCell {
   border-top: none;
   border-bottom: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 /* Data column headers: leading 1×24px rail after selection chrome (Figma `37721:114663`) */
@@ -297,7 +307,7 @@
   transform: translateY(-50%);
   width: 1px;
   height: 24px;
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   pointer-events: none;
   z-index: 1;
 }
@@ -371,19 +381,19 @@
   margin: 0 0 -1px;
   box-sizing: border-box;
   border: none;
-  border-top: 1px solid var(--color-border-accessible);
-  border-right: 1px solid var(--color-border-accessible);
-  border-left: 1px solid var(--color-border-accessible);
+  border-top: 1px solid var(--color-border-gray-neutral-base);
+  border-right: 1px solid var(--color-border-gray-neutral-base);
+  border-left: 1px solid var(--color-border-gray-neutral-base);
   border-bottom: none;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   line-height: 0;
   cursor: pointer;
 }
 
 .filterPopupIconTab:hover {
-  border-top-color: var(--color-border-strong);
-  border-right-color: var(--color-border-strong);
-  border-left-color: var(--color-border-strong);
+  border-top-color: var(--color-border-gray-neutral-strong);
+  border-right-color: var(--color-border-gray-neutral-strong);
+  border-left-color: var(--color-border-gray-neutral-strong);
 }
 
 .filterPopupPanel {
@@ -391,15 +401,19 @@
   z-index: 1;
   width: max-content;
   min-width: 200px;
-  max-width: min(480px, calc(100vw - 24px));
+  max-width: min(
+    480px,
+    calc(100vw - 24px),
+    var(--ids-datagrid-filter-panel-max-width, 480px)
+  );
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-top: none;
-  border-right: 1px solid var(--color-border-accessible);
-  border-bottom: 1px solid var(--color-border-accessible);
-  border-left: 1px solid var(--color-border-accessible);
+  border-right: 1px solid var(--color-border-gray-neutral-base);
+  border-bottom: 1px solid var(--color-border-gray-neutral-base);
+  border-left: 1px solid var(--color-border-gray-neutral-base);
   /*
    * Shadow 1 — Figma `44360:181713`: 0 2px 2px + 0 4px 4px @ 8%.
    * Offsets/blur are literal px (ids-theme FLOAT tokens are unitless; var() would invalidate box-shadow).
@@ -417,7 +431,7 @@
   left: 0;
   width: calc(100% - 38px);
   height: 1px;
-  background: var(--color-border-accessible);
+  background: var(--color-border-gray-neutral-base);
   pointer-events: none;
 }
 
@@ -430,8 +444,8 @@
 /* Date / date-time inner panel: 480px sample, py-8 px-1 on slot content. */
 .filterPopupPanel:has([data-datetime-filter]),
 .filterPopupPanel:has([data-date-filter]) {
-  min-width: 480px;
-  max-width: min(480px, calc(100vw - 24px));
+  min-width: min(480px, var(--ids-datagrid-filter-panel-max-width, 480px));
+  max-width: min(480px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 480px));
 }
 
 .filterPopupPanel:has([data-datetime-filter]) .filterPopupPanelBody,
@@ -439,22 +453,55 @@
   padding: 0;
 }
 
+/* Column Search — Figma Search Box Properties `37822:91077` (Large 40px). */
+.filterPopupPanel:has([data-text-filter]) {
+  width: min(300px, var(--ids-datagrid-filter-panel-max-width, 300px));
+  min-width: min(200px, var(--ids-datagrid-filter-panel-max-width, 200px));
+  max-width: min(300px, calc(100vw - 24px), var(--ids-datagrid-filter-panel-max-width, 300px));
+}
+
 .filterPopupSearchRow {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
-  min-height: 32px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 40px;
+  /* Figma: padding-16 L/R, padding-6 T/B; outer itemSpacing = space-none */
+  padding: var(--padding-padding-6, 6px) var(--padding-padding-16, 16px);
+  gap: 0;
+  background: var(--color-background-surface-component);
+  /* Outer border lives on L-frame FilterPanel — do not double-stroke the row */
 }
 
 .filterPopupSearchIcon {
   flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 16px;
   height: 16px;
+  /* Tint via Icon mask `currentColor` — do not hardcode fill on the SVG */
   color: var(--color-icon-brand-base);
+}
+
+.filterPopupSearchIcon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: currentColor;
+}
+
+/* Inner text frame — Figma Frame 3466216 / DropdownMenu `.searchInputWrap` */
+.filterPopupSearchInputWrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--spacing-space-8, 8px);
+  padding: var(--padding-padding-4, 4px) 0 var(--padding-padding-4, 4px)
+    var(--padding-padding-8, 8px);
+  box-sizing: border-box;
 }
 
 .filterPopupSearchInput {
@@ -464,16 +511,46 @@
   margin: 0;
   padding: 0;
   background: transparent;
-  font-size: 14px;
+  font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
-  line-height: 20px;
-  color: var(--color-text-neutral-strong);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-gray-neutral);
   outline: none;
 }
 
 .filterPopupSearchInput::placeholder {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-weight: 400;
+}
+
+.filterPopupSearchInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* Clear — same contract as DropdownMenu search clear (visible only when query non-empty). */
+.filterPopupSearchClear {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: var(--color-icon-gray-neutral-accessible);
+}
+
+.filterPopupSearchClear:focus-visible {
+  outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.filterPopupSearchClearIcon {
+  flex-shrink: 0;
+  display: block;
+  /* Inherits button `color` → Icon mask / SVG fill use currentColor */
+  color: inherit;
+  fill: currentColor;
 }
 
 /* Holds header layout while the open filter menu is portaled above scroll/stacking contexts */
@@ -522,7 +599,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -552,7 +629,7 @@
   justify-content: center;
   width: 12px;
   height: 12px;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .sortIconSelected {
@@ -560,7 +637,7 @@
 }
 
 .iconButton:hover .sortIcon {
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .iconButton[data-sorted="true"]:hover .sortIcon {
@@ -582,11 +659,11 @@
 }
 
 .filter-default {
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .filter-hover {
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .filter-selected {
@@ -605,7 +682,7 @@
   width: 1px;
   height: 24px;
   transform: translateY(-50%);
-  background: var(--color-border-light);
+  background: var(--color-border-gray-neutral-light);
   pointer-events: none;
   z-index: 2;
 }
@@ -656,23 +733,23 @@
   position: sticky;
   left: 0;
   z-index: 1;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .bodyRow[data-selected="true"] .selectionColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-selected="true"]:active .selectionColumn {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .bodyRow:not([data-readonly="true"]):not([data-selected="true"]):hover .selectionColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-readonly="true"]:not([data-selected="true"]):hover .selectionColumn {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .headerSelectionColumn {
@@ -740,7 +817,7 @@
   z-index: 2;
   text-align: center;
   vertical-align: middle;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .settingsColumn.headerCell {
@@ -753,19 +830,19 @@
 }
 
 .bodyRow[data-selected="true"] .settingsColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-selected="true"]:active .settingsColumn {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .bodyRow:not([data-readonly="true"]):not([data-selected="true"]):hover .settingsColumn {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-readonly="true"]:not([data-selected="true"]):hover .settingsColumn {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .settingsHeaderInner {
@@ -821,7 +898,7 @@
   justify-content: center;
   width: var(--datagrid-chrome-icon-size);
   height: var(--datagrid-chrome-icon-size);
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   line-height: 0;
 }
 
@@ -845,8 +922,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: var(--color-background-component);
-  border: 1px solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: 1px solid var(--color-border-gray-neutral-base);
   box-shadow:
     0 2px 2px 0 var(--shadow-shadow-1-drop-shadow-2-color, rgba(37, 37, 37, 0.08)),
     0 4px 4px 0 var(--shadow-shadow-1-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
@@ -867,23 +944,23 @@
 }
 
 .bodyRow > td {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .bodyRow:not([data-readonly="true"]):not([data-selected="true"]):hover > td {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-readonly="true"]:not([data-selected="true"]):hover > td {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .bodyRow[data-selected="true"] > td {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .bodyRow[data-selected="true"]:active > td {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 /* 4px leading selection accent when vertical indicator is on */
@@ -910,8 +987,8 @@
   height: 40px;
   /* Figma `.Cell Item` `37721:114328`: pl 16, pr 12, py 10 */
   padding: 10px 12px 10px 16px;
-  border-bottom: 1px solid var(--color-border-light);
-  color: var(--color-text-neutral);
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
+  color: var(--color-text-gray-neutral);
   font-size: 14px;
   line-height: 20px;
   vertical-align: middle;
@@ -933,14 +1010,9 @@
 
 .footer {
   flex: 0 0 auto;
-  background: var(--color-background-component);
-  border-top: 1px solid var(--color-border-light);
+  background: var(--color-background-surface-component);
+  border-top: 1px solid var(--color-border-gray-neutral-light);
   padding: 0;
-}
-
-.footer :global(nav) {
-  border: 0;
-  margin: 0;
 }
 
 .detailPanel {
@@ -949,10 +1021,24 @@
   border-top: 0 !important;
   border-right: 0 !important;
   border-bottom: 0 !important;
-  border-left: 1px solid var(--color-border-light) !important;
+  border-left: 1px solid var(--color-border-gray-neutral-light) !important;
+}
+
+/* Align detail-panel header band with datagrid column header row (48px + bottom rule). */
+.shell[data-with-detail-panel="true"] :global(.ids-detail-panel__header) {
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--color-border-gray-neutral-base);
+}
+
+.shell[data-header-styled="true"][data-with-detail-panel="true"] :global(.ids-detail-panel__header) {
+  border-bottom: 1px solid var(--color-border-gray-neutral-light);
 }
 
 .detailBody {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: 14px;
 }

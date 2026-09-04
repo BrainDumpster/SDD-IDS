@@ -1,106 +1,280 @@
-import { useId, useRef } from "react";
-import type { ReactNode } from "react";
+import {
+  Children,
+  isValidElement,
+  useId,
+  useRef,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import { idsAssetUrl } from "../../../lib/shared/ids-assets-base.js";
 import { CardHeaderOverflowMenu, type CardMenuOption } from "./CardHeaderMenu";
+import { Icon } from "./Icon";
 import styles from "./Card.module.css";
 
 export type { CardMenuOption };
 
+/** Dashboard / grid column span relative to a 3-column Dashboard grid. */
+export type CardSize = "span-1" | "span-2" | "span-3";
+
+export interface CardAction {
+  id?: string;
+  label: string;
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+export interface CardKeyValueItem {
+  id?: string;
+  label: string;
+  value: string;
+  /** Optional leading icon slug (e.g. `folder-closed`) per Figma key-value rows. */
+  iconSlug?: string;
+}
+
 interface CardProps {
-  /** Optional header label — rendered when `header` is not provided */
   title?: string;
-  /** Optional leading icon in the title row (ReactNode or icon slug string; omitted if using custom `header`) */
+  /**
+   * Secondary title shown inline after a `|` separator (Figma Dashboard-Element-Card
+   * `14093:123118` — Body 1 / `var(--color-text-gray-neutral)`).
+   * Prefer `<CardSecondaryTitle>` or a string/node via this prop.
+   */
+  secondaryTitle?: ReactNode;
+  /**
+   * Optional trailing meta before kebab (Figma “Last 24 Hours” — Body 2 / neutral).
+   */
+  headerMeta?: ReactNode;
   headerIcon?: ReactNode | string;
-  /** Controls whether headerIcon should render in default title row. */
   showIcon?: boolean;
-  /** Custom header region — replaces default title row layout; pair with `menuOptions` to keep kebab on the right */
   header?: ReactNode;
+  /** Optional `CardAdditionalFilter` slot — any Dropdown / filter before the kebab. */
+  additionalFilter?: ReactNode;
   children: ReactNode;
-  /** Optional footer for actions or metadata */
   footer?: ReactNode;
-  /** Controls whether footer button/content row should render. */
+  actions?: CardAction[];
   showButtons?: boolean;
-  /**
-   * Per-card overflow actions. Each card instance supplies its own list; lists are not shared
-   * across cards on a page.
-   */
   menuOptions?: CardMenuOption[];
-  /** Controls whether the header overflow menu (vertical ellipsis) should render. */
+  showOverflowMenu?: boolean;
+  /** @deprecated Alias of `showOverflowMenu` */
   showOverFlowMenu?: boolean;
-  /**
-   * Emitted when the user selects an item from the header options overlay.
-   * Codegen: React `onOptionSelected(value)`; Angular `optionSelected.emit(value)`;
-   * Lit `CustomEvent` `option-selected` with `detail` = selected `value` string.
-   */
   onOptionSelected?: (value: string) => void;
+  /**
+   * When `true` (default), `CardBody` shows header‖body `border-top` and, if a
+   * footer is present, body‖footer `border-bottom`. Set `false` to hide both.
+   */
+  showDivider?: boolean;
+  /**
+   * Column span inside Dashboard’s 3-column grid.
+   * `span-1` (default) | `span-2` (2×) | `span-3` (3× / full row).
+   */
+  size?: CardSize;
+  /** Demo-only — not in Figma Card-Main; ignored. */
   elevated?: boolean;
+  /** Demo-only — not in Figma Card-Main; ignored. */
   outlined?: boolean;
+  className?: string;
+}
+
+const SIZE_CLASS: Record<CardSize, string> = {
+  "span-1": styles.sizeSpan1,
+  "span-2": styles.sizeSpan2,
+  "span-3": styles.sizeSpan3,
+};
+
+/**
+ * Optional secondary title (Figma Dashboard-Element-Card).
+ * Rendered inline after `|` when used with `title` — Body 1 / `var(--color-text-gray-neutral)`.
+ */
+export function CardSecondaryTitle({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span className={[styles.secondaryTitle, className].filter(Boolean).join(" ")}>
+      {children}
+    </span>
+  );
+}
+
+/** Content Type=Text — Figma `15718:219736`. */
+export function CardTextContent({
+  sectionTitle = "Section Title",
+  children,
+}: {
+  sectionTitle?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className={styles.textContent}>
+      <p className={styles.textSectionTitle}>{sectionTitle}</p>
+      <div className={styles.textParagraph}>{children}</div>
+    </div>
+  );
+}
+
+/** Content Type=Key Value Pair — Figma `15718:220110`. */
+export function CardKeyValueContent({ items }: { items: CardKeyValueItem[] }) {
+  return (
+    <dl className={styles.keyValueList}>
+      {items.map((item, index) => (
+        <div
+          key={item.id ?? `${item.label}-${index}`}
+          className={styles.keyValueRow}
+        >
+          <dt className={styles.keyValueLabel}>{item.label}:</dt>
+          <dd className={styles.keyValueValue}>
+            {item.iconSlug ? (
+              <Icon
+                shapeName={item.iconSlug}
+                className={styles.keyValueIcon}
+                style={{ width: 16, height: 16 }}
+              />
+            ) : null}
+            <span>{item.value}</span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function resolveSecondaryTitle(secondaryTitle: ReactNode | undefined): ReactNode {
+  if (secondaryTitle == null || secondaryTitle === false) return null;
+  if (typeof secondaryTitle === "string" || typeof secondaryTitle === "number") {
+    return <CardSecondaryTitle>{secondaryTitle}</CardSecondaryTitle>;
+  }
+  if (
+    isValidElement(secondaryTitle) &&
+    secondaryTitle.type === CardSecondaryTitle
+  ) {
+    return secondaryTitle;
+  }
+  return <CardSecondaryTitle>{secondaryTitle}</CardSecondaryTitle>;
 }
 
 export function Card({
   title,
+  secondaryTitle,
+  headerMeta,
   headerIcon,
   showIcon = false,
   header,
+  additionalFilter,
   children,
   footer,
+  actions,
   showButtons = false,
   menuOptions,
-  showOverFlowMenu = false,
+  showOverflowMenu,
+  showOverFlowMenu,
   onOptionSelected,
-  elevated = false,
-  outlined = false,
+  showDivider = true,
+  size = "span-1",
+  className,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const secondaryId = useId();
 
+  const overflowEnabled = showOverflowMenu ?? showOverFlowMenu ?? false;
   const showMenu =
-    showOverFlowMenu && menuOptions != null && menuOptions.length > 0;
+    overflowEnabled && menuOptions != null && menuOptions.length > 0;
   const resolvedHeaderIcon =
     typeof headerIcon === "string" &&
     /^[a-z0-9-]+$/.test(headerIcon) &&
     headerIcon.length > 0
-      ? `/assets/icons/${headerIcon}.svg`
+      ? idsAssetUrl(`icons/${headerIcon}.svg`)
       : undefined;
   const showHeaderIcon =
     showIcon &&
     headerIcon != null &&
     (typeof headerIcon === "string" ? resolvedHeaderIcon != null : true);
+  const secondaryNode = resolveSecondaryTitle(secondaryTitle);
+  const hasTitle = title != null && String(title).length > 0;
   const hasHeader =
     header != null ||
-    (title != null && String(title).length > 0) ||
+    hasTitle ||
+    secondaryNode != null ||
     showHeaderIcon ||
-    showMenu;
-  const hasFooter = showButtons && footer != null;
-
-  const classNames = [
-    styles.card,
-    elevated ? styles.elevated : "",
-    outlined ? styles.outlined : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    showMenu ||
+    additionalFilter != null ||
+    headerMeta != null;
+  const hasFooter =
+    showButtons &&
+    ((actions != null && actions.length > 0) || footer != null);
 
   const menu = showMenu ? (
     <CardHeaderOverflowMenu
       options={menuOptions!}
       onOptionSelected={(v) => onOptionSelected?.(v)}
       cardRef={cardRef}
-      triggerAriaLabel="Card options"
+      triggerAriaLabel={
+        hasTitle ? `Options for ${title}` : "Card options"
+      }
     />
   ) : null;
 
+  const metaNode =
+    headerMeta == null || headerMeta === false ? null : typeof headerMeta ===
+        "string" || typeof headerMeta === "number" ? (
+      <span className={styles.headerMeta}>{headerMeta}</span>
+    ) : (
+      headerMeta
+    );
+
+  const trailing =
+    additionalFilter != null || menu != null || metaNode != null ? (
+      <div className={styles.headerTrailing}>
+        {additionalFilter}
+        {metaNode}
+        {menu}
+      </div>
+    ) : null;
+
+  const sizeClass = SIZE_CLASS[size] ?? SIZE_CLASS["span-1"];
+
+  const titleBlock =
+    secondaryNode != null ? (
+      <div className={styles.titleRow}>
+        {hasTitle ? (
+          <h3 id={titleId} className={styles.titleInline}>
+            {title}
+          </h3>
+        ) : null}
+        {hasTitle ? (
+          <span className={styles.titleDivider} aria-hidden="true">
+            |
+          </span>
+        ) : null}
+        <div id={secondaryId}>{secondaryNode}</div>
+      </div>
+    ) : hasTitle ? (
+      <h3 id={titleId} className={styles.title}>
+        {title}
+      </h3>
+    ) : null;
+
   return (
-    <div ref={cardRef} className={classNames}>
+    <div
+      ref={cardRef}
+      className={[styles.card, sizeClass, className].filter(Boolean).join(" ")}
+      data-card-size={size}
+      aria-labelledby={hasTitle ? titleId : undefined}
+      aria-describedby={secondaryNode != null ? secondaryId : undefined}
+    >
       {hasHeader && (
         <div
-          className={`${styles.header} ${styles.headerDivider}`}
+          className={styles.header}
           data-card-header
+          data-has-overflow-menu={showMenu ? "true" : "false"}
         >
           {header != null ? (
-            showMenu ? (
+            trailing != null ? (
               <div className={styles.headerRow}>
                 <div className={styles.headerTitleCluster}>{header}</div>
-                {menu}
+                {trailing}
               </div>
             ) : (
               header
@@ -123,23 +297,53 @@ export function Card({
                     )}
                   </span>
                 )}
-                {title != null && String(title).length > 0 && (
-                  <h3 id={titleId} className={styles.title}>
-                    {title}
-                  </h3>
-                )}
+                {titleBlock}
               </div>
-              {menu}
+              {trailing}
             </div>
           )}
         </div>
       )}
-      <div className={styles.body}>{children}</div>
+      <div
+        className={[
+          styles.body,
+          showDivider ? "" : styles.bodyNoDivider,
+          showDivider && hasFooter ? styles.bodyWithFooter : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        data-card-show-divider={showDivider ? "true" : "false"}
+      >
+        {children}
+      </div>
       {hasFooter && (
         <div className={styles.footer} data-card-footer>
-          {footer}
+          {actions != null && actions.length > 0
+            ? actions.map((action, index) => (
+                <button
+                  key={action.id ?? `${action.label}-${index}`}
+                  type="button"
+                  className={styles.footerAction}
+                  disabled={action.disabled}
+                  onClick={action.onClick}
+                >
+                  {action.label}
+                </button>
+              ))
+            : footer}
         </div>
       )}
     </div>
   );
+}
+
+/** Type guard for Dashboard children inspection. */
+export function isCardElement(
+  node: ReactNode,
+): node is ReactElement<CardProps> {
+  return isValidElement(node) && node.type === Card;
+}
+
+export function collectCardChildren(children: ReactNode): ReactElement[] {
+  return Children.toArray(children).filter(isValidElement);
 }
