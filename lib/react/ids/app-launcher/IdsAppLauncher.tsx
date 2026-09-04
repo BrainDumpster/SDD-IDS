@@ -154,7 +154,7 @@ export interface IdsAppLauncherProps {
   /** Unknown / invalid → `2`. */
   columns?: number;
   triggerVariant?: IdsAppLauncherTriggerVariant | string;
-  /** Default `8`. Masthead coerces `≥ 1`. */
+  /** Default `8` for the default trigger; `1` for `masthead` so the popup's top border sits right below the masthead's 1px bottom border. */
   sideOffset?: number;
   open?: boolean;
   defaultOpen?: boolean;
@@ -1301,7 +1301,7 @@ export function IdsAppLauncher({
   footerAction,
   columns: columnsProp,
   triggerVariant: triggerVariantProp,
-  sideOffset = 8,
+  sideOffset,
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -1336,7 +1336,7 @@ export function IdsAppLauncher({
   });
 
   const positionerSideOffset =
-    triggerVariant === "masthead" ? Math.max(sideOffset, 1) : sideOffset;
+    sideOffset ?? (triggerVariant === "masthead" ? 1 : 8);
 
   const position = useAnchorPosition({
     open: open && !panelOnly,

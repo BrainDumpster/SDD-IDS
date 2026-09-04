@@ -97,7 +97,7 @@ App Launcher (`grid-square-9-16`) and avatar remain **separate optional slots** 
 - Action group spacing: **16px** between the brand/product-name area and the right action group (`margin-left: var(--spacing-space-16, 16px)`)
 - Horizontal padding: 16px left, 8px right
 - Masthead overflow: `overflow: hidden` to prevent horizontal scrolling in the masthead area; content truncates instead of scroll
-- Bottom border: `var(--border-width-border-1)` solid `var(--color-border-transparent-neutral)`
+- Bottom border: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-transparent-base)`
 - Border radius: 0 (full-width masthead)
 - Action element focus ring: `var(--border-width-border-default)` dashed `var(--color-border-gray-white)`, `outline-offset: -1px` (inset) — applies to icon buttons and avatar button only
 - Action icon button: 16px × 16px icon, padding 19px 16px
@@ -406,11 +406,15 @@ Production integrations MUST use host-composed `iconsSlot` instead of this defau
 ### Behavior contract
 
 - Brand area remains left-aligned; `MastheadActionsRow` right-aligned when present.
+- `MastheadActionsRow` must have `role="toolbar"` and `aria-label="Masthead actions"` (or localized equivalent). It must implement arrow-key focus cycling: `ArrowLeft` / `ArrowRight` move focus between focusable action buttons, wrapping at ends; `Home` focuses the first button; `End` focuses the last button. Only consider non-disabled `button` elements inside the actions row.
 - `logo`, `iconsSlot` (search / action icons), `appLauncherSlot`, and `avatarSlot` are all **optional** and **host-defined**.
 - `iconsSlot` accepts arbitrary host content; Masthead does not interpret action semantics.
 - `MastheadActionIconButton` (when used) maintains 16×16 icon contract and tokenized hover/active/`aria-expanded` states.
 - Optional app launcher integrates in `appLauncherSlot` without breaking spacing.
 - Event handlers attach to composed children, not Masthead root.
+- Masthead root must set `overflow: hidden` so long content truncates instead of causing horizontal scroll.
+- `MastheadActionsRow` must be separated from the brand area by `margin-left: var(--spacing-space-16)` (or 16px fallback), and must not shrink (`flex-shrink: 0`).
+- `MastheadProductName` must render as a single-line ellipsized label with `max-width: 45ch`, `min-width: 1ch`, `white-space: nowrap`, `overflow: hidden`, and `text-overflow: ellipsis`. When the supplied `productName` is a `string` longer than 45 characters, wrap the label in a Tooltip (React IDS: `IdsTooltip` with `Trigger`/`Panel`/`Body`) showing the full product name.
 
 ### Fallback/error rules
 

@@ -382,7 +382,9 @@ export function DropdownMenu({
                             setGhostSuffix(computeGhostSuffix(value));
                           }}
                           onKeyDown={(event) => {
-                            event.stopPropagation();
+                            if (!["Escape", "ArrowUp", "ArrowDown"].includes(event.key)) {
+                              event.stopPropagation();
+                            }
                             // Ignore keys while the IME is composing (keyCode 229 /
                             // isComposing): Tab/→ then belong to the IME candidate UI,
                             // and mutating the value mid-composition corrupts it.
