@@ -14,6 +14,7 @@ import { MainMenuLeftContext, type MainMenuLeftContextValue } from "./MainMenuLe
 import styles from "./MainMenuLeft.module.css";
 import { Icon } from "./Icon";
 import { IdsTooltip } from "./IdsTooltip";
+import { toPascalState } from "./MainMenuLeft.utils";
 
 export type MainMenuLeftContextMenuOption = LeftNavSecondaryContextMenuOption;
 
@@ -180,6 +181,7 @@ export interface MainMenuLeftProps {
    * Optional lead row inside `MainMenuList` (Synapse “New Chat”; first in scroll stack, expanded only).
    */
   menuLead?: { label?: string; onAction?: () => void };
+  children?: React.ReactNode;
 }
 
 function slugify(value: string): string {
@@ -357,7 +359,7 @@ export function MainMenuLeft({
   ariaLabel = "Main menu left",
   programme = "ids",
   menuLead,
-}: MainMenuLeftRootProps) {
+}: MainMenuLeftProps) {
   const useComposition = items === undefined;
   const controlled = onExpandedChange !== undefined;
   const [internalExpanded, setInternalExpanded] = useState(expanded);
@@ -424,6 +426,8 @@ export function MainMenuLeft({
       ?.focus();
   };
 
+  const contextValue = { railExpanded, forceStates } as unknown as MainMenuLeftContextValue;
+
   return (
     <MainMenuLeftContext.Provider value={contextValue}>
       <nav
@@ -440,7 +444,7 @@ export function MainMenuLeft({
       >
         {logo ? <MainMenuLeftLogoFromData logo={logo} onNavigate={onNavigate} /> : null}
 
-        <div className={styles.content}>
+        <div className={styles.content} ref={contentRef}>
           {menuLead && (railExpanded || programme === "synapse") ? (
             <MenuLeadBlock menuLead={menuLead} railExpanded={railExpanded} />
           ) : null}
@@ -465,27 +469,28 @@ export function MainMenuLeft({
               setExpandedChildrenKey={setExpandedGroupId}
               setSelectedSecondaryParentKey={setSelectedSecondaryParentKey}
               setSelectedSecondaryKey={setSelectedSecondaryKey}
+              moveFocus={moveFocus}
+              focusFirst={focusFirst}
+              focusLast={focusLast}
+              focusParent={focusParent}
             />
           )}
         </div>
 
-      <div className={styles.content} ref={contentRef}>
-        {menuLead && (isExpanded || programme === "synapse") ? (
-          <div
-            className={[
-              styles.menuLeadBlock,
-              !isExpanded ? styles.menuLeadBlockCollapsed : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <Icon
-              shapeName={railExpanded ? "double-chev-left" : "double-chev-right"}
-              className={styles.bottomToggleIcon}
-              style={{ width: 16, height: 16, flexShrink: 0 }}
-            />
-          </button>
-        </div>
+      <div className={styles.bottomToggle}>
+        <button
+          type="button"
+          className={styles.bottomToggleButton}
+          aria-label={railExpanded ? "Collapse" : "Expand"}
+          onClick={() => setRailExpanded(!railExpanded)}
+        >
+          <Icon
+            shapeName={railExpanded ? "double-chev-left" : "double-chev-right"}
+            className={styles.bottomToggleIcon}
+            style={{ width: 16, height: 16, flexShrink: 0 }}
+          />
+        </button>
+      </div>
       </nav>
     </MainMenuLeftContext.Provider>
   );
@@ -584,10 +589,14 @@ interface ItemsAdapterProps {
   onSelected?: MainMenuLeftProps["onSelected"];
   onSecondaryContextMenu?: MainMenuLeftProps["onSecondaryContextMenu"];
   getSecondaryContextMenuOptions?: MainMenuLeftProps["getSecondaryContextMenuOptions"];
-  setSelectedKey: (key: string) => void;
+  setSelectedKey: (key: string | null) => void;
   setExpandedChildrenKey: (key: string | null) => void;
   setSelectedSecondaryParentKey: (key: string | null) => void;
   setSelectedSecondaryKey: (key: string | null) => void;
+  moveFocus: (delta: number) => void;
+  focusFirst: () => void;
+  focusLast: () => void;
+  focusParent: (parentItemId: string) => void;
 }
 
 function MainMenuLeftItemsAdapter({
@@ -607,98 +616,13 @@ function MainMenuLeftItemsAdapter({
   setExpandedChildrenKey,
   setSelectedSecondaryParentKey,
   setSelectedSecondaryKey,
+  moveFocus,
+  focusFirst,
+  focusLast,
+  focusParent,
 }: ItemsAdapterProps) {
   return (
     <>
-      {items.map((item, itemIndex) => {
-        const itemId = resolvePrimaryId(item, itemIndex);
-        const hasForcedState = forceStates && Boolean(item.state);
-        const state = hasForcedState
-          ? item.state!
-          : selectedKey === itemId
-            ? "selected"
-            : "default";
-        const isSelected = state === "selected" || state === "selected-focus";
-        const isFocused = state === "default-focus" || state === "selected-focus";
-        const childList = item.children ?? [];
-        const hasChildren = childList.length > 0;
-        const showChildrenList =
-          railExpanded &&
-          hasChildren &&
-          (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
-        const showChevron = railExpanded && hasChildren;
-        const primaryIconName = item.iconName ?? "home";
-        const hasSelectedSecondary = selectedSecondaryParentKey === itemId;
-        const showSelectedInset = hasForcedState
-          ? state === "selected" || state === "selected-focus"
-          : hasChildren
-            ? hasSelectedSecondary
-            : selectedKey === itemId;
-        const primaryIsCurrentPage =
-          (isSelected && !hasSelectedSecondary) ||
-          (hasSelectedSecondary && !showChildrenList);
-        const primaryLabel = primaryDisplayName(item);
-        const primaryTitle = item.tooltip ?? primaryLabel;
-        const secondaryContextMenuEnabled =
-          programme === "synapse" && Boolean(item.childrenContextMenu);
-
-        return (
-          <div key={itemId} className={styles.itemBlock}>
-            <button
-              type="button"
-              title={primaryTitle}
-              onClick={() => {
-                if (hasForcedState) return;
-
-                if (hasChildren && railExpanded) {
-                  setExpandedChildrenKey(expandedChildrenKey === itemId ? null : itemId);
-                  return;
-                }
-
-                setSelectedKey(itemId);
-                onNavigate?.(
-                  buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
-                    href: item.href,
-                    routeRef: item.routeRef,
-                  }),
-                );
-                onSelected?.(
-                  buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
-                    href: item.href,
-                    routeRef: item.routeRef,
-                  }),
-                );
-                setSelectedSecondaryParentKey(null);
-                setSelectedSecondaryKey(null);
-              }}
-              className={[
-                styles.primaryRow,
-                !hasForcedState ? styles.interactive : "",
-                styles[`state${toPascalState(state)}`],
-                hasSelectedSecondary ? styles.secondaryParentSelected : "",
-                showSelectedInset ? styles.selected : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              aria-current={primaryIsCurrentPage ? "page" : undefined}
-              aria-expanded={showChevron ? showChildrenList : undefined}
-              tabIndex={hasForcedState ? -1 : undefined}
-            >
-              <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
-              {railExpanded ? <span className={styles.primaryLabel}>{primaryLabel}</span> : null}
-              {showChevron ? (
-                <Icon
-                  shapeName={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
-                  className={styles.chevronIcon}
-                />
-              ) : null}
-              {isFocused ? <span className={styles.focusRing} aria-hidden="true" /> : null}
-              {showSelectedInset ? (
-                <span className={styles.selectedInset} aria-hidden="true" />
-              ) : null}
-            </button>
-          </div>
-        ) : null}
         {items.map((item, itemIndex) => {
           const itemId = resolvePrimaryId(item, itemIndex);
           const hasForcedState = forceStates && Boolean(item.state);
@@ -712,10 +636,10 @@ function MainMenuLeftItemsAdapter({
           const childList = item.children ?? [];
           const hasChildren = childList.length > 0;
           const showChildrenList =
-            isExpanded &&
+            railExpanded &&
             hasChildren &&
             (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
-          const showChevron = isExpanded && hasChildren;
+          const showChevron = railExpanded && hasChildren;
           const primaryIconName = item.iconName ?? "home";
           const hasSelectedSecondary = selectedSecondaryParentKey === itemId;
           const showSelectedInset = hasForcedState
@@ -737,7 +661,7 @@ function MainMenuLeftItemsAdapter({
           const openPrimary = () => {
             if (hasForcedState) return;
 
-            if (hasChildren && isExpanded) {
+            if (hasChildren && railExpanded) {
               if (!showChildrenList) {
                 // Open the sub-menu.
                 setExpandedChildrenKey(itemId);
@@ -769,8 +693,8 @@ function MainMenuLeftItemsAdapter({
             // rail is expanded. Expanding/collapsing only toggles the sub-menu —
             // it must not navigate or change the active selection, so the user
             // stays on the current page. Navigation comes from the secondary rows.
-            if (hasChildren && isExpanded) {
-              setExpandedChildrenKey((prev) => (prev === itemId ? null : itemId));
+            if (hasChildren && railExpanded) {
+              setExpandedChildrenKey(expandedChildrenKey === itemId ? null : itemId);
               return;
             }
 
@@ -814,7 +738,7 @@ function MainMenuLeftItemsAdapter({
                 focusLast();
                 break;
               case "ArrowRight":
-                if (hasChildren && isExpanded) {
+                if (hasChildren && railExpanded) {
                   event.preventDefault();
                   if (!showChildrenList) {
                     setExpandedChildrenKey(itemId);
@@ -849,13 +773,13 @@ function MainMenuLeftItemsAdapter({
               <button
                 type="button"
                 data-item-id={itemId}
-                title={!isExpanded ? primaryTitle : undefined}
+                title={!railExpanded ? primaryTitle : undefined}
                 onClick={togglePrimary}
                 onKeyDown={handlePrimaryKeyDown}
                 className={[
                   styles.primaryRow,
                   !hasForcedState ? styles.interactive : "",
-                  styles[`state${toPascal(state)}`],
+                  styles[`state${toPascalState(state)}`],
                   hasSelectedSecondary ? styles.secondaryParentSelected : "",
                   showSelectedInset ? styles.selected : "",
                 ]
@@ -868,7 +792,7 @@ function MainMenuLeftItemsAdapter({
                 tabIndex={hasForcedState ? -1 : undefined}
               >
                 <Icon shapeName={primaryIconName} className={styles.primaryIcon} />
-                {isExpanded ? (
+                {railExpanded ? (
                   <ClampedLabel
                     text={primaryLabel}
                     tooltip={item.tooltip ?? primaryLabel}
@@ -1029,7 +953,7 @@ function MainMenuLeftItemsAdapter({
                     }
 
                     return (
-                      <div
+                      <button
                         key={childId}
                         type="button"
                         data-item-id={childId}
@@ -1082,4 +1006,10 @@ function MainMenuLeftItemsAdapter({
   );
 }
 
-export type MainMenuLeftProps = MainMenuLeftRootProps;
+export {
+  MainMenuLeftChildren,
+  MainMenuLeftGroup,
+  MainMenuLeftItem,
+  MainMenuLeftItemIcon,
+  MainMenuLeftLogoSlot,
+} from "./MainMenuLeft.compose";

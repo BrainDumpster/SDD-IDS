@@ -82,7 +82,15 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
         minHeight: 0,
       }}
     >
-      <IdsMainMenuLeft {...props} />
+      <div
+        style={{
+          width: 278,
+          height: "100%",
+          flexShrink: 0,
+        }}
+      >
+        <IdsMainMenuLeft {...props} />
+      </div>
       <div
         style={{
           flex: 1,
