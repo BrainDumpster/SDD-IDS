@@ -158,7 +158,7 @@ export const EditableAndBadgeStates = {
           <ids-tag
             type="editable"
             label="Tag"
-            tone="critical"
+            tone="none"
             size="large"
             [error]="true"
           ></ids-tag>

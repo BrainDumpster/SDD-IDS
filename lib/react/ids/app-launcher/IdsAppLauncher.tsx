@@ -322,6 +322,7 @@ interface IdsAppLauncherContextValue {
   open: boolean;
   setOpen: (open: boolean) => void;
   panelOnly: boolean;
+  programme: IdsAppLauncherProgramme;
   triggerVariant: IdsAppLauncherTriggerVariant;
   popupId: string;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -1255,6 +1256,7 @@ export function IdsAppLauncherSurface({
       aria-label={root.panelOnly ? undefined : "App launcher"}
       data-ids="ids-app-launcher-surface"
       data-slot="AppLauncherSurface"
+      data-programme={root.programme}
     >
       {children ?? <DefaultSurfaceChildren />}
     </div>
@@ -1270,6 +1272,7 @@ export function IdsAppLauncherSurface({
       className={s.popup}
       style={root.popupStyle}
       data-ids="ids-app-launcher-popup"
+      data-programme={root.programme}
     >
       {surface}
     </div>,
@@ -1378,6 +1381,7 @@ export function IdsAppLauncher({
       open,
       setOpen,
       panelOnly,
+      programme,
       triggerVariant,
       popupId,
       triggerRef,
@@ -1402,6 +1406,7 @@ export function IdsAppLauncher({
       open,
       setOpen,
       panelOnly,
+      programme,
       triggerVariant,
       popupId,
       position.style,

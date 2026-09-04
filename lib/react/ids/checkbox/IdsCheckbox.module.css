@@ -27,6 +27,19 @@
   color: var(--color-text-gray-neutral);
 }
 
+/* Compact chrome for datagrid selection column (Figma `8505:14304`). */
+.ids-checkbox[data-density="datagrid"] .ids-checkbox-row {
+  min-height: 0;
+  gap: 0;
+}
+
+.ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+}
+
 .ids-checkbox[data-disabled="true"] .ids-checkbox-row {
   cursor: not-allowed;
   color: var(--color-text-gray-disabled);
@@ -66,13 +79,21 @@
   border-color: var(--color-border-gray-neutral-strong);
 }
 
+.ids-checkbox-row:active:not([data-disabled="true"]) .ids-checkbox-control,
+.ids-checkbox[data-state="press"] .ids-checkbox-control {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
 .ids-checkbox[data-checked="true"] .ids-checkbox-control {
   background: var(--color-background-controls-base);
   border-color: var(--color-border-brand-transparent-brand);
 }
 
 .ids-checkbox[data-checked="true"] .ids-checkbox-row:hover:not([data-disabled="true"]) .ids-checkbox-control,
-.ids-checkbox[data-checked="true"][data-state="hover"] .ids-checkbox-control {
+.ids-checkbox[data-checked="true"][data-state="hover"] .ids-checkbox-control,
+.ids-checkbox[data-checked="true"] .ids-checkbox-row:active:not([data-disabled="true"]) .ids-checkbox-control,
+.ids-checkbox[data-checked="true"][data-state="press"] .ids-checkbox-control {
   background: var(--color-background-controls-strong);
   border-color: var(--color-border-brand-transparent-brand);
 }
@@ -83,7 +104,10 @@
 }
 
 .ids-checkbox[data-indeterminate="true"] .ids-checkbox-row:hover:not([data-disabled="true"]) .ids-checkbox-control,
-.ids-checkbox[data-indeterminate="true"][data-state="hover"] .ids-checkbox-control {
+.ids-checkbox[data-indeterminate="true"][data-state="hover"] .ids-checkbox-control,
+.ids-checkbox[data-indeterminate="true"] .ids-checkbox-row:active:not([data-disabled="true"]) .ids-checkbox-control,
+.ids-checkbox[data-indeterminate="true"][data-state="press"] .ids-checkbox-control {
+  background: var(--color-background-surface-component);
   border-color: var(--color-border-gray-neutral-strong);
 }
 

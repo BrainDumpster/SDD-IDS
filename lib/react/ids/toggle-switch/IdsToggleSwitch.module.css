@@ -8,6 +8,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
+  min-height: 44px;
   cursor: pointer;
 }
 

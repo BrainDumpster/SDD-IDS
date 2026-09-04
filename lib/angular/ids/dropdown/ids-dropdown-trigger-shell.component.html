@@ -5,8 +5,33 @@
   [attr.data-error]="error || null"
   [attr.data-hover]="hover || null"
   [attr.data-focus]="focusVisible || null"
+  [attr.data-filled]="filled || null"
 >
   <div class="main">
+    @if (showBadge) {
+      <span class="badgeWrap">
+        @if (showSelectedTooltip) {
+          <ids-tooltip side="top" arrowAlign="start" [hugContent]="true">
+            <ids-tooltip-trigger>
+              <span class="badgeTrigger">
+                <ids-badge [value]="selectedCount" [type]="badgeType" />
+              </span>
+            </ids-tooltip-trigger>
+            <ids-tooltip-panel>
+              <ids-tooltip-header>
+                <ids-tooltip-title>{{ selectedCount }} Items</ids-tooltip-title>
+              </ids-tooltip-header>
+              <ids-tooltip-body>{{ selectedDisplay }}</ids-tooltip-body>
+              <ids-tooltip-arrow />
+            </ids-tooltip-panel>
+          </ids-tooltip>
+        } @else {
+          <span class="badgeTrigger">
+            <ids-badge [value]="selectedCount" [type]="badgeType" />
+          </span>
+        }
+      </span>
+    }
     <ng-content />
   </div>
   <span class="caret-wrap" aria-hidden="true">

@@ -99,6 +99,8 @@ ids-dual-list-box-transfer-button-group {
 .ids-dual-list-box__list-group--drag-over {
   background: var(--color-background-controls-light);
   border-color: var(--color-border-brand-base);
+  outline: var(--border-width-border-2, 2px) dashed var(--color-border-brand-base);
+  outline-offset: -2px;
 }
 
 .ids-dual-list-box__empty-status {
@@ -144,6 +146,9 @@ ids-dual-list-box-transfer-button-group {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  width: 48px;
+  height: 40px;
   padding: var(--padding-padding-12) var(--padding-padding-16);
   border-radius: 2px;
   border: var(--border-width-border-default, 1px) solid transparent;
@@ -161,6 +166,11 @@ ids-dual-list-box-transfer-button-group {
   border-color: var(--color-border-gray-disabled);
   color: var(--color-icon-gray-disabled);
   cursor: not-allowed;
+}
+
+.ids-dual-list-box__transfer-button:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
+  outline-offset: 2px;
 }
 
 .ids-dual-list-box__list-item-wrap {
@@ -255,7 +265,9 @@ ids-dual-list-box-transfer-button-group {
 .ids-dual-list-box__drop-preview-inner {
   display: block;
   width: 100%;
-  min-height: 8px;
+  min-height: 48px;
+  box-sizing: border-box;
   border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base);
+  border-radius: 2px;
   background: var(--color-background-controls-light);
 }

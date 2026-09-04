@@ -91,6 +91,15 @@ PRIMARY_STATE_MATRIX: tuple[dict[str, Any], ...] = (
     },
 )
 
+SECONDARY_STATE_MATRIX: tuple[dict[str, Any], ...] = (
+    {"id": "sec-default", "name": "Default", "state": "default"},
+    {"id": "sec-hover", "name": "Hover", "state": "hover"},
+    {"id": "sec-press", "name": "Press", "state": "press"},
+    {"id": "sec-selected", "name": "Selected", "state": "selected"},
+    {"id": "sec-default-focus", "name": "Default focus", "state": "default-focus"},
+    {"id": "sec-selected-focus", "name": "Selected focus", "state": "selected-focus"},
+)
+
 
 def _indent_block(text: str, spaces: int) -> str:
     pad = " " * spaces
@@ -278,6 +287,33 @@ def emit_react_primary_state_matrix(
     return "\n".join(rows)
 
 
+def emit_react_secondary_state_matrix(
+    matrix: Sequence[Mapping[str, Any]] = SECONDARY_STATE_MATRIX,
+) -> str:
+    rows: list[str] = []
+    for item in matrix:
+        item_id = item["id"]
+        state = item["state"]
+        label = resolve_item_label(item)
+        rows.append(
+            f"""          <MainMenuLeftItem itemId="{item_id}" level="secondary" forceState="{state}">
+            <a href="#">{label}</a>
+          </MainMenuLeftItem>"""
+        )
+    children = "\n".join(rows)
+    return f"""        <MainMenuLeftGroup groupId="secondary-focus-matrix" defaultExpanded={{true}}>
+          <MainMenuLeftItem itemId="secondary-parent">
+            <a href="#">
+              <MainMenuLeftItemIcon shapeName="network-share" />
+              <span className={{styles.primaryLabel}}>Infrastructure</span>
+            </a>
+          </MainMenuLeftItem>
+          <MainMenuLeftChildren>
+{children}
+          </MainMenuLeftChildren>
+        </MainMenuLeftGroup>"""
+
+
 def emit_angular_primary_state_matrix(
     matrix: Sequence[Mapping[str, Any]] = PRIMARY_STATE_MATRIX,
 ) -> str:
@@ -293,3 +329,27 @@ def emit_angular_primary_state_matrix(
           </ids-main-menu-left-item>"""
         )
     return "\n".join(rows)
+
+
+def emit_angular_secondary_state_matrix(
+    matrix: Sequence[Mapping[str, Any]] = SECONDARY_STATE_MATRIX,
+) -> str:
+    rows: list[str] = []
+    for item in matrix:
+        item_id = item["id"]
+        state = item["state"]
+        label = resolve_item_label(item)
+        rows.append(
+            f"""            <ids-main-menu-left-item itemId="{item_id}" level="secondary" forceState="{state}">
+              <a href="#">{label}</a>
+            </ids-main-menu-left-item>"""
+        )
+    children = "\n".join(rows)
+    return f"""          <ids-main-menu-left-group groupId="secondary-focus-matrix" [defaultExpanded]="true">
+            <ids-main-menu-left-item itemId="secondary-parent">
+              <a href="#"><ids-main-menu-left-item-icon shapeName="network-share" /><span class="ids-main-menu-left__primary-label">Infrastructure</span></a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-children>
+{children}
+            </ids-main-menu-left-children>
+          </ids-main-menu-left-group>"""

@@ -13,5 +13,6 @@ export {
   APP_LAUNCHER_TRIGGER_ICON,
   APP_SHELL_SPEC_ACCURATE_LAUNCHER_PRODUCTS,
   type IdsAppLauncherProduct,
+  type IdsAppLauncherProgramme,
   type IdsAppLauncherTriggerVariant,
 } from "./ids-app-launcher.types";

@@ -252,7 +252,7 @@ export const ArrowMatrix = {
         "
       >
         @for (placement of placements; track placement.key) {
-          <div style="display: flex; justify-content: center; padding: 48px 8px; overflow: visible;">
+          <div style="display: flex; justify-content: center; align-items: center; padding: 72px 48px; overflow: visible; min-height: 200px;">
             <ids-tooltip
               [side]="placement.side"
               [arrowAlign]="placement.align"

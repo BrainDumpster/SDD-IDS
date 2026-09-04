@@ -3,6 +3,7 @@
  * Selectors: ids-button, ids-button-leading-icon, ids-button-label
  * Theme: components/ids-theme.css
  * Control stroke: inset box-shadow (inside stroke; does not grow box size).
+ * Focus: ::after ring with --button-focus-ring-radius (Spec Accurate parity).
  */
 
 .ids-button {
@@ -11,8 +12,6 @@
   justify-content: center;
   gap: var(--spacing-space-8);
   box-sizing: border-box;
-  min-width: 56px;
-  max-width: 320px;
   border: none;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   border-radius: var(--button-control-radius);
@@ -31,32 +30,35 @@
   padding: 0;
 }
 
-/* --- Sizes (total box height includes inside stroke) --- */
+/* --- Sizes --- */
 .ids-button--small {
-  height: var(--scale-24, 24px);
+  min-height: var(--scale-24, 24px);
   padding: var(--padding-padding-2) var(--padding-padding-16);
 }
 
 .ids-button--medium {
-  height: var(--scale-32, 32px);
+  min-height: var(--scale-32, 32px);
   padding: var(--padding-padding-6) var(--padding-padding-16);
 }
 
 .ids-button--large {
-  height: var(--scale-40, 40px);
+  min-height: var(--scale-40, 40px);
   padding: var(--padding-padding-10) var(--padding-padding-16);
 }
 
+.ids-button--icon-only.ids-button--small {
+  min-height: var(--scale-24, 24px);
+  padding: var(--padding-padding-4) var(--padding-padding-16);
+}
+
 .ids-button--icon-only.ids-button--medium {
-  height: var(--scale-32, 32px);
+  min-height: var(--scale-32, 32px);
   padding: var(--padding-padding-8) var(--padding-padding-16);
-  min-width: unset;
 }
 
 .ids-button--icon-only.ids-button--large {
-  height: var(--scale-40, 40px);
+  min-height: var(--scale-40, 40px);
   padding: var(--padding-padding-12) var(--padding-padding-16);
-  min-width: unset;
 }
 
 /* --- Leading icon / label slots --- */
@@ -79,8 +81,15 @@
   box-sizing: border-box;
 }
 
+.ids-button-leading-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .ids-button-label {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -208,11 +217,20 @@
   cursor: not-allowed;
 }
 
-/* Focus ring — outer brand outline; tertiary keeps state border (no forced brand inset). */
+/* Focus ring — ::after so --button-focus-ring-radius applies (outline cannot). */
 .ids-button:focus-visible:not(:disabled),
 .ids-button[data-state="focus-visible"] {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: var(--button-focus-ring-offset);
+  outline: none;
+}
+
+.ids-button:focus-visible:not(:disabled)::after,
+.ids-button[data-state="focus-visible"]::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 /* Loading */

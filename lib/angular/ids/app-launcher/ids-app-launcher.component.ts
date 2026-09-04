@@ -29,6 +29,7 @@ import {
   APP_LAUNCHER_DEFAULT_PRODUCT_ICON,
   APP_LAUNCHER_TRIGGER_ICON,
   type IdsAppLauncherProduct,
+  type IdsAppLauncherProgramme,
   type IdsAppLauncherTriggerVariant,
 } from "./ids-app-launcher.types";
 
@@ -49,12 +50,18 @@ let launcherPortalSeq = 0;
 })
 export class IdsAppLauncherComponent implements OnInit, OnDestroy {
   @Input() products: IdsAppLauncherProduct[] = [];
+  /** Unknown → `ids`. Drives Synapse tile chrome on the portaled surface. */
+  @Input() programme: IdsAppLauncherProgramme | string = "ids";
   @Input() triggerVariant: IdsAppLauncherTriggerVariant = "default";
   @Input() sideOffset = 8;
   @Input() columns = 2;
   @Input() ariaLabel = "App launcher";
   @Input() defaultOpen = false;
   @Input() openInput?: boolean;
+
+  get resolvedProgramme(): IdsAppLauncherProgramme {
+    return this.programme === "synapse" ? "synapse" : "ids";
+  }
 
   @Output() readonly openChange = new EventEmitter<boolean>();
   @Output() readonly productSelect = new EventEmitter<IdsAppLauncherProduct>();

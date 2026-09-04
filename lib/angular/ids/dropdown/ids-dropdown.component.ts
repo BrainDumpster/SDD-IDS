@@ -43,7 +43,10 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
 
   @Input() mode: IdsDropdownMode = "single-select";
   @Input() disabled = false;
+  /** @deprecated Prefer `showRadio` (React/spec name). */
   @Input() showSingleSelectRadio = false;
+  /** Spec/React alias for radio option visuals. When set, wins over `showSingleSelectRadio`. */
+  @Input() showRadio?: boolean | null;
   @Input() value?: string;
   @Input() values: string[] = [];
   @Input() defaultValue?: string;
@@ -62,6 +65,11 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
     return selectionModeForMode(this.mode);
   }
 
+  /** Resolved radio visibility (React `showRadio` preferred). */
+  get resolvedShowRadio(): boolean {
+    return this.showRadio ?? this.showSingleSelectRadio;
+  }
+
   ngAfterContentInit(): void {
     this.syncMenuFromRoot();
     this.syncSelectedFromInputs();
@@ -71,7 +79,7 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
     if (changes["value"] || changes["values"] || changes["defaultValue"] || changes["defaultValues"]) {
       this.syncSelectedFromInputs();
     }
-    if (changes["disabled"] || changes["showSingleSelectRadio"] || changes["mode"]) {
+    if (changes["disabled"] || changes["showSingleSelectRadio"] || changes["showRadio"] || changes["mode"]) {
       this.syncMenuFromRoot();
     }
   }
@@ -82,9 +90,10 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
     }
     this.menu.disabled = this.disabled;
     this.menu.selectionMode = this.selectionMode;
-    this.menu.showSingleSelectRadio = this.showSingleSelectRadio;
+    this.menu.showSingleSelectRadio = this.resolvedShowRadio;
     this.menu.selectedValues = [...this.selectedValues];
     this.menu.describedBy = this.describedByIds();
+    this.menu.syncTriggerShellFilled();
     this.cdr.markForCheck();
   }
 
@@ -97,6 +106,7 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
     }
     if (this.menu) {
       this.menu.selectedValues = [...this.selectedValues];
+      this.menu.syncTriggerShellFilled();
       this.cdr.markForCheck();
     }
   }
@@ -124,6 +134,7 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
     this.selectedValues = next;
     if (this.menu) {
       this.menu.selectedValues = [...next];
+      this.menu.syncTriggerShellFilled();
     }
     this.cdr.markForCheck();
   }

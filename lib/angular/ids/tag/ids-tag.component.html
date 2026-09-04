@@ -9,9 +9,8 @@
   [attr.aria-pressed]="type === 'clickable' ? isSelected : null"
   [attr.tabindex]="isClickable ? 0 : null"
   (click)="onRootClick()"
-  (mousedown)="onEditableMouseDown($event)"
 >
-  @if (leadingIconSlug) {
+  @if (type === "read-only" && leadingIconSlug) {
     <ids-icon [shapeName]="leadingIconSlug" [size]="10" className="leading-icon" />
   }
 
@@ -21,9 +20,7 @@
 
   @if (type === "editable") {
     <span
-      #editableField
       class="text-field"
-      [attr.tabindex]="isEditableFocusable ? 0 : null"
       [attr.data-focus-on-text]="focusOnText ? true : null"
     >
       <span class="content">
@@ -33,7 +30,14 @@
             <span class="prefix-colon">:</span>
           </span>
         }
-        <span class="label">{{ label }}</span>
+        <span
+          #editableField
+          class="label"
+          [attr.contenteditable]="isEditableFocusable ? true : null"
+          [attr.tabindex]="isEditableFocusable ? 0 : null"
+          role="textbox"
+          [attr.aria-label]="label"
+        >{{ label }}</span>
       </span>
     </span>
   } @else {
@@ -60,7 +64,7 @@
       [attr.aria-label]="'Remove ' + label"
       (click)="onDismissClick($event)"
     >
-      <ids-icon shapeName="shape-x" [size]="10" className="dismiss-icon" />
+      <ids-icon shapeName="shape-x-thick" [size]="10" className="dismiss-icon" />
     </button>
   }
 </span>

@@ -81,5 +81,5 @@ The full state matrix lives under **States (Light Theme)** in the design spec. *
 
 - Expanded rail width: **278px**; collapsed: **64px** (Figma-verified 2026-05-19).
 - Primary row **40px** min-height; secondary row **32px** with **58px** left padding.
-- Selected primary: **4px** brand inset (`selectedInset`); secondary selected + focus uses inset bar per module CSS.
+- Selected primary: **4px** brand inset (`selectedInset`, `var(--color-border-brand-base)`); secondary selected/focus has **no** inset bar (PR #82).
 - Icons: shared `Icon` with slugs from `assets/icons/` (for example `home`, `nav-tree`, `reports`, `settings-gear`, `double-chev-left`).

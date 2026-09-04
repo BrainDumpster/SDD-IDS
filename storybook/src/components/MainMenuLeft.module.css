@@ -180,6 +180,7 @@
   gap: var(--spacing-space-16);
   /* Side chrome is on `.root` only — per-row L/R borders break through the 8px block gap. */
   border: none;
+  overflow: visible;
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -324,6 +325,9 @@
   border-bottom: none;
   border-left: var(--border-width-border-1) solid var(--color-border-accessible);
   border-right: var(--border-width-border-1) solid var(--color-border-accessible);
+  height: 32px;
+  border: none;
+  overflow: visible;
   background: transparent;
   text-align: left;
   padding: var(--padding-padding-6, 6px) var(--padding-padding-58, 58px);
@@ -365,6 +369,16 @@
   font-weight: 400;
 }
 
+.secondaryRowStateHover {
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-brand-strong);
+}
+
+.secondaryRowStatePress {
+  background: var(--color-background-brand-light-slate);
+  color: var(--color-text-brand-strong);
+}
+
 .secondaryInteractive:hover {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
@@ -384,13 +398,18 @@
 }
 
 .secondaryInteractive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: -1px;
-  border-radius: var(--corner-radius-radius-4);
+  outline: none;
 }
 
-.secondaryInteractive.secondaryRowSelected:focus-visible {
-  box-shadow: inset 4px 0 0 0 var(--color-border-brand-strong);
+/* Secondary Default-Focus `12016:227537`: 1px gap from rail L/R border; flush top/bottom. */
+.secondaryInteractive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .bottomToggle {
@@ -442,9 +461,13 @@
   color: var(--color-icon-gray-neutral-base, #616161);
 }
 
+/* Focus ring — Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu
+   L/R border (gray @ x=0, gap @ x=1, blue @ x=2). No drop-shadow in the gap.
+   Primary isolated frames use left/right -1px over their own L/R strokes; in the rail those
+   strokes live on the root, so primary uses the same 1px inset as secondary. */
 .focusRing {
   position: absolute;
-  inset: 0;
+  inset: 0 var(--border-width-border-1);
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -452,9 +475,17 @@
 }
 
 .interactive:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: calc(-1 * var(--border-width-border-1));
+  outline: none;
+}
+
+.interactive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .primaryRow:not(.interactive):focus,
@@ -462,26 +493,23 @@
   outline: none;
 }
 
+/* PR #82 — UX: selected inset uses brand-base; bar extends into rail border zone. */
 .selectedInset {
   position: absolute;
-  left: 0;
+  left: calc(-1 * var(--border-width-border-1));
   top: 0;
   bottom: 0;
-  width: 4px;
-  background: var(--color-border-brand-strong);
+  width: calc(4px + var(--border-width-border-1));
+  background: var(--color-border-brand-base);
 }
 
 .selected .selectedInset {
   display: block;
 }
 
-/* IDS default: selected + selected-focus use brand-base inset. */
-.stateSelected .selectedInset {
-  background: var(--color-border-brand-strong);
-}
-
+.stateSelected .selectedInset,
 .stateSelectedFocus .selectedInset {
-  background: var(--color-border-brand-strong);
+  background: var(--color-border-brand-base);
 }
 
 .stateDefault,
@@ -602,6 +630,20 @@
 .programmeSynapse .secondaryInteractive.secondaryRowSelected:active {
   background: var(--color-background-controls-light);
   color: var(--color-text-gray-neutral-strong);
+}
+
+.programmeSynapse .secondaryInteractive:focus-visible {
+  outline: none;
+}
+
+.programmeSynapse .secondaryInteractive:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--border-width-border-1);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .programmeSynapse .secondaryInteractive.secondaryRowSelected:focus-visible {

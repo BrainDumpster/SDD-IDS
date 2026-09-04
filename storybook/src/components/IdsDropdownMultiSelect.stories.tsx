@@ -1,6 +1,6 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { IdsBadge } from "./IdsBadge";
 import { DropdownMenu } from "./DropdownMenu";
 import { IdsTooltip } from "./IdsTooltip";
@@ -9,6 +9,59 @@ import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical
 
 type Size = "small" | "large";
 type Option = { id: string; label: string; disabled?: boolean };
+
+function FieldValue({
+  children,
+  tooltip,
+  tooltipTitle,
+}: {
+  children: string;
+  tooltip?: string;
+  tooltipTitle?: string;
+}) {
+  const [truncated, setTruncated] = useState(false);
+  const observerRef = useRef<ResizeObserver | null>(null);
+
+  const measureRef = useCallback((el: HTMLSpanElement | null) => {
+    observerRef.current?.disconnect();
+    if (!el) return;
+    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
+    check();
+    observerRef.current = new ResizeObserver(check);
+    observerRef.current.observe(el);
+  }, []);
+
+  const text = (
+    <span
+      ref={measureRef}
+      style={{
+        display: "block",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        width: "100%",
+        cursor: "pointer",
+      }}
+    >
+      {children}
+    </span>
+  );
+
+  return truncated && tooltip ? (
+    <IdsTooltip
+      title={tooltipTitle}
+      content={tooltip}
+      side="top"
+      arrowAlign="start"
+      triggerDisplay="block"
+      delay={0}
+    >
+      {text}
+    </IdsTooltip>
+  ) : (
+    text
+  );
+}
 
 function MultiSelectTrigger({
   placeholder = "-Select-",
@@ -63,17 +116,12 @@ function MultiSelectTrigger({
               </IdsTooltip>
             </span>
           ) : null}
-          <span
-            style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              flex: "1 1 auto",
-              minWidth: 0,
-            }}
+          <FieldValue
+            tooltipTitle={`${selectedCount} Items`}
+            tooltip={selectedCount > 0 ? selectedLabels.join(", ") : undefined}
           >
             {listText}
-          </span>
+          </FieldValue>
         </>
       }
     />
@@ -215,7 +263,8 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setVisibleSelected([])}
               clearAllDisabled={visibleSelected.length === 0}
               showSelectedPanel
-              defaultShowSelectedExpanded
+              showSelectedFirst
+              defaultShowSelectedExpanded={false}
               onRemoveSelectedTag={(value) =>
                 setVisibleSelected((prev) => prev.filter((entry) => entry !== value))
               }
@@ -241,6 +290,7 @@ export const MainScenarios: Story = {
               onClearAllClick={() => setHiddenSelected([])}
               clearAllDisabled={hiddenSelected.length === 0}
               showSelectedPanel
+              showSelectedFirst
               defaultShowSelectedExpanded={false}
               onRemoveSelectedTag={(value) =>
                 setHiddenSelected((prev) => prev.filter((entry) => entry !== value))

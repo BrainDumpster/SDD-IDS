@@ -10,8 +10,8 @@
 - Individual breadcrumb items (links)
 - Separator characters (/) between items
 - Ellipsis (...) for truncated paths
-- Dropdown menu for truncated links (shown on hover)
-- Current page text (two-line variant only, displayed below breadcrumb trail)
+- The overflow menu uses the IDS DropdownMenu component with all truncated links
+- Current page text (displayed below breadcrumb trail)
 - Focus ring for keyboard navigation
 ## Layout & Measurements
 - Standard height: 32px
@@ -88,7 +88,7 @@
 - In two-line variant, current page is displayed below breadcrumb trail with larger typography
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
-- Truncated breadcrumbs show dropdown on hover of "..."
+- Truncated breadcrumbs reveal the IDS DropdownMenu when the "..." ellipsis is clicked or keyboard-activated
 ### Accessibility
 - Focus ring: 2px brand color border
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
@@ -101,8 +101,9 @@
 ### Behavior & guidelines
 - Use breadcrumbs to show navigation hierarchy
 - Overflow pattern: breadcrumb shows full path up to 4 items (could be less based on screen size)
-- From 5 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
-- Hovering on "..." displays a dropdown menu with all truncated links
+- From 4 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
+- The ellipsis uses the same link color and hover/focus/press styling as the other breadcrumb links
+- Clicking or keyboard-activating the "..." ellipsis opens the IDS DropdownMenu (single-select dropdown) with all truncated links
 - Use proper separator characters (/ > »)
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement

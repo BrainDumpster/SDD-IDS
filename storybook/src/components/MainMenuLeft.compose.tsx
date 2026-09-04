@@ -31,16 +31,18 @@ export function MainMenuLeftItem({
   const isPrimary = level === "primary";
   const isSecondary = level === "secondary";
 
+  const forcedSelected =
+    Boolean(ctx.forceStates && forceState) &&
+    (forceState === "selected" || forceState === "selected-focus");
+  const forcedFocus =
+    Boolean(ctx.forceStates && forceState) &&
+    (forceState === "default-focus" || forceState === "selected-focus");
   const state = isPrimary ? ctx.getPrimaryState(itemId, forceState) : "default";
   const isSelected = isPrimary
     ? ctx.isPrimarySelected(itemId, forceState)
-    : groupId
-      ? ctx.isSecondarySelected(itemId, groupId)
-      : false;
-  const isFocused = isPrimary ? ctx.isPrimaryFocused(itemId, forceState) : false;
-  const showInset = isPrimary
-    ? ctx.showPrimaryInset(itemId, groupId, forceState)
-    : isSelected;
+    : forcedSelected || Boolean(groupId && ctx.isSecondarySelected(itemId, groupId));
+  const isFocused = isPrimary ? ctx.isPrimaryFocused(itemId, forceState) : forcedFocus;
+  const showInset = isPrimary ? ctx.showPrimaryInset(itemId, groupId, forceState) : false;
   const showChevron =
     isPrimary && groupId ? ctx.showChevronForGroup(groupId) && ctx.railExpanded : false;
 
@@ -56,8 +58,10 @@ export function MainMenuLeftItem({
         .join(" ")
     : [
         styles.secondaryRow,
-        styles.secondaryInteractive,
+        !(ctx.forceStates && forceState) ? styles.secondaryInteractive : "",
         isSelected ? styles.secondaryRowSelected : "",
+        forceState === "hover" ? styles.secondaryRowStateHover : "",
+        forceState === "press" ? styles.secondaryRowStatePress : "",
       ]
         .filter(Boolean)
         .join(" ");
@@ -81,11 +85,12 @@ export function MainMenuLeftItem({
           ctx.onSecondaryActivate(itemId, groupId, label);
           return;
         }
-        ctx.onPrimaryActivate(itemId, label, groupId);
-        if (groupId) {
+        if (isPrimary && groupId && ctx.railExpanded) {
           event.preventDefault();
           ctx.toggleGroup(groupId);
+          return;
         }
+        ctx.onPrimaryActivate(itemId, label, groupId);
       }}
     >
       <div className={styles.linkHost}>{children}</div>

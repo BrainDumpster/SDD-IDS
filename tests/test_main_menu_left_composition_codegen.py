@@ -84,6 +84,7 @@ def test_angular_generator_emits_composition_stories():
     assert "MAIN_MENU_LEFT_COMPOSITION_DEMO_TEMPLATE" in story
     assert "LegacyItemsAdapter" in story
     assert "PrimaryStateSnapshotMatrix" in story
+    assert "SecondaryStateSnapshotMatrix" in story
 
 
 def test_contract_anatomy_constants_documented_in_spec():

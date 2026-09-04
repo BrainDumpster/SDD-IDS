@@ -32,7 +32,7 @@ const meta: Meta<typeof IdsBreadcrumb> = {
     ],
     twoLines: false,
     truncate: false,
-    maxVisibleItems: 4,
+    maxVisibleItems: 3,
     showDropdown: false,
   },
   argTypes: {
@@ -63,6 +63,21 @@ export const Default: Story = {
       { label: "Breadcrumb 4", href: "#" },
     ],
   },
+  render: (args) => (
+    <div
+      style={{
+        resize: "both",
+        overflow: "auto",
+        maxWidth: "100%",
+        minWidth: 200,
+        padding: 16,
+        border: "1px dashed var(--color-border-gray-neutral-base, #757575)",
+        borderRadius: 4,
+      }}
+    >
+      <IdsBreadcrumb {...args} />
+    </div>
+  ),
 };
 
 export const OneLineOneItem: Story = {
@@ -189,7 +204,7 @@ export const TwoLinesFiveItemsTruncated: Story = {
     twoLines: true,
     currentPage: "Current Page",
     truncate: true,
-    maxVisibleItems: 4,
+    maxVisibleItems: 3,
     showDropdown: true,
   },
 };
@@ -322,7 +337,7 @@ export const VariantsMatrix: Story = {
           twoLines={true}
           currentPage="Current Page"
           truncate={true}
-          maxVisibleItems={4}
+          maxVisibleItems={3}
           showDropdown={true}
         />
       </div>

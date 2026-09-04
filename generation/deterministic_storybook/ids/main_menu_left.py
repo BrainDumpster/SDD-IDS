@@ -14,6 +14,7 @@ from generation.spec_derived.main_menu_left_composition import (
     emit_angular_composition_root,
     emit_react_menu_list,
     emit_react_primary_state_matrix,
+    emit_react_secondary_state_matrix,
 )
 from validation.spec_contract_parser import SpecContract
 
@@ -51,6 +52,7 @@ def generate_ids_main_menu_left_story(
     theme_import = storybook_theme_import_line(options.design_system_slug)
     composition_jsx = emit_react_menu_list()
     state_matrix_jsx = emit_react_primary_state_matrix()
+    secondary_state_matrix_jsx = emit_react_secondary_state_matrix()
 
     return f"""{theme_import}
 import type {{ Meta, StoryObj }} from "@storybook/react";
@@ -146,6 +148,24 @@ export const PrimaryStateSnapshotMatrix: Story = {{
     >
       <{component_name} expanded forceStates>
 {state_matrix_jsx}
+      </{component_name}>
+    </div>
+  ),
+}};
+
+export const SecondaryStateSnapshotMatrix: Story = {{
+  render: () => (
+    <div
+      style={{{{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        padding: 16,
+        background: "var(--color-background-surface-primary)",
+      }}}}
+    >
+      <{component_name} expanded forceStates>
+{secondary_state_matrix_jsx}
       </{component_name}>
     </div>
   ),

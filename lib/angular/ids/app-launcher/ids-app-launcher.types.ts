@@ -12,6 +12,8 @@ export interface IdsAppLauncherProduct {
 }
 
 export type IdsAppLauncherTriggerVariant = "default" | "masthead";
+/** Unknown → `ids`. Synapse chrome is CSS-only via `data-programme`. */
+export type IdsAppLauncherProgramme = "ids" | "synapse";
 
 export const APP_LAUNCHER_TRIGGER_ICON = "grid-square-9-16" as const;
 export const APP_LAUNCHER_DEFAULT_PRODUCT_ICON = "shield-encrypt-alt" as const;

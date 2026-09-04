@@ -135,6 +135,22 @@ const config = {
     config.plugins = config.plugins ?? [];
     config.plugins.push(new PatchAngularAotPlugin());
 
+    // Avoid reload loops from WSL/editor churn outside the Storybook package
+    // (repo-root components/, assets/, compiled output, caches).
+    config.watchOptions = {
+      ...(config.watchOptions ?? {}),
+      ignored: [
+        "**/node_modules/**",
+        "**/.git/**",
+        "**/storybook-angular/compiled/**",
+        "**/storybook-angular/node_modules/**",
+        "**/storybook-angular/storybook-static/**",
+        "**/storybook-angular/dist/**",
+        "**/.cache/**",
+      ],
+      aggregateTimeout: 400,
+    };
+
     return config;
   },
 };

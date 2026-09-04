@@ -6,8 +6,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { type ComponentProps } from "react";
 import {
   MainMenuLeft as IdsMainMenuLeft,
+  MainMenuLeftChildren,
+  MainMenuLeftGroup,
+  MainMenuLeftItem,
+  MainMenuLeftItemIcon,
   type MainMenuLeftPrimaryItem,
 } from "../../../../storybook/src/components/MainMenuLeft";
+import styles from "../../../../storybook/src/components/MainMenuLeft.module.css";
 
 const DESIGN_SPEC_PATH = "components/ids/main-menu-left/design-spec.md";
 

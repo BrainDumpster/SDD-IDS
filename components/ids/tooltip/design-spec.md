@@ -84,7 +84,7 @@ Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx
 
 Storybook alignment insets (cross-axis; applies to all sides on that axis):
 - Top/Bottom tooltips — `start`: `left: 8px`; `center`: `left: calc(50% - 5px)`; `end`: `left: calc(100% - 18px)`.
-- Left/Right tooltips — `start`: `top: 8px`; `center`: `top: calc(50% - 5px)`; `end`: `top: calc(100% - 18px)`.
+- Left/Right tooltips — `start`: `top: 8px`; `center`: `top: calc(50% - 5px)`; `end`: `top: auto; bottom: 8px` (prefer `bottom` over `top: calc(100% - 18px)` so Floating UI inline `top` cannot pin the arrow to center).
 
 Storybook attachment-axis calibration (Base UI `data-side` on arrow; tuned against IDS Design Library `38201:109592`):
 
@@ -97,7 +97,7 @@ Storybook attachment-axis calibration (Base UI `data-side` on arrow; tuned again
 | `left` | `end` | `left` | `right: -5px` | `1px` right from default `-4px` |
 | `right` | `start` | `right` | `left: -5px` | `1px` left from default `-4px` |
 | `right` | `center` | `right` | `left: -5px` | `1px` left from default `-4px` |
-| `right` | `end` | `right` | `left: -3px` | `1px` right from default `-4px` |
+| `right` | `end` | `right` | `left: -5px` | same as start/center (was `-3px`; caused end arrow to look centered/detached) |
 
 Default attachment offset before per-placement tuning: `-4px` on the attachment axis (`top`/`bottom`/`left`/`right` as appropriate).
 
@@ -256,6 +256,7 @@ Validation checklist (pass/fail):
 - Angular Storybook: `storybook-angular/src/components/ids-tooltip/`
 
 ## Changelog
+- **2026-08-31**: Fixed `right-end` arrow sitting at center — use `bottom: 8px` / `top: auto` for left/right `end`, normalize `right`+`end` attachment to `left: -5px`, and disable Base UI align-flip on Storybook React Positioner so requested `arrowAlign` is preserved.
 - **2026-08-19**: Canonical composition is `TooltipRoot` → `TooltipTrigger` + `TooltipPanel` (`Header`/`Title`, `Body`, `Close`, `Arrow`). Angular reference: `lib/angular/ids/tooltip/`. Live Figma re-check: nodes `42636:14688`, `38201:109593`.
 - **2026-08-07**: Added `hugContent` runtime API and `.popupHug` style to let the popup width shrink to fit its content; default remains the standard `240px` (`popupStandard`) / `264px` (`popupClosable`) fixed widths. Synced from `storybook/src/components/IdsTooltip.tsx` and `IdsTooltip.module.css`.
 - **2026-07-27**: Preserved the `Header` slot in closable no-title tooltips (empty, one-line min-height) to maintain close-icon alignment and vertical rhythm; synced from `IdsTooltip.tsx` / `IdsTooltip.module.css`.

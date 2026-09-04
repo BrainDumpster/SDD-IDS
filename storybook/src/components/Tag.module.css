@@ -246,6 +246,17 @@
   outline: none;
 }
 
+.editable .textField .label {
+  user-select: text;
+  cursor: text;
+  outline: none;
+  min-width: 0;
+}
+
+.tag[data-disabled] .textField .label {
+  cursor: default;
+}
+
 /* Opt-in max-width truncation (set via the `maxWidth` prop). The label
    ellipsizes; the dismiss/badge/caret keep their size. */
 .truncated {
@@ -269,11 +280,7 @@
   flex-shrink: 0;
 }
 
-.editable .textField:focus-visible {
-  border-color: var(--color-border-brand-base);
-}
-
-.editable .textField:focus {
+.editable .textField:focus-within {
   border-color: var(--color-border-brand-base);
 }
 
@@ -327,9 +334,13 @@
   border: none;
   border-radius: var(--button-control-radius);
   background: transparent;
-  color: inherit;
+  color: var(--color-icon-gray-neutral-accessible);
   padding: var(--padding-padding-4);
   cursor: pointer;
+}
+
+.tag[data-error]:not(.clickable) .dismiss {
+  color: var(--color-icon-gray-neutral-accessible);
 }
 
 .dismiss:hover:not(:disabled) {

@@ -77,12 +77,20 @@
   border-color: var(--color-border-gray-neutral-strong);
 }
 
+.ids-radio-row:active:not([data-disabled="true"]) .ids-radio-control,
+.ids-radio-button[data-state="press"] .ids-radio-control {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
 .ids-radio-button[data-checked="true"] .ids-radio-control {
   border-color: var(--color-border-brand-base);
 }
 
 .ids-radio-button[data-checked="true"] .ids-radio-row:hover:not([data-disabled="true"]) .ids-radio-control,
-.ids-radio-button[data-checked="true"][data-state="hover"] .ids-radio-control {
+.ids-radio-button[data-checked="true"][data-state="hover"] .ids-radio-control,
+.ids-radio-button[data-checked="true"] .ids-radio-row:active:not([data-disabled="true"]) .ids-radio-control,
+.ids-radio-button[data-checked="true"][data-state="press"] .ids-radio-control {
   border-color: var(--color-border-gray-neutral-strong);
 }
 
@@ -116,7 +124,9 @@
 }
 
 .ids-radio-button[data-checked="true"] .ids-radio-row:hover:not([data-disabled="true"]) .ids-radio-dot,
-.ids-radio-button[data-checked="true"][data-state="hover"] .ids-radio-dot {
+.ids-radio-button[data-checked="true"][data-state="hover"] .ids-radio-dot,
+.ids-radio-button[data-checked="true"] .ids-radio-row:active:not([data-disabled="true"]) .ids-radio-dot,
+.ids-radio-button[data-checked="true"][data-state="press"] .ids-radio-dot {
   background: var(--color-icon-brand-strong);
 }
 

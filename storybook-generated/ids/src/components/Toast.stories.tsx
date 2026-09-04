@@ -56,11 +56,30 @@ const meta: Meta<ToastStoryArgs> = {
     duration: { control: { type: "number", min: 0, step: 500 } },
   },
   decorators: [
-    (Story, ctx) => (
-      <ToastSetup position={ctx.args.position} duration={ctx.args.duration}>
-        <Story />
-      </ToastSetup>
-    ),
+    (Story, ctx) =>
+      ctx.name === "Playground" ? (
+        <div
+          style={{
+            position: "relative",
+            width: "60vw",
+            boxSizing: "border-box",
+            resize: "both",
+            overflow: "auto",
+            padding: 16,
+            border: "1px dashed var(--color-border-accessible)",
+            minHeight: 120,
+            transform: "translate(0, 0)",
+          }}
+        >
+          <ToastSetup position={ctx.args.position} duration={ctx.args.duration}>
+            <Story />
+          </ToastSetup>
+        </div>
+      ) : (
+        <ToastSetup position={ctx.args.position} duration={ctx.args.duration}>
+          <Story />
+        </ToastSetup>
+      ),
   ],
 };
 

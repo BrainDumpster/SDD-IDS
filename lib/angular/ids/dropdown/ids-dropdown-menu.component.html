@@ -5,8 +5,12 @@
   [disabled]="disabled"
   [style.cursor]="disabled ? 'not-allowed' : 'pointer'"
   (click)="toggleOpen()"
+  role="combobox"
   [attr.aria-expanded]="isOpen"
+  [attr.aria-controls]="listboxId"
   [attr.aria-describedby]="triggerAriaDescribedBy"
+  [attr.aria-invalid]="ariaInvalid || null"
+  [attr.aria-label]="ariaLabel || null"
   aria-haspopup="listbox"
 >
   <span #triggerMeasure class="triggerMeasure">
@@ -26,11 +30,12 @@
       [class.popup--above]="popupPlacement === 'above'"
       [ngStyle]="popupStyle"
       role="listbox"
+      [attr.id]="listboxId"
     >
-      @if (showSearch) {
+      @if (resolvedSearchable) {
         <div class="searchRow">
           <div class="searchField">
-            <ids-icon class="searchIcon" shapeName="search-16" variant="mask" [size]="16" />
+            <span #searchIconEl class="searchIcon" aria-hidden="true"></span>
             <div class="searchInputWrap">
               <input
                 class="searchInput"
@@ -55,19 +60,19 @@
         </div>
       }
 
-      @if (showSelectAllClearAll) {
+      @if (showSelectAllRow) {
         <div class="selectAllClearAllRow">
           <button
             type="button"
             class="selectAllButton"
-            [attr.data-checked]="selectAllChecked ? 'true' : null"
-            [attr.data-indeterminate]="selectAllIndeterminate ? 'true' : null"
+            [attr.data-checked]="effectiveSelectAllChecked ? 'true' : null"
+            [attr.data-indeterminate]="effectiveSelectAllIndeterminate ? 'true' : null"
             (click)="onSelectAll()"
           >
             <span class="checkboxOuter selectAllCheckbox" aria-hidden="true">
-              @if (selectAllIndeterminate) {
+              @if (effectiveSelectAllIndeterminate) {
                 <span class="checkboxDash"></span>
-              } @else if (selectAllChecked) {
+              } @else if (effectiveSelectAllChecked) {
                 <span class="checkboxTick"></span>
               }
             </span>
@@ -76,7 +81,7 @@
           <button
             type="button"
             class="clearAllButton"
-            [disabled]="clearAllDisabled"
+            [disabled]="effectiveClearAllDisabled"
             (click)="onClearAll()"
           >
             {{ clearAllLabel }}
@@ -84,7 +89,13 @@
         </div>
       }
 
-      @if (showSelectedPanel && selectionMode === 'multi' && resolvedSelectedValues.length > 0) {
+      @if (showSingleClearAllRow) {
+        <button type="button" class="clearAllAction" (click)="onClearAll()">
+          <span class="footerActionButton">{{ clearAllLabel }}</span>
+        </button>
+      }
+
+      @if (showSelectedPanelVisible) {
         <div class="showSelectedPanel" [attr.data-expanded]="isShowSelectedExpanded ? 'true' : null">
           <div class="showSelectedHeader">
             <button
@@ -124,58 +135,62 @@
       }
 
       <div class="optionsScrollRegion" [ngStyle]="optionsScrollStyle">
-        @for (item of resolvedItems; track item.id ?? $index) {
-          @if (item.kind === 'section') {
-            <div class="sectionHeader" role="presentation">{{ item.label }}</div>
-          } @else if (item.kind === 'divider') {
-            <div class="sectionDivider" role="presentation"></div>
-          } @else if (isSelectableItem(item)) {
-            <button
-              type="button"
-              class="item"
-              [disabled]="item.disabled"
-              [attr.data-disabled]="item.disabled ? 'true' : null"
-              data-selectable="true"
-              [attr.data-selection-mode]="selectionMode"
-              [attr.data-selected]="isItemSelected(item) ? 'true' : null"
-              [attr.data-indeterminate]="item.indeterminate ? 'true' : null"
-              [attr.role]="itemRole(item)"
-              [attr.aria-checked]="itemAriaChecked(item, isItemSelected(item))"
-              (click)="onItemClick(item, $event)"
-            >
-              @if (selectionMode === 'multi') {
-                <span class="leadingControl" aria-hidden="true">
-                  <span class="checkboxOuter">
-                    @if (item.indeterminate) {
-                      <span class="checkboxDash"></span>
-                    } @else if (isItemSelected(item)) {
-                      <span class="checkboxTick"></span>
-                    }
+        @if (showNoResults) {
+          <div class="noResults" role="presentation">{{ noResultsLabel }}</div>
+        } @else {
+          @for (item of displayedItems; track item.id ?? $index) {
+            @if (item.kind === 'section') {
+              <div class="sectionHeader" role="presentation">{{ item.label }}</div>
+            } @else if (item.kind === 'divider') {
+              <div class="sectionDivider" role="presentation"></div>
+            } @else if (isSelectableItem(item)) {
+              <button
+                type="button"
+                class="item"
+                [disabled]="item.disabled"
+                [attr.data-disabled]="item.disabled ? 'true' : null"
+                data-selectable="true"
+                [attr.data-selection-mode]="selectionMode"
+                [attr.data-selected]="isItemSelected(item) ? 'true' : null"
+                [attr.data-indeterminate]="item.indeterminate ? 'true' : null"
+                [attr.role]="itemRole(item)"
+                [attr.aria-checked]="itemAriaChecked(item, isItemSelected(item))"
+                (click)="onItemClick(item, $event)"
+              >
+                @if (selectionMode === 'multi') {
+                  <span class="leadingControl" aria-hidden="true">
+                    <span class="checkboxOuter">
+                      @if (item.indeterminate) {
+                        <span class="checkboxDash"></span>
+                      } @else if (isItemSelected(item)) {
+                        <span class="checkboxTick"></span>
+                      }
+                    </span>
                   </span>
-                </span>
-              }
-              @if (selectionMode === 'single' && showSingleSelectRadio) {
-                <span class="leadingControl" aria-hidden="true">
-                  <span class="radioOuter">
-                    @if (isItemSelected(item)) {
-                      <span class="radioInner"></span>
-                    }
+                }
+                @if (selectionMode === 'single' && resolvedShowRadio) {
+                  <span class="leadingControl" aria-hidden="true">
+                    <span class="radioOuter">
+                      @if (isItemSelected(item)) {
+                        <span class="radioInner"></span>
+                      }
+                    </span>
                   </span>
-                </span>
-              }
-              {{ item.label }}
-            </button>
-          } @else {
-            <button
-              type="button"
-              class="item"
-              [disabled]="item.disabled"
-              data-selectable="false"
-              [attr.data-selected]="isItemSelected(item) ? 'true' : null"
-              (click)="onItemClick(item, $event)"
-            >
-              {{ item.label }}
-            </button>
+                }
+                {{ item.label }}
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="item"
+                [disabled]="item.disabled"
+                data-selectable="false"
+                [attr.data-selected]="isItemSelected(item) ? 'true' : null"
+                (click)="onItemClick(item, $event)"
+              >
+                {{ item.label }}
+              </button>
+            }
           }
         }
       </div>

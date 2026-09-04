@@ -172,7 +172,8 @@
 
 .arrow[data-side="left"][data-align="end"],
 .arrow[data-side="right"][data-align="end"] {
-  top: calc(100% - 18px) !important;
+  top: auto !important;
+  bottom: 8px !important;
 }
 
 .arrow[data-side="left"][data-align="end"] {
@@ -180,7 +181,7 @@
 }
 
 .arrow[data-side="right"][data-align="end"] {
-  left: -3px !important;
+  left: -5px !important;
 }
 
 .popupStandard {

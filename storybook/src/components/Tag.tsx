@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import type { MouseEvent } from "react";
 import { Icon } from "./Icon";
 import styles from "./Tag.module.css";
 
@@ -59,6 +58,8 @@ export function Tag({
   const clickable = type === "clickable";
   const editable = type === "editable";
   const isBadgeType = type === "badge";
+  const readOnly = type === "read-only";
+  const effectiveTone = readOnly ? tone : "non-alerting";
   const hasBadge = isBadgeType && badgeCount != null;
   const isSelectedControlled = selected !== undefined;
   const [internalSelected, setInternalSelected] = useState(defaultSelected);
@@ -102,21 +103,6 @@ export function Tag({
     return handleEditableContainerClick;
   }, [handleEditableContainerClick, handleTagClick, isInteractiveClickable]);
 
-  const handleEditableMouseDown = useMemo(
-    () =>
-      isEditableFocusable
-        ? (event: MouseEvent<HTMLSpanElement>) => {
-            const target = event.target as HTMLElement;
-            if (target.closest("button")) {
-              return;
-            }
-            event.preventDefault();
-            textFocusRef.current?.focus();
-          }
-        : undefined,
-    [isEditableFocusable]
-  );
-
   return (
     <span
       className={[
@@ -124,7 +110,7 @@ export function Tag({
         programme === "synapse" ? styles.programmeSynapse : styles.programmeIds,
         styles[size],
         typeClassName,
-        styles[`tone_${tone}`],
+        styles[`tone_${effectiveTone}`],
         styles[`emphasis_${emphasis}`],
         clickable && isSelected ? styles.selected : "",
         (closable || editable) ? styles.dismissible : "",
@@ -141,19 +127,24 @@ export function Tag({
       aria-pressed={clickable ? isSelected : undefined}
       tabIndex={isInteractiveClickable ? 0 : isBadgeFocusable ? 0 : undefined}
       onClick={handleRootClick}
-      onMouseDown={handleEditableMouseDown}
     >
       {hasBadge ? <span className={styles.badge}>{badgeCount}</span> : null}
       {editable ? (
-        <span
-          ref={textFocusRef}
-          className={styles.textField}
-          tabIndex={isEditableFocusable ? 0 : undefined}
-          onFocus={onTextFocus}
-          onBlur={onTextBlur}
-        >
+        <span className={styles.textField}>
           {showLabel ? <span className={styles.prefix}>{labelPrefix}</span> : null}
-          <span className={styles.label}>{label}</span>
+          <span
+            ref={textFocusRef}
+            className={styles.label}
+            contentEditable={!disabled}
+            suppressContentEditableWarning
+            role="textbox"
+            tabIndex={isEditableFocusable ? 0 : undefined}
+            aria-label={label}
+            onFocus={onTextFocus}
+            onBlur={onTextBlur}
+          >
+            {label}
+          </span>
         </span>
       ) : (
         <>
@@ -182,7 +173,11 @@ export function Tag({
         >
           <Icon
             shapeName="shape-x-thick"
-            color={disabled ? "var(--color-icon-gray-disabled)" : "var(--color-icon-gray-neutral-accessible)"}
+            color={
+              disabled
+                ? "var(--color-icon-gray-disabled)"
+                : "var(--color-icon-gray-neutral-accessible)"
+            }
             style={{ width: 10, height: 10 }}
           />
         </button>

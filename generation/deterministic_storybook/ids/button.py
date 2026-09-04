@@ -51,10 +51,6 @@ def _ids_state_harness_css(focus_outline_width: str) -> str:
           background: var(--color-background-alerting-critical-stronger);
           border-color: var(--color-border-alerting-critical-transparent-base);
         }}
-        .sbSimButton[data-sim-state="focus-visible"]:not(:disabled) {{
-          outline: {focus_outline_width} solid var(--color-border-brand-base);
-          outline-offset: 3px;
-        }}
 """
 
 
@@ -260,12 +256,14 @@ function SimButton(
     simVariant?: Variant;
   }},
 ) {{
-  const {{ simState = "default", simVariant, className, ...rest }} = props;
+  const {{ simState = "default", simVariant, className, disabled, ...rest }} = props;
   return (
     <{component_name}
       {{...rest}}
+      disabled={{disabled || simState === "disabled"}}
       data-sim-state={{simState}}
       data-sim-variant={{simVariant ?? (rest.variant as Variant | undefined) ?? "primary"}}
+      data-state={{simState !== "default" && simState !== "disabled" ? simState : undefined}}
       className={{["sbSimButton", className].filter(Boolean).join(" ")}}
     />
   );

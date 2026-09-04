@@ -6,7 +6,10 @@ from typing import Optional
 from generation.deterministic_storybook.ids.main_menu_left import _sync_angular_developer_usage_composition
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from generation.deterministic_storybook.story_model import build_main_menu_left_story_model
-from generation.spec_derived.main_menu_left_composition import emit_angular_primary_state_matrix
+from generation.spec_derived.main_menu_left_composition import (
+    emit_angular_primary_state_matrix,
+    emit_angular_secondary_state_matrix,
+)
 from validation.spec_contract_parser import SpecContract
 
 
@@ -21,6 +24,7 @@ def generate_ids_main_menu_left_story_angular(
     model = build_main_menu_left_story_model(options=options)
     _sync_angular_developer_usage_composition(repo_root)
     state_matrix = emit_angular_primary_state_matrix()
+    secondary_state_matrix = emit_angular_secondary_state_matrix()
 
     return f"""import {{ applicationConfig, moduleMetadata }} from "@storybook/angular";
 import {{ provideZoneChangeDetection }} from "@angular/core";
@@ -110,6 +114,20 @@ export const PrimaryStateSnapshotMatrix = {{
       <div class="ids-main-menu-left-state-matrix">
         <ids-main-menu-left [compositionMode]="true" [forceStates]="true" [expanded]="true">
 {state_matrix}
+        </ids-main-menu-left>
+      </div>
+    `,
+  }}),
+}};
+
+/** @type {{import("@storybook/angular").StoryObj<IdsMainMenuLeftComponent>}} */
+export const SecondaryStateSnapshotMatrix = {{
+  render: () => ({{
+    styles: [MAIN_MENU_LEFT_STORY_FRAME_STYLES],
+    template: `
+      <div class="ids-main-menu-left-state-matrix">
+        <ids-main-menu-left [compositionMode]="true" [forceStates]="true" [expanded]="true">
+{secondary_state_matrix}
         </ids-main-menu-left>
       </div>
     `,

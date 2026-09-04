@@ -268,8 +268,15 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 ## Implementation Notes
 > Last updated: 2026-06-07.
 
-**Field shell is square (0px radius) in all states.**
-Figma Container `12579:77895` binds `Corner Radius/radius-none` (not `radius-2`). IDS theme maps `--dropdown-control-radius` → `var(--corner-radius-radius-none)`. Do not round the field on focus.
+### 2026-08-30
+- **Options list 1px inset padding** — `DropdownMenu.module.css` `.optionsScrollViewport` now has `padding-inline: 1px` so the option rows sit 1px inside the menu border, matching the App Launcher options list.
+
+### 2026-08-13
+- **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
+- **Section-aware keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections (option rows, footer action) and stop at section boundaries. `Tab` still traverses every tabbable control.
+- **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport`) carry `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable.
+- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Action button focus rings** — Added missing `:focus-visible` focus ring for the `footerAction` button to match IDS Button / Dropdown Button specs.
 
 **Focus ring must not add border-radius to the field element.**
 Only the outer ring is rounded (`radius-4`). Implementation: `IdsDropdownTriggerShell.module.css` — field uses `border-radius: var(--dropdown-control-radius)`; focus uses `::after` (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`).
@@ -318,14 +325,14 @@ Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single
 **Text-only single-select option aligns to the top (`align-items: flex-start`); radio rows stay centered.**
 Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single"]:not(:has(.radioOuter)) { align-items: flex-start }`.
 
-**Caret rotates `180°` while the popup is open.**
-Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .caretWrap { transform: rotate(180deg) }`.
+**Caret stays down-pointing while the popup is open** (Figma show-dropdown / component matrix — no 180° flip).
+Implementation: `IdsDropdownTriggerShell` uses `arrow-drop-tri-caret` without open-state rotation.
 
 ### Implementation updates (2026-08-05)
 
 - **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-gray-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownSingleSelect` wrapper and does not constrain the menu width.
 - **Single-select `Clear All` row** — visible above the option list whenever a value is selected (enabled via `showClearAll`). Clicking it fires `onClearAllClick`, clears the selection and the row auto-hides; the popup stays open (does **not** collapse the menu). Implementation: `DropdownMenu.tsx` — `showSingleClearAllRow`; `DropdownMenu.module.css` — `.clearAllAction`.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup) while the caret rotates `180°`. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field` and `:global([data-popup-open]) .caretWrap`.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup). Caret direction is unchanged (still down). Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field`.
 - **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip showing the full item. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
 - **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
 - **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.

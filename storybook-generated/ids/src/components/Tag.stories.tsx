@@ -112,7 +112,7 @@ export const EditableAndBadgeStates: Story = {
     <div style={{ display: "grid", gap: 16 }}>
       <Tags ariaLabel="Editable tag states">
         <IdsTag type="editable" label="Tag" tone="none" size="large" />
-        <IdsTag type="editable" label="Tag" tone="critical" size="large" error />
+        <IdsTag type="editable" label="Tag" tone="none" size="large" error />
         <IdsTag type="editable" label="Tag" tone="none" size="large" disabled />
         <IdsTag type="editable" label="Tag" tone="none" size="large" focusOnText showLabel labelPrefix="Label" />
       </Tags>

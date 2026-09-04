@@ -113,6 +113,44 @@ export const PrimaryStateSnapshotMatrix = {
 };
 
 /** @type {import("@storybook/angular").StoryObj<IdsMainMenuLeftComponent>} */
+export const SecondaryStateSnapshotMatrix = {
+  render: () => ({
+    styles: [MAIN_MENU_LEFT_STORY_FRAME_STYLES],
+    template: `
+      <div class="ids-main-menu-left-state-matrix">
+        <ids-main-menu-left [compositionMode]="true" [forceStates]="true" [expanded]="true">
+          <ids-main-menu-left-group groupId="secondary-focus-matrix" [defaultExpanded]="true">
+            <ids-main-menu-left-item itemId="secondary-parent">
+              <a href="#"><ids-main-menu-left-item-icon shapeName="network-share" /><span class="ids-main-menu-left__primary-label">Infrastructure</span></a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-children>
+            <ids-main-menu-left-item itemId="sec-default" level="secondary" forceState="default">
+              <a href="#">Default</a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-item itemId="sec-hover" level="secondary" forceState="hover">
+              <a href="#">Hover</a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-item itemId="sec-press" level="secondary" forceState="press">
+              <a href="#">Press</a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-item itemId="sec-selected" level="secondary" forceState="selected">
+              <a href="#">Selected</a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-item itemId="sec-default-focus" level="secondary" forceState="default-focus">
+              <a href="#">Default focus</a>
+            </ids-main-menu-left-item>
+            <ids-main-menu-left-item itemId="sec-selected-focus" level="secondary" forceState="selected-focus">
+              <a href="#">Selected focus</a>
+            </ids-main-menu-left-item>
+            </ids-main-menu-left-children>
+          </ids-main-menu-left-group>
+        </ids-main-menu-left>
+      </div>
+    `,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsMainMenuLeftComponent>} */
 export const LegacyItemsAdapter = {
   name: "Legacy items[] adapter",
   render: (args) => ({

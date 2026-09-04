@@ -62,6 +62,19 @@ export const InlineWarningMinor: Story = {
   },
 };
 
+/** Figma `11946:230315` — compact warning-minor with outlined action + dismiss (16px gap). */
+export const InlineWarningMinorWithActionAndDismiss: Story = {
+  args: {
+    display: "inline",
+    severity: "warning-minor",
+    density: "compact",
+    message:
+      "This is an page-level alert that communicates a warning (minor) message. It may include actions.",
+    actionLabel: "Action",
+    dismissible: true,
+  },
+};
+
 export const InlineWarningMajor: Story = {
   args: {
     display: "inline",
@@ -103,6 +116,21 @@ export const InlineDetailedLayout: Story = {
   },
 };
 
+/** Figma `11946:230988` — detailed title + message; action in title row; close at 16px top inset. */
+export const InlineDetailedTitleActionDismiss: Story = {
+  args: {
+    display: "inline",
+    severity: "warning-minor",
+    density: "detailed",
+    title: "Alert Title",
+    message:
+      "This is an page-level alert that communicates a warning (minor) message. It may include actions or a ",
+    linkLabel: "link to another page.",
+    actionLabel: "Action",
+    dismissible: true,
+  },
+};
+
 export const InlineDetailedWithLinkActionDismiss: Story = {
   args: {
     display: "inline",
@@ -125,8 +153,14 @@ export const InlineVariantMatrix: Story = {
       <Alert display="inline" severity="warning-minor" message="Warning minor inline." dismissible />
       <Alert display="inline" severity="warning-major" message="Warning major inline." dismissible />
       <Alert display="inline" severity="critical" message="Critical inline." dismissible />
-      <Alert display="inline" severity="informational" message="With link." linkLabel="Learn more" dismissible />
-      <Alert display="inline" severity="critical" message="With action." actionLabel="Resolve now" dismissible={false} />
+      <Alert display="inline" severity="warning-minor" message="With link." linkLabel="Learn more" dismissible />
+      <Alert
+        display="inline"
+        severity="warning-minor"
+        message="This is an page-level alert that communicates a warning (minor) message. It may include actions."
+        actionLabel="Action"
+        dismissible
+      />
       <Alert
         display="inline"
         severity="warning-major"

@@ -37,7 +37,7 @@ export class IdsMainMenuLeftItemsAdapterComponent {
   @Input() selectedSecondaryParentKey: string | null = null;
   @Input() selectedSecondaryKey: string | null = null;
 
-  @Output() readonly selectedKeyChange = new EventEmitter<string>();
+  @Output() readonly selectedKeyChange = new EventEmitter<string | null>();
   @Output() readonly expandedChildrenKeyChange = new EventEmitter<string | null>();
   @Output() readonly selectedSecondaryParentKeyChange = new EventEmitter<string | null>();
   @Output() readonly selectedSecondaryKeyChange = new EventEmitter<string | null>();
@@ -89,6 +89,13 @@ export class IdsMainMenuLeftItemsAdapterComponent {
     const legacy = { href: item.href, routeRef: item.routeRef };
     const hasChildren = (item.children?.length ?? 0) > 0;
 
+    if (hasChildren && this.railExpanded) {
+      this.expandedChildrenKeyChange.emit(
+        this.expandedChildrenKey === itemId ? null : itemId,
+      );
+      return;
+    }
+
     this.selectedKeyChange.emit(itemId);
     this.navigate.emit(
       buildNavigateTarget(itemId, label, undefined, item.link, legacy),
@@ -96,21 +103,8 @@ export class IdsMainMenuLeftItemsAdapterComponent {
     this.selectedChange.emit(
       buildSelectionDetail("primary", itemId, undefined, label, item.link, legacy),
     );
-
-    if (!hasChildren) {
-      this.selectedSecondaryParentKeyChange.emit(null);
-      this.selectedSecondaryKeyChange.emit(null);
-      return;
-    }
-    if (!this.railExpanded) return;
-
-    if (this.expandedChildrenKey === itemId) {
-      this.expandedChildrenKeyChange.emit(null);
-      this.selectedSecondaryParentKeyChange.emit(null);
-      this.selectedSecondaryKeyChange.emit(null);
-    } else {
-      this.expandedChildrenKeyChange.emit(itemId);
-    }
+    this.selectedSecondaryParentKeyChange.emit(null);
+    this.selectedSecondaryKeyChange.emit(null);
   }
 
   onSecondaryClick(
@@ -120,6 +114,7 @@ export class IdsMainMenuLeftItemsAdapterComponent {
   ): void {
     const label = secondaryDisplayName(child);
     const legacy = { href: child.href, routeRef: child.routeRef };
+    this.selectedKeyChange.emit(null);
     this.selectedSecondaryParentKeyChange.emit(itemId);
     this.selectedSecondaryKeyChange.emit(childId);
     this.navigate.emit(buildNavigateTarget(childId, label, itemId, child.link, legacy));
