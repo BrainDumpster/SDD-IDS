@@ -59,7 +59,7 @@ Figma slot mapping:
 6. `ExpandCollapse` — footer control; **16×16** icon (`double-chev-left` when expanded / `double-chev-right` when collapsed)
 
 ## Layout & Measurements
-- **Expanded rail width:** `278px` (Figma `11099:56218`)
+- **Expanded rail width:** `min 256px` / `max 356px` (implementation override — pending live Figma re-verification against `11099:56218`)
 - **Collapsed rail width:** `64px` (24px inline padding × 2 + 16px icon; Figma `11099:56206`)
 - **Sample frame height:** `888px` (container-driven at runtime; Storybook uses `100vh`)
 - **Menu top padding:** `var(--padding-padding-8)` on `MainMenuLeftRoot`
@@ -68,6 +68,11 @@ Figma slot mapping:
 - **Primary row (expanded):** min-height `40px`; padding `var(--padding-padding-8)` block, `var(--padding-padding-24)` inline; gap `var(--spacing-space-16)`
 - **Primary row (collapsed icon):** padding `var(--padding-padding-12)` block, `var(--padding-padding-24)` inline
 - **Secondary row:** height `32px` (`box-sizing: border-box`); padding `var(--padding-padding-6)` block, `var(--padding-padding-58)` inline (Figma `11099:56237`: 6px top/bottom, 58px left/right)
+- **Primary icon:** 16×16; centered on a single-line row, top-aligned with `4px` (`var(--spacing-space-4)`) vertical padding when the primary label wraps to two lines (total `24px` / `var(--font-line-height-line-height-24)` box)
+- **Chevron:** 14×14; same wrap-responsive alignment/padding treatment as the primary icon
+- **Primary and secondary labels (expanded):** wrap to a maximum of **2 lines** using `-webkit-line-clamp: 2`, then truncate with `text-overflow: ellipsis`; when truncation occurs, hovering the label reveals an `IdsTooltip` showing the full text (or `tooltip` prop if provided)
+- **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-accessible)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
+- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-accessible)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** has `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside the container. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-accessible)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
 - **Primary icon:** 16×16
 - **Chevron:** 14×14
 - **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-gray-neutral-base)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
@@ -145,10 +150,18 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Secondary row click: emit navigation; becomes the active page and sets its parent as selected context (clears any prior primary selection). The **parent row reads as selected** — brand-lighter background, brand-strong label, brand icon/chevron, and the 4px inset — while its sub-menu is expanded.
 - Parent selected-context persistence: when a secondary child is the active page and its sub-menu is **collapsed**, the parent row **stays in the selected state** (background + inset retained) and takes over `aria-current="page"` from the now-hidden child, so the current-page indicator is never lost.
 - Collapsed rail: primary buttons use `title` / tooltip from `tooltip` when set, else visible `name`.
-- Collapse footer: toggles expanded (`278px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`.
+- Collapse footer: toggles expanded (`min 256px` / `max 356px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`.
+- Truncated label tooltips (expanded only): when a primary or secondary label is clipped after 2 lines, hovering the visible text shows an `IdsTooltip` whose body is the full label (or the item's `tooltip` prop if supplied).
 - Chevron reflects `children` list open (`chev-down-thick`) vs closed (`chev-right-thick`).
 - **`childrenMenu` (runtime):** when `forceStates` is **false**, open/closed state is driven by user interaction (in-memory expand key on the primary row). When `forceStates` is **true** (Storybook matrix only), `childrenMenu` pins the list open or closed for that row.
-- Keyboard: arrow keys move focus; Enter/Space activate; Escape closes `children` list (product-defined).
+- Keyboard (expanded rail):
+  - `Tab` / `Shift+Tab`: move focus through the active menu buttons (primary, secondary, lead, footer toggle).
+  - `↑` / `↓`: move focus to the previous/next focusable row inside the menu content.
+  - `Home` / `End`: jump focus to the first/last focusable row.
+  - `Enter` / `Space`: activate the focused primary or secondary row. For a parent primary with a collapsed sub-menu, this opens the sub-menu. For a leaf primary, it selects and emits `onSelected`/`onNavigate`. For a secondary row, it selects and emits.
+  - `→` on a primary parent: open the `children` list (if closed) or move focus to the first secondary.
+  - `←` on a primary parent: close the `children` list. On a secondary row, move focus back to the parent primary.
+  - `Escape`: close the currently expanded `children` list and return focus to its parent primary.
 
 ### Accessibility
 - Root: `<nav aria-label="Main menu left">`
@@ -322,8 +335,8 @@ Legacy adapter: `items[]` on root expands to the same tree at runtime (do not em
 ### Variant matrix
 | expanded | childrenMenu (when `forceStates`) | Visual |
 |---|---|---|
-| true | collapsed | 278px rail, labels + chevron when `children` |
-| true | expanded | 278px + `children` list visible |
+| true | collapsed | `min 256px` / `max 356px` rail, labels + chevron when `children` |
+| true | expanded | `min 256px` / `max 356px` rail + `children` list visible |
 | false | n/a | 64px icon-only primary rows |
 
 ### Per-slot style contract
@@ -346,7 +359,7 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 - Missing icon slug when required by product → validation error at codegen boundary
 
 ### Validation checklist
-- [x] Expanded width **278px**, collapsed **64px**
+- [x] Expanded width **min 256px / max 356px**, collapsed **64px**
 - [x] Primary 40px row; secondary 32px with `padding-padding-6` block and `padding-padding-58` inline
 - [x] Footer: **49px** footer block + **1px** root bottom border (no stacked footer+root bottom borders); icon control **16×16** with **no** extra UA padding
 - [x] Selected 4px inset uses `var(--color-border-brand-base)` with `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))` (PR #82)
@@ -368,6 +381,15 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 2. **Font-weight incorrect** — Original bug: Primary label and secondary label font-weight were 500 instead of 400. Fix: Changed to `font-weight: 400` in `.primaryLabel`, `.secondaryRow`, and `.secondaryRowSelected`.
 3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-gray-neutral-strong` instead of `color-icon-gray-neutral-base`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-gray-neutral-base)`.
 4. **Rail side border + highlight** — Side chrome on `MainMenuLeftRoot` only (continuous through the `8px` gap). `MainMenuList` must **not** use negative side margins — hover/selected backgrounds stay inside the right border (Figma Element-Primary fill). `SelectedInset` extends into the rail border zone per PR #82 geometry above.
+
+### Updates (2026-08-30)
+1. **Expanded rail width range** — Implementation override: `min 256px` / `max 356px` (was 278px fixed). `MainMenuLeft.module.css` uses `width: 100%` clamped by `min-width` and `max-width`.
+2. **Label wrap / truncate** — Primary and secondary labels support up to 2 lines (`-webkit-line-clamp: 2`) and `text-overflow: ellipsis` overflow. Implemented via `ClampedLabel` with `ResizeObserver` detection.
+3. **Truncated-label `IdsTooltip`** — When a primary or secondary label is clipped, hovering it opens an `IdsTooltip` (content = `tooltip` prop or full label, `side="right"`, `arrowAlign="start"`).
+4. **Icon/chevron alignment on wrap** — Primary icon and chevron are `align-self: center` on single-line rows and `align-self: flex-start` with `4px` top/bottom padding (total `24px` height) when the primary label wraps to two lines.
+5. **Storybook coverage** — Added `Long Primary Label` and `Long Primary with Children` stories in `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx` to QA wrapped/truncated primary and secondary rows.
+6. **Keyboard accessibility** — Primary/secondary rows now support `Tab`, `↑`/`↓`, `Home`/`End`, `Enter`/`Space`, `→`/`←`, and `Escape` for focus, activation, expand/collapse, and parent/child navigation.
+7. **Reference files** — `storybook/src/components/MainMenuLeft.tsx`, `storybook/src/components/MainMenuLeft.module.css`, `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx`.
 
 ## Source Mapping
 - Design source: IDS Design Library `0bHk3XhrjFhowgFkz9yLr4`

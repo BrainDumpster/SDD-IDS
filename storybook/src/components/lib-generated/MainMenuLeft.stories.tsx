@@ -114,7 +114,15 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
         minHeight: 0,
       }}
     >
-      <IdsMainMenuLeft {...props} />
+      <div
+        style={{
+          width: 278,
+          height: "100%",
+          flexShrink: 0,
+        }}
+      >
+        <IdsMainMenuLeft {...props} />
+      </div>
       <div
         style={{
           flex: 1,
@@ -137,6 +145,44 @@ export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
   render: (args) => <SpecAccurateFrame {...args} />,
   args: specAccurateArgs,
+};
+
+/** Primary row with a long label that wraps to two lines and then truncates. */
+export const LongPrimaryLabel: Story = {
+  name: "Long Primary Label",
+  render: (args) => <SpecAccurateFrame {...args} />,
+  args: {
+    ...specAccurateArgs,
+    items: specAccurateItems.map((item) =>
+      item.id === "alerts"
+        ? {
+            ...item,
+            name: "Alerts and Events with an unusually long and descriptive label that should wrap to two lines and then truncate",
+          }
+        : item,
+    ),
+  },
+};
+
+/** Secondary rows with long labels under an expanded primary parent. */
+export const LongSecondaryLabels: Story = {
+  name: "Long Secondary Labels",
+  render: (args) => <SpecAccurateFrame {...args} />,
+  args: {
+    ...specAccurateArgs,
+    items: specAccurateItems.map((item) =>
+      item.id === "infrastructure"
+        ? {
+            ...item,
+            childrenMenu: "expanded" as const,
+            children: (item.children ?? []).map((child, index) => ({
+              ...child,
+              name: `Very long secondary item label ${index + 1} that also wraps to two lines and may truncate if it is too long`,
+            })),
+          }
+        : item,
+    ),
+  },
 };
 
 /** Collapsed icon-only rail (**64px**, Figma `11099:56206`). */
