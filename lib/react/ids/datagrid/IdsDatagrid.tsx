@@ -98,14 +98,14 @@ function SelectionCheckbox({
   id,
   label,
   checked,
-  indeterminate,
+  partial,
   onChange,
   onClick,
 }: {
   id: string;
   label: string;
   checked: boolean;
-  indeterminate?: boolean;
+  partial?: boolean;
   onChange: (checked: boolean) => void;
   onClick?: (event: React.MouseEvent) => void;
 }) {
@@ -114,7 +114,7 @@ function SelectionCheckbox({
       <IdsCheckbox
         id={id}
         checked={checked}
-        indeterminate={indeterminate}
+        partial={partial}
         density="datagrid"
         onChange={onChange}
       >
@@ -942,7 +942,7 @@ export function IdsDatagrid({
                         id={`ids-dg-select-all-${reactId}`}
                         label="Select all rows on this page"
                         checked={allVisibleRowsSelected}
-                        indeterminate={someVisibleRowsSelected}
+                        partial={someVisibleRowsSelected}
                         onChange={toggleSelectAllVisible}
                         onClick={(event) => event.stopPropagation()}
                       />

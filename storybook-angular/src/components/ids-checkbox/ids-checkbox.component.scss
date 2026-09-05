@@ -96,13 +96,13 @@
   border-color: var(--color-border-brand-transparent-brand);
 }
 
-.root[data-indeterminate] {
+.root[data-partial] {
   background: var(--color-background-surface-component);
   border-color: var(--color-border-brand-base);
 }
 
-.root[data-indeterminate]:has(.input:hover:not(:disabled)),
-.root[data-indeterminate]:has(.input:active:not(:disabled)) {
+.root[data-partial]:has(.input:hover:not(:disabled)),
+.root[data-partial]:has(.input:active:not(:disabled)) {
   background: var(--color-background-surface-component);
   border-color: var(--color-border-gray-neutral-strong);
 }
@@ -118,7 +118,7 @@
   border-color: transparent;
 }
 
-.root[data-disabled][data-indeterminate],
+.root[data-disabled][data-partial],
 .root[data-disabled][data-checked="mixed"] {
   background: var(--color-background-gray-light);
   border-color: var(--color-border-gray-disabled);
@@ -164,7 +164,7 @@
   color: var(--color-icon-gray-inverse);
 }
 
-.root[data-indeterminate] .indicator {
+.root[data-partial] .indicator {
   color: var(--color-icon-brand-base);
 }
 
@@ -172,7 +172,7 @@
   color: var(--color-icon-brand-base);
 }
 
-.root[data-disabled][data-indeterminate] .indicator {
+.root[data-disabled][data-partial] .indicator {
   color: var(--color-icon-gray-disabled);
 }
 
@@ -204,14 +204,14 @@
   color: var(--color-text-gray-disabled);
 }
 
-.root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]) {
+.root[data-error="true"]:not([data-checked]):not([data-partial]):not([data-checked="mixed"]) {
   border-color: var(--color-border-gray-neutral-strong);
 }
 
-.root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]):has(
+.root[data-error="true"]:not([data-checked]):not([data-partial]):not([data-checked="mixed"]):has(
     .input:hover:not(:disabled)
   ),
-.root[data-error="true"]:not([data-checked]):not([data-indeterminate]):not([data-checked="mixed"]):has(
+.root[data-error="true"]:not([data-checked]):not([data-partial]):not([data-checked="mixed"]):has(
     .input:active:not(:disabled)
   ) {
   border-color: var(--color-border-gray-neutral-strong);

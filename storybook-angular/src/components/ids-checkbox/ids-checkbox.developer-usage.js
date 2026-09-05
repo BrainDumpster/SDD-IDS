@@ -3,7 +3,7 @@
 export const CHECKBOX_DOCS_DESCRIPTION = `
 ## Overview
 
-Binary or indeterminate selection control with group composition and helper/error text.
+Binary or partial selection control with group composition and helper/error text.
 
 ## Props
 
@@ -78,7 +78,7 @@ export const CHECKBOX_COMPOSITION_DEMO_TEMPLATE = `
   <ids-checkbox
     [label]="label"
     [checked]="state.checked"
-    [indeterminate]="state.indeterminate"
+    [partial]="state.partial"
     [disabled]="disabled"
     [error]="error"
     [helperText]="helperText"

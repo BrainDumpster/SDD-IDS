@@ -3,7 +3,7 @@
 export const CHECKBOX_DOCS_DESCRIPTION = `
 ## Overview
 
-Binary or indeterminate selection control with label, helper, and error projection.
+Binary or partial selection control with label, helper, and error projection.
 
 \`\`\`
 IdsCheckbox
@@ -21,7 +21,7 @@ Import from \`@ids/react/checkbox\`.
 | \`children\` | \`ReactNode\` | — |
 | \`checked\` | \`boolean\` | — |
 | \`defaultChecked\` | \`boolean\` | — |
-| \`indeterminate\` | \`boolean\` | — |
+| \`partial\` | \`boolean\` | — |
 | \`disabled\` | \`boolean\` | — |
 | \`name\` | \`string\` | — |
 | \`value\` | \`string\` | — |

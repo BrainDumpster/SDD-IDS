@@ -80,7 +80,7 @@ const meta: Meta<typeof IdsCheckbox> = {
   ],
   argTypes: {
     disabled: { control: "boolean" },
-    indeterminate: { control: "boolean" },
+    partial: { control: "boolean" },
     error: { control: "boolean" },
     helperText: { control: "text" },
     label: { control: "text" },
@@ -88,7 +88,7 @@ const meta: Meta<typeof IdsCheckbox> = {
   args: {
     label: "Accept terms and conditions",
     disabled: false,
-    indeterminate: false,
+    partial: false,
     error: false,
   },
 };
@@ -104,12 +104,31 @@ export const Playground: Story = {
   render: (args) => <IdsCheckbox {...args} />
 };
 
+/** Label typography/color contract from Figma `8505:14299` / Body 2. */
+export const LabelStyle: Story = {
+  name: "Label Style",
+  render: () => (
+    <div className="sbCheckboxCol">
+      <IdsCheckbox label="Option" />
+      <IdsCheckbox label="Option" checked />
+      <IdsCheckbox label="Option" partial />
+      <IdsCheckbox label="Option" disabled />
+      <p className="sbHarnessHint" style={{ margin: 0, maxWidth: 420 }}>
+        Label uses Body 2 Regular (`14/20`, weight 400) and{" "}
+        <code>var(--color-text-gray-neutral)</code> for default/checked/partial.
+        Disabled uses <code>var(--color-text-gray-disabled)</code>. Do not use{" "}
+        <code>var(--color-text-gray-neutral-strong)</code> on the option label.
+      </p>
+    </div>
+  ),
+};
+
 export const SelectionStates: Story = {
   render: () => (
     <div className="sbCheckboxRow">
       <IdsCheckbox label="Unchecked" />
       <IdsCheckbox label="Checked" checked />
-      <IdsCheckbox label="Partial" indeterminate />
+      <IdsCheckbox label="Partial" partial />
     </div>
   ),
 };
@@ -119,7 +138,7 @@ export const DisabledStates: Story = {
     <div className="sbCheckboxRow">
       <IdsCheckbox label="Unchecked" disabled />
       <IdsCheckbox label="Checked" checked disabled />
-      <IdsCheckbox label="Indeterminate" indeterminate disabled />
+      <IdsCheckbox label="Indeterminate" partial disabled />
     </div>
   ),
 };
@@ -214,20 +233,20 @@ export const StateHarness: Story = {
 
       <div className="sbHarnessTitle">Partial</div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} partial />
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} partial />
         <span className="sbHarnessHint">Hover for strong border; dash stays brand.</span>
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate simulateFocusVisible />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} partial simulateFocusVisible />
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate disabled />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} partial disabled />
       </div>
       <div className="sbHarnessControl">
-        <IdsCheckbox label={HARNESS_OPTION_LABEL} indeterminate error helperText="Error message" />
+        <IdsCheckbox label={HARNESS_OPTION_LABEL} partial error helperText="Error message" />
       </div>
     </div>
   ),
