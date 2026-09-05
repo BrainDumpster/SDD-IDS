@@ -143,7 +143,7 @@ export function IdsDatagridMultiselectFilter({
     [filteredOptions, selectedSet],
   );
   const allChecked = filteredOptions.length > 0 && selectedCount === filteredOptions.length;
-  const indeterminate = selectedCount > 0 && selectedCount < filteredOptions.length;
+  const partial = selectedCount > 0 && selectedCount < filteredOptions.length;
 
   const toggleAll = (checked: boolean) => {
     if (checked) {
@@ -212,7 +212,7 @@ export function IdsDatagridMultiselectFilter({
           <IdsCheckbox
             id={`ids-datagrid-filter-${groupLabel}-select-all`.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
             checked={allChecked}
-            indeterminate={indeterminate}
+            partial={partial}
             onChange={toggleAll}
           >
             <IdsCheckboxLabel>Select All</IdsCheckboxLabel>

@@ -11,6 +11,8 @@ interface CheckboxProps {
   simulateFocusVisible?: boolean;
   checked?: boolean;
   defaultChecked?: boolean;
+  /** Figma "partial" — maps to Base UI `indeterminate`. */
+  partial?: boolean;
   indeterminate?: boolean;
   disabled?: boolean;
   error?: boolean;
@@ -29,6 +31,7 @@ export function Checkbox({
   simulateFocusVisible = false,
   checked,
   defaultChecked,
+  partial,
   indeterminate,
   disabled,
   error = false,
@@ -38,6 +41,7 @@ export function Checkbox({
   onChange,
   density = "default",
 }: CheckboxProps) {
+  const isPartial = partial ?? indeterminate;
   const resolvedId = id ?? `checkbox-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const assistiveId = helperText ? `${resolvedId}-assistive` : undefined;
 
@@ -51,7 +55,7 @@ export function Checkbox({
           className={[styles.root, simulateFocusVisible ? styles.rootSimulatedFocus : ""].filter(Boolean).join(" ")}
           checked={checked}
           defaultChecked={defaultChecked}
-          indeterminate={indeterminate}
+          indeterminate={isPartial}
           disabled={disabled}
           aria-invalid={error || undefined}
           aria-describedby={assistiveId}
@@ -60,7 +64,7 @@ export function Checkbox({
         >
           <BaseCheckbox.Indicator
             className={styles.indicator}
-            data-indicator-type={indeterminate ? "minus" : "check"}
+            data-indicator-type={isPartial ? "minus" : "check"}
           />
         </BaseCheckbox.Root>
         <span className={showLabel ? styles.label : styles.visuallyHidden}>{label}</span>

@@ -42,11 +42,11 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() checked?: boolean;
   @Input() defaultChecked = CHECKBOX_SPEC_ACCURATE_DEFAULTS.checked;
   @Input()
-  set indeterminate(value: boolean) {
-    this.indeterminateState = value;
+  set partial(value: boolean) {
+    this.partialState = value;
   }
-  get indeterminate(): boolean {
-    return this.indeterminateState;
+  get partial(): boolean {
+    return this.partialState;
   }
   @Input() disabled = CHECKBOX_SPEC_ACCURATE_DEFAULTS.disabled;
   @Input() error = CHECKBOX_SPEC_ACCURATE_DEFAULTS.error;
@@ -58,7 +58,7 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() readonly checkedChange = new EventEmitter<boolean>();
 
   private internalChecked: boolean = CHECKBOX_SPEC_ACCURATE_DEFAULTS.checked;
-  private indeterminateState: boolean = CHECKBOX_SPEC_ACCURATE_DEFAULTS.indeterminate;
+  private partialState: boolean = CHECKBOX_SPEC_ACCURATE_DEFAULTS.partial;
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
 
@@ -75,11 +75,11 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
     if (changes["defaultChecked"] && this.checked === undefined) {
       this.internalChecked = this.defaultChecked;
     }
-    this.syncIndeterminate();
+    this.syncPartial();
   }
 
   ngAfterViewInit(): void {
-    this.syncIndeterminate();
+    this.syncPartial();
   }
 
   get isControlled(): boolean {
@@ -115,7 +115,7 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   get dataChecked(): string | null {
-    if (this.indeterminate) {
+    if (this.partial) {
       return "mixed";
     }
     if (this.resolvedChecked) {
@@ -125,25 +125,25 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   get ariaChecked(): boolean | "mixed" {
-    if (this.indeterminate) {
+    if (this.partial) {
       return "mixed";
     }
     return this.resolvedChecked;
   }
 
   get showIndicator(): boolean {
-    return this.resolvedChecked || this.indeterminate;
+    return this.resolvedChecked || this.partial;
   }
 
   get indicatorType(): "check" | "minus" {
-    return this.indeterminate ? "minus" : "check";
+    return this.partial ? "minus" : "check";
   }
 
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const next = input.checked;
-    if (this.indeterminateState) {
-      this.indeterminateState = false;
+    if (this.partialState) {
+      this.partialState = false;
     }
     if (!this.isControlled) {
       this.internalChecked = next;
@@ -153,10 +153,10 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
     this.cdr.markForCheck();
   }
 
-  private syncIndeterminate(): void {
+  private syncPartial(): void {
     const el = this.checkboxInput?.nativeElement;
     if (el) {
-      el.indeterminate = this.indeterminateState;
+      el.indeterminate = this.partialState;
     }
   }
 }
