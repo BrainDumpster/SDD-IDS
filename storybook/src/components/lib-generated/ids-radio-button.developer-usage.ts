@@ -6,8 +6,8 @@ export const RADIO_BUTTON_DOCS_DESCRIPTION = `
 Single-choice selection within a radio group, with label projection.
 
 \`\`\`
-IdsRadioButton
-  IdsRadioGroup
+IdsRadioGroup
+  IdsRadioButton
   IdsRadioLabel
 \`\`\`
 
@@ -25,6 +25,14 @@ Import from \`@ids/react/radio-button\`.
 | \`defaultValue\` | \`string\` | — |
 | \`disabled\` | \`boolean\` | — |
 | \`orientation\` | \`IdsRadioOrientation\` | — |
+| \`label\` | \`string\` | — |
+| \`showLabel\` | \`boolean\` | \`true\` |
+| \`labelIcon\` | \`ReactNode\` | — |
+| \`labelPosition\` | \`\"left\" \| \"top\"\` | \`\"left\"\` |
+| \`required\` | \`boolean\` | \`false\` |
+| \`ariaLabel\` | \`string\` | — |
+| \`error\` | \`boolean\` | \`false\` |
+| \`errorText\` | \`ReactNode\` | — |
 
 ### \`IdsRadioLabelProps\`
 
@@ -43,6 +51,7 @@ Import from \`@ids/react/radio-button\`.
 | \`checked\` | \`boolean\` | — |
 | \`defaultChecked\` | \`boolean\` | — |
 | \`disabled\` | \`boolean\` | — |
+| \`error\` | \`boolean\` | \`false\` |
 | \`dataState\` | \`IdsRadioDataState\` | — |
 
 ## Events
@@ -67,22 +76,23 @@ import {
 ### Usage
 
 \`\`\`tsx
-<IdsRadioButton>
-  {/* project children / slots per anatomy */}
-</IdsRadioButton>
+<IdsRadioGroup name="demo" label="Radio Group">
+  <IdsRadioButton value="a">
+    <IdsRadioLabel>Option A</IdsRadioLabel>
+  </IdsRadioButton>
+</IdsRadioGroup>
 \`\`\`
 `.trim();
 
 export const RADIO_BUTTON_SOURCE_CODE = `import {
   IdsRadioButton,
-  IdsRadioGroup,
   IdsRadioLabel,
 } from "@ids/react/radio-button";
 
 export function Example() {
   return (
-    <IdsRadioButton>
-      {/* project children / slots */}
+    <IdsRadioButton name="example" value="a">
+      <IdsRadioLabel>Option A</IdsRadioLabel>
     </IdsRadioButton>
   );
 }`;

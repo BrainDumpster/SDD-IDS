@@ -12,7 +12,7 @@
 - Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
 - Verified at: 2026-06-18
 - Variant axes covered: selection (`unselected | selected`) x interaction (`default | hover | disabled | focus-visible`) x validation (`default | error`, optional)
-- Reference implementation: Angular composition (`storybook-angular/src/components/ids-radio-button/`, `IDS_RADIO_BUTTON_IMPORTS`). React aggregate wrapper `storybook/src/components/RadioButton.tsx` maps `options[]` → items for legacy Storybook only. Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
+- Reference implementation: Angular composition (`storybook-angular/src/components/ids-radio-button/`, `IDS_RADIO_BUTTON_IMPORTS`). React `lib/react/ids/radio-button/` provides `IdsRadioGroup` + `IdsRadioButton` + `IdsRadioLabel` composition. `storybook/src/components/RadioButton.tsx` maps `options[]` → items for legacy Storybook only. Storybook matrices may use **single-option** groups per cell and per-option `simulatedState` for static focus/hover (docs-only).
 ## Anatomy
 - **groupRoot** (optional): semantic grouping wrapper for radio collections.
 - **root**: one radio row item (control + label).
@@ -111,8 +111,16 @@ Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`s
 | `defaultValue` | No | Initial selected value when uncontrolled. |
 | `onChange(value)` | No | Fires with the new value when selection changes. |
 | `disabled` | No | When true, disables the entire group (merged with per-item `disabled`). |
-| `orientation` | No | `vertical` (default) or `horizontal`. |
-| `id` | No | Optional id prefix for assistive text ids. |
+| `orientation` | No | `vertical` (default) or `horizontal`. Both use `var(--spacing-space-16)` between radio items. |
+| `label` | No | Group form label text. |
+| `showLabel` | No | Default `true`; when `false`, the group label is not rendered. |
+| `required` | No | Renders a `*` required mark inside the group label and sets `aria-required` on the group. |
+| `labelIcon` | No | Optional 16x16 icon node rendered after the group label text (and after `*`, if present). |
+| `labelPosition` | No | `left` (default) or `top`. |
+| `ariaLabel` | No | Accessible name when `showLabel` is `false` or `label` is not provided. |
+| `error` | No | `true` applies error styling to child radios and renders `errorText`/`error` slot. |
+| `errorText` | No | Validation error message string or node. |
+| `id` | No | Optional id for the group root; used for `aria-labelledby` and `aria-errormessage` ids. |
 
 Outputs (group): `onChange(value)` / `valueChange`.
 
@@ -131,12 +139,16 @@ Outputs (group): `onChange(value)` / `valueChange`.
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 - `groupRoot` (optional)
-  - `radioItem[]`
-    - `input`
-    - `controlOuter`
-      - optional `controlInnerDot`
-    - `label`
-    - optional `assistiveText`
+  - optional `groupLabel` (when `label` is shown)
+  - `groupBody`
+    - `groupItems`
+      - repeated `radioItem`
+        - `input`
+        - `controlOuter`
+          - optional `controlInnerDot`
+        - `label`
+        - optional `assistiveText`
+    - optional `validationErrorMessage` (when `error` is true and `errorText` is provided)
 
 ### Variant matrix
 - Selection: unselected | selected.
@@ -152,16 +164,36 @@ Outputs (group): `onChange(value)` / `valueChange`.
 - Focus-visible ring uses 1px brand outline with 2px offset.
 - Harness-only simulated state (`data-simulated-state` or equivalent) is allowed for Storybook; omit in production defaults unless documenting fixtures.
 - No hardcoded values for color/border/typography.
+- Group body layout contract:
+  - The body wraps the `groupItems` and the optional `validationErrorMessage`.
+  - `labelPosition="left"` + `orientation="horizontal"` (no error message): body and label align middle (`align-items: center`), body has no extra padding.
+  - `labelPosition="left"` + `orientation="vertical"`: body aligns top with the label, body has `padding: var(--spacing-space-10) 0`.
+  - `labelPosition="left"` + error message: body aligns top with the label, body has `padding: var(--spacing-space-10) 0`; gap between `groupItems` and `validationErrorMessage` is `var(--spacing-space-8)` for horizontal and `var(--spacing-space-16)` for vertical.
+  - `labelPosition="top"`: body appears directly below the label with no gap.
+- Group items layout contract:
+  - `orientation="vertical"`: column layout, gap `var(--spacing-space-16)`
+  - `orientation="horizontal"`: row layout, gap `var(--spacing-space-16)`, wrap allowed
+- Group label contract:
+  - Body 2 Regular, `var(--color-text-gray-neutral-strong)`, `min-height: 20px`, `padding: var(--spacing-space-10) 0`, single-line `nowrap`, title case with colon.
+  - `*` required mark: `margin-left: 2px`, `aria-hidden`.
+  - `labelIcon`: `16x16`, `margin-left: var(--spacing-space-8)` from preceding text/asterisk.
 
 ### Behavior and accessibility contract
 - Native radio semantics preferred.
 - Group semantics:
+  - `role="radiogroup"` on `groupRoot`,
   - radios share `name`,
-  - optionally wrapped in `fieldset` + `legend`.
+  - `aria-labelledby` points to `groupLabel` when rendered, or `aria-label` when label is hidden,
+  - `aria-required` when `required` is `true`,
+  - `aria-invalid` and `aria-errormessage` when `error` is `true`.
 - ARIA/semantic expectations:
   - input `type="radio"` handles role/checked state,
   - `aria-disabled` when disabled,
   - helper/error text associated with `aria-describedby` when present.
+- Keyboard:
+  - `Tab` enters/leaves the group,
+  - `Arrow` keys move focus through radio options (including disabled options),
+  - `Space` or `Enter` selects the focused radio if it is not disabled.
 
 ### Fallback/error rules
 - If multiple radios are `checked=true` in controlled data, first checked wins; warn.
@@ -181,13 +213,18 @@ Outputs (group): `onChange(value)` / `valueChange`.
 - Primary extraction source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26737&m=dev`
 - Component/state matrix source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26730&m=dev`
 - Additional state validation board: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14225&m=dev`
-- Lib React implementation (no Base UI): `lib/react/ids/radio-button/` (`IdsRadioGroup`, `IdsRadioButton`, `IdsRadioLabel`; selectors `ids-radio-*`); stories: `storybook/src/components/lib-generated/RadioButton.stories.tsx`
+- Lib React implementation (no Base UI): `lib/react/ids/radio-button/` (`IdsRadioGroup`, `IdsRadioButton`, `IdsRadioLabel`; selectors `IdsRadioGroup*` / `ids-radio-*`); stories: `storybook/src/components/lib-generated/RadioButton.stories.tsx`
 - Runtime story / codegen contract: `component-contracts/ids/radio-button.contract.ts`
 - Angular composition reference: `storybook-angular/src/components/ids-radio-button/` (`IDS_RADIO_BUTTON_IMPORTS`)
 
 ---
 
 ## Implementation Notes
+
+**2026-09-05 changes:**
+- `IdsRadioGroup` now owns the group form label, `labelPosition`, `required` mark, `labelIcon`, `error`, `errorText`, and orientation for projected `IdsRadioButton` children.
+- `IdsRadioButton` consumes group context for cascaded `name`, `disabled`, and `error`.
+- Layout/label/selectors are documented in the Codegen Contract above.
 
 **Layout & structure**
 - **Group gap**: use `var(--spacing-space-16)` between radio items, not `var(--spacing-space-12)`

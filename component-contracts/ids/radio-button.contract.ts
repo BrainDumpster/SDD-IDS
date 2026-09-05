@@ -30,4 +30,11 @@ export const RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS = {
   defaultValue: "option1",
   disabled: false,
   orientation: "vertical" as RadioButtonOrientation,
+  label: "Radio Group",
+  showLabel: true,
+  required: false,
+  labelPosition: "left" as const,
+  labelIcon: undefined,
+  error: false,
+  errorText: undefined,
 } as const;
