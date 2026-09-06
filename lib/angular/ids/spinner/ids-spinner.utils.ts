@@ -49,6 +49,8 @@ export function resolveSpinnerLabelVisibility(
   mode: IdsSpinnerMode,
   value: unknown,
 ): IdsSpinnerLabelVisibility {
+  if (size === "lg") return "sr-only";
+
   let visibility: IdsSpinnerLabelVisibility | undefined;
   if (
     typeof value === "string" &&
@@ -59,8 +61,7 @@ export function resolveSpinnerLabelVisibility(
 
   if (visibility == null) {
     if (size === "sm") return "visible-inline";
-    if (size === "md") return "visible-below";
-    return "sr-only";
+    return "visible-below";
   }
 
   if (size === "sm") {
@@ -70,7 +71,7 @@ export function resolveSpinnerLabelVisibility(
   }
 
   if (visibility === "visible-inline") {
-    return size === "lg" ? "sr-only" : "visible-below";
+    return "visible-below";
   }
 
   return visibility;
