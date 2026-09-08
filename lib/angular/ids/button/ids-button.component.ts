@@ -35,6 +35,8 @@ export class IdsButtonComponent {
 
   @Output() readonly clicked = new EventEmitter<MouseEvent>();
 
+  keyboardPressed = false;
+
   get variantClass(): string {
     return this.variant === "destructive" ? "danger" : this.variant;
   }
@@ -47,6 +49,11 @@ export class IdsButtonComponent {
     return this.iconOnly && this.variant !== "destructive";
   }
 
+  /** Spec Accurate: icon-only mode supports medium and large only. */
+  get resolvedSize(): ButtonSize {
+    return this.resolvedIconOnly && this.size === "sm" ? "md" : this.size;
+  }
+
   onClick(event: MouseEvent): void {
     if (this.disabled || this.loading) {
       event.preventDefault();
@@ -54,5 +61,22 @@ export class IdsButtonComponent {
       return;
     }
     this.clicked.emit(event);
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (this.disabled || this.loading) return;
+    if (event.key === " " || event.key === "Enter") {
+      this.keyboardPressed = true;
+    }
+  }
+
+  onKeyUp(event: KeyboardEvent): void {
+    if (event.key === " " || event.key === "Enter") {
+      this.keyboardPressed = false;
+    }
+  }
+
+  onBlur(): void {
+    this.keyboardPressed = false;
   }
 }
