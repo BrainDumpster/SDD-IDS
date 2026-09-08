@@ -27,7 +27,7 @@
   border-top: none;
   border-left: none;
   border-bottom: none;
-  border-right: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }
 
 .programmeSynapseExpanded {
@@ -43,7 +43,7 @@
 }
 
 .programmeSynapse .bottomToggle {
-  border-top-color: var(--color-border-neutral-light);
+  border-top-color: var(--color-border-gray-neutral-light);
 }
 
 .logoSlot {
@@ -192,7 +192,7 @@
   flex-shrink: 0;
   display: inline-block;
   background-color: currentColor;
-  color: var(--color-icon-neutral-strong, #252525);
+  color: var(--color-icon-gray-neutral-strong, #252525);
   align-self: center;
 }
 
@@ -212,7 +212,7 @@
   flex: 1;
   min-width: 0;
   display: block;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   cursor: pointer;
 }
 
@@ -323,8 +323,8 @@
   height: auto;
   border-top: none;
   border-bottom: none;
-  border-left: var(--border-width-border-1) solid var(--color-border-accessible);
-  border-right: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-left: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   height: 32px;
   border: none;
   overflow: visible;
@@ -765,7 +765,7 @@
 }
 
 .programmeSynapse .secondaryContextButton:focus-visible {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 2px;
 }
 
@@ -801,7 +801,7 @@
 }
 
 .secondaryContextButtonStateFocus {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 2px;
 }
 
