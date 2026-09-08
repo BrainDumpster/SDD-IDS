@@ -184,6 +184,16 @@ Outputs (item): `onChange(checked)` / `checkedChange`.
   - `Tab` focus traversal,
   - `Space` toggles.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 - If both `checked` and `defaultChecked` provided, controlled `checked` wins.
 - If `indeterminate=true` and `checked=true`, indeterminate visual takes precedence until next explicit change.

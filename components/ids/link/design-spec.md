@@ -179,6 +179,16 @@ Variant matrix:
 - [ ] Icon colors for all 12 state/type cells match the icon color matrix from node `43478:105167`.
 - [ ] Keyboard focus-visible and activation semantics are present.
 - [ ] Generated code remains framework-agnostic and token-driven.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/pop-up-square-corner-big.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named `IdsIcon` in this spec. |
+
+
 ## Source Mapping
 - Component map entry found at `data/component-figma-map.json` for Link points to legacy exploratory node `11067-54506`.
 - This spec intentionally uses IDS Design Library authoritative node:

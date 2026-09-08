@@ -241,6 +241,16 @@ All validation checklist items verified and passing as of 2026-07-09.
 - **Collapsed rail padding** — Datagrid rail: `var(--spacing-space-16, 16px) var(--padding-padding-12, 12px)` (toggle top-aligned); page rail: `var(--padding-padding-12, 12px)` (toggle bottom-aligned).
 - **Host border overlap** — Wrap the panel in `margin: -1px -1px -1px 0` so the panel border collapses onto the host border into a single `1px` line (Figma `space-minus-1`); left edge retains its `1px` as the divider against host content.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 - Component map baseline:
   - `data/component-figma-map.json` -> component `"Detail Panel"` (legacy exploration node)

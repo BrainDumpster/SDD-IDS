@@ -908,6 +908,22 @@ See **Interactions → Accessibility** + Slider IDS/Synapse contract.
 
 Toolbar icons: `search-16`, `arrow-drop-tri-caret`, `state-add-circ-solid`, `ctrl-minimize-16`, `shape-plus`, `arrow-reset`, `full-screen`, `save-disk`, `photos` (minimap).
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | Cited `components/synapse/button/design-spec.md`.; Named `IdsButton` in this spec. |
+| component | `detail-panel` (`IdsDetailPanel`) | optional | Cited `components/synapse/detail-panel/design-spec.md`. |
+| component | `dropdown-single-select` (`IdsDropdownSingleSelect`) | optional | Cited `components/synapse/dropdown-single-select/design-spec.md`. |
+| component | `search` (`IdsSearch`) | required | Cited `components/synapse/search/design-spec.md`. |
+| component | `slider` (`IdsSlider`) | optional | Cited `components/synapse/slider/design-spec.md`. |
+| component | `tag` (`IdsTag`) | optional | Cited `components/synapse/tag/design-spec.md`. |
+| component | `tooltip` (`IdsTooltip`) | required | Cited `components/synapse/tooltip/design-spec.md`.; Named `IdsTooltip` in this spec. |
+
+
 ### Fallback/error rules
 
 - Unknown `edgeType` → `connectedTo`.

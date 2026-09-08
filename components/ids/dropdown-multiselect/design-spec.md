@@ -254,6 +254,17 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Checkbox glyphs: `shape-check-checkbox`, `shape-dash-thick`.
 - Badge + tooltip are component dependencies, not duplicated custom visuals.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `badge` (`IdsBadge`) | required | Cited `components/ids/badge/design-spec.md`.; Declared as Badge dependency. |
+| component | `checkbox` (`IdsCheckbox`) | required | Cited `components/ids/checkbox/design-spec.md`.; Declared as Checkbox dependency. |
+| component | `tooltip` (`IdsTooltip`) | required | Cited `components/ids/tooltip/design-spec.md`.; Declared as Tooltip dependency.; Named `IdsTooltip` in this spec. |
+
+
 ### Fallback/error rules
 - Unknown `size` -> `large`.
 - Missing/empty options -> empty option list, no crash.

@@ -261,6 +261,15 @@ DashboardRoot
 
 No Dashboard-owned assets. Nested Card icons / kebab follow Card design-spec.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `card` (`IdsCard`) | required | Cited `components/ids/card/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 | Condition | Behavior |

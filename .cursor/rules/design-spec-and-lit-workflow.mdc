@@ -55,6 +55,7 @@ For each `components/ids/<slug>/design-spec.md` (IDS) or `components/synapse/<sl
 - Behavior contract (state transitions, timers, triggers, close/open logic).
 - Accessibility contract (roles, aria attributes, keyboard behavior).
 - Asset resolution + bundling contract (icons/images/fonts if used).
+- **Component dependencies (codegen)** table (assets and/or named peers — or explicit none; every component).
 - Fallback/error rules for unknown variants, missing tokens, missing assets.
 - Validation checklist with pass/fail items suitable for automated codegen QA.
 

@@ -206,6 +206,17 @@ See **Interactions → Accessibility**.
 - Prefer shared `Icon` primitive with `variant="img"` for full-color status glyphs (`status-ok-circ-solid`, `status-warn-tri-solid`, `status-critical-square-solid`).
 - Unknown slug: omit icon slot; still render helper text.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `helper` (`IdsHelper`) | required | React lib composes `IdsHelper` + `IdsIcon` for status helper row. |
+| component | `icon` (`IdsIcon`) | required | Helper status icons (success/warning/error) via shared Icon. |
+
+
 ### Fallback/error rules
 - Unknown `type` → `inline`
 - Unknown `thickness` → `medium`

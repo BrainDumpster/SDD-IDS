@@ -288,6 +288,15 @@ See **Interactions → Accessibility**. Minimum: dialog labeling, expanded on tr
 | Column arrows | `arrow-tri-down-solid` | 10×10; rotate 180° for up |
 | Error icon | `status-critical-square-solid` | `variant="img"` |
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `date-and-time-picker` (`IdsDateAndTimePicker`) | optional | Cited `components/ids/date-and-time-picker/design-spec.md`. |
+
+
 ### Fallback/error rules
 | Scenario | Behavior |
 |---|---|

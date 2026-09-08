@@ -214,6 +214,16 @@ See **Interactions → Accessibility**.
 ### Asset resolution + bundling contract
 When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 - Unknown variant or state → fall back to the documented default variant.
 - Missing required content → validation error at codegen boundary (do not silently omit required slots).

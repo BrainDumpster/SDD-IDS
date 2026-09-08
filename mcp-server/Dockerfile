@@ -8,6 +8,7 @@ COPY mcp-server/package.json mcp-server/package-lock.json* ./
 RUN npm ci
 
 COPY mcp-server/tsconfig.json mcp-server/server.ts ./
+COPY mcp-server/lib ./lib
 RUN npm run build && npm prune --omit=dev
 
 FROM node:20-alpine AS runner

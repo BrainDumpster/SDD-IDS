@@ -211,6 +211,16 @@ Validation checklist:
 - [ ] Accessibility attributes/keyboard close behavior are present.
 - [ ] No missing variable references against `components/ids-theme.css`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `app-launcher` (`IdsAppLauncher`) | optional | Cited `components/ids/app-launcher/design-spec.md`. |
+| component | `masthead` (`IdsMasthead`) | optional | Cited `components/ids/masthead/design-spec.md`. |
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

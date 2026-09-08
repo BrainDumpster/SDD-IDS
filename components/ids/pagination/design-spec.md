@@ -288,6 +288,16 @@ Variant matrix:
 - [ ] Light/Dark states are structurally parallel and token-driven.
 - [ ] Spec defines deterministic responsive behavior for narrow containers (`width: 100%` container-driven runtime).
 - [ ] `embeddedInDatagrid` / `rootEmbedded` datagrid footer uses **top border only** on `PaginationRoot` (no left/right/bottom double-border with shell).
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<shapeName>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `datagrid` (`IdsDatagrid`) | optional | Cited `components/ids/datagrid/design-spec.md`. |
+
+
 ## Source Mapping
 - Runtime contract: `component-contracts/ids/pagination.contract.ts`
 - Reference implementation (React): `storybook/src/components/IdsPagination.tsx`

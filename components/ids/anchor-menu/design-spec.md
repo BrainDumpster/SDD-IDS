@@ -201,6 +201,16 @@ Figma `11955:229709` (`AnchorMenu-Example`):
 ### Asset resolution + bundling contract
 No image or icon assets.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 - Unknown/missing `href` disables navigation for that item.
 - Empty item list renders `nav` without crash (header optional).

@@ -163,6 +163,16 @@ Outputs (group): `onChange(value)` / `valueChange`.
   - `aria-disabled` when disabled,
   - helper/error text associated with `aria-describedby` when present.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 - If multiple radios are `checked=true` in controlled data, first checked wins; warn.
 - If no radio selected in required group, generator should support explicit validation state.

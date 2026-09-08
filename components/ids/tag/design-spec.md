@@ -178,6 +178,15 @@ Alerting `tone` values (`informational` … `critical`) apply **only** when `typ
   - [ ] alerting `tone` and `leadingIconSlug` render only for `type=read-only`
   - [ ] clickable label uses Body 2 weight 400 (not medium/500)
   - [ ] badge variant handles icon + count + label layout
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/shape-x-thick.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+
+
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Tag"`.
 - IDS design library nodes verified:

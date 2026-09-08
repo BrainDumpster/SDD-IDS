@@ -264,6 +264,16 @@ Contract mirror: `component-contracts/ids/spinner.contract.ts`
 - [ ] Motion pass: default `900ms linear infinite`; reduced motion `>=1800ms linear infinite`.
 - [ ] Layout pass: small inline label and medium stacked label spacing are exactly `8px`.
 - [ ] Fallback pass: invalid `size|mode|label|labelVisibility` values resolve using declared defaults.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4` (`IDS-Design-Library`)
 - Primary usage frame: node `11099:58972` (three side-by-side spinners + labels)

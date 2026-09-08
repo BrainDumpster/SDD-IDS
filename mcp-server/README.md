@@ -1,16 +1,169 @@
 # SDD-IDS Centralized MCP Server
 
-Internal engineering playbook for the network-hosted [Model Context Protocol](https://modelcontextprotocol.io/) server. It exposes design-system tools backed by this repository on **GitHub Enterprise Server (GHES)**.
+Internal engineering playbook for the network-hosted [Model Context Protocol](https://modelcontextprotocol.io/) server. It exposes design-system **context and documentation** tools backed by this repository on **GitHub Enterprise Server (GHES)**.
+
+**Scope:** design specs, tokens, states, principles, Composition & API, and Storybook Docs usage examples. This server does **not** generate component code — the IDE AI agent generates code using MCP context.
+
+**Consumer docs:** [`USER_GUIDE.md`](./USER_GUIDE.md) · Agent skill: [`.cursor/skills/ids-design-mcp/SKILL.md`](../.cursor/skills/ids-design-mcp/SKILL.md) · Rule: [`.cursor/rules/ids-design-mcp.mdc`](../.cursor/rules/ids-design-mcp.mdc)
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
 | `/mcp` | `POST` | MCP Streamable HTTP transport (tool calls) |
 | `/health` | `GET` | Liveness + GHES configuration check |
 
+### MCP Resources
+
+| URI | Description |
+|-----|-------------|
+| `sdd://programmes` | Programme folders under `components/` |
+| `sdd://documentation/{programme}/components` | Component slug list |
+| `sdd://documentation/{programme}/components/{slug}` | Full design-spec (IDS baseline when applicable) |
+| `sdd://documentation/{programme}/foundations/{category}` | Foundation sections from root-spec |
+
+**Version pin:** server `GITHUB_REF` (live GitHub fetch). No `refresh_cache` tool.
+
+## MCP Tool / API Reference
+
+Shared parameters (unless noted):
+
+| Param | Default | Notes |
+|-------|---------|-------|
+| `programme` | `"ids"` | Case-sensitive folder under `components/` (`ids`, `synapse`, `DAP`, …) |
+| `componentName` | — | Slug folder under `components/<programme>/` |
+| `framework` | `"react"` | `react` \| `angular` (Storybook / Docs lookup) |
+
 | Tool | Description |
 |------|-------------|
-| `list_components` | Discovers UI component slugs under `components/<programme>/` |
-| `get_component_context` | Full component deliverable bundle (see table below) |
+| `discover_design_system` | Catalogue programmes, doc categories, and available MCP tools |
+| `list_components` | List component slugs for a programme |
+| `search_registry` | Find components by name across programmes + inheritance mappings |
+| `get_lib_generation_context` | **Fail-closed lib/ codegen pack** (spec + filtered theme tokens + contracts + deps) |
+| `resolve_component_dependencies` | Spec-declared assets/peers + lib/spec existence |
+| `get_design_spec` | Full component `design-spec.md` (IDS baseline included for non-IDS) |
+| `get_design_spec_section` | Extract named `##` section(s) from design-spec (aliases supported) |
+| `get_composition_api` | Composition & API + Anatomy from design-spec |
+| `get_component_states` | Light/Dark state matrices from design-spec |
+| `get_component_tokens` | Tokens + Layout & Measurements from design-spec |
+| `get_foundation_tokens` | Programme-wide foundations from root-spec (+ optional theme CSS slice) |
+| `get_design_principles` | Global rules: identity, interaction, a11y, theming, codegen baseline |
+| `get_usage_examples` | Storybook Docs (`*.developer-usage.*`); falls back to Storybook story |
+| `get_component_context` | Large exploratory bundle. Prefer `get_lib_generation_context` for lib codegen |
+
+### Preferred agent call order
+
+**Pixel-perfect `lib/` generation (e.g. Implement Button using IDS Design)**
+
+1. `get_lib_generation_context` — programme + componentName + framework
+2. If blockers / `ok: false` → stop; do not invent tokens
+3. Generate under `lib/react|angular/<programme>/<slug>/` using only returned CSS variables and spec
+
+**IDE docs / API lookup**
+
+1. `discover_design_system` or `search_registry` / `list_components`
+2. `get_composition_api` — props, events, composition tree
+3. `get_usage_examples` — Storybook Docs usage guides
+
+### Tool details
+
+#### `discover_design_system`
+
+**Parameters:** `programme` (optional, default `ids`)
+
+**Returns:** JSON with programmes under `components/`, documentation categories, tool names, and component count for the focus programme.
+
+#### `list_components`
+
+**Parameters:** `programme` (optional, default `ids`)
+
+**Returns:** JSON `{ programme, path, components[], count }`.
+
+#### `search_registry`
+
+**Parameters:**
+- `query` (required) — slug/name substring
+- `programme` (optional) — limit to one programme
+
+**Returns:** JSON matches with paths and inheritance baseline fields from `data/programme-inheritance-registry.json`.
+
+#### `get_design_spec`
+
+**Parameters:** `programme`, `componentName`
+
+**Returns:** Full `components/<programme>/<component>/design-spec.md`. For non-IDS programmes, also includes the resolved IDS baseline design-spec. Does **not** include root-spec, theme CSS, or Storybook.
+
+#### `get_lib_generation_context`
+
+**Parameters:** `programme`, `componentName`, `framework` (`react` \| `angular`)
+
+**Returns (fail-closed):** Closed pack for pixel-perfect `lib/` codegen:
+
+- Agent generation contract (`data/agent-generation-contract.md`)
+- Design-spec (IDS baseline + programme when inherited)
+- Root-spec(s)
+- **Filtered** theme CSS: only custom properties referenced by the design-spec, plus alias chain (e.g. `--button-control-radius` → `--corner-radius-radius-2`)
+- Extracted Codegen / Composition / Layout / Tokens / States / Interactions sections
+- Optional `component-contracts/...`
+- **Resolved dependencies** from `### Component dependencies (codegen)` (or asset-resolution fallback): `asset_only` | `use_existing` | `missing_ask_user` | `optional_missing`
+- Lib output path rules (`lib/react|angular/<programme>/<slug>/`)
+
+If design-spec, root-spec, theme, or required layout aliases are missing → error with blockers; agent must not invent values. If `dependencyAction: ask_user`, agent must ask before implementing missing **required** peers.
+
+#### `resolve_component_dependencies`
+
+**Parameters:** `programme`, `componentName`, `framework` (`react` \| `angular`)
+
+**Returns:** Spec-declared dependency report only (no invented peers). Prefer for a focused check; also included inside `get_lib_generation_context`.
+
+#### `get_composition_api`
+
+**Parameters:** `programme`, `componentName`
+
+**Returns:** Markdown with `## Composition & API (runtime)` and `## Anatomy` (plus IDS baseline for non-IDS programmes).
+
+#### `get_component_states`
+
+**Parameters:** `programme`, `componentName`
+
+**Returns:** Light/Dark state sections from design-spec.
+
+#### `get_component_tokens`
+
+**Parameters:** `programme`, `componentName`
+
+**Returns:** `## Tokens` and `## Layout & Measurements`.
+
+#### `get_design_spec_section`
+
+**Parameters:**
+- `programme`, `componentName`
+- `sections` — string or string[] (titles or aliases: `tokens`, `states`, `composition`, `layout`, …)
+
+**Returns:** Requested `##` sections; lists available headings if missing.
+
+#### `get_foundation_tokens`
+
+**Parameters:**
+- `programme` (default `ids`)
+- `category` — `color` \| `spacing` \| `typography` \| `elevation` \| `radius` \| `border` \| `opacity` \| `breakpoints` \| `all` (default)
+- `includeThemeCss` — boolean (default `true`) — append filtered `*-theme.css` custom properties
+
+**Returns:** Matching root-spec foundation sections (+ IDS baseline for non-IDS) and optional CSS slice.
+
+#### `get_design_principles`
+
+**Parameters:** `programme` (default `ids`)
+
+**Returns:** Root-spec sections: Design System Identity, Interaction Baseline, Accessibility Baseline, Theming Mechanism, Codegen Baseline Contract.
+
+#### `get_usage_examples`
+
+**Parameters:** `programme`, `componentName`, `framework` (default `react`)
+
+**Returns:** Prefer `*.developer-usage.ts|js` (Storybook Docs). If absent, Storybook companion story. Explicit error when neither exists.
+
+#### `get_component_context`
+
+Full deliverable bundle (see below). Use sparingly — prefer `get_design_spec` or section tools for smaller context windows.
 
 ### `get_component_context` deliverables
 
@@ -120,7 +273,7 @@ Uses the **same variables** as the rest of SDD-IDS (see root `.env.example`). No
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `GITHUB_HOST` | Yes | GHES hostname **without** `/api/v3` (e.g. `https://eos2git.cec.lab.emc.com`) |
+| `GITHUB_HOST` | Yes | GHES hostname **without** `/api/v3` (e.g. `https://eos2git.cec.lab.emc.com`). For **github.com** SaaS use `https://github.com` — the server maps it to `https://api.github.com`. |
 | `GITHUB_REPO` | Yes | Repository as `owner/repo` that hosts the **`components/`** tree (e.g. `EDGUI/Component-Specs` or `data-manager/SDD-IDS`). **Not** `ids-content` unless `components/ids/` exists there. |
 | `GITHUB_PERSONAL_ACCESS_TOKEN` | Yes* | PAT with **repo read** / Contents read access |
 | `GITHUB_REF` | No | Branch/tag/SHA for Contents API (`main` when unset; empty = repo default) |
@@ -390,7 +543,15 @@ Add to project `.cursor/mcp.json` (use `localhost` for local dev):
 Reload MCP servers in Cursor, then try:
 
 ```text
-Use sdd-ids-design-spec: call list_components for programme "ids"
+Use sdd-ids-design-spec: call list_components (programme defaults to ids)
+```
+
+```text
+Call get_composition_api for componentName "accordion"
+```
+
+```text
+Call get_usage_examples for componentName "accordion", framework "react"
 ```
 
 ```text
@@ -433,7 +594,7 @@ When Inspector starts it prints a URL with `MCP_PROXY_AUTH_TOKEN=...` — **use 
 
 **If you see `Cannot POST /register` or `Invalid OAuth error response`:** the client tried OAuth against this server. Clear OAuth settings, use Streamable HTTP with no auth, and connect via the Inspector **proxy** URL (port **6274**), not by pointing a browser OAuth flow at port **3000** directly.
 
-**Step 4 — Run tools:** Tools tab → `list_components` or `get_component_context` → submit JSON → Run.
+**Step 4 — Run tools:** Tools tab → try `discover_design_system`, `get_composition_api`, `get_usage_examples`, or `get_component_context` → submit JSON → Run.
 
 **CLI mode** (no browser UI):
 
@@ -478,8 +639,16 @@ Repeat the health check and Cursor / Inspector steps against `http://localhost:3
 |-------|------------------|---------------|
 | Server starts | `npm run dev` | No `FATAL` in logs |
 | GHES config | `curl http://localhost:3000/health` | `githubEnterprise` block populated |
-| List components | `list_components` → `{ "programme": "ids" }` | JSON list of component slugs |
-| Component context | `get_component_context` → `{ "programme": "ids", "componentName": "button" }` | Markdown with design spec + theme CSS |
+| Discover | `discover_design_system` → `{}` or `{ "programme": "ids" }` | Programmes + tool catalogue |
+| List components | `list_components` → `{}` (defaults to ids) | JSON list of component slugs |
+| Composition API | `get_composition_api` → `{ "componentName": "accordion" }` | Composition & API + Anatomy |
+| States | `get_component_states` → `{ "componentName": "accordion" }` | Light/Dark state matrices |
+| Tokens | `get_component_tokens` → `{ "componentName": "accordion" }` | Tokens + layout measurements |
+| Foundations | `get_foundation_tokens` → `{ "category": "color" }` | Root-spec color system (+ CSS slice) |
+| Principles | `get_design_principles` → `{}` | Global design rules |
+| Usage examples | `get_usage_examples` → `{ "componentName": "accordion" }` | developer-usage / Storybook Docs |
+| Search | `search_registry` → `{ "query": "accordion" }` | Cross-programme matches |
+| Component context | `get_component_context` → `{ "componentName": "button" }` | Full design spec + theme CSS |
 | Programme inheritance | `get_component_context` → `{ "programme": "synapse", "componentName": "modal" }` | IDS baseline + programme sections |
 
 > The server is **read-only** against GHES — local testing fetches spec files only; it does not modify the repository.
@@ -547,7 +716,7 @@ The MCP server does **not** generate code itself — it supplies the authoritati
 
 ### Golden rule
 
-> Always call `get_component_context` for every component you plan to implement or modify. Never codegen from memory or stale local files when the centralized server is available.
+> Prefer section tools (`get_composition_api`, `get_component_states`, `get_component_tokens`, `get_usage_examples`) before `get_component_context`. Never codegen from memory or stale local files when the centralized server is available. This MCP does not generate code.
 
 ---
 
@@ -751,16 +920,19 @@ DAP wrapper per the spec's shared implementation notes.
 | Step | Action | MCP tool |
 |------|--------|----------|
 | 1 | Confirm programme folder name (`ids`, `synapse`, `DAP`) | — |
-| 2 | Discover slugs if unknown | `list_components` |
-| 3 | Fetch spec bundle per component | `get_component_context` |
-| 4 | For pages/compositions, repeat step 3 for **every** primitive used | `get_component_context` × N |
+| 2 | Discover slugs if unknown | `list_components` / `search_registry` |
+| 3 | Fetch API + states + tokens (prefer over full bundle) | `get_composition_api`, `get_component_states`, `get_component_tokens` |
+| 4 | Fetch usage Docs when needed | `get_usage_examples` |
+| 5 | Full bundle only when required | `get_component_context` |
+| 6 | For pages/compositions, repeat steps 3–5 for **every** primitive used | section tools × N |
 | 5 | Implement using `var(--...)` from returned theme CSS | — |
 | 6 | Validate against Storybook companion in the MCP response | — |
 
 ### Tips for compositions
 
-- **One MCP call per component** — there is no `get_page_context` tool; compose by aggregating multiple `get_component_context` results.
-- **Fetch programme root-spec once** — it is included in every `get_component_context` response for that programme; reuse token naming rules across components on the same page.
+- **Prefer section tools** — avoid loading full theme CSS via `get_component_context` unless necessary.
+- **One MCP call set per component** — there is no `get_page_context` tool; compose by aggregating multiple tool results.
+- **Fetch programme principles / foundations once** — reuse across components on the same page.
 - **Prefer existing implementations** — the Storybook companion section points to reference `.stories.tsx` / `.stories.ts` files; wrap and compose rather than duplicating primitives.
 - **Match `framework`** — pass `"angular"` when generating `storybook-angular` code, `"react"` (default) for `storybook/`.
 - **Non-IDS programmes** — always read the IDS baseline sections first, then programme deltas, per `design-spec-programme-inheritance`.

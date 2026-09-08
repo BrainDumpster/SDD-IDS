@@ -313,6 +313,17 @@ See **Interactions → Accessibility**. Focus order when New Chat present: New C
 ### Asset resolution + bundling contract
 Icons via shared `Icon` + `assets/icons/<slug>.svg`. Spec slugs: `shape-plus`, `home`, `light-bulb`, `grid-square-9`, `star-fav`, `time-clock`, `folder-closed`, `chev-right-thick`, `chev-down-thick`, `double-chev-left`, `double-chev-right`, **`overflow-menu-dots`** (secondary context trigger).
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `dropdown-combo-box` (`IdsDropdownComboBox`) | optional | Cited `components/synapse/dropdown-combo-box/design-spec.md`. |
+| component | `main-menu-left` (`IdsMainMenuLeft`) | optional | Cited `components/ids/main-menu-left/design-spec.md`. |
+
+
 ### Fallback/error rules
 - Unknown `state` → `default`
 - `defaultSelectedItemId` not matching any primary id → no initial selection

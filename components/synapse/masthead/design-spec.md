@@ -283,6 +283,16 @@ Inherits IDS. Menu triggers must set `aria-expanded`; menu popups use appropriat
 
 Icons via `assets/icons/<slug>.svg` through shared `Icon` component (`variant="mask"` default). Masthead owns no bundled assets.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `app-shell` (`IdsAppShell`) | optional | Cited `components/synapse/app-shell/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 Inherits IDS fallback rules from [`ids/masthead/design-spec.md`](../ids/masthead/design-spec.md#fallbackerror-rules).

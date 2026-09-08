@@ -73,10 +73,28 @@ Reference implementations: `components/ids/alert/design-spec.md`, `components/id
 - `### Behavior contract`
 - `### Accessibility contract`
 - `### Asset resolution + bundling contract`
+- `### Component dependencies (codegen)` — **required for every component** (see below)
 - `### Fallback/error rules`
 - `### Validation checklist` (pass/fail checkboxes)
 
 Replace cross-refs with concrete contracts before **Status: active**.
+
+### Component dependencies (codegen) (all components)
+
+Machine-readable dependency list for MCP (`resolve_component_dependencies` / `get_lib_generation_context`). Policy: **spec-declared only** — no invented peers.
+
+| Kind | Meaning |
+|------|---------|
+| `asset` | Slug/path (e.g. `iconSlug` → `/asset/icons/<slug>.svg`). Implement inside this component **or** via a named Icon peer if a `component` row exists. |
+| `component` | Named peer (e.g. `button` (`IdsButton`), `icon` (`IdsIcon`), `tooltip` (`IdsTooltip`)). Import if `lib/` exists; ask user if required and missing. |
+
+**Composites (examples):** Dual List Box declares **button + icon** for transfer controls and optional **tooltip**; Modal declares **button** for footer; Datagrid declares checkbox/date-picker/pagination/etc. An asset-only row is **not** enough when the Codegen Contract says “compose IDS Button / Icon”.
+
+If the component has neither assets nor peers, keep the heading and an empty table (or explicit “none” note) — do not omit the subsection.
+
+Backfill/enrich: `scripts/backfill_component_dependencies.py`, `scripts/enrich_component_dependencies.py` (peers only from `components/.../design-spec.md` citations or known compose IDS names — no prose guessing).
+
+Reference: `components/ids/dual-list-box/design-spec.md`, `components/ids/button/design-spec.md`, `data/agent-generation-contract.md` §5a.
 
 ## Live Figma verification (mandatory)
 

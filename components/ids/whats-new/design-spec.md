@@ -757,6 +757,18 @@ Reference implementation: `lib/react/ids/whats-new/IdsWhatsNew.tsx` (root is `Wh
 
 Resolve from `assets/icons/<slug>.svg` via project `Icon` component. Do **not** substitute `chev-left-thick` / `chev-right-thick` — Figma preview uses **`chev-left`** / **`chev-right`** (`27437:44200`, `27437:44213`).
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | Cited `components/ids/button/design-spec.md`.; Named `IdsButton` in this spec. |
+| component | `modal` (`IdsModal`) | optional | Cited `components/ids/modal/design-spec.md`. |
+| component | `toggle-switch` (`IdsToggleSwitch`) | optional | Cited `components/ids/toggle-switch/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Missing `sections` and no `WhatsNewSection` children → empty list (main header/footer intact).

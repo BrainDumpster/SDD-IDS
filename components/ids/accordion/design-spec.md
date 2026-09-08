@@ -202,6 +202,16 @@ Use this section whenever codegen targets a stack that already ships an **Icon**
 
 **IDS / Storybook reference implementation**
 - `Icon` in `storybook/src/components/Icon.tsx`: `import.meta.glob` over `assets/icons/*.svg`, default **`variant` `mask`**, optional `variant` `img` for full-color glyphs. Accordion uses **`Icon` + `shapeName="chev-down-thick"`** + mask tint pattern (`color` + `background-color: currentColor` on the slot class). See `IdsAccordion.tsx` / `IdsAccordion.module.css`.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/chev-down-thick.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

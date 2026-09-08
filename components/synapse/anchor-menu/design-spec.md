@@ -169,6 +169,16 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 
 No image assets.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 - Missing `href` → disable navigation for that item (render as `span` or `aria-disabled` link).

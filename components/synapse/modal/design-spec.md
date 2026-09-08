@@ -113,6 +113,16 @@ Generators **must** emit `border-radius: var(--modal-control-radius)` on the mod
 - [x] Storybook `Spec Generated/Synapse/Modal` + `Spec Generated/Synapse/Modal/Dialog` load `components/synapse-theme.css`
 - [x] Dialog examples mirror IDS (`NonAlerting` … `Destructive`, single-page, multi-page)
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 
 | Property | Value |

@@ -196,6 +196,17 @@ Runtime rules:
   - badge count tokenized with alert colors.
 - Unknown icon slug fallback: hide icon slot and keep text label/badge.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `/assets/icons/<iconSlug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | `TabClose` — tertiary icon-only `IdsButton` (`ctrl-close-16`). |
+| component | `icon` (`IdsIcon`) | required | Close glyph + optional tab leading icons via shared Icon / `IdsIcon`. |
+
+
 ### Fallback/error rules
 - Unknown `type` (or `variant`) falls back to `secondary`.
 - Missing `activeItemId` falls back to first non-disabled item.

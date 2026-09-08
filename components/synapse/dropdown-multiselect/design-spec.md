@@ -141,6 +141,15 @@ Inherit IDS listbox + checkbox option pattern, `aria-multiselectable`, keyboard 
 
 Inherit IDS caret, search icon, and checkbox CSS indicators.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `dropdown-single-select` (`IdsDropdownSingleSelect`) | required | Cited `components/ids/dropdown-single-select/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown size and empty selection rules.

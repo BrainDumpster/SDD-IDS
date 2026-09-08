@@ -303,6 +303,16 @@ Validation checklist:
 - [ ] Cancel/Previous/Next/Finish emit typed events.
 - [ ] Primary action disabled state is respected.
 - [ ] Modal and inline mode + all sizes render correctly.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

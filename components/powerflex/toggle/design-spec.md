@@ -197,6 +197,16 @@ Classes must be stable. Framework-specific wrappers (React, Angular, Vue, Lit) m
 - No image assets are required; the toggle is rendered entirely with CSS geometry and semantic tokens.
 - Theme CSS `components/powerflex-theme.css` must be imported by any Storybook or application entry that renders the component.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 - If an unsupported `size` is supplied, fall back to `md`.

@@ -127,6 +127,16 @@ Inherit IDS slider semantics, `aria-valuemin` / `aria-valuemax` / `aria-valuenow
 
 No external icon assets; marker shapes are CSS/token primitives.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 Inherit IDS fallback rules (`mode`, `step`, `min`/`max`, invalid range values).

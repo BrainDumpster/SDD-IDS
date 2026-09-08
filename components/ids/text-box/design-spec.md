@@ -175,6 +175,15 @@ Variant matrix:
   - [ ] focus-visible ring appears only when focused
   - [ ] dark theme uses same semantic tokens (no hardcoded literals)
   - [ ] unknown icon slug does not crash rendering
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+
+
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Text Box"`.
 - IDS design library source:

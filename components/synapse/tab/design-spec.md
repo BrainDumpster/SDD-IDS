@@ -304,6 +304,16 @@ See **Interactions → Accessibility**.
 | `star-fav` | Sample favorite icon |
 | In-progress slug | Per `52922:70466` |
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `/asset/icons/<iconSlug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `dropdown-combo-box` (`IdsDropdownComboBox`) | optional | Cited `components/synapse/dropdown-combo-box/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Unknown `type` → `Tab`.

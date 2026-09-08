@@ -199,6 +199,16 @@ See **Interactions → Accessibility**.
 
 Status icons via shared `Icon` + `assets/icons/`. Same slugs as [`node/design-spec.md`](../node/design-spec.md) status table.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `tooltip` (`IdsTooltip`) | required | Cited `components/synapse/tooltip/design-spec.md`.; Named `IdsTooltip` in this spec. |
+| component | `topology` (`IdsTopology`) | optional | Cited `components/synapse/topology/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Missing `title` → validation error.

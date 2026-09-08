@@ -116,6 +116,15 @@ Inherit IDS `aria-expanded`, `aria-controls`, `role="region"`, keyboard model.
 
 Inherit IDS `chev-down-thick` slug via shared `Icon` primitive.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown chevron/variant, duplicate `value` warnings.

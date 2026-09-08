@@ -247,6 +247,16 @@ Inherit IDS behavior, accessibility, asset, and fallback contracts. Additionally
 - [x] `synapse-theme.css` + reference impl + Storybook
 - [ ] Visual regression for Custom View / Workspaces (manual)
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 
 | Property | Value |

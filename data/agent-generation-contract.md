@@ -48,6 +48,38 @@ Generated component must include:
 - Required API props/events/defaults are implemented
 - Unknown variant/size fallback behavior is implemented
 - Missing asset behavior is implemented
+- Cross-component dependencies follow **spec-declared only** (section 5a)
+
+## 5a) Cross-component dependencies (spec-declared only)
+
+Agents must not invent peer-component requirements.
+
+1. Read Composition & API, Codegen Contract, and asset-resolution sections of the layered specs.
+2. **Assets** (icon/image slug → file path, render mode, missing-asset fallback): implement per that contract inside the requested component. An asset reference is not permission to invent or require another component.
+3. **Named components** (explicit import, projection of a named IDS/programme component, or `dependsOn`-style declaration in the spec):
+   - If the peer already exists in the target lib → import / refer; do not reimplement.
+   - If the peer is required by the spec but missing in lib → stop and ask the caller (implement together, defer, or keep slot-only). Do not guess.
+4. Suspected dependencies that are **not** written in the pack → ask once; do not add unilaterally.
+5. Spec authors: **every** design-spec must include **`### Component dependencies (codegen)`** (assets, named peers, or explicit none). Undeclared peers are out of scope for generation.
+
+### Component dependencies (codegen) — authoring format
+
+Add this subsection under **Codegen Contract** (or immediately after Asset resolution):
+
+```markdown
+### Component dependencies (codegen)
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `/asset/icons/<iconSlug>.svg` | optional | Mask; unknown slug hides icon |
+| component | `icon` (`IdsIcon`) | optional | Project into leading-icon slot when host chooses |
+```
+
+Rules:
+- `Kind` is only `asset` or `component`.
+- MCP resolves `component` rows against `components/<programme>/<slug>/design-spec.md` and `lib/<framework>/<programme>/<slug>/`.
+- Resolutions: `asset_only` | `use_existing` | `missing_ask_user` | `optional_missing`.
+- Free prose (e.g. “use the Icon component”) is **not** a declaration — use the table.
 
 ## 6) Standard Agent Prompt Template
 
@@ -69,8 +101,10 @@ Requirements:
 - Use semantic CSS variables only; do not hardcode visual values.
 - Implement interaction and accessibility contracts.
 - Apply fallback/error rules for unknown variants/sizes and missing assets.
+- Implement only peer components named in the layered specs; assets ≠ auto peer deps; ask if a named peer is missing.
 - Return framework output in structured sections:
   === COMPONENT ===
   === CSS ===   (or framework-equivalent style block)
 ```
+
 

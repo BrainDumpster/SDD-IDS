@@ -217,6 +217,15 @@ RecommendationFeedbackRoot
 
 Resolve from `assets/icons/<slug>.svg`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+
+
 ### Fallback / error rules
 
 | Condition | Behavior |

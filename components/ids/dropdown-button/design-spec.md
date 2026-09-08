@@ -476,6 +476,15 @@ IdsDropdownButton (`dropdown`)
 - Must support color changes via CSS or fill property
 - Size: 10x10px
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/settings-gear-detailed.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+
+
 ### Fallback/error rules
 
 **Missing label:**

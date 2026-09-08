@@ -214,6 +214,16 @@ Validation checklist:
 - [ ] Optional summary/page-size/jump slots do not break base layout contract.
 - [ ] `PaginationJumpToPage` uses width `52px` and `border-radius: var(--corner-radius-radius-4)`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

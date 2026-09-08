@@ -239,6 +239,15 @@ See **Interactions → Accessibility**.
 - Search: `search-16`
 - Context trigger (Left Nav): `overflow-menu-dots`
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `left-nav` (`IdsLeftNav`) | optional | Cited `components/synapse/left-nav/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Unknown `mode` → `combobox-single` (inherit IDS)

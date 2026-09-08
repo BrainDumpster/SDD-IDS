@@ -222,6 +222,16 @@ All six combinations are valid in Figma. The `scrollThumb` value is **demo-only*
 - Caret icons resolve from `assets/icons/caret-large-up-solid-full.svg` (or equivalent) through the shared `Icon` primitive.
 - If the icon is not available, the up-caret glyph is the fallback; rotate it for the other three directions.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/caret-large-up-solid-full.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 - Unknown `type` → `"vertical"`.
 - Unknown `scrollThumb` → `"start"`.

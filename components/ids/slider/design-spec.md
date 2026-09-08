@@ -221,6 +221,16 @@ Contract mirror: `component-contracts/ids/slider.contract.ts`
 - No external icon assets are required for slider rendering.
 - Marker shapes are tokenized vector/circle primitives.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 - Unknown `mode` falls back to `single`.
 - Invalid range value (wrong length or NaN) falls back to `[min, min]` then normalized.

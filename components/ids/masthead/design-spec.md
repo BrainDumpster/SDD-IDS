@@ -410,6 +410,17 @@ Production integrations MUST use host-composed `iconsSlot` instead of this defau
 - Optional app launcher integrates in `appLauncherSlot` without breaking spacing.
 - Event handlers attach to composed children, not Masthead root.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/appic-dp-cloud-blue.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `app-shell` (`IdsAppShell`) | optional | Cited `components/ids/app-shell/design-spec.md`. |
+| component | `icon` (`IdsIcon`) | required | Named `IdsIcon` in this spec.; Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 
 - Missing `logo` → product name-only brand slot.

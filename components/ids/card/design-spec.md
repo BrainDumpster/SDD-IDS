@@ -431,6 +431,16 @@ Card [data-card-size=span-1|span-2|span-3]
 | Kebab icon | `overflow-menu-dots` (Figma **`48133:233331`**) | Bundle via IDS Icon / SVG map; 16×16 in trigger; tint **`var(--color-icon-brand-base)`** |
 | Key-value icons | Per table/cell instances | Owned by Key-value / table dependency |
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 | Condition | Behavior |

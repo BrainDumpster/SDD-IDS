@@ -116,6 +116,16 @@ Inherit IDS `span` default, `ariaLabel` for ambiguous numeric values.
 
 No image assets for baseline badge.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown type → `default`, empty value warning.

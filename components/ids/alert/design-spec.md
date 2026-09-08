@@ -424,6 +424,17 @@ Code generator outputs should be reusable primitives, not one-off story/demo cod
 - [ ] Fallback/error behavior is defined for invalid `display`/severity combinations and missing optional slots.
 - [ ] Accessibility roles, labels, keyboard behavior, and live-region behavior are specified.
 - [ ] Asset contract uses canonical icon slugs and shared Icon primitive; no standalone inline SVG fallback functions (warning-minor global uses `variant="inline"` through `iconInlineRegistry.ts`, which is the shared Icon primitive — acceptable).
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<shapeName>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | Cited `components/ids/button/design-spec.md`.; Named via compose/reuse IDS Button.; Named `IdsButton` in this spec.; Named IDS Button composition/reuse in this spec. |
+| component | `icon` (`IdsIcon`) | required | Named `IdsIcon` in this spec.; Named shared Icon primitive / composition in this spec. |
+
+
 ## Source Mapping
 
 ### Storybook reference

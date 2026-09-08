@@ -151,6 +151,15 @@ Validation checklist:
 - [ ] Runtime output is deterministic for (`type`, `value`).
 - [ ] Badge remains single-line and pill-shaped.
 - [ ] No hardcoded non-token colors are introduced in generated code.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `tooltip` (`IdsTooltip`) | required | Named `IdsTooltip` in this spec. |
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

@@ -341,6 +341,16 @@ PageErrorRoot
 - `assets/icons/state-error.svg` must exist in the consuming application.
 - If `iconName` is overridden, the corresponding SVG must be bundled under `assets/icons/<iconName>.svg`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/state-error.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | Named IDS Button composition/reuse in this spec. |
+
+
 ### Fallback/error rules
 - Missing `errorName`: throw a development validation error; the component cannot render without a heading.
 - Missing `errorCode`, `probableCause`, `resolutions`, or `action`: omit the corresponding slot silently.

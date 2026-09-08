@@ -239,6 +239,18 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Error icon: `status-critical-square-solid`, 16×16px, `var(--color-icon-alerting-critical-base)`. Resolve from `assets/icons/status-critical-square-solid.svg`.
 - Optional radio visuals must follow IDS radio design-spec; no hardcoded inline SVG data URIs.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/arrow-drop-tri-caret.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+| component | `radio-button` (`IdsRadioButton`) | required | Cited `components/ids/radio-button/design-spec.md`.; Declared as Radio dependency. |
+| component | `tooltip` (`IdsTooltip`) | required | Cited `components/ids/tooltip/design-spec.md`.; Named `IdsTooltip` in this spec. |
+
+
 ### Fallback/error rules
 - Unknown `size` -> `large`.
 - Missing `options` -> empty, non-crashing menu.

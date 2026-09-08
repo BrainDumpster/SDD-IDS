@@ -338,6 +338,15 @@ See **Interactions → Accessibility**.
 ### Asset resolution + bundling contract
 Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+
+
 ### Fallback/error rules
 - Unknown `state` → `default`
 - `defaultSelectedItemId` not matching any resolved primary id → treat as **no** initial selection (no throw in reference impl.)

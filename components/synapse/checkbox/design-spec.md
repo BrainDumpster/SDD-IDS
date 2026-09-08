@@ -145,6 +145,16 @@ Inherit IDS native checkbox semantics, `aria-checked` (`true | false | mixed`), 
 
 No image assets for control indicators — CSS-only check and indeterminate dash per IDS contract. Error assistive row may use `status-critical-square-solid` icon slug per IDS implementation notes.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 Inherit IDS controlled/uncontrolled precedence, indeterminate precedence, and missing-label warning.

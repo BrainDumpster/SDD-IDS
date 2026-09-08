@@ -282,6 +282,8 @@ Emit **`DualListBoxRoot`** → **`ListsParent`** containing **`AvailablePane`**,
 
 Each pane contains **`PaneHeader`** (title + metrics) then **`ListGroup`** → `ListItem` slots as in **Anatomy**. `ListItem` child order is **`DragHandle`** → **`ItemContent`** → optional **`SelectionCheck`**. Transfer children are **`MoveAllRight`** → **`MoveSelectedRight`** → **`MoveSelectedLeft`** → **`MoveAllLeft`**.
 
+**TransferButtonGroup:** each transfer control **composes IDS Button** (`IdsButton`, `iconOnly`, size covering `16×16` icon + button padding) **and IDS Icon** (`IdsIcon` with the transfer slug). Enabled = Button primary/default; disabled = Button disabled — states from `components/ids/button/design-spec.md`. Do not invent dual-list-only button paints.
+
 Pane wrappers use `display: contents` so Header + ListGroup participate in `ListsParent` CSS grid (`header | list` rows; transfer column stays on list row 2).
 
 ### Variant matrix
@@ -306,8 +308,22 @@ Pane wrappers use `display: contents` so Header + ListGroup participate in `List
 - See **Interactions → Accessibility**; all four transfers must have discernible names.
 
 ### Asset resolution + bundling contract
-- Icons via shared Icon primitive / `assets/icons/<slug>.svg`.
+- Icons via shared Icon primitive (`IdsIcon`) / `assets/icons/<slug>.svg` (mask).
+- Transfer glyphs: `double-chev-right`, `chev-right`, `chev-left`, `double-chev-left` at `16×16`.
+- Drag handle: `arrow-arrange`; selection check: `shape-check-thick`.
 - No inline hex in generated CSS.
+
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | required (transfer + drag/check) | Slugs listed under Asset resolution / Per-slot style. |
+| component | `button` (`IdsButton`) | required | **TransferButtonGroup** — icon-only primary/disabled per `components/ids/button/design-spec.md` (compose `IdsButton` + `IdsIcon`). |
+| component | `icon` (`IdsIcon`) | required | Transfer glyphs + drag handle + selection check; mask + token/`currentColor`. |
+| component | `tooltip` (`IdsTooltip`) | optional | When `tooltipTitle` / `tooltipDescription` set — per `components/ids/tooltip/design-spec.md`. |
+
 
 ### Fallback/error rules
 - Duplicate `id` in either list → validation error at boundary.

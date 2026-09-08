@@ -131,6 +131,16 @@ Inherit IDS `role="progressbar"`, `aria-valuenow` / `aria-valuetext`, and label 
 
 Inherit IDS helper status icon slugs (`status-ok-circ-solid`, etc.). See IDS **Codegen Contract → Asset resolution**.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown `type`/`thickness`/`state` fallbacks. Programme additions:

@@ -1,0 +1,84 @@
+---
+description: Enforce IDS Design MCP tool usage for design-system / component generation requests. Ground answers on MCP docs — never invent tokens or APIs.
+alwaysApply: true
+---
+
+# IDS Design MCP — AI SDLC Rule
+
+## Purpose
+
+Ground all IDS / programme design-system answers and generated component code in documentation retrieved via the **IDS Design Spec MCP** tools. Do not answer from training memory alone. Do not invent CSS tokens, sizes, radii, colors, props, or anatomy.
+
+## When this applies
+
+A request is IDS MCP-related if it involves any of:
+
+- Implementing or generating a component under `lib/` (React/Angular) from IDS / programme design
+- Using an IDS / Synapse / DAP / PowerFlex UI component
+- Looking up design tokens, states, Composition & API, or design-spec sections
+- Asking which components exist for a programme
+
+## Required agent behavior
+
+1. Read the **ids-design-mcp** skill (`.cursor/skills/ids-design-mcp/SKILL.md`) for tool selection.
+2. Resolve `programme` (default `ids`) and `framework` (`react` | `angular`).
+3. Call the appropriate MCP tool(s) **before** generating code or definitive API/token answers.
+4. Ground the response strictly on MCP tool output.
+
+### Lib / pixel-perfect generation (mandatory)
+
+When the user asks to **implement / generate / port** a component to match IDS Design (especially `lib/react` or `lib/angular`):
+
+1. Call **`get_lib_generation_context`** with `programme`, `componentName`, `framework`.
+2. If the tool returns `ok: false` / blockers / `isError` → **STOP**. Do not invent missing tokens or geometry.
+3. If meta `dependencyAction` is `ask_user` (or **Ask user before codegen** appears) → **ask the user** before implementing missing required peers.
+4. Generate **only** from that pack (design-spec, root-spec, filtered theme CSS, contracts, lib path rules).
+5. Use `var(--…)` from the returned theme slice / spec only — no hardcoded visual values when a token exists.
+6. Do **not** use section-only tools or Storybook Docs as the sole source for lib generation.
+
+### IDE Q&A / usage docs
+
+For questions that are not full lib codegen, prefer section tools (`get_composition_api`, `get_component_states`, `get_component_tokens`, `get_usage_examples`, `get_design_spec`).
+
+### Cross-component dependencies (spec-declared only)
+
+Policy: **only dependencies named in the design-spec pack** (Composition & API / Codegen Contract / asset contract). Do not invent peer components.
+
+1. **Asset** (e.g. `iconSlug` → `/asset/icons/<slug>.svg`, mask rules, missing-asset fallback) → implement per that contract inside the requested component. An asset is **not** a requirement to implement another IDS component (e.g. Icon) unless the pack **names** that component.
+2. **Named component** (e.g. project/import `IdsIcon`, compose `IdsButton`) → treat as a dependency:
+   - Spec + matching `lib/` exists → **import / refer**; do not reimplement.
+   - Spec requires it and `lib/` is missing → **ask the user** (implement together vs defer vs slot-only). Do not guess.
+3. If the agent suspects a dependency **not** declared in the pack → **ask once**; do not add it unilaterally.
+
+### Available MCP tools (summary)
+
+| Tool | When to call |
+|------|-------------|
+| `get_lib_generation_context` | **Lib codegen** — fail-closed pack (spec + filtered tokens + contracts + deps) |
+| `resolve_component_dependencies` | Spec-declared assets/peers + lib/spec existence (`ask_user` when required peer missing) |
+| `discover_design_system` | Inventory programmes, categories, tools |
+| `list_components` | What components exist for a programme |
+| `search_registry` | Find a component across programmes / inheritance |
+| `get_design_spec` | Full design-spec.md (Q&A / review) |
+| `get_design_spec_section` | Named ## section(s) only |
+| `get_composition_api` | Props / events / composition tree |
+| `get_component_states` | Light/Dark state matrices |
+| `get_component_tokens` | Component Tokens + Layout & Measurements |
+| `get_foundation_tokens` | Programme-wide foundations / theme CSS slice |
+| `get_design_principles` | Global rules (identity, a11y, theming, codegen) |
+| `get_usage_examples` | Storybook Docs / developer-usage (not visual SoT for lib) |
+| `get_component_context` | Large exploratory bundle (prefer lib tool for codegen) |
+
+## Prohibited
+
+- Answering IDS design/API/token questions without calling MCP when the server is available
+- Inventing component props, CSS variable names, spacing, or state tables
+- Generating `lib/` code from memory or partial section tools alone
+- Hardcoding colors/spacing/radius when tokens exist in MCP output
+- Inventing peer-component dependencies not declared in the design-spec pack
+
+## Defaults
+
+- `programme`: `ids` unless the user or detection says otherwise (case-sensitive: `ids`, `synapse`, `DAP`, …)
+- `framework`: `react` unless Angular is requested
+- Spec pin: server `GITHUB_REF` (live GitHub fetch; no `refresh_cache`)

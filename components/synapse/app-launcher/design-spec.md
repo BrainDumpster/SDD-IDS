@@ -347,6 +347,16 @@ See **Interactions → Accessibility**. Programme-specific: Synapse focus uses i
 
 Resolve via shared `Icon` / `assets/icons/<slug>.svg`. Unknown slug → `shield-encrypt-alt`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `masthead` (`IdsMasthead`) | optional | Cited `components/synapse/masthead/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - If both `products` and `apps` supplied, `products` wins.

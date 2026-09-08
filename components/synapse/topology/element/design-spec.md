@@ -189,6 +189,17 @@ All `elementType` values × `default` \| `hover` \| `selected` with rules in **S
 
 Resolve icons via shared `Icon` primitive from `assets/icons/<slug>.svg`. Default slugs per **Layout & Measurements** type table.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+| component | `topology` (`IdsTopology`) | optional | Cited `components/synapse/topology/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Unknown `elementType` → `general` circle + `objects-square`.

@@ -220,6 +220,16 @@ Prop-driven `items` / `total` MUST emit this same tree. Compound children MAY re
 - Overflow left slug is `chev-left-thick`; overflow right slug is `chev-right-thick`.
 - Missing inventory `iconShapeName` resolves to `docs-bundle`. Unknown severity renders no severity icon.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named `IdsIcon` in this spec.; Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 - missing `items` -> generate mode-specific defaults.
 - missing inventory `iconShapeName` -> use `docs-bundle`.

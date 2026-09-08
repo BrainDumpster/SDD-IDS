@@ -29,3 +29,13 @@ Events: `onExpandedChange`, `onOpened`, `onClosed` (IDS parity).
 - Synapse contract: `component-contracts/synapse/detail-panel.contract.ts`
 - React reference: `storybook/src/components/SynapseDetailPanel.tsx` (re-exports IDS implementation)
 - Storybook: `storybook/src/components/SynapseDetailPanel.stories.tsx`
+
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+

@@ -241,6 +241,17 @@ Validation checklist (pass/fail):
 - [ ] Body content supports arbitrary consumer-provided content.
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
 - [ ] Layout uses `var(--tooltip-control-radius)` on `TooltipPanel`, not hardcoded px.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/ctrl-close-16.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | Closable variant — IDS tertiary icon-only close control. |
+| component | `icon` (`IdsIcon`) | required | `ctrl-close-16` via shared Icon at `12×12`. |
+
+
 ## Source Mapping
 - IDS map file: `data/component-figma-map.json` (`Tooltip` entry).
 - Showcase frame: `42636:14688` (`Tooltip`, IDS Design Library).

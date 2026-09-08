@@ -192,6 +192,15 @@ Validation checklist:
 - [ ] Close icon is `ctrl-close-16` and neutral icon tokenized.
 - [ ] Action/close events emit correctly.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `/assets/icons/ctrl-close-16.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

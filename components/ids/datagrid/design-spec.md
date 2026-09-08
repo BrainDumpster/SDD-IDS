@@ -1365,6 +1365,24 @@ Variant matrix:
   - [ ] **Grow column:** `growColumnKey` = last data column (unified) or last **scrollable** data column (freeze); sole `<col width="auto">` in that slice; settings **`40px`** in dedicated pane (freeze) or trailing chrome (unified); selection/settings **`th`** = **48**/**40**.
   - [ ] **Header ellipsis:** title `display: block` + `text-overflow: ellipsis`; `title` attribute on truncated labels.
   - [ ] **Body padding:** `10px 12px 10px 16px` on data cells; settings body **`12px 0`** (Figma `37721:114944`); selection body **`12px 16px`**.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/*.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `checkbox` (`IdsCheckbox`) | required | Cited `components/ids/checkbox/design-spec.md`. |
+| component | `date-picker` (`IdsDatePicker`) | required | Cited `components/ids/date-picker/design-spec.md`. |
+| component | `detail-panel` (`IdsDetailPanel`) | optional | Cited `components/ids/detail-panel/design-spec.md`. |
+| component | `dropdown-combo-box` (`IdsDropdownComboBox`) | optional | Cited `components/ids/dropdown-combo-box/design-spec.md`. |
+| component | `dropdown-single-select` (`IdsDropdownSingleSelect`) | required | Cited `components/ids/dropdown-single-select/design-spec.md`. |
+| component | `pagination` (`IdsPagination`) | optional | Cited `components/ids/pagination/design-spec.md`. |
+| component | `radio-button` (`IdsRadioButton`) | required | Cited `components/ids/radio-button/design-spec.md`. |
+| component | `text-box` (`IdsTextBox`) | required | Cited `components/ids/text-box/design-spec.md`. |
+| component | `time-picker` (`IdsTimePicker`) | required | Cited `components/ids/time-picker/design-spec.md`. |
+
+
 ## Source Mapping
 - Component map baseline:
   - `data/component-figma-map.json` -> Datagrid legacy exploration entry.

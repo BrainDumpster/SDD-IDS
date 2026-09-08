@@ -205,6 +205,16 @@ Validation checklist (pass/fail):
 - [ ] Thumb moves via transform, no layout shift.
 - [ ] Disabled mode blocks toggles and emits no change event.
 - [ ] Generated output avoids hardcoded design values when semantic tokens exist.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ## Source Mapping
 - Map file: `data/component-figma-map.json`
 - Map entry: component `Toggle Switch`, category `Formelements`, node `42848-100536`

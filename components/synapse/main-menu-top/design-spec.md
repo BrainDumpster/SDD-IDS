@@ -193,6 +193,17 @@ See **Interactions → Accessibility**; full keyboard navigation required.
 
 Icons via shared Icon primitive / `assets/icons/<slug>.svg`. Token-only colors.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `dropdown-single-select` (`IdsDropdownSingleSelect`) | optional | Cited `components/synapse/dropdown-single-select/design-spec.md`. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 
 Inherit IDS fallback rules (duplicate `id`, unknown `size` → `Large`, chevron-only when `dropdown` without `menuOptions`, etc.).

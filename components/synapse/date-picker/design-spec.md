@@ -143,6 +143,15 @@ Inherit IDS label association, `aria-expanded`, grid roving tabindex, and focus 
 
 Inherit IDS calendar/navigation icon slugs via shared Icon primitive. See IDS **Codegen Contract → Asset resolution**.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 
 Inherit IDS invalid date and out-of-range handling. Programme additions:

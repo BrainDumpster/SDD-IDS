@@ -139,6 +139,15 @@ Inherit IDS roles, `aria-*`, dismiss ≥32×32, carousel labeling.
 
 Inherit IDS status icon slug map, `Icon` primitive usage, `warning-minor` inline registry pattern.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown severity/density, `success` on global rejection, carousel on inline error.

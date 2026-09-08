@@ -183,6 +183,15 @@ Validation checklist:
 - [ ] Inputs/outputs are explicit and deterministic.
 - [ ] Source mapping includes live verification nodes and method.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ## Source Mapping
 | Source | Location |
 |---|---|

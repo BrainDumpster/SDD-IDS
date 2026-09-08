@@ -146,6 +146,16 @@ Inherit IDS radiogroup semantics, arrow keys, `aria-checked`, root labeling.
 
 Inherit IDS slug → `assets/icons/<slug>.svg` and custom `IconSlot` rules. Reference slugs: `view-hamburger`, `nav-tree`, `view-sort-grid-solid`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `segmented-button` (`IdsSegmentedButton`) | required | Cited `components/ids/segmented-button/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 Inherit IDS invalid count, missing slug, duplicate `value`, and missing label/icon warnings.

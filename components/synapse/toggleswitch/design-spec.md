@@ -119,6 +119,15 @@ Inherit IDS checkbox/switch semantics, label association, accessible name requir
 
 No image assets required for baseline toggle rendering.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `toggle-switch` (`IdsToggleSwitch`) | required | Cited `components/ids/toggle-switch/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown size fallback, missing accessible name error, controlled mode without handler warning.

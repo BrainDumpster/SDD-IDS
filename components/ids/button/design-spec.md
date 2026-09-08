@@ -217,22 +217,15 @@ Variant matrix:
   - Icon input uses slug: `iconSlug`.
   - Resolve icon from `/asset/icons/<iconSlug>.svg`.
   - Unknown slug fallback: hide icon slot and continue rendering label.
-- Fallback/error rules:
-  - Unknown `variant` -> `primary`.
-  - Unknown `size` -> `large`.
-  - `iconOnly=true` and missing `ariaLabel` -> validation error.
-  - `iconOnly=true` and missing `iconSlug` -> validation error.
-  - `iconOnly=true` with `size=small` -> validation error (or coerce to `medium` only if product explicitly enables coercion).
-- Validation checklist:
-  - [ ] All variant x size x state combinations resolve tokenized styles.
-  - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
-  - [ ] Aliases defined in `components/ids-theme.css` (both light and dark selectors) and documented in Tokens — **grep theme file before marking ready**.
-  - [ ] Focus ring uses `::after` + `var(--button-focus-ring-radius)`; **no** CSS `outline` / `outline-offset` on the control or in StateHarness demos.
-  - [ ] Programme fork deltas list alias overrides when values differ (Synapse/DAP).
-  - [ ] Icon slug path resolution works and gracefully handles missing slugs.
-  - [ ] Disabled/loading modes prevent output events.
-  - [ ] Keyboard and pointer activation parity is preserved.
-  - [ ] Light/Dark tables remain structurally parallel.
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `/asset/icons/<iconSlug>.svg` | optional (required when `iconOnly=true`) | Mask render; unknown slug hides icon. Do **not** treat as `IdsIcon` unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named `IdsIcon` in this spec. |
+
 
 ## Storybook proof & codegen consumers
 

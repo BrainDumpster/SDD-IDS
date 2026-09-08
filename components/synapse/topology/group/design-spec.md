@@ -275,6 +275,16 @@ See **Interactions → Accessibility**.
 
 `cluster-badge`, `info-circ`, `minimize` via `Icon` primitive.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+| component | `topology` (`IdsTopology`) | optional | Cited `components/synapse/topology/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Empty group → hide border; show label only or placeholder per parent policy.

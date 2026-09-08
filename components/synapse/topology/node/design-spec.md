@@ -408,6 +408,17 @@ See **Interactions → Accessibility**.
 
 Resolve icon slugs via shared `Icon` from `assets/icons/`. Status and element icons cited in **Tokens** table.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `/asset/icons/<iconSlug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+| component | `topology` (`IdsTopology`) | optional | Cited `components/synapse/topology/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 - Unknown `elementType` → `general` circle shell.

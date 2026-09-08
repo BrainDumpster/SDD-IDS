@@ -254,6 +254,17 @@ Emit **`MainMenuTopRoot`** (`nav`) → **`MainMenuTopBar`** → repeat **`MainMe
 - Icons via shared Icon primitive / `assets/icons/<slug>.svg`.
 - No inline hex in generated CSS.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `dropdown-single-select` (`IdsDropdownSingleSelect`) | required | Cited `components/ids/dropdown-single-select/design-spec.md`.; Named via compose/reuse IDS Dropdown. |
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 - Duplicate `id` → validation error at boundary.
 - Missing `name` → use `id` as accessible name.

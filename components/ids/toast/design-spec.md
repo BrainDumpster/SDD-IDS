@@ -186,6 +186,17 @@ Resolution rules:
 - Keyboard: tab to view details/close; `Escape` dismisses the active toast when any focusable control inside it has focus.
 - Toast container is not keyboard-focusable; only the view-details and close controls receive focus.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons` | optional | From existing Resolve…from path in this spec. |
+| component | `button` (`IdsButton`) | required | Close + View Details — IDS tertiary / small tertiary Button. |
+| component | `icon` (`IdsIcon`) | required | Severity + close (`shape-x`) glyphs via shared Icon / mask. |
+
+
 ### Fallback/error rules
 - Unknown `type` -> fallback to `info`.
 - Missing icon asset -> render no icon and log non-blocking warning.

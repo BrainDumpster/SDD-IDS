@@ -590,6 +590,19 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 - Product mark in Masthead: optional host `logo` (`RenderableNode`) or optional `mastheadProductIconSlug` → `assets/icons/<slug>.svg` per Masthead asset contract. Omit both for product-name-only.
 - Body slot assets are host responsibility.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `datagrid` (`IdsDatagrid`) | optional | Cited `components/ids/datagrid/design-spec.md`. |
+| component | `footer` (`IdsFooter`) | optional | Cited `components/ids/footer/design-spec.md`. |
+| component | `main-menu-left` (`IdsMainMenuLeft`) | optional | Cited `components/ids/main-menu-left/design-spec.md`. |
+| component | `masthead` (`IdsMasthead`) | optional | Cited `components/ids/masthead/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 | Condition | Behavior |

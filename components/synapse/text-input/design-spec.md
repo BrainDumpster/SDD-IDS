@@ -136,6 +136,16 @@ Inherit IDS label association, `aria-invalid`, and keyboard focus ring behavior.
 
 Inherit IDS optional suffix icon slugs via shared Icon primitive. See IDS **Codegen Contract → Asset resolution**.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+| component | `text-box` (`IdsTextBox`) | required | Cited `components/ids/text-box/design-spec.md`. |
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown `size` and missing-label rules. Programme additions:

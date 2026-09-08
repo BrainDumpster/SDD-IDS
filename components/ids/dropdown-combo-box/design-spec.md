@@ -255,6 +255,16 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Error icon slug: `status-critical-square-solid`.
 - Multi-select glyph slugs: `shape-check-checkbox`, `shape-dash-thick`, `shape-x-thick` where applicable.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `tag` (`IdsTag`) | optional | Cited `components/ids/tag/design-spec.md`. |
+| component | `tooltip` (`IdsTooltip`) | required | Cited `components/ids/tooltip/design-spec.md`.; Named `IdsTooltip` in this spec. |
+
+
 ### Fallback/error rules
 - Unknown `mode` falls back to `combobox-single`.
 - Unknown `size` falls back to `large`.

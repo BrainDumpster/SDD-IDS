@@ -130,6 +130,16 @@ Inherit IDS `radiogroup` semantics, roving tabindex or native radio group patter
 
 No control image assets. Error assistive row may use `status-critical-square-solid` per IDS implementation notes.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown value, empty options, and duplicate `value` warnings.

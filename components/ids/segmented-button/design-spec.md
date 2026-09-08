@@ -450,6 +450,16 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - `Icon`: `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`, default `variant` `mask`).
 - Lib React (compound): `lib/react/ids/segmented-button/` — `IdsSegmentedButton` + `IdsSegmentedText` / `IdsSegmentedIcon`; stories: `storybook/src/components/lib-generated/SegmentedButton.stories.tsx`.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `icon` (`IdsIcon`) | required | Named `IdsIcon` in this spec.; Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 - **Invalid count:** if `type=text` and `n∉[2,5]` or `type=icon` and `n∉[2,3]`, implementations must refuse render or log dev error; never clip silently.
 - **Child/type mismatch:** `SegmentedIcon` under `type="text"` (or `SegmentedText` under `type="icon"`) → refuse render / dev error.

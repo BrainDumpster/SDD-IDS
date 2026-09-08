@@ -126,6 +126,16 @@ Inherit IDS focus trap (modal), step list semantics, and keyboard navigation. Se
 
 Inherit IDS step status icons and close control slugs. See IDS **Codegen Contract → Asset resolution**.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component).
+
+_No assets or peer components declared in this spec._
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+
+
 ### Fallback/error rules
 
 Inherit IDS unknown `mode`/`size` fallbacks. Programme additions:

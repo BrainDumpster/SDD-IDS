@@ -96,7 +96,17 @@ See **Interactions** and **Interactions → Behavior & guidelines**.
 See **Interactions → Accessibility**.
 
 ### Asset resolution + bundling contract
-When icons are used, resolve from `assets/icons/<slug>.svg` through the shared Icon primitive; document slugs in this spec when known.
+When icons/images are used, document slug → path (e.g. `assets/icons/<slug>.svg`), render mode (mask/img), and missing-asset fallback. Assets are **not** peer components unless listed under **Component dependencies (codegen)**.
+
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; required for every component).
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| — | none | — | Replace with `asset` / `component` rows when declared. Do not invent peers. |
+
+Rules: `Kind` is only `asset` or `component`. MCP resolves `component` rows against design-spec + `lib/<framework>/…`. Free prose is not a declaration.
 
 ### Fallback/error rules
 - Unknown variant or state → fall back to the documented default variant.
@@ -178,7 +188,13 @@ NEW_SPEC_TEMPLATE = (
 - TODO: roles, keyboard, ARIA
 
 ### Asset resolution + bundling contract
-- TODO: icon slugs and bundling rules, or N/A
+- TODO: icon/image slugs and bundling rules, or N/A (assets ≠ peer components)
+
+### Component dependencies (codegen)
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| — | none | — | Replace with `asset` / `component` rows when declared. Do not invent peers. |
 
 ### Fallback/error rules
 - TODO: unknown variant/token/asset handling
@@ -186,6 +202,7 @@ NEW_SPEC_TEMPLATE = (
 ### Validation checklist
 - [ ] **Slot geometry (Figma-verified)** table complete; every border-radius row cites a Figma node + MCP method
 - [ ] Theme aliases match geometry table (no alias-only documentation)
+- [ ] **Component dependencies (codegen)** table present (assets/peers declared or explicitly none)
 - [ ] TODO: pass/fail items for codegen QA
 
 ## Source Mapping

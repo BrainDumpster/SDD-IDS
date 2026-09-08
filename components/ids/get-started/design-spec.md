@@ -559,6 +559,17 @@ Card / chrome icons: render via shared **`Icon`** (`shapeName`); icon box **`32�
 
 **Bundling:** ship `assets/images/honeycomb.png` with the component package; do not substitute a CSS-only pattern or a differently named file.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| asset | `iconSlug` → `assets/icons/<slug>.svg` | optional | From existing Asset resolution / iconSlug mentions. Not an Icon peer unless a `component` row is added. |
+| component | `button` (`IdsButton`) | required | Cited `components/ids/button/design-spec.md`.; Named via compose/reuse IDS Button.; Named `IdsButton` in this spec. |
+| component | `masthead` (`IdsMasthead`) | required | Cited `components/ids/masthead/design-spec.md`.; Named via compose/reuse IDS Masthead. |
+
+
 ### Fallback/error rules
 
 - Unknown `overflow` / `sequential` → `false`

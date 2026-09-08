@@ -259,6 +259,15 @@ Emit **`Tree`** (root) + **`TreeItem`** (+ **`TreeItemLabel`** slot). Support **
 - Folder: `Folders / folder-closed` or mapped slug `folder-closed` under `assets/icons/`.
 - Resolve icon color from row state tokens, not hardcoded hex.
 
+### Component dependencies (codegen)
+
+Machine-readable for MCP / agents (**spec-declared only**; applies to every component). Assets are not peer components unless a `component` row is listed.
+
+| Kind | Id | Required | Notes |
+|------|-----|----------|-------|
+| component | `icon` (`IdsIcon`) | required | Named shared Icon primitive / composition in this spec. |
+
+
 ### Fallback/error rules
 - Unknown variant combination → branch vs leaf inferred from presence of `children` in data.
 - Missing label → codegen validation error at boundary.
