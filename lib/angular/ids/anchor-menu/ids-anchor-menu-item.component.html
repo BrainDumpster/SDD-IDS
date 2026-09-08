@@ -3,12 +3,27 @@
   [class.ids-anchor-menu__link--active]="isActive"
   role="listitem"
   [attr.href]="canNavigate ? href : null"
+  [attr.title]="nativeTitle"
   [attr.aria-current]="isActive ? 'page' : null"
   [attr.aria-disabled]="canNavigate ? null : 'true'"
   [tabIndex]="tabIndex"
   (click)="onClick($event)"
   (keydown)="onKeydown($event)"
   (focus)="onFocus()"
+  (focusin)="$event.stopPropagation()"
 >
-  {{ label }}
+  @if (useIdsTooltip) {
+    <!-- Anchor the tooltip to the label text (not the padded link) so it sits
+         right beside the text edge. -->
+    <ids-tooltip triggerDisplay="inline" [side]="tooltipSide" arrowAlign="start">
+      <ids-tooltip-trigger>
+        <span #labelRef class="ids-anchor-menu__label">{{ label }}</span>
+      </ids-tooltip-trigger>
+      <ids-tooltip-panel>
+        <ids-tooltip-body>{{ label }}</ids-tooltip-body>
+      </ids-tooltip-panel>
+    </ids-tooltip>
+  } @else {
+    <span #labelRef class="ids-anchor-menu__label">{{ label }}</span>
+  }
 </a>

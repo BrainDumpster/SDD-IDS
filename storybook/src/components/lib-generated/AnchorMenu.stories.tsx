@@ -42,6 +42,7 @@ const specAccurateArgs: ComponentProps<typeof IdsAnchorMenu> = {
   title: "On this page",
   header: true,
   sticky: true,
+  nativeTooltip: false,
   onItemClick,
 };
 
@@ -64,6 +65,14 @@ const meta: Meta<typeof IdsAnchorMenu> = {
     },
   },
   args: specAccurateArgs,
+  argTypes: {
+    nativeTooltip: {
+      control: { type: "boolean" },
+      description:
+        "Reveal truncated labels with the browser's native `title` tooltip instead of the branded `IdsTooltip`.",
+      table: { defaultValue: { summary: "false" } },
+    },
+  },
 };
 
 export default meta;
@@ -135,4 +144,48 @@ export const StickyWithPageContent: Story = {
     </div>
   ),
   args: specAccurateArgs,
+};
+
+const longLabelItems = [
+  { label: "Overview", href: "#overview" },
+  { label: "Types and classifications of anchor menu patterns", href: "#types" },
+  { label: "A deliberately extremely long anchor menu section title that overflows the two-line clamp and shows an ellipsis on the third line", href: "#anatomy", active: true },
+  { label: "Usage Rules", href: "#usage-rules" },
+  { label: "States and Colors", href: "#states-and-colors" },
+  { label: "Redlines", href: "#redlines" },
+];
+
+export const LongLabel: Story = {
+  name: "Long Label",
+  args: {
+    items: longLabelItems,
+  },
+};
+
+/**
+ * Menu on a right-hand rail: the IdsTooltip auto-flips to `side="left"` so it
+ * opens toward the page instead of overflowing off the right edge.
+ */
+export const RightRailLongLabel: Story = {
+  name: "Right Rail (Long Label)",
+  args: {
+    items: longLabelItems,
+  },
+  render: (args) => (
+    <div
+      style={{
+        display: "flex",
+        gap: 32,
+        padding: 24,
+        alignItems: "flex-start",
+        justifyContent: "flex-end",
+        background: "var(--color-background-surface-primary)",
+      }}
+    >
+      <div style={{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}>
+        Page content on the left; anchor menu pinned to the right edge.
+      </div>
+      <IdsAnchorMenu {...args} />
+    </div>
+  ),
 };

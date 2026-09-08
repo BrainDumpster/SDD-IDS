@@ -15,8 +15,8 @@ ids-anchor-active-indicator {
 
 .ids-anchor-menu {
   box-sizing: border-box;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: min(200px, 100%);
+  max-width: min(300px, 100%);
   width: fit-content;
   background: transparent;
   border-radius: 0;
@@ -52,8 +52,9 @@ ids-anchor-active-indicator {
 .ids-anchor-menu__link {
   display: inline-block;
   width: fit-content;
+  max-width: 100%;
   box-sizing: border-box;
-  height: var(--scale-40);
+  min-height: var(--scale-40);
   padding: var(--padding-padding-8) var(--padding-padding-24);
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
@@ -89,6 +90,15 @@ ids-anchor-active-indicator {
   border-left-color: transparent;
 }
 
+/* Selected + hover — text stays brand-strong; left indicator darkens to brand-strong */
+.ids-anchor-menu__link--active:hover {
+  color: var(--color-text-brand-strong);
+}
+
+.ids-anchor-menu__link--active:hover::before {
+  background: var(--color-border-brand-strong);
+}
+
 .ids-anchor-menu__link:focus:not(:focus-visible)::after {
   content: none;
 }
@@ -100,10 +110,19 @@ ids-anchor-active-indicator {
 .ids-anchor-menu__link:focus-visible::after {
   content: "";
   position: absolute;
-  inset: -4px -6px;
-  border: var(--border-width-border-2) solid var(--color-border-brand-base);
+  inset: -3px -5px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
+}
+
+.ids-anchor-menu__label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .ids-anchor-menu__link[aria-disabled="true"] {
