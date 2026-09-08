@@ -421,19 +421,9 @@ export function DropdownMenu({
           {trigger}
         </span>
       </Menu.Trigger>
-      <Menu.Portal container={portalContainer ?? undefined}>
-        <Menu.Positioner
-          sideOffset={sideOffset}
-          align="start"
-          /* Field-attached combobox: keep left edge and side glued to the trigger.
-             Default align-shift repositions the popup when Show Selected expands and
-             briefly changes intrinsic width/height — perceived as screen drift. */
-          collisionAvoidance={{ side: "none", align: "none", fallbackAxisSide: "none" }}
-        >
-          <Menu.Popup
-            className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
-            style={popupStyle}
-          >
+      <Menu.Portal>
+        <Menu.Positioner sideOffset={sideOffset} align="start" style={positionerStyle}>
+          <Menu.Popup className={styles.popup} style={popupStyle}>
             {showSearch ? (
               <>
                 <div className={styles.searchRow}>
@@ -447,82 +437,18 @@ export function DropdownMenu({
                       }}
                     />
                     <div className={styles.searchInputWrap}>
-                      <div className={styles.searchInputBox}>
-                        <input
-                          ref={searchInputRef}
-                          className={styles.searchInput}
-                          type="text"
-                          value={currentSearch}
-                          placeholder={searchPlaceholder}
-                          onChange={(event) => {
-                            const value = event.target.value;
-                            const nativeEvent = event.nativeEvent as Partial<InputEvent>;
-                            // While an IME (e.g. Vietnamese Telex) is composing, the
-                            // text isn't committed yet — never autocomplete into a
-                            // half-composed value or the compositionend commit will
-                            // duplicate it. Just track the value; the ghost is
-                            // computed in onCompositionEnd once composition settles.
-                            if (nativeEvent.isComposing) {
-                              setSearch(value);
-                              setGhostSuffix("");
-                              return;
-                            }
-                            const inputType = nativeEvent.inputType;
-                            // Autocomplete on typing, never on deleting. Prefer the
-                            // InputEvent's inputType; fall back to a length compare
-                            // when it is unavailable (older browsers).
-                            const isDeletion =
-                              typeof inputType === "string"
-                                ? inputType.startsWith("delete")
-                                : value.length < currentSearch.length;
-                            handleSearchInput(value, !isDeletion);
-                          }}
-                          onCompositionEnd={(event) => {
-                            // Composition committed — now it's safe to suggest.
-                            const value = event.currentTarget.value;
-                            setSearch(value);
-                            setGhostSuffix(computeGhostSuffix(value));
-                          }}
-                          onKeyDown={(event) => {
+                      <input
+                        className={styles.searchInput}
+                        type="text"
+                        value={searchValue}
+                        placeholder={searchPlaceholder}
+                        onChange={(event) => onSearchValueChange?.(event.target.value)}
+                        onKeyDown={(event) => {
+                          if (!["Escape", "ArrowUp", "ArrowDown"].includes(event.key)) {
                             event.stopPropagation();
-                            // Ignore keys while the IME is composing (keyCode 229 /
-                            // isComposing): Tab/→ then belong to the IME candidate UI,
-                            // and mutating the value mid-composition corrupts it.
-                            if (event.nativeEvent.isComposing || event.keyCode === 229) {
-                              return;
-                            }
-                            // Accept the greyed-out ghost suggestion. Recompute the
-                            // suffix from the live DOM value (not the ghostSuffix /
-                            // currentSearch closures) so a fast type-then-Tab can
-                            // never commit a stale value.
-                            if (
-                              event.key === "Tab" ||
-                              event.key === "ArrowRight" ||
-                              event.key === "End"
-                            ) {
-                              const input = event.currentTarget;
-                              const typed = input.value;
-                              const atEnd =
-                                input.selectionStart === typed.length &&
-                                input.selectionStart === input.selectionEnd;
-                              if (event.key === "Tab" || atEnd) {
-                                const suffix = computeGhostSuffix(typed);
-                                if (suffix) {
-                                  event.preventDefault();
-                                  setSearch(typed + suffix);
-                                  setGhostSuffix("");
-                                }
-                              }
-                            }
-                          }}
-                        />
-                        {ghostSuffix ? (
-                          <span className={styles.searchGhost} aria-hidden="true">
-                            <span className={styles.searchGhostTyped}>{currentSearch}</span>
-                            <span className={styles.searchGhostSuffix}>{ghostSuffix}</span>
-                          </span>
-                        ) : null}
-                      </div>
+                          }
+                        }}
+                      />
                       {showSearchClear ? (
                         <button
                           type="button"
