@@ -28,14 +28,15 @@
 - Standard height: Auto (based on content)
 - Header text line box height: `24px` (`Body 1` rhythm)
 - Header container vertical padding: `12px` top and `12px` bottom (no horizontal padding)
+- Header long text: grows to the rail's max width, wraps to a 2nd line, then truncates line 3+ with a `…` ellipsis and reveals the full heading on hover (same `nativeTooltip` behaviour as item labels). The 2-line `-webkit-line-clamp` sits on an **inner label** span (no padding); the `12px` block padding stays on the header wrapper so the clamped 3rd line cannot bleed into the padding under `overflow: hidden`. The `IdsTooltip` trigger wraps the **inner label** (not the padded wrapper) so the tooltip lines up with the heading text rather than sitting above it in the top padding.
 - Item height: 40px minimum (1 line); 64px when clamped to 2 lines
 - Item width: hug content (`fit-content`)
-- Long text: wrap up to 2 lines, then `…` ellipsis; `IdsTooltip` is shown on hover only for labels that are truncated
+- Long text: wrap up to 2 lines, then `…` ellipsis; a tooltip is shown on hover/focus only for labels that are truncated. Tooltip mode is selectable (`nativeTooltip` prop, boolean, default `false`): when `false`, `IdsTooltip` is anchored to the label text (inline trigger, beside the text edge) so it never overlaps other menu items; when `true`, the browser `title` attribute is used. The `IdsTooltip` side auto-flips from the menu's viewport position — `side="right"` when the menu is in the left half of the viewport, `side="left"` when it is in the right half — so a right-hand-rail menu opens tooltips toward the page instead of off-screen (`IdsTooltip` has no built-in collision detection).
 - Section-item padding: `8px` top/bottom and `24px` left/right
-- Item border radius: 0 (square); focus ring radius: `6px` outer / `4px` inner
-- Focus ring: `1px` brand border hugging the item, inset `-3px` top/bottom and `-5px` left/right
-- Minimum width: 200px
-- Maximum width: 300px
+- Item border radius: 0 (square); focus ring radius: `4px` (`var(--corner-radius-radius-4)`)
+- Focus ring: `2px` brand border hugging the item, inset `-3px` top/bottom and `-5px` left/right
+- Minimum width: 200px (soft floor via `min(200px, 100%)` — shrinks below 200px only when the container is narrower)
+- Maximum width: 300px (`min(300px, 100%)`)
 - Item spacing: 0 (adjacent)
 - Progress indicator height: 2px
 ## Tokens
@@ -54,19 +55,19 @@
 ### Spacing / radius
 - `var(--padding-padding-8)`, `var(--padding-padding-12)`, `var(--padding-padding-24)`
 - `var(--scale-40)`
-- `var(--border-width-border-2)`
+- `var(--border-width-border-2)` (focus ring)
 - `var(--corner-radius-radius-4)` (focus ring only)
 
 ## States (Light Theme)
 | Element | Background | Border | Text |
 |---|---|---|---|
-| Menu Container | transparent | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-brand-strong)` (#055fa9) |
+| Menu Container | transparent | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-gray-neutral)` (#4d4d4d) |
 | Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
-| Anchor Item (Active + Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
-| Progress Indicator | `var(--color-background-controls-brand-base)` (#0672cb) | transparent | transparent |
+| Anchor Item (Active + Hover) | transparent | left border `4px` `var(--color-border-brand-strong)` (#055fa9) | `var(--color-text-brand-strong)` (#055fa9) |
+| Progress Indicator | `var(--color-background-controls-base)` (#0672cb) | transparent | transparent |
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -166,12 +167,12 @@ Figma `11955:229709` (`AnchorMenu-Example`):
 - `href`: navigable | missing/empty (disabled navigation)
 
 ### Per-slot style contract
-- Root: `min-width: 200px`; `max-width: 300px`; `width: fit-content`; background transparent.
+- Root: `min-width: min(200px, 100%)`; `max-width: min(300px, 100%)`; `width: fit-content`; background transparent. The `min(…, 100%)` keeps the 200–300px band on normal layouts but lets the menu shrink with a narrower container instead of overflowing.
 - Header: Body 1; `padding: var(--padding-padding-12) 0`; `var(--color-text-gray-neutral-strong)`; no text-transform.
-- Item link: height `var(--scale-40)`; `padding: var(--padding-padding-8) var(--padding-padding-24)`; `width: fit-content`; Body 1; square corners.
+- Item link: min-height `var(--scale-40)`; `padding: var(--padding-padding-8) var(--padding-padding-24)`; `width: fit-content` (hugs label, wraps within root max-width); Body 1; square corners.
 - Default rail: `border-left: 1.2px solid var(--color-border-gray-neutral-base)`.
 - Hover/active rail: `4px` `var(--color-border-brand-base)` overlay **centered on** the `1.2px` default rail (no layout shift). Hover label stays `var(--color-text-gray-neutral)`; active label `var(--color-text-brand-strong)`.
-- Focus-visible: `2px` `var(--color-border-brand-base)` ring, `var(--corner-radius-radius-4)`, inset `-4px -6px`.
+- Focus-visible: `1px` `var(--color-border-brand-base)` ring, `var(--corner-radius-radius-4)`, inset `-3px -5px`.
 - No hardcoded colors in implementation; measurements `1.2px` / `4px` / `200px` / `300px` are Figma/spec literals (no token).
 
 ### Behavior contract

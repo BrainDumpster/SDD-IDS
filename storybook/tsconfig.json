@@ -22,6 +22,6 @@
       "@ids/react/*": ["../lib/react/ids/*"]
     }
   },
-  "include": ["src", "../lib", "../component-contracts", "src/global.d.ts"],
+  "include": ["src", "../lib/react", "../lib/shared", "../component-contracts", "src/global.d.ts"],
   "exclude": ["node_modules"]
 }
