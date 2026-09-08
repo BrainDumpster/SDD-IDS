@@ -1,8 +1,8 @@
 .nav {
   font-family: inherit;
   width: fit-content;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: min(200px, 100%);
+  max-width: min(300px, 100%);
 }
 
 .heading {
@@ -30,8 +30,11 @@
 }
 
 .link {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  min-height: var(--scale-40);
   padding: var(--padding-padding-8) var(--padding-padding-24);
   font-size: var(--font-size-body-1);
   color: var(--color-text-gray-neutral);
@@ -66,7 +69,7 @@
   position: absolute;
   inset: -3px -5px;
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-6);
+  border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
 }
 
@@ -88,6 +91,11 @@
   left: -2px;
   width: 4px;
   background: var(--color-border-brand-base);
+}
+
+/* Selected + hover — left indicator darkens to brand-strong */
+.active:hover::before {
+  background: var(--color-border-brand-strong);
 }
 
 .label {

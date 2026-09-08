@@ -95,3 +95,31 @@ export const WithHeader = {
     sticky: ANCHOR_MENU_SPEC_ACCURATE_DEFAULTS.sticky,
   },
 };
+
+/** Long label: wraps to 2 lines, truncates with ellipsis, and shows tooltip when truncated. */
+/** @type {import("@storybook/angular").StoryObj<IdsAnchorMenuComponent>} */
+export const LongLabel = {
+  name: "Long Label",
+  render: (args) => ({
+    props: {
+      ...args,
+      itemClick: (href) => {
+        args.itemClick?.(href);
+      },
+    },
+    template: `
+      <ids-anchor-menu [title]="title" [sticky]="sticky">
+        <ids-anchor-menu-item label="Overview" href="#overview"></ids-anchor-menu-item>
+        <ids-anchor-menu-item label="Types and classifications of anchor menu patterns" href="#types"></ids-anchor-menu-item>
+        <ids-anchor-menu-item label="A deliberately extremely long anchor menu section title that overflows the two-line clamp and shows an ellipsis on the third line" href="#anatomy" [active]="true"></ids-anchor-menu-item>
+        <ids-anchor-menu-item label="Usage Rules" href="#usage-rules"></ids-anchor-menu-item>
+        <ids-anchor-menu-item label="States and Colors" href="#states-and-colors"></ids-anchor-menu-item>
+        <ids-anchor-menu-item label="Redlines" href="#redlines"></ids-anchor-menu-item>
+      </ids-anchor-menu>
+    `,
+  }),
+  args: {
+    title: ANCHOR_MENU_SPEC_ACCURATE_DEFAULTS.title,
+    sticky: ANCHOR_MENU_SPEC_ACCURATE_DEFAULTS.sticky,
+  },
+};
