@@ -21,10 +21,12 @@ def generate_ids_app_launcher_story(
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("app-launcher", options.component_prefix)
     import_path = "../../../../storybook/src/components/AppLauncher"
+    icon_import_path = "../../../../storybook/src/components/Icon"
 
     theme_import = storybook_theme_import_line(options.design_system_slug)
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ AppLauncher as {component_name} }} from "{import_path}";
+import {{ Icon }} from "{icon_import_path}";
 {theme_import}
 
 const products = [
@@ -71,11 +73,41 @@ export const ComponentDetailMatrix: Story = {{
 export const OptionTextOverflow: Story = {{
   render: () => (
     <{component_name}
-      products={{products.slice(0, 2)}}
+      products={{products}}
       options={{[
         {{ id: "o1", label: "Option" }},
         {{ id: "o2", label: "This is a very long option label that truncates with an ellipsis instead of wrapping" }},
         {{ id: "o3", label: "Option" }},
+      ]}}
+      panelOnly
+    />
+  ),
+}};
+
+export const NoIconTiles: Story = {{
+  render: () => (
+    <{component_name}
+      products={{[
+        {{ id: "n1", name: "Product Name 1", icon: null, href: "#" }},
+        {{ id: "n2", name: "Very Long Product Name That Truncates", icon: null, href: "#" }},
+        {{ id: "n3", name: "Product Name 3", icon: null, href: "#" }},
+        {{ id: "n4", name: "Product Name 4", icon: null, href: "#" }},
+      ]}}
+      panelOnly
+    />
+  ),
+}};
+
+const optionLogo = <Icon shapeName="shield-encrypt-alt" variant="inline" />;
+
+export const OptionRowWithLogo: Story = {{
+  render: () => (
+    <{component_name}
+      products={{products}}
+      options={{[
+        {{ id: "l1", label: "Option with logo", icon: optionLogo }},
+        {{ id: "l2", label: "Another option with logo", icon: optionLogo }},
+        {{ id: "l3", label: "Option without logo" }},
       ]}}
       panelOnly
     />

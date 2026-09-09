@@ -43,7 +43,7 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Tile default | `13231:109520` | `148×125` |
 | Tile hover | `13231:109522` | full-tile `brand-lighter` fill |
 | Tile press | `14141:255626` | full-tile `brand-light` fill; brand-strong text/icon |
-| Element set | `13231:109521` | State matrix (`default`, `hover`, `press`, `selected`, `no-icon`) |
+| Element set | `13231:109521` | State matrix (`default`, `hover`, `press`, `no-icon`); product tiles have no persistent `selected` state (navigation, not selection) |
 | Row divider sample | `13231:124057`, `13231:123911` | Horizontal dotted `262px` / `16px` inset |
 
 ## Anatomy
@@ -124,9 +124,10 @@ Token: `var(--color-border-gray-neutral-base)`.
 
 | Property | Value |
 |---|---|
-| Block width | **`295px`**, centered within the `298px` surface (`margin-inline: auto`); option rows fill the block |
+| Block width | fills the `296px` surface content; `1px` left/right padding → option rows are **`294px`**, inset `1px` from the surface border on each side (symmetric — avoids the sub-pixel snapping a `295px` centered block would cause) |
 | Options list block padding | **`16px`** bottom (`var(--padding-padding-16)`); `1px` left/right |
 | Option row padding | `10px 24px 10px 16px` (top/bottom `10`, left `16`, right `24`) |
+| Option logo (optional) | leading logo inside the row, vertically centered with the label; **`16px`** fixed width, height auto (aspect ratio); **`8px`** gap to label (`var(--spacing-space-8)`) |
 | Option text overflow | single-line — truncates on the **first line** with an ellipsis (`text-overflow: ellipsis`; `white-space: nowrap`) |
 | Row contract | mirrors `Dropdown-SingleSelect-Elements-Options` (`337:180199`) — **re-implemented locally in App Launcher, not reusing `DropdownMenu`** |
 
@@ -168,7 +169,7 @@ Token: `var(--color-border-gray-neutral-base)`.
 | Launcher surface | default | `var(--color-background-surface-secondary)` | `1px var(--color-border-gray-neutral-base)` | n/a |
 | Product tile | default | `var(--color-background-surface-secondary)` | dividers: `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
 | Product tile | hover | `var(--color-background-brand-lighter-slate)` (full tile) | dividers unchanged (separate elements) | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
-| Product tile | press/selected | `var(--color-background-brand-light-slate)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
+| Product tile | press | `var(--color-background-brand-light-slate)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
 | Product tile | focus | `var(--color-background-surface-secondary)` | `outline: var(--border-width-border-2) var(--color-border-brand-base)`; `outline-offset: -2px` | neutral strong |
 | Product tile | no-icon | `var(--color-background-surface-secondary)` | dividers unchanged | `var(--color-text-gray-neutral-strong)` only |
 | Options row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
@@ -194,9 +195,14 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - `data-state` / `demoState` forced values are Storybook/demo-only; runtime interaction must not be blocked.
 
 ### Keyboard
-- `Enter` / `Space` activates focused tile/option.
-- `Escape` closes launcher.
+- On open, focus **stays on the trigger** (the panel does not steal focus); the user `Tab`s into the panel. Matches the IDS dropdown menu behavior.
 - `Tab` traverses trigger → tiles → options in visible order.
+- **Arrow keys** navigate within the open panel (same model as the dropdown popup, keyed off `data-focus-section`):
+  - **Products** are a `columns`-wide grid: `←` / `→` move within a row (stop at the row edges); `↑` / `↓` move across rows in the same column.
+  - **Options** are a vertical list: `↑` / `↓` move between rows (including the footer action).
+  - At a section boundary focus **crosses over**: `↓` past the last product row → first option; `↑` above the first option → last product tile.
+- `Enter` / `Space` activates the focused tile/option.
+- `Escape` closes the launcher and returns focus to the trigger.
 
 ### Accessibility
 
@@ -279,7 +285,7 @@ Ordered slot list:
 | `triggerVariant` | `default` \| `masthead` |
 | column divider `variant` | `dotted` (3+ external) |
 | tile rail `variant` | `dotted` (2-product internal, leading tile only) |
-| tile `state` | `default` \| `hover` \| `press` \| `selected` \| `focus` \| `no-icon` |
+| tile `state` | `default` \| `hover` \| `press` \| `focus` \| `no-icon` |
 
 ### Per-slot style contract
 
@@ -332,7 +338,7 @@ Resolve via shared `Icon` component (`import.meta.glob` on `assets/icons/*.svg` 
 - [x] 3+ product **dotted** column divider `110px` / `7px` inset documented
 - [x] Row divider `262px` / `padding-16` inset documented
 - [x] Dividers as separate flex siblings in anatomy + codegen structure
-- [x] Tile states (`default/hover/press/selected/no-icon/focus`) match `13231:109521`
+- [x] Tile states (`default/hover/press/no-icon/focus`) match `13231:109521`
 - [x] Product count layouts (`1/2/3/4/8`) match `13231:123761` variants
 - [x] Usage masthead + products+options align with `42266:95085`, `42266:95081`
 - [x] Composition/API props, events, and defaults explicit
@@ -347,7 +353,7 @@ _Updated 2026-07-29._
 
 - **Product icon color** — the product icon inherits the tile color via `currentColor`: `var(--color-icon-gray-neutral-strong)` for default and hover, `var(--color-icon-brand-strong)` for press. The icon asset uses `fill: currentColor` so it tracks theme and state (light `#252525`, dark `#b8c1c9`, press `#055fa9`).
 - **Label padding** — label cluster is `28px 0` (icon variant) / `52px 0` (no-icon); horizontal padding is `0`.
-- **Surface width & border** — fixed **`298px`** with **`1px`** padding; the `1px` border is an inset box-shadow (not `border`) so it does not consume layout, leaving `296px` content (two `148px` tiles). Never stretches with option text. The options menu is a **`295px`** block centered within it (`margin-inline: auto`); option rows are **`293px`** (`1px` inset each side).
+- **Surface width & border** — fixed **`298px`** with **`1px`** padding; the `1px` border is an inset box-shadow (not `border`) so it does not consume layout, leaving `296px` content (two `148px` tiles). Never stretches with option text. The options menu fills the `296px` content with `1px` left/right padding → option rows are **`294px`**, symmetrically inset `1px` from the border (an even inset avoids the half-pixel snapping — hence a visibly off-centre focus ring — that a `295px` centered block produces in a `296px` space).
 - **Options list padding** — `16px` above the first option row and below the last.
 - **Option text overflow** — long option text truncates on the **first line** with an ellipsis (single line, no wrap).
 - **Option row** — follows the `Dropdown-SingleSelect-Elements-Options` contract as a standalone element (not a shared dropdown component).

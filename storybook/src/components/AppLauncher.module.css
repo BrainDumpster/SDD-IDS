@@ -133,6 +133,13 @@
   justify-content: center;
 }
 
+/* A lone tile in its row (e.g. the 3rd product of a 3-product launcher) spans the
+   full row width so its hover/press fill covers the whole row instead of
+   just the 148px tile; the icon + label stay centered inside it. */
+.productRowSingle .appTile {
+  width: 100%;
+}
+
 /* Separate flex child between tiles — hover fill must not cover this track. */
 .columnDivider {
   flex: 0 0 1px;
@@ -241,8 +248,9 @@
 }
 
 .appTile:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 /* 2-product: horizontal tile shell + internal dotted rail on leading tile (`13231:109518`). */
@@ -348,17 +356,20 @@
   box-sizing: border-box;
   background: var(--color-background-surface-component);
   border-top: none;
-  width: 295px;
-  margin-inline: auto;
   padding-inline: var(--padding-padding-1);
-  padding-block-end: var(--padding-padding-16);
+  /* No region-level bottom padding: the options list owns the 16px block padding
+     around the rows, and the footer action sits below it — so there is no extra
+     padding stacked underneath the action row. */
+  padding-block-end: 0;
   overflow: hidden;
 }
 
 /* Figma `AppLauncher-Main` (e.g. `42266:95081`): `gap-px` after row divider + `py-[16px]` on menu options wrapper before rows. */
 .optionsRegionWithSeparator {
   position: relative;
-  padding-block-start: calc(var(--padding-padding-1) + var(--padding-padding-16));
+  /* Just the 1px divider offset — the 16px top gap now lives inside the scrolling
+     options list (so the scrollbar covers it). */
+  padding-block-start: var(--padding-padding-1);
 }
 
 .optionsRegionWithSeparator::before {
@@ -378,11 +389,26 @@
 .optionsList {
   list-style: none;
   margin: 0;
-  padding: 0;
+  /* 16px top and bottom gap lives INSIDE the scroll region. Row height =
+     2×10 block padding + 20 line-height = 40px. */
+  padding: var(--padding-padding-16) 0;
+  --app-launcher-option-row-height: calc(
+    var(--padding-padding-10) * 2 + var(--font-line-height-line-height-20)
+  );
+  /* ≤4 options: no scroll — the 16px top and bottom gap both show. */
+  max-height: calc(4 * var(--app-launcher-option-row-height) + var(--padding-padding-16) * 2);
+  overflow-y: auto;
+}
+
+/* 5+ options: cut the viewport to the top gap + 4 rows so the 5th row can't peek
+   above the bottom edge; the 16px bottom gap is then only revealed at scroll end. */
+.optionsList:has(li:nth-child(5)) {
+  max-height: calc(4 * var(--app-launcher-option-row-height) + var(--padding-padding-16));
 }
 
 .optionItem {
   display: flex;
+  align-items: center;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -397,6 +423,21 @@
   text-align: start;
   cursor: pointer;
   transition: background 80ms ease;
+}
+
+/* Leading logo: fixed 16px width, height auto (aspect ratio), 8px gap before label. */
+.optionIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 16px;
+  margin-inline-end: var(--spacing-space-8);
+}
+
+.optionIcon :where(svg, img) {
+  display: block;
+  width: 16px;
+  height: auto;
 }
 
 .optionLabel {
@@ -424,30 +465,35 @@
 }
 
 .optionItem:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
+/* Footer action mirrors the Dropdown menu's element action button: the footer
+   row carries the top divider and aligns the inner button with the option labels
+   (8px row inset + 8px button inset = 16px), and the button itself is a compact
+   chip that takes the brand focus ring instead of a plain padded outline. */
 .optionsFooter {
   display: flex;
   align-items: center;
-  padding: var(--padding-padding-8) 0;
-  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-8);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }
 
 .footerAction {
-  margin: 0;
-  margin-inline-start: var(--padding-padding-16);
-  padding: var(--padding-padding-2) var(--padding-padding-16);
-  border: none;
-  border-radius: var(--corner-radius-radius-4);
-  background: transparent;
-  font-family: inherit;
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding: var(--padding-padding-2) var(--padding-padding-8);
+  border-radius: var(--corner-radius-radius-2);
+  color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-brand-strong);
   cursor: pointer;
-  text-align: start;
 }
 
 .footerAction:hover {
@@ -455,8 +501,16 @@
 }
 
 .footerAction:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+  outline: none;
+}
+
+.footerAction:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 /* ----- Synapse programme (`13231:123761`, `13231:109521`) ----- */
@@ -466,9 +520,9 @@
 }
 
 .programmeSynapse.launcherSurface {
-  --app-launcher-column-divider-color: var(--color-border-neutral-light);
+  --app-launcher-column-divider-color: var(--color-border-gray-neutral-light);
   gap: var(--spacing-space-1);
-  border-color: var(--color-border-neutral-light);
+  border-color: var(--color-border-gray-neutral-light);
 }
 
 .programmeSynapseTile {

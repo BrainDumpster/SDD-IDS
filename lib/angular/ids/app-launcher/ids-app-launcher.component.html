@@ -26,6 +26,7 @@
       [attr.aria-label]="ariaLabel"
       [attr.data-programme]="resolvedProgramme"
       [ngStyle]="popupStyle"
+      (keydown)="onPopupKeyDown($event)"
     >
       <div
         class="ids-app-launcher__surface"
@@ -34,7 +35,7 @@
         [attr.data-programme]="resolvedProgramme"
       >
         @if (products.length > 0) {
-          <div class="ids-app-launcher__product-region">
+          <div class="ids-app-launcher__product-region" data-focus-section="products">
             @for (row of rows; track $index; let rowIndex = $index) {
               <div class="ids-app-launcher__product-row-group">
                 @if (rowIndex > 0) {

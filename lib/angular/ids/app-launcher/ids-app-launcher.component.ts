@@ -214,6 +214,90 @@ export class IdsAppLauncherComponent implements OnInit, OnDestroy {
     this.setOpen(false);
   }
 
+  /**
+   * Cross-section Arrow-key navigation inside the open panel (like the dropdown
+   * popup): products are a `columns`-wide grid (Left/Right within a row, Up/Down
+   * across rows); the options list is vertical; at the grid/list boundary focus
+   * crosses between the two sections (keyed off `data-focus-section`). The
+   * options branch is null-safe, so a products-only launcher just navigates the
+   * grid.
+   */
+  onPopupKeyDown(event: KeyboardEvent): void {
+    if (
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
+      return;
+    }
+    const popup = event.currentTarget as HTMLElement | null;
+    if (!popup) return;
+    const active = popup.ownerDocument.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusables = (node: Element | null): HTMLElement[] =>
+      node ? Array.from(node.querySelectorAll<HTMLElement>(focusableSelector)) : [];
+
+    const productsSection = popup.querySelector<HTMLElement>('[data-focus-section="products"]');
+    const optionsSection = popup.querySelector<HTMLElement>('[data-focus-section="options"]');
+    const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
+    const dir = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+    const cols = Math.max(1, this.columns);
+    const focus = (el?: HTMLElement): void => {
+      if (!el) return;
+      event.preventDefault();
+      event.stopPropagation();
+      el.focus();
+    };
+
+    // Products grid.
+    if (productsSection?.contains(active)) {
+      const tiles = getFocusables(productsSection);
+      const idx = tiles.indexOf(active);
+      if (idx === -1) return;
+      if (horizontal) {
+        const nextIdx = idx + dir; // stay within the same row
+        if (
+          nextIdx >= 0 &&
+          nextIdx < tiles.length &&
+          Math.floor(nextIdx / cols) === Math.floor(idx / cols)
+        ) {
+          focus(tiles[nextIdx]);
+        }
+        return;
+      }
+      const nextIdx = idx + dir * cols; // move one row up/down
+      if (nextIdx >= 0 && nextIdx < tiles.length) {
+        focus(tiles[nextIdx]);
+        return;
+      }
+      // Past the last grid row → first option (Down). Above the first row → stay.
+      if (dir > 0) focus(getFocusables(optionsSection)[0]);
+      return;
+    }
+
+    // Options list (vertical only).
+    if (optionsSection?.contains(active)) {
+      if (horizontal) return;
+      const opts = getFocusables(optionsSection);
+      const idx = opts.indexOf(active);
+      if (idx === -1) return;
+      const nextIdx = idx + dir;
+      if (nextIdx >= 0 && nextIdx < opts.length) {
+        focus(opts[nextIdx]);
+        return;
+      }
+      // Above the first option → last product tile.
+      if (dir < 0) {
+        const tiles = getFocusables(productsSection);
+        focus(tiles[tiles.length - 1]);
+      }
+    }
+  }
+
   private onDocumentPointerDown(event: PointerEvent): void {
     if (!this.open) return;
     if (typeof performance !== "undefined" && performance.now() < this.ignoreOutsideCloseUntil) {

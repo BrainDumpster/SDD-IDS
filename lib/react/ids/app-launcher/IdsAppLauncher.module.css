@@ -150,6 +150,13 @@
   justify-content: center;
 }
 
+/* A lone tile in its row (e.g. the 3rd product of a 3-product launcher) spans the
+   full row width so its hover/press fill covers the whole row instead of
+   just the 148px tile; the icon + label stay centered inside it. */
+.ids-app-launcher-product-row--single .ids-app-launcher-product-tile {
+  width: 100%;
+}
+
 /* Separate flex sibling — tile hover/press fill must not cover this track. */
 .ids-app-launcher-column-divider {
   flex: 0 0 1px;
@@ -230,35 +237,33 @@
   position: relative;
 }
 
-.ids-app-launcher-product-tile:hover:not([data-state="press"]):not([data-state="selected"]),
+.ids-app-launcher-product-tile:hover:not([data-state="press"]),
 .ids-app-launcher-product-tile[data-state="hover"] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-icon-gray-neutral-strong);
 }
 
 .ids-app-launcher-product-tile:active,
-.ids-app-launcher-product-tile[data-state="press"],
-.ids-app-launcher-product-tile[data-state="selected"] {
+.ids-app-launcher-product-tile[data-state="press"] {
   background: var(--color-background-brand-light-slate);
   color: var(--color-icon-brand-strong);
 }
 
 .ids-app-launcher-product-tile:active .ids-app-launcher-product-label,
-.ids-app-launcher-product-tile[data-state="press"] .ids-app-launcher-product-label,
-.ids-app-launcher-product-tile[data-state="selected"] .ids-app-launcher-product-label {
+.ids-app-launcher-product-tile[data-state="press"] .ids-app-launcher-product-label {
   color: var(--color-text-brand-strong);
 }
 
 .ids-app-launcher-product-tile:active .ids-app-launcher-product-icon,
-.ids-app-launcher-product-tile[data-state="press"] .ids-app-launcher-product-icon,
-.ids-app-launcher-product-tile[data-state="selected"] .ids-app-launcher-product-icon {
+.ids-app-launcher-product-tile[data-state="press"] .ids-app-launcher-product-icon {
   color: var(--color-icon-brand-strong);
 }
 
 .ids-app-launcher-product-tile:focus-visible,
 .ids-app-launcher-product-tile[data-state="focus"] {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .ids-app-launcher-product-tile--two-product {
@@ -349,16 +354,22 @@
   box-sizing: border-box;
   background: var(--color-background-surface-component);
   border-top: none;
-  width: 295px;
-  margin-inline: auto;
+  /* Fill the 296px content box with an even 1px inline inset (rows = 294px) so
+     the option-row focus ring is symmetric. A 295px centered block in the 296px
+     space snaps to a half-pixel and renders a visibly off-centre focus ring. */
   padding-inline: var(--padding-padding-1);
-  padding-block-end: var(--padding-padding-16);
+  /* No region-level bottom padding: the options list owns the 16px block padding
+     around the rows, and the footer action sits below it — so there is no extra
+     padding stacked underneath the action row. */
+  padding-block-end: 0;
   overflow: hidden;
 }
 
 .ids-app-launcher-options-region--separator {
   position: relative;
-  padding-block-start: calc(var(--padding-padding-1) + var(--padding-padding-16));
+  /* Just the 1px divider offset — the 16px top gap now lives inside the scrolling
+     options list (so the scrollbar covers it). */
+  padding-block-start: var(--padding-padding-1);
 }
 
 .ids-app-launcher-options-region--separator::before {
@@ -377,11 +388,26 @@
 .ids-app-launcher-options-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  /* 16px top and bottom gap lives INSIDE the scroll region. Row height =
+     2×10 block padding + 20 line-height = 40px. */
+  padding: var(--padding-padding-16) 0;
+  --app-launcher-option-row-height: calc(
+    var(--padding-padding-10) * 2 + var(--font-line-height-line-height-20)
+  );
+  /* ≤4 options: no scroll — the 16px top and bottom gap both show. */
+  max-height: calc(4 * var(--app-launcher-option-row-height) + var(--padding-padding-16) * 2);
+  overflow-y: auto;
+}
+
+/* 5+ options: cut the viewport to the top gap + 4 rows so the 5th row can't peek
+   above the bottom edge; the 16px bottom gap is then only revealed at scroll end. */
+.ids-app-launcher-options-list:has(li:nth-child(5)) {
+  max-height: calc(4 * var(--app-launcher-option-row-height) + var(--padding-padding-16));
 }
 
 .ids-app-launcher-option-row {
   display: flex;
+  align-items: center;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -400,12 +426,37 @@
   transition: background 80ms ease, color 80ms ease;
 }
 
+/* Leading logo: fixed 16px width, height auto (aspect ratio), 8px gap before label. */
+.ids-app-launcher-option-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 16px;
+  margin-inline-end: var(--spacing-space-8);
+}
+
+.ids-app-launcher-option-icon :where(svg, img) {
+  display: block;
+  width: 16px;
+  height: auto;
+}
+
 .ids-app-launcher-option-label {
   flex: 1 1 auto;
   min-width: 0;
+  /* Block-level so overflow/ellipsis still clip when the label is wrapped in the
+     (block) IDS tooltip trigger. */
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* IDS-tooltip trigger wrapping a truncated option label: shrink like the bare
+   label so it never forces the row wider. */
+.ids-app-launcher-option-label-trigger {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .ids-app-launcher-option-row:hover:not([data-state="press"]),
@@ -428,30 +479,35 @@
 
 .ids-app-launcher-option-row:focus-visible,
 .ids-app-launcher-option-row[data-state="focus"] {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
+/* Footer action mirrors the Dropdown menu's element action button: the footer
+   row carries the top divider and aligns the inner button with the option labels
+   (8px row inset + 8px button inset = 16px), and the button itself is a compact
+   chip that takes the brand focus ring instead of a plain padded outline. */
 .ids-app-launcher-options-footer {
   display: flex;
   align-items: center;
-  padding: var(--padding-padding-8) 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-padding-8);
   border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }
 
 .ids-app-launcher-footer-action {
-  margin: 0;
-  margin-inline-start: var(--padding-padding-16);
-  padding: var(--padding-padding-2) var(--padding-padding-16);
-  border: none;
-  border-radius: var(--corner-radius-radius-4);
-  background: transparent;
-  font-family: inherit;
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding: var(--padding-padding-2) var(--padding-padding-8);
+  border-radius: var(--corner-radius-radius-2);
+  color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-brand-strong);
   cursor: pointer;
-  text-align: start;
 }
 
 .ids-app-launcher-footer-action:hover {
@@ -459,8 +515,16 @@
 }
 
 .ids-app-launcher-footer-action:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+  outline: none;
+}
+
+.ids-app-launcher-footer-action:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius);
+  pointer-events: none;
 }
 
 /* ----- Synapse programme (label-cluster hover/press + inset focus; Spec Accurate parity) ----- */
@@ -477,14 +541,14 @@
   gap: var(--spacing-space-1);
 }
 
-.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:hover:not([data-state="press"]):not([data-state="selected"]),
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:hover:not([data-state="press"]),
 .ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="hover"] {
   background: var(--color-background-surface-secondary);
   color: var(--color-icon-gray-neutral-strong, var(--color-icon-gray-neutral-base));
 }
 
 .ids-app-launcher-surface[data-programme="synapse"]
-  .ids-app-launcher-product-tile:hover:not([data-state="press"]):not([data-state="selected"])
+  .ids-app-launcher-product-tile:hover:not([data-state="press"])
   .ids-app-launcher-label-cluster,
 .ids-app-launcher-surface[data-programme="synapse"]
   .ids-app-launcher-product-tile[data-state="hover"]
@@ -493,8 +557,7 @@
 }
 
 .ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile:active,
-.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="press"],
-.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="selected"] {
+.ids-app-launcher-surface[data-programme="synapse"] .ids-app-launcher-product-tile[data-state="press"] {
   background: var(--color-background-surface-secondary);
   color: var(--color-icon-brand-strong);
 }
@@ -504,9 +567,6 @@
   .ids-app-launcher-label-cluster,
 .ids-app-launcher-surface[data-programme="synapse"]
   .ids-app-launcher-product-tile[data-state="press"]
-  .ids-app-launcher-label-cluster,
-.ids-app-launcher-surface[data-programme="synapse"]
-  .ids-app-launcher-product-tile[data-state="selected"]
   .ids-app-launcher-label-cluster {
   background: var(--color-background-brand-light-slate);
 }
@@ -516,9 +576,6 @@
   .ids-app-launcher-product-label,
 .ids-app-launcher-surface[data-programme="synapse"]
   .ids-app-launcher-product-tile[data-state="press"]
-  .ids-app-launcher-product-label,
-.ids-app-launcher-surface[data-programme="synapse"]
-  .ids-app-launcher-product-tile[data-state="selected"]
   .ids-app-launcher-product-label {
   color: var(--color-text-brand-strong);
 }
