@@ -55,7 +55,7 @@
   box-sizing: border-box;
   border-radius: 999px;
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  background: var(--color-background-gray-neutral-dark);
+  background: var(--color-background-gray-neutral-strong);
   transition:
     background-color 160ms ease-out,
     border-color 160ms ease-out;
@@ -80,15 +80,15 @@
     :has(.ids-toggle-switch-input:focus-visible)
   )
   .ids-toggle-switch-track {
-  background: var(--color-background-gray-neutral-light);
-  border-color: var(--color-border-gray-neutral-strong);
+  background: var(--color-background-gray-neutral-stronger);
+  border-color: var(--color-border-gray-neutral-stronger);
 }
 
 .ids-toggle-switch:hover:not([data-disabled="true"]):not([data-checked="true"]):not(
     :has(.ids-toggle-switch-input:focus-visible)
   )
   .ids-toggle-switch-thumb {
-  border-color: var(--color-border-gray-neutral-strong);
+  border-color: var(--color-border-gray-neutral-stronger);
 }
 
 /* On / default */
@@ -140,12 +140,12 @@
   border-color: var(--color-border-gray-disabled);
 }
 
-.ids-toggle-switch-label {
+.ids-toggle-switch-status {
   color: var(--color-text-gray-neutral);
   line-height: 16px;
   user-select: none;
 }
 
-.ids-toggle-switch[data-disabled="true"] .ids-toggle-switch-label {
+.ids-toggle-switch[data-disabled="true"] .ids-toggle-switch-status {
   color: var(--color-text-gray-disabled);
 }
