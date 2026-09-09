@@ -9,8 +9,8 @@
   display: flex;
   flex-direction: column;
   width: fit-content;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: min(200px, 100%);
+  max-width: min(300px, 100%);
   margin: 0;
   padding: 0;
   background: transparent;
@@ -60,7 +60,8 @@
   box-sizing: border-box;
   position: relative;
   width: fit-content;
-  min-height: 40px;
+  max-width: 100%;
+  min-height: var(--scale-40);
   margin: 0;
   padding: var(--padding-padding-8) var(--padding-padding-24);
   border: none;
@@ -101,22 +102,39 @@
   border-left-color: var(--color-border-brand-base);
 }
 
-/* Focus ring — 2px brand, inset -4px / -6px, radius 6px outer */
-.ids-anchor-menu-link:focus-visible {
+/* Selected + hover — text stays brand-strong; left indicator darkens to brand-strong */
+.ids-anchor-menu-link[aria-current="page"]:hover:not([aria-disabled="true"]) {
   color: var(--color-text-brand-strong);
+}
+
+.ids-anchor-menu-link[aria-current="page"]:hover:not([aria-disabled="true"])::before {
+  background: var(--color-border-brand-strong);
+}
+
+/* Focus ring — 1px brand, inset -3px / -5px, radius 4px outer */
+.ids-anchor-menu-link:focus-visible {
   outline: none;
 }
 
 .ids-anchor-menu-link:focus-visible::after {
   content: "";
   position: absolute;
-  inset: -4px -6px;
-  border: var(--border-width-border-2) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-6);
+  inset: -3px -5px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
 }
 
 .ids-anchor-menu-link[aria-disabled="true"] {
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.ids-anchor-menu-label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: break-word;
 }

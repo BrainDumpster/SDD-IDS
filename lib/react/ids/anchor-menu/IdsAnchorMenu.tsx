@@ -27,6 +27,7 @@ import React, {
   type ReactElement,
 } from "react";
 import styles from "./IdsAnchorMenu.module.css";
+import { IdsTooltip } from "../tooltip";
 
 export interface IdsAnchorMenuItem {
   label: string;
@@ -44,6 +45,11 @@ export interface IdsAnchorMenuProps
   header?: boolean;
   /** Sticky positioning for long-page usage. Default `true`. */
   sticky?: boolean;
+  /**
+   * Reveal truncated labels with the browser's built-in `title` tooltip instead
+   * of the branded `IdsTooltip`. Default `false` (use `IdsTooltip`).
+   */
+  nativeTooltip?: boolean;
   onItemClick?: (href: string) => void;
 }
 
@@ -74,6 +80,7 @@ export function IdsAnchorMenu({
   title = "On this page",
   header = true,
   sticky = true,
+  nativeTooltip = false,
   onItemClick,
   className,
   ...rest
@@ -83,6 +90,29 @@ export function IdsAnchorMenu({
     resolveActiveHref(safeItems, undefined),
   );
   const itemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const labelRefs = useRef<Map<number, HTMLSpanElement>>(new Map());
+  const [truncatedIndexes, setTruncatedIndexes] = useState<Set<number>>(new Set());
+
+  // Auto-flip the label tooltip: when the menu sits in the right half of the
+  // viewport (e.g. a right-hand rail), anchor tooltips on the left so they open
+  // toward the page instead of overflowing off the right edge. IdsTooltip has
+  // no built-in collision detection, so the menu picks the side itself.
+  const navRef = useRef<HTMLElement>(null);
+  const [tooltipSide, setTooltipSide] = useState<"left" | "right">("right");
+
+  useEffect(() => {
+    if (nativeTooltip || typeof window === "undefined") return;
+    const updateSide = () => {
+      const nav = navRef.current;
+      if (!nav) return;
+      const rect = nav.getBoundingClientRect();
+      const center = rect.left + rect.width / 2;
+      setTooltipSide(center > window.innerWidth / 2 ? "left" : "right");
+    };
+    updateSide();
+    window.addEventListener("resize", updateSide);
+    return () => window.removeEventListener("resize", updateSide);
+  }, [nativeTooltip]);
 
   const hashTargets = useMemo(
     () =>
@@ -216,9 +246,20 @@ export function IdsAnchorMenu({
     }
   };
 
+  useEffect(() => {
+    const nextTruncated = new Set<number>();
+    labelRefs.current.forEach((el, index) => {
+      if (el.scrollHeight > el.clientHeight) {
+        nextTruncated.add(index);
+      }
+    });
+    setTruncatedIndexes(nextTruncated);
+  }, [safeItems]);
+
   return (
     <nav
       {...rest}
+      ref={navRef}
       aria-label={title}
       data-ids="ids-anchor-menu"
       data-sticky={sticky ? "true" : "false"}
@@ -246,29 +287,70 @@ export function IdsAnchorMenu({
               ? activeHref === item.href
               : Boolean(item.active);
 
+          const isTruncated = truncatedIndexes.has(index);
+          const useIdsTooltip = isTruncated && !nativeTooltip;
+          const nativeTitle =
+            isTruncated && nativeTooltip ? item.label : undefined;
+
+          const labelSpan = (
+            <span
+              ref={(el) => {
+                if (el) {
+                  labelRefs.current.set(index, el);
+                } else {
+                  labelRefs.current.delete(index);
+                }
+              }}
+              className={styles["ids-anchor-menu-label"]}
+              title={nativeTitle}
+            >
+              {item.label}
+            </span>
+          );
+
+          // In `"ids"` mode, anchor the tooltip to the label text (not the
+          // padded link) so it sits right beside the text edge.
+          const labelContent = useIdsTooltip ? (
+            <IdsTooltip side={tooltipSide} arrowAlign="start">
+              <IdsTooltip.Trigger display="inline">
+                {labelSpan}
+              </IdsTooltip.Trigger>
+              <IdsTooltip.Panel>
+                <IdsTooltip.Body>{item.label}</IdsTooltip.Body>
+              </IdsTooltip.Panel>
+            </IdsTooltip>
+          ) : (
+            labelSpan
+          );
+
+          const link = (
+            <a
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
+              href={navigable ? href : undefined}
+              className={styles["ids-anchor-menu-link"]}
+              data-ids="ids-anchor-menu-link"
+              aria-current={isActive ? "page" : undefined}
+              aria-disabled={navigable ? undefined : true}
+              tabIndex={navigable ? 0 : -1}
+              onClick={(event) => handleItemClick(event, href, navigable)}
+              onKeyDown={(event) =>
+                handleItemKeyDown(event, index, href, navigable)
+              }
+              onFocus={(event) => event.stopPropagation()}
+            >
+              {labelContent}
+            </a>
+          );
+
           return (
             <li
               key={`${item.href}-${index}`}
               className={styles["ids-anchor-menu-item"]}
               data-ids="ids-anchor-menu-item"
             >
-              <a
-                ref={(el) => {
-                  itemRefs.current[index] = el;
-                }}
-                href={navigable ? href : undefined}
-                className={styles["ids-anchor-menu-link"]}
-                data-ids="ids-anchor-menu-link"
-                aria-current={isActive ? "page" : undefined}
-                aria-disabled={navigable ? undefined : true}
-                tabIndex={navigable ? 0 : -1}
-                onClick={(event) => handleItemClick(event, href, navigable)}
-                onKeyDown={(event) =>
-                  handleItemKeyDown(event, index, href, navigable)
-                }
-              >
-                {item.label}
-              </a>
+              {link}
             </li>
           );
         })}

@@ -1,10 +1,13 @@
 import {
   AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -31,21 +34,39 @@ import { IdsAnchorMenuItemComponent } from "./ids-anchor-menu-item.component";
   providers: [{ provide: IDS_ANCHOR_MENU_CONTEXT, useExisting: IdsAnchorMenuComponent }],
 })
 export class IdsAnchorMenuComponent
-  implements OnInit, AfterContentInit, OnDestroy, IdsAnchorMenuContext
+  implements
+    OnInit,
+    AfterContentInit,
+    AfterViewInit,
+    OnDestroy,
+    IdsAnchorMenuContext
 {
   @ContentChildren(IdsAnchorMenuItemComponent) itemQuery!: QueryList<IdsAnchorMenuItemComponent>;
 
   @Input() title = ANCHOR_MENU_API_DEFAULTS.title;
   @Input() sticky = ANCHOR_MENU_API_DEFAULTS.sticky;
+  /**
+   * Reveal truncated labels with the browser's native `title` tooltip instead
+   * of the branded `IdsTooltip`. Default `false`.
+   */
+  @Input() nativeTooltip = false;
 
   @Output() readonly itemClick = new EventEmitter<string>();
 
+  /**
+   * Auto-flipped tooltip side: `"left"` when the menu sits in the right half of
+   * the viewport (so tooltips open toward the page, not off the right edge).
+   */
+  tooltipSide: "left" | "right" = "right";
   activeHref: string | undefined;
   private items: IdsAnchorMenuItemComponent[] = [];
   private focusedIndex = 0;
   private scrollSpyBound = false;
 
-  constructor(private readonly cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly hostRef: ElementRef<HTMLElement>,
+  ) {}
 
   ngOnInit(): void {
     this.bindScrollSpy();
@@ -54,6 +75,23 @@ export class IdsAnchorMenuComponent
   ngAfterContentInit(): void {
     this.bindItems();
     this.itemQuery.changes.subscribe(() => this.bindItems());
+  }
+
+  ngAfterViewInit(): void {
+    this.updateTooltipSide();
+  }
+
+  @HostListener("window:resize")
+  updateTooltipSide(): void {
+    if (typeof window === "undefined") return;
+    const rect = this.hostRef.nativeElement.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const next: "left" | "right" =
+      center > window.innerWidth / 2 ? "left" : "right";
+    if (next !== this.tooltipSide) {
+      this.tooltipSide = next;
+      this.cdr.markForCheck();
+    }
   }
 
   ngOnDestroy(): void {
