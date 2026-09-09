@@ -64,8 +64,10 @@ export interface TooltipProps {
   onClose?: (reason: TooltipCloseReason) => void;
   /** Default `ctrl-close-16`. */
   closeIconShapeName?: string;
-  /** When true, popup width hugs content (skip fixed 240/264). Default `false`. */
+  /** When true, popup width hugs content (skip fixed 240/264). Default `true`. */
   hugContent?: boolean;
+  /** Maximum popup width (px) when `hugContent` is true. Default `244`. */
+  maxWidth?: number;
 }
 
 export interface TooltipTriggerProps extends HTMLAttributes<HTMLSpanElement> {
@@ -524,7 +526,8 @@ function TooltipRoot({
   onOpenChange,
   onClose,
   closeIconShapeName = "ctrl-close-16",
-  hugContent = false,
+  hugContent = true,
+  maxWidth = 244,
 }: TooltipProps) {
   const side = resolveSide(sideProp);
   const arrowAlign = resolveAlign(alignProp);
@@ -634,7 +637,7 @@ function TooltipRoot({
       window.removeEventListener("scroll", update, true);
       window.removeEventListener("resize", update);
     };
-  }, [open, side, arrowAlign, children, hugContent, closable]);
+  }, [open, side, arrowAlign, children, hugContent, maxWidth, closable]);
 
   useEffect(() => {
     if (!open || !closable) return;
@@ -686,7 +689,8 @@ function TooltipRoot({
     top: coords?.top ?? 0,
     left: coords?.left ?? 0,
     visibility: coords ? "visible" : "hidden",
-  };
+    ...(hugContent ? { "--tooltip-max-width": `${maxWidth}px` } : {}),
+  } as CSSProperties;
 
   const handlePopupKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape" && closable) {
