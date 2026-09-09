@@ -53,6 +53,7 @@ import { createPortal } from "react-dom";
 import { useAnchorPosition } from "../../shared/utils/useAnchorPosition";
 import { useControllableState } from "../../shared/utils/useControllableState";
 import { IdsIcon } from "../icon";
+import { IdsTooltip, TooltipTrigger, TooltipPanel, TooltipBody } from "../tooltip";
 import styles from "./IdsAppLauncher.module.css";
 
 const DEFAULT_PRODUCT_ICON = "shield-encrypt-alt";
@@ -88,7 +89,9 @@ const s = {
   optionsSeparator: styles["ids-app-launcher-options-region--separator"],
   optionsList: styles["ids-app-launcher-options-list"],
   optionRow: styles["ids-app-launcher-option-row"],
+  optionIcon: styles["ids-app-launcher-option-icon"],
   optionLabel: styles["ids-app-launcher-option-label"],
+  optionLabelTrigger: styles["ids-app-launcher-option-label-trigger"],
   optionsFooter: styles["ids-app-launcher-options-footer"],
   footerAction: styles["ids-app-launcher-footer-action"],
 };
@@ -105,7 +108,6 @@ export type IdsAppLauncherTileDataState =
   | "default"
   | "hover"
   | "press"
-  | "selected"
   | "focus"
   | "no-icon";
 export type IdsAppLauncherOptionDataState = "default" | "hover" | "press" | "focus";
@@ -124,6 +126,8 @@ export interface IdsAppLauncherProduct {
 export interface IdsAppLauncherOption {
   id?: string;
   label: string;
+  /** Optional leading logo — `16px` wide, height auto, vertically centered with the label. */
+  icon?: ReactNode;
   onSelect?: () => void;
 }
 
@@ -151,6 +155,9 @@ export interface IdsAppLauncherProps {
   apps?: IdsAppLauncherProduct[];
   options?: IdsAppLauncherOption[];
   footerAction?: IdsAppLauncherFooterActionModel;
+  /** How a truncated option label reveals its full text: `false` (default) uses
+   *  the native browser tooltip (`title`); `true` uses the styled IDS tooltip. */
+  useIdsOptionTooltip?: boolean;
   /** Unknown / invalid → `2`. */
   columns?: number;
   triggerVariant?: IdsAppLauncherTriggerVariant | string;
@@ -237,6 +244,65 @@ function chunkRows<T>(items: T[], columns: number): T[][] {
   return rows;
 }
 
+/* Long-name reflow (design-spec "Long labels"):
+   - text-only tile: name may wrap to 3 lines; more than that promotes it to a
+     full-width tile (its own row) rather than truncating.
+   - icon tile: name is a single line (icon already takes 32px height); more than
+     that also promotes it to full-width.
+   A full-width product occupies a whole row; the launcher shows at most
+   `APP_LAUNCHER_MAX_PRODUCT_ROWS` product rows and the overflow becomes options. */
+const APP_LAUNCHER_LABEL_LINE_HEIGHT = 20; // Body 2 line-height (px)
+const APP_LAUNCHER_MAX_PRODUCT_ROWS = 2; // spec 42266:95081 — max 4 tiles (2×2)
+
+function productReflowKey(product: IdsAppLauncherProduct, index: number): string {
+  return product.id && product.id.trim() ? product.id : `idx-${index}`;
+}
+
+function isTextOnlyProduct(product: IdsAppLauncherProduct): boolean {
+  return product.icon === null;
+}
+
+/** Pack products into rows: a full-width product takes its own row, the rest fill
+    `columns`-per-row. Rows beyond the cap overflow (returned separately). */
+function packProductRows(
+  list: IdsAppLauncherProduct[],
+  fullWidthKeys: Set<string>,
+  columns: number,
+): { rows: IdsAppLauncherProduct[][]; overflow: IdsAppLauncherProduct[] } {
+  const cols = Math.max(1, columns);
+  const rows: IdsAppLauncherProduct[][] = [];
+  let current: IdsAppLauncherProduct[] = [];
+  const flush = () => {
+    if (current.length) {
+      rows.push(current);
+      current = [];
+    }
+  };
+  list.forEach((product, index) => {
+    if (fullWidthKeys.has(productReflowKey(product, index))) {
+      flush();
+      rows.push([product]);
+    } else {
+      current.push(product);
+      if (current.length === cols) flush();
+    }
+  });
+  flush();
+  return {
+    rows: rows.slice(0, APP_LAUNCHER_MAX_PRODUCT_ROWS),
+    overflow: rows.slice(APP_LAUNCHER_MAX_PRODUCT_ROWS).flat(),
+  };
+}
+
+function productToOption(product: IdsAppLauncherProduct, index: number): IdsAppLauncherOption {
+  return {
+    id: product.id && product.id.trim() ? product.id : `overflow-${index}`,
+    label: product.name,
+    icon: product.icon ?? undefined,
+    onSelect: product.onSelect,
+  };
+}
+
 function productKey(product: IdsAppLauncherProduct, fallback: string): string {
   return product.id && product.id.trim() ? product.id : fallback;
 }
@@ -305,11 +371,9 @@ function useChromeState(forced?: string): {
 
 function resolveTileDataState(args: {
   chrome?: ChromeState;
-  selected: boolean;
   forced?: IdsAppLauncherTileDataState;
 }): IdsAppLauncherTileDataState | undefined {
   if (args.chrome) return args.chrome;
-  if (args.selected) return "selected";
   if (args.forced && args.forced !== "default") return args.forced;
   return undefined;
 }
@@ -338,10 +402,9 @@ interface IdsAppLauncherContextValue {
   useSingleProductWidth: boolean;
   onProductSelect?: (detail: IdsAppLauncherProductSelectDetail) => void;
   onOptionSelect?: (detail: IdsAppLauncherOptionSelectDetail) => void;
-  selectedProductId: string | null;
   selectedOptionId: string | null;
-  setSelectedProductId: (id: string | null) => void;
   setSelectedOptionId: (id: string | null) => void;
+  useIdsOptionTooltip: boolean;
 }
 
 const IdsAppLauncherContext = createContext<IdsAppLauncherContextValue | null>(null);
@@ -707,7 +770,6 @@ export function IdsAppLauncherProductTile({
   const resolvedId = id && id.trim() ? id : name || "product";
   const showRail = tileDivider !== "none";
   const twoProduct = twoProductLayout || showRail;
-  const selected = root?.selectedProductId === resolvedId;
   const { chrome, pointerProps } = useChromeState(resolvedState);
 
   const tileCtx = useMemo<ProductTileContextValue>(
@@ -744,14 +806,17 @@ export function IdsAppLauncherProductTile({
   const handleActivate = (event: MouseEvent<HTMLElement>) => {
     onClick?.(event as MouseEvent<HTMLButtonElement>);
     if (event.defaultPrevented) return;
-    root?.setSelectedProductId(resolvedId);
+    // Product tiles are navigation, not a selection: activating one launches its
+    // app. There is no selected state — only the transient press (pointer down→up,
+    // handled by useChromeState) — and the launcher closes afterwards (matches the
+    // Angular implementation). `setOpen(false)` is a no-op in panelOnly stories.
     onSelect?.();
     root?.onProductSelect?.({ id: resolvedId, name });
+    root?.setOpen(false);
   };
 
   const tileDataState = resolveTileDataState({
     chrome,
-    selected,
     forced: resolvedState,
   });
 
@@ -953,6 +1018,7 @@ export function IdsAppLauncherProductRegion({
       className={cx(s.productRegion, className)}
       data-ids="ids-app-launcher-product-region"
       data-slot="ProductRegion"
+      data-focus-section="products"
     >
       {content}
     </div>
@@ -971,6 +1037,8 @@ export interface IdsAppLauncherOptionRowProps
   option?: IdsAppLauncherOption;
   label?: string;
   optionId?: string;
+  /** Optional leading logo — `16px` wide, height auto, vertically centered with the label. */
+  icon?: ReactNode;
   dataState?: IdsAppLauncherOptionDataState;
 }
 
@@ -979,6 +1047,7 @@ export function IdsAppLauncherOptionRow({
   option,
   label,
   optionId,
+  icon,
   dataState,
   className,
   onClick,
@@ -992,6 +1061,17 @@ export function IdsAppLauncherOptionRow({
 }: IdsAppLauncherOptionRowProps) {
   const root = useAppLauncher("IdsAppLauncherOptionRow", true);
   const resolvedLabel = label ?? option?.label ?? "";
+  const resolvedIcon = icon ?? option?.icon ?? null;
+  // When the label is cut off by the ellipsis, expose the full text via a tooltip.
+  // Default is the native browser tooltip (`title`); `useIdsOptionTooltip` on the
+  // launcher switches to the styled IDS tooltip. Measured after layout.
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const [labelTruncated, setLabelTruncated] = useState(false);
+  useEffect(() => {
+    const el = labelRef.current;
+    if (el) setLabelTruncated(el.scrollWidth > el.clientWidth + 1);
+  }, [resolvedLabel]);
+  const useIdsTooltip = root?.useIdsOptionTooltip ?? false;
   const resolvedId =
     optionId ??
     (option?.id && option.id.trim() ? option.id : resolvedLabel || "option");
@@ -1043,7 +1123,35 @@ export function IdsAppLauncherOptionRow({
         onBlur?.(event);
       }}
     >
-      {children ?? <span className={s.optionLabel}>{resolvedLabel}</span>}
+      {children ?? (
+        <>
+          {resolvedIcon ? (
+            <span className={s.optionIcon} aria-hidden="true">
+              {resolvedIcon}
+            </span>
+          ) : null}
+          {labelTruncated && useIdsTooltip ? (
+            <IdsTooltip side="right" arrowAlign="start" hugContent>
+              <TooltipTrigger display="block" className={s.optionLabelTrigger}>
+                <span ref={labelRef} className={s.optionLabel}>
+                  {resolvedLabel}
+                </span>
+              </TooltipTrigger>
+              <TooltipPanel>
+                <TooltipBody>{resolvedLabel}</TooltipBody>
+              </TooltipPanel>
+            </IdsTooltip>
+          ) : (
+            <span
+              ref={labelRef}
+              className={s.optionLabel}
+              title={labelTruncated ? resolvedLabel : undefined}
+            >
+              {resolvedLabel}
+            </span>
+          )}
+        </>
+      )}
     </button>
   );
 }
@@ -1128,6 +1236,7 @@ export function IdsAppLauncherOptionsRegion({
       className={cx(s.optionsRegion, showSeparator && s.optionsSeparator, className)}
       data-ids="ids-app-launcher-options-region"
       data-slot="OptionsRegion"
+      data-focus-section="options"
     >
       {content}
     </div>
@@ -1239,12 +1348,94 @@ export function IdsAppLauncherSurface({
   ...rest
 }: IdsAppLauncherSurfaceProps) {
   const root = useAppLauncher("IdsAppLauncherSurface");
+
+  // Cross-section Arrow-key navigation inside the panel (like the dropdown popup):
+  // products are a `columns`-wide grid (Left/Right within a row, Up/Down across
+  // rows); the options list is vertical; at the grid/list boundary focus jumps
+  // between the two sections (keyed off `data-focus-section`).
+  const handlePopupKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    (rest as HTMLAttributes<HTMLDivElement>).onKeyDown?.(event);
+    if (
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
+      return;
+    }
+    const popup = event.currentTarget;
+    const active = popup.ownerDocument.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusables = (node: Element | null) =>
+      node ? Array.from(node.querySelectorAll<HTMLElement>(focusableSelector)) : [];
+
+    const productsSection = popup.querySelector<HTMLElement>('[data-focus-section="products"]');
+    const optionsSection = popup.querySelector<HTMLElement>('[data-focus-section="options"]');
+    const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
+    const dir = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+    const cols = Math.max(1, root?.columns ?? 2);
+    const focus = (el?: HTMLElement) => {
+      if (!el) return;
+      event.preventDefault();
+      event.stopPropagation();
+      el.focus();
+    };
+
+    // Products grid.
+    if (productsSection?.contains(active)) {
+      const tiles = getFocusables(productsSection);
+      const idx = tiles.indexOf(active);
+      if (idx === -1) return;
+      if (horizontal) {
+        const nextIdx = idx + dir; // stay within the same row
+        if (
+          nextIdx >= 0 &&
+          nextIdx < tiles.length &&
+          Math.floor(nextIdx / cols) === Math.floor(idx / cols)
+        ) {
+          focus(tiles[nextIdx]);
+        }
+        return;
+      }
+      const nextIdx = idx + dir * cols; // move one row up/down
+      if (nextIdx >= 0 && nextIdx < tiles.length) {
+        focus(tiles[nextIdx]);
+        return;
+      }
+      // Past the last grid row → first option (Down). Above the first row → stay.
+      if (dir > 0) focus(getFocusables(optionsSection)[0]);
+      return;
+    }
+
+    // Options list (vertical only).
+    if (optionsSection?.contains(active)) {
+      if (horizontal) return;
+      const opts = getFocusables(optionsSection);
+      const idx = opts.indexOf(active);
+      if (idx === -1) return;
+      const nextIdx = idx + dir;
+      if (nextIdx >= 0 && nextIdx < opts.length) {
+        focus(opts[nextIdx]);
+        return;
+      }
+      // Above the first option → last product tile.
+      if (dir < 0) {
+        const tiles = getFocusables(productsSection);
+        focus(tiles[tiles.length - 1]);
+      }
+    }
+  };
+
   if (!root) return null;
   if (!root.panelOnly && !root.open) return null;
 
   const surface = (
     <div
       {...rest}
+      onKeyDown={handlePopupKeyDown}
       className={cx(
         s.surface,
         root.useTwoProductInternalRail && s.surfaceTwoProduct,
@@ -1302,6 +1493,7 @@ export function IdsAppLauncher({
   apps,
   options,
   footerAction,
+  useIdsOptionTooltip = false,
   columns: columnsProp,
   triggerVariant: triggerVariantProp,
   sideOffset,
@@ -1320,16 +1512,43 @@ export function IdsAppLauncher({
   const columns = resolveColumns(columnsProp);
   const list = products ?? apps ?? [];
   const optionList = options ?? [];
-  const showOptions = optionList.length > 0 || footerAction != null;
+
+  // Measure each product name at the normal tile label width (111px) to detect
+  // labels that overflow their line budget (1 line with an icon, 3 without) and
+  // must become full-width tiles. The hidden measurement nodes render below.
+  const labelMeasureRefs = useRef<Map<string, HTMLSpanElement>>(new Map());
+  const [fullWidthKeys, setFullWidthKeys] = useState<Set<string>>(() => new Set());
+  useEffect(() => {
+    const next = new Set<string>();
+    list.forEach((product, index) => {
+      const el = labelMeasureRefs.current.get(productReflowKey(product, index));
+      if (!el) return;
+      const lines = Math.round(el.scrollHeight / APP_LAUNCHER_LABEL_LINE_HEIGHT);
+      const budget = isTextOnlyProduct(product) ? 3 : 1;
+      if (lines > budget) next.add(productReflowKey(product, index));
+    });
+    setFullWidthKeys((prev) =>
+      prev.size === next.size && [...next].every((k) => prev.has(k)) ? prev : next,
+    );
+  }, [list]);
+
+  const { rows, overflow: overflowProducts } = useMemo(
+    () => packProductRows(list, fullWidthKeys, columns),
+    [list, fullWidthKeys, columns],
+  );
+  const mergedOptions = useMemo<IdsAppLauncherOption[]>(
+    () => [...overflowProducts.map(productToOption), ...optionList],
+    [overflowProducts, optionList],
+  );
+
+  const showOptions = mergedOptions.length > 0 || footerAction != null;
   const useTwoProductInternalRail = list.length === 2 && !showOptions;
   const useSingleProductWidth = list.length === 1 && !showOptions;
-  const rows = chunkRows(list, columns);
   const reactId = useId();
   const popupId = id ? `${id}-surface` : `ids-app-launcher-${reactId}`;
 
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
 
   const [open, setOpen] = useControllableState({
@@ -1390,17 +1609,16 @@ export function IdsAppLauncher({
       list,
       rows,
       columns,
-      options: optionList,
+      options: mergedOptions,
       footerAction,
       showOptions,
       useTwoProductInternalRail,
       useSingleProductWidth,
       onProductSelect,
       onOptionSelect,
-      selectedProductId,
       selectedOptionId,
-      setSelectedProductId,
       setSelectedOptionId,
+      useIdsOptionTooltip,
     }),
     [
       open,
@@ -1413,15 +1631,15 @@ export function IdsAppLauncher({
       list,
       rows,
       columns,
-      optionList,
+      mergedOptions,
       footerAction,
       showOptions,
       useTwoProductInternalRail,
       useSingleProductWidth,
       onProductSelect,
       onOptionSelect,
-      selectedProductId,
       selectedOptionId,
+      useIdsOptionTooltip,
     ],
   );
 
@@ -1450,6 +1668,46 @@ export function IdsAppLauncher({
         data-panel-only={panelOnly ? "true" : undefined}
       >
         {tree}
+        {/* Off-screen label measurement for the long-name reflow. Rendered at the
+            normal tile label width so the row packing is known before the panel
+            opens. */}
+        <div
+          aria-hidden="true"
+          data-ids="ids-app-launcher-measure"
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            top: 0,
+            width: "111px",
+            pointerEvents: "none",
+            fontFamily: 'var(--typography-font-style-primary, "Roboto", sans-serif)',
+          }}
+        >
+          {list.map((product, index) => {
+            const key = productReflowKey(product, index);
+            return (
+              <span
+                key={key}
+                ref={(el) => {
+                  if (el) labelMeasureRefs.current.set(key, el);
+                  else labelMeasureRefs.current.delete(key);
+                }}
+                style={{
+                  display: "block",
+                  fontSize: "var(--font-size-body-2)",
+                  lineHeight: "var(--font-line-height-line-height-20)",
+                  fontWeight: 400,
+                  whiteSpace: "normal",
+                  overflowWrap: "break-word",
+                  wordBreak: "break-word",
+                  textAlign: "center",
+                }}
+              >
+                {product.name}
+              </span>
+            );
+          })}
+        </div>
       </span>
     </IdsAppLauncherContext.Provider>
   );
