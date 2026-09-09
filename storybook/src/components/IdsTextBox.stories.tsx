@@ -12,6 +12,7 @@ const meta: Meta<typeof IdsTextBox> = {
       control: "select",
       options: ["default", "hover", "selected", "focus", "disabled", "error"],
     },
+    labelPosition: { control: "select", options: ["left", "top"] },
     disabled: { control: "boolean" },
     invalid: { control: "boolean" },
     showLabel: { control: "boolean" },
@@ -19,6 +20,9 @@ const meta: Meta<typeof IdsTextBox> = {
     required: { control: "boolean" },
     showIcon: { control: "boolean" },
     showHelperText: { control: "boolean" },
+    showInfoIcon: { control: "boolean" },
+    infoTooltip: { control: "text" },
+    inputType: { control: "select", options: ["text", "password", "email", "number"] },
   },
 };
 
@@ -26,6 +30,11 @@ export default meta;
 type Story = StoryObj<typeof IdsTextBox>;
 
 export const Default: Story = {
+  render: (args) => (
+    <div style={{ width: 300 }}>
+      <IdsTextBox {...args} />
+    </div>
+  ),
   args: {
     componentType: "text-input",
     size: "large",
@@ -40,49 +49,120 @@ export const Default: Story = {
   },
 };
 
-export const States: Story = {
+export const ErrorWithHelper: Story = {
+  name: "Error + Helper Text",
   render: () => (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(280px, 300px))", gap: 16 }}>
-      <IdsTextBox state="default" value="Filled Text" helperText="Helper text" />
-      <IdsTextBox state="hover" value="Filled Text" helperText="Helper text" />
-      <IdsTextBox state="selected" value="Filled Text" helperText="Helper text" />
-      <IdsTextBox state="focus" value="Filled Text" helperText="Helper text" />
-      <IdsTextBox disabled value="Filled Text" helperText="Helper text" />
-      <IdsTextBox state="error" placeholder="Placeholder Text" errorText="Error message" />
+    <div style={{ display: "grid", gap: 16, width: 300 }}>
+      <IdsTextBox
+        label="Username:"
+        required
+        state="error"
+        value="User12345"
+        helperText="Username or email address"
+        errorText="Username already exists. Enter a different username."
+      />
     </div>
   ),
 };
 
-export const TextArea: Story = {
-  args: {
-    componentType: "text-area",
-    state: "default",
-    label: "Label:",
-    showLabel: true,
-    required: false,
-    placeholder: "Placeholder Text",
-    helperText: "Helper text",
-    showHelperText: true,
-    showIcon: true,
-  },
-};
-
-export const SizeScaleManual: Story = {
+export const TopLabel: Story = {
+  name: "Label Position: Top",
   render: () => (
-    <div style={{ display: "grid", gap: 16, maxWidth: 300 }}>
-      <IdsTextBox size="large" placeholder="Large (40)" helperText="Helper text" />
-      <IdsTextBox size="small" placeholder="Small (32)" helperText="Helper text" />
+    <div style={{ display: "grid", gap: 16, width: 300 }}>
+      <IdsTextBox
+        label="Label:"
+        labelPosition="top"
+        placeholder="Top label"
+        helperText="Helper text"
+      />
+      <IdsTextBox
+        label="Label:"
+        labelPosition="top"
+        required
+        placeholder="Top label required"
+        helperText="Helper text"
+      />
     </div>
   ),
 };
 
-export const FocusBehavior: Story = {
+export const InfoIcon: Story = {
+  name: "Label with Info Icon",
   render: () => (
-    <div style={{ display: "grid", gap: 12, maxWidth: 300 }}>
-      <p style={{ margin: 0, fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
-        Click inside input: active border only. Use Tab to see focus-visible outline.
-      </p>
-      <IdsTextBox value="Focus behavior demo" helperText="Helper text" />
+    <div style={{ display: "grid", gap: 32, width: 300, margin: "60px auto" }}>
+      <IdsTextBox
+        label="Label:"
+        showInfoIcon
+        infoTooltip="Additional information about this field"
+        placeholder="Hover the info icon"
+        helperText="Helper text"
+      />
+    </div>
+  ),
+};
+
+export const Password: Story = {
+  name: "Password Toggle",
+  render: () => (
+    <div style={{ display: "grid", gap: 16, width: 300 }}>
+      <IdsTextBox
+        label="Password:"
+        inputType="password"
+        value="secretpass123"
+        helperText="Click the eye icon to toggle visibility"
+      />
+    </div>
+  ),
+};
+
+export const ResponsiveTextInput: Story = {
+  name: "Responsive: Text Input",
+  render: () => (
+    <div
+      style={{
+        resize: "horizontal",
+        overflow: "auto",
+        width: 400,
+        minWidth: 70,
+        maxWidth: 720,
+        padding: 12,
+        border: "1px dashed var(--color-border-accessible)",
+        borderRadius: 8,
+      }}
+    >
+      <IdsTextBox
+        componentType="text-input"
+        labelPosition="top"
+        label="Label:"
+        placeholder="Drag the bottom-right handle to resize"
+        helperText="Field fills its container (min 70px, max 700px)."
+      />
+    </div>
+  ),
+};
+
+export const ResponsiveTextArea: Story = {
+  name: "Responsive: Text Area",
+  render: () => (
+    <div
+      style={{
+        resize: "horizontal",
+        overflow: "auto",
+        width: 400,
+        minWidth: 70,
+        maxWidth: 720,
+        padding: 12,
+        border: "1px dashed var(--color-border-accessible)",
+        borderRadius: 8,
+      }}
+    >
+      <IdsTextBox
+        componentType="text-area"
+        labelPosition="top"
+        label="Label:"
+        placeholder="Drag the bottom-right handle to resize"
+        helperText="Text area fills its container (min 70px, max 700px)."
+      />
     </div>
   ),
 };
