@@ -2,7 +2,6 @@
   all: unset;
   display: flex;
   box-sizing: border-box;
-  position: relative;
 }
 
 .triggerFull {
@@ -15,29 +14,16 @@
   box-sizing: border-box;
 }
 
-.triggerReset:focus-visible {
-  outline: none;
-}
-
-.triggerReset:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
-}
-
 .popup {
   background: var(--color-background-surface-component);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
   width: var(--dropdown-trigger-width, auto) !important;
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
   /* Field-attached: bottom corners only (Figma Rounded Corners=True → radius-4). IDS menu radius = 0. */
-  border-radius: 0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius);
+  border-radius: 0 0 var(--dropdown-menu-radius, var(--corner-radius-radius-none)) var(--dropdown-menu-radius, var(--corner-radius-radius-none));
   box-shadow:
     0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
     0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
@@ -50,8 +36,8 @@
 
 /* Detached menu (context menu, masthead help) — full border; not field-attached. */
 .popupStandalone {
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  border-radius: var(--dropdown-menu-radius);
+  border-top: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--dropdown-menu-radius, var(--corner-radius-radius-none));
   width: auto !important;
   min-width: 186px !important;
   max-width: none !important;
@@ -64,33 +50,21 @@
 }
 
 .searchField {
-  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: 0;
-}
-
-.searchField[data-focus-visible="true"]::after,
-.searchField:has(.searchInput:focus-visible)::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
 }
 
 .searchIcon {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  /* Match React: tint via background + CSS mask (Figma Search-Main → brand icon). */
   background: var(--color-icon-brand-base);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: contain;
@@ -117,7 +91,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-space-10);
+  gap: var(--spacing-space-8);
   flex: 1 1 auto;
   min-width: 0;
   padding-left: var(--padding-padding-8);
@@ -137,7 +111,7 @@
 }
 
 .searchClearButton:focus-visible {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 1px;
 }
 
@@ -148,7 +122,7 @@
 .showSelectedPanel {
   width: 100%;
   box-sizing: border-box;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
 }
@@ -196,10 +170,24 @@
   cursor: pointer;
 }
 
-.showSelectedClear:focus-visible,
-.showSelectedToggle:focus-visible {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+.showSelectedClear:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 1px;
+}
+
+/* Show/Hide Selected toggle focus ring — button-style `::after` ring, per design-spec. */
+.showSelectedToggle:focus-visible {
+  position: relative;
+  outline: none;
+}
+
+.showSelectedToggle:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
+  pointer-events: none;
 }
 
 .showSelectedClearIcon {
@@ -223,21 +211,6 @@
   box-sizing: border-box;
 }
 
-.noResults {
-  display: flex;
-  align-items: center;
-  padding: var(--padding-padding-10) var(--padding-padding-16);
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 40px;
-  background: var(--color-background-surface-component);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  font-weight: 500;
-  font-variation-settings: "wdth" 100;
-  color: var(--color-text-gray-neutral);
-}
-
 .selectAllClearAllRow {
   display: flex;
   align-items: center;
@@ -245,7 +218,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-16);
-  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   background: var(--color-background-surface-component);
 }
 
@@ -271,15 +244,6 @@
 .clearAllButton:disabled {
   color: var(--color-text-gray-disabled);
   cursor: not-allowed;
-}
-
-.selectAllButton:focus-visible .selectAllCheckbox {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
-}
-
-.selectAllButton:focus-visible:not([data-checked="true"]) .selectAllCheckbox {
-  border-color: var(--color-border-brand-base);
 }
 
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
@@ -326,41 +290,32 @@
 }
 
 .item[data-selection-mode="single"] {
-  padding: var(--padding-padding-10) var(--padding-padding-16);
-  min-height: 40px;
-}
-
-/* Figma single-select text-only option aligns content to the top (items-start).
-   Radio rows keep center alignment so the control lines up with the label. */
-.item[data-selection-mode="single"]:not(:has(.radioOuter)) {
-  align-items: flex-start;
+  padding: var(--padding-padding-10) var(--padding-padding-24) var(--padding-padding-10) var(--padding-padding-16);
+  min-height: 44px;
 }
 
 .item:hover:not([data-disabled]) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
 }
 
 .item[data-highlighted] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
   box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+    inset 0 1px 0 0 var(--color-border-brand-base),
+    inset 0 -1px 0 0 var(--color-border-brand-base);
 }
 
 .item[data-selection-mode="single"]:hover:not([data-disabled]),
 .item[data-selection-mode="single"][data-highlighted]:not([data-disabled]) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral);
-  /* Top + bottom border only (no side borders); inset box-shadow is not clipped
-     by the options scroll region the way a 0-offset outline is. */
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+  outline: 1px solid var(--color-border-brand-base-neutral);
+  box-shadow: none;
 }
 
 .item[data-focus-visible] {
@@ -372,7 +327,7 @@
 }
 
 .item[data-selection-mode="single"]:focus-visible {
-  outline: 1px solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: -1px;
   border-radius: var(--corner-radius-radius-4);
 }
@@ -398,16 +353,14 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-disabled],
 .item[data-selection-mode="single"]:not(:has(.radioOuter)):disabled {
   background: var(--color-background-gray-lighter);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-gray-disabled),
-    inset 0 -1px 0 0 var(--color-border-gray-disabled);
+  outline: 1px solid var(--color-border-gray-disabled);
 }
 
 .item[data-selectable="false"][data-disabled],
 .item[data-selectable="false"]:disabled {
-  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   box-shadow:
-    inset 0 -1px 0 0 var(--color-border-neutral-light),
+    inset 0 -1px 0 0 var(--color-border-gray-neutral-light),
     0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
@@ -415,7 +368,7 @@
   display: flex;
   align-items: center;
   padding: var(--padding-padding-6) var(--padding-padding-16);
-  border-top: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -438,7 +391,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: var(--padding-padding-8) 0;
-  border-top: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -448,51 +401,23 @@
 .footerActionButton {
   display: inline-flex;
   align-items: center;
-  position: relative;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: var(--corner-radius-radius-2);
 }
 
-/* Single-select Clear All (Figma / React parity): below search, bottom border. */
-.clearAllAction {
-  all: unset;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--padding-padding-8) 0;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
-  color: var(--color-text-brand-strong);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
-}
-
-.clearAllButton:focus-visible .footerActionButton,
-.footerAction:focus-visible .footerActionButton,
-.clearAllAction:focus-visible .footerActionButton {
-  outline: none;
-}
-
-.clearAllButton:focus-visible .footerActionButton::after,
-.footerAction:focus-visible .footerActionButton::after,
-.clearAllAction:focus-visible .footerActionButton::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius);
-  pointer-events: none;
-}
-
 .leadingControl {
   display: inline-flex;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   pointer-events: none;
+}
+
+.item[data-selection-mode="single"] .leadingControl {
+  width: 16px;
+  height: 16px;
 }
 
 .radioOuter {
@@ -551,13 +476,13 @@
   border-radius: 2px;
 }
 
-.item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,
-.item[data-selection-mode="multi"]:focus-visible .checkboxOuter::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-2);
+/* Focus ring on the whole option row (matches single-select + design-spec
+   "Option rows use outline: 1px brand, outline-offset: -1px, radius-4"). */
+.item[data-selection-mode="multi"][data-focus-visible],
+.item[data-selection-mode="multi"]:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]) {
@@ -581,9 +506,8 @@
 .item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected] {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+  outline: 1px solid var(--color-border-brand-base-neutral);
+  box-shadow: none;
 }
 
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
@@ -591,6 +515,15 @@
   color: var(--color-text-brand-strong);
   outline: none;
   box-shadow: none;
+}
+
+/* Keep the keyboard focus ring on a selected radio row (outline:none above wins
+   over the generic :focus-visible rule otherwise → selected row looks skipped). */
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected][data-focus-visible],
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected]:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .item[data-selection-mode="multi"][data-selected] {
@@ -615,9 +548,8 @@
 .item[data-selection-mode="single"]:active:not([data-disabled]) {
   background: var(--color-background-brand-light-slate);
   color: var(--color-text-brand-strong);
-  box-shadow:
-    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
-    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+  outline: 1px solid var(--color-border-brand-base-neutral);
+  box-shadow: none;
 }
 
 /* --- Control-state parity (delegated from checkbox/radio specs) --- */
@@ -741,9 +673,10 @@
 }
 
 .popup--above {
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  border-radius: var(--dropdown-menu-radius) var(--dropdown-menu-radius) 0 0;
-  /* Spec Accurate: suppress drop shadow when menu opens above the field. */
+  border-top: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--dropdown-menu-radius, var(--corner-radius-radius-none)) var(--dropdown-menu-radius, var(--corner-radius-radius-none)) 0 0;
+  /* Menu flipped above the field: drop the shadow entirely (design-spec) so it
+     does not cast onto the field/container. */
   box-shadow: none;
 }
 
