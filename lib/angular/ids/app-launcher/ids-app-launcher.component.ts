@@ -11,6 +11,7 @@
  */
 import { NgStyle, NgTemplateOutlet } from "@angular/common";
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -20,8 +21,10 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   Renderer2,
   ViewChild,
+  ViewChildren,
   ViewEncapsulation,
 } from "@angular/core";
 import { IdsIconComponent } from "../icon/ids-icon.component";
@@ -48,7 +51,9 @@ let launcherPortalSeq = 0;
     "[attr.data-ids]": "'IdsAppLauncher'",
   },
 })
-export class IdsAppLauncherComponent implements OnInit, OnDestroy {
+export class IdsAppLauncherComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
   @Input() products: IdsAppLauncherProduct[] = [];
   /** Unknown → `ids`. Drives Synapse tile chrome on the portaled surface. */
   @Input() programme: IdsAppLauncherProgramme | string = "ids";
@@ -102,12 +107,46 @@ export class IdsAppLauncherComponent implements OnInit, OnDestroy {
     return this.openInput !== undefined ? this.openInput : this.internalOpen;
   }
 
+  /** Off-screen measurement labels (one per product) for the long-name reflow. */
+  @ViewChildren("measureLabel")
+  private measureLabels?: QueryList<ElementRef<HTMLElement>>;
+
+  /** Body 2 line-height used to convert measured height into a line count. */
+  private static readonly LABEL_LINE_HEIGHT = 20;
+
+  /** Product keys whose name overflows its line budget → rendered full-width. */
+  private fullWidthKeys = new Set<string>();
+
+  reflowKey(product: IdsAppLauncherProduct, index: number): string {
+    return product.id && product.id.trim() ? product.id : `idx-${index}`;
+  }
+
+  isFullWidth(product: IdsAppLauncherProduct, index: number): boolean {
+    return this.fullWidthKeys.has(this.reflowKey(product, index));
+  }
+
+  /** Pack products into rows: a full-width (long-name) product takes its own row;
+      the rest fill `columns`-per-row. No options region here, so no overflow. */
   get rows(): IdsAppLauncherProduct[][] {
     const cols = Math.max(1, this.columns);
     const rows: IdsAppLauncherProduct[][] = [];
-    for (let i = 0; i < this.products.length; i += cols) {
-      rows.push(this.products.slice(i, i + cols));
-    }
+    let current: IdsAppLauncherProduct[] = [];
+    const flush = () => {
+      if (current.length) {
+        rows.push(current);
+        current = [];
+      }
+    };
+    this.products.forEach((product, index) => {
+      if (this.isFullWidth(product, index)) {
+        flush();
+        rows.push([product]);
+      } else {
+        current.push(product);
+        if (current.length === cols) flush();
+      }
+    });
+    flush();
     return rows;
   }
 
@@ -132,6 +171,29 @@ export class IdsAppLauncherComponent implements OnInit, OnDestroy {
 
   isNoIcon(product: IdsAppLauncherProduct): boolean {
     return product.iconSlug === "";
+  }
+
+  ngAfterViewChecked(): void {
+    const labels = this.measureLabels;
+    if (!labels) return;
+    const next = new Set<string>();
+    labels.forEach((ref) => {
+      const el = ref.nativeElement;
+      const key = el.dataset["reflowKey"];
+      if (!key) return;
+      const budget = el.dataset["reflowBudget"] === "3" ? 3 : 1;
+      const lines = Math.round(
+        el.scrollHeight / IdsAppLauncherComponent.LABEL_LINE_HEIGHT,
+      );
+      if (lines > budget) next.add(key);
+    });
+    const changed =
+      next.size !== this.fullWidthKeys.size ||
+      ![...next].every((k) => this.fullWidthKeys.has(k));
+    if (changed) {
+      this.fullWidthKeys = next;
+      this.cdr.markForCheck();
+    }
   }
 
   ngOnInit(): void {
@@ -212,6 +274,90 @@ export class IdsAppLauncherComponent implements OnInit, OnDestroy {
       event?.preventDefault();
     }
     this.setOpen(false);
+  }
+
+  /**
+   * Cross-section Arrow-key navigation inside the open panel (like the dropdown
+   * popup): products are a `columns`-wide grid (Left/Right within a row, Up/Down
+   * across rows); the options list is vertical; at the grid/list boundary focus
+   * crosses between the two sections (keyed off `data-focus-section`). The
+   * options branch is null-safe, so a products-only launcher just navigates the
+   * grid.
+   */
+  onPopupKeyDown(event: KeyboardEvent): void {
+    if (
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
+      return;
+    }
+    const popup = event.currentTarget as HTMLElement | null;
+    if (!popup) return;
+    const active = popup.ownerDocument.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusables = (node: Element | null): HTMLElement[] =>
+      node ? Array.from(node.querySelectorAll<HTMLElement>(focusableSelector)) : [];
+
+    const productsSection = popup.querySelector<HTMLElement>('[data-focus-section="products"]');
+    const optionsSection = popup.querySelector<HTMLElement>('[data-focus-section="options"]');
+    const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
+    const dir = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+    const cols = Math.max(1, this.columns);
+    const focus = (el?: HTMLElement): void => {
+      if (!el) return;
+      event.preventDefault();
+      event.stopPropagation();
+      el.focus();
+    };
+
+    // Products grid.
+    if (productsSection?.contains(active)) {
+      const tiles = getFocusables(productsSection);
+      const idx = tiles.indexOf(active);
+      if (idx === -1) return;
+      if (horizontal) {
+        const nextIdx = idx + dir; // stay within the same row
+        if (
+          nextIdx >= 0 &&
+          nextIdx < tiles.length &&
+          Math.floor(nextIdx / cols) === Math.floor(idx / cols)
+        ) {
+          focus(tiles[nextIdx]);
+        }
+        return;
+      }
+      const nextIdx = idx + dir * cols; // move one row up/down
+      if (nextIdx >= 0 && nextIdx < tiles.length) {
+        focus(tiles[nextIdx]);
+        return;
+      }
+      // Past the last grid row → first option (Down). Above the first row → stay.
+      if (dir > 0) focus(getFocusables(optionsSection)[0]);
+      return;
+    }
+
+    // Options list (vertical only).
+    if (optionsSection?.contains(active)) {
+      if (horizontal) return;
+      const opts = getFocusables(optionsSection);
+      const idx = opts.indexOf(active);
+      if (idx === -1) return;
+      const nextIdx = idx + dir;
+      if (nextIdx >= 0 && nextIdx < opts.length) {
+        focus(opts[nextIdx]);
+        return;
+      }
+      // Above the first option → last product tile.
+      if (dir < 0) {
+        const tiles = getFocusables(productsSection);
+        focus(tiles[tiles.length - 1]);
+      }
+    }
   }
 
   private onDocumentPointerDown(event: PointerEvent): void {

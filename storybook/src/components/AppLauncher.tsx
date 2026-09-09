@@ -1,5 +1,5 @@
 import { Popover } from "@base-ui-components/react/popover";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import { Icon } from "./Icon";
 import styles from "./AppLauncher.module.css";
 
@@ -15,6 +15,8 @@ export interface AppLauncherProduct {
 export interface AppLauncherOption {
   id?: string;
   label: string;
+  /** Optional leading logo — `16px` wide, height auto, vertically centered with the label. */
+  icon?: ReactNode;
   onSelect?: () => void;
 }
 
@@ -140,6 +142,22 @@ export interface AppLauncherOptionsListProps {
   showTopSeparator?: boolean;
 }
 
+/** Option label that exposes the full text via a native tooltip when the
+ *  ellipsis cuts it off. */
+function OptionRowLabel({ label }: { label: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [truncated, setTruncated] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (el) setTruncated(el.scrollWidth > el.clientWidth + 1);
+  }, [label]);
+  return (
+    <span ref={ref} className={styles.optionLabel} title={truncated ? label : undefined}>
+      {label}
+    </span>
+  );
+}
+
 /** Options list block below product grid (Figma `Dropdown-SingleSelect-Elements-Menu` pattern). */
 export function AppLauncherOptionsList({
   options,
@@ -156,6 +174,7 @@ export function AppLauncherOptionsList({
       ]
         .filter(Boolean)
         .join(" ")}
+      data-focus-section="options"
     >
       {options.length > 0 ? (
         <ul className={styles.optionsList}>
@@ -166,7 +185,12 @@ export function AppLauncherOptionsList({
                 className={styles.optionItem}
                 onClick={opt.onSelect}
               >
-                <span className={styles.optionLabel}>{opt.label}</span>
+                {opt.icon ? (
+                  <span className={styles.optionIcon} aria-hidden="true">
+                    {opt.icon}
+                  </span>
+                ) : null}
+                <OptionRowLabel label={opt.label} />
               </button>
             </li>
           ))}
@@ -256,7 +280,7 @@ function AppLauncherSurface({
         .join(" ")}
     >
       {list.length > 0 ? (
-        <div className={styles.productRegion}>
+        <div className={styles.productRegion} data-focus-section="products">
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.productRowGroup}>
               {rowIndex > 0 ? (
@@ -324,6 +348,56 @@ function chunkRows<T>(items: T[], columns: number): T[][] {
   return rows;
 }
 
+/* Long-name reflow (see design-spec "Long-label reflow"): a text-only tile wraps
+   to 3 lines, an icon tile to 1; a longer name promotes the tile to full-width
+   (its own row). At most APP_LAUNCHER_MAX_PRODUCT_ROWS product rows show; the
+   overflow becomes options. */
+const APP_LAUNCHER_LABEL_LINE_HEIGHT = 20;
+const APP_LAUNCHER_MAX_PRODUCT_ROWS = 2;
+
+function productReflowKey(product: AppLauncherProduct, index: number): string {
+  return product.id && product.id.trim() ? product.id : `idx-${index}`;
+}
+
+function packProductRows(
+  list: AppLauncherProduct[],
+  fullWidthKeys: Set<string>,
+  columns: number,
+): { rows: AppLauncherProduct[][]; overflow: AppLauncherProduct[] } {
+  const cols = Math.max(1, columns);
+  const rows: AppLauncherProduct[][] = [];
+  let current: AppLauncherProduct[] = [];
+  const flush = () => {
+    if (current.length) {
+      rows.push(current);
+      current = [];
+    }
+  };
+  list.forEach((product, index) => {
+    if (fullWidthKeys.has(productReflowKey(product, index))) {
+      flush();
+      rows.push([product]);
+    } else {
+      current.push(product);
+      if (current.length === cols) flush();
+    }
+  });
+  flush();
+  return {
+    rows: rows.slice(0, APP_LAUNCHER_MAX_PRODUCT_ROWS),
+    overflow: rows.slice(APP_LAUNCHER_MAX_PRODUCT_ROWS).flat(),
+  };
+}
+
+function productToOption(product: AppLauncherProduct, index: number): AppLauncherOption {
+  return {
+    id: product.id && product.id.trim() ? product.id : `overflow-${index}`,
+    label: product.name,
+    icon: product.icon ?? undefined,
+    onSelect: product.onSelect,
+  };
+}
+
 export function AppLauncher({
   programme = "ids",
   products,
@@ -340,9 +414,34 @@ export function AppLauncher({
 }: AppLauncherProps) {
   const isSynapse = programme === "synapse";
   const list = products ?? apps ?? [];
-  const rows = chunkRows(list, Math.max(1, columns));
-  const showOptions =
-    (options && options.length > 0) || footerAction != null;
+  const optionList = options ?? [];
+
+  // Measure each name at the 111px tile width to promote overflowing labels to
+  // full-width tiles; overflow past the row cap becomes options.
+  const labelMeasureRefs = useRef<Map<string, HTMLSpanElement>>(new Map());
+  const [fullWidthKeys, setFullWidthKeys] = useState<Set<string>>(() => new Set());
+  useEffect(() => {
+    const next = new Set<string>();
+    list.forEach((product, index) => {
+      const el = labelMeasureRefs.current.get(productReflowKey(product, index));
+      if (!el) return;
+      const lines = Math.round(el.scrollHeight / APP_LAUNCHER_LABEL_LINE_HEIGHT);
+      const budget = product.icon === null ? 3 : 1;
+      if (lines > budget) next.add(productReflowKey(product, index));
+    });
+    setFullWidthKeys((prev) =>
+      prev.size === next.size && [...next].every((k) => prev.has(k)) ? prev : next,
+    );
+  }, [list]);
+
+  const { rows, overflow: overflowProducts } = packProductRows(
+    list,
+    fullWidthKeys,
+    Math.max(1, columns),
+  );
+  const mergedOptions = [...overflowProducts.map(productToOption), ...optionList];
+
+  const showOptions = mergedOptions.length > 0 || footerAction != null;
   const useTwoProductLayout = list.length === 2 && !showOptions;
   const useSingleProductWidth = list.length === 1 && !showOptions;
   const useTwoProductInternalRail = useTwoProductLayout;
@@ -351,12 +450,124 @@ export function AppLauncher({
     sideOffset ?? (triggerVariant === "masthead" ? 1 : 8);
 
   const controlledOpen = open !== undefined;
+
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const isOpen = controlledOpen ? Boolean(open) : uncontrolledOpen;
+  const skipInitialFocusRef = useRef(defaultOpen);
+
+  const handleOpenChange = (next: boolean) => {
+    if (!controlledOpen) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  };
+
+  // Match the dropdown: on open, Base UI Popover moves focus into the popup — we
+  // don't want that. Keep focus on the trigger so the launcher opens quietly; the
+  // user Tabs into the panel and Arrow keys navigate the tiles/options. Double rAF
+  // lands after Base UI's own focus. Skip when `defaultOpen` (no false focus ring).
+  useEffect(() => {
+    if (!isOpen) return;
+    if (skipInitialFocusRef.current) {
+      skipInitialFocusRef.current = false;
+      return;
+    }
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => triggerRef.current?.focus());
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [isOpen]);
+
+  // Cross-section Arrow-key navigation inside the panel (like the dropdown popup):
+  // products are a `columns`-wide grid (Left/Right within a row, Up/Down across
+  // rows); the options list is vertical; at the grid/list boundary focus jumps
+  // between the two sections.
+  const handlePopupKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowRight"
+    ) {
+      return;
+    }
+    const popup = popupRef.current;
+    if (!popup) return;
+    const active = popup.ownerDocument.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const getFocusables = (root: Element | null) =>
+      root ? Array.from(root.querySelectorAll<HTMLElement>(focusableSelector)) : [];
+
+    const productsSection = popup.querySelector<HTMLElement>('[data-focus-section="products"]');
+    const optionsSection = popup.querySelector<HTMLElement>('[data-focus-section="options"]');
+    const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
+    const dir = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+    const cols = Math.max(1, columns);
+    const focus = (el?: HTMLElement) => {
+      if (!el) return;
+      event.preventDefault();
+      event.stopPropagation();
+      el.focus();
+    };
+
+    // Products grid.
+    if (productsSection?.contains(active)) {
+      const tiles = getFocusables(productsSection);
+      const idx = tiles.indexOf(active);
+      if (idx === -1) return;
+      if (horizontal) {
+        const nextIdx = idx + dir; // stay within the same row
+        if (
+          nextIdx >= 0 &&
+          nextIdx < tiles.length &&
+          Math.floor(nextIdx / cols) === Math.floor(idx / cols)
+        ) {
+          focus(tiles[nextIdx]);
+        }
+        return;
+      }
+      const nextIdx = idx + dir * cols; // move one row up/down
+      if (nextIdx >= 0 && nextIdx < tiles.length) {
+        focus(tiles[nextIdx]);
+        return;
+      }
+      // Past the last grid row → first option (Down). Above the first row → stay.
+      if (dir > 0) focus(getFocusables(optionsSection)[0]);
+      return;
+    }
+
+    // Options list (vertical only).
+    if (optionsSection?.contains(active)) {
+      if (horizontal) return;
+      const opts = getFocusables(optionsSection);
+      const idx = opts.indexOf(active);
+      if (idx === -1) return;
+      const nextIdx = idx + dir;
+      if (nextIdx >= 0 && nextIdx < opts.length) {
+        focus(opts[nextIdx]);
+        return;
+      }
+      // Above the first option → last product tile.
+      if (dir < 0) {
+        const tiles = getFocusables(productsSection);
+        focus(tiles[tiles.length - 1]);
+      }
+    }
+  };
+
   const surfaceProps: AppLauncherSurfaceProps = {
     programme,
     list,
     rows,
     columns,
-    options,
+    options: mergedOptions,
     footerAction,
     showOptions,
     isSynapse,
@@ -366,17 +577,65 @@ export function AppLauncher({
     columnDividerVariant,
   };
 
+  // Off-screen label measurement for the long-name reflow (always rendered).
+  const measureNodes = (
+    <div
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        left: "-9999px",
+        top: 0,
+        width: "111px",
+        pointerEvents: "none",
+        fontFamily: 'var(--typography-font-style-primary, "Roboto", sans-serif)',
+      }}
+    >
+      {list.map((product, index) => {
+        const key = productReflowKey(product, index);
+        return (
+          <span
+            key={key}
+            ref={(el) => {
+              if (el) labelMeasureRefs.current.set(key, el);
+              else labelMeasureRefs.current.delete(key);
+            }}
+            style={{
+              display: "block",
+              fontSize: "var(--font-size-body-2)",
+              lineHeight: "var(--font-line-height-line-height-20)",
+              fontWeight: 400,
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
+              textAlign: "center",
+            }}
+          >
+            {product.name}
+          </span>
+        );
+      })}
+    </div>
+  );
+
   if (panelOnly) {
-    return <AppLauncherSurface {...surfaceProps} />;
+    return (
+      <>
+        {measureNodes}
+        <AppLauncherSurface {...surfaceProps} />
+      </>
+    );
   }
 
   return (
+    <>
+      {measureNodes}
     <Popover.Root
       open={controlledOpen ? open : undefined}
       defaultOpen={controlledOpen ? undefined : defaultOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
     >
       <Popover.Trigger
+        ref={triggerRef}
         className={[
           styles.trigger,
           triggerVariant === "masthead" ? styles.triggerMasthead : "",
@@ -398,11 +657,16 @@ export function AppLauncher({
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner sideOffset={positionerSideOffset} align="end">
-          <Popover.Popup className={styles.launcherPopup}>
+          <Popover.Popup
+            ref={popupRef}
+            className={styles.launcherPopup}
+            onKeyDownCapture={handlePopupKeyDown}
+          >
             <AppLauncherSurface {...surfaceProps} />
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
+    </>
   );
 }
