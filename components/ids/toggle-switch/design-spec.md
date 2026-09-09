@@ -16,7 +16,7 @@ Deterministic slot order:
 3. `switch` (interactive visual switch rail; implementation wrapper around track + thumb, not a public selector)
 4. `track` (background rail) — Angular: `ids-toggle-switch-track`
 5. `thumb` (movable knob) — Angular: `ids-toggle-switch-thumb`
-6. `label` (optional visible text) — Angular: `ids-toggle-switch-label`
+6. `status` (visible on/off status text) — Angular: `ids-toggle-switch-status`
 7. `assistiveText` (optional helper/description, if product uses it) — Angular: `ids-toggle-switch-assistive-text`
 
 Preferred projected-child order (Angular):
@@ -26,7 +26,7 @@ ids-toggle-switch
   ids-toggle-switch-input
   ids-toggle-switch-track
   ids-toggle-switch-thumb
-  ids-toggle-switch-label
+  ids-toggle-switch-status
   ids-toggle-switch-assistive-text
 ```
 ## Layout & Measurements
@@ -35,18 +35,18 @@ ids-toggle-switch
 - Thumb size: `16px x 16px`
 - Border radius: track `999px`, thumb `999px`
 - Thumb travel distance (off -> on): `16px`
-- Label gap from switch: `var(--spacing-space-8)` (fallback `8px`)
-- Label line-height: `16px` in component sample rows.
+- Status gap from switch: `var(--spacing-space-8)` (fallback `8px`)
+- Status line-height: `16px` in component sample rows.
 - Focus ring geometry around switch body: `38px x 22px` (implemented as `inset: -3px` ring around `32x16` body).
 - Interactive target rule: visual switch remains `32x16`, but click target should be expanded by wrapper/label in runtime layouts.
-- Sample-only note: frame widths in Figma are showcase values; runtime width is container-driven when label text varies.
+- Sample-only note: frame widths in Figma are showcase values; runtime width is container-driven when status text varies.
 ## Tokens
 Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` / symbol `8505:14390` — Off default rail reads as **neutral dark gray**; `get_variable_defs` may omit bound fills when the toggle is rasterized):
 
-- `track.off.background`: `var(--color-background-gray-neutral-dark)` — light `#616161`, dark `#616161` (Figma `Toggle=Off, State=Default` / MCP: dark gray rail; token added to IDS theme)
+- `track.off.background`: `var(--color-background-gray-neutral-strong)` — light `#4d4d4d`, dark `#566c7f` (Figma `Toggle=Off, State=Default` / MCP: dark gray rail; token added to IDS theme)
 - `track.off.border`: `var(--color-border-gray-neutral-base)` — light `#4d4d4d`, dark `#8898a5`
-- `track.off.hover.background`: `var(--color-background-gray-neutral-light)` — light `#4d4d4d`, dark `#8898a5`
-- `track.off.hover.border`: `var(--color-border-gray-neutral-strong)` — light `#252525`, dark `#b8c1c9`
+- `track.off.hover.background`: `var(--color-background-gray-neutral-stronger)` — light `#252525`, dark `#b8c1c9`
+- `track.off.hover.border`: `var(--color-border-gray-neutral-stronger)` — light `#252525`, dark `#b8c1c9`
 - `track.on.background`: `var(--color-background-brand-base)` — light `#0076ce`, dark `#4c9fdd`
 - `track.on.border`: `var(--color-border-brand-base)` — light `#0076ce`, dark `#4c9fdd`
 - `track.on.hover.background`: `var(--color-background-brand-strong)` — light `#0062ab`, dark `#94c5ea`
@@ -57,24 +57,24 @@ Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` /
 
 - `thumb.default.background`: `var(--color-background-surface-component)` (Figma binds knob fill to component surface; light `#ffffff`, dark `#111619`)
 - `thumb.off.default.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-base)`
-- `thumb.off.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-strong)`
+- `thumb.off.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-stronger)`
 - `thumb.on.default.border`: `var(--border-width-border-1)` solid `var(--color-border-brand-base)`
 - `thumb.on.hover.border`: `var(--border-width-border-1)` solid `var(--color-border-brand-strong)`
 - `thumb.disabled.background`: `var(--color-background-surface-component)`
 - `thumb.disabled.border`: `var(--border-width-border-1)` solid `var(--color-border-gray-disabled)`
 
-- `label.default.text`: `var(--color-text-gray-neutral)` — light `#4d4d4d`, dark `#8898a5`
-- `label.disabled.text`: `var(--color-text-gray-disabled)` — light `#757575`, dark `#c5c5c5`
+- `status.default.text`: `var(--color-text-gray-neutral)` — light `#4d4d4d`, dark `#8898a5`
+- `status.disabled.text`: `var(--color-text-gray-disabled)` — light `#757575`, dark `#c5c5c5`
 
 - `focus.ring`: `var(--color-border-brand-base)` on a ring **outside** the track (e.g. pseudo-element `inset: -3px` around the `32x16` body); track border tokens **do not** switch to brand on focus-only (Figma uses a separate focus frame).
 - `focus.outlineWidth`: `var(--border-width-border-1)`
 - `focus.outlineOffset`: implied by ring geometry (`inset: -3px` → ~`3px` gap outside track edge before ring stroke)
 ## States (Light Theme)
-| State | Track Background | Track Border | Thumb (fill + border) | Label |
+| State | Track Background | Track Border | Thumb (fill + border) | Status |
 |---|---|---|---|---|
-| Off / default | `var(--color-background-gray-neutral-dark)` | `var(--color-border-gray-neutral-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
-| Off / hover | `var(--color-background-gray-neutral-light)` | `var(--color-border-gray-neutral-strong)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-strong)` | `var(--color-text-gray-neutral)` |
-| Off / focus-visible | `var(--color-background-gray-neutral-dark)` | `var(--color-border-gray-neutral-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Off / default | `var(--color-background-gray-neutral-strong)` | `var(--color-border-gray-neutral-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Off / hover | `var(--color-background-gray-neutral-stronger)` | `var(--color-border-gray-neutral-stronger)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-stronger)` | `var(--color-text-gray-neutral)` |
+| Off / focus-visible | `var(--color-background-gray-neutral-strong)` | `var(--color-border-gray-neutral-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
 | On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
 | On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-strong)` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-strong)` | `var(--color-text-gray-neutral)` |
 | On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
@@ -104,15 +104,15 @@ Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts
 **Preferred pattern:** projected children inside the root — not an aggregate `options[]` / `items[]` prop.
 
 ```
-ToggleSwitch [checked?, defaultChecked?, disabled?, label?, id?, name?, value?, className?, aria-label?, aria-describedby?]
+ToggleSwitch [checked?, defaultChecked?, disabled?, id?, name?, value?, className?, aria-label?, aria-describedby?]
   ToggleSwitchInput
   ToggleSwitchTrack
   ToggleSwitchThumb
-  ToggleSwitchLabel
+  ToggleSwitchStatus
   ToggleSwitchAssistiveText
 ```
 
-Angular reference selectors: `ids-toggle-switch` → `ids-toggle-switch-input` → `ids-toggle-switch-track` → `ids-toggle-switch-thumb` → `ids-toggle-switch-label` → `ids-toggle-switch-assistive-text` (`lib/angular/ids/toggle-switch/`, Storybook `storybook-angular`, port 6007). React reference: `storybook/src/components/ToggleSwitch.tsx` (single-control convenience wrapper).
+Angular reference selectors: `ids-toggle-switch` → `ids-toggle-switch-input` → `ids-toggle-switch-track` → `ids-toggle-switch-thumb` → `ids-toggle-switch-status` → `ids-toggle-switch-assistive-text` (`lib/angular/ids/toggle-switch/`, Storybook `storybook-angular`, port 6007). React reference: `storybook/src/components/ToggleSwitch.tsx` (single-control convenience wrapper).
 
 ### Root (`ToggleSwitch` / `root`)
 | Prop / Input | Required | Behavior |
@@ -120,12 +120,11 @@ Angular reference selectors: `ids-toggle-switch` → `ids-toggle-switch-input` �
 | `checked` | No (controlled) | Controlled on/off value. |
 | `defaultChecked` | No (uncontrolled) | Initial on/off value when `checked` is absent. Default `false`. |
 | `disabled` | No | Blocks pointer and keyboard toggles. Default `false`. |
-| `label` | No | Optional visible label when the label slot is omitted. |
 | `id` | No | Native input id / label association. |
 | `name` | No | Native form integration. |
 | `value` | No | Native form integration. |
 | `className` | No | Optional extra class on the root host. |
-| `aria-label` / `ariaLabel` | Required when visible label is absent | Accessible name. |
+| `aria-label` / `ariaLabel` | Required (visible text is `On`/`Off` status only) | Accessible name. |
 | `aria-describedby` / `ariaDescribedBy` | No | Optional helper text association (merged with assistive-text slot id when that slot is projected). |
 
 Outputs (root): `onCheckedChange(checked)` (Angular: `(onCheckedChange)`).
@@ -136,7 +135,7 @@ Outputs (root): `onCheckedChange(checked)` (Angular: `(onCheckedChange)`).
 | `input` / `ids-toggle-switch-input` | Yes (canonical) | Native `input[type="checkbox"]`, visually hidden, still focusable. Root renders a fallback input when the slot is omitted. |
 | `track` / `ids-toggle-switch-track` | Yes (canonical) | Visual rail (`32x16`). Root renders a fallback track when omitted. |
 | `thumb` / `ids-toggle-switch-thumb` | Yes (canonical) | Visual knob (`16x16`), translated `16px` when checked. Root renders a fallback thumb when omitted. |
-| `label` / `ids-toggle-switch-label` | No | Visible associated text. If omitted, root `label` string is used when provided. |
+| `status` / `ids-toggle-switch-status` | No | Visible on/off status text (`On`/`Off`). |
 | `assistiveText` / `ids-toggle-switch-assistive-text` | No | Optional helper/description; associated via `aria-describedby`. |
 
 Behavioral requirements:
@@ -151,7 +150,7 @@ Behavioral requirements:
   - `switch` (implementation wrapper for focus-ring geometry around the `32x16` body)
     - `track` (`ids-toggle-switch-track`)
     - `thumb` (`ids-toggle-switch-thumb`)
-  - optional `label` (`ids-toggle-switch-label`)
+  - optional `status` (`ids-toggle-switch-status`)
   - optional `assistiveText` (`ids-toggle-switch-assistive-text`)
 
 Deterministic rendering contract:
@@ -163,15 +162,14 @@ Deterministic rendering contract:
 Variant/option matrix:
 - `checked`: `false | true`
 - `disabled`: `false | true`
-- `hasLabel`: `false | true`
-- Valid matrix: all 8 combinations are valid.
+- Valid matrix: all 4 combinations are valid.
 
 Per-slot style contract:
 - `root`: inline-flex alignment, pointer cursor when enabled.
 - `input`: visually hidden, still focusable; linked to `switch` via sibling/state selectors or state binding.
 - `track`: fixed `32x16` body, rounded corners, tokenized background/border by state table.
 - `thumb`: fixed `16x16`, `box-sizing: border-box`, tokenized fill + stateful border (`neutral` off-default, `strong` off-hover, `brand-base` on-default, `brand-dark` on-hover, `disabled` when control disabled), translated `16px` on checked.
-- `label`: tokenized text color; disabled text token when disabled.
+- `status`: tokenized text color; disabled text token when disabled.
 
 Behavior contract:
 - Trigger state change only through input activation pathways (click label, click switch, press Space).
@@ -182,8 +180,8 @@ Behavior contract:
 Accessibility contract:
 - Underlying semantic control must be `input[type="checkbox"]` or equivalent ARIA `role="switch"` implementation that preserves checkbox-like behavior.
 - If using `role="switch"`, keep `aria-checked` synchronized.
-- Ensure label association through `<label for>` + `id` or wrapping label pattern.
-- Require accessible name (`label` text or `aria-label`).
+- The visible `status` text (`On`/`Off`) is **not** the accessible name; provide an accessible name via `aria-label` or `aria-labelledby`.
+- Require accessible name (`aria-label` or external label).
 - Maintain visible focus indicator meeting contrast requirements.
 
 Asset resolution + bundling contract:
@@ -225,8 +223,8 @@ Validation checklist (pass/fail):
 - **Switch body**: `32px × 16px` (`box-sizing: border-box`); focus ring uses `inset: -3px` around that body (`38px × 22px`).
 - **Thumb**: `16px × 16px`, `box-sizing: border-box`; checked position via `transform: translateX(16px)` (not layout reflow).
 - **Track / thumb radius**: `999px`.
-- **Label gap**: `var(--spacing-space-8)` between switch body and label.
-- **Label line-height**: `16px` in component sample rows.
+- **Status gap**: `var(--spacing-space-8)` between switch body and status.
+- **Status line-height**: `16px` in component sample rows.
 - **Motion**: thumb position and rail color `160ms` `ease-out` (within spec `120ms–200ms` ease-out).
 - **Angular host**: `ids-toggle-switch` provides context; `ids-toggle-switch-track` / `ids-toggle-switch-thumb` use `display: contents` so geometry lives on `__track` / `__thumb` inside the `switch` wrapper.
 - **Disabled cascade**: root `disabled` blocks input activation and change emission; no per-slot disabled prop.
