@@ -14,7 +14,8 @@
   width: 32px;
   height: 16px;
   border-radius: 999px;
-  border: 1px solid var(--color-border-gray-neutral-base);
+  /* Default off: no visible base border (kept transparent to preserve 32×16 geometry). */
+  border: var(--border-width-border-1) solid transparent;
   background: var(--color-background-gray-neutral-strong);
   padding: 0;
   display: inline-flex;
@@ -22,7 +23,7 @@
   flex-shrink: 0;
   cursor: inherit;
   outline: none;
-  box-sizing: content-box;
+  box-sizing: border-box;
   transition:
     background 160ms ease,
     border-color 160ms ease;
@@ -50,9 +51,10 @@
 .switch:focus-visible::after {
   content: "";
   position: absolute;
-  inset: -3px;
+  /* 38×22 ring, 3px outside the 32×16 body (inset is relative to the 30×14 padding box). */
+  inset: -4px;
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: 20px;
+  border-radius: 999px;
   pointer-events: none;
 }
 
@@ -73,6 +75,8 @@
   box-sizing: border-box;
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
+  /* Off: left edge covers the track's left base border. */
+  transform: translateX(-1px);
   transition:
     transform 160ms ease,
     background 160ms ease,
@@ -84,7 +88,8 @@
 }
 
 .switch[data-checked] .thumb {
-  transform: translateX(16px);
+  /* On: right edge covers the track's right base border (16px travel). */
+  transform: translateX(15px);
   border-color: var(--color-border-brand-base);
 }
 

@@ -35,6 +35,8 @@ ids-toggle-switch
 - Thumb size: `16px x 16px`
 - Border radius: track `999px`, thumb `999px`
 - Thumb travel distance (off -> on): `16px`
+- Thumb off position: thumb's left edge aligns with the track's outer left edge, covering the base border (implemented `translateX(-1px)` inside the `border-box` track).
+- Thumb on position: thumb's right edge aligns with the track's outer right edge, covering the base border (implemented `translateX(15px)`).
 - Status gap from switch: `var(--spacing-space-8)` (fallback `8px`)
 - Status line-height: `16px` in component sample rows.
 - Focus ring geometry around switch body: `38px x 22px` (implemented as `inset: -3px` ring around `32x16` body).
@@ -44,7 +46,7 @@ ids-toggle-switch
 Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` / symbol `8505:14390` — Off default rail reads as **neutral dark gray**; `get_variable_defs` may omit bound fills when the toggle is rasterized):
 
 - `track.off.background`: `var(--color-background-gray-neutral-strong)` — light `#4d4d4d`, dark `#566c7f` (Figma `Toggle=Off, State=Default` / MCP: dark gray rail; token added to IDS theme)
-- `track.off.border`: `var(--color-border-gray-neutral-base)` — light `#4d4d4d`, dark `#8898a5`
+- `track.off.border`: `transparent` — no visible base border in default off (the `1px` border width is preserved to keep `32x16` geometry); the thumb's own border provides the edge outline.
 - `track.off.hover.background`: `var(--color-background-gray-neutral-stronger)` — light `#252525`, dark `#b8c1c9`
 - `track.off.hover.border`: `var(--color-border-gray-neutral-stronger)` — light `#252525`, dark `#b8c1c9`
 - `track.on.background`: `var(--color-background-brand-base)` — light `#0076ce`, dark `#4c9fdd`
@@ -72,12 +74,12 @@ Per-slot semantic tokens (verified via Figma MCP on component set `8505:14389` /
 ## States (Light Theme)
 | State | Track Background | Track Border | Thumb (fill + border) | Status |
 |---|---|---|---|---|
-| Off / default | `var(--color-background-gray-neutral-strong)` | `var(--color-border-gray-neutral-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Off / default | `var(--color-background-gray-neutral-strong)` | `transparent` (no visible base border) | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
 | Off / hover | `var(--color-background-gray-neutral-stronger)` | `var(--color-border-gray-neutral-stronger)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-stronger)` | `var(--color-text-gray-neutral)` |
-| Off / focus-visible | `var(--color-background-gray-neutral-strong)` | `var(--color-border-gray-neutral-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Off / focus-visible | `var(--color-background-gray-neutral-strong)` | `transparent` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
 | On / default | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
 | On / hover | `var(--color-background-brand-strong)` | `var(--color-border-brand-strong)` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-strong)` | `var(--color-text-gray-neutral)` |
-| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| On / focus-visible | `var(--color-background-brand-base)` | `var(--color-border-brand-base)` + outer `focus.ring` | fill `var(--color-background-surface-component)`; border `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
 | Disabled / off | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 | Disabled / on | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | fill `var(--color-background-surface-component)`; border `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
@@ -93,7 +95,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ## Interactions
 - Pointer click/tap on the switch or associated label toggles checked state when not disabled.
-- Keyboard: `Tab` focuses input, `Space` toggles checked state.
+- Keyboard: `Tab` focuses input, `Space` or `Enter` toggles checked state.
 - `focus-visible` ring appears only for keyboard focus strategy, not for pointer focus.
 - Hover visuals apply only when `disabled=false`.
 - Press state can reuse default state visuals unless product introduces explicit press token overrides.
@@ -134,7 +136,7 @@ Outputs (root): `onCheckedChange(checked)` (Angular: `(onCheckedChange)`).
 |---|---|---|
 | `input` / `ids-toggle-switch-input` | Yes (canonical) | Native `input[type="checkbox"]`, visually hidden, still focusable. Root renders a fallback input when the slot is omitted. |
 | `track` / `ids-toggle-switch-track` | Yes (canonical) | Visual rail (`32x16`). Root renders a fallback track when omitted. |
-| `thumb` / `ids-toggle-switch-thumb` | Yes (canonical) | Visual knob (`16x16`), translated `16px` when checked. Root renders a fallback thumb when omitted. |
+| `thumb` / `ids-toggle-switch-thumb` | Yes (canonical) | Visual knob (`16x16`), translated from `-1px` (off) to `15px` (on) — `16px` travel. Root renders a fallback thumb when omitted. |
 | `status` / `ids-toggle-switch-status` | No | Visible on/off status text (`On`/`Off`). |
 | `assistiveText` / `ids-toggle-switch-assistive-text` | No | Optional helper/description; associated via `aria-describedby`. |
 
@@ -168,11 +170,11 @@ Per-slot style contract:
 - `root`: inline-flex alignment, pointer cursor when enabled.
 - `input`: visually hidden, still focusable; linked to `switch` via sibling/state selectors or state binding.
 - `track`: fixed `32x16` body, rounded corners, tokenized background/border by state table.
-- `thumb`: fixed `16x16`, `box-sizing: border-box`, tokenized fill + stateful border (`neutral` off-default, `strong` off-hover, `brand-base` on-default, `brand-dark` on-hover, `disabled` when control disabled), translated `16px` on checked.
+- `thumb`: fixed `16x16`, `box-sizing: border-box`, tokenized fill + stateful border (`neutral` off-default, `strong` off-hover, `brand-base` on-default, `brand-dark` on-hover, `disabled` when control disabled), translated from `-1px` (off, covering left base edge) to `15px` (on, covering right base edge) — `16px` total travel.
 - `status`: tokenized text color; disabled text token when disabled.
 
 Behavior contract:
-- Trigger state change only through input activation pathways (click label, click switch, press Space).
+- Trigger state change only through input activation pathways (click label, click switch, press `Space` or `Enter`).
 - Emit single change event per successful toggle.
 - Do not emit change when disabled.
 - Preserve focus on input during toggle.
@@ -221,7 +223,7 @@ Validation checklist (pass/fail):
 
 **Layout & structure**
 - **Switch body**: `32px × 16px` (`box-sizing: border-box`); focus ring uses `inset: -3px` around that body (`38px × 22px`).
-- **Thumb**: `16px × 16px`, `box-sizing: border-box`; checked position via `transform: translateX(16px)` (not layout reflow).
+- **Thumb**: `16px × 16px`, `box-sizing: border-box`; off position `transform: translateX(-1px)` (left edge covers base border), checked position `transform: translateX(15px)` (right edge covers base border) — `16px` travel, no layout reflow.
 - **Track / thumb radius**: `999px`.
 - **Status gap**: `var(--spacing-space-8)` between switch body and status.
 - **Status line-height**: `16px` in component sample rows.

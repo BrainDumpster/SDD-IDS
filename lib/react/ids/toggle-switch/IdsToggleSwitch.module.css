@@ -54,7 +54,8 @@
   height: 16px;
   box-sizing: border-box;
   border-radius: 999px;
-  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  /* Default off: no visible base border (kept transparent to preserve 32×16 geometry). */
+  border: var(--border-width-border-1) solid transparent;
   background: var(--color-background-gray-neutral-strong);
   transition:
     background-color 160ms ease-out,
@@ -68,7 +69,8 @@
   border-radius: 999px;
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
-  transform: translateX(0);
+  /* Off: align the thumb’s left edge with the track’s outer left edge, covering the base border. */
+  transform: translateX(-1px);
   transition:
     transform 160ms ease-out,
     background-color 160ms ease-out,
@@ -98,7 +100,8 @@
 }
 
 .ids-toggle-switch[data-checked="true"] .ids-toggle-switch-thumb {
-  transform: translateX(16px);
+  /* On: thumb’s right edge aligns with the track’s outer right edge (16px travel). */
+  transform: translateX(15px);
   border-color: var(--color-border-brand-base);
 }
 
@@ -119,14 +122,19 @@
 }
 
 /*
- * Off / focus-visible + On / focus-visible:
- * track keeps default (off or on) colors; thumb border uses neutral-base
- * (state table: On/focus-visible thumb border is gray-neutral-base).
+ * Off / focus-visible: thumb border uses neutral-base.
+ * On / focus-visible: thumb border keeps brand-base to match the active switch.
  */
-.ids-toggle-switch-input:focus-visible
+.ids-toggle-switch:not([data-checked="true"]) .ids-toggle-switch-input:focus-visible
   + .ids-toggle-switch-switch
   .ids-toggle-switch-thumb {
   border-color: var(--color-border-gray-neutral-base);
+}
+
+.ids-toggle-switch[data-checked="true"] .ids-toggle-switch-input:focus-visible
+  + .ids-toggle-switch-switch
+  .ids-toggle-switch-thumb {
+  border-color: var(--color-border-brand-base);
 }
 
 /* Disabled / off + Disabled / on */
