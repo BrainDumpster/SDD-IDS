@@ -1,48 +1,60 @@
 import { Switch as BaseSwitch } from "@base-ui-components/react/switch";
+import { useState } from "react";
 import styles from "./ToggleSwitch.module.css";
 
 export interface ToggleSwitchProps {
-  label?: string;
   checked?: boolean;
   defaultChecked?: boolean;
   disabled?: boolean;
+  /** Default `true`. Renders the `On`/`Off` status text. */
+  showStatus?: boolean;
   id?: string;
   name?: string;
-  value?: string;
   ariaLabel?: string;
   ariaDescribedBy?: string;
   onCheckedChange?: (checked: boolean) => void;
 }
 
 export function ToggleSwitch({
-  label,
-  checked,
-  defaultChecked,
+  checked: checkedProp,
+  defaultChecked = false,
   disabled = false,
+  showStatus = true,
   id,
   name,
-  value,
   ariaLabel,
   ariaDescribedBy,
   onCheckedChange,
 }: ToggleSwitchProps) {
+  const isControlled = checkedProp !== undefined;
+  const [uncontrolledChecked, setUncontrolledChecked] = useState(
+    Boolean(defaultChecked),
+  );
+  const checked = isControlled ? Boolean(checkedProp) : uncontrolledChecked;
+
   return (
     <label className={styles.root}>
       <BaseSwitch.Root
         id={id}
         name={name}
-        value={value}
-        checked={checked}
-        defaultChecked={defaultChecked}
+        checked={isControlled ? checked : undefined}
+        defaultChecked={isControlled ? undefined : defaultChecked}
         disabled={disabled}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}
         className={styles.switch}
-        onCheckedChange={onCheckedChange}
+        onCheckedChange={(next) => {
+          if (!isControlled) {
+            setUncontrolledChecked(next);
+          }
+          onCheckedChange?.(next);
+        }}
       >
         <BaseSwitch.Thumb className={styles.thumb} />
       </BaseSwitch.Root>
-      {label ? <span className={styles.label}>{label}</span> : null}
+      {showStatus ? (
+        <span className={styles.status}>{checked ? "On" : "Off"}</span>
+      ) : null}
     </label>
   );
 }
