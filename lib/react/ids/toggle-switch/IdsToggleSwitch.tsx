@@ -15,6 +15,7 @@ import React, {
   useId,
   useState,
   type ChangeEvent,
+  type KeyboardEvent,
   type ReactElement,
 } from "react";
 import styles from "./IdsToggleSwitch.module.css";
@@ -88,6 +89,18 @@ export function IdsToggleSwitch({
     onCheckedChange?.(next);
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== "Enter") {
+      return;
+    }
+    event.preventDefault();
+    if (isDisabled) {
+      return;
+    }
+    // Programmatic click fires the native change event, which handleChange picks up.
+    event.currentTarget.click();
+  };
+
   return (
     <label
       className={cx(styles["ids-toggle-switch"], className)}
@@ -112,6 +125,7 @@ export function IdsToggleSwitch({
         aria-describedby={ariaDescribedBy}
         data-ids="ids-toggle-switch-input"
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
       />
       <span
         className={styles["ids-toggle-switch-switch"]}
