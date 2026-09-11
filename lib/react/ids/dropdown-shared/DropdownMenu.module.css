@@ -18,7 +18,7 @@
 }
 
 /* Base UI Menu.Trigger is the real focusable element; show the IDS focus ring
-   around the trigger shell when keyboard focus is active.
+   around the trigger shell (inset -5px) when keyboard focus is active.
    `.triggerReset` has `all: unset`, so the pseudo-element draws the ring. */
 .triggerReset:focus-visible,
 .triggerReset[data-focus-visible] {
@@ -32,7 +32,7 @@
   position: absolute;
   /* -4px → 2px visible offset from the 1px field border (IDS standard). */
   inset: -4px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
 }
@@ -44,8 +44,10 @@
 
 .popup {
   background: var(--color-background-surface-component);
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  border-top: none;
+  /* Full 1px border. With sideOffset -1 the popup's top border overlaps the
+     field's bottom border into a single line (attached-dropdown look, 677bdca3).
+     Without the top border, the opaque popup covers the field border → no line. */
+  border: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
   box-sizing: border-box;
   /* Default (container-driven): menu matches the trigger/field width so it
      tracks the field as its container resizes; long options truncate via
@@ -54,7 +56,7 @@
   min-width: var(--dropdown-trigger-width, auto) !important;
   max-width: var(--dropdown-trigger-width, auto) !important;
   /* Field-attached: bottom corners only (Figma Rounded Corners=True → radius-4). IDS menu radius = 0. */
-  border-radius: 0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius);
+  border-radius: 0 0 var(--dropdown-menu-radius, var(--corner-radius-radius-none)) var(--dropdown-menu-radius, var(--corner-radius-radius-none));
   box-shadow:
     0 4px 4px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
     0 2px 2px 0 var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
@@ -65,16 +67,20 @@
   overflow: clip;
 }
 
-/* When Base UI flips/places the menu above the field, suppress drop shadow so it
-   does not fall onto the field/container. */
-.popup[data-side="top"] {
+/* When Base UI flips/places the menu above the field, drop the shadow entirely
+   (a downward drop shadow would fall onto the field/container below) and round
+   the **top** corners so the menu stays attached at its bottom edge (mirror of
+   the default below-field look). `data-side` sits on the Base UI positioner
+   (the popup's parent), not on `.popup` itself, so key off the ancestor. */
+[data-side="top"] .popup {
+  border-radius: var(--dropdown-menu-radius, var(--corner-radius-radius-none)) var(--dropdown-menu-radius, var(--corner-radius-radius-none)) 0 0;
   box-shadow: none;
 }
 
 /* Detached menu (context menu, masthead help) — full border; not field-attached. */
 .popupStandalone {
-  border-top: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
-  border-radius: var(--dropdown-menu-radius);
+  border-top: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--dropdown-menu-radius, var(--corner-radius-radius-none));
   width: auto !important;
   min-width: 186px !important;
   max-width: none !important;
@@ -102,20 +108,22 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  border: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: 0;
 }
 
 /* Outer focus ring: matches the IDS dropdown trigger focus ring
-   (`inset: -4px` = 2px offset, brand border, 4px radius). */
-.searchField[data-focus-visible="true"]::after,
-.searchField:has(.searchInput:focus-visible)::after {
+   (`inset: -4px` = 2px offset, brand border, 4px radius). Keyboard focus only —
+   `DropdownMenu.tsx` sets `data-focus-visible` on the field for a Tab focus but
+   not a mouse click (a text `<input>` matches `:focus-visible` even on click, so
+   `:focus-within` / `:focus-visible` would wrongly show the ring on click). */
+.searchField[data-focus-visible="true"]::after {
   content: "";
   position: absolute;
   inset: -4px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
 }
@@ -205,14 +213,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
   cursor: pointer;
 }
 
 .searchClearButton:focus-visible {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 1px;
 }
 
@@ -223,7 +231,7 @@
 .showSelectedPanel {
   width: 100%;
   box-sizing: border-box;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) 0;
   /* Keep Show/Hide Selected from resizing content-driven popup max-content (avoids
@@ -237,15 +245,16 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding-right: var(--padding-padding-8);
+  padding: 0 var(--padding-padding-8);
 }
 
 .showSelectedToggle {
   all: unset;
   display: inline-flex;
   align-items: center;
+  position: relative;
   gap: var(--spacing-space-8);
-  padding: var(--padding-padding-2) var(--padding-padding-16);
+  padding: var(--padding-padding-2) var(--padding-padding-8);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -255,12 +264,22 @@
 
 .showSelectedCaret {
   flex-shrink: 0;
-  transition: transform 150ms ease;
 }
 
+/* Show/Hide Selected toggle focus ring — same button-style `::after` ring as the
+   other popup action buttons (Clear All / footer action), per design-spec. */
 .showSelectedToggle:focus-visible {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
-  outline-offset: 1px;
+  position: relative;
+  outline: none;
+}
+
+.showSelectedToggle:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
+  pointer-events: none;
 }
 
 .showSelectedTagsRoot {
@@ -301,10 +320,7 @@
   /* Cap at 3 rows of tags, then scroll: top (8) + 3 × 28px tag (lg) + 2 × 4px gap = 100px. */
   max-height: 100px;
   overflow-y: auto;
-}
-
-.showSelectedTags::-webkit-scrollbar {
-  display: none;
+  outline: none;
 }
 
 /* Spec: dismissible tags truncate at panel width (maxWidth 100%). */
@@ -321,6 +337,10 @@
   white-space: nowrap;
 }
 
+.showSelectedTags::-webkit-scrollbar {
+  display: none;
+}
+
 .optionsScrollRoot {
   position: relative;
   width: 100%;
@@ -334,9 +354,12 @@
   box-sizing: border-box;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* App Launcher parity: the options list sits 1px inside the menu border. */
+  padding-inline: 1px;
   /* Hide the native scrollbar — the overlay scrollbar below draws on top
      without taking layout space, so option rows keep their full width. */
   scrollbar-width: none;
+  outline: none;
 }
 
 .optionsScrollViewport::-webkit-scrollbar {
@@ -373,9 +396,24 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  padding: var(--padding-padding-8) var(--padding-padding-16);
+  /* Symmetric 16px: Clear All (right) aligns with the option content right edge,
+     matching Select All (left). */
+  padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) var(--padding-padding-16);
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
+}
+
+/* Wrapper around the Select All / Clear All row, single Clear All, and Show
+   Selected panel. Default is layout-transparent (`display: contents`) so the
+   rows flow exactly as before; `showSelectedFirst` flips their visual order via
+   flex column-reverse (the Show Selected panel renders above the controls). */
+.menuControls {
+  display: contents;
+}
+
+.menuControlsReversed {
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .selectAllButton {
@@ -391,6 +429,8 @@
 
 .clearAllButton {
   all: unset;
+  display: inline-flex;
+  align-items: center;
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -400,6 +440,24 @@
 .clearAllButton:disabled {
   color: var(--color-text-gray-disabled);
   cursor: not-allowed;
+}
+
+/* Multi-select Clear All keyboard focus ring. `.clearAllButton` renders its
+   label directly (no inner `.footerActionButton`), so the shared footer-button
+   ring rule does not reach it — draw the ring on the button itself.
+   (src's DropdownMenu.module.css has the same latent gap.) */
+.clearAllButton:focus-visible {
+  position: relative;
+  outline: none;
+}
+
+.clearAllButton:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
+  pointer-events: none;
 }
 
 /* Select All checkbox focus matches IDS Checkbox focus-visible:
@@ -412,6 +470,8 @@
 .selectAllButton:focus-visible:not([data-checked="true"]) .selectAllCheckbox {
   border-color: var(--color-border-brand-base);
 }
+
+
 
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
   background: var(--color-background-controls-base);
@@ -465,9 +525,21 @@
 .itemLabel {
   flex: 1 1 auto;
   min-width: 0;
+  /* Block-level so overflow/ellipsis clip in BOTH contexts: as a direct flex
+     child of the row, and when wrapped in the (block) tooltip trigger for a
+     truncated label. Without this the wrapped span reverts to inline and the
+     ellipsis stops working → the full label pops out and the row jumps on hover. */
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Tooltip trigger wrapping a truncated option label: must shrink like the bare
+   `.itemLabel` flex child so a long label never forces the menu wider. */
+.triggerBlock {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* Empty search state — first row is "No results found" (Body 2 Medium). */
@@ -533,7 +605,7 @@
 }
 
 .item[data-selection-mode="single"]:focus-visible {
-  outline: 1px solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: -1px;
   border-radius: var(--corner-radius-radius-4);
 }
@@ -566,9 +638,9 @@
 
 .item[data-selectable="false"][data-disabled],
 .item[data-selectable="false"]:disabled {
-  border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   box-shadow:
-    inset 0 -1px 0 0 var(--color-border-neutral-light),
+    inset 0 -1px 0 0 var(--color-border-gray-neutral-light),
     0 -1px 0 0 var(--color-border-gray-disabled);
 }
 
@@ -576,7 +648,7 @@
   display: flex;
   align-items: center;
   padding: var(--padding-padding-6) var(--padding-padding-16);
-  border-top: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -598,8 +670,11 @@
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: var(--padding-padding-8) 0;
-  border-top: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  /* 16px left inset so the label aligns with Select All / options / single Clear
+     All. The 8px lives on the row (not the inner span) so the focus ring hugs
+     the label — see `.footerAction .footerActionButton` below. */
+  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
@@ -610,7 +685,7 @@
   display: inline-flex;
   align-items: center;
   position: relative;
-  padding: var(--padding-padding-2) var(--padding-padding-16);
+  padding: var(--padding-padding-2) var(--padding-padding-8);
   border-radius: var(--corner-radius-radius-2);
 }
 
@@ -625,27 +700,40 @@
 .clearAllAction:focus-visible .footerActionButton::after {
   content: "";
   position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
+  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius);
+  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
   pointer-events: none;
 }
 
-/* Single-select Clear All: identical visual to the footer action button, but
-   placed at the top of the menu with a bottom border (instead of the footer's
-   top border). Reuses `.footerActionButton` for the inner button. */
+/* Single-select Clear All: placed at the top of the menu with a bottom border
+   (instead of the footer's top border). Reuses `.footerActionButton` for the
+   inner label span, but with no inner padding so its keyboard focus ring hugs
+   the label exactly like the multi/combo Clear All (`.clearAllButton`) ring —
+   the label position is preserved by moving that 8px onto the row padding. */
 .clearAllAction {
   all: unset;
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: var(--padding-padding-8) 0;
-  border-bottom: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   color: var(--color-text-brand-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
+}
+
+.clearAllAction .footerActionButton,
+.footerAction .footerActionButton {
+  padding: 0;
+}
+
+/* Right-aligned single-select Clear All (clearAllAlign="right"). */
+.clearAllAction[data-align="right"] {
+  justify-content: flex-end;
+  padding-right: var(--padding-padding-24);
 }
 
 /* 16px = the control size (checkbox/radio), so it aligns left with the Select All
@@ -716,13 +804,14 @@
   border-radius: 2px;
 }
 
-.item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,
-.item[data-selection-mode="multi"]:focus-visible .checkboxOuter::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-2);
+/* Focus ring on the whole option row (matches single-select + design-spec
+   "Option rows use outline: 1px brand, outline-offset: -1px, radius-4"), not the
+   checkbox control alone. */
+.item[data-selection-mode="multi"][data-focus-visible],
+.item[data-selection-mode="multi"]:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) {
@@ -756,6 +845,16 @@
   color: var(--color-text-brand-strong);
   outline: none;
   box-shadow: none;
+}
+
+/* Keep the keyboard focus ring on a selected radio row — the selected rule above
+   sets outline:none at a higher specificity than the generic :focus-visible rule,
+   which otherwise swallows the ring so the selected row looks skipped. */
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected][data-focus-visible],
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected]:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: -1px;
+  border-radius: var(--corner-radius-radius-4);
 }
 
 .item[data-selection-mode="multi"][data-selected] {

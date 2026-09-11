@@ -77,7 +77,6 @@ const meta: Meta<typeof IdsDropdownMultiSelect> = {
     label: "Environment",
     required: true,
     placeholder: "Select",
-    searchable: true,
     showSelectAllClearAll: true,
     showSelectedBadge: true,
     showSelectedTooltip: true,
@@ -91,7 +90,6 @@ const meta: Meta<typeof IdsDropdownMultiSelect> = {
     showSelectAllClearAll: { control: "boolean" },
     showSelectedBadge: { control: "boolean" },
     showSelectedTooltip: { control: "boolean" },
-    searchable: { control: "boolean" },
     disabled: { control: "boolean" },
     onChange: { action: "onChange" },
     onAction: { action: "onAction" },
@@ -125,7 +123,6 @@ export const CompositionalOptions: Story = {
           size="large"
           label="Products"
           required
-          searchable
           showSelectAllClearAll
           showSelectedBadge
           showSelectedTooltip
@@ -180,7 +177,6 @@ export const MainScenarios: Story = {
             options={LONG_OPTIONS}
             value={visible}
             onChange={setVisible}
-            searchable
             showSelectAllClearAll
             showSelectedBadge
             showSelectedTooltip
