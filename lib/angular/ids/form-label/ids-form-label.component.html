@@ -1,0 +1,34 @@
+<span
+  [class]="rootClassName"
+  data-ids="ids-form-label"
+  [attr.data-size]="resolvedSize"
+>
+  <label
+    class="ids-form-label-group"
+    data-ids="ids-form-label-group"
+    [attr.for]="htmlFor || null"
+  >
+    <span class="ids-form-label-text" data-ids="ids-form-label-text"
+      >{{ label }}<ng-content></ng-content></span
+    >
+    @if (isRequired) {
+      <span
+        class="ids-form-label-marker"
+        data-ids="ids-form-label-marker"
+        aria-hidden="true"
+        >*</span
+      >
+    }
+  </label>
+  @if (isInfoIconShown) {
+    <span
+      class="ids-form-label-info"
+      data-ids="ids-form-label-info"
+      [attr.role]="iconDecorative ? null : 'img'"
+      [attr.aria-label]="iconDecorative ? null : infoLabel"
+      [attr.aria-hidden]="iconDecorative ? 'true' : null"
+    >
+      <ids-icon shape="info-circ-solid" variant="img" [size]="16"></ids-icon>
+    </span>
+  }
+</span>
