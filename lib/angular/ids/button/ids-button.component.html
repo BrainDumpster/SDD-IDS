@@ -1,9 +1,14 @@
 <button
   [attr.type]="type"
   [attr.aria-label]="resolvedIconOnly ? ariaLabel || null : null"
-  [ngClass]="['ids-button', variantClass, size, resolvedIconOnly ? 'icon-only' : '', loading ? 'loading' : '']"
+  [attr.data-size]="resolvedSize"
+  [ngClass]="['ids-button', variantClass, resolvedSize, resolvedIconOnly ? 'icon-only' : '', loading ? 'loading' : '']"
+  [class.pressed]="keyboardPressed"
   [disabled]="disabled || loading"
   (click)="onClick($event)"
+  (keydown)="onKeyDown($event)"
+  (keyup)="onKeyUp($event)"
+  (blur)="onBlur()"
 >
   @if (loading) {
     <span class="spinner" aria-hidden="true"></span>

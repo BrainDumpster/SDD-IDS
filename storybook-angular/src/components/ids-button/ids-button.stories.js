@@ -212,3 +212,52 @@ export const Loading = {
     `,
   }),
 };
+
+/** @type {import("@storybook/angular").StoryObj<IdsButtonComponent>} */
+export const AllTypesIconWithText = {
+  name: "All Types Icon With Text",
+  render: () => ({
+    template: `
+      <div style="display: grid; gap: 12px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="primary" size="sm"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+          <ids-button variant="primary" size="md"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+          <ids-button variant="primary" size="lg"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="secondary" size="sm"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+          <ids-button variant="secondary" size="md"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+          <ids-button variant="secondary" size="lg"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="tertiary" size="sm"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+          <ids-button variant="tertiary" size="md"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+          <ids-button variant="tertiary" size="lg"><ids-icon shapeName="${DEMO_ICON}" variant="mask" />Button</ids-button>
+        </div>
+      </div>
+    `,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsButtonComponent>} */
+export const AllTypesIconOnly = {
+  name: "All Types Icon Only",
+  render: () => ({
+    template: `
+      <div style="display: grid; gap: 12px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="primary" size="md" [iconOnly]="true" ariaLabel="Primary md"><ids-icon shapeName="${DEMO_ICON}" variant="mask" /></ids-button>
+          <ids-button variant="primary" size="lg" [iconOnly]="true" ariaLabel="Primary lg"><ids-icon shapeName="${DEMO_ICON}" variant="mask" /></ids-button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="secondary" size="md" [iconOnly]="true" ariaLabel="Secondary md"><ids-icon shapeName="${DEMO_ICON}" variant="mask" /></ids-button>
+          <ids-button variant="secondary" size="lg" [iconOnly]="true" ariaLabel="Secondary lg"><ids-icon shapeName="${DEMO_ICON}" variant="mask" /></ids-button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="tertiary" size="md" [iconOnly]="true" ariaLabel="Tertiary md"><ids-icon shapeName="${DEMO_ICON}" variant="mask" /></ids-button>
+          <ids-button variant="tertiary" size="lg" [iconOnly]="true" ariaLabel="Tertiary lg"><ids-icon shapeName="${DEMO_ICON}" variant="mask" /></ids-button>
+        </div>
+      </div>
+    `,
+  }),
+};

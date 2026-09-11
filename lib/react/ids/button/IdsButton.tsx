@@ -18,6 +18,7 @@ import React, {
   Children,
   forwardRef,
   isValidElement,
+  useState,
   type ButtonHTMLAttributes,
   type FocusEvent,
   type KeyboardEvent,
@@ -216,7 +217,10 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const isDestructive = variant === "destructive";
   /** Spec Accurate: destructive never shows a leading icon / icon-only chrome. */
   const resolvedIconOnly = isDestructive ? false : iconOnly;
+  /** Spec Accurate: icon-only mode supports medium and large only. */
+  const resolvedSize: IdsButtonSize = resolvedIconOnly && size === "small" ? "medium" : size;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
+  const [isPressed, setIsPressed] = useState(false);
 
   const { projectedIcon, projectedLabel } = partitionProjectedChildren(children);
 
@@ -264,6 +268,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       return;
     }
     if (event.key === " " || event.key === "Enter") {
+      setIsPressed(true);
       onPressStart?.(event);
     }
     onKeyDown?.(event);
@@ -271,22 +276,28 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
 
   const handleKeyUp = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === " " || event.key === "Enter") {
+      setIsPressed(false);
       onPressEnd?.(event);
     }
     onKeyUp?.(event);
   };
 
   const handleMouseDown = (event: MouseEvent<HTMLButtonElement>) => {
-    if (!isDisabled) onPressStart?.(event);
+    if (!isDisabled) {
+      setIsPressed(true);
+      onPressStart?.(event);
+    }
     onMouseDown?.(event);
   };
 
   const handleMouseUp = (event: MouseEvent<HTMLButtonElement>) => {
+    setIsPressed(false);
     onPressEnd?.(event);
     onMouseUp?.(event);
   };
 
   const handleMouseLeave = (event: MouseEvent<HTMLButtonElement>) => {
+    setIsPressed(false);
     onPressEnd?.(event);
     onMouseLeave?.(event);
   };
@@ -296,6 +307,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   };
 
   const handleBlur = (event: FocusEvent<HTMLButtonElement>) => {
+    setIsPressed(false);
     onBlur?.(event);
   };
 
@@ -310,14 +322,14 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       aria-busy={loading || undefined}
       data-ids="ids-button"
       data-variant={variant}
-      data-size={size}
-      data-state={dataState && dataState !== "default" ? dataState : undefined}
+      data-size={resolvedSize}
+      data-state={isPressed ? "press" : dataState && dataState !== "default" ? dataState : undefined}
       data-icon-only={resolvedIconOnly ? "true" : undefined}
       data-loading={loading ? "true" : undefined}
       className={cx(
         styles["ids-button"],
         variantClass[variant],
-        sizeClass[size],
+        sizeClass[resolvedSize],
         resolvedIconOnly && styles["ids-button--icon-only"],
         loading && styles["ids-button--loading"],
         isDisabled && styles["ids-button--disabled"],
