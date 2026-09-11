@@ -37,6 +37,7 @@
     "../component-contracts/ids/dual-list-box.contract.ts",
     "../component-contracts/ids/toggle-switch.contract.ts",
     "../component-contracts/ids/wizard.contract.ts",
+    "../component-contracts/ids/spinner.contract.ts",
     "../lib/angular/ids/**/*.ts"
   ]
 }

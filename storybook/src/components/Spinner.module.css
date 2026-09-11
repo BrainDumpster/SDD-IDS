@@ -64,7 +64,7 @@
 
 .labelInline,
 .labelBelow {
-  font-family: var(--font-family-body, Roboto, Arial, sans-serif);
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
