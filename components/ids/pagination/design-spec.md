@@ -21,7 +21,7 @@
 - `PageNavigationGroup`
   - `FirstPageButton` (`double-chev-left`) (always shown when `showFirstLast` is true, disabled at first page with `var(--color-icon-gray-disabled)`)
   - `PrevPageButton` (`chev-left`)
-  - `PageInput` (textbox)
+  - `PageInput` (`IdsTextBox` text-input, small, no visible label, `aria-label="Current page"`)
   - `PageCountText` (format is `"of {totalPages}"` with exactly one space after `of`; single-page fallback `"1 page"`)
   - `NextPageButton` (`chev-right`)
   - `LastPageButton` (`double-chev-right`)
@@ -42,7 +42,7 @@
 - Page input (`PageInput` / Figma `.TextBox` node `11677:157819`):
   - Width: `52px`
   - Height: `32px`
-  - Padding: `5px/6px` vertical, `0px` horizontal
+  - Padding: `0 4px` horizontal (overrides `IdsTextBox` default horizontal padding for the pagination use-case)
   - Text alignment: `center`
 - Page count text:
   - Must render as `of {totalPages}` with one whitespace separator.
@@ -106,12 +106,14 @@
 |---|---|---|---|---|
 | Navigation icon buttons | default | transparent | none | disabled/neutral/brand icon based on position |
 | Navigation icon buttons | hover | transparent | none | `var(--color-icon-brand-base)` |
+| Navigation icon buttons | focus-visible | transparent | none + outer ring `var(--color-border-brand-base)` (`var(--corner-radius-radius-4)`) | icon unchanged |
 | Navigation icon buttons | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
 | Page input | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
-| Page input | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` + outer focus treatment | text unchanged |
+| Page input | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-brand-base)` (selected state) | text unchanged |
 | Per-page dropdown trigger | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
-| Per-page dropdown trigger | hover | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text/caret unchanged |
-| Per-page dropdown trigger | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` + focus outline | text/caret unchanged |
+| Per-page dropdown trigger | hover | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-strong)` | text/caret unchanged |
+| Per-page dropdown trigger | show-dropdown | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text/caret unchanged; bottom corners square (radius 0) so the menu attaches flush |
+| Per-page dropdown trigger | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` + outer focus ring `var(--color-border-brand-base)` | text/caret unchanged |
 | Dropdown option row | default (layout-stable) | `var(--color-background-surface-component)` | top+bottom `1px solid transparent` | `var(--color-text-gray-neutral)` |
 | Dropdown option row | hover | `var(--color-background-brand-lighter-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
 | Dropdown option row | press | `var(--color-background-brand-light-slate)` | top+bottom `1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
@@ -308,6 +310,7 @@ Variant matrix:
 - **Caret icon (2026-06-19)**: Per-page dropdown caret (`arrow-drop-tri-caret`) must render at 10×10px via explicit `style={{ width: 10, height: 10 }}` on `Icon` (inline default is 16px).
 - **Page number (2026-06-19)**: Figma `.TextBox` (`11677:157819`) — numeric text input only; no page-number dropdown in IDS or Synapse.
 - **Page input width (2026-08-31)**: `PageInput` control width is `52px` (height remains `32px`).
+- **Page input component (2026-09-12)**: `PageInput` is rendered with `IdsTextBox` (`componentType="text-input"`, `size="small"`), no visible label, `aria-label="Current page"`, and value is center-aligned. Keyboard focus-visible is styled with the `IdsTextBox` selected-state brand border (`var(--color-border-brand-base)`) and the outer focus ring is suppressed.
 - **Per-page menu stacking (2026-08-31)**: Portal the results-per-page menu to `document.body` with `position: fixed` and high `z-index` so it paints above the pagination root (and parent overflow/clipping contexts). Reposition on scroll/resize.
 - **Navigation arrows (2026-06-19)**: First/previous/next/last controls always render on multi-page views; boundary positions use disabled styling instead of hiding controls. All four use shared `Icon` with `style={{ width: 16, height: 16 }}`; button `color` drives `var(--color-icon-brand-base)` / `var(--color-icon-gray-disabled)`.
 - **Datagrid embed (2026-07-06)**: Pass **`embeddedInDatagrid`** when hosted in datagrid footer; **`rootEmbedded`** class sets `border: 0; border-top: 1px solid var(--color-border-gray-neutral-base)` so shell owns left/right/bottom edges.
