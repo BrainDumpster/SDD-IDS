@@ -58,6 +58,7 @@
 }
 
 .dropdownTrigger {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -75,18 +76,28 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
+  outline: none;
 }
 
 .dropdownTrigger:hover:not(:disabled) {
   background: var(--color-background-surface-component);
-  border-color: var(--color-border-gray-neutral-base);
+  border-color: var(--color-border-gray-neutral-strong);
   color: var(--color-text-gray-neutral);
 }
 
-.dropdownTrigger:focus-visible {
-  outline: var(--border-width-border-default, 1px) solid
+.dropdownTrigger[aria-expanded="true"]:not(:disabled) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.dropdownTrigger:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default, 1px) solid
     var(--color-border-brand-base);
-  outline-offset: 4px;
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .dropdownTrigger:disabled {
@@ -158,11 +169,11 @@
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
   text-align: left;
-  padding: var(--padding-padding-10) var(--padding-padding-24)
-    var(--padding-padding-10) var(--padding-padding-16);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
+  outline: none;
 }
 
 .dropdownOption:hover {
@@ -180,9 +191,10 @@
 }
 
 .dropdownOption:focus-visible {
+  border-radius: var(--corner-radius-radius-4);
   outline: var(--border-width-border-default, 1px) solid
     var(--color-border-brand-base);
-  outline-offset: 4px;
+  outline-offset: -1px;
 }
 
 .dropdownOptionSelected {
@@ -202,6 +214,7 @@
 }
 
 .iconButton {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -222,9 +235,17 @@
 }
 
 .iconButton:focus-visible {
-  outline: var(--border-width-border-default, 1px) solid
+  outline: none;
+}
+
+.iconButton:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default, 1px) solid
     var(--color-border-brand-base);
-  outline-offset: 4px;
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .iconButton:disabled {
@@ -236,55 +257,31 @@
   display: none;
 }
 
-.pageInputWrap {
-  display: inline-flex;
-  align-items: center;
-  box-sizing: border-box;
-  width: 52px;
-  height: 32px;
-  border: var(--border-width-border-default, 1px) solid
-    var(--color-border-gray-neutral-base);
-  border-radius: 0;
-  background: var(--color-background-surface-component);
-  padding: 5px 0 6px;
-}
-
-.pageInputWrapCollapsed {
-  display: none;
-}
-
 .pageInput {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--color-text-gray-neutral);
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  flex: 0 0 52px;
+}
+
+.pageInput [data-ids="ids-text-box-control"] {
+  padding: 0 4px;
+}
+
+.pageInput [data-ids="ids-text-box-input"] {
   text-align: center;
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
 }
 
-.pageInput:focus {
-  outline: 0;
+.pageInput [data-ids="ids-text-box-control"]:has([data-ids="ids-text-box-input"]:focus-visible):not([data-state="disabled"]):not([data-state="error"]) {
+  border-color: var(--color-border-brand-base);
 }
 
-.pageInput:focus-visible {
-  outline: 0;
+.pageInput [data-ids="ids-text-box-control"]:has([data-ids="ids-text-box-input"]:focus-visible):not([data-state="disabled"]):not([data-state="error"])::after {
+  content: none;
 }
 
-.pageInputWrap:focus-within {
-  outline: var(--border-width-border-default, 1px) solid
-    var(--color-border-brand-base);
-  outline-offset: 4px;
-}
-
-.pageInput:disabled {
-  cursor: not-allowed;
-  color: var(--color-text-gray-disabled);
+.pageInputCollapsed {
+  display: none;
 }
 
 .countText {
