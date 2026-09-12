@@ -60,25 +60,27 @@ function formatTime24(hour: number, minute: number, second: number, showSeconds:
 function TimeColumn({
   label,
   display,
-  onUp,
-  onDown,
+  onIncrement,
+  onDecrement,
   disabled,
 }: {
   label: string;
   display: string;
-  onUp: () => void;
-  onDown: () => void;
+  onIncrement: () => void;
+  onDecrement: () => void;
   disabled?: boolean;
 }) {
   return (
     <div className={styles.timeColumn} role="group" aria-label={label}>
-      <button type="button" className={`${styles.arrowBtn} ${styles.arrowUp}`} onClick={onUp} disabled={disabled} aria-label={`Increase ${label}`}>
+      {/* Per spec: the up arrow is the "Previous" control — navigates backward (decrement). */}
+      <button type="button" className={`${styles.arrowBtn} ${styles.arrowUp}`} onClick={onDecrement} disabled={disabled} aria-label={`Previous ${label}`}>
         <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
       <div className={styles.valueCell} aria-live="polite">
         {display}
       </div>
-      <button type="button" className={styles.arrowBtn} onClick={onDown} disabled={disabled} aria-label={`Decrease ${label}`}>
+      {/* Per spec: the down arrow is the "Next" control — navigates forward (increment). */}
+      <button type="button" className={styles.arrowBtn} onClick={onIncrement} disabled={disabled} aria-label={`Next ${label}`}>
         <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
     </div>
@@ -101,6 +103,9 @@ export function IdsTimePicker({
   forceOpen,
 }: IdsTimePickerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const clockBtnRef = useRef<HTMLButtonElement>(null);
+  const didMountRef = useRef(false);
   const [mouseActivated, setMouseActivated] = useState(false);
   const [open, setOpen] = useState(forceOpen ?? false);
   const [inputText, setInputText] = useState(value ?? "");
@@ -157,22 +162,70 @@ export function IdsTimePicker({
     commit(formatted);
   }, [commit, formatted]);
 
+  const closePopup = useCallback(
+    (returnFocus: boolean) => {
+      setOpen(false);
+      applyFromColumns();
+      if (returnFocus) clockBtnRef.current?.focus();
+    },
+    [applyFromColumns],
+  );
+
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        applyFromColumns();
+        closePopup(false);
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open, applyFromColumns]);
+  }, [open, closePopup]);
+
+  /** Focusable controls inside the popup, in DOM order (for the focus trap). */
+  const getFocusableEls = () =>
+    popupRef.current
+      ? Array.from(
+          popupRef.current.querySelectorAll<HTMLElement>("button:not([disabled])"),
+        ).filter((el) => el.offsetParent !== null)
+      : [];
+
+  // On open, move focus to the first control in the popup (the selected time),
+  // per the spec's "Space/Enter opens the selector and moves focus to the
+  // currently selected time". Skipped on the initial mount so forceOpen demos
+  // don't grab focus on load.
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    if (open && !disabled) {
+      getFocusableEls()[0]?.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, disabled]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape" && open) {
-      setOpen(false);
-      applyFromColumns();
+      e.preventDefault();
+      closePopup(true);
+    }
+  };
+
+  /** Selector is a single tab stop: Tab / Shift+Tab cycle within the popup (focus trap). */
+  const onPopupKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== "Tab") return;
+    const els = getFocusableEls();
+    if (els.length === 0) return;
+    const first = els[0];
+    const last = els[els.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    if (e.shiftKey && active === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
     }
   };
 
@@ -221,9 +274,10 @@ export function IdsTimePicker({
               if (inputText.trim()) commit(inputText.trim());
             }}
             disabled={disabled}
-            aria-label={label || "Time"}
+            aria-label={label ? (inputText.trim() ? label : `${label}, ${placeholder}`) : "Time"}
           />
           <Button
+            ref={clockBtnRef}
             type="button"
             variant="tertiary"
             size={size === "large" ? "lg" : "md"}
@@ -248,10 +302,12 @@ export function IdsTimePicker({
 
         {open && !disabled && (
           <div
+            ref={popupRef}
             className={`${styles.timePopup} ${clockType === "24h" && !showSeconds ? styles.widePadding : ""}`}
             role="dialog"
             aria-modal="true"
             aria-label="Choose time"
+            onKeyDown={onPopupKeyDown}
           >
             {clockType === "12h" ? (
               <>
@@ -259,31 +315,31 @@ export function IdsTimePicker({
                   label="Hour"
                   display={String(hour12)}
                   disabled={disabled}
-                  onUp={() => setHour12((h) => wrap(h + 1, 1, 12))}
-                  onDown={() => setHour12((h) => wrap(h - 1, 1, 12))}
+                  onIncrement={() => setHour12((h) => wrap(h + 1, 1, 12))}
+                  onDecrement={() => setHour12((h) => wrap(h - 1, 1, 12))}
                 />
                 <TimeColumn
                   label="Minute"
                   display={pad2(minute)}
                   disabled={disabled}
-                  onUp={() => setMinute((m) => wrap(m + 1, 0, 59))}
-                  onDown={() => setMinute((m) => wrap(m - 1, 0, 59))}
+                  onIncrement={() => setMinute((m) => wrap(m + 1, 0, 59))}
+                  onDecrement={() => setMinute((m) => wrap(m - 1, 0, 59))}
                 />
                 {showSeconds && (
                   <TimeColumn
                     label="Second"
                     display={pad2(second)}
                     disabled={disabled}
-                    onUp={() => setSecond((s) => wrap(s + 1, 0, 59))}
-                    onDown={() => setSecond((s) => wrap(s - 1, 0, 59))}
+                    onIncrement={() => setSecond((s) => wrap(s + 1, 0, 59))}
+                    onDecrement={() => setSecond((s) => wrap(s - 1, 0, 59))}
                   />
                 )}
                 <TimeColumn
                   label="AM or PM"
                   display={period}
                   disabled={disabled}
-                  onUp={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
-                  onDown={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
+                  onIncrement={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
+                  onDecrement={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
                 />
               </>
             ) : (
@@ -292,23 +348,23 @@ export function IdsTimePicker({
                   label="Hour"
                   display={String(hour24)}
                   disabled={disabled}
-                  onUp={() => setHour24((h) => wrap(h + 1, 0, 23))}
-                  onDown={() => setHour24((h) => wrap(h - 1, 0, 23))}
+                  onIncrement={() => setHour24((h) => wrap(h + 1, 0, 23))}
+                  onDecrement={() => setHour24((h) => wrap(h - 1, 0, 23))}
                 />
                 <TimeColumn
                   label="Minute"
                   display={pad2(minute)}
                   disabled={disabled}
-                  onUp={() => setMinute((m) => wrap(m + 1, 0, 59))}
-                  onDown={() => setMinute((m) => wrap(m - 1, 0, 59))}
+                  onIncrement={() => setMinute((m) => wrap(m + 1, 0, 59))}
+                  onDecrement={() => setMinute((m) => wrap(m - 1, 0, 59))}
                 />
                 {showSeconds && (
                   <TimeColumn
                     label="Second"
                     display={pad2(second)}
                     disabled={disabled}
-                    onUp={() => setSecond((s) => wrap(s + 1, 0, 59))}
-                    onDown={() => setSecond((s) => wrap(s - 1, 0, 59))}
+                    onIncrement={() => setSecond((s) => wrap(s + 1, 0, 59))}
+                    onDecrement={() => setSecond((s) => wrap(s - 1, 0, 59))}
                   />
                 )}
               </>

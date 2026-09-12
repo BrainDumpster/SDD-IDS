@@ -111,7 +111,7 @@
   content: "";
   position: absolute;
   inset: -5px;
-  border: 1px solid var(--color-border-brand-base, #0076ce);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
   border-radius: var(--time-picker-focus-ring-radius);
   pointer-events: none;
   z-index: 1;
@@ -231,7 +231,7 @@
   flex-direction: row;
   gap: var(--spacing-space-16, 16px);
   align-items: center;
-  border-radius: 0;
+  border-radius: var(--corner-radius-radius-none, 0);
 }
 
 .timePopup.widePadding {
