@@ -68,7 +68,6 @@ const meta: Meta<typeof IdsBreadcrumb> = {
 
     maxVisibleItems: 3,
 
-    showDropdown: false,
 
   },
 
@@ -94,7 +93,6 @@ const meta: Meta<typeof IdsBreadcrumb> = {
 
     maxVisibleItems: { control: "number", description: "Max items before truncation" },
 
-    showDropdown: { control: "boolean", description: "Show dropdown on hover of '...'" },
 
   },
 

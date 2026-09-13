@@ -50,3 +50,7 @@
   flex-shrink: 0;
 }
 
+.breadcrumbItem :global([data-ids-menu-portal]) {
+  display: contents;
+}
+

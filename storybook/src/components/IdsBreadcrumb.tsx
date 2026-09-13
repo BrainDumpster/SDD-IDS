@@ -1,10 +1,10 @@
-import type { ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 
 import { IdsLink } from "../../../lib/react/ids/link";
 
 import idsLinkStyles from "../../../lib/react/ids/link/IdsLink.module.css";
 
-import { DropdownMenu } from "./DropdownMenu";
+import { DropdownMenu } from "../../../lib/react/ids/dropdown-shared";
 
 import styles from "./IdsBreadcrumb.module.css";
 
@@ -38,9 +38,6 @@ interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
 
   maxVisibleItems?: number;
 
-  /** Whether to show dropdown menu on hover of "..." */
-
-  showDropdown?: boolean;
 
 }
 
@@ -55,8 +52,6 @@ export function IdsBreadcrumb({
   truncate = false,
 
   maxVisibleItems = 3,
-
-  showDropdown = false,
 
   className,
 
@@ -73,6 +68,18 @@ export function IdsBreadcrumb({
     : items;
 
   const hiddenItems = shouldTruncate ? items.slice(1, -1) : [];
+
+  const [dropdownContainer, setDropdownContainer] = useState<HTMLDivElement | null>(null);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (!dropdownOpen || !dropdownContainer) return;
+    const firstItem = dropdownContainer.querySelector<HTMLElement>(
+      'button:not(:disabled), [role="menuitem"]:not([aria-disabled="true"])',
+    );
+    firstItem?.focus();
+  }, [dropdownOpen, dropdownContainer]);
 
 
 
@@ -122,7 +129,7 @@ export function IdsBreadcrumb({
 
                   {shouldTruncate && index === 0 && (
 
-                    showDropdown ? (
+                    <>
 
                       <DropdownMenu
 
@@ -146,6 +153,8 @@ export function IdsBreadcrumb({
 
                           label: hiddenItem.label,
 
+                          selectable: true,
+
                           onClick: () => {
 
                             window.location.href = hiddenItem.href ?? "#";
@@ -154,25 +163,17 @@ export function IdsBreadcrumb({
 
                         }))}
 
-                        selectionMode="none"
+                        selectionMode="single"
 
                         menuWidth="content"
+                        portalContainer={dropdownContainer}
+                        onOpenChange={setDropdownOpen}
 
                       />
 
-                    ) : (
+                      <div ref={setDropdownContainer} style={{ display: "contents" }} />
 
-                      <span
-
-                        className={[idsLinkStyles["ids-link"], idsLinkStyles["ids-link--standalone"]].join(" ")}
-
-                      >
-
-                        ...
-
-                      </span>
-
-                    )
+                    </>
 
                   )}
 
