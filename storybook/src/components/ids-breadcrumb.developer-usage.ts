@@ -36,8 +36,6 @@ Import the component used by the IDS Storybook example for **Breadcrumb**.
 
 | \`maxVisibleItems\` | \`number\` | — |
 
-| \`showDropdown\` | \`boolean\` | — |
-
 
 
 ## Events

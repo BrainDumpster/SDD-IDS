@@ -109,6 +109,24 @@
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement
 - Use consistent styling across the application
+
+### Text Truncation (Responsive)
+When horizontal space is limited by an adjacent sibling, individual breadcrumb labels are gradually truncated to avoid collision.
+
+- **Spacing measurement** — The component measures the gap between the right edge of the breadcrumb list and the left edge of the next sibling in its container. When no sibling exists, the right edge of the breadcrumb container is used.
+- **Thresholds**
+  - **Truncate** when the measured spacing drops below `24px`.
+  - **Revert** (un-truncate) when the measured spacing reaches `48px` or more. This 24px buffer above the truncation threshold prevents rapid oscillation when a character is added back.
+- **Gradual decrease** — A character cap is lowered by one character at a time. Only labels longer than the current cap are rendered as `{{label.slice(0, cap)}...` (three dots, no space). Because the cap is global, the longest label is shortened first.
+- **Gradual increase** — As the container grows, the cap is raised by one character at a time until all labels are fully restored.
+- **Observation** — `ResizeObserver` watches the breadcrumb `<nav>`, the `<ol>` list, and the parent container so truncation updates as the layout changes.
+
+### Text Truncation Priority
+When the available width limit is hit (spacing to the next element drops below `24px`), labels are truncated in the following order of priority:
+
+1. First, identify and truncate any breadcrumb labels that exceed 45 characters.
+2. Next, identify and truncate any remaining breadcrumb labels that exceed 20 characters.
+3. If the list still overflows after the 45 and 20 character stages, continue truncating all labels gradually until the content fits.
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants

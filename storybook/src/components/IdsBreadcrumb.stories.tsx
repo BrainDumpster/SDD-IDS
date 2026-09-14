@@ -11,6 +11,7 @@ import {
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { IdsBreadcrumb } from "./IdsBreadcrumb";
+import { IdsButton } from "./IdsButton";
 
 
 
@@ -68,7 +69,6 @@ const meta: Meta<typeof IdsBreadcrumb> = {
 
     maxVisibleItems: 3,
 
-    showDropdown: false,
 
   },
 
@@ -94,7 +94,6 @@ const meta: Meta<typeof IdsBreadcrumb> = {
 
     maxVisibleItems: { control: "number", description: "Max items before truncation" },
 
-    showDropdown: { control: "boolean", description: "Show dropdown on hover of '...'" },
 
   },
 
@@ -134,6 +133,8 @@ export const Default: Story = {
 
       style={{
 
+        position: "relative",
+
         resize: "both",
 
         overflow: "auto",
@@ -152,12 +153,107 @@ export const Default: Story = {
 
     >
 
+      <IdsButton
+
+        style={{
+
+          position: "absolute",
+
+          top: 8,
+
+          right: 8,
+
+        }}
+
+      >
+
+        Action
+
+      </IdsButton>
+
       <IdsBreadcrumb {...args} />
 
     </div>
 
   ),
 
+};
+
+
+
+export const Truncation: Story = {
+  args: {
+    items: [
+      { label: "This is an extremely long breadcrumb label that should be truncated", href: "#" },
+      { label: "Another very long label for testing overflow behavior with long text", href: "#" },
+      { label: "Short", href: "#" },
+      { label: "Current", href: "#" },
+    ],
+    currentPage: "Current Page",
+  },
+  render: (args) => (
+    <div
+      style={{
+        position: "relative",
+        resize: "both",
+        overflow: "auto",
+        maxWidth: "100%",
+        minWidth: 200,
+        padding: 16,
+        border: "1px dashed var(--color-border-gray-neutral-base, #757575)",
+        borderRadius: 4,
+      }}
+    >
+      <IdsButton
+        style={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+        }}
+      >
+        Action
+      </IdsButton>
+      <IdsBreadcrumb {...args} />
+    </div>
+  ),
+};
+
+
+
+export const MixedLengths: Story = {
+  args: {
+    items: [
+      { label: "This breadcrumb is exactly seventy characters in the total length now!", href: "#" },
+      { label: "Thirty character breadcrumb!!!", href: "#" },
+      { label: "Fifteen chars!!", href: "#" },
+    ],
+    currentPage: "Current Page",
+  },
+  render: (args) => (
+    <div
+      style={{
+        position: "relative",
+        resize: "both",
+        overflow: "auto",
+        maxWidth: "100%",
+        minWidth: 200,
+        padding: 16,
+        border: "1px dashed var(--color-border-gray-neutral-base, #757575)",
+        borderRadius: 4,
+      }}
+    >
+      <IdsButton
+        style={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+        }}
+      >
+        Action
+      </IdsButton>
+      <IdsBreadcrumb {...args} />
+    </div>
+  ),
 };
 
 
