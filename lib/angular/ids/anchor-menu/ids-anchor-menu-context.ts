@@ -4,6 +4,10 @@ import type { IdsAnchorMenuItemComponent } from "./ids-anchor-menu-item.componen
 export interface IdsAnchorMenuContext {
   readonly title: string;
   readonly sticky: boolean;
+  /** Reveal truncated labels with the browser `title` instead of IdsTooltip. */
+  readonly nativeTooltip: boolean;
+  /** Auto-flipped IdsTooltip side based on the menu's viewport position. */
+  readonly tooltipSide: "left" | "right";
   readonly activeHref: string | undefined;
   readonly activeIndicatorTopPx: number | null;
   isActive(href: string): boolean;
