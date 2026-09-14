@@ -54,3 +54,7 @@
   display: contents;
 }
 
+.breadcrumbList :global([data-ids="ids-link-label"]) {
+  white-space: nowrap;
+}
+
