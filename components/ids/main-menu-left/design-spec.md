@@ -59,7 +59,7 @@ Figma slot mapping:
 6. `ExpandCollapse` — footer control; **16×16** icon (`double-chev-left` when expanded / `double-chev-right` when collapsed)
 
 ## Layout & Measurements
-- **Expanded rail width:** `min 256px` / `max 356px` (implementation override — pending live Figma re-verification against `11099:56218`)
+- **Expanded rail width:** `min 256px` / `max 356px` — the fixed-expanded rail fills its slot within this range (`width: 100%` clamped). Storybook frames use **`278px`** as the example. The **collapsed hover-expand overlay** is out of flow (absolute) and cannot fill a slot, so its width comes from `--ids-main-menu-left-expanded-width` (default `278px`, clamped to the range) — set it to match the consumer's fixed-expanded rail width so the two read the same.
 - **Collapsed rail width:** `64px` (24px inline padding × 2 + 16px icon; Figma `11099:56206`)
 - **Sample frame height:** `888px` (container-driven at runtime; Storybook uses `100vh`)
 - **Menu top padding:** `var(--padding-padding-8)` on `MainMenuLeftRoot`
@@ -109,7 +109,7 @@ Figma slot mapping:
 |---|---|---|---|---|---|
 | Default | Collapsed | transparent | none (container border only) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
 | Default | Expanded | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
-| Hover | * | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Hover | * | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
 | Press | * | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
 | Selected | Collapsed | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
 | Selected | Expanded | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
@@ -122,14 +122,14 @@ Figma slot mapping:
 |---|---|---|---|
 | Default | transparent | — | `var(--color-icon-gray-neutral-strong)` |
 | Selected | `var(--color-background-brand-lighter-slate)` | **4px** `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| Hover / Press | same token mapping as expanded primary | — | brand-strong / brand-base per state |
+| Hover / Press | same token mapping as expanded primary | — | Hover: `var(--color-icon-gray-neutral-strong)` (neutral); Press: `var(--color-icon-brand-strong)` |
 
 ### Secondary row (`.MainMenu-Left-Element-Secondary`)
 
 | State | Background | Text |
 |---|---|---|
 | Default | transparent | `var(--color-text-gray-neutral)` |
-| Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-gray-neutral)` |
 | Press | `var(--color-background-brand-light-slate)` | `var(--color-text-brand-strong)` |
 | Selected | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
 | Default-Focus | transparent; focus ring `var(--color-border-brand-base)` (`inset: 0 1px` — 1px gap from rail L/R border); **no** 4px bar | `var(--color-text-gray-neutral)` |
@@ -151,6 +151,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Parent selected-context persistence: when a secondary child is the active page and its sub-menu is **collapsed**, the parent row **stays in the selected state** (background + inset retained) and takes over `aria-current="page"` from the now-hidden child, so the current-page indicator is never lost.
 - Collapsed rail: primary buttons use `title` / tooltip from `tooltip` when set, else visible `name`.
 - Collapse footer: toggles expanded (`min 256px` / `max 356px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`.
+- **Collapsed hover-expand (overlay):** while the rail is *fixed* collapsed, hovering it temporarily expands it to full rail width **as an overlay over the page content** (the collapsed rail keeps reserving its `64px` footprint, so content does not reflow), and it collapses again on mouse leave. While hover-expanded it behaves the same as a permanently expanded rail (labels, chevrons, sub-menu accordions). The footer **expand icon stays in the collapsed state** (`double-chev-right`) during a hover-expand — it only flips once the rail is *fixed* expanded via the footer toggle. Overlay drop shadow (Figma `11099:56206`): two layers, `x 4 / blur 4 / spread 0` and `x 2 / blur 2 / spread 0`, both `8%` — blur/spread/color from `--shadow-drop-shadow-4-*` / `--shadow-drop-shadow-2-*`; the horizontal `x` offset is a Figma literal (the tokens carry the vertical geometry).
 - Truncated label tooltips (expanded only): when a primary or secondary label is clipped after 2 lines, hovering the visible text shows an `IdsTooltip` whose body is the full label (or the item's `tooltip` prop if supplied).
 - Chevron reflects `children` list open (`chev-down-thick`) vs closed (`chev-right-thick`).
 - **`childrenMenu` (runtime):** when `forceStates` is **false**, open/closed state is driven by user interaction (in-memory expand key on the primary row). When `forceStates` is **true** (Storybook matrix only), `childrenMenu` pins the list open or closed for that row.
@@ -383,7 +384,7 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 4. **Rail side border + highlight** — Side chrome on `MainMenuLeftRoot` only (continuous through the `8px` gap). `MainMenuList` must **not** use negative side margins — hover/selected backgrounds stay inside the right border (Figma Element-Primary fill). `SelectedInset` extends into the rail border zone per PR #82 geometry above.
 
 ### Updates (2026-08-30)
-1. **Expanded rail width range** — Implementation override: `min 256px` / `max 356px` (was 278px fixed). `MainMenuLeft.module.css` uses `width: 100%` clamped by `min-width` and `max-width`.
+1. **Expanded rail width range** — Implementation override: `min 256px` / `max 356px`. `MainMenuLeft.module.css` uses `width: 100%` clamped by `min-width` and `max-width`; Storybook uses `278px` as the example. The collapsed hover-expand overlay (out of flow) takes its width from `--ids-main-menu-left-expanded-width` (default `278px`) instead. See **Layout & Measurements**.
 2. **Label wrap / truncate** — Primary and secondary labels support up to 2 lines (`-webkit-line-clamp: 2`) and `text-overflow: ellipsis` overflow. Implemented via `ClampedLabel` with `ResizeObserver` detection.
 3. **Truncated-label `IdsTooltip`** — When a primary or secondary label is clipped, hovering it opens an `IdsTooltip` (content = `tooltip` prop or full label, `side="right"`, `arrowAlign="start"`).
 4. **Icon/chevron alignment on wrap** — Primary icon and chevron are `align-self: center` on single-line rows and `align-self: flex-start` with `4px` top/bottom padding (total `24px` height) when the primary label wraps to two lines.

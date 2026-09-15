@@ -26,6 +26,55 @@
   max-width: 64px;
 }
 
+/* Layout footprint. Keeps the rail's reserved width fixed to the *fixed* state
+   (expanded vs 64px collapsed) so that a collapsed rail hover-expanding as an
+   overlay does not push the page content. */
+.reserve {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+/* Fixed-expanded footprint: a concrete width (so the rail's slot changes size
+   between collapsed 64px and expanded, and the page content reflows on toggle),
+   driven by --ids-main-menu-left-expanded-width (default 278px) and kept within
+   the 256–356px range. The overlay uses the same variable. */
+.reserveExpanded {
+  width: var(--ids-main-menu-left-expanded-width, 278px);
+  min-width: 256px;
+  max-width: 356px;
+}
+
+.reserveCollapsed {
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+}
+
+/* Collapsed → hover: the rail overlays the content instead of reflowing it,
+   with the two-layer drop shadow from the design tokens (Figma: x 4/2, blur
+   4/2, spread 0, 8% — the x offset is a Figma literal; blur/spread/color are
+   tokens). Being out of flow, the overlay can't fill its slot the way the
+   in-flow expanded rail does, so its width comes from
+   --ids-main-menu-left-expanded-width (default 278px, within the 256–356 range);
+   set it to match the consumer's fixed-expanded rail width. */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--ids-main-menu-left-expanded-width, 278px);
+  min-width: 256px;
+  max-width: 356px;
+  height: 100%;
+  z-index: 20;
+  box-shadow:
+    4px 0 var(--shadow-drop-shadow-4-blur) var(--shadow-drop-shadow-4-spread)
+      var(--shadow-drop-shadow-4-color),
+    2px 0 var(--shadow-drop-shadow-2-blur) var(--shadow-drop-shadow-2-spread)
+      var(--shadow-drop-shadow-2-color);
+}
+
 .logoSlot {
   flex-shrink: 0;
   width: 100%;
@@ -222,7 +271,7 @@
 
 .secondaryInteractive:hover {
   background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral);
 }
 
 .secondaryInteractive:active {
@@ -232,6 +281,7 @@
 
 .secondaryInteractive.secondaryRowSelected:hover {
   background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-brand-strong);
 }
 
 .secondaryInteractive.secondaryRowSelected:active {
@@ -353,11 +403,11 @@
 }
 
 .stateHover .primaryLabel {
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .stateHover .primaryIcon {
-  color: var(--color-icon-brand-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .statePress {
@@ -413,12 +463,19 @@
   background: var(--color-background-brand-lighter-slate);
 }
 
+/* Hover on a non-selected row keeps the label/icon neutral (only the background
+   tints); selected rows stay brand on hover (overrides below). */
 .interactive:hover .primaryLabel {
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .interactive:hover .primaryIcon {
-  color: var(--color-icon-brand-strong);
+  color: var(--color-icon-gray-neutral-strong);
+}
+
+.interactive.selected:hover .primaryLabel,
+.interactive.secondaryParentSelected:hover .primaryLabel {
+  color: var(--color-text-brand-strong);
 }
 
 .interactive.selected:hover .primaryIcon,
