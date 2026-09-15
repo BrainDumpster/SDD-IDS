@@ -26,6 +26,55 @@
   max-width: 64px;
 }
 
+/* Layout footprint. Keeps the rail's reserved width fixed to the *fixed* state
+   (expanded vs 64px collapsed) so that a collapsed rail hover-expanding as an
+   overlay does not push the page content. */
+.reserve {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+/* Fixed-expanded footprint: a concrete width (so the rail's slot changes size
+   between collapsed 64px and expanded, and the page content reflows on toggle),
+   driven by --ids-main-menu-left-expanded-width (default 278px) and kept within
+   the 256–356px range. The overlay uses the same variable. */
+.reserveExpanded {
+  width: var(--ids-main-menu-left-expanded-width, 278px);
+  min-width: 256px;
+  max-width: 356px;
+}
+
+.reserveCollapsed {
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+}
+
+/* Collapsed → hover: the rail overlays the content instead of reflowing it,
+   with the two-layer drop shadow from the design tokens (Figma: x 4/2, blur
+   4/2, spread 0, 8% — the x offset is a Figma literal; blur/spread/color are
+   tokens). Being out of flow, the overlay can't fill its slot the way the
+   in-flow expanded rail does, so its width comes from
+   --ids-main-menu-left-expanded-width (default 278px, within the 256–356 range);
+   set it to match the consumer's fixed-expanded rail width. */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--ids-main-menu-left-expanded-width, 278px);
+  min-width: 256px;
+  max-width: 356px;
+  height: 100%;
+  z-index: 20;
+  box-shadow:
+    4px 0 var(--shadow-drop-shadow-4-blur) var(--shadow-drop-shadow-4-spread)
+      var(--shadow-drop-shadow-4-color),
+    2px 0 var(--shadow-drop-shadow-2-blur) var(--shadow-drop-shadow-2-spread)
+      var(--shadow-drop-shadow-2-color);
+}
+
 .logoSlot {
   flex-shrink: 0;
   width: 100%;
@@ -78,6 +127,12 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Let the row focus ring sit fully outside the rail's L/R border (a 1px gap
+     between the ring's inner edge and the rail's outer edge) instead of being
+     clipped by this scroll container. The negative inline margin keeps the row
+     content-box — and its hover/selected fills — in place. */
+  padding-inline: calc(4 * var(--border-width-border-1));
+  margin-inline: calc(-4 * var(--border-width-border-1));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
@@ -222,7 +277,7 @@
 
 .secondaryInteractive:hover {
   background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral);
 }
 
 .secondaryInteractive:active {
@@ -232,6 +287,7 @@
 
 .secondaryInteractive.secondaryRowSelected:hover {
   background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-brand-strong);
 }
 
 .secondaryInteractive.secondaryRowSelected:active {
@@ -245,8 +301,8 @@
 .secondaryInteractive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -260,29 +316,42 @@
   max-height: 49px;
   flex-shrink: 0;
   border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  padding: var(--padding-padding-16) var(--padding-padding-24);
+  /* Padding moved onto the button so its hover/press fill covers the whole footer. */
+  padding: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .bottomToggleButton {
   box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  min-height: 16px;
-  padding: 0;
+  /* Tertiary control that fills the entire footer: hover/press tint the whole
+     background edge-to-edge. Inline padding keeps the icon on the 24px inset. */
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--padding-padding-24);
   margin: 0;
   border: none;
+  border-radius: 0;
   background: transparent;
+  box-shadow: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   line-height: 0;
   font: inherit;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
+  transition: background-color 150ms ease;
+}
+
+/* Tertiary hover/press fill across the whole footer — no border. */
+.bottomToggleButton:hover {
+  background: var(--color-background-controls-lighter);
+}
+
+.bottomToggleButton:active {
+  background: var(--color-background-controls-light);
 }
 
 .bottomToggleButton:focus,
@@ -303,8 +372,8 @@
   position: absolute;
   /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
      No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -317,8 +386,8 @@
 .interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -353,11 +422,11 @@
 }
 
 .stateHover .primaryLabel {
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .stateHover .primaryIcon {
-  color: var(--color-icon-brand-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .statePress {
@@ -413,12 +482,19 @@
   background: var(--color-background-brand-lighter-slate);
 }
 
+/* Hover on a non-selected row keeps the label/icon neutral (only the background
+   tints); selected rows stay brand on hover (overrides below). */
 .interactive:hover .primaryLabel {
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .interactive:hover .primaryIcon {
-  color: var(--color-icon-brand-strong);
+  color: var(--color-icon-gray-neutral-strong);
+}
+
+.interactive.selected:hover .primaryLabel,
+.interactive.secondaryParentSelected:hover .primaryLabel {
+  color: var(--color-text-brand-strong);
 }
 
 .interactive.selected:hover .primaryIcon,

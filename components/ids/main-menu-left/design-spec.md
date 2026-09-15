@@ -50,16 +50,16 @@ Figma slot mapping:
    - `PrimaryLabel` — Body 1 medium (hidden when collapsed)
    - `PrimaryChevron` — 14×14 `chev-right-thick` / `chev-down-thick` when `children` exist (expanded only)
    - `SelectedInset` — primary only; **4px** leading bar `var(--color-border-brand-base)`; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))` (PR #82 — bar extends into rail border zone)
-   - `FocusRing` — 1px `var(--color-border-brand-base)` (`var(--corner-radius-radius-4)`).
-     - **Assembled rail (primary + secondary):** absolute ring with `inset: 0 var(--border-width-border-1)` — **1px gap** between the Main Menu L/R rail border and the focus ring (flush top/bottom). Applies to Default-Focus and Selected-Focus.
+   - `FocusRing` — 2px `var(--color-border-brand-base)` (`var(--corner-radius-radius-4)`).
+     - **Assembled rail (primary + secondary):** absolute 2px ring with `inset: 0 calc(-4 * var(--border-width-border-1))` — the ring border sits **fully outside** the Main Menu L/R rail border (not overlapping it), with a **1px gap** between the ring's inner edge and the rail's outer edge (flush top/bottom). The `MainMenuList` scroll container adds `padding-inline` + negative `margin-inline` of `4px` so this outward bleed is not clipped while the rows/fills stay put. Applies to Default-Focus and Selected-Focus.
      - **No drop-shadow** in that gap (Figma Selected-Focus has only an **inset** 4px selected bar via `SelectedInset` / `inset 4px 0 0 0`, not an outer/drop shadow).
-     - Keyboard focus uses the same geometry via `::after`. Snapshot matrix rows use a `.focusRing` / `__focus-ring` span; forced states use `tabIndex={-1}`. **No** secondary selected-focus inset bar.
+     - Keyboard focus uses the same geometry via `::after` (2px, `inset: 0 calc(-4 * var(--border-width-border-1))`). Snapshot matrix rows use a `.focusRing` / `__focus-ring` span; forced states use `tabIndex={-1}`. **No** secondary selected-focus inset bar.
 5. `MainMenuSecondaryList` — optional, under expanded primary row when `children` exist
    - `MainMenuSecondaryItem` — `.MainMenu-Left-Element-Secondary` (32px row)
-6. `ExpandCollapse` — footer control; **16×16** icon (`double-chev-left` when expanded / `double-chev-right` when collapsed)
+6. `ExpandCollapse` — footer control; **16×16** icon (`double-chev-left` when expanded / `double-chev-right` when collapsed) rendered as a **full-footer tertiary control**: the button fills the entire `49px` footer (`width: 100%` / `height: 100%`, inline padding `var(--padding-padding-24)` so the icon stays on the `24px` inset). Hover/press tint the **whole footer background** edge-to-edge (`var(--color-background-controls-lighter)` / `var(--color-background-controls-light)`) — **no border** and no corner radius (unlike the standard tertiary button, the hover/press stroke is omitted)
 
 ## Layout & Measurements
-- **Expanded rail width:** `min 256px` / `max 356px` (implementation override — pending live Figma re-verification against `11099:56218`)
+- **Expanded rail width:** `min 256px` / `max 356px` — the fixed-expanded rail fills its slot within this range (`width: 100%` clamped). Storybook frames use **`278px`** as the example. The **collapsed hover-expand overlay** is out of flow (absolute) and cannot fill a slot, so its width comes from `--ids-main-menu-left-expanded-width` (default `278px`, clamped to the range) — set it to match the consumer's fixed-expanded rail width so the two read the same.
 - **Collapsed rail width:** `64px` (24px inline padding × 2 + 16px icon; Figma `11099:56206`)
 - **Sample frame height:** `888px` (container-driven at runtime; Storybook uses `100vh`)
 - **Menu top padding:** `var(--padding-padding-8)` on `MainMenuLeftRoot`
@@ -72,16 +72,16 @@ Figma slot mapping:
 - **Chevron:** 14×14; same wrap-responsive alignment/padding treatment as the primary icon
 - **Primary and secondary labels (expanded):** wrap to a maximum of **2 lines** using `-webkit-line-clamp: 2`, then truncate with `text-overflow: ellipsis`; when truncation occurs, hovering the label reveals an `IdsTooltip` showing the full text (or `tooltip` prop if provided)
 - **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-gray-neutral-base)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
-- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** has `margin-left: calc(-1 * var(--border-width-border-1))` and `margin-right: calc(-1 * var(--border-width-border-1))` to extend outside the container. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-gray-neutral-base)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-1 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
+- **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge for the whole rail). **`ExpandCollapse`** uses **`border-top` only** to separate from the menu list (no extra `border-bottom` on the footer — avoids a double 1px line with the root). **`MainMenuList` (content)** adds `padding-inline: calc(4 * var(--border-width-border-1))` with a compensating `margin-inline: calc(-4 * var(--border-width-border-1))`, so the focus ring (which sits fully outside the rail with a 1px gap) clears the scroll clip while the row content-box (hover/selected fills) stays flush inside the rail stroke. **`MainMenuPrimaryItem` (Element-Primary)** and **`MainMenuSecondaryItem` (Element-Secondary)** carry their own **left + right** `1px` `var(--color-border-gray-neutral-base)` border with `z-index: 1`, so their side borders read as the rail edges along each row (the content spans the full rail width so these align over the root borders rather than doubling). **`FocusRing`** uses `inset: 0 calc(-4 * var(--border-width-border-1))` to extend outside. **`SelectedInset`** uses `left: calc(-1 * var(--border-width-border-1))` and `width: calc(4px + var(--border-width-border-1))` to extend outside.
 - **Primary icon:** 16×16
 - **Chevron:** 14×14
 - **Collapse footer (`ExpandCollapse`):** **49px** footer block (`box-sizing: border-box`): `1px` **top** border (`var(--color-border-gray-neutral-base)`) + `var(--padding-padding-16)` block padding + **16×16** icon + `var(--padding-padding-16)` block padding; **no** `border-bottom` on the footer — the **rail bottom stroke** is **`MainMenuLeftRoot` `border-bottom` only** (single 1px line; avoids doubling with the container). Inline padding `var(--padding-padding-24)`; icon slugs `double-chev-left` / `double-chev-right`
 - **Borders:** **container chrome** — `MainMenuLeftRoot` uses `var(--color-border-gray-neutral-base)` on **left, right, and bottom** (single bottom edge; continuous through the `8px` list gap). Isolated Element-Primary / Element-Secondary frames (`278px`) also bind **left + right** strokes of that token — that is the **same rail chrome**, not a second pair of row borders. **Do not** paint additional left/right borders on primary/secondary rows in the assembled rail (doubles the stroke and breaks the `8px` block gap). **`ExpandCollapse`** uses **`border-top` only**. **`MainMenuList` stays inside the root** (no negative side margins) so hover/selected fills end flush inside the rail stroke.
 - **Focus (Figma-verified):**
-  - **Secondary Default-Focus** (`12016:227537`): focus ring `inset: 0 1px` — **1px** gap between rail L/R border and blue ring; ring flush on top/bottom; transparent fill; text `var(--color-text-gray-neutral)`; **no** 4px selected bar; **no drop-shadow** in the gap.
+  - **Secondary Default-Focus** (`12016:227537`): 2px focus ring `inset: 0 calc(-4 * var(--border-width-border-1))` — border sits **fully outside** the rail L/R border with a **1px gap** (ring inner edge → rail outer edge); ring flush on top/bottom; transparent fill; text `var(--color-text-gray-neutral)`; **no** 4px selected bar.
   - **Secondary Selected-Focus** (`12016:227542`): fill `var(--color-background-brand-lighter-slate)`; text `var(--color-text-brand-strong)`; same L/R 1px focus inset; **no** 4px bar; **no** drop-shadow.
-  - **Primary Default-Focus** (`12016:227840`) / **Selected-Focus** (`12016:227912`): in the **assembled rail**, same `inset: 0 1px` focus gap as secondary (isolated Figma frames paint L/R strokes on the element and use `left/right: -1px` over those strokes; rail chrome is on the root instead). Selected-Focus adds **4px** `SelectedInset` (`var(--color-border-brand-base)`) — Figma expresses this as `inset 4px 0 0 0` shadow, **not** a drop-shadow in the focus gap.
-  - Keyboard focus: `::after` (or snapshot `.focusRing`) with `inset: 0 var(--border-width-border-1)`.
+  - **Primary Default-Focus** (`12016:227840`) / **Selected-Focus** (`12016:227912`): in the **assembled rail**, same `inset: 0 calc(-4 * var(--border-width-border-1))` — ring border fully outside the root's L/R border with a 1px gap (rail chrome is on the root). Selected-Focus adds **4px** `SelectedInset` (`var(--color-border-brand-base)`) — Figma expresses this as `inset 4px 0 0 0` shadow.
+  - Keyboard focus: `::after` (or snapshot `.focusRing`), 2px, with `inset: 0 calc(-4 * var(--border-width-border-1))`.
 - **`SelectedInset`:** primary only; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))`, `var(--color-border-brand-base)`.
 
 ## Tokens
@@ -109,11 +109,11 @@ Figma slot mapping:
 |---|---|---|---|---|---|
 | Default | Collapsed | transparent | none (container border only) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
 | Default | Expanded | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
-| Hover | * | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Hover | * | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
 | Press | * | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
 | Selected | Collapsed | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
 | Selected | Expanded | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
-| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (`inset: 0 1px` L/R gap); no 4px bar; no drop-shadow | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Default-Focus | * | transparent | 2px focus ring `var(--color-border-brand-base)` (`inset: 0 -4px`, border fully outside rail L/R border, 1px gap); no 4px bar | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
 | Selected-Focus | * | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-base)` **plus** focus ring | `var(--color-text-brand-strong)` | `var(--color-icon-brand-base)` |
 
 ### Primary icon-only (`.MainMenu-Left-Element-PrimaryIcon`, collapsed)
@@ -122,17 +122,17 @@ Figma slot mapping:
 |---|---|---|---|
 | Default | transparent | — | `var(--color-icon-gray-neutral-strong)` |
 | Selected | `var(--color-background-brand-lighter-slate)` | **4px** `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| Hover / Press | same token mapping as expanded primary | — | brand-strong / brand-base per state |
+| Hover / Press | same token mapping as expanded primary | — | Hover: `var(--color-icon-gray-neutral-strong)` (neutral); Press: `var(--color-icon-brand-strong)` |
 
 ### Secondary row (`.MainMenu-Left-Element-Secondary`)
 
 | State | Background | Text |
 |---|---|---|
 | Default | transparent | `var(--color-text-gray-neutral)` |
-| Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-gray-neutral)` |
 | Press | `var(--color-background-brand-light-slate)` | `var(--color-text-brand-strong)` |
 | Selected | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
-| Default-Focus | transparent; focus ring `var(--color-border-brand-base)` (`inset: 0 1px` — 1px gap from rail L/R border); **no** 4px bar | `var(--color-text-gray-neutral)` |
+| Default-Focus | transparent; 2px focus ring `var(--color-border-brand-base)` (`inset: 0 -4px` — border fully outside rail L/R border, 1px gap); **no** 4px bar | `var(--color-text-gray-neutral)` |
 | Selected-Focus | `var(--color-background-brand-lighter-slate)`; focus ring only; **no** 4px bar | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
@@ -150,7 +150,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Secondary row click: emit navigation; becomes the active page and sets its parent as selected context (clears any prior primary selection). The **parent row reads as selected** — brand-lighter background, brand-strong label, brand icon/chevron, and the 4px inset — while its sub-menu is expanded.
 - Parent selected-context persistence: when a secondary child is the active page and its sub-menu is **collapsed**, the parent row **stays in the selected state** (background + inset retained) and takes over `aria-current="page"` from the now-hidden child, so the current-page indicator is never lost.
 - Collapsed rail: primary buttons use `title` / tooltip from `tooltip` when set, else visible `name`.
-- Collapse footer: toggles expanded (`min 256px` / `max 356px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`.
+- Collapse footer: toggles expanded (`min 256px` / `max 356px`) ↔ collapsed (`64px`); swaps `double-chev-left` ↔ `double-chev-right`. The control **fills the entire footer** (full-width tertiary): **hover** = `var(--color-background-controls-lighter)`, **press** = `var(--color-background-controls-light)` tint the whole footer background edge-to-edge, **no border** in any state.
+- **Collapsed hover-expand (overlay):** while the rail is *fixed* collapsed, hovering it temporarily expands it to full rail width **as an overlay over the page content** (the collapsed rail keeps reserving its `64px` footprint, so content does not reflow), and it collapses again on mouse leave. While hover-expanded it behaves the same as a permanently expanded rail (labels, chevrons, sub-menu accordions). The footer **expand icon stays in the collapsed state** (`double-chev-right`) during a hover-expand — it only flips once the rail is *fixed* expanded via the footer toggle. Overlay drop shadow (Figma `11099:56206`): two layers, `x 4 / blur 4 / spread 0` and `x 2 / blur 2 / spread 0`, both `8%` — blur/spread/color from `--shadow-drop-shadow-4-*` / `--shadow-drop-shadow-2-*`; the horizontal `x` offset is a Figma literal (the tokens carry the vertical geometry).
 - Truncated label tooltips (expanded only): when a primary or secondary label is clipped after 2 lines, hovering the visible text shows an `IdsTooltip` whose body is the full label (or the item's `tooltip` prop if supplied).
 - Chevron reflects `children` list open (`chev-down-thick`) vs closed (`chev-right-thick`).
 - **`childrenMenu` (runtime):** when `forceStates` is **false**, open/closed state is driven by user interaction (in-memory expand key on the primary row). When `forceStates` is **true** (Storybook matrix only), `childrenMenu` pins the list open or closed for that row.
@@ -374,16 +375,16 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 1. **Selected inset** — `var(--color-border-brand-base)`; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))`; primary rows only (secondary never gets the 4px bar).
 2. **Expand behavior** — parent rows (with `children`, expanded rail) only toggle the sub-menu; no navigate/select; secondary activation clears primary `selectedKey`.
 3. **Parent selected-context** — `.secondaryParentSelected` reads fully selected (brand-lighter bg, brand-strong label, brand icon/chevron, 4px inset when a secondary child is active); parent takes `aria-current="page"` when its selected child is hidden.
-4. **Focus ring** — primary + secondary in the rail: `inset: 0 var(--border-width-border-1)` (1px gap from Main Menu L/R border; **no drop-shadow** in the gap). Selected-Focus keeps the solid 4px `SelectedInset` only. Keyboard via `::after`; snapshot `.focusRing`; forced-state rows use `tabIndex={-1}`.
+4. **Focus ring** — primary + secondary in the rail: 2px, `inset: 0 calc(-4 * var(--border-width-border-1))` (border fully outside the Main Menu L/R border with a 1px gap between the ring inner edge and the rail outer edge; the `MainMenuList` scroll container pads + negative-margins by 4px so the ring is not clipped). Selected-Focus keeps the solid 4px `SelectedInset` only. Keyboard via `::after`; snapshot `.focusRing`; forced-state rows use `tabIndex={-1}`.
 
 ### Bug fixes applied (2026-07-01)
 1. **Menu top padding missing** — Original bug: `.root` (MainMenuLeftRoot) was missing top padding. Fix: Added `padding-top: var(--padding-padding-8)`.
 2. **Font-weight incorrect** — Original bug: Primary label and secondary label font-weight were 500 instead of 400. Fix: Changed to `font-weight: 400` in `.primaryLabel`, `.secondaryRow`, and `.secondaryRowSelected`.
 3. **Toggle color incorrect** — Original bug: Collapse control icon used `color-icon-gray-neutral-strong` instead of `color-icon-gray-neutral-base`. Fix: Changed `.bottomToggleIcon` color to `var(--color-icon-gray-neutral-base)`.
-4. **Rail side border + highlight** — Side chrome on `MainMenuLeftRoot` only (continuous through the `8px` gap). `MainMenuList` must **not** use negative side margins — hover/selected backgrounds stay inside the right border (Figma Element-Primary fill). `SelectedInset` extends into the rail border zone per PR #82 geometry above.
+4. **Rail side border + highlight** — Side chrome on `MainMenuLeftRoot` only (continuous through the `8px` gap). `MainMenuList` uses **padding-compensated** negative side margins (`padding-inline` + equal negative `margin-inline` of `4px`): the row content-box — and its hover/selected backgrounds — stays inside the rail stroke (Figma Element-Primary fill), while the scroll clip is widened enough for the focus ring to sit fully outside the rail (1px gap from the L/R border). Do **not** use bare negative margins (those would push the fills out over the border).
 
 ### Updates (2026-08-30)
-1. **Expanded rail width range** — Implementation override: `min 256px` / `max 356px` (was 278px fixed). `MainMenuLeft.module.css` uses `width: 100%` clamped by `min-width` and `max-width`.
+1. **Expanded rail width range** — Implementation override: `min 256px` / `max 356px`. `MainMenuLeft.module.css` uses `width: 100%` clamped by `min-width` and `max-width`; Storybook uses `278px` as the example. The collapsed hover-expand overlay (out of flow) takes its width from `--ids-main-menu-left-expanded-width` (default `278px`) instead. See **Layout & Measurements**.
 2. **Label wrap / truncate** — Primary and secondary labels support up to 2 lines (`-webkit-line-clamp: 2`) and `text-overflow: ellipsis` overflow. Implemented via `ClampedLabel` with `ResizeObserver` detection.
 3. **Truncated-label `IdsTooltip`** — When a primary or secondary label is clipped, hovering it opens an `IdsTooltip` (content = `tooltip` prop or full label, `side="right"`, `arrowAlign="start"`).
 4. **Icon/chevron alignment on wrap** — Primary icon and chevron are `align-self: center` on single-line rows and `align-self: flex-start` with `4px` top/bottom padding (total `24px` height) when the primary label wraps to two lines.
