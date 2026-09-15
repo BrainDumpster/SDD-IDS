@@ -98,6 +98,12 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Let the row focus ring sit fully outside the rail's L/R border (a 1px gap
+     between the ring's inner edge and the rail's outer edge) instead of being
+     clipped by this scroll container. The negative inline margin keeps the row
+     content-box — and its hover/selected fills — in place. */
+  padding-inline: calc(4 * var(--border-width-border-1));
+  margin-inline: calc(-4 * var(--border-width-border-1));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
@@ -135,7 +141,7 @@
 }
 
 .menuLeadButton:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: -1px;
 }
 
@@ -405,8 +411,8 @@
 .secondaryInteractive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -467,8 +473,8 @@
    strokes live on the root, so primary uses the same 1px inset as secondary. */
 .focusRing {
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -481,8 +487,8 @@
 .interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -639,8 +645,8 @@
 .programmeSynapse .secondaryInteractive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -765,7 +771,7 @@
 }
 
 .programmeSynapse .secondaryContextButton:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: 2px;
 }
 
@@ -801,7 +807,7 @@
 }
 
 .secondaryContextButtonStateFocus {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
   outline-offset: 2px;
 }
 
