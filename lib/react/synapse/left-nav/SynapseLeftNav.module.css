@@ -1,0 +1,32 @@
+/**
+ * Synapse Left Nav overlay — chrome deltas vs IDS Main Menu/Left.
+ * Source: components/synapse/left-nav/design-spec.md (programme deltas).
+ * Applied via className on IdsMainMenuLeft root (IDS stays programme-agnostic).
+ */
+
+.SynapseLeftNav {
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+  border-right: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  background:
+    linear-gradient(
+      180deg,
+      var(--color-background-gradient-left-nav-start),
+      var(--color-background-gradient-left-nav-end)
+    ),
+    var(--color-background-component);
+  padding-top: var(--padding-padding-8);
+}
+
+.SynapseLeftNavExpanded {
+  width: 100%;
+  min-width: 250px;
+  max-width: 500px;
+}
+
+.SynapseLeftNavCollapsed {
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+}

@@ -19,7 +19,9 @@
       "@base-ui-components/react/*": ["./node_modules/@base-ui-components/react/*"],
       "@component-contracts/*": ["../component-contracts/*"],
       "@ids/react": ["../lib/react/ids"],
-      "@ids/react/*": ["../lib/react/ids/*"]
+      "@ids/react/*": ["../lib/react/ids/*"],
+      "@synapse/react": ["../lib/react/synapse"],
+      "@synapse/react/*": ["../lib/react/synapse/*"]
     }
   },
   "include": ["src", "../lib", "../component-contracts", "src/global.d.ts"],

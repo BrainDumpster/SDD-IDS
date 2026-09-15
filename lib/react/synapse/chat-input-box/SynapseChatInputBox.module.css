@@ -1,0 +1,312 @@
+/**
+ * Synapse Chat Input Box — components/synapse/chatinputbox/design-spec.md
+ * Theme: components/synapse-theme.css
+ */
+
+.SynapseChatInputBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 650px;
+  box-sizing: border-box;
+}
+
+.SynapseChatInputBoxWithPromptsV {
+  gap: var(--spacing-space-24);
+}
+
+.SynapseChatInputBoxNewChat {
+  gap: var(--spacing-space-16);
+  align-items: stretch;
+}
+
+.SynapseChatInputBoxTryAskingLabel {
+  margin: 0;
+  width: 100%;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-neutral-strong);
+}
+
+.SynapseChatInputBoxElement {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-space-8);
+  width: 100%;
+  max-width: 670px;
+  box-sizing: border-box;
+}
+
+.SynapseChatInputBoxElementComposing {
+  min-height: var(--chat-input-shell-min-height);
+  max-height: var(--chat-input-shell-max-height);
+}
+
+.SynapseChatInputBoxElementLimit,
+.SynapseChatInputBoxElementCustomView {
+  min-height: auto;
+}
+
+.SynapseChatInputBoxContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-8);
+  position: relative;
+  width: 100%;
+  padding: var(--padding-padding-16) var(--padding-padding-12) var(--padding-padding-12)
+    var(--padding-padding-16);
+  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-radius: var(--chat-input-shell-radius);
+  background: var(--color-background-surface-2);
+  box-sizing: border-box;
+}
+
+.SynapseChatInputBoxContentComposing {
+  flex: 1 1 auto;
+  min-height: var(--chat-input-shell-min-height);
+  max-height: var(--chat-input-shell-max-height);
+  min-width: 0;
+}
+
+.SynapseChatInputBoxContent[data-element-state="focus"]::after {
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--chat-input-focus-ring-radius);
+  content: "";
+  inset: calc(-1 * var(--chat-input-focus-ring-offset));
+  pointer-events: none;
+  position: absolute;
+}
+
+.SynapseChatInputBoxContentCustomView {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-height: auto;
+  padding: var(--padding-padding-12) var(--padding-padding-12) var(--padding-padding-12)
+    var(--padding-padding-16);
+}
+
+.SynapseChatInputBoxContentHover {
+  border-color: var(--color-border-strong);
+}
+
+.SynapseChatInputBoxContentSelected {
+  border-color: var(--color-border-brand-base);
+}
+
+.SynapseChatInputBoxContentLimit {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--spacing-space-8);
+  height: 112px;
+  min-height: 112px;
+}
+
+.SynapseChatInputBoxTextarea {
+  display: block;
+  width: 100%;
+  min-height: var(--font-line-height-line-height-24);
+  max-height: var(--chat-input-textarea-max-height);
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow-y: auto;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  font-weight: 400;
+  color: var(--color-text-neutral);
+  word-break: break-word;
+}
+
+.SynapseChatInputBoxShellCharacterCount {
+  margin: 0;
+  align-self: flex-end;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-disabled);
+  white-space: nowrap;
+}
+
+.SynapseChatInputBoxTextareaSelected {
+  color: var(--color-text-neutral-strong);
+}
+
+.SynapseChatInputBoxTextarea::placeholder {
+  color: var(--color-text-neutral);
+}
+
+.SynapseChatInputBoxTextareaSelected::placeholder {
+  color: var(--color-text-neutral-strong);
+}
+
+.SynapseChatInputBoxPlaceholderReadonly {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  font-weight: 400;
+  color: var(--color-text-neutral);
+  white-space: nowrap;
+}
+
+.SynapseChatInputBoxActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.SynapseChatInputBoxActionsInline {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.SynapseChatInputBoxSendButton,
+.SynapseChatInputBoxStopButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-8);
+  border: var(--border-width-border-1) solid var(--color-border-disabled);
+  border-radius: var(--chat-input-button-radius);
+  background: var(--color-background-gray-light);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.SynapseChatInputBoxSendButton {
+  color: var(--color-icon-disabled);
+}
+
+.SynapseChatInputBoxSendButtonSelected {
+  border-color: var(--color-border-transparent-brand);
+  background: var(--color-background-controls-brand-base);
+  color: var(--color-icon-white);
+}
+
+.SynapseChatInputBoxSendButtonSelected:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.SynapseChatInputBoxStopButton {
+  border-color: var(--color-border-brand-base);
+  background: transparent;
+  color: var(--color-icon-brand-base);
+}
+
+.SynapseChatInputBoxNewChatButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-8);
+  border: none;
+  border-radius: var(--chat-input-button-radius);
+  background: transparent;
+  padding: var(--padding-padding-6) var(--padding-padding-8);
+  color: var(--color-text-brand-strong);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.SynapseChatInputBoxNewChatLabel {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.SynapseChatInputBoxStopIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: var(--padding-padding-2);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.SynapseChatInputBoxLimitIconWrap {
+  display: flex;
+  align-items: center;
+  padding: var(--padding-padding-2) 0;
+  flex-shrink: 0;
+}
+
+.SynapseChatInputBoxLimitContent {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-width: 0;
+  color: var(--color-text-neutral-strong);
+}
+
+.SynapseChatInputBoxLimitMessage {
+  margin: 0;
+  width: 100%;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.SynapseChatInputBoxLimitCountdown {
+  margin: 0;
+  font-size: var(--font-size-header-5);
+  line-height: var(--font-line-height-line-height-32);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.SynapseChatInputBoxFooter {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--spacing-space-8);
+  width: 100%;
+}
+
+.SynapseChatInputBoxFooterMeta {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-width: 0;
+}
+
+.SynapseChatInputBoxFooterText {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-disabled);
+  white-space: nowrap;
+}
+
+.SynapseChatInputBoxFooterCount {
+  font-weight: 500;
+}
+
+.SynapseChatInputBoxCharacterCount {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-disabled);
+  white-space: nowrap;
+}
+
+.SynapseChatInputBoxDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

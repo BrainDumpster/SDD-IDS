@@ -1,0 +1,136 @@
+/**
+ * Synapse Skeleton Loader — components/synapse/skeletonloader/design-spec.md
+ * Theme: components/synapse-theme.css
+ */
+
+.SynapseSkeletonLoaderBone {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  background: var(--color-background-surface-1);
+  overflow: hidden;
+}
+
+.SynapseSkeletonLoaderBone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: synapse-skeleton-shimmer 1.5s infinite;
+}
+
+.SynapseSkeletonLoaderText {
+  height: 16px;
+  width: 100%;
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.SynapseSkeletonLoaderHeading {
+  height: 24px;
+  width: 60%;
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.SynapseSkeletonLoaderAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.SynapseSkeletonLoaderImage {
+  width: 100%;
+  height: 120px;
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.SynapseSkeletonLoaderButton {
+  width: 120px;
+  height: 40px;
+  border-radius: var(--corner-radius-radius-4);
+}
+
+.SynapseSkeletonLoaderCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 100%;
+  max-width: 320px;
+  padding: var(--padding-padding-16);
+  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-surface-1);
+}
+
+.SynapseSkeletonLoaderCardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+}
+
+.SynapseSkeletonLoaderCardMeta {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  gap: var(--spacing-space-4);
+}
+
+.SynapseSkeletonLoaderCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+}
+
+.SynapseSkeletonLoaderList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 100%;
+}
+
+.SynapseSkeletonLoaderTable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 100%;
+}
+
+.SynapseSkeletonLoaderTableRow {
+  display: grid;
+  grid-template-columns: repeat(var(--skeleton-table-columns, 3), 1fr);
+  gap: var(--spacing-space-8);
+}
+
+.SynapseSkeletonLoaderForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16);
+  width: 100%;
+  max-width: 320px;
+}
+
+.SynapseSkeletonLoaderFormRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .SynapseSkeletonLoaderBone::after {
+    animation: none;
+  }
+}
+
+@keyframes synapse-skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

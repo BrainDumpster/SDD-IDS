@@ -1,0 +1,65 @@
+/**
+ * Synapse Tracker — components/synapse/tracker/design-spec.md
+ * Theme: components/synapse-theme.css
+ */
+
+.SynapseTracker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+  width: 100%;
+}
+
+.SynapseTrackerBar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  border-radius: var(--corner-radius-radius-4);
+  overflow: hidden;
+}
+
+.SynapseTrackerSegment {
+  flex: 1;
+  height: 100%;
+  transition: background 150ms ease;
+}
+
+.SynapseTrackerSegmentComplete {
+  background: var(--alert-green-500);
+}
+
+.SynapseTrackerSegmentActive {
+  background: var(--color-background-controls-brand-base);
+}
+
+.SynapseTrackerSegmentPending {
+  background: var(--color-background-gray-lighter);
+}
+
+.SynapseTrackerLabels {
+  display: flex;
+  gap: 2px;
+}
+
+.SynapseTrackerLabel {
+  flex: 1;
+  font-size: var(--font-size-body-3);
+  font-family: inherit;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.SynapseTrackerLabelComplete {
+  color: var(--alert-green-600);
+}
+
+.SynapseTrackerLabelActive {
+  color: var(--color-text-brand-base);
+  font-weight: 500;
+}
+
+.SynapseTrackerLabelPending {
+  color: var(--color-text-neutral);
+}

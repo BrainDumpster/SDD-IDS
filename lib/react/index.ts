@@ -3,6 +3,9 @@
  *
  * Path convention: `lib/react/<design-system>/<component>/`
  * Other frameworks use sibling folders (e.g. `lib/angular/...`).
+ *
+ * Synapse: import from `./synapse` (façade over `./ids` + synapse-theme.css).
+ * Do not clone IDS implementations for ids-fork components.
  */
 export { IdsIcon, type IdsIconProps } from "./ids/icon";
 export { IdsHelper, IdsHelperText } from "./ids/helper";

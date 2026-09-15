@@ -45,7 +45,7 @@ Scaffold: `scripts/design_spec_template.py` → `PROGRAMME_IDS_FORK_TEMPLATE` (`
 3. Live Figma MCP on Synapse nodes: `get_metadata`, `get_design_context`, `get_variable_defs`.
 4. Build programme deltas table (layout, chrome, tokens, states, anatomy, API defaults).
 5. Write Synapse spec (Status `draft` → `active` when checklist passes).
-6. Implementation: shared component + `programme="synapse"` CSS and/or thin wrapper.
+6. Implementation: `lib/react/synapse` façade (`reexport` / overlay CSS / thin wrapper). Do not clone `lib/react/ids`. Load `components/synapse-theme.css` only. Base UI is not the React runtime.
 7. Storybook (**React only**): `Spec Generated/Synapse/<Name>` with **Spec Accurate Design** using Synapse Figma sample data (`storybook-generated/synapse/` or `storybook/src/components/`). Do **not** add Synapse examples under `storybook-angular/` unless explicitly requested.
 8. Update `data/synapse-component-figma-map.json` (`designSpecPath`, element node IDs).
 

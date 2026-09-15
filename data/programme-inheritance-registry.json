@@ -11,7 +11,9 @@
       "figmaMapPath": "data/synapse-component-figma-map.json",
       "themeCssPath": "components/synapse-theme.css",
       "storybookTitlePrefix": "Spec Generated/Synapse",
-      "baselineComponentsDir": "components/ids"
+      "baselineComponentsDir": "components/ids",
+      "reactLibDir": "lib/react/synapse",
+      "reactStrategyMap": "lib/react/synapse/react-strategy.json"
     },
     "dap": {
       "componentsDir": "components/DAP",
@@ -42,7 +44,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-main-menu-top.contract.ts",
       "storybookPath": "storybook/src/components/SynapseMainMenuTop.stories.tsx",
       "lastVerified": "2026-06-16",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "deferred",
+      "reactLibPath": null
     },
     {
       "programme": "synapse",
@@ -58,7 +62,9 @@
       "sharedImplementation": "storybook/src/components/MainMenuLeft.tsx",
       "programmeWrapper": "storybook/src/components/SynapseLeftNav.tsx",
       "programmeFlag": "programme=\"synapse\"",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "wrapper",
+      "reactLibPath": "lib/react/synapse/left-nav"
     },
     {
       "programme": "synapse",
@@ -79,7 +85,9 @@
       "storybookDialogPath": "storybook/src/components/SynapseModalDialog.stories.tsx",
       "themeAlias": "--modal-control-radius",
       "lastVerified": "2026-06-05",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/modal"
     },
     {
       "programme": "synapse",
@@ -97,7 +105,9 @@
       "idsFigmaNodeId": "10130:29493",
       "storybookPath": "storybook-generated/synapse/src/components/Masthead.stories.tsx",
       "lastVerified": "2026-06-17",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/masthead"
     },
     {
       "programme": "synapse",
@@ -112,7 +122,9 @@
       "documentationBoardNodeId": "47809:1805",
       "storybookPath": "storybook-generated/synapse/src/components/Button.stories.tsx",
       "lastVerified": "2026-06-05",
-      "status": "draft"
+      "status": "draft",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/button"
     },
     {
       "programme": "synapse",
@@ -128,7 +140,9 @@
       "storybookPath": "storybook/src/components/SynapseCard.stories.tsx",
       "themeAlias": "--card-control-radius",
       "lastVerified": "2026-06-09",
-      "status": "draft"
+      "status": "draft",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/card"
     },
     {
       "programme": "synapse",
@@ -146,7 +160,9 @@
       "storybookPath": "storybook/src/components/SynapseSpinner.stories.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-spinner.contract.ts",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/spinner"
     },
     {
       "programme": "synapse",
@@ -165,7 +181,9 @@
       "themeAlias": "--progress-bar-control-radius",
       "specContract": "storybook/src/spec-contracts/synapse-progress-bar.contract.ts",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/progress-bar"
     },
     {
       "programme": "synapse",
@@ -183,7 +201,9 @@
       "storybookPath": "storybook/src/components/SynapseDatePicker.stories.tsx",
       "themeAlias": "--date-picker-control-radius",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/date-picker"
     },
     {
       "programme": "synapse",
@@ -201,7 +221,9 @@
       "storybookPath": "storybook/src/components/SynapseTimePicker.stories.tsx",
       "themeAlias": "--time-picker-control-radius",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/time-picker"
     },
     {
       "programme": "synapse",
@@ -223,7 +245,9 @@
       "contextMenuImplementation": "storybook/src/components/LeftNavSecondaryContextMenu.tsx",
       "programmeDetachedMenuNodeId": "53325:280088",
       "lastVerified": "2026-06-05",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/dropdown-combo-box"
     },
     {
       "programme": "synapse",
@@ -241,9 +265,15 @@
       "triggerShell": "storybook/src/components/SynapseDropdownTriggerShell.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-dropdown-single-select.contract.ts",
       "storybookPath": "storybook/src/components/SynapseDropdownSingleSelect.stories.tsx",
-      "themeAliases": ["--dropdown-control-radius", "--dropdown-focus-ring-radius", "--dropdown-menu-radius"],
+      "themeAliases": [
+        "--dropdown-control-radius",
+        "--dropdown-focus-ring-radius",
+        "--dropdown-menu-radius"
+      ],
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/dropdown-single-select"
     },
     {
       "programme": "synapse",
@@ -261,9 +291,15 @@
       "triggerShell": "storybook/src/components/SynapseDropdownTriggerShell.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-dropdown-multiselect.contract.ts",
       "storybookPath": "storybook/src/components/SynapseDropdownMultiSelect.stories.tsx",
-      "themeAliases": ["--dropdown-control-radius", "--dropdown-focus-ring-radius", "--dropdown-menu-radius"],
+      "themeAliases": [
+        "--dropdown-control-radius",
+        "--dropdown-focus-ring-radius",
+        "--dropdown-menu-radius"
+      ],
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/dropdown-multiselect"
     },
     {
       "programme": "synapse",
@@ -282,9 +318,14 @@
       "programmeWrapper": "storybook/src/components/SynapseCheckbox.tsx",
       "specContract": "storybook/src/spec-contracts/synapse-checkbox.contract.ts",
       "storybookPath": "storybook/src/components/SynapseCheckbox.stories.tsx",
-      "themeAliases": ["--checkbox-control-radius", "--checkbox-label-font-weight"],
+      "themeAliases": [
+        "--checkbox-control-radius",
+        "--checkbox-label-font-weight"
+      ],
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/checkbox"
     },
     {
       "programme": "synapse",
@@ -305,7 +346,9 @@
       "storybookPath": "storybook/src/components/SynapseRadioButton.stories.tsx",
       "themeAlias": "--radio-label-font-weight",
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/radio-button"
     },
     {
       "programme": "synapse",
@@ -326,7 +369,9 @@
       "storybookPath": "storybook/src/components/SynapseSegmentedButton.stories.tsx",
       "themeAlias": "--segmented-button-control-radius",
       "lastVerified": "2026-06-24",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/segmented-button"
     },
     {
       "programme": "synapse",
@@ -347,7 +392,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-toggle-switch.contract.ts",
       "storybookPath": "storybook/src/components/SynapseToggleSwitch.stories.tsx",
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/toggle-switch"
     },
     {
       "programme": "synapse",
@@ -370,7 +417,9 @@
       "storybookPath": "storybook/src/components/SynapseAlert.stories.tsx",
       "themeAlias": "--alert-action-control-radius",
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/alert"
     },
     {
       "programme": "synapse",
@@ -389,7 +438,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-accordion.contract.ts",
       "storybookPath": "storybook/src/components/SynapseAccordion.stories.tsx",
       "lastVerified": "2026-06-12",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/accordion"
     },
     {
       "programme": "synapse",
@@ -409,7 +460,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-badge.contract.ts",
       "storybookPath": "storybook/src/components/SynapseBadge.stories.tsx",
       "lastVerified": "2026-06-05",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/badge"
     },
     {
       "programme": "synapse",
@@ -430,7 +483,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-anchor-menu.contract.ts",
       "storybookPath": "storybook/src/components/SynapseAnchorMenu.stories.tsx",
       "lastVerified": "2026-06-05",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/anchor-menu"
     },
     {
       "programme": "synapse",
@@ -451,7 +506,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-slider.contract.ts",
       "storybookPath": "storybook/src/components/SynapseSlider.stories.tsx",
       "lastVerified": "2026-06-05",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/slider"
     },
     {
       "programme": "synapse",
@@ -471,7 +528,9 @@
       "specContract": "storybook/src/spec-contracts/synapse-app-launcher.contract.ts",
       "storybookPath": "storybook-generated/synapse/src/components/AppLauncher.stories.tsx",
       "lastVerified": "2026-06-08",
-      "status": "draft"
+      "status": "draft",
+      "reactStrategy": "wrapper",
+      "reactLibPath": "lib/react/synapse/app-launcher"
     },
     {
       "programme": "synapse",
@@ -489,7 +548,9 @@
       "modalShell": "storybook/src/components/Dialog.tsx (variant=\"about\")",
       "storybookPath": "storybook-generated/synapse/src/components/About.stories.tsx",
       "lastVerified": "2026-06-08",
-      "status": "draft"
+      "status": "draft",
+      "reactStrategy": "deferred",
+      "reactLibPath": null
     },
     {
       "programme": "synapse",
@@ -508,7 +569,9 @@
       "programmeFlag": "programme=\"synapse\"",
       "storybookPath": "storybook-generated/synapse/src/components/Tab.stories.tsx",
       "lastVerified": "2026-06-05",
-      "status": "draft"
+      "status": "draft",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/tab"
     },
     {
       "programme": "synapse",
@@ -532,7 +595,9 @@
       "storybookPath": "storybook/src/components/SynapseTextInput.stories.tsx",
       "themeAlias": "--text-box-control-radius",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/text-input"
     },
     {
       "programme": "synapse",
@@ -551,7 +616,9 @@
       "storybookPath": "storybook-generated/synapse/src/components/Toast.stories.tsx",
       "themeAlias": "--toast-control-radius",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/toast"
     },
     {
       "programme": "synapse",
@@ -570,7 +637,9 @@
       "storybookPath": "storybook/src/components/SynapseTooltip.stories.tsx",
       "themeAlias": "--tooltip-control-radius",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/tooltip"
     },
     {
       "programme": "synapse",
@@ -590,7 +659,9 @@
       "storybookPath": "storybook-generated/synapse/src/components/Wizard.stories.tsx",
       "themeAlias": "--modal-control-radius",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/wizard"
     },
     {
       "programme": "synapse",
@@ -611,7 +682,9 @@
       "storybookPath": "storybook/src/components/SynapseTag.stories.tsx",
       "notes": "No theme layout alias; deltas are programme CSS modifiers (focus offset, critical Light, close hover)",
       "lastVerified": "2026-06-10",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/tag"
     },
     {
       "programme": "synapse",
@@ -628,7 +701,9 @@
       "documentationBoardNodeId": "47803:1845",
       "figmaDisplayName": "Page Layout",
       "lastVerified": "2026-06-17",
-      "status": "active"
+      "status": "active",
+      "reactStrategy": "reexport",
+      "reactLibPath": "lib/react/synapse/app-shell"
     },
     {
       "programme": "dap",

@@ -177,6 +177,7 @@ const config: StorybookConfig = {
           "@component-contracts": path.join(repoRoot, "component-contracts"),
           // Public package scope used in Docs / Code Connect (maps to lib/react/ids/*)
           "@ids/react": path.join(repoRoot, "lib/react/ids"),
+          "@synapse/react": path.join(repoRoot, "lib/react/synapse"),
           react: reactRoot,
           "react-dom": reactDomRoot,
           "react/jsx-runtime": path.join(reactRoot, "jsx-runtime.js"),

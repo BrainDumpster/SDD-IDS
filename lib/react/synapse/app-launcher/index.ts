@@ -1,0 +1,53 @@
+/**
+ * Synapse façade — strategy: wrapper.
+ * IDS implementation: `lib/react/ids/app-launcher` with programme="synapse".
+ * Load `components/synapse-theme.css` only (not `ids-theme.css`).
+ */
+export {
+  SynapseAppLauncher,
+  type SynapseAppLauncherProps,
+} from "./SynapseAppLauncher";
+export {
+  IdsAppLauncherCompound as SynapseAppLauncherCompound,
+  IdsAppLauncherTrigger as SynapseAppLauncherTrigger,
+  IdsAppLauncherSurface as SynapseAppLauncherSurface,
+  IdsAppLauncherProductRegion as SynapseAppLauncherProductRegion,
+  IdsAppLauncherProductRowGroup as SynapseAppLauncherProductRowGroup,
+  IdsAppLauncherRowDivider as SynapseAppLauncherRowDivider,
+  IdsAppLauncherProductRow as SynapseAppLauncherProductRow,
+  IdsAppLauncherColumnDivider as SynapseAppLauncherColumnDivider,
+  IdsAppLauncherProductTile as SynapseAppLauncherProductTile,
+  IdsAppLauncherLabelCluster as SynapseAppLauncherLabelCluster,
+  IdsAppLauncherTileDividerRail as SynapseAppLauncherTileDividerRail,
+  IdsAppLauncherProductIcon as SynapseAppLauncherProductIcon,
+  IdsAppLauncherProductLabel as SynapseAppLauncherProductLabel,
+  IdsAppLauncherOptionsRegion as SynapseAppLauncherOptionsRegion,
+  IdsAppLauncherOptionRow as SynapseAppLauncherOptionRow,
+  IdsAppLauncherFooterAction as SynapseAppLauncherFooterAction,
+  type IdsAppLauncherProduct as SynapseAppLauncherProduct,
+  type IdsAppLauncherOption as SynapseAppLauncherOption,
+  type IdsAppLauncherFooterActionModel as SynapseAppLauncherFooterActionModel,
+  type IdsAppLauncherProductSelectDetail as SynapseAppLauncherProductSelectDetail,
+  type IdsAppLauncherOptionSelectDetail as SynapseAppLauncherOptionSelectDetail,
+  type IdsAppLauncherTriggerVariant as SynapseAppLauncherTriggerVariant,
+  type IdsAppLauncherDividerVariant as SynapseAppLauncherDividerVariant,
+  type IdsAppLauncherTileDivider as SynapseAppLauncherTileDivider,
+  type IdsAppLauncherTileDataState as SynapseAppLauncherTileDataState,
+  type IdsAppLauncherOptionDataState as SynapseAppLauncherOptionDataState,
+  type IdsAppLauncherSlotName as SynapseAppLauncherSlotName,
+  type IdsAppLauncherTriggerProps as SynapseAppLauncherTriggerProps,
+  type IdsAppLauncherSurfaceProps as SynapseAppLauncherSurfaceProps,
+  type IdsAppLauncherProductRegionProps as SynapseAppLauncherProductRegionProps,
+  type IdsAppLauncherProductRowGroupProps as SynapseAppLauncherProductRowGroupProps,
+  type IdsAppLauncherRowDividerProps as SynapseAppLauncherRowDividerProps,
+  type IdsAppLauncherProductRowProps as SynapseAppLauncherProductRowProps,
+  type IdsAppLauncherColumnDividerProps as SynapseAppLauncherColumnDividerProps,
+  type IdsAppLauncherProductTileProps as SynapseAppLauncherProductTileProps,
+  type IdsAppLauncherLabelClusterProps as SynapseAppLauncherLabelClusterProps,
+  type IdsAppLauncherTileDividerRailProps as SynapseAppLauncherTileDividerRailProps,
+  type IdsAppLauncherProductIconProps as SynapseAppLauncherProductIconProps,
+  type IdsAppLauncherProductLabelProps as SynapseAppLauncherProductLabelProps,
+  type IdsAppLauncherOptionsRegionProps as SynapseAppLauncherOptionsRegionProps,
+  type IdsAppLauncherOptionRowProps as SynapseAppLauncherOptionRowProps,
+  type IdsAppLauncherFooterActionProps as SynapseAppLauncherFooterActionProps,
+} from "../../ids/app-launcher";

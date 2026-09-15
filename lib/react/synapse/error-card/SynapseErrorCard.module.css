@@ -1,0 +1,82 @@
+/**
+ * Synapse Error Card — components/synapse/errorcard/design-spec.md
+ * Theme: components/synapse-theme.css
+ */
+
+.SynapseErrorCard {
+  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-component);
+  overflow: hidden;
+  position: relative;
+}
+
+.SynapseErrorCardAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--alert-red-500);
+}
+
+.SynapseErrorCardBody {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-12);
+  padding: var(--padding-padding-16) var(--padding-padding-16) var(--padding-padding-16)
+    var(--padding-padding-20);
+}
+
+.SynapseErrorCardIconWrapper {
+  flex-shrink: 0;
+  color: var(--alert-red-500);
+  margin-top: 2px;
+}
+
+.SynapseErrorCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.SynapseErrorCardTitle {
+  margin: 0;
+  font-size: var(--font-size-body-1);
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--color-text-neutral-strong);
+  line-height: var(--font-line-height-line-height-24);
+}
+
+.SynapseErrorCardMessage {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  font-family: inherit;
+  color: var(--color-text-neutral);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.SynapseErrorCardAction {
+  margin-top: var(--spacing-space-8);
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-brand-base);
+  font-size: var(--font-size-body-2);
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.SynapseErrorCardAction:hover {
+  color: var(--color-background-controls-brand-strong);
+}
+
+.SynapseErrorCardAction:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+  border-radius: var(--corner-radius-radius-2);
+}

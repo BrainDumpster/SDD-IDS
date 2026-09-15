@@ -1,0 +1,157 @@
+/**
+ * Synapse Stepper — components/synapse/stepper/design-spec.md
+ * Theme: components/synapse-theme.css
+ */
+
+.SynapseStepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.SynapseStepperVertical {
+  flex-direction: column;
+  overflow-x: visible;
+}
+
+.SynapseStepperStep {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 0 0 180px;
+  position: relative;
+  gap: var(--spacing-space-6);
+}
+
+.SynapseStepperStepVertical {
+  width: 100%;
+  min-height: 126px;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--spacing-space-6);
+}
+
+.SynapseStepperTopRow {
+  position: relative;
+  width: 180px;
+  height: 22px;
+}
+
+.SynapseStepperTopRowVertical {
+  width: 22px;
+  min-height: 126px;
+}
+
+.SynapseStepperConnector {
+  position: absolute;
+  top: 50%;
+  left: 11px;
+  width: calc(100% - 11px);
+  height: 4px;
+  background: var(--color-background-gray-neutral-dark);
+  transform: translateY(-50%);
+}
+
+.SynapseStepperConnectorVertical {
+  top: 11px;
+  left: 50%;
+  width: 4px;
+  height: calc(100% - 11px);
+  transform: translateX(-50%);
+}
+
+.SynapseStepperConnectorTerminal {
+  display: none;
+}
+
+.SynapseStepperConnectorCompleted {
+  background: var(--color-border-brand-base);
+}
+
+.SynapseStepperCircle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border-width-border-2) solid var(--color-border-accessible);
+  background: var(--color-background-component);
+  color: var(--color-text-white);
+  z-index: 1;
+  cursor: default;
+}
+
+.SynapseStepperCircle:disabled {
+  cursor: default;
+}
+
+.SynapseStepperCircle:not(:disabled) {
+  cursor: pointer;
+}
+
+.SynapseStepperCircle:focus {
+  outline: none;
+}
+
+.SynapseStepperCircle:focus-visible {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: var(--scale-2);
+}
+
+.SynapseStepperLabel {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+  font-family: inherit;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.SynapseStepperLabelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  min-height: 24px;
+  padding: var(--padding-padding-2) var(--padding-padding-8);
+}
+
+.SynapseStepperStepActive .SynapseStepperLabelRow {
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-6);
+}
+
+.SynapseStepperNumber {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-neutral-strong);
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.SynapseStepperCircleActive {
+  border-width: var(--border-width-border-2);
+  border-color: var(--color-border-brand-base);
+}
+
+.SynapseStepperActiveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border-brand-base);
+}
+
+.SynapseStepperCircleCompleted {
+  border-color: var(--color-background-brand-base);
+  background: var(--color-background-brand-base);
+  color: var(--color-icon-inverse);
+}

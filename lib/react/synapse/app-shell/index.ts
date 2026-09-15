@@ -1,0 +1,36 @@
+/**
+ * Synapse façade — strategy: reexport.
+ * IDS implementation: `lib/react/ids/app-shell`.
+ * Load `components/synapse-theme.css` only (not `ids-theme.css`).
+ */
+export {
+  IdsAppShell as SynapseAppShell,
+  IdsAppShellCompound as SynapseAppShellCompound,
+  IdsAppShellMastheadSlot as SynapseAppShellMastheadSlot,
+  IdsAppShellBodyRow as SynapseAppShellBodyRow,
+  IdsAppShellMainMenuSlot as SynapseAppShellMainMenuSlot,
+  IdsAppShellMainColumn as SynapseAppShellMainColumn,
+  IdsAppShellPageHeader as SynapseAppShellPageHeader,
+  IdsAppShellPageTitle as SynapseAppShellPageTitle,
+  IdsAppShellPageDescription as SynapseAppShellPageDescription,
+  IdsAppShellBodyViewport as SynapseAppShellBodyViewport,
+  IdsAppShellBodyContentSlot as SynapseAppShellBodyContentSlot,
+  IdsAppShellFooterSlot as SynapseAppShellFooterSlot,
+  IdsAppShellHeaderActions as SynapseAppShellHeaderActions,
+  IdsAppShellPagePanel as SynapseAppShellPagePanel,
+  type IdsAppShellProps as SynapseAppShellProps,
+  type IdsAppShellBreakpointPreset as SynapseAppShellBreakpointPreset,
+  type IdsAppShellPageTitleLevel as SynapseAppShellPageTitleLevel,
+  type IdsAppShellMastheadSlotProps as SynapseAppShellMastheadSlotProps,
+  type IdsAppShellBodyRowProps as SynapseAppShellBodyRowProps,
+  type IdsAppShellMainMenuSlotProps as SynapseAppShellMainMenuSlotProps,
+  type IdsAppShellMainColumnProps as SynapseAppShellMainColumnProps,
+  type IdsAppShellPageHeaderProps as SynapseAppShellPageHeaderProps,
+  type IdsAppShellPageTitleProps as SynapseAppShellPageTitleProps,
+  type IdsAppShellPageDescriptionProps as SynapseAppShellPageDescriptionProps,
+  type IdsAppShellBodyViewportProps as SynapseAppShellBodyViewportProps,
+  type IdsAppShellBodyContentSlotProps as SynapseAppShellBodyContentSlotProps,
+  type IdsAppShellFooterSlotProps as SynapseAppShellFooterSlotProps,
+  type IdsAppShellHeaderActionsProps as SynapseAppShellHeaderActionsProps,
+  type IdsAppShellPagePanelProps as SynapseAppShellPagePanelProps,
+} from "../../ids/app-shell";
