@@ -30,6 +30,7 @@
 ## Layout & Measurements
 - Main row (`Pagination - Main`):
   - Height: `48px` (total height including border)
+  - Width: `100%` of host container with **`min-width: 495px`** — the row never shrinks below 495px
   - Horizontal padding: `24px` left, `32px` right
   - Border: `1px solid var(--color-border-gray-neutral-base)` on all sides (**standalone**). When **`embeddedInDatagrid`** is `true`, **`rootEmbedded`** applies **top border only** — left/right/bottom are owned by the datagrid shell (see **Datagrid footer integration**).
   - Supports `Background=Gray` (default), `Background=White`, and `Background=None`.
@@ -62,7 +63,8 @@
 ### Responsiveness
 - Runtime width behavior:
   - `PaginationRoot` is container-driven (`width: 100%`, `box-sizing: border-box`) and must not depend on the sample Figma width (`779px`).
-  - Horizontal overflow in the root container is not allowed.
+  - `PaginationRoot` enforces **`min-width: 495px`**. Below 495px of host width the root keeps its intrinsic layout and overflows the host container rather than collapsing controls — hosts must provide at least 495px or supply their own overflow handling (e.g. horizontal scroll).
+  - Horizontal overflow inside the root container is not allowed.
 - Layout adaptation order (deterministic):
   1. Keep both groups in a single row while space allows.
   2. If insufficient width, hide `ResultsPerPageGroup` first when `showResultsPerPage` is optional in the host context.
@@ -314,3 +316,4 @@ Variant matrix:
 - **Per-page menu stacking (2026-08-31)**: Portal the results-per-page menu to `document.body` with `position: fixed` and high `z-index` so it paints above the pagination root (and parent overflow/clipping contexts). Reposition on scroll/resize.
 - **Navigation arrows (2026-06-19)**: First/previous/next/last controls always render on multi-page views; boundary positions use disabled styling instead of hiding controls. All four use shared `Icon` with `style={{ width: 16, height: 16 }}`; button `color` drives `var(--color-icon-brand-base)` / `var(--color-icon-gray-disabled)`.
 - **Datagrid embed (2026-07-06)**: Pass **`embeddedInDatagrid`** when hosted in datagrid footer; **`rootEmbedded`** class sets `border: 0; border-top: 1px solid var(--color-border-gray-neutral-base)` so shell owns left/right/bottom edges.
+- **Minimum width (2026-09-17)**: `PaginationRoot` sets `min-width: 495px` alongside `width: 100%`. The row still fills its host but never renders narrower than 495px; below that threshold the host is responsible for overflow behavior.

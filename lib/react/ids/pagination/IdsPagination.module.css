@@ -11,6 +11,7 @@
   justify-content: space-between;
   gap: var(--spacing-space-16);
   width: 100%;
+  min-width: 495px;
   height: 48px;
   overflow: hidden;
   border: var(--border-width-border-default, 1px) solid
