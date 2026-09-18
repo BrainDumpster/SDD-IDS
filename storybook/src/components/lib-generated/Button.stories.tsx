@@ -189,15 +189,15 @@ export const Loading: Story = {
 
 export const ForcedStates: Story = {
   name: "Forced States (dataState)",
-  render: () => (
+  render: (args) => (
     <div style={{ display: "grid", gap: 16 }}>
       {(["primary", "secondary", "tertiary", "destructive"] as const).map((variant) => (
         <div key={variant} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-          <Btn variant={variant} label="Default" />
-          <Btn variant={variant} label="Hover" dataState="hover" />
-          <Btn variant={variant} label="Press" dataState="press" />
-          <Btn variant={variant} label="Focus" dataState="focus-visible" />
-          <Btn variant={variant} label="Disabled" dataState="disabled" />
+          <Btn variant={variant} label="Default" size={args.size} />
+          <Btn variant={variant} label="Hover" dataState="hover" size={args.size} />
+          <Btn variant={variant} label="Press" dataState="press" size={args.size} />
+          <Btn variant={variant} label="Focus" dataState="focus-visible" size={args.size} />
+          <Btn variant={variant} label="Disabled" dataState="disabled" size={args.size} />
         </div>
       ))}
     </div>
@@ -214,6 +214,58 @@ export const VariantSizeMatrix: Story = {
           <Btn variant={variant} size="medium" label="Medium" />
           <Btn variant={variant} size="large" label="Large" />
           <Btn variant={variant} size="medium" label="Icon" icon />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const AllTypesIconWithText: Story = {
+  name: "All Types Icon With Text",
+  render: () => (
+    <div style={{ display: "grid", gap: 16 }}>
+      {(["primary", "secondary", "tertiary"] as const).map((variant) => (
+        <div
+          key={variant}
+          style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
+        >
+          {(["small", "medium", "large"] as const).map((size) => (
+            <Btn
+              key={`${variant}-${size}`}
+              variant={variant}
+              size={size}
+              label="Button"
+              icon
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const AllTypesIconOnly: Story = {
+  name: "All Types Icon Only",
+  render: () => (
+    <div style={{ display: "grid", gap: 16 }}>
+      {(["primary", "secondary", "tertiary"] as const).map((variant) => (
+        <div
+          key={variant}
+          style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
+        >
+          {(["medium", "large"] as const).map((size) => (
+            <IdsButton
+              key={`${variant}-${size}`}
+              variant={variant}
+              size={size}
+              iconOnly
+              ariaLabel={`${variant} ${size}`}
+            >
+              <IdsButtonLeadingIcon>
+                <IdsIcon shape={DEMO_ICON} size={16} />
+              </IdsButtonLeadingIcon>
+            </IdsButton>
+          ))}
         </div>
       ))}
     </div>

@@ -210,7 +210,15 @@ function normalizeSelected(
  * Single-line value that truncates with an ellipsis; when (and only when) the
  * text is actually cut off, wrap in IDS Tooltip (design-spec Interactions).
  */
-function TruncatingValue({ text, tooltip }: { text: string; tooltip?: string }) {
+function TruncatingValue({
+  text,
+  tooltip,
+  tooltipTitle,
+}: {
+  text: string;
+  tooltip?: string;
+  tooltipTitle?: string;
+}) {
   const [truncated, setTruncated] = useState(false);
   const observerRef = useRef<ResizeObserver | null>(null);
 
@@ -235,6 +243,7 @@ function TruncatingValue({ text, tooltip }: { text: string; tooltip?: string }) 
     <IdsTooltip side="top" arrowAlign="start" hugContent>
       <TooltipTrigger display="block">{valueSpan}</TooltipTrigger>
       <TooltipPanel>
+        {tooltipTitle ? <TooltipHeader>{tooltipTitle}</TooltipHeader> : null}
         <TooltipBody>{tooltip}</TooltipBody>
       </TooltipPanel>
     </IdsTooltip>
@@ -356,6 +365,9 @@ export function IdsDropdownComboBox({
   const selectedDisplay = selectedLabels.join(", ");
   const hasSelection = selectedLabels.length > 0;
   const hasError = Boolean(errorMessage);
+  // Spec: a disabled dropdown showing an empty selection must NOT display the
+  // required asterisk — the user can't act on it, so marking it required misleads.
+  const showRequiredMark = required && !(disabled && !hasSelection);
   const message = errorMessage ?? helper;
 
   const applySelectionByLabels = (nextLabels: string[]) => {
@@ -415,7 +427,11 @@ export function IdsDropdownComboBox({
                 </TooltipPanel>
               </IdsTooltip>
             </span>
-            <TruncatingValue text={selectedDisplay || placeholder} />
+            <TruncatingValue
+              text={selectedDisplay || placeholder}
+              tooltip={selectedDisplay}
+              tooltipTitle={`${selectedLabels.length} Items`}
+            />
           </>
         ) : (
           <TruncatingValue
@@ -489,6 +505,7 @@ export function IdsDropdownComboBox({
         }}
         clearAllDisabled={selectedLabels.length === 0}
         showSelectedPanel={isMulti && showSelectedPanel}
+        showSelectedFirst
         showSelectedExpanded={showSelectedExpanded}
         onShowSelectedExpandedChange={onShowSelectedExpandedChange}
         onRemoveSelectedTag={(labelValue) => {
@@ -541,7 +558,7 @@ export function IdsDropdownComboBox({
     >
       <div className={styles.fieldRow} data-ids="ids-combobox-field-row">
         {label ? (
-          <FieldLabel text={label} size={size} required={required} htmlFor={rootId} />
+          <FieldLabel text={label} size={size} required={showRequiredMark} htmlFor={rootId} />
         ) : null}
         {combobox}
       </div>

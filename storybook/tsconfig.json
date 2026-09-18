@@ -21,7 +21,9 @@
       "@ids/react": ["../lib/react/ids"],
       "@ids/react/*": ["../lib/react/ids/*"],
       "@synapse/react": ["../lib/react/synapse"],
-      "@synapse/react/*": ["../lib/react/synapse/*"]
+      "@synapse/react/*": ["../lib/react/synapse/*"],
+      "react": ["./node_modules/react"],
+      "react/*": ["./node_modules/react/*"]
     }
   },
   "include": ["src", "../lib", "../component-contracts", "src/global.d.ts"],

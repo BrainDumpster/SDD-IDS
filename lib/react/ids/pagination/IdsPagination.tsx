@@ -29,6 +29,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { IdsIcon } from "../icon";
+import { IdsTextBox } from "../text-box";
 import styles from "./IdsPagination.module.css";
 
 export type IdsPaginationBackground = "gray" | "white" | "none";
@@ -436,26 +437,34 @@ export function IdsPagination({
               </button>
               <div
                 className={cx(
-                  styles.pageInputWrap,
-                  pageInputCollapsed && styles.pageInputWrapCollapsed,
+                  styles.pageInput,
+                  pageInputCollapsed && styles.pageInputCollapsed,
                 )}
-              >
-                <input
-                  className={styles.pageInput}
-                  value={pageInputValue}
-                  disabled={disabled}
-                  inputMode="numeric"
-                  aria-label="Current page"
-                  onChange={(event) =>
-                    setPageInputValue(event.target.value.replace(/[^\d]/g, ""))
+                onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
+                  if (event.key === "Enter") {
+                    commitPageInput();
+                    const input =
+                      event.currentTarget.querySelector(
+                        '[data-ids="ids-text-box-input"]',
+                      ) as HTMLInputElement | null;
+                    input?.blur();
                   }
-                  onBlur={commitPageInput}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      commitPageInput();
-                      event.currentTarget.blur();
-                    }
-                  }}
+                }}
+                onBlurCapture={() => {
+                  commitPageInput();
+                }}
+              >
+                <IdsTextBox
+                  componentType="text-input"
+                  size="small"
+                  inputType="text"
+                  ariaLabel="Current page"
+                  value={pageInputValue}
+                  showIcon={false}
+                  disabled={disabled}
+                  onValueChange={(value) =>
+                    setPageInputValue(value.replace(/[^\d]/g, ""))
+                  }
                 />
               </div>
               <span className={styles.countText}>{countText}</span>
