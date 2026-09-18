@@ -28,6 +28,13 @@ storybook-angular/.angular/cache/
 # Figma MCP token dumps (assembled into compact-export, then ids-theme.css)
 storage/figma-exports/
 
+# @ids/react package build artifacts (synced/copied at build time)
+lib/react/ids/dist/
+lib/react/ids/assets/
+lib/react/ids/fonts/
+lib/react/ids/styles/ids-theme.css
+lib/react/ids/*.tgz
+
 # Temporary workspace artifacts
 .tmp_*
 **/.tmp_*

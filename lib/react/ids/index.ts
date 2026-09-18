@@ -4,6 +4,23 @@
  * Path convention: `lib/react/ids/<component>/`
  * Shared primitives (e.g. Icon, Helper, Error) live alongside feature components.
  */
+export {
+  IdsAccordion,
+  IdsAccordionCompound,
+  IdsAccordionItem,
+  IdsAccordionHeader,
+  IdsAccordionChevron,
+  IdsAccordionBody,
+  IdsAccordionPanel,
+  IdsAccordionContent,
+  type IdsAccordionItemInput,
+  type IdsAccordionProps,
+  type IdsAccordionItemProps,
+  type IdsAccordionHeaderProps,
+  type IdsAccordionChevronProps,
+  type IdsAccordionBodyProps,
+  type IdsAccordionContentProps,
+} from "./accordion";
 export { IdsIcon, type IdsIconProps } from "./icon";
 export {
   IdsButton,
@@ -34,6 +51,11 @@ export {
 } from "./text-box";
 export { IdsHelper, IdsHelperText, type IdsHelperProps } from "./helper";
 export { IdsError, IdsErrorText, type IdsErrorProps } from "./error";
+export {
+  IdsFormLabel,
+  type IdsFormLabelProps,
+  type IdsFormLabelSize,
+} from "./form-label";
 export {
   IdsAlert,
   IdsAlertGroup,
