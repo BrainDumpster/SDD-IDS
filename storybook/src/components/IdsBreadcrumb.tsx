@@ -1,10 +1,10 @@
-import type { ComponentProps } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
 
 import { IdsLink } from "../../../lib/react/ids/link";
 
 import idsLinkStyles from "../../../lib/react/ids/link/IdsLink.module.css";
 
-import { DropdownMenu } from "./DropdownMenu";
+import { DropdownMenu } from "../../../lib/react/ids/dropdown-shared";
 
 import styles from "./IdsBreadcrumb.module.css";
 
@@ -30,17 +30,10 @@ interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
 
   currentPage?: string;
 
-  /** Whether to truncate with "..." when items exceed maxVisibleItems */
-
-  truncate?: boolean;
-
   /** Maximum number of items to show before truncating (default: 3) */
 
   maxVisibleItems?: number;
 
-  /** Whether to show dropdown menu on hover of "..." */
-
-  showDropdown?: boolean;
 
 }
 
@@ -52,11 +45,7 @@ export function IdsBreadcrumb({
 
   currentPage,
 
-  truncate = false,
-
   maxVisibleItems = 3,
-
-  showDropdown = false,
 
   className,
 
@@ -64,7 +53,7 @@ export function IdsBreadcrumb({
 
 }: IdsBreadcrumbProps) {
 
-  const shouldTruncate = truncate && items.length > maxVisibleItems;
+  const shouldTruncate = items.length > maxVisibleItems;
 
   const visibleItems = shouldTruncate
 
@@ -74,6 +63,91 @@ export function IdsBreadcrumb({
 
   const hiddenItems = shouldTruncate ? items.slice(1, -1) : [];
 
+  const [dropdownContainer, setDropdownContainer] = useState<HTMLDivElement | null>(null);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (!dropdownOpen || !dropdownContainer) return;
+    const frame = requestAnimationFrame(() => {
+      const firstItem = dropdownContainer.querySelector<HTMLElement>(
+        'button:not(:disabled), [role="menuitem"]:not([aria-disabled="true"])',
+      );
+      firstItem?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [dropdownOpen, dropdownContainer]);
+
+  const navRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
+  const [labelCap, setLabelCap] = useState<number | null>(null);
+
+  const displayedItems = useMemo(() => {
+    if (labelCap == null) return visibleItems;
+    return visibleItems.map((item) => {
+      if (item.label.length <= labelCap) return item;
+      return { ...item, label: `${item.label.slice(0, labelCap)}...` };
+    });
+  }, [visibleItems, labelCap]);
+
+  const originalMax = useMemo(
+    () => Math.max(0, ...visibleItems.map((item) => item.label.length)),
+    [visibleItems],
+  );
+
+  useEffect(() => {
+    const nav = navRef.current;
+    const list = listRef.current;
+    const parent = nav?.parentElement;
+    if (!nav || !list) return;
+
+    const checkOverflow = () => {
+      const listRect = list.getBoundingClientRect();
+      const contentRight = listRect.left + list.scrollWidth;
+
+      let nextEdge: number | null = null;
+      if (parent) {
+        for (const child of parent.children) {
+          if (child === nav) continue;
+          const childRect = child.getBoundingClientRect();
+          if (childRect.width === 0 || childRect.height === 0) continue;
+          if (childRect.right > listRect.left) {
+            if (nextEdge == null || childRect.left < nextEdge) {
+              nextEdge = childRect.left;
+            }
+          }
+        }
+      }
+
+      if (nextEdge == null) {
+        const navRect = nav.getBoundingClientRect();
+        nextEdge = navRect.left + nav.clientWidth;
+      }
+
+      const spacing = nextEdge - contentRight;
+      if (spacing < 24) {
+        setLabelCap((prev) => {
+          if (prev == null) return Math.max(1, originalMax - 1);
+          return Math.max(1, prev - 1);
+        });
+      } else if (spacing >= 48) {
+        setLabelCap((prev) => {
+          if (prev == null) return prev;
+          const next = prev + 1;
+          if (next >= originalMax) return null;
+          return next;
+        });
+      }
+    };
+
+    const observer = new ResizeObserver(checkOverflow);
+    observer.observe(nav);
+    observer.observe(list);
+    if (parent) observer.observe(parent);
+    checkOverflow();
+    return () => observer.disconnect();
+  }, [originalMax]);
+
 
 
   return (
@@ -82,17 +156,19 @@ export function IdsBreadcrumb({
 
       aria-label="Breadcrumb"
 
+      ref={navRef}
+
       className={[styles.breadcrumbContainer, className].filter(Boolean).join(" ")}
 
       {...rest}
 
     >
 
-      <ol className={styles.breadcrumbList}>
+      <ol ref={listRef} className={styles.breadcrumbList}>
 
-        {visibleItems.map((item, index) => {
+        {displayedItems.map((item, index) => {
 
-          const isLast = index === visibleItems.length - 1;
+          const isLast = index === displayedItems.length - 1;
 
 
 
@@ -122,7 +198,7 @@ export function IdsBreadcrumb({
 
                   {shouldTruncate && index === 0 && (
 
-                    showDropdown ? (
+                    <>
 
                       <DropdownMenu
 
@@ -146,6 +222,8 @@ export function IdsBreadcrumb({
 
                           label: hiddenItem.label,
 
+                          selectable: true,
+
                           onClick: () => {
 
                             window.location.href = hiddenItem.href ?? "#";
@@ -154,25 +232,17 @@ export function IdsBreadcrumb({
 
                         }))}
 
-                        selectionMode="none"
+                        selectionMode="single"
 
                         menuWidth="content"
+                        portalContainer={dropdownContainer}
+                        onOpenChange={setDropdownOpen}
 
                       />
 
-                    ) : (
+                      <div ref={setDropdownContainer} style={{ display: "contents" }} />
 
-                      <span
-
-                        className={[idsLinkStyles["ids-link"], idsLinkStyles["ids-link--standalone"]].join(" ")}
-
-                      >
-
-                        ...
-
-                      </span>
-
-                    )
+                    </>
 
                   )}
 
