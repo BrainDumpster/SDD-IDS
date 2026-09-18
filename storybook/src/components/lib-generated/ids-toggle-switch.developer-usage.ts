@@ -16,10 +16,12 @@ Import from \`@ids/react/toggle-switch\`.
 | \`checked\` | \`boolean\` | — |
 | \`defaultChecked\` | \`boolean\` | — |
 | \`disabled\` | \`boolean\` | — |
-| \`label\` | \`string\` | — |
+| \`showStatus\` | \`boolean\` | \`true\` |
 | \`id\` | \`string\` | — |
 | \`name\` | \`string\` | — |
 | \`value\` | \`string\` | — |
+| \`aria-label\` | \`string\` | — |
+| \`aria-describedby\` | \`string\` | — |
 | \`className\` | \`string\` | — |
 
 ## Events
