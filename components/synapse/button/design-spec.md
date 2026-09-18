@@ -44,26 +44,26 @@ Implementations must render these parts in order. Each part maps to a single DOM
 - `var(--button-control-radius)` = var(--corner-radius-radius-4)
 - `var(--button-focus-ring-offset)` = 3px
 - `var(--button-focus-ring-radius)` = var(--corner-radius-radius-6)
-- `var(--color-background-alerting-critical)` = #af0000 (light) / #c74c4c (dark)
+- `var(--color-background-alerting-critical-base)` = #af0000 (light) / #c74c4c (dark)
 - `var(--color-background-alerting-critical-strong)` = #910000 (light) / #af0000 (dark)
 - `var(--color-background-alerting-critical-stronger)` = #730000 (light) / #910000 (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-background-controls-brand-light)` = #d9eaf8 (light) / #002642 (dark)
-- `var(--color-background-controls-brand-lighter)` = #ebf4fb (light) / #003a65 (dark)
-- `var(--color-background-controls-brand-strong)` = #0062ab
-- `var(--color-background-controls-brand-stronger)` = #06528a
+- `var(--color-background-controls-base)` = #0076ce
+- `var(--color-background-controls-light)` = #d9eaf8 (light) / #002642 (dark)
+- `var(--color-background-controls-lighter)` = #ebf4fb (light) / #003a65 (dark)
+- `var(--color-background-controls-strong)` = #0062ab
+- `var(--color-background-controls-stronger)` = #06528a
 - `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
-- `var(--color-border-alerting-transparent-critical)` = rgba(175,0,0,0.00) (light) / #dd9494 (dark)
+- `var(--color-border-alerting-critical-transparent-base)` = rgba(175,0,0,0.00) (light) / #dd9494 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-border-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
+- `var(--color-border-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-brand-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
 - `var(--color-icon-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-icon-disabled)` = #757575 (light) / #c5c5c5 (dark)
-- `var(--color-icon-white)` = #ffffff
+- `var(--color-icon-gray-disabled)` = #757575 (light) / #c5c5c5 (dark)
+- `var(--color-icon-gray-white)` = #ffffff
 - `var(--color-text-brand-strong)` = #0062ab (light) / #94c5ea (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--color-text-white)` = #ffffff
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
 - `var(--padding-padding-10)` = 10px
@@ -84,30 +84,30 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
 | danger | active | `var(--color-background-alerting-critical-stronger)` (#730000) |  |  |  |
-| danger | default | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-alerting-transparent-critical)` (rgba(175,0,0,0.00)) | `var(--color-text-white)` (#ffffff) |  |
-| danger | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |  |
-| danger | focus |  | `var(--color-border-alerting-transparent-critical)` (rgba(175,0,0,0.00)) |  |  |
+| danger | default | `var(--color-background-alerting-critical-base)` (#af0000) | `var(--color-border-alerting-critical-transparent-base)` (rgba(175,0,0,0.00)) | `var(--color-text-gray-white)` (#ffffff) |  |
+| danger | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) |  |
+| danger | focus |  | `var(--color-border-alerting-critical-transparent-base)` (rgba(175,0,0,0.00)) |  |  |
 | danger | hover | `var(--color-background-alerting-critical-strong)` (#910000) |  |  |  |
 | default | default |  | `var(--border-width-border-1)` (var(--border-width-border-default)) |  | radius: `var(--button-control-radius)` |
-| default | disabled |  |  | `var(--color-icon-disabled)` (#757575) |  |
+| default | disabled |  |  | `var(--color-icon-gray-disabled)` (#757575) |  |
 | default | focus |  | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-brand-base)` (#0076ce) |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)`; radius: `var(--button-focus-ring-radius)` |
-| ghost | default |  |  | `var(--color-text-neutral-strong)` (#252525) |  |
-| ghost | disabled |  |  | `var(--color-text-disabled)` (#757575) |  |
+| ghost | default |  |  | `var(--color-text-gray-neutral-strong)` (#252525) |  |
+| ghost | disabled |  |  | `var(--color-text-gray-disabled)` (#757575) |  |
 | ghost | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
-| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
-| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-transparent-brand)` (rgba(255,255,255,0.00)) | `var(--color-text-white)` (#ffffff) |  |
-| primary | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |  |
-| primary | focus |  | `var(--color-border-transparent-brand)` (rgba(255,255,255,0.00)) |  |  |
-| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
-| secondary | active | `var(--color-background-controls-brand-light)` (#d9eaf8) |  |  |  |
+| primary | active | `var(--color-background-controls-stronger)` (#06528a) |  |  |  |
+| primary | default | `var(--color-background-controls-base)` (#0076ce) | `var(--color-border-brand-transparent-brand)` (rgba(255,255,255,0.00)) | `var(--color-text-gray-white)` (#ffffff) |  |
+| primary | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) | `var(--color-border-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) |  |
+| primary | focus |  | `var(--color-border-brand-transparent-brand)` (rgba(255,255,255,0.00)) |  |  |
+| primary | hover | `var(--color-background-controls-strong)` (#0062ab) |  |  |  |
+| secondary | active | `var(--color-background-controls-light)` (#d9eaf8) |  |  |  |
 | secondary | default |  | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-brand-strong)` (#0062ab) |  |
-| secondary | disabled |  | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) |  |
+| secondary | disabled |  | `var(--color-border-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) |  |
 | secondary | focus |  | `var(--color-border-brand-base)` (#0076ce) |  |  |
-| secondary | hover | `var(--color-background-controls-brand-lighter)` (#ebf4fb) |  |  |  |
-| tertiary | active | `var(--color-background-controls-brand-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| secondary | hover | `var(--color-background-controls-lighter)` (#ebf4fb) |  |  |  |
+| tertiary | active | `var(--color-background-controls-light)` (#d9eaf8) | `var(--color-border-brand-base)` (#0076ce) |  |  |
 | tertiary | default |  |  | `var(--color-text-brand-strong)` (#0062ab) |  |
-| tertiary | disabled |  |  | `var(--color-text-disabled)` (#757575) |  |
-| tertiary | hover | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| tertiary | disabled |  |  | `var(--color-text-gray-disabled)` (#757575) |  |
+| tertiary | hover | `var(--color-background-controls-lighter)` (#ebf4fb) | `var(--color-border-brand-base)` (#0076ce) |  |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
@@ -115,30 +115,30 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
 | danger | active | `var(--color-background-alerting-critical-stronger)` (#910000) |  |  |  |
-| danger | default | `var(--color-background-alerting-critical)` (#c74c4c) | `var(--color-border-alerting-transparent-critical)` (#dd9494) | `var(--color-text-white)` (#ffffff) |  |
-| danger | disabled | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#9e9e9e) |  |
-| danger | focus |  | `var(--color-border-alerting-transparent-critical)` (#dd9494) |  |  |
+| danger | default | `var(--color-background-alerting-critical-base)` (#c74c4c) | `var(--color-border-alerting-critical-transparent-base)` (#dd9494) | `var(--color-text-gray-white)` (#ffffff) |  |
+| danger | disabled | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-gray-disabled)` (#9e9e9e) | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
+| danger | focus |  | `var(--color-border-alerting-critical-transparent-base)` (#dd9494) |  |  |
 | danger | hover | `var(--color-background-alerting-critical-strong)` (#af0000) |  |  |  |
 | default | default |  | `var(--border-width-border-1)` (var(--border-width-border-default)) |  | radius: `var(--button-control-radius)` |
-| default | disabled |  |  | `var(--color-icon-disabled)` (#c5c5c5) |  |
+| default | disabled |  |  | `var(--color-icon-gray-disabled)` (#c5c5c5) |  |
 | default | focus |  | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-brand-base)` (#4c9fdd) |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)`; radius: `var(--button-focus-ring-radius)` |
-| ghost | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
-| ghost | disabled |  |  | `var(--color-text-disabled)` (#9e9e9e) |  |
+| ghost | default |  |  | `var(--color-text-gray-neutral-strong)` (#e6e9ec) |  |
+| ghost | disabled |  |  | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
 | ghost | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
-| primary | active | `var(--color-background-controls-brand-stronger)` (#06528a) |  |  |  |
-| primary | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-transparent-brand)` (#4c9fdd) | `var(--color-text-white)` (#ffffff) |  |
-| primary | disabled | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#9e9e9e) |  |
-| primary | focus |  | `var(--color-border-transparent-brand)` (#4c9fdd) |  |  |
-| primary | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
-| secondary | active | `var(--color-background-controls-brand-light)` (#002642) |  |  |  |
+| primary | active | `var(--color-background-controls-stronger)` (#06528a) |  |  |  |
+| primary | default | `var(--color-background-controls-base)` (#0076ce) | `var(--color-border-brand-transparent-brand)` (#4c9fdd) | `var(--color-text-gray-white)` (#ffffff) |  |
+| primary | disabled | `var(--color-background-gray-lighter)` (#393939) | `var(--color-border-gray-disabled)` (#9e9e9e) | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
+| primary | focus |  | `var(--color-border-brand-transparent-brand)` (#4c9fdd) |  |  |
+| primary | hover | `var(--color-background-controls-strong)` (#0062ab) |  |  |  |
+| secondary | active | `var(--color-background-controls-light)` (#002642) |  |  |  |
 | secondary | default |  | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-brand-strong)` (#94c5ea) |  |
-| secondary | disabled |  | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| secondary | disabled |  | `var(--color-border-gray-disabled)` (#9e9e9e) | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
 | secondary | focus |  | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
-| secondary | hover | `var(--color-background-controls-brand-lighter)` (#003a65) |  |  |  |
-| tertiary | active | `var(--color-background-controls-brand-light)` (#002642) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| secondary | hover | `var(--color-background-controls-lighter)` (#003a65) |  |  |  |
+| tertiary | active | `var(--color-background-controls-light)` (#002642) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
 | tertiary | default |  |  | `var(--color-text-brand-strong)` (#94c5ea) |  |
-| tertiary | disabled |  |  | `var(--color-text-disabled)` (#9e9e9e) |  |
-| tertiary | hover | `var(--color-background-controls-brand-lighter)` (#003a65) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| tertiary | disabled |  |  | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
+| tertiary | hover | `var(--color-background-controls-lighter)` (#003a65) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

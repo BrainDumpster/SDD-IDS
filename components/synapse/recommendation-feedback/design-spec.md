@@ -58,7 +58,7 @@ Deterministic slot order (codegen **must** preserve):
 | Property | Token / value |
 |---|---|
 | Typography | Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)` |
-| Color | `var(--color-text-neutral)` |
+| Color | `var(--color-text-gray-neutral)` |
 
 Figma default: **"What did you think about this recommendation?"**
 
@@ -78,15 +78,15 @@ Figma default: **"What did you think about this recommendation?"**
 | Padding | `var(--padding-padding-6)` vertical, `var(--padding-padding-8)` horizontal |
 | Border radius | `var(--corner-radius-radius-4)` |
 | Icon size | **16×16px** |
-| Icon color | `var(--color-icon-neutral)` |
-| Background | transparent; hover → `var(--color-background-surface-1)` |
+| Icon color | `var(--color-icon-gray-neutral-base)` |
+| Background | transparent; hover → `var(--color-background-surface-primary)` |
 
 ### `Timestamp`
 
 | Property | Token / value |
 |---|---|
 | Typography | Body 3 — `var(--font-size-body-3)` / `var(--font-line-height-line-height-18)` |
-| Color | `var(--color-text-disabled)` |
+| Color | `var(--color-text-gray-disabled)` |
 | White space | `nowrap` |
 
 Figma sample: **"24 Sep, 11:30 PM"** (dynamic; host-formatted).
@@ -97,8 +97,8 @@ Figma sample: **"24 Sep, 11:30 PM"** (dynamic; host-formatted).
 
 | Role | Font size | Line height | Weight | Color |
 |---|---|---|---|---|
-| Prompt | `var(--font-size-body-1)` | `var(--font-line-height-line-height-24)` | 400 | `var(--color-text-neutral)` |
-| Timestamp | `var(--font-size-body-3)` | `var(--font-line-height-line-height-18)` | 400 | `var(--color-text-disabled)` |
+| Prompt | `var(--font-size-body-1)` | `var(--font-line-height-line-height-24)` | 400 | `var(--color-text-gray-neutral)` |
+| Timestamp | `var(--font-size-body-3)` | `var(--font-line-height-line-height-18)` | 400 | `var(--color-text-gray-disabled)` |
 
 ### Icons
 
@@ -113,11 +113,11 @@ Figma sample: **"24 Sep, 11:30 PM"** (dynamic; host-formatted).
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | Root | default | transparent | none | — |
-| Prompt | default | transparent | none | `var(--color-text-neutral)` |
-| Action button | default | transparent | none | `var(--color-icon-neutral)` |
-| Action button | hover | `var(--color-background-surface-1)` | none | `var(--color-icon-neutral)` |
-| Action button | focus-visible | transparent | `var(--color-border-brand-base)` outline | `var(--color-icon-neutral)` |
-| Timestamp | default | transparent | none | `var(--color-text-disabled)` |
+| Prompt | default | transparent | none | `var(--color-text-gray-neutral)` |
+| Action button | default | transparent | none | `var(--color-icon-gray-neutral-base)` |
+| Action button | hover | `var(--color-background-surface-primary)` | none | `var(--color-icon-gray-neutral-base)` |
+| Action button | focus-visible | transparent | `var(--color-border-brand-base)` outline | `var(--color-icon-gray-neutral-base)` |
+| Timestamp | default | transparent | none | `var(--color-text-gray-disabled)` |
 
 ## States (Dark Theme)
 
@@ -130,7 +130,7 @@ Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved v
 | Click copy | Emit `onCopy`; host copies recommendation content to clipboard. |
 | Click thumb-up | Emit `onThumbUp`; host records positive feedback. |
 | Click thumb-down | Emit `onThumbDown`; host records negative feedback. |
-| Hover action | Background → `var(--color-background-surface-1)`. |
+| Hover action | Background → `var(--color-background-surface-primary)`. |
 
 Selected good/bad response chrome is documented on the Chat System Response action bar (`53259:126297`, `53259:126298`) — **out of scope** for this standalone block; host may style actions after selection.
 
@@ -187,10 +187,10 @@ RecommendationFeedbackRoot
 | Slot | Key properties |
 |---|---|
 | `RecommendationFeedbackRoot` | column; gap `var(--spacing-space-12)`; max-width `800px` |
-| `PromptText` | Body 1; `var(--color-text-neutral)` |
+| `PromptText` | Body 1; `var(--color-text-gray-neutral)` |
 | `SystemResponseActions` | row; gap `var(--spacing-space-8)`; radius `var(--corner-radius-radius-6)` |
 | `SystemResponseActionButton` | padding 6/8; radius `var(--corner-radius-radius-4)`; icon 16px |
-| `Timestamp` | Body 3; `var(--color-text-disabled)` |
+| `Timestamp` | Body 3; `var(--color-text-gray-disabled)` |
 
 ### Behavior contract
 

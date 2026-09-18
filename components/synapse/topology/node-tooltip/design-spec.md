@@ -89,11 +89,11 @@ Documented in parent [`topology/design-spec.md`](../design-spec.md); summary:
 
 | Role | Token |
 |---|---|
-| Surface | `var(--color-background-surface-1)` |
-| Border | `var(--border-width-border-default)` `var(--color-border-accessible)` |
+| Surface | `var(--color-background-surface-primary)` |
+| Border | `var(--border-width-border-default)` `var(--color-border-gray-neutral-base)` |
 | Radius | `var(--corner-radius-radius-8)` |
-| Title / labels | `var(--color-text-neutral-strong)` |
-| Values | `var(--color-text-neutral)` |
+| Title / labels | `var(--color-text-gray-neutral-strong)` |
+| Values | `var(--color-text-gray-neutral)` |
 | Status icons | Full-color via `Icon` `variant="img"` |
 
 ## States (Light Theme)

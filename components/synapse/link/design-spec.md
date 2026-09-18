@@ -35,13 +35,13 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-white)` = #ffffff
+- `var(--color-border-gray-white)` = #ffffff
 - `var(--color-text-link-brand-base)` = #0062ab (light) / #4c9fdd (dark)
 - `var(--color-text-link-brand-light)` = #d9eaf8
 - `var(--color-text-link-brand-lighter)` = #ebf4fb
 - `var(--color-text-link-brand-strong)` = #06528a (light) / #94c5ea (dark)
 - `var(--color-text-link-brand-stronger)` = #003a65 (light) / #d9eaf8 (dark)
-- `var(--color-text-white)` = #ffffff
+- `var(--color-text-gray-white)` = #ffffff
 
 <!-- ds:section id=states-light -->
 ## States (Light Theme)
@@ -49,9 +49,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
 | default | active |  |  | `var(--color-text-link-brand-light)` (#d9eaf8) |  |
-| default | default |  |  | `var(--color-text-white)` (#ffffff) |  |
+| default | default |  |  | `var(--color-text-gray-white)` (#ffffff) |  |
 | default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | shadow: `var(--color-border-white)` |
+| default | focus |  |  |  | shadow: `var(--color-border-gray-white)` |
 | default | hover |  |  | `var(--color-text-link-brand-lighter)` (#ebf4fb) |  |
 
 <!-- ds:section id=states-dark -->
@@ -60,9 +60,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
 | default | active |  |  | `var(--color-text-link-brand-light)` (#d9eaf8) |  |
-| default | default |  |  | `var(--color-text-white)` (#ffffff) |  |
+| default | default |  |  | `var(--color-text-gray-white)` (#ffffff) |  |
 | default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | shadow: `var(--color-border-white)` |
+| default | focus |  |  |  | shadow: `var(--color-border-gray-white)` |
 | default | hover |  |  | `var(--color-text-link-brand-lighter)` (#ebf4fb) |  |
 
 <!-- ds:section id=interactions -->

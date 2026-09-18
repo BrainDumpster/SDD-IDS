@@ -35,19 +35,19 @@ Synapse **Dropdown / Combo Box** shares the IDS **Dropdown-Combobox** family (si
 
 | Topic | IDS | Synapse (verified `53325:280088`) |
 |---|---|---|
-| Detached menu border | `var(--color-border-accessible)` | **`var(--color-border-neutral-light)`** |
+| Detached menu border | `var(--color-border-gray-neutral-base)` | **`var(--color-border-neutral-light)`** |
 | Detached menu radius | `0` (field-attached popup); detached IDS stories use `186px` min-width, square corners | **`var(--corner-radius-radius-4)`** (4px; Figma token `Drowdown Menu`) |
 | Detached menu min-width | `186px` | **`185px`** (Figma frame width) |
 | Detached menu shadow | drop-shadow 4 + 2 stack | Same tokens; **2px layer listed before 4px** in Figma export |
 | Option row padding | `var(--padding-padding-10) var(--padding-padding-16)` | **Same** |
 | Option row min-height | `40px` | **Same** (`120px` popup ÷ 3 rows) |
-| Option label typography | Body 2 | **Body 2 Regular (`font-weight: 400`)**, `var(--color-text-neutral)` |
-| Option row hover inset | `var(--color-border-brand-base)` top/bottom | **`var(--color-border-brand-neutral)`** top/bottom (Synapse detached pattern; aligns masthead help menu) |
-| Option row press | `var(--color-background-brand-light)` + brand-strong text | **Same semantic tokens** |
+| Option label typography | Body 2 | **Body 2 Regular (`font-weight: 400`)**, `var(--color-text-gray-neutral)` |
+| Option row hover inset | `var(--color-border-brand-base)` top/bottom | **`var(--color-border-brand-base-neutral)`** top/bottom (Synapse detached pattern; aligns masthead help menu) |
+| Option row press | `var(--color-background-brand-light-slate)` + brand-strong text | **Same semantic tokens** |
 | Field trigger corner radius | `var(--dropdown-control-radius)` → `var(--corner-radius-radius-none)` (**0px** — square; Figma `29393:149487` / `12730:157290`) | **`var(--dropdown-control-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
 | Field focus ring radius | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **Same alias** (**4px**) |
 | Detached / standalone menu radius | `var(--dropdown-menu-radius)` → `0` (square) | **`var(--dropdown-menu-radius)` → `var(--corner-radius-radius-4)`** (**4px**) |
-| Field trigger border | `var(--color-border-accessible)` | **Inherit IDS** until `11067:54551` verified |
+| Field trigger border | `var(--color-border-gray-neutral-base)` | **Inherit IDS** until `11067:54551` verified |
 | Combobox-single / multi field | IDS size matrix | **Inherit IDS** (radius via aliases above) |
 | Theme resolution | `components/ids-theme.css` | `components/synapse-theme.css` |
 
@@ -117,18 +117,18 @@ No search row, no radio/checkbox leading controls, no field trigger in this usag
 
 ### Detached menu popup + option rows (verified `53325:280088`)
 
-- `var(--color-background-component)` — popup + row default
+- `var(--color-background-surface-component)` — popup + row default
 - `var(--color-border-neutral-light)` — popup border
 - `var(--dropdown-menu-radius)` — popup radius (resolves to `var(--corner-radius-radius-4)`)
-- `var(--color-text-neutral)` — row label (Body 2 Regular)
+- `var(--color-text-gray-neutral)` — row label (Body 2 Regular)
 - `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)` — typography
 - `var(--padding-padding-10)` / `var(--padding-padding-16)` — row padding
 - `var(--shadow-shadow-4-drop-shadow-4-color)` — elevation
-- `var(--color-background-brand-lighter)` — row hover
-- `var(--color-border-brand-neutral)` — row hover/press inset emphasis
-- `var(--color-background-brand-light)` — row press
+- `var(--color-background-brand-lighter-slate)` — row hover
+- `var(--color-border-brand-base-neutral)` — row hover/press inset emphasis
+- `var(--color-background-brand-light-slate)` — row press
 - `var(--color-text-brand-strong)` — row press text
-- `var(--color-text-disabled)` / `var(--color-background-gray-lighter)` — disabled row
+- `var(--color-text-gray-disabled)` / `var(--color-background-gray-lighter)` — disabled row
 
 ### Combobox field (inherit IDS)
 
@@ -140,11 +140,11 @@ Full IDS token list in [`components/ids/dropdown-combo-box/design-spec.md`](../i
 
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| Default | `var(--color-background-component)` | none | `var(--color-text-neutral)` Body 2 Regular |
-| Hover | `var(--color-background-brand-lighter)` | inset top/bottom `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| Press | `var(--color-background-brand-light)` | inset top/bottom `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| Default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` Body 2 Regular |
+| Hover | `var(--color-background-brand-lighter-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| Press | `var(--color-background-brand-light-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Focus-visible | current fill + focus ring `var(--color-border-brand-base)` | — | unchanged |
-| Disabled | `var(--color-background-gray-lighter)` | — | `var(--color-text-disabled)` |
+| Disabled | `var(--color-background-gray-lighter)` | — | `var(--color-text-gray-disabled)` |
 
 ### Field + selectable rows (combobox-single / multi)
 

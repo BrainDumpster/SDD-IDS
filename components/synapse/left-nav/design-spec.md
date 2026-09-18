@@ -42,9 +42,9 @@ Synapse **Left Nav** is the same component family as IDS **Main Menu/Left**. Lay
 |---|---|---|
 | Expanded rail width | `278px` | **`250px`** (`min-width: 250px`, `max-width: 500px`) |
 | Collapsed width | `64px` | **`64px`** (same) |
-| Root borders | L/R/bottom `var(--color-border-accessible)` | **Right only** `var(--color-border-neutral-light)`; no L/top/bottom on rail |
-| Footer top border | `var(--color-border-accessible)` | **`var(--color-border-neutral-light)`** |
-| Rail background | `var(--color-background-component)` | Component + **gradient** `var(--color-background-gradient-left-nav-start/end)` (see `MainMenuLeft.module.css`) |
+| Root borders | L/R/bottom `var(--color-border-gray-neutral-base)` | **Right only** `var(--color-border-neutral-light)`; no L/top/bottom on rail |
+| Footer top border | `var(--color-border-gray-neutral-base)` | **`var(--color-border-neutral-light)`** |
+| Rail background | `var(--color-background-surface-component)` | Component + **gradient** `var(--color-background-gradient-left-nav-start/end)` (see `MainMenuLeft.module.css`) |
 | Sample labels | Dashboard, Infrastructure, … | Home, Recommendations, Workspace, Favorites, Recent (+ optional **Category** rows in Figma sample) |
 | Root top padding | none on rail | **`var(--padding-padding-8)`** on expanded/collapsed rail (`47807:8154`, `47807:8166`) |
 | Product slot | — | **`NewChatAction`** first in `MainMenuList` — expanded: label + icon; collapsed: **icon-only** `shape-plus` (`47807:8168`) |
@@ -57,12 +57,12 @@ Synapse **Left Nav** is the same component family as IDS **Main Menu/Left**. Lay
 | Expanded primary **selected** inset | `brand-dark` (IDS) | **`brand-base`** (Figma `47807:8060`; selected-focus keeps **`brand-dark`**) |
 | Selected row background | `brand-lighter` | **`controls-brand-lighter`** (selected-focus expanded: `brand-lighter`) |
 | Collapsed hover/selected fill | `brand-lighter` / `brand-light` | Same semantic names; Figma binds **`controls-brand-lighter`** / **`controls-brand-light`** (resolved in `synapse-theme.css`) |
-| Secondary hover/selected **text** | `var(--color-text-brand-strong)` | **`var(--color-text-neutral-strong)`** — Figma `50514:23038` (hover), `50512:84338` (selected) |
+| Secondary hover/selected **text** | `var(--color-text-brand-strong)` | **`var(--color-text-gray-neutral-strong)`** — Figma `50514:23038` (hover), `50512:84338` (selected) |
 | Secondary selected **inset** | IDS may use inset on focus | **No left inset** on secondary rows (primary only) |
 | Secondary row padding | `6px` block / `58px` inline | **`0` block** / `58px` left / `16px` right (`py-0`, `h=32px`) |
 | Secondary overflow menu | — | Parent `childrenContextMenu: true` → hover reveals **`overflow-menu-dots`** trigger (`50514:23038`, `53325:280087`); button states `50516:35461`; popup = Synapse detached menu `53325:280088` ([`dropdown-combo-box`](../dropdown-combo-box/design-spec.md)) |
 
-Resolved hover/selected fills may map to Synapse theme aliases (e.g. controls tokens); **contract token names** in tables below match IDS (`--color-background-brand-lighter`, `--color-border-brand-dark` inset).
+Resolved hover/selected fills may map to Synapse theme aliases (e.g. controls tokens); **contract token names** in tables below match IDS (`--color-background-brand-lighter-slate`, `--color-border-brand-strong` inset).
 
 ## Anatomy
 Deterministic slot order (IDS-aligned + Synapse lead row inside menu list):
@@ -95,23 +95,23 @@ Deterministic slot order (IDS-aligned + Synapse lead row inside menu list):
 
 ## Tokens
 ### Surfaces and borders
-- `var(--color-background-component)` — rail base
+- `var(--color-background-surface-component)` — rail base
 - `var(--color-background-gradient-left-nav-start)` / `var(--color-background-gradient-left-nav-end)` — vertical wash (Synapse theme)
 - `var(--color-border-neutral-light)` — rail **right** border + footer **top** border
-- `var(--color-background-brand-lighter)` — primary/secondary hover, selected, selected-focus backgrounds
-- `var(--color-background-brand-light)` — primary/secondary press backgrounds
+- `var(--color-background-brand-lighter-slate)` — primary/secondary hover, selected, selected-focus backgrounds
+- `var(--color-background-brand-light-slate)` — primary/secondary press backgrounds
 
 ### Typography
-- Primary label: Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`, weight 500, `var(--color-text-neutral-strong)` default, `var(--color-text-brand-strong)` on hover/press/selected
-- Secondary label: Body 2 — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight 500, `var(--color-text-neutral)` default
+- Primary label: Body 1 — `var(--font-size-body-1)` / `var(--font-line-height-line-height-24)`, weight 500, `var(--color-text-gray-neutral-strong)` default, `var(--color-text-brand-strong)` on hover/press/selected
+- Secondary label: Body 2 — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, weight 500, `var(--color-text-gray-neutral)` default
 - New Chat label: `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`, `var(--color-text-brand-strong)`
 
 ### Icons
-- Default primary: `var(--color-icon-neutral-strong)`
+- Default primary: `var(--color-icon-gray-neutral-strong)`
 - Hover/press primary: `var(--color-icon-brand-strong)`
 - Selected primary (expanded + collapsed): `var(--color-icon-brand-strong)` (IDS uses `brand-base` on selected)
 - Chevron: `var(--color-icon-brand-strong)`
-- Collapse control: `var(--color-icon-neutral-strong)`
+- Collapse control: `var(--color-icon-gray-neutral-strong)`
 - New Chat: `shape-plus`, `var(--color-icon-brand-strong)`
 
 ## States (Light Theme)
@@ -119,14 +119,14 @@ Deterministic slot order (IDS-aligned + Synapse lead row inside menu list):
 
 | State | Children list (`childrenMenu` when `forceStates`) | Background | Border / inset | Text | Icon |
 |---|---|---|---|---|---|
-| Default | Collapsed | transparent | none (container border only) | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Default | Expanded | transparent | none | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Hover | * | `var(--color-background-brand-lighter)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Press | * | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Selected | Collapsed | `var(--color-background-controls-brand-lighter)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Selected | Expanded | `var(--color-background-controls-brand-lighter)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (not a side border) | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Selected-Focus | * | `var(--color-background-brand-lighter)` | **4px inset** `var(--color-border-brand-dark)` + focus ring | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Default | Collapsed | transparent | none (container border only) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Default | Expanded | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Hover | * | `var(--color-background-brand-lighter-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Press | * | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Selected | Collapsed | `var(--color-background-controls-lighter)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Selected | Expanded | `var(--color-background-controls-lighter)` | **4px inset** `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Default-Focus | * | transparent | focus ring `var(--color-border-brand-base)` (not a side border) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Selected-Focus | * | `var(--color-background-brand-lighter-slate)` | **4px inset** `var(--color-border-brand-strong)` + focus ring | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
 
 ### Primary icon-only (`.MainMenu-Left-Element-PrimaryIcon`, collapsed)
 
@@ -134,14 +134,14 @@ Figma component set [`47807:8043`](https://www.figma.com/design/Td1bnsvRj1PCGs9R
 
 | State | Figma node | Background | Inset / focus | Icon |
 |---|---|---|---|---|
-| Default | `47807:8056` | transparent | — | `var(--color-icon-neutral-strong)` |
-| Hover | `47807:8054` | `var(--color-background-controls-brand-lighter)` | — | **`var(--color-icon-neutral-strong)`** (no brand shift on hover) |
-| Press | `47807:8052` | `var(--color-background-controls-brand-light)` | — | `var(--color-icon-brand-strong)` |
-| Selected | `47807:8050` | `var(--color-background-controls-brand-lighter)` | **4px inset** `var(--color-border-brand-dark)` | `var(--color-icon-brand-strong)` |
-| Default-Focus | `47807:8047` | transparent | focus ring `var(--color-border-brand-base)` on 40px row | `var(--color-icon-neutral-strong)` |
-| Selected-Focus | `47807:8044` | `var(--color-background-controls-brand-lighter)` | inset `var(--color-border-brand-dark)` + focus ring `var(--color-border-brand-base)` | `var(--color-icon-brand-strong)` |
+| Default | `47807:8056` | transparent | — | `var(--color-icon-gray-neutral-strong)` |
+| Hover | `47807:8054` | `var(--color-background-controls-lighter)` | — | **`var(--color-icon-gray-neutral-strong)`** (no brand shift on hover) |
+| Press | `47807:8052` | `var(--color-background-controls-light)` | — | `var(--color-icon-brand-strong)` |
+| Selected | `47807:8050` | `var(--color-background-controls-lighter)` | **4px inset** `var(--color-border-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Default-Focus | `47807:8047` | transparent | focus ring `var(--color-border-brand-base)` on 40px row | `var(--color-icon-gray-neutral-strong)` |
+| Selected-Focus | `47807:8044` | `var(--color-background-controls-lighter)` | inset `var(--color-border-brand-strong)` + focus ring `var(--color-border-brand-base)` | `var(--color-icon-brand-strong)` |
 
-`--color-background-controls-brand-*` resolve to the same values as `--color-background-brand-lighter` / `--light` in `components/synapse-theme.css`; use either family in CSS as long as theme is loaded.
+`--color-background-controls-brand-*` resolve to the same values as `--color-background-brand-lighter-slate` / `--light` in `components/synapse-theme.css`; use either family in CSS as long as theme is loaded.
 
 ### Secondary row (`.MainMenu-Left-Element-Secondary`)
 
@@ -149,12 +149,12 @@ Verified on composed frames **`50512:84338`** (selected) and **`50514:23038`** (
 
 | State | Background | Text | Notes |
 |---|---|---|---|
-| Default | transparent | `var(--color-text-neutral-strong)` | No inset |
-| Hover | `var(--color-background-controls-brand-lighter)` | `var(--color-text-neutral-strong)` | Figma `50514:23038`; when `childrenContextMenu`, overflow trigger visible |
-| Press | `var(--color-background-controls-brand-light)` | `var(--color-text-neutral-strong)` | Inherit IDS press pattern |
-| Selected | `var(--color-background-controls-brand-lighter)` | `var(--color-text-neutral-strong)` | Figma `50512:84338`; **no** left inset |
-| Default-Focus | transparent + outline `var(--color-border-brand-base)` | `var(--color-text-neutral-strong)` | |
-| Selected-Focus | `var(--color-background-controls-brand-lighter)` + outline | `var(--color-text-neutral-strong)` | **No** inset (`box-shadow` none) |
+| Default | transparent | `var(--color-text-gray-neutral-strong)` | No inset |
+| Hover | `var(--color-background-controls-lighter)` | `var(--color-text-gray-neutral-strong)` | Figma `50514:23038`; when `childrenContextMenu`, overflow trigger visible |
+| Press | `var(--color-background-controls-light)` | `var(--color-text-gray-neutral-strong)` | Inherit IDS press pattern |
+| Selected | `var(--color-background-controls-lighter)` | `var(--color-text-gray-neutral-strong)` | Figma `50512:84338`; **no** left inset |
+| Default-Focus | transparent + outline `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | |
+| Selected-Focus | `var(--color-background-controls-lighter)` + outline | `var(--color-text-gray-neutral-strong)` | **No** inset (`box-shadow` none) |
 
 ### Secondary overflow trigger (`Left Nav Button`, `50516:35461`)
 
@@ -163,9 +163,9 @@ Icon: **`overflow-menu-dots`** (16×16). Hit area: padding `var(--padding-paddin
 | State | Figma node | Background | Icon |
 |---|---|---|---|
 | Default | `50516:35456` | transparent | `var(--color-icon-brand-base)` |
-| Hover | `50516:35457` | `var(--color-background-controls-brand-light)` | `var(--color-icon-brand-strong)` |
-| Press | `50516:35458` | `var(--color-background-controls-brand-light)` | `var(--color-icon-brand-strong)` |
-| Disabled | `50516:35459` | transparent | `var(--color-icon-disabled)` |
+| Hover | `50516:35457` | `var(--color-background-controls-light)` | `var(--color-icon-brand-strong)` |
+| Press | `50516:35458` | `var(--color-background-controls-light)` | `var(--color-icon-brand-strong)` |
+| Disabled | `50516:35459` | transparent | `var(--color-icon-gray-disabled)` |
 | Focused | `50516:35460` | transparent + outline `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
 
 Trigger is **hidden** until the secondary row is hovered or focus is within the row (`50514:23038`, `53325:280087`). Click opens a **user-defined menu popup** when `contextMenuOptions` (per child) or `getSecondaryContextMenuOptions` (host) supply options; popup chrome matches Synapse detached menu Figma `53325:280088` ([`dropdown-combo-box`](../dropdown-combo-box/design-spec.md): `185px` min-width, `radius-4`, `border-neutral-light`). Figma sample labels: **Open In a New Tab**, **Rename**, **Delete**. `onSecondaryContextMenu` fires when the menu opens. Does not navigate the row.
@@ -177,8 +177,8 @@ Expanded (`47807:8154` / `50516:35461`): label + icon. Collapsed (`47807:8168`):
 | State | Background | Text / icon |
 |---|---|---|
 | Default | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` (label hidden when collapsed) |
-| Hover | `var(--color-background-brand-lighter)` | `var(--color-text-brand-strong)` |
-| Press | `var(--color-background-brand-light)` | `var(--color-text-brand-strong)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | `var(--color-text-brand-strong)` |
+| Press | `var(--color-background-brand-light-slate)` | `var(--color-text-brand-strong)` |
 | Focus-visible | transparent + ring `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
@@ -287,7 +287,7 @@ Codegen and `LeftNav.stories.tsx` **Spec Accurate Design** must use:
 - `newChat: { label: "New Chat" }` (or `onAction` stub)
 - `items` matching Figma `47807:8154`: `home`, `light-bulb`, `grid-square-9` (with **`children`** + `childrenMenu: "collapsed"`), `star-fav`, `time-clock`
 - Canonical **`children`** / **`childrenMenu`** (not `secondaryItems`)
-- Parent frame: `height: 100vh`, flex row, canvas `var(--color-background-surface-1)`
+- Parent frame: `height: 100vh`, flex row, canvas `var(--color-background-surface-primary)`
 - Stories: **Collapsed** (`expanded: false`; New Chat icon-only per Figma), **PrimaryStateSnapshotMatrix** (expanded, `47807:8058`), **CollapsedPrimaryStateSnapshotMatrix** (collapsed icon-only, `47807:8043`)
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -326,7 +326,7 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg`. Spec slugs: `shape-plus`, `
 - [x] Primary 40px row; secondary 32px with `padding-padding-6` / `padding-padding-58`
 - [x] Footer **49px** block; footer top `var(--color-border-neutral-light)`; rail right border neutral-light
 - [x] Collapsed primary-icon matrix matches Figma `47807:8043` (hover icon stays neutral-strong; selected icon brand-strong)
-- [x] Selected expanded inset `var(--color-border-brand-base)`; selected-focus + collapsed-selected inset `var(--color-border-brand-dark)`
+- [x] Selected expanded inset `var(--color-border-brand-base)`; selected-focus + collapsed-selected inset `var(--color-border-brand-strong)`
 - [x] `MainMenuList` scroll: `overflow-y: auto` + `min-height: 0`; gap `var(--spacing-space-8)`
 - [x] **Spec Accurate Design** uses `defaultSelectedItemId: "home"` + **`children`** / **`childrenMenu`**
 - [x] `onExpandedChange` + **`onSelected`** documented; single `aria-current="page"` (deepest active row)

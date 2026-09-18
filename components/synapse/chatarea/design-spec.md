@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 47816:4025 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -42,12 +43,12 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--color-text-white)` = #ffffff
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-controls-base)` = #0076ce
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -62,14 +63,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#f4f4f4) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-neutral-strong)` (#252525) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-primary)` (#f4f4f4) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#eaeaea) | `var(--color-text-gray-neutral-strong)` (#252525) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#1e262c) | `var(--color-text-neutral-strong)` (#e6e9ec) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-primary)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#1e262c) | `var(--color-text-gray-neutral-strong)` (#e6e9ec) | opacity: 0.7; radius: `var(--corner-radius-radius-4)` |
 
 ## Source Mapping
 

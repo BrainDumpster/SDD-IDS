@@ -10,7 +10,7 @@
  *       SynapseSuggestedPromptLabel
  */
 import React from "react";
-import { IdsIcon } from "../../ids/icon";
+import { SynapseIcon } from "../icon";
 import { cx } from "../../shared/utils/cx";
 import styles from "./SynapseSuggestedPrompt.module.css";
 
@@ -83,7 +83,7 @@ export function SynapseSuggestedPrompt({
             data-ids="SynapseSuggestedPromptIcon"
             aria-hidden="true"
           >
-            <IdsIcon shape={ICON_SHAPE} size={16} />
+            <SynapseIcon shape={ICON_SHAPE} size={16} />
           </span>
         ) : null}
         <span

@@ -20,6 +20,7 @@ import React, { type CSSProperties, type ReactElement } from "react";
 import { IdsHelper, IdsHelperText } from "../helper";
 import { IdsIcon } from "../icon";
 import styles from "./IdsProgressBar.module.css";
+import { IDS_ICON_URL_BY_SHAPE } from "../shared/idsAssetRegistry.generated";
 
 export type IdsProgressBarType = "inline" | "with-label" | "indeterminate";
 export type IdsProgressBarThickness = "thin" | "medium" | "thick";
@@ -76,19 +77,26 @@ const HELPER_ICON_BY_STATE: Record<
 const SHAPE_PATTERN = /^[a-z0-9-]+$/;
 
 const iconUrlByShape: Record<string, string> = (() => {
-  const modules = import.meta.glob<string>("../../../../assets/icons/*.svg", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  });
   const out: Record<string, string> = {};
-  for (const path of Object.keys(modules)) {
-    const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
-    if (file && modules[path] != null) {
-      out[file] = modules[path] as string;
+  try {
+    const modules = import.meta.glob<string>("../../../../assets/icons/*.svg", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    });
+    for (const path of Object.keys(modules)) {
+      const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
+      if (file && modules[path] != null) {
+        out[file] = modules[path] as string;
+      }
     }
+  } catch {
+    // Non-Vite bundler (esbuild): `import.meta.glob` is not a function. Fall through.
   }
-  return out;
+  // Vite populates `out` and this returns it unchanged (behaviour is byte-identical).
+  // esbuild leaves it EMPTY, which would render every icon as a missing box -- use the
+  // generated registry (scripts/generate_ids_asset_registry.mjs) in that case.
+  return Object.keys(out).length > 0 ? out : IDS_ICON_URL_BY_SHAPE;
 })();
 
 function hasIconAsset(shape: string): boolean {

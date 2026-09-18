@@ -42,8 +42,8 @@ Implementations must render these parts in order. Each part maps to a single DOM
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
 - `var(--color-text-link-brand-base)` = #0062ab (light) / #4c9fdd (dark)
 - `var(--color-text-link-brand-strong)` = #06528a (light) / #94c5ea (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--corner-radius-radius-2)` = 2px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -56,7 +56,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral-strong)` (#252525) | radius: `var(--corner-radius-radius-2)` |
+| default | default |  |  | `var(--color-text-gray-neutral-strong)` (#252525) | radius: `var(--corner-radius-radius-2)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
 | default | hover |  |  | `var(--color-text-link-brand-strong)` (#06528a) |  |
 
@@ -65,7 +65,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral-strong)` (#e6e9ec) | radius: `var(--corner-radius-radius-2)` |
+| default | default |  |  | `var(--color-text-gray-neutral-strong)` (#e6e9ec) | radius: `var(--corner-radius-radius-2)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
 | default | hover |  |  | `var(--color-text-link-brand-strong)` (#94c5ea) |  |
 

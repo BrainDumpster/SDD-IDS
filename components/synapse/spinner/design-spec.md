@@ -40,7 +40,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--spinner-progress-size)` = ?
 
 <!-- ds:section id=states-light -->
@@ -48,14 +48,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-border-brand-base)` (#0076ce) |  | `var(--color-text-neutral-strong)` (#252525) |  |
+| default | default | `var(--color-border-brand-base)` (#0076ce) |  | `var(--color-text-gray-neutral-strong)` (#252525) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-border-brand-base)` (#4c9fdd) |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| default | default | `var(--color-border-brand-base)` (#4c9fdd) |  | `var(--color-text-gray-neutral-strong)` (#e6e9ec) |  |
 
 ## Source Mapping
 

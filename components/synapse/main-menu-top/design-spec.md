@@ -38,11 +38,11 @@ Synapse **Main Menu Top** is the same component family as IDS **Main Menu/Top**.
 
 | Topic | IDS | Synapse (Figma evidence) |
 |---|---|---|
-| Hover **text** | `var(--color-text-brand-strong)` | **`var(--color-text-neutral-strong)`** — `11099:56587` (`Size=Large, State=Hover`) |
-| Hover **icon** | `var(--color-icon-brand-strong)` | **`var(--color-icon-neutral-strong)`** — same variant |
-| Menu-open, not selected | brand-strong text (IDS) | **`neutral-strong` text/icon** + `var(--color-background-brand-lighter)` — matches hover row |
+| Hover **text** | `var(--color-text-brand-strong)` | **`var(--color-text-gray-neutral-strong)`** — `11099:56587` (`Size=Large, State=Hover`) |
+| Hover **icon** | `var(--color-icon-brand-strong)` | **`var(--color-icon-gray-neutral-strong)`** — same variant |
+| Menu-open, not selected | brand-strong text (IDS) | **`neutral-strong` text/icon** + `var(--color-background-brand-lighter-slate)` — matches hover row |
 | Press text/icon | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` | **Same** — `11393:103109` |
-| Selected text/icon | brand-strong + bottom inset `var(--color-border-brand-dark)` | **Same** — `11099:56577` |
+| Selected text/icon | brand-strong + bottom inset `var(--color-border-brand-strong)` | **Same** — `11099:56577` |
 | Label font weight | Body 1/2 **medium (500)** | **regular (400)** — Figma `Typography/Font Weight/regular` on `11099:56597` |
 | Bar layout / item geometry | `40px` Large row, `16px` gap, `12px` inline padding, `18×18` icon, `12×12` chevron | **Same** — `10189:30280`, `11099:56576` |
 | Dropdown menu chrome | square corners (`border-radius: 0`), shadow-4 | **Synapse dropdown aliases** — `var(--dropdown-menu-radius)` → **`var(--corner-radius-radius-4)`** per [`dropdown-single-select`](../dropdown-single-select/design-spec.md); sample width **`185px`** (`43603:179106`) |
@@ -54,7 +54,7 @@ Synapse **Main Menu Top** is the same component family as IDS **Main Menu/Top**.
 Deterministic slot order (IDS-aligned):
 
 1. **`MainMenuTopRoot`** — `<nav>` horizontal shell (`width: 100%`, `box-sizing: border-box`)
-2. **`MainMenuTopBar`** — flex row on `var(--color-background-surface-1)`
+2. **`MainMenuTopBar`** — flex row on `var(--color-background-surface-primary)`
 3. Repeat **`MainMenuTopItem`** (`.MainMenu-Top-Element-Primary`) per option:
    - **`ItemContainer`** — icon + label (`gap: var(--spacing-space-16)`)
    - **`ItemIcon`** — `18×18` (`assets/icons/<slug>.svg`)
@@ -68,10 +68,10 @@ Deterministic slot order (IDS-aligned):
 Inherit IDS [`main-menu-top`](../ids/main-menu-top/design-spec.md) **Layout & Measurements** except where **Synapse programme deltas** apply.
 
 - **Runtime width:** `width: 100%`, `box-sizing: border-box`; Figma sample `1496×40` on `10189:30280` (reference only).
-- **Bar:** `display: flex`; `align-items: center`; `min-height: 40px`; `gap: var(--spacing-space-16)`; padding `0 var(--padding-padding-12)`; background `var(--color-background-surface-1)`.
+- **Bar:** `display: flex`; `align-items: center`; `min-height: 40px`; `gap: var(--spacing-space-16)`; padding `0 var(--padding-padding-12)`; background `var(--color-background-surface-primary)`.
 - **Item (Large):** height `40px`; padding `0 var(--padding-padding-12)`; inner cluster gap `var(--spacing-space-16)`; chevron gap `var(--spacing-space-8)`.
 - **Item (Small):** height `36px`; padding `0 var(--padding-padding-8)`; Body 2 typography.
-- **Selected underline:** `box-shadow: inset 0 -2px 0 var(--color-border-brand-dark)` inside hit target.
+- **Selected underline:** `box-shadow: inset 0 -2px 0 var(--color-border-brand-strong)` inside hit target.
 - **Focus ring:** `4px` outline `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)`.
 - **Dropdown panel:** min-width **185px** (Synapse sample `43603:179106`); `sideOffset` **10px**; center-aligned to trigger; radius via **`var(--dropdown-menu-radius)`** (Synapse → 4px).
 - **Option row:** min-height **40px**; padding `var(--padding-padding-10)` × `var(--padding-padding-16)` — per Synapse dropdown-single-select.
@@ -86,13 +86,13 @@ Inherit IDS [`main-menu-top`](../ids/main-menu-top/design-spec.md) **Layout & Me
 
 ### Surfaces, borders, icons
 
-- **Bar background:** `var(--color-background-surface-1)`
-- **Item default text/icon:** `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)`
-- **Hover / menu-open (not selected) background:** `var(--color-background-brand-lighter)`
-- **Hover / menu-open (not selected) text/icon:** **`var(--color-text-neutral-strong)`** / **`var(--color-icon-neutral-strong)`** (Synapse delta)
-- **Press background:** `var(--color-background-brand-light)`
+- **Bar background:** `var(--color-background-surface-primary)`
+- **Item default text/icon:** `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)`
+- **Hover / menu-open (not selected) background:** `var(--color-background-brand-lighter-slate)`
+- **Hover / menu-open (not selected) text/icon:** **`var(--color-text-gray-neutral-strong)`** / **`var(--color-icon-gray-neutral-strong)`** (Synapse delta)
+- **Press background:** `var(--color-background-brand-light-slate)`
 - **Press / selected text/icon:** `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)`
-- **Selected underline:** `var(--color-border-brand-dark)`
+- **Selected underline:** `var(--color-border-brand-strong)`
 - **Focus outline:** `var(--color-border-brand-base)`
 - **Dropdown menu:** per [`dropdown-single-select`](../dropdown-single-select/design-spec.md) + `components/synapse-theme.css`
 
@@ -100,14 +100,14 @@ Inherit IDS [`main-menu-top`](../ids/main-menu-top/design-spec.md) **Layout & Me
 
 | Element | State | Background | Border / indicator | Text | Icon |
 | --- | --- | --- | --- | --- | --- |
-| Bar | default | `var(--color-background-surface-1)` | — | — | — |
-| Item (Large) | default | transparent | none | `var(--color-text-neutral-strong)` | `var(--color-icon-neutral-strong)` |
-| Item (Large) | hover | `var(--color-background-brand-lighter)` | none | **`var(--color-text-neutral-strong)`** | **`var(--color-icon-neutral-strong)`** |
-| Item (Large) | press | `var(--color-background-brand-light)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
-| Item (Large) | selected | transparent | inset `2px` bottom `var(--color-border-brand-dark)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Bar | default | `var(--color-background-surface-primary)` | — | — | — |
+| Item (Large) | default | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-gray-neutral-strong)` |
+| Item (Large) | hover | `var(--color-background-brand-lighter-slate)` | none | **`var(--color-text-gray-neutral-strong)`** | **`var(--color-icon-gray-neutral-strong)`** |
+| Item (Large) | press | `var(--color-background-brand-light-slate)` | none | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
+| Item (Large) | selected | transparent | inset `2px` bottom `var(--color-border-brand-strong)` | `var(--color-text-brand-strong)` | `var(--color-icon-brand-strong)` |
 | Item (Large) | focus-visible | transparent | `var(--color-border-brand-base)` outline (4px) | prior text token | prior icon token |
 | Item (Small) | default / hover / press / selected / focus-visible | same semantic mapping as Large with Small typography | Small selected uses same bottom inset | per row | per row |
-| Item + menu open (not selected) | show-dropdown | `var(--color-background-brand-lighter)` | **no underline** | **`var(--color-text-neutral-strong)`** | **`var(--color-icon-neutral-strong)`** |
+| Item + menu open (not selected) | show-dropdown | `var(--color-background-brand-lighter-slate)` | **no underline** | **`var(--color-text-gray-neutral-strong)`** | **`var(--color-icon-gray-neutral-strong)`** |
 | Menu option row | default / hover / selected | per Synapse dropdown-single-select | per Synapse dropdown-single-select | per dropdown contract | — |
 | Submenu parent row | default / hover | per dropdown contract | — | per dropdown contract | trailing chevron per IDS flip rules |
 

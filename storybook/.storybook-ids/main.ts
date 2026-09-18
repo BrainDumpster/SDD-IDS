@@ -23,7 +23,11 @@ const libGenerated = path.join(storybookPackageRoot, "src/components/lib-generat
 
 const storyFiles = fs
   .readdirSync(libGenerated)
-  .filter((f) => /\.stories\.tsx?$/.test(f))
+  // `lib-generated/` now also holds 55 `Synapse*.stories.tsx` (added on
+  // usr/muthu/synapse-react-components). Without this prefix filter they would be indexed
+  // here too and collide with the IDS titles on their last path segment — exactly the
+  // collision this config exists to prevent. IDS stories are the UNPREFIXED files.
+  .filter((f) => /\.stories\.tsx?$/.test(f) && !/^Synapse/.test(f))
   .map((f) => path.join(libGenerated, f))
   .sort();
 

@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 50756:226212 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -39,9 +40,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
 > Below are tokens referenced by this component's CSS module.
 
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -56,14 +57,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#f4f4f4) |  | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-primary)` (#f4f4f4) |  | `var(--color-text-gray-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#111619) |  | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-primary)` (#111619) |  | `var(--color-text-gray-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
 
 ## Source Mapping
 

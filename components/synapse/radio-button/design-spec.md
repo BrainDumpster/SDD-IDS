@@ -34,7 +34,7 @@ Synapse **Radio Button** is an **ids-fork** of the IDS **Radio Button** family. 
 | Topic | IDS | Synapse (Figma `11537:97665`) |
 |---|---|---|
 | Label font-weight | `500` (Medium) | **`400`** (Body 2 Regular) via `var(--radio-label-font-weight)` |
-| Label color | `var(--color-text-neutral)` | **Same** (inherit IDS) |
+| Label color | `var(--color-text-gray-neutral)` | **Same** (inherit IDS) |
 | Control geometry / tokens | IDS contract | **Same** (inherit IDS) |
 | Group keyboard model | IDS contract | **Same** (inherit IDS) |
 | Runtime API | IDS contract | **Same** (inherit IDS) |

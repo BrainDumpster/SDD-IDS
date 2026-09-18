@@ -42,9 +42,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
 - `var(--padding-padding-16)` = 16px
 
 <!-- ds:section id=states-light -->
@@ -52,14 +52,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) |  |  |  |
+| default | default | `var(--color-background-surface-component)` (#ffffff) |  |  |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) |  |  |  |
+| default | default | `var(--color-background-surface-component)` (#111619) |  |  |  |
 
 ## Source Mapping
 

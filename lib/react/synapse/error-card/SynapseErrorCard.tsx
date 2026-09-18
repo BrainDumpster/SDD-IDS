@@ -3,7 +3,7 @@
  * Source: components/synapse/errorcard/design-spec.md
  */
 import React from "react";
-import { IdsIcon } from "../../ids/icon";
+import { SynapseIcon } from "../icon";
 import { cx } from "../../shared/utils/cx";
 import styles from "./SynapseErrorCard.module.css";
 
@@ -38,7 +38,7 @@ export function SynapseErrorCard({
           data-ids="SynapseErrorCardIconWrapper"
           aria-hidden="true"
         >
-          <IdsIcon
+          <SynapseIcon
             shape="status-critical-square-solid"
             size={24}
             color="var(--alert-red-500)"

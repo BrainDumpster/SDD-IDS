@@ -35,7 +35,7 @@ Synapse **Checkbox** is an **ids-fork** of the IDS **Checkbox** family. Control 
 | Topic | IDS | Synapse (Figma `8505:14297`) |
 |---|---|---|
 | Label font-weight | `500` (Medium) | **`400`** (Body 2 Regular) via `var(--checkbox-label-font-weight)` |
-| Label color (all selection rows) | Unchecked default: `var(--color-text-neutral-strong)`; checked/partial: `var(--color-text-neutral)` | **`var(--color-text-neutral)`** for all rows (Figma Body 2 Regular) |
+| Label color (all selection rows) | Unchecked default: `var(--color-text-gray-neutral-strong)`; checked/partial: `var(--color-text-gray-neutral)` | **`var(--color-text-gray-neutral)`** for all rows (Figma Body 2 Regular) |
 | Control corner radius | `var(--corner-radius-radius-2)` (2px) | **Same** via `var(--checkbox-control-radius)` → `radius-2` |
 | Control / indicator / border tokens | IDS contract | **Same** (inherit IDS) |
 | State matrix structure | selection × interaction × optional validation | **Same** |
@@ -66,13 +66,13 @@ Synapse-specific layout (alias-driven):
 
 Inherit IDS **Tokens** and **States** tables — same semantic `var(--...)` names for control box, border, background, and indicator.
 
-Label typography resolves through `--checkbox-label-font-weight` on the wrapper row; color uses `var(--color-text-neutral)` per shared implementation.
+Label typography resolves through `--checkbox-label-font-weight` on the wrapper row; color uses `var(--color-text-gray-neutral)` per shared implementation.
 
 ## States (Light Theme)
 
 Inherit IDS **States (Light Theme)** from [`components/ids/checkbox/design-spec.md`](../ids/checkbox/design-spec.md) for **Box Background / Box Border / Indicator** columns.
 
-**Label column (Synapse override):** all rows use `var(--color-text-neutral)` (including unchecked default). Disabled row remains `var(--color-text-disabled)`.
+**Label column (Synapse override):** all rows use `var(--color-text-gray-neutral)` (including unchecked default). Disabled row remains `var(--color-text-gray-disabled)`.
 
 ## States (Dark Theme)
 
@@ -112,7 +112,7 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 | Rule | IDS | Synapse |
 |---|---|---|
 | `label` row `font-weight` | `500` | **`var(--checkbox-label-font-weight)`** → `400` |
-| `label` row `color` (non-disabled) | unchecked: `neutral-strong`; checked/partial: `neutral` | **`var(--color-text-neutral)`** all rows |
+| `label` row `color` (non-disabled) | unchecked: `neutral-strong`; checked/partial: `neutral` | **`var(--color-text-gray-neutral)`** all rows |
 | `controlBox` `border-radius` | `var(--corner-radius-radius-2)` | **`var(--checkbox-control-radius)`** (same resolved value) |
 | All other slots | IDS contract | **Inherit IDS** |
 
@@ -130,7 +130,7 @@ Inherit IDS: selection (`unchecked | checked | partial`) × interaction (`defaul
 |---|---|---|
 | `controlBox` | `border-radius` | `var(--checkbox-control-radius)` |
 | `label` | `font-weight` | `var(--checkbox-label-font-weight, 500)` |
-| `label` | `color` (enabled) | `var(--color-text-neutral)` |
+| `label` | `color` (enabled) | `var(--color-text-gray-neutral)` |
 | Indicator / borders / backgrounds | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** |
 
 ### Behavior contract

@@ -89,7 +89,7 @@ Figma variant frames use **280×28px** reference chips. **Runtime:** `width: fit
 
 | Role | Font size | Line height | Weight | Color |
 |---|---|---|---|---|
-| Label (Body 2) | `var(--font-size-body-2)` | `var(--font-line-height-line-height-20)` | 400 | `var(--color-text-neutral-strong)` |
+| Label (Body 2) | `var(--font-size-body-2)` | `var(--font-line-height-line-height-20)` | 400 | `var(--color-text-gray-neutral-strong)` |
 
 ## States (Light Theme)
 
@@ -97,10 +97,10 @@ Figma variant frames use **280×28px** reference chips. **Runtime:** `width: fit
 
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| default | transparent | `var(--color-border-neutral-light)` | `var(--color-text-neutral-strong)` |
-| hover | transparent | `var(--color-border-strong)` | `var(--color-text-neutral-strong)` |
+| default | transparent | `var(--color-border-neutral-light)` | `var(--color-text-gray-neutral-strong)` |
+| hover | transparent | `var(--color-border-gray-neutral-strong)` | `var(--color-text-gray-neutral-strong)` |
 | focus-visible | transparent | outer ring `var(--color-border-brand-base)`; `outline-offset: var(--scale-2)` | unchanged |
-| disabled | transparent | `var(--color-border-neutral-light)` | `var(--color-text-neutral-strong)` at reduced opacity |
+| disabled | transparent | `var(--color-border-neutral-light)` | `var(--color-text-gray-neutral-strong)` at reduced opacity |
 
 ### Variant axis (`48467:26158`)
 
@@ -125,7 +125,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 | Trigger | Behavior |
 |---|---|
 | Click / Enter / Space | Emit `onClick` / `onSelect(label)` when not `disabled`. |
-| Hover | Border → `var(--color-border-strong)`. |
+| Hover | Border → `var(--color-border-gray-neutral-strong)`. |
 | Keyboard focus | `focus-visible` ring per state table. |
 | `disabled` | Suppress interaction; `cursor: not-allowed`; reduced opacity. |
 

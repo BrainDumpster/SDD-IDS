@@ -1,4 +1,8 @@
 {
+  "name": "sdd-ids",
+  "version": "0.0.0",
+  "private": true,
+  "types": ".design-sync/types/index.d.ts",
   "dependencies": {
     "@figma/code-connect": "^1.5.2"
   }

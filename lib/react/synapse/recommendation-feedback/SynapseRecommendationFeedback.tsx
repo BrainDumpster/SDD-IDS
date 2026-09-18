@@ -11,7 +11,7 @@
  *       SynapseRecommendationFeedbackTimestamp
  */
 import React from "react";
-import { IdsIcon } from "../../ids/icon";
+import { SynapseIcon } from "../icon";
 import { cx } from "../../shared/utils/cx";
 import styles from "./SynapseRecommendationFeedback.module.css";
 
@@ -44,7 +44,7 @@ function ActionButton({
       onClick={onClick}
       aria-label={label}
     >
-      <IdsIcon
+      <SynapseIcon
         shape={iconShape}
         size={16}
         color="var(--color-icon-neutral)"

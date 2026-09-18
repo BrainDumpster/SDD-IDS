@@ -41,13 +41,13 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--border-width-border-2)` = var(--border-width-border-thick)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
 - `var(--color-background-overlay-1)` = rgba(37,37,37,0.65) (light) / rgba(37,37,37,0.75) (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-icon-gray-neutral-base)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -65,7 +65,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) |  | `var(--color-text-neutral-strong)` (#252525) | shadow: `var(--shadow-drop-shadow-32-x)` `var(--shadow-drop-shadow-32-y)` `var(--shadow-drop-shadow-32-blur)` `var(--shadow-drop-shadow-32-color)`; radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-component)` (#ffffff) |  | `var(--color-text-gray-neutral-strong)` (#252525) | shadow: `var(--shadow-drop-shadow-32-x)` `var(--shadow-drop-shadow-32-y)` `var(--shadow-drop-shadow-32-blur)` `var(--shadow-drop-shadow-32-color)`; radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
 | default | hover | `var(--color-background-gray-lighter)` (#f4f4f4) |  |  |  |
 
@@ -74,7 +74,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) |  | `var(--color-text-neutral-strong)` (#e6e9ec) | shadow: `var(--shadow-drop-shadow-32-x)` `var(--shadow-drop-shadow-32-y)` `var(--shadow-drop-shadow-32-blur)` `var(--shadow-drop-shadow-32-color)`; radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-surface-component)` (#111619) |  | `var(--color-text-gray-neutral-strong)` (#e6e9ec) | shadow: `var(--shadow-drop-shadow-32-x)` `var(--shadow-drop-shadow-32-y)` `var(--shadow-drop-shadow-32-blur)` `var(--shadow-drop-shadow-32-color)`; radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
 | default | hover | `var(--color-background-gray-lighter)` (#393939) |  |  |  |
 

@@ -82,6 +82,30 @@ const hiddenIdsGeneratedStories = new Set([
   "Wizard.stories.tsx",
 ]);
 
+const SYNAPSE_STORY_TITLE =
+  /title:\s*["'](?:Components|Spec Generated)\/Synapse\//;
+
+function isLibGeneratedSynapseStory(full: string): boolean {
+  return (
+    full.includes(`${path.sep}lib-generated${path.sep}`) &&
+    /[/\\]Synapse[^/\\]*\.stories\.(ts|tsx)$/.test(full)
+  );
+}
+
+/** Hide every Synapse example except `lib-generated/Synapse*.stories.tsx`. */
+function isHiddenSynapseExample(full: string): boolean {
+  if (isLibGeneratedSynapseStory(full)) return false;
+  if (full.includes(`${path.sep}storybook-generated${path.sep}synapse${path.sep}`)) {
+    return true;
+  }
+  try {
+    const head = fs.readFileSync(full, "utf8").slice(0, 8000);
+    return SYNAPSE_STORY_TITLE.test(head);
+  } catch {
+    return false;
+  }
+}
+
 function listStoryFiles(dir: string, ignoreBasenames?: Set<string>): string[] {
   if (!fs.existsSync(dir)) return [];
   const out: string[] = [];
@@ -94,6 +118,7 @@ function listStoryFiles(dir: string, ignoreBasenames?: Set<string>): string[] {
       continue;
     }
     if (!/\.stories\.(ts|tsx)$/.test(entry.name)) continue;
+    if (isHiddenSynapseExample(full)) continue;
     // Hide legacy hand ports by basename, but never hide canonical `lib-generated/` ports
     // (same basenames as hand files: Link, Slider, Spinner, ToggleSwitch).
     if (
@@ -107,7 +132,7 @@ function listStoryFiles(dir: string, ignoreBasenames?: Set<string>): string[] {
   return out;
 }
 
-/** Explicit file list — negation globs with absolute paths are ignored by Storybook's indexer. */
+/** Explicit file list. Hand-port Synapse stories are `*.stories.tsx.skip` (not indexed). */
 const storyFiles = [
   ...listStoryFiles(path.join(storybookPackageRoot, "src"), hiddenHandStories),
   ...listStoryFiles(
@@ -115,7 +140,7 @@ const storyFiles = [
     hiddenIdsGeneratedStories,
   ),
   ...listStoryFiles(path.join(repoRoot, "storybook-generated/dap/src")),
-  ...listStoryFiles(path.join(repoRoot, "storybook-generated/synapse/src")),
+  // Synapse: only `lib-generated/Synapse*.stories.tsx`.
 ];
 
 /** New files under storybook-generated are not in the startup importers map until restart. */

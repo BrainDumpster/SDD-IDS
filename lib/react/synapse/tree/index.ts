@@ -11,4 +11,5 @@ export {
   type IdsTreeProps as SynapseTreeProps,
   type IdsTreeItemProps as SynapseTreeItemProps,
   type IdsTreeItemLabelProps as SynapseTreeItemLabelProps,
+  type TreeItemClickDetail as SynapseTreeItemClickDetail,
 } from "../../ids/tree";

@@ -5,6 +5,7 @@
 import popoutDoubleRaw from "../../../../assets/icons/popout-double.svg?raw";
 import popoutWindowArrowRaw from "../../../../assets/icons/popout-window-arrow.svg?raw";
 import statusWarnTriSolidRaw from "../../../../assets/icons/status-warn-tri-solid.svg?raw";
+import { idsRawSvg } from "../shared/idsAssetRegistry.generated";
 
 function stripXmlDeclaration(svg: string): string {
   return svg.replace(/<\?xml[^>]*>\s*/i, "").trim();
@@ -54,7 +55,7 @@ function warnMinorAlertIcon(raw: string): string {
 export { stripXmlDeclaration };
 
 export const IDS_ICON_INLINE_SVG_BY_SHAPE: Readonly<Record<string, string>> = {
-  "status-warn-tri-solid": warnMinorAlertIcon(statusWarnTriSolidRaw),
-  "popout-window-arrow": popoutWindowArrowIcon(popoutWindowArrowRaw),
-  "popout-double": popoutDoubleIcon(popoutDoubleRaw),
+  "status-warn-tri-solid": warnMinorAlertIcon(idsRawSvg(statusWarnTriSolidRaw, "status-warn-tri-solid")),
+  "popout-window-arrow": popoutWindowArrowIcon(idsRawSvg(popoutWindowArrowRaw, "popout-window-arrow")),
+  "popout-double": popoutDoubleIcon(idsRawSvg(popoutDoubleRaw, "popout-double")),
 };

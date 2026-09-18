@@ -184,9 +184,9 @@ TopologyRoot                 ← section; border + radius-4 + surface-2 (see des
 
 | Property | Value |
 |----------|--------|
-| Border | `var(--border-width-border-default)` solid `var(--color-border-light)` |
+| Border | `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-light)` |
 | Radius | `var(--corner-radius-radius-4)` |
-| Background | `var(--color-background-surface-2)` |
+| Background | `var(--color-background-surface-secondary)` |
 | Overflow | `hidden` |
 
 Reference: `Topology.module.css` → `.root`
@@ -198,7 +198,7 @@ Reference: `Topology.module.css` → `.root`
 
 Implement per `topologyEdgePath.ts` + parent § TopologyEdgeLayer:
 
-- Stroke `var(--color-border-accessible)`, width `1.5px`
+- Stroke `var(--color-border-gray-neutral-base)`, width `1.5px`
 - `dependsOn`: `stroke-dasharray: 6 4`
 - **Filled triangle arrowhead** (7px depth) — not SVG `<marker>` with CSS variables
 - Anchors: **horizontal shell intersection** (`topologyNodeAnchor.ts`) — arrow tip must touch node shell (no gap)

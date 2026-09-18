@@ -93,11 +93,11 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-surface-2)` = #ffffff (light) / #1e262c (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-background-surface-secondary)` = #ffffff (light) / #1e262c (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-icon-gray-neutral-base)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--corner-radius-radius-8)` = 8px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -110,14 +110,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-2)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#757575) | `var(--color-icon-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-8)` |
+| default | default | `var(--color-background-surface-secondary)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) | radius: `var(--corner-radius-radius-8)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-2)` (#1e262c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#8898a5) | `var(--color-icon-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-8)` |
+| default | default | `var(--color-background-surface-secondary)` (#1e262c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-base)` (#8898a5) | `var(--color-icon-gray-neutral-base)` (#b8c1c9) | radius: `var(--corner-radius-radius-8)` |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

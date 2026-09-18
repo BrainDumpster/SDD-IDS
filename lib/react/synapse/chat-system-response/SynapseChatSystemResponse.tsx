@@ -4,7 +4,7 @@
  * Theme: components/synapse-theme.css
  */
 import React from "react";
-import { IdsIcon } from "../../ids/icon";
+import { SynapseIcon } from "../icon";
 import { cx } from "../../shared/utils/cx";
 import styles from "./SynapseChatSystemResponse.module.css";
 
@@ -29,7 +29,7 @@ export function SynapseChatSystemResponse({
         data-ids="SynapseChatSystemResponseAvatar"
         aria-hidden="true"
       >
-        <IdsIcon shape="info-circ-solid" size={16} color="var(--color-text-neutral)" />
+        <SynapseIcon shape="info-circ-solid" size={16} color="var(--color-text-neutral)" />
       </div>
       <div
         className={styles.SynapseChatSystemResponseBubble}

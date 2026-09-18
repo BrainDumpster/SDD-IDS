@@ -49,18 +49,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-alerting-critical)` = #af0000 (light) / #c74c4c (dark)
-- `var(--color-background-alerting-minor)` = #ffc700
-- `var(--color-background-alerting-success)` = ?
+- `var(--color-background-alerting-critical-base)` = #af0000 (light) / #c74c4c (dark)
+- `var(--color-background-alerting-minor-base)` = #ffc700
+- `var(--color-background-alerting-success-base)` = ?
 - `var(--color-background-brand-base)` = #0076ce (light) / #4c9fdd (dark)
 - `var(--color-background-gray-light)` = #eaeaea (light) / #393939 (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
 - `var(--color-border-alerting-critical-base)` = #af0000 (light) / #dd9494 (dark)
-- `var(--color-border-alerting-minor-transparent)` = #9c622e (light) / rgba(255,255,255,0.00) (dark)
+- `var(--color-border-alerting-minor-base)` = #9c622e (light) / rgba(255,255,255,0.00) (dark)
 - `var(--color-border-alerting-success-base)` = #1b8500 (light) / #9fcc94 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
 - `var(--padding-padding-8)` = 8px
@@ -75,14 +75,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-alerting-critical)` (#af0000) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--progress-bar-control-radius)` |
+| default | default | `var(--color-background-alerting-critical-base)` (#af0000) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-gray-neutral)` (#4d4d4d) | radius: `var(--progress-bar-control-radius)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-alerting-critical)` (#c74c4c) | `var(--color-border-alerting-critical-base)` (#dd9494) | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--progress-bar-control-radius)` |
+| default | default | `var(--color-background-alerting-critical-base)` (#c74c4c) | `var(--color-border-alerting-critical-base)` (#dd9494) | `var(--color-text-gray-neutral)` (#b8c1c9) | radius: `var(--progress-bar-control-radius)` |
 
 ## Source Mapping
 

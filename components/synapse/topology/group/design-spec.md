@@ -104,8 +104,8 @@ Use this spec **without** the parent Topology component when a third-party graph
 | Min width | `90px` |
 | Padding | `px var(--padding-padding-16)` `py var(--padding-padding-6)` |
 | Gap | `var(--spacing-space-8)` icon ↔ text |
-| Background | `var(--color-background-surface-2)` |
-| Border | `var(--border-width-border-default)` `var(--color-border-accessible)` |
+| Background | `var(--color-background-surface-secondary)` |
+| Border | `var(--border-width-border-default)` `var(--color-border-gray-neutral-base)` |
 | Radius | `var(--corner-radius-radius-8)` |
 | Typography | Body 3 — **bold** `Type:` prefix + regular type name |
 | Leading icon | `cluster-badge` `16×16` (optional) |
@@ -123,7 +123,7 @@ Use this spec **without** the parent Topology component when a third-party graph
 |---|---|---|
 | Role | Rounded rect framing child nodes | `53265:128986` |
 | Padding | `var(--padding-padding-16)` | `53265:128986` |
-| Border | `var(--border-width-border-default)` `var(--color-border-accessible)` | `53265:128986` |
+| Border | `var(--border-width-border-default)` `var(--color-border-gray-neutral-base)` | `53265:128986` |
 | Radius | `var(--corner-radius-radius-20)` | `get_design_context` `53265:128999` |
 | Background | transparent (stroke only) | |
 | Drag | Moves all child nodes; parent updates edges | |
@@ -155,7 +155,7 @@ Figma sample width `376px` × content-driven height — **runtime:** `width/heig
 
 | Role | Token |
 |---|---|
-| Border | `var(--color-border-accessible)` |
+| Border | `var(--color-border-gray-neutral-base)` |
 | Radius | `var(--corner-radius-radius-20)` |
 | Padding | `var(--padding-padding-16)` |
 
@@ -163,16 +163,16 @@ Figma sample width `376px` × content-driven height — **runtime:** `width/heig
 
 | Role | Token |
 |---|---|
-| Background | `var(--color-background-surface-2)` |
-| Border | `var(--color-border-accessible)` |
-| Text | `var(--color-text-neutral-strong)` |
+| Background | `var(--color-background-surface-secondary)` |
+| Border | `var(--color-border-gray-neutral-base)` |
+| Text | `var(--color-text-gray-neutral-strong)` |
 | Radius | `var(--corner-radius-radius-8)` |
 
 ### Element: `TopologyGroupCountBadge`
 
 | Role | Token |
 |---|---|
-| Same as node count badge | `var(--color-background-alerting-info-2)`, `var(--color-text-white)`, `var(--color-border-white)` |
+| Same as node count badge | `var(--color-background-alerting-info-2)`, `var(--color-text-gray-white)`, `var(--color-border-gray-white)` |
 
 ### Element: `TopologyGroupChrome`
 
@@ -184,7 +184,7 @@ Figma sample width `376px` × content-driven height — **runtime:** `width/heig
 
 | Part | State | Visual |
 |---|---|---|
-| Group border | `default` | `1px` `var(--color-border-accessible)` |
+| Group border | `default` | `1px` `var(--color-border-gray-neutral-base)` |
 | Group label | `default` | surface-2 fill + accessible border |
 | Chrome `info` / `minimize` | `default` | neutral icon tokens |
 | Count badge | `expanded=false` | numeric count |

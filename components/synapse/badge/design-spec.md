@@ -35,7 +35,7 @@ Synapse **Badge** is an **ids-fork** of the IDS **Badge** family. Pill geometry 
 |---|---|---|
 | Pill height / radius | 18px, `100px` (pill) | **Same** |
 | Type variants | default / critical / warning / disabled / success | **Same** |
-| Default background token | `var(--color-background-alerting-info)` | **`var(--color-background-alerting-info-1)`** (Synapse theme; same semantic role) |
+| Default background token | `var(--color-background-alerting-info-base)` | **`var(--color-background-alerting-info-1)`** (Synapse theme; same semantic role) |
 | Typography | 12px, weight 400 | **Same** |
 | Runtime API | IDS contract | **Same** (inherit IDS) |
 
@@ -51,7 +51,7 @@ Inherit IDS 18px height, pill radius, horizontal padding rules (single/two/three
 
 ## Tokens
 
-Inherit IDS **Tokens** and **States (Light Theme)** type matrix. Default type resolves via `var(--color-background-alerting-info, var(--color-background-alerting-info-1))` in shared implementation.
+Inherit IDS **Tokens** and **States (Light Theme)** type matrix. Default type resolves via `var(--color-background-alerting-info-base, var(--color-background-alerting-info-1))` in shared implementation.
 
 ## States (Light Theme)
 
@@ -90,7 +90,7 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 | Rule | IDS | Synapse |
 |---|---|---|
 | Geometry / type matrix | IDS contract | **Inherit IDS** |
-| Default type fill token | `var(--color-background-alerting-info)` | **Same role** via theme (`--color-background-alerting-info-1` in Synapse CSS) |
+| Default type fill token | `var(--color-background-alerting-info-base)` | **Same role** via theme (`--color-background-alerting-info-1` in Synapse CSS) |
 
 ### Deterministic structure
 

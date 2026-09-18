@@ -10,7 +10,7 @@ import React, {
   type ChangeEvent,
   type KeyboardEvent,
 } from "react";
-import { IdsIcon } from "../../ids/icon";
+import { SynapseIcon } from "../icon";
 import { cx } from "../../shared/utils/cx";
 import {
   SynapseSuggestedPrompt,
@@ -363,7 +363,7 @@ export function SynapseChatInputBox({
                 data-ids="SynapseChatInputBoxLimitIconWrap"
                 aria-hidden="true"
               >
-                <IdsIcon shape={LIMIT_ICON} variant="img" size={16} />
+                <SynapseIcon shape={LIMIT_ICON} variant="img" size={16} />
               </div>
               <div
                 className={styles.SynapseChatInputBoxLimitContent}
@@ -394,7 +394,7 @@ export function SynapseChatInputBox({
                   onClick={handleNewChat}
                   aria-label="New Chat"
                 >
-                  <IdsIcon shape="shape-plus" color="var(--color-text-brand-strong)" />
+                  <SynapseIcon shape="shape-plus" color="var(--color-text-brand-strong)" />
                   <span className={styles.SynapseChatInputBoxNewChatLabel}>New Chat</span>
                 </button>
               </div>
@@ -430,7 +430,7 @@ export function SynapseChatInputBox({
                     aria-label="Stop response"
                   >
                     <span className={styles.SynapseChatInputBoxStopIconWrap}>
-                      <IdsIcon
+                      <SynapseIcon
                         shape="shape-square-solid"
                         size={12}
                         color="var(--color-icon-brand-base)"
@@ -449,7 +449,7 @@ export function SynapseChatInputBox({
                     disabled={disabled || limitReached || !canSend}
                     aria-label="Send message"
                   >
-                    <IdsIcon
+                    <SynapseIcon
                       shape="arrow-right"
                       color={
                         elementState === "selected"
@@ -473,7 +473,7 @@ export function SynapseChatInputBox({
         {showFooter ? (
           <footer className={styles.SynapseChatInputBoxFooter}>
             <div className={styles.SynapseChatInputBoxFooterMeta}>
-              <IdsIcon shape="info-circ-solid" color="var(--color-icon-disabled)" />
+              <SynapseIcon shape="info-circ-solid" color="var(--color-icon-disabled)" />
               <p className={styles.SynapseChatInputBoxFooterText}>
                 <span className={styles.SynapseChatInputBoxFooterCount}>{questionsRemaining}</span>
                 {` questions remaining (resets in ${questionsResetLabel})`}

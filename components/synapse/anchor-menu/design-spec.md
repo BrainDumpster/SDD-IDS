@@ -36,10 +36,10 @@ Synapse **Anchor Menu** is an **ids-fork** of the IDS **Anchor Menu** family. Se
 |---|---|---|
 | Section item height | `40px` | **Same** (`8px` + `24px` line + `8px`) |
 | Item padding | `8px 24px` | **Same** |
-| Default left rail | `1.2px` `var(--color-border-accessible)` | **Same** |
+| Default left rail | `1.2px` `var(--color-border-gray-neutral-base)` | **Same** |
 | Hover / active left rail | `4px` `var(--color-border-brand-base)` | **Same** |
 | Active text | `var(--color-text-brand-strong)` | **Same** |
-| Hover text | `var(--color-text-neutral)` | **Same** (not brand-strong) |
+| Hover text | `var(--color-text-gray-neutral)` | **Same** (not brand-strong) |
 | Focus ring | `2px` `var(--color-border-brand-base)`, radius `4px` | **Same** |
 | Header label | Body 1, `12px` vertical padding | **Same** |
 | Runtime API | IDS contract | **Same** (inherit IDS) |
@@ -59,7 +59,7 @@ Figma element part: `AnchorMenu-Element-Section` (`11955:229729`) — states `Un
 | `AnchorMenuRoot` width | `200px` min (reference); runtime container-driven | shared CSS `width: 200px` sample |
 | `AnchorMenuHeader` | `padding: 12px 0`; Body 1 (`16/24`), weight 400 | `var(--padding-padding-12)`, `var(--font-size-body-1)` |
 | `AnchorMenuItem` / link | height `40px`; padding `8px 24px` | `var(--padding-padding-8)`, `var(--padding-padding-24)` |
-| Left rail (default) | `1.2px` solid | `var(--color-border-accessible)` |
+| Left rail (default) | `1.2px` solid | `var(--color-border-gray-neutral-base)` |
 | Left rail (hover / active) | `4px` solid | `var(--color-border-brand-base)` via `::before` overlay in implementation |
 | Focus ring inset | `2px` offset; radius `4px` | `var(--border-width-border-2)`, `var(--corner-radius-radius-2)` |
 | Item gap | `0` (stacked) | adjacent rows |
@@ -68,20 +68,20 @@ Figma element part: `AnchorMenu-Element-Section` (`11955:229729`) — states `Un
 
 Inherit IDS semantic tokens:
 
-- `var(--color-text-neutral-strong)` — header
-- `var(--color-text-neutral)` — default / hover item label
+- `var(--color-text-gray-neutral-strong)` — header
+- `var(--color-text-gray-neutral)` — default / hover item label
 - `var(--color-text-brand-strong)` — active item label
-- `var(--color-border-accessible)` — default left rail
+- `var(--color-border-gray-neutral-base)` — default left rail
 - `var(--color-border-brand-base)` — hover/active rail + focus ring
 
 ## States (Light Theme)
 
 | Element | State | Background | Border / rail | Text |
 |---|---|---|---|---|
-| `AnchorMenuLink` | default | transparent | left `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| `AnchorMenuLink` | hover | transparent | left `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` |
+| `AnchorMenuLink` | default | transparent | left `1.2px` `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| `AnchorMenuLink` | hover | transparent | left `4px` `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` |
 | `AnchorMenuLink` | active | transparent | left `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` |
-| `AnchorMenuLink` | focus-visible | transparent | focus ring `2px` `var(--color-border-brand-base)`; rail per selection | selected: `var(--color-text-brand-strong)`; else `var(--color-text-neutral)` |
+| `AnchorMenuLink` | focus-visible | transparent | focus ring `2px` `var(--color-border-brand-base)`; rail per selection | selected: `var(--color-text-brand-strong)`; else `var(--color-text-gray-neutral)` |
 
 ## States (Dark Theme)
 
@@ -149,9 +149,9 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 ### Per-slot style contract
 
 - `AnchorMenuLink`: block, full width, `padding: var(--padding-padding-8) var(--padding-padding-24)`, Body 1 (`16/24`), weight 400.
-- Default rail: `border-left: 1.2px solid var(--color-border-accessible)`.
+- Default rail: `border-left: 1.2px solid var(--color-border-gray-neutral-base)`.
 - Hover/active rail: `4px` brand bar (implementation may use `::before` to avoid layout shift).
-- Active text: `var(--color-text-brand-strong)`; hover text remains `var(--color-text-neutral)`.
+- Active text: `var(--color-text-brand-strong)`; hover text remains `var(--color-text-gray-neutral)`.
 
 ### Behavior contract
 

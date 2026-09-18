@@ -36,13 +36,13 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
 > Below are tokens referenced by this component's CSS module.
 
-- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-brand-lighter-slate)` = #ebf4fb (light) / #1e262c (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
-- `var(--color-border-brand-neutral)` = #0076ce (light) / #8898a5 (dark)
+- `var(--color-border-brand-base-neutral)` = #0076ce (light) / #8898a5 (dark)
 - `var(--color-border-neutral-light)` = #757575 (light) / #34414c (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
 - `var(--padding-padding-10)` = 10px
@@ -53,18 +53,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) | `var(--color-border-neutral-light)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) |  |
-| default | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) |  | `var(--color-text-disabled)` (#757575) |  |
-| default | hover | `var(--color-background-brand-lighter)` (#ebf4fb) |  | `var(--color-text-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-neutral)` `var(--color-border-brand-neutral)` |
+| default | default | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-neutral-light)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) |  |
+| default | disabled | `var(--color-background-gray-lighter)` (#f4f4f4) |  | `var(--color-text-gray-disabled)` (#757575) |  |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#ebf4fb) |  | `var(--color-text-gray-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-base-neutral)` `var(--color-border-brand-base-neutral)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) | `var(--color-border-neutral-light)` (#34414c) | `var(--color-text-neutral)` (#b8c1c9) |  |
-| default | disabled | `var(--color-background-gray-lighter)` (#393939) |  | `var(--color-text-disabled)` (#9e9e9e) |  |
-| default | hover | `var(--color-background-brand-lighter)` (#1e262c) |  | `var(--color-text-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-neutral)` `var(--color-border-brand-neutral)` |
+| default | default | `var(--color-background-surface-component)` (#111619) | `var(--color-border-neutral-light)` (#34414c) | `var(--color-text-gray-neutral)` (#b8c1c9) |  |
+| default | disabled | `var(--color-background-gray-lighter)` (#393939) |  | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#1e262c) |  | `var(--color-text-gray-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-base-neutral)` `var(--color-border-brand-base-neutral)` |
 
 ## Source Mapping
 

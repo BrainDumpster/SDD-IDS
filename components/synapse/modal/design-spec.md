@@ -31,7 +31,7 @@ Synapse **Modal** is a **thin ids-fork** of the IDS **Modal** component family (
 | Topic | IDS | Synapse |
 |---|---|---|
 | Surface corner radius | `var(--modal-control-radius)` → `var(--corner-radius-radius-none)` (**0**) | **same alias** → **`var(--corner-radius-radius-16)`** (16px) via `components/synapse-theme.css` |
-| Surface border | `var(--color-border-accessible)` | **Same** (inherit IDS) |
+| Surface border | `var(--color-border-gray-neutral-base)` | **Same** (inherit IDS) |
 | Size matrix / padding / shadows | IDS contract | **Same** (inherit IDS) |
 | Dialog `type` matrix | IDS contract | **Same** (inherit IDS) |
 | Footer buttons | IDS Button contract | **`programme="synapse"`** on shared `Button` (see [`button`](../button/design-spec.md)) |

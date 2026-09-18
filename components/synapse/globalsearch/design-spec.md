@@ -42,15 +42,15 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--border-width-border-2)` = var(--border-width-border-thick)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-masthead-brand-strong)` = #0062ab (light) / #34414c (dark)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-masthead-strong)` = #0062ab (light) / #34414c (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--color-text-white)` = #ffffff
+- `var(--color-border-gray-neutral-light)` = #c5c5c5 (light) / #34414c (dark)
+- `var(--color-icon-gray-neutral-base)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--corner-radius-radius-2)` = 2px
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-line-height-line-height-20)` = 20px
@@ -69,18 +69,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-light)` (#c5c5c5) | `var(--color-icon-neutral)` (#4d4d4d) | shadow: `var(--shadow-drop-shadow-2-x)` `var(--shadow-drop-shadow-2-y)` `var(--shadow-drop-shadow-2-blur)` `var(--shadow-drop-shadow-2-color)`; radius: `var(--corner-radius-radius-2)` |
+| default | default | `var(--color-background-surface-component)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-light)` (#c5c5c5) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) | shadow: `var(--shadow-drop-shadow-2-x)` `var(--shadow-drop-shadow-2-y)` `var(--shadow-drop-shadow-2-blur)` `var(--shadow-drop-shadow-2-color)`; radius: `var(--corner-radius-radius-2)` |
 | default | focus |  | `var(--color-border-brand-base)` (#0076ce) |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-surface-1)` (#f4f4f4) |  | `var(--color-text-neutral-strong)` (#252525) |  |
+| default | hover | `var(--color-background-surface-primary)` (#f4f4f4) |  | `var(--color-text-gray-neutral-strong)` (#252525) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-light)` (#34414c) | `var(--color-icon-neutral)` (#b8c1c9) | shadow: `var(--shadow-drop-shadow-2-x)` `var(--shadow-drop-shadow-2-y)` `var(--shadow-drop-shadow-2-blur)` `var(--shadow-drop-shadow-2-color)`; radius: `var(--corner-radius-radius-2)` |
+| default | default | `var(--color-background-surface-component)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-light)` (#34414c) | `var(--color-icon-gray-neutral-base)` (#b8c1c9) | shadow: `var(--shadow-drop-shadow-2-x)` `var(--shadow-drop-shadow-2-y)` `var(--shadow-drop-shadow-2-blur)` `var(--shadow-drop-shadow-2-color)`; radius: `var(--corner-radius-radius-2)` |
 | default | focus |  | `var(--color-border-brand-base)` (#4c9fdd) |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-surface-1)` (#111619) |  | `var(--color-text-neutral-strong)` (#e6e9ec) |  |
+| default | hover | `var(--color-background-surface-primary)` (#111619) |  | `var(--color-text-gray-neutral-strong)` (#e6e9ec) |  |
 
 ## Source Mapping
 

@@ -40,10 +40,10 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--corner-radius-radius-6)` = 6px
 - `var(--font-line-height-line-height-18)` = 18px
@@ -61,18 +61,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-disabled)` (#757575) | radius: `var(--corner-radius-radius-4)` |
+| default | default |  |  | `var(--color-text-gray-disabled)` (#757575) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-surface-1)` (#f4f4f4) |  |  |  |
+| default | hover | `var(--color-background-surface-primary)` (#f4f4f4) |  |  |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-disabled)` (#9e9e9e) | radius: `var(--corner-radius-radius-4)` |
+| default | default |  |  | `var(--color-text-gray-disabled)` (#9e9e9e) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-surface-1)` (#111619) |  |  |  |
+| default | hover | `var(--color-background-surface-primary)` (#111619) |  |  |  |
 
 ## Source Mapping
 

@@ -1,0 +1,218 @@
+{
+  "projectId": "37675bab-666a-4259-85ce-6f0facfde4c3",
+  "shape": "storybook",
+  "pkg": "@synapse/react",
+  "globalName": "SynapseReact",
+  "entry": "lib/react/synapse/index.ts",
+  "storybookConfigDir": "storybook/.storybook-synapse",
+  "storybookStatic": ".design-sync/sb-reference-synapse",
+  "cssEntry": ".design-sync/synapse-theme-bundle.css",
+  "extraFonts": [
+    "assets/fonts/roboto/roboto-variable-latin.woff2"
+  ],
+  "extraEntries": [
+    "./lib/react/synapse/index.ts"
+  ],
+  "titleMap": {
+    "Accordion": "SynapseAccordion",
+    "Alert": "SynapseAlert",
+    "AnchorMenu": "SynapseAnchorMenu",
+    "AppLauncher": "SynapseAppLauncher",
+    "AppShell": "SynapseAppShell",
+    "Badge": "SynapseBadge",
+    "Button": "SynapseButton",
+    "Card": "SynapseCard",
+    "ChatArea": "SynapseChatArea",
+    "ChatInputBox": "SynapseChatInputBox",
+    "ChatSystemResponse": "SynapseChatSystemResponse",
+    "Checkbox": "SynapseCheckbox",
+    "ComboBox": "SynapseDropdownComboBox",
+    "Dashboard": "SynapseDashboard",
+    "Datagrid": "SynapseDatagrid",
+    "DatePicker": "SynapseDatePicker",
+    "DetailPanel": "SynapseDetailPanel",
+    "DropdownButton": "SynapseDropdownButton",
+    "DualListBox": "SynapseDualListBox",
+    "EmptyState": "SynapseEmptyState",
+    "Error": "SynapseError",
+    "ErrorCard": "SynapseErrorCard",
+    "Footer": "SynapseFooter",
+    "GetStarted": "SynapseGetStarted",
+    "Helper": "SynapseHelper",
+    "Icon": "SynapseIcon",
+    "LeftNav": "SynapseLeftNav",
+    "Link": "SynapseLink",
+    "Masthead": "SynapseMasthead",
+    "Modal": "SynapseModal",
+    "MultiSelect": "SynapseDropdownMultiSelect",
+    "Pagination": "SynapsePagination",
+    "ProgressBar": "SynapseProgressBar",
+    "RadioButton": "SynapseRadioGroup",
+    "RecommendationFeedback": "SynapseRecommendationFeedback",
+    "SegmentedButton": "SynapseSegmentedButton",
+    "SingleSelect": "SynapseDropdownSingleSelect",
+    "SkeletonLoader": "SynapseSkeletonLoader",
+    "Slider": "SynapseSlider",
+    "Spinner": "SynapseSpinner",
+    "StatusBar": "SynapseStatusBar",
+    "Stepper": "SynapseStepper",
+    "SuggestedPrompt": "SynapseSuggestedPrompt",
+    "Tab": "SynapseTabs",
+    "Tag": "SynapseTag",
+    "TextInput": "SynapseTextInput",
+    "Thinking": "SynapseThinking",
+    "TimePicker": "SynapseTimePicker",
+    "Toast": "SynapseToastItem",
+    "ToggleSwitch": "SynapseToggleSwitch",
+    "Tooltip": "SynapseTooltip",
+    "Tracker": "SynapseTracker",
+    "Tree": "SynapseTree",
+    "WhatsNew": "SynapseWhatsNew",
+    "Wizard": "SynapseWizard"
+  },
+  "docsMap": {
+    "SynapseAccordion": "components/synapse/accordion/design-spec.md",
+    "SynapseAlert": "components/synapse/alert/design-spec.md",
+    "SynapseAnchorMenu": "components/synapse/anchor-menu/design-spec.md",
+    "SynapseAppLauncher": "components/synapse/app-launcher/design-spec.md",
+    "SynapseAppShell": "components/synapse/app-shell/design-spec.md",
+    "SynapseBadge": "components/synapse/badge/design-spec.md",
+    "SynapseButton": "components/synapse/button/design-spec.md",
+    "SynapseCard": "components/synapse/card/design-spec.md",
+    "SynapseChatArea": "components/synapse/chatarea/design-spec.md",
+    "SynapseChatInputBox": "components/synapse/chatinputbox/design-spec.md",
+    "SynapseChatSystemResponse": "components/synapse/chatsystemresponse/design-spec.md",
+    "SynapseCheckbox": "components/synapse/checkbox/design-spec.md",
+    "SynapseDatagrid": "components/synapse/datagrid/design-spec.md",
+    "SynapseDatePicker": "components/synapse/date-picker/design-spec.md",
+    "SynapseDetailPanel": "components/synapse/detail-panel/design-spec.md",
+    "SynapseDropdownComboBox": "components/synapse/dropdown-combo-box/design-spec.md",
+    "SynapseDropdownMultiSelect": "components/synapse/dropdown-multiselect/design-spec.md",
+    "SynapseDropdownSingleSelect": "components/synapse/dropdown-single-select/design-spec.md",
+    "SynapseEmptyState": "components/synapse/emptystate/design-spec.md",
+    "SynapseErrorCard": "components/synapse/errorcard/design-spec.md",
+    "SynapseFooter": "components/synapse/footer/design-spec.md",
+    "SynapseIcon": "components/synapse/icon/design-spec.md",
+    "SynapseLeftNav": "components/synapse/left-nav/design-spec.md",
+    "SynapseLink": "components/synapse/link/design-spec.md",
+    "SynapseMasthead": "components/synapse/masthead/design-spec.md",
+    "SynapseModal": "components/synapse/modal/design-spec.md",
+    "SynapsePagination": "components/synapse/pagination/design-spec.md",
+    "SynapseProgressBar": "components/synapse/progress-bar/design-spec.md",
+    "SynapseRadioGroup": "components/synapse/radio-button/design-spec.md",
+    "SynapseRecommendationFeedback": "components/synapse/recommendation-feedback/design-spec.md",
+    "SynapseSegmentedButton": "components/synapse/segmentedbutton/design-spec.md",
+    "SynapseSkeletonLoader": "components/synapse/skeletonloader/design-spec.md",
+    "SynapseSlider": "components/synapse/slider/design-spec.md",
+    "SynapseSpinner": "components/synapse/spinner/design-spec.md",
+    "SynapseStepper": "components/synapse/stepper/design-spec.md",
+    "SynapseSuggestedPrompt": "components/synapse/suggested-prompt/design-spec.md",
+    "SynapseTabs": "components/synapse/tab/design-spec.md",
+    "SynapseTag": "components/synapse/tag/design-spec.md",
+    "SynapseTextInput": "components/synapse/text-input/design-spec.md",
+    "SynapseThinking": "components/synapse/thinking/design-spec.md",
+    "SynapseTimePicker": "components/synapse/time-picker/design-spec.md",
+    "SynapseToastItem": "components/synapse/toast/design-spec.md",
+    "SynapseToggleSwitch": "components/synapse/toggleswitch/design-spec.md",
+    "SynapseTooltip": "components/synapse/tooltip/design-spec.md",
+    "SynapseTracker": "components/synapse/tracker/design-spec.md",
+    "SynapseTree": "components/synapse/tree/design-spec.md",
+    "SynapseWizard": "components/synapse/wizard/design-spec.md",
+    "SynapseDropdownButton": "components/synapse/dropdownmenu/design-spec.md"
+  },
+  "overrides": {
+    "SynapseAlert": {
+      "cardMode": "column"
+    },
+    "SynapseAnchorMenu": {
+      "cardMode": "column"
+    },
+    "SynapseAppLauncher": {
+      "cardMode": "single",
+      "primaryStory": "DefaultTrigger"
+    },
+    "SynapseAppShell": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseCard": {
+      "cardMode": "column"
+    },
+    "SynapseChatInputBox": {
+      "cardMode": "column"
+    },
+    "SynapseDatePicker": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseDetailPanel": {
+      "cardMode": "column"
+    },
+    "SynapseDropdownComboBox": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseDropdownMultiSelect": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseDropdownSingleSelect": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseDualListBox": {
+      "cardMode": "column"
+    },
+    "SynapseLeftNav": {
+      "cardMode": "column"
+    },
+    "SynapseLink": {
+      "cardMode": "column"
+    },
+    "SynapsePagination": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseSegmentedButton": {
+      "cardMode": "column"
+    },
+    "SynapseSkeletonLoader": {
+      "cardMode": "column"
+    },
+    "SynapseSpinner": {
+      "cardMode": "single",
+      "primaryStory": "FigmaUsageFrame"
+    },
+    "SynapseStepper": {
+      "cardMode": "column"
+    },
+    "SynapseTextInput": {
+      "cardMode": "column"
+    },
+    "SynapseTimePicker": {
+      "cardMode": "column"
+    },
+    "SynapseToastItem": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "SynapseTooltip": {
+      "cardMode": "column"
+    },
+    "SynapseWhatsNew": {
+      "cardMode": "single",
+      "primaryStory": "ConvenienceDataSections"
+    },
+    "SynapseWizard": {
+      "cardMode": "column"
+    }
+  },
+  "guidelinesGlob": [],
+  "storyImports": {
+    "shim": [
+      "lib/react/synapse/app-launcher/index",
+      "lib/react/synapse/left-nav/index"
+    ]
+  },
+  "readmeHeader": ".design-sync/conventions.synapse.md"
+}

@@ -158,9 +158,9 @@ Figma variant frames use fixed sizes; **runtime** positions are graph-driven (`x
 | Height | `18px` |
 | Min width | content-driven; sample count `20` uses `px: 5.5px` |
 | Border radius | pill `100px` / `var(--corner-radius-radius-round)` |
-| Border | `var(--border-width-border-default)` solid `var(--color-border-white)` |
+| Border | `var(--border-width-border-default)` solid `var(--color-border-gray-white)` |
 | Background | `var(--color-background-alerting-info-2)` |
-| Text | Body 3 — `12px`, `var(--color-text-white)` |
+| Text | Body 3 — `12px`, `var(--color-text-gray-white)` |
 | Expanded icon | `ctrl-minimize-16` at `8×12px` slot (`54159:282543`) — **not** ASCII `-` |
 | Interaction | `<button type="button">`; toggles `expanded`; `aria-expanded` |
 | Omit when | `childCount` undefined, `0`, or `showChildCount=false` |
@@ -177,9 +177,9 @@ Figma variant frames use fixed sizes; **runtime** positions are graph-driven (`x
 |---|---|
 | Min width | `90px` |
 | Padding | `var(--padding-padding-16)` horizontal, `var(--padding-padding-2)` vertical |
-| Background | `var(--color-background-surface-1)` |
+| Background | `var(--color-background-surface-primary)` |
 | Border radius | `var(--corner-radius-radius-8)` |
-| Typography | Body 3 — `var(--font-size-body-3)` / `18px` line-height, `var(--color-text-neutral-strong)` |
+| Typography | Body 3 — `var(--font-size-body-3)` / `18px` line-height, `var(--color-text-gray-neutral-strong)` |
 | Text align | center; `word-break: break-word` |
 
 ### Element: `TopologyNodeGroupStack` (optional)
@@ -211,11 +211,11 @@ Figma variant frames use fixed sizes; **runtime** positions are graph-driven (`x
 
 | Role | Token |
 |---|---|
-| Shell background (default) | `var(--color-background-surface-2)` |
-| Shell border (default) | `var(--border-width-border-default)` `var(--color-icon-accessible)` |
-| Shell background (selected) | `var(--color-background-controls-brand-light)` |
-| Shell border (selected/hover) | `var(--border-width-border-thick)` `var(--color-border-brand-dark)` |
-| Selected shadow | `var(--color-background-controls-brand-light)` drop-shadow |
+| Shell background (default) | `var(--color-background-surface-secondary)` |
+| Shell border (default) | `var(--border-width-border-default)` `var(--color-icon-gray-neutral-accessible)` |
+| Shell background (selected) | `var(--color-background-controls-light)` |
+| Shell border (selected/hover) | `var(--border-width-border-thick)` `var(--color-border-brand-strong)` |
+| Selected shadow | `var(--color-background-controls-light)` drop-shadow |
 | Icon tint | `currentColor` / mask per `Icon` primitive |
 
 ### Element: `TopologyNodeStatusSlot`
@@ -229,15 +229,15 @@ Figma variant frames use fixed sizes; **runtime** positions are graph-driven (`x
 | Role | Token |
 |---|---|
 | Background | `var(--color-background-alerting-info-2)` |
-| Text | `var(--color-text-white)` |
-| Border | `var(--border-width-border-default)` `var(--color-border-white)` |
+| Text | `var(--color-text-gray-white)` |
+| Border | `var(--border-width-border-default)` `var(--color-border-gray-white)` |
 
 ### Element: `TopologyNodeLabel`
 
 | Role | Token |
 |---|---|
-| Background | `var(--color-background-surface-1)` |
-| Text | `var(--color-text-neutral-strong)` |
+| Background | `var(--color-background-surface-primary)` |
+| Text | `var(--color-text-gray-neutral-strong)` |
 
 ### Typography
 
@@ -264,9 +264,9 @@ Applies to **`Object`** shell. Hover uses enlarged `52×52` hit halo in Figma (`
 
 | State | Background | Border | Shadow / other |
 |---|---|---|---|
-| `default` | `var(--color-background-surface-2)` | `1px` `var(--color-icon-accessible)` | none |
-| `hover` | `var(--color-background-surface-2)` | `2px` `var(--color-border-brand-dark)` | outer halo per Figma `Hover` asset; shell remains `44×44` |
-| `selected` | `var(--color-background-controls-brand-light)` | `2px` `var(--color-border-brand-dark)` | `drop-shadow` using `var(--color-background-controls-brand-light)` per `52497:196963` |
+| `default` | `var(--color-background-surface-secondary)` | `1px` `var(--color-icon-gray-neutral-accessible)` | none |
+| `hover` | `var(--color-background-surface-secondary)` | `2px` `var(--color-border-brand-strong)` | outer halo per Figma `Hover` asset; shell remains `44×44` |
+| `selected` | `var(--color-background-controls-light)` | `2px` `var(--color-border-brand-strong)` | `drop-shadow` using `var(--color-background-controls-light)` per `52497:196963` |
 
 Verified nodes: General `52497:196935` (default), `53470:228409` (hover), `52497:196963` (selected). **Same state tokens** apply to circle types (`hostCompute`, `vm`, etc.) and `radius-8` types (`cluster`, `datacenter`) unless a future Figma delta documents otherwise.
 

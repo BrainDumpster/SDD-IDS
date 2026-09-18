@@ -37,7 +37,7 @@ Synapse **Segmented Button** is an **ids-fork** of the IDS **Segmented Button** 
 |---|---|---|
 | Root + segment corner radius | `var(--corner-radius-radius-2)` (**2px**) | **Same** via `var(--segmented-button-control-radius)` → `radius-2` |
 | Segment label typography | Body 2 | **Body 2 Regular (`font-weight: 400`)** — Figma `Typography/Font Weight/regular` |
-| Segment label color (unselected) | `var(--color-text-neutral)` | **Same** |
+| Segment label color (unselected) | `var(--color-text-gray-neutral)` | **Same** |
 | Root border, gap, padding, states | IDS contract | **Same** (inherit IDS) |
 | Type × option count matrix | text 2–5, icon 2–3 | **Same** |
 | Runtime API | IDS contract | **Same** (inherit IDS; **disabled out of scope**) |
@@ -71,7 +71,7 @@ Synapse-specific layout (alias-driven):
 
 Inherit IDS **Tokens** and **States** tables — same semantic `var(--...)` names.
 
-Segment labels use Body 2 Regular (`font-weight: 400`) per Figma; unselected label `var(--color-text-neutral)`, selected `var(--color-text-white)`.
+Segment labels use Body 2 Regular (`font-weight: 400`) per Figma; unselected label `var(--color-text-gray-neutral)`, selected `var(--color-text-gray-white)`.
 
 ## States (Light Theme)
 
@@ -132,7 +132,7 @@ Inherit IDS: `(text × 2..5) ∪ (icon × 2..3)` × per-segment interaction × s
 | `root` | `border-radius` | `var(--segmented-button-control-radius)` |
 | `segmentSurface` | `border-radius` | `var(--segmented-button-control-radius)` |
 | `segmentLabel` | `font-weight` | `400` (Body 2 Regular) |
-| Borders / backgrounds / icons | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** (segment `border` reserved **1px**; selected default `border-color` matches `var(--color-background-controls-brand-base)`; icon root **39px** CSS `border-box`) |
+| Borders / backgrounds / icons | per IDS | Inherit IDS **Codegen Contract → Per-slot style contract** (segment `border` reserved **1px**; selected default `border-color` matches `var(--color-background-controls-base)`; icon root **39px** CSS `border-box`) |
 
 ### Behavior contract
 

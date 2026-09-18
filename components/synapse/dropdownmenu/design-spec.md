@@ -60,28 +60,28 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-brand-light)` = #d9eaf8 (light) / #34414c (dark)
-- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-brand-light-slate)` = #d9eaf8 (light) / #34414c (dark)
+- `var(--color-background-brand-lighter-slate)` = #ebf4fb (light) / #1e262c (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-controls-base)` = #0076ce
+- `var(--color-background-controls-strong)` = #0062ab
 - `var(--color-background-gray-base)` = #757575 (light) / #9e9e9e (dark)
 - `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-brand-neutral)` = #0076ce (light) / #8898a5 (dark)
-- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-brand-base-neutral)` = #0076ce (light) / #8898a5 (dark)
+- `var(--color-border-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
 - `var(--color-border-neutral-light)` = #757575 (light) / #34414c (dark)
-- `var(--color-border-strong)` = #252525 (light) / #b8c1c9 (dark)
-- `var(--color-border-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
+- `var(--color-border-gray-neutral-strong)` = #252525 (light) / #b8c1c9 (dark)
+- `var(--color-border-brand-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
 - `var(--color-icon-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-icon-disabled)` = #757575 (light) / #c5c5c5 (dark)
-- `var(--color-icon-inverse)` = #ffffff (light) / #252525 (dark)
-- `var(--color-icon-white)` = #ffffff
+- `var(--color-icon-gray-disabled)` = #757575 (light) / #c5c5c5 (dark)
+- `var(--color-icon-gray-inverse)` = #ffffff (light) / #252525 (dark)
+- `var(--color-icon-gray-white)` = #ffffff
 - `var(--color-text-brand-strong)` = #0062ab (light) / #94c5ea (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--dropdown-control-radius)` = var(--corner-radius-radius-4)
 - `var(--dropdown-focus-ring-radius)` = var(--corner-radius-radius-4)
 - `var(--dropdown-menu-radius)` = var(--corner-radius-radius-4)
@@ -103,28 +103,28 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | active | `var(--color-background-brand-light)` (#d9eaf8) |  | `var(--color-text-brand-strong)` (#0062ab) | shadow: `var(--color-border-brand-neutral)` `var(--color-border-brand-neutral)` |
-| default | default | `var(--color-icon-brand-base)` (#0076ce) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#757575) | `var(--color-text-brand-strong)` (#0062ab) | radius: `var(--dropdown-control-radius)` |
-| default | disabled | `var(--color-background-gray-base)` (#757575) | `var(--color-border-disabled)` (#757575) | `var(--color-icon-inverse)` (#ffffff) | shadow: `var(--color-border-neutral-light)` `var(--color-border-disabled)` |
+| default | active | `var(--color-background-brand-light-slate)` (#d9eaf8) |  | `var(--color-text-brand-strong)` (#0062ab) | shadow: `var(--color-border-brand-base-neutral)` `var(--color-border-brand-base-neutral)` |
+| default | default | `var(--color-icon-brand-base)` (#0076ce) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-brand-strong)` (#0062ab) | radius: `var(--dropdown-control-radius)` |
+| default | disabled | `var(--color-background-gray-base)` (#757575) | `var(--color-border-gray-disabled)` (#757575) | `var(--color-icon-gray-inverse)` (#ffffff) | shadow: `var(--color-border-neutral-light)` `var(--color-border-gray-disabled)` |
 | default | focus |  | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-brand-base)` (#0076ce) |  | radius: `var(--dropdown-focus-ring-radius)` |
-| default | highlighted | `var(--color-background-brand-lighter)` (#ebf4fb) |  | `var(--color-text-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
-| default | indeterminate | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) |  |  |
-| default | selected | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-neutral)` `var(--color-border-brand-neutral)` |
+| default | highlighted | `var(--color-background-brand-lighter-slate)` (#ebf4fb) |  | `var(--color-text-gray-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
+| default | hover | `var(--color-background-controls-strong)` (#0062ab) | `var(--color-border-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
+| default | indeterminate | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) |  |  |
+| default | selected | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-gray-neutral)` (#4d4d4d) | shadow: `var(--color-border-brand-base-neutral)` `var(--color-border-brand-base-neutral)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | active | `var(--color-background-brand-light)` (#34414c) |  | `var(--color-text-brand-strong)` (#94c5ea) | shadow: `var(--color-border-brand-neutral)` `var(--color-border-brand-neutral)` |
-| default | default | `var(--color-icon-brand-base)` (#4c9fdd) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#8898a5) | `var(--color-text-brand-strong)` (#94c5ea) | radius: `var(--dropdown-control-radius)` |
-| default | disabled | `var(--color-background-gray-base)` (#9e9e9e) | `var(--color-border-disabled)` (#9e9e9e) | `var(--color-icon-inverse)` (#252525) | shadow: `var(--color-border-neutral-light)` `var(--color-border-disabled)` |
+| default | active | `var(--color-background-brand-light-slate)` (#34414c) |  | `var(--color-text-brand-strong)` (#94c5ea) | shadow: `var(--color-border-brand-base-neutral)` `var(--color-border-brand-base-neutral)` |
+| default | default | `var(--color-icon-brand-base)` (#4c9fdd) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-base)` (#8898a5) | `var(--color-text-brand-strong)` (#94c5ea) | radius: `var(--dropdown-control-radius)` |
+| default | disabled | `var(--color-background-gray-base)` (#9e9e9e) | `var(--color-border-gray-disabled)` (#9e9e9e) | `var(--color-icon-gray-inverse)` (#252525) | shadow: `var(--color-border-neutral-light)` `var(--color-border-gray-disabled)` |
 | default | focus |  | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-brand-base)` (#4c9fdd) |  | radius: `var(--dropdown-focus-ring-radius)` |
-| default | highlighted | `var(--color-background-brand-lighter)` (#1e262c) |  | `var(--color-text-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-strong)` (#b8c1c9) | `var(--color-text-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
-| default | indeterminate | `var(--color-background-component)` (#111619) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
-| default | selected | `var(--color-background-component)` (#111619) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-neutral)` `var(--color-border-brand-neutral)` |
+| default | highlighted | `var(--color-background-brand-lighter-slate)` (#1e262c) |  | `var(--color-text-gray-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
+| default | hover | `var(--color-background-controls-strong)` (#0062ab) | `var(--color-border-gray-neutral-strong)` (#b8c1c9) | `var(--color-text-gray-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-base)` `var(--color-border-brand-base)` |
+| default | indeterminate | `var(--color-background-surface-component)` (#111619) | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
+| default | selected | `var(--color-background-surface-component)` (#111619) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-gray-neutral)` (#b8c1c9) | shadow: `var(--color-border-brand-base-neutral)` `var(--color-border-brand-base-neutral)` |
 
 ## Source Mapping
 

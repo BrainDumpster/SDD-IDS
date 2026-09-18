@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 48160:11907 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -50,14 +51,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--border-width-border-2)` = var(--border-width-border-thick)
 - `var(--color-background-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-gray-neutral-dark)` = #616161 (light) / #8898a5 (dark)
 - `var(--color-background-gray-neutral-light)` = #eaeaea (light) / #34414c (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-icon-inverse)` = #ffffff (light) / #252525 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
-- `var(--color-text-white)` = #ffffff
+- `var(--color-icon-gray-inverse)` = #ffffff (light) / #252525 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--corner-radius-radius-6)` = 6px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -71,16 +72,16 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| circle | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-2)` (var(--border-width-border-thick)) `var(--color-border-accessible)` (#757575) | `var(--color-text-white)` (#ffffff) |  |
-| default | default | `var(--color-background-brand-base)` (#0076ce) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-icon-inverse)` (#ffffff) | radius: `var(--corner-radius-radius-6)` |
+| circle | default | `var(--color-background-surface-component)` (#ffffff) | `var(--border-width-border-2)` (var(--border-width-border-thick)) `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-white)` (#ffffff) |  |
+| default | default | `var(--color-background-brand-base)` (#0076ce) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-icon-gray-inverse)` (#ffffff) | radius: `var(--corner-radius-radius-6)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| circle | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-2)` (var(--border-width-border-thick)) `var(--color-border-accessible)` (#8898a5) | `var(--color-text-white)` (#ffffff) |  |
-| default | default | `var(--color-background-brand-base)` (#4c9fdd) | `var(--color-background-brand-base)` (#4c9fdd) | `var(--color-icon-inverse)` (#252525) | radius: `var(--corner-radius-radius-6)` |
+| circle | default | `var(--color-background-surface-component)` (#111619) | `var(--border-width-border-2)` (var(--border-width-border-thick)) `var(--color-border-gray-neutral-base)` (#8898a5) | `var(--color-text-gray-white)` (#ffffff) |  |
+| default | default | `var(--color-background-brand-base)` (#4c9fdd) | `var(--color-background-brand-base)` (#4c9fdd) | `var(--color-icon-gray-inverse)` (#252525) | radius: `var(--corner-radius-radius-6)` |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

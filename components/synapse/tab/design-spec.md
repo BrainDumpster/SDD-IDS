@@ -34,8 +34,8 @@ Synapse **Tab** shares the IDS **Tab** family name and high-level tablist semant
 | Tab padding | `9px 24px` | **`var(--padding-padding-6)`** block / **`var(--padding-padding-16)`** left / **`var(--padding-padding-8)`** right |
 | Tab width | Content-driven | **`min-width: 80px`**, **`max-width: 250px`** (includes optional close icon) — Figma `50431:32236`, `50454:81701` |
 | Label overflow | Clip where unavoidable | **`text-overflow: ellipsis`**, `white-space: nowrap` at max width; tooltip on truncated label (`50454:81963`) |
-| Selected chrome | `2px` `var(--color-border-brand-dark)` indicator | **`var(--color-background-brand-light)`** fill + **`var(--color-text-brand-strong)`** (`47804:187`) |
-| Unselected chrome | Baseline `var(--color-border-accessible)` | **`var(--color-background-component)`** + **right** divider **`var(--color-border-light)`** (`47804:188`) |
+| Selected chrome | `2px` `var(--color-border-brand-strong)` indicator | **`var(--color-background-brand-light-slate)`** fill + **`var(--color-text-brand-strong)`** (`47804:187`) |
+| Unselected chrome | Baseline `var(--color-border-gray-neutral-base)` | **`var(--color-background-surface-component)`** + **right** divider **`var(--color-border-gray-neutral-light)`** (`47804:188`) |
 | Group chrome | IDS tab row baseline | **`Nav Tab Group`** bottom border **`var(--color-border-neutral-light)`** + `padding-bottom: var(--padding-padding-1)` (`47835:4947`) |
 | Close control | Not in IDS tab item | **`Close Tab`** optional per tab — `12×12` `shape-x` / `ctrl-close-16`, hit padding `var(--padding-padding-4)` (`47803:1728`) |
 | Close hover | — | Close hit area **`var(--color-background-n-tabs-x-hover)`** (`47803:1731`, `50431:32236`) |
@@ -96,7 +96,7 @@ Deterministic slot order (Synapse Nav Tab):
 | Max width | **`250px`** (incl. close icon when present) |
 | Padding | `var(--padding-padding-6)` block; `var(--padding-padding-16)` inline-start; `var(--padding-padding-8)` inline-end |
 | Internal gap (icon → label → close) | `var(--spacing-space-8)` |
-| Right divider | `var(--border-width-border-1)` `var(--color-border-light)` on unselected tabs (`47804:188`, `47806:372`); **none** on selected (`47804:187`, `47806:371`) or add tab (`47806:527`) |
+| Right divider | `var(--border-width-border-1)` `var(--color-border-gray-neutral-light)` on unselected tabs (`47804:188`, `47806:372`); **none** on selected (`47804:187`, `47806:371`) or add tab (`47806:527`) |
 | Label | Body 2 Regular (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`); ellipsis at max width |
 
 ### `Close Tab`
@@ -145,20 +145,20 @@ Deterministic slot order (Synapse Nav Tab):
 ## Tokens
 
 ### Tab shell
-- `var(--color-background-component)` — default tab + group base
-- `var(--color-border-light)` — tab right divider (unselected)
+- `var(--color-background-surface-component)` — default tab + group base
+- `var(--color-border-gray-neutral-light)` — tab right divider (unselected)
 - `var(--color-border-neutral-light)` — group bottom border
-- `var(--color-background-brand-light)` — selected tab + selected overflow
-- `var(--color-background-brand-lighter)` — hover tab
+- `var(--color-background-brand-light-slate)` — selected tab + selected overflow
+- `var(--color-background-brand-lighter-slate)` — hover tab
 - `var(--color-background-n-tabs-x-hover)` — close control hover
 
 ### Typography
 - `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)` — tab label (Regular / 400)
-- `var(--color-text-neutral)` — default tab label
+- `var(--color-text-gray-neutral)` — default tab label
 - `var(--color-text-brand-strong)` — selected + hover tab label
 
 ### Icons
-- `var(--color-icon-neutral)` — close default (`Color/Icon/Neutral` on `47804:188`)
+- `var(--color-icon-gray-neutral-base)` — close default (`Color/Icon/Neutral` on `47804:188`)
 - Close / add / overflow caret slugs: `shape-x`, `shape-plus`, `arrow-tri-down-solid` (overflow `10×10`)
 
 ### Spacing
@@ -171,36 +171,36 @@ Deterministic slot order (Synapse Nav Tab):
 
 | State | Background | Border | Text / icon |
 |---|---|---|---|
-| Default | `var(--color-background-component)` | right `var(--color-border-light)` | label `var(--color-text-neutral)`; close `var(--color-icon-neutral)` |
-| Hover | `var(--color-background-brand-lighter)` | right `var(--color-border-light)` (unless selected neighbor) | label `var(--color-text-brand-strong)` |
-| Selected | `var(--color-background-brand-light)` | no right divider on selected cell | label `var(--color-text-brand-strong)` |
+| Default | `var(--color-background-surface-component)` | right `var(--color-border-gray-neutral-light)` | label `var(--color-text-gray-neutral)`; close `var(--color-icon-gray-neutral-base)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | right `var(--color-border-gray-neutral-light)` (unless selected neighbor) | label `var(--color-text-brand-strong)` |
+| Selected | `var(--color-background-brand-light-slate)` | no right divider on selected cell | label `var(--color-text-brand-strong)` |
 | Close hover (on tab) | close hit `var(--color-background-n-tabs-x-hover)` | — | close icon neutral |
 
 ### `Tab-Single` (`Type=Overflow`)
 
 | State | Background | Border | Text / icon |
 |---|---|---|---|
-| Default | `var(--color-background-component)` | right `var(--color-border-light)` | `More` + chevron `var(--color-text-neutral)` |
-| Hover | `var(--color-background-brand-lighter)` | right `var(--color-border-light)` | `var(--color-text-brand-strong)` |
-| Selected (menu open / active hidden tab) | `var(--color-background-brand-light)` | — | `var(--color-text-brand-strong)` |
+| Default | `var(--color-background-surface-component)` | right `var(--color-border-gray-neutral-light)` | `More` + chevron `var(--color-text-gray-neutral)` |
+| Hover | `var(--color-background-brand-lighter-slate)` | right `var(--color-border-gray-neutral-light)` | `var(--color-text-brand-strong)` |
+| Selected (menu open / active hidden tab) | `var(--color-background-brand-light-slate)` | — | `var(--color-text-brand-strong)` |
 
 ### `Add Tab`
 
 | State | Background | Icon |
 |---|---|---|
-| Default | `var(--color-background-component)` | `shape-plus` neutral |
-| Hover | `var(--color-background-brand-lighter)` | brand-strong |
+| Default | `var(--color-background-surface-component)` | `shape-plus` neutral |
+| Hover | `var(--color-background-brand-lighter-slate)` | brand-strong |
 
 ### `Close Tab` (isolated control)
 
 | State | Background | Icon |
 |---|---|---|
-| Default | transparent | `var(--color-icon-neutral)` |
-| Hover | `var(--color-background-n-tabs-x-hover)` | `var(--color-icon-neutral)` |
+| Default | transparent | `var(--color-icon-gray-neutral-base)` |
+| Hover | `var(--color-background-n-tabs-x-hover)` | `var(--color-icon-gray-neutral-base)` |
 
 ## States (Dark Theme)
 
-Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / Synapse dark scope live in `components/synapse-theme.css` (including `--color-background-n-tabs-x-hover`, `--color-border-light`).
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / Synapse dark scope live in `components/synapse-theme.css` (including `--color-background-n-tabs-x-hover`, `--color-border-gray-neutral-light`).
 
 Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
 

@@ -40,8 +40,8 @@ Synapse **App Launcher** inherits the IDS app-switcher contract (popover surface
 
 | Topic | IDS | Synapse (verified) |
 |---|---|---|
-| Surface border | `var(--color-border-accessible)` | **`var(--color-border-neutral-light)`** |
-| Row/column divider token | `var(--color-border-accessible)` | **`var(--color-border-neutral-light)`** |
+| Surface border | `var(--color-border-gray-neutral-base)` | **`var(--color-border-neutral-light)`** |
+| Row/column divider token | `var(--color-border-gray-neutral-base)` | **`var(--color-border-neutral-light)`** |
 | Surface padding | `var(--padding-padding-1)` | Same (`1px` inset) — **including 2-product** |
 | Multi-row surface gap | implicit | **`var(--spacing-space-1)`** between row groups (`13231:123908`) |
 | Tile hover/press fill | **Full `148×125` tile footprint** | **`LabelCluster` only** (`147px` wide inner stack); tile shell stays `surface-2` |
@@ -140,27 +140,27 @@ Deterministic slot order. **Divider placement is programme- and count-dependent*
 ## Tokens
 
 ### Surface + dividers
-- `var(--color-background-surface-2)` — launcher + default tile shell
-- `var(--color-background-component)` — options region
+- `var(--color-background-surface-secondary)` — launcher + default tile shell
+- `var(--color-background-surface-component)` — options region
 - `var(--color-border-neutral-light)` — surface border + all dividers (Synapse programme)
 - `var(--border-width-border-1)` — borders/dividers
 - `var(--shadow-drop-shadow-2-*)`, `var(--shadow-drop-shadow-4-*)` — elevation stack
 
 ### Product tile
-- Default shell: `var(--color-background-surface-2)`
-- Hover cluster: `var(--color-background-brand-lighter)`
-- Press cluster: `var(--color-background-brand-light)`
-- Default text/icon: `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)`
+- Default shell: `var(--color-background-surface-secondary)`
+- Hover cluster: `var(--color-background-brand-lighter-slate)`
+- Press cluster: `var(--color-background-brand-light-slate)`
+- Default text/icon: `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)`
 - Press text/icon: `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)`
 - Focus ring: `var(--color-border-brand-base)`, `var(--corner-radius-radius-4)`
 
 ### Options rows (Synapse programme)
-- Default background: `var(--color-background-component)`
-- Default text: `var(--color-text-neutral)`
-- Hover background: `var(--color-background-brand-lighter)`
-- Press background: `var(--color-background-brand-light)`
+- Default background: `var(--color-background-surface-component)`
+- Default text: `var(--color-text-gray-neutral)`
+- Hover background: `var(--color-background-brand-lighter-slate)`
+- Press background: `var(--color-background-brand-light-slate)`
 - Press text: `var(--color-text-brand-strong)`
-- Row emphasis stroke (hover/press): `var(--color-border-brand-neutral)` inset top/bottom
+- Row emphasis stroke (hover/press): `var(--color-border-brand-base-neutral)` inset top/bottom
 
 ### Typography
 - Product label: `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`
@@ -174,15 +174,15 @@ Deterministic slot order. **Divider placement is programme- and count-dependent*
 
 | Element | State | Background | Border / divider | Text / icon |
 |---|---|---|---|---|
-| `AppLauncherSurface` | default | `var(--color-background-surface-2)` | `1px var(--color-border-neutral-light)` | — |
-| `ProductTile` shell | default | `var(--color-background-surface-2)` | dividers `var(--color-border-neutral-light)` | `var(--color-text-neutral-strong)` / `var(--color-icon-neutral-strong)` |
-| `LabelCluster` | hover | `var(--color-background-brand-lighter)` | dividers unchanged (never receive fill) | neutral strong |
-| `LabelCluster` | press | `var(--color-background-brand-light)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
+| `AppLauncherSurface` | default | `var(--color-background-surface-secondary)` | `1px var(--color-border-neutral-light)` | — |
+| `ProductTile` shell | default | `var(--color-background-surface-secondary)` | dividers `var(--color-border-neutral-light)` | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
+| `LabelCluster` | hover | `var(--color-background-brand-lighter-slate)` | dividers unchanged (never receive fill) | neutral strong |
+| `LabelCluster` | press | `var(--color-background-brand-light-slate)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
 | `ProductTile` | focus | shell `surface-2`; inset ring `var(--color-border-brand-base)` | dividers unchanged | neutral strong |
 | `ProductTile` | no-icon | shell `surface-2` | dividers unchanged | neutral strong text only |
-| `OptionRow` | default | `var(--color-background-component)` | none | `var(--color-text-neutral)` |
-| `OptionRow` | hover | `var(--color-background-brand-lighter)` | inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-neutral)` |
-| `OptionRow` | press | `var(--color-background-brand-light)` | inset stroke `var(--color-border-brand-neutral)` | `var(--color-text-brand-strong)` |
+| `OptionRow` | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
+| `OptionRow` | hover | `var(--color-background-brand-lighter-slate)` | inset stroke `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
+| `OptionRow` | press | `var(--color-background-brand-light-slate)` | inset stroke `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 
 ## States (Dark Theme)
 

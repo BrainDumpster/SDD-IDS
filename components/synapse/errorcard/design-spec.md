@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 49861:302744 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -45,13 +46,13 @@ Implementations must render these parts in order. Each part maps to a single DOM
 - `var(--alert-red-500)` = #af0000
 - `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--border-width-border-2)` = var(--border-width-border-thick)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-controls-strong)` = #0062ab
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
 - `var(--color-text-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--corner-radius-radius-2)` = 2px
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-line-height-line-height-20)` = 20px
@@ -69,18 +70,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-brand-base)` (#0076ce) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#eaeaea) | `var(--color-text-brand-base)` (#0076ce) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
-| default | hover |  |  | `var(--color-background-controls-brand-strong)` (#0062ab) |  |
+| default | hover |  |  | `var(--color-background-controls-strong)` (#0062ab) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#1e262c) | `var(--color-text-brand-base)` (#4c9fdd) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--alert-red-500)` (#af0000) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#1e262c) | `var(--color-text-brand-base)` (#4c9fdd) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
-| default | hover |  |  | `var(--color-background-controls-brand-strong)` (#0062ab) |  |
+| default | hover |  |  | `var(--color-background-controls-strong)` (#0062ab) |  |
 
 ## Source Mapping
 

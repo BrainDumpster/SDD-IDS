@@ -58,21 +58,21 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--border-width-border-thick)` = 2px
-- `var(--color-background-brand-light)` = #d9eaf8 (light) / #34414c (dark)
-- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-brand-light-slate)` = #d9eaf8 (light) / #34414c (dark)
+- `var(--color-background-brand-lighter-slate)` = #ebf4fb (light) / #1e262c (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-n-tabs-x-hover)` = #d9eaf8 (light) / #455666 (dark)
-- `var(--color-background-surface-2)` = #ffffff (light) / #1e262c (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-background-surface-secondary)` = #ffffff (light) / #1e262c (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-brand-dark)` = #0062ab (light) / #94c5ea (dark)
-- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-border-brand-strong)` = #0062ab (light) / #94c5ea (dark)
+- `var(--color-border-gray-neutral-light)` = #c5c5c5 (light) / #34414c (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
 - `var(--color-border-neutral-light)` = #757575 (light) / #34414c (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-icon-gray-neutral-base)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--color-text-brand-strong)` = #0062ab (light) / #94c5ea (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -96,20 +96,20 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#eaeaea) | `var(--color-text-brand-strong)` (#0062ab) | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-dark)` |
+| default | default | `var(--color-background-surface-component)` (#ffffff) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#eaeaea) | `var(--color-text-brand-strong)` (#0062ab) | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-strong)` |
 | default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-dark)` `var(--border-width-border-thick)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-4)` |
-| default | hover | `var(--color-background-brand-lighter)` (#ebf4fb) |  | `var(--color-text-brand-strong)` (#0062ab) |  |
+| default | focus |  |  |  | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-strong)` `var(--border-width-border-thick)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-4)` |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#ebf4fb) |  | `var(--color-text-brand-strong)` (#0062ab) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-component)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#1e262c) | `var(--color-text-brand-strong)` (#94c5ea) | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-dark)` |
+| default | default | `var(--color-background-surface-component)` (#111619) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#1e262c) | `var(--color-text-brand-strong)` (#94c5ea) | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-strong)` |
 | default | disabled |  |  |  | opacity: 0.5 |
-| default | focus |  |  |  | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-dark)` `var(--border-width-border-thick)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-4)` |
-| default | hover | `var(--color-background-brand-lighter)` (#1e262c) |  | `var(--color-text-brand-strong)` (#94c5ea) |  |
+| default | focus |  |  |  | shadow: `var(--border-width-border-thick)` `var(--color-border-brand-strong)` `var(--border-width-border-thick)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-4)` |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#1e262c) |  | `var(--color-text-brand-strong)` (#94c5ea) |  |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

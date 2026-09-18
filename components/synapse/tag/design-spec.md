@@ -47,37 +47,37 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-default)` = 1px
-- `var(--color-background-alerting-critical)` = #af0000 (light) / #c74c4c (dark)
+- `var(--color-background-alerting-critical-base)` = #af0000 (light) / #c74c4c (dark)
 - `var(--color-background-alerting-critical-slate)` = #f3d9d9 (light) / #1e262c (dark)
-- `var(--color-background-alerting-info)` = ?
+- `var(--color-background-alerting-info-base)` = ?
 - `var(--color-background-alerting-info-1)` = #005ece (light) / #4c8edd (dark)
-- `var(--color-background-alerting-major)` = #ed6400
-- `var(--color-background-alerting-minor)` = #ffc700
-- `var(--color-background-alerting-success)` = ?
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-background-controls-brand-base)` = #0076ce
-- `var(--color-background-controls-brand-lighter)` = #ebf4fb (light) / #003a65 (dark)
-- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-alerting-major-base)` = #ed6400
+- `var(--color-background-alerting-minor-base)` = #ffc700
+- `var(--color-background-alerting-success-base)` = ?
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-controls-base)` = #0076ce
+- `var(--color-background-controls-lighter)` = #ebf4fb (light) / #003a65 (dark)
+- `var(--color-background-controls-strong)` = #0062ab
 - `var(--color-background-gray-light)` = #eaeaea (light) / #393939 (dark)
 - `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
 - `var(--color-border-alerting-critical-base)` = #af0000 (light) / #dd9494 (dark)
-- `var(--color-border-alerting-critical-white)` = #af0000 (light) / #ffffff (dark)
-- `var(--color-border-alerting-info-white)` = #005ece (light) / #ffffff (dark)
-- `var(--color-border-alerting-major-white)` = #ed6400 (light) / #ffffff (dark)
-- `var(--color-border-alerting-minor-transparent)` = #9c622e (light) / rgba(255,255,255,0.00) (dark)
-- `var(--color-border-alerting-success-white)` = #1b8500 (light) / #ffffff (dark)
+- `var(--color-border-alerting-critical-base-white)` = #af0000 (light) / #ffffff (dark)
+- `var(--color-border-alerting-info-base-white)` = #005ece (light) / #ffffff (dark)
+- `var(--color-border-alerting-major-base-white)` = #ed6400 (light) / #ffffff (dark)
+- `var(--color-border-alerting-minor-base)` = #9c622e (light) / rgba(255,255,255,0.00) (dark)
+- `var(--color-border-alerting-success-base-white)` = #1b8500 (light) / #ffffff (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-border-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
-- `var(--color-border-white)` = #ffffff
-- `var(--color-icon-neutral-strong)` = #252525 (light) / #f2f3f5 (dark)
+- `var(--color-border-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-brand-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
+- `var(--color-border-gray-white)` = #ffffff
+- `var(--color-icon-gray-neutral-strong)` = #252525 (light) / #f2f3f5 (dark)
 - `var(--color-static-gray-500)` = #757575
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--color-text-tag-critical)` = #af0000 (light) / #dd9494 (dark)
-- `var(--color-text-warning)` = #6d4028
-- `var(--color-text-white)` = #ffffff
+- `var(--color-text-alerting-major-strong)` = #6d4028
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--corner-radius-radius-2)` = 2px
 - `var(--corner-radius-radius-24)` = 24px
 - `var(--font-line-height-line-height-20)` = 20px
@@ -97,9 +97,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
 | default | default | `var(--color-background-alerting-critical-slate)` (#f3d9d9) | `var(--color-border-alerting-critical-base)` (#af0000) | `var(--color-text-tag-critical)` (#af0000) | focus-ring: `var(--border-width-border-default)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
-| default | disabled | `var(--color-static-gray-500)` (#757575) | `var(--color-border-white)` (#ffffff) | `var(--color-text-disabled)` (#757575) |  |
+| default | disabled | `var(--color-static-gray-500)` (#757575) | `var(--color-border-gray-white)` (#ffffff) | `var(--color-text-gray-disabled)` (#757575) |  |
 | default | focus |  | `var(--color-border-brand-base)` (#0076ce) |  |  |
-| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-transparent-brand)` (rgba(255,255,255,0.00)) | `var(--color-icon-neutral-strong)` (#252525) |  |
+| default | hover | `var(--color-background-controls-strong)` (#0062ab) | `var(--color-border-brand-transparent-brand)` (rgba(255,255,255,0.00)) | `var(--color-icon-gray-neutral-strong)` (#252525) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
@@ -107,9 +107,9 @@ Implementations must render these parts in order. Each part maps to a single DOM
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
 | default | default | `var(--color-background-alerting-critical-slate)` (#1e262c) | `var(--color-border-alerting-critical-base)` (#dd9494) | `var(--color-text-tag-critical)` (#dd9494) | focus-ring: `var(--border-width-border-default)` `var(--color-border-brand-base)`; radius: `var(--corner-radius-radius-2)` |
-| default | disabled | `var(--color-static-gray-500)` (#757575) | `var(--color-border-white)` (#ffffff) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| default | disabled | `var(--color-static-gray-500)` (#757575) | `var(--color-border-gray-white)` (#ffffff) | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
 | default | focus |  | `var(--color-border-brand-base)` (#4c9fdd) |  |  |
-| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) | `var(--color-border-transparent-brand)` (#4c9fdd) | `var(--color-icon-neutral-strong)` (#f2f3f5) |  |
+| default | hover | `var(--color-background-controls-strong)` (#0062ab) | `var(--color-border-brand-transparent-brand)` (#4c9fdd) | `var(--color-icon-gray-neutral-strong)` (#f2f3f5) |  |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

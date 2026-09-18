@@ -18,6 +18,8 @@ export {
   IdsAppShellFooterSlot as SynapseAppShellFooterSlot,
   IdsAppShellHeaderActions as SynapseAppShellHeaderActions,
   IdsAppShellPagePanel as SynapseAppShellPagePanel,
+  AppShellSpecAccurateHeaderActions as SynapseAppShellSpecAccurateHeaderActions,
+  AppShellSpecAccurateAppLauncher as SynapseAppShellSpecAccurateAppLauncher,
   type IdsAppShellProps as SynapseAppShellProps,
   type IdsAppShellBreakpointPreset as SynapseAppShellBreakpointPreset,
   type IdsAppShellPageTitleLevel as SynapseAppShellPageTitleLevel,
@@ -33,4 +35,7 @@ export {
   type IdsAppShellFooterSlotProps as SynapseAppShellFooterSlotProps,
   type IdsAppShellHeaderActionsProps as SynapseAppShellHeaderActionsProps,
   type IdsAppShellPagePanelProps as SynapseAppShellPagePanelProps,
+  type AppShellPage as SynapseAppShellPage,
+  type AppShellMastheadBundle as SynapseAppShellMastheadBundle,
+  type AppShellMainMenuBundle as SynapseAppShellMainMenuBundle,
 } from "../../ids/app-shell";

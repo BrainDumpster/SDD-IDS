@@ -36,7 +36,7 @@ Synapse **Toggle Switch** is an **ids-fork** of the IDS **Toggle Switch** family
 |---|---|---|
 | Track / thumb geometry | 32×16 track, 16×16 thumb, 16px travel | **Same** |
 | Off/on/hover/focus/disabled tokens | IDS contract | **Same** semantic `var(--...)` names |
-| Label typography | `var(--color-text-neutral)`, Body 2 | **Same** (`text-neutral` on switch label; optional form label wrapper may use `neutral-strong` — out of switch primitive scope) |
+| Label typography | `var(--color-text-gray-neutral)`, Body 2 | **Same** (`text-neutral` on switch label; optional form label wrapper may use `neutral-strong` — out of switch primitive scope) |
 | Runtime API | IDS contract | **Same** (inherit IDS) |
 
 **No programme layout aliases.** Synapse does not override corner radius, track size, or token names.

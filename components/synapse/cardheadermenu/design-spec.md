@@ -37,10 +37,10 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-2)` = var(--border-width-border-thick)
-- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
+- `var(--color-background-brand-lighter-slate)` = #ebf4fb (light) / #1e262c (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
 - `var(--color-icon-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-icon-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-icon-gray-neutral-base)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--icon-standard-gray)` = #616161
 - `var(--padding-padding-32)` = 32px
@@ -51,18 +51,18 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-icon-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
+| default | default |  |  | `var(--color-icon-gray-neutral-base)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-brand-lighter)` (#ebf4fb) |  | `var(--color-icon-brand-base)` (#0076ce) |  |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#ebf4fb) |  | `var(--color-icon-brand-base)` (#0076ce) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-icon-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
+| default | default |  |  | `var(--color-icon-gray-neutral-base)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-2)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-background-brand-lighter)` (#1e262c) |  | `var(--color-icon-brand-base)` (#4c9fdd) |  |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#1e262c) |  | `var(--color-icon-brand-base)` (#4c9fdd) |  |
 
 ## Source Mapping
 

@@ -39,10 +39,10 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
-- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-border-gray-neutral-light)` = #c5c5c5 (light) / #34414c (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--corner-radius-radius-4)` = 4px
 
 <!-- ds:section id=states-light -->
@@ -50,16 +50,16 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-border-light)` (#c5c5c5) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#eaeaea) |  | opacity: 0; radius: `var(--corner-radius-radius-4)` |
-| default | hover | `var(--color-text-neutral)` (#4d4d4d) |  |  | opacity: 1 |
+| default | default | `var(--color-border-gray-neutral-light)` (#c5c5c5) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#eaeaea) |  | opacity: 0; radius: `var(--corner-radius-radius-4)` |
+| default | hover | `var(--color-text-gray-neutral)` (#4d4d4d) |  |  | opacity: 1 |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-border-light)` (#34414c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-lighter)` (#1e262c) |  | opacity: 0; radius: `var(--corner-radius-radius-4)` |
-| default | hover | `var(--color-text-neutral)` (#b8c1c9) |  |  | opacity: 1 |
+| default | default | `var(--color-border-gray-neutral-light)` (#34414c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-lighter)` (#1e262c) |  | opacity: 0; radius: `var(--corner-radius-radius-4)` |
+| default | hover | `var(--color-text-gray-neutral)` (#b8c1c9) |  |  | opacity: 1 |
 
 ## Source Mapping
 

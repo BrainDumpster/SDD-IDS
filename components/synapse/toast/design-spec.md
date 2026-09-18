@@ -50,16 +50,16 @@ Implementations must render these parts in order. Each part maps to a single DOM
 - `var(--border-width-border-default)` = 1px
 - `var(--border-width-border-thick)` = 2px
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-white)` = #ffffff
-- `var(--color-icon-alerting-critical)` = #af0000 (light) / #c74c4c (dark)
-- `var(--color-icon-alerting-info)` = ?
-- `var(--color-icon-alerting-major)` = #ed6400 (light) / #f2934c (dark)
-- `var(--color-icon-alerting-minor)` = ?
-- `var(--color-icon-alerting-success)` = ?
-- `var(--color-icon-white)` = #ffffff
+- `var(--color-border-gray-white)` = #ffffff
+- `var(--color-icon-alerting-critical-base)` = #af0000 (light) / #c74c4c (dark)
+- `var(--color-icon-alerting-info-base)` = ?
+- `var(--color-icon-alerting-major-base)` = #ed6400 (light) / #f2934c (dark)
+- `var(--color-icon-alerting-minor-base)` = ?
+- `var(--color-icon-alerting-success-base)` = ?
+- `var(--color-icon-gray-white)` = #ffffff
 - `var(--color-static-gray-900)` = #252525
 - `var(--color-static-gray-white)` = #ffffff
-- `var(--color-text-white)` = #ffffff
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--corner-radius-radius-2)` = 2px
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
@@ -81,20 +81,20 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-static-gray-900)` (#252525) | `var(--color-border-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | radius: `var(--corner-radius-radius-2)` |
+| default | default | `var(--color-static-gray-900)` (#252525) | `var(--color-border-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) | radius: `var(--corner-radius-radius-2)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-thick)` `var(--color-border-brand-base)` |
-| info | default |  |  | `var(--color-icon-alerting-info)` |  |
-| success | default |  |  | `var(--color-icon-alerting-success)` |  |
+| info | default |  |  | `var(--color-icon-alerting-info-base)` |  |
+| success | default |  |  | `var(--color-icon-alerting-success-base)` |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-static-gray-900)` (#252525) | `var(--color-border-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) | radius: `var(--corner-radius-radius-2)` |
+| default | default | `var(--color-static-gray-900)` (#252525) | `var(--color-border-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) | radius: `var(--corner-radius-radius-2)` |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-thick)` `var(--color-border-brand-base)` |
-| info | default |  |  | `var(--color-icon-alerting-info)` |  |
-| success | default |  |  | `var(--color-icon-alerting-success)` |  |
+| info | default |  |  | `var(--color-icon-alerting-info-base)` |  |
+| success | default |  |  | `var(--color-icon-alerting-success-base)` |  |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

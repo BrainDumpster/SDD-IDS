@@ -48,17 +48,17 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-controls-brand-strong)` = #0062ab
+- `var(--color-background-controls-strong)` = #0062ab
 - `var(--color-background-gradient-masthead-end)` = #0076ce (light) / rgba(19,21,25,0.10) (dark)
 - `var(--color-background-gradient-masthead-start)` = #0076ce (light) / rgba(0,118,206,0.50) (dark)
-- `var(--color-background-masthead-brand-base)` = #0076ce (light) / #1e262c (dark)
-- `var(--color-background-masthead-brand-strong)` = #0062ab (light) / #34414c (dark)
-- `var(--color-background-masthead-brand-stronger)` = #06528a (light) / #455666 (dark)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-background-masthead-base)` = #0076ce (light) / #1e262c (dark)
+- `var(--color-background-masthead-strong)` = #0062ab (light) / #34414c (dark)
+- `var(--color-background-masthead-stronger)` = #06528a (light) / #455666 (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
 - `var(--color-border-transparent-neutral-light)` = rgba(255,255,255,0.00) (light) / #34414c (dark)
-- `var(--color-border-white)` = #ffffff
-- `var(--color-icon-white)` = #ffffff
-- `var(--color-text-white)` = #ffffff
+- `var(--color-border-gray-white)` = #ffffff
+- `var(--color-icon-gray-white)` = #ffffff
+- `var(--color-text-gray-white)` = #ffffff
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-line-height-line-height-32)` = 32px
 - `var(--font-size-body-1)` = 16px
@@ -79,20 +79,20 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | active | `var(--color-background-masthead-brand-stronger)` (#06528a) |  |  |  |
-| default | default | `var(--color-background-masthead-brand-base)` (#0076ce) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) |  |
-| default | focus | `var(--color-background-masthead-brand-base)` (#0076ce) |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-white)` |
-| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
+| default | active | `var(--color-background-masthead-stronger)` (#06528a) |  |  |  |
+| default | default | `var(--color-background-masthead-base)` (#0076ce) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-white)` (#ffffff) | `var(--color-text-gray-white)` (#ffffff) |  |
+| default | focus | `var(--color-background-masthead-base)` (#0076ce) |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-gray-white)` |
+| default | hover | `var(--color-background-controls-strong)` (#0062ab) |  |  |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | active | `var(--color-background-masthead-brand-stronger)` (#455666) |  |  |  |
-| default | default | `var(--color-background-masthead-brand-base)` (#1e262c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) |  |
-| default | focus | `var(--color-background-masthead-brand-base)` (#1e262c) |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-white)` |
-| default | hover | `var(--color-background-controls-brand-strong)` (#0062ab) |  |  |  |
+| default | active | `var(--color-background-masthead-stronger)` (#455666) |  |  |  |
+| default | default | `var(--color-background-masthead-base)` (#1e262c) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-white)` (#ffffff) | `var(--color-text-gray-white)` (#ffffff) |  |
+| default | focus | `var(--color-background-masthead-base)` (#1e262c) |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-gray-white)` |
+| default | hover | `var(--color-background-controls-strong)` (#0062ab) |  |  |  |
 
 ## Source Mapping
 

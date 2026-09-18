@@ -39,12 +39,12 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--border-width-border-2)` = var(--border-width-border-thick)
-- `var(--color-background-brand-lighter)` = #ebf4fb (light) / #1e262c (dark)
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
-- `var(--color-border-light)` = #c5c5c5 (light) / #34414c (dark)
-- `var(--color-border-lighter)` = #eaeaea (light) / #1e262c (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-background-brand-lighter-slate)` = #ebf4fb (light) / #1e262c (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-border-gray-neutral-light)` = #c5c5c5 (light) / #34414c (dark)
+- `var(--color-border-gray-neutral-lighter)` = #eaeaea (light) / #1e262c (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
 - `var(--padding-padding-10)` = 10px
@@ -55,16 +55,16 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#f4f4f4) |  | `var(--color-text-neutral)` (#4d4d4d) |  |
-| default | hover | `var(--color-background-brand-lighter)` (#ebf4fb) |  |  |  |
+| default | default | `var(--color-background-surface-primary)` (#f4f4f4) |  | `var(--color-text-gray-neutral)` (#4d4d4d) |  |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#ebf4fb) |  |  |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#111619) |  | `var(--color-text-neutral)` (#b8c1c9) |  |
-| default | hover | `var(--color-background-brand-lighter)` (#1e262c) |  |  |  |
+| default | default | `var(--color-background-surface-primary)` (#111619) |  | `var(--color-text-gray-neutral)` (#b8c1c9) |  |
+| default | hover | `var(--color-background-brand-lighter-slate)` (#1e262c) |  |  |  |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)

@@ -45,8 +45,8 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
 - `var(--spacing-space-4)` = 4px
@@ -58,7 +58,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral)` (#4d4d4d) |  |
+| default | default |  |  | `var(--color-text-gray-neutral)` (#4d4d4d) |  |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
 
 <!-- ds:section id=states-dark -->
@@ -66,7 +66,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral)` (#b8c1c9) |  |
+| default | default |  |  | `var(--color-text-gray-neutral)` (#b8c1c9) |  |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
 
 ## Source Mapping

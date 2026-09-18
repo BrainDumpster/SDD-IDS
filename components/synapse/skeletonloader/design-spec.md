@@ -14,6 +14,7 @@
 | Figma Page | Loading |
 | Node ID | 11067:54669 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -36,7 +37,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
 > Below are tokens referenced by this component's CSS module.
 
-- `var(--color-background-surface-1)` = #f4f4f4 (light) / #111619 (dark)
+- `var(--color-background-surface-primary)` = #f4f4f4 (light) / #111619 (dark)
 - `var(--corner-radius-radius-4)` = 4px
 
 <!-- ds:section id=states-light -->
@@ -44,7 +45,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#f4f4f4) |  |  | opacity: 1 |
+| default | default | `var(--color-background-surface-primary)` (#f4f4f4) |  |  | opacity: 1 |
 | rectangle | default |  |  |  | radius: `var(--corner-radius-radius-4)` |
 | text | default |  |  |  | radius: `var(--corner-radius-radius-4)` |
 
@@ -53,7 +54,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-surface-1)` (#111619) |  |  | opacity: 1 |
+| default | default | `var(--color-background-surface-primary)` (#111619) |  |  | opacity: 1 |
 | rectangle | default |  |  |  | radius: `var(--corner-radius-radius-4)` |
 | text | default |  |  |  | radius: `var(--corner-radius-radius-4)` |
 

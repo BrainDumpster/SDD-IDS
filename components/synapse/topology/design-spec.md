@@ -133,9 +133,9 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Display | `flex`; `flex-direction: column` | runtime |
 | Width / height | `width: 100%`; `height: 100%`; `flex: 1`; `min-height: 520px` (story host may use `780px`) | `54009:293109` sample |
 | Box model | `box-sizing: border-box` | runtime |
-| Background | `var(--color-background-surface-2)` | `get_design_context` `54009:293109` |
+| Background | `var(--color-background-surface-secondary)` | `get_design_context` `54009:293109` |
 | Border width | `var(--border-width-border-default)` | `54015:299824` page chrome |
-| Border color | `var(--color-border-light)` | `54015:299824` |
+| Border color | `var(--color-border-gray-neutral-light)` | `54015:299824` |
 | Border radius | `var(--corner-radius-radius-4)` | `54015:299824` |
 | Overflow | `hidden` (clips toolbar/canvas/footer to rounded shell) | runtime |
 | Implementation | `Topology.module.css` → `.root` | `Topology.tsx` |
@@ -157,7 +157,7 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Property | Contract | Figma evidence |
 |---|---|---|
 | Role | Canvas column wrapper inside page main area | `54009:292967` |
-| Background | `var(--color-background-surface-2)` | `get_design_context` `54009:293109` |
+| Background | `var(--color-background-surface-secondary)` | `get_design_context` `54009:293109` |
 | Padding | `var(--padding-padding-24)` all sides | `54009:292967` |
 | Column gap | `var(--spacing-space-16)` toolbar ↔ canvas ↔ footer | `54009:292967` |
 | Flex | `flex-direction: column`; canvas `flex: 1` | runtime |
@@ -191,11 +191,11 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Height | `32px` | `53993:290152` |
 | Shell padding | `py var(--padding-padding-2)` `px var(--padding-padding-16)` | `53993:290152` |
 | Border radius | `var(--corner-radius-radius-4)` | `53993:290152` |
-| Border | `var(--border-width-border-default)` `var(--color-border-accessible)` | `53993:290152` |
-| Background | `var(--color-background-component)` | search spec |
+| Border | `var(--border-width-border-default)` `var(--color-border-gray-neutral-base)` | `53993:290152` |
+| Background | `var(--color-background-surface-component)` | search spec |
 | Icon | `search-16` at `16×16`; brand tint | `29393:137074` |
 | Input padding | `pl var(--padding-padding-8)` `py var(--padding-padding-4)` | inner row `29393:137075` |
-| Placeholder | `Search node name`; `var(--color-text-neutral)` | `29393:137076` |
+| Placeholder | `Search node name`; `var(--color-text-gray-neutral)` | `29393:137076` |
 | Typography | Body 2 — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)` | |
 | Implementation | `Search.tsx` `variant="main"`; slot `.searchSlot` width 280px | |
 
@@ -207,7 +207,7 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 |---|---|---|
 | Visibility | `showFilter=true` only | `53993:290064` |
 | Filter chip | `TopologyFilterChip` — field `Status` (medium) + `:` + value + `arrow-drop-tri-caret` (10px) | `54015:299554` |
-| Chip background | `var(--color-background-surface-2)` | `54015:299554` |
+| Chip background | `var(--color-background-surface-secondary)` | `54015:299554` |
 | Chip radius | `var(--corner-radius-radius-24)` | `54015:299554` |
 | Chip padding | `px var(--padding-padding-12)` `py var(--padding-padding-4)` | `54015:299554` |
 | Gap chip ↔ Add Filter | `var(--spacing-space-8)` | `53993:290064` |
@@ -235,7 +235,7 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Size | `32×28px` (`box-sizing: border-box`) |
 | Padding | `py var(--padding-padding-6)` `px var(--padding-padding-8)` |
 | Border | transparent default; `var(--border-width-border-default)` solid `var(--color-border-brand-base)` on `:hover` / `:active` (tertiary — see [`button`](../button/design-spec.md) + slider § tertiary) |
-| Background | transparent default; `var(--color-background-controls-brand-lighter)` on hover | |
+| Background | transparent default; `var(--color-background-controls-lighter)` on hover | |
 | Border radius | `var(--corner-radius-radius-4)` |
 | Action | Decrement zoom by `SYNAPSE_TOPOLOGY_ZOOM_STEP_PERCENT` (10), clamp min 25 |
 | `aria-label` | `Zoom out` |
@@ -247,7 +247,7 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Library spec | `components/synapse/slider/design-spec.md` |
 | Props | `showEdgeLabels={false}` `showStepper={false}` `showValueLabel={false}` `density="viewport"` |
 | Host size | `120px × 16px` | `53932:151178` |
-| Rail | `6px` pill height; `var(--color-border-light)`; `var(--corner-radius-radius-6)` — no IDS inset frame |
+| Rail | `6px` pill height; `var(--color-border-gray-neutral-light)`; `var(--corner-radius-radius-6)` — no IDS inset frame |
 | Thumb | `var(--sizing-size-16)`; `var(--color-icon-brand-base)` (hover/press/focus per slider spec) |
 | Thumb position (codegen) | Horizontal: `left: ((value − min) / (max − min)) × 100%` on track. Vertical: `top: 50%`; `transform: translate(-50%, -50%)` — **not** fixed `top` px. Reference: `Slider.module.css` (stepper dots use same pattern); Base UI thumb in `Slider.tsx` | |
 | Fill | `var(--color-background-brand-base)` indicator; pill radius `6px` |
@@ -270,7 +270,7 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Property | Contract |
 |---|---|
 | Content | `{value}%` (e.g. `100%`) |
-| Typography | Body 2 `var(--color-text-neutral)` |
+| Typography | Body 2 `var(--color-text-gray-neutral)` |
 | `aria-live` | `polite` on readout |
 
 ### Element: `TopologyViewportActionButtons` (`54015:299140`)
@@ -293,7 +293,7 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 |---|---|
 | Role | Pan/zoom surface; grid background |
 | Flex | `flex: 1`; `min-height: 360px` (story); runtime fills layout |
-| Background | `var(--color-background-surface-1)` + dot grid using `var(--color-border-light)` |
+| Background | `var(--color-background-surface-primary)` + dot grid using `var(--color-border-gray-neutral-light)` |
 | Cursor | `grab` default; `grabbing` while panning |
 | Transform stack | Inner `.canvasLayer`: `translate(x,y) scale(s)`; `transform-origin: 0 0` |
 | Rendering | **SVG** edges + HTML absolutely positioned nodes — **no D3** |
@@ -306,8 +306,8 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 |---|---|
 | Layer order | Below nodes; inside transformed `.canvasLayer` |
 | Direction | **Source → target** — path starts at source anchor; **filled arrowhead at target** shell intersection (`buildArrowHeadPath` tip on `to` point) |
-| Stroke | `var(--color-border-accessible)`; width `1.5px` |
-| Arrowhead | Separate filled SVG path (`<path d="… Z">`); `fill: var(--color-border-accessible)`; depth `7px` (`SYNAPSE_TOPOLOGY_EDGE_ARROW_LENGTH_PX`) — **not** SVG `<marker>` with CSS variables |
+| Stroke | `var(--color-border-gray-neutral-base)`; width `1.5px` |
+| Arrowhead | Separate filled SVG path (`<path d="… Z">`); `fill: var(--color-border-gray-neutral-base)`; depth `7px` (`SYNAPSE_TOPOLOGY_EDGE_ARROW_LENGTH_PX`) — **not** SVG `<marker>` with CSS variables |
 | Anchor | Horizontal shell intersection: source at `sourceCenter.y`, target at `targetCenter.y`; radius `22px` (`44px` shell) or `24px` (`48px` pentagon) |
 | Path end | Line/cubic ends `7px` before target tip so arrowhead base meets shell (no visible gap) |
 | Routing | **Flexible cubic** when vertical offset \> `4px`; **straight** when aligned (Figma `54010:295826` / `54010:295831`) |
@@ -337,9 +337,9 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Implementation | `TopologyLegend.tsx` | `storybook/src/components/topology/TopologyLegend.tsx` |
 | Row gap | `var(--spacing-space-32)` between items | `53993:290286` |
 | Item layout | **Label first**, then arrow graphic (`space-8` gap) | `53993:290057`, `53993:290060` |
-| Typography | Body 2 `var(--color-text-neutral)` | `53993:290058` |
+| Typography | Body 2 `var(--color-text-gray-neutral)` | `53993:290058` |
 | Arrow size | `48×15px` | `53993:290059`, `53993:290062` |
-| Arrow color | `var(--color-border-accessible)` via `currentColor` | Figma `#757575` |
+| Arrow color | `var(--color-border-gray-neutral-base)` via `currentColor` | Figma `#757575` |
 | Connected To arrow | Solid line + chevron — `topology-legend-connected-to.svg` | `53993:290059` |
 | Depends On arrow | Dashed segments + chevron — `topology-legend-depends-on.svg` | `53993:290062` |
 | Accessibility | `aria-label="Edge legend"`; arrows `aria-hidden` | |
@@ -352,9 +352,9 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 |---|---|---|
 | Visibility | `showMinimap=true` (optional; default **false** in story contract) | |
 | Size | `120×80px` | `54009:292963` |
-| Border | `var(--color-border-brand-dark)` | `54009:292963` |
+| Border | `var(--color-border-brand-strong)` | `54009:292963` |
 | Radius | `var(--corner-radius-radius-8)` | `54009:292963` |
-| Background | `var(--color-background-surface-2)` | |
+| Background | `var(--color-background-surface-secondary)` | |
 | Trigger icon | `grid-square-9-16` in icon button | `54009:292963` |
 | Position | Footer right; layout padding provides inset | `54009:293086` |
 
@@ -363,16 +363,16 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 | Slot / layer | Property | Token / contract | Figma node | Live evidence |
 |---|---|---|---|---|
 | Topology root shell | border width | `var(--border-width-border-default)` | `54015:299824` | `get_design_context` on `54009:293109` |
-| Topology root shell | border color | `var(--color-border-light)` | `54015:299824` | `get_design_context` on `54009:293109` |
+| Topology root shell | border color | `var(--color-border-gray-neutral-light)` | `54015:299824` | `get_design_context` on `54009:293109` |
 | Topology root shell | border-radius | `var(--corner-radius-radius-4)` | `54015:299824` | `get_design_context` on `54009:293109` |
-| Topology root shell | background | `var(--color-background-surface-2)` | `54015:299824` | `get_design_context` on `54009:293109` |
+| Topology root shell | background | `var(--color-background-surface-secondary)` | `54015:299824` | `get_design_context` on `54009:293109` |
 | Search field | border-radius | `var(--corner-radius-radius-4)` | `53993:290152` | `get_design_context` on `54009:293109` |
 | Topology layout | padding | `var(--padding-padding-24)` | `54009:292967` | `get_design_context` on `54009:293109` |
 | Topology layout | column gap | `var(--spacing-space-16)` | `54009:292967` | `get_design_context` on `54009:293109` |
 | Search field | padding | `py var(--padding-padding-2)` `px var(--padding-padding-16)` | `53993:290152` | `get_design_context` on `54010:295885` |
 | Viewport slider host | width × height | `120px × 16px` | `53932:151178` | `get_design_context` on `55459:151345` |
 | Viewport slider rail | height | `6px` (Synapse pill track) | `53932:123027` | `components/synapse/slider/design-spec.md` |
-| Viewport slider rail fill | token | `var(--color-border-light)` | `53932:123027` | `components/synapse/slider/design-spec.md` |
+| Viewport slider rail fill | token | `var(--color-border-gray-neutral-light)` | `53932:123027` | `components/synapse/slider/design-spec.md` |
 | Viewport selected segment | token | `var(--color-background-brand-base)` | `53932:123008` | `components/synapse/slider/design-spec.md` |
 | Viewport icon button | padding | `py var(--padding-padding-6)` `px var(--padding-padding-8)` | `53949:279843` | `get_design_context` on `54010:295885` |
 | Zoom cluster | gap | `var(--spacing-space-12)` | `53949:279842` | `get_design_context` on `54010:295885` |
@@ -389,15 +389,15 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 
 | Role | Token |
 |---|---|
-| Shell background | `var(--color-background-surface-2)` |
-| Shell border | `var(--border-width-border-default)` solid `var(--color-border-light)` |
+| Shell background | `var(--color-background-surface-secondary)` |
+| Shell border | `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-light)` |
 | Shell radius | `var(--corner-radius-radius-4)` |
 
 ### Element: `TopologyLayout`
 
 | Role | Token |
 |---|---|
-| Column background | `var(--color-background-surface-2)` |
+| Column background | `var(--color-background-surface-secondary)` |
 | Inset padding | `var(--padding-padding-24)` |
 | Section gap | `var(--spacing-space-16)` |
 
@@ -405,10 +405,10 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 
 | Role | Token |
 |---|---|
-| Field background | `var(--color-background-component)` |
-| Border | `var(--border-width-border-default)` `var(--color-border-accessible)` |
+| Field background | `var(--color-background-surface-component)` |
+| Border | `var(--border-width-border-default)` `var(--color-border-gray-neutral-base)` |
 | Radius | `var(--corner-radius-radius-4)` |
-| Placeholder / value text | `var(--color-text-neutral)` |
+| Placeholder / value text | `var(--color-text-gray-neutral)` |
 | Focus border | `var(--color-border-brand-base)` |
 | Focus ring | `var(--border-width-border-thick)` `var(--color-border-brand-base)` |
 
@@ -416,47 +416,47 @@ Outermost topology host — **distinct from** `TopologyLayout` (inner padded col
 
 | Role | Token |
 |---|---|
-| Chip background | `var(--color-background-surface-2)` |
-| Chip border | `var(--color-border-accessible)` |
-| Chip text | `var(--color-text-neutral)` |
+| Chip background | `var(--color-background-surface-secondary)` |
+| Chip border | `var(--color-border-gray-neutral-base)` |
+| Chip text | `var(--color-text-gray-neutral)` |
 | Add Filter text | `var(--color-text-brand-strong)` |
 
 ### Element: `TopologyZoomSlider`
 
 | Role | Token |
 |---|---|
-| Slider rail (viewport) | `var(--color-border-light)`; `6px` pill; `var(--corner-radius-radius-6)` |
+| Slider rail (viewport) | `var(--color-border-gray-neutral-light)`; `6px` pill; `var(--corner-radius-radius-6)` |
 | Slider fill / indicator | `var(--color-background-brand-base)` |
 | Slider thumb | `var(--color-icon-brand-base)` (hover/press per slider spec) |
-| Zoom label | `var(--color-text-neutral)` |
+| Zoom label | `var(--color-text-gray-neutral)` |
 | Icon buttons | `var(--color-icon-brand-base)` (tertiary button) |
 
 ### Element: `TopologyCanvasViewport`
 
 | Role | Token |
 |---|---|
-| Canvas fill | `var(--color-background-surface-1)` |
-| Grid dot | `var(--color-border-light)` |
+| Canvas fill | `var(--color-background-surface-primary)` |
+| Grid dot | `var(--color-border-gray-neutral-light)` |
 
 ### Element: `TopologyEdgeLayer`
 
 | Role | Token |
 |---|---|
-| Stroke | `var(--color-border-accessible)` |
+| Stroke | `var(--color-border-gray-neutral-base)` |
 
 ### Element: `TopologyLegend`
 
 | Role | Token |
 |---|---|
-| Label text | `var(--color-text-neutral)` |
-| Swatch stroke | `var(--color-border-accessible)` |
+| Label text | `var(--color-text-gray-neutral)` |
+| Swatch stroke | `var(--color-border-gray-neutral-base)` |
 
 ### Element: `TopologyMinimap`
 
 | Role | Token |
 |---|---|
-| Shell background | `var(--color-background-surface-2)` |
-| Shell border | `var(--color-border-brand-dark)` |
+| Shell background | `var(--color-background-surface-secondary)` |
+| Shell border | `var(--color-border-brand-strong)` |
 | Radius | `var(--corner-radius-radius-8)` |
 
 ### Typography (shared toolbar/footer)
@@ -879,8 +879,8 @@ Prescriptive layout/CSS from Storybook reference — agents **must not** paraphr
 
 | Area | Contract | Reference |
 |---|---|---|
-| `TopologyRoot` | Border `var(--border-width-border-default)` solid `var(--color-border-light)`; radius `var(--corner-radius-radius-4)`; `overflow: hidden` | `Topology.module.css` → `.root` |
-| Zoom −/+ (tertiary) | `border-color: transparent` default; hover/active → `var(--color-border-brand-base)` + `var(--color-background-controls-brand-lighter)` | `Button.module.css` → `.tertiary` |
+| `TopologyRoot` | Border `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-light)`; radius `var(--corner-radius-radius-4)`; `overflow: hidden` | `Topology.module.css` → `.root` |
+| Zoom −/+ (tertiary) | `border-color: transparent` default; hover/active → `var(--color-border-brand-base)` + `var(--color-background-controls-lighter)` | `Button.module.css` → `.tertiary` |
 | Slider thumb | Vertical center: `top: 50%`; `transform: translate(-50%, -50%)`; horizontal `%` from value | `Slider.module.css`; `Slider.tsx` |
 | Zoom icons | `ctrl-minimize-16` / `shape-plus`: `Icon` **`variant="mask"`** (tint via `color` / `currentColor`) — not `fill` on SVG | `TopologyZoomSlider.tsx` |
 | Node `main` cluster | `position: relative` on `TopologyNodeMain` (`.main`) — required for absolute children | `TopologyNode.module.css` → `.main` |

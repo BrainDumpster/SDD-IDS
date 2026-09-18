@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 48254:161809 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -45,10 +46,10 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 - `var(--alert-green-500)` = #1b8500
 - `var(--alert-green-600)` = #166e00
-- `var(--color-background-controls-brand-base)` = #0076ce
+- `var(--color-background-controls-base)` = #0076ce
 - `var(--color-background-gray-lighter)` = #f4f4f4 (light) / #393939 (dark)
 - `var(--color-text-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--corner-radius-radius-4)` = 4px
 - `var(--font-size-body-3)` = 12px
 - `var(--spacing-space-8)` = 8px
@@ -58,14 +59,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-gray-lighter)` (#f4f4f4) |  | `var(--color-text-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-gray-lighter)` (#f4f4f4) |  | `var(--color-text-gray-neutral)` (#4d4d4d) | radius: `var(--corner-radius-radius-4)` |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-gray-lighter)` (#393939) |  | `var(--color-text-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
+| default | default | `var(--color-background-gray-lighter)` (#393939) |  | `var(--color-text-gray-neutral)` (#b8c1c9) | radius: `var(--corner-radius-radius-4)` |
 
 ## Source Mapping
 

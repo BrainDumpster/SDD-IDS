@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 53259:126090 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -40,7 +41,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Global tokens (colors, spacing, typography, elevation): see [root-spec.md](../root-spec.md).
 > Below are tokens referenced by this component's CSS module.
 
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--font-line-height-line-height-24)` = 24px
 - `var(--font-size-body-1)` = 16px
 - `var(--padding-padding-12)` = 12px
@@ -53,14 +54,14 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral)` (#4d4d4d) |  |
+| default | default |  |  | `var(--color-text-gray-neutral)` (#4d4d4d) |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default |  |  | `var(--color-text-neutral)` (#b8c1c9) |  |
+| default | default |  |  | `var(--color-text-gray-neutral)` (#b8c1c9) |  |
 
 ## Source Mapping
 

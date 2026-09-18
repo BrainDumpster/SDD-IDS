@@ -14,6 +14,7 @@
 | Figma Page | Components |
 | Node ID | 48467:26816 |
 | Design System | Synapse |
+| Spec pattern | **standalone** |
 
 <!-- ds:section id=anatomy -->
 ## Anatomy
@@ -78,21 +79,21 @@ Implementations must render these parts in order. Each part maps to a single DOM
 - `var(--chat-input-shell-min-height)` = 92px
 - `var(--chat-input-shell-radius)` = var(--corner-radius-radius-20)
 - `var(--chat-input-textarea-max-height)` = 252px
-- `var(--color-background-controls-brand-base)` = #0076ce
+- `var(--color-background-controls-base)` = #0076ce
 - `var(--color-background-gray-light)` = #eaeaea (light) / #393939 (dark)
-- `var(--color-background-surface-2)` = #ffffff (light) / #1e262c (dark)
+- `var(--color-background-surface-secondary)` = #ffffff (light) / #1e262c (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
 - `var(--color-border-neutral-light)` = #757575 (light) / #34414c (dark)
-- `var(--color-border-strong)` = #252525 (light) / #b8c1c9 (dark)
-- `var(--color-border-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
+- `var(--color-border-gray-neutral-strong)` = #252525 (light) / #b8c1c9 (dark)
+- `var(--color-border-brand-transparent-brand)` = rgba(255,255,255,0.00) (light) / #4c9fdd (dark)
 - `var(--color-icon-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-icon-disabled)` = #757575 (light) / #c5c5c5 (dark)
-- `var(--color-icon-white)` = #ffffff
+- `var(--color-icon-gray-disabled)` = #757575 (light) / #c5c5c5 (dark)
+- `var(--color-icon-gray-white)` = #ffffff
 - `var(--color-text-brand-strong)` = #0062ab (light) / #94c5ea (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
-- `var(--color-text-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-text-gray-neutral-strong)` = #252525 (light) / #e6e9ec (dark)
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-line-height-line-height-24)` = 24px
 - `var(--font-line-height-line-height-32)` = 32px
@@ -113,7 +114,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-disabled)` (#757575) | opacity: 0.5; radius: `var(--chat-input-button-radius)` |
+| default | default | `var(--color-background-controls-base)` (#0076ce) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-gray-disabled)` (#757575) | opacity: 0.5; radius: `var(--chat-input-button-radius)` |
 | default | disabled |  |  |  | opacity: 1 |
 
 <!-- ds:section id=states-dark -->
@@ -121,7 +122,7 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | default | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-disabled)` (#9e9e9e) | opacity: 0.5; radius: `var(--chat-input-button-radius)` |
+| default | default | `var(--color-background-controls-base)` (#0076ce) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-gray-disabled)` (#9e9e9e) | opacity: 0.5; radius: `var(--chat-input-button-radius)` |
 | default | disabled |  |  |  | opacity: 1 |
 
 ## Source Mapping

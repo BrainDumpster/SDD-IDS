@@ -14,8 +14,8 @@ Synapse **Masthead** shares the IDS **Masthead** component family (`Masthead-Mai
 | Topic | IDS | Synapse |
 |---|---|---|
 | Figma file | IDS Design Library (`0bHk3XhrjFhowgFkz9yLr4`) | Synapse Hi-Fi (`Td1bnsvRj1PCGs9RVJkIvJ`) |
-| Root background | Solid `var(--color-background-masthead-brand-base)` | **`var(--color-background-surface-1)`** + horizontal gradient `var(--color-background-gradient-masthead-start)` → `var(--color-background-gradient-masthead-end)` (`47807:7569`) |
-| Bottom border token | `var(--color-border-transparent-neutral)` | **`var(--color-border-transparent-neutral-light)`** |
+| Root background | Solid `var(--color-background-masthead-base)` | **`var(--color-background-surface-primary)`** + horizontal gradient `var(--color-background-gradient-masthead-start)` → `var(--color-background-gradient-masthead-end)` (`47807:7569`) |
+| Bottom border token | `var(--color-border-gray-neutral-transparent-base)` | **`var(--color-border-transparent-neutral-light)`** |
 | Product name typography | Header 6 (18px / 32px line) in reference CSS | **Same tokens** — `var(--font-size-header-6)` / `var(--font-line-height-line-height-32)` |
 | Default sample product name | `"Product Name"` | **`"Synapse"`** (`47807:7569`, Page Layout `48463:143536`) |
 | Default `iconsSlot` sample | Search, Alerts, Jobs, Settings, Help (5 icons) | **Help only** in canonical Page Layout; full strip available as optional story (`50154:68499`) |
@@ -25,7 +25,7 @@ Synapse **Masthead** shares the IDS **Masthead** component family (`Masthead-Mai
 | Help menu dropdown | IDS settings-style menus (product-specific) | **`SynapseMastheadHelpMenu`** — About, Get Started (`51829:85983`) |
 | User account menu | `MastheadAvatar` + host menu | **`SynapseMastheadUserMenu`** — 250px panel (`49989:83672`); icon-only avatar variant (`50024:244160`) |
 | Dark theme action default bg | `masthead-brand-base` | **`transparent`** on icon/avatar triggers (`50154:68499` row Default) |
-| Dark theme action hover bg | `masthead-brand-strong` | **`var(--color-background-controls-brand-strong)`** (`50154:68499` row Hover) |
+| Dark theme action hover bg | `masthead-brand-strong` | **`var(--color-background-controls-strong)`** (`50154:68499` row Hover) |
 | Dark theme root gradient | N/A (solid) | Start `rgba(0,118,206,0.50)` → end `rgba(19,21,25,0.10)` in `synapse-theme.css` |
 | Theme CSS | `components/ids-theme.css` | **`components/synapse-theme.css`** |
 
@@ -103,14 +103,14 @@ Inherits IDS shell geometry from [`ids/masthead/design-spec.md` → Layout & Mea
 |---|---|
 | `MastheadRoot` height | `var(--sizing-size-56)` / `var(--scale-56)` — **56px** |
 | `MastheadRoot` padding | `0 var(--padding-padding-8) 0 var(--padding-padding-16)` |
-| `MastheadRoot` background | `var(--color-background-surface-1)` + `linear-gradient(90deg, var(--color-background-gradient-masthead-start), var(--color-background-gradient-masthead-end))` |
+| `MastheadRoot` background | `var(--color-background-surface-primary)` + `linear-gradient(90deg, var(--color-background-gradient-masthead-start), var(--color-background-gradient-masthead-end))` |
 | `MastheadRoot` bottom border | `var(--border-width-border-default)` solid `var(--color-border-transparent-neutral-light)` |
-| `productName` | Header 6 — `var(--font-size-header-6)`, line-height `var(--font-line-height-line-height-32)`, weight 400, `var(--color-text-white)` |
+| `productName` | Header 6 — `var(--font-size-header-6)`, line-height `var(--font-line-height-line-height-32)`, weight 400, `var(--color-text-gray-white)` |
 | `SynapseMastheadActionIconButton` | width `var(--sizing-size-48)`; padding `var(--padding-padding-20)` `var(--padding-padding-16)`; icon glyph `16×16` |
 | `SynapseMastheadAvatar` trigger | padding `var(--padding-padding-12)` `var(--padding-padding-8)` |
-| Avatar chip | `32×32` circle, `var(--border-width-border-default)` solid `var(--color-border-white)` |
+| Avatar chip | `32×32` circle, `var(--border-width-border-default)` solid `var(--color-border-gray-white)` |
 | Badge wrapper | `position: absolute; top: 12px; left: 23px` (parent `position: relative`) |
-| Focus ring (actions + avatar) | `var(--border-width-border-default)` dashed `var(--color-border-white)`, `outline-offset: -1px` — action elements only |
+| Focus ring (actions + avatar) | `var(--border-width-border-default)` dashed `var(--color-border-gray-white)`, `outline-offset: -1px` — action elements only |
 | Help menu panel | Detached dropdown below trigger; default options About / Get Started |
 | User menu panel | **250px** fixed width (`SynapseMastheadUserMenu`) |
 
@@ -120,26 +120,26 @@ Sample frame width `1920px` is reference-only; runtime uses `width: 100%`.
 
 ### Surfaces and chrome
 
-- `var(--color-background-surface-1)` — masthead base under gradient
+- `var(--color-background-surface-primary)` — masthead base under gradient
 - `var(--color-background-gradient-masthead-start)` / `var(--color-background-gradient-masthead-end)` — horizontal brand wash
-- `var(--color-background-masthead-brand-base)` — action default (light theme)
-- `var(--color-background-masthead-brand-strong)` — action hover / open+hover (light)
-- `var(--color-background-masthead-brand-stronger)` — action active / `aria-expanded`
-- `var(--color-background-controls-brand-strong)` — action hover (dark theme)
+- `var(--color-background-masthead-base)` — action default (light theme)
+- `var(--color-background-masthead-strong)` — action hover / open+hover (light)
+- `var(--color-background-masthead-stronger)` — action active / `aria-expanded`
+- `var(--color-background-controls-strong)` — action hover (dark theme)
 - `var(--color-border-transparent-neutral-light)` — masthead bottom border
-- `var(--color-border-white)` — avatar ring, focus ring, badge border
+- `var(--color-border-gray-white)` — avatar ring, focus ring, badge border
 
 ### Typography and icons
 
-- Product name: `var(--color-text-white)`, Header 6 tokens (see Layout)
-- Action icons: **`var(--color-icon-white)`** (not `var(--color-text-white)`)
+- Product name: `var(--color-text-gray-white)`, Header 6 tokens (see Layout)
+- Action icons: **`var(--color-icon-gray-white)`** (not `var(--color-text-gray-white)`)
 - Avatar initials: Body 2 — `var(--font-size-body-2)`, line-height `var(--font-line-height-line-height-20)`, `font-variation-settings: 'wdth' 100`
 
 ### Badges (when composed)
 
-- Critical: `var(--color-background-alerting-critical)` — Alerts
-- Success: `var(--color-background-alerting-success)` or `var(--color-background-alerting-success-1)` in dark matrix — Jobs
-- Badge text: `var(--color-text-white)`, `var(--font-size-body-3)` (12px)
+- Critical: `var(--color-background-alerting-critical-base)` — Alerts
+- Success: `var(--color-background-alerting-success-base)` or `var(--color-background-alerting-success-1)` in dark matrix — Jobs
+- Badge text: `var(--color-text-gray-white)`, `var(--font-size-body-3)` (12px)
 - Cap display at `"99+"` when count > 99
 
 Global token catalog: `components/synapse-theme.css`, `components/synapse/root-spec.md`.
@@ -148,19 +148,19 @@ Global token catalog: `components/synapse-theme.css`, `components/synapse/root-s
 
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Masthead container | gradient + `var(--color-background-surface-1)` | bottom `var(--color-border-transparent-neutral-light)` | — | — |
-| Brand / product name | transparent (gradient shows through) | none | `var(--color-text-white)` | `var(--color-icon-white)` (logo) |
-| Action icon button (default) | `var(--color-background-masthead-brand-base)` | none | — | `var(--color-icon-white)` |
-| Action icon button (hover) | `var(--color-background-masthead-brand-strong)` | none | — | `var(--color-icon-white)` |
-| Action icon button (active / `aria-expanded`) | `var(--color-background-masthead-brand-stronger)` | none | — | `var(--color-icon-white)` |
-| Action icon button (open + hover) | `var(--color-background-masthead-brand-strong)` | none | — | `var(--color-icon-white)` |
-| Action icon button (focus-visible) | `var(--color-background-masthead-brand-base)` | dashed inset `var(--color-border-white)` | — | `var(--color-icon-white)` |
-| Avatar trigger (default) | `var(--color-background-masthead-brand-base)` | none | `var(--color-text-white)` (initials) | `var(--color-icon-white)` |
-| Avatar trigger (hover) | `var(--color-background-masthead-brand-strong)` | none | `var(--color-text-white)` | `var(--color-icon-white)` |
-| Avatar trigger (active / `aria-expanded`) | `var(--color-background-masthead-brand-stronger)` | none | `var(--color-text-white)` | `var(--color-icon-white)` |
-| Avatar chip | transparent | `var(--color-border-white)` | `var(--color-text-white)` | — |
-| Badge (critical) | `var(--color-background-alerting-critical)` | `var(--color-border-white)` | `var(--color-text-white)` | — |
-| Badge (success) | `var(--color-background-alerting-success)` | `var(--color-border-white)` | `var(--color-text-white)` | — |
+| Masthead container | gradient + `var(--color-background-surface-primary)` | bottom `var(--color-border-transparent-neutral-light)` | — | — |
+| Brand / product name | transparent (gradient shows through) | none | `var(--color-text-gray-white)` | `var(--color-icon-gray-white)` (logo) |
+| Action icon button (default) | `var(--color-background-masthead-base)` | none | — | `var(--color-icon-gray-white)` |
+| Action icon button (hover) | `var(--color-background-masthead-strong)` | none | — | `var(--color-icon-gray-white)` |
+| Action icon button (active / `aria-expanded`) | `var(--color-background-masthead-stronger)` | none | — | `var(--color-icon-gray-white)` |
+| Action icon button (open + hover) | `var(--color-background-masthead-strong)` | none | — | `var(--color-icon-gray-white)` |
+| Action icon button (focus-visible) | `var(--color-background-masthead-base)` | dashed inset `var(--color-border-gray-white)` | — | `var(--color-icon-gray-white)` |
+| Avatar trigger (default) | `var(--color-background-masthead-base)` | none | `var(--color-text-gray-white)` (initials) | `var(--color-icon-gray-white)` |
+| Avatar trigger (hover) | `var(--color-background-masthead-strong)` | none | `var(--color-text-gray-white)` | `var(--color-icon-gray-white)` |
+| Avatar trigger (active / `aria-expanded`) | `var(--color-background-masthead-stronger)` | none | `var(--color-text-gray-white)` | `var(--color-icon-gray-white)` |
+| Avatar chip | transparent | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` | — |
+| Badge (critical) | `var(--color-background-alerting-critical-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` | — |
+| Badge (success) | `var(--color-background-alerting-success-base)` | `var(--color-border-gray-white)` | `var(--color-text-gray-white)` | — |
 
 Evidence: `50154:68499` (light rows use masthead-brand-* progression); canonical frame `47807:7569`.
 
@@ -172,15 +172,15 @@ Rows that **genuinely differ** from Light (verified `50154:68499` on dark surfac
 
 | Element | Background | Border | Notes |
 |---|---|---|---|
-| Masthead container | gradient (`masthead-start` 50% blue → `masthead-end` 10% dark) over `var(--color-background-surface-1)` | bottom `var(--color-border-transparent-neutral-light)` | Synapse-only gradient |
+| Masthead container | gradient (`masthead-start` 50% blue → `masthead-end` 10% dark) over `var(--color-background-surface-primary)` | bottom `var(--color-border-transparent-neutral-light)` | Synapse-only gradient |
 | Action icon button (default) | **transparent** | none | Not `masthead-brand-base` fill |
-| Action icon button (hover) | **`var(--color-background-controls-brand-strong)`** | none | Not `masthead-brand-strong` |
-| Action icon button (active / `aria-expanded`) | `var(--color-background-masthead-brand-stronger)` | none | Same token as Light |
-| Action icon button (focus-visible) | `var(--color-background-masthead-brand-base)` | dashed inset `var(--color-border-white)` | Focus row in matrix |
+| Action icon button (hover) | **`var(--color-background-controls-strong)`** | none | Not `masthead-brand-strong` |
+| Action icon button (active / `aria-expanded`) | `var(--color-background-masthead-stronger)` | none | Same token as Light |
+| Action icon button (focus-visible) | `var(--color-background-masthead-base)` | dashed inset `var(--color-border-gray-white)` | Focus row in matrix |
 | Avatar trigger (default) | **transparent** | none | Matches action default |
-| Avatar trigger (hover) | **`var(--color-background-controls-brand-strong)`** | none | |
-| Avatar trigger (active / `aria-expanded`) | `var(--color-background-masthead-brand-stronger)` | none | |
-| Badge (success) | `var(--color-background-alerting-success-1)` | `var(--color-border-white)` | Dark matrix binding |
+| Avatar trigger (hover) | **`var(--color-background-controls-strong)`** | none | |
+| Avatar trigger (active / `aria-expanded`) | `var(--color-background-masthead-stronger)` | none | |
+| Badge (success) | `var(--color-background-alerting-success-1)` | `var(--color-border-gray-white)` | Dark matrix binding |
 
 ## Interactions
 
@@ -306,7 +306,7 @@ Inherits IDS fallback rules from [`ids/masthead/design-spec.md`](../ids/masthead
 
 ### Icon color
 
-Same as IDS — use `var(--color-icon-white)` on action buttons; `Icon` default `variant="mask"` for asset icons with hardcoded fills.
+Same as IDS — use `var(--color-icon-gray-white)` on action buttons; `Icon` default `variant="mask"` for asset icons with hardcoded fills.
 
 ### Open state (`aria-expanded`)
 

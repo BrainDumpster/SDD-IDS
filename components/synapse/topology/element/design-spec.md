@@ -76,7 +76,7 @@ Deterministic slot order:
 | Slot / layer | Property | Token / contract | Figma node | Live evidence |
 |---|---|---|---|---|
 | General `Object` | border-radius | `var(--corner-radius-radius-round)` | `52497:196937` | `get_design_context` `52497:196935` |
-| General `Object` | border (default) | `1px` `var(--color-icon-accessible)` | `52497:196937` | `get_variable_defs` |
+| General `Object` | border (default) | `1px` `var(--color-icon-gray-neutral-accessible)` | `52497:196937` | `get_variable_defs` |
 | Cluster `Object` | border-radius | `var(--corner-radius-radius-8)` | `52497:197086` | `get_design_context` `52497:197085` |
 | Cluster `Hover` outline | size / offset | `52×52` at `-4px`; `radius-12` | `54474:142194` | `get_design_context` `53470:228412` |
 | Hypervisor shell | polygon frame | `48×48` | `52497:196951` | `get_design_context` `52497:196949` |
@@ -88,38 +88,38 @@ Deterministic slot order:
 
 | Role | Token |
 |---|---|
-| Background | `var(--color-background-surface-2)` |
-| Border | `var(--border-width-border-default)` `var(--color-icon-accessible)` |
+| Background | `var(--color-background-surface-secondary)` |
+| Border | `var(--border-width-border-default)` `var(--color-icon-gray-neutral-accessible)` |
 | Application/Service default border accent | `var(--color-border-violet-base-strong)` |
 
 ### Shell (hover — not selected)
 
 | Role | Token |
 |---|---|
-| Border | `var(--border-width-border-thick)` `var(--color-border-brand-dark)` |
-| Frame shadow | `drop-shadow(0 3px 1.5px var(--color-background-controls-brand-light))` |
+| Border | `var(--border-width-border-thick)` `var(--color-border-brand-strong)` |
+| Frame shadow | `drop-shadow(0 3px 1.5px var(--color-background-controls-light))` |
 
 ### Hover outline
 
 | Role | Token |
 |---|---|
-| Stroke | `var(--border-width-border-default)` `var(--color-border-brand-dark)` |
+| Stroke | `var(--border-width-border-default)` `var(--color-border-brand-strong)` |
 
 ### Shell (selected)
 
 | Role | Token |
 |---|---|
-| Background | `var(--color-background-controls-brand-light)` |
-| Border | `var(--border-width-border-thick)` `var(--color-border-brand-dark)` |
+| Background | `var(--color-background-controls-light)` |
+| Border | `var(--border-width-border-thick)` `var(--color-border-brand-strong)` |
 | Frame shadow | same as hover |
 
 ## States (Light Theme)
 
 | State | Background | Border | Hover outline | Shadow |
 |---|---|---|---|---|
-| `default` | `var(--color-background-surface-2)` | `1px` `var(--color-icon-accessible)`* | hidden | none |
-| `hover` | `var(--color-background-surface-2)` | `2px` `var(--color-border-brand-dark)` | visible; shape-matched `52×52` / pentagon `58×58` | brand-light drop shadow |
-| `selected` | `var(--color-background-controls-brand-light)` | `2px` `var(--color-border-brand-dark)` | hidden | brand-light drop shadow |
+| `default` | `var(--color-background-surface-secondary)` | `1px` `var(--color-icon-gray-neutral-accessible)`* | hidden | none |
+| `hover` | `var(--color-background-surface-secondary)` | `2px` `var(--color-border-brand-strong)` | visible; shape-matched `52×52` / pentagon `58×58` | brand-light drop shadow |
+| `selected` | `var(--color-background-controls-light)` | `2px` `var(--color-border-brand-strong)` | hidden | brand-light drop shadow |
 
 \* `applicationService` default uses `var(--color-border-violet-base-strong)` instead of accessible gray.
 

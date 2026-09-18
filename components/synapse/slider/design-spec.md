@@ -63,7 +63,7 @@ Inherit IDS from [`components/ids/slider/design-spec.md`](../ids/slider/design-s
 
 ## Tokens
 
-Inherit IDS **Tokens** — rail, segment, marker, endpoint label, value label, and value-input semantic tokens (`var(--color-icon-brand-base)`, `var(--color-icon-brand-strong)`, `var(--color-icon-brand-stronger)`, `var(--color-border-brand-base)`, `var(--color-icon-disabled)`, `var(--color-background-gray-light)`, `var(--color-border-disabled)`, `var(--color-text-brand-base)`, `var(--color-text-disabled)`, `var(--color-text-neutral)`, `var(--color-background-component)`, `var(--color-border-accessible)`).
+Inherit IDS **Tokens** — rail, segment, marker, endpoint label, value label, and value-input semantic tokens (`var(--color-icon-brand-base)`, `var(--color-icon-brand-strong)`, `var(--color-icon-brand-stronger)`, `var(--color-border-brand-base)`, `var(--color-icon-gray-disabled)`, `var(--color-background-gray-light)`, `var(--color-border-gray-disabled)`, `var(--color-text-brand-base)`, `var(--color-text-gray-disabled)`, `var(--color-text-gray-neutral)`, `var(--color-background-surface-component)`, `var(--color-border-gray-neutral-base)`).
 
 ## States (Light Theme)
 

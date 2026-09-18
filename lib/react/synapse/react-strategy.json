@@ -1,5 +1,5 @@
 {
-  "description": "How each Synapse React public component is produced from lib/react/ids. Used by codegen and the façade barrel. Base UI is not a runtime for any programme.",
+  "description": "How each Synapse React public component is produced from lib/react/ids. Used by codegen and the fa\u00e7ade barrel. Base UI is not a runtime for any programme.",
   "themeCss": "components/synapse-theme.css",
   "idsLib": "lib/react/ids",
   "synapseLib": "lib/react/synapse",
@@ -7,61 +7,305 @@
     "reexport": "Alias IdsX as SynapseX. Token deltas come from synapse-theme.css.",
     "overlay-css": "Re-export or wrap IdsX; Synapse CSS module overrides chrome/layout.",
     "wrapper": "Thin SynapseX around IdsX (defaults, locked programme, extra slots).",
-    "standalone": "No IDS counterpart — implement only under lib/react/synapse.",
+    "standalone": "No IDS counterpart \u2014 implement only under lib/react/synapse.",
     "deferred": "ids-fork in specs but no lib/react/ids implementation yet."
   },
   "components": [
-    { "slug": "button", "strategy": "reexport", "idsSlug": "button" },
-    { "slug": "spinner", "strategy": "reexport", "idsSlug": "spinner" },
-    { "slug": "progress-bar", "strategy": "reexport", "idsSlug": "progress-bar" },
-    { "slug": "date-picker", "strategy": "reexport", "idsSlug": "date-picker" },
-    { "slug": "time-picker", "strategy": "reexport", "idsSlug": "time-picker" },
-    { "slug": "dropdown-combo-box", "strategy": "reexport", "idsSlug": "dropdown-combo-box" },
-    { "slug": "dropdown-single-select", "strategy": "reexport", "idsSlug": "dropdown-single-select" },
-    { "slug": "dropdown-multiselect", "strategy": "reexport", "idsSlug": "dropdown-multiselect" },
-    { "slug": "checkbox", "strategy": "reexport", "idsSlug": "checkbox" },
-    { "slug": "radio-button", "strategy": "reexport", "idsSlug": "radio-button" },
-    { "slug": "segmented-button", "strategy": "reexport", "idsSlug": "segmented-button" },
-    { "slug": "toggle-switch", "strategy": "reexport", "idsSlug": "toggle-switch" },
-    { "slug": "alert", "strategy": "reexport", "idsSlug": "alert" },
-    { "slug": "accordion", "strategy": "reexport", "idsSlug": "accordion" },
-    { "slug": "badge", "strategy": "reexport", "idsSlug": "badge" },
-    { "slug": "anchor-menu", "strategy": "reexport", "idsSlug": "anchor-menu" },
-    { "slug": "slider", "strategy": "reexport", "idsSlug": "slider" },
-    { "slug": "tab", "strategy": "reexport", "idsSlug": "tab" },
-    { "slug": "text-input", "strategy": "reexport", "idsSlug": "text-box", "publicName": "SynapseTextInput" },
-    { "slug": "toast", "strategy": "reexport", "idsSlug": "toast" },
-    { "slug": "tooltip", "strategy": "reexport", "idsSlug": "tooltip" },
-    { "slug": "wizard", "strategy": "reexport", "idsSlug": "wizard" },
-    { "slug": "tag", "strategy": "reexport", "idsSlug": "tag", "notes": "Verified chrome deltas (focus offset, close hover) still need overlay-css." },
-    { "slug": "app-shell", "strategy": "reexport", "idsSlug": "app-shell" },
-    { "slug": "card", "strategy": "reexport", "idsSlug": "card" },
-    { "slug": "masthead", "strategy": "reexport", "idsSlug": "masthead" },
-    { "slug": "modal", "strategy": "reexport", "idsSlug": "modal" },
-    { "slug": "tree", "strategy": "reexport", "idsSlug": "tree" },
-    { "slug": "footer", "strategy": "reexport", "idsSlug": "footer" },
-    { "slug": "pagination", "strategy": "reexport", "idsSlug": "pagination" },
-    { "slug": "datagrid", "strategy": "reexport", "idsSlug": "datagrid" },
-    { "slug": "detail-panel", "strategy": "reexport", "idsSlug": "detail-panel" },
-    { "slug": "link", "strategy": "reexport", "idsSlug": "link" },
-    { "slug": "icon", "strategy": "reexport", "idsSlug": "icon" },
-    { "slug": "helper", "strategy": "reexport", "idsSlug": "helper" },
-    { "slug": "error", "strategy": "reexport", "idsSlug": "error" },
-    { "slug": "app-launcher", "strategy": "wrapper", "idsSlug": "app-launcher", "notes": "Locks programme=synapse on existing IDS chrome CSS." },
-    { "slug": "left-nav", "strategy": "wrapper", "idsSlug": "main-menu-left", "notes": "Overlay CSS for rail width/border/gradient. New Chat slot deferred until IdsMainMenuLeft has a lead slot." },
-    { "slug": "main-menu-top", "strategy": "deferred", "idsSlug": "main-menu-top", "notes": "No lib/react/ids/main-menu-top yet." },
-    { "slug": "about", "strategy": "deferred", "idsSlug": "about", "notes": "No lib/react/ids/about yet." },
-    { "slug": "suggested-prompt", "strategy": "standalone", "libPath": "lib/react/synapse/suggested-prompt" },
-    { "slug": "thinking", "strategy": "standalone", "libPath": "lib/react/synapse/thinking" },
-    { "slug": "chat-area", "strategy": "standalone", "libPath": "lib/react/synapse/chat-area" },
-    { "slug": "chat-input-box", "strategy": "standalone", "libPath": "lib/react/synapse/chat-input-box" },
-    { "slug": "chat-system-response", "strategy": "standalone", "libPath": "lib/react/synapse/chat-system-response" },
-    { "slug": "recommendation-feedback", "strategy": "standalone", "libPath": "lib/react/synapse/recommendation-feedback" },
-    { "slug": "tracker", "strategy": "standalone", "libPath": "lib/react/synapse/tracker" },
-    { "slug": "stepper", "strategy": "standalone", "libPath": "lib/react/synapse/stepper" },
-    { "slug": "skeleton-loader", "strategy": "standalone", "libPath": "lib/react/synapse/skeleton-loader" },
-    { "slug": "empty-state", "strategy": "standalone", "libPath": "lib/react/synapse/empty-state" },
-    { "slug": "error-card", "strategy": "standalone", "libPath": "lib/react/synapse/error-card" },
-    { "slug": "topology", "strategy": "standalone", "notes": "Composed canvas (toolbar + SVG graph). Not ported in this pass — no lib-ready implementation; see components/synapse/topology/design-spec.md." }
+    {
+      "slug": "button",
+      "strategy": "reexport",
+      "idsSlug": "button"
+    },
+    {
+      "slug": "spinner",
+      "strategy": "reexport",
+      "idsSlug": "spinner"
+    },
+    {
+      "slug": "progress-bar",
+      "strategy": "reexport",
+      "idsSlug": "progress-bar"
+    },
+    {
+      "slug": "date-picker",
+      "strategy": "reexport",
+      "idsSlug": "date-picker"
+    },
+    {
+      "slug": "time-picker",
+      "strategy": "reexport",
+      "idsSlug": "time-picker"
+    },
+    {
+      "slug": "dropdown-combo-box",
+      "strategy": "reexport",
+      "idsSlug": "dropdown-combo-box"
+    },
+    {
+      "slug": "dropdown-single-select",
+      "strategy": "reexport",
+      "idsSlug": "dropdown-single-select"
+    },
+    {
+      "slug": "dropdown-multiselect",
+      "strategy": "reexport",
+      "idsSlug": "dropdown-multiselect"
+    },
+    {
+      "slug": "checkbox",
+      "strategy": "reexport",
+      "idsSlug": "checkbox"
+    },
+    {
+      "slug": "radio-button",
+      "strategy": "reexport",
+      "idsSlug": "radio-button"
+    },
+    {
+      "slug": "segmented-button",
+      "strategy": "reexport",
+      "idsSlug": "segmented-button"
+    },
+    {
+      "slug": "toggle-switch",
+      "strategy": "reexport",
+      "idsSlug": "toggle-switch"
+    },
+    {
+      "slug": "alert",
+      "strategy": "reexport",
+      "idsSlug": "alert"
+    },
+    {
+      "slug": "accordion",
+      "strategy": "reexport",
+      "idsSlug": "accordion"
+    },
+    {
+      "slug": "badge",
+      "strategy": "reexport",
+      "idsSlug": "badge"
+    },
+    {
+      "slug": "anchor-menu",
+      "strategy": "reexport",
+      "idsSlug": "anchor-menu"
+    },
+    {
+      "slug": "slider",
+      "strategy": "reexport",
+      "idsSlug": "slider"
+    },
+    {
+      "slug": "tab",
+      "strategy": "reexport",
+      "idsSlug": "tab"
+    },
+    {
+      "slug": "text-input",
+      "strategy": "reexport",
+      "idsSlug": "text-box",
+      "publicName": "SynapseTextInput"
+    },
+    {
+      "slug": "toast",
+      "strategy": "reexport",
+      "idsSlug": "toast"
+    },
+    {
+      "slug": "tooltip",
+      "strategy": "reexport",
+      "idsSlug": "tooltip"
+    },
+    {
+      "slug": "wizard",
+      "strategy": "reexport",
+      "idsSlug": "wizard"
+    },
+    {
+      "slug": "tag",
+      "strategy": "reexport",
+      "idsSlug": "tag",
+      "notes": "Verified chrome deltas (focus offset, close hover) still need overlay-css."
+    },
+    {
+      "slug": "app-shell",
+      "strategy": "reexport",
+      "idsSlug": "app-shell"
+    },
+    {
+      "slug": "card",
+      "strategy": "reexport",
+      "idsSlug": "card"
+    },
+    {
+      "slug": "masthead",
+      "strategy": "reexport",
+      "idsSlug": "masthead"
+    },
+    {
+      "slug": "modal",
+      "strategy": "reexport",
+      "idsSlug": "modal"
+    },
+    {
+      "slug": "tree",
+      "strategy": "reexport",
+      "idsSlug": "tree"
+    },
+    {
+      "slug": "footer",
+      "strategy": "reexport",
+      "idsSlug": "footer"
+    },
+    {
+      "slug": "pagination",
+      "strategy": "reexport",
+      "idsSlug": "pagination"
+    },
+    {
+      "slug": "datagrid",
+      "strategy": "reexport",
+      "idsSlug": "datagrid"
+    },
+    {
+      "slug": "detail-panel",
+      "strategy": "reexport",
+      "idsSlug": "detail-panel"
+    },
+    {
+      "slug": "link",
+      "strategy": "reexport",
+      "idsSlug": "link"
+    },
+    {
+      "slug": "icon",
+      "strategy": "reexport",
+      "idsSlug": "icon"
+    },
+    {
+      "slug": "helper",
+      "strategy": "reexport",
+      "idsSlug": "helper"
+    },
+    {
+      "slug": "error",
+      "strategy": "reexport",
+      "idsSlug": "error"
+    },
+    {
+      "slug": "app-launcher",
+      "strategy": "wrapper",
+      "idsSlug": "app-launcher",
+      "notes": "Locks programme=synapse on existing IDS chrome CSS."
+    },
+    {
+      "slug": "left-nav",
+      "strategy": "wrapper",
+      "idsSlug": "main-menu-left",
+      "notes": "Overlay CSS for rail width/border/gradient. New Chat slot deferred until IdsMainMenuLeft has a lead slot."
+    },
+    {
+      "slug": "dashboard",
+      "strategy": "reexport",
+      "idsSlug": "dashboard"
+    },
+    {
+      "slug": "dropdown-button",
+      "strategy": "reexport",
+      "idsSlug": "dropdown-button"
+    },
+    {
+      "slug": "dual-list-box",
+      "strategy": "reexport",
+      "idsSlug": "dual-list-box"
+    },
+    {
+      "slug": "get-started",
+      "strategy": "reexport",
+      "idsSlug": "get-started"
+    },
+    {
+      "slug": "status-bar",
+      "strategy": "reexport",
+      "idsSlug": "status-bar"
+    },
+    {
+      "slug": "whats-new",
+      "strategy": "reexport",
+      "idsSlug": "whats-new"
+    },
+    {
+      "slug": "main-menu-top",
+      "strategy": "deferred",
+      "idsSlug": "main-menu-top",
+      "notes": "No lib/react/ids/main-menu-top yet."
+    },
+    {
+      "slug": "about",
+      "strategy": "deferred",
+      "idsSlug": "about",
+      "notes": "No lib/react/ids/about yet."
+    },
+    {
+      "slug": "suggested-prompt",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/suggested-prompt"
+    },
+    {
+      "slug": "thinking",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/thinking"
+    },
+    {
+      "slug": "chat-area",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/chat-area"
+    },
+    {
+      "slug": "chat-input-box",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/chat-input-box"
+    },
+    {
+      "slug": "chat-system-response",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/chat-system-response"
+    },
+    {
+      "slug": "recommendation-feedback",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/recommendation-feedback"
+    },
+    {
+      "slug": "tracker",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/tracker"
+    },
+    {
+      "slug": "stepper",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/stepper"
+    },
+    {
+      "slug": "skeleton-loader",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/skeleton-loader"
+    },
+    {
+      "slug": "empty-state",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/empty-state"
+    },
+    {
+      "slug": "error-card",
+      "strategy": "standalone",
+      "libPath": "lib/react/synapse/error-card"
+    },
+    {
+      "slug": "topology",
+      "strategy": "standalone",
+      "notes": "Composed canvas (toolbar + SVG graph). Not ported in this pass \u2014 no lib-ready implementation; see components/synapse/topology/design-spec.md."
+    }
   ]
 }

@@ -107,9 +107,9 @@ Inherit IDS **Tokens** for shared shell slots. Synapse **App Shell–owned** ove
 
 | Slot | Tokens |
 |---|---|
-| `AppShellPageTitle` | `var(--font-size-header-6)`, `var(--font-line-height-line-height-25)`, `var(--color-text-neutral-strong)` |
+| `AppShellPageTitle` | `var(--font-size-header-6)`, `var(--font-line-height-line-height-25)`, `var(--color-text-gray-neutral-strong)` |
 | `AppShellPageHeader` border | `var(--color-border-neutral-light)` |
-| `AppShellRoot` / main column | `var(--color-background-surface-1)` |
+| `AppShellRoot` / main column | `var(--color-background-surface-primary)` |
 
 Masthead, Left Nav, Tabs, Tracker, Footer tokens: **delegate to child specs**. Resolve colours in `components/synapse-theme.css`.
 
@@ -121,7 +121,7 @@ Synapse-only static chrome (when not covered by IDS table):
 
 | Slot | Text |
 |---|---|
-| `AppShellPageTitle` | `var(--color-text-neutral-strong)` via **Header 6** (not Header 5) |
+| `AppShellPageTitle` | `var(--color-text-gray-neutral-strong)` via **Header 6** (not Header 5) |
 
 ## States (Dark Theme)
 

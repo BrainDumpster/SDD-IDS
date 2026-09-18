@@ -41,17 +41,17 @@ Implementations must render these parts in order. Each part maps to a single DOM
 > Below are tokens referenced by this component's CSS module.
 
 - `var(--border-width-border-1)` = var(--border-width-border-default)
-- `var(--color-background-component)` = #ffffff (light) / #111619 (dark)
+- `var(--color-background-surface-component)` = #ffffff (light) / #111619 (dark)
 - `var(--color-background-gray-light)` = #eaeaea (light) / #393939 (dark)
-- `var(--color-border-accessible)` = #757575 (light) / #8898a5 (dark)
+- `var(--color-border-gray-neutral-base)` = #757575 (light) / #8898a5 (dark)
 - `var(--color-border-brand-base)` = #0076ce (light) / #4c9fdd (dark)
-- `var(--color-border-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-border-strong)` = #252525 (light) / #b8c1c9 (dark)
+- `var(--color-border-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-border-gray-neutral-strong)` = #252525 (light) / #b8c1c9 (dark)
 - `var(--color-icon-brand-base)` = #0076ce (light) / #4c9fdd (dark)
 - `var(--color-icon-brand-strong)` = #0062ab (light) / #94c5ea (dark)
-- `var(--color-icon-disabled)` = #757575 (light) / #c5c5c5 (dark)
-- `var(--color-text-disabled)` = #757575 (light) / #9e9e9e (dark)
-- `var(--color-text-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
+- `var(--color-icon-gray-disabled)` = #757575 (light) / #c5c5c5 (dark)
+- `var(--color-text-gray-disabled)` = #757575 (light) / #9e9e9e (dark)
+- `var(--color-text-gray-neutral)` = #4d4d4d (light) / #b8c1c9 (dark)
 - `var(--font-line-height-line-height-20)` = 20px
 - `var(--font-size-body-2)` = 14px
 - `var(--spacing-space-16)` = 16px
@@ -63,24 +63,24 @@ Implementations must render these parts in order. Each part maps to a single DOM
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | active | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) |  |  |
-| default | checked | `var(--color-icon-brand-strong)` (#0062ab) | `var(--color-border-strong)` (#252525) |  |  |
-| default | default | `var(--color-icon-brand-base)` (#0076ce) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
-| default | disabled | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) | `var(--color-text-disabled)` (#757575) |  |
+| default | active | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-strong)` (#252525) |  |  |
+| default | checked | `var(--color-icon-brand-strong)` (#0062ab) | `var(--color-border-gray-neutral-strong)` (#252525) |  |  |
+| default | default | `var(--color-icon-brand-base)` (#0076ce) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
+| default | disabled | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-strong)` (#252525) | `var(--color-text-gray-disabled)` (#757575) |  |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-icon-brand-strong)` (#0062ab) | `var(--color-border-strong)` (#252525) |  |  |
+| default | hover | `var(--color-icon-brand-strong)` (#0062ab) | `var(--color-border-gray-neutral-strong)` (#252525) |  |  |
 
 <!-- ds:section id=states-dark -->
 ## States (Dark Theme)
 
 | Variant | State | Background | Border | Text / Icon | Other |
 |---|---|---|---|---|---|
-| default | active | `var(--color-background-component)` (#111619) | `var(--color-border-strong)` (#b8c1c9) |  |  |
-| default | checked | `var(--color-icon-brand-strong)` (#94c5ea) | `var(--color-border-strong)` (#b8c1c9) |  |  |
-| default | default | `var(--color-icon-brand-base)` (#4c9fdd) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-accessible)` (#8898a5) | `var(--color-text-neutral)` (#b8c1c9) | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
-| default | disabled | `var(--color-background-component)` (#111619) | `var(--color-border-strong)` (#b8c1c9) | `var(--color-text-disabled)` (#9e9e9e) |  |
+| default | active | `var(--color-background-surface-component)` (#111619) | `var(--color-border-gray-neutral-strong)` (#b8c1c9) |  |  |
+| default | checked | `var(--color-icon-brand-strong)` (#94c5ea) | `var(--color-border-gray-neutral-strong)` (#b8c1c9) |  |  |
+| default | default | `var(--color-icon-brand-base)` (#4c9fdd) | `var(--border-width-border-1)` (var(--border-width-border-default)) `var(--color-border-gray-neutral-base)` (#8898a5) | `var(--color-text-gray-neutral)` (#b8c1c9) | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
+| default | disabled | `var(--color-background-surface-component)` (#111619) | `var(--color-border-gray-neutral-strong)` (#b8c1c9) | `var(--color-text-gray-disabled)` (#9e9e9e) |  |
 | default | focus |  |  |  | focus-ring: `var(--border-width-border-1)` `var(--color-border-brand-base)` |
-| default | hover | `var(--color-icon-brand-strong)` (#94c5ea) | `var(--color-border-strong)` (#b8c1c9) |  |  |
+| default | hover | `var(--color-icon-brand-strong)` (#94c5ea) | `var(--color-border-gray-neutral-strong)` (#b8c1c9) |  |  |
 
 <!-- ds:section id=interactions -->
 ## Interactions (Component-Specific)
