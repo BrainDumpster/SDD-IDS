@@ -154,7 +154,7 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 Inputs:
 - `label?: string` (required unless `iconOnly=true`)
 - `variant?: "primary" | "secondary" | "tertiary" | "destructive"` (default `primary`)
-- `size?: "small" | "medium" | "large"` (default `large`)
+- `size?: "small" | "medium" | "large"` (default `large`; when `iconOnly=true`, use `"medium"` or `"large"` only)
 - `iconSlug?: string` (optional; user-defined icon slug from `/asset/icons/<slug>.svg`)
 - `iconOnly?: boolean` (default `false`)
 - `disabled?: boolean` (default `false`)
