@@ -16,7 +16,7 @@
   min-width: 186px;
   min-height: 40px;
   box-sizing: border-box;
-  border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-gray-neutral-base));
+  border: var(--border-width-border-1) solid var(--trigger-border, var(--color-border-gray-neutral-base));
   background: var(--trigger-bg, var(--color-background-surface-component));
   color: var(--trigger-fg, var(--color-text-gray-neutral));
   padding: var(--trigger-py, var(--padding-padding-10)) var(--padding-padding-16);
@@ -24,7 +24,7 @@
   line-height: var(--font-line-height-line-height-20);
   cursor: pointer;
   gap: var(--spacing-space-10);
-  border-radius: var(--dropdown-control-radius);
+  border-radius: var(--dropdown-control-radius, var(--corner-radius-radius-none));
 }
 
 .field[data-size="small"] {
@@ -51,7 +51,7 @@
   content: "";
   position: absolute;
   inset: -5px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
 }
