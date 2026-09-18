@@ -90,6 +90,8 @@
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
 - Truncated breadcrumbs reveal the IDS DropdownMenu when the "..." ellipsis is clicked or keyboard-activated
+- When the overflow menu opens, focus moves to the first menu item
+- When focus moves out of the menu (Tab past the last item, Shift+Tab back to the trigger, or focus leaving the menu entirely), the menu closes
 ### Accessibility
 - Focus ring: follows `IdsLink` 1px brand color focus ring
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
@@ -101,8 +103,8 @@
 
 ### Behavior & guidelines
 - Use breadcrumbs to show navigation hierarchy
-- Overflow pattern: breadcrumb shows full path up to 4 items (could be less based on screen size)
-- From 4 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
+- Overflow pattern: breadcrumb shows full path up to 3 items (could be less based on screen size)
+- From 4 items, breadcrumb automatically truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between. The threshold is configurable via `maxVisibleItems` (default 3); no opt-in prop is required
 - The ellipsis uses the same `IdsLink` standalone color and hover/focus/press styling as the other breadcrumb links
 - Clicking or keyboard-activating the "..." ellipsis opens the IDS DropdownMenu (single-select dropdown) with all truncated links
 - Use proper separator characters (/ > »)
@@ -132,6 +134,11 @@ Document runtime props, events, and variant axes. When **Variants** appears as a
 ### Variants
 - **Standard**: Breadcrumb trail on top with current page displayed below (larger typography)
 - **Truncated**: Standard variant with truncation for long paths (shows first and last items with ellipsis in between)
+
+### Props
+- `items`: `BreadcrumbItem[]` (`{ label, href? }`) — required
+- `currentPage`: `string` — optional, displayed below the trail
+- `maxVisibleItems`: `number` — default `3`; item count above this triggers the ellipsis overflow automatically
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.

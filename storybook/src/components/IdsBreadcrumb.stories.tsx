@@ -65,8 +65,6 @@ const meta: Meta<typeof IdsBreadcrumb> = {
 
     currentPage: "Current Page",
 
-    truncate: false,
-
     maxVisibleItems: 3,
 
 
@@ -89,8 +87,6 @@ const meta: Meta<typeof IdsBreadcrumb> = {
       description: "Current page text (displayed below breadcrumb trail)",
 
     },
-
-    truncate: { control: "boolean", description: "Whether to truncate with '...'" },
 
     maxVisibleItems: { control: "number", description: "Max items before truncation" },
 
@@ -270,8 +266,6 @@ export const OneItem: Story = {
 
     currentPage: "Current Page",
 
-    truncate: false,
-
   },
 
 };
@@ -291,8 +285,6 @@ export const TwoItems: Story = {
     ],
 
     currentPage: "Current Page",
-
-    truncate: false,
 
   },
 
@@ -315,8 +307,6 @@ export const ThreeItems: Story = {
     ],
 
     currentPage: "Current Page",
-
-    truncate: false,
 
   },
 
@@ -341,8 +331,6 @@ export const FourItems: Story = {
     ],
 
     currentPage: "Current Page",
-
-    truncate: false,
 
   },
 
@@ -370,8 +358,6 @@ export const VariantsMatrix: Story = {
 
           currentPage="Current Page"
 
-          truncate={false}
-
         />
 
       </div>
@@ -391,8 +377,6 @@ export const VariantsMatrix: Story = {
           ]}
 
           currentPage="Current Page"
-
-          truncate={false}
 
         />
 
@@ -415,8 +399,6 @@ export const VariantsMatrix: Story = {
           ]}
 
           currentPage="Current Page"
-
-          truncate={false}
 
         />
 
@@ -441,8 +423,6 @@ export const VariantsMatrix: Story = {
           ]}
 
           currentPage="Current Page"
-
-          truncate={false}
 
         />
 

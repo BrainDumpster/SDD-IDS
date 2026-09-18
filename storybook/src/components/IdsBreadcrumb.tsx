@@ -30,10 +30,6 @@ interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
 
   currentPage?: string;
 
-  /** Whether to truncate with "..." when items exceed maxVisibleItems */
-
-  truncate?: boolean;
-
   /** Maximum number of items to show before truncating (default: 3) */
 
   maxVisibleItems?: number;
@@ -49,8 +45,6 @@ export function IdsBreadcrumb({
 
   currentPage,
 
-  truncate = false,
-
   maxVisibleItems = 3,
 
   className,
@@ -59,7 +53,7 @@ export function IdsBreadcrumb({
 
 }: IdsBreadcrumbProps) {
 
-  const shouldTruncate = truncate && items.length > maxVisibleItems;
+  const shouldTruncate = items.length > maxVisibleItems;
 
   const visibleItems = shouldTruncate
 
@@ -75,10 +69,13 @@ export function IdsBreadcrumb({
 
   useEffect(() => {
     if (!dropdownOpen || !dropdownContainer) return;
-    const firstItem = dropdownContainer.querySelector<HTMLElement>(
-      'button:not(:disabled), [role="menuitem"]:not([aria-disabled="true"])',
-    );
-    firstItem?.focus();
+    const frame = requestAnimationFrame(() => {
+      const firstItem = dropdownContainer.querySelector<HTMLElement>(
+        'button:not(:disabled), [role="menuitem"]:not([aria-disabled="true"])',
+      );
+      firstItem?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
   }, [dropdownOpen, dropdownContainer]);
 
   const navRef = useRef<HTMLElement>(null);

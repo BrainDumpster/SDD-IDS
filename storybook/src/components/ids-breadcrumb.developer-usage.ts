@@ -32,9 +32,7 @@ Import the component used by the IDS Storybook example for **Breadcrumb**.
 
 | \`currentPage\` | \`string\` | — |
 
-| \`truncate\` | \`boolean\` | — |
-
-| \`maxVisibleItems\` | \`number\` | — |
+| \`maxVisibleItems\` | \`number\` | \`3\` |
 
 
 
