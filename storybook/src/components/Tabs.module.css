@@ -136,6 +136,20 @@
   transform: none;
 }
 
+/* Selected Primary rails replace the adjacent unselected 24px divider. */
+.tabPrimary.selected + .tabPrimary::before,
+.tabPrimary.selected + .moreTriggerPrimary::before,
+.tabPrimary.selected + :has(> .moreTriggerPrimary) .moreTriggerPrimary::before,
+.tabPrimary.selected + .addButton::before {
+  display: none;
+}
+
+.tabPrimary:not(.selected):has(+ .tabPrimary.selected)::after,
+.tabPrimary:not(.selected):has(+ .moreTriggerPrimary.moreTriggerSelected)::after,
+.tabPrimary:not(.selected):has(+ :has(> .moreTriggerPrimary.moreTriggerSelected))::after {
+  display: none;
+}
+
 /* Primary selected: top brand-dark segment (inside 38px row — inset shadow, not border). */
 .tabPrimary.selected {
   border-bottom: none;
@@ -157,9 +171,9 @@
   z-index: 1;
 }
 
-.selected::after {
-  top: 0;
-  height: 100%;
+.tabPrimary.selected::after {
+  top: 2px;
+  height: 36px;
   transform: none;
 }
 

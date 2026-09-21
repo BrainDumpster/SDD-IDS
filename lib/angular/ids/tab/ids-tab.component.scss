@@ -135,9 +135,25 @@ ids-tab-panel {
 }
 
 .ids-tab__tab--primary.ids-tab__tab--selected::before {
-  top: 0;
-  height: 100%;
+  top: 2px;
+  height: 36px;
   transform: none;
+}
+
+/* Selected Primary rails replace the adjacent unselected 24px divider. */
+.ids-tab__tab--primary.ids-tab__tab--selected + .ids-tab__tab--primary::before,
+.ids-tab__tab--primary.ids-tab__tab--selected + .ids-tab__more .ids-tab__more-trigger--primary::before,
+.ids-tab__tab--primary.ids-tab__tab--selected + .ids-tab__add--primary::before {
+  display: none;
+}
+
+.ids-tab__tab--primary:not(.ids-tab__tab--selected):has(
+    + .ids-tab__tab--primary.ids-tab__tab--selected
+  )::after,
+.ids-tab__tab--primary:not(.ids-tab__tab--selected):has(
+    + .ids-tab__more .ids-tab__more-trigger--selected
+  )::after {
+  display: none;
 }
 
 .ids-tab__tab--primary.ids-tab__tab--selected {
@@ -159,9 +175,9 @@ ids-tab-panel {
   z-index: 1;
 }
 
-.ids-tab__tab--selected::after {
-  top: 0;
-  height: 100%;
+.ids-tab__tab--primary.ids-tab__tab--selected::after {
+  top: 2px;
+  height: 36px;
   transform: none;
 }
 
@@ -296,9 +312,20 @@ ids-tab-panel {
 }
 
 .ids-tab__more-trigger--primary.ids-tab__more-trigger--selected::before {
-  top: 0;
-  height: 100%;
+  top: 2px;
+  height: 36px;
   transform: none;
+}
+
+.ids-tab__more-trigger--primary.ids-tab__more-trigger--selected::after {
+  top: 2px;
+  height: 36px;
+  transform: none;
+}
+
+.ids-tab__more-trigger--primary.ids-tab__more-trigger--selected + .ids-tab__add--primary::before,
+.ids-tab__more:has(.ids-tab__more-trigger--primary.ids-tab__more-trigger--selected) + .ids-tab__add--primary::before {
+  display: none;
 }
 
 .ids-tab__more-trigger--primary.ids-tab__more-trigger--selected {

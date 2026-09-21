@@ -29,6 +29,7 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Dividers/baseline use `1px` borders (`var(--border-width-border-1)` + `var(--color-border-gray-neutral-base)`).
 - Primary tab side divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
 - Primary tab right divider height: `24px` (unselected), `36px` with `2px` top padding for selected state (total `38px`).
+- **Primary adjacent unselected divider (mandatory):** when a Primary tab is selected, hide the neighboring unselected `24px` side/right divider that shares that edge. The selected `36px` rails replace it — do not stack a `24px` unselected divider against the selected tab.
 - **Row baseline / selected bottom-border contract (mandatory for codegen):**
   - Unselected tab items, overflow trigger (idle), and add-tab control draw the accessible baseline via their own `border-bottom`.
   - Remaining width after the last tab/control continues the baseline with a flex filler on the tab list (e.g. `TabList::after`), not via the panel.
@@ -158,6 +159,7 @@ Runtime rules:
 - `TabItem`: `38px` height (`box-sizing: border-box`), `9px 24px` padding (`padding-right: var(--padding-padding-20)` when a `TabClose` is shown), `8px` internal gap between icon/label/badge, `var(--spacing-space-20)` gap between the tab content and the `TabClose` control.
 - `TabItem` unselected: `border-bottom` = `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-base)`.
 - `TabItem` selected: `border-bottom: none` (elevated **and** transparent). Do not rely on opaque fill to hide a baseline drawn elsewhere.
+- `TabItem` Primary selected: `36px` left/right rails (`2px` from top). Adjacent unselected Primary `24px` dividers on the shared edge are `display: none`.
 - `TabLabel`: Body 2 tokenized typography.
 - `SelectedIndicator`: `2px`, placement depends on variant (`primary=top`, `secondary=bottom` in validated IDS examples).
 - `FocusRing`: `2px` brand border, tokenized.
@@ -213,6 +215,7 @@ Runtime rules:
 - [ ] Labels and content follow usage rules (title case labels, related content, no autosave on tab switch).
 - [ ] Light and dark snapshots remain token-driven with no hardcoded visual values.
 - [ ] Selected tab has `border-bottom: none` (not transparent-only) for Primary and Secondary.
+- [ ] Primary selected tab does not show an adjacent unselected `24px` divider on either shared edge.
 - [ ] `surface=transparent` + selected (light and dark) shows **no** accessible baseline under the selected tab.
 - [ ] `surface=elevated` + selected likewise shows no accessible baseline under the selected tab.
 - [ ] `ActiveTabPanel` does not use `border-top` + negative margin as a baseline underlay.
@@ -224,3 +227,4 @@ Runtime rules:
 ## Implementation Notes
 - **Caret icon size:** Overflow trigger caret icon (`moreIcon`) is set to `var(--sizing-size-10, 10px)` width and height.
 - **Selected baseline (Storybook reference):** `storybook/src/components/Tabs.module.css` — selected / overflow-selected use `border-bottom: none`; panel has no top border underlay; `.list::after` continues the row baseline. Required so Primary + dark + `surface=transparent` does not show a bottom line under the selected tab.
+- **Primary adjacent divider:** selected Primary rails (`36px` / `2px` from top) replace the neighboring unselected `24px` divider. Hide the next sibling `::before` and the previous sibling `::after` on the shared edge (`lib/react/ids/tab/IdsTabs.module.css`, `lib/angular/ids/tab/ids-tab.component.scss`).

@@ -121,6 +121,22 @@
   transform: none;
 }
 
+/* Selected Primary rails replace the adjacent unselected 24px divider. */
+.ids-tab-button--primary[aria-selected="true"] + .ids-tab-button--primary::before,
+.ids-tab-button--primary[aria-selected="true"] + .ids-tabs-overflow-trigger--primary::before,
+.ids-tab-button--primary[aria-selected="true"] + .ids-tabs-add--primary::before {
+  display: none;
+}
+
+.ids-tab-button--primary:not([aria-selected="true"]):has(
+    + .ids-tab-button--primary[aria-selected="true"]
+  )::after,
+.ids-tab-button--primary:not([aria-selected="true"]):has(
+    + .ids-tabs-overflow-trigger--primary[data-selected="true"]
+  )::after {
+  display: none;
+}
+
 .ids-tab-button:hover:not([aria-selected="true"]):not(:disabled) {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-gray-neutral-strong);
@@ -157,9 +173,9 @@
   z-index: 1;
 }
 
-.ids-tab-button[aria-selected="true"]::after {
-  top: 0;
-  height: 100%;
+.ids-tab-button--primary[aria-selected="true"]::after {
+  top: 2px;
+  height: 36px;
   transform: none;
 }
 
@@ -276,6 +292,16 @@
   top: 2px;
   height: 36px;
   transform: none;
+}
+
+.ids-tabs-overflow-trigger--primary[data-selected="true"]::after {
+  top: 2px;
+  height: 36px;
+  transform: none;
+}
+
+.ids-tabs-overflow-trigger--primary[data-selected="true"] + .ids-tabs-add--primary::before {
+  display: none;
 }
 
 .ids-tabs-overflow-trigger:hover {
