@@ -157,6 +157,43 @@ because root `package.json` has a single `"types"` pointer that both syncs read:
 tsc exits 2 with ~18 non-fatal errors (asset imports, `import.meta.env/glob`) but **emits correctly**
 — do not chase them, do not add `noEmitOnError`. 198 `.d.ts` parsed (120 ids + 69 synapse + shared).
 **Re-run after changing component props.**
+(2026-09-18: tsc now exits **0** and emits **200**. Unchanged otherwise.)
+
+### OPEN DEFECT — 42 of 55 components ship an EMPTY props contract
+
+`components/<group>/<Name>/<Name>.d.ts` emits `interface <Name>Props { [key: string]: unknown }` for
+every `strategy: "reexport"` facade — 42 of 55. Only the 13 `standalone`/`wrapper` components (which
+declare their own `Synapse<X>Props`) get a real contract. **This is the state currently published**,
+not a regression: `DesignSync(get_file, components/synapse/SynapseButton/SynapseButton.d.ts)` returns
+byte-identical empty output. The conventions header tells the design agent that file is "the
+`<Name>Props` contract to code against", so for those 42 the agent is coding against nothing.
+
+**Root cause (verified 2026-09-18).** `lib/dts.mjs` -> `propsBodyFor()` looks for a *declared*
+`interface/type <Name>Props` under `pkgDir`; a re-export alias
+(`type IdsButtonProps as SynapseButtonProps`) is neither, so it falls through to the entry-file
+fallback `project.getSourceFile(entry).getExportedDeclarations()`. `entry` is
+`join(pkgDir, pkg.types)` = `.design-sync/types/index.d.ts` — **which tsc never emits** (`rootDir` is
+`../lib/react` and `include` lists only `ids/**`, `synapse/**`, `shared/**`). No entry file -> no
+declarations -> floor contract.
+
+**Why the obvious fix does NOT work — do not repeat this experiment blind.** Adding a barrel that
+emits `types/index.d.ts` does populate all 55 contracts correctly (verified: `empty-props=0`, real
+unions + JSDoc), **but it breaks the bundle**: 42 components then render `root empty` with
+`Element type is invalid ... got: undefined`. The coupling is `cfg.extraEntries`, which populates the
+**bundle global** `window.SynapseReact.*`, not merely the export gate as this file previously said.
+Once a real types entry exists, the main-package export surface wins the global merge
+(`[EXPORT_COLLISION]`: 280 names) and binds the facades to a copy the bundle does not ship. Removing
+`extraEntries` clears the collision and keeps the props — and still leaves all 42 `undefined`,
+because that key was what put them on the global in the first place.
+
+So the fix requires re-tuning `entry` + `extraEntries` **across both syncs at once** (IDS and Synapse
+share the one `package.json` `"types"` pointer; a synapse-only barrel would starve the IDS sync).
+Budget for it accordingly: **`entry`/`extraEntries` are grade-contract keys — landing this clears all
+55 grades and forces a full re-grade** (see the COST LESSON section). Settle it BEFORE the first
+compare of whichever sync you touch first.
+
+Also note `lib/react/index.ts` is a real, tracked, hand-maintained IDS barrel — it is *not* a
+generated artifact. Do not overwrite it while chasing this.
 
 ## Known render warns (triaged — a warn NOT in this list is new)
 
@@ -370,3 +407,47 @@ prevent next time.
 Also: the playwright zoom trick needs the SAME `LD_LIBRARY_PATH` prefix as every other chromium call
 on this machine, or it dies with `libnspr4.so: cannot open shared object file`. Reading the full-res
 raws directly is the cheaper fallback and was sufficient in every borderline case this sync.
+
+## Conventions header — validation results (re-run this every sync)
+
+`.design-sync/conventions.synapse.md` is validated against the fresh build, never rewritten.
+2026-09-18 pass — everything verified EXCEPT two items:
+
+- **VERIFIED:** all 36 enumerated tokens are defined in the shipped CSS closure
+  (`styles.css` -> `fonts/fonts.css` + `_ds_bundle.css`, 421 KB); all named components exist as
+  `components/{synapse,dropdown}/<Name>/` dirs; the compound parts it names
+  (`SynapseAppLauncherTrigger|Surface|ProductRegion`) exist in `_ds_bundle.js`; `window.SynapseReact`
+  is the real global; `data-theme="dark"` is a real selector in `_ds_bundle.css`;
+  `SynapseButton.variant` really does include `"tertiary"`; `SynapseCard.title?: string` is real.
+- **DRIFT 1 — the `.d.ts` claim is hollow for 42/55.** "`<Name>.d.ts` — the `<Name>Props` contract to
+  code against" is true only for the 13 non-facade components. See the OPEN DEFECT section above.
+- **DRIFT 2 — the worked example misuses `SynapseBadge`.** It writes
+  `<SynapseBadge type={...}>{status}</SynapseBadge>`, but `IdsBadgeProps` is
+  `Omit<HTMLAttributes<HTMLElement>, "children">` and **requires `value: string | number`** — children
+  are dropped, so an agent copying the example renders an EMPTY badge. The `type` values it uses
+  (`"success"`, `"critical"`) are valid (`IdsBadgeType = default|critical|warning|disabled|success`).
+  **Proposed edit** (not applied — conventions content belongs to its authors):
+  `<SynapseBadge type={status === 'ok' ? 'success' : 'critical'} value={status} />`
+
+## Re-sync risks — the watch-list for the next run
+
+- **The 42 empty props contracts (OPEN DEFECT above).** Highest-value open item. Do not attempt it
+  mid-sync; it is a two-sync config change that clears all 55 grades.
+- **DRIFT 2 above is still unfixed** in `conventions.synapse.md` unless someone applied the proposed
+  edit. Re-check before trusting the example.
+- **`.ds-sync/storybook/http-serve.mjs` still ships no `.svg` MIME type** (re-diffed against skill
+  2.1.276 — still true). The `cp .design-sync/http-serve.mime-patch.mjs` re-apply after every
+  `cp -r` remains mandatory; without it every icon-bearing component mis-grades.
+- **`storyImports.shim` must list every NEW `strategy: "wrapper"` facade** whose `index.ts`
+  re-exports compound children from `../../ids/<x>`. Today: `app-launcher`, `left-nav`. Check
+  `react-strategy.json` for new `wrapper` entries before grading — this is a grade-contract key.
+- **Grades are carried, not re-earned.** All 55 components / 251 stories are `match` from the
+  2026-09-16 campaign; this run re-verified only the 5 driver-chosen canary picks. A DS-wide visual
+  change deserves `compare.mjs --spot-check-components` on a wider sample, not blind trust.
+- **`[STORY_CAP]` tail stories were never individually graded** for Button (6/9), Card (6/8),
+  DropdownComboBox (6/8). They are verified-by-upload, not image-judged.
+- **Verified only partially:** `[TOKENS_MISSING]`'s 10 properties were judged non-visible via
+  SynapseAlert alone. Still deliberately unpatched — see that section for why.
+- **Assumed toolchain:** node 24.14.0, storybook 8.6.18, skill 2.1.276, chromium via
+  `.ds-sync/syslibs` + `LD_LIBRARY_PATH`. `node_modules`, `.ds-sync/`, `.design-sync/types/` and
+  `sb-reference-synapse/` are all gitignored — every one of them must be rebuilt on a fresh clone.
