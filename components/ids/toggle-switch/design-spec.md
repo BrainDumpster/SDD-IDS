@@ -18,6 +18,7 @@ Deterministic slot order:
 5. `thumb` (movable knob) — Angular: `ids-toggle-switch-thumb`
 6. `status` (visible on/off status text) — Angular: `ids-toggle-switch-status`
 7. `assistiveText` (optional helper/description, if product uses it) — Angular: `ids-toggle-switch-assistive-text`
+8. `label` (optional `IdsFormLabel` rendered to the **left** of the switch) — sibling of `root` inside a field wrapper (`ids-toggle-switch-field`), **not** nested inside the root `<label>`; associated via `htmlFor` → input id so label clicks toggle
 
 Preferred projected-child order (Angular):
 
@@ -38,6 +39,7 @@ ids-toggle-switch
 - Thumb off position: thumb's left edge aligns with the track's outer left edge, covering the base border (implemented `translateX(-1px)` inside the `border-box` track).
 - Thumb on position: thumb's right edge aligns with the track's outer right edge, covering the base border (implemented `translateX(15px)`).
 - Status gap from switch: `var(--spacing-space-8)` (fallback `8px`)
+- Label gap from switch: `var(--spacing-space-8)` (field row is `inline-flex`, `align-items: center`)
 - Status line-height: `16px` in component sample rows.
 - Focus ring geometry around switch body: `38px x 22px` (implemented as `inset: -3px` ring around `32x16` body).
 - Interactive target rule: visual switch remains `32x16`, but click target should be expanded by wrapper/label in runtime layouts.
@@ -128,6 +130,10 @@ Angular reference selectors: `ids-toggle-switch` → `ids-toggle-switch-input` �
 | `className` | No | Optional extra class on the root host. |
 | `aria-label` / `ariaLabel` | Required (visible text is `On`/`Off` status only) | Accessible name. |
 | `aria-describedby` / `ariaDescribedBy` | No | Optional helper text association (merged with assistive-text slot id when that slot is projected). |
+| `label` | No | Visible `IdsFormLabel` rendered left of the switch (`htmlFor` → input id). |
+| `labelRequired` | No | Show the label's required `*` marker. Default `false`. |
+| `labelShowInfoIcon` | No | Show the label's `info-circ-solid` info icon. Default `false`. |
+| `labelInfoLabel` | No | Accessible name for the label info icon (decorative when omitted). |
 
 Outputs (root): `onCheckedChange(checked)` (Angular: `(onCheckedChange)`).
 
@@ -139,6 +145,7 @@ Outputs (root): `onCheckedChange(checked)` (Angular: `(onCheckedChange)`).
 | `thumb` / `ids-toggle-switch-thumb` | Yes (canonical) | Visual knob (`16x16`), translated from `-1px` (off) to `15px` (on) — `16px` travel. Root renders a fallback thumb when omitted. |
 | `status` / `ids-toggle-switch-status` | No | Visible on/off status text (`On`/`Off`). |
 | `assistiveText` / `ids-toggle-switch-assistive-text` | No | Optional helper/description; associated via `aria-describedby`. |
+| `label` / `ids-toggle-switch-field` | No | Optional `IdsFormLabel` left of the switch; sibling of root (root is itself a `<label>` — never nest labels); `htmlFor` association preserves click-to-toggle. |
 
 Behavioral requirements:
 - Support both controlled and uncontrolled patterns.
@@ -154,6 +161,9 @@ Behavioral requirements:
     - `thumb` (`ids-toggle-switch-thumb`)
   - optional `status` (`ids-toggle-switch-status`)
   - optional `assistiveText` (`ids-toggle-switch-assistive-text`)
+- optional `field` wrapper (`ids-toggle-switch-field`) when `label` is set
+  - `label` (`IdsFormLabel`, left of switch)
+  - `root` (`ids-toggle-switch`) — same subtree as above
 
 Deterministic rendering contract:
 1. Render native checkbox input for accessibility and form interoperability.

@@ -28,9 +28,17 @@ const specAccurateArgs: IdsToggleSwitchProps = {
   defaultChecked: false,
   disabled: false,
   showStatus: true,
+  label: "Enable alerts",
+  labelRequired: false,
+  labelShowInfoIcon: false,
 };
 
-const meta: Meta<IdsToggleSwitchProps> = {
+/** Story-only args: `showLabel` gates the `label` prop (component has no such prop). */
+type ToggleSwitchStoryArgs = IdsToggleSwitchProps & {
+  showLabel: boolean;
+};
+
+const meta: Meta<ToggleSwitchStoryArgs> = {
   tags: ["autodocs"],
   title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
@@ -48,24 +56,31 @@ const meta: Meta<IdsToggleSwitchProps> = {
       },
     },
   },
-  args: specAccurateArgs,
+  args: { ...specAccurateArgs, showLabel: true },
   argTypes: {
     checked: { control: "boolean" },
     defaultChecked: { control: "boolean" },
     disabled: { control: "boolean" },
     showStatus: { control: "boolean" },
+    showLabel: { control: "boolean" },
+    label: { control: "text" },
+    labelRequired: { control: "boolean" },
+    labelShowInfoIcon: { control: "boolean" },
+    labelInfoLabel: { control: "text" },
     "aria-label": { control: "text" },
     onCheckedChange: { action: "onCheckedChange" },
   },
+  render: ({ showLabel, ...args }) => (
+    <IdsToggleSwitch {...args} label={showLabel ? args.label : undefined} />
+  ),
 };
 
 export default meta;
-type Story = StoryObj<IdsToggleSwitchProps>;
+type Story = StoryObj<ToggleSwitchStoryArgs>;
 
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
   args: specAccurateArgs,
-  render: (args) => <IdsToggleSwitch {...args} />,
 };
 
 export const Off: Story = {
@@ -108,6 +123,7 @@ export const WithoutVisibleLabel: Story = {
   args: {
     "aria-label": "Enable alerts",
     defaultChecked: false,
+    showLabel: false,
   },
 };
 

@@ -16,6 +16,13 @@
   cursor: not-allowed;
 }
 
+/* Optional field row: IdsFormLabel to the left of the switch, space-8 gap. */
+.ids-toggle-switch-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+}
+
 /* Visually hidden, still focusable (codegen: native checkbox). */
 .ids-toggle-switch-input {
   position: absolute;

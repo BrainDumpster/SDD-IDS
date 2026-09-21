@@ -17,7 +17,9 @@ import React, {
   type ChangeEvent,
   type KeyboardEvent,
   type ReactElement,
+  type ReactNode,
 } from "react";
+import { IdsFormLabel } from "../form-label";
 import styles from "./IdsToggleSwitch.module.css";
 
 export interface IdsToggleSwitchProps {
@@ -31,6 +33,14 @@ export interface IdsToggleSwitchProps {
   disabled?: boolean;
   /** Default `true`. Renders the `On`/`Off` status text. */
   showStatus?: boolean;
+  /** Optional visible `IdsFormLabel` rendered to the left of the switch. */
+  label?: ReactNode;
+  /** Show the required `*` marker on the form label. Default `false`. */
+  labelRequired?: boolean;
+  /** Show the `info-circ-solid` info icon on the form label. Default `false`. */
+  labelShowInfoIcon?: boolean;
+  /** Accessible name for the label info icon (decorative when omitted). */
+  labelInfoLabel?: string;
   id?: string;
   name?: string;
   value?: string;
@@ -56,6 +66,10 @@ export function IdsToggleSwitch({
   value,
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
+  label,
+  labelRequired = false,
+  labelShowInfoIcon = false,
+  labelInfoLabel,
   className,
 }: IdsToggleSwitchProps): ReactElement {
   const reactId = useId();
@@ -101,7 +115,7 @@ export function IdsToggleSwitch({
     event.currentTarget.click();
   };
 
-  return (
+  const switchControl = (
     <label
       className={cx(styles["ids-toggle-switch"], className)}
       data-ids="ids-toggle-switch"
@@ -151,6 +165,30 @@ export function IdsToggleSwitch({
         </span>
       ) : null}
     </label>
+  );
+
+  if (label == null) {
+    return switchControl;
+  }
+
+  // Field row: IdsFormLabel sits to the left of the switch (space-8 gap).
+  // Sibling composition — the toggle root is itself a <label>, so the form
+  // label must not be nested inside it; htmlFor keeps click-to-toggle.
+  return (
+    <span
+      className={styles["ids-toggle-switch-field"]}
+      data-ids="ids-toggle-switch-field"
+    >
+      <IdsFormLabel
+        htmlFor={inputId}
+        required={labelRequired}
+        showInfoIcon={labelShowInfoIcon}
+        infoLabel={labelInfoLabel}
+      >
+        {label}
+      </IdsFormLabel>
+      {switchControl}
+    </span>
   );
 }
 
