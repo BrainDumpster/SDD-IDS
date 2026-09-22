@@ -10,6 +10,11 @@
   min-width: 80px;
 }
 
+/* Indeterminate track never shrinks below 80px. */
+.root[data-type="indeterminate"] .track {
+  min-width: 80px;
+}
+
 .labeledBlock {
   display: flex;
   flex-direction: column;

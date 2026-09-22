@@ -221,6 +221,7 @@ See **Interactions → Accessibility**.
 - [x] `with-label` meta row + track + optional helper matches Figma `Determinate/regular`
 - [x] `inline` track + 36px percentage column with 8px gap
 - [x] `inline` min-widths: 80px root, 36px track
+- [x] `indeterminate` track min-width: 80px
 - [x] `indeterminate` + success/warning/error renders helper row only (no track)
 - [x] Thickness 4 / 8 / 16px via sizing tokens
 - [x] Track/fill radius via `var(--progress-bar-control-radius)` (IDS: 0)

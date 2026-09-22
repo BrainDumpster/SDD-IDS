@@ -22,6 +22,11 @@
   min-width: 80px;
 }
 
+/* Indeterminate track never shrinks below 80px. */
+.ids-progress-bar[data-type="indeterminate"] .ids-progress-bar-track {
+  min-width: 80px;
+}
+
 .ids-progress-bar-labeled-block {
   display: flex;
   flex-direction: column;
