@@ -43,3 +43,8 @@ apps/design-spec-collab/data/collab_sessions/
 apps/design-spec-collab/data/storybook_pr_builds/
 apps/design-spec-portal/data/jobs/
 apps/design-spec-portal/*.json
+
+# Design-system bundle build output (regenerate via .ds-sync/package-build.mjs)
+ds-bundle/
+ds-bundle-synapse/
+.design-sync/
