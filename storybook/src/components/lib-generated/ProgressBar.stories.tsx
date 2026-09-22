@@ -34,9 +34,19 @@ const specAccurateArgs: IdsProgressBarProps = {
   helperText: "Helper text (time estimate)",
 };
 
+/**
+ * Resizable frame ("responsive box") — drag the bottom-right corner to
+ * shrink/expand and verify min-widths (inline: 80px root / 36px track;
+ * with-label: 200px root).
+ */
 const frameStyle: React.CSSProperties = {
-  maxWidth: 300,
-  width: "100%",
+  width: 320,
+  maxWidth: "100%",
+  boxSizing: "border-box",
+  resize: "horizontal",
+  overflow: "auto",
+  border: "1px dashed var(--color-border-gray-neutral-base)",
+  padding: 8,
 };
 
 const meta: Meta<IdsProgressBarProps> = {
@@ -114,7 +124,14 @@ export const InlineType: Story = {
 export const ThicknessReference: Story = {
   name: "Thickness Reference",
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 300 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        ...frameStyle,
+      }}
+    >
       <IdsProgressBar
         value={30}
         label="Thin"
@@ -142,7 +159,14 @@ export const ThicknessReference: Story = {
 
 export const States: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 300 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        ...frameStyle,
+      }}
+    >
       <IdsProgressBar
         value={35}
         label="In Progress"

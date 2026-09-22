@@ -5,6 +5,11 @@
   gap: var(--spacing-space-4);
 }
 
+/* Determinate/Inline never shrinks below 80px. */
+.root[data-type="inline"] {
+  min-width: 80px;
+}
+
 .labeledBlock {
   display: flex;
   flex-direction: column;
@@ -41,7 +46,7 @@
 
 .inlineRow .track {
   flex: 1 1 0;
-  min-width: 0;
+  min-width: 36px;
 }
 
 .inlineValue {

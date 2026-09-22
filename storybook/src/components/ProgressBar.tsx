@@ -59,11 +59,14 @@ export function ProgressBar({
   );
 
   const progressClip = isIndeterminate ? "0%" : `${clampedValue}%`;
+  // Indeterminate + success/warning/error: helper text only, no track.
+  const hideTrack = isIndeterminate && state !== "in-progress";
 
   return (
     <Progress.Root
       className={`${styles.root} ${styles[state]} ${isIndeterminate ? styles.indeterminate : ""}`}
       value={isIndeterminate ? null : clampedValue}
+      data-type={type}
       data-value-full={!isIndeterminate && clampedValue >= 100 ? "true" : undefined}
       aria-label={label ?? "Progress"}
       style={{ "--progress-clip": progressClip } as CSSProperties}
@@ -89,7 +92,7 @@ export function ProgressBar({
             </Progress.Value>
           )}
         </div>
-      ) : (
+      ) : hideTrack ? null : (
         track
       )}
       {showHelperText && helperText && (

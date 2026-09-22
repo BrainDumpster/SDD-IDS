@@ -12,6 +12,16 @@
   gap: var(--spacing-space-4);
 }
 
+/* Determinate/regular (with-label) never shrinks below 200px. */
+.ids-progress-bar[data-type="with-label"] {
+  min-width: 200px;
+}
+
+/* Determinate/Inline never shrinks below 80px. */
+.ids-progress-bar[data-type="inline"] {
+  min-width: 80px;
+}
+
 .ids-progress-bar-labeled-block {
   display: flex;
   flex-direction: column;
@@ -43,7 +53,7 @@
 
 .ids-progress-bar-inline-row .ids-progress-bar-track {
   flex: 1 1 0;
-  min-width: 0;
+  min-width: 36px;
 }
 
 .ids-progress-bar-inline-value {

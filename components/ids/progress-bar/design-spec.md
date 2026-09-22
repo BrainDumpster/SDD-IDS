@@ -5,11 +5,11 @@
 - Design system: IDS
 - Category: Loading and Progress
 - Spec path: `components/ids/progress-bar/design-spec.md`
-- Version: 1.1.0
+- Version: 1.3.0
 - Description: Determinate and indeterminate progress with optional label, inline percentage, helper row, and status-colored fills.
 - Status: active
 - Created: 2026-05-22
-- Updated: 2026-08-19
+- Updated: 2026-09-22
 - Primary Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev
 - Primary node id: `11067:54665`
 - Spec-accurate reference node: `11099:57210` (Determinate/regular, Thin, In Progress + helper)
@@ -26,13 +26,13 @@
 Deterministic slot order:
 1. `ProgressRoot` (wraps track + optional meta + helper)
 2. `ProgressMetaRow?` (label + percentage; `with-label` only)
-3. `ProgressTrackRow` (track alone, or track + inline percentage)
+3. `ProgressTrackRow?` (track alone, or track + inline percentage; omitted for `indeterminate` + `completed-success` / `completed-warning` / `failed-error`)
    - `ProgressTrack` (accessible border + neutral track background)
    - `ProgressIndicator` (fill; width driven by value or indeterminate animation)
 4. `ProgressHelperRow?` (status icon + helper text)
 
 ## Layout & Measurements
-- Container width: `100%` of available space (`box-sizing: border-box` on root).
+- Container width: `100%` of available space (`box-sizing: border-box` on root). No `max-width` on the track — it always fills the container width.
 - Track heights (`ProgressTrack`, `trackBg`, and `ProgressIndicator` share height; `box-sizing: border-box` so the 1px border renders inside the container and thickness tokens are not inflated):
   - `thin`: `var(--sizing-size-4)` (4px) — Figma `Type=Determinate/Inline, Thickness=Thin`
   - `medium`: `var(--sizing-size-8)` (8px)
@@ -42,15 +42,19 @@ Deterministic slot order:
 - Track shell (`ProgressTrack`): sizing only, no border. **`trackBg`** (`z-index: 0`) has accessible border + neutral background, clipped with `clip-path: inset(0 0 0 var(--progress-clip))` so it only paints the **unfilled** width (set from `value` on root). Track background uses `var(--color-background-gray-light)` (#393939 in dark theme).
 - **Filled segment** (`ProgressIndicator`, `z-index: 1`): full track height, width from value %, state-colored border on top, left, and bottom always. **Right border on the fill** only when determinate `value` is `100` (`data-value-full="true"` on root); for partial progress, the fill omits its right edge and the **far-right** accessible border is painted by `trackBg` on the unfilled segment. No gray track stroke on the completed segment because `trackBg` is not drawn under the fill.
 - `with-label` (`Determinate/regular` in Figma):
+  - Min width: **200px** on root (`min-width: 200px`); the bar never shrinks below this.
   - Meta row: label left, percentage right, `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`.
   - Gap between meta row and track: `var(--padding-padding-8)` (8px).
   - Gap between track block and helper: `var(--spacing-space-4)` (4px) on root column.
 - `inline` (`Determinate/Inline` in Figma):
+  - Min width: **80px** on root (`min-width: 80px`); the bar never shrinks below this.
   - Horizontal row: flex track (`flex: 1`) + percentage column.
+  - Track min width: **36px** (`min-width: 36px` on `ProgressTrack` inside the inline row).
   - Gap between track and percentage: `var(--padding-padding-8)` (8px).
   - Percentage column width: **36px**, text align left, Body 2.
-- `indeterminate`: animated fill segment (~60% width, horizontal sweep); percentage omitted when indeterminate.
+- `indeterminate`: animated fill segment (~60% width, horizontal sweep); percentage omitted when indeterminate. For `completed-success` / `completed-warning` / `failed-error` states the track is not rendered — the component shows the helper row only (standard helper design: status icon + text).
 - Helper row: icon `16px`, gap `var(--padding-padding-8)` between icon and text.
+- Helper text max width: **900px** (`max-width: 900px`). Text keeps its natural width and only wraps once the 900px limit is reached (`flex-shrink: 0` on the text so it does not wrap early inside the flex row).
 - Status icons: no icon for `in-progress` helper row.
 
 ### Figma type mapping
@@ -110,6 +114,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 | `completed-warning` | `var(--color-background-gray-light)` | `var(--color-background-alerting-minor-base)` | Track: accessible; fill edges: `var(--color-border-alerting-minor-base)` | `var(--color-text-gray-neutral-strong)` / helper `var(--color-text-gray-neutral)` |
 | `failed-error` | `var(--color-background-gray-light)` | `var(--color-background-alerting-critical-base)` | Track: accessible; fill edges: `var(--color-border-alerting-critical-base)` | `var(--color-text-gray-neutral-strong)` / helper `var(--color-text-gray-neutral)` |
 | `indeterminate` + `in-progress` | `var(--color-background-gray-light)` | `var(--color-background-brand-base)` | same as in-progress | same as in-progress |
+| `indeterminate` + `completed-success` / `completed-warning` / `failed-error` | — (track not rendered) | — | — | Helper row only: icon per slug table + `var(--color-text-gray-neutral)` text |
 
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -172,14 +177,14 @@ Canonical Storybook args (Figma `11099:57210`):
 - `state`: `"in-progress"`
 - `showHelperText`: `true`
 - `helperText`: `"Helper text (time estimate)"`
-- Frame width in story: `300px` max (matches Figma sample width)
+- Frame width in story: `100%` (no max-width cap; track fills available width)
 
 Secondary proof for `inline` (Figma `11099:57186`):
 - `value`: `30`, `type`: `"inline"`, `thickness`: `"medium"`, `state`: `"in-progress"` (no helper)
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
-Emit slots in **Anatomy** order: `ProgressRoot` → optional `ProgressMetaRow` → `ProgressTrackRow` (track + optional inline value) → optional `ProgressHelperRow`.
+Emit slots in **Anatomy** order: `ProgressRoot` → optional `ProgressMetaRow` → `ProgressTrackRow` (track + optional inline value) → optional `ProgressHelperRow`. Skip `ProgressTrackRow` entirely when `type="indeterminate"` and `state` is `completed-success`, `completed-warning`, or `failed-error`.
 
 ### Variant matrix
 Valid combinations:
@@ -194,7 +199,7 @@ Valid combinations:
 
 ### Behavior contract
 - Clamp `value` to `[0, 100]` for determinate types.
-- `indeterminate`: ignore `value`; animate indicator width/position.
+- `indeterminate`: ignore `value`; animate indicator width/position. When `state` is `completed-success`, `completed-warning`, or `failed-error`, do not render the track — the helper row keeps its standard design (status icon + text).
 - `data-value-full="true"` when determinate `value >= 100`.
 - Helper icon omitted for `in-progress`.
 
@@ -215,6 +220,8 @@ See **Interactions → Accessibility**.
 ### Validation checklist
 - [x] `with-label` meta row + track + optional helper matches Figma `Determinate/regular`
 - [x] `inline` track + 36px percentage column with 8px gap
+- [x] `inline` min-widths: 80px root, 36px track
+- [x] `indeterminate` + success/warning/error renders helper row only (no track)
 - [x] Thickness 4 / 8 / 16px via sizing tokens
 - [x] Track/fill radius via `var(--progress-bar-control-radius)` (IDS: 0)
 - [x] State fills and borders use semantic alerting/brand tokens only
