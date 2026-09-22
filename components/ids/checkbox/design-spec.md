@@ -29,9 +29,11 @@
 - Checkboxes should always have an option label, except in some data grids. In a flat data grid, the context around the checkbox is enough to understand its purpose.
 - Use sentence case with no period. Punctuation can be used with confirmation label like `I accept.`
 - Labels should be clear and concise. Avoid wrapping as much as possible.
+- **Long labels:** the row (checkbox + label) caps at `max-width: 900px`; longer text wraps to a second line and **never truncates**. The checkbox is `flex-start` aligned (with a `2px` top offset so it optically centers on the first `20px` line), so it stays on the first line when the label wraps. The label uses `min-width: 0` + `overflow-wrap: break-word`.
 
 ### Form label
 - Form label belongs to a `CheckboxGroup`, not to an individual `Checkbox`.
+- The group renders it with the shared **`IdsFormLabel`** component (`size="lg"`, 40px) — the group's `required` → `IdsFormLabel required`, and `labelIcon` (the `info-circ-solid` icon) → `IdsFormLabel showInfoIcon`. `aria-labelledby` points at the form label's inner `<label>`.
 - It is placed to the left or top of the checkbox group; the chosen position (left or top) should be common across the product.
 - Use `label` (string), `showLabel` (boolean, default `true`), and `ariaLabel` (string) props on `CheckboxGroup`. When `showLabel` is false or `label` is omitted, use `ariaLabel` as the accessible name of the group.
 - Form label text is single-line (`nowrap`).
@@ -56,7 +58,7 @@
   - `font-variation-settings: "wdth" 100` when the host font supports it
 - **Label color (Figma-verified):** `var(--color-text-gray-neutral)` for default, hover, focus-visible, checked, and partial. Disabled uses `var(--color-text-gray-disabled)`. Error does **not** change label color.
 - Checked indicator geometry: CSS-drawn thick check mark in an `8px x 8px` lane with sharp corners/edges (no rounded stroke caps), center-aligned to match Figma placement with optical Y nudge `-0.5px`.
-- Indeterminate indicator geometry: CSS-drawn horizontal stroke centered within the control (`8px` width, `2px` height), no rounded ends.
+- Partial indicator geometry: CSS-drawn horizontal stroke centered within the control (`8px` width, `2px` height), no rounded ends.
 - Assistive text row aligns to the left edge of the control (no `margin-left` offset); it occupies the full field width.
 - Focus-visible ring:
   - 1px brand ring (`var(--color-border-brand-base)`) drawn outside the control,
@@ -96,13 +98,13 @@ Use semantic tokens only.
 |---|---|---|---|---|---|
 | Unchecked | Default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | none | `var(--color-text-gray-neutral)` |
 | Unchecked | Hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | none | `var(--color-text-gray-neutral)` |
-| Unchecked | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | none | `var(--color-text-gray-neutral)` |
+| Unchecked | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + 3px focus ring offset (`var(--corner-radius-radius-4)` radius) | none | `var(--color-text-gray-neutral)` |
 | Checked | Default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
 | Checked | Hover | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
-| Checked | Focus-visible | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` + 2px focus ring offset | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
+| Checked | Focus-visible | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` + 3px focus ring offset (`var(--corner-radius-radius-4)` radius) | check in `var(--color-icon-gray-white)` | `var(--color-text-gray-neutral)` |
 | Partial | Default | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
 | Partial | Hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
-| Partial | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + 2px focus ring offset | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
+| Partial | Focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` + 3px focus ring offset (`var(--corner-radius-radius-4)` radius) | dash in `var(--color-icon-brand-base)` | `var(--color-text-gray-neutral)` |
 | Any | Disabled | `var(--color-background-gray-light)` for unselected/partial; `var(--color-background-gray-base)` for checked | `var(--color-border-gray-disabled)` | selected check uses `var(--color-icon-gray-inverse)`; partial dash uses `var(--color-icon-gray-disabled)`; unchecked none | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 
@@ -148,8 +150,9 @@ Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts
 **Preferred pattern:** projected children inside a group wrapper — not an `options[]` prop.
 
 ```
-CheckboxGroup [orientation?, disabled?, name?, idPrefix?]
-  Checkbox [label, checked?, defaultChecked?, partial?, disabled?, error?, helperText?, …]
+CheckboxGroup [orientation?, disabled?, name?, label?, showLabel?, labelPosition?, required?, labelIcon?, ariaLabel?, error?, errorText?]
+  Checkbox [checked?, defaultChecked?, partial?, disabled?, error?, name?, value?, ariaLabel?, density?, dataState?]
+    IdsCheckboxLabel | IdsHelper | IdsError  (projected children — there is no `label` or `helperText` prop)
   Checkbox …
 ```
 
@@ -163,13 +166,13 @@ Angular reference selectors: `ids-checkbox-group` → `ids-checkbox` (`storybook
 | `ariaLabel` | No | Accessible name used when `showLabel` is false or `label` is omitted. |
 | `labelPosition` | No | `left` (default) or `top`. |
 | `required` | No | Renders a `*` required mark inside the form label and sets `aria-required` on the group. |
-| `labelIcon` | No | Optional 16x16 icon node rendered after the form label text (and after `*`, if present). |
+| `labelIcon` | No | Truthy value shows the shared `IdsFormLabel` info icon after the form label text (and after `*`, if present). The node itself is not rendered — it maps to `showInfoIcon`. |
 | `error` | No | `true` applies error styling to child checkboxes and renders `errorText`/`error` slot. |
 | `errorText` | No | Validation error message string or node. |
 | `orientation` | No | `vertical` (default) or `horizontal`. Both use `var(--spacing-space-16)` between checkbox items. |
 | `disabled` | No | When `true`, cascades to all child checkboxes (merged with per-item `disabled`). |
 | `name` | No | Optional shared form `name` for child inputs. |
-| `idPrefix` | No | Optional id prefix for child control/assistive ids. |
+
 
 ### Item (`Checkbox` / `root`)
 | Prop / Slot | Required | Behavior |

@@ -75,6 +75,28 @@ export const SpecAccurateDesign: Story = {
   ),
 };
 
+/**
+ * Long label: the row (radio + text) grows to a 900px max width, then the text
+ * wraps to a second line — never truncating — while the radio stays aligned to
+ * the top on the first line.
+ */
+export const LongLabel: Story = {
+  name: "Long Label",
+  args: {
+    value: "a",
+  },
+  render: (args) => (
+    <IdsRadioButton {...args} defaultChecked>
+      <IdsRadioLabel>
+        This is a deliberately long radio option label that keeps going until the
+        row reaches its 900px maximum width including the radio control itself, at
+        which point the text wraps onto a second line without ever truncating,
+        while the radio stays aligned to the top on the first line.
+      </IdsRadioLabel>
+    </IdsRadioButton>
+  ),
+};
+
 /** Label typography/color contract from Figma `8505:14299` / Body 2. */
 export const LabelStyle: Story = {
   name: "Label Style",

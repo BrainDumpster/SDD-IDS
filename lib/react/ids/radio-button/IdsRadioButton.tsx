@@ -38,6 +38,7 @@ import React, {
 } from "react";
 import { IdsError, IdsErrorText } from "../error";
 import { IdsHelper } from "../helper";
+import { IdsFormLabel } from "../form-label";
 import styles from "./IdsRadioButton.module.css";
 
 export type IdsRadioDataState = "default" | "hover" | "focus-visible" | "disabled";
@@ -143,16 +144,23 @@ export function IdsRadioGroup({
   }, [valueProp]);
 
   useEffect(() => {
-    if (focusedValue !== undefined) return;
     const groupEl = groupRef.current;
     if (!groupEl) return;
     const radios = Array.from(
       groupEl.querySelectorAll<HTMLInputElement>(`input[type="radio"][name="${CSS.escape(name)}"]`),
     );
     if (!radios.length) return;
-    const selected = radios.find((r) => r.checked);
+    /* The roving tab stop must always land on an option that exists: every radio
+       gets tabIndex={-1} unless its value is the focused one. Re-seed not only
+       when it is unset but also when it matches no rendered option — a consumer
+       passing a sentinel for "nothing selected" (IdsDatagrid passes "") would
+       otherwise drop the whole group out of the tab order. */
+    if (focusedValue !== undefined && radios.some((radio) => radio.value === focusedValue)) {
+      return;
+    }
+    const selected = radios.find((radio) => radio.checked);
     setFocusedValue((selected ?? radios[0]).value);
-  }, [focusedValue, name]);
+  }, [focusedValue, name, value]);
 
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLDivElement>) => {
@@ -197,31 +205,54 @@ export function IdsRadioGroup({
 
       const currentIndex = radios.indexOf(current);
       const isCurrentEnabled = current.getAttribute("aria-disabled") !== "true";
+      const isEnabled = (radio: HTMLInputElement) =>
+        radio.getAttribute("aria-disabled") !== "true" && !radio.disabled;
+
+      /* ARIA APG radiogroup: arrows move the focus AND check the option they land
+         on, wrapping at the ends and skipping disabled options. `preventDefault`
+         suppresses the browser's own radio-group arrow handling, so the selection
+         has to be made here. */
+      const moveTo = (start: number, step: number) => {
+        for (let i = 1; i <= radios.length; i += 1) {
+          const index = (((start + step * i) % radios.length) + radios.length) % radios.length;
+          const candidate = radios[index];
+          if (isEnabled(candidate)) {
+            focusOption(candidate);
+            setValue(candidate.value);
+            return;
+          }
+        }
+      };
+
+      const moveToEdge = (from: "start" | "end") => {
+        const ordered = from === "start" ? radios : [...radios].reverse();
+        const target = ordered.find(isEnabled);
+        if (!target) return;
+        focusOption(target);
+        setValue(target.value);
+      };
 
       switch (event.key) {
         case "ArrowDown":
         case "ArrowRight": {
           event.preventDefault();
-          const target = radios[(currentIndex + 1) % radios.length];
-          focusOption(target);
+          moveTo(currentIndex, 1);
           break;
         }
         case "ArrowUp":
         case "ArrowLeft": {
           event.preventDefault();
-          const target =
-            radios[(currentIndex - 1 + radios.length) % radios.length];
-          focusOption(target);
+          moveTo(currentIndex, -1);
           break;
         }
         case "Home": {
           event.preventDefault();
-          focusOption(radios[0]);
+          moveToEdge("start");
           break;
         }
         case "End": {
           event.preventDefault();
-          focusOption(radios[radios.length - 1]);
+          moveToEdge("end");
           break;
         }
         case " ":
@@ -273,25 +304,15 @@ export function IdsRadioGroup({
         onKeyDown={handleKeyDown}
       >
         {shouldRenderLabel ? (
-          <span
+          <IdsFormLabel
             id={labelId}
+            size="lg"
+            required={required}
+            showInfoIcon={Boolean(labelIcon)}
             className={styles["IdsRadioGroupLabel"]}
-            data-ids="IdsRadioGroupLabel"
           >
             {label}
-            {required ? (
-              <span
-                className={styles["IdsRadioGroupLabelRequired"]}
-                data-ids="IdsRadioGroupLabelRequired"
-                aria-hidden="true"
-              >
-                *
-              </span>
-            ) : null}
-            {labelIcon ? (
-              <span className={styles["IdsRadioGroupLabelIcon"]}>{labelIcon}</span>
-            ) : null}
-          </span>
+          </IdsFormLabel>
         ) : null}
         <div
           className={styles["IdsRadioGroupBody"]}

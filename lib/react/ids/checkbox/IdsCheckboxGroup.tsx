@@ -17,6 +17,7 @@ import React, {
   type ReactNode,
 } from "react";
 import { IdsError, IdsErrorText } from "../error";
+import { IdsFormLabel } from "../form-label";
 import styles from "./IdsCheckboxGroup.module.css";
 
 export interface IdsCheckboxGroupContextValue {
@@ -108,25 +109,15 @@ export function IdsCheckboxGroup({
         aria-required={required ? true : undefined}
       >
         {shouldRenderLabel ? (
-          <span
+          <IdsFormLabel
             id={labelId}
+            size="lg"
+            required={required}
+            showInfoIcon={Boolean(labelIcon)}
             className={styles["IdsCheckboxGroupLabel"]}
-            data-ids="IdsCheckboxGroupLabel"
           >
             {label}
-            {required ? (
-              <span
-                className={styles["IdsCheckboxGroupLabelRequired"]}
-                data-ids="IdsCheckboxGroupLabelRequired"
-                aria-hidden="true"
-              >
-                *
-              </span>
-            ) : null}
-            {labelIcon ? (
-              <span className={styles["IdsCheckboxGroupLabelIcon"]}>{labelIcon}</span>
-            ) : null}
-          </span>
+          </IdsFormLabel>
         ) : null}
         <div
           className={styles["IdsCheckboxGroupBody"]}

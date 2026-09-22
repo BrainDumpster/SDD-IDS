@@ -149,7 +149,7 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
       this.internalChecked = next;
     }
     this.checkedChange.emit(next);
-    this.syncIndeterminate();
+    this.syncPartial();
     this.cdr.markForCheck();
   }
 

@@ -28,6 +28,7 @@
 - Dot-to-ring inset: `4px` (computed from 16 outer and 8 inner).
 - Label gap from control: `var(--spacing-space-8)`.
 - Min hit area: `20px` height.
+- **Long labels:** the row (control + label) caps at `max-width: 900px`; longer text wraps to a second line and **never truncates**. The control is `flex-start` aligned (with a `2px` top offset so it optically centers on the first `20px` line), so it stays on the first line when the label wraps. The label uses `min-width: 0` + `overflow-wrap: break-word`.
 - Focus-visible ring:
   - 1px outline with `var(--color-border-brand-base)`,
   - 2px offset from the outer control.
@@ -88,7 +89,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Keyboard:
   - `Tab`: enters/leaves group,
   - `Arrow` keys: move selection among enabled radios in group,
-  - `Space`: select focused radio.
+  - `Space` or `Enter`: select the focused radio.
+  - `Home` / `End`: move to the first / last enabled radio and select it.
 - Disabled radios are skipped by selection changes and cannot be activated.
 ## Composition & API (runtime)
 Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts/ids/radio-button.contract.ts`.
@@ -96,8 +98,9 @@ Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts
 **Preferred pattern:** projected children inside a group wrapper — not an `options[]` prop.
 
 ```
-RadioButtonGroup [name, value?, defaultValue?, disabled?, orientation?, id?]
-  RadioButton [value, label, disabled?, error?, helperText?, simulatedState?]
+RadioButtonGroup [name, value?, defaultValue?, disabled?, orientation?, id?, label?, showLabel?, labelPosition?, required?, labelIcon?, ariaLabel?, error?, errorText?]
+  RadioButton [value, name?, checked?, defaultChecked?, disabled?, error?, dataState?]
+    IdsRadioLabel | IdsHelper | IdsError  (projected children — there is no `label` or `helperText` prop)
   RadioButton …
 ```
 
@@ -115,7 +118,7 @@ Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`s
 | `label` | No | Group form label text. |
 | `showLabel` | No | Default `true`; when `false`, the group label is not rendered. |
 | `required` | No | Renders a `*` required mark inside the group label and sets `aria-required` on the group. |
-| `labelIcon` | No | Optional 16x16 icon node rendered after the group label text (and after `*`, if present). |
+| `labelIcon` | No | Truthy value shows the shared `IdsFormLabel` info icon after the group label text (and after `*`, if present). The node itself is not rendered — it maps to `showInfoIcon`. |
 | `labelPosition` | No | `left` (default) or `top`. |
 | `ariaLabel` | No | Accessible name when `showLabel` is `false` or `label` is not provided. |
 | `error` | No | `true` applies error styling to child radios and renders `errorText`/`error` slot. |
@@ -174,9 +177,9 @@ Outputs (group): `onChange(value)` / `valueChange`.
   - `orientation="vertical"`: column layout, gap `var(--spacing-space-16)`
   - `orientation="horizontal"`: row layout, gap `var(--spacing-space-16)`, wrap allowed
 - Group label contract:
-  - Body 2 Regular, `var(--color-text-gray-neutral-strong)`, `min-height: 20px`, `padding: var(--spacing-space-10) 0`, single-line `nowrap`, title case with colon.
-  - `*` required mark: `margin-left: 2px`, `aria-hidden`.
-  - `labelIcon`: `16x16`, `margin-left: var(--spacing-space-8)` from preceding text/asterisk.
+  - Rendered with the shared **`IdsFormLabel`** component (`size="lg"`, 40px): Body 2 Regular, `var(--color-text-gray-neutral-strong)`, single-line, title case with colon. `aria-labelledby` points at the form label's inner `<label>`.
+  - `required` → `IdsFormLabel required` (`*` marker, `aria-hidden`).
+  - `labelIcon` (the `info-circ-solid` icon) → `IdsFormLabel showInfoIcon`: a `16x16` info icon after the text/`*`.
 
 ### Behavior and accessibility contract
 - Native radio semantics preferred.
@@ -192,7 +195,8 @@ Outputs (group): `onChange(value)` / `valueChange`.
   - helper/error text associated with `aria-describedby` when present.
 - Keyboard:
   - `Tab` enters/leaves the group,
-  - `Arrow` keys move focus through radio options (including disabled options),
+  - `Arrow` keys move focus to the next/previous **enabled** radio and select it, wrapping at the ends (ARIA APG radiogroup),
+  - `Home` / `End` move to the first / last enabled radio and select it,
   - `Space` or `Enter` selects the focused radio if it is not disabled.
 
 ### Fallback/error rules
