@@ -1,5 +1,6 @@
 import type { ChangeEvent } from "react";
 import { useId, useState } from "react";
+import { IdsTooltip } from "./IdsTooltip";
 import styles from "./IdsTextBox.module.css";
 
 const iconUrlBySlug: Record<string, string> = (() => {
@@ -37,12 +38,15 @@ export type IdsTextBoxState =
   | "disabled"
   | "error";
 
+export type IdsTextBoxLabelPosition = "left" | "top";
+
 export interface IdsTextBoxProps {
   componentType?: IdsTextBoxType;
   size?: IdsTextBoxSize;
   state?: IdsTextBoxState;
   label?: string;
   showLabel?: boolean;
+  labelPosition?: IdsTextBoxLabelPosition;
   required?: boolean;
   placeholder?: string;
   value?: string;
@@ -54,6 +58,8 @@ export interface IdsTextBoxProps {
   showHelperText?: boolean;
   showIcon?: boolean;
   iconName?: string;
+  showInfoIcon?: boolean;
+  infoTooltip?: string;
   id?: string;
   name?: string;
   rows?: number;
@@ -69,6 +75,7 @@ export function IdsTextBox({
   state = "default",
   label,
   showLabel = true,
+  labelPosition = "left",
   required = false,
   placeholder = "Placeholder Text",
   value,
@@ -80,6 +87,8 @@ export function IdsTextBox({
   showHelperText = true,
   showIcon = true,
   iconName = "mail",
+  showInfoIcon = false,
+  infoTooltip,
   id,
   name,
   rows = 4,
@@ -89,9 +98,11 @@ export function IdsTextBox({
   onValueChange,
 }: IdsTextBoxProps) {
   const [focusModality, setFocusModality] = useState<"keyboard" | "pointer">("pointer");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const helperId = `${inputId}-help`;
+  const errorId = `${inputId}-error`;
   const computedInvalid = invalid || state === "error";
   const visualState: IdsTextBoxState = disabled
     ? "disabled"
@@ -99,12 +110,18 @@ export function IdsTextBox({
       ? "error"
       : state;
   const shouldRenderLabel = showLabel && Boolean(label);
-  const shouldRenderHelper = showHelperText && (computedInvalid || Boolean(helperText));
-  const helperCopy = computedInvalid ? errorText : helperText;
-  const suffixIconUrl = showIcon ? resolveIconUrl(iconName) : undefined;
+  const hasHelperText = showHelperText && Boolean(helperText);
+  const hasErrorText = computedInvalid && Boolean(errorText);
+  const shouldRenderHelperRow = hasHelperText || hasErrorText;
+  const suffixIconUrl = showIcon && inputType !== "password" ? resolveIconUrl(iconName) : undefined;
   const errorIconUrl = resolveIconUrl("status-critical-square-solid");
+  const infoIconUrl = resolveIconUrl("info-circ-solid");
+  const eyeViewUrl = resolveIconUrl("eye-view");
+  const eyeHideUrl = resolveIconUrl("eye-view-hide");
+  const isPassword = inputType === "password";
+  const resolvedInputType = isPassword && passwordVisible ? "text" : inputType;
   const describedBy =
-    [ariaDescribedBy, shouldRenderHelper ? helperId : undefined].filter(Boolean).join(" ") || undefined;
+    [ariaDescribedBy, hasHelperText ? helperId : undefined, hasErrorText ? errorId : undefined].filter(Boolean).join(" ") || undefined;
 
   const commonProps = {
     id: inputId,
@@ -114,8 +131,8 @@ export function IdsTextBox({
     value,
     defaultValue,
     "aria-label": ariaLabel,
-    "aria-invalid": computedInvalid ? "true" : "false",
-    "aria-required": required ? "true" : undefined,
+    "aria-invalid": computedInvalid || undefined,
+    "aria-required": required || undefined,
     "aria-describedby": describedBy,
     onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       onValueChange?.(event.target.value);
@@ -137,18 +154,35 @@ export function IdsTextBox({
           <textarea
             className={styles.value}
             rows={rows}
+            cols={1}
             onKeyDownCapture={(event) => handleKeyboardModality(event, setFocusModality)}
             {...commonProps}
           />
         ) : (
           <input
             className={styles.value}
-            type={inputType}
+            type={resolvedInputType}
             onKeyDownCapture={(event) => handleKeyboardModality(event, setFocusModality)}
             {...commonProps}
           />
         )}
-        {suffixIconUrl ? (
+        {isPassword && eyeViewUrl && eyeHideUrl ? (
+          <button
+            type="button"
+            aria-label={passwordVisible ? "Hide password" : "Show password"}
+            className={styles.passwordToggle}
+            onClick={() => setPasswordVisible((v) => !v)}
+            tabIndex={-1}
+          >
+            <span
+              className={styles.suffixIcon}
+              style={{
+                maskImage: `url(${passwordVisible ? eyeHideUrl : eyeViewUrl})`,
+                WebkitMaskImage: `url(${passwordVisible ? eyeHideUrl : eyeViewUrl})`,
+              }}
+            />
+          </button>
+        ) : suffixIconUrl ? (
           <span
             aria-hidden="true"
             className={styles.suffixIcon}
@@ -157,12 +191,21 @@ export function IdsTextBox({
         ) : null}
       </div>
 
-      {shouldRenderHelper ? (
-        <div className={styles.helperRow} id={helperId}>
-          {computedInvalid && errorIconUrl ? (
-            <img src={errorIconUrl} alt="" aria-hidden="true" className={styles.errorIcon} />
+      {shouldRenderHelperRow ? (
+        <div className={styles.helperColumn}>
+          {hasHelperText ? (
+            <div className={styles.helperRow} id={helperId}>
+              <p className={styles.helperText}>{helperText}</p>
+            </div>
           ) : null}
-          <p className={computedInvalid ? styles.errorText : styles.helperText}>{helperCopy}</p>
+          {hasErrorText ? (
+            <div className={styles.helperRow} id={errorId}>
+              {errorIconUrl ? (
+                <img src={errorIconUrl} alt="" aria-hidden="true" className={styles.errorIcon} />
+              ) : null}
+              <p className={styles.errorText}>{errorText}</p>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>
@@ -172,16 +215,31 @@ export function IdsTextBox({
     return fieldGroup;
   }
 
-  return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={inputId}>
+  const labelEl = (
+    <label className={styles.label} data-size={size} htmlFor={inputId}>
+      <span className={styles.labelTextGroup}>
         {label}
         {required ? (
           <span className={styles.requiredMark} aria-hidden="true">
             *
           </span>
         ) : null}
-      </label>
+      </span>
+      {showInfoIcon && infoIconUrl ? (
+        <IdsTooltip content={infoTooltip ?? ""} side="top" arrowAlign="start" hugContent tabIndex={0}>
+          <img
+            src={infoIconUrl}
+            alt="More information"
+            className={styles.infoIcon}
+          />
+        </IdsTooltip>
+      ) : null}
+    </label>
+  );
+
+  return (
+    <div className={labelPosition === "top" ? styles.fieldTop : styles.field}>
+      {labelEl}
       {fieldGroup}
     </div>
   );

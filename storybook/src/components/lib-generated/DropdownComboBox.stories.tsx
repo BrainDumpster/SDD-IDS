@@ -347,9 +347,17 @@ export const ContentDrivenLongOption: Story = {
   },
 };
 
-/** Controls playground — args-driven. */
+/** Controls playground — args-driven. Defaults to a multi-select with a few
+ *  selections so the count badge + truncated list are visible; switch `mode`,
+ *  `defaultValue`, and the other controls to explore every variant. Uses the
+ *  12-option set because a combo box is meant for 10–100 options (per spec). */
 export const Playground: Story = {
   name: "Playground",
+  args: {
+    mode: "combobox-multi",
+    options: MULTI_OPTIONS,
+    defaultValue: ["o1", "o2", "o5"],
+  },
   render: (args: ComboProps) => (
     <div style={sampleWidth}>
       <IdsDropdownComboBox {...args}>

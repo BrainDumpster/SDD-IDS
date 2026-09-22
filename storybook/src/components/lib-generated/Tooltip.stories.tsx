@@ -59,13 +59,19 @@ const meta: Meta<TooltipProps> = {
     side: "top",
     arrowAlign: "start",
     closable: false,
-    hugContent: false,
+    hugContent: true,
+    maxWidth: 244,
   },
   argTypes: {
     side: { control: "select", options: ["top", "bottom", "left", "right"] },
     arrowAlign: { control: "select", options: ["start", "center", "end"] },
     closable: { control: "boolean" },
-    hugContent: { control: "boolean" },
+    // Always true — tooltip always hugs content; `maxWidth` governs sizing instead.
+    hugContent: { control: false },
+    maxWidth: {
+      control: { type: "number", min: 100, max: 500, step: 4 },
+      name: "max width (px)",
+    },
     onOpenChange: { action: "onOpenChange" },
     onClose: { action: "onClose" },
   },
@@ -235,6 +241,7 @@ export const HugContent: Story = {
   name: "Hug Content",
   args: {
     hugContent: true,
+    maxWidth: 244,
     closable: false,
     side: "bottom",
     arrowAlign: "center",

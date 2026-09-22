@@ -202,7 +202,7 @@ export interface AppLauncherProps {
   triggerVariant?: "default" | "masthead";
   /**
    * Popover vertical offset from trigger (px).
-   * For `masthead`, values below 1 are treated as 1 so the panel clears the masthead bottom border.
+   * Default is `8` for the default trigger; `masthead` defaults to `1` so the popup's top border sits right below the masthead's 1px bottom border.
    */
   sideOffset?: number;
   defaultOpen?: boolean;
@@ -332,7 +332,7 @@ export function AppLauncher({
   footerAction,
   columns = 2,
   triggerVariant = "default",
-  sideOffset = 8,
+  sideOffset,
   defaultOpen = false,
   open,
   onOpenChange,
@@ -348,7 +348,7 @@ export function AppLauncher({
   const useTwoProductInternalRail = useTwoProductLayout;
   const columnDividerVariant: AppLauncherDividerVariant = "dotted";
   const positionerSideOffset =
-    triggerVariant === "masthead" ? Math.max(sideOffset, 1) : sideOffset;
+    sideOffset ?? (triggerVariant === "masthead" ? 1 : 8);
 
   const controlledOpen = open !== undefined;
   const surfaceProps: AppLauncherSurfaceProps = {

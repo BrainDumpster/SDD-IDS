@@ -37,6 +37,7 @@
 .ids-tooltip-popup--hug {
   width: auto;
   min-width: 0;
+  max-width: var(--tooltip-max-width, 244px);
 }
 
 .ids-tooltip-panel {

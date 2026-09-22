@@ -52,7 +52,7 @@ ids-tooltip
 - Panel corner radius: `border-radius: var(--tooltip-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0 — square panel corners per Figma).
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
-- Default content panel width is `240px` (`264px` when `closable=true`). Consumers may set `hugContent=true` to size the panel to its content instead of the fixed width.
+- Default behavior is `hugContent=true`: the panel sizes to its content up to `maxWidth` (default `244px`). Consumers may set `hugContent={false}` to use the fixed `240px` (`264px` when `closable=true`) width instead.
 
 **Closable content layout** (`closable=true`; Storybook `.contentClosable` / `.contentColumn`):
 - Panel inner `.content` is a **horizontal flex row** (`flex-direction: row`; `align-items: flex-start`; no inter-column gap — spacing is column padding).
@@ -171,7 +171,8 @@ Root props:
 - `onOpenChange?: (open: boolean) => void`.
 - `onClose?: (reason: "close-click" | "escape" | "programmatic") => void`.
 - `closeIconShapeName?: string` default `ctrl-close-16`.
-- `hugContent?: boolean` (default `false`). When `true`, the tooltip popup width shrinks to fit its content instead of using the standard `240px` / `264px` fixed widths.
+- `hugContent?: boolean` (default `true`). When `true`, the tooltip popup width shrinks to fit its content instead of using the standard `240px` / `264px` fixed widths. Pass `hugContent={false}` to opt back into the fixed widths.
+- `maxWidth?: number` (default `244`). Maximum popup width (px) applied only when `hugContent` is `true`; content wraps once this width is reached.
 - `triggerDisplay?: "inline" | "block"` (default `inline`). When `block`, the trigger anchor spans the full width of its container and uses `min-width: 0`.
 - `delay?: number` (default `600` ms). Open delay for standard hover tooltips; use `0` for immediate appearance.
 - `closeDelay?: number` (default `0` ms). Delay before closing when the pointer leaves the trigger.
@@ -256,6 +257,8 @@ Validation checklist (pass/fail):
 - Angular Storybook: `storybook-angular/src/components/ids-tooltip/`
 
 ## Changelog
+- **2026-09-09**: Changed `hugContent` default from `false` to `true` — tooltip popup now hugs content by default (capped at `maxWidth`, default `244px`); pass `hugContent={false}` to opt back into fixed `240px`/`264px` widths. Storybook `Components/IDS/Tooltip` locks the `hugContent` control to `true` (not toggleable) since the `maxWidth` control now governs sizing. Synced from `lib/react/ids/tooltip/IdsTooltip.tsx` and `storybook/src/components/lib-generated/Tooltip.stories.tsx`.
+- **2026-09-09**: Added `maxWidth` runtime prop (default `244px`) constraining `.ids-tooltip-popup--hug` width via `--tooltip-max-width` CSS var. Synced from `lib/react/ids/tooltip/IdsTooltip.tsx` and `IdsTooltip.module.css`.
 - **2026-08-31**: Fixed `right-end` arrow sitting at center — use `bottom: 8px` / `top: auto` for left/right `end`, normalize `right`+`end` attachment to `left: -5px`, and disable Base UI align-flip on Storybook React Positioner so requested `arrowAlign` is preserved.
 - **2026-08-19**: Canonical composition is `TooltipRoot` → `TooltipTrigger` + `TooltipPanel` (`Header`/`Title`, `Body`, `Close`, `Arrow`). Angular reference: `lib/angular/ids/tooltip/`. Live Figma re-check: nodes `42636:14688`, `38201:109593`.
 - **2026-08-07**: Added `hugContent` runtime API and `.popupHug` style to let the popup width shrink to fit its content; default remains the standard `240px` (`popupStandard`) / `264px` (`popupClosable`) fixed widths. Synced from `storybook/src/components/IdsTooltip.tsx` and `IdsTooltip.module.css`.
