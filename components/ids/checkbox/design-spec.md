@@ -29,9 +29,11 @@
 - Checkboxes should always have an option label, except in some data grids. In a flat data grid, the context around the checkbox is enough to understand its purpose.
 - Use sentence case with no period. Punctuation can be used with confirmation label like `I accept.`
 - Labels should be clear and concise. Avoid wrapping as much as possible.
+- **Long labels:** the row (checkbox + label) caps at `max-width: 900px`; longer text wraps to a second line and **never truncates**. The checkbox is `flex-start` aligned (with a `2px` top offset so it optically centers on the first `20px` line), so it stays on the first line when the label wraps. The label uses `min-width: 0` + `overflow-wrap: break-word`.
 
 ### Form label
 - Form label belongs to a `CheckboxGroup`, not to an individual `Checkbox`.
+- The group renders it with the shared **`IdsFormLabel`** component (`size="lg"`, 40px) — the group's `required` → `IdsFormLabel required`, and `labelIcon` (the `info-circ-solid` icon) → `IdsFormLabel showInfoIcon`. `aria-labelledby` points at the form label's inner `<label>`.
 - It is placed to the left or top of the checkbox group; the chosen position (left or top) should be common across the product.
 - Use `label` (string), `showLabel` (boolean, default `true`), and `ariaLabel` (string) props on `CheckboxGroup`. When `showLabel` is false or `label` is omitted, use `ariaLabel` as the accessible name of the group.
 - Form label text is single-line (`nowrap`).

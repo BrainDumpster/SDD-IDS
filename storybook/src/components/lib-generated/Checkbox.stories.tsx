@@ -95,6 +95,25 @@ export const SpecAccurateDesign: Story = {
   ),
 };
 
+/**
+ * Long label: the row (checkbox + text) grows to a 900px max width, then the
+ * text wraps to a second line — never truncating — while the checkbox stays
+ * aligned to the top on the first line.
+ */
+export const LongLabel: Story = {
+  name: "Long Label",
+  render: () => (
+    <IdsCheckbox defaultChecked>
+      <IdsCheckboxLabel>
+        This is a deliberately long checkbox option label that keeps going until
+        the row reaches its 900px maximum width including the checkbox itself, at
+        which point the text wraps onto a second line without ever truncating,
+        while the checkbox stays aligned to the top on the first line.
+      </IdsCheckboxLabel>
+    </IdsCheckbox>
+  ),
+};
+
 /** Label typography/color contract from Figma `8505:14299` / Body 2. */
 export const LabelStyle: Story = {
   name: "Label Style",

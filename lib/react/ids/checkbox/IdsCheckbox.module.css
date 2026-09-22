@@ -13,7 +13,10 @@
 
 .ids-checkbox-row {
   display: inline-flex;
-  align-items: center;
+  /* Long labels wrap under a 900px cap (control + text); the control top-aligns
+     so it stays on the first line instead of centering across the wrapped text. */
+  align-items: flex-start;
+  max-width: 900px;
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -31,6 +34,12 @@
 .ids-checkbox[data-density="datagrid"] .ids-checkbox-row {
   min-height: 0;
   gap: 0;
+  /* Selection cell has no wrapping label — keep it centered, no top offset. */
+  align-items: center;
+}
+
+.ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
+  margin-top: 0;
 }
 
 .ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
@@ -69,6 +78,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Optically center the 16px control on the first 20px text line while the row
+     top-aligns for multi-line labels ((20 - 16) / 2 = 2px). */
+  margin-top: 2px;
   transition: background-color 100ms ease, border-color 100ms ease;
   position: relative;
   outline: none;
@@ -200,6 +212,9 @@
 
 .ids-checkbox-label {
   user-select: none;
+  /* Wrap long text (never truncate); min-width:0 lets it wrap inside the flex row. */
+  min-width: 0;
+  overflow-wrap: break-word;
   font-family: inherit;
   font-weight: 400;
   font-size: var(--font-size-body-2);

@@ -28,6 +28,7 @@
 - Dot-to-ring inset: `4px` (computed from 16 outer and 8 inner).
 - Label gap from control: `var(--spacing-space-8)`.
 - Min hit area: `20px` height.
+- **Long labels:** the row (control + label) caps at `max-width: 900px`; longer text wraps to a second line and **never truncates**. The control is `flex-start` aligned (with a `2px` top offset so it optically centers on the first `20px` line), so it stays on the first line when the label wraps. The label uses `min-width: 0` + `overflow-wrap: break-word`.
 - Focus-visible ring:
   - 1px outline with `var(--color-border-brand-base)`,
   - 2px offset from the outer control.
@@ -174,9 +175,9 @@ Outputs (group): `onChange(value)` / `valueChange`.
   - `orientation="vertical"`: column layout, gap `var(--spacing-space-16)`
   - `orientation="horizontal"`: row layout, gap `var(--spacing-space-16)`, wrap allowed
 - Group label contract:
-  - Body 2 Regular, `var(--color-text-gray-neutral-strong)`, `min-height: 20px`, `padding: var(--spacing-space-10) 0`, single-line `nowrap`, title case with colon.
-  - `*` required mark: `margin-left: 2px`, `aria-hidden`.
-  - `labelIcon`: `16x16`, `margin-left: var(--spacing-space-8)` from preceding text/asterisk.
+  - Rendered with the shared **`IdsFormLabel`** component (`size="lg"`, 40px): Body 2 Regular, `var(--color-text-gray-neutral-strong)`, single-line, title case with colon. `aria-labelledby` points at the form label's inner `<label>`.
+  - `required` → `IdsFormLabel required` (`*` marker, `aria-hidden`).
+  - `labelIcon` (the `info-circ-solid` icon) → `IdsFormLabel showInfoIcon`: a `16x16` info icon after the text/`*`.
 
 ### Behavior and accessibility contract
 - Native radio semantics preferred.

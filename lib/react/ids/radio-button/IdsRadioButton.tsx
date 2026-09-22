@@ -38,6 +38,7 @@ import React, {
 } from "react";
 import { IdsError, IdsErrorText } from "../error";
 import { IdsHelper } from "../helper";
+import { IdsFormLabel } from "../form-label";
 import styles from "./IdsRadioButton.module.css";
 
 export type IdsRadioDataState = "default" | "hover" | "focus-visible" | "disabled";
@@ -273,25 +274,15 @@ export function IdsRadioGroup({
         onKeyDown={handleKeyDown}
       >
         {shouldRenderLabel ? (
-          <span
+          <IdsFormLabel
             id={labelId}
+            size="lg"
+            required={required}
+            showInfoIcon={Boolean(labelIcon)}
             className={styles["IdsRadioGroupLabel"]}
-            data-ids="IdsRadioGroupLabel"
           >
             {label}
-            {required ? (
-              <span
-                className={styles["IdsRadioGroupLabelRequired"]}
-                data-ids="IdsRadioGroupLabelRequired"
-                aria-hidden="true"
-              >
-                *
-              </span>
-            ) : null}
-            {labelIcon ? (
-              <span className={styles["IdsRadioGroupLabelIcon"]}>{labelIcon}</span>
-            ) : null}
-          </span>
+          </IdsFormLabel>
         ) : null}
         <div
           className={styles["IdsRadioGroupBody"]}

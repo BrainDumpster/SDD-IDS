@@ -37,21 +37,6 @@
   padding: var(--spacing-space-10) 0;
 }
 
-.IdsRadioGroupLabelRequired {
-  color: var(--color-text-gray-neutral-strong);
-  margin-left: 2px;
-}
-
-.IdsRadioGroupLabelIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  margin-left: var(--spacing-space-8);
-}
-
 .IdsRadioGroupBody {
   display: flex;
   flex-direction: column;
@@ -93,7 +78,10 @@
 
 .ids-radio-row {
   display: inline-flex;
-  align-items: center;
+  /* Long labels wrap under a 900px cap (control + text); the control top-aligns
+     so it stays on the first line instead of centering across the wrapped text. */
+  align-items: flex-start;
+  max-width: 900px;
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -136,6 +124,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Optically center the 16px control on the first 20px text line while the row
+     top-aligns for multi-line labels ((20 - 16) / 2 = 2px). */
+  margin-top: 2px;
   transition: background-color 100ms ease, border-color 100ms ease;
   position: relative;
   outline: none;
@@ -207,6 +198,9 @@
 
 .ids-radio-label {
   user-select: none;
+  /* Wrap long text (never truncate); min-width:0 lets it wrap inside the flex row. */
+  min-width: 0;
+  overflow-wrap: break-word;
   font-weight: 400;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
