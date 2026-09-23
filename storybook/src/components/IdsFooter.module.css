@@ -11,6 +11,14 @@
   font-family: inherit;
 }
 
+/* Below the compact breakpoint the footer no longer compresses — it keeps
+   its 1024px layout width and the host/page scrolls horizontally instead. */
+@media (max-width: 1024px) {
+  .root {
+    min-width: 1024px;
+  }
+}
+
 .left {
   flex: 1 1 0;
   min-width: 0;
@@ -118,6 +126,18 @@
 }
 
 .dateTime {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  white-space: nowrap;
+}
+
+/* Date/time content shown inside the time zone tooltip at <=1024px. */
+.dateTimeTooltip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
