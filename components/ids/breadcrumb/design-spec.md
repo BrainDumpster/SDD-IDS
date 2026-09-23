@@ -90,6 +90,8 @@
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
 - Truncated breadcrumbs reveal the IDS DropdownMenu when the "..." ellipsis is clicked or keyboard-activated
+- When the overflow menu opens, focus moves to the first menu item
+- When focus moves out of the menu (Tab past the last item, Shift+Tab back to the trigger, or focus leaving the menu entirely), the menu closes
 ### Accessibility
 - Focus ring: follows `IdsLink` 1px brand color focus ring
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
@@ -101,19 +103,42 @@
 
 ### Behavior & guidelines
 - Use breadcrumbs to show navigation hierarchy
-- Overflow pattern: breadcrumb shows full path up to 4 items (could be less based on screen size)
-- From 4 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
+- Overflow pattern: breadcrumb shows full path up to 3 items (could be less based on screen size)
+- From 4 items, breadcrumb automatically truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between. The threshold is configurable via `maxVisibleItems` (default 3); no opt-in prop is required
 - The ellipsis uses the same `IdsLink` standalone color and hover/focus/press styling as the other breadcrumb links
 - Clicking or keyboard-activating the "..." ellipsis opens the IDS DropdownMenu (single-select dropdown) with all truncated links
 - Use proper separator characters (/ > »)
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement
 - Use consistent styling across the application
+
+### Text Truncation (Responsive)
+When horizontal space is limited by an adjacent sibling, individual breadcrumb labels are gradually truncated to avoid collision.
+
+- **Spacing measurement** — The component measures the gap between the right edge of the breadcrumb list and the left edge of the next sibling in its container. When no sibling exists, the right edge of the breadcrumb container is used.
+- **Thresholds**
+  - **Truncate** when the measured spacing drops below `24px`.
+  - **Revert** (un-truncate) when the measured spacing reaches `48px` or more. This 24px buffer above the truncation threshold prevents rapid oscillation when a character is added back.
+- **Gradual decrease** — A character cap is lowered by one character at a time. Only labels longer than the current cap are rendered as `{{label.slice(0, cap)}...` (three dots, no space). Because the cap is global, the longest label is shortened first.
+- **Gradual increase** — As the container grows, the cap is raised by one character at a time until all labels are fully restored.
+- **Observation** — `ResizeObserver` watches the breadcrumb `<nav>`, the `<ol>` list, and the parent container so truncation updates as the layout changes.
+
+### Text Truncation Priority
+When the available width limit is hit (spacing to the next element drops below `24px`), labels are truncated in the following order of priority:
+
+1. First, identify and truncate any breadcrumb labels that exceed 45 characters.
+2. Next, identify and truncate any remaining breadcrumb labels that exceed 20 characters.
+3. If the list still overflows after the 45 and 20 character stages, continue truncating all labels gradually until the content fits.
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants
 - **Standard**: Breadcrumb trail on top with current page displayed below (larger typography)
 - **Truncated**: Standard variant with truncation for long paths (shows first and last items with ellipsis in between)
+
+### Props
+- `items`: `BreadcrumbItem[]` (`{ label, href? }`) — required
+- `currentPage`: `string` — optional, displayed below the trail
+- `maxVisibleItems`: `number` — default `3`; item count above this triggers the ellipsis overflow automatically
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.

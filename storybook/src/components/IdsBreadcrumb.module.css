@@ -50,3 +50,11 @@
   flex-shrink: 0;
 }
 
+.breadcrumbItem :global([data-ids-menu-portal]) {
+  display: contents;
+}
+
+.breadcrumbList :global([data-ids="ids-link-label"]) {
+  white-space: nowrap;
+}
+

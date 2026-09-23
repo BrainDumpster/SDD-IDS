@@ -370,7 +370,7 @@ export interface MenuPopupProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-function MenuPopup({ children, className, style, id, onKeyDown, ...rest }: MenuPopupProps) {
+function MenuPopup({ children, className, style, id, onKeyDown, onBlur, ...rest }: MenuPopupProps) {
   const root = useMenuRoot()!;
   const popupRef = useRef<HTMLDivElement | null>(null);
 
@@ -430,6 +430,21 @@ function MenuPopup({ children, className, style, id, onKeyDown, ...rest }: MenuP
         if (event.key === "Escape") {
           root.setOpen(false);
         }
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        const next = event.relatedTarget as Node | null;
+        // Focus moved to another element inside the popup — stay open.
+        if (next && popupRef.current?.contains(next)) return;
+        // Focus moved into a nested/sibling menu portal (e.g. submenu) — stay open.
+        if (next) {
+          const portals = document.querySelectorAll("[data-ids-menu-portal]");
+          for (const portal of portals) {
+            if (portal.contains(next)) return;
+          }
+        }
+        // Focus left the menu entirely (including back to the trigger) — close.
+        root.setOpen(false);
       }}
     >
       {children}
