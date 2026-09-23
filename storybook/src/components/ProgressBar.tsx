@@ -74,7 +74,11 @@ export function ProgressBar({
       {isWithLabel ? (
         <div className={styles.labeledBlock}>
           <div className={styles.meta}>
-            {label && <span className={styles.label}>{label}</span>}
+            {label && (
+              <span className={styles.label} title={label}>
+                {label}
+              </span>
+            )}
             {showPercentage && (
               <Progress.Value className={styles.value}>
                 {(_formatted, val) => `${Math.round(val ?? 0)}%`}

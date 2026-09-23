@@ -44,6 +44,7 @@ Deterministic slot order:
 - `with-label` (`Determinate/regular` in Figma):
   - Min width: **200px** on root (`min-width: 200px`); the bar never shrinks below this.
   - Meta row: label left, percentage right, `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`.
+  - Min gap between label and percentage: **`var(--spacing-space-16)`** (16px). The label truncates with ellipsis (`text-overflow: ellipsis`, `white-space: nowrap`, `min-width: 0`) to preserve the gap; the percentage never shrinks (`flex-shrink: 0`). The full label text is shown in a native browser tooltip (`title` attribute) on hover.
   - Gap between meta row and track: `var(--padding-padding-8)` (8px).
   - Gap between track block and helper: `var(--spacing-space-4)` (4px) on root column.
 - `inline` (`Determinate/Inline` in Figma):
@@ -96,7 +97,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 
 ### Sizing and spacing
 - `var(--sizing-size-4)`, `var(--sizing-size-8)`, `var(--sizing-size-16)`
-- `var(--padding-padding-8)`, `var(--spacing-space-4)`
+- `var(--padding-padding-8)`, `var(--spacing-space-4)`, `var(--spacing-space-16)`
 - `var(--border-width-border-1)`
 
 ### Status icon slugs (helper row)
@@ -219,10 +220,7 @@ See **Interactions → Accessibility**.
 
 ### Validation checklist
 - [x] `with-label` meta row + track + optional helper matches Figma `Determinate/regular`
-- [x] `inline` track + 36px percentage column with 8px gap
-- [x] `inline` min-widths: 80px root, 36px track
-- [x] `indeterminate` track min-width: 80px
-- [x] `indeterminate` + success/warning/error renders helper row only (no track)
+- [x] `with-label` meta row keeps 16px min gap; label truncates with native `title` tooltip for full text
 - [x] Thickness 4 / 8 / 16px via sizing tokens
 - [x] Track/fill radius via `var(--progress-bar-control-radius)` (IDS: 0)
 - [x] State fills and borders use semantic alerting/brand tokens only
@@ -266,3 +264,4 @@ See **Interactions → Accessibility**.
 
 **Lib ports**
 - React (`lib/react/ids/progress-bar`) and Angular (`lib/angular/ids/progress-bar`) share anatomy, tokens, `data-ids` slots, fallbacks, and determinate/indeterminate behavior. Neither lib depends on Base UI; `role="progressbar"` and `aria-valuemin` / `aria-valuemax` / `aria-valuenow` are applied on the root.
+- **Angular divergence (pending port)**: the Angular lib does not yet implement the `inline` min-widths (80px root / 36px track), the indeterminate track hiding for success/warning/error states, the indeterminate 80px track min-width, or the meta-row 16px min gap with label truncation + native `title` tooltip. React lib and Storybook reference implementation are current.

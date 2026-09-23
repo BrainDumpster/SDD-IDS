@@ -214,6 +214,7 @@ export function IdsProgressBar({
               <span
                 className={styles["ids-progress-bar-label"]}
                 data-ids="ids-progress-bar-label"
+                title={label}
               >
                 {label}
               </span>
