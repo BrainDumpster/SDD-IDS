@@ -17,6 +17,14 @@
   font-family: inherit;
 }
 
+/* Below the compact breakpoint the footer no longer compresses — it keeps
+   its 1024px layout width and the host/page scrolls horizontally instead. */
+@media (max-width: 1024px) {
+  .ids-footer {
+    min-width: 1024px;
+  }
+}
+
 .ids-footer-left {
   flex: 1 0 0;
   min-width: 0;
@@ -134,4 +142,16 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+}
+
+/* Date/time content shown inside the time zone tooltip at <=1024px. */
+.ids-footer-datetime-tooltip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral);
+  white-space: nowrap;
 }

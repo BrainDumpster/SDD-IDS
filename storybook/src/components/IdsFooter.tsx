@@ -19,6 +19,30 @@ export interface IdsFooterProps extends Omit<ComponentProps<"footer">, "children
   onTimeZoneClick?: () => void;
 }
 
+/**
+ * At or below this viewport width the inline date/time group is hidden and
+ * surfaced in a tooltip on the time zone button instead.
+ */
+const COMPACT_BREAKPOINT_PX = 1024;
+
+/** True while the viewport is at/below the compact footer breakpoint. */
+function useCompactFooter(): boolean {
+  const [compact, setCompact] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT_PX}px)`).matches;
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT_PX}px)`);
+    const onChange = () => setCompact(mq.matches);
+    setCompact(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return compact;
+}
+
 async function copyTextToClipboard(text: string): Promise<void> {
   if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(text);
@@ -51,6 +75,9 @@ export function IdsFooter({
   ...rest
 }: IdsFooterProps) {
   const canCopy = Boolean(swid) && !copyDisabled;
+  const isCompact = useCompactFooter();
+  const showDateTimeTooltip =
+    isCompact && showCurrentDateAndTime && currentDateTime != null && currentDateTime !== "";
 
   const truncatedHostname = hostname.length > 48 ? `${hostname.slice(0, 48)}...` : hostname;
 
@@ -133,7 +160,7 @@ export function IdsFooter({
           </div>
         )}
       </div>
-      {showCurrentDateAndTime && currentDateTime != null && currentDateTime !== "" && (
+      {showCurrentDateAndTime && !isCompact && currentDateTime != null && currentDateTime !== "" && (
         <div className={styles.timeGroup}>
           <Icon
             shapeName="time-clock"
@@ -144,18 +171,35 @@ export function IdsFooter({
           <span className={styles.dateTime}>{currentDateTime}</span>
         </div>
       )}
-      {showTimeZone && (
-        <Button
-          type="button"
-          variant="tertiary"
-          size="sm"
-          iconSlug="world-globe"
-          disabled={timeZoneDisabled}
-          onClick={() => onTimeZoneClick?.()}
-        >
-          {timeZoneLabel || "Time zone"}
-        </Button>
-      )}
+      {showTimeZone && (() => {
+        const timeZoneButton = (
+          <Button
+            type="button"
+            variant="tertiary"
+            size="sm"
+            iconSlug="world-globe"
+            disabled={timeZoneDisabled}
+            onClick={() => onTimeZoneClick?.()}
+          >
+            {timeZoneLabel || "Time zone"}
+          </Button>
+        );
+
+        return showDateTimeTooltip ? (
+          <IdsTooltip
+            hugContent
+            content={
+              <span className={styles.dateTimeTooltip}>
+                {currentDateTime}
+              </span>
+            }
+          >
+            {timeZoneButton}
+          </IdsTooltip>
+        ) : (
+          timeZoneButton
+        );
+      })()}
     </footer>
   );
 }
