@@ -24,12 +24,21 @@ const DESIGN_SPEC_PATH = "components/ids/toggle-switch/design-spec.md";
 
 /** Spec Accurate Design — labeled off default (Composition & API). */
 const specAccurateArgs: IdsToggleSwitchProps = {
-  label: "Enable alerts",
+  "aria-label": "Enable alerts",
   defaultChecked: false,
   disabled: false,
+  showStatus: true,
+  label: "Enable alerts",
+  labelRequired: false,
+  labelShowInfoIcon: false,
 };
 
-const meta: Meta<IdsToggleSwitchProps> = {
+/** Story-only args: `showLabel` gates the `label` prop (component has no such prop). */
+type ToggleSwitchStoryArgs = IdsToggleSwitchProps & {
+  showLabel: boolean;
+};
+
+const meta: Meta<ToggleSwitchStoryArgs> = {
   tags: ["autodocs"],
   title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
@@ -47,30 +56,37 @@ const meta: Meta<IdsToggleSwitchProps> = {
       },
     },
   },
-  args: specAccurateArgs,
+  args: { ...specAccurateArgs, showLabel: true },
   argTypes: {
     checked: { control: "boolean" },
     defaultChecked: { control: "boolean" },
     disabled: { control: "boolean" },
+    showStatus: { control: "boolean" },
+    showLabel: { control: "boolean" },
     label: { control: "text" },
+    labelRequired: { control: "boolean" },
+    labelShowInfoIcon: { control: "boolean" },
+    labelInfoLabel: { control: "text" },
     "aria-label": { control: "text" },
     onCheckedChange: { action: "onCheckedChange" },
   },
+  render: ({ showLabel, ...args }) => (
+    <IdsToggleSwitch {...args} label={showLabel ? args.label : undefined} />
+  ),
 };
 
 export default meta;
-type Story = StoryObj<IdsToggleSwitchProps>;
+type Story = StoryObj<ToggleSwitchStoryArgs>;
 
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
   args: specAccurateArgs,
-  render: (args) => <IdsToggleSwitch {...args} />,
 };
 
 export const Off: Story = {
   name: "Off",
   args: {
-    label: "Enable alerts",
+    "aria-label": "Enable alerts",
     defaultChecked: false,
   },
 };
@@ -78,7 +94,7 @@ export const Off: Story = {
 export const On: Story = {
   name: "On",
   args: {
-    label: "Enable alerts",
+    "aria-label": "Enable alerts",
     defaultChecked: true,
   },
 };
@@ -86,7 +102,7 @@ export const On: Story = {
 export const DisabledOff: Story = {
   name: "Disabled Off",
   args: {
-    label: "Enable alerts",
+    "aria-label": "Enable alerts",
     disabled: true,
     defaultChecked: false,
   },
@@ -95,7 +111,7 @@ export const DisabledOff: Story = {
 export const DisabledOn: Story = {
   name: "Disabled On",
   args: {
-    label: "Enable alerts",
+    "aria-label": "Enable alerts",
     disabled: true,
     defaultChecked: true,
   },
@@ -107,6 +123,7 @@ export const WithoutVisibleLabel: Story = {
   args: {
     "aria-label": "Enable alerts",
     defaultChecked: false,
+    showLabel: false,
   },
 };
 
@@ -117,7 +134,7 @@ export const Controlled: Story = {
     return (
       <div style={{ display: "grid", gap: 8 }}>
         <IdsToggleSwitch
-          label="Enable alerts"
+          aria-label="Enable alerts"
           checked={checked}
           onCheckedChange={setChecked}
         />
@@ -135,12 +152,12 @@ export const StateMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Off" defaultChecked={false} />
-        <IdsToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch aria-label="Off" defaultChecked={false} />
+        <IdsToggleSwitch aria-label="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch aria-label="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch aria-label="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),
@@ -156,12 +173,12 @@ export const StateMatrixDark: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Off" defaultChecked={false} />
-        <IdsToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch aria-label="Off" defaultChecked={false} />
+        <IdsToggleSwitch aria-label="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch aria-label="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch aria-label="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),

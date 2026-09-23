@@ -6,8 +6,12 @@ import { IdsToggleSwitch } from "./IdsToggleSwitch";
 const meta: Meta<typeof IdsToggleSwitch> = {
   title: "Components/IDS/Toggle Switch",
   component: IdsToggleSwitch,
+  args: {
+    showStatus: true,
+  },
   argTypes: {
     disabled: { control: "boolean" },
+    showStatus: { control: "boolean" },
   },
 };
 
@@ -16,21 +20,21 @@ type Story = StoryObj<typeof IdsToggleSwitch>;
 
 export const OffManual: Story = {
   args: {
-    label: "Enable alerts",
+    ariaLabel: "Enable alerts",
     defaultChecked: false,
   },
 };
 
 export const OnManual: Story = {
   args: {
-    label: "Enable alerts",
+    ariaLabel: "Enable alerts",
     defaultChecked: true,
   },
 };
 
 export const DisabledOff: Story = {
   args: {
-    label: "Enable alerts",
+    ariaLabel: "Enable alerts",
     disabled: true,
     defaultChecked: false,
   },
@@ -38,7 +42,7 @@ export const DisabledOff: Story = {
 
 export const DisabledOn: Story = {
   args: {
-    label: "Enable alerts",
+    ariaLabel: "Enable alerts",
     disabled: true,
     defaultChecked: true,
   },
@@ -57,7 +61,7 @@ export const ControlledManual: Story = {
     return (
       <div style={{ display: "grid", gap: 8 }}>
         <IdsToggleSwitch
-          label="Enable alerts"
+          ariaLabel="Enable alerts"
           checked={checked}
           onCheckedChange={setChecked}
         />
@@ -73,12 +77,12 @@ export const StateMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Off" defaultChecked={false} />
-        <IdsToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch ariaLabel="Off" defaultChecked={false} />
+        <IdsToggleSwitch ariaLabel="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch ariaLabel="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch ariaLabel="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),
@@ -93,12 +97,12 @@ export const StateMatrixDarkManual: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Off" defaultChecked={false} />
-        <IdsToggleSwitch label="On" defaultChecked />
+        <IdsToggleSwitch ariaLabel="Off" defaultChecked={false} />
+        <IdsToggleSwitch ariaLabel="On" defaultChecked />
       </div>
       <div style={{ display: "flex", gap: 24 }}>
-        <IdsToggleSwitch label="Disabled Off" disabled defaultChecked={false} />
-        <IdsToggleSwitch label="Disabled On" disabled defaultChecked />
+        <IdsToggleSwitch ariaLabel="Disabled Off" disabled defaultChecked={false} />
+        <IdsToggleSwitch ariaLabel="Disabled On" disabled defaultChecked />
       </div>
     </div>
   ),
