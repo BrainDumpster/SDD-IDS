@@ -39,8 +39,9 @@
   height: auto;
   min-height: var(--scale-40);
   box-sizing: border-box;
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-space-8);
   padding: var(--padding-padding-10) var(--padding-padding-16);
@@ -82,9 +83,13 @@
 }
 
 .ids-accordion-chevron {
-  /* Size/color come from IdsIcon + this class; keep layout for trigger flex row. */
+  /* Size/color come from IdsIcon + this class; keep layout for trigger flex row.
+     margin-top (not padding): the glyph is a CSS mask centered in a fixed 16px
+     box, so padding only grows the box — margin pushes the icon itself down
+     2px onto the 20px title line while header content stays top-aligned. */
   flex-shrink: 0;
-  color: var(--color-icon-gray-neutral-base);
+  margin-top: var(--padding-padding-2);
+  color: var(--color-icon-gray-neutral-accessible);
   transition: transform 120ms ease;
 }
 
@@ -92,15 +97,23 @@
   background: var(--color-background-brand-lighter-slate);
 }
 
-.ids-accordion-trigger:hover:not(:disabled) .ids-accordion-chevron {
-  color: var(--color-icon-gray-neutral-strong);
+.ids-accordion-trigger:focus-visible {
+  outline: none;
+  background: transparent;
 }
 
-.ids-accordion-trigger:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 0;
+/* Focus ring: border-2 ring offset 4px beyond the trigger on left/right and
+   1px on top/bottom (outline can't do per-side offsets, so a pseudo-element). */
+.ids-accordion-trigger:focus-visible::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -4px;
+  right: -4px;
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
-  background: transparent;
+  pointer-events: none;
 }
 
 .ids-accordion-trigger:disabled,
@@ -139,7 +152,13 @@
 .ids-accordion-item--open .ids-accordion-trigger .ids-accordion-chevron,
 .ids-accordion-item[data-open="true"] .ids-accordion-trigger .ids-accordion-chevron {
   transform: rotate(180deg);
-  color: var(--color-icon-gray-neutral-base);
+  color: var(--color-icon-gray-neutral-accessible);
+}
+
+/* Must come after the open rules: the [data-open] selector ties this rule at
+   0,4,0, so source order decides — hover (strong) wins on expanded items too. */
+.ids-accordion-trigger:hover:not(:disabled) .ids-accordion-chevron {
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .ids-accordion-body {
@@ -169,13 +188,10 @@
   );
 }
 
+/* Optional inner content card — spec: no background, no border, no padding;
+   it only holds the body text (max-width 900px). */
 .ids-accordion-content-card {
-  padding: var(--padding-padding-24);
-  background-color: var(--color-background-brand-lighter-slate);
-  border-width: var(--border-width-border-1);
-  border-style: solid;
-  border-color: var(--color-border-brand-strong);
-  border-top: none;
+  max-width: 900px;
   color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
