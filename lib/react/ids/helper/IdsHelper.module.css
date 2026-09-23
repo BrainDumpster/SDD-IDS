@@ -51,3 +51,9 @@
 .ids-error-text {
   min-width: 0;
 }
+
+.ids-helper-text {
+  max-width: 900px;
+  /* Keep natural width up to the 900px cap — only wrap once the limit is hit. */
+  flex-shrink: 0;
+}

@@ -16,6 +16,21 @@ const specAccurateArgs: ComponentProps<typeof IdsProgressBar> = {
   helperText: "Helper text (time estimate)",
 };
 
+/**
+ * Resizable frame ("responsive box") — drag the bottom-right corner to
+ * shrink/expand and verify min-widths (inline: 80px root / 36px track;
+ * with-label: 200px root).
+ */
+const frameStyle: React.CSSProperties = {
+  width: 320,
+  maxWidth: "100%",
+  boxSizing: "border-box",
+  resize: "horizontal",
+  overflow: "auto",
+  border: "1px dashed var(--color-border-gray-neutral-base)",
+  padding: 8,
+};
+
 const meta: Meta<typeof IdsProgressBar> = {
   title: "Components/IDS/Progress Bar",
   component: IdsProgressBar,
@@ -51,7 +66,7 @@ export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
   args: specAccurateArgs,
   render: (args) => (
-    <div style={{ maxWidth: 300, width: "100%" }}>
+    <div style={frameStyle}>
       <IdsProgressBar {...args} />
     </div>
   ),
@@ -66,7 +81,7 @@ export const InlineType: Story = {
     state: "in-progress",
   },
   render: (args) => (
-    <div style={{ maxWidth: 300, width: "100%" }}>
+    <div style={frameStyle}>
       <IdsProgressBar {...args} />
     </div>
   ),
@@ -74,7 +89,14 @@ export const InlineType: Story = {
 
 export const ThicknessReference: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 300 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        ...frameStyle,
+      }}
+    >
       <IdsProgressBar
         value={30}
         label="Thin"
@@ -102,7 +124,14 @@ export const ThicknessReference: Story = {
 
 export const States: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 300 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        ...frameStyle,
+      }}
+    >
       <IdsProgressBar
         value={35}
         label="In Progress"
@@ -149,7 +178,7 @@ export const Indeterminate: Story = {
     helperText: "Estimated time unavailable",
   },
   render: (args) => (
-    <div style={{ maxWidth: 300, width: "100%" }}>
+    <div style={frameStyle}>
       <IdsProgressBar {...args} />
     </div>
   ),

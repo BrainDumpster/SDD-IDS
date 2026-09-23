@@ -150,6 +150,9 @@ export function IdsProgressBar({
   const progressClip = isIndeterminate ? "0%" : `${clampedValue}%`;
   const valueFull = !isIndeterminate && clampedValue >= 100;
 
+  // Indeterminate + success/warning/error: helper text only, no track.
+  const hideTrack = isIndeterminate && state !== "in-progress";
+
   const helperIconSlug =
     state !== "in-progress" ? HELPER_ICON_BY_STATE[state] : undefined;
   const showHelperIcon =
@@ -211,6 +214,7 @@ export function IdsProgressBar({
               <span
                 className={styles["ids-progress-bar-label"]}
                 data-ids="ids-progress-bar-label"
+                title={label}
               >
                 {label}
               </span>
@@ -241,7 +245,7 @@ export function IdsProgressBar({
             </span>
           ) : null}
         </div>
-      ) : (
+      ) : hideTrack ? null : (
         track
       )}
 
