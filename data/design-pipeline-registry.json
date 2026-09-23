@@ -1,0 +1,86 @@
+{
+  "_comment": "Programme registry for /design-pipeline. One entry per design system. Adding a programme means adding an entry here - no skill or script edits. Routing key is the 'Design system' field of the design-handoff issue, matched case-insensitively against a programme's key or label. NOTE: the issue form's 'Design system' dropdown in .github/ISSUE_TEMPLATE/design-handoff.yml duplicates the enabled labels below - GitHub issue forms cannot read this file. Keep the two in sync when enabling a programme.",
+  "version": 1,
+  "defaults": {
+    "storybookDir": "storybook",
+    "storybookConfigDir": "storybook/.storybook",
+    "baseBranch": "master",
+    "branchPrefix": "handoff/",
+    "commitPrefix": "design-handoff",
+    "archiveDir": "handoffs",
+    "issueLabel": "design-handoff"
+  },
+  "programmes": {
+    "ids": {
+      "label": "IDS",
+      "enabled": true,
+      "titlePrefix": "Components/IDS",
+      "sourceRoots": [
+        "lib/react/ids",
+        "storybook/src/components/lib-generated",
+        "storybook-generated/ids/src"
+      ],
+      "specRoot": "components/ids",
+      "themeCss": "components/ids-theme.css",
+      "sbReference": ".design-sync/sb-reference",
+      "syncConfig": ".design-sync/ids/config.json",
+      "bundleOut": "ds-bundle",
+      "globalName": "IdsReact",
+      "pkg": "@ids/react",
+      "designProject": null,
+      "_designProjectNote": "claude.ai design-system project UUID. Resolve once via DesignSync list_projects during the first resync, then record it here."
+    },
+    "synapse": {
+      "label": "Synapse",
+      "enabled": true,
+      "titlePrefix": "Components/Synapse",
+      "sourceRoots": [
+        "storybook/src/components",
+        "storybook-generated/synapse/src"
+      ],
+      "specRoot": "components/synapse",
+      "themeCss": "components/synapse-theme.css",
+      "sbReference": ".design-sync/sb-reference-synapse",
+      "syncConfig": ".design-sync/synapse/config.json",
+      "bundleOut": "ds-bundle-synapse",
+      "globalName": "SynapseReact",
+      "pkg": "@synapse/react",
+      "designProject": null
+    },
+    "dap": {
+      "label": "DAP",
+      "enabled": true,
+      "titlePrefix": "Components/DAP",
+      "sourceRoots": [
+        "components/DAP",
+        "storybook-generated/dap/src"
+      ],
+      "specRoot": "components/DAP",
+      "themeCss": "components/dap-theme.css",
+      "sbReference": ".design-sync/sb-reference-dap",
+      "syncConfig": ".design-sync/dap/config.json",
+      "bundleOut": "ds-bundle-dap",
+      "globalName": "DapReact",
+      "pkg": "@dap/react",
+      "designProject": null,
+      "_note": "DAP is programme deltas layered on IDS (see CLAUDE.md). A DAP handoff may need the IDS base component inspected for context, but must never edit it."
+    },
+    "powerflex": {
+      "label": "Powerflex",
+      "enabled": false,
+      "titlePrefix": "Components/Powerflex",
+      "sourceRoots": [
+        "storybook-generated/powerflex/src"
+      ],
+      "specRoot": null,
+      "themeCss": null,
+      "sbReference": ".design-sync/sb-reference-powerflex",
+      "syncConfig": ".design-sync/powerflex/config.json",
+      "bundleOut": "ds-bundle-powerflex",
+      "globalName": "PowerflexReact",
+      "pkg": "@powerflex/react",
+      "designProject": null,
+      "_note": "Sources exist but storybook/.storybook/main.ts does not index storybook-generated/powerflex/src. Add it to the storyFiles list there before enabling."
+    }
+  }
+}

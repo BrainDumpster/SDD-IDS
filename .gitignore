@@ -47,4 +47,15 @@ apps/design-spec-portal/*.json
 # Design-system bundle build output (regenerate via .ds-sync/package-build.mjs)
 ds-bundle/
 ds-bundle-synapse/
-.design-sync/
+.ds-sync/
+
+# /design-sync working state. The durable set (config.json, NOTES.md, previews/)
+# IS committed - it is the carry-forward that makes re-syncs incremental.
+.design-sync/*.log
+.design-sync/sb-reference/
+.design-sync/sb-reference-synapse/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/types/
+.design-sync/*-theme-bundle.css

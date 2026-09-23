@@ -1,0 +1,96 @@
+name: Design handoff
+description: Hand a design change from a Claude design project to the component library. No git required.
+title: "[handoff] "
+labels: ["design-handoff"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in and submit. A developer picks it up with `/design-pipeline apply #<this issue>`,
+        which turns it into a branch, updates the components and Storybook, and opens a PR back here.
+
+        Drag screenshots and extracted markup/CSS straight into the fields below — GitHub hosts them.
+
+  - type: input
+    id: package-name
+    attributes:
+      label: Package name
+      description: Short kebab-case name. Becomes the branch and the archive folder, e.g. button-focus-ring.
+      placeholder: button-focus-ring
+    validations:
+      required: true
+
+  - type: dropdown
+    id: programme
+    attributes:
+      label: Design system
+      description: Which programme this change belongs to. Routes the handoff — must be right.
+      options:
+        - IDS
+        - Synapse
+        - DAP
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Update existing component
+        - New component
+    validations:
+      required: true
+
+  - type: input
+    id: components
+    attributes:
+      label: Affected components
+      description: Exact names as they appear in code / Storybook. Comma-separated.
+      placeholder: Button, DropdownButton
+    validations:
+      required: true
+
+  - type: textarea
+    id: intent
+    attributes:
+      label: Intent
+      description: One to three sentences — what changed and why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-changed
+    attributes:
+      label: What changed
+      description: |
+        The concrete changes — markup, styles, states, props. Paste extracted HTML/CSS here,
+        and drag in screenshots.
+    validations:
+      required: true
+
+  - type: textarea
+    id: states
+    attributes:
+      label: States / variants affected
+      description: |
+        Which variants, severities, sizes and themes this touches (including dark theme).
+        This drives which Storybook stories get updated — be specific.
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes for the developer
+      description: Anything ambiguous, and anything that must NOT be touched.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **New components need the designated design reviewer's approval before merge.**
+
+        Once filed, treat this as immutable — corrections go in a new handoff, not an edit here.

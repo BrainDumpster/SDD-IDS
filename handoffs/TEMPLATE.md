@@ -1,5 +1,11 @@
 # Design Handoff
 
+<!-- This is the shape `/design-pipeline apply` writes into handoffs/<package-name>/HANDOFF.md
+     from a design-handoff issue. Designers do not fill this in by hand — they use
+     .github/ISSUE_TEMPLATE/design-handoff.yml in the browser. Kept here as the contract
+     between the two, and for operators applying a package manually. -->
+
+- **Handoff issue**: <!-- #<n> -->
 - **Package name**: <!-- kebab-case, becomes branch handoff/<name> -->
 - **Design system**: <!-- e.g. Synapse, IDS — the programme this change belongs to -->
 - **Source root**: <!-- where its components live, e.g. src/components/ -->
