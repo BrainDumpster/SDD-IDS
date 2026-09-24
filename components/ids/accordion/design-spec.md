@@ -29,6 +29,7 @@ Optional child sub-slots:
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
 - Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
+- Truncated header titles expose the full text via a **native browser tooltip** (`title` attribute on the title element). The tooltip is set **only while the rendered text is actually truncated** (measured overflow), so untruncated titles show no redundant tooltip; tooltip text is the rendered text content.
 - **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
 - Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
 - Selected/open state does **not** add a second item outline beyond shared row borders.
@@ -117,6 +118,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Arrow key roving focus is supported between triggers.
 - Home/End move focus to first/last trigger.
 - Panel content participates in layout only when expanded.
+- Hovering a truncated header title shows the full title text in a native browser tooltip (no tooltip when the title fits).
 ## Composition & API (runtime)
 Canonical machine-readable mirror (Storybook + codegen QA; MDX is not executed by Storybook): `storybook/src/spec-contracts/ids-accordion.contract.tsx`.
 

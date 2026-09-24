@@ -197,3 +197,20 @@ export const ChevronRight: Story = {
   },
 };
 
+/** Long panel title clamps to two lines; hovering shows the native browser tooltip with the full text. */
+export const TruncatedTitleTooltip: Story = {
+  name: "Truncated Title Tooltip",
+  args: {
+    items: [
+      {
+        value: "long-title",
+        title:
+          "Network configuration with an unusually long and descriptive panel title that wraps to two lines and then truncates with an ellipsis so the full text is only reachable via the browser tooltip",
+        content: "Hover the truncated title to see the full text in a native browser tooltip.",
+      },
+      ...demoItems,
+    ],
+    defaultValue: [],
+  },
+};
+
