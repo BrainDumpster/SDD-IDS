@@ -35,6 +35,11 @@ export {
 export { IdsHelper, IdsHelperText, type IdsHelperProps } from "./helper";
 export { IdsError, IdsErrorText, type IdsErrorProps } from "./error";
 export {
+  IdsFormLabel,
+  type IdsFormLabelProps,
+  type IdsFormLabelSize,
+} from "./form-label";
+export {
   IdsAlert,
   IdsAlertGroup,
   type IdsAlertProps,

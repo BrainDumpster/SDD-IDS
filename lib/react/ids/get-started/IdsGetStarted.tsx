@@ -59,6 +59,7 @@ import {
   type ParsedGetStartedCard,
 } from "./IdsGetStarted.compose";
 import styles from "./IdsGetStarted.module.css";
+import { IDS_IMAGE_URL_BY_FILE } from "../shared/idsAssetRegistry.generated";
 
 const CARD_SCROLL_STEP = 345;
 const DEFAULT_TITLE = "Get Started";
@@ -69,12 +70,19 @@ const DEFAULT_CONFIGURE_LABEL = "Configure";
 const DEFAULT_PRODUCT_NAME = "Product Name";
 
 const honeycombUrl = (() => {
-  const modules = import.meta.glob<string>("../../../../assets/images/honeycomb.png", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  });
-  return Object.values(modules)[0];
+  try {
+    const modules = import.meta.glob<string>("../../../../assets/images/honeycomb.png", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    });
+    const fromGlob = Object.values(modules)[0];
+    if (fromGlob) return fromGlob;
+  } catch {
+    // Non-Vite bundler (esbuild): `import.meta.glob` is not a function. Fall through.
+  }
+  // esbuild leaves the glob empty -- use the generated registry so the hero image ships.
+  return IDS_IMAGE_URL_BY_FILE["honeycomb.png"];
 })();
 
 const s = {

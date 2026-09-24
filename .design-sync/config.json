@@ -1,0 +1,192 @@
+{
+  "projectId": "3e6c53e3-4159-4601-b391-0801e7f3f3bf",
+  "shape": "storybook",
+  "pkg": "@ids/react",
+  "globalName": "IdsReact",
+  "entry": "lib/react/ids/index.ts",
+  "storybookStatic": ".design-sync/sb-reference",
+  "storybookConfigDir": "storybook/.storybook-ids",
+  "cssEntry": ".design-sync/ids-theme-bundle.css",
+  "extraEntries": [
+    "./lib/react/ids/index.ts",
+    "./lib/react/ids/accordion/index.ts",
+    "./lib/react/ids/datagrid/index.ts"
+  ],
+  "titleMap": {
+    "Accordion": "IdsAccordion",
+    "Alert": "IdsAlert",
+    "AnchorMenu": "IdsAnchorMenu",
+    "AppLauncher": "IdsAppLauncher",
+    "AppShell": "IdsAppShell",
+    "Badge": "IdsBadge",
+    "Button": "IdsButton",
+    "Card": "IdsCard",
+    "Checkbox": "IdsCheckbox",
+    "Dashboard": "IdsDashboard",
+    "Datagrid": "IdsDatagrid",
+    "DatePicker": "IdsDatePicker",
+    "DetailPanel": "IdsDetailPanel",
+    "DropdownButton": "IdsDropdownButton",
+    "ComboBox": "IdsDropdownComboBox",
+    "MultiSelect": "IdsDropdownMultiSelect",
+    "SingleSelect": "IdsDropdownSingleSelect",
+    "DualListBox": "IdsDualListBox",
+    "Footer": "IdsFooter",
+    "GetStarted": "IdsGetStarted",
+    "Link": "IdsLink",
+    "MainMenuLeft": "IdsMainMenuLeft",
+    "Masthead": "IdsMasthead",
+    "Modal": "IdsModal",
+    "Pagination": "IdsPagination",
+    "ProgressBar": "IdsProgressBar",
+    "RadioButton": "IdsRadioButton",
+    "SegmentedButton": "IdsSegmentedButton",
+    "Slider": "IdsSlider",
+    "Spinner": "IdsSpinner",
+    "StatusBar": "IdsStatusBar",
+    "Tab": "IdsTabs",
+    "Tag": "IdsTag",
+    "TextBox": "IdsTextBox",
+    "TimePicker": "IdsTimePicker",
+    "Toast": "IdsToastViewport",
+    "ToggleSwitch": "IdsToggleSwitch",
+    "Tooltip": "IdsTooltip",
+    "Tree": "IdsTree",
+    "WhatsNew": "IdsWhatsNew",
+    "Wizard": "IdsWizard",
+    "FormLabel": "IdsFormLabel"
+  },
+  "overrides": {
+    "IdsDropdownComboBox": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsDropdownMultiSelect": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsDropdownSingleSelect": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsAlert": {
+      "cardMode": "column"
+    },
+    "IdsAnchorMenu": {
+      "cardMode": "column"
+    },
+    "IdsAppLauncher": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsAppShell": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsCard": {
+      "cardMode": "column"
+    },
+    "IdsDatePicker": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsDetailPanel": {
+      "cardMode": "column"
+    },
+    "IdsDualListBox": {
+      "cardMode": "column"
+    },
+    "IdsLink": {
+      "cardMode": "column"
+    },
+    "IdsMainMenuLeft": {
+      "cardMode": "column",
+      "skip": [
+        "components-ids-main-menu-left--secondary-state-snapshot-matrix"
+      ]
+    },
+    "IdsMasthead": {
+      "cardMode": "column"
+    },
+    "IdsPagination": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsSegmentedButton": {
+      "cardMode": "column"
+    },
+    "IdsSpinner": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsTextBox": {
+      "cardMode": "column"
+    },
+    "IdsTimePicker": {
+      "cardMode": "column"
+    },
+    "IdsToastViewport": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsTooltip": {
+      "cardMode": "column"
+    },
+    "IdsWhatsNew": {
+      "cardMode": "single",
+      "primaryStory": "SpecAccurateDesign"
+    },
+    "IdsWizard": {
+      "cardMode": "column"
+    }
+  },
+  "docsMap": {
+    "IdsAccordion": "components/ids/accordion/design-spec.md",
+    "IdsAlert": "components/ids/alert/design-spec.md",
+    "IdsAnchorMenu": "components/ids/anchor-menu/design-spec.md",
+    "IdsAppLauncher": "components/ids/app-launcher/design-spec.md",
+    "IdsAppShell": "components/ids/app-shell/design-spec.md",
+    "IdsBadge": "components/ids/badge/design-spec.md",
+    "IdsButton": "components/ids/button/design-spec.md",
+    "IdsCard": "components/ids/card/design-spec.md",
+    "IdsCheckbox": "components/ids/checkbox/design-spec.md",
+    "IdsDashboard": "components/ids/dashboard/design-spec.md",
+    "IdsDatagrid": "components/ids/datagrid/design-spec.md",
+    "IdsDatePicker": "components/ids/date-picker/design-spec.md",
+    "IdsDetailPanel": "components/ids/detail-panel/design-spec.md",
+    "IdsDropdownButton": "components/ids/dropdown-button/design-spec.md",
+    "IdsDropdownComboBox": "components/ids/dropdown-combo-box/design-spec.md",
+    "IdsDropdownMultiSelect": "components/ids/dropdown-multiselect/design-spec.md",
+    "IdsDropdownSingleSelect": "components/ids/dropdown-single-select/design-spec.md",
+    "IdsDualListBox": "components/ids/dual-list-box/design-spec.md",
+    "IdsFooter": "components/ids/footer/design-spec.md",
+    "IdsGetStarted": "components/ids/get-started/design-spec.md",
+    "IdsLink": "components/ids/link/design-spec.md",
+    "IdsMainMenuLeft": "components/ids/main-menu-left/design-spec.md",
+    "IdsMasthead": "components/ids/masthead/design-spec.md",
+    "IdsModal": "components/ids/modal/design-spec.md",
+    "IdsPagination": "components/ids/pagination/design-spec.md",
+    "IdsProgressBar": "components/ids/progress-bar/design-spec.md",
+    "IdsRadioButton": "components/ids/radio-button/design-spec.md",
+    "IdsSegmentedButton": "components/ids/segmented-button/design-spec.md",
+    "IdsSlider": "components/ids/slider/design-spec.md",
+    "IdsSpinner": "components/ids/spinner/design-spec.md",
+    "IdsStatusBar": "components/ids/status-bar/design-spec.md",
+    "IdsTabs": "components/ids/tab/design-spec.md",
+    "IdsTag": "components/ids/tag/design-spec.md",
+    "IdsTextBox": "components/ids/text-box/design-spec.md",
+    "IdsTimePicker": "components/ids/time-picker/design-spec.md",
+    "IdsToastViewport": "components/ids/toast/design-spec.md",
+    "IdsToggleSwitch": "components/ids/toggle-switch/design-spec.md",
+    "IdsTooltip": "components/ids/tooltip/design-spec.md",
+    "IdsTree": "components/ids/tree/design-spec.md",
+    "IdsWhatsNew": "components/ids/whats-new/design-spec.md",
+    "IdsWizard": "components/ids/wizard/design-spec.md",
+    "IdsFormLabel": "components/ids/form-label/design-spec.md"
+  },
+  "guidelinesGlob": [],
+  "extraFonts": [
+    "assets/fonts/roboto/roboto-variable-latin.woff2"
+  ],
+  "readmeHeader": ".design-sync/conventions.md"
+}
