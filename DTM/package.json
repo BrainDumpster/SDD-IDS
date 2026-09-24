@@ -1,0 +1,23 @@
+{
+  "name": "design-token-manager",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "node features/tokens/seed-cli.js",
+    "start": "node api/server.js",
+    "mcp": "node mcp/server.js",
+    "dev": "vite --config ui/vite.config.js",
+    "test": "node --test features/validation/validate.test.js features/tokens/seed.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.19.1",
+    "express": "^4.21.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "vite": "^6.3.5"
+  }
+}

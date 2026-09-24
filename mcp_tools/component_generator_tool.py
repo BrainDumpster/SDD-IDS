@@ -39,6 +39,16 @@ def generate_component(
 
     repaired = repair_engine.repair(component, generated)
 
+    try:
+        from api.dtm_client import resolve_design_tokens
+        import json as _json
+        text = repaired if isinstance(repaired, str) else _json.dumps(repaired)
+        dtm = resolve_design_tokens(text)
+        if dtm is not None and isinstance(repaired, dict):
+            repaired = {**repaired, "dtm": dtm}
+    except Exception:
+        pass
+
     return repaired
 
 

@@ -143,6 +143,16 @@ async def generate_figma_aware_component(request: ComponentGenerationRequest):
         # Extract validation score
         validation_score = result.get("metadata", {}).get("validation", {}).get("score", 0)
         
+        metadata = result.get("metadata") or {}
+        try:
+            from api.dtm_client import resolve_design_tokens
+            import json as _json
+            dtm = resolve_design_tokens(_json.dumps(result))
+            if dtm is not None:
+                metadata = {**metadata, "dtm": dtm}
+        except Exception:
+            pass
+
         return GenerationResponse(
             success=True,
             component=request.component,
@@ -150,7 +160,7 @@ async def generate_figma_aware_component(request: ComponentGenerationRequest):
             style_mode=request.style_mode,
             message="Component generated successfully",
             generated_code=result,
-            metadata=result.get("metadata"),
+            metadata=metadata,
             file_paths=file_paths,
             validation_score=validation_score,
             generated_at=datetime.now().isoformat()

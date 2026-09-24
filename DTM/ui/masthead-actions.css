@@ -1,0 +1,93 @@
+.dtm-masthead-actions {
+  gap: var(--spacing-space-16);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+[data-ids="IdsAppShellBodyViewport"] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+[data-ids="IdsAppShellBodyContentSlot"] {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dtm-token-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dtm-token-list [data-ids="ids-datagrid"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+}
+
+.dtm-token-filter {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: 100%;
+  height: 40px;
+  margin-bottom: var(--spacing-space-16);
+  padding: 8px 12px;
+  box-sizing: border-box;
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  position: relative;
+}
+
+.dtm-token-filter:hover {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+.dtm-token-filter:focus-within {
+  border-color: var(--color-border-brand-base);
+}
+
+.dtm-token-filter input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-gray-neutral);
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  outline: none;
+  padding: 0 8px;
+}
+
+.dtm-token-filter input::placeholder {
+  color: var(--color-text-gray-disabled);
+}
+
+.dtm-token-filter input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.dtm-token-filter button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}

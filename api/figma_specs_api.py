@@ -163,6 +163,15 @@ async def generate_specification(request: SpecGenerationRequest):
             # TODO: Implement vector store indexing
             logger.info("🔍 Vector store indexing not yet implemented")
         
+        try:
+            from api.dtm_client import resolve_design_tokens
+        except ImportError:
+            from dtm_client import resolve_design_tokens
+        import json as _json
+        dtm = resolve_design_tokens(_json.dumps(spec_dict.get("design_tokens") or []))
+        if dtm is not None:
+            spec_dict["dtm"] = dtm
+
         return SpecResponse(
             success=True,
             component=request.component,
