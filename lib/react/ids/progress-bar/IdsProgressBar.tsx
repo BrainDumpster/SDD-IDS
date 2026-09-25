@@ -253,6 +253,7 @@ export function IdsProgressBar({
         <IdsHelper
           className={styles["ids-progress-bar-helper"]}
           data-ids="ids-progress-bar-helper"
+          title={helperText}
         >
           {showHelperIcon ? (
             <IdsIcon shape={helperIconSlug!} variant="img" size={16} />
