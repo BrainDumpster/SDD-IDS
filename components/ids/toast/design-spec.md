@@ -46,7 +46,8 @@ ids-toast-viewport
 
 ## Layout & Measurements
 - Item container: `height: 48px`, `padding-inline: left 24px, right 16px`, `padding-block: 14px`.
-- Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime width is container-driven.
+- Item sample widths from Figma: `516px` (without view details), `617px` (with view details); runtime width **hugs content** (`width: fit-content` on the item) up to a **900px max** (`max-width: min(900px, 100%)`) — the toast only shrinks/wraps when the available width (container or viewport, capped at `100vw - 32px`) is smaller than the content or 900px.
+- Message text wraps with the item width up to **5 lines**; beyond that it is truncated with an ellipsis (five-line clamp on `ids-toast-message`).
 - Root surface: `background: var(--color-static-gray-900)`, `box-shadow: inset 0 0 0 1px var(--color-border-gray-white)` (inner border), `border-radius: var(--toast-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Row composition: two horizontal groups with `justify-content: space-between`:
   - `Content` (status icon + message) with `padding-top: var(--padding-padding-2)`
