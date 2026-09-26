@@ -1,6 +1,6 @@
 import { Menu } from "../../shared/menu";
 import { ScrollArea } from "../../shared/scroll-area";
-import React, { useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import React, { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { IdsIcon } from "../icon";
 import { IdsTag } from "../tag";
 import { IdsTooltip, TooltipBody, TooltipPanel, TooltipTrigger } from "../tooltip";
@@ -368,6 +368,166 @@ export function DropdownMenu({
     ...(popupMinHeight ? { minHeight: `${popupMinHeight}px` } : {}),
   };
 
+  /* ---------------------------------------------------------------------- *
+   * Trigger <-> popup tab bridge.
+   *
+   * The popup is portaled to the end of <body>, so in DOM (= tab) order it sits
+   * AFTER the whole page. Per design-spec the popup is deliberately not
+   * auto-focused on open and "the user must Tab into the popup" — but a plain
+   * Tab from the trigger walks the rest of the page instead, visiting every
+   * other control (including other dropdown triggers) while this menu stays
+   * open. On a real page that leaves the options unreachable in practice.
+   * Bridge the two boundaries explicitly.
+   * -------------------------------------------------------------------------- */
+  const POPUP_FOCUSABLE_SELECTOR =
+    'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  /**
+   * `listboxId` is optional — Menu.Popup then falls back to its own internal id,
+   * so resolve by id when we have one and by open-state otherwise.
+   */
+  const getPopupElement = (doc: Document): HTMLElement | null =>
+    (listboxId ? doc.getElementById(listboxId) : null) ??
+    doc.querySelector<HTMLElement>('[data-ids-menu-portal] [role="listbox"][data-open]');
+
+  /**
+   * The trigger, found by state rather than by id: Menu.Trigger overwrites the
+   * `aria-controls` we pass with its own internal menu id, so it does not match
+   * `listboxId`. Exactly one combobox is expanded while this popup is open.
+   */
+  const getTriggerElement = (doc: Document) =>
+    doc.querySelector<HTMLElement>('[role="combobox"][aria-expanded="true"]');
+
+  const getPopupFocusables = (popup: HTMLElement) =>
+    Array.from(popup.querySelectorAll<HTMLElement>(POPUP_FOCUSABLE_SELECTOR));
+
+  /** Enabled option rows only — skips Search / Select All / Show Selected. */
+  const getOptionRows = (popup: HTMLElement) =>
+    Array.from(popup.querySelectorAll<HTMLElement>('[data-selectable="true"]')).filter(
+      (row) => !row.hasAttribute("disabled") && row.getAttribute("aria-disabled") !== "true",
+    );
+
+  /**
+   * ARIA APG: ArrowDown lands on the selected option (or the first one when
+   * nothing is selected); ArrowUp lands on the last.
+   */
+  const focusOptionRow = (popup: HTMLElement, edge: "first" | "last") => {
+    const rows = getOptionRows(popup);
+    if (rows.length === 0) return false;
+    const selected = rows.find((row) => row.dataset.selected === "true");
+    const target = edge === "last" ? rows[rows.length - 1] : (selected ?? rows[0]);
+    target.focus();
+    return true;
+  };
+
+  /** Set while the popup is still mounting, so the effect below can focus it. */
+  const pendingOptionFocusRef = useRef<"first" | "last" | null>(null);
+
+  useEffect(() => {
+    if (!open) {
+      pendingOptionFocusRef.current = null;
+      return;
+    }
+    const edge = pendingOptionFocusRef.current;
+    if (!edge) return;
+    pendingOptionFocusRef.current = null;
+    // The portal mounts in this commit; focus on the next frame so the rows exist.
+    const frame = requestAnimationFrame(() => {
+      const popup = getPopupElement(document);
+      if (popup) focusOptionRow(popup, edge);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open, listboxId]);
+
+  /**
+   * Trigger keys.
+   * - Tab forward while open enters the popup instead of walking the page.
+   * - ArrowDown / ArrowUp move focus onto an option row (ARIA APG), opening the
+   *   menu first when it is closed. MenuTrigger only calls `setOpen(true)` for
+   *   ArrowDown and ignores ArrowUp, so both are handled here.
+   */
+  const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    const doc = event.currentTarget.ownerDocument;
+
+    if (event.key === "Tab" && !event.shiftKey && open) {
+      const popup = getPopupElement(doc);
+      if (!popup) return;
+      const items = getPopupFocusables(popup);
+      if (items.length === 0) return;
+      event.preventDefault();
+      items[0].focus();
+      return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      const edge = event.key === "ArrowDown" ? "first" : "last";
+      if (open) {
+        const popup = getPopupElement(doc);
+        if (popup && focusOptionRow(popup, edge)) {
+          event.preventDefault();
+        }
+        return;
+      }
+      // Closed: open now and focus once the popup has mounted.
+      pendingOptionFocusRef.current = edge;
+      if (event.key === "ArrowUp") {
+        // MenuTrigger does not open on ArrowUp — do it here.
+        event.preventDefault();
+        setOpen(true);
+        onOpenChange?.(true);
+      }
+      // ArrowDown: MenuTrigger's own handler opens the menu.
+    }
+  };
+
+  /**
+   * Tab out of the popup's first/last control returns to the page sanely.
+   *
+   * Runs in the CAPTURE phase: Base UI's own Menu keydown closes the popup on
+   * Tab and lets the browser move focus, which would otherwise win.
+   */
+  const handlePopupTabCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab") return;
+    // The search field owns Tab (it commits the ghost suffix) — never steal it.
+    const target = event.target as HTMLElement | null;
+    if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+    const popup = event.currentTarget;
+    const doc = popup.ownerDocument;
+    const active = doc.activeElement as HTMLElement | null;
+    if (!active || !popup.contains(active)) return;
+    const items = getPopupFocusables(popup);
+    const index = items.indexOf(active);
+    if (index === -1) return;
+
+    // Shift+Tab off the first control goes back to the trigger, not to the
+    // last element of the page.
+    if (event.shiftKey && index === 0) {
+      const trigger = getTriggerElement(doc);
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      trigger.focus();
+      return;
+    }
+
+    // Tab past the last control closes the menu and continues the page tab
+    // order after the trigger, the way a native select does.
+    if (!event.shiftKey && index === items.length - 1) {
+      const trigger = getTriggerElement(doc);
+      const pageFocusables = Array.from(
+        doc.querySelectorAll<HTMLElement>(
+          `${POPUP_FOCUSABLE_SELECTOR}, a[href], select:not([disabled]), textarea:not([disabled])`,
+        ),
+      ).filter((element) => !popup.contains(element) && element.offsetParent !== null);
+      const next = trigger ? pageFocusables[pageFocusables.indexOf(trigger) + 1] : undefined;
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(false);
+      onOpenChange?.(false);
+      (next ?? trigger)?.focus();
+    }
+  };
+
   // Cross-section arrow-key navigation. Up/Down move between focusable popup
   // sections; Left/Right move within horizontal sections such as Select All /
   // Clear All and the Show Selected tags. Tab still visits every control.
@@ -557,6 +717,7 @@ export function DropdownMenu({
         aria-describedby={ariaDescribedBy}
         aria-invalid={ariaInvalid || undefined}
         aria-label={ariaLabel}
+        onKeyDown={handleTriggerKeyDown}
       >
         <span className={styles.triggerMeasure}>
           {trigger}
@@ -579,6 +740,7 @@ export function DropdownMenu({
             role="listbox"
             className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
             style={popupStyle}
+            onKeyDownCapture={handlePopupTabCapture}
             onKeyDown={handlePopupKeyDown}
           >
             {showSearch ? (

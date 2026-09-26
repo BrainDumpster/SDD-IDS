@@ -143,7 +143,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ## Interactions
 - Trigger:
   - click/`Enter`/`Space` toggles menu.
-  - when the menu opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
+  - when the menu opens, focus remains on the trigger; nothing auto-focuses the popup. `Tab`, `ArrowDown` or `ArrowUp` then move focus into the popup (see Implementation Notes).
   - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, select all, clear all, option rows, footer action).
   - `Escape` closes menu and restores trigger focus.
 - Option selection:
@@ -294,7 +294,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - **Options list 1px inset padding** — `DropdownMenu.module.css` `.optionsScrollViewport` now has `padding-inline: 1px` so the option rows sit 1px inside the menu border, matching the App Launcher options list.
 
 ### 2026-08-13
-- **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
+- **Focus management / no auto-focus on open** — the popup is never auto-focused; focus stays on the trigger because nothing moves it. The popup is portaled to the end of `<body>` (lib-local `shared/menu`, not Base UI), so in tab order it sits after the whole page — `DropdownMenu.tsx` therefore bridges the trigger↔popup boundary explicitly: `Tab` from the open trigger focuses the popup's first tabbable control, `Shift+Tab` from that first control returns to the trigger, and `Tab` past the last control closes the menu and continues the page tab order after the trigger. `ArrowDown`/`ArrowUp` on the trigger open the menu when closed and put focus on the selected (else first) / last enabled `[data-selectable="true"]` option row. Once focus is inside the popup, `handlePopupKeyDown` moves it between popup sections.
 - **Cross-section keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags); `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags. `Tab` still traverses every tabbable control.
 - **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport` and `showSelectedTags`) carry `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable.
 - **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
