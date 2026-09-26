@@ -1,0 +1,216 @@
+/**
+ * Layout for the IDS Settings page story.
+ * Values are IDS design tokens only — no hardcoded colors or spacing.
+ */
+
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16);
+  padding-bottom: var(--spacing-space-24);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.settings-search {
+  max-width: 420px;
+}
+
+/* Content column + sticky "On this page" rail. */
+.settings-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: var(--spacing-space-24);
+  align-items: start;
+}
+
+.settings-main {
+  min-width: 0;
+}
+
+.settings-aside {
+  position: sticky;
+  top: var(--spacing-space-16);
+}
+
+.settings-group-title {
+  margin: var(--spacing-space-24) 0 var(--spacing-space-8);
+  font-size: var(--font-size-header-6);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.settings-group {
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-background-surface-secondary);
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--spacing-space-24);
+  padding: var(--spacing-space-16) var(--spacing-space-20);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
+}
+
+.settings-row:first-child {
+  border-top: none;
+}
+
+.settings-row__label-group {
+  min-width: 0;
+}
+
+.settings-row__label-line {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-6);
+}
+
+.settings-label {
+  margin: 0;
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.settings-description {
+  margin: var(--spacing-space-2) 0 0;
+  font-size: var(--font-size-body-3);
+  line-height: var(--font-line-height-line-height-18);
+  color: var(--color-text-gray-neutral);
+}
+
+.settings-row__control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-space-8);
+}
+
+/* Controls that need a predictable field width (selects, pickers). */
+.settings-row__control--field {
+  width: 220px;
+}
+
+/* Rows whose control needs the full row width (slider, radio row). */
+.settings-row--stacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.settings-row--stacked .settings-row__control {
+  justify-content: flex-start;
+  margin-top: var(--spacing-space-12);
+}
+
+.settings-row--stacked .settings-row__control--field {
+  width: 100%;
+}
+
+.settings-fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.settings-legend {
+  margin-bottom: var(--spacing-space-8);
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.settings-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-8);
+}
+
+.settings-stack--lg {
+  gap: var(--spacing-space-16);
+}
+
+.settings-inline {
+  display: flex;
+  gap: var(--spacing-space-12);
+}
+
+.settings-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-space-12);
+  margin-top: var(--spacing-space-8);
+  padding: var(--spacing-space-12) var(--spacing-space-20);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
+  background-color: var(--color-background-surface-secondary);
+}
+
+.settings-actions__status {
+  margin-right: auto;
+}
+
+/* Narrow viewports: the control drops under its label instead of squeezing it. */
+/* No room for the rail — the tabs alone carry navigation. */
+@media (max-width: 1180px) {
+  .settings-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-aside {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .settings-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-row__control {
+    justify-content: flex-start;
+    margin-top: var(--spacing-space-12);
+  }
+
+  .settings-row__control--field {
+    width: 100%;
+  }
+
+  .settings-inline {
+    flex-wrap: wrap;
+  }
+}
+
+/* Standalone page canvas (story without the App Shell chrome). */
+.settings-canvas {
+  min-height: 100vh;
+  padding: var(--spacing-space-24);
+  background-color: var(--color-background-surface-primary);
+}
+
+.settings-canvas__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.settings-title {
+  margin: 0;
+  font-size: var(--font-size-header-2);
+  line-height: var(--font-line-height-line-height-40);
+  font-weight: 500;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.settings-subtitle {
+  margin: var(--spacing-space-4) 0 var(--spacing-space-16);
+  max-width: 720px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
+}
