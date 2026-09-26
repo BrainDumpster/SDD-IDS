@@ -114,13 +114,7 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
         minHeight: 0,
       }}
     >
-      <div
-        style={{
-          width: 278,
-          height: "100%",
-          flexShrink: 0,
-        }}
-      >
+      <div style={{ height: "100%", flexShrink: 0 }}>
         <IdsMainMenuLeft {...props} />
       </div>
       <div
@@ -185,9 +179,44 @@ export const LongSecondaryLabels: Story = {
   },
 };
 
-/** Collapsed icon-only rail (**64px**, Figma `11099:56206`). */
+/** Rail column matches the collapsed 64px width so a hover-expand overlays the
+ *  page content (drop shadow) instead of pushing it. */
+function CollapsedRailFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
+  return (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        display: "flex",
+        background: "var(--color-background-surface-primary)",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ height: "100%", flexShrink: 0 }}>
+        <IdsMainMenuLeft {...props} />
+      </div>
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          padding: 24,
+          color: "var(--color-text-gray-neutral-strong)",
+          fontSize: 14,
+        }}
+      >
+        <p style={{ margin: 0, opacity: 0.85 }}>
+          Main content area — hover the collapsed rail: it expands as an overlay
+          over this content (with a drop shadow) and collapses on mouse leave.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Collapsed icon-only rail (**64px**, Figma `11099:56206`). Hover the rail to
+ *  expand it as an overlay over the content; it collapses on mouse leave. */
 export const Collapsed: Story = {
-  render: (args) => <SpecAccurateFrame {...args} />,
+  render: (args) => <CollapsedRailFrame {...args} />,
   args: { ...specAccurateArgs, expanded: false },
 };
 
