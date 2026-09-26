@@ -82,18 +82,21 @@
   border-color: var(--color-border-brand-base);
 }
 
-/* Pointer focus: active/selected border only (no outline ring) */
-.ids-text-box-control:has(.ids-text-box-value:focus:not(:focus-visible)):not([data-state="disabled"]):not([data-state="error"]) {
+/* Pointer focus: active/selected border only (no outline ring).
+   Keyed off `data-focus-modality` set by IdsTextBox, not `:focus:not(:focus-visible)`:
+   a focused input/textarea always matches `:focus-visible` per spec, so the
+   selector below would never apply and a click wrongly drew the keyboard ring. */
+.ids-text-box-control[data-focus-modality="pointer"]:not([data-state="disabled"]):not([data-state="error"]) {
   border-color: var(--color-border-brand-base);
 }
 
 /* Keyboard focus-visible: accessible border + outer ring */
-.ids-text-box-control:has(.ids-text-box-value:focus-visible):not([data-state="disabled"]):not([data-state="error"]),
+.ids-text-box-control[data-focus-modality="keyboard"]:not([data-state="disabled"]):not([data-state="error"]),
 .ids-text-box-control[data-state="focus"] {
   border-color: var(--color-border-gray-neutral-base);
 }
 
-.ids-text-box-control:has(.ids-text-box-value:focus-visible):not([data-state="disabled"]):not([data-state="error"])::after,
+.ids-text-box-control[data-focus-modality="keyboard"]:not([data-state="disabled"]):not([data-state="error"])::after,
 .ids-text-box-control[data-state="focus"]::after {
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
   border-radius: var(--text-box-focus-ring-radius, var(--corner-radius-radius-4));
@@ -103,7 +106,7 @@
   position: absolute;
 }
 
-.ids-text-box-control:has(.ids-text-box-value:focus:not(:focus-visible)):not([data-state="disabled"]):not([data-state="error"])::after {
+.ids-text-box-control[data-focus-modality="pointer"]:not([data-state="disabled"]):not([data-state="error"])::after {
   content: none;
 }
 

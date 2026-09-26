@@ -17,6 +17,8 @@ import React, {
   Children,
   isValidElement,
   useId,
+  useRef,
+  useState,
   type ChangeEvent,
   type InputHTMLAttributes,
   type ReactElement,
@@ -175,6 +177,18 @@ export function IdsTextBox({
   className,
 }: IdsTextBoxProps) {
   const reactId = useId();
+  /**
+   * Focus modality.
+   *
+   * `:focus-visible` cannot separate pointer focus from keyboard focus on a text
+   * field: per the CSS spec a focused `input` / `textarea` ALWAYS matches
+   * `:focus-visible`, because it accepts keyboard input. That makes the
+   * design-spec's pointer-focus rule (`:focus:not(:focus-visible)` -> selected
+   * border, no ring) unreachable, so clicking the field wrongly showed the
+   * keyboard ring. Track the modality ourselves and expose it on the control.
+   */
+  const pointerFocusRef = useRef(false);
+  const [focusModality, setFocusModality] = useState<"pointer" | "keyboard" | null>(null);
   const inputId = id ?? `ids-text-box-${reactId}`;
   const messageId = `${inputId}-message`;
 
@@ -237,6 +251,14 @@ export function IdsTextBox({
     // Spec: aria-label is fallback when no visible label; placeholder is never the label
     "aria-label": shouldRenderLabel ? undefined : ariaLabel,
     onChange: handleChange,
+    onFocus: () => {
+      setFocusModality(pointerFocusRef.current ? "pointer" : "keyboard");
+      pointerFocusRef.current = false;
+    },
+    onBlur: () => {
+      pointerFocusRef.current = false;
+      setFocusModality(null);
+    },
   };
 
   const fieldGroup = (
@@ -250,6 +272,10 @@ export function IdsTextBox({
         className={cx(styles["ids-text-box-control"], sizeClass)}
         data-ids="ids-text-box-control"
         data-state={visualState !== "default" ? visualState : undefined}
+        data-focus-modality={focusModality ?? undefined}
+        onPointerDown={() => {
+          pointerFocusRef.current = true;
+        }}
       >
         {useTextArea ? (
           <textarea
