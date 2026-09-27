@@ -33,6 +33,7 @@ import { IdsAlert } from "@ids/react/alert";
 import { IdsButton, IdsButtonLabel, IdsButtonLeadingIcon } from "@ids/react/button";
 import { IdsTabs } from "@ids/react/tab";
 import { IdsTextBox } from "@ids/react/text-box";
+import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 import { IdsToggleSwitch } from "@ids/react/toggle-switch";
 import { IdsDropdownSingleSelect } from "@ids/react/dropdown-single-select";
 import { IdsDropdownMultiSelect } from "@ids/react/dropdown-multiselect";
@@ -249,6 +250,7 @@ const TAB_SECTIONS: Record<string, IdsAnchorMenuItem[]> = {
     { label: "Delivery", href: "#delivery" },
     { label: "Quiet hours", href: "#quiet-hours" },
   ],
+  account: [{ label: "Passwords", href: "#passwords" }],
 };
 
 type SetPref = <K extends keyof Preferences>(key: K, value: Preferences[K]) => void;
@@ -620,6 +622,170 @@ function NotificationsPanel({ prefs, set }: { prefs: Preferences; set: SetPref }
   );
 }
 
+interface PasswordEntry {
+  id: string;
+  site: string;
+  username: string;
+  password: string;
+  note: string;
+}
+
+const INITIAL_PASSWORDS: PasswordEntry[] = [
+  {
+    id: "adobe",
+    site: "adobe.com",
+    username: "haotran170620@gmail.com",
+    password: "correcthorse",
+    note: "",
+  },
+  { id: "agoda", site: "agoda.com", username: "haotran", password: "hunter2", note: "" },
+  {
+    id: "apple",
+    site: "apple.com",
+    username: "haotran170620@gmail.com",
+    password: "s3cret-key",
+    note: "Recovery key in the safe.",
+  },
+];
+
+const EMPTY_PASSWORD_FORM = { site: "", username: "", password: "", note: "" };
+
+function AccountPanel() {
+  const [passwords, setPasswords] = useState<PasswordEntry[]>(INITIAL_PASSWORDS);
+  const [addOpen, setAddOpen] = useState(false);
+  const [form, setForm] = useState(EMPTY_PASSWORD_FORM);
+
+  const setField = (key: keyof typeof EMPTY_PASSWORD_FORM) => (value: string) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
+  const canSave =
+    form.site.trim() !== "" && form.username.trim() !== "" && form.password.trim() !== "";
+
+  const openAdd = () => {
+    setForm(EMPTY_PASSWORD_FORM);
+    setAddOpen(true);
+  };
+
+  const handleSave = () => {
+    if (!canSave) return;
+    setPasswords((prev) =>
+      [
+        ...prev,
+        {
+          id: `${form.site.trim()}-${Date.now()}`,
+          site: form.site.trim(),
+          username: form.username.trim(),
+          password: form.password,
+          note: form.note.trim(),
+        },
+      ].sort((a, b) => a.site.localeCompare(b.site)),
+    );
+    setForm(EMPTY_PASSWORD_FORM);
+    setAddOpen(false);
+  };
+
+  return (
+    <>
+      <Section id="passwords" title="Passwords">
+        <div className="account-passwords">
+          <div className="account-passwords__intro">
+            <p className="settings-description">
+              Create, save, and manage your passwords so you can easily sign in to sites and apps.
+            </p>
+            <IdsButton variant="secondary" size="small" onClick={openAdd}>
+              <IdsButtonLeadingIcon>
+                <IdsIcon shape="shape-plus" size={16} />
+              </IdsButtonLeadingIcon>
+              <IdsButtonLabel>Add</IdsButtonLabel>
+            </IdsButton>
+          </div>
+
+          {passwords.length > 0 ? (
+            <ul className="account-passwords__list">
+              {passwords.map((entry) => (
+                <li key={entry.id}>
+                  <button type="button" className="account-passwords__row">
+                    <IdsIcon
+                      shape="globe-lock"
+                      size={20}
+                      color="var(--color-icon-gray-neutral-base)"
+                    />
+                    <span className="account-passwords__site">{entry.site}</span>
+                    <span className="account-passwords__meta">{entry.username}</span>
+                    <IdsIcon
+                      shape="chev-right"
+                      size={16}
+                      color="var(--color-icon-gray-neutral-base)"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="account-passwords__empty settings-description">
+              No saved passwords yet. Select “Add” to create one.
+            </p>
+          )}
+        </div>
+      </Section>
+
+      <IdsModal
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        scenario="single-page"
+        size="small"
+        title="Add new password"
+        primaryActionLabel="Save"
+        tertiaryActionLabel="Cancel"
+        enablePrimaryAction={canSave}
+        onPrimaryAction={handleSave}
+        onTertiaryAction={() => setAddOpen(false)}
+      >
+        <div className="account-form">
+          <IdsTextBox
+            label="Site"
+            placeholder="example.com"
+            value={form.site}
+            onValueChange={setField("site")}
+            showIcon={false}
+            size="small"
+          />
+          <IdsTextBox
+            label="Username"
+            value={form.username}
+            onValueChange={setField("username")}
+            showIcon={false}
+            size="small"
+          />
+          <IdsTextBox
+            label="Password"
+            inputType="password"
+            value={form.password}
+            onValueChange={setField("password")}
+            showIcon
+            iconName="eye-view-hide"
+            size="small"
+          >
+            <IdsHelper>
+              <IdsHelperText>
+                Make sure you&apos;re saving your current password for this site
+              </IdsHelperText>
+            </IdsHelper>
+          </IdsTextBox>
+          <IdsTextBox
+            label="Note"
+            componentType="text-area"
+            rows={3}
+            value={form.note}
+            onValueChange={setField("note")}
+            showIcon={false}
+            size="small"
+          />
+        </div>
+      </IdsModal>
+    </>
+  );
+}
+
 /* -------------------------------------------------------------------------- */
 /* Settings page                                                               */
 /* -------------------------------------------------------------------------- */
@@ -715,6 +881,11 @@ function SettingsPage({ showAnchorMenu = true }: { showAnchorMenu?: boolean }) {
                 label: "Notifications",
                 badgeCount: prefs.severities.length,
                 content: <NotificationsPanel prefs={prefs} set={set} />,
+              },
+              {
+                id: "account",
+                label: "Account",
+                content: <AccountPanel />,
               },
             ]}
           />
