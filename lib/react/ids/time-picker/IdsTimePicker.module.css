@@ -238,6 +238,16 @@
   padding: var(--padding-padding-16, 16px) var(--padding-padding-40, 40px);
 }
 
+/* Portaled popup — escapes ancestor overflow/stacking (e.g. the next settings row
+   painting on top). Positioned via inline top/left from the field's rect. */
+.timePopupPortaled {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: auto;
+  margin-top: 0;
+}
+
 .timeColumn {
   display: flex;
   flex-direction: column;

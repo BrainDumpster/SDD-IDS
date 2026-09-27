@@ -36,7 +36,7 @@
 8. optional `ValidationError` (`status-critical-square-solid` icon + error message)
 
 ### Time popup
-9. `TimePopup` — floating panel below the field, right-aligned (`right: 0`)
+9. `TimePopup` — floating panel below the field, right-aligned (`right: 0`). Render it in a body portal (`position: fixed`, coordinates from the field's rect) so it escapes ancestor `overflow`/stacking contexts (e.g. a following row with `isolation: isolate`) and is never painted behind adjacent fields.
 10. `TimeColumn` × N — scroll columns for hour, minute, optional seconds, optional AM/PM
    - `IncrementButton` — up arrow (`arrow-tri-down-solid` rotated 180°, 10×10px)
    - `ScrollableValueList` — vertical list of selectable values
