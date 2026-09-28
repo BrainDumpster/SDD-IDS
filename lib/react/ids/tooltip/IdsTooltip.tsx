@@ -465,6 +465,7 @@ export function TooltipPanel({
         className={cx(
           styles["ids-tooltip-content"],
           hasTopBar && styles["ids-tooltip-content--under-top"],
+          closable && styles["ids-tooltip-content--closable"],
         )}
         data-ids="ids-tooltip-content"
       >
