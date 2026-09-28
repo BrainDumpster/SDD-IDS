@@ -58,151 +58,21 @@
   flex-shrink: 0;
 }
 
-.dropdownTrigger {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-space-10);
-  box-sizing: border-box;
+/* Per-page trigger — the shared IDS single-select field shell
+   (`dropdown-shared/IdsDropdownTriggerShell`) sized to the pagination spec
+   field: 90px wide, 32px high (shell `size="small"`). Scoped under
+   `.dropdownWrap` so it beats the shell's own `.field` sizing
+   (`width: 300px; min-width: 186px`) regardless of CSS bundle order. */
+.dropdownWrap .perPageTrigger {
   width: 90px;
-  height: 32px;
-  margin: 0;
-  border: var(--border-width-border-default, 1px) solid
-    var(--color-border-gray-neutral-base);
-  border-radius: 0;
-  background: var(--color-background-surface-component);
-  color: var(--color-text-gray-neutral);
-  padding: 0 var(--padding-padding-16);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
-  outline: none;
+  min-width: 90px;
+  max-width: 90px;
 }
 
-.dropdownTrigger:hover:not(:disabled) {
-  background: var(--color-background-surface-component);
-  border-color: var(--color-border-gray-neutral-strong);
-  color: var(--color-text-gray-neutral);
-}
-
-.dropdownTrigger[aria-expanded="true"]:not(:disabled) {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.dropdownTrigger:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-default, 1px) solid
-    var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
-}
-
-.dropdownTrigger:disabled {
-  cursor: not-allowed;
-  color: var(--color-text-gray-disabled);
-  background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-gray-disabled);
-}
-
-.dropdownTrigger:disabled .caretIcon {
-  color: var(--color-icon-gray-disabled);
-}
-
-.caretIcon {
-  flex-shrink: 0;
-  color: var(--color-icon-gray-neutral-base);
-}
-
-.dropdownMenu {
-  box-sizing: border-box;
-  width: 90px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: var(--border-width-border-default, 1px) solid
-    var(--color-border-gray-neutral-base);
-  border-radius: 0;
-  background: var(--color-background-surface-component);
-  overflow: clip;
-  box-shadow:
-    var(--shadow-shadow-4-drop-shadow-4-x, 0)
-      var(--shadow-shadow-4-drop-shadow-4-y, 4px)
-      var(--shadow-shadow-4-drop-shadow-4-blur, 4px)
-      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
-      var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08)),
-    0 2px 2px 0
-      var(--shadow-shadow-4-drop-shadow-4-color, rgba(37, 37, 37, 0.08));
-}
-
-.dropdownMenuPortaled {
-  z-index: 10000;
-}
-
-.dropdownMenuBelow {
-  border-top: none;
-}
-
-.dropdownMenuAbove {
-  border-bottom: none;
-  border-top: var(--border-width-border-default, 1px) solid
-    var(--color-border-gray-neutral-base);
-}
-
-.dropdownOptionWrap {
-  margin: 0;
-  padding: 0;
-}
-
-.dropdownOption {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 40px;
-  margin: 0;
-  border: 0;
-  border-top: var(--border-width-border-default, 1px) solid transparent;
-  border-bottom: var(--border-width-border-default, 1px) solid transparent;
-  border-radius: 0;
-  background: var(--color-background-surface-component);
-  color: var(--color-text-gray-neutral);
-  text-align: left;
-  padding: var(--padding-padding-10) var(--padding-padding-16);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
-  outline: none;
-}
-
-.dropdownOption:hover {
-  background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-gray-neutral);
-  border-top-color: var(--color-border-brand-base-neutral);
-  border-bottom-color: var(--color-border-brand-base-neutral);
-}
-
-.dropdownOption:active {
-  background: var(--color-background-brand-light-slate);
-  color: var(--color-text-brand-strong);
-  border-top-color: var(--color-border-brand-base-neutral);
-  border-bottom-color: var(--color-border-brand-base-neutral);
-}
-
-.dropdownOption:focus-visible {
-  border-radius: var(--corner-radius-radius-4);
-  outline: var(--border-width-border-default, 1px) solid
-    var(--color-border-brand-base);
-  outline-offset: -1px;
-}
-
-.dropdownOptionSelected {
-  background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
-  border-top-color: var(--color-border-brand-base-neutral);
-  border-bottom-color: var(--color-border-brand-base-neutral);
+/* Real hover border — the shell only exposes hover via the demo `data-hover`
+   attribute, so apply the IDS hover token directly. */
+.dropdownWrap .perPageTrigger:hover:not([data-disabled="true"]) {
+  --trigger-border: var(--color-border-gray-neutral-strong);
 }
 
 .pageNavGroup {

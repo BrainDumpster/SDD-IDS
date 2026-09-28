@@ -269,28 +269,3 @@ export const Disabled: Story = {
     </div>
   ),
 };
-
-export const WithoutResultsPerPage: Story = {
-  name: "Without Results Per Page",
-  render: () => (
-    <div style={frameStyle}>
-      <ControlledPagination
-        {...specAccurateArgs}
-        showResultsPerPage={false}
-      />
-    </div>
-  ),
-};
-
-export const NarrowContainer: Story = {
-  name: "Narrow Container (responsive auto)",
-  render: () => (
-    <div style={{ ...frameStyle, maxWidth: 360 }}>
-      <ControlledPagination
-        {...specAccurateArgs}
-        responsiveMode="auto"
-        collapseOrder={["results-per-page"]}
-      />
-    </div>
-  ),
-};
