@@ -44,7 +44,11 @@
   position: relative;
   z-index: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  max-height: var(--tooltip-max-height, 300px);
+  overflow: hidden;
   background: var(--color-background-surface-secondary);
   color: var(--color-text-gray-neutral);
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
@@ -203,17 +207,30 @@
   left: -5px !important;
 }
 
+/* Fixed top bar: title column + close sit above the scroll region, so the
+   scrollbar runs underneath them instead of spanning the whole panel. */
+.ids-tooltip-top {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  padding: var(--padding-padding-12) var(--padding-padding-12) 0;
+}
+
 .ids-tooltip-content {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: var(--spacing-space-4);
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
   padding: var(--padding-padding-12);
 }
 
-.ids-tooltip-content--closable {
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 0;
+/* Under a top bar, only the header-body gap (space-4) remains at the top. */
+.ids-tooltip-content--under-top {
+  padding: var(--padding-padding-4) var(--padding-padding-12)
+    var(--padding-padding-12);
 }
 
 .ids-tooltip-content-column {

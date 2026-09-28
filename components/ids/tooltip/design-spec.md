@@ -53,15 +53,16 @@ ids-tooltip
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
 - Default behavior is `hugContent=true`: the panel sizes to its content up to `maxWidth` (default `244px`). Consumers may set `hugContent={false}` to use the fixed `240px` (`264px` when `closable=true`) width instead.
+- Panel height is capped at `maxHeight` (default `300px`) via `--tooltip-max-height` on the popup; the content region scrolls vertically (`overflow-y: auto`, thin scrollbar) when content exceeds the cap. When a title or close icon is present, they sit in a fixed top bar (`.ids-tooltip-top`) above the scroll region, so the scrollbar runs underneath them rather than spanning the whole panel. Consumers may override `maxHeight` per instance.
 
-**Closable content layout** (`closable=true`; Storybook `.contentClosable` / `.contentColumn`):
-- Panel inner `.content` is a **horizontal flex row** (`flex-direction: row`; `align-items: flex-start`; no inter-column gap — spacing is column padding).
-- `ContentColumn` (`.contentColumn`): stacks `Header` slot + `BodyContent` vertically; header text is optional, but the slot is always rendered in `closable` mode (empty when title is absent, one-line min-height) to preserve vertical rhythm and close-icon alignment; `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--padding-padding-4)` (4px reserve before the close icon column so title/body wrap inside the remaining width).
-- `CloseAction` is a **sibling** of `ContentColumn`, top-aligned — **not** nested inside `Header`.
+**Closable content layout** (`closable=true`; Storybook `.contentTop` / `.contentColumn`):
+- Panel is a vertical flex column: a fixed top bar (`.ids-tooltip-top`, `display: flex`; `align-items: flex-start`; `padding: padding-12 padding-12 0`) holds the title column and `CloseAction`, above a scrollable `.content` region (`flex: 1 1 auto`; `min-height: 0`; `overflow-y: auto`; thin scrollbar; `padding: padding-4 padding-12 padding-12`). The scrollbar therefore starts below the title/close row.
+- `ContentColumn` (`.contentColumn`): holds the `Header` slot inside the top bar; header text is optional, but the slot is always rendered in `closable` mode (empty when title is absent, one-line min-height) to preserve vertical rhythm and close-icon alignment; `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--padding-padding-4)` (4px reserve before the close icon column so the title wraps inside the remaining width).
+- `CloseAction` is a **sibling** of `ContentColumn` in the top bar, top-aligned — **not** nested inside `Header`.
 - `CloseAction` dimensions: `20px × 20px` IDS tertiary icon-only button (`sizing/size-20`); padding `padding/padding-4` on all sides.
 - Close icon: shared `Icon` component with `shapeName="ctrl-close-16"` at explicit `12px × 12px` (overrides `Icon` default `16×16` mask size); color `var(--color-icon-gray-neutral-base)`.
 - Popup shell: `popupClosable` width `264px` (vs `popupStandard` `240px`); inner content box after panel padding remains `240px` (`264 − 24px`).
-- Inner width math: `240px` inner = `ContentColumn` content area (`216px`) + `4px` column padding-right + `20px` close → body/title text wraps at ~`216px` (does not extend under the close icon).
+- Inner width math: `240px` inner = `ContentColumn` content area (`216px`) + `4px` column padding-right + `20px` close → title text wraps at ~`216px` (does not extend under the close icon); the scrolling body uses the full `240px` inner width beneath the top bar.
 - Standard (`closable=false`): `.content` stays a vertical column; `BodyContent` uses full inner width (sample `216px` after padding on `240px` popup).
 
 Arrow geometry contract:
@@ -80,7 +81,7 @@ Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx
 - `TooltipRoot` / `.popup`: transparent positioning shell (`overflow: visible`; no border/shadow).
 - `TooltipPanel` / `.panel`: bordered content surface (background, border, shadow, `box-sizing: border-box`).
 - `Arrow` / `.arrow`: absolute sibling above `.panel`; overlaps panel edge (no `::before`/`::after` border-notch masks).
-- `closable=true`: `.content` + `.contentClosable` row wrapper; `.contentColumn` + `.close` siblings inside `.content`.
+- `closable=true` (or any visible title): `.contentTop` top bar holds `.contentColumn` + `.close` as siblings; `.content` below it is the only scroll region, so the scrollbar starts under the title/close row.
 
 Storybook alignment insets (cross-axis; applies to all sides on that axis):
 - Top/Bottom tooltips — `start`: `left: 8px`; `center`: `left: calc(50% - 5px)`; `end`: `left: calc(100% - 18px)`.
@@ -173,6 +174,7 @@ Root props:
 - `closeIconShapeName?: string` default `ctrl-close-16`.
 - `hugContent?: boolean` (default `true`). When `true`, the tooltip popup width shrinks to fit its content instead of using the standard `240px` / `264px` fixed widths. Pass `hugContent={false}` to opt back into the fixed widths.
 - `maxWidth?: number` (default `244`). Maximum popup width (px) applied only when `hugContent` is `true`; content wraps once this width is reached.
+- `maxHeight?: number` (default `300`). Maximum panel height (px) applied in all width modes; the content region scrolls vertically once content exceeds this height (title/close stay fixed above it).
 - `triggerDisplay?: "inline" | "block"` (default `inline`). When `block`, the trigger anchor spans the full width of its container and uses `min-width: 0`.
 - `delay?: number` (default `600` ms). Open delay for standard hover tooltips; use `0` for immediate appearance.
 - `closeDelay?: number` (default `0` ms). Delay before closing when the pointer leaves the trigger.
@@ -257,6 +259,8 @@ Validation checklist (pass/fail):
 - Angular Storybook: `storybook-angular/src/components/ids-tooltip/`
 
 ## Changelog
+- **2026-09-28**: Moved vertical scrolling from `.ids-tooltip-panel` to a dedicated `.ids-tooltip-content` scroll region; when a title or close icon is present, they render in a fixed `.ids-tooltip-top` bar so the scrollbar runs underneath them. Panel is now a vertical flex column with `overflow: hidden`; removed the `.ids-tooltip-content--closable` row layout. Changed in `lib/react/ids/tooltip/IdsTooltip.tsx` and `IdsTooltip.module.css`.
+- **2026-09-17**: Added `maxHeight` runtime prop (default `300px`) constraining `.ids-tooltip-panel` height via `--tooltip-max-height` CSS var; panel scrolls vertically (`overflow-y: auto`, `scrollbar-width: thin`) past the cap. Storybook `Components/IDS/Tooltip` exposes a `max height (px)` number control (60–600, step 10). Synced from `lib/react/ids/tooltip/IdsTooltip.tsx`, `IdsTooltip.module.css`, and `storybook/src/components/lib-generated/Tooltip.stories.tsx`.
 - **2026-09-09**: Changed `hugContent` default from `false` to `true` — tooltip popup now hugs content by default (capped at `maxWidth`, default `244px`); pass `hugContent={false}` to opt back into fixed `240px`/`264px` widths. Storybook `Components/IDS/Tooltip` locks the `hugContent` control to `true` (not toggleable) since the `maxWidth` control now governs sizing. Synced from `lib/react/ids/tooltip/IdsTooltip.tsx` and `storybook/src/components/lib-generated/Tooltip.stories.tsx`.
 - **2026-09-09**: Added `maxWidth` runtime prop (default `244px`) constraining `.ids-tooltip-popup--hug` width via `--tooltip-max-width` CSS var. Synced from `lib/react/ids/tooltip/IdsTooltip.tsx` and `IdsTooltip.module.css`.
 - **2026-08-31**: Fixed `right-end` arrow sitting at center — use `bottom: 8px` / `top: auto` for left/right `end`, normalize `right`+`end` attachment to `left: -5px`, and disable Base UI align-flip on Storybook React Positioner so requested `arrowAlign` is preserved.
