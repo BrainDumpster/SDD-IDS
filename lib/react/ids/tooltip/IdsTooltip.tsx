@@ -426,6 +426,26 @@ TooltipClose.displayName = "TooltipClose";
 /* TooltipPanel                                                               */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Measure the rendered scrollbar width for `scrollbar-width: thin` so the
+ * closable scroll region can keep an exact `spacing/space-4` gap while
+ * `scrollbar-gutter: stable` reserves the track permanently.
+ */
+function measureThinScrollbarWidth(): number {
+  const probe = document.createElement("div");
+  probe.style.position = "absolute";
+  probe.style.top = "-9999px";
+  probe.style.visibility = "hidden";
+  probe.style.overflow = "scroll";
+  probe.style.scrollbarWidth = "thin";
+  probe.style.width = "100px";
+  probe.style.height = "100px";
+  document.body.appendChild(probe);
+  const width = Math.max(probe.offsetWidth - probe.clientWidth, 0);
+  probe.remove();
+  return width;
+}
+
 export function TooltipPanel({
   children,
   className,
@@ -433,6 +453,11 @@ export function TooltipPanel({
 }: TooltipPanelProps) {
   const { closable } = useTooltipContext("TooltipPanel");
   const { header, body, close, other } = partitionPanelChildren(children);
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (closable) setScrollbarWidth(measureThinScrollbarWidth());
+  }, [closable]);
 
   const hasTitle = headerHasVisibleTitle(header);
   const closeNode = closable ? close ?? <TooltipClose /> : null;
@@ -467,6 +492,13 @@ export function TooltipPanel({
           hasTopBar && styles["ids-tooltip-content--under-top"],
           closable && styles["ids-tooltip-content--closable"],
         )}
+        style={
+          closable
+            ? ({
+                "--ids-scrollbar-width": `${scrollbarWidth}px`,
+              } as CSSProperties)
+            : undefined
+        }
         data-ids="ids-tooltip-content"
       >
         {body}

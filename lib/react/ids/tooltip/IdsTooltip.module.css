@@ -237,19 +237,17 @@
 }
 
 /* Closable: keep body text 4px (space-4) to the left of the close icon column.
-   The right reserve is top-bar right padding + 20px close button + 4px spacing. */
+   `scrollbar-gutter: stable` permanently reserves the scrollbar track so the
+   content width — and popup width — never changes when the scrollbar appears.
+   The right reserve is top-bar right padding + 20px close button + 4px spacing,
+   minus the measured scrollbar width (`--ids-scrollbar-width` is set at runtime)
+   so the visible gap stays exactly 4px whether or not the scrollbar is present. */
 .ids-tooltip-content--closable {
+  scrollbar-gutter: stable;
   padding-right: calc(
-    var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4)
+    var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4) -
+      var(--ids-scrollbar-width, 0px)
   );
-}
-
-/* WebKit/Blink: render the scrollbar over the content so it does not consume
-   layout space and the 4px spacing is preserved. */
-@supports (overflow-y: overlay) {
-  .ids-tooltip-content--closable {
-    overflow-y: overlay;
-  }
 }
 
 .ids-tooltip-content-column {
