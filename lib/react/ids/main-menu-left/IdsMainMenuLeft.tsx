@@ -357,6 +357,15 @@ export function IdsMainMenuLeft({
     onExpandedChange?.(next);
   };
 
+  // Collapsed-state behavior: while the rail is collapsed, hovering it expands
+  // the rail as an overlay over the page content (with drop shadow) and it
+  // collapses again on mouse leave. The rail is only *fixed* expanded via the
+  // footer toggle, so the footer icon keeps showing the collapsed state during
+  // a hover-expand ("expand icon remains until the nav is fixed expanded").
+  const [hoverExpanded, setHoverExpanded] = useState(false);
+  const overlayExpanded = hoverExpanded && !isExpanded;
+  const showExpanded = isExpanded || overlayExpanded;
+
   const [selectedKey, setSelectedKey] = useState<string | null>(() =>
     resolveInitialSelectedKey(items, defaultSelectedItemId),
   );
@@ -406,15 +415,26 @@ export function IdsMainMenuLeft({
   };
 
   return (
-    <nav
+    <div
       className={cx(
-        styles.root,
-        isExpanded ? styles.expanded : styles.collapsed,
-        className,
+        styles.reserve,
+        isExpanded ? styles.reserveExpanded : styles.reserveCollapsed,
       )}
-      aria-label={ariaLabel}
+      onMouseEnter={() => {
+        if (!isExpanded) setHoverExpanded(true);
+      }}
+      onMouseLeave={() => setHoverExpanded(false)}
     >
-      {logo ? (
+      <nav
+        className={cx(
+          styles.root,
+          showExpanded ? styles.expanded : styles.collapsed,
+          overlayExpanded && styles.overlay,
+          className,
+        )}
+        aria-label={ariaLabel}
+      >
+        {logo ? (
         <div className={styles.logoSlot}>
           {logo.link ? (
             <button
@@ -457,16 +477,21 @@ export function IdsMainMenuLeft({
           const childList = item.children ?? [];
           const hasChildren = childList.length > 0;
           const showChildrenList =
-            isExpanded &&
+            showExpanded &&
             hasChildren &&
             (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
-          const showChevron = isExpanded && hasChildren;
+          const showChevron = showExpanded && hasChildren;
           const primaryIconName = item.iconName ?? "home";
           const hasSelectedSecondary = selectedSecondaryParentKey === itemId;
+          // A parent only shows the selected highlight when its selected child is
+          // hidden (sub-menu collapsed) — it takes over the indicator from the
+          // now-hidden child. While the sub-menu is open the child carries the
+          // highlight, so the parent stays unselected.
+          const parentSelectedWhileHidden = hasSelectedSecondary && !showChildrenList;
           const showSelectedInset = hasForcedState
             ? state === "selected" || state === "selected-focus"
             : hasChildren
-              ? hasSelectedSecondary
+              ? parentSelectedWhileHidden
               : selectedKey === itemId;
           // Parent takes aria-current when its selected secondary child is hidden (sub-menu collapsed).
           const primaryIsCurrentPage =
@@ -479,7 +504,7 @@ export function IdsMainMenuLeft({
           const togglePrimary = () => {
             if (hasForcedState) return;
 
-            if (hasChildren && isExpanded) {
+            if (hasChildren && showExpanded) {
               setExpandedChildrenKey((prev: string | null) =>
                 prev === itemId ? null : itemId,
               );
@@ -512,7 +537,7 @@ export function IdsMainMenuLeft({
           const openPrimary = () => {
             if (hasForcedState) return;
 
-            if (hasChildren && isExpanded) {
+            if (hasChildren && showExpanded) {
               if (!showChildrenList) {
                 setExpandedChildrenKey(itemId);
               }
@@ -545,7 +570,7 @@ export function IdsMainMenuLeft({
                 focusLast();
                 break;
               case "ArrowRight":
-                if (hasChildren && isExpanded) {
+                if (hasChildren && showExpanded) {
                   event.preventDefault();
                   if (!showChildrenList) {
                     setExpandedChildrenKey(itemId);
@@ -580,14 +605,14 @@ export function IdsMainMenuLeft({
               <button
                 type="button"
                 data-item-id={itemId}
-                title={!isExpanded ? primaryTitle : undefined}
+                title={!showExpanded ? primaryTitle : undefined}
                 onClick={togglePrimary}
                 onKeyDown={handlePrimaryKeyDown}
                 className={cx(
                   styles.primaryRow,
                   !hasForcedState && styles.interactive,
                   styles[`state${toPascal(state)}` as keyof typeof styles],
-                  hasSelectedSecondary && styles.secondaryParentSelected,
+                  parentSelectedWhileHidden && styles.secondaryParentSelected,
                   showSelectedInset && styles.selected,
                 )}
                 aria-current={primaryIsCurrentPage ? "page" : undefined}
@@ -595,7 +620,7 @@ export function IdsMainMenuLeft({
                 tabIndex={hasForcedState ? -1 : undefined}
               >
                 <IdsIcon shape={primaryIconName} size={16} className={styles.primaryIcon} />
-                {isExpanded ? (
+                {showExpanded ? (
                   <ClampedLabel
                     text={primaryLabel}
                     tooltip={item.tooltip ?? primaryLabel}
@@ -734,7 +759,8 @@ export function IdsMainMenuLeft({
           />
         </button>
       </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 
