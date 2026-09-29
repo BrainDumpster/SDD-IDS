@@ -162,7 +162,7 @@ Runtime contract mirror: `component-contracts/ids/pagination.contract.ts`. Refer
 | `showPageOffset` | `boolean` | `false` | When `true`, replace the page-number text input with a page-offset dropdown bound to `pageOffsetOptions`. |
 | `background` | `"gray" \| "white" \| "none"` | `"gray"` | Root surface variant. |
 | `embeddedInDatagrid` | `boolean` | `false` | When `true` (datagrid footer), applies **`rootEmbedded`**: top border only; no left/right/bottom outer border. |
-| `disabled` | `boolean` | `false` | Disables all interactive controls. |
+| `disabled` | `boolean` | `false` | Disables all interactive controls. **Angular only** — the React implementation has no `disabled` prop. |
 | `dropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Per-page dropdown visual state (demo/testing; runtime defaults to collapsed until opened). |
 | `pageOffsetDropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Page-offset dropdown visual state (demo/testing). |
 | `responsiveMode` | `"auto" \| "keep-inline"` | `"auto"` | Responsive layout strategy (see **Responsiveness**). |

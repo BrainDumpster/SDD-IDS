@@ -52,7 +52,6 @@ export interface IdsPaginationProps
   showResultsPerPage?: boolean;
   /** Default `"gray"`. */
   background?: IdsPaginationBackground;
-  disabled?: boolean;
   summaryFormatter?: (currentPage: number, totalPages: number) => string;
   /** Default `"auto"`. */
   responsiveMode?: IdsPaginationResponsiveMode;
@@ -144,7 +143,6 @@ export function IdsPagination({
   onPageSizeChange,
   showResultsPerPage = true,
   background: backgroundProp = "gray",
-  disabled = false,
   summaryFormatter,
   responsiveMode: responsiveModeProp = "auto",
   collapseOrder: collapseOrderProp,
@@ -185,11 +183,10 @@ export function IdsPagination({
 
   const goToPage = useCallback(
     (nextPage: number) => {
-      if (disabled) return;
       const clamped = clamp(nextPage, 1, safeTotalPages);
       onPageChange(clamped);
     },
-    [disabled, onPageChange, safeTotalPages],
+    [onPageChange, safeTotalPages],
   );
 
   const commitPageInput = useCallback(() => {
@@ -277,7 +274,6 @@ export function IdsPagination({
                 trigger={
                   <IdsDropdownTriggerShell
                     size="small"
-                    disabled={disabled}
                     filled
                     className={styles.perPageTrigger}
                     left={<span>{safePageSize}</span>}
@@ -291,7 +287,6 @@ export function IdsPagination({
                 }))}
                 selectionMode="single"
                 selectedValues={[String(safePageSize)]}
-                disabled={disabled}
                 matchTriggerWidth
                 side="bottom"
                 ariaLabel="Items per page"
@@ -314,7 +309,7 @@ export function IdsPagination({
                   firstLastCollapsed && styles.iconButtonCollapsed,
                 )}
                 onClick={() => goToPage(1)}
-                disabled={disabled || atFirstPage}
+                disabled={atFirstPage}
                 aria-label="First page"
               >
                 <IdsIcon
@@ -328,7 +323,7 @@ export function IdsPagination({
                 type="button"
                 className={styles.iconButton}
                 onClick={() => goToPage(safeCurrentPage - 1)}
-                disabled={disabled || atFirstPage}
+                disabled={atFirstPage}
                 aria-label="Previous page"
               >
                 <IdsIcon
@@ -364,7 +359,6 @@ export function IdsPagination({
                   ariaLabel="Current page"
                   value={pageInputValue}
                   showIcon={false}
-                  disabled={disabled}
                   onValueChange={(value) =>
                     setPageInputValue(value.replace(/[^\d]/g, ""))
                   }
@@ -375,7 +369,7 @@ export function IdsPagination({
                 type="button"
                 className={styles.iconButton}
                 onClick={() => goToPage(safeCurrentPage + 1)}
-                disabled={disabled || atLastPage}
+                disabled={atLastPage}
                 aria-label="Next page"
               >
                 <IdsIcon
@@ -392,7 +386,7 @@ export function IdsPagination({
                   firstLastCollapsed && styles.iconButtonCollapsed,
                 )}
                 onClick={() => goToPage(safeTotalPages)}
-                disabled={disabled || atLastPage}
+                disabled={atLastPage}
                 aria-label="Last page"
               >
                 <IdsIcon

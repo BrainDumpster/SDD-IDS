@@ -71,7 +71,7 @@
 
 /* Real hover border — the shell only exposes hover via the demo `data-hover`
    attribute, so apply the IDS hover token directly. */
-.dropdownWrap .perPageTrigger:hover:not([data-disabled="true"]) {
+.dropdownWrap .perPageTrigger:hover {
   --trigger-border: var(--color-border-gray-neutral-strong);
 }
 

@@ -38,7 +38,6 @@ export interface IdsPaginationProps extends ComponentProps<"nav"> {
   pageOffsetDropdownState?: IdsPaginationDropdownState;
   background?: IdsPaginationBackground;
   embeddedInDatagrid?: boolean;
-  disabled?: boolean;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -128,7 +127,6 @@ export function IdsPagination({
   pageOffsetDropdownState = "collapsed",
   background = "gray",
   embeddedInDatagrid = false,
-  disabled = false,
   className,
   ...rest
 }: IdsPaginationProps) {
@@ -196,7 +194,6 @@ export function IdsPagination({
   const atLastPage = safeCurrentPage >= safeTotalPages;
 
   const goToPage = (nextPage: number) => {
-    if (disabled) return;
     const clamped = clamp(nextPage, 1, safeTotalPages);
     if (onPageChange) {
       onPageChange(clamped);
@@ -215,7 +212,6 @@ export function IdsPagination({
   };
 
   const togglePageOffsetMenu = () => {
-    if (disabled) return;
     closePerPageMenu();
     setPageOffsetMenuOpen((prev) => !prev);
   };
@@ -225,7 +221,6 @@ export function IdsPagination({
   };
 
   const togglePerPageMenu = () => {
-    if (disabled) return;
     closePageOffsetMenu();
     setPerPageMenuOpen((prev) => !prev);
   };
@@ -260,7 +255,6 @@ export function IdsPagination({
               ref={perPageTriggerRef}
               className={styles.dropdownTrigger}
               type="button"
-              disabled={disabled}
               aria-haspopup="listbox"
               aria-expanded={resolvedPerPageDropdownState !== "collapsed"}
               aria-label="Items per page"
@@ -298,7 +292,7 @@ export function IdsPagination({
                   onFirstPageNavigate?.();
                   goToPage(1);
                 }}
-                disabled={disabled || atFirstPage}
+                disabled={atFirstPage}
                 aria-label="First page"
               >
                 <Icon
@@ -315,7 +309,7 @@ export function IdsPagination({
                 onPreviousPageNavigate?.();
                 goToPage(safeCurrentPage - 1);
               }}
-              disabled={disabled || atFirstPage}
+              disabled={atFirstPage}
               aria-label="Previous page"
             >
               <Icon
@@ -330,7 +324,6 @@ export function IdsPagination({
                   ref={pageOffsetRef}
                   className={styles.pageOffsetTrigger}
                   type="button"
-                  disabled={disabled}
                   aria-haspopup="listbox"
                   aria-expanded={
                     resolvedPageOffsetDropdownState !== "collapsed"
@@ -379,7 +372,7 @@ export function IdsPagination({
                 onNextPageNavigate?.();
                 goToPage(safeCurrentPage + 1);
               }}
-              disabled={disabled || atLastPage}
+              disabled={atLastPage}
               aria-label="Next page"
             >
               <Icon
@@ -396,7 +389,7 @@ export function IdsPagination({
                   onLastPageNavigate?.();
                   goToPage(safeTotalPages);
                 }}
-                disabled={disabled || atLastPage}
+                disabled={atLastPage}
                 aria-label="Last page"
               >
                 <Icon

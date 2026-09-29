@@ -78,19 +78,8 @@
   border-radius: 4px;
 }
 
-.dropdownTrigger:disabled,
 .iconButton:disabled {
   cursor: not-allowed;
-}
-
-.dropdownTrigger:disabled .caretIcon {
-  color: var(--color-icon-gray-disabled);
-}
-
-.dropdownTrigger:disabled {
-  background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-gray-disabled);
-  color: var(--color-text-gray-disabled);
 }
 
 .caretIcon {
@@ -249,16 +238,6 @@
 
 .pageOffsetTrigger:hover:not(:disabled) {
   border-color: var(--color-border-gray-neutral-strong);
-}
-
-.pageOffsetTrigger:disabled {
-  background: var(--color-background-gray-lighter);
-  border-color: var(--color-border-gray-disabled);
-  color: var(--color-text-gray-disabled);
-}
-
-.pageOffsetTrigger:disabled .pageOffsetCaretIcon {
-  color: var(--color-icon-gray-disabled);
 }
 
 .pageOffsetCaretIcon {

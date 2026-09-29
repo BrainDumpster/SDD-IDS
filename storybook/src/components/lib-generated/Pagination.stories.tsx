@@ -32,7 +32,6 @@ const specAccurateArgs: IdsPaginationProps = {
   pageSizeOptions: [25, 50, 75, 100],
   showResultsPerPage: true,
   background: "gray",
-  disabled: false,
   responsiveMode: "auto",
   onPageChange: () => undefined,
 };
@@ -174,7 +173,6 @@ const meta: Meta<IdsPaginationProps> = {
       options: ["gray", "white", "none"],
     },
     showResultsPerPage: { control: "boolean" },
-    disabled: { control: "boolean" },
     responsiveMode: {
       control: "select",
       options: ["auto", "keep-inline"],
@@ -261,11 +259,3 @@ export const PerPageDropdownOpen: Story = {
   ),
 };
 
-export const Disabled: Story = {
-  name: "Disabled",
-  render: () => (
-    <div style={frameStyle}>
-      <IdsPagination {...specAccurateArgs} disabled />
-    </div>
-  ),
-};
