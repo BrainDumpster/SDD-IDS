@@ -12,9 +12,10 @@
  *       FirstPageButton + PrevPageButton + PageInput + PageCountText
  *       + NextPageButton + LastPageButton
  *
- * Composition: lib `IdsIcon` for nav glyphs + per-page caret.
+ * Composition: lib `IdsIcon` for nav glyphs; the results-per-page control
+ * composes the shared IDS single-select dropdown (`dropdown-shared`:
+ * `DropdownMenu` + `IdsDropdownTriggerShell`).
  * Page number is always a numeric text input (never a dropdown).
- * No @base-ui-components dependency.
  */
 
 import React, {
@@ -27,7 +28,7 @@ import React, {
   type ComponentProps,
   type ReactElement,
 } from "react";
-import { createPortal } from "react-dom";
+import { DropdownMenu, IdsDropdownTriggerShell } from "../dropdown-shared";
 import { IdsIcon } from "../icon";
 import { IdsTextBox } from "../text-box";
 import styles from "./IdsPagination.module.css";
@@ -51,11 +52,11 @@ export interface IdsPaginationProps
   showResultsPerPage?: boolean;
   /** Default `"gray"`. */
   background?: IdsPaginationBackground;
-  disabled?: boolean;
   summaryFormatter?: (currentPage: number, totalPages: number) => string;
   /** Default `"auto"`. */
   responsiveMode?: IdsPaginationResponsiveMode;
-  /** Default `["results-per-page"]`. */
+  /** Collapse priority when `responsiveMode="auto"`. `"results-per-page"` is ignored — the results-per-page group always renders when `showResultsPerPage` is true. Default `["results-per-page"]`.
+   */
   collapseOrder?: IdsPaginationCollapseSlot[];
 }
 
@@ -78,25 +79,6 @@ const COLLAPSE_SLOTS = new Set<IdsPaginationCollapseSlot>([
   "page-input",
   "first-last-buttons",
 ]);
-
-type PerPageMenuPlacement = "below" | "above";
-type PaginationMenuPos = { top: number; left: number; width: number };
-
-function computePerPageMenuPos(
-  trigger: HTMLElement | null,
-  menu: HTMLElement | null,
-  placement: PerPageMenuPlacement,
-): PaginationMenuPos | null {
-  if (!trigger) return null;
-  const rect = trigger.getBoundingClientRect();
-  const width = rect.width;
-  const left = rect.left;
-  if (placement === "above") {
-    const menuHeight = menu?.getBoundingClientRect().height ?? 0;
-    return { top: rect.top + 1 - menuHeight, left, width };
-  }
-  return { top: rect.top + rect.height - 1, left, width };
-}
 
 function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
@@ -161,7 +143,6 @@ export function IdsPagination({
   onPageSizeChange,
   showResultsPerPage = true,
   background: backgroundProp = "gray",
-  disabled = false,
   summaryFormatter,
   responsiveMode: responsiveModeProp = "auto",
   collapseOrder: collapseOrderProp,
@@ -171,12 +152,13 @@ export function IdsPagination({
 }: IdsPaginationProps): ReactElement {
   const menuId = useId();
   const rootRef = useRef<HTMLElement | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLUListElement | null>(null);
 
   const background = resolveBackground(backgroundProp);
   const responsiveMode = resolveResponsiveMode(responsiveModeProp);
-  const collapseOrder = resolveCollapseOrder(collapseOrderProp);
+  // Results-per-page always renders — strip it from the collapse candidates.
+  const collapseOrder = resolveCollapseOrder(collapseOrderProp).filter(
+    (slot) => slot !== "results-per-page",
+  );
 
   const safeTotalPages = Math.max(1, totalPages);
   const safeCurrentPage = clamp(currentPage, 1, safeTotalPages);
@@ -189,11 +171,6 @@ export function IdsPagination({
   const [pageInputValue, setPageInputValue] = useState(
     String(safeCurrentPage),
   );
-  const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
-  const [menuPlacement, setMenuPlacement] =
-    useState<PerPageMenuPlacement>("below");
-  const [perPageMenuPos, setPerPageMenuPos] =
-    useState<PaginationMenuPos | null>(null);
   const [collapseLevel, setCollapseLevel] = useState(0);
 
   useEffect(() => {
@@ -206,11 +183,10 @@ export function IdsPagination({
 
   const goToPage = useCallback(
     (nextPage: number) => {
-      if (disabled) return;
       const clamped = clamp(nextPage, 1, safeTotalPages);
       onPageChange(clamped);
     },
-    [disabled, onPageChange, safeTotalPages],
+    [onPageChange, safeTotalPages],
   );
 
   const commitPageInput = useCallback(() => {
@@ -221,86 +197,6 @@ export function IdsPagination({
     }
     goToPage(parsed);
   }, [goToPage, pageInputValue, safeCurrentPage]);
-
-  const closePerPageMenu = useCallback(() => {
-    setPerPageMenuOpen(false);
-    setPerPageMenuPos(null);
-  }, []);
-
-  const syncPerPageOverlay = useCallback(() => {
-    const trigger = triggerRef.current;
-    if (!trigger) {
-      setMenuPlacement("below");
-      setPerPageMenuPos(null);
-      return;
-    }
-    const rect = trigger.getBoundingClientRect();
-    const viewportHeight =
-      typeof window !== "undefined" ? window.innerHeight : rect.bottom + 200;
-    const spaceBelow = viewportHeight - rect.bottom;
-    const spaceAbove = rect.top;
-    const estimatedMenuHeight = Math.max(
-      menuRef.current?.offsetHeight ?? 0,
-      safePageSizeOptions.length * 40,
-    );
-    const nextPlacement: PerPageMenuPlacement =
-      spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow
-        ? "above"
-        : "below";
-    setMenuPlacement(nextPlacement);
-    setPerPageMenuPos(
-      computePerPageMenuPos(trigger, menuRef.current, nextPlacement),
-    );
-  }, [safePageSizeOptions.length]);
-
-  const togglePerPageMenu = useCallback(() => {
-    if (disabled) return;
-    setPerPageMenuOpen((prev) => !prev);
-  }, [disabled]);
-
-  useLayoutEffect(() => {
-    if (!perPageMenuOpen) {
-      setPerPageMenuPos(null);
-      return;
-    }
-    syncPerPageOverlay();
-    const frame = requestAnimationFrame(() => {
-      syncPerPageOverlay();
-    });
-    const onReposition = () => {
-      syncPerPageOverlay();
-    };
-    window.addEventListener("resize", onReposition);
-    window.addEventListener("scroll", onReposition, true);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("resize", onReposition);
-      window.removeEventListener("scroll", onReposition, true);
-    };
-  }, [perPageMenuOpen, syncPerPageOverlay]);
-
-  useEffect(() => {
-    if (!perPageMenuOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closePerPageMenu();
-        triggerRef.current?.focus();
-      }
-    };
-    const onPointerDown = (event: MouseEvent) => {
-      const target = event.target as Node | null;
-      if (!target) return;
-      if (triggerRef.current?.contains(target)) return;
-      if (menuRef.current?.contains(target)) return;
-      closePerPageMenu();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("mousedown", onPointerDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("mousedown", onPointerDown);
-    };
-  }, [closePerPageMenu, perPageMenuOpen]);
 
   // Responsive: reset collapse on container resize, then progressively apply
   // `collapseOrder` until content fits (spec Layout & Measurements → Responsiveness).
@@ -374,26 +270,28 @@ export function IdsPagination({
           >
             <span className={styles.label}>Show:</span>
             <div className={styles.dropdownWrap}>
-              <button
-                ref={triggerRef}
-                type="button"
-                className={styles.dropdownTrigger}
-                disabled={disabled}
-                aria-haspopup="listbox"
-                aria-expanded={perPageMenuOpen}
-                aria-controls={perPageMenuOpen ? menuId : undefined}
-                aria-label="Items per page"
-                onClick={togglePerPageMenu}
-              >
-                <span>{safePageSize}</span>
-                <IdsIcon
-                  shape="arrow-drop-tri-caret"
-                  className={styles.caretIcon}
-                  size={10}
-                  color="currentColor"
-                  style={{ width: 10, height: 10 }}
-                />
-              </button>
+              <DropdownMenu
+                trigger={
+                  <IdsDropdownTriggerShell
+                    size="small"
+                    filled
+                    className={styles.perPageTrigger}
+                    left={<span>{safePageSize}</span>}
+                  />
+                }
+                items={safePageSizeOptions.map((option) => ({
+                  label: String(option),
+                  value: String(option),
+                  selectable: true,
+                  onClick: () => onPageSizeChange?.(option),
+                }))}
+                selectionMode="single"
+                selectedValues={[String(safePageSize)]}
+                matchTriggerWidth
+                side="bottom"
+                ariaLabel="Items per page"
+                listboxId={menuId}
+              />
             </div>
             <span className={styles.label}>per page</span>
           </div>
@@ -411,7 +309,7 @@ export function IdsPagination({
                   firstLastCollapsed && styles.iconButtonCollapsed,
                 )}
                 onClick={() => goToPage(1)}
-                disabled={disabled || atFirstPage}
+                disabled={atFirstPage}
                 aria-label="First page"
               >
                 <IdsIcon
@@ -425,7 +323,7 @@ export function IdsPagination({
                 type="button"
                 className={styles.iconButton}
                 onClick={() => goToPage(safeCurrentPage - 1)}
-                disabled={disabled || atFirstPage}
+                disabled={atFirstPage}
                 aria-label="Previous page"
               >
                 <IdsIcon
@@ -461,7 +359,6 @@ export function IdsPagination({
                   ariaLabel="Current page"
                   value={pageInputValue}
                   showIcon={false}
-                  disabled={disabled}
                   onValueChange={(value) =>
                     setPageInputValue(value.replace(/[^\d]/g, ""))
                   }
@@ -472,7 +369,7 @@ export function IdsPagination({
                 type="button"
                 className={styles.iconButton}
                 onClick={() => goToPage(safeCurrentPage + 1)}
-                disabled={disabled || atLastPage}
+                disabled={atLastPage}
                 aria-label="Next page"
               >
                 <IdsIcon
@@ -489,7 +386,7 @@ export function IdsPagination({
                   firstLastCollapsed && styles.iconButtonCollapsed,
                 )}
                 onClick={() => goToPage(safeTotalPages)}
-                disabled={disabled || atLastPage}
+                disabled={atLastPage}
                 aria-label="Last page"
               >
                 <IdsIcon
@@ -503,56 +400,6 @@ export function IdsPagination({
           )}
         </div>
       </nav>
-      {perPageMenuOpen && typeof document !== "undefined"
-        ? createPortal(
-            <ul
-              ref={menuRef}
-              id={menuId}
-              className={cx(
-                styles.dropdownMenu,
-                styles.dropdownMenuPortaled,
-                menuPlacement === "above"
-                  ? styles.dropdownMenuAbove
-                  : styles.dropdownMenuBelow,
-              )}
-              role="listbox"
-              aria-label="Items per page options"
-              data-ids-pagination-per-page-menu
-              data-placement={menuPlacement}
-              style={{
-                position: "fixed",
-                top: perPageMenuPos?.top ?? 0,
-                left: perPageMenuPos?.left ?? 0,
-                width: perPageMenuPos?.width ?? 90,
-              }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              {safePageSizeOptions.map((option) => {
-                const selected = option === safePageSize;
-                return (
-                  <li key={option} className={styles.dropdownOptionWrap}>
-                    <button
-                      type="button"
-                      role="option"
-                      aria-selected={selected}
-                      className={cx(
-                        styles.dropdownOption,
-                        selected && styles.dropdownOptionSelected,
-                      )}
-                      onClick={() => {
-                        onPageSizeChange?.(option);
-                        closePerPageMenu();
-                      }}
-                    >
-                      {option}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>,
-            document.body,
-          )
-        : null}
     </>
   );
 }
