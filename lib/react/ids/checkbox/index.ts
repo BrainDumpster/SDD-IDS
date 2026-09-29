@@ -6,4 +6,9 @@ export {
   type IdsCheckboxDataState,
   type IdsCheckboxLabelProps,
 } from "./IdsCheckbox";
+export {
+  IdsCheckboxGroup,
+  useIdsCheckboxGroup,
+  type IdsCheckboxGroupProps,
+} from "./IdsCheckboxGroup";
 export { default } from "./IdsCheckbox";
