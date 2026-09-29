@@ -37,7 +37,13 @@ import {
 const longContent =
   "Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna a sed ullamcorper laoreet, lectus arcu.";
 
-const meta: Meta<TooltipProps> = {
+/** Story-only args: `title`/`content` feed TooltipHeader/TooltipBody children. */
+type TooltipStoryArgs = TooltipProps & {
+  title: string;
+  content: string;
+};
+
+const meta: Meta<TooltipStoryArgs> = {
   tags: ["autodocs"],
   title: "Components/IDS/Tooltip",
   component: Tooltip,
@@ -61,16 +67,25 @@ const meta: Meta<TooltipProps> = {
     closable: false,
     hugContent: true,
     maxWidth: 244,
+    maxHeight: 300,
+    title: "Tooltip Title",
+    content: longContent,
   },
   argTypes: {
     side: { control: "select", options: ["top", "bottom", "left", "right"] },
     arrowAlign: { control: "select", options: ["start", "center", "end"] },
     closable: { control: "boolean" },
+    title: { control: "text", name: "title text" },
+    content: { control: "text", name: "body text" },
     // Always true — tooltip always hugs content; `maxWidth` governs sizing instead.
     hugContent: { control: false },
     maxWidth: {
       control: { type: "number", min: 100, max: 500, step: 4 },
       name: "max width (px)",
+    },
+    maxHeight: {
+      control: { type: "number", min: 60, max: 600, step: 10 },
+      name: "max height (px)",
     },
     onOpenChange: { action: "onOpenChange" },
     onClose: { action: "onClose" },
@@ -78,7 +93,7 @@ const meta: Meta<TooltipProps> = {
 };
 
 export default meta;
-type Story = StoryObj<TooltipProps>;
+type Story = StoryObj<TooltipStoryArgs>;
 
 function TriggerButton({ label }: { label: string }) {
   return (
@@ -91,18 +106,19 @@ function TriggerButton({ label }: { label: string }) {
 /** Standard tooltip — body only (no header). */
 export const NormalNoHeader: Story = {
   name: "Normal / No Header",
+  parameters: { controls: { exclude: ["title"] } },
   args: {
     closable: false,
     side: "top",
     arrowAlign: "start",
   },
-  render: (args) => (
+  render: ({ content, ...args }) => (
     <Tooltip {...args}>
       <TooltipTrigger>
         <TriggerButton label="Hover over me" />
       </TooltipTrigger>
       <TooltipPanel>
-        <TooltipBody>{longContent}</TooltipBody>
+        <TooltipBody>{content}</TooltipBody>
       </TooltipPanel>
     </Tooltip>
   ),
@@ -116,14 +132,14 @@ export const WithHeader: Story = {
     side: "top",
     arrowAlign: "center",
   },
-  render: (args) => (
+  render: ({ title, content, ...args }) => (
     <Tooltip {...args}>
       <TooltipTrigger>
         <TriggerButton label="Hover over me" />
       </TooltipTrigger>
       <TooltipPanel>
-        <TooltipHeader>Tooltip Title</TooltipHeader>
-        <TooltipBody>{longContent}</TooltipBody>
+        <TooltipHeader>{title}</TooltipHeader>
+        <TooltipBody>{content}</TooltipBody>
       </TooltipPanel>
     </Tooltip>
   ),
@@ -137,14 +153,14 @@ export const Closable: Story = {
     side: "top",
     arrowAlign: "end",
   },
-  render: (args) => (
+  render: ({ title, content, ...args }) => (
     <Tooltip {...args}>
       <TooltipTrigger>
         <TriggerButton label="Open closable" />
       </TooltipTrigger>
       <TooltipPanel>
-        <TooltipHeader>Tooltip Title</TooltipHeader>
-        <TooltipBody>{longContent}</TooltipBody>
+        <TooltipHeader>{title}</TooltipHeader>
+        <TooltipBody>{content}</TooltipBody>
         <TooltipClose />
       </TooltipPanel>
     </Tooltip>
@@ -154,18 +170,19 @@ export const Closable: Story = {
 /** Closable without title — empty Header slot preserved for close alignment. */
 export const ClosableNoTitle: Story = {
   name: "Closable / No Title",
+  parameters: { controls: { exclude: ["title"] } },
   args: {
     closable: true,
     side: "top",
     arrowAlign: "start",
   },
-  render: (args) => (
+  render: ({ content, ...args }) => (
     <Tooltip {...args}>
       <TooltipTrigger>
         <TriggerButton label="Open closable" />
       </TooltipTrigger>
       <TooltipPanel>
-        <TooltipBody>{longContent}</TooltipBody>
+        <TooltipBody>{content}</TooltipBody>
         <TooltipClose />
       </TooltipPanel>
     </Tooltip>
@@ -175,18 +192,20 @@ export const ClosableNoTitle: Story = {
 /** Body accepts arbitrary consumer content. */
 export const RichContent: Story = {
   name: "Rich Content",
+  parameters: { controls: { exclude: ["content"] } },
   args: {
     closable: false,
     side: "right",
     arrowAlign: "center",
+    title: "Custom Content",
   },
-  render: (args) => (
+  render: ({ title, ...args }) => (
     <Tooltip {...args}>
       <TooltipTrigger>
         <TriggerButton label="Rich content" />
       </TooltipTrigger>
       <TooltipPanel>
-        <TooltipHeader>Custom Content</TooltipHeader>
+        <TooltipHeader>{title}</TooltipHeader>
         <TooltipBody>
           <div>
             <p style={{ margin: 0 }}>Any content can be rendered here.</p>
@@ -205,6 +224,7 @@ export const RichContent: Story = {
 /** All 12 arrow permutations (`side` × `arrowAlign`). */
 export const ArrowMatrix: Story = {
   name: "Arrow Matrix",
+  parameters: { controls: { exclude: ["title", "content"] } },
   render: () => (
     <div
       style={{
@@ -245,15 +265,17 @@ export const HugContent: Story = {
     closable: false,
     side: "bottom",
     arrowAlign: "center",
+    title: "Short",
+    content: "Compact body",
   },
-  render: (args) => (
+  render: ({ title, content, ...args }) => (
     <Tooltip {...args}>
       <TooltipTrigger>
         <TriggerButton label="Hug width" />
       </TooltipTrigger>
       <TooltipPanel>
-        <TooltipHeader>Short</TooltipHeader>
-        <TooltipBody>Compact body</TooltipBody>
+        <TooltipHeader>{title}</TooltipHeader>
+        <TooltipBody>{content}</TooltipBody>
       </TooltipPanel>
     </Tooltip>
   ),

@@ -68,6 +68,8 @@ export interface TooltipProps {
   hugContent?: boolean;
   /** Maximum popup width (px) when `hugContent` is true. Default `244`. */
   maxWidth?: number;
+  /** Maximum popup height (px); panel scrolls past this. Default `300`. */
+  maxHeight?: number;
 }
 
 export interface TooltipTriggerProps extends HTMLAttributes<HTMLSpanElement> {
@@ -424,6 +426,26 @@ TooltipClose.displayName = "TooltipClose";
 /* TooltipPanel                                                               */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Measure the rendered scrollbar width for `scrollbar-width: thin` so the
+ * closable scroll region can keep an exact `spacing/space-4` gap while
+ * `scrollbar-gutter: stable` reserves the track permanently.
+ */
+function measureThinScrollbarWidth(): number {
+  const probe = document.createElement("div");
+  probe.style.position = "absolute";
+  probe.style.top = "-9999px";
+  probe.style.visibility = "hidden";
+  probe.style.overflow = "scroll";
+  probe.style.scrollbarWidth = "thin";
+  probe.style.width = "100px";
+  probe.style.height = "100px";
+  document.body.appendChild(probe);
+  const width = Math.max(probe.offsetWidth - probe.clientWidth, 0);
+  probe.remove();
+  return width;
+}
+
 export function TooltipPanel({
   children,
   className,
@@ -431,29 +453,17 @@ export function TooltipPanel({
 }: TooltipPanelProps) {
   const { closable } = useTooltipContext("TooltipPanel");
   const { header, body, close, other } = partitionPanelChildren(children);
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (closable) setScrollbarWidth(measureThinScrollbarWidth());
+  }, [closable]);
 
   const hasTitle = headerHasVisibleTitle(header);
   const closeNode = closable ? close ?? <TooltipClose /> : null;
-
-  const content = closable ? (
-    <>
-      <div
-        className={styles["ids-tooltip-content-column"]}
-        data-ids="ids-tooltip-content-column"
-      >
-        {header ?? <TooltipHeader />}
-        {body}
-        {other}
-      </div>
-      {closeNode}
-    </>
-  ) : (
-    <>
-      {hasTitle ? header : null}
-      {body}
-      {other}
-    </>
-  );
+  // When a title or close icon exists, pin them in a top bar so the
+  // scrollable region (and its scrollbar) starts below them.
+  const hasTopBar = closable || hasTitle;
 
   return (
     <div
@@ -462,14 +472,37 @@ export function TooltipPanel({
       data-closable={closable ? "true" : "false"}
       {...rest}
     >
+      {hasTopBar ? (
+        <div
+          className={styles["ids-tooltip-top"]}
+          data-ids="ids-tooltip-top"
+        >
+          <div
+            className={styles["ids-tooltip-content-column"]}
+            data-ids="ids-tooltip-content-column"
+          >
+            {header ?? (closable ? <TooltipHeader /> : null)}
+          </div>
+          {closeNode}
+        </div>
+      ) : null}
       <div
         className={cx(
           styles["ids-tooltip-content"],
+          hasTopBar && styles["ids-tooltip-content--under-top"],
           closable && styles["ids-tooltip-content--closable"],
         )}
+        style={
+          closable
+            ? ({
+                "--ids-scrollbar-width": `${scrollbarWidth}px`,
+              } as CSSProperties)
+            : undefined
+        }
         data-ids="ids-tooltip-content"
       >
-        {content}
+        {body}
+        {other}
       </div>
     </div>
   );
@@ -528,6 +561,7 @@ function TooltipRoot({
   closeIconShapeName = "ctrl-close-16",
   hugContent = true,
   maxWidth = 244,
+  maxHeight = 300,
 }: TooltipProps) {
   const side = resolveSide(sideProp);
   const arrowAlign = resolveAlign(alignProp);
@@ -637,7 +671,7 @@ function TooltipRoot({
       window.removeEventListener("scroll", update, true);
       window.removeEventListener("resize", update);
     };
-  }, [open, side, arrowAlign, children, hugContent, maxWidth, closable]);
+  }, [open, side, arrowAlign, children, hugContent, maxWidth, maxHeight, closable]);
 
   useEffect(() => {
     if (!open || !closable) return;
@@ -690,6 +724,7 @@ function TooltipRoot({
     left: coords?.left ?? 0,
     visibility: coords ? "visible" : "hidden",
     ...(hugContent ? { "--tooltip-max-width": `${maxWidth}px` } : {}),
+    "--tooltip-max-height": `${maxHeight}px`,
   } as CSSProperties;
 
   const handlePopupKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {

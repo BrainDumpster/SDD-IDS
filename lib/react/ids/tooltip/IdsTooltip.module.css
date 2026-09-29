@@ -44,7 +44,11 @@
   position: relative;
   z-index: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  max-height: var(--tooltip-max-height, 300px);
+  overflow: hidden;
   background: var(--color-background-surface-secondary);
   color: var(--color-text-gray-neutral);
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
@@ -203,17 +207,47 @@
   left: -5px !important;
 }
 
-.ids-tooltip-content {
+/* Fixed top bar: title column + close sit above the scroll region, so the
+   scrollbar runs underneath them instead of spanning the whole panel. */
+.ids-tooltip-top {
   display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  padding: var(--padding-padding-12) var(--padding-padding-12) 0;
+}
+
+.ids-tooltip-content {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: var(--spacing-space-4);
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
   padding: var(--padding-padding-12);
 }
 
+/* Under a top bar, only the header-body gap (space-4) remains at the top. */
+.ids-tooltip-content--under-top {
+  padding: var(--padding-padding-4) var(--padding-padding-12)
+    var(--padding-padding-12);
+}
+
+/* Closable: keep body text 4px (space-4) to the left of the close icon column.
+   `scrollbar-gutter: stable` permanently reserves the scrollbar track so the
+   content width — and popup width — never changes when the scrollbar appears.
+   The right reserve is top-bar right padding + 20px close button + 4px spacing,
+   minus the measured scrollbar width (`--ids-scrollbar-width` is set at runtime)
+   so the visible gap stays exactly 4px whether or not the scrollbar is present. */
 .ids-tooltip-content--closable {
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 0;
+  scrollbar-gutter: stable;
+  padding-right: calc(
+    var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4) -
+      var(--ids-scrollbar-width, 0px)
+  );
 }
 
 .ids-tooltip-content-column {
@@ -222,7 +256,8 @@
   flex-direction: column;
   gap: var(--spacing-space-4);
   min-width: 0;
-  padding-right: var(--padding-padding-4);
+  /* 4px spacing reserve between title column and close button. */
+  padding-right: var(--spacing-space-4);
 }
 
 .ids-tooltip-header {
