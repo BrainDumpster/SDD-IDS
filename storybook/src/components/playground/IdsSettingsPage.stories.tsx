@@ -691,7 +691,7 @@ function AccountPanel() {
             <p className="settings-description">
               Create, save, and manage your passwords so you can easily sign in to sites and apps.
             </p>
-            <IdsButton variant="secondary" size="small" onClick={openAdd}>
+            <IdsButton variant="secondary" size="medium" onClick={openAdd}>
               <IdsButtonLeadingIcon>
                 <IdsIcon shape="shape-plus" size={16} />
               </IdsButtonLeadingIcon>
