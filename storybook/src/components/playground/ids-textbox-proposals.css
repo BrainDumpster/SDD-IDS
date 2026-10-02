@@ -1,0 +1,124 @@
+/**
+ * Layout for the Text Box / Text Area proposal story.
+ * IDS design tokens only — no hardcoded colors or spacing.
+ */
+
+.tbp-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-32);
+  padding: var(--spacing-space-24);
+  background-color: var(--color-background-surface-primary);
+  color: var(--color-text-gray-neutral-strong);
+  min-height: 100vh;
+}
+
+.tbp-title {
+  margin: 0;
+  font-size: var(--font-size-header-3);
+  line-height: var(--font-line-height-line-height-32);
+  font-weight: 500;
+}
+
+.tbp-lede {
+  margin: var(--spacing-space-4) 0 0;
+  max-width: 760px;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
+}
+
+.tbp-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16);
+  padding: var(--spacing-space-20);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-background-surface-secondary);
+}
+
+.tbp-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+
+.tbp-h {
+  margin: 0;
+  font-size: var(--font-size-header-6);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+}
+
+.tbp-note {
+  margin: 0;
+  max-width: 760px;
+  font-size: var(--font-size-body-3);
+  line-height: var(--font-line-height-line-height-18);
+  color: var(--color-text-gray-neutral);
+}
+
+.tbp-quote {
+  margin: 0;
+  padding-left: var(--spacing-space-12);
+  border-left: var(--border-width-border-2) solid var(--color-border-gray-neutral-light);
+  font-size: var(--font-size-body-3);
+  line-height: var(--font-line-height-line-height-18);
+  color: var(--color-text-gray-neutral);
+  font-style: italic;
+}
+
+.tbp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-space-24);
+  align-items: start;
+}
+
+.tbp-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-12);
+  min-width: 0;
+}
+
+.tbp-col__title {
+  margin: 0;
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  font-weight: 500;
+}
+
+.tbp-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-24);
+}
+
+/* Figma note: "Change the style of Focus state to be the same as Selected state."
+   Scoped to this demo — the proposal changes the style outright rather than adding
+   a component option, so nothing in lib/ carries it. The module rule has two :not()
+   guards; match them or this loses on specificity. */
+.tbp-as-selected
+  [data-ids="ids-text-box-control"][data-focus-modality="keyboard"]:not([data-state="disabled"]):not([data-state="error"]) {
+  border-color: var(--color-border-brand-base);
+}
+
+.tbp-as-selected
+  [data-ids="ids-text-box-control"][data-focus-modality="keyboard"]:not([data-state="disabled"]):not([data-state="error"])::after {
+  content: none;
+}
+
+.tbp-list {
+  margin: 0;
+  padding-left: var(--spacing-space-20);
+  max-width: 760px;
+  font-size: var(--font-size-body-3);
+  line-height: var(--font-line-height-line-height-18);
+  color: var(--color-text-gray-neutral);
+}
+
+.tbp-list li + li {
+  margin-top: var(--spacing-space-4);
+}
