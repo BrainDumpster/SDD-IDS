@@ -27,7 +27,7 @@
 
 ### Input field
 1. `TimePickerRoot` — flex row, `gap: 16px` between `Label` and field group
-2. optional `Label` — flex row with `labelInner` wrapper containing `labelText` and optional `labelRequired` asterisk; padding: `var(--padding-padding-10)` vertical for large, `var(--padding-padding-6)` for small
+2. optional `Label` — the shared **Form Label** component (`IdsFormLabel`), which owns the label text, the optional `*` marker and the vertical padding: `size="lg"` for a large field (`var(--padding-padding-10)`), `size="md"` for a small one (`var(--padding-padding-6)`). The Time Picker contributes only a layout slot that stops the label shrinking or wrapping inside the root row.
 3. `FieldGroup` — flex column, `gap: var(--spacing-space-4)` (4px), `isolate` (Figma "Date and time picker")
 4. `FieldContainer` — text input + clock icon trigger (z-index: 2)
 5. `TextInput` — editable time value or placeholder
@@ -173,7 +173,9 @@ Same semantic `var(--...)` tokens as **States (Light Theme)**. Resolved dark val
 - `Escape`: close popup
 
 ### Accessibility
-- Input: native `<input type="text">` with `aria-label` or associated `<label>`
+- Input: native `<input type="text">` carrying an `id`. When `label` is set, Form Label's native `<label for>` names the field and no `aria-label` is set, so clicking the label focuses the input; `aria-label="Time"` is the fallback only when there is no visible label
+- `required` sets `aria-required` on the input. The `*` marker is `aria-hidden`, so the requirement is announced once, by the control rather than by the label text
+- `formatHint` / `errorMessage` are linked with `aria-describedby`, so the expected format is announced whether or not the field is empty
 - Clock icon: `aria-label="Open time picker"`, `aria-expanded`
 - Popup: `role="dialog"`, `aria-modal="true"`, `aria-label="Choose time"`
 - Columns: `role="listbox"` / `role="option"` or spinbutton pattern per column
@@ -204,8 +206,9 @@ Same semantic `var(--...)` tokens as **States (Light Theme)**. Resolved dark val
 | `onChange` | `(value: string \| null) => void` | — | Fired when time changes |
 | `size` | `'large' \| 'small'` | `'large'` | Field height |
 | `placeholder` | `string` | `'HH:MM AM/PM'` | Input placeholder |
-| `label` | `string` | — | Optional label |
-| `required` | `boolean` | `false` | Show required asterisk (`*`) after label text |
+| `label` | `string` | — | Optional label, rendered by `IdsFormLabel` |
+| `required` | `boolean` | `false` | Forwarded to `IdsFormLabel` as its `*` marker, and set as `aria-required` on the input |
+| `id` | `string` | generated | Input `id`; the label's `htmlFor` points at it |
 | `formatHint` | `string` | `'HH:MM AM/PM'` | Hint below field |
 | `clockType` | `'12h' \| '24h'` | `'12h'` | 12- or 24-hour dropdown |
 | `showSeconds` | `boolean` | `false` | Show seconds column |
@@ -230,7 +233,7 @@ Same semantic `var(--...)` tokens as **States (Light Theme)**. Resolved dark val
 ### Deterministic structure
 ```
 TimePickerRoot
-├── Label?
+├── Label?  (IdsFormLabel — size lg for large, md for small)
 ├── FieldContainer
 │   ├── TextInput
 │   └── ClockIconTrigger
@@ -329,16 +332,18 @@ See **Interactions → Accessibility**. Minimum: dialog labeling, expanded on tr
 | Runtime path | Role |
 |---|---|
 | `lib/react/ids/time-picker/` | React reference implementation |
+| `lib/react/ids/form-label/` | Shared label consumed by the Time Picker (`IdsFormLabel`) |
 | `lib/angular/ids/time-picker/` | Angular implementation (parity with React) |
 | `storybook-angular/src/components/ids-time-picker/` | Angular Spec Generated stories |
 | `components/ids/date-and-time-picker/design-spec.md` | Family map entry (Date and Time Picker) |
 
 ## Implementation Notes
-Last updated: 2026-07-17
+Last updated: 2026-10-02
 
 - **Font-weight:** all text elements use `400`.
-- **Required indicator:** `required?: boolean` prop renders a `*` (`var(--color-text-alerting-critical-base)`) after the label.
-- **Label layout:** the label is optional; when present it sits to the left of the field (root is a `row` with gap 16px).
+- **Label component:** the label is the shared `IdsFormLabel`, not local markup. The Time Picker maps its own `size` to Form Label's: `large` → `lg`, `small` → `md` (**not** `sm` — `md` is the size whose `padding-block` matches a 32px field).
+- **Required indicator:** `required?: boolean` is forwarded to `IdsFormLabel`, which renders the `*` in `var(--color-text-gray-neutral-strong)` — the same colour as the label text. This replaces the earlier red `var(--color-text-alerting-critical-base)`; Form Label's spec states the marker is deliberately not a critical token, and that spec wins so the two components agree.
+- **Label layout:** the label is optional; when present it sits to the left of the field (root is a `row` with gap 16px). The local `.label` class is now only a layout slot (`flex-shrink: 0`, `white-space: nowrap`); typography and padding come from Form Label.
 - **Clock button:** trailing native icon button (same pattern as Date Picker calendar trigger). Hover fill uses `var(--time-picker-control-radius)` — square in IDS (Figma `42159:132250`). Not `--button-control-radius`.
 - **Field border:** keeps the accessible border when the clock button is hovered/focused.
 - **Text selection:** input has no selection highlight; selection is cleared when opening the popup.

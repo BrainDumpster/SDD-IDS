@@ -8,38 +8,12 @@
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
 }
 
+/* Layout slot for the shared IdsFormLabel. Typography, the size padding-block
+   and the required marker all come from that component now; this only keeps the
+   label from shrinking or wrapping inside the root's flex row. */
 .label {
-  display: flex;
-  gap: var(--spacing-space-8, 8px);
-  align-items: center;
+  display: inline-flex;
   flex-shrink: 0;
-  padding: var(--padding-padding-10, 10px) 0;
-  cursor: default;
-}
-
-.labelSmall {
-  padding: var(--padding-padding-6, 6px) 0;
-}
-
-.labelInner {
-  display: flex;
-  gap: var(--spacing-space-2, 2px);
-  align-items: center;
-}
-
-.labelText {
-  font-size: var(--font-size-body-2, 14px);
-  font-weight: 400;
-  line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-gray-neutral-strong, #252525);
-  white-space: nowrap;
-}
-
-.labelRequired {
-  font-size: var(--font-size-body-2, 14px);
-  font-weight: 400;
-  line-height: var(--font-line-height-line-height-20, 20px);
-  color: var(--color-text-alerting-critical-base, #af0000);
   white-space: nowrap;
 }
 
@@ -111,7 +85,7 @@
   content: "";
   position: absolute;
   inset: -5px;
-  border: 1px solid var(--color-border-brand-base, #0076ce);
+  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0076ce);
   border-radius: var(--time-picker-focus-ring-radius);
   pointer-events: none;
   z-index: 1;
@@ -231,7 +205,7 @@
   flex-direction: row;
   gap: var(--spacing-space-16, 16px);
   align-items: center;
-  border-radius: 0;
+  border-radius: var(--corner-radius-radius-none, 0);
 }
 
 .timePopup.widePadding {
