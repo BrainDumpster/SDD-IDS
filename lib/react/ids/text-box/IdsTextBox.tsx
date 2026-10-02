@@ -20,6 +20,7 @@ import React, {
   useId,
   useState,
   type ChangeEvent,
+  type FocusEvent,
   type InputHTMLAttributes,
   type ReactElement,
   type ReactNode,
@@ -124,6 +125,12 @@ export interface IdsTextBoxProps {
   name?: string;
   rows?: number;
   inputType?: string;
+  /**
+   * Keyboard focus only (`Tab`). `true` selects the whole value; `false`
+   * (default) puts the caret at the end. Pointer focus is untouched — a click
+   * always places the caret where the user clicked.
+   */
+  selectOnFocus?: boolean;
   ariaLabel?: string;
   ariaDescribedBy?: string;
   onValueChange?: (value: string) => void;
@@ -204,6 +211,7 @@ export function IdsTextBox({
   name,
   rows = 4,
   inputType = "text",
+  selectOnFocus = false,
   ariaLabel,
   ariaDescribedBy,
   onValueChange,
@@ -284,8 +292,25 @@ export function IdsTextBox({
     // Spec: aria-label is fallback when no visible label; placeholder is never the label
     "aria-label": shouldRenderLabel ? undefined : ariaLabel,
     onChange: handleChange,
-    onFocus: () => {
-      setFocusModality(lastInputModality === "pointer" ? "pointer" : "keyboard");
+    onFocus: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const byPointer = lastInputModality === "pointer";
+      setFocusModality(byPointer ? "pointer" : "keyboard");
+      // A click already placed the caret where the user aimed — leave it alone.
+      if (byPointer) return;
+      const field = event.currentTarget;
+      const applySelection = () => {
+        if (selectOnFocus) {
+          field.select();
+          return;
+        }
+        const end = field.value.length;
+        field.setSelectionRange(end, end);
+      };
+      // Browsers select the whole value when you Tab into a field, and some do it
+      // after this handler runs. Apply it now so there is no flash of highlighted
+      // text, then again on the next frame so the result sticks either way.
+      applySelection();
+      requestAnimationFrame(applySelection);
     },
     onBlur: () => {
       setFocusModality(null);
