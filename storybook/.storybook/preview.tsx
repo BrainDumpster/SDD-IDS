@@ -91,6 +91,8 @@ const preview: Preview = {
             "DAP",
             "Synapse",
           ],
+          "Playground",
+          ["Settings Page"],
         ],
       },
     },
