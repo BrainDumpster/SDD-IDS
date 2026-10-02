@@ -16,8 +16,8 @@
 import React, {
   Children,
   isValidElement,
+  useEffect,
   useId,
-  useRef,
   useState,
   type ChangeEvent,
   type InputHTMLAttributes,
@@ -30,6 +30,39 @@ import { IdsHelper } from "../helper";
 import { IdsIcon } from "../icon";
 import styles from "./IdsTextBox.module.css";
 import { IDS_ICON_URL_BY_SHAPE } from "../shared/idsAssetRegistry.generated";
+
+/**
+ * How the user last interacted with the page, used to tell a click apart from a
+ * Tab when a field takes focus.
+ *
+ * Tracked on the document rather than on the control, because focus can reach
+ * the field without a `pointerdown` ever landing on it — clicking the label, or
+ * code calling `focus()` — and a `pointerdown` can land on the control without
+ * moving focus at all, by hitting its padding. A per-control flag gets both of
+ * those wrong: the label click reads as a Tab, and the stray padding click
+ * leaves the flag set so the NEXT Tab reads as a click.
+ */
+let lastInputModality: "pointer" | "keyboard" = "keyboard";
+let modalityTracked = false;
+
+function trackInputModality() {
+  if (modalityTracked || typeof document === "undefined") return;
+  modalityTracked = true;
+  document.addEventListener(
+    "pointerdown",
+    () => {
+      lastInputModality = "pointer";
+    },
+    true,
+  );
+  document.addEventListener(
+    "keydown",
+    () => {
+      lastInputModality = "keyboard";
+    },
+    true,
+  );
+}
 
 export type IdsTextBoxComponentType = "text-input" | "text-area";
 export type IdsTextBoxSize = "large" | "small";
@@ -187,7 +220,7 @@ export function IdsTextBox({
    * border, no ring) unreachable, so clicking the field wrongly showed the
    * keyboard ring. Track the modality ourselves and expose it on the control.
    */
-  const pointerFocusRef = useRef(false);
+  useEffect(trackInputModality, []);
   const [focusModality, setFocusModality] = useState<"pointer" | "keyboard" | null>(null);
   const inputId = id ?? `ids-text-box-${reactId}`;
   const messageId = `${inputId}-message`;
@@ -252,11 +285,9 @@ export function IdsTextBox({
     "aria-label": shouldRenderLabel ? undefined : ariaLabel,
     onChange: handleChange,
     onFocus: () => {
-      setFocusModality(pointerFocusRef.current ? "pointer" : "keyboard");
-      pointerFocusRef.current = false;
+      setFocusModality(lastInputModality === "pointer" ? "pointer" : "keyboard");
     },
     onBlur: () => {
-      pointerFocusRef.current = false;
       setFocusModality(null);
     },
   };
@@ -273,8 +304,13 @@ export function IdsTextBox({
         data-ids="ids-text-box-control"
         data-state={visualState !== "default" ? visualState : undefined}
         data-focus-modality={focusModality ?? undefined}
-        onPointerDown={() => {
-          pointerFocusRef.current = true;
+        onPointerDown={(event) => {
+          // Clicking a field that is ALREADY focused fires no focus event, so the
+          // modality set when it was tabbed into would stick and keep the keyboard
+          // ring on a field the user is now pointing at.
+          if (event.currentTarget.contains(document.activeElement)) {
+            setFocusModality("pointer");
+          }
         }}
       >
         {useTextArea ? (
