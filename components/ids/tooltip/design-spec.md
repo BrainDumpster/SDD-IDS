@@ -45,7 +45,7 @@ ids-tooltip
   - outer sample size: `255x132`
   - content panel width: `240`
   - arrow lane width: `12`
-- Panel content padding: `12px`.
+- Panel content padding: `12px` on all sides. The top and bottom padding live on a non-scrollable `.ids-tooltip-scroll` wrapper so they remain visible while the body scrolls; left and right padding live on the scrollable `.ids-tooltip-content` region along with `overflow-x: hidden` so content clips inside the panel.
 - Panel internal gap (header/body): `4px`.
 - Close control: `20×20` hit target (`CloseAction`); padding `padding/padding-4` on all sides; icon `ctrl-close-16` rendered through shared `Icon` at `12×12`.
 - Panel border: `1px solid`.
@@ -53,10 +53,10 @@ ids-tooltip
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
 - Text block width sample: tooltip container `216`, title line sample `208`; runtime width is content-constrained within host max width.
 - Default behavior is `hugContent=true`: the panel sizes to its content up to `maxWidth` (default `244px`). Consumers may set `hugContent={false}` to use the fixed `240px` (`264px` when `closable=true`) width instead.
-- Panel height is capped at `maxHeight` (default `300px`) via `--tooltip-max-height` on the popup; the content region scrolls vertically (`overflow-y: auto`, thin scrollbar) when content exceeds the cap. When a title or close icon is present, they sit in a fixed top bar (`.ids-tooltip-top`) above the scroll region, so the scrollbar runs underneath them rather than spanning the whole panel. Consumers may override `maxHeight` per instance.
+- Panel height is capped at `maxHeight` (default `300px`) via `--tooltip-max-height` on the popup; the inner `.ids-tooltip-content` region scrolls vertically (`overflow-y: auto`, `overflow-x: hidden`, thin scrollbar) when content exceeds the cap. When a title or close icon is present, they sit in a fixed top bar (`.ids-tooltip-top`) above the scroll region, so the scrollbar runs underneath them rather than spanning the whole panel. Consumers may override `maxHeight` per instance.
 
-**Closable content layout** (`closable=true`; `.ids-tooltip-top` / `.ids-tooltip-content`):
-- Panel is a vertical flex column: a fixed top bar (`.ids-tooltip-top`, `display: flex`; `align-items: flex-start`; `padding: padding-12 padding-12 0`) holds the title column and `CloseAction`, above a scrollable `.ids-tooltip-content` region (`flex: 1 1 auto`; `min-height: 0`; `box-sizing: border-box`; `width: 100%`; `min-width: 0`; `overflow-y: auto`; `scrollbar-width: thin`; `padding: padding-4 padding-12 padding-12`). The scrollbar therefore starts below the title/close row.
+**Closable content layout** (`closable=true`; `.ids-tooltip-top` / `.ids-tooltip-scroll` / `.ids-tooltip-content`):
+- Panel is a vertical flex column: a fixed top bar (`.ids-tooltip-top`, `display: flex`; `align-items: flex-start`; `padding: padding-12 padding-12 0`) holds the title column and `CloseAction`, above a non-scrollable `.ids-tooltip-scroll` wrapper (`flex: 1 1 auto`; `min-height: 0`; `padding: padding-12 0`) and a scrollable `.ids-tooltip-content` region (`flex: 1 1 auto`; `min-height: 0`; `box-sizing: border-box`; `width: 100%`; `min-width: 0`; `overflow-y: auto`; `overflow-x: hidden`; `scrollbar-width: thin`; `padding: 0 padding-12`). Under a top bar `.ids-tooltip-scroll` uses `padding: padding-4 0 padding-12` so the remaining `4px` is the header-body gap. The scrollbar therefore starts below the title/close row, and the top/bottom padding stays fixed.
 - `ContentColumn` (`.ids-tooltip-content-column`): holds the `Header` slot inside the top bar; header text is optional, but the slot is always rendered in `closable` mode (empty when title is absent, one-line min-height) to preserve vertical rhythm and close-icon alignment; `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--spacing-space-4)` (4px `spacing/space-4` reserve before the close icon column so the title wraps inside the remaining width).
 - `CloseAction` is a **sibling** of `ContentColumn` in the top bar, top-aligned — **not** nested inside `Header`.
 - `CloseAction` dimensions: `20px × 20px` IDS tertiary icon-only button (`sizing/size-20`); padding `padding/padding-4` on all sides.
@@ -64,7 +64,7 @@ ids-tooltip
 - Popup shell: `popupClosable` width `264px` (vs `popupStandard` `240px`); inner content box after panel padding remains `240px` (`264 − 24px`).
 - Inner width math: `240px` inner = `ContentColumn` content area (`216px`) + `4px` `spacing/space-4` reserve + `20px` close → title text wraps at ~`216px` (does not extend under the close icon).
 - Closable scroll body reserve: when `closable=true`, the scrollable `.ids-tooltip-content` gets `scrollbar-gutter: stable` (scrollbar track is always reserved, so adding a scrollbar never changes the content or popup width) plus `padding-right: calc(var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4) - var(--ids-scrollbar-width, 0px))`. The component measures the rendered `thin` scrollbar width at runtime and exposes it as `--ids-scrollbar-width`, so the body text stays exactly `4px` (`spacing/space-4`) to the left of the close icon column and never flows underneath it.
-- Standard (`closable=false`): `.ids-tooltip-content` stays a vertical column; `BodyContent` uses full inner width (sample `216px` after padding on `240px` popup).
+- Standard (`closable=false`): `.ids-tooltip-scroll` / `.ids-tooltip-content` stay a vertical column; `BodyContent` uses full inner width (sample `216px` after padding on `240px` popup).
 
 Arrow geometry contract:
 - Up/down pointer triangle: `10x6` (layout box).

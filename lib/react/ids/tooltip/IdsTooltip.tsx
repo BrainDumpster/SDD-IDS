@@ -488,21 +488,28 @@ export function TooltipPanel({
       ) : null}
       <div
         className={cx(
-          styles["ids-tooltip-content"],
-          hasTopBar && styles["ids-tooltip-content--under-top"],
-          closable && styles["ids-tooltip-content--closable"],
+          styles["ids-tooltip-scroll"],
+          hasTopBar && styles["ids-tooltip-scroll--under-top"],
         )}
-        style={
-          closable
-            ? ({
-                "--ids-scrollbar-width": `${scrollbarWidth}px`,
-              } as CSSProperties)
-            : undefined
-        }
-        data-ids="ids-tooltip-content"
+        data-ids="ids-tooltip-scroll"
       >
-        {body}
-        {other}
+        <div
+          className={cx(
+            styles["ids-tooltip-content"],
+            closable && styles["ids-tooltip-content--closable"],
+          )}
+          style={
+            closable
+              ? ({
+                  "--ids-scrollbar-width": `${scrollbarWidth}px`,
+                } as CSSProperties)
+              : undefined
+          }
+          data-ids="ids-tooltip-content"
+        >
+          {body}
+          {other}
+        </div>
       </div>
     </div>
   );
