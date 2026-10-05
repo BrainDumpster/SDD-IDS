@@ -18,7 +18,7 @@ def resolve_design_tokens(text: str, programme: str = "ids") -> dict[str, Any] |
 
     Returns None when the DTM is not running. Generation continues either way.
     """
-    names = sorted(set(re.findall(r"--[A-Za-z0-9-]+", text or "")))
+    names = sorted(set(re.findall(r"--[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*", text or "")))
     if not names:
         return {"results": []}
     payload = json.dumps({"names": names, "programme": programme, "createMissing": False}).encode()

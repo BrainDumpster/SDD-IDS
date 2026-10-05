@@ -128,6 +128,94 @@ export function validateProgrammeFiles() {
   return reports;
 }
 
+export function stripCustomProperty(css, name) {
+  const escaped = String(name).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return String(css).replace(new RegExp(`^[ \\t]*${escaped}\\s*:[^;]*;\\r?\\n`, "gm"), "");
+}
+
+function matchingParen(text, openIndex) {
+  let depth = 0;
+  for (let index = openIndex; index < text.length; index += 1) {
+    if (text[index] === "(") depth += 1;
+    else if (text[index] === ")") {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
+export function replaceTokenVar(text, from, to, fallbackValue) {
+  const source = String(text);
+  const needle = "var(";
+  const nextValue = fallbackValue == null ? "" : String(fallbackValue).trim();
+  let out = "";
+  let index = 0;
+  while (index < source.length) {
+    const start = source.indexOf(needle, index);
+    if (start < 0) {
+      out += source.slice(index);
+      break;
+    }
+    const open = start + needle.length - 1;
+    const close = matchingParen(source, open);
+    if (close < 0) {
+      out += source.slice(index);
+      break;
+    }
+    out += source.slice(index, start);
+    const inner = source.slice(open + 1, close);
+    const match = inner.match(/^\s*(--[A-Za-z0-9-]+)([\s\S]*)$/);
+    if (match && match[1] === from) {
+      const hasFallback = /^\s*,/.test(match[2]);
+      out += hasFallback && nextValue ? `var(${to}, ${nextValue})` : `var(${to}${hasFallback ? match[2] : ""})`;
+    } else {
+      out += source.slice(start, close + 1);
+    }
+    index = close + 1;
+  }
+  return out;
+}
+
+function upsertBlock(block, name, value) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const existing = new RegExp(`^([ \\t]*)${escaped}\\s*:[^;]*;`, "m");
+  if (existing.test(block)) return block.replace(existing, `$1${name}: ${cssValue(value)};`);
+  const close = block.lastIndexOf("}");
+  if (close < 0) return `${block}\n  ${name}: ${cssValue(value)};\n`;
+  return `${block.slice(0, close)}  ${name}: ${cssValue(value)};\n${block.slice(close)}`;
+}
+
+export function upsertIdsThemeToken(name, values, css = fs.readFileSync(IDS_THEME_PATH, "utf8")) {
+  const marker = 'data-theme="dark"';
+  const at = css.indexOf(marker);
+  const light = String(values.light ?? "").trim();
+  let next = css;
+  if (light) {
+    const head = at < 0 ? next : next.slice(0, at);
+    const tail = at < 0 ? "" : next.slice(at);
+    next = upsertBlock(head, name, light) + tail;
+  }
+  const darkAt = next.indexOf(marker);
+  const dark = values.dark == null ? "" : String(values.dark).trim();
+  if (dark && dark !== light && darkAt >= 0) {
+    next = next.slice(0, darkAt) + upsertBlock(next.slice(darkAt), name, dark);
+  }
+  return next;
+}
+
+export function writeIdsThemeToken(name, values) {
+  const next = upsertIdsThemeToken(name, values);
+  fs.writeFileSync(IDS_THEME_PATH, next);
+  return next;
+}
+
+export function removeIdsThemeToken(name) {
+  const next = stripCustomProperty(fs.readFileSync(IDS_THEME_PATH, "utf8"), name);
+  fs.writeFileSync(IDS_THEME_PATH, next);
+  return next;
+}
+
 function patchBlock(body, name, value) {
   const line = new RegExp(`(^\\s*${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*:\\s*)([^;]+)(;)`, "m");
   if (line.test(body)) return { body: body.replace(line, `$1${value}$3`), patched: true };

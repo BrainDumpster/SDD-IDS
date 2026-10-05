@@ -4,6 +4,9 @@
  * and component-alias sections in components/ids-theme.css.
  */
 
+import { readCatalog, writeCatalog } from "../tokens/store.js";
+import { groupNameProblem } from "../validation/validate.js";
+
 export function primitiveGroup(name) {
   const n = name.startsWith("--") ? name.slice(2) : name;
   const rules = [
@@ -56,12 +59,91 @@ export function groupForSection(section, name) {
   return semanticGroup(name);
 }
 
-export function listGroups(tokens) {
+export function listGroups(catalogOrTokens) {
+  const tokens = Array.isArray(catalogOrTokens) ? catalogOrTokens : (catalogOrTokens?.tokens ?? []);
+  const stored = Array.isArray(catalogOrTokens) ? [] : (catalogOrTokens?.groups ?? []);
   const counts = new Map();
+  for (const name of stored) {
+    const group = String(name ?? "").trim();
+    if (group) counts.set(group, 0);
+  }
   for (const token of tokens) {
     counts.set(token.group, (counts.get(token.group) ?? 0) + 1);
   }
   return [...counts.entries()]
     .map(([group, count]) => ({ group, count }))
     .sort((a, b) => a.group.localeCompare(b.group));
+}
+
+function reject(message) {
+  return { status: "rejected", errors: [{ field: "name", message }] };
+}
+
+export function createGroupRecord(catalog, name) {
+  const problem = groupNameProblem(name);
+  if (problem) return reject(problem);
+  const next = String(name).trim();
+  if (listGroups(catalog).some((item) => item.group === next)) return reject("Group already exists.");
+  return {
+    status: "created",
+    group: next,
+    catalog: { ...catalog, groups: [...listGroups(catalog).map((item) => item.group), next] },
+  };
+}
+
+export function renameGroupRecord(catalog, from, to) {
+  const current = String(from ?? "").trim();
+  const problem = groupNameProblem(to);
+  if (problem) return reject(problem);
+  const next = String(to).trim();
+  const known = listGroups(catalog);
+  if (next !== current && known.some((item) => item.group === next)) return reject("Group already exists.");
+  if (!known.some((item) => item.group === current)) {
+    return { status: "missing", errors: [{ field: "name", message: "Group was not found." }] };
+  }
+  return {
+    status: "updated",
+    group: next,
+    catalog: {
+      ...catalog,
+      groups: known.map((item) => (item.group === current ? next : item.group)),
+      tokens: (catalog.tokens ?? []).map((token) => (token.group === current ? { ...token, group: next } : token)),
+    },
+  };
+}
+
+export function deleteGroupRecord(catalog, name) {
+  const current = String(name ?? "").trim();
+  const known = listGroups(catalog);
+  const match = known.find((item) => item.group === current);
+  if (!match) return { status: "missing" };
+  if (match.count > 0) {
+    return {
+      status: "in-use",
+      errors: [{ field: "name", message: `${current} has tokens. Delete is not possible.` }],
+    };
+  }
+  return {
+    status: "deleted",
+    group: current,
+    catalog: { ...catalog, groups: known.map((item) => item.group).filter((group) => group !== current) },
+  };
+}
+
+export function createGroup(name) {
+  const result = createGroupRecord(readCatalog(), name);
+  if (result.catalog) writeCatalog(result.catalog);
+  return { status: result.status, group: result.group, errors: result.errors };
+}
+
+export function renameGroup(from, to) {
+  const result = renameGroupRecord(readCatalog(), from, to);
+  if (result.catalog) writeCatalog(result.catalog);
+  return { status: result.status, group: result.group, errors: result.errors };
+}
+
+export function deleteGroup(name) {
+  const result = deleteGroupRecord(readCatalog(), name);
+  if (result.catalog) writeCatalog(result.catalog);
+  return { status: result.status, group: result.group, errors: result.errors };
 }

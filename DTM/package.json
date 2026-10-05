@@ -7,7 +7,8 @@
     "start": "node api/server.js",
     "mcp": "node mcp/server.js",
     "dev": "vite --config ui/vite.config.js",
-    "test": "node --test features/validation/validate.test.js features/tokens/seed.test.js"
+    "test": "node --test features/validation/validate.test.js features/tokens/seed.test.js features/groups/groups.test.js features/availability/spec-check.test.js features/availability/programme-usage.test.js features/css-export/theme-token.test.js features/access/access.test.js",
+    "check-spec": "node scripts/check-spec-tokens.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.19.1",

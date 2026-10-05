@@ -9,12 +9,16 @@ function orderToken(token) {
   for (const key of Object.keys(source).sort()) {
     if (key !== "light" && String(source[key] ?? "").trim()) values[key] = source[key];
   }
-  return {
+  const ordered = {
     group: token.group,
     name: token.name,
     alias: String(token.alias ?? ""),
     values,
   };
+  if (token.introducedBy === "synapse" || token.introducedBy === "dap" || token.introducedBy === "powerflex") {
+    ordered.introducedBy = token.introducedBy;
+  }
+  return ordered;
 }
 
 export function normalizeCatalog(catalog) {
@@ -24,9 +28,15 @@ export function normalizeCatalog(catalog) {
     return a.id.localeCompare(b.id);
   });
   const tokens = [...(catalog.tokens ?? [])].map(orderToken).sort((a, b) => a.name.localeCompare(b.name));
+  const groups = [...new Set(
+    [...(catalog.groups ?? []), ...tokens.map((token) => token.group)]
+      .map((group) => String(group ?? "").trim())
+      .filter(Boolean),
+  )].sort((a, b) => a.localeCompare(b));
   return {
     source: catalog.source ?? {},
     themes,
+    groups,
     tokens,
   };
 }

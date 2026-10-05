@@ -1,4 +1,14 @@
 const NAME_RE = /^--[A-Za-z0-9-]+$/;
+const GROUP_NAME_RE = /^[A-Za-z0-9 /]+$/;
+
+export function groupNameProblem(value) {
+  const group = String(value ?? "").trim();
+  if (!group) return "Group is required.";
+  if (!GROUP_NAME_RE.test(group) || !/[A-Za-z0-9]/.test(group)) {
+    return "Group name can use letters, numbers, spaces, and / only.";
+  }
+  return null;
+}
 const HEX_RE = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 const UNITS = [
   "px",
@@ -197,7 +207,8 @@ export function validateTokenDraft(draft, catalog, { existingName } = {}) {
     }
   }
   const group = String(draft.group ?? "").trim();
-  if (!group) errors.push({ field: "group", message: "Group is required." });
+  const groupProblem = groupNameProblem(group);
+  if (groupProblem) errors.push({ field: "group", message: groupProblem });
   const values = draft.values && typeof draft.values === "object" ? draft.values : {};
   if (!String(values.light ?? "").trim()) {
     errors.push({ field: "values.light", message: "Light value is required." });

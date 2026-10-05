@@ -1,0 +1,14 @@
+---
+description: Never commit directly to main or master; open or update a pull request instead
+alwaysApply: true
+---
+
+# No direct commits to main or master
+
+Do not commit, push, or merge onto `main` or `master`.
+
+- If the current branch is `main` or `master`, create a new branch before any commit.
+- Ship the change by opening a pull request, or by adding commits to an existing pull request branch after the user chooses that pull request.
+- Ask before the commit: new pull request, existing pull request (number or URL), or leave the files uncommitted.
+- A new pull request uses a new branch taken from the base (`main` or `master`). An existing pull request means committing on that pull request’s branch, which must not be `main` or `master`.
+- Do not push the commit to `main` or `master` to “update” them. The pull request is the delivery.

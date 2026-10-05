@@ -10,7 +10,7 @@ export function availability({ group, q, theme } = {}) {
   const tokens = listTokens({ group, q, theme });
   return {
     theme: theme || "light",
-    groups: listGroups(catalog.tokens),
+    groups: listGroups(catalog),
     tokens,
   };
 }
@@ -40,7 +40,7 @@ export function resolveNames({ names, programme, theme, createMissing, drafts })
         });
         continue;
       }
-      const created = createToken(draft);
+      const created = createToken({ ...draft, programme });
       results.push({ name, ...created });
       continue;
     }

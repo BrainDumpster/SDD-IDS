@@ -43,3 +43,7 @@ apps/design-spec-collab/data/collab_sessions/
 apps/design-spec-collab/data/storybook_pr_builds/
 apps/design-spec-portal/data/jobs/
 apps/design-spec-portal/*.json
+
+# DTM access list is created on startup from the seed in features/access/access.js
+DTM/records/access.sqlite
+DTM/records/access.sqlite-*

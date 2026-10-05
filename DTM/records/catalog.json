@@ -17,6 +17,28 @@
       "default": false
     }
   ],
+  "groups": [
+    "Alert",
+    "Annotation",
+    "Color / Background",
+    "Color / Border",
+    "Color / Data",
+    "Color / Gradient",
+    "Color / Icon",
+    "Color / Static",
+    "Color / Text",
+    "Component layout aliases",
+    "Opacity",
+    "Primitives",
+    "Scale",
+    "Secondary Palette",
+    "Shadows",
+    "Sizes",
+    "Typography",
+    "UI Icon Spacing",
+    "UI Palette",
+    "White"
+  ],
   "tokens": [
     {
       "group": "Alert",

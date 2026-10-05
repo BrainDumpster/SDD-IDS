@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { helperText, validateCatalog, validateValue } from "./validate.js";
+import { groupNameProblem, helperText, validateCatalog, validateTokenDraft, validateValue } from "./validate.js";
 
 test("hex and length rules", () => {
   assert.equal(validateValue("#0672cb", "Color / Background", new Set()), null);
@@ -13,6 +13,16 @@ test("hex and length rules", () => {
   assert.equal(validateValue("rgba(37,37,37,0.08)", "Shadows", new Set()), null);
   assert.equal(validateValue("var(--corner-radius-radius-2)", "Component layout aliases", new Set(["--corner-radius-radius-2"])), null);
   assert.match(helperText("Sizes"), /48px/);
+});
+
+test("group names allow letters, numbers, spaces, and slash", () => {
+  assert.equal(groupNameProblem("Color / Background"), null);
+  assert.equal(groupNameProblem("UI Icon Spacing"), null);
+  assert.match(groupNameProblem("Color_Background"), /letters, numbers, spaces, and \//);
+  assert.match(groupNameProblem("///"), /letters, numbers, spaces, and \//);
+  const draft = { group: "New / Group", name: "--spacing-xxl", alias: "", values: { light: "64px" } };
+  assert.equal(validateTokenDraft(draft, { tokens: [] }).ok, true);
+  assert.equal(validateTokenDraft({ ...draft, group: "New_Group" }, { tokens: [] }).ok, false);
 });
 
 test("catalog requires one light default", () => {

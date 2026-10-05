@@ -334,3 +334,5 @@ Behavior is identical when the user pastes the **starter prompt** from `docs/des
 ## Delegation
 
 After the spec file exists, upgrades and hardening use **design-spec-blueprint** skill (normalizer, dedupe scripts, production-ready gate).
+
+After the spec file is written, follow **DTM, then the pull request** in **design-spec-blueprint**. Do not start the DTM process. Ask about the pull request only after the DTM writes for this run have finished.

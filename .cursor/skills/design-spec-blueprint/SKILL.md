@@ -146,6 +146,43 @@ When generating or updating Storybook for a component with `Storybook examples r
 - **Synapse:** generate **React** stories only (`storybook-generated/synapse/`); do not add Synapse under `storybook-angular/` unless explicitly requested.
 - See `docs/design-spec-authoring-contract.md` and `generation/deterministic_storybook/helpers.py`.
 
+## DTM, then the pull request
+
+Do this only after the spec, and any component files for this run, are already written. Do not start the DTM process. Do not open a pull request before the DTM step has finished.
+
+Before calling the API, record whether `DTM/records/catalog.json` and `components/ids-theme.css` are already modified. Those earlier edits stay out of this run’s pull request.
+
+From the repository root, pass every spec file written in this run:
+
+```bash
+node DTM/scripts/check-spec-tokens.js components/<programme>/<slug>/design-spec.md
+```
+
+The command calls the DTM API at `DTM_URL` (default `http://127.0.0.1:8110`) and does not write files.
+
+- **API down:** the spec stays complete. Show the command’s message. The user can start `cd DTM && npm start`, then re-run this section. Do not create tokens and do not open a pull request.
+- **API up:** the report lists available, missing, and programme-local names, plus programme theme CSS counts.
+
+Then finish the DTM writes for this run:
+
+- A missing common name is created only when this spec already states its group and its light value. Call `POST /design/tokens/resolve` with `createMissing: true`, the programme id (`synapse`, `dap`, or `powerflex` when the spec is a programme spec), and one draft per name: `{ name, group, values: { light } }`. That writes `DTM/records/catalog.json` and `components/ids-theme.css`.
+- Do not invent a group or a light value. Leave that name missing and say so.
+- A programme-local name stays out of the catalog.
+- An available name is reused. Do not write it again.
+- Do not patch programme theme CSS. An override stays in the programme file. A missing programme count means that catalog name is not in that file.
+- Re-run the check after the creates. The created names should be available.
+
+Pull request, only after that DTM step:
+
+- Do not commit on `main` or `master`. If the checkout is either branch, create a new branch first.
+- Ask once: create a new pull request, update an existing pull request (number or URL), or leave the files uncommitted.
+- A new pull request uses a new branch from the base (`main` or `master`) and opens a pull request into that base. An existing pull request means committing onto that pull request’s branch, which must not be `main` or `master`.
+- Stage only this run’s spec files, component files written in this run, and `DTM/records/catalog.json` plus `components/ids-theme.css` when this run created or updated a token.
+- If `catalog.json` or `components/ids-theme.css` was already modified before this run, stop before the pull request and say those files still contain earlier edits.
+- If no token was created or updated, the pull request is the spec and component files from this run only.
+
+Include one line for the DTM result in the compact completion reply. Include the pull request URL when one was opened.
+
 ## User-facing completion (chat)
 
 When spec work or a design-check fix is **done**, close with a **compact summary** (3–6 lines): what shipped, key paths changed, how to verify. No detailed report, Figma dump, or full checklist in chat — see `.cursor/rules/compact-task-completion.mdc`.

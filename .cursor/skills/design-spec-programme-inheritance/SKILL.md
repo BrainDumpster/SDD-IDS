@@ -266,3 +266,4 @@ When inheritance spec work or a parity fix is **done**, close with a **compact s
 - [ ] Dark states deduped when Light/Dark use same semantic tokens
 - [ ] Programme figma map + `programme-inheritance-registry.json` updated
 - [ ] Storybook (if requested) under programme story prefix with programme theme CSS
+- [ ] **DTM, then the pull request** from **design-spec-blueprint**. Do not start the DTM process. The pull request question comes after this run’s DTM writes finish.

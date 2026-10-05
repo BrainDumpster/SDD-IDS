@@ -574,6 +574,8 @@ export function IdsModal({
   const surfaceRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
+  const closeRef = useRef(close);
+  closeRef.current = close;
   const [showScrollShadow, setShowScrollShadow] = useState(false);
   const [footerChecked, setFooterChecked] = useState(false);
 
@@ -603,7 +605,7 @@ export function IdsModal({
       if (event.key === "Escape") {
         if (closable) {
           event.preventDefault();
-          close();
+          closeRef.current();
         }
         return;
       }
@@ -632,7 +634,7 @@ export function IdsModal({
       document.removeEventListener("keydown", onKeyDown);
       previouslyFocused.current?.focus?.();
     };
-  }, [open, closable, close]);
+  }, [open, closable]);
 
   useEffect(() => {
     if (!open || !scrollBar) {
