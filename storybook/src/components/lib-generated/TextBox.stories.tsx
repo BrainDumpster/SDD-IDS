@@ -75,6 +75,7 @@ const meta: Meta<IdsTextBoxProps> = {
     iconName: "mail",
     disabled: false,
     invalid: false,
+    selectOnFocus: true,
   },
   argTypes: {
     componentType: { control: "select", options: ["text-input", "text-area"] },
@@ -88,6 +89,7 @@ const meta: Meta<IdsTextBoxProps> = {
     showLabel: { control: "boolean" },
     required: { control: "boolean" },
     showIcon: { control: "boolean" },
+    selectOnFocus: { control: "boolean" },
     onValueChange: { action: "onValueChange" },
   },
 };
@@ -230,9 +232,44 @@ export const FocusVisibleAndPointerFocus: Story = {
           color: "var(--color-text-gray-neutral)",
         }}
       >
-        Click inside input: active border only. Use Tab for focus-visible ring.
+        Click: brand border only. Tab: brand border plus the outer focus ring. Same for the text
+        area.
       </p>
       <Box value="Focus behavior demo" helper="Helper text" />
+      <Box componentType="text-area" value="Focus behavior demo" helper="Helper text" />
+    </div>
+  ),
+};
+
+export const SelectTextOnFocus: Story = {
+  name: "Select Text On Focus",
+  args: { selectOnFocus: true },
+  parameters: {
+    controls: { include: ["selectOnFocus"] },
+    docs: {
+      description: {
+        story:
+          "Switch `selectOnFocus` in Controls, then Tab through the fields. `true` (default): the whole " +
+          "value is selected, typing replaces it. `false`: the caret goes to the end. A click keeps its " +
+          "own caret, and no field remembers an earlier selection.",
+      },
+    },
+  },
+  render: (args) => (
+    <div style={{ display: "grid", gap: 16, maxWidth: 420 }}>
+      <Box
+        label="Location:"
+        defaultValue="Boston"
+        showIcon={false}
+        selectOnFocus={args.selectOnFocus}
+      />
+      <Box
+        label="Note:"
+        componentType="text-area"
+        defaultValue="Rack 4, shelf 2. Replace the fan module before the next firmware update."
+        showIcon={false}
+        selectOnFocus={args.selectOnFocus}
+      />
     </div>
   ),
 };

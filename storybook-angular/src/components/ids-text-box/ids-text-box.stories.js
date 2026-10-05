@@ -56,6 +56,7 @@ const meta = {
     showHelperText: { control: "boolean" },
     showIcon: { control: "boolean" },
     iconName: { control: "text" },
+    selectOnFocus: { control: "boolean" },
     valueChange: { action: "valueChange" },
   },
 };
@@ -192,7 +193,7 @@ export const FocusBehavior = {
     docs: {
       description: {
         story:
-          "Pointer focus (click inside): active brand border only. Tab keyboard focus: accessible border + outer focus ring.",
+          "Pointer focus (click inside): brand border only. Tab keyboard focus: brand border + outer focus ring. Same for the text area.",
       },
     },
   },
@@ -200,9 +201,36 @@ export const FocusBehavior = {
     template: `
       <div style="display: grid; gap: 12px; max-width: 300px;">
         <p style="margin: 0; font-size: 12px; color: var(--color-text-gray-neutral);">
-          Click inside input for pointer focus; use Tab to see focus-visible ring.
+          Click: brand border only. Tab: brand border plus the outer focus ring.
         </p>
         <ids-text-box value="Focus behavior demo" helperText="Helper text"></ids-text-box>
+        <ids-text-box componentType="text-area" value="Focus behavior demo" helperText="Helper text"></ids-text-box>
+      </div>
+    `,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsTextBoxComponent>} */
+export const SelectTextOnFocus = {
+  name: "Select Text On Focus",
+  args: { selectOnFocus: TEXT_BOX_SPEC_ACCURATE_DEFAULTS.selectOnFocus },
+  parameters: {
+    controls: { include: ["selectOnFocus"] },
+    docs: {
+      description: {
+        story:
+          "Switch `selectOnFocus` in Controls, then Tab through the fields. `true` (default): the whole value " +
+          "is selected, typing replaces it. `false`: the caret goes to the end. A click keeps its own caret, " +
+          "and no field remembers an earlier selection.",
+      },
+    },
+  },
+  render: (args) => ({
+    props: { selectOnFocus: args.selectOnFocus },
+    template: `
+      <div style="display: grid; gap: 16px; max-width: 300px;">
+        <ids-text-box defaultValue="Boston" [showIcon]="false" [showHelperText]="false" [selectOnFocus]="selectOnFocus"></ids-text-box>
+        <ids-text-box componentType="text-area" defaultValue="Rack 4, shelf 2. Replace the fan module before the next firmware update." [showIcon]="false" [showHelperText]="false" [selectOnFocus]="selectOnFocus"></ids-text-box>
       </div>
     `,
   }),

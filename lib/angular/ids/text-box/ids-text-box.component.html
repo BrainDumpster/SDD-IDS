@@ -6,8 +6,7 @@
     [class.ids-text-box__control--text-area]="isTextArea"
     [attr.data-state]="visualState"
     [attr.data-focus-modality]="focusModality"
-    [attr.data-focused]="isFocused ? '' : null"
-    (pointerdown)="onPointerDown()"
+    (pointerdown)="onPointerDown($event)"
   >
     @if (isTextArea) {
       <textarea
@@ -21,8 +20,7 @@
         [attr.aria-label]="ariaLabel || null"
         [attr.aria-invalid]="computedInvalid ? 'true' : 'false'"
         [attr.aria-describedby]="describedBy || null"
-        (keydown)="onKeyDown($event)"
-        (focus)="onFocus()"
+        (focus)="onFocus($event)"
         (blur)="onBlur()"
         (input)="onInput($event)"
       ></textarea>
@@ -38,8 +36,7 @@
         [attr.aria-label]="ariaLabel || null"
         [attr.aria-invalid]="computedInvalid ? 'true' : 'false'"
         [attr.aria-describedby]="describedBy || null"
-        (keydown)="onKeyDown($event)"
-        (focus)="onFocus()"
+        (focus)="onFocus($event)"
         (blur)="onBlur()"
         (input)="onInput($event)"
       />

@@ -126,9 +126,16 @@ export interface IdsTextBoxProps {
   rows?: number;
   inputType?: string;
   /**
-   * Keyboard focus only (`Tab`). `true` selects the whole value; `false`
-   * (default) puts the caret at the end. Pointer focus is untouched — a click
-   * always places the caret where the user clicked.
+   * Figma: "Select text when in focus". Keyboard focus only (`Tab` /
+   * `Shift+Tab`), same for text input and text area.
+   *
+   * - `true` (default): selects the whole value so typing replaces it — simple
+   *   values that are usually re-entered (name, location).
+   * - `false`: puts the caret at the end — values that are usually edited in
+   *   part, where replacing them by accident loses data (IP address, path).
+   *
+   * A previous selection is never restored. Pointer focus is untouched — a
+   * click always places the caret where the user clicked.
    */
   selectOnFocus?: boolean;
   ariaLabel?: string;
@@ -211,7 +218,7 @@ export function IdsTextBox({
   name,
   rows = 4,
   inputType = "text",
-  selectOnFocus = false,
+  selectOnFocus = true,
   ariaLabel,
   ariaDescribedBy,
   onValueChange,
@@ -299,10 +306,15 @@ export function IdsTextBox({
       if (byPointer) return;
       const field = event.currentTarget;
       const applySelection = () => {
+        // A fast Tab can move on before the next frame; leave that field alone.
+        if (document.activeElement !== field) return;
         if (selectOnFocus) {
           field.select();
           return;
         }
+        // `email`, `number` and similar types have no caret API and throw on
+        // `setSelectionRange`; they keep the browser's own Tab behaviour.
+        if (field.selectionStart === null) return;
         const end = field.value.length;
         field.setSelectionRange(end, end);
       };

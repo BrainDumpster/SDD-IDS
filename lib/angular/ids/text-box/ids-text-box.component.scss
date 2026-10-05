@@ -51,21 +51,17 @@
   border-color: var(--color-border-brand-base);
 }
 
+/* Any focus (click or Tab): the control takes the Selected brand border.
+   `data-focus-modality` is only present while focused. Same rules for text input
+   and text area. */
 .ids-text-box__control[data-state="focus"],
-.ids-text-box__control[data-focus-modality="pointer"][data-focused]:not([data-state="disabled"]):not(
-    [data-state="error"]
-  ) {
+.ids-text-box__control[data-focus-modality]:not([data-state="disabled"]):not([data-state="error"]) {
   border-color: var(--color-border-brand-base);
 }
 
-.ids-text-box__control[data-focus-modality="keyboard"][data-focused]:not([data-state="disabled"]):not(
-    [data-state="error"]
-  ) {
-  border-color: var(--color-border-gray-neutral-base);
-}
-
+/* Keyboard focus: brand border + outer focus ring. A click never draws the ring. */
 .ids-text-box__control[data-state="focus"]::after,
-.ids-text-box__control[data-focus-modality="keyboard"][data-focused]:not([data-state="disabled"]):not(
+.ids-text-box__control[data-focus-modality="keyboard"]:not([data-state="disabled"]):not(
     [data-state="error"]
   )::after {
   border: var(--border-width-border-1) solid var(--color-border-brand-base);
@@ -74,12 +70,6 @@
   inset: -5px;
   pointer-events: none;
   position: absolute;
-}
-
-.ids-text-box__control[data-focus-modality="pointer"][data-focused]:not([data-state="disabled"]):not(
-    [data-state="error"]
-  )::after {
-  content: none;
 }
 
 .ids-text-box__control[data-state="disabled"] {
@@ -99,7 +89,10 @@
   border: none;
   color: var(--color-text-gray-neutral);
   flex: 1 1 auto;
+  /* Without it a <textarea> falls back to the UA monospace font, unlike the input. */
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2);
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
   min-width: 0;
   outline: none;

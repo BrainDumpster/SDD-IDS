@@ -37,6 +37,7 @@ export const TEXT_BOX_SPEC_ACCURATE_DEFAULTS = {
   invalid: false,
   rows: 4,
   inputType: "text",
+  selectOnFocus: true,
 } as const;
 
 /** @deprecated Use `TEXT_BOX_SPEC_ACCURATE_DEFAULTS` */

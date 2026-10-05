@@ -54,7 +54,7 @@
 - Control corner radius: **`var(--text-box-control-radius)`** (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
 - Text area padding aligns to sample: `9px` top and `10px` bottom.
 - Trailing icon size: `16px x 16px`.
-- Focus-visible ring is outside the control boundary and uses the brand border token.
+- Focus-visible ring is outside the control boundary (`inset: -5px`) and uses the brand border token. It is drawn on top of the brand control border, never instead of it.
 ## Tokens
 
 ### Layout aliases (theme-resolvable)
@@ -71,8 +71,8 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Border:
   - `var(--color-border-gray-neutral-base)` (default)
   - `var(--color-border-gray-neutral-strong)` (hover)
-  - `var(--color-border-brand-base)` (selected)
-  - `var(--color-border-brand-base)` (focus outline)
+  - `var(--color-border-brand-base)` (selected, and control border on any focus)
+  - `var(--color-border-brand-base)` (keyboard focus outline)
   - `var(--color-border-alerting-critical-base)` (error)
 - Text:
   - `var(--color-text-gray-neutral)` (input value, helper text)
@@ -92,7 +92,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 | TextBoxControl | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
 | TextBoxControl | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
 | TextBoxControl | selected | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
-| TextBoxControl | focus-visible | `var(--color-background-surface-component)` | control border `var(--color-border-gray-neutral-base)` + outer outline `var(--color-border-brand-base)` (radius `var(--text-box-focus-ring-radius)`) | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
+| TextBoxControl | focus-visible | `var(--color-background-surface-component)` | control border `var(--color-border-brand-base)` + outer outline `var(--color-border-brand-base)` (radius `var(--text-box-focus-ring-radius)`) | text `var(--color-text-gray-neutral)`, icon `var(--color-icon-gray-neutral-base)` |
 | TextBoxControl | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-disabled)`, icon `var(--color-icon-gray-disabled)` |
 | TextBoxControl | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, helper row icon/text critical |
 | TextBoxHelperRow | helper | transparent | none | `var(--color-text-gray-neutral)` |
@@ -113,7 +113,15 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Click/focus places caret in input/textarea.
 - Hover updates control border from accessible to strong.
 - Pointer focus (click inside input) is treated as active/selected visual: control border `var(--color-border-brand-base)` with no outline.
-- Keyboard focus-visible keeps control border `var(--color-border-gray-neutral-base)` and draws an outer 1px `var(--color-border-brand-base)` ring with `var(--text-box-focus-ring-radius)`.
+- Keyboard focus (`Tab` / `Shift-Tab`) uses the same control border `var(--color-border-brand-base)` **and** draws an outer 1px `var(--color-border-brand-base)` ring with `var(--text-box-focus-ring-radius)`. The ring is required for accessibility and is shown only for keyboard focus; a pointer user already sees hover and the brand border.
+- Text input and text area use identical focus visuals.
+- A field focused by script right after a click (for example the first field of a dialog opened with the mouse) counts as pointer focus; the same field reached with the keyboard counts as keyboard focus.
+- Keyboard focus on a field that already holds text follows `selectOnFocus` (Figma property *Select text when in focus*):
+  - `true` (default): the whole value is selected, so typing replaces it. For simple values that are usually re-entered (e.g. Location `Boston`, a person's name).
+  - `false`: the caret is placed at the end of the value. For important values that are usually edited in part, where an accidental keystroke would wipe the value (e.g. IP address `190.10.1.100`).
+  - The field never restores a selection the user made before leaving it: returning with `Tab` / `Shift-Tab` applies the same rule again.
+  - Pointer focus ignores `selectOnFocus`; the caret goes where the user clicked.
+  - An empty field shows the caret at the start either way (placeholder text is not a value).
 - Disabled removes interaction and uses disabled text/icon/background tokens.
 - Error state keeps control interactive (unless separately disabled) and shows critical helper row.
 - Demo/testing mode may force visual states with `data-state`; this must not block runtime pointer/keyboard behavior.
@@ -138,6 +146,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - `infoTooltip?: string` (tooltip content for the info icon)
 - `rows?: number` (textarea only; default `4`)
 - `inputType?: string` (text-input only; default `"text"`)
+- `selectOnFocus?: boolean` (default `true`; Figma property *Select text when in focus*; text-input and text-area; keyboard focus only — see **Interactions**)
 - `id?: string`, `name?: string`, `ariaLabel?: string`, `ariaDescribedBy?: string`
 - `onValueChange?: (value: string) => void`
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -166,9 +175,11 @@ Variant matrix:
   - `onValueChange` emits on every text change.
   - `disabled` overrides hover/focus/selected/error visuals to disabled visual model.
   - `invalid || errorText` activates error helper row styling.
-  - runtime focus semantics:
-    - pointer focus (`:focus:not(:focus-visible)`) -> active border only (`var(--color-border-brand-base)`), no outline ring
-    - keyboard focus (`:focus-visible`) -> control border `var(--color-border-gray-neutral-base)` + visible outer focus ring (`var(--text-box-focus-ring-radius)`)
+  - runtime focus semantics (identical for text-input and text-area):
+    - pointer focus -> active border only (`var(--color-border-brand-base)`), no outline ring
+    - keyboard focus -> control border `var(--color-border-brand-base)` + visible outer focus ring (`var(--text-box-focus-ring-radius)`)
+    - modality is tracked on the document (last `pointerdown` vs `keydown`) and exposed as `data-focus-modality="pointer" | "keyboard"` on `TextBoxControl`; do not rely on `:focus-visible`, which every focused `input` / `textarea` matches per the CSS spec
+  - keyboard focus with a value: `selectOnFocus` -> select all; otherwise caret at end; no restored selection
 - Accessibility contract:
   - input/textarea must expose `aria-invalid` when invalid.
   - a visible label must be programmatically linked to the input via `for`/`id`; `aria-label` is the fallback when no visible label is shown (placeholder is never the label).
@@ -188,6 +199,8 @@ Common keystrokes used to navigate text boxes:
 
 ### Behavior
 - When a text box receives focus, the user can begin typing in the text box with no additional actions.
+- Keyboard focus always shows the outer focus ring in addition to the brand border, for both text input and text area.
+- When the field already holds text, keyboard focus either selects the whole value (`selectOnFocus`, default) or places the caret at the end (`selectOnFocus={false}`). Choose per field: turn it off for values that are usually edited in part.
 - All text boxes should have labels. These labels should be programmatically associated with the text box using the `for` attribute.
 - Placeholder text is not a replacement for labels.
 - Not all screen readers recognize and read placeholder text, so it should not contain important requirements such as field formatting. Important information should be visible on the screen in instructions or helper text.
@@ -206,7 +219,9 @@ Common keystrokes used to navigate text boxes:
   - [ ] all visual states match tokenized border/background/text/icon model
   - [ ] helper and error rows are mutually exclusive in render output
   - [ ] disabled prevents editing and pointer interaction
-  - [ ] focus-visible ring appears only when focused
+  - [ ] focus-visible ring appears only on keyboard focus, together with the brand control border
+  - [ ] text area focus visuals match text input
+  - [ ] keyboard focus selects the value when `selectOnFocus` is on, puts the caret at the end when off, and never restores an earlier selection
   - [ ] dark theme uses same semantic tokens (no hardcoded literals)
   - [ ] unknown icon slug does not crash rendering
 ## Implementation Notes
@@ -214,6 +229,7 @@ Common keystrokes used to navigate text boxes:
 - Label vertical padding tracks control size: `10px` for `large` (40px), `6px` for `small` (32px). Label text, asterisk, and info icon are grouped with `2px` text-to-asterisk gap and `8px` label-to-icon gap.
 - `<textarea>` fills the control height (`align-self: stretch`) and `cols={1}` is set so CSS `width: 100%` controls the rendered width instead of the browser default `cols`.
 - `TextBoxErrorText` is constrained to one line (`white-space: nowrap`) without ellipsis truncation; it overflows visibly if longer than the field.
+- Focus (2026-10 review): focus style changed from "accessible border + ring" to "brand border + ring" so Tab and click read as the same state, with the ring added for keyboard users. `selectOnFocus` was added so each field can choose select-all or caret-at-end. The Figma property name *Select text when in focus* and its default are still being confirmed with the design team.
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Text Box"`.
 - IDS design library source:
