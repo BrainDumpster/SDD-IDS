@@ -16,8 +16,10 @@ import {
 } from "./ids-checkbox.developer-usage";
 import {
   IdsCheckbox,
+  IdsCheckboxGroup,
   IdsCheckboxLabel,
   type IdsCheckboxProps,
+  type IdsCheckboxGroupProps,
 } from "@ids/react/checkbox";
 import { IdsError, IdsErrorText } from "@ids/react/error";
 import { IdsHelper, IdsHelperText } from "@ids/react/helper";
@@ -67,11 +69,11 @@ const meta: Meta<IdsCheckboxProps> = {
   },
   args: {
     disabled: false,
-    indeterminate: false,
+    partial: false,
   },
   argTypes: {
     checked: { control: "boolean" },
-    indeterminate: { control: "boolean" },
+    partial: { control: "boolean" },
     disabled: { control: "boolean" },
     dataState: {
       control: "select",
@@ -93,6 +95,25 @@ export const SpecAccurateDesign: Story = {
   ),
 };
 
+/**
+ * Long label: the row (checkbox + text) grows to a 900px max width, then the
+ * text wraps to a second line — never truncating — while the checkbox stays
+ * aligned to the top on the first line.
+ */
+export const LongLabel: Story = {
+  name: "Long Label",
+  render: () => (
+    <IdsCheckbox defaultChecked>
+      <IdsCheckboxLabel>
+        This is a deliberately long checkbox option label that keeps going until
+        the row reaches its 900px maximum width including the checkbox itself, at
+        which point the text wraps onto a second line without ever truncating,
+        while the checkbox stays aligned to the top on the first line.
+      </IdsCheckboxLabel>
+    </IdsCheckbox>
+  ),
+};
+
 /** Label typography/color contract from Figma `8505:14299` / Body 2. */
 export const LabelStyle: Story = {
   name: "Label Style",
@@ -104,7 +125,7 @@ export const LabelStyle: Story = {
       <IdsCheckbox defaultChecked>
         <IdsCheckboxLabel>Option</IdsCheckboxLabel>
       </IdsCheckbox>
-      <IdsCheckbox indeterminate>
+      <IdsCheckbox partial>
         <IdsCheckboxLabel>Option</IdsCheckboxLabel>
       </IdsCheckbox>
       <IdsCheckbox disabled>
@@ -134,7 +155,7 @@ export const SelectionStates: Story = {
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <Box label="Option" />
       <Box label="Option" defaultChecked />
-      <Box label="Option" indeterminate />
+      <Box label="Option" partial />
     </div>
   ),
 };
@@ -145,15 +166,15 @@ export const InteractionMatrix: Story = {
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, auto)", gap: 16 }}>
       <Box label="Option" />
       <Box label="Option" defaultChecked />
-      <Box label="Option" indeterminate />
+      <Box label="Option" partial />
 
       <Box label="Option" dataState="focus-visible" />
       <Box label="Option" defaultChecked dataState="focus-visible" />
-      <Box label="Option" indeterminate dataState="focus-visible" />
+      <Box label="Option" partial dataState="focus-visible" />
 
       <Box label="Option" disabled />
       <Box label="Option" defaultChecked disabled />
-      <Box label="Option" indeterminate disabled />
+      <Box label="Option" partial disabled />
     </div>
   ),
 };
@@ -220,4 +241,45 @@ export const Controlled: Story = {
       </div>
     );
   },
+};
+
+export const CheckboxGroup: StoryObj<IdsCheckboxGroupProps & { showIcon?: boolean }> = {
+  name: "Checkbox Group",
+  argTypes: {
+    required: { control: "boolean" },
+    showIcon: { control: "boolean" },
+    labelPosition: { control: "radio", options: ["left", "top"] },
+    orientation: { control: "radio", options: ["vertical", "horizontal"] },
+    error: { control: "boolean" },
+    errorText: { control: "text" },
+  },
+  args: {
+    label: "Notifications:",
+    required: false,
+    showIcon: false,
+    labelPosition: "left",
+    orientation: "vertical",
+    error: false,
+    errorText: "You must select at least one option.",
+  },
+  render: ({ showIcon, ...args }) => (
+    <IdsCheckboxGroup
+      {...args}
+      labelIcon={
+        showIcon ? (
+          <IdsIcon shape="info-circ-solid" size={16} variant="img" />
+        ) : undefined
+      }
+    >
+      <IdsCheckbox>
+        <IdsCheckboxLabel>Email</IdsCheckboxLabel>
+      </IdsCheckbox>
+      <IdsCheckbox defaultChecked>
+        <IdsCheckboxLabel>SMS</IdsCheckboxLabel>
+      </IdsCheckbox>
+      <IdsCheckbox>
+        <IdsCheckboxLabel>Push notification</IdsCheckboxLabel>
+      </IdsCheckbox>
+    </IdsCheckboxGroup>
+  ),
 };

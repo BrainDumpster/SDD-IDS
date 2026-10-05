@@ -45,7 +45,7 @@ const meta = {
   argTypes: {
     label: { control: "text" },
     disabled: { control: "boolean" },
-    indeterminate: { control: "boolean" },
+    partial: { control: "boolean" },
     error: { control: "boolean" },
     helperText: { control: "text" },
     simulateFocusVisible: { control: "boolean" },
@@ -73,7 +73,7 @@ export const SpecAccurateDesign = {
   render: (args) => {
     const state = {
       checked: args.checked ?? CHECKBOX_SPEC_ACCURATE_DEFAULTS.checked,
-      indeterminate: args.indeterminate ?? CHECKBOX_SPEC_ACCURATE_DEFAULTS.indeterminate,
+      partial: args.partial ?? CHECKBOX_SPEC_ACCURATE_DEFAULTS.partial,
     };
     return {
       props: {
@@ -81,7 +81,7 @@ export const SpecAccurateDesign = {
         state,
         onCheckedChange: (next) => {
           state.checked = next;
-          state.indeterminate = false;
+          state.partial = false;
           args.checkedChange?.(next);
         },
       },
@@ -91,7 +91,7 @@ export const SpecAccurateDesign = {
   args: {
     label: CHECKBOX_SPEC_ACCURATE_DEFAULTS.label,
     checked: CHECKBOX_SPEC_ACCURATE_DEFAULTS.checked,
-    indeterminate: CHECKBOX_SPEC_ACCURATE_DEFAULTS.indeterminate,
+    partial: CHECKBOX_SPEC_ACCURATE_DEFAULTS.partial,
     disabled: CHECKBOX_SPEC_ACCURATE_DEFAULTS.disabled,
     error: CHECKBOX_SPEC_ACCURATE_DEFAULTS.error,
     helperText: CHECKBOX_SPEC_ACCURATE_DEFAULTS.helperText,
@@ -125,7 +125,7 @@ export const SelectionStatesManual = {
       <div style="display: flex; gap: 24px; flex-wrap: wrap;">
         <ids-checkbox label="Unchecked"></ids-checkbox>
         <ids-checkbox label="Checked" [checked]="true"></ids-checkbox>
-        <ids-checkbox label="Partial" [indeterminate]="true"></ids-checkbox>
+        <ids-checkbox label="Partial" [partial]="true"></ids-checkbox>
       </div>
     `,
   }),
@@ -153,15 +153,15 @@ export const FigmaMainMatrix = {
         <div>Default</div>
         <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}"></ids-checkbox>
         <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [checked]="true"></ids-checkbox>
-        <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [indeterminate]="true"></ids-checkbox>
+        <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [partial]="true"></ids-checkbox>
         <div>Focus-visible (simulated)</div>
         <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [simulateFocusVisible]="true"></ids-checkbox>
         <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [checked]="true" [simulateFocusVisible]="true"></ids-checkbox>
-        <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [indeterminate]="true" [simulateFocusVisible]="true"></ids-checkbox>
+        <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [partial]="true" [simulateFocusVisible]="true"></ids-checkbox>
         <div>Disabled</div>
         <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [disabled]="true"></ids-checkbox>
         <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [checked]="true" [disabled]="true"></ids-checkbox>
-        <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [indeterminate]="true" [disabled]="true"></ids-checkbox>
+        <ids-checkbox label="${CHECKBOX_MATRIX_LABEL}" [partial]="true" [disabled]="true"></ids-checkbox>
       </div>
     `,
   }),
@@ -174,7 +174,7 @@ export const DisabledStatesManual = {
       <div style="display: flex; gap: 24px; flex-wrap: wrap;">
         <ids-checkbox label="Unchecked" [disabled]="true"></ids-checkbox>
         <ids-checkbox label="Checked" [checked]="true" [disabled]="true"></ids-checkbox>
-        <ids-checkbox label="Partial" [indeterminate]="true" [disabled]="true"></ids-checkbox>
+        <ids-checkbox label="Partial" [partial]="true" [disabled]="true"></ids-checkbox>
       </div>
     `,
   }),

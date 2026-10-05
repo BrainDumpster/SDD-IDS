@@ -29,11 +29,13 @@ import React, {
   useState,
   type ChangeEvent,
   type InputHTMLAttributes,
+  type KeyboardEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
 import { IdsError } from "../error";
 import { IdsHelper } from "../helper";
+import { useIdsCheckboxGroup } from "./IdsCheckboxGroup";
 import styles from "./IdsCheckbox.module.css";
 
 export type IdsCheckboxDataState = "default" | "hover" | "focus-visible" | "disabled";
@@ -41,14 +43,16 @@ export type IdsCheckboxDataState = "default" | "hover" | "focus-visible" | "disa
 export interface IdsCheckboxProps
   extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
-    "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size"
+    "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size" | "aria-label"
   > {
   children?: ReactNode;
   checked?: boolean;
   defaultChecked?: boolean;
   /** Partial / mixed selection (Figma “Partial”; ARIA `mixed`). */
-  indeterminate?: boolean;
+  partial?: boolean;
   disabled?: boolean;
+  /** Forces error styling on the control (merged with group `error` and `IdsError` child). */
+  error?: boolean;
   name?: string;
   value?: string;
   onChange?: (checked: boolean) => void;
@@ -56,6 +60,8 @@ export interface IdsCheckboxProps
   dataState?: IdsCheckboxDataState;
   /** Compact chrome for datagrid selection column (Figma 16×16). */
   density?: "default" | "datagrid";
+  /** Accessible name fallback when no visible option label is rendered. */
+  ariaLabel?: string;
 }
 
 interface IdsCheckboxContextValue {
@@ -146,19 +152,24 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
     children,
     checked: checkedProp,
     defaultChecked = false,
-    indeterminate = false,
+    partial = false,
     disabled = false,
+    required = false,
+    error: errorProp = false,
     name,
     value,
     onChange,
+    onKeyDown,
     dataState,
     density = "default",
+    ariaLabel,
     id: idProp,
     className,
     ...rest
   },
   forwardedRef,
 ) {
+  const group = useIdsCheckboxGroup();
   const reactId = useId();
   const inputId = idProp ?? `ids-checkbox-${reactId}`;
   const messageId = `${inputId}-message`;
@@ -168,25 +179,27 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
   const [uncontrolledChecked, setUncontrolledChecked] = useState(defaultChecked);
   const checked = isControlled ? Boolean(checkedProp) : uncontrolledChecked;
 
-  const isDisabled = Boolean(disabled || dataState === "disabled");
-  const showPartial = Boolean(indeterminate);
-  const showChecked = checked && !showPartial;
+  const isDisabled = Boolean(disabled || group?.disabled || dataState === "disabled");
+  const isPartial = Boolean(partial);
+  const showChecked = checked && !isPartial;
 
   const { label, helper, error: errorMessage } = partitionChildren(children);
-  if (!label) {
+  if (!label && density !== "datagrid") {
     throw new Error("IdsCheckbox: project `IdsCheckboxLabel` (required for accessibility).");
   }
   if (helper && errorMessage) {
     throw new Error("IdsCheckbox: project either `IdsHelper` or `IdsError`, not both.");
   }
 
-  const hasError = Boolean(errorMessage);
+  const hasError = Boolean(errorProp || group?.error || errorMessage);
   const message = errorMessage ?? helper;
+  const inputName = name ?? group?.name;
+  const inputAriaLabel = label ? undefined : ariaLabel;
 
   useEffect(() => {
     const el = inputRef.current;
-    if (el) el.indeterminate = showPartial;
-  }, [showPartial]);
+    if (el) el.indeterminate = isPartial;
+  }, [isPartial]);
 
   const setRefs = useCallback(
     (node: HTMLInputElement | null) => {
@@ -204,12 +217,22 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
       event.preventDefault();
       return;
     }
-    const next = showPartial ? true : event.target.checked;
+    const next = isPartial ? true : event.target.checked;
     if (!isControlled) setUncontrolledChecked(next);
     onChange?.(next);
   };
 
-  const ariaChecked: boolean | "mixed" = showPartial ? "mixed" : checked;
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && !isDisabled) {
+      event.preventDefault();
+      const next = isPartial ? true : !checked;
+      if (!isControlled) setUncontrolledChecked(next);
+      onChange?.(next);
+    }
+    onKeyDown?.(event);
+  };
+
+  const ariaChecked: boolean | "mixed" = isPartial ? "mixed" : checked;
 
   const projectedMessage =
     message != null
@@ -226,7 +249,7 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
         data-ids="ids-checkbox"
         data-density={density === "datagrid" ? "datagrid" : undefined}
         data-checked={showChecked ? "true" : "false"}
-        data-indeterminate={showPartial ? "true" : "false"}
+        data-partial={isPartial ? "true" : "false"}
         data-disabled={isDisabled ? "true" : "false"}
         data-error={hasError ? "true" : "false"}
         data-state={dataState && dataState !== "default" ? dataState : undefined}
@@ -243,15 +266,19 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
             id={inputId}
             type="checkbox"
             className={styles["ids-checkbox-input"]}
-            name={name}
+            name={inputName}
             value={value}
             checked={isControlled ? checked : undefined}
             defaultChecked={isControlled ? undefined : defaultChecked}
             disabled={isDisabled}
+            required={required}
             aria-checked={ariaChecked}
             aria-invalid={hasError || undefined}
             aria-describedby={projectedMessage ? messageId : undefined}
+            aria-label={inputAriaLabel}
+            aria-required={required ? true : undefined}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
           <span
             className={styles["ids-checkbox-control"]}
@@ -261,7 +288,7 @@ export const IdsCheckbox = forwardRef<HTMLInputElement, IdsCheckboxProps>(functi
             <span
               className={cx(
                 styles["ids-checkbox-indicator"],
-                showPartial
+                isPartial
                   ? styles["ids-checkbox-indicator--partial"]
                   : styles["ids-checkbox-indicator--check"],
               )}

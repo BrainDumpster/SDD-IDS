@@ -13,7 +13,10 @@
 
 .ids-checkbox-row {
   display: inline-flex;
-  align-items: center;
+  /* Long labels wrap under a 900px cap (control + text); the control top-aligns
+     so it stays on the first line instead of centering across the wrapped text. */
+  align-items: flex-start;
+  max-width: 900px;
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -31,6 +34,12 @@
 .ids-checkbox[data-density="datagrid"] .ids-checkbox-row {
   min-height: 0;
   gap: 0;
+  /* Selection cell has no wrapping label — keep it centered, no top offset. */
+  align-items: center;
+}
+
+.ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
+  margin-top: 0;
 }
 
 .ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
@@ -69,6 +78,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Optically center the 16px control on the first 20px text line while the row
+     top-aligns for multi-line labels ((20 - 16) / 2 = 2px). */
+  margin-top: 2px;
   transition: background-color 100ms ease, border-color 100ms ease;
   position: relative;
   outline: none;
@@ -98,23 +110,33 @@
   border-color: var(--color-border-brand-transparent-brand);
 }
 
-.ids-checkbox[data-indeterminate="true"] .ids-checkbox-control {
+.ids-checkbox[data-partial="true"] .ids-checkbox-control {
   background: var(--color-background-surface-component);
   border-color: var(--color-border-brand-base);
 }
 
-.ids-checkbox[data-indeterminate="true"] .ids-checkbox-row:hover:not([data-disabled="true"]) .ids-checkbox-control,
-.ids-checkbox[data-indeterminate="true"][data-state="hover"] .ids-checkbox-control,
-.ids-checkbox[data-indeterminate="true"] .ids-checkbox-row:active:not([data-disabled="true"]) .ids-checkbox-control,
-.ids-checkbox[data-indeterminate="true"][data-state="press"] .ids-checkbox-control {
+.ids-checkbox[data-partial="true"] .ids-checkbox-row:hover:not([data-disabled="true"]) .ids-checkbox-control,
+.ids-checkbox[data-partial="true"][data-state="hover"] .ids-checkbox-control,
+.ids-checkbox[data-partial="true"] .ids-checkbox-row:active:not([data-disabled="true"]) .ids-checkbox-control,
+.ids-checkbox[data-partial="true"][data-state="press"] .ids-checkbox-control {
   background: var(--color-background-surface-component);
   border-color: var(--color-border-gray-neutral-strong);
 }
 
-.ids-checkbox-input:focus-visible + .ids-checkbox-control,
-.ids-checkbox[data-state="focus-visible"] .ids-checkbox-control {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.ids-checkbox-control::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--border-width-border-1) + 3px) * -1);
+  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease;
+}
+
+.ids-checkbox-input:focus-visible + .ids-checkbox-control::after,
+.ids-checkbox[data-state="focus-visible"] .ids-checkbox-control::after {
+  opacity: 1;
 }
 
 .ids-checkbox[data-disabled="true"] .ids-checkbox-control {
@@ -127,13 +149,13 @@
   border-color: transparent;
 }
 
-.ids-checkbox[data-disabled="true"][data-indeterminate="true"] .ids-checkbox-control {
+.ids-checkbox[data-disabled="true"][data-partial="true"] .ids-checkbox-control {
   background: var(--color-background-gray-light);
   border-color: var(--color-border-gray-disabled);
 }
 
 /* Error: unchecked border uses strong (not critical). Label color unchanged. */
-.ids-checkbox[data-error="true"]:not([data-checked="true"]):not([data-indeterminate="true"])
+.ids-checkbox[data-error="true"]:not([data-checked="true"]):not([data-partial="true"])
   .ids-checkbox-control {
   border-color: var(--color-border-gray-neutral-strong);
 }
@@ -149,7 +171,7 @@
 }
 
 .ids-checkbox[data-checked="true"] .ids-checkbox-indicator,
-.ids-checkbox[data-indeterminate="true"] .ids-checkbox-indicator {
+.ids-checkbox[data-partial="true"] .ids-checkbox-indicator {
   display: inline-flex;
 }
 
@@ -176,7 +198,7 @@
   transform: translate(-50%, -50%);
 }
 
-.ids-checkbox[data-indeterminate="true"] .ids-checkbox-indicator {
+.ids-checkbox[data-partial="true"] .ids-checkbox-indicator {
   color: var(--color-icon-brand-base);
 }
 
@@ -184,12 +206,15 @@
   color: var(--color-icon-gray-inverse);
 }
 
-.ids-checkbox[data-disabled="true"][data-indeterminate="true"] .ids-checkbox-indicator {
+.ids-checkbox[data-disabled="true"][data-partial="true"] .ids-checkbox-indicator {
   color: var(--color-icon-gray-disabled);
 }
 
 .ids-checkbox-label {
   user-select: none;
+  /* Wrap long text (never truncate); min-width:0 lets it wrap inside the flex row. */
+  min-width: 0;
+  overflow-wrap: break-word;
   font-family: inherit;
   font-weight: 400;
   font-size: var(--font-size-body-2);
@@ -197,3 +222,5 @@
   letter-spacing: 0;
   color: inherit;
 }
+
+

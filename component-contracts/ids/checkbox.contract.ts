@@ -15,7 +15,7 @@ export const CHECKBOX_ERROR_ICON_SLUG = "status-critical-square-solid" as const;
 export const CHECKBOX_SPEC_ACCURATE_DEFAULTS = {
   label: CHECKBOX_SPEC_SAMPLE_LABEL,
   checked: false,
-  indeterminate: false,
+  partial: false,
   disabled: false,
   error: false,
   helperText: undefined as string | undefined,
