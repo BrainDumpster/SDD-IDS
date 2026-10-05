@@ -203,6 +203,22 @@ export const States: Story = {
   ),
 };
 
+/** Helper text wraps up to 2 lines with the container width — drag the frame corner to verify. */
+export const LongHelperText: Story = {
+  name: "Long Helper Text",
+  args: {
+    ...specAccurateArgs,
+    state: "failed-error",
+    helperText:
+      "The backup job failed because the network connection to the remote storage repository was interrupted. Verify the repository credentials and network route, then retry the job.",
+  },
+  render: (args) => (
+    <div style={frameStyle}>
+      <IdsProgressBar {...args} />
+    </div>
+  ),
+};
+
 export const Indeterminate: Story = {
   args: {
     label: "Processing...",
