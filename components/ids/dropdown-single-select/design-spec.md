@@ -125,6 +125,8 @@
 | Option row | selected (no radio) | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Option row | selected (with radio) | `var(--color-background-surface-component)` | none | `var(--color-text-brand-strong)` |
 | Option row | focus-visible | `var(--color-background-surface-component)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`) | `var(--color-text-gray-neutral)` |
+| Option row | selected + focus-visible (no radio) | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`), `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-brand-strong)` |
+| Option row | selected + focus-visible (with radio) | `var(--color-background-surface-component)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`), `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-brand-strong)` |
 | Option row | disabled (no radio) | `var(--color-background-gray-lighter)` | `outline: 1px solid var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 | Option row | disabled (with radio) | `var(--color-background-surface-component)` | none | `var(--color-text-gray-disabled)` |
 | Section header | — | `var(--color-background-surface-component)` | `border-top: var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
@@ -135,19 +137,24 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/selected/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+| Option rows | default/hover/selected/focus-visible/selected + focus-visible/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 ## Interactions
 - Trigger:
-  - click/`Enter`/`Space` toggles open/close.
-  - when the popup opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
-  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, option rows, footer action).
+  - click toggles open/close; focus stays on the trigger after a pointer open.
+  - `Tab` onto the trigger focuses it but does **not** open the menu.
+  - `Enter`/`Space` open the menu and move focus **into** it, onto the **selected** option (the first enabled option when nothing is selected). With the menu already open (pointer open), `Enter`/`Space`/`ArrowUp`/`ArrowDown` move focus onto the selected option.
   - `Escape` closes and returns focus to trigger.
 - Selection:
   - selecting an option sets exactly one selected value.
   - selecting a new option replaces previous selection.
-- Keyboard:
-  - `ArrowUp`/`ArrowDown` navigates options.
-  - `Enter` commits active option.
+  - selecting (click or `Enter`) closes the menu and returns focus to the trigger.
+- Keyboard (design review 2026-10, Windows-style):
+  - `ArrowUp`/`ArrowDown` move focus through the menu and **wrap**: `ArrowDown` on the last item goes to the first, `ArrowUp` on the first goes to the last. The cycle covers every control in the menu in DOM order: search field (`searchable`), Clear All (`showClearAll`), enabled option rows, action row. Disabled options are skipped.
+  - focus is separate from selection: moving focus never changes the value. The selected option keeps its selected state, and when it also has focus it shows **selected + focus-visible** (selected fill/text plus the focus ring).
+  - `Enter` (or `Space`) on the focused option selects it and closes the menu.
+  - `Tab`/`Shift+Tab` while the menu is open close it, **keep the previously selected value** (e.g. stays `100%` even with focus on `125%`) and move focus to the next/previous component on the page. `Tab` never walks the option rows (lists can be 20+ items). Exception: in the search field, `Tab` first accepts a pending inline suggestion.
+  - `Escape` closes the menu without changing the value and returns focus to the trigger.
+  - **On hold:** `ArrowUp`/`ArrowDown` on the **closed** trigger (change the value without opening, as Windows does) is pending accessibility review. Until then the existing behavior stays: React opens the menu on `ArrowDown` with focus kept on the trigger; Angular does nothing.
 - Optional radio mode:
   - radio control visibility is input-driven.
   - radio does not change single-select behavior semantics; it is visual control parity.
@@ -195,7 +202,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - `size`: `small | large`
 - `content`: `empty | filled`
 - `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
-- `option-state`: `default | hover | press | selected | focus-visible | disabled`
+- `option-state`: `default | hover | press | selected | focus-visible | selected-focus-visible | disabled`
 - `radio-visibility`: `on | off`
 - `search`: `enabled | disabled`
 - `sections`: `none | enabled`
@@ -266,7 +273,14 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-06-07.
+> Last updated: 2026-10-05.
+
+### 2026-10-05
+- **Single-select keyboard model** (design review, see ## Interactions → Keyboard). Supersedes the 2026-08-13 "no auto-focus on open" and "`Tab` still traverses every tabbable control" notes for single-select; multi-select and combo box are unchanged.
+  - React `lib/react/ids/dropdown-shared/DropdownMenu.tsx`, active only for `selectionMode="single"`: `handleTriggerKeyDown` flags a keyboard open, and an effect focuses the selected (else first enabled) `[data-selectable="true"]` row one frame after the popup mounts (the positioner reveals it in a layout effect). `handleSingleSelectKeyDownCapture` runs in the capture phase, because the search input stops propagation of its keys: `ArrowUp`/`ArrowDown` cycle the popup's enabled `input`/`button` controls with wrap-around; `Tab` closes and focuses the trigger **without** `preventDefault`, so the browser's own `Tab`/`Shift+Tab` continues from the trigger. That is how focus escapes the portal at the end of `<body>`. Selecting an option closes the menu and returns focus to the trigger. `onOpenChange` is deduplicated through `openRef`, and it now also fires when a selection closes the menu.
+  - React `lib/react/shared/menu/Menu.tsx`: pressing the trigger while focus is inside the popup no longer closes the menu on blur and then reopens it on the trigger click. The blur-close is skipped for a trigger press, and the click toggles the menu closed.
+  - Angular `lib/angular/ids/dropdown/ids-dropdown-menu.component.ts` (parity): `onTriggerKeydown`, `onPopupKeydown` and `onSearchKeydown` implement the same model. `cdr.detectChanges()` renders the popup before focusing a row and removes it before `Tab`'s default action. `onEscape` returns focus to the trigger when focus was inside the popup, and `Escape` from the search field now reaches it.
+- **Selected + focus-visible** needs no extra CSS. The selected rule sets background/text and the `:focus-visible` rule adds the 1px `var(--color-border-brand-base)` inset ring, so both show together on the same row (with and without radio). Figma still needs this as an explicit option variant.
 
 ### 2026-08-30
 - **Options list 1px inset padding** — `DropdownMenu.module.css` `.optionsScrollViewport` now has `padding-inline: 1px` so the option rows sit 1px inside the menu border, matching the App Launcher options list.
