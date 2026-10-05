@@ -49,6 +49,7 @@ import {
   type IdsAppLauncherProduct,
   type IdsAppLauncherProps,
 } from "@ids/react/app-launcher";
+import { IdsIcon } from "@ids/react/icon";
 
 const DESIGN_SPEC_PATH = "components/ids/app-launcher/design-spec.md";
 
@@ -95,10 +96,17 @@ const meta: Meta<IdsAppLauncherProps> = {
     triggerVariant: "default",
     columns: 2,
     sideOffset: 8,
+    useIdsOptionTooltip: false,
   },
   argTypes: {
     triggerVariant: { control: "radio", options: ["default", "masthead"] },
     panelOnly: { control: "boolean" },
+    useIdsOptionTooltip: {
+      control: "boolean",
+      description:
+        "How a truncated option label reveals its full text: `false` (default) uses the native browser tooltip (`title`); `true` uses the branded `IdsTooltip`.",
+      table: { defaultValue: { summary: "false" } },
+    },
   },
 };
 
@@ -119,6 +127,35 @@ export const SpecAccurateDesign: Story = {
       <IdsAppLauncher {...args} />
     </div>
   ),
+};
+
+/**
+ * Long names: text-only tiles wrap up to 3 lines; a name longer than that (or an
+ * icon-tile name longer than 1 line) becomes a full-width rectangle tile. When
+ * full-width tiles push products past the 4-tile cap, the overflow moves into the
+ * options list.
+ */
+export const LongNames: Story = {
+  name: "Long Names",
+  args: {
+    products: [
+      { id: "ln1", name: "Short label", icon: null },
+      { id: "ln2", name: "Text-only tile with a two-line name", icon: null },
+      {
+        id: "ln3",
+        name: "A very long text-only product name that cannot fit within three lines so it becomes a full-width rectangle tile",
+        icon: null,
+      },
+      {
+        id: "ln4",
+        name: "Icon tile whose name is far too long to fit on a single line",
+      },
+      { id: "ln5", name: "Product Name 5" },
+      { id: "ln6", name: "Product Name 6" },
+    ],
+    panelOnly: true,
+  },
+  render: (args) => <IdsAppLauncher {...args} />,
 };
 
 /** Explicit Anatomy slots in Codegen Contract order (same tree the prop API emits). */
@@ -218,8 +255,11 @@ export const ComponentDetailMatrix: Story = {
 export const OptionTextOverflow: Story = {
   name: "Option Text Overflow",
   render: () => (
+    // Options are the overflow list shown once there are more than 4 products:
+    // the first 4 render as tiles, the rest become option rows.
     <IdsAppLauncher
-      products={products.slice(0, 2)}
+      products={products}
+      useIdsOptionTooltip
       options={[
         { id: "o1", label: "Option" },
         {
@@ -228,6 +268,9 @@ export const OptionTextOverflow: Story = {
             "This is a very long option label that truncates with an ellipsis instead of wrapping",
         },
         { id: "o3", label: "Option" },
+        { id: "o4", label: "Option" },
+        { id: "o5", label: "Option" },
+        { id: "o6", label: "Option" },
       ]}
       panelOnly
     />
@@ -284,6 +327,34 @@ export const OptionsWithFooter: Story = {
     <IdsAppLauncher
       products={products}
       options={optionsList}
+      footerAction={{ label: "View all apps", onClick: () => undefined }}
+      panelOnly
+    />
+  ),
+};
+
+const optionsWithLogos: IdsAppLauncherOption[] = [
+  {
+    id: "l1",
+    label: "Option with logo",
+    icon: <IdsIcon shape="shield-encrypt-alt" size={16} color="var(--color-icon-gray-neutral-strong)" />,
+  },
+  {
+    id: "l2",
+    label: "Another option with logo",
+    icon: <IdsIcon shape="shield-encrypt-alt" size={16} color="var(--color-icon-gray-neutral-strong)" />,
+  },
+  { id: "l3", label: "Option without logo" },
+];
+
+/** Option rows with an optional leading logo (16px, height auto, 8px gap); rows
+ *  without a logo keep their label flush-left, aligned with the logo rows. */
+export const OptionRowWithLogo: Story = {
+  name: "Option Row With Logo",
+  render: () => (
+    <IdsAppLauncher
+      products={products}
+      options={optionsWithLogos}
       footerAction={{ label: "View all apps", onClick: () => undefined }}
       panelOnly
     />
