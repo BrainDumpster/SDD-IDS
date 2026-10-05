@@ -1,10 +1,12 @@
 <button
+  #triggerButton
   type="button"
   class="triggerReset"
   [class.triggerFull]="fullWidth"
   [disabled]="disabled"
   [style.cursor]="disabled ? 'not-allowed' : 'pointer'"
   (click)="toggleOpen()"
+  (keydown)="onTriggerKeydown($event)"
   role="combobox"
   [attr.aria-expanded]="isOpen"
   [attr.aria-controls]="listboxId"
@@ -26,11 +28,13 @@
     [ngStyle]="positionerStyle"
   >
     <div
+      #popupEl
       class="popup"
       [class.popup--above]="popupPlacement === 'above'"
       [ngStyle]="popupStyle"
       role="listbox"
       [attr.id]="listboxId"
+      (keydown)="onPopupKeydown($event)"
     >
       @if (resolvedSearchable) {
         <div class="searchRow">
@@ -43,7 +47,7 @@
                 [value]="searchValue"
                 [placeholder]="searchPlaceholder"
                 (input)="onSearchInput($event)"
-                (keydown)="$event.stopPropagation()"
+                (keydown)="onSearchKeydown($event)"
               />
               @if (showSearchClear) {
                 <button
