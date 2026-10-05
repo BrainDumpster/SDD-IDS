@@ -355,3 +355,8 @@ Last updated: 2026-07-17
 - `IdsTimePicker.tsx`: time popup uses `createPortal` to `document.body`.
 - Enable `popupPortal` (default `true`) so the popup escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels).
 - Add `e.stopPropagation()` on `mousedown`/`pointerdown` so selecting a time does not close the parent filter menu.
+
+**2026-10-05**
+
+**React library parity (`lib/react/ids/time-picker`)**
+- Ported `popupPortal` (default `true`): time popup is portaled to `document.body` with fixed positioning (`.timePopupPortaled`), flips above when viewport space is insufficient, and isolates `mousedown` so DataGrid filter menus stay open. `.fieldGroup` uses `flex: 1 0 0` / `min-width: 1px`; `.fieldContainer` uses `width: 100%`.

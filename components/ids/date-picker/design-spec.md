@@ -704,3 +704,8 @@ Last updated: 2026-07-08
 - `IdsDatePicker.tsx`: calendar popup uses `createPortal` to `document.body`.
 - Enable `popupPortal` (default `true`) so the popup escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels).
 - Add `e.stopPropagation()` on `mousedown`/`pointerdown` so selecting a date does not close the parent filter menu.
+
+**2026-10-05**
+
+**React library parity (`lib/react/ids/date-picker`)**
+- Portaled calendar popup isolates `mousedown` (`e.stopPropagation()`) so DataGrid filter menus stay open; `.fieldContainer` / `.positionWrapper` use `width: 100%`.

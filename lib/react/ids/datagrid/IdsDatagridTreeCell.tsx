@@ -5,7 +5,8 @@ import { IdsRadioButton, IdsRadioLabel } from "../radio-button";
 import styles from "./IdsDatagrid.module.css";
 import type { IdsDatagridTreeRowSelection } from "./IdsDatagridTree";
 
-const TREE_LEVEL_INDENT_PX = 16;
+/** Figma Cells `Type=Tree*`: chevron at x 16 / 40 / 64 … → 24px per level (the td supplies the first 16px). */
+const TREE_LEVEL_INDENT_PX = 24;
 
 export interface IdsDatagridTreeCellProps {
   rowId: string;
@@ -36,7 +37,7 @@ export function IdsDatagridTreeCell({
   onCheckboxChange,
   onControlClick,
 }: IdsDatagridTreeCellProps) {
-  const indentPx = 16 + level * TREE_LEVEL_INDENT_PX;
+  const indentPx = level * TREE_LEVEL_INDENT_PX;
 
   return (
     <div
@@ -76,6 +77,7 @@ export function IdsDatagridTreeCell({
           <IdsCheckbox
             id={`ids-dg-tree-${rowId}`}
             checked={isCheckboxChecked}
+            density="datagrid"
             onChange={(checked) => onCheckboxChange?.(checked)}
           >
             <IdsCheckboxLabel>
