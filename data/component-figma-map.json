@@ -312,8 +312,12 @@
   {
     "category": "Table and Data Grids",
     "component": "Datagrid",
-    "figmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=37721-112481&m=dev",
-    "nodeId": "37721-112481"
+    "designSpecPath": "components/ids/datagrid/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=48122-183847&m=dev",
+    "nodeId": "48122-183847",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "legacyFigmaUrl": "https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=37721-112481&m=dev",
+    "legacyNodeId": "37721-112481"
   },
   {
     "category": "Table and Data Grids",

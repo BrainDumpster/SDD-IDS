@@ -57,9 +57,10 @@ export function IdsDataGridTypeDateFilterPanel({
         const checked = state.mode === mode;
         const inputId = `${slug}-mode-${mode}`;
         const isHovered = hoverMode === mode;
-        const showSummary = (checked || isHovered) && modeShowsSummary(mode);
+        const canShowSummary = modeShowsSummary(mode);
         const summaryState: IdsDataGridDateFilterState = checked ? state : { ...state, mode };
-        const summary = showSummary ? formatIdsDataGridDateFilterSummary(summaryState) : null;
+        const summary = canShowSummary ? formatIdsDataGridDateFilterSummary(summaryState) : null;
+        const summaryVisible = (checked || isHovered) && summary != null;
         const showSpecific = checked && mode === "specific-date";
         const showCustom = checked && mode === "custom-range";
 
@@ -95,8 +96,12 @@ export function IdsDataGridTypeDateFilterPanel({
                   {IDS_DATAGRID_DATE_MODE_LABELS[mode]}
                 </span>
               </label>
-              {summary && (
-                <span className={styles.summary} aria-hidden>
+              {summary != null && (
+                <span
+                  className={styles.summary}
+                  aria-hidden
+                  style={{ visibility: summaryVisible ? "visible" : "hidden" }}
+                >
                   {summary}
                 </span>
               )}

@@ -1,9 +1,11 @@
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type ComponentProps,
+  type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
@@ -108,6 +110,34 @@ function usePortaledMenuPosition(
   return pos;
 }
 
+const DROPDOWN_OPTION_HEIGHT = 40;
+
+function useViewportDropdownPlacement<T extends HTMLElement>(
+  triggerRef: RefObject<T | null>,
+  isOpen: boolean,
+  itemCount: number,
+): "below" | "above" {
+  const [placement, setPlacement] = useState<"below" | "above">("below");
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined" || !isOpen) {
+      setPlacement("below");
+      return;
+    }
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const menuHeight = itemCount * DROPDOWN_OPTION_HEIGHT + 2;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    setPlacement(
+      spaceBelow < menuHeight && spaceAbove >= menuHeight ? "above" : "below",
+    );
+  }, [isOpen, itemCount, triggerRef]);
+
+  return placement;
+}
+
 export function IdsPagination({
   currentPage,
   totalPages,
@@ -155,18 +185,32 @@ export function IdsPagination({
   );
   const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
   const [pageOffsetMenuOpen, setPageOffsetMenuOpen] = useState(false);
+  const perPagePlacement = useViewportDropdownPlacement(
+    perPageTriggerRef,
+    perPageMenuOpen,
+    safePageSizeOptions.length,
+  );
+  const pageOffsetPlacement = useViewportDropdownPlacement(
+    pageOffsetRef,
+    pageOffsetMenuOpen,
+    offsetOptions.length,
+  );
   const resolvedPerPageDropdownState =
     dropdownState !== "collapsed"
       ? dropdownState
       : perPageMenuOpen
-        ? "expanded-below"
+        ? perPagePlacement === "above"
+          ? "expanded-above"
+          : "expanded-below"
         : "collapsed";
   const safeCurrentPage = onPageChange ? controlledCurrentPage : internalPage;
   const resolvedPageOffsetDropdownState =
     pageOffsetDropdownState !== "collapsed"
       ? pageOffsetDropdownState
       : pageOffsetMenuOpen
-        ? "expanded-below"
+        ? pageOffsetPlacement === "above"
+          ? "expanded-above"
+          : "expanded-below"
         : "collapsed";
   const perPageMenuPos = usePortaledMenuPosition(
     resolvedPerPageDropdownState !== "collapsed",

@@ -66,7 +66,7 @@ export function matchesIdsDatagridNumericFilter(
   cellValue: unknown,
   state: IdsDatagridNumericFilterState,
 ): boolean {
-  if (state.operator === "all") return true;
+  if (!isIdsDatagridNumericFilterActive(state)) return true;
 
   const cell = parseCellNumber(cellValue);
   if (cell === null) return false;
