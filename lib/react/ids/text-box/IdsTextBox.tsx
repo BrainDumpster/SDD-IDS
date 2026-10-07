@@ -16,12 +16,11 @@
 import React, {
   Children,
   isValidElement,
-  useEffect,
   useId,
-  useState,
   type ChangeEvent,
   type FocusEvent,
   type InputHTMLAttributes,
+  type PointerEvent,
   type ReactElement,
   type ReactNode,
   type TextareaHTMLAttributes,
@@ -32,37 +31,21 @@ import { IdsIcon } from "../icon";
 import styles from "./IdsTextBox.module.css";
 import { IDS_ICON_URL_BY_SHAPE } from "../shared/idsAssetRegistry.generated";
 
-/**
- * How the user last interacted with the page, used to tell a click apart from a
- * Tab when a field takes focus.
- *
- * Tracked on the document rather than on the control, because focus can reach
- * the field without a `pointerdown` ever landing on it — clicking the label, or
- * code calling `focus()` — and a `pointerdown` can land on the control without
- * moving focus at all, by hitting its padding. A per-control flag gets both of
- * those wrong: the label click reads as a Tab, and the stray padding click
- * leaves the flag set so the NEXT Tab reads as a click.
- */
-let lastInputModality: "pointer" | "keyboard" = "keyboard";
-let modalityTracked = false;
+type TextField = HTMLInputElement | HTMLTextAreaElement;
 
-function trackInputModality() {
-  if (modalityTracked || typeof document === "undefined") return;
-  modalityTracked = true;
-  document.addEventListener(
-    "pointerdown",
-    () => {
-      lastInputModality = "pointer";
-    },
-    true,
-  );
-  document.addEventListener(
-    "keydown",
-    () => {
-      lastInputModality = "keyboard";
-    },
-    true,
-  );
+/** `selectTextOnFocus`: select the whole value, or put the caret at the end. */
+function applyFocusSelection(field: TextField, selectAll: boolean) {
+  // A fast Tab or click can move focus on before this runs; leave that field alone.
+  if (document.activeElement !== field) return;
+  if (selectAll) {
+    field.select();
+    return;
+  }
+  // `email`, `number` and similar types have no caret API and throw on
+  // `setSelectionRange`; they keep the browser's own behaviour.
+  if (field.selectionStart === null) return;
+  const end = field.value.length;
+  field.setSelectionRange(end, end);
 }
 
 export type IdsTextBoxComponentType = "text-input" | "text-area";
@@ -126,18 +109,19 @@ export interface IdsTextBoxProps {
   rows?: number;
   inputType?: string;
   /**
-   * Figma: "Select text when in focus". Keyboard focus only (`Tab` /
-   * `Shift+Tab`), same for text input and text area.
+   * Figma: "Select text when in focus". Applies however the field takes focus —
+   * a click (Selected) or `Tab` / `Shift+Tab` — on text input and text area alike.
    *
    * - `true` (default): selects the whole value so typing replaces it — simple
    *   values that are usually re-entered (name, location).
    * - `false`: puts the caret at the end — values that are usually edited in
    *   part, where replacing them by accident loses data (IP address, path).
+   * - `null`: leaves the caret to the browser. The option is for Text Box /
+   *   Text Area only; components that embed the field (Pagination, Slider) pass it.
    *
-   * A previous selection is never restored. Pointer focus is untouched — a
-   * click always places the caret where the user clicked.
+   * A previous selection is never restored.
    */
-  selectOnFocus?: boolean;
+  selectTextOnFocus?: boolean | null;
   ariaLabel?: string;
   ariaDescribedBy?: string;
   onValueChange?: (value: string) => void;
@@ -218,25 +202,13 @@ export function IdsTextBox({
   name,
   rows = 4,
   inputType = "text",
-  selectOnFocus = true,
+  selectTextOnFocus = true,
   ariaLabel,
   ariaDescribedBy,
   onValueChange,
   className,
 }: IdsTextBoxProps) {
   const reactId = useId();
-  /**
-   * Focus modality.
-   *
-   * `:focus-visible` cannot separate pointer focus from keyboard focus on a text
-   * field: per the CSS spec a focused `input` / `textarea` ALWAYS matches
-   * `:focus-visible`, because it accepts keyboard input. That makes the
-   * design-spec's pointer-focus rule (`:focus:not(:focus-visible)` -> selected
-   * border, no ring) unreachable, so clicking the field wrongly showed the
-   * keyboard ring. Track the modality ourselves and expose it on the control.
-   */
-  useEffect(trackInputModality, []);
-  const [focusModality, setFocusModality] = useState<"pointer" | "keyboard" | null>(null);
   const inputId = id ?? `ids-text-box-${reactId}`;
   const messageId = `${inputId}-message`;
 
@@ -278,6 +250,17 @@ export function IdsTextBox({
     onValueChange?.(event.target.value);
   };
 
+  const placeFocusSelection = (field: TextField) => {
+    const selectAll = selectTextOnFocus;
+    if (selectAll == null) return;
+    const apply = () => applyFocusSelection(field, selectAll);
+    // Browsers select the whole value when you Tab into a field, and some do it
+    // after this handler runs. Apply it now so there is no flash of highlighted
+    // text, then again on the next frame so the result sticks either way.
+    apply();
+    requestAnimationFrame(apply);
+  };
+
   const projectedMessage =
     message != null
       ? React.cloneElement(message as ReactElement<{ id?: string; disabled?: boolean }>, {
@@ -299,33 +282,16 @@ export function IdsTextBox({
     // Spec: aria-label is fallback when no visible label; placeholder is never the label
     "aria-label": shouldRenderLabel ? undefined : ariaLabel,
     onChange: handleChange,
-    onFocus: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const byPointer = lastInputModality === "pointer";
-      setFocusModality(byPointer ? "pointer" : "keyboard");
-      // A click already placed the caret where the user aimed — leave it alone.
-      if (byPointer) return;
+    onPointerDown: (event: PointerEvent<TextField>) => {
       const field = event.currentTarget;
-      const applySelection = () => {
-        // A fast Tab can move on before the next frame; leave that field alone.
-        if (document.activeElement !== field) return;
-        if (selectOnFocus) {
-          field.select();
-          return;
-        }
-        // `email`, `number` and similar types have no caret API and throw on
-        // `setSelectionRange`; they keep the browser's own Tab behaviour.
-        if (field.selectionStart === null) return;
-        const end = field.value.length;
-        field.setSelectionRange(end, end);
-      };
-      // Browsers select the whole value when you Tab into a field, and some do it
-      // after this handler runs. Apply it now so there is no flash of highlighted
-      // text, then again on the next frame so the result sticks either way.
-      applySelection();
-      requestAnimationFrame(applySelection);
+      // Already focused: no focus event follows, the click just moves the caret.
+      if (selectTextOnFocus == null || document.activeElement === field) return;
+      // A click focuses on press, then the browser drops the caret under the
+      // pointer on release, wiping what onFocus applied. Apply it again after.
+      document.addEventListener("pointerup", () => placeFocusSelection(field), { once: true });
     },
-    onBlur: () => {
-      setFocusModality(null);
+    onFocus: (event: FocusEvent<TextField>) => {
+      placeFocusSelection(event.currentTarget);
     },
   };
 
@@ -340,15 +306,6 @@ export function IdsTextBox({
         className={cx(styles["ids-text-box-control"], sizeClass)}
         data-ids="ids-text-box-control"
         data-state={visualState !== "default" ? visualState : undefined}
-        data-focus-modality={focusModality ?? undefined}
-        onPointerDown={(event) => {
-          // Clicking a field that is ALREADY focused fires no focus event, so the
-          // modality set when it was tabbed into would stick and keep the keyboard
-          // ring on a field the user is now pointing at.
-          if (event.currentTarget.contains(document.activeElement)) {
-            setFocusModality("pointer");
-          }
-        }}
       >
         {useTextArea ? (
           <textarea

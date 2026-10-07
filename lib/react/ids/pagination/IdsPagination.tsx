@@ -462,6 +462,7 @@ export function IdsPagination({
                   value={pageInputValue}
                   showIcon={false}
                   disabled={disabled}
+                  selectTextOnFocus={null}
                   onValueChange={(value) =>
                     setPageInputValue(value.replace(/[^\d]/g, ""))
                   }

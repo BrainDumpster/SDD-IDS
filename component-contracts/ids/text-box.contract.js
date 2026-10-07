@@ -29,7 +29,7 @@ export const TEXT_BOX_SPEC_ACCURATE_DEFAULTS = {
     invalid: false,
     rows: 4,
     inputType: "text",
-    selectOnFocus: true,
+    selectTextOnFocus: true,
 };
 /** @deprecated Use `TEXT_BOX_SPEC_ACCURATE_DEFAULTS` */
 export const IDS_TEXT_BOX_DEFAULTS = TEXT_BOX_SPEC_ACCURATE_DEFAULTS;

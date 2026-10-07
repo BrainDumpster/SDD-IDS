@@ -537,6 +537,7 @@ export function IdsSlider({
                 size="small"
                 showLabel={false}
                 showIcon={false}
+                selectTextOnFocus={null}
                 inputType="number"
                 value={String(currentValues[0])}
                 disabled={disabled}
@@ -562,6 +563,7 @@ export function IdsSlider({
                     size="small"
                     showLabel={false}
                     showIcon={false}
+                    selectTextOnFocus={null}
                     inputType="number"
                     value={String(currentValues[1])}
                     disabled={disabled}

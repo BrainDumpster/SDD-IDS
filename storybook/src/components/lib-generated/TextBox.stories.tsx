@@ -75,7 +75,7 @@ const meta: Meta<IdsTextBoxProps> = {
     iconName: "mail",
     disabled: false,
     invalid: false,
-    selectOnFocus: true,
+    selectTextOnFocus: true,
   },
   argTypes: {
     componentType: { control: "select", options: ["text-input", "text-area"] },
@@ -89,7 +89,7 @@ const meta: Meta<IdsTextBoxProps> = {
     showLabel: { control: "boolean" },
     required: { control: "boolean" },
     showIcon: { control: "boolean" },
-    selectOnFocus: { control: "boolean" },
+    selectTextOnFocus: { control: "boolean" },
     onValueChange: { action: "onValueChange" },
   },
 };
@@ -232,8 +232,7 @@ export const FocusVisibleAndPointerFocus: Story = {
           color: "var(--color-text-gray-neutral)",
         }}
       >
-        Click: brand border only. Tab: brand border plus the outer focus ring. Same for the text
-        area.
+        Click or Tab: the Selected style, brand border with no outer ring. Same for the text area.
       </p>
       <Box value="Focus behavior demo" helper="Helper text" />
       <Box componentType="text-area" value="Focus behavior demo" helper="Helper text" />
@@ -243,15 +242,15 @@ export const FocusVisibleAndPointerFocus: Story = {
 
 export const SelectTextOnFocus: Story = {
   name: "Select Text On Focus",
-  args: { selectOnFocus: true },
+  args: { selectTextOnFocus: true },
   parameters: {
-    controls: { include: ["selectOnFocus"] },
+    controls: { include: ["selectTextOnFocus"] },
     docs: {
       description: {
         story:
-          "Switch `selectOnFocus` in Controls, then Tab through the fields. `true` (default): the whole " +
-          "value is selected, typing replaces it. `false`: the caret goes to the end. A click keeps its " +
-          "own caret, and no field remembers an earlier selection.",
+          "Switch `selectTextOnFocus` in Controls, then click or Tab into the fields. `true` " +
+          "(default): the whole value is selected, typing replaces it. `false`: the caret goes to the " +
+          "end. No field remembers an earlier selection.",
       },
     },
   },
@@ -261,14 +260,14 @@ export const SelectTextOnFocus: Story = {
         label="Location:"
         defaultValue="Boston"
         showIcon={false}
-        selectOnFocus={args.selectOnFocus}
+        selectTextOnFocus={args.selectTextOnFocus}
       />
       <Box
         label="Note:"
         componentType="text-area"
         defaultValue="Rack 4, shelf 2. Replace the fan module before the next firmware update."
         showIcon={false}
-        selectOnFocus={args.selectOnFocus}
+        selectTextOnFocus={args.selectTextOnFocus}
       />
     </div>
   ),
