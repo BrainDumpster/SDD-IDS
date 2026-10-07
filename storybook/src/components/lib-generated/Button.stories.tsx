@@ -142,29 +142,6 @@ export const WithProjectedIcon: Story = {
   ),
 };
 
-export const IconOnly: Story = {
-  name: "Icon Only",
-  render: () => (
-    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-      <IdsButton variant="primary" iconOnly ariaLabel="Settings" size="medium">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape={DEMO_ICON} size={16} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
-      <IdsButton variant="secondary" iconOnly ariaLabel="Settings" size="large">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape={DEMO_ICON} size={16} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
-      <IdsButton variant="tertiary" iconOnly ariaLabel="Settings" size="large">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape={DEMO_ICON} size={16} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
-    </div>
-  ),
-};
-
 export const Disabled: Story = {
   name: "Disabled",
   render: () => (
@@ -175,15 +152,6 @@ export const Disabled: Story = {
       <Btn variant="destructive" label="Destructive" disabled />
       <Btn variant="primary" label="Settings" icon disabled />
     </div>
-  ),
-};
-
-export const Loading: Story = {
-  name: "Loading",
-  render: () => (
-    <IdsButton variant="primary" loading>
-      <IdsButtonLabel>Saving</IdsButtonLabel>
-    </IdsButton>
   ),
 };
 
@@ -237,34 +205,6 @@ export const AllTypesIconWithText: Story = {
               label="Button"
               icon
             />
-          ))}
-        </div>
-      ))}
-    </div>
-  ),
-};
-
-export const AllTypesIconOnly: Story = {
-  name: "All Types Icon Only",
-  render: () => (
-    <div style={{ display: "grid", gap: 16 }}>
-      {(["primary", "secondary", "tertiary"] as const).map((variant) => (
-        <div
-          key={variant}
-          style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
-        >
-          {(["medium", "large"] as const).map((size) => (
-            <IdsButton
-              key={`${variant}-${size}`}
-              variant={variant}
-              size={size}
-              iconOnly
-              ariaLabel={`${variant} ${size}`}
-            >
-              <IdsButtonLeadingIcon>
-                <IdsIcon shape={DEMO_ICON} size={16} />
-              </IdsButtonLeadingIcon>
-            </IdsButton>
           ))}
         </div>
       ))}
