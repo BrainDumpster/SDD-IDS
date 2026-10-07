@@ -51,25 +51,11 @@
   border-color: var(--color-border-brand-base);
 }
 
-/* Any focus (click or Tab): the control takes the Selected brand border.
-   `data-focus-modality` is only present while focused. Same rules for text input
-   and text area. */
+/* Focus looks the same as Selected — brand border, no outer ring — whether the
+   field was clicked or reached with Tab. Same for text input and text area. */
 .ids-text-box__control[data-state="focus"],
-.ids-text-box__control[data-focus-modality]:not([data-state="disabled"]):not([data-state="error"]) {
+.ids-text-box__control:focus-within:not([data-state="disabled"]):not([data-state="error"]) {
   border-color: var(--color-border-brand-base);
-}
-
-/* Keyboard focus: brand border + outer focus ring. A click never draws the ring. */
-.ids-text-box__control[data-state="focus"]::after,
-.ids-text-box__control[data-focus-modality="keyboard"]:not([data-state="disabled"]):not(
-    [data-state="error"]
-  )::after {
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--text-box-focus-ring-radius);
-  content: "";
-  inset: -5px;
-  pointer-events: none;
-  position: absolute;
 }
 
 .ids-text-box__control[data-state="disabled"] {

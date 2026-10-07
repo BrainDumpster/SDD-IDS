@@ -5,8 +5,6 @@
     [class.ids-text-box__control--small]="!isTextArea && size === 'small'"
     [class.ids-text-box__control--text-area]="isTextArea"
     [attr.data-state]="visualState"
-    [attr.data-focus-modality]="focusModality"
-    (pointerdown)="onPointerDown($event)"
   >
     @if (isTextArea) {
       <textarea
@@ -20,8 +18,8 @@
         [attr.aria-label]="ariaLabel || null"
         [attr.aria-invalid]="computedInvalid ? 'true' : 'false'"
         [attr.aria-describedby]="describedBy || null"
+        (pointerdown)="onPointerDown($event)"
         (focus)="onFocus($event)"
-        (blur)="onBlur()"
         (input)="onInput($event)"
       ></textarea>
     } @else {
@@ -36,8 +34,8 @@
         [attr.aria-label]="ariaLabel || null"
         [attr.aria-invalid]="computedInvalid ? 'true' : 'false'"
         [attr.aria-describedby]="describedBy || null"
+        (pointerdown)="onPointerDown($event)"
         (focus)="onFocus($event)"
-        (blur)="onBlur()"
         (input)="onInput($event)"
       />
     }
