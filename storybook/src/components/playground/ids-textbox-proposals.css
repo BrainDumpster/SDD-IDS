@@ -96,20 +96,6 @@
   gap: var(--spacing-space-24);
 }
 
-/* Figma note: "Change the style of Focus state to be the same as Selected state."
-   Scoped to this demo — the proposal changes the style outright rather than adding
-   a component option, so nothing in lib/ carries it. The module rule has two :not()
-   guards; match them or this loses on specificity. */
-.tbp-as-selected
-  [data-ids="ids-text-box-control"][data-focus-modality="keyboard"]:not([data-state="disabled"]):not([data-state="error"]) {
-  border-color: var(--color-border-brand-base);
-}
-
-.tbp-as-selected
-  [data-ids="ids-text-box-control"][data-focus-modality="keyboard"]:not([data-state="disabled"]):not([data-state="error"])::after {
-  content: none;
-}
-
 .tbp-list {
   margin: 0;
   padding-left: var(--spacing-space-20);

@@ -1,16 +1,12 @@
 /**
  * Storybook: the two Text Box / Text Area proposals from the Figma Documentation
- * page (`Storybook-Test`, node `6024-48349`), demoed against the real IDS
- * components so they can be tried in the Friday review.
+ * page (`Storybook-Test`, node `6024-48349`), as decided in the design review and
+ * shipped in `lib/react/ids/text-box`.
  *
- *   1. "Select Text when field is in focus" — a per-field option: Tab either
- *      highlights the whole value or puts the caret at the end.
- *   2. "Change the style of Focus state to be the same as Selected state" — drop
- *      the outer focus ring so Tab looks like a click.
- *
- * Proposal 1 ships as a real prop (`selectOnFocus`) because the note asks for an
- * option. Proposal 2 is a story-scoped CSS override, because the note asks to
- * change the style outright — nothing in `lib/` carries it yet.
+ *   1. "Change the style of Focus state to be the same as Selected state" —
+ *      adopted: click and Tab both give the brand border, with no outer ring.
+ *   2. "Select Text when field is in focus" — adopted as a per-field option,
+ *      `selectTextOnFocus`, applied the same way to a click and to Tab.
  *
  * Theme: components/ids-theme.css · Layout: ./ids-textbox-proposals.css
  */
@@ -26,12 +22,12 @@ const SAMPLE = "Sample Text";
 
 function Field({
   label,
-  selectOnFocus,
+  selectTextOnFocus,
   area,
   empty,
 }: {
   label: string;
-  selectOnFocus?: boolean;
+  selectTextOnFocus?: boolean;
   area?: boolean;
   empty?: boolean;
 }) {
@@ -40,7 +36,7 @@ function Field({
       label={label}
       size="small"
       showIcon={false}
-      selectOnFocus={selectOnFocus}
+      selectTextOnFocus={selectTextOnFocus}
       {...(area ? { componentType: "text-area" as const, rows: 3 } : {})}
       {...(empty ? { placeholder: "Placeholder Text" } : { defaultValue: SAMPLE })}
     />
@@ -54,8 +50,9 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "Both proposals only change fields that **already hold text**. A placeholder is not a " +
-          "value, so an empty field puts the caret at position 0 either way.",
+          "Both proposals were adopted in the design review. `selectTextOnFocus` only changes " +
+          "fields that **already hold text**: a placeholder is not a value, so an empty field puts " +
+          "the caret at position 0 either way.",
       },
     },
   },
@@ -64,16 +61,16 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-/** Proposal 1 — current focus ring vs the Selected style. */
+/** Proposal 1 — the focus state is the Selected state. */
 export const FocusStateCurrentVsProposed: Story = {
-  name: "1. Focus state: current vs proposed",
+  name: "1. Focus state: same as Selected",
   render: () => (
     <div className="tbp-page">
       <div>
-        <h1 className="tbp-title">Focus state: current vs proposed</h1>
+        <h1 className="tbp-title">Focus state: same as Selected</h1>
         <p className="tbp-lede">
-          Tab through the left column, then the right. A click behaves the same in both — it always
-          gives the brand border alone.
+          Click a field, then Tab through the rest. Both give the same look, on the text input and
+          the text area alike.
         </p>
         <p className="tbp-quote" style={{ marginTop: "var(--spacing-space-12)" }}>
           “When the user presses Tab, the text box is in Focus state but with the cursor blinking.
@@ -85,37 +82,17 @@ export const FocusStateCurrentVsProposed: Story = {
       <section className="tbp-section">
         <div className="tbp-grid">
           <div className="tbp-col">
-            <p className="tbp-col__title">Current</p>
+            <p className="tbp-col__title">Adopted</p>
             <ul className="tbp-list">
               <li>
-                Click in the field → the <strong>Selected</strong> style: brand border
-                (<code>--color-border-brand-base</code>), no ring.
-              </li>
-              <li>Clicking the label does the same — it is still a pointer.</li>
-              <li>
-                Tab in → <strong>a different look</strong>: the border stays neutral
-                (<code>--color-border-gray-neutral-base</code>) and a 1px brand ring is drawn
-                outside the control at <code>inset: −5px</code>.
+                Click, label click or Tab → the <strong>Selected</strong> style: brand border
+                (<code>--color-border-brand-base</code>), no outer ring.
               </li>
               <li>
-                Either way the caret blinks in the field. The note is about the ring, not the caret.
+                Before the review, Tab kept the neutral border and drew a 1px brand ring outside the
+                control, so a tabbed field looked different from a clicked one.
               </li>
-            </ul>
-            <Field label="Input:" empty />
-            <Field label="Area:" area empty />
-          </div>
-          <div className="tbp-col tbp-as-selected">
-            <p className="tbp-col__title">Proposed</p>
-            <ul className="tbp-list">
-              <li>
-                Tab in → the <strong>same Selected style as a click</strong>: brand border, no ring.
-              </li>
-              <li>Click and label click are untouched.</li>
-              <li>
-                So a field looks identical whether you clicked it or tabbed to it. The border still
-                changes on focus, so there is a visible focus indicator, but the ring is the only
-                thing today that tells the two apart.
-              </li>
+              <li>The caret blinks in a focused field either way; that is the browser’s caret.</li>
             </ul>
             <Field label="Input:" empty />
             <Field label="Area:" area empty />
@@ -126,7 +103,7 @@ export const FocusStateCurrentVsProposed: Story = {
   ),
 };
 
-/** Proposal 2 — caret at the end vs highlight the whole value. */
+/** Proposal 2 — highlight the whole value vs caret at the end. */
 export const SelectTextOnFocus: Story = {
   name: "2. Select Text when field is in focus",
   render: () => (
@@ -134,55 +111,52 @@ export const SelectTextOnFocus: Story = {
       <div>
         <h1 className="tbp-title">Select Text when field is in focus</h1>
         <p className="tbp-lede">
-          Tab through the fields below. The design spec has <strong>no rule</strong> for this case —
-          it only says keyboard operations “use native input semantics”, so the behaviour is
-          whatever the browser does, and every browser highlights the whole value when you Tab into
-          a field that already holds text. The proposal turns that into a choice, with the caret at
-          the end as the default.
+          Click or Tab into the fields below. <code>selectTextOnFocus</code> decides what happens to
+          a value that is already there, and a click behaves the same as Tab. The field never
+          brings back a selection made before it lost focus.
         </p>
       </div>
 
       <section className="tbp-section">
         <div className="tbp-section__head">
           <h2 className="tbp-h">Field that already holds text</h2>
-          <p className="tbp-note">This is the only case either proposal changes.</p>
+          <p className="tbp-note">This is the only case the option changes.</p>
         </div>
         <div className="tbp-grid">
           <div className="tbp-col">
-            <p className="tbp-col__title">Default — caret at the end</p>
+            <p className="tbp-col__title">Default — highlight the whole text</p>
             <ul className="tbp-list">
               <li>
-                Tab in → the caret sits <strong>after the last character</strong> and nothing is
-                highlighted, so typing <strong>adds to</strong> the value.
+                Click or Tab in → the <strong>whole value is highlighted</strong>, so typing{" "}
+                <strong>replaces</strong> it.
               </li>
-              <li>Click → caret where you clicked, as today.</li>
-              <li>Click the label → the caret stays where it already was.</li>
+              <li>For simple values that are usually re-entered — a name, a location.</li>
               <li>
-                Text Area behaves the same as the input. <code>selectOnFocus={"{false}"}</code> — the
-                default, and a <strong>change</strong> from what ships today.
+                <code>selectTextOnFocus</code> (default <code>true</code>). Text Area behaves the
+                same as the input.
               </li>
             </ul>
             <Field label="Input:" />
             <Field label="Area:" area />
           </div>
-          <div className="tbp-col tbp-as-selected">
-            <p className="tbp-col__title">Opt in — highlight the whole text</p>
+          <div className="tbp-col">
+            <p className="tbp-col__title">Opt out — caret at the end</p>
             <ul className="tbp-list">
               <li>
-                Tab in → the <strong>whole value is highlighted</strong>, so typing{" "}
-                <strong>replaces</strong> it. This is what ships today.
+                Click or Tab in → the caret sits <strong>after the last character</strong> and
+                nothing is highlighted, so typing <strong>adds to</strong> the value.
               </li>
               <li>
-                Click → still the caret where you clicked. The option only changes keyboard focus.
+                For important values that are usually edited in part — an IP address, a path — where
+                a stray keystroke must not wipe the value.
               </li>
-              <li>Text Area behaves the same as the input.</li>
               <li>
-                <code>selectOnFocus</code>, shown with the proposed focus style from story 1 so the
-                highlight is not competing with an outer ring.
+                <code>selectTextOnFocus={"{false}"}</code>. Clicking again inside the focused field
+                moves the caret as usual.
               </li>
             </ul>
-            <Field label="Input:" selectOnFocus />
-            <Field label="Area:" area selectOnFocus />
+            <Field label="Input:" selectTextOnFocus={false} />
+            <Field label="Area:" area selectTextOnFocus={false} />
           </div>
         </div>
       </section>
@@ -197,8 +171,8 @@ export const SelectTextOnFocus: Story = {
         </div>
         <div className="tbp-grid">
           <div className="tbp-col">
-            <Field label="Input:" empty selectOnFocus />
-            <Field label="Area:" area empty selectOnFocus />
+            <Field label="Input:" empty />
+            <Field label="Area:" area empty />
           </div>
         </div>
       </section>
@@ -206,20 +180,19 @@ export const SelectTextOnFocus: Story = {
   ),
 };
 
-/** Both proposals on one form, each behind a switch. */
+/** The option on one form, behind a switch. */
 export const TryBoth: Story = {
-  name: "3. Try both",
-  render: function TryBothStory() {
-    const [selectOnFocus, setSelectOnFocus] = useState(false);
-    const [asSelected, setAsSelected] = useState(false);
+  name: "3. Try it",
+  render: function TryItStory() {
+    const [selectTextOnFocus, setSelectTextOnFocus] = useState(true);
 
     return (
       <div className="tbp-page">
         <div>
-          <h1 className="tbp-title">Try both</h1>
+          <h1 className="tbp-title">Try it</h1>
           <p className="tbp-lede">
-            Flip either switch, then Tab through the form. The fields start with text, since that is
-            the case the proposals change.
+            Flip the switch, then click or Tab through the form. The fields start with text, since
+            that is the case the option changes.
           </p>
         </div>
 
@@ -228,21 +201,15 @@ export const TryBoth: Story = {
             <IdsToggleSwitch
               label="Select Text when field is in focus"
               aria-label="Select Text when field is in focus"
-              checked={selectOnFocus}
-              onCheckedChange={setSelectOnFocus}
-            />
-            <IdsToggleSwitch
-              label="Focus state same as Selected state"
-              aria-label="Focus state same as Selected state"
-              checked={asSelected}
-              onCheckedChange={setAsSelected}
+              checked={selectTextOnFocus}
+              onCheckedChange={setSelectTextOnFocus}
             />
           </div>
 
-          <div className={asSelected ? "tbp-col tbp-as-selected" : "tbp-col"}>
-            <Field label="Site:" selectOnFocus={selectOnFocus} />
-            <Field label="Username:" selectOnFocus={selectOnFocus} />
-            <Field label="Note:" area selectOnFocus={selectOnFocus} />
+          <div className="tbp-col">
+            <Field label="Site:" selectTextOnFocus={selectTextOnFocus} />
+            <Field label="Username:" selectTextOnFocus={selectTextOnFocus} />
+            <Field label="Note:" area selectTextOnFocus={selectTextOnFocus} />
           </div>
         </section>
       </div>
