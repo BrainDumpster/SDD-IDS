@@ -78,6 +78,7 @@ export interface IdsAccordionProps {
   chevronPosition?: "left" | "right";
   variant?: "default" | "form";
   className?: string;
+  maxWidth?: number | string;
 }
 
 type ChevronPosition = "left" | "right";
@@ -214,7 +215,14 @@ export function IdsAccordion({
   chevronPosition: chevronPositionProp,
   variant: variantProp,
   className,
+  maxWidth,
 }: IdsAccordionProps) {
+  const maxWidthValue =
+    maxWidth !== undefined
+      ? typeof maxWidth === "number"
+        ? `${maxWidth}px`
+        : maxWidth
+      : undefined;
   if (items) {
     assertUniqueValues(items);
   }
@@ -359,6 +367,7 @@ export function IdsAccordion({
         className={cx(s.accordion, variant === "form" && s.accordionForm, className)}
         data-ids="ids-accordion"
         data-variant={variant}
+        style={maxWidthValue !== undefined ? { maxWidth: maxWidthValue } : undefined}
       >
         {composedChildren}
       </div>

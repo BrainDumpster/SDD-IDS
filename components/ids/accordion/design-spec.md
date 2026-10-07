@@ -26,6 +26,7 @@ Optional child sub-slots:
 - `AccordionMetaSlot` (optional helper text/metadata)
 ## Layout & Measurements
 - Root width is container-driven (`width: 100%`).
+- Root `max-width` is `1594px` by default and may be overridden via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
 - Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
@@ -127,6 +128,7 @@ Main inputs:
 - `multiple?: boolean` (default `false`)
 - `defaultValue?: string[]`
 - `chevronPosition?: "left" | "right"` (default `"left"`)
+- `maxWidth?: number | string` (default `1594px`; numbers are treated as px, strings as any CSS length)
 
 Per-item inputs:
 - `value: string` (required stable ID)

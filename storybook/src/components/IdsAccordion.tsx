@@ -11,12 +11,20 @@ export function IdsAccordion({
   defaultValue,
   variant = "default",
   chevronPosition = "left",
+  maxWidth,
 }: IdsAccordionProps) {
+  const maxWidthValue =
+    maxWidth !== undefined
+      ? typeof maxWidth === "number"
+        ? `${maxWidth}px`
+        : maxWidth
+      : undefined;
   return (
     <BaseAccordion.Root
       className={[styles.root, variant === "form" ? styles.rootForm : ""].filter(Boolean).join(" ")}
       multiple={multiple}
       defaultValue={defaultValue}
+      style={maxWidthValue !== undefined ? { maxWidth: maxWidthValue } : undefined}
     >
       {items.map((item, index) => (
         <BaseAccordion.Item
