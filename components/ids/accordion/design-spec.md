@@ -172,7 +172,7 @@ Behavior contract:
 Accessibility contract:
 - The header/trigger surface carries `aria-expanded` and `aria-controls` on the actual focusable control (if the header wraps an inner `button`, those attributes live on that element).
 - Panel carries `role="region"` and `aria-labelledby`.
-- Keyboard support: `Enter`, `Space`, `ArrowUp`, `ArrowDown`, `Home`, `End`.
+- Keyboard support: `Enter`, `Space`, `Home`, `End`. (Arrow keys no longer move focus between accordion triggers.)
 
 Fallback/error rules:
 - Unknown `chevronPosition` -> fallback to `"left"`.

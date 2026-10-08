@@ -452,14 +452,6 @@ export function IdsAccordionHeader({ children, className, title }: IdsAccordionH
 
   const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        root.moveFocus(item.value, 1);
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        root.moveFocus(item.value, -1);
-        break;
       case "Home":
         event.preventDefault();
         root.focusFirst();
