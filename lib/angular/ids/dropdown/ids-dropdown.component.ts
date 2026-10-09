@@ -49,6 +49,11 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
   @Input() showRadio?: boolean | null;
   @Input() value?: string;
   @Input() values: string[] = [];
+  /**
+   * Single-select initial value when `value` is unset. With radio options it is
+   * also the value Reset to Default (the radio replacement for Clear All)
+   * restores, so pass it alongside a bound `value` too.
+   */
   @Input() defaultValue?: string;
   @Input() defaultValues: string[] = [];
 
@@ -134,6 +139,22 @@ export class IdsDropdownComponent implements IdsDropdownContext, OnChanges, Afte
     this.selectedValues = next;
     if (this.menu) {
       this.menu.selectedValues = [...next];
+      this.menu.syncTriggerShellFilled();
+    }
+    this.cdr.markForCheck();
+  }
+
+  /** Single-select radio mode: Reset to Default restores `defaultValue` (or no selection). */
+  resetToDefault(): void {
+    if (this.disabled || this.selectionMode !== "single") {
+      return;
+    }
+    const next = this.defaultValue ?? "";
+    this.valueChange.emit(next);
+    this.selectionChange.emit(next);
+    this.selectedValues = next ? [next] : [];
+    if (this.menu) {
+      this.menu.selectedValues = [...this.selectedValues];
       this.menu.syncTriggerShellFilled();
     }
     this.cdr.markForCheck();

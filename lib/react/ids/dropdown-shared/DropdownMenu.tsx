@@ -81,8 +81,16 @@ interface DropdownMenuProps {
   showSelectAllClearAll?: boolean;
   /** Single-select only: shows a top "Clear All" row (footer-action visual with
    *  a bottom border) whenever a value is selected. Clicking fires
-   *  `onClearAllClick`; once the selection is cleared the row disappears. */
+   *  `onClearAllClick`; once the selection is cleared the row disappears.
+   *  With `showSingleSelectRadio` the row becomes "Reset to Default" instead: a
+   *  radio group always keeps a value, so the consumer restores its default
+   *  option in `onClearAllClick`, and the row shows while `isDefaultValue` is false. */
   showClearAll?: boolean;
+  /** Single-select radio mode: label of the row that replaces Clear All. */
+  resetToDefaultLabel?: string;
+  /** Single-select radio mode: the current value already is the default, so the
+   *  Reset to Default row is hidden. */
+  isDefaultValue?: boolean;
   /** Single-select Clear All row alignment. Default `"left"`; `"right"` pushes
    *  the Clear All control to the right edge of the row. */
   clearAllAlign?: "left" | "right";
@@ -171,6 +179,8 @@ export function DropdownMenu({
   showSelectedFirst = false,
   selectAllLabel = "Select All",
   clearAllLabel = "Clear All",
+  resetToDefaultLabel = "Reset to Default",
+  isDefaultValue = false,
   selectAllChecked = false,
   selectAllIndeterminate = false,
   onSelectAllClick,
@@ -323,14 +333,16 @@ export function DropdownMenu({
   // only keep it when at least 2 options match the query.
   const showSelectAllRow = showSelectAllClearAll && (!hasSearchQuery || optionRowCount >= 2);
 
-  // Single-select Clear All row: visible whenever a value is selected.
   // Single-select Clear All row: visible whenever a value is selected, but hidden
   // while a search query is active (same as the multi-select Select All / Clear All
   // row, which also hides during search). Commit 83f9d224.
+  // With radio options it is a Reset to Default row, visible while the value
+  // differs from the default.
+  const singleRowResetsToDefault = selectionMode === "single" && showSingleSelectRadio;
   const showSingleClearAllRow =
     selectionMode === "single" &&
     showClearAll &&
-    selectedValues.length > 0 &&
+    (singleRowResetsToDefault ? !isDefaultValue : selectedValues.length > 0) &&
     !hasSearchQuery;
 
   // Values of the options currently visible (respecting the search filter).
@@ -864,8 +876,8 @@ export function DropdownMenu({
                 </button>
               </div>
             ) : null}
-            {/* Single-select Clear All — below the search row, like the
-               multi-select Select All / Clear All row. */}
+            {/* Single-select Clear All (Reset to Default with radio options) —
+               below the search row, like the multi-select Select All / Clear All row. */}
             {showSingleClearAllRow ? (
               <button
                 type="button"
@@ -873,11 +885,18 @@ export function DropdownMenu({
                 data-align={clearAllAlign}
                 data-focus-section="singleClearAll"
                 onClick={(event) => {
+                  // The row hides once there is nothing left to clear or reset,
+                  // which would drop focus to <body>. Park it on the popup, then
+                  // move it onto the option that is selected after the change.
+                  getPopupElement()?.focus();
                   onClearAllClick?.();
                   scrollOptionsToTop(event);
+                  requestAnimationFrame(focusSelectedOption);
                 }}
               >
-                <span className={styles.footerActionButton}>{clearAllLabel}</span>
+                <span className={styles.footerActionButton}>
+                  {singleRowResetsToDefault ? resetToDefaultLabel : clearAllLabel}
+                </span>
               </button>
             ) : null}
             {showSelectedFirst ? null : showSelectedPanelNode}

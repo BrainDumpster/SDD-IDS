@@ -94,8 +94,10 @@
       }
 
       @if (showSingleClearAllRow) {
-        <button type="button" class="clearAllAction" (click)="onClearAll()">
-          <span class="footerActionButton">{{ clearAllLabel }}</span>
+        <button type="button" class="clearAllAction" (click)="onSingleClearAll($event)">
+          <span class="footerActionButton">{{
+            singleRowResetsToDefault ? resetToDefaultLabel : clearAllLabel
+          }}</span>
         </button>
       }
 

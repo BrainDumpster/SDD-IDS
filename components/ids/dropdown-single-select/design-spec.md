@@ -149,7 +149,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - selecting a new option replaces previous selection.
   - selecting (click or `Enter`) closes the menu and returns focus to the trigger.
 - Keyboard (design review 2026-10, Windows-style):
-  - `ArrowUp`/`ArrowDown` move focus through the menu and **wrap**: `ArrowDown` on the last item goes to the first, `ArrowUp` on the first goes to the last. The cycle covers every control in the menu in DOM order: search field (`searchable`), Clear All (`showClearAll`), enabled option rows, action row. Disabled options are skipped.
+  - `ArrowUp`/`ArrowDown` move focus through the menu and **wrap**: `ArrowDown` on the last item goes to the first, `ArrowUp` on the first goes to the last. The cycle covers every control in the menu in DOM order: search field (`searchable`), Clear All / Reset to Default (`showClearAll`), enabled option rows, action row. Disabled options are skipped.
   - focus is separate from selection: moving focus never changes the value. The selected option keeps its selected state, and when it also has focus it shows **selected + focus-visible** (selected fill/text plus the focus ring).
   - `Enter` (or `Space`) on the focused option selects it and closes the menu.
   - `Tab`/`Shift+Tab` while the menu is open close it, **keep the previously selected value** (e.g. stays `100%` even with focus on `125%`) and move focus to the next/previous component on the page. `Tab` never walks the option rows (lists can be 20+ items). Exception: in the search field, `Tab` first accepts a pending inline suggestion.
@@ -166,6 +166,8 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding-2 / padding-16`, `radius-2`) but with a **bottom** border since it sits at the top of the list.
   - the Clear All row is **hidden while a search query is active**, and reappears when the search is cleared.
   - clicking clears the selection; the row then auto-hides. It does **not** collapse the menu.
+  - after the click, focus moves onto the option that is now selected (the first enabled option when none is), so the keyboard user stays in the menu instead of losing focus with the hidden row.
+  - **With radio options (`showRadio`) the row becomes "Reset to Default"** (design review 2026-10). A radio group always keeps a value, so emptying it is not offered. Instead the row restores the default option (`defaultValue`; no selection when none is set). Same position and visual as Clear All. It shows while the value **differs from the default**, hides once reset, and is hidden while a search query is active. It does **not** collapse the menu.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -177,10 +179,11 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | `disabled` | No | `boolean` | Blocks interactions. |
 | `searchable` | No | `boolean` | Enables search row. |
 | `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default) = trigger width; `"content"` = grow to widest option, clamped `[trigger, 700px]`. |
-| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. |
+| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. With `showRadio` the row is "Reset to Default" instead: shown while the value differs from `defaultValue`, restores it on click. |
 | `showRadio` | No | `boolean` | Optional radio visual in option rows. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option list. |
 | `value` | No | `string` | Controlled selected value. |
+| `defaultValue` | No | `string` | Initial value when uncontrolled. With `showRadio`, also the value Reset to Default restores, so pass it alongside a controlled `value` too. |
 | `onChange` | No | `(value: string \| optionObject) => void` | Selection event payload strategy is app-defined. |
 | `actionLabel` | No | `string` | Optional action row label. |
 | `onAction` | No | `() => void` | Optional action row event. |
@@ -273,7 +276,11 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-10-05.
+> Last updated: 2026-10-09.
+
+### 2026-10-09
+- **Reset to Default replaces Clear All with radio options** (design review). React `DropdownMenu.tsx`: when `showSingleSelectRadio` is on, the `showClearAll` row renders `resetToDefaultLabel` (default `"Reset to Default"`). It is visible while `isDefaultValue` is false, and its click still fires `onClearAllClick`. `IdsDropdownSingleSelect` passes `isDefaultValue={selectedId === defaultValue}` and resets to `defaultValue` (or `""`) instead of clearing. Angular: `ids-dropdown-menu` shows the row while the selection differs from the root's `defaultValue`. Its click calls `IdsDropdownComponent.resetToDefault()`, which emits `valueChange`/`selectionChange` with `defaultValue`, and emits the new `resetToDefaultClick` output instead of `clearAllClick`. `resetToDefaultLabel` is an input. Storybook radio examples (React Compositional Options / Main Scenarios "Small menu", Angular Composition API) now pass `defaultValue`.
+- **Focus after Clear All / Reset to Default**: the row hides itself on click, which used to drop focus to `<body>` with the menu still open. React parks focus on the popup (`tabIndex=-1`, no outline), then moves it onto the now-selected option on the next frame. Angular moves it after the consumer's update renders (`requestAnimationFrame` → `focusSelectedOption`). Angular also stops the row's click from propagating: the row is removed before the click reaches `onDocumentClick`, which took it for an outside click and closed the menu, contrary to "does not collapse the menu".
 
 ### 2026-10-05
 - **Single-select keyboard model** (design review, see ## Interactions → Keyboard). Supersedes the 2026-08-13 "no auto-focus on open" and "`Tab` still traverses every tabbable control" notes for single-select; multi-select and combo box are unchanged.
