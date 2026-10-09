@@ -70,9 +70,6 @@ export interface IdsDropdownSingleSelectProps {
   noResultsLabel?: string;
   options?: IdsDropdownSingleSelectOptionModel[];
   value?: string;
-  /** Initial value when uncontrolled. With `showRadio`, also the value that
-   *  Reset to Default (the radio replacement for Clear All) restores — pass it
-   *  alongside a controlled `value` too. */
   defaultValue?: string;
   onChange?: (value: string) => void;
   actionLabel?: string;
@@ -380,8 +377,7 @@ export function IdsDropdownSingleSelect({
             noResultsLabel={noResultsLabel}
             showClearAll={showClearAll}
             showSingleSelectRadio={showRadio}
-            isDefaultValue={selectedId === defaultValue}
-            onClearAllClick={() => emitChange(showRadio ? defaultValue : "")}
+            onClearAllClick={() => emitChange("")}
             footerActionLabel={actionLabel}
             onFooterActionClick={onAction}
             defaultOpen={defaultOpen && !disabled}

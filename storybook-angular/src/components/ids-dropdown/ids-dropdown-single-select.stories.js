@@ -52,7 +52,6 @@ export const CompositionApi = {
             mode="single-select"
             [value]="selected"
             (valueChange)="selected = $event"
-            defaultValue="Option 2"
             [disabled]="disabled"
             [showRadio]="showRadio"
           >
@@ -89,7 +88,6 @@ export const CompositionApi = {
             mode="single-select"
             [value]="selected"
             (valueChange)="selected = $event"
-            defaultValue="Option 2"
             [disabled]="disabled"
             [showRadio]="showRadio"
           >
@@ -132,7 +130,6 @@ export const CompositionApi = {
             mode="single-select"
             [value]="selected"
             (valueChange)="selected = $event"
-            defaultValue="Option 2"
             [disabled]="disabled"
             [showRadio]="showRadio"
           >

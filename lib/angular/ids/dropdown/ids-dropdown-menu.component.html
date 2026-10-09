@@ -88,16 +88,14 @@
             [disabled]="effectiveClearAllDisabled"
             (click)="onClearAll()"
           >
-            {{ clearAllLabel }}
+            {{ resolvedClearAllLabel }}
           </button>
         </div>
       }
 
       @if (showSingleClearAllRow) {
         <button type="button" class="clearAllAction" (click)="onSingleClearAll($event)">
-          <span class="footerActionButton">{{
-            singleRowResetsToDefault ? resetToDefaultLabel : clearAllLabel
-          }}</span>
+          <span class="footerActionButton">{{ resolvedClearAllLabel }}</span>
         </button>
       }
 

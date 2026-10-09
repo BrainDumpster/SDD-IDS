@@ -129,7 +129,6 @@ export const CompositionalOptions: Story = {
           showRadio
           showClearAll
           value={value}
-          defaultValue="2"
           onChange={setValue}
           defaultOpen
         >
@@ -171,7 +170,6 @@ export const MainScenarios: Story = {
               { id: "5", label: "Option 5" },
             ]}
             value={small}
-            defaultValue="2"
             onChange={setSmall}
             showRadio
             showClearAll

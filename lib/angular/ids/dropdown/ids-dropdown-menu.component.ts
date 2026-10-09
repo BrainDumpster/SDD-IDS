@@ -96,7 +96,7 @@ export class IdsDropdownMenuComponent
   @Input() showClearAll = false;
   @Input() selectAllLabel = "Select All";
   @Input() clearAllLabel = "Clear All";
-  /** Single-select with radio options: label of the row that replaces Clear All. */
+  /** Single-select with radio options: label of the Clear All row. */
   @Input() resetToDefaultLabel = "Reset to Default";
   @Input() selectAllChecked = false;
   @Input() selectAllIndeterminate = false;
@@ -167,12 +167,6 @@ export class IdsDropdownMenuComponent
   @Output() readonly selectAllClick = new EventEmitter<string[] | undefined>();
   /** Emits visible option values while filtering; `undefined` when no filter (React parity). */
   @Output() readonly clearAllClick = new EventEmitter<string[] | undefined>();
-  /**
-   * Single-select with radio options: Reset to Default was clicked. Inside
-   * `ids-dropdown` the root already restored its `defaultValue` (and emitted
-   * `valueChange`); a standalone menu leaves the reset to the consumer.
-   */
-  @Output() readonly resetToDefaultClick = new EventEmitter<void>();
   @Output() readonly showSelectedExpandedChange = new EventEmitter<boolean>();
   @Output() readonly removeSelectedTag = new EventEmitter<string>();
   @Output() readonly showSelectedPanelClear = new EventEmitter<void>();
@@ -314,27 +308,31 @@ export class IdsDropdownMenuComponent
   }
 
   /**
-   * Single-select with radio options: the Clear All row becomes Reset to Default.
-   * A radio group always keeps a value, so the row restores the default option
-   * instead of emptying the selection.
+   * Single-select with radio options: the Clear All row reads "Reset to Default"
+   * (same behavior: back to no selection).
    */
   get singleRowResetsToDefault(): boolean {
     return this.selectionMode === "single" && this.resolvedShowRadio;
   }
 
+  /** Combo box names every Clear All "Reset to Default" (same behavior). */
+  get resolvedClearAllLabel(): string {
+    const mode = this.dropdown?.mode;
+    const isComboBox = mode === "combobox-single" || mode === "combobox-multi";
+    return isComboBox || this.singleRowResetsToDefault
+      ? this.resetToDefaultLabel
+      : this.clearAllLabel;
+  }
+
   /**
    * Single-select Clear All (spec `showClearAll`): below search when a value is
    * selected; hidden while a search query is active (Figma / React parity).
-   * As Reset to Default it shows while the value differs from the default.
    */
   get showSingleClearAllRow(): boolean {
-    const hasSomethingToClear = this.singleRowResetsToDefault
-      ? (this.resolvedSelectedValues[0] ?? "") !== (this.dropdown?.defaultValue ?? "")
-      : this.resolvedSelectedValues.length > 0;
     return (
       this.selectionMode === "single" &&
       this.showClearAll &&
-      hasSomethingToClear &&
+      this.resolvedSelectedValues.length > 0 &&
       !this.hasSearchQuery
     );
   }
@@ -623,15 +621,9 @@ export class IdsDropdownMenuComponent
     // The row is removed before the click reaches `onDocumentClick`, which would
     // then take it for an outside click and close the menu.
     event.stopPropagation();
-    if (this.singleRowResetsToDefault) {
-      this.dropdown?.resetToDefault();
-      this.resetToDefaultClick.emit();
-    } else {
-      this.clearAllClick.emit();
-    }
-    // The row hides once there is nothing left to clear or reset, dropping focus
-    // to <body>. After the consumer's update renders, move focus onto the option
-    // that is selected now (the first option when none is).
+    this.clearAllClick.emit();
+    // The row hides once the selection is cleared, dropping focus to <body>.
+    // After the consumer's update renders, move focus onto the first option.
     requestAnimationFrame(() => this.focusSelectedOption());
   }
 
