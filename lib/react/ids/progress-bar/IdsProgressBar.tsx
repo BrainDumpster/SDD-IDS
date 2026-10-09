@@ -258,11 +258,17 @@ export function IdsProgressBar({
       )}
 
       {showHelperText && helperText ? (
-        <IdsHelper data-ids="ids-progress-bar-helper">
+        <IdsHelper
+          className={styles["ids-progress-bar-helper"]}
+          data-ids="ids-progress-bar-helper"
+          title={helperText}
+        >
           {showHelperIcon ? (
             <IdsIcon shape={helperIconSlug!} variant="img" size={16} />
           ) : null}
-          <IdsHelperText>{helperText}</IdsHelperText>
+          <IdsHelperText className={styles["ids-progress-bar-helper-text"]}>
+            {helperText}
+          </IdsHelperText>
         </IdsHelper>
       ) : null}
     </div>

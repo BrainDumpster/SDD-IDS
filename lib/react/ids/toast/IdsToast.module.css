@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
-  width: min(617px, calc(100vw - 32px));
+  width: fit-content;
   max-width: calc(100vw - 32px);
   outline: none;
   pointer-events: none;
@@ -21,6 +21,18 @@
 
 .ids-toast-viewport > * {
   pointer-events: auto;
+}
+
+.ids-toast-viewport[data-position$="-left"] {
+  align-items: flex-start;
+}
+
+.ids-toast-viewport[data-position$="-center"] {
+  align-items: center;
+}
+
+.ids-toast-viewport[data-position$="-right"] {
+  align-items: flex-end;
 }
 
 .ids-toast-viewport[data-position="top-left"] {
@@ -73,7 +85,8 @@
   justify-content: space-between;
   gap: var(--spacing-space-32);
   box-sizing: border-box;
-  width: 100%;
+  width: fit-content;
+  max-width: min(900px, 100%);
   min-height: 48px;
   padding: var(--padding-padding-14) var(--padding-padding-16) var(--padding-padding-14)
     var(--padding-padding-24);
@@ -137,6 +150,12 @@
   margin: 0;
   flex: 1 1 auto;
   min-width: 0;
+  /* Message wraps with the item width and clamps at 5 lines with ellipsis. */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   font-family: var(--typography-font-style-primary), sans-serif;
   font-size: var(--font-size-body-2);
   font-weight: 400;
@@ -210,8 +229,10 @@
   outline-offset: 2px;
 }
 
-/* Close — tertiary icon-only fixed 24×24, padding-6, shape-x 12×12 */
-.ids-toast-close {
+/* Close — tertiary icon-only fixed 24×24, padding-6, shape-x 12×12.
+   Double class selector raises specificity above IdsButton's icon-only
+   size rules (two classes) so the toast override actually applies. */
+.ids-toast-close.ids-toast-close {
   width: var(--sizing-size-24);
   height: var(--sizing-size-24);
   min-height: var(--sizing-size-24);

@@ -217,7 +217,8 @@
   flex-direction: column;
   gap: var(--spacing-space-4);
   min-width: 0;
-  padding-right: var(--padding-padding-4);
+  /* 4px spacing reserve between content (title/body) and close button. */
+  padding-right: var(--spacing-space-4);
 }
 
 .header {

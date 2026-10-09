@@ -24,6 +24,7 @@ import React, {
   useContext,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -133,6 +134,47 @@ function assertUniqueValues(items: IdsAccordionItemInput[]): void {
 
 function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
+}
+
+/**
+ * Panel title (two-line clamp via `.ids-accordion-title`). Sets the native
+ * browser `title` tooltip with the full text only while the rendered text is
+ * actually truncated, so untruncated titles don't show a redundant tooltip.
+ */
+function AccordionTitle({ children }: { children: ReactNode }) {
+  const [element, setElement] = useState<HTMLSpanElement | null>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!element) return;
+
+    const check = () => {
+      setIsTruncated(
+        element.scrollHeight > element.clientHeight + 1 ||
+          element.scrollWidth > element.clientWidth + 1,
+      );
+    };
+
+    check();
+
+    let observer: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(check);
+      observer.observe(element);
+    }
+
+    return () => observer?.disconnect();
+  }, [children, element]);
+
+  return (
+    <span
+      ref={setElement}
+      className={s.title}
+      title={isTruncated ? (element?.textContent ?? undefined) : undefined}
+    >
+      {children}
+    </span>
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -427,7 +469,7 @@ export function IdsAccordionHeader({ children, className, title }: IdsAccordionH
   const composedChildren = useTitleApi ? (
     <>
       {root.chevronPosition === "left" ? <IdsAccordionChevron /> : null}
-      <span className={s.title}>{title}</span>
+      <AccordionTitle>{title}</AccordionTitle>
       {root.chevronPosition === "right" ? <IdsAccordionChevron /> : null}
     </>
   ) : (

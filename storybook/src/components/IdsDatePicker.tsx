@@ -443,6 +443,7 @@ export function IdsDatePicker({
       role="dialog"
       aria-modal="true"
       aria-label="Choose date"
+      onMouseDown={popupPortal ? (e) => e.stopPropagation() : undefined}
     >
       <div className={styles.calendarHeader}>
         <div className={styles.headerDropdowns}>

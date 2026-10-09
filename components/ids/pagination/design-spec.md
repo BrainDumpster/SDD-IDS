@@ -55,10 +55,11 @@
   - Caret slot: `10px` (implementation note: Icon component defaults to 16px, must override with `style={{ width: 10, height: 10 }}`)
   - **Border radius: `0` (square corners, per IDS nodes `11677:157848` and `37721:115839`)**
 - Results-per-page dropdown menu:
+  - **Composes the shared IDS single-select dropdown** (`dropdown-shared`: `DropdownMenu` + `IdsDropdownTriggerShell`, `selectionMode="single"`, `size="small"` trigger) — trigger field, menu, and option rows inherit the canonical single-select design.
   - Width tracks trigger (`90px` in sample)
-  - Opens above or below trigger
+  - Opens above or below trigger (Base UI `Positioner` collision flip)
   - Render portaled above ancestor stacking/overflow contexts (`position: fixed` on `document.body`, high `z-index`)
-  - Option row padding: `10px` vertical, `16px` left, `24px` right
+  - Option row padding: `10px` vertical, `16px` left/right (shared `.item` single-select row)
   - Border radius: `0` (square corners)
 ### Responsiveness
 - Runtime width behavior:
@@ -67,7 +68,7 @@
   - Horizontal overflow inside the root container is not allowed.
 - Layout adaptation order (deterministic):
   1. Keep both groups in a single row while space allows.
-  2. If insufficient width, hide `ResultsPerPageGroup` first when `showResultsPerPage` is optional in the host context.
+  2. If insufficient width, collapse controls in `collapseOrder` — but `ResultsPerPageGroup` **always renders** when `showResultsPerPage` is true (it is never a collapse candidate; `"results-per-page"` entries in `collapseOrder` are ignored).
   3. Keep `PageNavigationGroup` visible as highest priority.
   4. Preserve control heights (`32px`) and touch targets while adapting spacing.
 - Spacing adaptation:
@@ -161,11 +162,11 @@ Runtime contract mirror: `component-contracts/ids/pagination.contract.ts`. Refer
 | `showPageOffset` | `boolean` | `false` | When `true`, replace the page-number text input with a page-offset dropdown bound to `pageOffsetOptions`. |
 | `background` | `"gray" \| "white" \| "none"` | `"gray"` | Root surface variant. |
 | `embeddedInDatagrid` | `boolean` | `false` | When `true` (datagrid footer), applies **`rootEmbedded`**: top border only; no left/right/bottom outer border. |
-| `disabled` | `boolean` | `false` | Disables all interactive controls. |
+| `disabled` | `boolean` | `false` | Disables all interactive controls. **Angular only** — the React implementation has no `disabled` prop. |
 | `dropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Per-page dropdown visual state (demo/testing; runtime defaults to collapsed until opened). |
 | `pageOffsetDropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Page-offset dropdown visual state (demo/testing). |
 | `responsiveMode` | `"auto" \| "keep-inline"` | `"auto"` | Responsive layout strategy (see **Responsiveness**). |
-| `collapseOrder` | `("results-per-page" \| "page-input" \| "first-last-buttons")[]` | `["results-per-page"]` | Collapse priority when `responsiveMode="auto"`. |
+| `collapseOrder` | `("results-per-page" \| "page-input" \| "first-last-buttons")[]` | `["results-per-page"]` | Collapse priority when `responsiveMode="auto"`. `"results-per-page"` is ignored — the group always renders when `showResultsPerPage` is true. |
 
 ### Outputs / events
 

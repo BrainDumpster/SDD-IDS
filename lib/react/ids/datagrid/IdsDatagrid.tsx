@@ -61,7 +61,11 @@ import {
   type IdsDatagridSortDirection,
   type IdsDatagridViewMode,
 } from "./IdsDatagridSlots";
-import { flattenIdsDatagridTree, type IdsDatagridTreeNode } from "./IdsDatagridTree";
+import {
+  flattenIdsDatagridTree,
+  type IdsDatagridTreeNode,
+  type IdsDatagridTreeRowSelection,
+} from "./IdsDatagridTree";
 import { IdsDatagridTreeCell } from "./IdsDatagridTreeCell";
 
 export type {
@@ -72,7 +76,14 @@ export type {
   IdsDatagridViewMode,
 };
 
-type FilterToggleIconState = "default" | "hover" | "selected" | "press";
+/** Figma `Filter state for data grid` `50618:174848`: Active=On/Off × Default/Hover/Press. */
+type FilterToggleIconState =
+  | "default"
+  | "hover"
+  | "press"
+  | "selected"
+  | "selected-hover"
+  | "selected-press";
 type SortDirection = IdsDatagridSortDirection | null;
 type FilterMenuPos = { top: number; right: number; maxPanelWidth?: number };
 type GridSectionPart = "header" | "body";
@@ -82,6 +93,7 @@ const DEFAULT_COLUMN_WIDTH = 160;
 const SELECTION_COL_WIDTH = 48;
 const SETTINGS_COL_WIDTH = 40;
 const FILTER_MENU_EDGE_PAD_PX = 8;
+const DEFAULT_PAGE_SIZE_OPTIONS = [25, 50, 75, 100];
 
 function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
@@ -154,11 +166,21 @@ export interface IdsDatagridProps {
   treeNodes?: IdsDatagridTreeNode[];
   treeColumnKey?: string;
   treeShowRowIcon?: boolean;
+  /**
+   * Tree view only: render the selection control inside the tree cell (Figma Cells
+   * `Type=Tree with selection`) instead of a separate selection column.
+   * `"checkbox"` = multiple selection, `"radio"` = single selection. Default `"none"`.
+   */
+  treeRowSelection?: IdsDatagridTreeRowSelection;
   rowSelection?: boolean;
   selectionMode?: IdsDatagridSelectionMode;
   showSingleSelectionRadio?: boolean;
   withDetailPanel?: boolean;
+  /** Initial rows per page. The footer per-page dropdown updates it internally. */
   pageSize?: number;
+  /** Per-page dropdown options. The initial and active page sizes are always included. Default `[25, 50, 75, 100]`. */
+  pageSizeOptions?: number[];
+  onPageSizeChange?: (size: number) => void;
   readOnly?: boolean;
   rowVerticalIndicator?: boolean;
   headerColorAndBorder?: boolean;
@@ -195,11 +217,14 @@ export function IdsDatagrid({
   treeNodes,
   treeColumnKey = "name",
   treeShowRowIcon = true,
+  treeRowSelection = "none",
   rowSelection = false,
   selectionMode = "single",
   showSingleSelectionRadio = true,
   withDetailPanel = false,
   pageSize = 6,
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
+  onPageSizeChange,
   readOnly = false,
   rowVerticalIndicator = false,
   headerColorAndBorder = true,
@@ -261,14 +286,42 @@ export function IdsDatagrid({
   const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState(columns.map((column) => column.key));
   const [currentPage, setCurrentPage] = useState(1);
+  const [activePageSize, setActivePageSize] = useState(pageSize);
+
+  useEffect(() => {
+    setActivePageSize(pageSize);
+    setCurrentPage(1);
+  }, [pageSize]);
+
+  const resolvedPageSizeOptions = useMemo(
+    () => [...new Set([...pageSizeOptions, pageSize, activePageSize])].sort((a, b) => a - b),
+    [pageSizeOptions, pageSize, activePageSize],
+  );
+
+  const handlePageSizeChange = (size: number) => {
+    setActivePageSize(size);
+    setCurrentPage(1);
+    onPageSizeChange?.(size);
+  };
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(() =>
     columnResizeEnabled
       ? Object.fromEntries(columns.map((c) => [c.key, columnBaseWidthPx(c)]))
       : {},
   );
 
+  // Tree view with inline selection: the control lives in the tree cell, so there is no
+  // separate selection column and the control type decides single vs multiple selection.
+  const inlineTreeSelection: IdsDatagridTreeRowSelection =
+    viewMode === "treeview" ? treeRowSelection : "none";
+  const resolvedSelectionMode: IdsDatagridSelectionMode =
+    inlineTreeSelection === "checkbox"
+      ? "multiple"
+      : inlineTreeSelection === "radio"
+        ? "single"
+        : selectionMode;
   const showSelectionColumn =
     rowSelection &&
+    inlineTreeSelection === "none" &&
     (selectionMode === "multiple" ||
       (selectionMode === "single" && showSingleSelectionRadio));
 
@@ -554,8 +607,11 @@ export function IdsDatagrid({
     return next;
   }, [rows, sortKey, sortDirection]);
 
-  const totalPages = Math.max(1, Math.ceil(sortedRows.length / pageSize));
-  const visibleRows = sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const totalPages = Math.max(1, Math.ceil(sortedRows.length / activePageSize));
+  const visibleRows = sortedRows.slice(
+    (currentPage - 1) * activePageSize,
+    currentPage * activePageSize,
+  );
   const visibleRowIds = useMemo(() => visibleRows.map((row) => row.id), [visibleRows]);
 
   const activeRow = useMemo(
@@ -579,8 +635,8 @@ export function IdsDatagrid({
   };
 
   const isRowSelectionChecked = (rowId: string) =>
-    selectionMode === "single"
-      ? showSingleSelectionRadio && selectedRowId === rowId
+    resolvedSelectionMode === "single"
+      ? (inlineTreeSelection === "radio" || showSingleSelectionRadio) && selectedRowId === rowId
       : selectedRowIds.has(rowId);
 
   const selectedVisibleCount = useMemo(
@@ -665,13 +721,15 @@ export function IdsDatagrid({
     column: IdsDatagridColumnDef,
     columnKey: string,
   ): { shape: "filter" | "filter-solid"; iconState: FilterToggleIconState } => {
-    if (filterPressKey === columnKey) return { shape: "filter-solid", iconState: "press" };
-    if (resolveIdsDatagridColumnFilterActive(column)) {
-      return { shape: "filter-solid", iconState: "selected" };
+    const active = resolveIdsDatagridColumnFilterActive(column);
+    const hovered = filterHoverKey === columnKey || filterFocusKey === columnKey;
+    if (filterPressKey === columnKey) {
+      return { shape: "filter-solid", iconState: active ? "selected-press" : "press" };
     }
-    if (filterHoverKey === columnKey || filterFocusKey === columnKey) {
-      return { shape: "filter-solid", iconState: "hover" };
+    if (active) {
+      return { shape: "filter-solid", iconState: hovered ? "selected-hover" : "selected" };
     }
+    if (hovered) return { shape: "filter-solid", iconState: "hover" };
     return { shape: "filter", iconState: "default" };
   };
 
@@ -959,6 +1017,7 @@ export function IdsDatagrid({
                     className={`${styles.headerCell} ${styles.headerDataCell}`}
                     scope="col"
                     data-ids="ids-datagrid-column-header"
+                    data-align={column.align === "right" ? "right" : undefined}
                     aria-sort={
                       column.sortable
                         ? isSorted
@@ -1148,6 +1207,7 @@ export function IdsDatagrid({
                       key={column.key}
                       className={styles.bodyCell}
                       data-ids="ids-datagrid-cell"
+                      data-align={column.align === "right" ? "right" : undefined}
                     >
                       {viewMode === "treeview" &&
                       treeMeta &&
@@ -1158,7 +1218,9 @@ export function IdsDatagrid({
                           level={treeMeta.level}
                           hasChildren={treeMeta.hasChildren}
                           isExpanded={expandedIds.has(row.id)}
-                          treeRowSelection="none"
+                          treeRowSelection={inlineTreeSelection}
+                          isCheckboxChecked={selectedRowIds.has(row.id)}
+                          onCheckboxChange={(checked) => setMultiselectRow(row.id, checked)}
                           treeShowRowIcon={treeShowRowIcon}
                           iconSlug={treeMeta.iconSlug}
                           onToggleExpand={() => {
@@ -1337,6 +1399,9 @@ export function IdsDatagrid({
       currentPage={currentPage}
       totalPages={totalPages}
       onPageChange={setCurrentPage}
+      pageSize={activePageSize}
+      pageSizeOptions={resolvedPageSizeOptions}
+      onPageSizeChange={handlePageSizeChange}
       background="gray"
     />
   );
@@ -1395,11 +1460,13 @@ export function IdsDatagrid({
     >
       <div className={styles.contentRow}>
         <div ref={gridWrapRef} className={styles.gridWrap} data-ids="ids-datagrid-grid-wrap">
-          {showSelectionColumn && selectionMode === "single" ? (
+          {(showSelectionColumn && selectionMode === "single") || inlineTreeSelection === "radio" ? (
             <IdsRadioGroup
               name={radioGroupName}
               className={styles.rowSelectionGroup}
               style={{ gap: 0 }}
+              /* Semantic wrapper only: `labelPosition="left"` (default) adds 10px form padding above the grid. */
+              labelPosition="top"
               value={selectedRowId ?? ""}
               onChange={(value) => setSingleRowSelection(value || null)}
               aria-label="Row selection"
@@ -1414,7 +1481,7 @@ export function IdsDatagrid({
           </div>
         </div>
         {showDetail ? (
-          <div data-ids="ids-datagrid-detail-panel-slot">
+          <div className={styles.detailPanelSlot} data-ids="ids-datagrid-detail-panel-slot">
             {anatomy.hasDetailSlot ? anatomy.detailPanel : defaultDetail}
           </div>
         ) : null}

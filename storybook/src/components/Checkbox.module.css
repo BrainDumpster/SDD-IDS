@@ -6,7 +6,10 @@
 
 .wrapper {
   display: inline-flex;
-  align-items: center;
+  /* Long labels wrap under a 900px cap (control + text); the control top-aligns
+     so it stays on the first line instead of centering across the wrapped text. */
+  align-items: flex-start;
+  max-width: 900px;
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -23,6 +26,8 @@
 .field[data-density="datagrid"] .wrapper {
   min-height: 0;
   gap: 0;
+  /* Selection cell has no wrapping label — keep it centered, no top offset. */
+  align-items: center;
 }
 
 /* Figma datagrid checkbox `8505:14304` — 16×16 in 48px selection column */
@@ -31,6 +36,7 @@
   height: 16px;
   min-width: 16px;
   min-height: 16px;
+  margin-top: 0;
 }
 
 .root {
@@ -43,6 +49,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Optically center the 16px control on the first 20px text line while the row
+     top-aligns for multi-line labels ((20 - 16) / 2 = 2px). */
+  margin-top: 2px;
   transition: all 100ms ease;
   cursor: inherit;
   outline: none;
@@ -175,6 +184,9 @@
 
 .label {
   user-select: none;
+  /* Wrap long text (never truncate); min-width:0 lets it wrap inside the flex row. */
+  min-width: 0;
+  overflow-wrap: break-word;
   font-family: inherit;
   font-weight: 400;
   font-size: var(--font-size-body-2);

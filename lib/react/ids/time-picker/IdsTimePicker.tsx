@@ -8,14 +8,22 @@
  * No @base-ui-components dependency.
  */
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { createPortal } from "react-dom";
 import { IdsButton, IdsButtonLeadingIcon } from "../button";
 import { IdsIcon } from "../icon";
 import styles from "./IdsTimePicker.module.css";
 
-// Above app chrome/dialogs so the popup is never covered by later-painted content.
-const TIME_POPUP_PORTAL_Z_INDEX = 10050;
+/** Above DataGrid column filter shell (`filterMenuLayer` z-index 10000). */
+const TIME_PORTAL_Z_INDEX = 10050;
 
 export interface IdsTimePickerProps {
   value?: string | null;
@@ -31,7 +39,10 @@ export interface IdsTimePickerProps {
   error?: boolean;
   errorMessage?: string;
   forceOpen?: boolean;
-  /** Render the popup into a body portal so it escapes ancestor overflow/stacking. */
+  /**
+   * Render the time menu in `document.body` with fixed positioning so it is not clipped
+   * by overflow/stacking contexts (e.g. DataGrid filter panels). Default: true.
+   */
   popupPortal?: boolean;
 }
 
@@ -120,10 +131,10 @@ export function IdsTimePicker({
   const rootRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
-  const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null);
   const [mouseActivated, setMouseActivated] = useState(false);
   const [open, setOpen] = useState(forceOpen ?? false);
   const [inputText, setInputText] = useState(value ?? "");
+  const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null);
 
   const defaults12 = { hour: 9, minute: 30, second: 0, period: "PM" as Period };
   const defaults24 = { hour: 13, minute: 30, second: 0 };
@@ -160,6 +171,47 @@ export function IdsTimePicker({
     if (forceOpen !== undefined) setOpen(forceOpen);
   }, [forceOpen]);
 
+  const updatePopupPosition = useCallback(() => {
+    const anchor = anchorRef.current;
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const popup = popupRef.current;
+    const popupWidth = popup?.offsetWidth ?? 220;
+    const popupHeight = popup?.offsetHeight ?? 220;
+    const margin = 8;
+    let top = rect.bottom - 1;
+    let left = rect.right - popupWidth;
+    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+    if (top + popupHeight > window.innerHeight - margin) {
+      const above = rect.top - popupHeight + 1;
+      if (above >= margin) top = above;
+    }
+    setPopupPos({ top, left });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open || !popupPortal) {
+      setPopupPos(null);
+      return;
+    }
+    let cancelled = false;
+    const run = () => {
+      if (cancelled) return;
+      updatePopupPosition();
+    };
+    run();
+    const raf = requestAnimationFrame(run);
+    const onWin = () => run();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("scroll", onWin, true);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("scroll", onWin, true);
+    };
+  }, [open, popupPortal, updatePopupPosition]);
+
   const formatted = useMemo(() => {
     if (clockType === "12h") return formatTime12(hour12, minute, second, period, showSeconds);
     return formatTime24(hour24, minute, second, showSeconds);
@@ -181,7 +233,6 @@ export function IdsTimePicker({
     if (!open) return;
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
-      // The popup may be portaled outside `root`, so treat it as inside too.
       if (rootRef.current?.contains(target)) return;
       if (popupRef.current?.contains(target)) return;
       setOpen(false);
@@ -190,55 +241,6 @@ export function IdsTimePicker({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open, applyFromColumns]);
-
-  const updatePopupPosition = useCallback(() => {
-    const anchor = anchorRef.current;
-    if (!anchor) return;
-    const rect = anchor.getBoundingClientRect();
-    const popup = popupRef.current;
-    const popupWidth = popup?.offsetWidth ?? 168;
-    const popupHeight = popup?.offsetHeight ?? 118;
-    const margin = 8;
-    // Popup is right-aligned to the field (CSS `right: 0`) and drops below it.
-    let top = rect.bottom - 1;
-    let left = rect.right - popupWidth;
-    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
-    if (top + popupHeight > window.innerHeight - margin) {
-      const above = rect.top - popupHeight + 1;
-      if (above >= margin) top = above;
-    }
-    setPopupPos({ top, left });
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!open || !popupPortal) {
-      setPopupPos(null);
-      return;
-    }
-
-    let cancelled = false;
-    const run = () => {
-      if (cancelled) return;
-      updatePopupPosition();
-    };
-
-    run();
-    const raf = requestAnimationFrame(() => {
-      run();
-      requestAnimationFrame(run);
-    });
-
-    const onWin = () => run();
-    window.addEventListener("resize", onWin);
-    window.addEventListener("scroll", onWin, true);
-
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onWin);
-      window.removeEventListener("scroll", onWin, true);
-    };
-  }, [open, popupPortal, updatePopupPosition]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape" && open) {
@@ -269,20 +271,20 @@ export function IdsTimePicker({
 
   const popupClasses = [
     styles.timePopup,
-    clockType === "24h" && !showSeconds ? styles.widePadding : "",
     popupPortal ? styles.timePopupPortaled : "",
+    clockType === "24h" && !showSeconds ? styles.widePadding : "",
   ]
     .filter(Boolean)
     .join(" ");
 
-  const popupStyle: React.CSSProperties | undefined =
+  const popupStyle: CSSProperties | undefined =
     popupPortal && popupPos
-      ? { top: popupPos.top, left: popupPos.left, zIndex: TIME_POPUP_PORTAL_Z_INDEX }
+      ? { top: popupPos.top, left: popupPos.left, zIndex: TIME_PORTAL_Z_INDEX }
       : popupPortal
         ? { visibility: "hidden" as const }
         : undefined;
 
-  const timePopup = open && !disabled && (
+  const popup = open && !disabled && (
     <div
       ref={popupRef}
       className={popupClasses}
@@ -290,6 +292,7 @@ export function IdsTimePicker({
       role="dialog"
       aria-modal="true"
       aria-label="Choose time"
+      onMouseDown={popupPortal ? (e) => e.stopPropagation() : undefined}
     >
       {clockType === "12h" ? (
         <>
@@ -407,13 +410,13 @@ export function IdsTimePicker({
           </IdsButton>
         </div>
 
-        {!popupPortal && timePopup}
+        {!popupPortal && popup}
         {popupPortal &&
           open &&
           !disabled &&
           typeof document !== "undefined" &&
-          timePopup &&
-          createPortal(timePopup, document.body)}
+          popup &&
+          createPortal(popup, document.body)}
         </div>
 
         {error && errorMessage ? (

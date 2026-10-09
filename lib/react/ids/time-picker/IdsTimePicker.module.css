@@ -46,12 +46,13 @@
 /* Field + format hint stack — Figma "Date and time picker" (gap 4px) */
 
 .fieldGroup {
+  flex: 1 0 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-space-4, 4px);
   isolation: isolate;
-  width: 100%;
+  min-width: 1px;
 }
 
 .positionWrapper {
@@ -65,6 +66,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  width: 100%;
   background: var(--color-background-surface-component, #fff);
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base, #757575);
   gap: var(--spacing-space-none, 0px);
@@ -234,18 +236,17 @@
   border-radius: 0;
 }
 
-.timePopup.widePadding {
-  padding: var(--padding-padding-16, 16px) var(--padding-padding-40, 40px);
-}
-
-/* Portaled popup — escapes ancestor overflow/stacking (e.g. the next settings row
-   painting on top). Positioned via inline top/left from the field's rect. */
+/* Portaled time menu — escapes overflow/stacking (e.g. DataGrid filter `overflow: clip`). */
 .timePopupPortaled {
   position: fixed;
   top: 0;
   left: 0;
-  right: auto;
   margin-top: 0;
+  right: auto;
+}
+
+.timePopup.widePadding {
+  padding: var(--padding-padding-16, 16px) var(--padding-padding-40, 40px);
 }
 
 .timeColumn {

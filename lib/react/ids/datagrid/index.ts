@@ -18,6 +18,7 @@ export {
   IdsDatagridDetailPanel,
   collectDatagridAnatomy,
   resolveIdsDatagridColumnFilterActive,
+  type IdsDatagridColumnAlign,
   type IdsDatagridColumnProps,
   type IdsDatagridColumnTitleProps,
   type IdsDatagridFilterProps,

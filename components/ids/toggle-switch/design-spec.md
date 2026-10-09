@@ -41,6 +41,7 @@ ids-toggle-switch
 - Status gap from switch: `var(--spacing-space-8)` (fallback `8px`)
 - Label gap from switch: `var(--spacing-space-8)` (field row is `inline-flex`, `align-items: center`)
 - Status line-height: `16px` in component sample rows.
+- Status/label text top padding: `var(--padding-padding-1)` (`1px`) — applied to the `status` text and, when `label` is present, to the `IdsFormLabel` inner label element (the form-label root keeps its size-driven `padding-block`, so padding must target the inner element to add space above the text rather than replace the block padding).
 - Focus ring geometry around switch body: `38px x 22px` (implemented as `inset: -3px` ring around `32x16` body).
 - Interactive target rule: visual switch remains `32x16`, but click target should be expanded by wrapper/label in runtime layouts.
 - Sample-only note: frame widths in Figma are showcase values; runtime width is container-driven when status text varies.
@@ -181,7 +182,7 @@ Per-slot style contract:
 - `input`: visually hidden, still focusable; linked to `switch` via sibling/state selectors or state binding.
 - `track`: fixed `32x16` body, rounded corners, tokenized background/border by state table.
 - `thumb`: fixed `16x16`, `box-sizing: border-box`, tokenized fill + stateful border (`neutral` off-default, `strong` off-hover, `brand-base` on-default, `brand-dark` on-hover, `disabled` when control disabled), translated from `-1px` (off, covering left base edge) to `15px` (on, covering right base edge) — `16px` total travel.
-- `status`: tokenized text color; disabled text token when disabled.
+- `status`: tokenized text color; disabled text token when disabled; `padding-top: var(--padding-padding-1)`.
 
 Behavior contract:
 - Trigger state change only through input activation pathways (click label, click switch, press `Space` or `Enter`).

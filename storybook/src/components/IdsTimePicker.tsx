@@ -1,7 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import { createPortal } from "react-dom";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import styles from "./IdsTimePicker.module.css";
+
+/** Above DataGrid column filter shell (`filterMenuLayer` z-index 10000). */
+const TIME_PORTAL_Z_INDEX = 10050;
 
 export interface IdsTimePickerProps {
   value?: string | null;
@@ -17,6 +29,11 @@ export interface IdsTimePickerProps {
   error?: boolean;
   errorMessage?: string;
   forceOpen?: boolean;
+  /**
+   * Render the time menu in `document.body` with fixed positioning so it is not clipped
+   * by overflow/stacking contexts (e.g. DataGrid filter panels). Default: true.
+   */
+  popupPortal?: boolean;
 }
 
 type Period = "AM" | "PM";
@@ -99,11 +116,15 @@ export function IdsTimePicker({
   error = false,
   errorMessage,
   forceOpen,
+  popupPortal = true,
 }: IdsTimePickerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const [mouseActivated, setMouseActivated] = useState(false);
   const [open, setOpen] = useState(forceOpen ?? false);
   const [inputText, setInputText] = useState(value ?? "");
+  const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null);
 
   const defaults12 = { hour: 9, minute: 30, second: 0, period: "PM" as Period };
   const defaults24 = { hour: 13, minute: 30, second: 0 };
@@ -140,6 +161,47 @@ export function IdsTimePicker({
     if (forceOpen !== undefined) setOpen(forceOpen);
   }, [forceOpen]);
 
+  const updatePopupPosition = useCallback(() => {
+    const anchor = anchorRef.current;
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const popup = popupRef.current;
+    const popupWidth = popup?.offsetWidth ?? 220;
+    const popupHeight = popup?.offsetHeight ?? 220;
+    const margin = 8;
+    let top = rect.bottom - 1;
+    let left = rect.right - popupWidth;
+    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+    if (top + popupHeight > window.innerHeight - margin) {
+      const above = rect.top - popupHeight + 1;
+      if (above >= margin) top = above;
+    }
+    setPopupPos({ top, left });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open || !popupPortal) {
+      setPopupPos(null);
+      return;
+    }
+    let cancelled = false;
+    const run = () => {
+      if (cancelled) return;
+      updatePopupPosition();
+    };
+    run();
+    const raf = requestAnimationFrame(run);
+    const onWin = () => run();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("scroll", onWin, true);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("scroll", onWin, true);
+    };
+  }, [open, popupPortal, updatePopupPosition]);
+
   const formatted = useMemo(() => {
     if (clockType === "12h") return formatTime12(hour12, minute, second, period, showSeconds);
     return formatTime24(hour24, minute, second, showSeconds);
@@ -160,10 +222,11 @@ export function IdsTimePicker({
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        applyFromColumns();
-      }
+      const target = e.target as Node;
+      if (rootRef.current?.contains(target)) return;
+      if (popupRef.current?.contains(target)) return;
+      setOpen(false);
+      applyFromColumns();
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -196,6 +259,94 @@ export function IdsTimePicker({
   const showFormatHint = formatHint !== "" && !error;
   const inputFilled = inputText.trim().length > 0;
 
+  const popupClasses = [
+    styles.timePopup,
+    popupPortal ? styles.timePopupPortaled : "",
+    clockType === "24h" && !showSeconds ? styles.widePadding : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const popupStyle: CSSProperties | undefined =
+    popupPortal && popupPos
+      ? { top: popupPos.top, left: popupPos.left, zIndex: TIME_PORTAL_Z_INDEX }
+      : popupPortal
+        ? { visibility: "hidden" as const }
+        : undefined;
+
+  const popup = open && !disabled && (
+    <div
+      ref={popupRef}
+      className={popupClasses}
+      style={popupStyle}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choose time"
+      onMouseDown={popupPortal ? (e) => e.stopPropagation() : undefined}
+    >
+      {clockType === "12h" ? (
+        <>
+          <TimeColumn
+            label="Hour"
+            display={String(hour12)}
+            disabled={disabled}
+            onUp={() => setHour12((h) => wrap(h + 1, 1, 12))}
+            onDown={() => setHour12((h) => wrap(h - 1, 1, 12))}
+          />
+          <TimeColumn
+            label="Minute"
+            display={pad2(minute)}
+            disabled={disabled}
+            onUp={() => setMinute((m) => wrap(m + 1, 0, 59))}
+            onDown={() => setMinute((m) => wrap(m - 1, 0, 59))}
+          />
+          {showSeconds && (
+            <TimeColumn
+              label="Second"
+              display={pad2(second)}
+              disabled={disabled}
+              onUp={() => setSecond((s) => wrap(s + 1, 0, 59))}
+              onDown={() => setSecond((s) => wrap(s - 1, 0, 59))}
+            />
+          )}
+          <TimeColumn
+            label="AM or PM"
+            display={period}
+            disabled={disabled}
+            onUp={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
+            onDown={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
+          />
+        </>
+      ) : (
+        <>
+          <TimeColumn
+            label="Hour"
+            display={String(hour24)}
+            disabled={disabled}
+            onUp={() => setHour24((h) => wrap(h + 1, 0, 23))}
+            onDown={() => setHour24((h) => wrap(h - 1, 0, 23))}
+          />
+          <TimeColumn
+            label="Minute"
+            display={pad2(minute)}
+            disabled={disabled}
+            onUp={() => setMinute((m) => wrap(m + 1, 0, 59))}
+            onDown={() => setMinute((m) => wrap(m - 1, 0, 59))}
+          />
+          {showSeconds && (
+            <TimeColumn
+              label="Second"
+              display={pad2(second)}
+              disabled={disabled}
+              onUp={() => setSecond((s) => wrap(s + 1, 0, 59))}
+              onDown={() => setSecond((s) => wrap(s - 1, 0, 59))}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
+
   return (
     <div className={styles.root} ref={rootRef} onKeyDown={handleKeyDown}>
       {label && (
@@ -207,7 +358,7 @@ export function IdsTimePicker({
         </div>
       )}
       <div className={styles.fieldGroup}>
-        <div className={styles.positionWrapper}>
+        <div className={styles.positionWrapper} ref={anchorRef}>
           <div className={fieldClasses}>
           <input
             type="text"
@@ -246,75 +397,13 @@ export function IdsTimePicker({
           />
         </div>
 
-        {open && !disabled && (
-          <div
-            className={`${styles.timePopup} ${clockType === "24h" && !showSeconds ? styles.widePadding : ""}`}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Choose time"
-          >
-            {clockType === "12h" ? (
-              <>
-                <TimeColumn
-                  label="Hour"
-                  display={String(hour12)}
-                  disabled={disabled}
-                  onUp={() => setHour12((h) => wrap(h + 1, 1, 12))}
-                  onDown={() => setHour12((h) => wrap(h - 1, 1, 12))}
-                />
-                <TimeColumn
-                  label="Minute"
-                  display={pad2(minute)}
-                  disabled={disabled}
-                  onUp={() => setMinute((m) => wrap(m + 1, 0, 59))}
-                  onDown={() => setMinute((m) => wrap(m - 1, 0, 59))}
-                />
-                {showSeconds && (
-                  <TimeColumn
-                    label="Second"
-                    display={pad2(second)}
-                    disabled={disabled}
-                    onUp={() => setSecond((s) => wrap(s + 1, 0, 59))}
-                    onDown={() => setSecond((s) => wrap(s - 1, 0, 59))}
-                  />
-                )}
-                <TimeColumn
-                  label="AM or PM"
-                  display={period}
-                  disabled={disabled}
-                  onUp={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
-                  onDown={() => setPeriod((p) => (p === "AM" ? "PM" : "AM"))}
-                />
-              </>
-            ) : (
-              <>
-                <TimeColumn
-                  label="Hour"
-                  display={String(hour24)}
-                  disabled={disabled}
-                  onUp={() => setHour24((h) => wrap(h + 1, 0, 23))}
-                  onDown={() => setHour24((h) => wrap(h - 1, 0, 23))}
-                />
-                <TimeColumn
-                  label="Minute"
-                  display={pad2(minute)}
-                  disabled={disabled}
-                  onUp={() => setMinute((m) => wrap(m + 1, 0, 59))}
-                  onDown={() => setMinute((m) => wrap(m - 1, 0, 59))}
-                />
-                {showSeconds && (
-                  <TimeColumn
-                    label="Second"
-                    display={pad2(second)}
-                    disabled={disabled}
-                    onUp={() => setSecond((s) => wrap(s + 1, 0, 59))}
-                    onDown={() => setSecond((s) => wrap(s - 1, 0, 59))}
-                  />
-                )}
-              </>
-            )}
-          </div>
-        )}
+        {!popupPortal && popup}
+        {popupPortal &&
+          open &&
+          !disabled &&
+          typeof document !== "undefined" &&
+          popup &&
+          createPortal(popup, document.body)}
         </div>
 
         {error && errorMessage ? (

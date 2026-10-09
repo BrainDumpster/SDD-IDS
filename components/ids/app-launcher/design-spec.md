@@ -149,7 +149,8 @@ Token: `var(--color-border-gray-neutral-base)`.
 - `var(--color-border-gray-neutral-base)` — surface border, column/row dividers
 - `var(--color-border-brand-base-neutral)` — options row hover/press emphasis stroke
 - `var(--border-width-border-1)` — surface, dividers
-- `var(--border-width-border-2)` — tile focus outline
+- `var(--border-width-border-1)` — tile / options row focus outline
+- `var(--corner-radius-radius-4)` — tile / options row focus outline radius
 - `var(--padding-padding-1)` — surface inset
 - `var(--padding-padding-16)` — row divider horizontal inset
 
@@ -180,11 +181,12 @@ Token: `var(--color-border-gray-neutral-base)`.
 | Product tile | default | `var(--color-background-surface-secondary)` | dividers: `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
 | Product tile | hover | `var(--color-background-brand-lighter-slate)` (full tile) | dividers unchanged (separate elements) | `var(--color-text-gray-neutral-strong)` / `var(--color-icon-gray-neutral-strong)` |
 | Product tile | press | `var(--color-background-brand-light-slate)` | dividers unchanged | `var(--color-text-brand-strong)` / `var(--color-icon-brand-strong)` |
-| Product tile | focus | `var(--color-background-surface-secondary)` | `outline: var(--border-width-border-2) var(--color-border-brand-base)`; `outline-offset: -2px` | neutral strong |
+| Product tile | focus | `var(--color-background-surface-secondary)` | `outline: var(--border-width-border-1) var(--color-border-brand-base)`; `outline-offset: -1px`; `border-radius: var(--corner-radius-radius-4)` | neutral strong |
 | Product tile | no-icon | `var(--color-background-surface-secondary)` | dividers unchanged | `var(--color-text-gray-neutral-strong)` only |
 | Options row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
 | Options row | hover | `var(--color-background-brand-lighter-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-gray-neutral)` |
 | Options row | press | `var(--color-background-brand-light-slate)` | inset top/bottom `var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
+| Options row | focus | `var(--color-background-surface-component)` | `outline: var(--border-width-border-1) var(--color-border-brand-base)`; `outline-offset: -1px`; `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-gray-neutral)` |
 
 ## States (Dark Theme)
 
@@ -362,7 +364,7 @@ Resolve via shared `Icon` component (`import.meta.glob` on `assets/icons/*.svg` 
 _Updated 2026-07-29._
 
 - **Product icon color** — the product icon inherits the tile color via `currentColor`: `var(--color-icon-gray-neutral-strong)` for default and hover, `var(--color-icon-brand-strong)` for press. The icon asset uses `fill: currentColor` so it tracks theme and state (light `#252525`, dark `#b8c1c9`, press `#055fa9`).
-- **Label padding** — label cluster is `28px 0` (icon variant) / `52px 0` (no-icon); horizontal padding is `0`.
+- **Label padding** — label cluster is `28px 0` for both the icon and no-icon variants; horizontal padding is `0`.
 - **Surface width & border** — fixed **`298px`** with **`1px`** padding; the `1px` border is an inset box-shadow (not `border`) so it does not consume layout, leaving `296px` content (two `148px` tiles). Never stretches with option text. The options menu fills the `296px` content with `1px` left/right padding → option rows are **`294px`**, symmetrically inset `1px` from the border (an even inset avoids the half-pixel snapping — hence a visibly off-centre focus ring — that a `295px` centered block produces in a `296px` space).
 - **Options list padding** — `16px` above the first option row and below the last.
 - **Option text overflow** — long option text truncates on the **first line** with an ellipsis (single line, no wrap).

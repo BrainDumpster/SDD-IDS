@@ -489,18 +489,27 @@ function NumericValueField({
   unitAriaLabel?: string;
 }) {
   const hasUnit = unitOptions && unitOptions.length > 0;
+  // Track pointer- vs keyboard-initiated focus: text inputs report
+  // :focus-visible even on mouse click, so CSS alone can't tell them apart.
+  // Pointer focus shows the active border only; keyboard focus shows the ring.
+  const [pointerFocus, setPointerFocus] = useState(false);
   return (
     <div className={numericStyles.valueField}>
       <div className={hasUnit ? numericStyles.valueRow : undefined}>
-        <input
-          id={id}
-          type="text"
-          inputMode="decimal"
-          className={numericStyles.valueInput}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={ariaLabel}
-        />
+        <span className={numericStyles.valueInputWrap}>
+          <input
+            id={id}
+            type="text"
+            inputMode="decimal"
+            className={numericStyles.valueInput}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            aria-label={ariaLabel}
+            data-pointer-focus={pointerFocus ? "true" : undefined}
+            onPointerDown={() => setPointerFocus(true)}
+            onBlur={() => setPointerFocus(false)}
+          />
+        </span>
         {hasUnit ? (
           <div className={numericStyles.unitDropdownWrap}>
             <NativeUnitDropdown
@@ -537,6 +546,7 @@ export function IdsDatagridNumericFilter({
   return (
     <div
       className={numericStyles.root}
+      data-numeric-filter=""
       role="radiogroup"
       aria-label={`${groupLabel}: numeric filter`}
       data-ids="ids-datagrid-numeric-filter"
@@ -670,9 +680,12 @@ export function IdsDatagridDateFilter({
         const checked = state.mode === mode;
         const inputId = `${slug}-mode-${mode}`;
         const isHovered = hoverMode === mode;
-        const showSummary = (checked || isHovered) && dateModeShowsSummary(mode);
+        const canShowSummary = dateModeShowsSummary(mode);
         const summaryState: IdsDatagridDateFilterState = checked ? state : { ...state, mode };
-        const summary = showSummary ? formatIdsDatagridDateFilterSummary(summaryState) : null;
+        const summary = canShowSummary ? formatIdsDatagridDateFilterSummary(summaryState) : null;
+        // Always render the summary and toggle visibility so the panel width does not
+        // change when hovering or selecting a row.
+        const summaryVisible = (checked || isHovered) && summary != null;
         const showSpecific = checked && mode === "specific-date";
         const showCustom = checked && mode === "custom-range";
 
@@ -706,8 +719,12 @@ export function IdsDatagridDateFilter({
                 </span>
                 <span className={dateTimeStyles.labelText}>{IDS_DATAGRID_DATE_MODE_LABELS[mode]}</span>
               </label>
-              {summary ? (
-                <span className={dateTimeStyles.summary} aria-hidden>
+              {summary != null ? (
+                <span
+                  className={dateTimeStyles.summary}
+                  aria-hidden
+                  style={{ visibility: summaryVisible ? "visible" : "hidden" }}
+                >
                   {summary}
                 </span>
               ) : null}
@@ -808,9 +825,12 @@ export function IdsDatagridDateTimeFilter({
         const checked = state.mode === mode;
         const inputId = `${slug}-mode-${mode}`;
         const isHovered = hoverMode === mode;
-        const showSummary = (checked || isHovered) && dateTimeModeShowsSummary(mode);
+        const canShowSummary = dateTimeModeShowsSummary(mode);
         const summaryState: IdsDatagridDateTimeFilterState = checked ? state : { ...state, mode };
-        const summary = showSummary ? formatIdsDatagridDateTimeFilterSummary(summaryState) : null;
+        const summary = canShowSummary ? formatIdsDatagridDateTimeFilterSummary(summaryState) : null;
+        // Always render the summary and toggle visibility so the panel width does not
+        // change when hovering or selecting a row.
+        const summaryVisible = (checked || isHovered) && summary != null;
         const showSpecific = checked && mode === "specific-date";
         const showCustom = checked && mode === "custom-range";
 
@@ -846,8 +866,12 @@ export function IdsDatagridDateTimeFilter({
                   {IDS_DATAGRID_DATETIME_MODE_LABELS[mode]}
                 </span>
               </label>
-              {summary ? (
-                <span className={dateTimeStyles.summary} aria-hidden>
+              {summary != null ? (
+                <span
+                  className={dateTimeStyles.summary}
+                  aria-hidden
+                  style={{ visibility: summaryVisible ? "visible" : "hidden" }}
+                >
                   {summary}
                 </span>
               ) : null}
@@ -866,7 +890,7 @@ export function IdsDatagridDateTimeFilter({
                   </div>
                   <div className={dateTimeStyles.timeField}>
                     <IdsTimePicker
-                      label="Time (optional):"
+                      label="Time:"
                       value={state.specificTime ?? null}
                       onChange={(specificTime) => onStateChange({ ...state, specificTime })}
                       formatHint="HH:MM AM/PM"
@@ -891,7 +915,7 @@ export function IdsDatagridDateTimeFilter({
                   </div>
                   <div className={dateTimeStyles.timeField}>
                     <IdsTimePicker
-                      label="Time (optional):"
+                      label="Time:"
                       value={state.rangeStartTime ?? null}
                       onChange={(rangeStartTime) => onStateChange({ ...state, rangeStartTime })}
                       formatHint="HH:MM AM/PM"
@@ -912,7 +936,7 @@ export function IdsDatagridDateTimeFilter({
                   </div>
                   <div className={dateTimeStyles.timeField}>
                     <IdsTimePicker
-                      label="Time (optional):"
+                      label="Time:"
                       value={state.rangeEndTime ?? null}
                       onChange={(rangeEndTime) => onStateChange({ ...state, rangeEndTime })}
                       formatHint="HH:MM AM/PM"

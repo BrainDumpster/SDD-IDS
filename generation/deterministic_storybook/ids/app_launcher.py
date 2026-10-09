@@ -89,7 +89,7 @@ export const NoIconTiles: Story = {{
     <{component_name}
       products={{[
         {{ id: "n1", name: "Product Name 1", icon: null, href: "#" }},
-        {{ id: "n2", name: "Very Long Product Name That Truncates", icon: null, href: "#" }},
+        {{ id: "n2", name: "Very Long Product Name That Wraps To Three Lines", icon: null, href: "#" }},
         {{ id: "n3", name: "Product Name 3", icon: null, href: "#" }},
         {{ id: "n4", name: "Product Name 4", icon: null, href: "#" }},
       ]}}

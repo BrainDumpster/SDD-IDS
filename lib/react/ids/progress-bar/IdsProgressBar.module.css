@@ -201,3 +201,22 @@
     transform: translateX(200%);
   }
 }
+
+/* Helper row: text wraps up to 2 lines with the container width;
+   the status icon stays aligned with the first text line. */
+.ids-progress-bar-helper {
+  align-items: flex-start;
+}
+
+.ids-progress-bar-helper [data-ids="ids-helper-icon"] {
+  margin-top: 2px;
+}
+
+.ids-progress-bar-helper-text {
+  flex-shrink: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -158,7 +158,14 @@
 .ids-toggle-switch-status {
   color: var(--color-text-gray-neutral);
   line-height: 16px;
+  padding-top: var(--padding-padding-1);
   user-select: none;
+}
+
+/* Field label: padding-top on the inner label element (its root already
+   carries padding-block; padding-top there would replace it and lift the text). */
+.ids-toggle-switch-label label {
+  padding-top: var(--padding-padding-1);
 }
 
 .ids-toggle-switch[data-disabled="true"] .ids-toggle-switch-status {

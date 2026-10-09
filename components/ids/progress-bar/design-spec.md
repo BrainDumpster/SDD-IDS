@@ -55,7 +55,7 @@ Deterministic slot order:
   - Percentage column width: **36px**, text align left, Body 2.
 - `indeterminate`: animated fill segment (~60% width, horizontal sweep); percentage omitted when indeterminate. For `completed-success` / `completed-warning` / `failed-error` states the track is not rendered — the component shows the helper row only (standard helper design: status icon + text).
 - Helper row: icon `16px`, gap `var(--padding-padding-8)` between icon and text.
-- Helper text max width: **900px** (`max-width: 900px`). Text keeps its natural width and only wraps once the 900px limit is reached (`flex-shrink: 0` on the text so it does not wrap early inside the flex row).
+- Helper text max width: **900px** (`max-width: 900px`). Text wraps with the container width up to **2 lines** (two-line clamp with ellipsis beyond that; `flex-shrink: 1` + `min-width: 0` so it wraps before the 900px cap on narrow screens). The status icon stays aligned with the **first** text line when the text wraps. The full helper text is shown in a native browser tooltip (`title` attribute) on hover — same as the meta row label.
 - Status icons: no icon for `in-progress` helper row.
 
 ### Figma type mapping

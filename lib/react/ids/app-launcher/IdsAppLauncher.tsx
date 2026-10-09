@@ -235,15 +235,6 @@ function resolveProductIconSlug(slug: unknown): string {
   return DEFAULT_PRODUCT_ICON;
 }
 
-function chunkRows<T>(items: T[], columns: number): T[][] {
-  const rows: T[][] = [];
-  const cols = Math.max(1, columns);
-  for (let i = 0; i < items.length; i += cols) {
-    rows.push(items.slice(i, i + cols));
-  }
-  return rows;
-}
-
 /* Long-name reflow (design-spec "Long labels"):
    - text-only tile: name may wrap to 3 lines; more than that promotes it to a
      full-width tile (its own row) rather than truncating.

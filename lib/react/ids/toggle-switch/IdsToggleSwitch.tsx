@@ -180,6 +180,7 @@ export function IdsToggleSwitch({
       data-ids="ids-toggle-switch-field"
     >
       <IdsFormLabel
+        className={styles["ids-toggle-switch-label"]}
         htmlFor={inputId}
         required={labelRequired}
         showInfoIcon={labelShowInfoIcon}

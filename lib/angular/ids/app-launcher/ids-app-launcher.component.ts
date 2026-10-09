@@ -307,7 +307,6 @@ export class IdsAppLauncherComponent
     const optionsSection = popup.querySelector<HTMLElement>('[data-focus-section="options"]');
     const horizontal = event.key === "ArrowLeft" || event.key === "ArrowRight";
     const dir = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
-    const cols = Math.max(1, this.columns);
     const focus = (el?: HTMLElement): void => {
       if (!el) return;
       event.preventDefault();
@@ -315,25 +314,29 @@ export class IdsAppLauncherComponent
       el.focus();
     };
 
-    // Products grid.
+    // Products grid. Rows are uneven — a long-name product is promoted to its own
+    // full-width row — so walk the rendered rows instead of assuming a uniform
+    // `columns`-wide grid, which would jump to the wrong tile across such a row.
     if (productsSection?.contains(active)) {
-      const tiles = getFocusables(productsSection);
-      const idx = tiles.indexOf(active);
-      if (idx === -1) return;
+      const rowEls = Array.from(
+        productsSection.querySelectorAll<HTMLElement>(".ids-app-launcher__product-row"),
+      );
+      const rowIdx = rowEls.findIndex((row) => row.contains(active));
+      if (rowIdx === -1) return;
+      const rowTiles = getFocusables(rowEls[rowIdx]);
+      const colIdx = rowTiles.indexOf(active);
+      if (colIdx === -1) return;
+
       if (horizontal) {
-        const nextIdx = idx + dir; // stay within the same row
-        if (
-          nextIdx >= 0 &&
-          nextIdx < tiles.length &&
-          Math.floor(nextIdx / cols) === Math.floor(idx / cols)
-        ) {
-          focus(tiles[nextIdx]);
-        }
+        focus(rowTiles[colIdx + dir]); // stay within the same row
         return;
       }
-      const nextIdx = idx + dir * cols; // move one row up/down
-      if (nextIdx >= 0 && nextIdx < tiles.length) {
-        focus(tiles[nextIdx]);
+
+      const nextRow = rowEls[rowIdx + dir]; // move one row up/down
+      if (nextRow) {
+        const nextTiles = getFocusables(nextRow);
+        // Keep the column where possible; clamp onto a shorter (full-width) row.
+        focus(nextTiles[Math.min(colIdx, nextTiles.length - 1)]);
         return;
       }
       // Past the last grid row → first option (Down). Above the first row → stay.

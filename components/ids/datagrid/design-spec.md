@@ -6,6 +6,7 @@
 - Component: Datagrid
 - Design System: IDS
 - Category: Table and Data Grids
+- **Canonical Figma (2026-09 redesign — authoritative):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=48122-183847&m=dev — node id **`48122:183847`**. Sub-nodes: Column Header **`47919:169543`** (Label / Checkbox Header / Blank Header / Column Customization), Row background **`47971:173289`**, Cells **`48133:234217`**, Filter state **`50618:174848`**, Data Grid variants **`47986:187011`** (Standard / All White / No Background). The **`37721:*`** nodes below are renamed **`_old`** in the library (e.g. `.Data Grid - Main_old`, `.Column Header_old`); where they disagree with **`48122:183847`**, the redesign wins.
 - Main component + use cases: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=44398-164837&m=dev
 - **Row / cell states & styling (body row chrome):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114580&m=dev — node id **`37721:114580`** (`.Row/Cell: States and styling`)
 - Column details: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=37721-114734&m=dev
@@ -47,7 +48,7 @@
     - `DatagridColumnTitle` (projected label for the column header)
     - `DatagridColumnHeaderContent` (horizontal host: Figma **`37721:114663`** Text variant — **`pl-[16px]`**, **`items-center`**, **no extra vertical padding** on the host; **cell height is exactly `48px`**)
       - `DatagridColumnHeaderTitleRow` (Figma frame **`37721:114673`**: **`flex: 1`**, **`min-width: 0`**, **`gap: 12px`**, **`padding: 0 8px 0 0`** — **8px** right; **`align-items: center`** on the **48px** header track so **title + sort** match Figma’s **9+20+9** optical band without stacking extra host **`py`**; title line **20px** / **Body 2 - Medium**; optional **`SortToggle`**)
-      - optional **`FilterToggle`** (Figma **`.Filter for table`** instance **`37721:114677`**: **`38×38`** hit target, **`padding: 12px`**, **`14×14`** icon — **sibling** of the title row, not inside **`37721:114673`**). Implement with the shared **`Icon`** component: **`shapeName`** = **`filter`** | **`filter-solid`** (slugs under **`assets/icons/*.svg`**); tint via **`color`** / ancestor **`color`** using **`var(--color-icon-...)`** tokens.
+      - optional **`FilterToggle`** (Figma **`.Filter for table`** as used on the Column Filter page **`44370:173173`**: **`38×38`** box flush with the column's right edge, **`padding: 12px`**, **`14×14`** icon — the open-menu tab covers this exact box so the icon never moves; title row **gap 12** to the 12px sort icon and **pr 8**, i.e. **20px** between sort and filter icons — **sibling** of the title row. The redesign's Column Header `47919:169542` shows a tighter `[sort] 16 [filter] pr 8` group, but the Column Filter page (authoritative for filter geometry) still uses this box). Implement with the shared **`Icon`** component: **`shapeName`** = **`filter`** | **`filter-solid`** (slugs under **`assets/icons/*.svg`**); tint via **`color`** / ancestor **`color`** using **`var(--color-icon-...)`** tokens.
     - optional **`DatagridFilter`** (filter panel body only — not header chrome)
       - optional **`FilterMenu`** (when the column filter is **open**): **`FilterIconTab`** + **`FilterPanel`** + **`FilterPanelBody`** (`column.filterPanel`) — see **Column filter menu (L-frame baseline)**.
       - optional **`ColumnResizeHandle`** (product / Storybook when **`columnResizeEnabled`**): transparent trailing-edge hit target co-located with the **1×24px** divider rail; **`cursor: col-resize`**; must not steal **`FilterToggle`** clicks.
@@ -88,7 +89,7 @@ Child components / projection slots map to framework wrappers; **geometry, token
 | Layer | Owner | Responsibility |
 |---|---|---|
 | **Grid chrome** | `DatagridRoot` | Shell, scroll viewport, `<colgroup>` widths, sticky pins, header/body table structure, L-frame filter shell, settings column, sort/filter icon chrome |
-| **Column metadata** | `DatagridColumn` config | `key`, `title`, `sortable`, `filterable`, `filterActive`, `minWidth`, **`width`** (fixed px for header/body), `defaultWidth`, optional **`filterPanel`** (inner UI only) |
+| **Column metadata** | `DatagridColumn` config | `key`, `title`, `sortable`, `filterable`, `filterActive`, `minWidth`, **`width`** (fixed px for header/body), `defaultWidth`, optional **`filterPanel`** (inner UI only), **`align`** (`"left"` default \| `"right"` — numeric columns, Figma Cells `Type=Numeric`; right-aligns header title and body cells via `data-align="right"`) |
 | **Cell content** | App / `DatagridRow.values` | Per-cell renderables (text, badges, custom components) inside `DatagridCell` padding box |
 | **Filter inner UI** | App / `column.filterPanel` | Search fields, checkbox lists, comboboxes — **never** redraw L-frame borders |
 | **Row selection** | IDS Radio / Checkbox spec | `single` + `showSingleSelectionRadio` → optional row radios; `multiple` → row checkboxes + header **select-all** |
@@ -163,7 +164,7 @@ Angular uses **declarative child components** with **content projection**. Colum
 | Spec slot | React module | Notes |
 |---|---|---|
 | `DatagridRoot` | `IdsDataGrid` | Monolithic table; acceptable reference for Storybook |
-| `FilterPanelBody` | `column.filterPanel` prop | e.g. `IdsDataGridFilterSearchField` |
+| `FilterPanelBody` | `column.filterPanel` prop / `IdsDataGrid.module.css` `.filterPopupPanelBody` | Slot has `padding: 0`; inner filter panel components manage their own spacing |
 | `DatagridDetailPanelSlot` | `IdsDetailPanel` `attachMode="datagrid"` | Sibling in `contentRow` flex |
 | Multiselect filter host | `IdsDataGridDefaultStoryHost` | Wires `filterActive` + Type checkbox filter |
 | Numeric filter host | `IdsDataGridNumericFilterStoryHost` | Wires `numericFilterState` + `IdsDataGridTypeNumericFilterPanel` |
@@ -172,6 +173,8 @@ Angular uses **declarative child components** with **content projection**. Colum
 | Date filter panel | `IdsDataGridTypeDateFilterPanel` | Figma `37822:90838`; model in `IdsDataGridDateFilter.ts` |
 | Date-time filter host | `IdsDataGridDateAndTimeFilterStoryHost` | Wires `dateTimeFilterState` + `IdsDataGridTypeDateAndTimeFilterPanel` |
 | Date-time filter panel | `IdsDataGridTypeDateAndTimeFilterPanel` | Figma `44360:181306`; model in `IdsDataGridDateAndTimeFilter.ts` |
+| Combobox-multiselect filter panel | `IdsDataGridTypeMultiselectFilterPanel` | Figma `44360:147581`; CSS module `.optionList { padding: 0; }` |
+| Combobox-single-select filter panel | `IdsDataGridTypeComboboxSingleSelectFilterPanel` | Figma `44360:179074`; CSS module `.optionList { padding: 0; }` |
 | Column visibility popup | `IdsDataGridColumnVisibilityPanel` | Gear menu; only `columnHideable` columns; min one visible |
 | Row selection | `IdsDataGridSelectionRadio` / `IdsDataGridSelectionCheckbox` | `single`: radio + `RadioGroup`; `multiple`: row + header select-all checkboxes |
 
@@ -193,9 +196,9 @@ Angular uses **declarative child components** with **content projection**. Colum
 - **Hit target:** **`38×38`**, **`padding: 12px`**, **14×14** icon (Figma **`37721:114677`**).
 - **Icon assets (slug → file):** outline **`filter`** → **`assets/icons/filter.svg`**; solid **`filter-solid`** → **`assets/icons/filter-solid.svg`** for non-default states. Render via the shared **`Icon`** component with **`shapeName`** set to that slug (default **`variant`** = mask/url bundle per app toolchain; do **not** hand-embed ad-hoc SVG paths outside the icon registry).
 - **Deterministic precedence** (codegen must implement in this order — **selected must rank above hover** so an active filter stays blue while hovered):
-  1. **Press** (`:active` / pointer down): **`shapeName`** **`filter-solid`**, tint **`var(--color-icon-brand-stronger)`**.
-  2. **Selected / filter applied** (menu **closed**, column has active filter criteria): **`filter-solid`**, tint **`var(--color-icon-brand-base)`**. Bind to a column-level flag (e.g. **`column.filterActive`**) driven by the app’s filter model. **This must be checked before hover** — otherwise hovering over an active filter icon resets it to neutral-strong.
-  3. **Hover** (pointer over toggle, or **keyboard focus** while closed): **`filter-solid`**, tint **`var(--color-icon-gray-neutral-strong)`**.
+  1. **Press** (`:active` / pointer down): **`shapeName`** **`filter-solid`**, tint **`var(--color-icon-brand-strong)`** when no filter is applied, **`var(--color-icon-brand-stronger)`** when a filter is applied (Figma **`Filter state for data grid`** **`50618:174848`**).
+  2. **Selected / filter applied** (menu **closed**, column has active filter criteria): **`filter-solid`**, tint **`var(--color-icon-brand-base)`**; **hover while applied** → **`var(--color-icon-brand-strong)`**. Bind to a column-level flag (e.g. **`column.filterActive`**) driven by the app’s filter model. **This must be checked before hover** — otherwise hovering over an active filter icon resets it to neutral-strong.
+  3. **Hover** (pointer over toggle, or **keyboard focus** while closed): **`filter-solid`**, tint **`var(--color-icon-gray-neutral-base)`**.
   4. **Default:** **`shapeName`** **`filter`**, tint **`var(--color-icon-gray-neutral-base)`**.
 - **Menu open:** header shows a **38×38** placeholder (invisible spacer) so layout is stable; the **visible** funnel for “open” lives on **`FilterIconTab`** in the portaled menu (outline + neutral is acceptable for the **Selected with menu** variant per Figma dev readout).
 - **Focus-visible:** **`FilterToggle`** button gets a **1px** **`var(--color-border-brand-base)`** outline with **~2px** offset (keyboard), without changing the default/hover/press icon rules above.
@@ -204,17 +207,21 @@ Angular uses **declarative child components** with **content projection**. Colum
 ### `FilterMenuLayer` (open) — stacking & anchor
 - Prefer **`position: fixed`** + **portal to `document.body`** so the menu is **not** a child of **`overflow: auto`** on the grid viewport (avoids extra scroll height, column shift, and clipping). **`z-index`** high enough to sit **above** grid body and side panels (e.g. **10000** until a global z-index token exists).
 - **Position:** `top = anchor.getBoundingClientRect().top + 5px` (optical **38** in **48** header), `right = document.documentElement.clientWidth - anchorRect.right` (right-align to filter column). Recompute on **resize**, **window scroll (capture)**, **viewport scroll**, and **ResizeObserver** on the viewport.
-- **Left-edge clamp (codegen-critical):** L-frame panels grow **left** from the filter tab. Set CSS var **`--ids-datagrid-filter-panel-max-width`** = `max(8px, anchorRect.right - gridWrapLeft - 8px)` so the panel (and leading chrome such as the text-filter **`search-16`** icon) never spills past the **datagrid** left edge. Prefer **grid wrap** bounds over bare viewport when available. Text filter preferred width remains **300px** but **shrinks** when space is tighter.
+- **Left-edge clamp (codegen-critical):** L-frame panels grow **left** from the filter tab. Set CSS var **`--ids-datagrid-filter-panel-max-width`** = `max(8px, anchorRect.right - gridWrapLeft - 8px)` so the panel (and leading chrome such as the text-filter **`search-16`** icon) never spills past the **datagrid** left edge. Prefer **grid wrap** bounds over bare viewport when available. Column Search filter panel uses **`min-width: 300px`** and **`max-width: 700px`**, clamped to available space so it shrinks only when the datagrid edge is tighter than 300px.
 - **Scroll viewport:** use **`scrollbar-gutter: auto`** on **`.bodyViewport`** (vertical scrollbar only when needed; avoid **`stable`** — it reserves a permanent right gutter). When a **detail panel** is attached, keep **`auto`** so no white strip appears beside **`SettingsColumn`**.
 
 ### L-frame geometry (invariant — all filter UIs)
 - **`FilterIconTab`:** width/height **38px** (same as header filter hit target). **Top + left + right** border **`1px`** **`var(--color-border-gray-neutral-base)`**; **no** bottom border; **`margin-bottom: -1px`** overlap onto **`FilterPanel`**. Background **`var(--color-background-surface-component)`**. Inner layout: **`display: inline-flex`**, **`align-items: center`**, **`justify-content: center`**. **Important — use `padding: 11px 11px 12px`** (not `12px`): the 3 visible borders (left 1px + right 1px + top 1px) consume space under `box-sizing: border-box`, so reducing side/top padding by 1px each restores the **14×14** icon content area (38 − 1 − 11 − 11 − 1 = 14px wide; 38 − 1 − 11 − 12 = 14px tall). Using `padding: 12px` leaves only a 12×13 content area and causes the icon to flex-shrink. **`Icon`** (**`shapeName="filter"`** or `"filter-solid"` when filter active; pass `style={{ maskSize: '14px 14px' }}` to prevent the SVG's 12:14 aspect ratio from rendering narrower than 14px under `mask-size: contain`).
-- **`FilterPanel`:** **Width is content-driven**, not a fixed pixel from Figma samples. Use **`width: max-content`** with a **floor** and **ceiling** so layouts stay usable:
-  - **`min-width`:** product choice; Storybook uses **`200px`** minimum; dense search-only UIs may match Figma sample **~300px** by setting content min-width inside **`filterPanel`**.
-  - **`max-width`:** cap to viewport (e.g. **`min(480px, calc(100vw - 24px))`**) for portaled/fixed menus.
+- **`FilterPanel`:** **Width is fixed to the longest option/content** so the menu does not resize when the user selects different rows. Bounds follow the dropdown menu contract:
+  - **`min-width`:** product choice; Storybook uses **`186px`** floor (matching the dropdown menu spec) for simple option-list menus.
+  - **`max-width`:** cap to viewport (e.g. **`min(700px, calc(100vw - 24px))`**) for portaled/fixed menus.
+  - **Dynamic-content filters** in Storybook pin the panel to the sample width of their widest option state so selection does not change width:
+    - Date-Time filter: **`480px`** (custom range with date + time pickers).
+    - Date filter: **`382px`** (custom date range with two date pickers).
+    - Numeric filter: **`300px`** (Between operator with two value fields).
 - **L top seam:** **No** full-width top border on the panel. Draw **only** the horizontal segment **`width: calc(100% - TAB)`** from **`left: 0`**, where **`TAB = 38px`** (must match **`FilterIconTab`** width). This leaves the strip under the tab **open** so the outer outline is one continuous **L**.
 - **Panel borders:** **left + bottom + right** **`1px`** **`var(--color-border-gray-neutral-base)`**. **`overflow: clip`** on **`FilterPanelBody`** (inner slot), not on the shadow host. **Elevation — Shadow 1** (Figma **`44360:181713`**): `box-shadow: 0 2px 2px 0 <color>, 0 4px 4px 0 <color>` — geometry is **literal px**; colors from `--shadow-shadow-1-drop-shadow-2-color` and `--shadow-shadow-1-drop-shadow-4-color` (FLOAT y/blur tokens in theme are unitless and must not be passed directly to `box-shadow`).
-- **`FilterPanelBody`:** horizontal + vertical padding for inner widgets (Storybook: **`6px`** **`16px`**); keeps the **::before** top rule aligned to the **outer** top edge of **`FilterPanel`**.
+- **`FilterPanelBody`:** no padding (Storybook: `padding: 0`). The inner filter panel component is responsible for its own internal spacing; the body slot must stay flush against the panel edges so option-list menus have no extra top/bottom padding.
 - **`FilterPanelBody` slot:** **`column.filterPanel`**. Search is **optional**. Checkbox lists must follow **`components/ids/checkbox/design-spec.md`**.
 
 ### Column filter composition contract
@@ -266,7 +273,7 @@ Date-only column filter: same preset radio matrix as **Date and Time**, but summ
 
 #### Layout
 
-- **Inner panel (`Multi-select Droddown`):** same chrome as date-time — **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot**; L-frame **`FilterPanel`** **`min-width` / `max-width` 480px** (content-driven; sample rows **`382px`** inner list width in Figma); **Shadow 1** on shell (`0 2px 2px` + `0 4px 4px` @ 8%, see L-frame baseline).
+- **Inner panel (`Multi-select Droddown`):** same chrome as date-time — panel root uses **`padding: var(--padding-padding-8) var(--padding-padding-1)`**; panel width is fixed to the widest option state, **`382px`** sample, bounded by the dropdown menu contract of **`186px`** / **`700px`**; **Shadow 1** on shell (`0 2px 2px` + `0 4px 4px` @ 8%, see L-frame baseline).
 - **Preset rows** (`37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`, `cursor: pointer`. Left: `16×16` radio + label (`gap: var(--spacing-space-8)`). Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
 - **Preset row states:**
   - **hover:** background `var(--color-background-controls-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
@@ -309,7 +316,7 @@ Label copy differs from **Date and Time**: Figma uses **`Custom date range`** (n
 |---|---|---|
 | Preset list | Same seven presets | Same seven presets |
 | Summary | Date-only (`Jan 12 - Jan 13`) | May include times (`Jan 12, 09:00 AM - …`) |
-| Specific date | **Date:** picker only | **Date:** + **Time (optional):** |
+| Specific date | **Date:** picker only | **Date:** + **Time:** |
 | Custom range | **Start:** / **End:** date pickers | **Start Date:** / **End Date:** + optional time per row |
 | Row component | `37822:90943` | `37822:90943` |
 
@@ -320,7 +327,7 @@ Label copy differs from **Date and Time**: Figma uses **`Custom date range`** (n
 - **Per-slot tokens:** preset row padding/summary typography per above; date picker per `date-picker` spec.
 - **Behavior:** single-select radios; selecting `all` clears `filterActive`; relative presets apply date-only range to column values (midnight-to-midnight or product rules).
 - **Accessibility:** one `radiogroup`; expanded pickers keep labels **Date:** / **Start:** / **End:** associated with inputs.
-- **Validation checklist:** [ ] No time fields rendered; [ ] Summary strings date-only; [ ] `all` → header filter outline icon; [ ] Shadow 1 + 480px panel chrome; [ ] Labels match Figma (`Custom date range`, `Start:`/`End:`).
+- **Validation checklist:** [ ] No time fields rendered; [ ] Summary strings date-only; [ ] `all` → header filter outline icon; [ ] Shadow 1 + dropdown-menu panel bounds (`186px` / `700px`); [ ] Labels match Figma (`Custom date range`, `Start:`/`End:`).
 
 #### Figma proof nodes
 
@@ -376,7 +383,7 @@ Multiselect combobox filter with search, Select All / Clear All, and scrollable 
   - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-gray-neutral-base)`. Delegate to `components/ids/checkbox/design-spec.md`.
   - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
   - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-gray-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal.
-- **Option list:** scrollable, sample height `366px`, no bottom padding. Custom scrollbar (Figma decorative — use platform scrollbar).
+- **Option list:** scrollable, sample height `366px`, no top or bottom padding. Custom scrollbar (Figma decorative — use platform scrollbar).
 - **Option row:** `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis.
 
 #### States (option row)
@@ -423,7 +430,7 @@ No Select All / Clear All row (single-select has no batch action).
 - **Container width:** `269px` (`FilterPanel` `min-width` / `max-width`).
 - **Container:** `var(--color-background-surface-component)` background, `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` border, `var(--padding-padding-1)` horizontal padding, Shadow 4 elevation, `overflow: clip`. Sample width `269px`; min-width `186px`, max-width `700px`, min-height `212px`.
 - **Search row:** identical to Combobox-Multiselect — `var(--padding-padding-8)` wrapper, bordered inner field with **no border-radius** (sharp corners per Figma `Search-Main`), search icon `search-16` (`16×16`, `var(--color-icon-brand-base)`), text input `font-weight: 400`. **Dismiss / clear button** (conditional, when `searchQuery` non-empty): icon slug `ctrl-close-16`, rendered `12×12`, `all: unset`, color `var(--color-icon-gray-neutral-accessible)`, cursor pointer, `aria-label="Clear search"`; click clears. Hidden when empty.
-- **Option list:** scrollable, sample height `406px`, no bottom padding.
+- **Option list:** scrollable, sample height `406px`, no top or bottom padding.
 - **Option row:** `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right padding, `var(--spacing-space-8)` gap. Min-height `40px`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis.
 
 #### States (option row)
@@ -474,6 +481,7 @@ No search row. No Select All / Clear All row. Single-select semantics.
 
 - **Container:** `var(--color-background-surface-component)` background, `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` border, Shadow 1 elevation, `overflow: clip`. Sample width `269px`; runtime: content-driven within L-frame `max-width`.
 - **Options wrapper:** `var(--padding-padding-1)` horizontal padding.
+- **Option list:** scrollable, no top or bottom padding; the last option row sits flush with the panel bottom.
 - **Option row** (`.Dropdown-SingleSelect-Elements-Options`): `var(--padding-padding-10)` vertical, `var(--padding-padding-16)` left / `var(--padding-padding-24)` right, `var(--spacing-space-8)` gap. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis.
 
 #### States (option row)
@@ -525,6 +533,7 @@ No search row.
   - Checkbox: `16×16`, `var(--corner-radius-radius-2)` corners, border `var(--color-border-gray-neutral-base)`. Delegate to `components/ids/checkbox/design-spec.md`.
   - "Select All" label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
   - "Clear All" action: Body 2 Regular (`font-weight: 400`), `var(--color-text-brand-strong)` (enabled) / `var(--color-text-gray-disabled)` (disabled when nothing selected). Padding `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal; pinned to the **right** edge of the row.
+- **Option list:** scrollable, no top or bottom padding; the last option row sits flush with the panel bottom.
 - **Option row** (`.Dropdown-Elements-MultiSelect-Options`): `var(--padding-padding-10)` vertical / `var(--padding-padding-16)` horizontal, `var(--spacing-space-8)` gap between checkbox and label, min-height `40px`. Checkbox `16×16` per `components/ids/checkbox/design-spec.md`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`, overflow ellipsis, `white-space: nowrap`.
 
 #### States (option row)
@@ -570,7 +579,7 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
 
 #### Layout
 
-- **Panel width:** `300px` minimum sample; content-driven within L-frame `max-width` rules.
+- **Panel width:** fixed to the widest operator layout, **`300px`** sample, bounded by the dropdown menu contract of **`186px`** / **`700px`**.
 - **Operator rows** (`.DataGrid-Elements-Filter-Numeric`, `44367:182693`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `gap: var(--spacing-space-8)` between `16×16` radio and label, `cursor: pointer`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
 - **Operator row states:**
   - **hover:** background `var(--color-background-controls-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
@@ -598,6 +607,7 @@ Operator-based numeric filter with radio group, value field(s), and optional uni
 - `value?: string`, `valueEnd?: string` (for `between`)
 - `unit?: string`, `unitEnd?: string` (optional; when `unitOptions` provided)
 - Header **`filterActive` / `numericFilterState`:** **`false`** when `operator === 'all'` (outline filter icon); **`true`** when another operator is selected and required value(s) are non-empty. Selecting **All** resets the model to default.
+- **Matching behavior:** When the selected operator's required value(s) are empty, the filter must be treated as inactive and not remove any rows. A row is only filtered once a valid numeric value has been entered.
 
 #### Figma proof nodes
 
@@ -617,12 +627,12 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
 
 1. `PresetRadioGroup` — vertical list of preset radio rows (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`)
 2. `PresetSummary` — optional right-aligned summary text on the same row as the selected preset (`All` and relative presets; not shown for `specific-date` or `custom-range`)
-3. `SpecificDateBlock` — when **Specific date** selected: one row with **Date:** + **Time (optional):** pickers
+3. `SpecificDateBlock` — when **Specific date** selected: one row with **Date:** + **Time:** pickers
 4. `CustomRangeBlock` — when **Custom date and time range** selected: two rows (**Start Date** + **Time (optional)**, **End Date** + **Time (optional)**)
 
 #### Layout
 
-- **Inner panel (`44360:181713` / `Multi-select Droddown`):** **`480px`** sample width (L-frame **`FilterPanel`** `min-width` / `max-width` **480px** for date-time columns); **`padding: var(--padding-padding-8) var(--padding-padding-1)`** on **`FilterPanelBody` slot** (not extra Storybook body padding); **`overflow: clip`**; full **`1px`** **`var(--color-border-gray-neutral-base)`** on panel host + **Shadow 1** on L-frame shell (see L-frame baseline). Preset summaries and labels: **no ellipsis** — single line, panel width accommodates copy.
+- **Inner panel (`44360:181713` / `Multi-select Droddown`):** panel width is fixed to the widest option state, **`480px`** sample, bounded by the dropdown menu contract of **`186px`** / **`700px`**. Panel root uses **`padding: var(--padding-padding-8) var(--padding-padding-1)`** (the `FilterPanelBody` slot itself has no padding); **`overflow: clip`**; full **`1px`** **`var(--color-border-gray-neutral-base)`** on panel host + **Shadow 1** on L-frame shell (see L-frame baseline). Preset summaries and labels: **no ellipsis** — single line, panel width accommodates copy. Summaries for all presets are rendered in the layout and toggled with `visibility` so selecting or hovering a row does not change the panel width.
 - **Preset rows** (`.DataGrid-Elements-Filter-DateAndTimeItem`, `37822:90943`): `padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16)`, `justify-content: space-between`, `align-items: center`, `cursor: pointer`. Left cluster: `16×16` radio + label, `gap: var(--spacing-space-8)`. Label: Body 2 Regular (`font-weight: 400`), `var(--color-text-gray-neutral)`.
 - **Preset row states:**
   - **hover:** background `var(--color-background-controls-lighter)`, inset top/bottom `1px` `var(--color-border-brand-base)`.
@@ -635,8 +645,8 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
   1. `All` — summary sample `Jan 12 2020 - Now` (product may bind column min/max or app epoch).
   2. `Last 24 hours` — summary shows computed start/end with time (sample `Jan 12, 09:00 AM - Jan 13, 9:00 AM`).
   3. `Last week` / `Last month` / `Last year` — summary shows computed date range endpoints.
-  4. `Specific date` — expands **Date:** (`DatePicker-Main`) + **Time (optional):** (`TimePicker-Main`); date alone is sufficient for `filterActive`; no right summary on the preset row while expanded.
-  5. `Custom date and time range` — expands two date-time rows: **Start Date:** + **Time (optional):**, **End Date:** + **Time (optional):**; at least one date required for `filterActive`.
+  4. `Specific date` — expands **Date:** (`DatePicker-Main`) + **Time:** (`TimePicker-Main`); date alone is sufficient for `filterActive`; no right summary on the preset row while expanded.
+  5. `Custom date and time range` — expands two date-time rows: **Start Date:** + **Time:**, **End Date:** + **Time:**; at least one date required for `filterActive`.
 
 #### Delegated specs
 
@@ -674,14 +684,14 @@ Preset-based date-time filter — extends **Date** filter (`37822:90838`) with *
     - **Host row (`DatagridColumnHeaderContent`):** horizontal flex, **`align-items: center`**, **`padding-left: 16px`**, **`padding-top` / `padding-bottom: 0`** on the host (do **not** stack **`py-[5px]`** on the host **and** **`py-[9px]`** on the title row — that inflates the header past **`48px`**). **Total header cell height is `48px`** (Figma **`Grid height/Header`**).
     - **Title row (`37721:114673`):** **`flex: 1`**, **`min-width: 0`**, horizontal flex, **`gap: 12px`**, **`align-items: center`**, **`padding: 0 8px 0 0`** — **8px** right padding, **no** left padding on this frame (**`16px`** inset is the host **`padding-left`**). **Vertically center** title + sort in the **48px** header (avoids icons riding high vs. a padded-only inner band). Title text uses **20px** line box (**`Body 2 - Medium`**, **14/20**, weight **500**).
     - **Column title text (`37721:114675`):** **`Body 2 - Medium`** — **`14px`** / **`20px`** line height, **`font-weight: 500`**, color **`var(--color-text-gray-neutral-strong)`**, ellipsis + single line.
-    - **Sort icon (Figma `.Sort for table`, `37721:114646`):** use the shared **`Icon`** with **`shapeName`** **`col-sort-up-16`** / **`col-sort-down-16`**. Rendered size **12×12** — the icon button wrapper must also be **`12×12`** (no extra padding/margin that inflates the hit target). Carry a **`data-sorted`** attribute on the button when sorted so CSS selectors can target the active state. **Visual states:** Default → **`var(--color-icon-gray-neutral-base)`**; Hover → **`var(--color-icon-gray-neutral-strong)`**; Selected (sorted) → **`var(--color-icon-brand-base)`**; Selected+Hover → **`var(--color-icon-brand-stronger)`**. **Visibility:** always visible (product decision — Figma shows hide-on-default but implementation keeps icon always shown).
+    - **Sort icon (Figma `.Sort for table`, `37721:114646`):** use the shared **`Icon`** with **`shapeName`** **`col-sort-up-16`** / **`col-sort-down-16`**. Rendered size **12×12** — the icon button wrapper must also be **`12×12`** (no extra padding/margin that inflates the hit target). Carry a **`data-sorted`** attribute on the button when sorted so CSS selectors can target the active state. **Visual states:** Default → **`var(--color-icon-gray-neutral-base)`**; Hover → **`var(--color-icon-gray-neutral-strong)`**; Selected (sorted) → **`var(--color-icon-brand-base)`**; Selected+Hover → **`var(--color-icon-brand-stronger)`**. **Visibility (Figma Column Header `37721:114664` — `.Sort for table` instance is `hidden` by default):** unsorted columns hide the sort toggle (`opacity: 0`, slot kept so the title does not shift) and reveal it on **header hover** or **keyboard focus within the header** (`:focus-visible`); the **sorted** column (`data-sorted="true"`) always shows it. Supersedes the 2026-06-07 always-visible decision.
     - **Filter icon:** use **`Icon`** with **`shapeName`** **`filter`** / **`filter-solid`** (**`assets/icons/filter.svg`**, **`assets/icons/filter-solid.svg`**) — **14×14** inside **`38×38`** control per **`37721:114635`** / **`37721:114677`**; cross-check the **Icons** / **Header Styling** area on the library page (e.g. annotation frame **`44551:229021`**) when auditing against Figma.
     - **Filter (`.Filter for table`, `37721:114677`):** **`shrink-0`**, **`38×38`** outer frame, **`padding: 12px`** on the interactive wrapper (Figma `p-[12px]`), **`14×14`** icon viewport; **default** icon color **`var(--color-icon-gray-neutral-base)`** (variable binding on default state). State/icon mapping for hover/selected/press remains from **`37721:114635`**.
   - **`colorAndBorder=false` (minimal):** header cell fill **`var(--color-background-surface-component)`**; **no** full-cell **top/bottom** rules on the default Text path in Figma; **leading column separator** only on **data** column headers: **1px** wide **`var(--color-border-gray-neutral-light)`**, **24px** tall, **`top: 50%`**, **`transform: translateY(-50%)`**, **`left: 0`** (Figma vertical rail).
-  - **`colorAndBorder=true` (styled band):** header cell fill **`var(--color-background-gray-neutral-lighter)`**; **top** and **bottom** rules **`1px`** **`var(--color-border-gray-neutral-light)`** across the cell; same **leading** **1px × 24px** centered **`var(--color-border-gray-neutral-light)`** rail on data column headers.
+  - **`colorAndBorder=true` (styled band):** header cell fill **`var(--color-background-gray-neutral-lighter)`**; **bottom** rule only, **`1px`** **`var(--color-border-gray-neutral-light)`**, drawn **inside** the 48px cell (`box-shadow: inset 0 -1px 0`, matching Figma's absolute stroke in Column Header **`47919:169543`**) — **no top rule** (the grid frame supplies it); same **leading** **1px × 24px** centered **`var(--color-border-gray-neutral-light)`** rail on data column headers.
   - **`Selection` / `Column Customization` with `colorAndBorder=true`:** nested **`.Header: Styling`** in Figma uses **`var(--color-background-gray-neutral-lighter)`** with **top** + **bottom** **`var(--color-border-gray-neutral-light)`** and **leading** **1px** **24px** rail; Selection + styled also shows a **full-height** **1px** trailing edge rule in the export (`37721:114685`) — implementations may mirror for pixel parity with checkbox/settings headers.
 - **Header affordance icon sizes:** **`SortToggle`** **`Icon`** **12×12** (Figma **`.Sort for table`**); **`FilterToggle`** **14×14** inside **`38×38`** padded control (Figma **`37721:114677`** / **`37721:114635`**); **`settings-gear`** **`Icon`** **16×16** (Figma / product alignment).
-- Row height baseline: **`40px`** — Figma variable **`Grid height/Cell`** (numeric `40`). **`components/ids-theme.css`** does not currently emit **`--grid-height-cell`**; implementations should use **`40px`** until a theme sync adds that alias.
+- Row height baseline: **`40px`** — Figma variable **`Grid height/Cell`** (numeric `40`). **`components/ids-theme.css`** does not currently emit **`--grid-height-cell`**; the row is **`40px` total including the `1px` bottom stroke** (Figma Row background **`47971:173289`** / Cells **`48133:234207`** draw the stroke inside the row). CSS: `td` `height: 40px` `box-sizing: border-box` with **`border-collapse: separate; border-spacing: 0`** (each cell owns its bottom border — collapsed borders split 0.5px per row and round differently per pane table), and every cell type keeps **content + padding = 39px**: data cells `padding: 10px 12px 9px 16px`, selection content `height: 39px` (`padding-bottom` 11px), settings cell `padding: 12px 0 11px`. This keeps frozen / scrollable / settings panes pixel-aligned.
 - **Row / cell body chrome (Figma `.Row/Cell: States and styling`, `37721:114580`):**
   - **Purpose:** Defines **full-row background**, **bottom separator**, and optional **left selection accent** for body rows (read-only vs interactive tables share the same geometry; hover differs by state).
   - **Figma variant axes:**
@@ -902,56 +912,62 @@ function colWidthStyle(column: DatagridColumn, ctx: LayoutCtx): CSSProperties {
 - Column-freeze boundary bar (`37721:114144`, **`FreezePaneEdge`**):
   - **Width:** **`20px`**; **`flex-shrink: 0`**; **`align-self: stretch`** (full header+body height in Figma auto-layout; runtime: **`position: absolute`**, **`top: 0`**, **`bottom: 0`** on scroll host).
   - **`border-radius: 0`**
-  - **Background (authoritative):** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`
-  - **Tokens:** `var(--color-gradient-overflow-vertical-start)` (gray cast), `var(--color-gradient-overflow-vertical-end)` (fade to transparent at seam)
+  - **Background (authoritative):** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)`
+  - **Tokens:** `var(--color-gradient-overflow-vertical-start)` (gray cast at the divider), `var(--color-gradient-overflow-vertical-end)` (fade to transparent as the bar extends into the scrollable pane). The crisp 1px divider at the seam belongs to the **first scrollable data column's leading rail** (`var(--color-border-gray-neutral-light)`); the freeze boundary bar itself does not draw a border.
 - Typography:
   - `Base Styles/Data Header` (`14/20`, medium)
   - `Body 2` (`14/20`, regular)
   - `Body 2 - Medium` (`14/20`, medium)
 - Layout (Figma variables on row chrome `37721:114580`):
-  - **`Grid height/Cell`** → row height **40** (use **`40px`** in IDS until **`--grid-height-cell`** is added to `components/ids-theme.css`).
+  - **`Grid height/Cell`** → row height **40** total, including the 1px bottom stroke (see Row height baseline).
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | `DatagridHeader` (data columns, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom in Figma Text path; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail **`left: 0`**, vertically centered | header text `var(--color-text-gray-neutral-strong)` |
-| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-gray-neutral-light)`** **top** + **bottom**; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail | header text `var(--color-text-gray-neutral-strong)` |
+| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-gray-neutral-light)`** **bottom** only (inset, inside 48px); **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail | header text `var(--color-text-gray-neutral-strong)` |
 | `DatagridHeader` (Selection / settings, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** (nested chrome per Figma) | **top** + **bottom** **`var(--color-border-gray-neutral-light)`**; inner rails per **`37721:114663`** | icons / checkbox per column spec |
 | `DatagridHeader` (Selection / settings, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom on minimal path; inner rails per **`37721:114663`** where shown in Figma | icons / checkbox per column spec |
 | `DatagridRow` | default | **`var(--color-background-surface-component)`** on **each body cell** (idle row; not `transparent` unless `rowBackgroundLayer` / Figma `background` is off) | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | `var(--color-text-gray-neutral)` |
 | `DatagridRow` | hover (interactive grid) | overlay **`var(--color-background-brand-lighter-slate)`** | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
 | `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-primary)`** (distinct from brand hover) | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
 | `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter-slate)`**; if `verticalBlueLine=true`, add **4px** leading bar **`var(--color-border-brand-base)`** full row height | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` — **not** a full-width brand border | token-resolved |
-| `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light-slate)`**; same optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
-| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-gray-neutral-base)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
-| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-gray-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
+| `DatagridRow` | hover on selected (Figma **`47971:173288`**; replaces *selected and press*) | overlay **`var(--color-background-brand-light-slate)`**; same optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
+| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default (unsorted, header idle) | transparent | none | **hidden** (`opacity: 0`; slot kept) — Figma Column Header **`37721:114664`** |
+| `SortToggle` | header hover / keyboard focus (unsorted) | transparent | none | `var(--color-icon-gray-neutral-base)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
+| `SortToggle` | icon hover (not sorted) | transparent | none | `var(--color-icon-gray-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
 | `SortToggle` | selected (sorted column) | transparent | none | `var(--color-icon-brand-base)` (**`37721:114649`** / **`37721:114659`**); **12×12**; direction = **`col-sort-up-16`** (asc) or **`col-sort-down-16`** (desc) |
 | `SortToggle` | selected + hover | transparent | none | `var(--color-icon-brand-stronger)` (**`37721:114653`** / **`37721:114661`**); **12×12** |
 | `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-gray-neutral-base)`**; **icon 14×14** |
 | `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-gray-neutral-base)` (`14x14`) |
-| `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
-| `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | press (no filter applied) | same | none | `var(--color-icon-brand-strong)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | selected (filter applied) | same | none | `var(--color-icon-brand-base)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | selected + hover | same | none | `var(--color-icon-brand-strong)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | selected + press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
 | `SettingsColumn` | default | header-aligned | `var(--color-border-gray-neutral-light)` | **`Icon`** `settings-gear` in `var(--color-icon-gray-neutral-base)` (`16x16`) |
 | `DatagridFooter` | default | **`var(--color-background-surface-primary)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-gray-neutral-base)` | per IDS Pagination spec |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | `DatagridHeader` (data columns, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom in Figma Text path; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail **`left: 0`**, vertically centered | header text `var(--color-text-gray-neutral-strong)` |
-| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-gray-neutral-light)`** **top** + **bottom**; **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail | header text `var(--color-text-gray-neutral-strong)` |
+| `DatagridHeader` (data columns, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** | **1px** **`var(--color-border-gray-neutral-light)`** **bottom** only (inset, inside 48px); **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail | header text `var(--color-text-gray-neutral-strong)` |
 | `DatagridHeader` (Selection / settings, `colorAndBorder=true`) | default | **`var(--color-background-gray-neutral-lighter)`** (nested chrome per Figma) | **top** + **bottom** **`var(--color-border-gray-neutral-light)`**; inner rails per **`37721:114663`** | icons / checkbox per column spec |
 | `DatagridHeader` (Selection / settings, `colorAndBorder=false`) | default | **`var(--color-background-surface-component)`** | **no** full-cell top/bottom on minimal path; inner rails per **`37721:114663`** where shown in Figma | icons / checkbox per column spec |
 | `DatagridRow` | default | **`var(--color-background-surface-component)`** on **each body cell** (idle row; not `transparent` unless `rowBackgroundLayer` is off) | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | `var(--color-text-gray-neutral)` |
 | `DatagridRow` | hover (interactive grid) | overlay **`var(--color-background-brand-lighter-slate)`** | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
 | `DatagridRow` | hover on read-only table | overlay **`var(--color-background-surface-primary)`** | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | unchanged unless product overrides |
 | `DatagridRow` | selected | overlay **`var(--color-background-brand-lighter-slate)`**; optional **4px** leading **`var(--color-border-brand-base)`** when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
-| `DatagridRow` | selected and press | overlay **`var(--color-background-brand-light-slate)`**; optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
-| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default | transparent | none | `var(--color-icon-gray-neutral-base)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
-| `SortToggle` | hover (not sorted) | transparent | none | `var(--color-icon-gray-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
+| `DatagridRow` | hover on selected (Figma **`47971:173288`**; replaces *selected and press*) | overlay **`var(--color-background-brand-light-slate)`**; optional **4px** leading bar when `verticalBlueLine=true` | bottom **1px** `var(--color-border-gray-neutral-light)` when `showBorder=true` | token-resolved |
+| `SortToggle` (`col-sort-up-16` / `col-sort-down-16`, Figma **`37721:114646`**) | default (unsorted, header idle) | transparent | none | **hidden** (`opacity: 0`; slot kept) — Figma Column Header **`37721:114664`** |
+| `SortToggle` | header hover / keyboard focus (unsorted) | transparent | none | `var(--color-icon-gray-neutral-base)` (**`37721:114647`** / **`37721:114655`**); **icon 12×12** |
+| `SortToggle` | icon hover (not sorted) | transparent | none | `var(--color-icon-gray-neutral-strong)` (**`37721:114651`** / **`37721:114657`**); **12×12** |
 | `SortToggle` | selected (sorted column) | transparent | none | `var(--color-icon-brand-base)` (**`37721:114649`** / **`37721:114659`**); **12×12**; direction = **`col-sort-up-16`** (asc) or **`col-sort-down-16`** (desc) |
 | `SortToggle` | selected + hover | transparent | none | `var(--color-icon-brand-stronger)` (**`37721:114653`** / **`37721:114661`**); **12×12** |
 | `FilterToggle` (`filter`) | default | hit target fill **transparent**; padding **12px** on **38×38** control | none | **`var(--color-icon-gray-neutral-base)`**; **icon 14×14** |
 | `FilterToggle` (`filter-solid`) | hover | same **38×38** / **12px** padding contract | none | `var(--color-icon-gray-neutral-base)` (`14x14`) |
-| `FilterToggle` (`filter-solid`) | selected | same | none | `var(--color-icon-brand-base)` (`14x14`) |
-| `FilterToggle` (`filter-solid`) | press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | press (no filter applied) | same | none | `var(--color-icon-brand-strong)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | selected (filter applied) | same | none | `var(--color-icon-brand-base)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | selected + hover | same | none | `var(--color-icon-brand-strong)` (`14x14`) |
+| `FilterToggle` (`filter-solid`) | selected + press | same | none | `var(--color-icon-brand-stronger)` (`14x14`) |
 | `SettingsColumn` | default | header-aligned | `var(--color-border-gray-neutral-light)` | **`Icon`** `settings-gear` in `var(--color-icon-gray-neutral-base)` (`16x16`) |
 | `DatagridFooter` | default | **`var(--color-background-surface-primary)`** (`IdsPagination background="gray"`) | top **1px** `var(--color-border-gray-neutral-base)` | per IDS Pagination spec |
 
@@ -990,7 +1006,7 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
     - **Scrollable pane (middle):** remaining **data** columns only. Own **`overflow-x: auto`** region; horizontal scrollbar starts at the freeze boundary (Figma **`37721:114143`** `pl` inset aligns scrollbar with pane edge).
     - **Settings pane (right, `40px`):** gear column only — **never** scrolls horizontally; pinned trailing chrome (same contract as unified **`position: sticky; right: 0`** on **`settingsColumn`**).
     - **Viewport host (`tableViewportSplit`):** **`overflow-y: auto`** + **`overflow-x: hidden`** only — never horizontally scroll the combined row (that would drag frozen columns and the boundary shadow).
-    - **Boundary bar (`freezePaneEdge`, Figma `37721:114144`):** **`20px`** wide; pinned at frozen/scrollable seam (`left: calc(var(--datagrid-frozen-pane-width) - 20px)` on scroll host); **`z-index`** above scrollable cells. **Background:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`. Stays static while scrollable columns move underneath.
+    - **Boundary bar (`freezePaneEdge`, Figma `37721:114144`):** **`20px`** wide; sits immediately to the right of the frozen/scrollable divider (`left: calc(var(--datagrid-frozen-pane-width) + 1px)` on scroll host) and casts the gradient shadow onto the scrollable pane. The freeze bar does **not** draw the divider — the divider is the leading rail of the first scrollable data column. **`z-index`** above scrollable cells. **Background:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)`. Stays static while scrollable columns move underneath.
   - **Grow column** when freeze is active: last **scrollable** data column only; frozen pane columns use fixed `<colgroup>` widths.
   - **Header band:** mirrors the three-pane split; header horizontal scroll syncs from the **scrollable data** pane only (frozen + settings hosts do not scroll horizontally with middle content).
   - **Vertical scroll:** only **`.bodyViewport`** scrolls body rows; header band stays fixed (see **Codegen Contract → Scroll & viewport blueprint**).
@@ -1142,14 +1158,15 @@ DatagridScrollHost
 | **Settings** | gear column only | **None** — **never** place settings inside scrollable pane | **`40px`** fixed |
 
 - **`growColumnKey`** = last column in **scrollable data** slice only.
-- **`freezePaneEdge`:** **`20px`** wide; **`flex-shrink: 0`**; **`align-self: stretch`**; **`border-radius: 0`**; **`left: calc(var(--datagrid-frozen-pane-width) - 20px)`** on scroll host (absolute pin). **Background:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`.
+- **`freezePaneEdge`:** **`20px`** wide; **`flex-shrink: 0`**; **`align-self: stretch`**; **`border-radius: 0`**; **`left: calc(var(--datagrid-frozen-pane-width) + 1px)`** on scroll host (absolute pin, immediately to the right of the divider rail). **Background:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)`.
 - Unknown / missing **`freezeUntilColumnKey`** → fall back to **unified** layout (sticky selection/settings only).
 
 #### Sort toggle (codegen — Figma `37721:114646`)
 
 | State | `shapeName` | Token | Attribute / a11y |
 |---|---|---|---|
-| Default (unsorted or inactive col) | `col-sort-up-16` | `var(--color-icon-gray-neutral-base)` | — |
+| Default (unsorted, header idle) | `col-sort-up-16` | hidden (`opacity: 0`, slot kept) | — |
+| Header hover / keyboard focus (unsorted) | `col-sort-up-16` | `var(--color-icon-gray-neutral-base)` | — |
 | Hover (not sorted) | unchanged shape | `var(--color-icon-gray-neutral-strong)` | — |
 | Selected asc | `col-sort-up-16` | `var(--color-icon-brand-base)` | **`data-sorted="true"`** on button; **`aria-sort="ascending"`** on **`th`** |
 | Selected desc | `col-sort-down-16` | `var(--color-icon-brand-base)` | **`data-sorted="true"`**; **`aria-sort="descending"`** |
@@ -1244,7 +1261,7 @@ div.gridScrollHost [flex column, position relative]
           table > tbody > scrollable data cols
         div.settingsPane [flex 0 0 40px, overflow hidden]
           table > tbody > settings col
-  div.freezePaneEdge [absolute, 20px wide, z-index above scrollable]
+  div.freezePaneEdge [absolute, 20px wide, left: frozenPaneWidth + 1px, z-index above scrollable]
 ```
 
 ### Per-slot style contract
@@ -1253,7 +1270,7 @@ div.gridScrollHost [flex column, position relative]
 |---|---|---|
 | `DatagridColumnHeader` host | **48px** height, `pl: 16px` | bg/border per `headerColorAndBorder`; leading **1×24** rail `var(--color-border-gray-neutral-light)` |
 | `ColumnTitle` | **14/20** medium, ellipsis | `var(--color-text-gray-neutral-strong)` |
-| `SortToggle` | **12×12** icon, **20×20** button ok | default **`var(--color-icon-gray-neutral-base)`**; hover (unsorted) **`var(--color-icon-gray-neutral-strong)`**; sorted **`var(--color-icon-brand-base)`** + **`data-sorted="true"`**; sorted+hover **`var(--color-icon-brand-stronger)`** (Figma **`37721:114646`**) |
+| `SortToggle` | **12×12** icon, **20×20** button ok | unsorted: **hidden** until header hover / keyboard focus, then **`var(--color-icon-gray-neutral-base)`**; hover (unsorted) **`var(--color-icon-gray-neutral-strong)`**; sorted **`var(--color-icon-brand-base)`** + **`data-sorted="true"`**; sorted+hover **`var(--color-icon-brand-stronger)`** (Figma **`37721:114646`**) |
 | `FilterToggle` | **38×38**, **14×14** icon | see **States** + precedence |
 | `DatagridCell` | **40px** row, padding **10/12/10/16** | text `var(--color-text-gray-neutral)`; bottom `var(--color-border-gray-neutral-light)` |
 | `DatagridRow` hover | full-cell overlay | brand-lighter or `surface-1` if readOnly |
@@ -1289,7 +1306,7 @@ Variant matrix:
   - `freezeUntilColumnKey`: `string | null` — when set, enables **three-pane** freeze layout (see **Scroll & viewport blueprint**); inclusive freeze through this column key.
   - **Column header chrome** (`DatagridColumnHeader` / `th`): **height `48px` total** (no **51px** drift); **host** **`padding-left: 16px`**, **`padding-top` / `bottom: 0`**; **title row** (**37721:114673**): **`padding: 0 8px 0 0`**, **`gap: 12px`**, **`align-items: center`** in **48px** row, title **20px** line box; **trailing column edge** draws the **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail (**decorative**); optional **transparent** resize strip when **`columnResizeEnabled`** (see **Layout → Resize**); **no** extra vertical rule **between** **sort** and **filter**; **filter** (**37721:114677**): **`38×38`**, **`padding: 12px`**, **14×14** **`Icon`**; **`colorAndBorder=true`**: fill **`var(--color-background-gray-neutral-lighter)`**, **1px** **`var(--color-border-gray-neutral-light)`** **top** + **bottom**; **data** headers add **leading** **1px × 24px** **`var(--color-border-gray-neutral-light)`** rail per **`37721:114663`**; **`colorAndBorder=false`**: fill **`var(--color-background-surface-component)`**, same **leading** rail on data headers, **no** full-cell top/bottom on Text minimal path.
   - data columns honor min-width `90px`.
-  - **Body row chrome** (`DatagridRow` / body `td`): height **40px** (Figma **`Grid height/Cell`**); **idle** fill **`var(--color-background-surface-component)`** on **each cell** (not `transparent` when `rowBackgroundLayer` is on); bottom divider **1px** **`var(--color-border-gray-neutral-light)`** when `rowShowBottomBorder` is on; hover/selected/press fills and vertical accent per **States** tables and Figma **`37721:114580`**.
+  - **Body row chrome** (`DatagridRow` / body `td`): height **40px** (Figma **`Grid height/Cell`**); **idle** fill **`var(--color-background-surface-component)`** on **each cell** (not `transparent` when `rowBackgroundLayer` is on); bottom divider **1px** **`var(--color-border-gray-neutral-light)`** when `rowShowBottomBorder` is on; hover / selected / hover-on-selected fills and vertical accent per **States** tables and Figma Row background **`47971:173289`**.
   - `SettingsColumn` width is fixed `40px` and pinned.
   - **Last data column** `<col>` uses **`width: auto`** (sole slack column); chrome **48**/**40** (Figma **`37721:113987`**).
   - selection column and settings column do not participate in horizontal scrolling.
@@ -1299,8 +1316,8 @@ Variant matrix:
   - **FilterToggle** (`.Filter for table`, **`37721:114677`** / **`37721:114635`**): **38×38** control, **12px** padding, **14×14** **`Icon`**; state/**`shapeName`** mapping (see **States** tables):
     - default: `filter` + **`var(--color-icon-gray-neutral-base)`**
     - hover (pointer or keyboard focus while closed): `filter-solid` + **`var(--color-icon-gray-neutral-base)`**
-    - selected (**`filterActive`** / applied criteria, menu closed): `filter-solid` + **`var(--color-icon-brand-base)`**
-    - press (`:active` / pointer down): `filter-solid` + **`var(--color-icon-brand-stronger)`**
+    - selected (**`filterActive`** / applied criteria, menu closed): `filter-solid` + **`var(--color-icon-brand-base)`**; selected + hover → **`var(--color-icon-brand-strong)`**
+    - press (`:active` / pointer down): `filter-solid` + **`var(--color-icon-brand-strong)`** (no filter applied) / **`var(--color-icon-brand-stronger)`** (filter applied)
     - **Precedence (codegen):** press **>** hover|focus **>** filterActive **>** default; clear press on **global** `pointerup` / `pointercancel`.
   - **Filter menu (open):** **`FilterMenuLayer`** portaled + **`position: fixed`**; keep the portal mounted while open and use **`visibility` / `pointer-events`** (or equivalent) only until anchor **`getBoundingClientRect()`** is available so the menu never stays permanently hidden on first open; **`FilterPanel`** width **`max-content`** with **min**/**max** clamps (not a single fixed Figma pixel); **L** top rule length **`calc(100% - 38px)`** where **38px** equals **`FilterIconTab`** width.
 - Behavior contract:
@@ -1350,8 +1367,8 @@ Variant matrix:
   - [ ] **Horizontal scrollbar:** anchored to **bottom of body viewport** (above footer), not under last row — body panes use **`min-height: 100%`**.
   - [ ] **`scrollbar-gutter: auto`** on body viewport — **no** permanent right gutter strip beside settings column.
   - [ ] **Height / width:** grid shell **`width/height: 100%`**; fills container (**`37721:112482`**); demo host **`100dvh`** without arbitrary **`max-width`** cap.
-  - [ ] **Freeze (`freezeUntilColumnKey`):** three panes (frozen | scrollable data | settings **`40px`**); settings **never** in scrollable pane; **`freezePaneEdge`** **`20px`** with `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)` pinned at seam (**`37721:114144`**); **`growColumnKey`** = last scrollable data column only.
-  - [ ] **Sort (`37721:114646`):** unsorted hover **`neutral-strong`** (not brand); sorted **`brand-base`** + **`data-sorted="true"`**; sorted+hover **`brand-stronger`**; **`aria-sort`** on **`th`**; icons **12×12**.
+  - [ ] **Freeze (`freezeUntilColumnKey`):** three panes (frozen | scrollable data | settings **`40px`**); settings **never** in scrollable pane; **`freezePaneEdge`** **`20px`** with `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)` pinned immediately to the right of the seam (**`37721:114144`**); divider rail belongs to first scrollable data column; **`growColumnKey`** = last scrollable data column only.
+  - [ ] **Sort (`37721:114646`):** unsorted columns hide the toggle until header hover / keyboard focus; sorted column always visible; unsorted icon hover **`neutral-strong`** (not brand); sorted **`brand-base`** + **`data-sorted="true"`**; sorted+hover **`brand-stronger`**; **`aria-sort`** on **`th`**; icons **12×12**.
   - [ ] **Header titles:** **`text-overflow: ellipsis`** on title text (**`display: block`** or equivalent — not **`display: flex`** on the title node); **`min-width: 0`** on flex title slot; sort/filter **`flex-shrink: 0`**; native **`title`** tooltip when truncated; no icon/title overlap at **`90px`** min width.
   - [ ] **Table layout:** **no** `display: flex` on **`th`/`td`**; `<table>` **`width: 100%`**, **`border-spacing: 0`** — **no** spurious side gutters from broken table-cell display.
   - [ ] column min-width (`90px`) and ellipsis behavior are enforced.
@@ -1392,6 +1409,7 @@ Variant matrix:
   - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; sort icon matrix **`37721:114646`** (symbols **`37721:114647`**–**`37721:114661`**) re-checked **`2026-06-05`** (Figma MCP); column freeze scenario **`37721:115949`** re-checked **`2026-06-05`**; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**); text filter search field **`37822:91077`** re-checked **`2026-07-28`** (Figma MCP `get_variable_defs` + REST + screenshot).
 - Angular library: `lib/angular/ids/datagrid/`
 - Angular Storybook: `storybook-angular/src/components/ids-datagrid/`
+
 ### Storybook generation contract
 
 **Root Storybook scope:** `storybook/.storybook/main.ts` includes **Spec Generated** only for **IDS** (`storybook-generated/ids`) and **DAP** (`storybook-generated/dap`). Each generated story imports exactly one program theme: **`components/ids-theme.css`** (IDS) or **`components/dap-theme.css`** (DAP).
@@ -1425,8 +1443,8 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 ## Implementation Notes
 
 **Column-freeze boundary bar (`freezePaneEdge`, `37721:114144`)**
-- **Width:** `20px`; **do NOT** substitute `box-shadow` or a reversed `to right` gradient — Figma uses a single **`linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63.46%, var(--color-gradient-overflow-vertical-start) 100%)`** fill on the bar.
-- **Pin:** `position: absolute; top: 0; bottom: 0; left: calc(var(--datagrid-frozen-pane-width) - 20px)` on `.gridScrollHost[data-split-freeze="true"]` so the bar spans header + body and stays fixed while scrollable columns move.
+- **Width:** `20px`; **do NOT** substitute `box-shadow` or a reversed `to right` gradient — Figma uses a single **`linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)`** fill on the bar.
+- **Pin:** `position: absolute; top: 0; bottom: 0; left: calc(var(--datagrid-frozen-pane-width) + 1px)` on `.gridScrollHost[data-split-freeze="true"]` so the bar sits immediately to the right of the divider rail, spans header + body, and stays fixed while scrollable columns move.
 
 **Sort icon**
 - **Wrapper size**: `12×12px` — do NOT use `20×20px`; a larger wrapper inflates the hit target and shifts layout
@@ -1437,7 +1455,7 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 **Filter icon**
 - **Hover color**: `var(--color-icon-gray-neutral-strong)` — do NOT use `var(--color-icon-gray-neutral-base)` (identical to default, no visual feedback)
 - **Selected vs hover priority**: in `resolveFilterToggleVisual`, check `resolveIdsDataGridColumnFilterActive()` BEFORE `filterHoverKey`/`filterFocusKey`; wrong order causes the icon to show gray instead of blue when an active filter column is hovered
-- **Size in open menu tab**: use `padding: 11px 11px 12px` on `.filterPopupIconTab`, NOT `padding: 12px` — the tab has 3×1px borders; with `box-sizing: border-box` and `padding: 12px` the content area is only 12×13px, causing the icon to flex-shrink below 14×14
+- **Size in open menu tab**: use `padding: 11px 11px 12px` on `.filterPopupIconTab` (Column Filter-Main `37822:91074`: 12px inset including the 1px border → 14×14 icon at (12, 12), exactly over the header filter icon), NOT `padding: 12px`, NOT `padding: 12px` — the tab has 3×1px borders; with `box-sizing: border-box` and `padding: 12px` the content area is only 12×13px, causing the icon to flex-shrink below 14×14
 - **Mask size on filter icon**: the filter SVG has a 12:14 natural ratio; the `Icon` default `mask-size: contain` renders it 12px wide instead of 14×14. Fix: add `.filterIcon span, .filterPopupIconTab span { mask-size: 14px 14px !important; -webkit-mask-size: 14px 14px !important; }` in `IdsDataGrid.module.css` — applies to both the header toggle icon and the open-menu tab icon
 
 **Pagination / Footer**
@@ -1448,6 +1466,11 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 - **Font-weight**: all filter text elements (labels, inputs, options) use `font-weight: 400` — do NOT use `font-weight: 500`
 - **Search icon**: slug `search-16`, rendered `16×16px` with no wrapper styles (no display/align-items/justify-content on the icon itself)
 - **Dismiss/clear button**: icon slug `ctrl-close-16`, rendered `12×12px`, color `var(--color-icon-gray-neutral-accessible)` — visible only when search query is non-empty; click clears. Same contract on Column Search, Combobox-SingleSelect, and Combobox-Multiselect filter search inputs (aligned with DropdownMenu search clear).
+
+**Date / Date and Time filters — picker portaling**
+- `DatePicker` and `TimePicker` popups must be portaled to `document.body` (`popupPortal: true`) so they escape the filter panel's `overflow: clip` and the grid's stacking context.
+- Portaled popups must isolate `mousedown`/`pointerdown` events (e.g. `e.stopPropagation()` on the popup panel) so selecting a date or time does not close the parent filter menu.
+- Reference implementation: `IdsDatePicker.tsx` and `IdsTimePicker.tsx`.
 
 **Date / Date and Time filters — preset row summary**
 - **Bug (fixed)**: `modeShowsSummary` incorrectly excluded `"all"` — correct guard is `mode !== "specific-date" && mode !== "custom-range"`. Do NOT add `mode !== "all"`.
@@ -1461,7 +1484,7 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 
 **Column Search filter**
 - **Figma:** `37822:91073` (L-frame) + search field **`37822:91077`** (Search Box Properties, Large 40px)
-- **Panel width**: preferred `300px`; clamp with `--ids-datagrid-filter-panel-max-width` so the menu stays inside the datagrid (Name / first columns)
+- **Panel width**: `min-width: 300px`; `max-width: 700px`; clamp with `--ids-datagrid-filter-panel-max-width` so the menu stays inside the datagrid (Name / first columns)
 - **Row**: `width: 100%`; `height: 40px`; `padding: var(--padding-padding-6) var(--padding-padding-16)`; `align-items: center`; **no** flex gap (icon→text via input `padding-left: 8px`)
 - **Icon**: shared `Icon` `search-16` (mask + `currentColor`); CSS `color: var(--color-icon-brand-base)`
 - **Clear**: shared `Icon` `ctrl-close-16` `12×12` (mask + `currentColor`); button `color: var(--color-icon-gray-neutral-accessible)` — only when query non-empty; click clears
@@ -1470,8 +1493,54 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 **Multiselect / Single-select filters**
 - **Panel width**: `269px` (min-width/max-width)
 - **Select All / Clear All row**: `justify-content: space-between`; row padding `8px 0 8px 16px`; Clear All right-aligned with its own `16px` horizontal padding (Figma `44360:179347`)
-- **Option list padding**: no bottom padding (removed `padding-bottom`)
 
 **Numeric filter**
 - **Value + helper grouping**: when unit dropdown is present, wrap text field and helper text in a vertical flex group (`gap: var(--spacing-space-4)`) that takes `flex: 1` alongside the unit dropdown — helper text belongs to the value field group, not to the entire row
 
+**2026-08-09**
+
+**Filter panel option-list padding fix**
+- `FilterPanelBody` slot (`IdsDataGrid.module.css`): `padding: 0`.
+- Combobox single/multi select option lists (`IdsDataGridTypeComboboxSingleSelectFilterPanel.module.css`, `IdsDataGridTypeMultiselectFilterPanel.module.css`): `padding: 0` (no top/bottom padding).
+- Inner panels that need spacing (Date / Date-Time) supply their own `padding` on the panel root.
+- The remaining ~10px vertical space above/below each option text comes from `min-height: 40px` and centered flex alignment, not from padding.
+
+**Date / Date and Time filters — picker portaling**
+- `IdsDatePicker.tsx` + `IdsTimePicker.tsx`: calendar/time popups use `createPortal` to `document.body`.
+- Enable `popupPortal` (default `true`) so the popup escapes the filter panel's `overflow: clip` / stacking context.
+- Add `e.stopPropagation()` on `mousedown`/`pointerdown` so selecting a date/time does not close the parent filter menu.
+
+**Column-freeze boundary position**
+- `IdsDataGrid.module.css`: `.freezePaneEdge` sits immediately to the right of the frozen/scrollable divider (`left: calc(var(--datagrid-frozen-pane-width) + 1px)`) and extends 20px into the scrollable pane. The bar only casts the overflow shadow and does **not** draw a border.
+- **Gradient:** `linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)`.
+- The crisp 1px divider at the seam is the leading rail of the first scrollable data column: unhide `.gridScrollHost[data-split-freeze="true"] .scrollableHeaderHost .grid thead tr > .headerDataCell:first-child::before` when split-freeze is active.
+- The bar stays fixed while the scrollable pane moves underneath.
+
+**Body row height / split-pane border alignment**
+- `IdsDataGrid.module.css`: `.bodyRow`, `.bodyCell`, and `.rowSelectionCell` use **`height: 41px`** (`box-sizing: border-box`). The 40px content/padding area matches the Figma `Grid height/Cell` token; the extra 1px is the bottom border.
+- This prevents rows from expanding to different pixel heights in frozen/scrollable/settings panes, which was causing horizontal row borders to look misaligned when panes scrolled independently.
+
+
+**2026-10-05**
+
+**React library parity (`lib/react/ids/datagrid`)**
+- Ported the 2026-08-09 fixes from Storybook (`storybook/src/components`) to the React library: freeze boundary (`+ 1px`, `63%` gradient, first scrollable column owns the divider rail), `41px` body row / cell height, filter panel bounds (`186px` / `700px`; Date-Time `480px`, Date `382px`, Numeric `300px`; Column Search `max-content` / `300px` / `700px`), option-list `padding: 0`, `data-numeric-filter` on the numeric panel, numeric matcher inactive while values are empty, "Time:" labels, summary rendered with `visibility` toggle so panel width stays stable.
+- Numeric filter focus ring: pointer focus shows the brand border only; keyboard focus shows the rounded `::after` ring on `.valueInputWrap` / `.unitDropdownRoot` (`data-pointer-focus` on the value input).
+- Pagination dropdown placement needs no port: `lib/react/ids/pagination` uses the shared `DropdownMenu` (Base UI `collisionAvoidance: flip`).
+
+**Sort toggle visibility (Figma parity)**
+- Figma Column Header `37721:114664` keeps the `.Sort for table` instance hidden; Data Grid samples (e.g. `37721:114249`) show the sort arrow only on the sorted column.
+- `lib/react/ids/datagrid/IdsDatagrid.module.css`: `.headerDataCell .iconButton:not([data-sorted="true"])` → `opacity: 0`; revealed by `.headerDataCell:hover` and `.headerDataCell:has(:focus-visible)`. Sorted column always visible. Replaces the 2026-06-07 "always visible" product decision.
+
+**Figma redesign parity (`48122:183847`) — `lib/react/ids/datagrid`**
+- **Row height 40px total** (Figma strokes sit inside the 40px row): `.grid` uses `border-collapse: separate; border-spacing: 0`; `td` `height: 40px` border-box with content + padding = 39px for every cell type (data `padding: 10px 12px 9px 16px`; selection content `height: 39px`; settings `padding: 12px 0 11px`). Replaces the 2026-08-09 `41px` rule; frozen / scrollable / settings panes verified aligned (unified, freeze, multiple selection, minimal header, tree view).
+- **Header** 48px total: bottom rule only, drawn inside the cell (`box-shadow: inset 0 -1px 0`); top rule removed. The grid frame moved to `.contentRow` (one border around grid + detail panel), and the detail-panel header rule now targets `[data-ids="ids-detail-panel-header"]` (the old `.ids-detail-panel__header` selector never matched), so both header bands span y 1–49. The grid/panel divider is the panel's 1px `gray-neutral-base` left border (Figma Details Panel - Main `48007:166309` strokes in `gray-neutral-base`, overlapping the table frame), and the panel header keeps its `gray-neutral-base` bottom rule.
+- **Row-selection radio group** passes `labelPosition="top"` — the default `"left"` added 10px form padding above the grid in single-selection mode.
+- **Hover on selected** row → `var(--color-background-brand-light-slate)` (replaces *selected and press*). Read-only hover (`surface-primary`) is retained as product behavior; the redesign has no read-only hover state.
+- **Numeric columns:** `IdsDatagridColumn` `align="right"`.
+- **Filter icon states** per `50618:174848`: press (no filter) `brand-strong`; applied + hover `brand-strong`; applied + press `brand-stronger`.
+- **Header icon spacing** per the Column Filter page `44370:173173` (`.Column Header` title row + `.Filter for table`): title→sort icon 12px, sort→filter icon 20px, filter icon 12px from the cell edge in a 38×38 box (title row `gap: 8px; padding-right: 4px` around the 20px sort button, `8px` when there is no sort). The open-menu tab covers the same box, so the icon does not move when the menu opens. (The redesign's 16px filter glyph / 8px inset was tried and reverted: it made the icon jump between closed and open states.)
+- **Selection radio clipped by 1px:** the radio control's `margin-top: 2px` (first-text-line offset for labelled radios) pushed the label-less control out of the 16px `selectionHost`; `.selectionHost [data-ids="ids-radio-control"] { margin-top: 0 }` and rows `align-items: center` keep it at y 12–28.
+- **Tree cells** per Figma Cells `Type=Tree` / `Type=Tree with selection` (`48133:234217`): chevron at x 16 + 24 × (level − 1) (24px per level; the `td` supplies the first 16px), then checkbox/radio, row icon and text **16px** apart; leaf rows keep the 16px chevron slot. The tree-cell checkbox uses `density="datagrid"` (it was 1px low and clipped by the 16px host).
+- **`treeRowSelection`** (`"none"` | `"checkbox"` | `"radio"`, tree view only): renders the selection control inside the tree cell instead of a separate selection column; checkbox = multiple selection, radio = single selection.
+- **Pagination per-page dropdown** now updates the grid: `IdsDatagrid` owns page-size state (`pageSize` = initial value, `pageSizeOptions`, `onPageSizeChange`); the initial and active sizes are always in the option list; changing size resets to page 1.

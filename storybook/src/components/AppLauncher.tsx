@@ -340,14 +340,6 @@ function AppLauncherSurface({
   );
 }
 
-function chunkRows<T>(items: T[], columns: number): T[][] {
-  const rows: T[][] = [];
-  for (let i = 0; i < items.length; i += columns) {
-    rows.push(items.slice(i, i + columns));
-  }
-  return rows;
-}
-
 /* Long-name reflow (see design-spec "Long-label reflow"): a text-only tile wraps
    to 3 lines, an icon tile to 1; a longer name promotes the tile to full-width
    (its own row). At most APP_LAUNCHER_MAX_PRODUCT_ROWS product rows show; the

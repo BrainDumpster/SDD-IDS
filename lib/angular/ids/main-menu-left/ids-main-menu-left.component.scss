@@ -90,6 +90,12 @@ ids-main-menu-left-item-icon {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Let the row focus ring sit fully outside the rail's L/R border (a 1px gap
+     between the ring's inner edge and the rail's outer edge) instead of being
+     clipped by this scroll container. The negative inline margin keeps the row
+     content-box — and its hover/selected fills — in place. */
+  padding-inline: calc(4 * var(--border-width-border-1));
+  margin-inline: calc(-4 * var(--border-width-border-1));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
@@ -243,8 +249,8 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__secondary-row--interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -257,29 +263,47 @@ ids-main-menu-left-item-icon {
   max-height: 49px;
   flex-shrink: 0;
   border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  padding: var(--padding-padding-16) var(--padding-padding-24);
+  /* Padding moved onto the button so its hover/press fill covers the whole footer. */
+  padding: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .ids-main-menu-left__bottom-toggle-button {
   box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  min-height: 16px;
-  padding: 0;
+  /* Tertiary control that fills the entire footer: hover/press tint the whole
+     background edge-to-edge. Inline padding keeps the icon on the 24px inset. */
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--padding-padding-24);
   margin: 0;
   border: none;
+  border-radius: 0;
   background: transparent;
+  box-shadow: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   line-height: 0;
   font: inherit;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
+  transition: background-color 150ms ease;
+
+  /* Tertiary hover/press fill across the whole footer — no border. */
+  &:hover {
+    background: var(--color-background-controls-lighter);
+  }
+
+  &:active {
+    background: var(--color-background-controls-light);
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .ids-main-menu-left__bottom-toggle-icon {
@@ -297,8 +321,8 @@ ids-main-menu-left-item-icon {
   position: absolute;
   /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
      No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -311,8 +335,8 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__primary-row--interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 calc(-4 * var(--border-width-border-1));
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
