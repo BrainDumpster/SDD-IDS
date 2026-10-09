@@ -166,6 +166,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Option selection:
   - single-select commits the option and **closes** the popup.
   - multi-select toggles the option and **keeps the popup open** for further selection.
+- **Naming (design review 2026-10):** in the combo box every Clear All control is labelled **"Reset to Default"**: the single-select row and the multi-select `Select All | Reset to Default` row. Only the label changes; the clearing behavior described below stays the same.
 - Single-select Clear All (`showClearAll`, Figma `348:140631`):
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the footer action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding: var(--padding-padding-2) var(--padding-padding-16)`, `radius-2`) but with a **bottom** border (not the footer's top border) since it sits at the top of the list.
   - the Clear All row is **hidden while a search query is active** (same as the multi-select `SelectAllRow`), and reappears when the search is cleared.
@@ -272,6 +273,9 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - [ ] Light and dark outputs remain semantic-token driven.
 - [ ] Accessibility semantics and keyboard behavior pass parity checks.
 ## Implementation Notes
+
+### 2026-10-09
+- **Clear All labelled "Reset to Default"** (design review). React `IdsDropdownComboBox.tsx` passes `clearAllLabel="Reset to Default"` to `DropdownMenu`, which covers the single row and the multi Select All row. Angular `ids-dropdown-menu` renders `resolvedClearAllLabel`, which is `resetToDefaultLabel` for `combobox-single` / `combobox-multi` (and for single-select with radio). Behavior and the `onClearAllClick` / `clearAllClick` events are unchanged.
 
 ### 2026-08-30
 - **Field text tooltip with section header (multi-select)** — `IdsDropdownComboBox.stories.tsx` `TruncatingValue` now accepts a `tooltipTitle` and renders an `IdsTooltip` on the truncated field text with the same `${selectedCount} Items` header as the badge. The tooltip only appears when the text is actually cut off.

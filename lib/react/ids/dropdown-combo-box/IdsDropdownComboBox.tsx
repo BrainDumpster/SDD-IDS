@@ -74,7 +74,8 @@ export interface IdsDropdownComboBoxProps {
   disabled?: boolean;
   searchable?: boolean;
   menuWidth?: IdsDropdownComboBoxMenuWidth | string;
-  /** Single-select only — Clear All row when a value is selected. */
+  /** Single-select only — Reset to Default row (combo box name for Clear All)
+   *  when a value is selected. */
   showClearAll?: boolean;
   maxVisibleItems?: number;
   noResultsLabel?: string;
@@ -453,6 +454,9 @@ export function IdsDropdownComboBox({
       <DropdownMenu
         selectionMode={isMulti ? "multi" : "single"}
         selectedValues={selectedLabels}
+        // Combo box names Clear All "Reset to Default" (single row and multi
+        // Select All row); clearing behaves the same.
+        clearAllLabel="Reset to Default"
         trigger={trigger}
         items={items}
         disabled={disabled}
