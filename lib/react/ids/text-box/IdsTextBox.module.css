@@ -82,29 +82,11 @@
   border-color: var(--color-border-brand-base);
 }
 
-/* Pointer focus: active/selected border only (no outline ring) */
-.ids-text-box-control:has(.ids-text-box-value:focus:not(:focus-visible)):not([data-state="disabled"]):not([data-state="error"]) {
-  border-color: var(--color-border-brand-base);
-}
-
-/* Keyboard focus-visible: accessible border + outer ring */
-.ids-text-box-control:has(.ids-text-box-value:focus-visible):not([data-state="disabled"]):not([data-state="error"]),
+/* Focus looks the same as Selected — brand border, no outer ring — whether the
+   field was clicked or reached with Tab. Same for text input and text area. */
+.ids-text-box-control:focus-within:not([data-state="disabled"]):not([data-state="error"]),
 .ids-text-box-control[data-state="focus"] {
-  border-color: var(--color-border-gray-neutral-base);
-}
-
-.ids-text-box-control:has(.ids-text-box-value:focus-visible):not([data-state="disabled"]):not([data-state="error"])::after,
-.ids-text-box-control[data-state="focus"]::after {
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--text-box-focus-ring-radius, var(--corner-radius-radius-4));
-  content: "";
-  inset: -5px;
-  pointer-events: none;
-  position: absolute;
-}
-
-.ids-text-box-control:has(.ids-text-box-value:focus:not(:focus-visible)):not([data-state="disabled"]):not([data-state="error"])::after {
-  content: none;
+  border-color: var(--color-border-brand-base);
 }
 
 .ids-text-box-control[data-state="disabled"] {

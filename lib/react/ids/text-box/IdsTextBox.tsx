@@ -18,7 +18,9 @@ import React, {
   isValidElement,
   useId,
   type ChangeEvent,
+  type FocusEvent,
   type InputHTMLAttributes,
+  type PointerEvent,
   type ReactElement,
   type ReactNode,
   type TextareaHTMLAttributes,
@@ -28,6 +30,23 @@ import { IdsHelper } from "../helper";
 import { IdsIcon } from "../icon";
 import styles from "./IdsTextBox.module.css";
 import { IDS_ICON_URL_BY_SHAPE } from "../shared/idsAssetRegistry.generated";
+
+type TextField = HTMLInputElement | HTMLTextAreaElement;
+
+/** `selectTextOnFocus`: select the whole value, or put the caret at the end. */
+function applyFocusSelection(field: TextField, selectAll: boolean) {
+  // A fast Tab or click can move focus on before this runs; leave that field alone.
+  if (document.activeElement !== field) return;
+  if (selectAll) {
+    field.select();
+    return;
+  }
+  // `email`, `number` and similar types have no caret API and throw on
+  // `setSelectionRange`; they keep the browser's own behaviour.
+  if (field.selectionStart === null) return;
+  const end = field.value.length;
+  field.setSelectionRange(end, end);
+}
 
 export type IdsTextBoxComponentType = "text-input" | "text-area";
 export type IdsTextBoxSize = "large" | "small";
@@ -89,6 +108,20 @@ export interface IdsTextBoxProps {
   name?: string;
   rows?: number;
   inputType?: string;
+  /**
+   * Figma: "Select text when in focus". Applies however the field takes focus —
+   * a click (Selected) or `Tab` / `Shift+Tab` — on text input and text area alike.
+   *
+   * - `true` (default): selects the whole value so typing replaces it — simple
+   *   values that are usually re-entered (name, location).
+   * - `false`: puts the caret at the end — values that are usually edited in
+   *   part, where replacing them by accident loses data (IP address, path).
+   * - `null`: leaves the caret to the browser. The option is for Text Box /
+   *   Text Area only; components that embed the field (Pagination, Slider) pass it.
+   *
+   * A previous selection is never restored.
+   */
+  selectTextOnFocus?: boolean | null;
   ariaLabel?: string;
   ariaDescribedBy?: string;
   onValueChange?: (value: string) => void;
@@ -169,6 +202,7 @@ export function IdsTextBox({
   name,
   rows = 4,
   inputType = "text",
+  selectTextOnFocus = true,
   ariaLabel,
   ariaDescribedBy,
   onValueChange,
@@ -216,6 +250,17 @@ export function IdsTextBox({
     onValueChange?.(event.target.value);
   };
 
+  const placeFocusSelection = (field: TextField) => {
+    const selectAll = selectTextOnFocus;
+    if (selectAll == null) return;
+    const apply = () => applyFocusSelection(field, selectAll);
+    // Browsers select the whole value when you Tab into a field, and some do it
+    // after this handler runs. Apply it now so there is no flash of highlighted
+    // text, then again on the next frame so the result sticks either way.
+    apply();
+    requestAnimationFrame(apply);
+  };
+
   const projectedMessage =
     message != null
       ? React.cloneElement(message as ReactElement<{ id?: string; disabled?: boolean }>, {
@@ -237,6 +282,17 @@ export function IdsTextBox({
     // Spec: aria-label is fallback when no visible label; placeholder is never the label
     "aria-label": shouldRenderLabel ? undefined : ariaLabel,
     onChange: handleChange,
+    onPointerDown: (event: PointerEvent<TextField>) => {
+      const field = event.currentTarget;
+      // Already focused: no focus event follows, the click just moves the caret.
+      if (selectTextOnFocus == null || document.activeElement === field) return;
+      // A click focuses on press, then the browser drops the caret under the
+      // pointer on release, wiping what onFocus applied. Apply it again after.
+      document.addEventListener("pointerup", () => placeFocusSelection(field), { once: true });
+    },
+    onFocus: (event: FocusEvent<TextField>) => {
+      placeFocusSelection(event.currentTarget);
+    },
   };
 
   const fieldGroup = (

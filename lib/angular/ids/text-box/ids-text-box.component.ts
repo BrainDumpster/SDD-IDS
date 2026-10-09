@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -17,7 +16,22 @@ import {
 } from "@component-contracts/ids/text-box.contract";
 import { IdsIconComponent } from "../icon/ids-icon.component";
 
-type FocusModality = "keyboard" | "pointer";
+type TextField = HTMLInputElement | HTMLTextAreaElement;
+
+/** `selectTextOnFocus`: select the whole value, or put the caret at the end. */
+function applyFocusSelection(field: TextField, selectAll: boolean): void {
+  // A fast Tab or click can move focus on before this runs; leave that field alone.
+  if (document.activeElement !== field) return;
+  if (selectAll) {
+    field.select();
+    return;
+  }
+  // `email`, `number` and similar types have no caret API and throw on
+  // `setSelectionRange`; they keep the browser's own behaviour.
+  if (field.selectionStart === null) return;
+  const end = field.value.length;
+  field.setSelectionRange(end, end);
+}
 
 @Component({
   selector: "ids-text-box",
@@ -47,17 +61,22 @@ export class IdsTextBoxComponent implements OnChanges {
   @Input() name?: string;
   @Input() rows = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.rows;
   @Input() inputType: string = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.inputType;
+  /**
+   * Figma: "Select text when in focus". Applies however the field takes focus —
+   * a click (Selected) or Tab / Shift+Tab — on text input and text area alike.
+   * `true` (default) selects the whole value; `false` puts the caret at the end,
+   * for values usually edited in part (IP address, path). `null` leaves the caret
+   * to the browser: the option is for Text Box / Text Area only, so components
+   * that embed the field (Slider) pass it. A previous selection is never restored.
+   */
+  @Input() selectTextOnFocus: boolean | null = TEXT_BOX_SPEC_ACCURATE_DEFAULTS.selectTextOnFocus;
   @Input() ariaLabel?: string;
   @Input() ariaDescribedBy?: string;
 
   @Output() readonly valueChange = new EventEmitter<string>();
 
-  focusModality: FocusModality = "pointer";
-  isFocused = false;
   private internalValue = "";
   private generatedId = `ids-text-box-${Math.random().toString(36).slice(2, 9)}`;
-
-  constructor(private readonly cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["defaultValue"] && this.value === undefined && !changes["defaultValue"].firstChange) {
@@ -113,24 +132,28 @@ export class IdsTextBoxComponent implements OnChanges {
     return this.ariaDescribedBy;
   }
 
-  onPointerDown(): void {
-    this.focusModality = "pointer";
+  onPointerDown(event: PointerEvent): void {
+    const field = event.currentTarget as TextField;
+    // Already focused: no focus event follows, the click just moves the caret.
+    if (this.selectTextOnFocus == null || document.activeElement === field) return;
+    // A click focuses on press, then the browser drops the caret under the
+    // pointer on release, wiping what onFocus applied. Apply it again after.
+    document.addEventListener("pointerup", () => this.placeFocusSelection(field), { once: true });
   }
 
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === "Tab") {
-      this.focusModality = "keyboard";
-    }
+  onFocus(event: FocusEvent): void {
+    this.placeFocusSelection(event.target as TextField);
   }
 
-  onFocus(): void {
-    this.isFocused = true;
-    this.cdr.markForCheck();
-  }
-
-  onBlur(): void {
-    this.isFocused = false;
-    this.cdr.markForCheck();
+  private placeFocusSelection(field: TextField): void {
+    const selectAll = this.selectTextOnFocus;
+    if (selectAll == null) return;
+    const apply = () => applyFocusSelection(field, selectAll);
+    // Browsers select the whole value when you Tab into a field, and some do it
+    // after this handler runs. Apply it now so there is no flash of highlighted
+    // text, then again on the next frame so the result sticks either way.
+    apply();
+    requestAnimationFrame(apply);
   }
 
   onInput(event: Event): void {
