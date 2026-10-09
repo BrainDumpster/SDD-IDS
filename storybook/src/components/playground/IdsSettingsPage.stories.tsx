@@ -4,8 +4,7 @@
  *
  * Every component here has a job on the page: the shell frames it, the anchor
  * menu jumps between sections, the tabs split the preference groups, each row
- * pairs a label with the control that actually edits that preference, and the
- * action bar saves or discards the pending edits.
+ * pairs a label with the control that actually edits that preference.
  *
  * Component sources — these are taken from their own feature branches, not master:
  *   app-launcher     → usr/charles/IDS/App-Launcher-Fixes (already merged into master)
@@ -18,7 +17,7 @@
  * Theme: components/ids-theme.css — works in light and dark via the Theme toolbar.
  * Layout: ./ids-settings-page.css, IDS design tokens only.
  */
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import "../../../../components/ids-theme.css";
 import "./ids-settings-page.css";
@@ -30,25 +29,19 @@ import { IdsMastheadAvatar } from "@ids/react/masthead";
 import type { MainMenuLeftPrimaryItem } from "@ids/react/main-menu-left";
 import { IdsAnchorMenu, type IdsAnchorMenuItem } from "@ids/react/anchor-menu";
 import { IdsAlert } from "@ids/react/alert";
-import { IdsButton, IdsButtonLabel, IdsButtonLeadingIcon } from "@ids/react/button";
+import { IdsButton, IdsButtonLabel } from "@ids/react/button";
 import { IdsTabs } from "@ids/react/tab";
 import { IdsTextBox } from "@ids/react/text-box";
-import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 import { IdsToggleSwitch } from "@ids/react/toggle-switch";
 import { IdsDropdownSingleSelect } from "@ids/react/dropdown-single-select";
 import { IdsDropdownMultiSelect } from "@ids/react/dropdown-multiselect";
-import { IdsSegmentedButton, IdsSegmentedText } from "@ids/react/segmented-button";
-import { IdsSlider, type IdsSliderValue } from "@ids/react/slider";
 import { IdsRadioGroup, IdsRadioButton, IdsRadioLabel } from "@ids/react/radio-button";
 import { IdsCheckbox, IdsCheckboxGroup, IdsCheckboxLabel } from "@ids/react/checkbox";
 import { IdsAccordion } from "@ids/react/accordion";
 import { IdsLink } from "@ids/react/link";
 import { IdsTag } from "@ids/react/tag";
-import { IdsDatePicker } from "@ids/react/date-picker";
-import { IdsTimePicker } from "@ids/react/time-picker";
 import { IdsDatagrid, type IdsDatagridColumnDef, type IdsDatagridRowDef } from "@ids/react/datagrid";
 import { IdsModal } from "@ids/react/modal";
-import { IdsToastViewport, type IdsToastQueueItem } from "@ids/react/toast";
 import { Tooltip, TooltipTrigger, TooltipPanel, TooltipHeader, TooltipBody } from "@ids/react/tooltip";
 
 /* -------------------------------------------------------------------------- */
@@ -137,48 +130,24 @@ interface Preferences {
   focusOutline: boolean;
   pageZoom: string;
   pageColors: string;
-  highContrastOnly: boolean;
-  textSize: IdsSliderValue;
-  customScrollbars: boolean;
-  imageDescriptions: boolean;
-  askBeforeClosing: boolean;
-  captionStyle: string;
   announcements: string[];
   focusIndicator: string;
   reduceMotion: boolean;
   underlineLinks: boolean;
-  theme: string;
-  density: string;
-  accent: string;
-  emailAlerts: boolean;
-  severities: string[];
-  quietFrom: string | null;
-  quietTo: string | null;
-  pauseUntil: Date | null;
+  accessibilityContact: string;
+  accommodationNotes: string;
 }
 
 const INITIAL_PREFERENCES: Preferences = {
   focusOutline: false,
   pageZoom: "100",
   pageColors: "system",
-  highContrastOnly: false,
-  textSize: 100,
-  customScrollbars: false,
-  imageDescriptions: true,
-  askBeforeClosing: true,
-  captionStyle: "default",
   announcements: ["errors", "jobs"],
   focusIndicator: "outline",
   reduceMotion: false,
   underlineLinks: true,
-  theme: "system",
-  density: "comfortable",
-  accent: "brand",
-  emailAlerts: true,
-  severities: ["critical", "major"],
-  quietFrom: "10:00 PM",
-  quietTo: "07:00 AM",
-  pauseUntil: null,
+  accessibilityContact: "",
+  accommodationNotes: "",
 };
 
 const ZOOM_OPTIONS = [
@@ -197,30 +166,11 @@ const PAGE_COLOR_OPTIONS = [
   { id: "aquatic", label: "Aquatic" },
 ];
 
-const CAPTION_OPTIONS = [
-  { id: "default", label: "System default" },
-  { id: "large", label: "Large text, high contrast" },
-  { id: "custom", label: "Custom" },
-];
-
 const ANNOUNCEMENT_OPTIONS = [
   { id: "errors", label: "Errors and failures" },
   { id: "jobs", label: "Job status changes" },
   { id: "capacity", label: "Capacity thresholds" },
   { id: "logins", label: "Sign-in activity" },
-];
-
-const SEVERITY_OPTIONS = [
-  { id: "critical", label: "Critical" },
-  { id: "major", label: "Major warning" },
-  { id: "minor", label: "Minor warning" },
-  { id: "info", label: "Informational" },
-];
-
-const ACCENT_OPTIONS = [
-  { id: "brand", label: "Brand blue" },
-  { id: "teal", label: "Teal" },
-  { id: "berry", label: "Berry" },
 ];
 
 const EXCLUDED_SITE_COLUMNS: IdsDatagridColumnDef[] = [
@@ -240,17 +190,9 @@ const TAB_SECTIONS: Record<string, IdsAnchorMenuItem[]> = {
   accessibility: [
     { label: "Visibility", href: "#visibility" },
     { label: "Usability", href: "#usability" },
+    { label: "Support", href: "#support" },
     { label: "Advanced", href: "#advanced" },
   ],
-  appearance: [
-    { label: "Theme", href: "#theme" },
-    { label: "Layout", href: "#layout" },
-  ],
-  notifications: [
-    { label: "Delivery", href: "#delivery" },
-    { label: "Quiet hours", href: "#quiet-hours" },
-  ],
-  account: [{ label: "Passwords", href: "#passwords" }],
 };
 
 type SetPref = <K extends keyof Preferences>(key: K, value: Preferences[K]) => void;
@@ -319,17 +261,6 @@ function AccessibilityPanel({
           }
         />
         <SettingRow
-          label="Only apply page colors when high contrast themes are on"
-          control={
-            <IdsToggleSwitch
-              checked={prefs.highContrastOnly}
-              onCheckedChange={(v) => set("highContrastOnly", v)}
-              disabled={prefs.pageColors === "off"}
-              aria-label="Only apply page colors when high contrast themes are on"
-            />
-          }
-        />
-        <SettingRow
           label="Specify sites"
           description="List of sites that are excluded from page colors."
           control={
@@ -341,74 +272,9 @@ function AccessibilityPanel({
             </>
           }
         />
-        <SettingRow
-          stacked
-          label="Text size"
-          description="Scales body text across the product. 100% matches the system default."
-          control={
-            <IdsSlider
-              min={75}
-              max={175}
-              step={25}
-              value={prefs.textSize}
-              onValueChange={(v) => set("textSize", v)}
-              showStepper
-              stepperFrequency={25}
-              showValueLabel
-              minLabel="75%"
-              maxLabel="175%"
-            />
-          }
-        />
-        <SettingRow
-          label="Turn off custom scrollbars"
-          description="Only default scrollbars will be available across all sites."
-          control={
-            <IdsToggleSwitch
-              checked={prefs.customScrollbars}
-              onCheckedChange={(v) => set("customScrollbars", v)}
-              aria-label="Turn off custom scrollbars"
-            />
-          }
-        />
       </Section>
 
       <Section id="usability" title="Usability">
-        <SettingRow
-          label="Get image descriptions for screen readers"
-          description="Unlabeled images are described automatically before they are announced."
-          control={
-            <IdsToggleSwitch
-              checked={prefs.imageDescriptions}
-              onCheckedChange={(v) => set("imageDescriptions", v)}
-              aria-label="Get image descriptions for screen readers"
-            />
-          }
-        />
-        <SettingRow
-          label="Ask before closing a window with multiple tabs"
-          control={
-            <IdsToggleSwitch
-              checked={prefs.askBeforeClosing}
-              onCheckedChange={(v) => set("askBeforeClosing", v)}
-              aria-label="Ask before closing a window with multiple tabs"
-            />
-          }
-        />
-        <SettingRow
-          fieldControl
-          label="Caption style"
-          description="Applies to in-product video walkthroughs and recorded sessions."
-          control={
-            <IdsDropdownSingleSelect
-              options={CAPTION_OPTIONS}
-              value={prefs.captionStyle}
-              onChange={(v) => set("captionStyle", v)}
-              menuWidth="content"
-              fullWidth
-            />
-          }
-        />
         <SettingRow
           fieldControl
           label="Screen reader announcements"
@@ -422,6 +288,46 @@ function AccessibilityPanel({
               showSelectAllClearAll
               menuWidth="content"
               fullWidth
+            />
+          }
+        />
+      </Section>
+
+      <Section id="support" title="Support">
+        <SettingRow
+          fieldControl
+          label="Accessibility contact"
+          description="Who your administrator reaches out to about accommodation requests."
+          control={
+            <IdsTextBox
+              label="Accessibility contact"
+              showLabel={false}
+              ariaLabel="Accessibility contact"
+              placeholder="name@example.com"
+              value={prefs.accessibilityContact}
+              onValueChange={(v) => set("accessibilityContact", v)}
+              showIcon={false}
+              size="small"
+            />
+          }
+        />
+        <SettingRow
+          stacked
+          fieldControl
+          label="Accommodation notes"
+          description="Describe any accommodations you need. Shared with your administrator only."
+          control={
+            <IdsTextBox
+              label="Accommodation notes"
+              showLabel={false}
+              ariaLabel="Accommodation notes"
+              componentType="text-area"
+              rows={4}
+              placeholder="For example: I use a screen magnifier at 200% and prefer keyboard-only navigation."
+              value={prefs.accommodationNotes}
+              onValueChange={(v) => set("accommodationNotes", v)}
+              showIcon={false}
+              size="small"
             />
           }
         />
@@ -484,308 +390,6 @@ function AccessibilityPanel({
   );
 }
 
-function AppearancePanel({ prefs, set }: { prefs: Preferences; set: SetPref }) {
-  return (
-    <>
-      <Section id="theme" title="Theme">
-        <SettingRow
-          stacked
-          label="Color theme"
-          description="System follows your operating system setting."
-          control={
-            <IdsRadioGroup
-              name="color-theme"
-              orientation="horizontal"
-              ariaLabel="Color theme"
-              value={prefs.theme}
-              onChange={(v) => set("theme", v)}
-            >
-              <IdsRadioButton value="system">
-                <IdsRadioLabel>System</IdsRadioLabel>
-              </IdsRadioButton>
-              <IdsRadioButton value="light">
-                <IdsRadioLabel>Light</IdsRadioLabel>
-              </IdsRadioButton>
-              <IdsRadioButton value="dark">
-                <IdsRadioLabel>Dark</IdsRadioLabel>
-              </IdsRadioButton>
-            </IdsRadioGroup>
-          }
-        />
-        <SettingRow
-          fieldControl
-          label="Accent color"
-          description="Used for primary actions, selection, and charts."
-          control={
-            <IdsDropdownSingleSelect
-              options={ACCENT_OPTIONS}
-              value={prefs.accent}
-              onChange={(v) => set("accent", v)}
-              menuWidth="trigger"
-              fullWidth
-            />
-          }
-        />
-      </Section>
-
-      <Section id="layout" title="Layout">
-        <SettingRow
-          label="Row density"
-          description="Controls padding in tables and list views."
-          control={
-            <IdsSegmentedButton
-              type="text"
-              value={prefs.density}
-              onSelected={(v) => set("density", v)}
-              ariaLabel="Row density"
-            >
-              <IdsSegmentedText value="comfortable" label="Comfortable" />
-              <IdsSegmentedText value="compact" label="Compact" />
-            </IdsSegmentedButton>
-          }
-        />
-      </Section>
-    </>
-  );
-}
-
-function NotificationsPanel({ prefs, set }: { prefs: Preferences; set: SetPref }) {
-  return (
-    <>
-      <Section id="delivery" title="Delivery">
-        <SettingRow
-          label="Email alerts"
-          description="Send a message to c.dao@example.com when an alert is raised."
-          control={
-            <IdsToggleSwitch
-              checked={prefs.emailAlerts}
-              onCheckedChange={(v) => set("emailAlerts", v)}
-              aria-label="Email alerts"
-            />
-          }
-        />
-        <SettingRow
-          fieldControl
-          label="Alert severities"
-          description="Only the selected severities are delivered by email."
-          control={
-            <IdsDropdownMultiSelect
-              options={SEVERITY_OPTIONS}
-              value={prefs.severities}
-              onChange={(v) => set("severities", v)}
-              disabled={!prefs.emailAlerts}
-              showSelectedBadge
-              menuWidth="content"
-              fullWidth
-            />
-          }
-        />
-      </Section>
-
-      <Section id="quiet-hours" title="Quiet hours">
-        <SettingRow
-          label="Do not disturb"
-          description="Non-critical alerts are held and delivered in the next digest."
-          control={
-            <div className="settings-inline">
-              <IdsTimePicker
-                label="From"
-                value={prefs.quietFrom}
-                onChange={(v) => set("quietFrom", v)}
-                size="small"
-              />
-              <IdsTimePicker
-                label="To"
-                value={prefs.quietTo}
-                onChange={(v) => set("quietTo", v)}
-                size="small"
-              />
-            </div>
-          }
-        />
-        <SettingRow
-          fieldControl
-          label="Pause all notifications until"
-          description="Leave empty to keep notifications running."
-          control={
-            <IdsDatePicker
-              value={prefs.pauseUntil}
-              onChange={(v) => set("pauseUntil", v)}
-              size="small"
-              placeholder="MM-DD-YYYY"
-              minDate={new Date(2026, 8, 23)}
-            />
-          }
-        />
-      </Section>
-    </>
-  );
-}
-
-interface PasswordEntry {
-  id: string;
-  site: string;
-  username: string;
-  password: string;
-  note: string;
-}
-
-const INITIAL_PASSWORDS: PasswordEntry[] = [
-  {
-    id: "adobe",
-    site: "adobe.com",
-    username: "haotran170620@gmail.com",
-    password: "correcthorse",
-    note: "",
-  },
-  { id: "agoda", site: "agoda.com", username: "haotran", password: "hunter2", note: "" },
-  {
-    id: "apple",
-    site: "apple.com",
-    username: "haotran170620@gmail.com",
-    password: "s3cret-key",
-    note: "Recovery key in the safe.",
-  },
-];
-
-const EMPTY_PASSWORD_FORM = { site: "", username: "", password: "", note: "" };
-
-function AccountPanel() {
-  const [passwords, setPasswords] = useState<PasswordEntry[]>(INITIAL_PASSWORDS);
-  const [addOpen, setAddOpen] = useState(false);
-  const [form, setForm] = useState(EMPTY_PASSWORD_FORM);
-
-  const setField = (key: keyof typeof EMPTY_PASSWORD_FORM) => (value: string) =>
-    setForm((prev) => ({ ...prev, [key]: value }));
-  const canSave =
-    form.site.trim() !== "" && form.username.trim() !== "" && form.password.trim() !== "";
-
-  const openAdd = () => {
-    setForm(EMPTY_PASSWORD_FORM);
-    setAddOpen(true);
-  };
-
-  const handleSave = () => {
-    if (!canSave) return;
-    setPasswords((prev) =>
-      [
-        ...prev,
-        {
-          id: `${form.site.trim()}-${Date.now()}`,
-          site: form.site.trim(),
-          username: form.username.trim(),
-          password: form.password,
-          note: form.note.trim(),
-        },
-      ].sort((a, b) => a.site.localeCompare(b.site)),
-    );
-    setForm(EMPTY_PASSWORD_FORM);
-    setAddOpen(false);
-  };
-
-  return (
-    <>
-      <Section id="passwords" title="Passwords">
-        <div className="account-passwords">
-          <div className="account-passwords__intro">
-            <p className="settings-description">
-              Create, save, and manage your passwords so you can easily sign in to sites and apps.
-            </p>
-            <IdsButton variant="secondary" size="medium" onClick={openAdd}>
-              <IdsButtonLeadingIcon>
-                <IdsIcon shape="shape-plus" size={16} />
-              </IdsButtonLeadingIcon>
-              <IdsButtonLabel>Add</IdsButtonLabel>
-            </IdsButton>
-          </div>
-
-          {passwords.length > 0 ? (
-            <ul className="account-passwords__list">
-              {passwords.map((entry) => (
-                <li key={entry.id}>
-                  <button type="button" className="account-passwords__row">
-                    <IdsIcon
-                      shape="globe-lock"
-                      size={20}
-                      color="var(--color-icon-gray-neutral-base)"
-                    />
-                    <span className="account-passwords__site">{entry.site}</span>
-                    <span className="account-passwords__meta">{entry.username}</span>
-                    <IdsIcon
-                      shape="chev-right"
-                      size={16}
-                      color="var(--color-icon-gray-neutral-base)"
-                    />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="account-passwords__empty settings-description">
-              No saved passwords yet. Select “Add” to create one.
-            </p>
-          )}
-        </div>
-      </Section>
-
-      <IdsModal
-        open={addOpen}
-        onOpenChange={setAddOpen}
-        scenario="single-page"
-        size="small"
-        title="Add new password"
-        primaryActionLabel="Save"
-        tertiaryActionLabel="Cancel"
-        enablePrimaryAction={canSave}
-        onPrimaryAction={handleSave}
-        onTertiaryAction={() => setAddOpen(false)}
-      >
-        <div className="account-form">
-          <IdsTextBox
-            label="Site"
-            placeholder="example.com"
-            value={form.site}
-            onValueChange={setField("site")}
-            showIcon={false}
-            size="small"
-          />
-          <IdsTextBox
-            label="Username"
-            value={form.username}
-            onValueChange={setField("username")}
-            showIcon={false}
-            size="small"
-          />
-          <IdsTextBox
-            label="Password"
-            inputType="password"
-            value={form.password}
-            onValueChange={setField("password")}
-            showIcon
-            iconName="eye-view-hide"
-            size="small"
-          >
-            <IdsHelper>
-              <IdsHelperText>
-                Make sure you&apos;re saving your current password for this site
-              </IdsHelperText>
-            </IdsHelper>
-          </IdsTextBox>
-          <IdsTextBox
-            label="Note"
-            componentType="text-area"
-            rows={3}
-            value={form.note}
-            onValueChange={setField("note")}
-            showIcon={false}
-            size="small"
-          />
-        </div>
-      </IdsModal>
-    </>
-  );
-}
-
 /* -------------------------------------------------------------------------- */
 /* Settings page                                                               */
 /* -------------------------------------------------------------------------- */
@@ -795,36 +399,8 @@ function SettingsPage({ showAnchorMenu = true }: { showAnchorMenu?: boolean }) {
   const [activeTab, setActiveTab] = useState("accessibility");
   const [query, setQuery] = useState("");
   const [sitesOpen, setSitesOpen] = useState(false);
-  const [discardOpen, setDiscardOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [toasts, setToasts] = useState<IdsToastQueueItem[]>([]);
 
   const set: SetPref = (key, value) => setPrefs((prev) => ({ ...prev, [key]: value }));
-
-  const changedCount = useMemo(
-    () =>
-      (Object.keys(INITIAL_PREFERENCES) as Array<keyof Preferences>).filter(
-        (key) => JSON.stringify(prefs[key]) !== JSON.stringify(INITIAL_PREFERENCES[key]),
-      ).length,
-    [prefs],
-  );
-
-  const handleSave = () => {
-    setSaving(true);
-    window.setTimeout(() => {
-      setSaving(false);
-      setToasts((prev) => [
-        ...prev,
-        {
-          id: `saved-${Date.now()}`,
-          type: "success",
-          message: `${changedCount} setting${changedCount === 1 ? "" : "s"} saved.`,
-          closable: true,
-          duration: 6000,
-        },
-      ]);
-    }, 900);
-  };
 
   return (
     <div className="settings-page">
@@ -833,7 +409,7 @@ function SettingsPage({ showAnchorMenu = true }: { showAnchorMenu?: boolean }) {
         severity="informational"
         density="detailed"
         title="Some settings are managed by your organization"
-        message="Page colors and caption defaults follow the IT policy assigned to your account."
+        message="Page colors follow the IT policy assigned to your account."
         linkLabel="View policy"
         linkHref="#policy"
       />
@@ -871,22 +447,6 @@ function SettingsPage({ showAnchorMenu = true }: { showAnchorMenu?: boolean }) {
                   />
                 ),
               },
-              {
-                id: "appearance",
-                label: "Appearance",
-                content: <AppearancePanel prefs={prefs} set={set} />,
-              },
-              {
-                id: "notifications",
-                label: "Notifications",
-                badgeCount: prefs.severities.length,
-                content: <NotificationsPanel prefs={prefs} set={set} />,
-              },
-              {
-                id: "account",
-                label: "Account",
-                content: <AccountPanel />,
-              },
             ]}
           />
         </div>
@@ -896,39 +456,6 @@ function SettingsPage({ showAnchorMenu = true }: { showAnchorMenu?: boolean }) {
             <IdsAnchorMenu title="On this page" items={TAB_SECTIONS[activeTab] ?? []} />
           </aside>
         ) : null}
-      </div>
-
-      {/* Action bar — reflects the pending-change state above it. */}
-      <div className="settings-actions">
-        <div className="settings-actions__status">
-          {changedCount > 0 ? (
-            <IdsTag
-              type="read-only"
-              tone="minor"
-              label={`${changedCount} unsaved change${changedCount === 1 ? "" : "s"}`}
-            />
-          ) : (
-            <span className="settings-description">All changes saved</span>
-          )}
-        </div>
-        <IdsButton
-          variant="tertiary"
-          disabled={changedCount === 0 || saving}
-          onClick={() => setDiscardOpen(true)}
-        >
-          <IdsButtonLabel>Discard</IdsButtonLabel>
-        </IdsButton>
-        <IdsButton
-          variant="primary"
-          loading={saving}
-          disabled={changedCount === 0}
-          onClick={handleSave}
-        >
-          <IdsButtonLeadingIcon>
-            <IdsIcon shape="save-disk" size={16} />
-          </IdsButtonLeadingIcon>
-          <IdsButtonLabel>{saving ? "Saving…" : "Save changes"}</IdsButtonLabel>
-        </IdsButton>
       </div>
 
       {/* “Specify sites” drill-in. */}
@@ -952,31 +479,6 @@ function SettingsPage({ showAnchorMenu = true }: { showAnchorMenu?: boolean }) {
           headerColorAndBorder
         />
       </IdsModal>
-
-      {/* Confirm before throwing away edits. */}
-      <IdsModal
-        open={discardOpen}
-        onOpenChange={setDiscardOpen}
-        scenario="dialog"
-        type="warning"
-        size="small"
-        title="Discard unsaved changes?"
-        description={`${changedCount} setting${changedCount === 1 ? "" : "s"} will return to the last saved value.`}
-        primaryActionLabel="Discard"
-        tertiaryActionLabel="Keep editing"
-        onPrimaryAction={() => {
-          setPrefs(INITIAL_PREFERENCES);
-          setDiscardOpen(false);
-        }}
-        onTertiaryAction={() => setDiscardOpen(false)}
-      />
-
-      <IdsToastViewport
-        position="bottom-right"
-        maxVisible={3}
-        items={toasts}
-        onItemsChange={setToasts}
-      />
     </div>
   );
 }
@@ -1079,8 +581,8 @@ const meta: Meta = {
         component:
           "A realistic application page assembled from IDS components. App Shell + Masthead + " +
           "App Launcher + Main Menu Left frame the screen, Tabs split the preference groups, the " +
-          "Anchor Menu jumps between sections, each row pairs a label with the control that edits " +
-          "it, and the sticky action bar saves or discards pending edits (Modal confirm → Toast).\n\n" +
+          "Anchor Menu jumps between sections, and each row pairs a label with the control that edits " +
+          "it.\n\n" +
           "App Launcher, Checkbox, Radio Button, Main Menu Left and Anchor Menu come from their " +
           "own feature branches rather than master.",
       },
