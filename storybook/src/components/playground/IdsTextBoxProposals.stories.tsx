@@ -10,8 +10,9 @@
  *
  * Theme: components/ids-theme.css · Layout: ./ids-textbox-proposals.css
  */
-import React, { useState } from "react";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { useArgs } from "storybook/internal/preview-api";
 import "../../../../components/ids-theme.css";
 import "./ids-textbox-proposals.css";
 
@@ -60,6 +61,10 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+interface TryItArgs {
+  selectTextOnFocus: boolean;
+}
 
 /** Proposal 1 — the focus state is the Selected state. */
 export const FocusStateCurrentVsProposed: Story = {
@@ -180,18 +185,29 @@ export const SelectTextOnFocus: Story = {
   ),
 };
 
-/** The option on one form, behind a switch. */
-export const TryBoth: Story = {
+/** The option on one form, behind a switch — also driven by the `selectTextOnFocus` control. */
+export const TryBoth: StoryObj<TryItArgs> = {
   name: "3. Try it",
+  args: { selectTextOnFocus: true },
+  argTypes: {
+    selectTextOnFocus: {
+      control: "boolean",
+      description:
+        "`true`: select the whole value on click or Tab. `false`: put the caret at the end.",
+    },
+  },
   render: function TryItStory() {
-    const [selectTextOnFocus, setSelectTextOnFocus] = useState(true);
+    // The switch and the Controls panel share the one arg, so they never disagree.
+    const [{ selectTextOnFocus }, updateArgs] = useArgs<TryItArgs>();
+    const setSelectTextOnFocus = (value: boolean) => updateArgs({ selectTextOnFocus: value });
 
     return (
       <div className="tbp-page">
         <div>
           <h1 className="tbp-title">Try it</h1>
           <p className="tbp-lede">
-            Flip the switch, then click or Tab through the form. The fields start with text, since
+            Flip the switch (or <code>selectTextOnFocus</code> in Controls), then click or Tab
+            through the form. The fields start with text, since
             that is the case the option changes.
           </p>
         </div>
