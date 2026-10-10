@@ -29,6 +29,7 @@ import {
   type IdsAccordionItemInput,
   type IdsAccordionProps,
 } from "@ids/react/accordion";
+import { IdsLink } from "@ids/react/link";
 
 const demoItems: IdsAccordionItemInput[] = [
   {
@@ -37,7 +38,7 @@ const demoItems: IdsAccordionItemInput[] = [
     content: (
       <>
         <p>Configure network policies and service endpoints for this workspace.</p>
-        <a href="#">Learn how network policies work</a>
+        <IdsLink label="Learn how network policies work" type="inline" href="#" />
       </>
     ),
   },
@@ -77,6 +78,7 @@ const meta: Meta<IdsAccordionProps> = {
     chevronPosition: "left",
     variant: "default",
     defaultValue: ["network"],
+    maxWidth: "1594px",
   },
   argTypes: {
     multiple: {
@@ -125,6 +127,11 @@ const meta: Meta<IdsAccordionProps> = {
       control: false,
       table: { category: "Props" },
     },
+    maxWidth: {
+      control: "text",
+      description: "Max-width of the accordion root.",
+      table: { category: "Props", defaultValue: { summary: "1594px" } },
+    },
   },
 };
 
@@ -153,7 +160,7 @@ export const SpecAccurateDesign: Story = {
         <IdsAccordionBody>
           <IdsAccordionContent>
             <p>Configure network policies and service endpoints for this workspace.</p>
-            <a href="#">Learn how network policies work</a>
+            <IdsLink label="Learn how network policies work" type="inline" href="#" />
           </IdsAccordionContent>
         </IdsAccordionBody>
       </IdsAccordionItem>
