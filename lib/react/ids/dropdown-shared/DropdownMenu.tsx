@@ -87,8 +87,9 @@ interface DropdownMenuProps {
   showClearAll?: boolean;
   /** Single-select radio mode: label of the Clear All row. */
   resetToDefaultLabel?: string;
-  /** Single-select Clear All row alignment. Default `"left"`; `"right"` pushes
-   *  the Clear All control to the right edge of the row. */
+  /** Single-select Clear All row alignment. `"right"` pushes the control to the
+   *  right edge of the row, like the multi-select Clear All. Defaults to
+   *  `"right"` when the row reads "Reset to Default" (radio options), else `"left"`. */
   clearAllAlign?: "left" | "right";
   /** Multi-select: render the Show Selected panel **above** the Select All /
    *  Clear All row (default renders the Select All / Clear All row first). */
@@ -171,7 +172,7 @@ export function DropdownMenu({
   showSingleSelectRadio = false,
   showSelectAllClearAll = false,
   showClearAll = false,
-  clearAllAlign = "left",
+  clearAllAlign,
   showSelectedFirst = false,
   selectAllLabel = "Select All",
   clearAllLabel = "Clear All",
@@ -293,6 +294,11 @@ export function DropdownMenu({
     setSearch(typed);
     setGhostSuffix(isInsertion ? computeGhostSuffix(typed) : "");
   };
+  // Only paint a suggestion that still completes the current value — the search
+  // can change without typing (clear button, consumer reset), and a stale suffix
+  // would otherwise overlay the empty field's placeholder.
+  const visibleGhostSuffix =
+    ghostSuffix && computeGhostSuffix(currentSearch) === ghostSuffix ? ghostSuffix : "";
 
   const showSearchClear = Boolean(currentSearch && currentSearch.length > 0);
 
@@ -333,6 +339,7 @@ export function DropdownMenu({
   // row, which also hides during search). Commit 83f9d224.
   // With radio options the row reads "Reset to Default" (same behavior).
   const singleRowResetsToDefault = selectionMode === "single" && showSingleSelectRadio;
+  const resolvedClearAllAlign = clearAllAlign ?? (singleRowResetsToDefault ? "right" : "left");
   const showSingleClearAllRow =
     selectionMode === "single" &&
     showClearAll &&
@@ -385,19 +392,22 @@ export function DropdownMenu({
   };
 
   /* ---------------------------------------------------------------------- *
-   * Single-select keyboard model (design review, Windows-style):
+   * Single- and multi-select keyboard model (design review, Windows-style):
    * - Enter / Space on the trigger open the menu and move focus onto the
-   *   selected option (the first option when nothing is selected).
+   *   selected option (the first option when nothing is selected). Multi-select
+   *   lands on the Show / Hide Selected toggle first, when it is shown.
    * - ArrowUp / ArrowDown move focus through the menu and wrap at both ends.
-   *   Focus never changes the selection; Enter on an option selects it,
-   *   closes the menu and returns focus to the trigger.
+   *   Focus never changes the selection. Enter on an option selects it;
+   *   single-select then closes the menu and returns focus to the trigger,
+   *   multi-select keeps the menu open. ArrowLeft / ArrowRight still move
+   *   within the Select All / Clear All row and the Show Selected tags.
    * - Tab / Shift+Tab close the menu, keep the current value and continue the
    *   page tab order from the trigger. Tab never walks the option rows.
    * - Escape closes the menu and returns focus to the trigger (shared/menu).
    * Arrow keys on the closed trigger (change the value without opening) are on
    * hold pending accessibility review, so Menu.Trigger's default is kept.
    * ---------------------------------------------------------------------- */
-  const isSingleSelect = selectionMode === "single";
+  const hasKeyboardModel = selectionMode === "single" || selectionMode === "multi";
 
   // Menu.Trigger and Menu.Popup do not forward refs; resolve both from elements
   // rendered inside them.
@@ -423,6 +433,17 @@ export function DropdownMenu({
     (rows.find((row) => row.dataset.selected === "true") ?? rows[0])?.focus();
   };
 
+  /** Where a keyboard open puts focus: the multi-select Show / Hide Selected
+   *  toggle when it is shown, else the selected (or first) option. */
+  const focusMenuEntry = () => {
+    const toggle =
+      selectionMode === "multi"
+        ? getPopupElement()?.querySelector<HTMLElement>('[data-focus-section="showSelected"] button')
+        : null;
+    if (toggle) toggle.focus();
+    else focusSelectedOption();
+  };
+
   const closeAndFocusTrigger = () => {
     const trigger = getTriggerElement();
     setOpen(false);
@@ -442,19 +463,19 @@ export function DropdownMenu({
     // wait a frame so the option rows can take focus.
     const frame = requestAnimationFrame(() => {
       focusSelectedOnOpenRef.current = false;
-      focusSelectedOption();
+      focusMenuEntry();
     });
     return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (!isSingleSelect || disabled) return;
+    if (!hasKeyboardModel || disabled) return;
     switch (event.key) {
       case "Enter":
       case " ":
         // Menu.Trigger opens the menu on these keys; focus follows into it.
-        if (open) focusSelectedOption();
+        if (open) focusMenuEntry();
         else focusSelectedOnOpenRef.current = true;
         break;
       case "ArrowDown":
@@ -462,7 +483,7 @@ export function DropdownMenu({
         // Menu opened by pointer, focus still on the trigger: step into it.
         if (open) {
           event.preventDefault();
-          focusSelectedOption();
+          focusMenuEntry();
         }
         break;
       case "Tab":
@@ -474,7 +495,7 @@ export function DropdownMenu({
 
   // Capture phase so the search field (which stops propagation of its keys)
   // still takes part in ArrowUp / ArrowDown / Tab.
-  const handleSingleSelectKeyDownCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleSelectKeyDownCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.nativeEvent.isComposing) return;
     const popup = event.currentTarget;
     const active = popup.ownerDocument.activeElement as HTMLElement | null;
@@ -705,7 +726,7 @@ export function DropdownMenu({
             role="listbox"
             className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
             style={popupStyle}
-            onKeyDownCapture={isSingleSelect ? handleSingleSelectKeyDownCapture : undefined}
+            onKeyDownCapture={hasKeyboardModel ? handleSelectKeyDownCapture : undefined}
             onKeyDown={handlePopupKeyDown}
           >
             {showSearch ? (
@@ -750,11 +771,13 @@ export function DropdownMenu({
                             // While an IME (e.g. Vietnamese Telex) is composing, the
                             // text isn't committed yet — never autocomplete into a
                             // half-composed value or the compositionend commit will
-                            // duplicate it. Just track the value; the ghost is
-                            // computed in onCompositionEnd once composition settles.
+                            // duplicate it. The suggestion is still shown (display
+                            // only): Telex keeps the whole word composing, so hiding
+                            // it here would hide it for every keystroke. Accepting
+                            // it waits for the commit (see onKeyDown).
                             if (nativeEvent.isComposing) {
                               setSearch(value);
-                              setGhostSuffix("");
+                              setGhostSuffix(computeGhostSuffix(value));
                               return;
                             }
                             const inputType = nativeEvent.inputType;
@@ -806,10 +829,10 @@ export function DropdownMenu({
                             }
                           }}
                         />
-                        {ghostSuffix ? (
+                        {visibleGhostSuffix ? (
                           <span className={styles.searchGhost} aria-hidden="true">
                             <span className={styles.searchGhostTyped}>{currentSearch}</span>
-                            <span className={styles.searchGhostSuffix}>{ghostSuffix}</span>
+                            <span className={styles.searchGhostSuffix}>{visibleGhostSuffix}</span>
                           </span>
                         ) : null}
                       </div>
@@ -819,7 +842,10 @@ export function DropdownMenu({
                           className={styles.searchClearButton}
                           aria-label="Clear search"
                           tabIndex={-1}
-                          onClick={() => setSearch("")}
+                          onClick={() => {
+                            setSearch("");
+                            setGhostSuffix("");
+                          }}
                         >
                           <IdsIcon
                             shape="ctrl-close-16"
@@ -859,10 +885,19 @@ export function DropdownMenu({
                   className={styles.clearAllButton}
                   data-focus-row="selectAllClearAll"
                   onClick={(event) => {
-                    onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined);
                     // Multi-select Clear All keeps the popup open for continued selection
-                    // (design-spec 2026-07-25 / commit d54c2336). It does not collapse the menu.
+                    // (design-spec 2026-07-25 / commit d54c2336). Clearing disables this
+                    // button, which drops focus to <body> and would close the menu on
+                    // blur: park focus on the popup, then hand it back to Clear All
+                    // or, once it is disabled, to Select All.
+                    const clearAll = event.currentTarget;
+                    const selectAll = clearAll.previousElementSibling as HTMLElement | null;
+                    getPopupElement()?.focus();
+                    onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined);
                     scrollOptionsToTop(event);
+                    requestAnimationFrame(() =>
+                      (clearAll.isConnected && !clearAll.disabled ? clearAll : selectAll)?.focus(),
+                    );
                   }}
                   disabled={effectiveClearAllDisabled}
                 >
@@ -876,7 +911,7 @@ export function DropdownMenu({
               <button
                 type="button"
                 className={styles.clearAllAction}
-                data-align={clearAllAlign}
+                data-align={resolvedClearAllAlign}
                 data-focus-section="singleClearAll"
                 onClick={(event) => {
                   // The row hides once the selection is cleared, which would

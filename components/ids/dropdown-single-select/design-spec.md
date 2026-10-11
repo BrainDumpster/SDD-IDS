@@ -168,6 +168,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - clicking clears the selection; the row then auto-hides. It does **not** collapse the menu.
   - after the click, focus moves onto the option that is now selected (the first enabled option when none is), so the keyboard user stays in the menu instead of losing focus with the hidden row.
   - **With radio options (`showRadio`) the row is labelled "Reset to Default"** (design review 2026-10). Behavior is unchanged: it returns the dropdown to no selection (placeholder), shows whenever a value is selected, hides once reset and while a search query is active, and does **not** collapse the menu.
+  - Reset to Default is **right-aligned** in its row, like the multi-select Clear All: `16px` (`var(--padding-padding-16)`) right inset. A plain Clear All row stays left-aligned.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -275,7 +276,11 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-10-09.
+> Last updated: 2026-10-11.
+
+### 2026-10-11
+- **Reset to Default right-aligned** (design review). React `DropdownMenu.tsx`: `clearAllAlign` now defaults to `"right"` when the row reads Reset to Default (`showSingleSelectRadio`), else `"left"`; `.clearAllAction[data-align="right"]` uses a `var(--padding-padding-16)` right inset, matching the multi-select Clear All. Angular `ids-dropdown-menu`: new `clearAllAlign` input, `resolvedClearAllAlign` → `data-align`. Angular also gets the `.clearAllAction` row styles (bottom border, `16px` inset, label focus ring), which its SCSS was missing.
+- The keyboard model below now also runs for multi-select (see the multi-select spec).
 
 ### 2026-10-09
 - **Clear All is labelled "Reset to Default" with radio options** (design review). Reset returns the dropdown to no selection, exactly like Clear All; only the label changes. React `DropdownMenu.tsx`: with `showSingleSelectRadio` the `showClearAll` row renders `resetToDefaultLabel` (default `"Reset to Default"`) and still fires `onClearAllClick`. Angular `ids-dropdown-menu`: `resetToDefaultLabel` input; the row still emits `clearAllClick`.

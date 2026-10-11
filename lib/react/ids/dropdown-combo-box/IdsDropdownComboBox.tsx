@@ -455,8 +455,10 @@ export function IdsDropdownComboBox({
         selectionMode={isMulti ? "multi" : "single"}
         selectedValues={selectedLabels}
         // Combo box names Clear All "Reset to Default" (single row and multi
-        // Select All row); clearing behaves the same.
+        // Select All row); clearing behaves the same. The single row sits on the
+        // right, like the multi row's Reset to Default.
         clearAllLabel="Reset to Default"
+        clearAllAlign="right"
         trigger={trigger}
         items={items}
         disabled={disabled}

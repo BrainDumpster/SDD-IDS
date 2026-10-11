@@ -86,7 +86,7 @@
             type="button"
             class="clearAllButton"
             [disabled]="effectiveClearAllDisabled"
-            (click)="onClearAll()"
+            (click)="onClearAll($event)"
           >
             {{ resolvedClearAllLabel }}
           </button>
@@ -94,7 +94,12 @@
       }
 
       @if (showSingleClearAllRow) {
-        <button type="button" class="clearAllAction" (click)="onSingleClearAll($event)">
+        <button
+          type="button"
+          class="clearAllAction"
+          [attr.data-align]="resolvedClearAllAlign"
+          (click)="onSingleClearAll($event)"
+        >
           <span class="footerActionButton">{{ resolvedClearAllLabel }}</span>
         </button>
       }
