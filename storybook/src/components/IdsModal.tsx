@@ -3,6 +3,7 @@ import {
   Children,
   createContext,
   isValidElement,
+  type CSSProperties,
   type ReactElement,
   type ReactNode,
   useContext,
@@ -117,6 +118,8 @@ export function IdsModal({
   const contentElementRef = useRef<HTMLElement | null>(null);
   const [bodyScrollable, setBodyScrollable] = useState(false);
   const [showScrollShadow, setShowScrollShadow] = useState(false);
+  // The fade stops short of the body's scroll bar, which sits on top of it (Figma).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   const titleChild = findChild(children, IdsModalTitle);
   const bodyChild = findChild(children, IdsModalBody);
@@ -147,6 +150,7 @@ export function IdsModal({
     const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
     setBodyScrollable(scrollable);
     setShowScrollShadow(scrollable && !atBottom);
+    setScrollbarWidth(el.offsetWidth - el.clientWidth);
   };
 
   const onContentScroll = () => {
@@ -241,7 +245,11 @@ export function IdsModal({
             {bodyChild}
 
             {showScrollShadow ? (
-              <div className={styles.contentScrollShadow} aria-hidden="true" />
+              <div
+                className={styles.contentScrollShadow}
+                style={{ "--ids-modal-scrollbar-width": `${scrollbarWidth}px` } as CSSProperties}
+                aria-hidden="true"
+              />
             ) : null}
 
             {footerChild}

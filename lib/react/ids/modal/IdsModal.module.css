@@ -91,22 +91,23 @@
   width: 1600px;
 }
 
-/* Modal page heights (Figma Modal-Main): the design height is a minimum and never
-   pushes the surface past its viewport max-height. */
+/* Modal page heights (Figma Modal-Main): fixed per size, capped by the surface
+   max-height (85vh / viewport); the content block takes the remaining space and
+   scrolls when it outgrows it. */
 .ids-modal-surface--page.ids-modal-surface--x-small {
-  min-height: min(328px, 85vh, calc(100vh - 48px));
+  height: 328px;
 }
 
 .ids-modal-surface--page.ids-modal-surface--small {
-  min-height: min(497px, 85vh, calc(100vh - 48px));
+  height: 497px;
 }
 
 .ids-modal-surface--page.ids-modal-surface--medium {
-  min-height: min(667px, 85vh, calc(100vh - 48px));
+  height: 667px;
 }
 
 .ids-modal-surface--page.ids-modal-surface--large {
-  min-height: min(826px, 85vh, calc(100vh - 48px));
+  height: 826px;
 }
 
 .ids-modal-surface--full-screen {
@@ -249,9 +250,11 @@
   padding: 0 var(--padding-padding-24) var(--padding-padding-24);
 }
 
-/* Modal page content slot: 16px top. */
+/* Modal page content slot: 16px top; scrolls inside the fixed-height page rather
+   than spilling over the footer. */
 .ids-modal-surface--page .ids-modal-content {
   padding-top: var(--padding-padding-16);
+  overflow-y: auto;
 }
 
 .ids-modal-content--warning,
@@ -265,8 +268,42 @@
   overflow-y: auto;
 }
 
+/* Scroll bar (Figma ScrollBar `11099:57442` in Modal-Main): token track and thumb so it
+   follows the theme — the IDS dark theme sets no color-scheme, so a native bar would stay
+   light. Thumb 10px, radius-8, 2px inset in the track (same tokens as Dual List Box). */
+.ids-modal-content--scroll,
+.ids-modal-surface--page .ids-modal-content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter);
+}
+
+.ids-modal-content--scroll::-webkit-scrollbar,
+.ids-modal-surface--page .ids-modal-content::-webkit-scrollbar {
+  width: 14px;
+}
+
+.ids-modal-content--scroll::-webkit-scrollbar-track,
+.ids-modal-surface--page .ids-modal-content::-webkit-scrollbar-track {
+  background: var(--color-background-gray-lighter);
+}
+
+.ids-modal-content--scroll::-webkit-scrollbar-thumb,
+.ids-modal-surface--page .ids-modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-background-gray-base);
+  background-clip: padding-box;
+  border: var(--border-width-border-2) solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
 .ids-modal-content-scroll-shadow {
+  /* Figma "gradient": laid over the bottom 19px of the content block, right above
+     the footer, not a band of its own. Its right margin (set inline) leaves the
+     content's scroll bar on top of it. */
+  position: relative;
+  z-index: 1;
   height: 19px;
+  margin-top: -19px;
+  pointer-events: none;
   flex-shrink: 0;
   background: linear-gradient(
     180deg,

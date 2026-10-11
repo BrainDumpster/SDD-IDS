@@ -1,5 +1,5 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
-import { isValidElement, type ReactNode, useEffect, useRef, useState } from "react";
+import { isValidElement, type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import styles from "./Dialog.module.css";
 import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
@@ -85,6 +85,8 @@ export function Dialog({
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const [bodyScrollable, setBodyScrollable] = useState(false);
   const [showBodyScrollShadow, setShowBodyScrollShadow] = useState(false);
+  // The fade stops short of the body's scroll bar, which sits on top of it (Figma).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   const controlled = open !== undefined;
   if (!controlled && trigger == null) {
@@ -130,6 +132,7 @@ export function Dialog({
       const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       setBodyScrollable(scrollable);
       setShowBodyScrollShadow(scrollable && !atBottom);
+      setScrollbarWidth(el.offsetWidth - el.clientWidth);
     };
 
     updateContentOverflow();
@@ -275,7 +278,11 @@ export function Dialog({
               ) : null}
 
               {showBodyScrollShadow ? (
-                <div className={styles.contentScrollShadow} aria-hidden="true" />
+                <div
+                  className={styles.contentScrollShadow}
+                  style={{ "--ids-modal-scrollbar-width": `${scrollbarWidth}px` } as CSSProperties}
+                  aria-hidden="true"
+                />
               ) : null}
 
               <div className={[styles.footer, isModalPage ? styles.footerModalPage : ""].filter(Boolean).join(" ")}>

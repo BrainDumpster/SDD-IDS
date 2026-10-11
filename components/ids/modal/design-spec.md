@@ -96,7 +96,7 @@ Runtime: `scenario=single-page`; sample frame `1152×708`; width is host-driven 
 
 ## Layout & Measurements
 - **Dialog width (`ModalDialog-Main` `11349:116221`):** fixed `640px`; height follows the content. `size` does not apply to dialogs.
-- **Size matrix, single-page / multi-page (from `11348:63064`):** width x minimum height — the design height is a minimum, capped by the viewport max-height (`min(<h>, 85vh, 100vh - 48px)`).
+- **Size matrix, single-page / multi-page (from `11348:63064`):** fixed width x height, the height capped by the surface max-height (`min(85vh, 100vh - 48px)`; Figma frames cap at ~85% of the 995px frame). The content block takes the remaining height and scrolls inside it.
   - `large`: `1600 x 826`
   - `medium`: `1280 x 667`
   - `small`: `960 x 497`
@@ -170,6 +170,7 @@ Same structure and behavior as Light theme. All colors resolve via semantic moda
 - **Single-Page:** one continuous content area; no internal page switch.
 - **Multi-Page:** tab/page switch updates content region inside same modal shell.
 - **Scroll usage:** when `scrollBar=true`, content region supports overflow with vertical scrollbar treatment and bottom gradient cue.
+- **Scroll bar (Figma ScrollBar `11099:57442`):** track `var(--color-background-gray-lighter)`, thumb `var(--color-background-gray-base)` (10px, `radius-8`, 2px inset), so the bar follows light / dark — the IDS dark theme sets no `color-scheme`, and a native bar stays light. Arrow buttons stay native.
 - **Footer actions:** emit distinct events for tertiary and primary actions.
 - **Destructive flow:** includes confirm text input region before destructive action. Confirm input layout: `16px` gap between label text and input field; input width `300px`; input `border-radius: 0`.
 - **Focus-visible:** close and action controls show brand focus ring in keyboard modality.
@@ -303,7 +304,7 @@ IdsModal
 ## Implementation Notes
 
 ### 2026-10-11 — Lib React aligned with the single-page / multi-page fixes and Figma (`Modal-Main`, `ModalDialog-Main`, overlay, button groups)
-- Dialogs are always `640px` wide (`ids-modal-surface--dialog`); `size` applies to single-page / multi-page only, with the Figma heights as minimums.
+- Dialogs are always `640px` wide (`ids-modal-surface--dialog`); `size` applies to single-page / multi-page only, with the Figma heights as fixed heights (capped by the viewport) — the content scrolls inside rather than growing the modal.
 - Dialog content block padding follows the reference: `0` top for Non-Alerting / Informational, `16px` top / `0` bottom for the alerting types.
 - Modal pages: description `8px` / `8px`, content `16px` top, footer top rule (`--color-border-gray-neutral-base`), header `4px` bottom on a `40px` control row, Shadow 4 elevation (`32/16/8/4`).
 - Multi-page tabs are `IdsTabs` (`type="primary"`, `surface="transparent"`) inside an `8px` / `24px` strip; `IdsModalTabs` is the strip only, the tablist belongs to `IdsTabs`.
@@ -312,7 +313,7 @@ IdsModal
 - Destructive confirmation field: `IdsTextBox` `300px` wide, `40px` tall (Figma `.Modal-Element-Content` "Confirmation Text Field").
 - The close control is unchanged for now (Figma: `16px` icon flush at 24 / 24 in dialogs, `40px` icon button in modal pages).
 - What's New is a `custom` scenario: its own `1152 x 708` shell, none of the modal-page chrome.
-- Stories cover Figma Modal-Main "Scroll Bar=Yes": single-page and multi-page with content taller than the modal scroll inside the content block, with the 19px bottom fade until the end.
+- Stories cover Figma Modal-Main "Scroll Bar=Yes": single-page and multi-page with content taller than the modal scroll inside the content block. The 19px fade (`--color-gradient-overflow-vertical-end` → `-start`) is laid over the bottom of the content, right above the footer rule (Figma `gradient`, `absolute bottom-0`), stops short of the content's scroll bar (the bar sits on top of it, as in Figma), and disappears at the end of the content. The scroll bar uses the gray-lighter / gray-base tokens (light and dark).
 - Legacy reference (`storybook/src` `Dialog.tsx`, `IdsModal.tsx`, `Dialog.module.css`): shared with the Synapse modal, so the IDS values (640px dialog, modal-page sizes / header / Shadow 4 / content top / footer rule, overlay token, IdsModal dialog insets) are scoped to `[data-design-system="ids"]` and keyed on the popup's `data-scenario` / `data-type` / `data-size`. `Dialog.tsx` groups its footer buttons in `.footerActions` (right-aligned) and has `secondaryButtonName` for the Three Button Group.
 
 ### Design spec errors fixed for single-page / multi-page modal (2026-07-16)

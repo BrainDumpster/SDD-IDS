@@ -49,12 +49,12 @@
 .lg { width: 640px; }
 .xl { width: 800px; }
 
-/* Single-page / multi-page modal sizes (Dialog `scenario` + `dialogSize`). The design
-   height is a minimum and never pushes the popup past its 85vh max-height. */
-.x-small { width: 640px;  min-height: min(328px, 85vh); }
-.small   { width: 960px;  min-height: min(497px, 85vh); }
-.medium  { width: 1280px; min-height: min(667px, 85vh); }
-.large   { width: 1600px; min-height: min(826px, 85vh); }
+/* Single-page / multi-page modal sizes (Dialog `scenario` + `dialogSize`): fixed design
+   height, capped by the popup's 85vh max-height; the body scrolls inside. */
+.x-small { width: 640px;  height: 328px; }
+.small   { width: 960px;  height: 497px; }
+.medium  { width: 1280px; height: 667px; }
+.large   { width: 1600px; height: 826px; }
 
 .headerLeft {
   display: flex;
@@ -264,10 +264,10 @@
 
 /* Modal pages: width x minimum height, Shadow 4, 68px header (4px bottom on a 40px control
    row), 16px content top, footer rule. */
-:global([data-design-system="ids"]) .popupPage[data-size="x-small"] { width: 640px;  min-height: min(328px, 85vh); }
-:global([data-design-system="ids"]) .popupPage[data-size="small"]   { width: 960px;  min-height: min(497px, 85vh); }
-:global([data-design-system="ids"]) .popupPage[data-size="medium"]  { width: 1280px; min-height: min(667px, 85vh); }
-:global([data-design-system="ids"]) .popupPage[data-size="large"]   { width: 1600px; min-height: min(826px, 85vh); }
+:global([data-design-system="ids"]) .popupPage[data-size="x-small"] { width: 640px;  height: 328px; }
+:global([data-design-system="ids"]) .popupPage[data-size="small"]   { width: 960px;  height: 497px; }
+:global([data-design-system="ids"]) .popupPage[data-size="medium"]  { width: 1280px; height: 667px; }
+:global([data-design-system="ids"]) .popupPage[data-size="large"]   { width: 1600px; height: 826px; }
 
 :global([data-design-system="ids"]) .popupPage {
   max-width: calc(100vw - 48px);
@@ -302,6 +302,38 @@
 
 :global([data-design-system="ids"]) .popupPage .body {
   padding-top: var(--padding-padding-16);
+}
+
+:global([data-design-system="ids"]) .body {
+  /* Figma ScrollBar: token track and thumb so the bar follows the theme (the IDS dark
+     theme sets no color-scheme, so a native bar would stay light). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter);
+}
+
+:global([data-design-system="ids"]) .body::-webkit-scrollbar {
+  width: 14px;
+}
+
+:global([data-design-system="ids"]) .body::-webkit-scrollbar-track {
+  background: var(--color-background-gray-lighter);
+}
+
+:global([data-design-system="ids"]) .body::-webkit-scrollbar-thumb {
+  background: var(--color-background-gray-base);
+  background-clip: padding-box;
+  border: var(--border-width-border-2) solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
+:global([data-design-system="ids"]) .contentScrollShadow {
+  /* Figma "gradient": laid over the bottom 19px of the content, right above the footer,
+     stopping short of the body's scroll bar, which sits on top of it. */
+  position: relative;
+  z-index: 1;
+  margin-top: -19px;
+  margin-right: var(--ids-modal-scrollbar-width, 0px);
+  pointer-events: none;
 }
 
 :global([data-design-system="ids"]) .popupPage .footerBordered {

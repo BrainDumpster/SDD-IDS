@@ -588,6 +588,8 @@ export function IdsModal({
   const contentRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const [showScrollShadow, setShowScrollShadow] = useState(false);
+  // The fade stops short of the content's scroll bar, which sits on top of it (Figma).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
   const [footerChecked, setFooterChecked] = useState(false);
 
   const ctx = useMemo<IdsModalContextValue>(
@@ -658,6 +660,7 @@ export function IdsModal({
       const scrollable = el.scrollHeight - el.clientHeight > 1;
       const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       setShowScrollShadow(scrollable && !atBottom);
+      setScrollbarWidth(el.offsetWidth - el.clientWidth);
     };
     update();
     el.addEventListener("scroll", update, { passive: true });
@@ -740,6 +743,7 @@ export function IdsModal({
       {showScrollShadow ? (
         <div
           className={styles["ids-modal-content-scroll-shadow"]}
+          style={{ marginRight: scrollbarWidth }}
           aria-hidden="true"
         />
       ) : null}
@@ -827,6 +831,7 @@ export function IdsModal({
         {compound && showScrollShadow ? (
           <div
             className={styles["ids-modal-content-scroll-shadow"]}
+            style={{ marginRight: scrollbarWidth }}
             aria-hidden="true"
           />
         ) : null}
