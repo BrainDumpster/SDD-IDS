@@ -85,22 +85,23 @@ function TimeColumn({
   onIncrement,
   onDecrement,
   disabled,
+  className,
 }: {
   label: string;
   display: string;
   onIncrement: () => void;
   onDecrement: () => void;
   disabled?: boolean;
+  className?: string;
 }) {
   return (
-    <div className={styles.timeColumn} role="group" aria-label={label}>
+    <div className={className ? `${styles.timeColumn} ${className}` : styles.timeColumn} role="group" aria-label={label}>
       {/* Per spec: the up arrow is the "Previous" control — navigates backward (decrement). */}
       <button type="button" className={`${styles.arrowBtn} ${styles.arrowUp}`} onClick={onDecrement} disabled={disabled} aria-label={`Previous ${label}`}>
         <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
       </button>
-      <div className={styles.valueCell} aria-live="polite">
-        {display}
-      </div>
+      {/* Not a live region: the popup announces the full time instead (see `role="status"`). */}
+      <div className={styles.valueCell}>{display}</div>
       {/* Per spec: the down arrow is the "Next" control — navigates forward (increment). */}
       <button type="button" className={styles.arrowBtn} onClick={onIncrement} disabled={disabled} aria-label={`Next ${label}`}>
         <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
@@ -140,40 +141,58 @@ export function IdsTimePicker({
   const [inputText, setInputText] = useState(value ?? "");
   const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null);
 
-  const defaults12 = { hour: 9, minute: 30, second: 0, period: "PM" as Period };
-  const defaults24 = { hour: 13, minute: 30, second: 0 };
-
-  const [hour12, setHour12] = useState(defaults12.hour);
-  const [minute, setMinute] = useState(defaults12.minute);
+  // The columns are re-seeded by `syncColumns` every time the selector opens,
+  // so these initial values are never shown.
+  const [hour12, setHour12] = useState(12);
+  const [minute, setMinute] = useState(0);
   const [second, setSecond] = useState(0);
-  const [period, setPeriod] = useState<Period>(defaults12.period);
-  const [hour24, setHour24] = useState(defaults24.hour);
+  const [period, setPeriod] = useState<Period>("AM");
+  const [hour24, setHour24] = useState(0);
 
   useEffect(() => {
-    if (value !== undefined && value !== null) {
-      setInputText(value);
-      if (clockType === "12h") {
-        const p = parseTime12(value);
-        if (p) {
-          setHour12(p.hour);
-          setMinute(p.minute);
-          setSecond(p.second);
-          setPeriod(p.period);
-        }
-      } else {
-        const p = parseTime24(value);
-        if (p) {
-          setHour24(p.hour);
-          setMinute(p.minute);
-          setSecond(p.second);
-        }
-      }
-    }
-  }, [value, clockType]);
+    if (value !== undefined && value !== null) setInputText(value);
+  }, [value]);
 
   useEffect(() => {
     if (forceOpen !== undefined) setOpen(forceOpen);
   }, [forceOpen]);
+
+  /**
+   * Point the columns at `text` — the time in the field, typed or selected. When
+   * the field holds no valid time, start from the current time instead.
+   */
+  const syncColumns = useCallback(
+    (text: string) => {
+      const now = new Date();
+      const nowSecond = showSeconds ? now.getSeconds() : 0;
+      if (clockType === "12h") {
+        const p = parseTime12(text) ?? {
+          hour: now.getHours() % 12 || 12,
+          minute: now.getMinutes(),
+          second: nowSecond,
+          period: (now.getHours() < 12 ? "AM" : "PM") as Period,
+        };
+        setHour12(p.hour);
+        setMinute(p.minute);
+        setSecond(p.second);
+        setPeriod(p.period);
+      } else {
+        const p = parseTime24(text) ?? { hour: now.getHours(), minute: now.getMinutes(), second: nowSecond };
+        setHour24(p.hour);
+        setMinute(p.minute);
+        setSecond(p.second);
+      }
+    },
+    [clockType, showSeconds],
+  );
+
+  // Every open starts from the field, so the selector shows the time the user
+  // sees there (and edits abandoned with Esc don't linger). Layout effect: the
+  // columns are corrected before the popup is painted.
+  useLayoutEffect(() => {
+    if (open) syncColumns(inputText);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const updatePopupPosition = useCallback(() => {
     const anchor = anchorRef.current;
@@ -233,14 +252,17 @@ export function IdsTimePicker({
     commit(formatted);
   }, [commit, formatted]);
 
-  const closePopup = useCallback(
-    (returnFocus: boolean) => {
-      setOpen(false);
-      applyFromColumns();
-      if (returnFocus) clockBtnRef.current?.focus();
-    },
-    [applyFromColumns],
-  );
+  /** Clicking outside keeps the time picked in the columns. */
+  const closePopupAndApply = useCallback(() => {
+    setOpen(false);
+    applyFromColumns();
+  }, [applyFromColumns]);
+
+  /** Esc closes without selecting a time and returns focus to the Choose Time button. */
+  const cancelPopup = () => {
+    setOpen(false);
+    clockBtnRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -248,11 +270,11 @@ export function IdsTimePicker({
       const target = e.target as Node;
       if (rootRef.current?.contains(target)) return;
       if (popupRef.current?.contains(target)) return;
-      closePopup(false);
+      closePopupAndApply();
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open, closePopup]);
+  }, [open, closePopupAndApply]);
 
   /** Focusable controls inside the popup, in DOM order (for the focus trap). */
   const getFocusableEls = () =>
@@ -262,10 +284,10 @@ export function IdsTimePicker({
         ).filter((el) => el.offsetParent !== null)
       : [];
 
-  // On open, move focus to the first control in the popup (the selected time),
-  // per the spec's "Space/Enter opens the selector and moves focus to the
-  // currently selected time". Skipped on the initial mount so forceOpen demos
-  // don't grab focus on load.
+  // On open, move focus to the first control in the popup, whose columns show the
+  // selected time (or the current time when the field is empty) — per the spec's
+  // "Space/Enter opens the selector and moves focus to the currently selected
+  // time". Skipped on the initial mount so forceOpen demos don't grab focus on load.
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -283,7 +305,10 @@ export function IdsTimePicker({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape" && open) {
       e.preventDefault();
-      closePopup(true);
+      // Esc belongs to the time selector: don't let it also close an overlay the
+      // picker sits in (e.g. the DataGrid filter menu listens on `window`).
+      e.stopPropagation();
+      cancelPopup();
     }
   };
 
@@ -334,7 +359,8 @@ export function IdsTimePicker({
   const popupClasses = [
     styles.timePopup,
     popupPortal ? styles.timePopupPortaled : "",
-    clockType === "24h" && !showSeconds ? styles.widePadding : "",
+    // 24h has no AM/PM column; the wider side padding keeps the popup as wide as the 12h one (Figma).
+    clockType === "24h" ? styles.widePadding : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -383,6 +409,7 @@ export function IdsTimePicker({
             />
           )}
           <TimeColumn
+            className={styles.periodColumn}
             label="AM or PM"
             display={period}
             disabled={disabled}
@@ -417,6 +444,11 @@ export function IdsTimePicker({
           )}
         </>
       )}
+      {/* Announces the whole time on every change ("7:30 PM" → "seven thirty p m"),
+          not just the column that moved. */}
+      <span className={styles.visuallyHidden} role="status">
+        {formatted}
+      </span>
     </div>
   );
 
