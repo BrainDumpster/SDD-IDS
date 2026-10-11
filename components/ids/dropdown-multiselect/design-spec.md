@@ -142,9 +142,8 @@ Dark theme must preserve the same state matrix and resolve values through semant
 | SelectAll / ClearAll | default/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 ## Interactions
 - Trigger:
-  - click/`Enter`/`Space` toggles menu.
-  - when the menu opens, focus remains on the trigger; nothing auto-focuses the popup. `Tab`, `ArrowDown` or `ArrowUp` then move focus into the popup (see Implementation Notes).
-  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, select all, clear all, option rows, footer action).
+  - click toggles open/close; focus stays on the trigger after a pointer open.
+  - `Enter`/`Space` open the menu and move focus **into** it, onto the **Show Selected / Hide Selected** toggle (design review 2026-10). When the toggle is not shown (nothing selected, or `showSelectedPanel` off), focus goes to the first enabled option instead. With the menu already open (pointer open), `Enter`/`Space`/`ArrowUp`/`ArrowDown` move focus the same way.
   - `Escape` closes menu and restores trigger focus.
 - Option selection:
   - clicking option toggles inclusion in selected set.
@@ -156,7 +155,7 @@ Dark theme must preserve the same state matrix and resolve values through semant
     - indeterminate when partial
     - unchecked when none.
 - `Clear All`:
-  - clears the selected set **and collapses the menu**.
+  - clears the selected set and does **not** collapse the menu. Once Clear All disables itself (nothing left to clear), focus moves to `Select All`, so the keyboard user stays in the menu.
   - while filtering, clears only the currently-visible options (off-filter selections kept); disabled when selected count is zero (or none visibly selected while filtering).
 - Search:
   - filters visible options in real time; source options remain unchanged.
@@ -170,10 +169,11 @@ Dark theme must preserve the same state matrix and resolve values through semant
 - Optional action row:
   - user-defined label
   - emits explicit action event.
-- Keyboard navigation:
-  - `ArrowUp`/`ArrowDown` on a selectable option row move focus to the previous/next enabled `data-selectable` row; stops at the ends of the list.
-  - `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags). `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags.
-  - `Enter` / `Space` toggles the focused option.
+- Keyboard navigation (design review 2026-10, Windows-style; same model as single-select and combo box):
+  - `ArrowUp`/`ArrowDown` move focus through the menu and **wrap** at both ends. The cycle covers every enabled control in DOM order: search field, Show Selected toggle and tags, Select All, Clear All, enabled option rows, action row. Disabled options and a disabled Clear All are skipped.
+  - `ArrowLeft`/`ArrowRight` still move horizontally within the Select All / Clear All row and between Show Selected tags.
+  - `Enter` / `Space` toggles the focused option; the menu stays open.
+  - `Tab`/`Shift+Tab` while the menu is open close it, keep the selection and move focus to the next/previous component on the page. `Tab` never walks the menu controls. Exception: in the search field, `Tab` first accepts a pending inline suggestion.
   - `ScrollArea.Viewport` elements use `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable. `searchClearButton` is part of the tab order.
 
 ## Composition & API (runtime)
@@ -287,6 +287,12 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ---
 
 ## Implementation Notes
+
+### 2026-10-11
+- **Keyboard model shared with single-select** (design review, see ## Interactions → Keyboard navigation). Supersedes the 2026-08-13 "no auto-focus on open", cross-section `ArrowUp`/`ArrowDown` and "`Tab` still traverses every tabbable control" notes. React `lib/react/ids/dropdown-shared/DropdownMenu.tsx` runs `handleTriggerKeyDown` and the capture-phase `handleSelectKeyDownCapture` for `selectionMode="single"` and `"multi"`; `handlePopupKeyDown` keeps `ArrowLeft`/`ArrowRight`. Angular `ids-dropdown-menu`: `onTriggerKeydown` / `onPopupKeydown` run for every mode except `"none"`.
+- **Keyboard open lands on Show / Hide Selected.** React `focusMenuEntry` focuses the first button of `[data-focus-section="showSelected"]` for `selectionMode="multi"`, else falls back to `focusSelectedOption`. Angular `focusMenuEntry` focuses `.showSelectedToggle` after `cdr.detectChanges()`, with the same fallback.
+- **Clear All keeps the menu open.** React: clearing disabled the focused Clear All, focus fell to `<body>` and `Menu.Popup`'s blur handler closed the menu. Clear All now parks focus on the popup before clearing, then focuses Clear All again (still enabled) or `Select All`. Angular: `onClearAll` no longer calls `setOpen(false)`, and moves focus to `Select All` once Clear All is disabled.
+- **Angular focus rings** for `selectAllButton`, `clearAllButton` and `footerAction`, now that the arrow keys reach them (React parity).
 
 ### 2026-08-30
 - **Field text tooltip with section header (multi-select)** — `IdsDropdownMultiSelect.stories.tsx` `FieldValue` wraps the truncated selected list in `IdsTooltip` with `title="${selectedCount} Items"` (matching the badge tooltip) and `content` as the full comma-separated selected list. Tooltip only renders when `scrollWidth > clientWidth`.

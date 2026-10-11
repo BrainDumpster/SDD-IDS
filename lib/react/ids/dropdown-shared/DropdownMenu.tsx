@@ -87,8 +87,9 @@ interface DropdownMenuProps {
   showClearAll?: boolean;
   /** Single-select radio mode: label of the Clear All row. */
   resetToDefaultLabel?: string;
-  /** Single-select Clear All row alignment. Default `"left"`; `"right"` pushes
-   *  the Clear All control to the right edge of the row. */
+  /** Single-select Clear All row alignment. `"right"` pushes the control to the
+   *  right edge of the row, like the multi-select Clear All. Defaults to
+   *  `"right"` when the row reads "Reset to Default" (radio options), else `"left"`. */
   clearAllAlign?: "left" | "right";
   /** Multi-select: render the Show Selected panel **above** the Select All /
    *  Clear All row (default renders the Select All / Clear All row first). */
@@ -161,6 +162,14 @@ interface DropdownMenuProps {
   ariaInvalid?: boolean;
   ariaLabel?: string;
   listboxId?: string;
+  /**
+   * Where a keyboard open (Enter / Space on the trigger) puts focus.
+   * - `"default"`: single-select → the selected option; multi-select → the
+   *   Show / Hide Selected toggle when shown; else the first option.
+   * - `"selectedOrSearch"` (combo box): the (first) selected option, else the
+   *   search field so the user can type.
+   */
+  keyboardOpenFocus?: "default" | "selectedOrSearch";
 }
 
 export function DropdownMenu({
@@ -171,7 +180,7 @@ export function DropdownMenu({
   showSingleSelectRadio = false,
   showSelectAllClearAll = false,
   showClearAll = false,
-  clearAllAlign = "left",
+  clearAllAlign,
   showSelectedFirst = false,
   selectAllLabel = "Select All",
   clearAllLabel = "Clear All",
@@ -212,6 +221,7 @@ export function DropdownMenu({
   ariaInvalid,
   ariaLabel,
   listboxId,
+  keyboardOpenFocus = "default",
 }: DropdownMenuProps) {
   const [open, setOpenState] = useState(defaultOpen && !disabled);
   // Mirrors `open` synchronously: one keyboard action can close the menu twice
@@ -293,6 +303,11 @@ export function DropdownMenu({
     setSearch(typed);
     setGhostSuffix(isInsertion ? computeGhostSuffix(typed) : "");
   };
+  // Only paint a suggestion that still completes the current value — the search
+  // can change without typing (clear button, consumer reset), and a stale suffix
+  // would otherwise overlay the empty field's placeholder.
+  const visibleGhostSuffix =
+    ghostSuffix && computeGhostSuffix(currentSearch) === ghostSuffix ? ghostSuffix : "";
 
   const showSearchClear = Boolean(currentSearch && currentSearch.length > 0);
 
@@ -333,6 +348,7 @@ export function DropdownMenu({
   // row, which also hides during search). Commit 83f9d224.
   // With radio options the row reads "Reset to Default" (same behavior).
   const singleRowResetsToDefault = selectionMode === "single" && showSingleSelectRadio;
+  const resolvedClearAllAlign = clearAllAlign ?? (singleRowResetsToDefault ? "right" : "left");
   const showSingleClearAllRow =
     selectionMode === "single" &&
     showClearAll &&
@@ -385,19 +401,24 @@ export function DropdownMenu({
   };
 
   /* ---------------------------------------------------------------------- *
-   * Single-select keyboard model (design review, Windows-style):
+   * Single- and multi-select keyboard model (design review, Windows-style):
    * - Enter / Space on the trigger open the menu and move focus onto the
-   *   selected option (the first option when nothing is selected).
+   *   selected option (the first option when nothing is selected). Multi-select
+   *   lands on the Show / Hide Selected toggle first, when it is shown. The
+   *   combo box (`keyboardOpenFocus="selectedOrSearch"`) lands on the selected
+   *   option, else on the search field.
    * - ArrowUp / ArrowDown move focus through the menu and wrap at both ends.
-   *   Focus never changes the selection; Enter on an option selects it,
-   *   closes the menu and returns focus to the trigger.
+   *   Focus never changes the selection. Enter on an option selects it;
+   *   single-select then closes the menu and returns focus to the trigger,
+   *   multi-select keeps the menu open. ArrowLeft / ArrowRight still move
+   *   within the Select All / Clear All row and the Show Selected tags.
    * - Tab / Shift+Tab close the menu, keep the current value and continue the
    *   page tab order from the trigger. Tab never walks the option rows.
    * - Escape closes the menu and returns focus to the trigger (shared/menu).
    * Arrow keys on the closed trigger (change the value without opening) are on
    * hold pending accessibility review, so Menu.Trigger's default is kept.
    * ---------------------------------------------------------------------- */
-  const isSingleSelect = selectionMode === "single";
+  const hasKeyboardModel = selectionMode === "single" || selectionMode === "multi";
 
   // Menu.Trigger and Menu.Popup do not forward refs; resolve both from elements
   // rendered inside them.
@@ -414,13 +435,34 @@ export function DropdownMenu({
       popup.querySelectorAll<HTMLElement>("input:not([disabled]), button:not([disabled])"),
     ).filter((element) => element.tabIndex >= 0);
 
+  const getOptionRows = (popup: HTMLElement) =>
+    Array.from(popup.querySelectorAll<HTMLElement>('[data-selectable="true"]:not(:disabled)'));
+
   const focusSelectedOption = () => {
     const popup = getPopupElement();
     if (!popup) return;
-    const rows = Array.from(
-      popup.querySelectorAll<HTMLElement>('[data-selectable="true"]:not(:disabled)'),
-    );
+    const rows = getOptionRows(popup);
     (rows.find((row) => row.dataset.selected === "true") ?? rows[0])?.focus();
+  };
+
+  /** Where a keyboard open puts focus (see `keyboardOpenFocus`). */
+  const focusMenuEntry = () => {
+    if (keyboardOpenFocus === "selectedOrSearch") {
+      const popup = getPopupElement();
+      if (!popup) return;
+      const selected = getOptionRows(popup).find((row) => row.dataset.selected === "true");
+      const target = selected ?? searchInputRef.current;
+      if (target) {
+        target.focus();
+        return;
+      }
+    }
+    const toggle =
+      selectionMode === "multi"
+        ? getPopupElement()?.querySelector<HTMLElement>('[data-focus-section="showSelected"] button')
+        : null;
+    if (toggle) toggle.focus();
+    else focusSelectedOption();
   };
 
   const closeAndFocusTrigger = () => {
@@ -442,23 +484,19 @@ export function DropdownMenu({
     // wait a frame so the option rows can take focus.
     const frame = requestAnimationFrame(() => {
       focusSelectedOnOpenRef.current = false;
-      focusSelectedOption();
+      focusMenuEntry();
     });
     return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (disabled) return;
-    if (!isSingleSelect) {
-      handleBridgeTriggerKeyDown(event);
-      return;
-    }
+    if (!hasKeyboardModel || disabled) return;
     switch (event.key) {
       case "Enter":
       case " ":
         // Menu.Trigger opens the menu on these keys; focus follows into it.
-        if (open) focusSelectedOption();
+        if (open) focusMenuEntry();
         else focusSelectedOnOpenRef.current = true;
         break;
       case "ArrowDown":
@@ -466,7 +504,7 @@ export function DropdownMenu({
         // Menu opened by pointer, focus still on the trigger: step into it.
         if (open) {
           event.preventDefault();
-          focusSelectedOption();
+          focusMenuEntry();
         }
         break;
       case "Tab":
@@ -478,7 +516,7 @@ export function DropdownMenu({
 
   // Capture phase so the search field (which stops propagation of its keys)
   // still takes part in ArrowUp / ArrowDown / Tab.
-  const handleSingleSelectKeyDownCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleSelectKeyDownCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.nativeEvent.isComposing) return;
     const popup = event.currentTarget;
     const active = popup.ownerDocument.activeElement as HTMLElement | null;
@@ -502,167 +540,6 @@ export function DropdownMenu({
       event.stopPropagation();
       const step = event.key === "ArrowDown" ? 1 : -1;
       stops[(index + step + stops.length) % stops.length].focus();
-    }
-  };
-
-  /* ---------------------------------------------------------------------- *
-   * Trigger <-> popup tab bridge — multi-select (and any non-single menu).
-   * Single-select follows the design-review keyboard model above instead.
-   *
-   * The popup is portaled to the end of <body>, so in DOM (= tab) order it sits
-   * AFTER the whole page. Per design-spec the popup is deliberately not
-   * auto-focused on open and "the user must Tab into the popup" — but a plain
-   * Tab from the trigger walks the rest of the page instead, visiting every
-   * other control (including other dropdown triggers) while this menu stays
-   * open. On a real page that leaves the options unreachable in practice.
-   * Bridge the two boundaries explicitly.
-   * -------------------------------------------------------------------------- */
-  const POPUP_FOCUSABLE_SELECTOR =
-    'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-  /**
-   * `listboxId` is optional — Menu.Popup then falls back to its own internal id,
-   * so resolve by id when we have one and by open-state otherwise.
-   */
-  const findOpenPopup = (doc: Document): HTMLElement | null =>
-    (listboxId ? doc.getElementById(listboxId) : null) ??
-    doc.querySelector<HTMLElement>('[data-ids-menu-portal] [role="listbox"][data-open]');
-
-  /**
-   * The trigger, found by state rather than by id: Menu.Trigger overwrites the
-   * `aria-controls` we pass with its own internal menu id, so it does not match
-   * `listboxId`. Exactly one combobox is expanded while this popup is open.
-   */
-  const findOpenTrigger = (doc: Document) =>
-    doc.querySelector<HTMLElement>('[role="combobox"][aria-expanded="true"]');
-
-  const getPopupFocusables = (popup: HTMLElement) =>
-    Array.from(popup.querySelectorAll<HTMLElement>(POPUP_FOCUSABLE_SELECTOR));
-
-  /** Enabled option rows only — skips Search / Select All / Show Selected. */
-  const getOptionRows = (popup: HTMLElement) =>
-    Array.from(popup.querySelectorAll<HTMLElement>('[data-selectable="true"]')).filter(
-      (row) => !row.hasAttribute("disabled") && row.getAttribute("aria-disabled") !== "true",
-    );
-
-  /**
-   * ARIA APG: ArrowDown lands on the selected option (or the first one when
-   * nothing is selected); ArrowUp lands on the last.
-   */
-  const focusOptionRow = (popup: HTMLElement, edge: "first" | "last") => {
-    const rows = getOptionRows(popup);
-    if (rows.length === 0) return false;
-    const selected = rows.find((row) => row.dataset.selected === "true");
-    const target = edge === "last" ? rows[rows.length - 1] : (selected ?? rows[0]);
-    target.focus();
-    return true;
-  };
-
-  /** Set while the popup is still mounting, so the effect below can focus it. */
-  const pendingOptionFocusRef = useRef<"first" | "last" | null>(null);
-
-  useEffect(() => {
-    if (!open) {
-      pendingOptionFocusRef.current = null;
-      return;
-    }
-    const edge = pendingOptionFocusRef.current;
-    if (!edge) return;
-    pendingOptionFocusRef.current = null;
-    // The portal mounts in this commit; focus on the next frame so the rows exist.
-    const frame = requestAnimationFrame(() => {
-      const popup = findOpenPopup(document);
-      if (popup) focusOptionRow(popup, edge);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [open, listboxId]);
-
-  /**
-   * Trigger keys.
-   * - Tab forward while open enters the popup instead of walking the page.
-   * - ArrowDown / ArrowUp move focus onto an option row (ARIA APG), opening the
-   *   menu first when it is closed. MenuTrigger only calls `setOpen(true)` for
-   *   ArrowDown and ignores ArrowUp, so both are handled here.
-   */
-  const handleBridgeTriggerKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    const doc = event.currentTarget.ownerDocument;
-
-    if (event.key === "Tab" && !event.shiftKey && open) {
-      const popup = findOpenPopup(doc);
-      if (!popup) return;
-      const items = getPopupFocusables(popup);
-      if (items.length === 0) return;
-      event.preventDefault();
-      items[0].focus();
-      return;
-    }
-
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      const edge = event.key === "ArrowDown" ? "first" : "last";
-      if (open) {
-        const popup = findOpenPopup(doc);
-        if (popup && focusOptionRow(popup, edge)) {
-          event.preventDefault();
-        }
-        return;
-      }
-      // Closed: open now and focus once the popup has mounted.
-      pendingOptionFocusRef.current = edge;
-      if (event.key === "ArrowUp") {
-        // MenuTrigger does not open on ArrowUp — do it here.
-        event.preventDefault();
-        setOpen(true);
-        onOpenChange?.(true);
-      }
-      // ArrowDown: MenuTrigger's own handler opens the menu.
-    }
-  };
-
-  /**
-   * Tab out of the popup's first/last control returns to the page sanely.
-   *
-   * Runs in the CAPTURE phase: Base UI's own Menu keydown closes the popup on
-   * Tab and lets the browser move focus, which would otherwise win.
-   */
-  const handlePopupTabCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== "Tab") return;
-    // The search field owns Tab (it commits the ghost suffix) — never steal it.
-    const target = event.target as HTMLElement | null;
-    if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
-    const popup = event.currentTarget;
-    const doc = popup.ownerDocument;
-    const active = doc.activeElement as HTMLElement | null;
-    if (!active || !popup.contains(active)) return;
-    const items = getPopupFocusables(popup);
-    const index = items.indexOf(active);
-    if (index === -1) return;
-
-    // Shift+Tab off the first control goes back to the trigger, not to the
-    // last element of the page.
-    if (event.shiftKey && index === 0) {
-      const trigger = findOpenTrigger(doc);
-      if (!trigger) return;
-      event.preventDefault();
-      event.stopPropagation();
-      trigger.focus();
-      return;
-    }
-
-    // Tab past the last control closes the menu and continues the page tab
-    // order after the trigger, the way a native select does.
-    if (!event.shiftKey && index === items.length - 1) {
-      const trigger = findOpenTrigger(doc);
-      const pageFocusables = Array.from(
-        doc.querySelectorAll<HTMLElement>(
-          `${POPUP_FOCUSABLE_SELECTOR}, a[href], select:not([disabled]), textarea:not([disabled])`,
-        ),
-      ).filter((element) => !popup.contains(element) && element.offsetParent !== null);
-      const next = trigger ? pageFocusables[pageFocusables.indexOf(trigger) + 1] : undefined;
-      event.preventDefault();
-      event.stopPropagation();
-      setOpen(false);
-      onOpenChange?.(false);
-      (next ?? trigger)?.focus();
     }
   };
 
@@ -870,9 +747,7 @@ export function DropdownMenu({
             role="listbox"
             className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
             style={popupStyle}
-            onKeyDownCapture={
-              isSingleSelect ? handleSingleSelectKeyDownCapture : handlePopupTabCapture
-            }
+            onKeyDownCapture={hasKeyboardModel ? handleSelectKeyDownCapture : undefined}
             onKeyDown={handlePopupKeyDown}
           >
             {showSearch ? (
@@ -917,11 +792,13 @@ export function DropdownMenu({
                             // While an IME (e.g. Vietnamese Telex) is composing, the
                             // text isn't committed yet — never autocomplete into a
                             // half-composed value or the compositionend commit will
-                            // duplicate it. Just track the value; the ghost is
-                            // computed in onCompositionEnd once composition settles.
+                            // duplicate it. The suggestion is still shown (display
+                            // only): Telex keeps the whole word composing, so hiding
+                            // it here would hide it for every keystroke. Accepting
+                            // it waits for the commit (see onKeyDown).
                             if (nativeEvent.isComposing) {
                               setSearch(value);
-                              setGhostSuffix("");
+                              setGhostSuffix(computeGhostSuffix(value));
                               return;
                             }
                             const inputType = nativeEvent.inputType;
@@ -973,10 +850,10 @@ export function DropdownMenu({
                             }
                           }}
                         />
-                        {ghostSuffix ? (
+                        {visibleGhostSuffix ? (
                           <span className={styles.searchGhost} aria-hidden="true">
                             <span className={styles.searchGhostTyped}>{currentSearch}</span>
-                            <span className={styles.searchGhostSuffix}>{ghostSuffix}</span>
+                            <span className={styles.searchGhostSuffix}>{visibleGhostSuffix}</span>
                           </span>
                         ) : null}
                       </div>
@@ -986,7 +863,10 @@ export function DropdownMenu({
                           className={styles.searchClearButton}
                           aria-label="Clear search"
                           tabIndex={-1}
-                          onClick={() => setSearch("")}
+                          onClick={() => {
+                            setSearch("");
+                            setGhostSuffix("");
+                          }}
                         >
                           <IdsIcon
                             shape="ctrl-close-16"
@@ -1026,10 +906,19 @@ export function DropdownMenu({
                   className={styles.clearAllButton}
                   data-focus-row="selectAllClearAll"
                   onClick={(event) => {
-                    onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined);
                     // Multi-select Clear All keeps the popup open for continued selection
-                    // (design-spec 2026-07-25 / commit d54c2336). It does not collapse the menu.
+                    // (design-spec 2026-07-25 / commit d54c2336). Clearing disables this
+                    // button, which drops focus to <body> and would close the menu on
+                    // blur: park focus on the popup, then hand it back to Clear All
+                    // or, once it is disabled, to Select All.
+                    const clearAll = event.currentTarget;
+                    const selectAll = clearAll.previousElementSibling as HTMLElement | null;
+                    getPopupElement()?.focus();
+                    onClearAllClick?.(hasSearchQuery ? visibleSelectableValues : undefined);
                     scrollOptionsToTop(event);
+                    requestAnimationFrame(() =>
+                      (clearAll.isConnected && !clearAll.disabled ? clearAll : selectAll)?.focus(),
+                    );
                   }}
                   disabled={effectiveClearAllDisabled}
                 >
@@ -1043,7 +932,7 @@ export function DropdownMenu({
               <button
                 type="button"
                 className={styles.clearAllAction}
-                data-align={clearAllAlign}
+                data-align={resolvedClearAllAlign}
                 data-focus-section="singleClearAll"
                 onClick={(event) => {
                   // The row hides once the selection is cleared, which would

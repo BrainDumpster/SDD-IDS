@@ -98,6 +98,12 @@ export class IdsDropdownMenuComponent
   @Input() clearAllLabel = "Clear All";
   /** Single-select with radio options: label of the Clear All row. */
   @Input() resetToDefaultLabel = "Reset to Default";
+  /**
+   * Single-select Clear All row alignment. `"right"` pushes the control to the
+   * right edge of the row, like the multi-select Clear All. Defaults to
+   * `"right"` when the row reads "Reset to Default", else `"left"` (React parity).
+   */
+  @Input() clearAllAlign?: "left" | "right";
   @Input() selectAllChecked = false;
   @Input() selectAllIndeterminate = false;
   @Input() clearAllDisabled = false;
@@ -316,12 +322,19 @@ export class IdsDropdownMenuComponent
   }
 
   /** Combo box names every Clear All "Reset to Default" (same behavior). */
-  get resolvedClearAllLabel(): string {
+  get clearAllReadsResetToDefault(): boolean {
     const mode = this.dropdown?.mode;
     const isComboBox = mode === "combobox-single" || mode === "combobox-multi";
-    return isComboBox || this.singleRowResetsToDefault
-      ? this.resetToDefaultLabel
-      : this.clearAllLabel;
+    return isComboBox || this.singleRowResetsToDefault;
+  }
+
+  get resolvedClearAllLabel(): string {
+    return this.clearAllReadsResetToDefault ? this.resetToDefaultLabel : this.clearAllLabel;
+  }
+
+  /** Reset to Default sits on the right of its row, like the multi-select Clear All. */
+  get resolvedClearAllAlign(): "left" | "right" {
+    return this.clearAllAlign ?? (this.clearAllReadsResetToDefault ? "right" : "left");
   }
 
   /**
@@ -462,13 +475,16 @@ export class IdsDropdownMenuComponent
   }
 
   /*
-   * Single-select keyboard model (design review, Windows-style), parity with
-   * React `DropdownMenu.tsx`:
+   * Single- and multi-select keyboard model (design review, Windows-style),
+   * parity with React `DropdownMenu.tsx`:
    * - Enter / Space on the trigger open the menu and move focus onto the
-   *   selected option (the first option when nothing is selected).
+   *   selected option (the first option when nothing is selected). Multi-select
+   *   lands on the Show / Hide Selected toggle first, when it is shown. The
+   *   combo box lands on the selected option, else on the search field.
    * - ArrowUp / ArrowDown move focus through the menu and wrap at both ends.
-   *   Focus never changes the selection; Enter on an option selects it,
-   *   closes the menu and returns focus to the trigger.
+   *   Focus never changes the selection. Enter on an option selects it;
+   *   single-select then closes the menu and returns focus to the trigger,
+   *   multi-select keeps the menu open.
    * - Tab / Shift+Tab close the menu, keep the current value and continue the
    *   page tab order from the trigger. Tab never walks the option rows.
    * - Escape closes the menu and returns focus to the trigger (`onEscape`).
@@ -476,7 +492,7 @@ export class IdsDropdownMenuComponent
    * hold pending accessibility review.
    */
   onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.selectionMode !== "single" || this.disabled) {
+    if (this.selectionMode === "none" || this.disabled) {
       return;
     }
     switch (event.key) {
@@ -487,14 +503,14 @@ export class IdsDropdownMenuComponent
         if (!this.isOpen) {
           this.setOpen(true);
         }
-        this.focusSelectedOption();
+        this.focusMenuEntry();
         break;
       case "ArrowDown":
       case "ArrowUp":
         // Menu opened by pointer, focus still on the trigger: step into it.
         if (this.isOpen) {
           event.preventDefault();
-          this.focusSelectedOption();
+          this.focusMenuEntry();
         }
         break;
       case "Tab":
@@ -507,7 +523,7 @@ export class IdsDropdownMenuComponent
   }
 
   onPopupKeydown(event: KeyboardEvent): void {
-    if (this.selectionMode !== "single" || event.isComposing) {
+    if (this.selectionMode === "none" || event.isComposing) {
       return;
     }
     const popup = this.popupEl?.nativeElement;
@@ -524,7 +540,8 @@ export class IdsDropdownMenuComponent
     }
 
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      // Search field, Clear All, enabled option rows and the action row, in DOM order.
+      // Search field, Select All / Clear All, Show Selected controls, enabled
+      // option rows and the action row, in DOM order.
       const stops = Array.from(
         popup.querySelectorAll<HTMLElement>("input:not([disabled]), button:not([disabled])"),
       ).filter((element) => element.tabIndex >= 0);
@@ -545,6 +562,37 @@ export class IdsDropdownMenuComponent
     if (event.key !== "Escape") {
       event.stopPropagation();
     }
+  }
+
+  /**
+   * Keyboard open. Combo box: the (first) selected option, else the search
+   * field. Otherwise: the multi-select Show / Hide Selected toggle when shown,
+   * else the selected (or first) option.
+   */
+  private focusMenuEntry(): void {
+    const mode = this.dropdown?.mode;
+    if (mode === "combobox-single" || mode === "combobox-multi") {
+      // Render the popup now so its controls can take focus in this same keystroke.
+      this.cdr.detectChanges();
+      const popup = this.popupEl?.nativeElement;
+      const target =
+        popup?.querySelector<HTMLElement>('[data-selectable="true"][data-selected="true"]:not(:disabled)') ??
+        popup?.querySelector<HTMLElement>(".searchInput");
+      if (target) {
+        target.focus();
+        return;
+      }
+    }
+    if (this.selectionMode === "multi") {
+      // Render the popup now so the toggle can take focus in this same keystroke.
+      this.cdr.detectChanges();
+      const toggle = this.popupEl?.nativeElement.querySelector<HTMLElement>(".showSelectedToggle");
+      if (toggle) {
+        toggle.focus();
+        return;
+      }
+    }
+    this.focusSelectedOption();
   }
 
   private focusSelectedOption(): void {
@@ -607,13 +655,17 @@ export class IdsDropdownMenuComponent
     this.selectAllClick.emit(this.hasSearchQuery ? this.visibleSelectableValues : undefined);
   }
 
-  onClearAll(): void {
+  /** Multi-select Clear All keeps the menu open for continued selection (spec / React parity). */
+  onClearAll(event: Event): void {
+    const clearAll = event.currentTarget as HTMLButtonElement;
     this.clearAllClick.emit(this.hasSearchQuery ? this.visibleSelectableValues : undefined);
-    // Multi-select Clear All collapses the menu (Figma combo-box / React parity).
-    // Single-select Clear All keeps the menu open (spec).
-    if (this.selectionMode === "multi") {
-      this.setOpen(false);
-    }
+    // Clearing disables this button, which drops focus to <body>. After the
+    // consumer's update renders, hand focus to Select All.
+    requestAnimationFrame(() => {
+      if (clearAll.disabled && !this.popupEl?.nativeElement.contains(document.activeElement)) {
+        (clearAll.previousElementSibling as HTMLElement | null)?.focus();
+      }
+    });
   }
 
   /** Single-select Clear All / Reset to Default row. Keeps the menu open (spec). */

@@ -246,6 +246,30 @@
   cursor: not-allowed;
 }
 
+/* Keyboard focus rings for the Select All / Clear All row (React parity). */
+.clearAllButton:focus-visible {
+  position: relative;
+  outline: none;
+}
+
+.clearAllButton:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
+  pointer-events: none;
+}
+
+.selectAllButton:focus-visible .selectAllCheckbox {
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.selectAllButton:focus-visible:not([data-checked="true"]) .selectAllCheckbox {
+  border-color: var(--color-border-brand-base);
+}
+
 .selectAllButton[data-checked="true"] .selectAllCheckbox {
   background: var(--color-background-controls-base);
   border-color: var(--color-border-brand-transparent-brand);
@@ -401,8 +425,52 @@
 .footerActionButton {
   display: inline-flex;
   align-items: center;
+  position: relative;
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: var(--corner-radius-radius-2);
+}
+
+/* Single-select Clear All / Reset to Default: below search, bottom border
+   (React parity). The label carries no inner padding so its focus ring hugs it;
+   the 16px inset lives on the row. */
+.clearAllAction {
+  all: unset;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  color: var(--color-text-brand-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.clearAllAction .footerActionButton {
+  padding: 0;
+}
+
+/* Right-aligned (Reset to Default): 16px right inset, same as the multi-select
+   Clear All in .selectAllClearAllRow. */
+.clearAllAction[data-align="right"] {
+  justify-content: flex-end;
+  padding-right: var(--padding-padding-16);
+}
+
+.footerAction:focus-visible .footerActionButton,
+.clearAllAction:focus-visible .footerActionButton {
+  outline: none;
+}
+
+.footerAction:focus-visible .footerActionButton::after,
+.clearAllAction:focus-visible .footerActionButton::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
+  pointer-events: none;
 }
 
 .leadingControl {

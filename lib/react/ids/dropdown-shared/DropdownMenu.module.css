@@ -730,10 +730,11 @@
   padding: 0;
 }
 
-/* Right-aligned single-select Clear All (clearAllAlign="right"). */
+/* Right-aligned single-select Clear All / Reset to Default (clearAllAlign="right"):
+   16px right inset, same as the multi-select Clear All in .selectAllClearAllRow. */
 .clearAllAction[data-align="right"] {
   justify-content: flex-end;
-  padding-right: var(--padding-padding-24);
+  padding-right: var(--padding-padding-16);
 }
 
 /* 16px = the control size (checkbox/radio), so it aligns left with the Select All
