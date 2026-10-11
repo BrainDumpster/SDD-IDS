@@ -15,6 +15,10 @@
   - `43411:184672` (`Multi-Page` heading)
   - `11348:63064` (`Modal-Main` component details)
   - `11348:63031` (`.Modal-Element-Content`)
+  - `11348:62999` (`.Modal-Element-Content` templates: Text, Form, Long Text Area, Confirmation Text Field)
+  - `11348:63043` (`.Modal-Element-ButtonGroup`)
+  - `11348:63172` (`Modal-Element-Overlay`)
+  - `11349:116221` (`ModalDialog-Main`, six dialog types)
   - `43390:21759` (`Dialog usage matrix`)
   - `43390:21754` (`Modal - Dialog` source page)
 - **Axes from Figma usage + component nodes:**
@@ -91,25 +95,30 @@ Runtime: `scenario=single-page`; sample frame `1152×708`; width is host-driven 
 **Reference implementation:** `storybook/src/components/IdsWhatsNew.tsx` (hosts all three layers via `IdsModal`); lib: `lib/react/ids/modal/`.
 
 ## Layout & Measurements
-- **Size matrix (from `11348:63064`):**
+- **Dialog width (`ModalDialog-Main` `11349:116221`):** fixed `640px`; height follows the content. `size` does not apply to dialogs.
+- **Size matrix, single-page / multi-page (from `11348:63064`):** width x minimum height — the design height is a minimum, capped by the viewport max-height (`min(<h>, 85vh, 100vh - 48px)`).
   - `large`: `1600 x 826`
   - `medium`: `1280 x 667`
   - `small`: `960 x 497`
   - `x-small`: `640 x 328`
-- **Header insets:** `24px` horizontal, `24px` top, `8px` bottom (`var(--padding-padding-24)` / `var(--padding-padding-8)`). Live-verified on Dialog matrix `43390:21759` header rows (`pb` = `padding-8`). Apply the same header insets for single-page / multi-page / dialog chrome.
+- **Header insets (dialog):** `24px` horizontal, `24px` top, `8px` bottom (`var(--padding-padding-24)` / `var(--padding-padding-8)`). Live-verified on Dialog matrix `43390:21759` header rows (`pb` = `padding-8`).
+- **Header insets (single-page / multi-page, `Modal-Main`):** `24px` horizontal, `24px` top, `4px` bottom (`var(--padding-padding-4)`), with a `40px` (`var(--scale-40)`) control row, so the title and controls center on 40px and the header band is `68px`.
 - **Description block (Non-Alerting / Informational):** `16px` top, `24px` right/bottom/left.
 - **Description block (Warning / Major / Critical / Destructive):** `8px` top/bottom, `24px` left/right.
 - **Description block (single-page / multi-page override):** `8px` top, `8px` bottom, `24px` left/right (overrides type-specific padding for modal-page usage).
-- **Content block:** `24px` horizontal, `16px` top, `24px` bottom.
+- **Content block (dialog Non-Alerting / Informational):** `24px` horizontal, `0` top, `24px` bottom (the description above already ends in `24px`).
 - **Content block (Warning / Major / Critical / Destructive):** `24px` horizontal, `16px` top, `0` bottom.
-- **Footer insets:** `24px` all sides.
+- **Content block (single-page / multi-page):** `24px` horizontal, `16px` top, `24px` bottom.
+- **Tab strip (multi-page, `Modal-Main` `tabs`):** `IdsTabs` `type="primary"` with `surface="transparent"` (tabs `38px` tall, `9px 24px` padding, selected tab has a `2px` top indicator), inside a `8px` vertical / `24px` horizontal inset. The page content renders in the modal content block, so the Tabs panel is not shown.
+- **Footer insets:** `24px` all sides; `16px` gap between the optional checkbox and the button group.
 - **Footer border (single-page / multi-page only):** `border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base)`. Dialog usage has no footer border-top.
-- **Action gap:** `12px` between footer buttons.
+- **Action gap:** `12px` (`var(--spacing-space-12)`) between footer buttons. Button groups (`.Modal-Element-ButtonGroup`): Close / Okay only, Apply / Continue / Save + Cancel, and the Three Button Group — tertiary, secondary (outlined), primary, in that order.
 - **Header control icon size:** `16x16` (`Modal / ctrl-close-16`, optional full-screen icon).
 - **Close icon size:** `16x16`.
 - **Border:** `1px` solid `var(--color-border-gray-neutral-base)`.
 - **Corner radius:** `var(--modal-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0).
-- **Elevation:** layered drop shadow: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16.
+- **Elevation (dialog):** layered drop shadow: (0,2) blur 2, (0,4) blur 4, (0,8) blur 8, (0,16) blur 16 — `--shadow-drop-shadow-{2,4,8,16}-{x,y,blur,spread,color}`.
+- **Elevation (single-page / multi-page):** Shadow 4 — (0,32) blur 32, (0,16) blur 16, (0,8) blur 8, (0,4) blur 4 — `--shadow-shadow-4-drop-shadow-{32,16,8,4}-{x,y,blur,spread}` (falling back to `--shadow-drop-shadow-*`) with colours `--shadow-drop-shadow-{32,16,8,4}-color`.
 - **Typography:**
   - Title: `Header 5` (`24/32`, regular).
   - Body/content: `Body 2` (`14/20`, regular).
@@ -132,7 +141,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - **Buttons:**
   - Primary: `var(--color-background-controls-base)` + `var(--color-text-gray-white)`
   - Destructive primary: `var(--color-background-alerting-critical-base)` + `var(--color-text-gray-white)`
-- **Backdrop:** `var(--color-background-overlay-1)` (runtime token-backed overlay)
+- **Backdrop:** `var(--color-background-surface-overlay)` — Figma `Modal-Element-Overlay` `#252525` at 65% (dark `rgba(17,22,25,0.75)`).
 
 ### Alerting icon asset mapping (Figma verified)
 - `Critical` / `Destructive` -> `status-critical-square-solid` (`1-Solid / status-critical-square-solid`)
@@ -208,8 +217,10 @@ IdsModal
 - `layer?: "main" | "carousel" | "single-preview"`
 - `children?: Slot` — either compound anatomy parts **or** custom `content` body when using prop-driven chrome
 - `tertiaryActionLabel?: string` (user-defined)
+- `secondaryActionLabel?: string` (Three Button Group middle button, outlined secondary)
 - `enablePrimaryAction?: boolean`
 - `enableTertiaryAction?: boolean`
+- `enableSecondaryAction?: boolean`
 
 ### Outputs
 
@@ -285,11 +296,23 @@ IdsModal
 - [ ] **What's New** pattern hosts main/carousel/single-preview layers via `IdsModal` with documented stack z-index and anatomy mapping.
 - [ ] Size matrix (`large/medium/small/x-small`) matches usage and component nodes.
 - [ ] Surface width, paddings, and border align with Figma modal usage board.
-- [ ] Header insets are `24px` top/left/right and `8px` bottom (`padding-24` / `padding-8`).
+- [ ] Dialog header insets are `24px` top/left/right and `8px` bottom (`padding-24` / `padding-8`); modal page headers are `24px` top / `4px` bottom on a `40px` control row.
 - [ ] Destructive type uses destructive primary action style and confirm content slot.
 - [ ] Keyboard focus trap and escape behavior function in modal mode.
 - [ ] Light and dark theme snapshots preserve tokenized contrast.
 ## Implementation Notes
+
+### 2026-10-11 — Lib React aligned with the single-page / multi-page fixes and Figma (`Modal-Main`, `ModalDialog-Main`, overlay, button groups)
+- Dialogs are always `640px` wide (`ids-modal-surface--dialog`); `size` applies to single-page / multi-page only, with the Figma heights as minimums.
+- Dialog content block padding follows the reference: `0` top for Non-Alerting / Informational, `16px` top / `0` bottom for the alerting types.
+- Modal pages: description `8px` / `8px`, content `16px` top, footer top rule (`--color-border-gray-neutral-base`), header `4px` bottom on a `40px` control row, Shadow 4 elevation (`32/16/8/4`).
+- Multi-page tabs are `IdsTabs` (`type="primary"`, `surface="transparent"`) inside an `8px` / `24px` strip; `IdsModalTabs` is the strip only, the tablist belongs to `IdsTabs`.
+- Overlay uses the IDS token `--color-background-surface-overlay` (Figma `#252525` at 65%).
+- Footer: `secondaryActionLabel` adds the Three Button Group's outlined secondary action between tertiary and primary; checkbox ↔ actions gap `16px`, action gap `--spacing-space-12`.
+- Destructive confirmation field: `IdsTextBox` `300px` wide, `40px` tall (Figma `.Modal-Element-Content` "Confirmation Text Field").
+- The close control is unchanged for now (Figma: `16px` icon flush at 24 / 24 in dialogs, `40px` icon button in modal pages).
+- What's New is a `custom` scenario: its own `1152 x 708` shell, none of the modal-page chrome.
+- Stories cover Figma Modal-Main "Scroll Bar=Yes": single-page and multi-page with content taller than the modal scroll inside the content block, with the 19px bottom fade until the end.
 
 ### Design spec errors fixed for single-page / multi-page modal (2026-07-16)
 - **Footer border for modal-page missing** — Single-page and multi-page usages add `border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base)` on the footer. Dialog usage does not. Was missing from spec. Added to Layout & Measurements.

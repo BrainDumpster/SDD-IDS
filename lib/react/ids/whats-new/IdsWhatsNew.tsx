@@ -1569,6 +1569,7 @@ export function IdsWhatsNew({
     <IdsWhatsNewContext.Provider value={ctx}>
       <IdsWhatsNewLayerContext.Provider value="main">
         <IdsModal
+          scenario="custom"
           open={open}
           onOpenChange={setOpen}
           layer="main"
@@ -1582,6 +1583,7 @@ export function IdsWhatsNew({
 
       <IdsWhatsNewLayerContext.Provider value="carousel">
         <IdsModal
+          scenario="custom"
           open={carouselOpen}
           onOpenChange={(next) => {
             if (!next) closeCarousel();
@@ -1597,6 +1599,7 @@ export function IdsWhatsNew({
 
       <IdsWhatsNewLayerContext.Provider value="single-preview">
         <IdsModal
+          scenario="custom"
           open={singlePreviewLayerOpen}
           onOpenChange={(next) => {
             if (!next) closeSinglePreview();

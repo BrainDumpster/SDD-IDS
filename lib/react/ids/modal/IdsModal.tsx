@@ -39,6 +39,7 @@ import React, {
 import { createPortal } from "react-dom";
 import { IdsButton, IdsButtonLabel } from "../button";
 import { IdsIcon } from "../icon";
+import { IdsTabs } from "../tab";
 import styles from "./IdsModal.module.css";
 
 export type IdsModalScenario =
@@ -366,9 +367,11 @@ markSlot(IdsModalDescription, "description");
 /* -------------------------------------------------------------------------- */
 
 export interface IdsModalTabsProps extends HTMLAttributes<HTMLDivElement> {
+  /** An `IdsTabs` (`type="primary"`, `surface="transparent"`); it owns the tablist. */
   children?: ReactNode;
 }
 
+/** Multi-page tab strip (Figma Modal-Main `tabs`): 8px / 24px inset around the tabs. */
 export function IdsModalTabs({
   children,
   className,
@@ -379,7 +382,6 @@ export function IdsModalTabs({
     <div
       className={cx(styles["ids-modal-tabs"], className)}
       data-ids="ids-modal-tabs"
-      role="tablist"
       {...rest}
     >
       {children}
@@ -477,6 +479,10 @@ export interface IdsModalProps {
   title?: string;
   description?: string;
   closable?: boolean;
+  /**
+   * Single-page / multi-page width and minimum height (Figma Modal-Main). Dialogs
+   * are always 640px wide and size to their content.
+   */
   size?: IdsModalSize;
   tabs?: boolean;
   scrollBar?: boolean;
@@ -486,11 +492,15 @@ export interface IdsModalProps {
   /** Required for prop-driven chrome when compound slots are not projected. */
   primaryActionLabel?: string;
   tertiaryActionLabel?: string;
+  /** Middle button of the Figma "Three Button Group" (secondary, outlined). */
+  secondaryActionLabel?: string;
   enablePrimaryAction?: boolean;
   enableTertiaryAction?: boolean;
+  enableSecondaryAction?: boolean;
   onClose?: () => void;
   onPrimaryAction?: () => void;
   onTertiaryAction?: () => void;
+  onSecondaryAction?: () => void;
   layer?: IdsModalLayer;
   className?: string;
   labelledBy?: string;
@@ -517,11 +527,14 @@ export function IdsModal({
   children,
   primaryActionLabel,
   tertiaryActionLabel,
+  secondaryActionLabel,
   enablePrimaryAction = true,
   enableTertiaryAction = true,
+  enableSecondaryAction = true,
   onClose,
   onPrimaryAction,
   onTertiaryAction,
+  onSecondaryAction,
   layer = "main",
   className,
   labelledBy,
@@ -658,9 +671,11 @@ export function IdsModal({
 
   if (!open || typeof document === "undefined") return null;
 
-  const showTertiary =
-    Boolean(tertiaryActionLabel) &&
-    (scenario !== "dialog" || TWO_BUTTON_TYPES.has(type));
+  // Dialogs of the alerting types and modal pages take more than one action.
+  const multiAction = scenario !== "dialog" || TWO_BUTTON_TYPES.has(type);
+  const showTertiary = Boolean(tertiaryActionLabel) && multiAction;
+  const showSecondary = Boolean(secondaryActionLabel) && multiAction;
+  const isModalPage = scenario === "single-page" || scenario === "multi-page";
   const primaryVariant = type === "destructive" ? "destructive" : "primary";
 
   const overlayLayerClass =
@@ -677,7 +692,9 @@ export function IdsModal({
         : undefined;
   const sizeClass = fullScreen
     ? styles["ids-modal-surface--full-screen"]
-    : styles[`ids-modal-surface--${size}`];
+    : scenario === "dialog"
+      ? styles["ids-modal-surface--dialog"]
+      : styles[`ids-modal-surface--${size}`];
 
   const propDrivenInterior = (
     <>
@@ -695,19 +712,17 @@ export function IdsModal({
           <p className={styles["ids-modal-empty"]}>No pages available.</p>
         ) : (
           <IdsModalTabs>
-            {pageList.map((page) => (
-              <button
-                key={page.id}
-                type="button"
-                role="tab"
-                className={styles["ids-modal-tab"]}
-                data-active={page.id === activePageId ? "true" : "false"}
-                aria-selected={page.id === activePageId}
-                onClick={() => setActivePageId(page.id)}
-              >
-                {page.label}
-              </button>
-            ))}
+            <IdsTabs
+              type="primary"
+              surface="transparent"
+              items={pageList.map((page) => ({
+                id: page.id,
+                label: page.label,
+                content: null,
+              }))}
+              activeItemId={activePageId}
+              onActiveItemChange={setActivePageId}
+            />
           </IdsModalTabs>
         )
       ) : null}
@@ -753,6 +768,16 @@ export function IdsModal({
               <IdsButtonLabel>{tertiaryActionLabel}</IdsButtonLabel>
             </IdsButton>
           ) : null}
+          {showSecondary ? (
+            <IdsButton
+              variant="secondary"
+              size="large"
+              disabled={!enableSecondaryAction}
+              onClick={() => onSecondaryAction?.()}
+            >
+              <IdsButtonLabel>{secondaryActionLabel}</IdsButtonLabel>
+            </IdsButton>
+          ) : null}
           <IdsButton
             variant={primaryVariant}
             size="large"
@@ -786,13 +811,14 @@ export function IdsModal({
         className={cx(
           styles["ids-modal-surface"],
           sizeClass,
+          isModalPage && styles["ids-modal-surface--page"],
           surfaceLayerClass,
           className,
         )}
         data-ids="ids-modal-surface"
         data-scenario={scenario}
         data-type={type}
-        data-size={size}
+        data-size={scenario === "dialog" ? undefined : size}
         data-layer={layer}
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
