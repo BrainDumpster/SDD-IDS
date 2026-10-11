@@ -2,7 +2,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import { RadioGroup } from "@base-ui-components/react/radio-group";
 import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
-import { IdsDetailPanel, IdsDetailPanelBody, IdsDetailPanelHeader } from "./IdsDetailPanel";
+import {
+  IdsDetailPanel,
+  IdsDetailPanelBlock,
+  IdsDetailPanelBody,
+  IdsDetailPanelField,
+  IdsDetailPanelHeader,
+  IdsDetailPanelSection,
+} from "./IdsDetailPanel";
 import { IdsPagination } from "./IdsPagination";
 import { IdsDataGridSelectionCheckbox } from "./IdsDataGridSelectionCheckbox";
 import { IdsDataGridSelectionRadio } from "./IdsDataGridSelectionRadio";
@@ -163,6 +170,15 @@ export interface IdsDataGridProps {
    */
   showSingleSelectionRadio?: boolean;
   withDetailPanel?: boolean;
+  /**
+   * Controlled active (highlighted) row. Use it with a page-level `IdsDetailPanel`
+   * beside the grid: the IDS guideline keeps one row highlighted there at all times
+   * (the first row by default), so pass the shown row and update it from `onRowClick`.
+   * Omit to let the grid manage the active row.
+   */
+  activeRowId?: string | null;
+  /** Fired on every row body click with the row id. */
+  onRowClick?: (rowId: string) => void;
   pageSize?: number;
   /** When set, drives footer pagination visibility and page count (server-side). Omit for client slice from `rows`. */
   totalPages?: number | null;
@@ -225,6 +241,8 @@ export function IdsDataGrid({
   selectionMode = "single",
   showSingleSelectionRadio = true,
   withDetailPanel = false,
+  activeRowId: activeRowIdProp,
+  onRowClick,
   pageSize = 6,
   totalPages: totalPagesInput = null,
   readOnly = false,
@@ -251,7 +269,8 @@ export function IdsDataGrid({
   const [columnVisibilityValidation, setColumnVisibilityValidation] = useState<string | null>(
     null,
   );
-  const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [activeRowIdState, setActiveRowId] = useState<string | null>(null);
+  const activeRowId = activeRowIdProp !== undefined ? activeRowIdProp : activeRowIdState;
   const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState(columns.map((column) => column.key));
   const [currentPage, setCurrentPage] = useState(1);
@@ -616,6 +635,7 @@ export function IdsDataGrid({
   };
 
   const handleRowClick = (rowId: string) => {
+    onRowClick?.(rowId);
     if (withDetailPanel) {
       if (activeRowId === rowId && detailPanelOpen) {
         setDetailPanelOpen(false);
@@ -1321,15 +1341,17 @@ export function IdsDataGrid({
             </IdsDetailPanelHeader>
             <IdsDetailPanelBody>
               {activeRow ? (
-                <div className={styles.detailBody}>
+                <IdsDetailPanelSection>
                   {visibleOrderedColumns.map((column) => (
-                    <p key={column.key}>
-                      <b>{column.title}:</b> {String(activeRow.values[column.key] ?? "")}
-                    </p>
+                    <IdsDetailPanelField key={column.key} label={<>{column.title}:</>}>
+                      {String(activeRow.values[column.key] ?? "")}
+                    </IdsDetailPanelField>
                   ))}
-                </div>
+                </IdsDetailPanelSection>
               ) : (
-                <div className={styles.detailBody}>Select a row to view details.</div>
+                <IdsDetailPanelBlock className={styles.detailEmpty}>
+                  Select a row to view details.
+                </IdsDetailPanelBlock>
               )}
             </IdsDetailPanelBody>
           </IdsDetailPanel>

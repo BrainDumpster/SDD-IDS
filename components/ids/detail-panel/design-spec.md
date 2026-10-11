@@ -301,6 +301,7 @@ All validation checklist items verified and passing as of 2026-07-09.
 - **Widths follow the guideline over the `398px` Figma frames** — datagrid content-driven `240–480px`; page `384px` max. `component-contracts/ids/detail-panel.contract.ts` and the Angular library are still on `398` until Angular is updated.
 - **Pop-out** — `IdsDetailPanelDetachButton` is opt-in (guideline feature, not a Figma variant). The floating panel stays in place in the DOM (`position: fixed`, no portal) so body state and scroll survive docking and undocking.
 - **Page + data grid** — Pass the shown row to `IdsDatagrid` `activeRowId` (first row by default) and update it from `onRowClick`, so one row is always highlighted.
+- **Legacy reference (`storybook/src/components/IdsDetailPanel.tsx`)** — Shared with Synapse (`SynapseDetailPanel`), so the IDS layout rules (body insets, header alignment, `240–480` / `384` widths) are scoped to `:global([data-design-system="ids"])`; Synapse keeps `398px` and the `24px` body padding. Content blocks are `IdsDetailPanelSection` / `Field` / `Block`; pop-out is the opt-in `detachable` prop. The legacy `IdsDataGrid` mirrors the lib grid (`activeRowId`, `onRowClick`, section/field default content, centered `48px` header).
 
 ## Source Mapping
 - Component map baseline:
