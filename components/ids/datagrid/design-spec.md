@@ -995,6 +995,9 @@ Use the same semantic token names in both themes; **do not** hardcode hex — li
   - **Row click** on the **same** active row again **closes** the panel (toggle); clearing active row clears detail content.
   - selection radio / sort / filter / resize controls use **`stopPropagation`** so they do not toggle the panel.
   - panel collapse via detail chrome still clears active row (parity with Angular `selectedRow` + `show` flag).
+  - default panel content: the active row as one `IdsDetailPanelSection` of `Column:` / value `IdsDetailPanelField` rows; with no active row, "Select a row to view details." in an `IdsDetailPanelBlock`. Panel width follows its content within **240–480px** (see `components/ids/detail-panel/design-spec.md`).
+- Page-level detail panel (panel beside the page content, not attached to the grid):
+  - pass the shown row as controlled **`activeRowId`** (the first row by default) and update it from **`onRowClick`**; one row stays highlighted at all times and clicking it again keeps it.
 - Column resize (optional — Storybook **`columnResizeEnabled`**):
   - align the **pointer hit target** with the **trailing** header edge (same vertical band as the **1×24px** **`var(--color-border-gray-neutral-light)`** rail); hit target may be a **transparent** strip (**~10px**) with **`cursor: col-resize`** so Figma still shows a single rail.
   - clamp widths to **`minWidth`** (default **90px** per column) and a product max; emit **`onColumnResize`** when the gesture completes (or continuously if product requires live layout).
@@ -1055,6 +1058,7 @@ interface DatagridProps {
   selectionMode?: "single" | "multiple";  // default "single"
   showSingleSelectionRadio?: boolean;   // default true; single only — false hides radio column
   withDetailPanel?: boolean;                // default false (spec story: true)
+  activeRowId?: string | null;              // controlled active row (page-level detail panel); omit → grid-managed
   pageSize?: number;                        // client page slice; default product-defined
   readOnly?: boolean;                       // default false → brand hover; true → surface-1 hover
   rowVerticalIndicator?: boolean;           // default false → 4px leading bar when selected

@@ -23,6 +23,10 @@ export {
   IdsDetailPanelFooter,
   IdsDetailPanelCollapsedRail,
   IdsDetailPanelToggleButton,
+  IdsDetailPanelDetachButton,
+  IdsDetailPanelSection,
+  IdsDetailPanelField,
+  IdsDetailPanelBlock,
   type IdsDetailPanelProps,
   type IdsDetailPanelAttachMode,
 } from "./ids/detail-panel";

@@ -34,10 +34,13 @@ import { createPortal } from "react-dom";
 import { IdsCheckbox, IdsCheckboxLabel } from "../checkbox";
 import {
   IdsDetailPanel,
+  IdsDetailPanelBlock,
   IdsDetailPanelBody,
   IdsDetailPanelCollapsedRail,
   IdsDetailPanelContent,
+  IdsDetailPanelField,
   IdsDetailPanelHeader,
+  IdsDetailPanelSection,
   IdsDetailPanelTitle,
   IdsDetailPanelToggleButton,
 } from "../detail-panel";
@@ -176,6 +179,13 @@ export interface IdsDatagridProps {
   selectionMode?: IdsDatagridSelectionMode;
   showSingleSelectionRadio?: boolean;
   withDetailPanel?: boolean;
+  /**
+   * Controlled active (highlighted) row. Use it with a page-level `IdsDetailPanel`
+   * beside the grid: the IDS guideline keeps one row highlighted there at all times
+   * (the first row by default), so pass the shown row and update it from `onRowClick`.
+   * Omit to let the grid manage the active row.
+   */
+  activeRowId?: string | null;
   /** Initial rows per page. The footer per-page dropdown updates it internally. */
   pageSize?: number;
   /** Per-page dropdown options. The initial and active page sizes are always included. Default `[25, 50, 75, 100]`. */
@@ -222,6 +232,7 @@ export function IdsDatagrid({
   selectionMode = "single",
   showSingleSelectionRadio = true,
   withDetailPanel = false,
+  activeRowId: activeRowIdProp,
   pageSize = 6,
   pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
   onPageSizeChange,
@@ -282,7 +293,8 @@ export function IdsDatagrid({
   const [columnVisibilityValidation, setColumnVisibilityValidation] = useState<string | null>(
     null,
   );
-  const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [activeRowIdState, setActiveRowId] = useState<string | null>(null);
+  const activeRowId = activeRowIdProp !== undefined ? activeRowIdProp : activeRowIdState;
   const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState(columns.map((column) => column.key));
   const [currentPage, setCurrentPage] = useState(1);
@@ -1426,15 +1438,17 @@ export function IdsDatagrid({
         </IdsDetailPanelHeader>
         <IdsDetailPanelBody>
           {activeRow ? (
-            <div className={styles.detailBody}>
+            <IdsDetailPanelSection>
               {visibleOrderedColumns.map((column) => (
-                <p key={column.key}>
-                  <b>{column.title}:</b> {String(activeRow.values[column.key] ?? "")}
-                </p>
+                <IdsDetailPanelField key={column.key} label={<>{column.title}:</>}>
+                  {String(activeRow.values[column.key] ?? "")}
+                </IdsDetailPanelField>
               ))}
-            </div>
+            </IdsDetailPanelSection>
           ) : (
-            <div className={styles.detailBody}>Select a row to view details.</div>
+            <IdsDetailPanelBlock className={styles.detailEmpty}>
+              Select a row to view details.
+            </IdsDetailPanelBlock>
           )}
         </IdsDetailPanelBody>
       </IdsDetailPanelContent>
