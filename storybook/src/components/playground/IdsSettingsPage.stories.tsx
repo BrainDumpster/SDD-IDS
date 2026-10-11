@@ -33,7 +33,6 @@ import { IdsButton, IdsButtonLabel } from "@ids/react/button";
 import { IdsTabs } from "@ids/react/tab";
 import { IdsTextBox } from "@ids/react/text-box";
 import { IdsToggleSwitch } from "@ids/react/toggle-switch";
-import { IdsDropdownSingleSelect } from "@ids/react/dropdown-single-select";
 import { IdsDropdownMultiSelect } from "@ids/react/dropdown-multiselect";
 import { IdsRadioGroup, IdsRadioButton, IdsRadioLabel } from "@ids/react/radio-button";
 import { IdsCheckbox, IdsCheckboxGroup, IdsCheckboxLabel } from "@ids/react/checkbox";
@@ -43,6 +42,8 @@ import { IdsTag } from "@ids/react/tag";
 import { IdsDatagrid, type IdsDatagridColumnDef, type IdsDatagridRowDef } from "@ids/react/datagrid";
 import { IdsModal } from "@ids/react/modal";
 import { Tooltip, TooltipTrigger, TooltipPanel, TooltipHeader, TooltipBody } from "@ids/react/tooltip";
+// Single selects use the on-hold keyboard proposal: Down/Up on a closed trigger step the value.
+import { StepValueSingleSelect } from "./StepValueSingleSelect";
 
 /* -------------------------------------------------------------------------- */
 /* Row scaffolding (styles live in ./ids-settings-page.css)                    */
@@ -236,7 +237,7 @@ function AccessibilityPanel({
             </>
           }
           control={
-            <IdsDropdownSingleSelect
+            <StepValueSingleSelect
               options={ZOOM_OPTIONS}
               value={prefs.pageZoom}
               onChange={(v) => set("pageZoom", v)}
@@ -251,7 +252,7 @@ function AccessibilityPanel({
           info="Page color themes override site palettes with a high-contrast set that is easier to read."
           description="Make sites easier to read by modifying the colors you see on pages."
           control={
-            <IdsDropdownSingleSelect
+            <StepValueSingleSelect
               options={PAGE_COLOR_OPTIONS}
               value={prefs.pageColors}
               onChange={(v) => set("pageColors", v)}
