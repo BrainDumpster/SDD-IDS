@@ -4,7 +4,7 @@
  * CLOSED trigger step the value in place (100% -> 110% / 90%) instead of opening
  * the menu. Everything else is the shipped component; nothing in `lib/` changes.
  *
- * Used by Playground/Dropdown Proposals (the "On hold" column) and the Settings page.
+ * Used by the Settings page.
  */
 import React from "react";
 import {
