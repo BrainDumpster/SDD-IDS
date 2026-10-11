@@ -240,32 +240,29 @@ export const RangeValidation: Story = {
 };
 
 function RangeValidationDemo() {
+  // 'End' is filled while 'Start' is still empty — the two-field picker reports it
+  // on the End field. Typing an End before the Start, or a Start after the End, is
+  // rejected the same way.
   const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<Date | null>(new Date(2023, 0, 18)); // 01-18-2023, matches doc
 
-  // Filling 'End' before 'Start' is invalid; the error surfaces on the End field
-  // (per the doc: End is filled while Start is still empty / out of order).
-  const endError =
-    end && !start
-      ? "'Start' date field cannot be empty"
-      : start && end && start.getTime() > end.getTime()
-        ? "'Start' date must be before 'End' date"
-        : undefined;
+  const shared = {
+    rangeMode: true as const,
+    rangeStart: start,
+    rangeEnd: end,
+    onRangeChange: (s: Date | null, e: Date | null) => {
+      setStart(s);
+      setEnd(e);
+    },
+  };
 
   return (
-    <div style={{ padding: 24, display: "flex", gap: 24, flexWrap: "wrap" as const }}>
+    <div style={{ padding: 24, paddingBottom: 520, display: "flex", gap: 24, flexWrap: "wrap" as const, alignItems: "flex-start" }}>
       <div style={{ maxWidth: 260 }}>
-        <IdsDatePicker label="Start" required value={start} onChange={(d) => setStart(d)} />
+        <IdsDatePicker label="Start" required rangeField="start" {...shared} />
       </div>
       <div style={{ maxWidth: 260 }}>
-        <IdsDatePicker
-          label="End"
-          required
-          value={end}
-          onChange={(d) => setEnd(d)}
-          error={!!endError}
-          errorMessage={endError}
-        />
+        <IdsDatePicker label="End" required rangeField="end" {...shared} />
       </div>
     </div>
   );

@@ -176,6 +176,39 @@ export const RestrictedDates: Story = {
   },
 };
 
+function RestrictedRangeDemo() {
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  const [start, setStart] = useState<Date | null>(new Date(y, m, 5));
+  const [end, setEnd] = useState<Date | null>(new Date(y, m, 25));
+  return (
+    <div style={{ padding: 24, paddingBottom: 520, maxWidth: 320 }}>
+      <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+        Restricted dates show gray box, disabled border, and strikethrough (not selectable).
+      </div>
+      <IdsDatePicker
+        size="large"
+        label="Date range"
+        rangeMode
+        rangeStart={start}
+        rangeEnd={end}
+        onRangeChange={(s, e) => {
+          setStart(s);
+          setEnd(e);
+        }}
+        forceOpen
+        disabledDates={[new Date(y, m, 10), new Date(y, m, 11), new Date(y, m, 20), new Date(y, m, 21)]}
+      />
+    </div>
+  );
+}
+
+export const RestrictedDatesInRange: Story = {
+  name: "Restricted Dates — Range Mode",
+  render: () => <RestrictedRangeDemo />,
+};
+
 function RangeDemo() {
   const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<Date | null>(null);
@@ -203,4 +236,79 @@ function RangeDemo() {
 export const RangeSelection: Story = {
   name: "Range Selection",
   render: () => <RangeDemo />,
+};
+
+function RangeValidationDemo() {
+  // 'End' is filled while 'Start' is still empty — the two-field picker reports it
+  // on the End field. Typing an End before the Start, or a Start after the End, is
+  // rejected the same way.
+  const [start, setStart] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(new Date(2023, 0, 18));
+
+  const shared = {
+    rangeMode: true as const,
+    rangeStart: start,
+    rangeEnd: end,
+    onRangeChange: (s: Date | null, e: Date | null) => {
+      setStart(s);
+      setEnd(e);
+    },
+  };
+
+  return (
+    <div style={{ padding: 24, paddingBottom: 520, display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start" }}>
+      <div style={{ maxWidth: 260 }}>
+        <IdsDatePicker label="Start" required rangeField="start" {...shared} />
+      </div>
+      <div style={{ maxWidth: 260 }}>
+        <IdsDatePicker label="End" required rangeField="end" {...shared} />
+      </div>
+    </div>
+  );
+}
+
+export const RangeValidation: Story = {
+  name: "Date Range Validation (From / To)",
+  render: () => <RangeValidationDemo />,
+};
+
+function DateRangePickerDemo() {
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  // Preset a range so both fields show a value and either calendar highlights it.
+  const [start, setStart] = useState<Date | null>(new Date(y, m, 8));
+  const [end, setEnd] = useState<Date | null>(new Date(y, m, 16));
+
+  const shared = {
+    rangeMode: true as const,
+    rangeStart: start,
+    rangeEnd: end,
+    onRangeChange: (s: Date | null, e: Date | null) => {
+      setStart(s);
+      setEnd(e);
+    },
+  };
+
+  return (
+    <div style={{ padding: 24, paddingBottom: 520 }}>
+      <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+        <div style={{ maxWidth: 220 }}>
+          <IdsDatePicker label="Start date" rangeField="start" {...shared} />
+        </div>
+        <div style={{ maxWidth: 220 }}>
+          <IdsDatePicker label="End date" rangeField="end" {...shared} />
+        </div>
+      </div>
+      <p style={{ marginTop: 12, fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
+        Two horizontally aligned pickers share one range. Open either calendar and pick two dates —
+        the overlay highlights the range while selecting, and both fields update.
+      </p>
+    </div>
+  );
+}
+
+export const DateRangePicker: Story = {
+  name: "Date Range Picker (two fields)",
+  render: () => <DateRangePickerDemo />,
 };

@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -8,6 +9,7 @@ import React, {
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
+import { IdsFormLabel } from "../form-label";
 import { IdsIcon } from "../icon";
 import styles from "./IdsDatePicker.module.css";
 
@@ -65,6 +67,11 @@ function getFirstDayOfWeek(year: number, month: number) {
 function isSameDay(a: Date | null, b: Date | null) {
   if (!a || !b) return false;
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+/** The two dates in chronological order. */
+function ordered(a: Date, b: Date): [Date, Date] {
+  return a.getTime() <= b.getTime() ? [a, b] : [b, a];
 }
 
 function formatDate(d: Date, format: string = "MM-DD-YYYY") {
@@ -127,8 +134,12 @@ export interface IdsDatePickerProps {
   onChange?: (d: Date | null) => void;
   size?: "large" | "small";
   placeholder?: string;
+  /** Field label, rendered by the shared `IdsFormLabel` and tied to the input with `htmlFor`. */
   label?: string;
+  /** Shows the label's `*` marker and sets `aria-required` on the input. */
   required?: boolean;
+  /** Id for the text input. Generated when omitted; the label points at it. */
+  id?: string;
   /** Date format for input text display/parsing (e.g., "MM-DD-YYYY", "DD/MM/YYYY", "YYYY-MM-DD"). Default: "MM-DD-YYYY". */
   dateFormat?: string;
   /** Date format hint displayed below the input (e.g. "MM-DD-YYYY"). Always shown unless empty string. */
@@ -151,7 +162,11 @@ export interface IdsDatePickerProps {
   /**
    * For a two-field date range picker: bind this field's input text to one range
    * endpoint. Both fields share `rangeStart`/`rangeEnd`, so either calendar
-   * highlights the range while selecting.
+   * highlights the range while selecting. Start always comes before End: a
+   * calendar pick fills Start first and keeps the pair in order, typing sets this
+   * field's endpoint (an out-of-order value is rejected inline), clearing the text
+   * clears it, and an End without a Start shows "'Start' date field cannot be
+   * empty" on the End field.
    */
   rangeField?: "start" | "end";
   /** Force-open state for Storybook demos */
@@ -174,11 +189,13 @@ export interface IdsDatePickerProps {
  * current year. Either way the selected value is scrolled to the middle on open.
  */
 function RollingList({
+  id,
   options,
   selectedValue,
   onSelect,
   cyclic,
 }: {
+  id: string;
   options: { value: number; label: string }[];
   selectedValue: number;
   onSelect: (value: number) => void;
@@ -221,23 +238,32 @@ function RollingList({
   return (
     <div
       ref={ref}
+      id={id}
       className={styles.overlayDropdown}
       onScroll={handleScroll}
       onClick={(e) => e.stopPropagation()}
     >
-      {rendered.map((o, idx) => (
-        <button
-          key={idx}
-          type="button"
-          className={`${styles.overlayOption} ${o.value === selectedValue ? styles.selectedOption : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(o.value);
-          }}
-        >
-          {o.label}
-        </button>
-      ))}
+      {rendered.map((o, idx) => {
+        // Only the middle copy is real to assistive tech and the Tab order; the
+        // repeats exist so the list can scroll seamlessly.
+        const isRepeat = Math.floor(idx / n) !== middleCopy;
+        return (
+          <button
+            key={idx}
+            type="button"
+            className={`${styles.overlayOption} ${o.value === selectedValue ? styles.selectedOption : ""}`}
+            aria-current={!isRepeat && o.value === selectedValue ? "true" : undefined}
+            aria-hidden={isRepeat || undefined}
+            tabIndex={isRepeat ? -1 : undefined}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(o.value);
+            }}
+          >
+            {o.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -249,6 +275,7 @@ export function IdsDatePicker({
   placeholder,
   label,
   required = false,
+  id: idProp,
   dateFormat = "MM-DD-YYYY",
   formatHint = "MM-DD-YYYY",
   helperText,
@@ -268,6 +295,13 @@ export function IdsDatePicker({
   popupPortal = true,
 }: IdsDatePickerProps) {
   const today = useMemo(() => new Date(), []);
+  const reactId = useId();
+  const inputId = idProp ?? `ids-date-picker-${reactId}`;
+  const hintId = `${inputId}-hint`;
+  const errorId = `${inputId}-error`;
+  const shortcutsId = `${inputId}-shortcuts`;
+  const monthListId = `${inputId}-months`;
+  const yearListId = `${inputId}-years`;
   const [internalValue, setInternalValue] = useState<Date | null>(value);
   const [open, setOpen] = useState(forceOpen ?? false);
   const [inputText, setInputText] = useState(value ? formatDate(value, dateFormat) : "");
@@ -348,20 +382,33 @@ export function IdsDatePicker({
     el?.focus();
   }, [open, focusedDate, viewMonth, viewYear]);
 
+  /** Write the range (controlled or uncontrolled) and notify the owner. */
+  const commitRange = useCallback(
+    (s: Date | null, e: Date | null) => {
+      setInternalRangeStart(s);
+      setInternalRangeEnd(e);
+      setHoverDate(null);
+      onRangeChange?.(s, e);
+    },
+    [onRangeChange],
+  );
+
   const selectDate = useCallback(
     (d: Date) => {
       setInputError(null);
       if (rangeMode) {
-        if (!rangeStart || (rangeStart && rangeEnd)) {
-          setInternalRangeStart(d);
-          setInternalRangeEnd(null);
-          setHoverDate(null);
-          onRangeChange?.(d, null);
-        } else {
-          setInternalRangeEnd(d);
-          setHoverDate(null);
-          onRangeChange?.(rangeStart, d);
+        if (rangeField) {
+          // Two-field picker: Start always comes before End. A pick fills whichever
+          // endpoint is missing — Start first — and keeps the pair in order; a pick
+          // on a complete range starts a new one.
+          if (rangeStart && rangeEnd) commitRange(d, null);
+          else if (rangeStart) commitRange(...ordered(rangeStart, d));
+          else if (rangeEnd) commitRange(...ordered(d, rangeEnd));
+          else commitRange(d, null);
+          return;
         }
+        if (!rangeStart || (rangeStart && rangeEnd)) commitRange(d, null);
+        else commitRange(rangeStart, d);
         return;
       }
       setInternalValue(d);
@@ -369,7 +416,7 @@ export function IdsDatePicker({
       setOpen(false);
       onChange?.(d);
     },
-    [onChange, rangeMode, rangeStart, rangeEnd, onRangeChange, dateFormat],
+    [onChange, rangeMode, rangeField, rangeStart, rangeEnd, commitRange, dateFormat],
   );
 
   const isInRange = useCallback(
@@ -502,8 +549,44 @@ export function IdsDatePicker({
     return rows;
   }, [viewYear, viewMonth]);
 
+  /**
+   * Two-field range picker: a typed value sets this field's own endpoint and
+   * clearing the text clears it. A value that would put Start after End is
+   * rejected inline and left in the field for the user to correct.
+   */
+  const commitTypedRangeEndpoint = (text: string) => {
+    const isStart = rangeField === "start";
+    if (!text) {
+      setInputError(null);
+      if (isStart ? rangeStart : rangeEnd) commitRange(isStart ? null : rangeStart, isStart ? rangeEnd : null);
+      return;
+    }
+    const d = parseDate(text, dateFormat);
+    if (!d || isDateDisabled(d)) {
+      setInputError(d ? "Date unavailable" : `Invalid date, use ${formatHint || dateFormat}`);
+      return;
+    }
+    if (isStart && rangeEnd && d.getTime() > rangeEnd.getTime()) {
+      setInputError("'Start' date must be before 'End' date");
+      return;
+    }
+    if (!isStart && rangeStart && d.getTime() < rangeStart.getTime()) {
+      setInputError("'End' date must be after 'Start' date");
+      return;
+    }
+    setInputError(null);
+    setInputText(formatDate(d, dateFormat));
+    setViewMonth(d.getMonth());
+    setViewYear(d.getFullYear());
+    commitRange(isStart ? d : rangeStart, isStart ? rangeEnd : d);
+  };
+
   const handleInputBlur = () => {
     const text = inputText.trim();
+    if (rangeMode && rangeField) {
+      commitTypedRangeEndpoint(text);
+      return;
+    }
     if (!text) {
       setInputError(null);
       return;
@@ -584,6 +667,9 @@ export function IdsDatePicker({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape" && open) {
       e.preventDefault();
+      // Esc belongs to the calendar: don't let it also close an overlay the picker
+      // sits in (e.g. the DataGrid filter menu listens on `window`).
+      e.stopPropagation();
       closeCalendar();
     }
   };
@@ -594,6 +680,15 @@ export function IdsDatePicker({
     setYearDropdownOpen(false);
     if (returnFocus) calendarBtnRef.current?.focus();
   }, []);
+
+  /**
+   * Commit a date picked in the calendar (click, Space/Enter, Today). A single-date
+   * pick closes the calendar, so focus returns to the Choose Date button.
+   */
+  const pickFromCalendar = (d: Date) => {
+    selectDate(d);
+    if (!rangeMode) calendarBtnRef.current?.focus();
+  };
 
   /** Keyboard navigation within the calendar grid (single focus stop, roving tabindex). */
   const onGridKeyDown = (e: React.KeyboardEvent) => {
@@ -630,7 +725,7 @@ export function IdsDatePicker({
       case "Enter":
       case " ":
         e.preventDefault();
-        if (!isDateDisabled(focusedDate)) selectDate(focusedDate);
+        if (!isDateDisabled(focusedDate)) pickFromCalendar(focusedDate);
         return;
       default:
         return;
@@ -656,6 +751,7 @@ export function IdsDatePicker({
   const onDialogKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       e.preventDefault();
+      e.stopPropagation();
       closeCalendar();
       return;
     }
@@ -689,9 +785,22 @@ export function IdsDatePicker({
     }
   };
 
-  // External `error` prop wins; otherwise surface the inline typed-value validation message.
-  const showError = error || Boolean(inputError);
-  const shownErrorMessage = error ? errorMessage : inputError;
+  // Two-field range: an End date without a Start date is reported on the End field
+  // (IDS guideline: "'Start' date field cannot be empty").
+  const rangeFieldError =
+    rangeMode && rangeField === "end" && rangeEnd && !rangeStart
+      ? "'Start' date field cannot be empty"
+      : null;
+
+  // External `error` prop wins; then the inline typed-value message; then the range check.
+  const showError = error || Boolean(inputError) || Boolean(rangeFieldError);
+  const shownErrorMessage = error ? errorMessage : (inputError ?? rangeFieldError);
+  const showFormatHint = Boolean(formatHint) && !showError;
+  const describedBy =
+    [showError && shownErrorMessage ? errorId : null, showFormatHint ? hintId : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
+  const todayUnavailable = isDateDisabled(today);
 
   const fieldClasses = [
     styles.fieldContainer,
@@ -731,9 +840,15 @@ export function IdsDatePicker({
       role="dialog"
       aria-modal="true"
       aria-label="Choose date"
+      aria-describedby={shortcutsId}
       onKeyDown={onDialogKeyDown}
       onMouseDown={popupPortal ? (e) => e.stopPropagation() : undefined}
     >
+      {/* Keyboard shortcuts, read out with the dialog (guideline: put the shortcut
+          keys in the hint description); the month / year buttons also show them as tooltips. */}
+      <span id={shortcutsId} className={styles.visuallyHidden}>
+        Use the arrow keys to move between dates. Shift+M opens the month list, Shift+Y opens the year list.
+      </span>
       <div className={styles.calendarHeader}>
         <div className={styles.headerDropdowns}>
           <span className={styles.dropdownWrap}>
@@ -741,9 +856,11 @@ export function IdsDatePicker({
               ref={monthBtnRef}
               type="button"
               className={`${styles.dropdownButton}${monthDropdownOpen ? ` ${styles.menuOpen}` : ""}`}
-              aria-haspopup="listbox"
               aria-expanded={monthDropdownOpen}
+              aria-controls={monthDropdownOpen ? monthListId : undefined}
               aria-label="Month"
+              aria-keyshortcuts="Shift+M"
+              title="Month (Shift+M)"
               onClick={() => {
                 setMonthDropdownOpen((v) => !v);
                 setYearDropdownOpen(false);
@@ -754,6 +871,7 @@ export function IdsDatePicker({
             </button>
             {monthDropdownOpen && (
               <RollingList
+                id={monthListId}
                 options={MONTH_OPTIONS}
                 selectedValue={viewMonth}
                 cyclic
@@ -769,9 +887,11 @@ export function IdsDatePicker({
               ref={yearBtnRef}
               type="button"
               className={`${styles.dropdownButton} ${styles.yearBtn}${yearDropdownOpen ? ` ${styles.menuOpen}` : ""}`}
-              aria-haspopup="listbox"
               aria-expanded={yearDropdownOpen}
+              aria-controls={yearDropdownOpen ? yearListId : undefined}
               aria-label="Year"
+              aria-keyshortcuts="Shift+Y"
+              title="Year (Shift+Y)"
               onClick={() => {
                 setYearDropdownOpen((v) => !v);
                 setMonthDropdownOpen(false);
@@ -782,6 +902,7 @@ export function IdsDatePicker({
             </button>
             {yearDropdownOpen && (
               <RollingList
+                id={yearListId}
                 options={yearOptions}
                 selectedValue={viewYear}
                 cyclic={false}
@@ -899,7 +1020,7 @@ export function IdsDatePicker({
                             setViewYear(cell.year);
                           }
                           setFocusedDate(cellDate);
-                          selectDate(cellDate);
+                          pickFromCalendar(cellDate);
                         }}
                         onMouseEnter={() => {
                           if (rangeMode && rangeStart && !rangeEnd && !isUnavailable) {
@@ -932,10 +1053,13 @@ export function IdsDatePicker({
         <button
           type="button"
           className={styles.todayLink}
+          // An unavailable today can't be picked through the shortcut either.
+          disabled={todayUnavailable}
           onClick={() => {
+            if (todayUnavailable) return;
             setViewMonth(today.getMonth());
             setViewYear(today.getFullYear());
-            selectDate(today);
+            pickFromCalendar(today);
           }}
         >
           Today
@@ -947,17 +1071,23 @@ export function IdsDatePicker({
   return (
     <div className={styles.root} ref={rootRef} onKeyDown={handleKeyDown}>
       {label && (
-        <div className={`${styles.label}${size === "small" ? ` ${styles.labelSmall}` : ""}`}>
-          <div className={styles.labelInner}>
-            <span className={styles.labelText}>{label}</span>
-            {required && <span className={styles.labelRequired}>*</span>}
-          </div>
-        </div>
+        <span className={styles.label}>
+          <IdsFormLabel
+            htmlFor={inputId}
+            required={required}
+            // Date Picker sizes are `large` / `small`; Form Label's padding-block
+            // matches them at `lg` / `md`, not `lg` / `sm`.
+            size={size === "small" ? "md" : "lg"}
+          >
+            {label}
+          </IdsFormLabel>
+        </span>
       )}
       <div className={styles.inputGroup}>
         <div className={styles.positionWrapper} ref={anchorRef}>
           <div className={fieldClasses}>
             <input
+              id={inputId}
               type="text"
               className={styles.textInput}
               placeholder={effectivePlaceholder}
@@ -975,7 +1105,13 @@ export function IdsDatePicker({
               }}
               onBlur={() => { setMouseActivated(false); handleInputBlur(); }}
               disabled={disabled}
-              aria-label={label ? (inputText ? label : `${label}, ${effectivePlaceholder}`) : "Date"}
+              // A visible label names the field through `htmlFor`. `aria-label`
+              // would override it, so it is only the fallback when there is none.
+              aria-label={label ? undefined : "Date"}
+              aria-required={required || undefined}
+              aria-invalid={showError || undefined}
+              // The format hint (or the error) is the field's description, per the guideline.
+              aria-describedby={describedBy}
             />
             <button
               ref={calendarBtnRef}
@@ -1001,9 +1137,13 @@ export function IdsDatePicker({
             calendarPopup &&
             createPortal(calendarPopup, document.body)}
         </div>
-        {formatHint && !showError && <span className={styles.formatHint}>{formatHint}</span>}
+        {showFormatHint && (
+          <span className={styles.formatHint} id={hintId}>
+            {formatHint}
+          </span>
+        )}
         {showError && shownErrorMessage && (
-          <span className={styles.errorMessage}>
+          <span className={styles.errorMessage} id={errorId} role="alert">
             <IdsIcon
               shape="status-critical-square-solid"
               variant="img"
