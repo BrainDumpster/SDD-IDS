@@ -130,7 +130,7 @@ export const MultiPage: StoryObj<MultiPageArgs> = {{
   argTypes: {{
     tabVariant: {{ control: "radio", options: ["primary", "secondary"], name: "Tab Variant" }},
   }},
-  args: {{ tabVariant: "secondary" }},
+  args: {{ tabVariant: "primary" }},
   render: ({{ tabVariant }}) => (
     <{component_name}
       trigger={{<Button variant="secondary">Open Multi-Page Modal</Button>}}

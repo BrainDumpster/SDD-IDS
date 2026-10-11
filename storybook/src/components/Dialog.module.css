@@ -49,11 +49,12 @@
 .lg { width: 640px; }
 .xl { width: 800px; }
 
-/* Single-page / multi-page modal sizes (Dialog `scenario` + `dialogSize`). */
-.x-small { width: 640px;  min-height: 328px; }
-.small   { width: 960px;  min-height: 497px; }
-.medium  { width: 1280px; min-height: 667px; }
-.large   { width: 1600px; min-height: 826px; }
+/* Single-page / multi-page modal sizes (Dialog `scenario` + `dialogSize`). The design
+   height is a minimum and never pushes the popup past its 85vh max-height. */
+.x-small { width: 640px;  min-height: min(328px, 85vh); }
+.small   { width: 960px;  min-height: min(497px, 85vh); }
+.medium  { width: 1280px; min-height: min(667px, 85vh); }
+.large   { width: 1600px; min-height: min(826px, 85vh); }
 
 .headerLeft {
   display: flex;
@@ -231,6 +232,79 @@
 }
 
 .footerModalPage {
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+}
+
+/* ----- IDS chrome (Figma ModalDialog-Main `11349:116221`, Modal-Main `11348:63064`,
+   Modal-Element-Overlay `11348:63172`). This file also styles the Synapse modal
+   (`SynapseModal` re-exports IdsModal), so IDS-only values are scoped to
+   [data-design-system="ids"] and keyed on the popup's data-scenario / data-type / data-size. ----- */
+
+:global([data-design-system="ids"]) .backdrop {
+  background: var(--color-background-surface-overlay);
+}
+
+/* Dialog: fixed 640px; `size` applies to modal pages only. */
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"] {
+  width: 640px;
+}
+
+/* IdsModal dialog insets, matching the Dialog type classes. */
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="non-alerting"] .description,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="informational"] .description {
+  padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24);
+}
+
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="warning"] .body,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="major"] .body,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="critical"] .body,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="destructive"] .body {
+  padding: var(--padding-padding-16) var(--padding-padding-24) 0;
+}
+
+/* Modal pages: width x minimum height, Shadow 4, 68px header (4px bottom on a 40px control
+   row), 16px content top, footer rule. */
+:global([data-design-system="ids"]) .popupPage[data-size="x-small"] { width: 640px;  min-height: min(328px, 85vh); }
+:global([data-design-system="ids"]) .popupPage[data-size="small"]   { width: 960px;  min-height: min(497px, 85vh); }
+:global([data-design-system="ids"]) .popupPage[data-size="medium"]  { width: 1280px; min-height: min(667px, 85vh); }
+:global([data-design-system="ids"]) .popupPage[data-size="large"]   { width: 1600px; min-height: min(826px, 85vh); }
+
+:global([data-design-system="ids"]) .popupPage {
+  max-width: calc(100vw - 48px);
+  box-shadow:
+    var(--shadow-shadow-4-drop-shadow-32-x, var(--shadow-drop-shadow-32-x))
+      var(--shadow-shadow-4-drop-shadow-32-y, var(--shadow-drop-shadow-32-y))
+      var(--shadow-shadow-4-drop-shadow-32-blur, var(--shadow-drop-shadow-32-blur))
+      var(--shadow-shadow-4-drop-shadow-32-spread, var(--shadow-drop-shadow-32-spread))
+      var(--shadow-drop-shadow-32-color),
+    var(--shadow-shadow-4-drop-shadow-16-x, var(--shadow-drop-shadow-16-x))
+      var(--shadow-shadow-4-drop-shadow-16-y, var(--shadow-drop-shadow-16-y))
+      var(--shadow-shadow-4-drop-shadow-16-blur, var(--shadow-drop-shadow-16-blur))
+      var(--shadow-shadow-4-drop-shadow-16-spread, var(--shadow-drop-shadow-16-spread))
+      var(--shadow-drop-shadow-16-color),
+    var(--shadow-shadow-4-drop-shadow-8-x, var(--shadow-drop-shadow-8-x))
+      var(--shadow-shadow-4-drop-shadow-8-y, var(--shadow-drop-shadow-8-y))
+      var(--shadow-shadow-4-drop-shadow-8-blur, var(--shadow-drop-shadow-8-blur))
+      var(--shadow-shadow-4-drop-shadow-8-spread, var(--shadow-drop-shadow-8-spread))
+      var(--shadow-drop-shadow-8-color),
+    var(--shadow-shadow-4-drop-shadow-4-x, var(--shadow-drop-shadow-4-x))
+      var(--shadow-shadow-4-drop-shadow-4-y, var(--shadow-drop-shadow-4-y))
+      var(--shadow-shadow-4-drop-shadow-4-blur, var(--shadow-drop-shadow-4-blur))
+      var(--shadow-shadow-4-drop-shadow-4-spread, var(--shadow-drop-shadow-4-spread))
+      var(--shadow-drop-shadow-4-color);
+}
+
+:global([data-design-system="ids"]) .popupPage .header {
+  box-sizing: border-box;
+  min-height: calc(var(--padding-padding-24) + var(--scale-40) + var(--padding-padding-4));
+  padding-bottom: var(--padding-padding-4);
+}
+
+:global([data-design-system="ids"]) .popupPage .body {
+  padding-top: var(--padding-padding-16);
+}
+
+:global([data-design-system="ids"]) .popupPage .footerBordered {
   border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
 }
 

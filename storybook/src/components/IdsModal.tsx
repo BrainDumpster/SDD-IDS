@@ -130,6 +130,7 @@ export function IdsModal({
   const normalizedType = normalizeDialogType(type);
   const showSeverityIcon = scenario === "dialog" && type !== "non-alerting";
   const showFooterBorder = scenario !== "dialog";
+  const isModalPage = scenario === "single-page" || scenario === "multi-page";
 
   const registerContentElement = (element: HTMLElement | null) => {
     contentElementRef.current = element;
@@ -208,7 +209,15 @@ export function IdsModal({
         ) : null}
         <BaseDialog.Portal>
           <BaseDialog.Backdrop className={styles.backdrop} />
-          <BaseDialog.Popup className={[styles.popup, SIZE_CLASS[size]].filter(Boolean).join(" ")}>
+          <BaseDialog.Popup
+            className={[styles.popup, isModalPage ? styles.popupPage : "", SIZE_CLASS[size]]
+              .filter(Boolean)
+              .join(" ")}
+            // IDS chrome (Dialog.module.css) keys on these; the Synapse modal ignores them.
+            data-scenario={scenario}
+            data-type={type}
+            data-size={scenario === "dialog" ? undefined : size}
+          >
             <div className={styles.header}>
               <div className={styles.headerLeft}>
                 {showSeverityIcon ? (

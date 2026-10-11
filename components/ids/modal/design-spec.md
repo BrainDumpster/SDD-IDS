@@ -313,6 +313,7 @@ IdsModal
 - The close control is unchanged for now (Figma: `16px` icon flush at 24 / 24 in dialogs, `40px` icon button in modal pages).
 - What's New is a `custom` scenario: its own `1152 x 708` shell, none of the modal-page chrome.
 - Stories cover Figma Modal-Main "Scroll Bar=Yes": single-page and multi-page with content taller than the modal scroll inside the content block, with the 19px bottom fade until the end.
+- Legacy reference (`storybook/src` `Dialog.tsx`, `IdsModal.tsx`, `Dialog.module.css`): shared with the Synapse modal, so the IDS values (640px dialog, modal-page sizes / header / Shadow 4 / content top / footer rule, overlay token, IdsModal dialog insets) are scoped to `[data-design-system="ids"]` and keyed on the popup's `data-scenario` / `data-type` / `data-size`. `Dialog.tsx` groups its footer buttons in `.footerActions` (right-aligned) and has `secondaryButtonName` for the Three Button Group.
 
 ### Design spec errors fixed for single-page / multi-page modal (2026-07-16)
 - **Footer border for modal-page missing** — Single-page and multi-page usages add `border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base)` on the footer. Dialog usage does not. Was missing from spec. Added to Layout & Measurements.

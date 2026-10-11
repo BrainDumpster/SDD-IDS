@@ -46,10 +46,14 @@ interface DialogProps {
   enableActionButton?: boolean;
   tertiaryButtonName?: string;
   enableTertiaryButtton?: boolean;
+  /** Middle button of the Figma "Three Button Group" (secondary, outlined). */
+  secondaryButtonName?: string;
+  enableSecondaryButton?: boolean;
 
   onClose?: () => void;
   onPrimaryButtonClick?: () => void;
   onTertiaryButtonClick?: () => void;
+  onSecondaryButtonClick?: () => void;
 }
 
 export function Dialog({
@@ -71,9 +75,12 @@ export function Dialog({
   enableActionButton = true,
   tertiaryButtonName,
   enableTertiaryButtton = true,
+  secondaryButtonName,
+  enableSecondaryButton = true,
   onClose,
   onPrimaryButtonClick,
   onTertiaryButtonClick,
+  onSecondaryButtonClick,
 }: DialogProps) {
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const [bodyScrollable, setBodyScrollable] = useState(false);
@@ -86,6 +93,8 @@ export function Dialog({
 
   const showTertiary =
     variant !== "about" && Boolean(tertiaryButtonName);
+  const showSecondary =
+    variant !== "about" && Boolean(secondaryButtonName);
 
   const isModalPage = scenario === "single-page" || scenario === "multi-page";
   const popupClassName =
@@ -100,6 +109,7 @@ export function Dialog({
       : [
           styles.popup,
           programme === "synapse" ? styles.popupSynapse : styles.popupIds,
+          isModalPage ? styles.popupPage : "",
           isModalPage && dialogSize ? styles[dialogSize] : "",
         ]
           .filter(Boolean)
@@ -156,7 +166,11 @@ export function Dialog({
         <BaseDialog.Backdrop
           className={variant === "about" ? styles.backdropAbout : styles.backdrop}
         />
-        <BaseDialog.Popup className={popupClassName}>
+        <BaseDialog.Popup
+          className={popupClassName}
+          data-scenario={variant === "about" ? undefined : scenario}
+          data-size={isModalPage ? dialogSize : undefined}
+        >
           {variant === "about" ? (
             <>
               <div className={styles.modalMainAbout}>
@@ -265,30 +279,44 @@ export function Dialog({
               ) : null}
 
               <div className={[styles.footer, isModalPage ? styles.footerModalPage : ""].filter(Boolean).join(" ")}>
-                {showTertiary ? (
+                {/* Right-aligned button group: tertiary, secondary, primary. */}
+                <div className={styles.footerActions}>
+                  {showTertiary ? (
+                    <Button
+                      programme={programme}
+                      size="lg"
+                      variant="tertiary"
+                      disabled={!enableTertiaryButtton}
+                      onClick={() => onTertiaryButtonClick?.()}
+                    >
+                      {tertiaryButtonName}
+                    </Button>
+                  ) : null}
+                  {showSecondary ? (
+                    <Button
+                      programme={programme}
+                      size="lg"
+                      variant="secondary"
+                      disabled={!enableSecondaryButton}
+                      onClick={() => onSecondaryButtonClick?.()}
+                    >
+                      {secondaryButtonName}
+                    </Button>
+                  ) : null}
                   <Button
                     programme={programme}
                     size="lg"
-                    variant="tertiary"
-                    disabled={!enableTertiaryButtton}
-                    onClick={() => onTertiaryButtonClick?.()}
+                    variant={
+                      normalizeDialogType(dialogType) === "Destructive"
+                        ? "destructive"
+                        : "primary"
+                    }
+                    disabled={!enableActionButton}
+                    onClick={() => onPrimaryButtonClick?.()}
                   >
-                    {tertiaryButtonName}
+                    {primaryButtonName}
                   </Button>
-                ) : null}
-                <Button
-                  programme={programme}
-                  size="lg"
-                  variant={
-                    normalizeDialogType(dialogType) === "Destructive"
-                      ? "destructive"
-                      : "primary"
-                  }
-                  disabled={!enableActionButton}
-                  onClick={() => onPrimaryButtonClick?.()}
-                >
-                  {primaryButtonName}
-                </Button>
+                </div>
               </div>
             </>
           )}
