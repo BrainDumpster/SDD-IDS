@@ -117,6 +117,11 @@
   color: var(--color-text-gray-disabled);
 }
 
+/* Selected text (e.g. selectTextOnFocus) uses the brand slate highlight, not the OS highlight colour. */
+.ids-text-box-value::selection {
+  background: var(--color-background-brand-lighter-slate);
+}
+
 .ids-text-box-control[data-state="disabled"] .ids-text-box-value,
 .ids-text-box-control[data-state="disabled"] .ids-text-box-value::placeholder {
   color: var(--color-text-gray-disabled);

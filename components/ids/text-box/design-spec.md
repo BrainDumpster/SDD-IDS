@@ -68,6 +68,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Surface/background:
   - `var(--color-background-surface-component)` (default)
   - `var(--color-background-gray-light)` (disabled)
+  - `var(--color-background-brand-lighter-slate)` (selected text highlight, `::selection` — replaces the OS highlight colour)
 - Border:
   - `var(--color-border-gray-neutral-base)` (default)
   - `var(--color-border-gray-neutral-strong)` (hover)
@@ -116,6 +117,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - `true` (default): the whole value is selected, so typing replaces it. For simple values that are usually re-entered (e.g. Location `Boston`, a person's name).
   - `false`: the caret is placed at the end of the value. For important values that are usually edited in part, where an accidental keystroke would wipe the value (e.g. IP address `190.10.1.100`).
   - The field never restores a selection the user made before leaving it: coming back applies the same rule again.
+  - Selected text is highlighted with `var(--color-background-brand-lighter-slate)`; the value keeps its normal text colour.
   - Clicking inside a field that is already focused only moves the caret.
   - An empty field shows the caret at the start either way (placeholder text is not a value).
 - `selectTextOnFocus` belongs to Text Box / Text Area only. Components that embed the field (Pagination page input, Slider value inputs) pass `null` and keep the browser's own caret behaviour.
