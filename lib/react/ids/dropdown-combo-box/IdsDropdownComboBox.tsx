@@ -459,6 +459,8 @@ export function IdsDropdownComboBox({
         // right, like the multi row's Reset to Default.
         clearAllLabel="Reset to Default"
         clearAllAlign="right"
+        // Keyboard open: the selected option, else the search field to type in.
+        keyboardOpenFocus="selectedOrSearch"
         trigger={trigger}
         items={items}
         disabled={disabled}

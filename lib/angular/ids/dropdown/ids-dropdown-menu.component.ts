@@ -479,7 +479,8 @@ export class IdsDropdownMenuComponent
    * parity with React `DropdownMenu.tsx`:
    * - Enter / Space on the trigger open the menu and move focus onto the
    *   selected option (the first option when nothing is selected). Multi-select
-   *   lands on the Show / Hide Selected toggle first, when it is shown.
+   *   lands on the Show / Hide Selected toggle first, when it is shown. The
+   *   combo box lands on the selected option, else on the search field.
    * - ArrowUp / ArrowDown move focus through the menu and wrap at both ends.
    *   Focus never changes the selection. Enter on an option selects it;
    *   single-select then closes the menu and returns focus to the trigger,
@@ -563,8 +564,25 @@ export class IdsDropdownMenuComponent
     }
   }
 
-  /** Keyboard open: the multi-select Show / Hide Selected toggle when shown, else the selected (or first) option. */
+  /**
+   * Keyboard open. Combo box: the (first) selected option, else the search
+   * field. Otherwise: the multi-select Show / Hide Selected toggle when shown,
+   * else the selected (or first) option.
+   */
   private focusMenuEntry(): void {
+    const mode = this.dropdown?.mode;
+    if (mode === "combobox-single" || mode === "combobox-multi") {
+      // Render the popup now so its controls can take focus in this same keystroke.
+      this.cdr.detectChanges();
+      const popup = this.popupEl?.nativeElement;
+      const target =
+        popup?.querySelector<HTMLElement>('[data-selectable="true"][data-selected="true"]:not(:disabled)') ??
+        popup?.querySelector<HTMLElement>(".searchInput");
+      if (target) {
+        target.focus();
+        return;
+      }
+    }
     if (this.selectionMode === "multi") {
       // Render the popup now so the toggle can take focus in this same keystroke.
       this.cdr.detectChanges();

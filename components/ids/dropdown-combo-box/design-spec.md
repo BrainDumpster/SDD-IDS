@@ -155,7 +155,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - `Escape` closes popup and restores focus to trigger.
   - the caret indicator does **not** rotate when the popup opens — it stays pointing down.
 - Keyboard list navigation (design review 2026-10, same model as the single-select and multi-select dropdowns):
-  - `Enter`/`Space` on the trigger open the menu and move focus into it. Single-select: onto the selected option. Multi-select: onto the Show / Hide Selected toggle when it is shown. Otherwise: the first enabled option.
+  - `Enter`/`Space` on the trigger open the menu and move focus into it (design review 2026-10): onto the **selected** option when there is one (multi-select: the first selected option), otherwise onto the **search field** so the user can start typing. Without a search row, the first enabled option.
   - `ArrowUp`/`ArrowDown` move focus through every enabled menu control in DOM order and wrap at both ends. In multi-select, `ArrowLeft`/`ArrowRight` still move within the Select All / Reset to Default row and between Show Selected tags.
   - `Enter` commits the focused option in single-select mode (menu closes).
   - `Enter`/`Space` toggle the focused option in multi-select mode (menu stays open).
@@ -281,6 +281,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - **Ghost text over the placeholder** — the search dismiss control reset the query but not the ghost suffix, so the stale tail painted over the empty field's placeholder. React `DropdownMenu.tsx` clears `ghostSuffix` on dismiss and only renders a suffix that still completes the current query (`visibleGhostSuffix`), which also covers a consumer-driven reset.
 - **Ghost text during IME composition** — Telex keeps the whole word composing, and the suggestion used to be hidden until `compositionend`, so it never appeared while typing. `DropdownMenu.tsx` now computes the suggestion on composing input too (display only); `Tab` / `→` / `End` still accept it only after the composition commits.
 - **Reset to Default right-aligned** — React `IdsDropdownComboBox.tsx` passes `clearAllAlign="right"`; Angular `resolvedClearAllAlign` is `"right"` for `combobox-single` / `combobox-multi`.
+- **Keyboard open focus** — React `IdsDropdownComboBox.tsx` passes `keyboardOpenFocus="selectedOrSearch"` to `DropdownMenu`: `focusMenuEntry` focuses the first `[data-selectable="true"][data-selected="true"]` row, else the search input (`searchInputRef`). Angular `focusMenuEntry` does the same for `combobox-single` / `combobox-multi` (`.searchInput`). The plain multi-select keeps landing on Show / Hide Selected.
 - **Keyboard model** — the single-select model (focus into the menu on `Enter`/`Space`, wrapping arrows, `Tab` closes) now also runs for multi-select. Supersedes the 2026-08-13 focus-management notes below. See the multi-select spec for the Clear All focus fix.
 
 ### 2026-10-09

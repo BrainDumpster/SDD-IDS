@@ -162,6 +162,14 @@ interface DropdownMenuProps {
   ariaInvalid?: boolean;
   ariaLabel?: string;
   listboxId?: string;
+  /**
+   * Where a keyboard open (Enter / Space on the trigger) puts focus.
+   * - `"default"`: single-select → the selected option; multi-select → the
+   *   Show / Hide Selected toggle when shown; else the first option.
+   * - `"selectedOrSearch"` (combo box): the (first) selected option, else the
+   *   search field so the user can type.
+   */
+  keyboardOpenFocus?: "default" | "selectedOrSearch";
 }
 
 export function DropdownMenu({
@@ -213,6 +221,7 @@ export function DropdownMenu({
   ariaInvalid,
   ariaLabel,
   listboxId,
+  keyboardOpenFocus = "default",
 }: DropdownMenuProps) {
   const [open, setOpenState] = useState(defaultOpen && !disabled);
   // Mirrors `open` synchronously: one keyboard action can close the menu twice
@@ -395,7 +404,9 @@ export function DropdownMenu({
    * Single- and multi-select keyboard model (design review, Windows-style):
    * - Enter / Space on the trigger open the menu and move focus onto the
    *   selected option (the first option when nothing is selected). Multi-select
-   *   lands on the Show / Hide Selected toggle first, when it is shown.
+   *   lands on the Show / Hide Selected toggle first, when it is shown. The
+   *   combo box (`keyboardOpenFocus="selectedOrSearch"`) lands on the selected
+   *   option, else on the search field.
    * - ArrowUp / ArrowDown move focus through the menu and wrap at both ends.
    *   Focus never changes the selection. Enter on an option selects it;
    *   single-select then closes the menu and returns focus to the trigger,
@@ -424,18 +435,28 @@ export function DropdownMenu({
       popup.querySelectorAll<HTMLElement>("input:not([disabled]), button:not([disabled])"),
     ).filter((element) => element.tabIndex >= 0);
 
+  const getOptionRows = (popup: HTMLElement) =>
+    Array.from(popup.querySelectorAll<HTMLElement>('[data-selectable="true"]:not(:disabled)'));
+
   const focusSelectedOption = () => {
     const popup = getPopupElement();
     if (!popup) return;
-    const rows = Array.from(
-      popup.querySelectorAll<HTMLElement>('[data-selectable="true"]:not(:disabled)'),
-    );
+    const rows = getOptionRows(popup);
     (rows.find((row) => row.dataset.selected === "true") ?? rows[0])?.focus();
   };
 
-  /** Where a keyboard open puts focus: the multi-select Show / Hide Selected
-   *  toggle when it is shown, else the selected (or first) option. */
+  /** Where a keyboard open puts focus (see `keyboardOpenFocus`). */
   const focusMenuEntry = () => {
+    if (keyboardOpenFocus === "selectedOrSearch") {
+      const popup = getPopupElement();
+      if (!popup) return;
+      const selected = getOptionRows(popup).find((row) => row.dataset.selected === "true");
+      const target = selected ?? searchInputRef.current;
+      if (target) {
+        target.focus();
+        return;
+      }
+    }
     const toggle =
       selectionMode === "multi"
         ? getPopupElement()?.querySelector<HTMLElement>('[data-focus-section="showSelected"] button')
