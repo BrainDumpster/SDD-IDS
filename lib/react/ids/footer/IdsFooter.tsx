@@ -36,6 +36,8 @@ import {
   TooltipTrigger,
 } from "../tooltip";
 import styles from "./IdsFooter.module.css";
+import { IdsToastViewport } from "../toast/IdsToastViewport";
+import type { IdsToastQueueItem } from "../toast/IdsToastViewport";
 
 const HOSTNAME_MAX_CHARS = 48;
 
@@ -144,6 +146,7 @@ export function IdsFooter({
 
   const [valueEl, setValueEl] = useState<HTMLSpanElement | null>(null);
   const [isOverflowed, setIsOverflowed] = useState(false);
+  const [toasts, setToasts] = useState<IdsToastQueueItem[]>([]);
 
   useEffect(() => {
     if (!valueEl) return;
@@ -172,6 +175,16 @@ export function IdsFooter({
     if (!canCopy || !swid) return;
     try {
       await copyTextToClipboard(swid);
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: `copy-toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          type: "success",
+          message: "Copied",
+          closable: true,
+          role: "status",
+        },
+      ]);
     } catch {
       /* Clipboard failure still notifies host via onCopySwid (spec fallback). */
     }
@@ -185,12 +198,13 @@ export function IdsFooter({
   );
 
   return (
-    <footer
-      {...rest}
-      className={cx(styles["ids-footer"], className)}
-      aria-label="Application status"
-      data-ids="ids-footer"
-    >
+    <>
+      <footer
+        {...rest}
+        className={cx(styles["ids-footer"], className)}
+        aria-label="Application status"
+        data-ids="ids-footer"
+      >
       <div className={styles["ids-footer-left"]} data-ids="ids-footer-left">
         {showHostname ? (
           <div
@@ -309,7 +323,13 @@ export function IdsFooter({
           })()}
         </div>
       ) : null}
-    </footer>
+      </footer>
+      <IdsToastViewport
+        position="top-right"
+        items={toasts}
+        onItemsChange={setToasts}
+      />
+    </>
   );
 }
 

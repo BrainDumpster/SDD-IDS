@@ -20,6 +20,10 @@ import {
   IdsFooter,
   type IdsFooterProps,
 } from "@ids/react/footer";
+import {
+  IdsMainMenuLeft,
+  type MainMenuLeftPrimaryItem,
+} from "@ids/react/main-menu-left";
 
 const DESIGN_SPEC_PATH = "components/ids/footer/design-spec.md";
 
@@ -33,6 +37,33 @@ const specAccurateArgs: IdsFooterProps = {
   showCurrentDateAndTime: true,
   showTimeZone: true,
 };
+
+/** Sample nav from Figma MainMenu-Left-Main expanded (`11099:56218`). */
+const leftNavItems: MainMenuLeftPrimaryItem[] = [
+  { id: "dashboard", name: "Dashboard", iconName: "home", routeRef: "/dashboard" },
+  {
+    id: "infrastructure",
+    name: "Infrastructure",
+    iconName: "network-share",
+    routeRef: "/infrastructure",
+    childrenMenu: "collapsed",
+    children: [
+      { id: "secondary-a", name: "Secondary Item", routeRef: "/infrastructure/a" },
+      { id: "secondary-b", name: "Secondary Item", routeRef: "/infrastructure/b" },
+    ],
+  },
+  { id: "protection", name: "Protection", iconName: "shield-encrypt-alt", routeRef: "/protection" },
+  { id: "recovery", name: "Recovery", iconName: "arrows-spin", routeRef: "/recovery" },
+  { id: "alerts", name: "Alerts and Events", iconName: "alert-bell", routeRef: "/alerts" },
+  { id: "reports", name: "Reports", iconName: "productivity-alt", routeRef: "/reports" },
+  {
+    id: "administration",
+    name: "Administration",
+    iconName: "user-settings",
+    routeRef: "/administration",
+  },
+  { id: "jobs", name: "Jobs", iconName: "time-detail", routeRef: "/jobs" },
+];
 
 const frameStyle: React.CSSProperties = {
   width: "100%",
@@ -145,4 +176,54 @@ export const WithoutSwid: Story = {
       <IdsFooter {...specAccurateArgs} swid={undefined} />
     </div>
   ),
+};
+
+/** App-shell layout: IDS Main Menu/Left rail on the left, footer filling the remaining width beside it. */
+function FooterWithLeftNavFrame(props: IdsFooterProps) {
+  const [navExpanded, setNavExpanded] = React.useState(true);
+  return (
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+        boxSizing: "border-box",
+        background: "var(--color-background-surface-primary)",
+        minHeight: 0,
+      }}
+    >
+      <div
+        style={{
+          width: navExpanded ? 278 : 64,
+          height: "100%",
+          flexShrink: 0,
+        }}
+      >
+        <IdsMainMenuLeft
+          expanded={navExpanded}
+          onExpandedChange={setNavExpanded}
+          items={leftNavItems}
+          defaultSelectedItemId="dashboard"
+        />
+      </div>
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          alignItems: "stretch",
+          background: "var(--color-background-surface-component)",
+        }}
+      >
+        <IdsFooter {...props} style={{ width: "100%" }} />
+      </div>
+    </div>
+  );
+}
+
+export const WithLeftNavigation: Story = {
+  name: "With Left Navigation",
+  render: (args) => <FooterWithLeftNavFrame {...args} />,
+  args: specAccurateArgs,
 };

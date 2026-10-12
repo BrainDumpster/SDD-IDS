@@ -114,7 +114,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 *(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
-- **SWID copy:** activating `FooterCopyControl` copies the SWID string to the system clipboard (when API available) and emits `onCopySwid` with the current SWID value; provide non-blocking confirmation in host app if required.
+- **SWID copy:** activating `FooterCopyControl` copies the SWID string to the system clipboard (when API available), emits `onCopySwid` with the current SWID value, and displays an IDS success toast reading **"Copied"** in the **top-right** corner (uses the IDS Toast default auto-dismiss duration).
 - **Time zone:** activating `FooterTimeZoneAction` opens the host time-zone picker or settings (`onTimeZoneClick`); control is a button styled as a link (not navigation away by default).
 - **Visibility toggles:** `showHostname`, `showCurrentDateAndTime`, and `showTimeZone` mirror Figma boolean props; when false, remove the corresponding group without shifting bar height.
 - Date/time string is **display-only** in the bar (no inline edit); host supplies formatted `currentDateTime` text.
