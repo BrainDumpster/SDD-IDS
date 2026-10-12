@@ -84,6 +84,43 @@ export const Sizes: Story = {
   ),
 };
 
+export const RequiredLabel: Story = {
+  name: "Required Label",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The label is the shared `IdsFormLabel`, so `required` renders its `*` in " +
+          "`var(--color-text-gray-neutral-strong)` — the same colour as the label text, not a " +
+          "critical red. The marker is `aria-hidden`; the field announces itself as required " +
+          "through `aria-required` on the input instead.",
+      },
+    },
+  },
+  render: () => (
+    <div style={{ padding: 24, display: "flex", gap: 48, alignItems: "flex-start" }}>
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", opacity: 0.6, marginBottom: 8 }}>
+          Large, required
+        </div>
+        <IdsTimePicker size="large" label="Time" required value="09:30 PM" />
+      </div>
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", opacity: 0.6, marginBottom: 8 }}>
+          Small, required
+        </div>
+        <IdsTimePicker size="small" label="Time" required value="09:30 PM" />
+      </div>
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", opacity: 0.6, marginBottom: 8 }}>
+          Not required
+        </div>
+        <IdsTimePicker size="large" label="Time" value="09:30 PM" />
+      </div>
+    </div>
+  ),
+};
+
 export const FieldStates: Story = {
   name: "Field States",
   render: () => (
