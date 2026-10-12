@@ -359,6 +359,7 @@ export function IdsPagination({
                   ariaLabel="Current page"
                   value={pageInputValue}
                   showIcon={false}
+                  selectTextOnFocus={null}
                   onValueChange={(value) =>
                     setPageInputValue(value.replace(/[^\d]/g, ""))
                   }
