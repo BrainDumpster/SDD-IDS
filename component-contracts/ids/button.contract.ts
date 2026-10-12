@@ -7,10 +7,17 @@ export const IDS_BUTTON_DESIGN_SPEC_PATH = "components/ids/button/design-spec.md
 export const BUTTON_DEMO_ICON_SLUG = "settings-gear-detailed" as const;
 
 /** IDS button variants from design-spec.md variant matrix. */
-export type ButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "destructive"
+  | "ghostNeutral"
+  /** @deprecated Alias of `ghostNeutral` (Figma Type=Ghost / docs label Ghost Neutral). */
+  | "ghost";
 
 /** React/Synapse extended variants (rendering layer may map destructive → danger). */
-export type ButtonVariantExtended = ButtonVariant | "ghost" | "danger";
+export type ButtonVariantExtended = ButtonVariant | "danger";
 
 export type ButtonSize = "sm" | "md" | "lg";
 

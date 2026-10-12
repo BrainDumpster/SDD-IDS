@@ -2,7 +2,13 @@ import type { ComponentProps } from "react";
 import { Button } from "../Button";
 import styles from "./IdsButtonDap.module.css";
 
-type DapButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
+type DapButtonVariant =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "destructive"
+  | "ghostNeutral"
+  | "ghost";
 type DapButtonSize = "small" | "medium" | "large";
 type DemoState = "default" | "hover" | "press" | "focus" | "disabled";
 
@@ -19,11 +25,16 @@ const sizeToIds: Record<DapButtonSize, "sm" | "md" | "lg"> = {
   large: "lg",
 };
 
-const variantToIds: Record<DapButtonVariant, "primary" | "secondary" | "tertiary" | "danger"> = {
+const variantToIds: Record<
+  DapButtonVariant,
+  "primary" | "secondary" | "tertiary" | "danger" | "ghostNeutral" | "ghost"
+> = {
   primary: "primary",
   secondary: "secondary",
   tertiary: "tertiary",
   destructive: "danger",
+  ghostNeutral: "ghostNeutral",
+  ghost: "ghostNeutral",
 };
 
 export function IdsButtonDap({

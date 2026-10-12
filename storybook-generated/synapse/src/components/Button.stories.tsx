@@ -160,7 +160,28 @@ export const SizeExamples: Story = {
           <DemoIcon />
           Large
         </Button>
-        <Button programme="synapse" variant="tertiary" size="lg" iconOnly aria-label="Settings">
+        <Button programme="synapse" variant="primary" size="sm" iconOnly aria-label="Settings small">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="secondary" size="md" iconOnly aria-label="Settings medium">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="tertiary" size="lg" iconOnly aria-label="Settings large">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="ghostNeutral" size="lg" iconOnly aria-label="Ghost Neutral large">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="primary" size="lg" iconOnly disabled aria-label="Primary disabled">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="secondary" size="lg" iconOnly disabled aria-label="Secondary disabled">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="tertiary" size="lg" iconOnly disabled aria-label="Tertiary disabled">
+          <DemoIcon />
+        </Button>
+        <Button programme="synapse" variant="ghostNeutral" size="lg" iconOnly disabled aria-label="Ghost Neutral disabled">
           <DemoIcon />
         </Button>
       </div>

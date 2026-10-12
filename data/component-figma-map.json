@@ -17,10 +17,12 @@
     "category": "Formelements",
     "component": "Button",
     "designSpecPath": "components/ids/button/design-spec.md",
-    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-116183&m=dev",
-    "nodeId": "41894-116183",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-116123&m=dev",
+    "nodeId": "41894-116123",
     "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
-    "stateMatrixNodeId": "9662-25120"
+    "stateMatrixNodeId": "9662-25120",
+    "iconButtonSetNodeId": "52172-249499",
+    "focusStateNodeId": "9662-25507"
   },
   {
     "category": "Formelements",

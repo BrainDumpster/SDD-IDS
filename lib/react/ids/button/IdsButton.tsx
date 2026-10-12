@@ -28,7 +28,14 @@ import React, {
 } from "react";
 import styles from "./IdsButton.module.css";
 
-export type IdsButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
+export type IdsButtonVariant =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "destructive"
+  | "ghostNeutral"
+  /** @deprecated Alias of `ghostNeutral`. */
+  | "ghost";
 export type IdsButtonSize = "small" | "medium" | "large";
 export type IdsButtonDataState =
   | "default"
@@ -46,6 +53,10 @@ export interface IdsButtonProps
   variant?: IdsButtonVariant;
   size?: IdsButtonSize;
   iconOnly?: boolean;
+  /**
+   * Figma `Show Icon` — when false, hide a projected leading icon (default true when icon projected).
+   */
+  showIcon?: boolean;
   disabled?: boolean;
   loading?: boolean;
   type?: "button" | "submit" | "reset";
@@ -62,13 +73,31 @@ function cx(...parts: Array<string | false | null | undefined>): string {
 }
 
 function resolveVariant(v: unknown): IdsButtonVariant {
-  if (v === "secondary" || v === "tertiary" || v === "destructive") return v;
+  if (v === "ghost" || v === "ghostNeutral" || v === "ghost-neutral") {
+    return "ghostNeutral";
+  }
+  if (v === "secondary" || v === "tertiary" || v === "destructive") {
+    return v;
+  }
   return "primary";
 }
 
 function resolveSize(s: unknown): IdsButtonSize {
   if (s === "small" || s === "medium") return s;
   return "large";
+}
+
+function iconGlyphSize(
+  size: IdsButtonSize,
+  iconOnly: boolean,
+  variant: IdsButtonVariant,
+): number {
+  if (!iconOnly) return 16;
+  if (size === "small") return 12;
+  if (size === "medium") return 14;
+  /* Ghost Neutral Large → UI Icon Spacing/icon-14 (Figma Type=Ghost) */
+  if (variant === "ghostNeutral" || variant === "ghost") return 14;
+  return 16;
 }
 
 const sizeClass: Record<IdsButtonSize, string> = {
@@ -82,6 +111,8 @@ const variantClass: Record<IdsButtonVariant, string> = {
   secondary: styles["ids-button--secondary"],
   tertiary: styles["ids-button--tertiary"],
   destructive: styles["ids-button--destructive"],
+  ghostNeutral: styles["ids-button--ghost-neutral"],
+  ghost: styles["ids-button--ghost-neutral"],
 };
 
 /* -------------------------------------------------------------------------- */
@@ -192,6 +223,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
     variant: variantProp,
     size: sizeProp,
     iconOnly = false,
+    showIcon = true,
     disabled = false,
     loading = false,
     type = "button",
@@ -215,17 +247,19 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const variant = resolveVariant(variantProp);
   const size = resolveSize(sizeProp);
   const isDestructive = variant === "destructive";
+  const isGhostNeutral = variant === "ghostNeutral" || variant === "ghost";
   /** Spec Accurate: destructive never shows a leading icon / icon-only chrome. */
-  const resolvedIconOnly = isDestructive ? false : iconOnly;
-  /** Spec Accurate: icon-only mode supports medium and large only. */
-  const resolvedSize: IdsButtonSize = resolvedIconOnly && size === "small" ? "medium" : size;
+  /** Ghost Neutral is icon-only only (Figma Icon Button Type=Ghost). */
+  const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
+  const resolvedSize: IdsButtonSize = size;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
   const [isPressed, setIsPressed] = useState(false);
+  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly, variant);
 
   const { projectedIcon, projectedLabel } = partitionProjectedChildren(children);
 
   const iconSlot =
-    !isDestructive && projectedIcon
+    !isDestructive && showIcon && projectedIcon
       ? loading
         ? React.cloneElement(projectedIcon, { hidden: true })
         : projectedIcon
@@ -253,6 +287,23 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       "IdsButton: project `IdsButtonLabel` (required unless `iconOnly` is true).",
     );
   }
+
+  // Propagate glyph size hint to IdsIcon children when size prop is unset/16.
+  const sizedIconSlot =
+    iconSlot &&
+    React.isValidElement(iconSlot) &&
+    iconSlot.props.children != null
+      ? React.cloneElement(iconSlot, {
+          children: Children.map(iconSlot.props.children, (child) => {
+            if (!isValidElement(child)) return child;
+            const childProps = child.props as { size?: number };
+            if (childProps.size != null && childProps.size !== 16) return child;
+            return React.cloneElement(child as ReactElement<{ size?: number }>, {
+              size: glyphPx,
+            });
+          }),
+        })
+      : iconSlot;
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (isDisabled) {
@@ -347,10 +398,10 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       {loading ? <span className={styles["ids-button-spinner"]} aria-hidden="true" /> : null}
 
       {resolvedIconOnly ? (
-        hasIcon ? iconSlot : null
+        hasIcon ? sizedIconSlot : null
       ) : (
         <>
-          {hasIcon ? iconSlot : null}
+          {hasIcon ? sizedIconSlot : null}
           {hasLabel ? labelSlot : null}
         </>
       )}
