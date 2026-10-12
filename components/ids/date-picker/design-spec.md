@@ -25,7 +25,7 @@
 
 ### Input field
 1. `DatePickerRoot` — flex row, `gap: 16px`, `items-start`; label and input group sit side-by-side horizontally
-2. optional `Label` — left side, flex column with label text + required asterisk, vertically centered
+2. optional `Label` — left side; the shared **Form Label** component (`IdsFormLabel`), which owns the label text, the optional `*` marker and the vertical padding: `size="lg"` for a large field, `size="md"` for a small one. The Date Picker contributes only a layout slot that stops the label shrinking or wrapping inside the root row.
 3. `InputGroup` — flex column containing FieldContainer + FormatHint + ValidationError
 4. `FieldContainer` — text input + calendar icon trigger (z-index: 2)
 5. `TextInput` — editable date value or placeholder
@@ -70,16 +70,16 @@
   - `Small`: `32px` height
 - Field container: `padding-left: var(--padding-padding-16)`, no right padding — trailing padding belongs to the icon button
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
-- Field container corner radius: `var(--date-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
+- Field container corner radius: `var(--corner-radius-radius-none)` (0, square)
 - Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--corner-radius-radius-2)` (2px), `margin: -1px -1px -1px 0` (right/top/bottom overlap container border by 1px)
-- Calendar popup shell + month/year dropdown overlays: `border-radius: 0` (square); when attached below field, all corners are square
+- Calendar popup shell + month/year dropdown overlays: `border-radius: var(--corner-radius-radius-none)` (0, square); when attached below field, all corners are square
 - Field focus ring corner radius: `var(--corner-radius-radius-4)` (4px)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
 - Placeholder font: Roboto Regular (400), 14px, `line-height: 20px`, `color: var(--color-text-gray-disabled)` (#757575)
 - Format hint: always shown below the input, Roboto Regular (400), `var(--font-size-body-2)` (14px), `var(--font-line-height-line-height-20)` (20px), `color: var(--color-text-gray-neutral)` (#4d4d4d), `width: 100%`
-- Label (when `label` prop provided): flex row, `gap: var(--spacing-space-8)` (8px), `align-items: center`, `flex-shrink: 0`, `cursor: default`; padding: `var(--padding-padding-10)` (10px) top/bottom for large size, `var(--padding-padding-6)` (6px) top/bottom for small size, 0 left/right; label text: Roboto Regular (400), 14px/20px, `color: var(--color-text-gray-neutral-strong)` (#252525); required asterisk (`required` prop): same font, `color: var(--color-text-alerting-critical-base)` (#af0000)
+- Label (when `label` prop provided): rendered by `IdsFormLabel` (`components/ids/form-label/design-spec.md`) — Roboto Regular (400), 14px/20px, `color: var(--color-text-gray-neutral-strong)` (#252525); padding `var(--padding-padding-10)` (10px) top/bottom via `size="lg"` for a large field, `var(--padding-padding-6)` (6px) via `size="md"` for a small field, 0 left/right, so the 20px text line centers on the 40px / 32px field; required `*` marker (`required` prop) in the same font and colour as the label text, 2px after it. The Date Picker's own `.label` slot is `display: inline-flex; flex-shrink: 0; white-space: nowrap`.
 - Root-to-hint gap: `var(--spacing-space-4)` (4px)
-- Validation error row (Figma `42159:132988`): `gap: var(--spacing-space-4)` (4px) between field and error row; error row uses `gap: var(--spacing-space-8)` (8px) between `status-critical-square-solid` icon (16×16) and message text; message: Roboto Regular (400), body-2, `var(--color-text-alerting-critical-base)`
+- Validation error row (Figma `42159:132988`): `gap: var(--spacing-space-4)` (4px) between field and error row; error row uses `gap: var(--spacing-space-8)` (8px) between `status-critical-square-solid` icon (16×16) and message text; message: Roboto Regular (400), body-2, `var(--color-text-alerting-critical-base)`, `white-space: nowrap` (stays on one line, does not wrap)
 
 ### Calendar popup
 - Default behavior: portal the calendar popup to `document.body` with `position: fixed` so it escapes ancestor `overflow: clip` / stacking contexts (e.g. DataGrid filter panels). Controlled by `popupPortal` prop (`default: true`).
@@ -159,15 +159,18 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - Width: `114px` fixed
 - Max height: `200px`, scrollable (`overflow-y: auto`, `overflow-x: hidden`)
 - Background: `white`
-- Border: `var(--border-width-border-default)` (1px) solid `#eaeaea` (gray-200)
-- Shadow: `0px 2px 5px 0px rgba(37,37,37,0.08)`
+- Border: `var(--border-width-border-default)` (1px) solid — top/left/right `var(--color-border-gray-neutral-lighter)`, bottom `var(--color-border-gray-neutral-base)`
+- Shadow: dual-layer, same as IDS DropdownMenu popup — `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)`
+- Corner radius: `var(--corner-radius-radius-none)` (0, square — matches calendar popup)
 - Container padding: `var(--padding-padding-4)` (4px) vertical, `var(--padding-padding-1)` (1px) horizontal
-- Option row:
+- Option row — copies IDS DropdownMenu single-select `.item` (text-only, no radio), compact `min-height: 32px`:
   - Padding: `var(--padding-padding-6)` (6px) vertical, `var(--padding-padding-16)` (16px) horizontal
-  - Text: Roboto Regular (400) 14px/20px, `var(--color-text-gray-neutral)` (#4d4d4d)
-  - No border on options, `border-radius: 0`
-- Selected option: background `var(--color-background-controls-lighter)` (#ebf4fb), text Roboto Regular (400) 14px/20px, `var(--color-text-gray-neutral-strong)` (#252525)
-- Hover option: background `var(--color-background-controls-lighter)` (#ebf4fb)
+  - Text: Roboto Regular (400) 14px/20px, `var(--color-text-gray-neutral)`
+  - `transition: background 80ms ease`, `gap: var(--spacing-space-8)`, no border/radius on the option itself
+- Hover option: background `var(--color-background-controls-lighter)`, text `var(--color-text-gray-neutral)`, top+bottom inset border `var(--color-border-brand-base)` (`box-shadow: inset 0 ±1px`) — **no left/right edge**
+- Selected option (current month/year): background `var(--color-background-controls-lighter)`, text `var(--color-text-brand-strong)`, top+bottom inset border `var(--color-border-brand-base-neutral)`
+- Press: background `var(--color-background-controls-light)`, text `var(--color-text-brand-strong)`, top+bottom inset border `var(--color-border-brand-base-neutral)`
+- Focus-visible: `outline: var(--border-width-border-default) solid var(--color-border-brand-base)`, `outline-offset: -1px`, `border-radius: var(--corner-radius-radius-4)`
 
 ## Tokens
 
@@ -181,7 +184,7 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 ### Input field
 - `var(--color-background-surface-component)` — field background
 - `var(--color-border-gray-neutral-base)` — default border (1px)
-- `var(--color-border-gray-neutral-strong)` — hover border
+- `var(--color-border-gray-neutral-stronger)` — hover border
 - `var(--color-border-brand-base)` — focus border
 - `var(--color-text-gray-neutral-strong)` — filled value text
 - `var(--color-text-gray-disabled)` — placeholder text (#757575)
@@ -211,7 +214,9 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - `var(--spacing-space-20)` — gap between prev/next chevrons
 
 ### Calendar shadow
-- `0px 2px 5px 0px rgba(37,37,37,0.08)` — single-layer shadow (same value used by month/year dropdown overlays)
+- Shadow 4, two layers (Figma variable names): offset/blur/spread `var(--shadow-shadow-4-drop-shadow-4-{x,y,blur,spread})` and `var(--shadow-shadow-4-drop-shadow-8-{x,y,blur,spread})`, colors `var(--shadow-drop-shadow-4-color)` and `var(--shadow-drop-shadow-8-color)`.
+- Figma also puts an untokenized `0 2px 5px rgba(37,37,37,0.08)` effect on the inner calendar frame; it is not reproduced.
+- Month/year dropdown overlays use the dual-layer DropdownMenu shadow — see below.
 
 ### Date cell
 - `var(--color-text-gray-neutral-strong)` — default date text (#252525)
@@ -226,7 +231,7 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 - `var(--color-border-gray-disabled)` — unavailable border (#757575)
 
 ### Today indicator
-- `var(--color-border-gray-neutral-strong)` — default underline (#252525)
+- `var(--color-border-gray-neutral-stronger)` — default underline (#252525)
 - `var(--color-border-gray-white)` — selected underline (white)
 - `var(--color-border-gray-disabled)` — unavailable underline (#757575)
 
@@ -238,10 +243,11 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 
 ### Month / Year dropdown
 - Surface: `white`
-- Border: `var(--ui-palette-gray-200)` (#eaeaea) or `var(--color-border-gray-neutral-base)`
-- Option text: `var(--ui-palette-gray-700)` (#4d4d4d), Medium weight
-- Selected option background: `var(--color-background-brand-lighter-slate)` (#ebf4fb)
-- Selected option text: `var(--ui-palette-gray-900)` (#252525), Regular weight
+- Border: top/left/right `var(--color-border-gray-neutral-lighter)`, bottom `var(--color-border-gray-neutral-base)`
+- Shadow: `var(--shadow-shadow-4-drop-shadow-4-color)` dual-layer (matches DropdownMenu popup); corner radius `0`
+- Option text: `var(--color-text-gray-neutral)`, Regular (400) weight
+- Hover option: background `var(--color-background-controls-lighter)`, top/bottom border `var(--color-border-brand-base)`
+- Selected option: background `var(--color-background-controls-lighter)`, text `var(--color-text-brand-strong)`, top/bottom border `var(--color-border-brand-base-neutral)`
 
 ### Icons
 - `arrow-drop-tri-caret` — 10×10px, caret for month/year dropdowns
@@ -257,7 +263,7 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 |---|---|---|---|---|---|
 | Default (empty) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` (placeholder) | `var(--color-icon-brand-base)` | — |
 | Default (filled) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` | `var(--color-icon-brand-base)` | — |
-| Hover (text field) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | (unchanged) | `var(--color-icon-brand-base)` (unchanged) | Container border darkens; icon button unchanged |
+| Hover (text field) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-stronger)` | (unchanged) | `var(--color-icon-brand-base)` (unchanged) | Container border darkens; icon button unchanged |
 | Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Icon button: bg `var(--color-background-controls-lighter)`, border `var(--color-border-brand-base)` 1px; container border stays default |
 | Pointer-focused / Selected (Figma `42159:133061`) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Click-focus: blue border, no focus ring, placeholder hidden (`:focus::placeholder { color: transparent }`) |
 | Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Outer focus ring via `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); field border-radius stays `0` (square) |
@@ -285,10 +291,10 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 | Adjacent Month | Selected | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-gray-white)` | — |
 | Adjacent Month | Selected + Focused | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-gray-white)` | — |
 | Adjacent Month | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` 1px | `var(--color-text-gray-disabled)` strikethrough | — |
-| Today | Default | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
-| Today | Hover | `var(--color-background-controls-lighter)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
-| Today | Press | `var(--color-background-controls-light)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
-| Today | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-strong)` |
+| Today | Default | transparent | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-stronger)` |
+| Today | Hover | `var(--color-background-controls-lighter)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-stronger)` |
+| Today | Press | `var(--color-background-controls-light)` | none | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-stronger)` |
+| Today | Focus | transparent | `var(--color-border-brand-base)` 1px, -2px offset (36×36 ring), 4px radius | `var(--color-text-gray-neutral-strong)` | `var(--color-border-gray-neutral-stronger)` |
 | Today | Selected | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px | `var(--color-text-gray-white)` | `var(--color-border-gray-white)` |
 | Today | Selected + Focused | `var(--color-background-controls-base)` | `var(--color-border-brand-base)` 1px + focus ring | `var(--color-text-gray-white)` | `var(--color-border-gray-white)` |
 | Today | Unavailable | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` 1px | `var(--color-text-gray-disabled)` strikethrough | `var(--color-border-gray-disabled)` |
@@ -296,16 +302,19 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 #### Unavailable implementation (Figma `42159:132767`)
 - **Default / Adjacent Month:** gray background + `1px` `var(--color-border-gray-disabled)` border on **inner** `DateCellContainer` only; label `var(--color-text-gray-disabled)` with `line-through` (Roboto Regular 400).
 - **Today:** gray background + `1px` `var(--color-border-gray-disabled)` border on **outer** `DateCell` (32×32); inner container has gray background, **no** inner border, `6px` padding; today underline uses `var(--color-border-gray-disabled)`.
-- **Interaction:** `cursor: not-allowed`, no hover/press/focus/selected/range-endpoint styling; not included in range hover preview; `aria-disabled="true"`, `tabIndex={-1}`.
+- **Interaction:** `cursor: default` (the guideline shows the plain arrow pointer — the date is simply not interactive), no hover/press/focus/selected/range-endpoint styling; not included in range hover preview; `aria-disabled="true"`, `tabIndex={-1}`.
 - **Range mode:** range highlight bar may pass behind unavailable cells; unavailable cells retain unavailable visuals on top and are not valid range endpoints.
 
 ### Month / Year dropdown option states
 
-| State | Background | Text |
-|---|---|---|
-| Default | `white` | `var(--ui-palette-gray-700)` Medium |
-| Hover | `var(--color-background-brand-lighter-slate)` | `var(--ui-palette-gray-700)` Medium |
-| Selected (current) | `var(--color-background-brand-lighter-slate)` | `var(--ui-palette-gray-900)` Regular |
+Border applies to top + bottom edges only (`box-shadow: inset 0 ±1px`), never left/right.
+
+| State | Background | Text | Top/Bottom border |
+|---|---|---|---|
+| Default | `white` | `var(--color-text-gray-neutral)` Regular | — |
+| Hover | `var(--color-background-controls-lighter)` | `var(--color-text-gray-neutral)` Regular | `var(--color-border-brand-base)` |
+| Selected (current) | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` Regular | `var(--color-border-brand-base-neutral)` |
+| Press | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` Regular | `var(--color-border-brand-base-neutral)` |
 
 ## States (Dark Theme)
 
@@ -318,22 +327,23 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 |---|---|
 | Click calendar icon | Toggle calendar popup open/close |
 | Click/focus text input | Enable direct date typing; caret in text field |
-| Type valid date | Update selected date, close popup if open |
-| Type invalid date | Show error state on blur |
+| Type a date | Accepts flexible separators (`-`, `/`, `.`, whitespace) between the day/month/year fields. No masking / auto-insert **while typing** (per a11y — input masks confuse screen readers). |
+| Press `Enter` or blur the input | Parse the typed value against `dateFormat`; if valid, commit and **normalize the separator to hyphen** (e.g. `04/18/2023` → `04-18-2023`); if valid but out of range/disabled, show inline error "Date unavailable"; if unparseable, show inline error `Invalid date, use <formatHint>`. Empty input clears any error. |
+| Type invalid date | On `Enter`/blur, show inline validation error (red border + message); do **not** update `value`. Error clears as soon as the user edits the text again. |
 | Tab | Focus moves to input field, then to calendar icon |
-| Escape (while popup open) | Close popup, return focus to input field |
+| Escape (while popup open) | Close popup without selecting a date; focus returns to the Choose Date (calendar icon) button. The key stops at the picker, so a hosting overlay (DataGrid filter menu) stays open until a second `Escape` |
 
 ### Calendar popup
 | Trigger | Action |
 |---|---|
-| Click date cell | Select date, close popup, populate input |
+| Click date cell | Select date, close popup, populate input; focus returns to the Choose Date button |
 | Click adjacent month date | Navigate to that month and select date |
 | Click prev/next chevron | Navigate calendar one month backward/forward |
 | Click month dropdown button | Open month selection overlay |
 | Click year dropdown button | Open year selection overlay |
 | Select month from dropdown | Update calendar to show selected month, close month dropdown |
 | Select year from dropdown | Update calendar to show selected year, close year dropdown |
-| Click "Today" link | Navigate to current month and select today's date |
+| Click "Today" link | Select today, close popup, populate input and return focus to the Choose Date button (single-date mode). Disabled when today is unavailable (`disabledDates`, `minDate` / `maxDate`) |
 | Click outside popup | Close popup |
 | Click inside portaled popup | Selection is applied; `mousedown` is isolated so ancestor overlays (e.g. DataGrid filter menu) are not closed |
 
@@ -344,7 +354,7 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 | Press (mousedown) | Show press background |
 | Click | Select the date |
 | Focus (keyboard) | Show focus ring |
-| Enter / Space (focused) | Select the date |
+| Enter / Space (focused) | Select the date, close the popup and return focus to the Choose Date button |
 | Arrow keys (focused) | Move focus between date cells |
 
 ### Range selection (when `rangeMode = true`)
@@ -360,6 +370,15 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 - If `rangeEnd < rangeStart`: reverse selection (`reverseSelection = true`) — bar anchors right, selected cell is the start date
 - Internally, the component normalizes so the earlier date is always the effective start
 
+#### Two-field range picker (`rangeField`)
+Source: IDS website guideline — "the user should set the Start date before the End date".
+- Start always comes before End.
+- A calendar pick, from either field, fills whichever endpoint is missing — Start first — and keeps the pair in order (an earlier pick becomes Start). A pick on a complete range starts a new one.
+- Typing sets the field's own endpoint. A Start after End is rejected inline with "'Start' date must be before 'End' date", an End before Start with "'End' date must be after 'Start' date"; the typed text stays for correction and the range is unchanged.
+- Clearing a field's text clears its endpoint.
+- An End without a Start shows "'Start' date field cannot be empty" on the End field (guideline example: End `01-18-2023`, Start empty).
+- The single-field `rangeMode` keeps the reverse selection described above.
+
 #### Multi-row range rendering
 - When a range spans multiple weeks, each `DateRow` renders its own `RangeHighlightBar` segment
 - First row: bar from start cell to end of row
@@ -367,13 +386,20 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 - Last row: bar from start of row to end cell
 
 ### Keyboard navigation
-- `Tab` / `Shift+Tab`: move focus between input, calendar icon, popup elements
-- `Arrow Left/Right`: move focus between days in a week
+- `Tab` / `Shift+Tab`: move focus between input, calendar icon, popup elements. When the calendar is open it is a **focus trap** — Tab cycles only through the dialog's controls (month button → year button → prev → next → grid → Today) and wraps.
+- The **calendar grid is a single tab stop** (roving tabindex): only the currently focused day is tabbable; arrow keys move focus between days.
+- `Arrow Left/Right`: move focus between days in a week (Left = previous day, Right = next day — conventional LTR mapping)
 - `Arrow Up/Down`: move focus between weeks
 - `Home/End`: move to first/last day of the week
-- `Page Up/Page Down`: navigate to previous/next month
-- `Enter/Space`: select focused date
-- `Escape`: close popup
+- `Page Up/Page Down`: navigate to previous/next month (day clamped to the last valid day)
+- `Shift+Page Up/Page Down`: navigate to previous/next year (day clamped)
+- `Shift+M`: open and focus the month dropdown
+- `Shift+Y`: open and focus the year dropdown
+- `Enter/Space`: on a date, select it, close the popup and return focus to the Choose Date button; on Today, select today the same way (unless today is unavailable — the button is then disabled)
+- Shortcut keys are announced: the month / year buttons carry `aria-keyshortcuts` and a tooltip (`Month (Shift+M)`, `Year (Shift+Y)`), and the dialog's `aria-describedby` points at a visually hidden hint naming the arrow keys, Shift+M and Shift+Y.
+- `Escape`: close popup and return focus to the Choose Date (calendar icon) button
+- On open, focus moves to the selected date (or today when none is selected).
+- Each day cell exposes a full `aria-label` (e.g. "Monday, August 18, 2026", plus "today" / "selected" / "unavailable") so screen readers announce the whole date, not just the number.
 
 ## Composition & API (runtime)
 
@@ -385,7 +411,9 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 | `onChange` | `(date: Date \| null) => void` | — | Callback when date changes |
 | `size` | `'large' \| 'small'` | `'large'` | Input field height variant |
 | `placeholder` | `string` | `'MM-DD-YYYY'` | Placeholder text when empty |
-| `label` | `string` | — | Optional label displayed to the left of the field (horizontal layout) |
+| `label` | `string` | — | Optional label displayed to the left of the field (horizontal layout), rendered by `IdsFormLabel` |
+| `required` | `boolean` | `false` | Forwarded to `IdsFormLabel` as its `*` marker, and set as `aria-required` on the input |
+| `id` | `string` | generated | Input `id`; the label's `htmlFor` points at it |
 | `formatHint` | `string` | `'MM-DD-YYYY'` | Date format hint displayed below the input |
 | `disabled` | `boolean` | `false` | Disable all interactions |
 | `error` | `boolean` | `false` | Show error state |
@@ -400,6 +428,7 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 | `rangeStart` | `Date \| null` | `null` | Controlled range start date |
 | `rangeEnd` | `Date \| null` | `null` | Controlled range end date |
 | `onRangeChange` | `(start: Date \| null, end: Date \| null) => void` | — | Callback when range start or end changes |
+| `rangeField` | `'start' \| 'end'` | — | Two-field range picker: binds this field's input text to one range endpoint. Both fields share `rangeStart`/`rangeEnd`, so either calendar highlights the range while selecting. Keeps Start before End — see **Interactions → Two-field range picker** |
 | `rangePreview` | `Date \| null` | `null` | Hovered date used for tentative range preview (controlled) |
 | `onRangePreviewChange` | `(date: Date \| null) => void` | — | Callback when hover preview date changes |
 | `open` | `boolean` | — | Controlled popup open state |
@@ -423,7 +452,7 @@ Same semantic `var(--...)` tokens as Light Theme. Resolved dark values live in `
 
 ```
 DatePickerRoot
-├── Label?
+├── Label?  (IdsFormLabel — size lg for large, md for small)
 ├── FieldContainer
 │   ├── TextInput
 │   └── CalendarIconTrigger
@@ -474,7 +503,7 @@ DatePickerRoot
 | Slot | Token(s) |
 |---|---|
 | `FieldContainer` | bg: `var(--color-background-surface-component)`, border: `var(--color-border-gray-neutral-base)` 1px, padding-left: `var(--padding-padding-16)`, no right padding, gap: `var(--spacing-space-none)` |
-| `FieldContainer:hover` | border: `var(--color-border-gray-neutral-strong)` |
+| `FieldContainer:hover` | border: `var(--color-border-gray-neutral-stronger)` |
 | `FieldContainer:focus:not(:focus-visible)` | border: `var(--color-border-brand-base)` (active/selected), no outline ring |
 | `FieldContainer:focus-visible` | border stays `var(--color-border-gray-neutral-base)`; `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); `FieldContainer` border-radius stays unchanged (square in IDS) |
 | `CalendarIconTrigger:focus-visible` | `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); button itself keeps `border-radius: var(--corner-radius-radius-2)` (2px) |
@@ -487,13 +516,13 @@ DatePickerRoot
 | `CalendarIconTrigger:disabled` | color: `var(--color-icon-gray-disabled)`, cursor: not-allowed, hover must NOT apply |
 | `FormatHint` | color: `var(--color-text-gray-neutral)`, font: Roboto Medium (500) `var(--font-size-body-2)`/`var(--font-line-height-line-height-20)`, width: 100%, z-index: 1 |
 | `FieldContainer.open` | border-color: `var(--color-border-brand-base)` |
-| `CalendarPopup` | bg: `var(--color-background-surface-secondary)`, border: `var(--color-border-gray-neutral-base)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: 0` (square) |
+| `CalendarPopup` | bg: `var(--color-background-surface-secondary)`, border: `var(--color-border-gray-neutral-base)` 1px all sides, Shadow 2, padding: `var(--padding-padding-16)`, right-aligned, `margin-top: -1px` (attached to input), `border-radius: var(--corner-radius-radius-none)` (square) |
 | `MonthDropdownButton` / `YearDropdownButton` | color: `var(--color-text-brand-strong)` (#055fa9), font: `var(--font-size-body-2)` Regular (400), `position: relative`, `border: 1px solid transparent`, `background: transparent`, `border-radius: 2px` |
 | `MonthDropdownButton:hover:not(.menuOpen)` / `YearDropdownButton:hover:not(.menuOpen)` | bg: `var(--color-background-controls-lighter)`, border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton:active:not(.menuOpen)` / `YearDropdownButton:active:not(.menuOpen)` | bg: `var(--color-background-controls-light)`, border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton:focus-visible` / `YearDropdownButton:focus-visible` | border-color: `var(--color-border-brand-base)` |
 | `MonthDropdownButton.menuOpen` / `YearDropdownButton.menuOpen` | bg: transparent, border: transparent — hover/active suppressed while dropdown is open; button returns to default appearance |
-| `MonthDropdownOverlay` / `YearDropdownOverlay` | centered on trigger (`left: 50%; transform: translateX(-50%)`), min-width: 114px, max-height: 200px, border: `var(--color-border-gray-neutral-base)` 1px, radius: `var(--corner-radius-radius-2)`, option padding: 10px/16px/24px, min-height: 44px, follows IDS Dropdown Single-Select spec |
+| `MonthDropdownOverlay` / `YearDropdownOverlay` | left-aligned under trigger (`left: 0`, `top: 100%`), width: 114px, max-height: 200px, border 1px: top/left/right `var(--color-border-gray-neutral-lighter)` + bottom `var(--color-border-gray-neutral-base)`, radius: `var(--corner-radius-radius-none)`, dual-layer `var(--shadow-shadow-4-drop-shadow-4-color)` shadow, scrollbar hidden; options follow IDS DropdownMenu single-select `.item` at `min-height: 32px` |
 | `PrevMonthButton` / `NextMonthButton` | 20×20px total (icon 12×12, padding 4px all sides), bg: transparent, border: none, `border-radius: var(--corner-radius-radius-2)` (2px), `outline: none` |
 | `PrevMonthButton:hover` / `NextMonthButton:hover` | icon color: `var(--color-icon-brand-base)` (#0672cb) |
 | `PrevMonthButton:focus-visible` / `NextMonthButton:focus-visible` | `outline: 2px solid #4c9fdd`, `outline-offset: 0` |
@@ -505,41 +534,41 @@ DatePickerRoot
 | `DateCell:focus` | ring: `var(--color-border-brand-base)` 1px, offset -2px (36×36 ring), radius 4px |
 | `DateCell.selected:focus-visible` | `outline: 1px solid var(--color-border-brand-base)` on inner container — outside border fills 1px `DateCell` padding so container visually expands to 32×32 |
 | `DateCell:unavailable` | bg: `var(--color-background-gray-lighter)`, border: `var(--color-border-gray-disabled)`, text: strikethrough |
-| `TodayIndicator` | color: `var(--color-border-gray-neutral-strong)` (default), `var(--color-border-gray-white)` (selected) |
+| `TodayIndicator` | color: `var(--color-border-gray-neutral-stronger)` (default), `var(--color-border-gray-white)` (selected) |
 | `RangeHighlightBar` | bg: `var(--color-background-brand-light-slate)` (#daeaf7), height: 30px, radius: 2px |
-| `MonthDropdownList` / `YearDropdownList` | bg: white, border: `var(--ui-palette-gray-200)` 1px, shadow: `0 2px 5px rgba(37,37,37,0.08)`, `border-radius: var(--date-picker-control-radius)` |
-| `MonthOption` / `YearOption` | padding: 16px h / 6px v, font-weight: 400, selected bg: `var(--color-background-brand-lighter-slate)` |
+| `MonthDropdownList` / `YearDropdownList` | bg: white, border 1px: top/left/right `var(--color-border-gray-neutral-lighter)` + bottom `var(--color-border-gray-neutral-base)`, shadow: `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)`, `border-radius: var(--corner-radius-radius-none)`, scrollbar hidden |
+| `MonthOption` / `YearOption` | copies DropdownMenu single-select `.item`, `min-height: 32px`, padding 6px v / 16px h, font-weight: 400; hover/selected/press use top+bottom inset border (`box-shadow`), selected text `var(--color-text-brand-strong)` |
 | `TodayLink` | color: `var(--color-text-brand-strong)` (#055fa9), font-weight: 400 |
 
 ### Behavior contract
 
 | Behavior | Rule |
 |---|---|
-| Popup positioning | Anchored below `FieldContainer`, aligned to leading edge |
+| Popup positioning | Anchored below `FieldContainer`, aligned to its trailing (right) edge; drawn on top without displacing other content |
 | Popup open | On calendar icon click or programmatic `open` prop |
-| Popup close | On date selection, Escape key, outside click, or programmatic |
+| Popup close | On a single-date selection (click, Enter / Space, Today), Escape key, outside click, or programmatic. Selection and Escape return focus to the Choose Date button |
 | Month navigation | Prev/next chevrons change displayed month ±1 |
 | Month dropdown | Overlay shows 12 months, scrollable, selects and closes on click |
 | Year dropdown | Overlay shows year list, scrollable, selects and closes on click |
-| Today link | Navigates to current month/year and selects today |
+| Today link | Selects today like a date pick; disabled when today is unavailable |
 | Date formatting | Value displayed in `dateFormat` pattern; parsed on input |
 | Min/max constraint | Dates outside `minDate`–`maxDate` shown as `unavailable` |
-| Range selection | First click sets start, second click sets end; range bar displayed between |
+| Range selection | First click sets start, second click sets end; range bar displayed between. With `rangeField`, Start is kept before End (see Interactions) |
 | Adjacent month dates | Clickable; navigates to the adjacent month and selects |
 
 ### Accessibility contract
 
 | Requirement | Implementation |
 |---|---|
-| Input role | `role="textbox"` or native `<input type="text">` with `aria-label` |
-| Calendar icon | `role="button"`, `aria-label="Open calendar"`, `aria-expanded` |
-| Calendar popup | `role="dialog"`, `aria-modal="true"`, `aria-label="Choose date"` |
+| Input role | Native `<input type="text">` carrying an `id`. When `label` is set, Form Label's native `<label for>` names the field and no `aria-label` is set, so clicking the label focuses the input; `aria-label="Date"` is the fallback only when there is no visible label. `aria-describedby` → format hint, or the error message while in error; `aria-invalid` in error; `aria-required` when required (the `*` marker is `aria-hidden`, so the requirement is announced once, by the control) |
+| Calendar icon | Native button, `aria-label="Choose date"`, `aria-haspopup="dialog"`, `aria-expanded` |
+| Calendar popup | `role="dialog"`, `aria-modal="true"`, `aria-label="Choose date"`, `aria-describedby` → visually hidden keyboard-shortcut hint |
 | Date grid | `role="grid"`, `aria-label="Calendar"` |
 | Date row | `role="row"` |
 | Date cell | `role="gridcell"`, `aria-selected`, `aria-disabled` for unavailable |
-| Month/Year dropdown | `role="listbox"`, options `role="option"`, `aria-selected` |
-| Focus management | Focus trapped in popup while open; returns to input on close |
-| Live region | `aria-live="polite"` announcement on month/year navigation |
+| Month/Year dropdown | Disclosure buttons (`aria-expanded`, `aria-controls`, `aria-keyshortcuts`, tooltip). The list holds option buttons; the current one has `aria-current="true"`, and the rolling list's repeated copies are `aria-hidden` and out of the Tab order |
+| Focus management | Focus trapped in popup while open; date pick, Today and Escape return focus to the Choose Date button |
+| Error message | `role="alert"`, so inline validation errors are announced |
 | Keyboard | Full arrow key, Tab, Enter, Space, Escape, Home/End, Page Up/Down support |
 
 ### Asset resolution + bundling contract
@@ -576,7 +605,7 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 - [ ] Weekday row shows 7 abbreviated day names in correct order
 - [ ] Date grid renders 7×6 grid with 4px gap between cells
 - [ ] Date cells are 32×32px with 2px border-radius
-- [ ] Today cell has underline indicator (18×2px, `var(--color-border-gray-neutral-strong)`)
+- [ ] Today cell has underline indicator (18×2px, `var(--color-border-gray-neutral-stronger)`)
 - [ ] Hover state: `var(--color-background-controls-lighter)`
 - [ ] Press state: `var(--color-background-controls-light)`
 - [ ] Selected state: `var(--color-background-controls-base)` bg, white text
@@ -622,13 +651,95 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 | Runtime path | Role |
 |---|---|
 | `lib/react/ids/date-picker/` | React reference implementation |
+| `lib/react/ids/form-label/` | Shared label consumed by the Date Picker (`IdsFormLabel`) |
 | `lib/angular/ids/date-picker/` | Angular implementation (parity with React) |
 | `storybook-angular/src/components/ids-date-picker/` | Angular Spec Generated stories |
 
 ---
 
 ## Implementation Notes
-Last updated: 2026-07-08
+Last updated: 2026-10-11
+
+### 2026-10-11 — Label uses the shared Form Label (parity with Time Picker)
+
+- The field label is `IdsFormLabel` with `htmlFor` → the input `id`, `required` for the `*` marker, and `size="lg"` (large) / `size="md"` (small) so its padding matches the field height. The Date Picker keeps only a `.label` layout slot (`inline-flex`, no shrink, no wrap).
+- With a visible label the input has no `aria-label`; the label names it, and clicking the label focuses the input. `aria-label="Date"` is the fallback without a label. The date format stays available through the format hint (`aria-describedby`) and the placeholder.
+- New `id` prop sets the input `id` (generated when omitted).
+- Applied to `lib/react/ids/date-picker` and the legacy `storybook/src/components/IdsDatePicker.tsx`; Angular not updated yet.
+
+### 2026-10-11 — Figma alignment (`DatePicker-Main` `42159:132852`, `DatePicker-Element-Calendar` `42159:132469`, `.DatePicker-Element-Date` `42159:132767`)
+
+- Text-field hover border: `var(--color-border-gray-neutral-stronger)`.
+- Today underline (default, hover, press, focus): `var(--color-border-gray-neutral-stronger)`; unavailable today keeps `var(--color-border-gray-disabled)`.
+- Calendar popup shadow: Shadow 4 — `--shadow-shadow-4-drop-shadow-{4,8}-{x,y,blur,spread}` with colours `--shadow-drop-shadow-4-color` / `--shadow-drop-shadow-8-color`, the names Figma binds.
+- A value wider than the field ends in an ellipsis; selected input text is highlighted on `var(--color-background-controls-lighter)` with `var(--color-text-gray-neutral)` text (Figma "Selected").
+- Known differences kept on purpose:
+  - Month / year dropdown buttons and the Today button are 26px tall (1px transparent border for their hover / focus stroke) where Figma draws 24px — button styling, handled separately.
+  - The month / year overlay follows IDS DropdownMenu (see 2026-07-26), not the legacy Dropdown Framework still drawn in the Figma calendar.
+  - CSS borders sit outside the padding while Figma strokes sit inside, so the calendar measures 2px wider and taller than Figma (280 × 346).
+
+### 2026-10-11 — Behavior per the IDS website guidelines (Date Picker: Keyboard Navigation, Behavior, Usage Rules)
+
+- A date picked in the calendar — click, `Enter` / `Space` on a day, or the Today button — closes the calendar (single-date mode) and returns focus to the Choose Date button. A typed value committed on blur does not move focus.
+- The Today button is disabled when today is unavailable (`disabledDates`, `minDate` / `maxDate`), so the shortcut cannot pick an unavailable date; it then uses `var(--color-text-gray-disabled)` like IdsButton tertiary disabled, and drops out of the focus trap.
+- `Escape` stops at the picker, so a hosting overlay (DataGrid filter menu) stays open until a second `Escape`.
+- Unavailable dates use `cursor: default`: they are simply not interactive.
+- Two-field range picker (`rangeField`): Start always comes before End. Calendar picks fill Start first and stay in order; typing sets that field's endpoint and an out-of-order value is rejected inline; clearing the text clears the endpoint; an End without a Start shows "'Start' date field cannot be empty" on the End field. The single-field `rangeMode` keeps its reverse selection.
+- Accessibility:
+  - The input carries an `id`, and `aria-describedby` points at the format hint, or at the error message while in error; it also gets `aria-invalid` (in error) and `aria-required` (when required).
+  - The error message is `role="alert"`.
+  - The month / year buttons are disclosure buttons (`aria-expanded`, `aria-controls`) with `aria-keyshortcuts` and a `Month (Shift+M)` / `Year (Shift+Y)` tooltip; the dialog's `aria-describedby` reads a visually hidden hint naming the shortcuts.
+  - In the rolling month list only the middle copy is exposed: the current option has `aria-current="true"`, and the repeats are `aria-hidden` and out of the Tab order (12 options, not 84).
+- Guideline points kept as they are:
+  - Helper text defaults to `MM-DD-YYYY` (Figma), not the guideline's `MM/DD/YYYY`, matching the Time Picker decision.
+  - No hyphen auto-insertion while typing: the Usage Rules example conflicts with the Accessibility rule against input masks, and the latter wins (see 2026-08-13).
+  - Arrow keys keep the conventional mapping (the guideline text has Left / Right reversed).
+
+### 2026-08-13 — Keyboard/a11y, typed-input auto-format, inline validation, two-field range
+
+**Month/Year dropdown option padding (correction)**
+- `.overlayOption` padding corrected to `var(--padding-padding-6)` (6px) vertical / `var(--padding-padding-16)` (16px) **horizontal** (both sides), matching the IDS DropdownMenu single-select row. Previously the right side used `var(--padding-padding-24)` (24px).
+
+**Required asterisk color (correction)**
+- `.labelRequired` changed from `var(--color-text-alerting-critical-base)` (#af0000, red) to `var(--color-text-gray-neutral-strong)` (#252525) — the asterisk now uses the **same color as the label text** (not red).
+
+**Validation error row**
+- `.errorMessage` given `white-space: nowrap` so the message stays on one line and extends horizontally instead of wrapping.
+
+**Keyboard navigation & accessibility (calendar)**
+- Calendar grid is a **single tab stop** via roving tabindex: only the focused day has `tabIndex={0}`, all others `-1`.
+- Full grid navigation on the grid keydown handler: `Arrow Left/Right` (prev/next day — conventional LTR, the reverse of the doc image which is treated as a doc typo), `Arrow Up/Down` (±1 week), `Home/End` (first/last day of week), `Page Up/Down` (±1 month, day clamped), `Shift+Page Up/Down` (±1 year, day clamped), `Enter/Space` (select focused day).
+- `Shift+M` opens/focuses the month dropdown; `Shift+Y` opens/focuses the year dropdown.
+- Calendar dialog is a **focus trap** (Tab cycles month → year → prev → next → grid → Today and wraps).
+- On open, focus moves to the selected date (or today when none). `Escape` closes the popup and **returns focus to the Choose Date (calendar icon) button** (`calendarBtnRef`).
+- Each day cell has a full `aria-label` (e.g. "Monday, August 18, 2026" + "today"/"selected"/"unavailable") so screen readers announce the whole date.
+- Calendar icon button `aria-label` = "Choose date", `aria-haspopup="dialog"`; month/year buttons `aria-haspopup="listbox"` with `aria-expanded`.
+
+**Typed-input auto-format (separator normalization)**
+- `parseDate` rewritten to accept flexible separators (`-`, `/`, `.`, whitespace) between fields, with a round-trip validity check (rejects overflow like `02-30`).
+- On `Enter` (new input `onKeyDown`) or blur, a valid value commits and the input is **normalized to the hyphen separator** via `formatDate` (e.g. `04/18/2023` → `04-18-2023`). No masking/auto-insert **while typing** (per the accessibility rule against input masks).
+
+**Inline validation error**
+- New internal `inputError` state. On Enter/blur: unparseable → `Invalid date, use <formatHint>`; parses but out of range/disabled → `Date unavailable`. Error clears on the next `onChange` (edit) and on a successful select. The external `error` prop takes precedence over the internal message (`showError = error || Boolean(inputError)`).
+
+**Two-field range picker**
+- New `rangeField?: 'start' | 'end'` prop. In `rangeMode`, it mirrors the bound endpoint (`rangeStart`/`rangeEnd`) into the field's input text, so two horizontally aligned pickers can share one range while either calendar highlights it.
+- Note: single-field `rangeMode` still leaves its own input empty (range visible only in the calendar) — the single-field input display format is an open UX question, intentionally not implemented.
+
+### 2026-07-26 — Month/Year dropdown parity with IDS DropdownMenu
+
+**Month/Year dropdown option row (single-select parity)**
+- `.overlayOption` rewritten to copy IDS DropdownMenu single-select `.item` (text-only, no radio) at a compact `min-height: 32px` (vs 44px in the shared component): `appearance: none`, `display: flex`, `gap: var(--spacing-space-8)`, `padding: var(--padding-padding-6)` vertical / `var(--padding-padding-16)` horizontal, `transition: background 80ms ease`, `user-select: none`.
+- Hover/selected/press use a **top + bottom** inset border only (`box-shadow: inset 0 1px 0 0 … , inset 0 -1px 0 0 …`), never left/right — matching how DropdownMenu `.item` renders. Do **not** use `outline` for these states (outline draws all 4 sides; the left/right edges are not part of the single-select row spec).
+  - Hover: bg `var(--color-background-controls-lighter)`, text `var(--color-text-gray-neutral)`, border `var(--color-border-brand-base)`.
+  - Selected (`.selectedOption`, current month/year): bg `var(--color-background-controls-lighter)`, text `var(--color-text-brand-strong)`, border `var(--color-border-brand-base-neutral)`.
+  - Press: bg `var(--color-background-controls-light)`, text `var(--color-text-brand-strong)`, border `var(--color-border-brand-base-neutral)`.
+- Focus-visible: `outline: var(--border-width-border-default) solid var(--color-border-brand-base)`, `outline-offset: -1px`, `border-radius: var(--corner-radius-radius-4)` (keyboard focus ring, all four sides — same as DropdownMenu `.item:focus-visible`).
+
+**Month/Year dropdown overlay (`.overlayDropdown`)**
+- Border split: top/left/right `var(--color-border-gray-neutral-lighter)` (#eaeaea), bottom `var(--color-border-gray-neutral-base)` (#757575) via `border-bottom-color`.
+- Shadow changed from single-layer to the dual-layer DropdownMenu popup shadow: `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)`.
+- `border-radius: var(--corner-radius-radius-none)` (0, square — matches `.calendarPopup`; same `--corner-radius-radius-*` family as the `-2`/`-4` tokens used elsewhere).
 
 **Font-weight consistency**
 - All text elements use `font-weight: 400`. Changed from `font-weight: 500` in `.errorMessage`, `.dropdownButton`, `.dateLabel`, `.todayLink`, `.overlayOption`.
@@ -688,15 +799,15 @@ Last updated: 2026-07-08
 **Token fixes**
 - Border widths: Changed hardcoded `1px` to `var(--border-width-border-default, 1px)` in `.fieldContainer`, `.calendarIconBtn`, `.navBtn`, `.todayLink`, `.overlayDropdown`.
 - Font-sizes: Changed hardcoded `14px` to `var(--font-size-body-2, 14px)` in `.textInput`; changed hardcoded `12px` to `var(--font-size-body-3, 12px)` in `.weekDayLabel`.
-- Border-radius: Changed `var(--date-picker-control-radius)` and `var(--button-control-radius, 2px)` to `var(--corner-radius-radius-2, 2px)` or `var(--corner-radius-radius-4, 4px)` in `.dropdownButton`, `.todayLink`, `.overlayDropdown`, `.dateCell`, `.rangeBar`, `.dateCellContainer`, `.todayIndicator`. `.fieldContainer` border-radius set to `0` (square input field).
-- Shadows: calendarPopup uses `--shadow-shadow-2` tokens (dual shadow: drop-shadow-4 + drop-shadow-8); overlayDropdown uses hardcoded shadow `0px 2px 5px 0px rgba(37, 37, 37, 0.08)` (per spec).
+- Border-radius: Changed `var(--date-picker-control-radius)` and `var(--button-control-radius, 2px)` to `var(--corner-radius-radius-2, 2px)` or `var(--corner-radius-radius-4, 4px)` in `.dropdownButton`, `.todayLink`, `.dateCell`, `.rangeBar`, `.dateCellContainer`, `.todayIndicator`. `.fieldContainer`, `.calendarPopup`, and `.overlayDropdown` border-radius set to `var(--corner-radius-radius-none)` (0, square).
+- Shadows: calendarPopup uses `--shadow-shadow-2` tokens (dual shadow: drop-shadow-4 + drop-shadow-8); overlayDropdown uses the dual-layer `0 4px 4px 0` + `0 2px 2px 0` `var(--shadow-shadow-4-drop-shadow-4-color)` shadow (matches IDS DropdownMenu popup).
 - navBtn focus-visible color `#4c9fdd` stays hardcoded (no corresponding token).
 
 **FormatHint behavior**
 - formatHint is hidden when `error` prop is true to avoid visual clutter in error state. Changed condition from `{formatHint && ...}` to `{formatHint && !error && ...}`.
 
 **Calendar popup border-radius**
-- Changed from `border-radius: var(--corner-radius-radius-4, 4px)` with `border-top-left-radius: 0` and `border-top-right-radius: 0` to `border-radius: 0` (square popup, all corners flat).
+- Changed from `border-radius: var(--corner-radius-radius-4, 4px)` with `border-top-left-radius: 0` and `border-top-right-radius: 0` to `border-radius: var(--corner-radius-radius-none)` (0, square popup, all corners flat).
 
 **2026-08-09**
 
