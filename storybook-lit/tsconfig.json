@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "paths": {
+      "@ids/lit": ["../lib/lit/ids/src/index.ts"],
+      "@ids/lit/ids-theme.css": ["../lib/lit/ids/styles/ids-theme.css"],
+      "@ids/lit/*": ["../lib/lit/ids/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", ".storybook/**/*.ts"]
+}
