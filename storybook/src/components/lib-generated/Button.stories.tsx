@@ -70,7 +70,7 @@ const meta: Meta<IdsButtonProps> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["primary", "secondary", "tertiary", "destructive"],
+      options: ["primary", "secondary", "tertiary", "destructive", "ghostNeutral"],
     },
     size: {
       control: "select",
@@ -145,22 +145,48 @@ export const WithProjectedIcon: Story = {
 export const IconOnly: Story = {
   name: "Icon Only",
   render: () => (
-    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-      <IdsButton variant="primary" iconOnly ariaLabel="Settings" size="medium">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape={DEMO_ICON} size={16} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
-      <IdsButton variant="secondary" iconOnly ariaLabel="Settings" size="large">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape={DEMO_ICON} size={16} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
-      <IdsButton variant="tertiary" iconOnly ariaLabel="Settings" size="large">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape={DEMO_ICON} size={16} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
+    <div style={{ display: "grid", gap: 16 }}>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+        <IdsButton variant="primary" iconOnly ariaLabel="Settings" size="small">
+          <IdsButtonLeadingIcon>
+            <IdsIcon shape={DEMO_ICON} size={12} />
+          </IdsButtonLeadingIcon>
+        </IdsButton>
+        <IdsButton variant="secondary" iconOnly ariaLabel="Settings" size="medium">
+          <IdsButtonLeadingIcon>
+            <IdsIcon shape={DEMO_ICON} size={14} />
+          </IdsButtonLeadingIcon>
+        </IdsButton>
+        <IdsButton variant="tertiary" iconOnly ariaLabel="Settings" size="large">
+          <IdsButtonLeadingIcon>
+            <IdsIcon shape={DEMO_ICON} size={16} />
+          </IdsButtonLeadingIcon>
+        </IdsButton>
+        <IdsButton variant="ghostNeutral" iconOnly ariaLabel="Settings" size="large">
+          <IdsButtonLeadingIcon>
+            <IdsIcon shape={DEMO_ICON} size={14} />
+          </IdsButtonLeadingIcon>
+        </IdsButton>
+      </div>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+        {(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map((variant) => {
+          const glyph = variant === "ghostNeutral" ? 14 : 16;
+          return (
+            <IdsButton
+              key={`disabled-${variant}`}
+              variant={variant}
+              iconOnly
+              disabled
+              ariaLabel={`${variant} disabled`}
+              size="large"
+            >
+              <IdsButtonLeadingIcon>
+                <IdsIcon shape={DEMO_ICON} size={glyph} />
+              </IdsButtonLeadingIcon>
+            </IdsButton>
+          );
+        })}
+      </div>
     </div>
   ),
 };
@@ -198,6 +224,43 @@ export const ForcedStates: Story = {
           <Btn variant={variant} label="Press" dataState="press" size={args.size} />
           <Btn variant={variant} label="Focus" dataState="focus-visible" size={args.size} />
           <Btn variant={variant} label="Disabled" dataState="disabled" size={args.size} />
+        </div>
+      ))}
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+        {(["default", "hover", "press", "focus-visible", "disabled"] as const).map((state) => (
+          <IdsButton
+            key={state}
+            variant="ghostNeutral"
+            iconOnly
+            ariaLabel={`Ghost Neutral ${state}`}
+            size="large"
+            dataState={state === "default" ? undefined : state}
+          >
+            <IdsButtonLeadingIcon>
+              <IdsIcon shape={DEMO_ICON} size={14} />
+            </IdsButtonLeadingIcon>
+          </IdsButton>
+        ))}
+      </div>
+      {(["secondary", "tertiary"] as const).map((variant) => (
+        <div
+          key={variant}
+          style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
+        >
+          {(["default", "hover", "press", "focus-visible", "disabled"] as const).map((state) => (
+            <IdsButton
+              key={`${variant}-${state}`}
+              variant={variant}
+              iconOnly
+              ariaLabel={`${variant} ${state}`}
+              size="large"
+              dataState={state === "default" ? undefined : state}
+            >
+              <IdsButtonLeadingIcon>
+                <IdsIcon shape={DEMO_ICON} size={16} />
+              </IdsButtonLeadingIcon>
+            </IdsButton>
+          ))}
         </div>
       ))}
     </div>
@@ -248,24 +311,43 @@ export const AllTypesIconOnly: Story = {
   name: "All Types Icon Only",
   render: () => (
     <div style={{ display: "grid", gap: 16 }}>
-      {(["primary", "secondary", "tertiary"] as const).map((variant) => (
+      {(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map((variant) => (
         <div
           key={variant}
           style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
         >
-          {(["medium", "large"] as const).map((size) => (
-            <IdsButton
-              key={`${variant}-${size}`}
-              variant={variant}
-              size={size}
-              iconOnly
-              ariaLabel={`${variant} ${size}`}
-            >
-              <IdsButtonLeadingIcon>
-                <IdsIcon shape={DEMO_ICON} size={16} />
-              </IdsButtonLeadingIcon>
-            </IdsButton>
-          ))}
+          {(["small", "medium", "large"] as const).map((size) => {
+            const glyph =
+              size === "small"
+                ? 12
+                : size === "medium" || variant === "ghostNeutral"
+                  ? 14
+                  : 16;
+            return (
+              <IdsButton
+                key={`${variant}-${size}`}
+                variant={variant}
+                size={size}
+                iconOnly
+                ariaLabel={`${variant} ${size}`}
+              >
+                <IdsButtonLeadingIcon>
+                  <IdsIcon shape={DEMO_ICON} size={glyph} />
+                </IdsButtonLeadingIcon>
+              </IdsButton>
+            );
+          })}
+          <IdsButton
+            variant={variant}
+            size="large"
+            iconOnly
+            disabled
+            ariaLabel={`${variant} disabled`}
+          >
+            <IdsButtonLeadingIcon>
+              <IdsIcon shape={DEMO_ICON} size={variant === "ghostNeutral" ? 14 : 16} />
+            </IdsButtonLeadingIcon>
+          </IdsButton>
         </div>
       ))}
     </div>

@@ -174,6 +174,7 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --typography-font-style-primary: 'Roboto';
   --typography-font-weight-medium: 'Medium';
   --typography-font-weight-regular: 'Regular';
+  --ui-icon-spacing-icon-12: 12px;
   --ui-icon-spacing-icon-14: 14px;
   --ui-icon-spacing-icon-16: 16px;
   --ui-icon-spacing-icon-18: 18px;
@@ -555,8 +556,8 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --spacing-space-none: 0px;
   /* --- Component layout aliases (IDS defaults; programmes override in programme theme CSS) --- */
   --button-control-radius: var(--corner-radius-radius-2);
-  --button-focus-ring-radius: var(--corner-radius-radius-4);
-  --button-focus-ring-offset: 2px;
+  --button-focus-ring-offset: var(--scale-2);
+  --button-focus-ring-radius: var(--corner-radius-radius-2);
   --card-control-radius: var(--corner-radius-radius-none);
   --card-min-width: 430px;
   --date-picker-control-radius: var(--corner-radius-radius-none);
@@ -731,6 +732,7 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --typography-font-style-primary: 'Roboto';
   --typography-font-weight-medium: 'Medium';
   --typography-font-weight-regular: 'Regular';
+  --ui-icon-spacing-icon-12: 12px;
   --ui-icon-spacing-icon-14: 14px;
   --ui-icon-spacing-icon-16: 16px;
   --ui-icon-spacing-icon-18: 18px;
@@ -1085,8 +1087,8 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --spacing-space-none: 0px;
   /* --- Component layout aliases (IDS defaults; programmes override in programme theme CSS) --- */
   --button-control-radius: var(--corner-radius-radius-2);
-  --button-focus-ring-radius: var(--corner-radius-radius-4);
-  --button-focus-ring-offset: 2px;
+  --button-focus-ring-offset: var(--scale-2);
+  --button-focus-ring-radius: var(--corner-radius-radius-2);
   --card-control-radius: var(--corner-radius-radius-none);
   --card-min-width: 430px;
   --date-picker-control-radius: var(--corner-radius-radius-none);

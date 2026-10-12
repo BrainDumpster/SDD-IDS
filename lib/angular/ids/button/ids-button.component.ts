@@ -38,7 +38,11 @@ export class IdsButtonComponent {
   keyboardPressed = false;
 
   get variantClass(): string {
-    return this.variant === "destructive" ? "danger" : this.variant;
+    if (this.variant === "destructive") return "danger";
+    if (this.variant === "ghost" || this.variant === "ghostNeutral") {
+      return "ghost-neutral";
+    }
+    return this.variant;
   }
 
   get hasLeadingIcon(): boolean {
@@ -46,12 +50,14 @@ export class IdsButtonComponent {
   }
 
   get resolvedIconOnly(): boolean {
-    return this.iconOnly && this.variant !== "destructive";
+    if (this.variant === "destructive") return false;
+    if (this.variant === "ghost" || this.variant === "ghostNeutral") return true;
+    return this.iconOnly;
   }
 
-  /** Spec Accurate: icon-only mode supports medium and large only. */
+  /** Icon-only supports small | medium | large (Icon Button set). */
   get resolvedSize(): ButtonSize {
-    return this.resolvedIconOnly && this.size === "sm" ? "md" : this.size;
+    return this.size;
   }
 
   onClick(event: MouseEvent): void {

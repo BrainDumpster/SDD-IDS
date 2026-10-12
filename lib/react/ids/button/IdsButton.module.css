@@ -3,7 +3,7 @@
  * Selectors: ids-button, ids-button-leading-icon, ids-button-label
  * Theme: components/ids-theme.css
  * Control stroke: inset box-shadow (inside stroke; does not grow box size).
- * Focus: ::after ring with --button-focus-ring-radius (Spec Accurate parity).
+ * Focus: dual drop-shadow rings + hover fill (Figma 2026-10-12).
  */
 
 .ids-button {
@@ -30,7 +30,7 @@
   padding: 0;
 }
 
-/* --- Sizes --- */
+/* --- Sizes (text / icon+text) --- */
 .ids-button--small {
   min-height: var(--scale-24, 24px);
   padding: var(--padding-padding-2) var(--padding-padding-16);
@@ -46,38 +46,73 @@
   padding: var(--padding-padding-10) var(--padding-padding-16);
 }
 
+/* Icon-only — square, padding-none (Icon Button set `52172:249499`) */
+.ids-button--icon-only {
+  gap: 0;
+  min-width: 0;
+  max-width: none;
+}
+
 .ids-button--icon-only.ids-button--small {
-  min-height: var(--scale-24, 24px);
-  padding: var(--padding-padding-4) var(--padding-padding-16);
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
+  min-height: var(--sizing-size-24);
+  padding: var(--padding-padding-none);
 }
 
 .ids-button--icon-only.ids-button--medium {
-  min-height: var(--scale-32, 32px);
-  padding: var(--padding-padding-8) var(--padding-padding-16);
+  width: var(--sizing-size-32);
+  height: var(--sizing-size-32);
+  min-height: var(--sizing-size-32);
+  padding: var(--padding-padding-none);
 }
 
 .ids-button--icon-only.ids-button--large {
-  min-height: var(--scale-40, 40px);
-  padding: var(--padding-padding-12) var(--padding-padding-16);
+  width: var(--sizing-size-40);
+  height: var(--sizing-size-40);
+  min-height: var(--sizing-size-40);
+  padding: var(--padding-padding-none);
 }
 
 /* --- Leading icon / label slots --- */
 .ids-button-leading-icon {
   display: inline-flex;
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: var(--ui-icon-spacing-icon-16);
+  height: var(--ui-icon-spacing-icon-16);
   align-items: center;
   justify-content: center;
   color: inherit;
+}
+
+.ids-button--icon-only.ids-button--small .ids-button-leading-icon {
+  width: var(--ui-icon-spacing-icon-12);
+  height: var(--ui-icon-spacing-icon-12);
+}
+
+.ids-button--icon-only.ids-button--medium .ids-button-leading-icon {
+  width: var(--ui-icon-spacing-icon-14);
+  height: var(--ui-icon-spacing-icon-14);
+}
+
+.ids-button--icon-only.ids-button--large .ids-button-leading-icon {
+  width: var(--ui-icon-spacing-icon-16);
+  height: var(--ui-icon-spacing-icon-16);
+}
+
+/* Ghost Large glyph is icon-14 (Figma Width/Height → UI Icon Spacing/icon-14) */
+.ids-button--icon-only.ids-button--large.ids-button--ghost .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--large.ids-button--ghost-neutral .ids-button-leading-icon {
+  width: var(--ui-icon-spacing-icon-14);
+  height: var(--ui-icon-spacing-icon-14);
 }
 
 .ids-button-leading-icon > * {
   flex-shrink: 0;
   width: 100%;
   height: 100%;
-  max-width: 16px;
-  max-height: 16px;
+  max-width: 100%;
+  max-height: 100%;
   box-sizing: border-box;
 }
 
@@ -95,7 +130,7 @@
   line-height: var(--font-line-height-line-height-20);
 }
 
-/* Icon color per variant (inherits into IdsIcon via currentColor) */
+/* Icon color per variant */
 .ids-button--primary .ids-button-leading-icon,
 .ids-button--destructive .ids-button-leading-icon {
   color: var(--color-icon-gray-white);
@@ -106,8 +141,59 @@
   color: var(--color-icon-brand-base);
 }
 
+/* Icon Button Secondary icon ladder */
+.ids-button--icon-only.ids-button--secondary:hover:not(:disabled) .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--secondary[data-state="hover"] .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--secondary:focus-visible:not(:disabled) .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--secondary[data-state="focus-visible"] .ids-button-leading-icon {
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-button--icon-only.ids-button--secondary:active:not(:disabled) .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--secondary[data-state="press"] .ids-button-leading-icon {
+  color: var(--color-icon-brand-stronger);
+}
+
+/* Icon Button Tertiary icon ladder */
+.ids-button--icon-only.ids-button--tertiary .ids-button-leading-icon {
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-button--icon-only.ids-button--tertiary:hover:not(:disabled) .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--tertiary[data-state="hover"] .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--tertiary:focus-visible:not(:disabled) .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--tertiary[data-state="focus-visible"] .ids-button-leading-icon {
+  color: var(--color-icon-brand-strong);
+}
+
+.ids-button--icon-only.ids-button--tertiary:active:not(:disabled) .ids-button-leading-icon,
+.ids-button--icon-only.ids-button--tertiary[data-state="press"] .ids-button-leading-icon {
+  color: var(--color-icon-brand-stronger);
+}
+
+.ids-button--ghost .ids-button-leading-icon,
+.ids-button--ghost-neutral .ids-button-leading-icon {
+  color: var(--color-icon-gray-neutral-base);
+}
+
+.ids-button--ghost:hover:not(:disabled) .ids-button-leading-icon,
+.ids-button--ghost-neutral:hover:not(:disabled) .ids-button-leading-icon,
+.ids-button--ghost[data-state="hover"] .ids-button-leading-icon,
+.ids-button--ghost-neutral[data-state="hover"] .ids-button-leading-icon,
+.ids-button--ghost:active:not(:disabled) .ids-button-leading-icon,
+.ids-button--ghost-neutral:active:not(:disabled) .ids-button-leading-icon,
+.ids-button--ghost[data-state="press"] .ids-button-leading-icon,
+.ids-button--ghost-neutral[data-state="press"] .ids-button-leading-icon,
+.ids-button--ghost:focus-visible:not(:disabled) .ids-button-leading-icon,
+.ids-button--ghost-neutral:focus-visible:not(:disabled) .ids-button-leading-icon,
+.ids-button--ghost[data-state="focus-visible"] .ids-button-leading-icon,
+.ids-button--ghost-neutral[data-state="focus-visible"] .ids-button-leading-icon {
+  color: var(--color-icon-gray-neutral-strong);
+}
+
 .ids-button:disabled .ids-button-leading-icon,
-.ids-button--disabled .ids-button-leading-icon {
+.ids-button--disabled .ids-button-leading-icon,
+.ids-button[data-state="disabled"] .ids-button-leading-icon {
   color: var(--color-icon-gray-disabled);
 }
 
@@ -136,6 +222,15 @@
   color: var(--color-text-gray-disabled);
 }
 
+.ids-button--primary:focus-visible:not(:disabled),
+.ids-button--primary[data-state="focus-visible"] {
+  background: var(--color-background-controls-strong);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand),
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
+}
+
 .ids-button--secondary {
   background: transparent;
   color: var(--color-text-brand-strong);
@@ -144,12 +239,18 @@
 
 .ids-button--secondary:hover:not(:disabled),
 .ids-button--secondary[data-state="hover"] {
-  background: var(--color-background-controls-lighter);
+  background: var(--color-background-controls-light);
 }
 
 .ids-button--secondary:active:not(:disabled),
 .ids-button--secondary[data-state="press"] {
   background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-strong);
+}
+
+.ids-button--icon-only.ids-button--secondary:active:not(:disabled),
+.ids-button--icon-only.ids-button--secondary[data-state="press"] {
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
 
 .ids-button--secondary:disabled,
@@ -160,6 +261,15 @@
   color: var(--color-text-gray-disabled);
 }
 
+.ids-button--secondary:focus-visible:not(:disabled),
+.ids-button--secondary[data-state="focus-visible"] {
+  background: var(--color-background-controls-light);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base),
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
+}
+
 .ids-button--tertiary {
   background: transparent;
   color: var(--color-text-brand-strong);
@@ -168,14 +278,14 @@
 
 .ids-button--tertiary:hover:not(:disabled),
 .ids-button--tertiary[data-state="hover"] {
-  background: var(--color-background-controls-lighter);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+  background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
 
 .ids-button--tertiary:active:not(:disabled),
 .ids-button--tertiary[data-state="press"] {
   background: var(--color-background-controls-light);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
 
 .ids-button--tertiary:disabled,
@@ -184,6 +294,15 @@
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   color: var(--color-text-gray-disabled);
+}
+
+.ids-button--tertiary:focus-visible:not(:disabled),
+.ids-button--tertiary[data-state="focus-visible"] {
+  background: var(--color-background-controls-light);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) transparent,
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .ids-button--destructive {
@@ -211,26 +330,80 @@
   color: var(--color-text-gray-disabled);
 }
 
+.ids-button--destructive:focus-visible:not(:disabled),
+.ids-button--destructive[data-state="focus-visible"] {
+  background: var(--color-background-alerting-critical-strong);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1)
+      var(--color-border-alerting-critical-transparent-base),
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
+}
+
+.ids-button--ghost,
+.ids-button--ghost-neutral {
+  background: transparent;
+  color: var(--color-icon-gray-neutral-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+}
+
+.ids-button--ghost:hover:not(:disabled),
+.ids-button--ghost-neutral:hover:not(:disabled),
+.ids-button--ghost[data-state="hover"],
+.ids-button--ghost-neutral[data-state="hover"] {
+  background: color-mix(
+    in srgb,
+    var(--color-background-gray-neutral-lighter) 10%,
+    transparent
+  );
+}
+
+.ids-button--ghost:active:not(:disabled),
+.ids-button--ghost-neutral:active:not(:disabled),
+.ids-button--ghost[data-state="press"],
+.ids-button--ghost-neutral[data-state="press"] {
+  background: color-mix(
+    in srgb,
+    var(--color-background-gray-neutral-lighter) 20%,
+    transparent
+  );
+}
+
+.ids-button--ghost:disabled,
+.ids-button--ghost-neutral:disabled,
+.ids-button--ghost.ids-button--disabled,
+.ids-button--ghost-neutral.ids-button--disabled,
+.ids-button--ghost[data-state="disabled"],
+.ids-button--ghost-neutral[data-state="disabled"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  color: var(--color-icon-gray-disabled);
+}
+
+.ids-button--ghost:focus-visible:not(:disabled),
+.ids-button--ghost-neutral:focus-visible:not(:disabled),
+.ids-button--ghost[data-state="focus-visible"],
+.ids-button--ghost-neutral[data-state="focus-visible"] {
+  background: color-mix(
+    in srgb,
+    var(--color-background-gray-neutral-lighter) 10%,
+    transparent
+  );
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) transparent,
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
+}
+
 .ids-button:disabled,
 .ids-button--disabled,
 .ids-button[data-state="disabled"] {
   cursor: not-allowed;
 }
 
-/* Focus ring — ::after so --button-focus-ring-radius applies (outline cannot). */
 .ids-button:focus-visible:not(:disabled),
 .ids-button[data-state="focus-visible"] {
   outline: none;
-}
-
-.ids-button:focus-visible:not(:disabled)::after,
-.ids-button[data-state="focus-visible"]::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius);
-  pointer-events: none;
 }
 
 /* Loading */

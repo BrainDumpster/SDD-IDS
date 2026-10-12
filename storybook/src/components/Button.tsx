@@ -73,14 +73,20 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   forwardedRef,
 ) {
-  const variantClass = variant === "destructive" ? "danger" : variant;
+  const variantClass =
+    variant === "destructive" || variant === "danger"
+      ? "danger"
+      : variant === "ghost" || variant === "ghostNeutral"
+        ? "ghost-neutral"
+        : variant;
   const isDestructive = variant === "destructive" || variant === "danger";
+  const isGhostNeutral = variant === "ghost" || variant === "ghostNeutral";
   const { leadingIcon: composedIcon, label } = splitButtonChildren(children);
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
   const slugIconNode =
     iconSlug && iconUrl ? <Icon shapeName={iconSlug} variant={iconVariant} /> : undefined;
   const resolvedIcon = isDestructive ? undefined : (icon ?? composedIcon ?? slugIconNode);
-  const resolvedIconOnly = isDestructive ? false : iconOnly;
+  const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
   const resolvedClassName = useMemo(

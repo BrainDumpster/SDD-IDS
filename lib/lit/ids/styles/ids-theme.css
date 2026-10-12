@@ -1,0 +1,13 @@
+/**
+ * Global IDS theme entry for `@ids/lit` consumers.
+ *
+ * Load **once** at the application / Storybook root — never inside a component
+ * shadow root. Components resolve colors via inherited `var(--…)` tokens.
+ *
+ * Required host attributes (see `applyIdsTheme`):
+ * - `data-design-system="ids"`
+ * - `data-theme="light" | "dark"`
+ *
+ * Source of truth: `components/ids-theme.css`
+ */
+@import url("../../../../components/ids-theme.css");
