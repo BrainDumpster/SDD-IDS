@@ -142,6 +142,141 @@ export const TertiaryWithIcon: Story = {
   },
 };
 
+/** Figma examples: leading icon + label + caret (41894:290670). */
+export const WithLeadingIcon: Story = {
+  name: "With leading icon",
+  args: {
+    label: "Settings",
+    buttonStyle: "primary",
+    size: "large",
+    icon: (
+      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
+    ),
+    items: SPEC_ITEMS,
+  },
+};
+
+/** Figma examples: gear + caret, no label (41894:290670). */
+export const IconOnly: Story = {
+  name: "Icon only",
+  args: {
+    label: "Actions",
+    buttonStyle: "secondary",
+    size: "medium",
+    iconOnly: true,
+    icon: (
+      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
+    ),
+    ariaLabel: "Dropdown actions",
+    items: SPEC_ITEMS,
+  },
+};
+
+/** Style × size matrix (closed triggers). */
+export const StyleSizeMatrix: Story = {
+  name: "Style × size matrix",
+  render: () => {
+    const styles = ["primary", "secondary", "tertiary"] as const;
+    const sizes = ["large", "medium", "small"] as const;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {sizes.map((size) => (
+          <div key={size} style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+            {styles.map((buttonStyle) => (
+              <IdsDropdownButton
+                key={`${size}-${buttonStyle}`}
+                label="Button"
+                buttonStyle={buttonStyle}
+                size={size}
+                items={SPEC_ITEMS}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  },
+};
+
+/** Open-menu compositions from Figma examples frame 41894:290670. */
+export const OpenMenuExamples: Story = {
+  name: "Open menu examples",
+  render: () => {
+    const gear = (
+      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
+    );
+    const longItems: IdsDropdownButtonItem[] = [
+      { id: "1", label: "Option with a longer label" },
+      { id: "2", label: "Option 2" },
+      { id: "3", label: "Option 3" },
+      { id: "4", label: "Option 4" },
+      { id: "5", label: "Option 5" },
+      { id: "6", label: "Option 6" },
+    ];
+    return (
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+          gap: 48,
+          alignItems: "start",
+        }}
+      >
+        <IdsDropdownButton
+          label="Button"
+          buttonStyle="primary"
+          size="large"
+          defaultOpen
+          items={SPEC_ITEMS}
+        />
+        <IdsDropdownButton
+          label="Button"
+          buttonStyle="primary"
+          size="large"
+          icon={gear}
+          defaultOpen
+          items={longItems}
+        />
+        <IdsDropdownButton
+          label="Button"
+          buttonStyle="secondary"
+          size="small"
+          defaultOpen
+          items={longItems}
+        />
+        <IdsDropdownButton
+          label="Button"
+          buttonStyle="secondary"
+          size="small"
+          icon={gear}
+          defaultOpen
+          items={SPEC_ITEMS}
+        />
+        <IdsDropdownButton
+          label="Actions"
+          buttonStyle="secondary"
+          size="medium"
+          iconOnly
+          icon={gear}
+          ariaLabel="Secondary icon-only dropdown"
+          defaultOpen
+          items={longItems}
+        />
+        <IdsDropdownButton
+          label="Actions"
+          buttonStyle="secondary"
+          size="medium"
+          iconOnly
+          icon={gear}
+          ariaLabel="Secondary icon-only dropdown with options"
+          defaultOpen
+          items={SPEC_ITEMS}
+        />
+      </div>
+    );
+  },
+};
+
 export const NestedSubmenus: Story = {
   name: "Nested submenus (Mode A)",
   args: {

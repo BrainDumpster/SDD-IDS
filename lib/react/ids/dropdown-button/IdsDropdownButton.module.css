@@ -58,3 +58,37 @@
   align-items: center;
   gap: var(--spacing-space-8);
 }
+
+/**
+ * Dropdown Button Figma press delta vs text Button:
+ * Secondary/Tertiary press → `background-brand-base` + `icon-brand-stronger`,
+ * Secondary press border stays `border-brand-base`.
+ * Applies to Mode A default trigger and Mode B IdsButton hosts under `.root`.
+ */
+.root :global(.ids-button--secondary:active:not(:disabled)),
+.root :global(.ids-button--secondary[data-state="press"]) {
+  background: var(--color-background-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+  color: var(--color-text-brand-strong);
+}
+
+.root :global(.ids-button--tertiary:active:not(:disabled)),
+.root :global(.ids-button--tertiary[data-state="press"]) {
+  background: var(--color-background-brand-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  color: var(--color-text-brand-strong);
+}
+
+.root :global(.ids-button--secondary:active:not(:disabled) .ids-button-leading-icon),
+.root :global(.ids-button--secondary[data-state="press"] .ids-button-leading-icon),
+.root :global(.ids-button--tertiary:active:not(:disabled) .ids-button-leading-icon),
+.root :global(.ids-button--tertiary[data-state="press"] .ids-button-leading-icon) {
+  color: var(--color-icon-brand-stronger);
+}
+
+.root :global(.ids-button--secondary:active:not(:disabled)) .caret,
+.root :global(.ids-button--secondary[data-state="press"]) .caret,
+.root :global(.ids-button--tertiary:active:not(:disabled)) .caret,
+.root :global(.ids-button--tertiary[data-state="press"]) .caret {
+  color: var(--color-icon-brand-stronger);
+}

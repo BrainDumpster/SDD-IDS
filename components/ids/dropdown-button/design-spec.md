@@ -2,15 +2,15 @@
 
 ## Metadata
 
-- **Version:** 1.0.0
+- **Version:** 1.1.0
 - **Description:** A button that triggers a dropdown menu when clicked. Supports multiple button styles (Primary, Secondary, Tertiary), sizes (Small, Medium, Large), and states (Default, Hover, Press, Focus, Disabled). Supports optional leading icon (settings-gear-detailed) and icon-only variant with both leading icon and dropdown caret. Used as a trigger for dropdown menus and action lists.
 - **Status:** draft
 - **Created:** 2025-06-23
-- **Updated:** 2026-08-19
+- **Updated:** 2026-10-12
 - **Figma verification:** Figma MCP (get_design_context, get_metadata, get_variable_defs, get_screenshot)
-- **Verification date:** 2026-08-19
+- **Verification date:** 2026-10-12
 - **Figma file key:** 0bHk3XhrjFhowgFkz9yLr4
-- **Figma node IDs:** Main: 14737:165791, Button instance: 9662:26341, Icon-only (primary): 9662:26098, Icon-only (secondary): 9662:26087, Icon-only (tertiary): 9662:26076, With icon: 9662:26192, Dropdown menu: 14737:142851, Option hover (no radio): 29377:159478
+- **Figma node IDs:** Main: 14737:165791, Examples: 41894:290670, Button instance: 9662:26341, Secondary press: 9662:26326, Tertiary hover/press/focus: 9662:26317 / 9662:26315 / 9662:26321, Icon-only (primary): 9662:26098, Icon-only (secondary): 9662:26087, Icon-only (tertiary): 9662:26076, With icon: 9662:26192, Dropdown menu: 14737:142851, Option hover (no radio): 29377:159478
 
 ## Anatomy
 
@@ -51,27 +51,27 @@ dropdown
 
 | Slot / layer | Property | Token / contract | Figma node | Live evidence |
 |--------------|----------|------------------|------------|---------------|
-| Trigger Button | border-radius | `var(--button-control-radius)` (2px for Primary/Secondary, 4px for Tertiary) | 9662:26341 | Figma MCP get_variable_defs |
-| Trigger Button | min-height | Size-dependent: Small=24px, Medium=32px, Large=40px | 9662:26341 | Figma MCP get_design_context |
-| Trigger Button | padding-x | Size-dependent: Small=16px, Medium=16px, Large=16px | 9662:26341 | Figma MCP get_design_context |
-| Trigger Button | padding-y | Size-dependent: Small=6px, Medium=6px, Large=10px | 9662:26341 | Figma MCP get_design_context |
+| Trigger Button | border-radius | `var(--corner-radius-radius-2)` (**2px** for Primary / Secondary / Tertiary) | 9662:26341, 9662:26319 | Figma MCP `get_variable_defs` → `Corner Radius/radius-2` |
+| Trigger Button | min-height | Small=`var(--scale-24)` (24px), Medium=`var(--scale-32)` (32px), Large=`var(--scale-40)` (40px) | 9662:26308 / 9662:26341 / 9662:26374 | Figma MCP get_metadata |
+| Trigger Button | padding-x | `var(--padding-padding-16)` (16px) all sizes | 9662:26341 | Figma MCP get_variable_defs |
+| Trigger Button | padding-y | Small=`var(--padding-padding-2)` (2px), Medium=`var(--padding-padding-6)` (6px), Large=`var(--padding-padding-10)` (10px) | 9662:26308 / 9662:26341 / 9662:26374 | Figma MCP get_variable_defs |
+| Focus rings | dual drop-shadow | inner `var(--scale-2)` + `var(--color-border-gray-white)`; outer `var(--scale-4)` + `var(--color-border-brand-base)` | 9662:26343, 9662:26332, 9662:26321 | Figma MCP get_variable_defs (Focus Drop Shadow spreads) |
 | Leading Icon (optional) | size | 16px | 9662:26099 | Figma MCP get_design_context |
-| Leading Icon | margin-right | 8px | 9662:26098 | Figma MCP get_design_context |
+| Leading Icon | gap to label/caret | `var(--spacing-space-8)` (8px) | 9662:26098 | Figma MCP get_design_context |
 | Dropdown Icon | size | 10px | 9662:26650 | Figma MCP get_design_context |
-| Dropdown Icon | margin-left | 8px | 9662:26341 | Figma MCP get_design_context |
-| Content Wrapper | display | flex | - | Storybook implementation |
-| Content Wrapper | align-items | center | - | Storybook implementation |
+| Dropdown Icon | gap from label | `var(--spacing-space-8)` (8px) | 9662:26341 | Figma MCP get_design_context |
+| Content Wrapper | display / align | flex / center | - | Runtime |
 | Dropdown Menu | border-radius | `var(--dropdown-menu-radius)` (IDS → 0; shared with combo-box detached popup) | 14737:142851 | Figma MCP get_design_context + shared `DropdownMenu.module.css` `.popupStandalone` |
 | Dropdown Menu | box-shadow | `var(--shadow-shadow-4)` | 14737:142851 | Figma MCP get_design_context |
-| Menu Option | padding-x | `var(--padding-16)` (16px) left, `var(--padding-24)` (24px) right | 22472:147638 | Figma MCP get_design_context |
-| Menu Option | padding-y | `var(--padding-10)` (10px) | 22472:147638 | Figma MCP get_design_context |
+| Menu Option | padding-x | `var(--padding-padding-16)` left, `var(--padding-padding-24)` right | 22472:147638 | Figma MCP get_design_context |
+| Menu Option | padding-y | `var(--padding-padding-10)` | 22472:147638 | Figma MCP get_design_context |
 
 ### Container measurements
 
 - **Trigger Button width:** Auto (based on content), min-width varies by size
 - **Dropdown Menu width:** `min-width: 100%` of trigger (content-driven); Figma example ~269px is reference only.
 - **Dropdown Menu max-height:** Not specified in Figma (scrollable if needed).
-- **Gap between button and menu:** `margin-top: -1px` so menu top border overlaps trigger bottom border into one line (matches single-select `sideOffset: -1`).
+- **Gap between button and menu:** Menu opens below the trigger, left-aligned. Runtime uses portaled positioning (`sideOffset` content-driven); do not invent a fixed pixel gap beyond Figma composition examples (`41894:290670`).
 
 ## Tokens
 
@@ -92,43 +92,43 @@ dropdown
 
 ### Colors
 
-**Button - Primary Style:**
-- Background (default): `var(--color-background-controls-base, #0672cb)`
-- Background (hover): `var(--color-background-controls-strong, #055fa9)`
-- Background (press): `var(--color-background-controls-stronger, #044b86)`
-- Background (focus): `var(--color-background-controls-base, #0672cb)`
-- Background (disabled): `var(--color-background-controls-disabled, #f4f4f4)`
-- Text (default/hover/press/focus): `var(--color-text-gray-white, #ffffff)`
-- Text (disabled): `var(--color-text-gray-disabled, #757575)`
-- Border: `var(--color-border-brand-transparent-brand, rgba(255,255,255,0))`
-- Border width: `var(--border-width-border-default, 1px)`
+**Button - Primary Style** (Figma `9662:26341` / hover `9662:26339` / focus `9662:26343` / disabled `9662:26335`):
+- Background (default): `var(--color-background-controls-base)`
+- Background (hover / focus-visible): `var(--color-background-controls-strong)`
+- Background (press): `var(--color-background-controls-stronger)`
+- Background (disabled): `var(--color-background-gray-lighter)`
+- Text/Icon (default/hover/press/focus): `var(--color-text-gray-white)` / `var(--color-icon-gray-white)`
+- Text/Icon (disabled): `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)`
+- Border (default/hover/press/focus): `var(--color-border-brand-transparent-brand)`
+- Border (disabled): `var(--color-border-gray-disabled)`
+- Border width: `var(--border-width-border-default)` (inset stroke)
 
-**Button - Secondary Style:**
-- Background (default): `var(--color-background-controls-lighter, #ebf4fb)`
-- Background (hover): `var(--color-background-controls-light, #daeaf7)`
-- Background (press): `var(--color-background-controls-base, #0672cb)`
-- Background (focus): `var(--color-background-controls-lighter, #ebf4fb)`
-- Background (disabled): `var(--color-background-controls-disabled, #f4f4f4)`
-- Text (default/hover/focus): `var(--color-text-brand-strong, #055fa9)`
-- Text (press): `var(--color-text-gray-white, #ffffff)`
-- Text (disabled): `var(--color-text-gray-disabled, #757575)`
-- Border: `var(--color-border-brand-base, #0672cb)`
-- Border width: `var(--border-width-border-default, 1px)`
+**Button - Secondary Style** (Figma `9662:26330` / hover `9662:26328` / press `9662:26326` / focus `9662:26332` / disabled `9662:26324`):
+- Background (default / disabled): transparent
+- Background (hover / focus-visible): `var(--color-background-controls-light)`
+- Background (press): `var(--color-background-brand-base)` (**Dropdown Button–specific**; differs from text Button press)
+- Text (default/hover/focus/press): `var(--color-text-brand-strong)`
+- Text (disabled): `var(--color-text-gray-disabled)`
+- Icon (default/hover/focus): `var(--color-icon-brand-base)`
+- Icon (press): `var(--color-icon-brand-stronger)`
+- Icon (disabled): `var(--color-icon-gray-disabled)`
+- Border (default/hover/press/focus): `var(--color-border-brand-base)` (press keeps brand-base — not Button’s `border-brand-strong`)
+- Border (disabled): `var(--color-border-gray-disabled)`
 
-**Button - Tertiary Style:**
-- Background (default): `var(--color-background-surface-component, transparent)`
-- Background (hover): `var(--color-background-gray-lighter, #f4f4f4)`
-- Background (press): `var(--color-background-gray-lighter, #f4f4f4)`
-- Background (focus): `var(--color-background-surface-component, transparent)`
-- Background (disabled): `var(--color-background-surface-component, transparent)`
-- Text (default/hover/press/focus): `var(--color-text-brand-strong, #055fa9)`
-- Text (disabled): `var(--color-text-gray-disabled, #757575)`
-- Border: `var(--color-border-brand-transparent-brand, rgba(255,255,255,0))`
-- Border width: `var(--border-width-border-default, 1px)`
+**Button - Tertiary Style** (Figma `9662:26319` / hover `9662:26317` / press `9662:26315` / focus `9662:26321`):
+- Background (default / disabled): transparent
+- Background (hover / focus-visible): `var(--color-background-controls-light)`
+- Background (press): `var(--color-background-brand-base)` (**Dropdown Button–specific**)
+- Text (default/hover/focus/press): `var(--color-text-brand-strong)`
+- Text (disabled): `var(--color-text-gray-disabled)`
+- Icon (default/hover/focus): `var(--color-icon-brand-base)`
+- Icon (press): `var(--color-icon-brand-stronger)`
+- Icon (disabled): `var(--color-icon-gray-disabled)`
+- Border: transparent (no control stroke) on all states; focus adds dual rings only
 
 **Dropdown Icon:**
-- Color (default/hover/press/focus): `var(--color-icon-gray-white, #ffffff)` for Primary, `var(--color-icon-brand-base, #0672cb)` for Secondary/Tertiary
-- Color (disabled): `var(--color-icon-gray-disabled, #757575)`
+- Primary: `var(--color-icon-gray-white)` (disabled → `var(--color-icon-gray-disabled)`)
+- Secondary / Tertiary: `var(--color-icon-brand-base)` default/hover/focus; press → `var(--color-icon-brand-stronger)`; disabled → `var(--color-icon-gray-disabled)`
 
 **Leading Icon (optional):**
 - Icon name: `settings-gear-detailed`
@@ -159,34 +159,35 @@ dropdown
 
 ### Border Radius
 
-- **Button (Primary/Secondary):** `var(--corner-radius-radius-2, 2px)`
-- **Button (Tertiary):** `var(--corner-radius-radius-4, 4px)`
-- **Dropdown Menu:** `var(--corner-radius-radius-2, 2px)`
+- **Trigger (all styles including Tertiary):** `var(--corner-radius-radius-2)` (2px) — Figma `get_variable_defs` on `9662:26319`
+- **Dropdown Menu:** `var(--dropdown-menu-radius)` (IDS → 0)
 
 ## States (Light Theme)
 
 | Variant | State | Background | Text | Border | Icon |
 |---------|-------|------------|------|--------|------|
-| **Primary - Medium** | default | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
-| **Primary - Medium** | hover | `var(--color-background-controls-strong)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
-| **Primary - Medium** | press | `var(--color-background-controls-stronger)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
-| **Primary - Medium** | focus-visible | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` + focus ring | `var(--color-icon-gray-white)` |
-| **Primary - Medium** | disabled | `var(--color-background-controls-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-disabled)` |
-| **Secondary - Medium** | default | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| **Secondary - Medium** | hover | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
-| **Secondary - Medium** | press | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-base)` | `var(--color-icon-gray-white)` |
-| **Secondary - Medium** | focus-visible | `var(--color-background-controls-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` + focus ring | `var(--color-icon-brand-base)` |
-| **Secondary - Medium** | disabled | `var(--color-background-controls-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-border-gray-disabled)` | `var(--color-icon-gray-disabled)` |
-| **Tertiary - Medium** | default | `var(--color-background-surface-component)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | hover | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | press | `var(--color-background-gray-lighter)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | focus-visible | `var(--color-background-surface-component)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-transparent-brand)` + focus ring | `var(--color-icon-brand-base)` |
-| **Tertiary - Medium** | disabled | `var(--color-background-surface-component)` | `var(--color-text-gray-disabled)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-disabled)` |
+| **Primary** | default | `var(--color-background-controls-base)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
+| **Primary** | hover | `var(--color-background-controls-strong)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
+| **Primary** | press | `var(--color-background-controls-stronger)` | `var(--color-text-gray-white)` | `var(--color-border-brand-transparent-brand)` | `var(--color-icon-gray-white)` |
+| **Primary** | focus-visible | `var(--color-background-controls-strong)` | `var(--color-text-gray-white)` | transparent control + dual focus rings | `var(--color-icon-gray-white)` |
+| **Primary** | disabled | `var(--color-background-gray-lighter)` | `var(--color-text-gray-disabled)` | `var(--color-border-gray-disabled)` | `var(--color-icon-gray-disabled)` |
+| **Secondary** | default | transparent | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
+| **Secondary** | hover | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-base)` |
+| **Secondary** | press | `var(--color-background-brand-base)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` | `var(--color-icon-brand-stronger)` |
+| **Secondary** | focus-visible | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` | `var(--color-border-brand-base)` + dual focus rings | `var(--color-icon-brand-base)` |
+| **Secondary** | disabled | transparent | `var(--color-text-gray-disabled)` | `var(--color-border-gray-disabled)` | `var(--color-icon-gray-disabled)` |
+| **Tertiary** | default | transparent | `var(--color-text-brand-strong)` | transparent | `var(--color-icon-brand-base)` |
+| **Tertiary** | hover | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` | transparent | `var(--color-icon-brand-base)` |
+| **Tertiary** | press | `var(--color-background-brand-base)` | `var(--color-text-brand-strong)` | transparent | `var(--color-icon-brand-stronger)` |
+| **Tertiary** | focus-visible | `var(--color-background-controls-light)` | `var(--color-text-brand-strong)` | transparent + dual focus rings | `var(--color-icon-brand-base)` |
+| **Tertiary** | disabled | transparent | `var(--color-text-gray-disabled)` | transparent | `var(--color-icon-gray-disabled)` |
+
+**Focus rings (all styles):** `0 0 0 var(--scale-2) var(--color-border-gray-white)` then `0 0 0 var(--scale-4) var(--color-border-brand-base)`, stacked after the inset control stroke.
 
 **Size variants (applies to all styles):**
-- **Small:** height 24px, padding-y 6px
-- **Medium:** height 32px, padding-y 6px
-- **Large:** height 40px, padding-y 10px
+- **Small:** height 24px, padding-y `var(--padding-padding-2)`
+- **Medium:** height 32px, padding-y `var(--padding-padding-6)`
+- **Large:** height 40px, padding-y `var(--padding-padding-10)`
 
 **Dropdown Menu States:**
 | State | Background | Border | Box Shadow |
@@ -208,7 +209,14 @@ dropdown
 
 ## States (Dark Theme)
 
-All Dark theme states use the same `var(--...)` tokens as Light theme. The token values themselves differ by theme in `ids-theme.css`, but the state matrix structure is identical. See Light theme table above for token references.
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
 
@@ -227,7 +235,7 @@ All Dark theme states use the same `var(--...)` tokens as Light theme. The token
   - `aria-controls`: References the dropdown menu element
   - Menu items: `role="menuitem"` with appropriate focus management
 - **Focus management:**
-  - Focus ring appears on `focus-visible` state (not on focus)
+  - Dual focus rings appear on `focus-visible` only (inner white gap + outer brand) — not on mouse focus
   - When menu opens, focus moves to first menu item
   - When menu closes, focus returns to trigger button
 
@@ -378,9 +386,11 @@ IdsDropdownButton (`dropdown`)
 
 **Trigger Button:**
 - Must use semantic tokens for all colors, spacing, typography
-- Border-radius: `var(--button-control-radius)` (size-dependent)
-- Padding: `var(--padding-16)` horizontal, size-dependent vertical
-- Focus ring: `var(--focus-ring)` on `focus-visible` only
+- Border-radius: `var(--corner-radius-radius-2)` (all styles)
+- Padding-x: `var(--padding-padding-16)`; padding-y: Small `var(--padding-padding-2)`, Medium `var(--padding-padding-6)`, Large `var(--padding-padding-10)`
+- Focus: dual drop-shadow rings on `focus-visible` only (`scale-2` white gap + `scale-4` brand outer)
+- Secondary/Tertiary **press** fill: `var(--color-background-brand-base)` (not text Button’s `controls-light`)
+- React Mode A: compose `IdsButton`, then override Secondary/Tertiary press (+ icon press) to match this matrix
 
 **Content Wrapper:**
 - Display: flex
@@ -516,11 +526,24 @@ IdsDropdownButton (`dropdown`)
 - Node type: FRAME
 - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=14737-165791
 
+**Examples / Composition Node:**
+- Node ID: `41894:290670`
+- Node name: Content (Dropdown Button examples)
+- Node type: FRAME
+- Documents: label-only / with-leading-icon / icon-only matrices + open-menu compositions (Primary Large ± icon, Secondary Small ± icon, Secondary icon-only Medium)
+- URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-290670
+
 **Button Instance Node (Primary, Medium, Default):**
 - Node ID: `9662:26341`
 - Node name: Button Style=Primary, State=Default, Size=Medium, Icon only button=No, Low res=No, Show Icon=No
 - Node type: SYMBOL
 - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26341
+
+**Press / focus verification nodes (2026-10-12):**
+- Secondary press: `9662:26326` → fill `var(--color-background-brand-base)`, icon `var(--color-icon-brand-stronger)`
+- Tertiary hover / press / focus: `9662:26317` / `9662:26315` / `9662:26321`
+- Primary focus / disabled: `9662:26343` / `9662:26335`
+- Small padding: `9662:26308` → `Padding/padding-2`
 
 **Icon-Only Variant Nodes:**
 - Primary icon-only: `9662:26098` - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26098
@@ -563,8 +586,8 @@ IdsDropdownButton (`dropdown`)
 **Verification Method:**
 - Method: Figma MCP
 - Tools: get_design_context, get_metadata, get_variable_defs, get_screenshot
-- Date: 2026-08-19
-- Session: Angular dropdown-button implementation update + lib compound API alignment
+- Date: 2026-10-12
+- Session: Dropdown Button Figma delta sync (trigger states, geometry, examples frame)
 
 **Runtime contract path:**
 - `component-contracts/ids/dropdown-button.contract.ts`
@@ -573,8 +596,16 @@ IdsDropdownButton (`dropdown`)
 - `lib/react/ids/dropdown-button/`
 - `lib/angular/ids/dropdown-button/`
 
+**Storybook:**
+- React: `storybook/src/components/lib-generated/DropdownButton.stories.tsx`
+- Angular: `storybook-angular/src/components/ids-dropdown-button/ids-dropdown-button.stories.js`
+
+**Implementation notes:**
+- React Mode A trigger composes `IdsButton` (inherits size padding, focus rings, Primary/Secondary/Tertiary default-hover-focus-disabled). Dropdown Button Secondary/Tertiary **press** overrides IdsButton to `var(--color-background-brand-base)` + `var(--color-icon-brand-stronger)` and keeps Secondary press border on `var(--color-border-brand-base)`.
+- Angular trigger styles the control locally (`ids-dropdown-button-trigger.component.scss`) to the same state matrix.
+
 **Supplemental Node IDs (for reference):**
-- Button variants (all styles × sizes × states): See metadata output for full list
+- Button variants (all styles × sizes × states): Main frame `14737:165791` metadata
 - Icon-only variants: 9662:26098 (primary), 9662:26087 (secondary), 9662:26076 (tertiary)
 - With icon variant: 9662:26192
-- All button symbols share the same component structure with different variant props
+- Examples open-menu instances under `41894:290670`
