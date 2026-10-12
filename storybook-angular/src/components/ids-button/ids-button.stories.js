@@ -7,8 +7,8 @@ import { SPEC_ACCURATE_DESIGN_STORY } from "../../../compiled/component-contract
 import {
   BUTTON_SPEC_ACCURATE_DEFAULTS,
 } from "../../../compiled/component-contracts/ids/button.contract.js";
-import { IdsButtonComponent } from "../../../compiled/storybook-angular/src/components/ids-button/ids-button.component.js";
-import { IDS_BUTTON_IMPORTS } from "../../../compiled/storybook-angular/src/components/ids-button/ids-button.imports.js";
+import { IdsButtonComponent } from "../../../compiled/lib/angular/ids/button/ids-button.component.js";
+import { IDS_BUTTON_IMPORTS } from "../../../compiled/lib/angular/ids/button/index.js";
 import {
   BUTTON_COMPOSITION_DEMO_TEMPLATE,
   BUTTON_DOCS_DESCRIPTION,
