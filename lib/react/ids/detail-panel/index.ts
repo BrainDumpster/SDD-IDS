@@ -7,6 +7,10 @@ export {
   IdsDetailPanelFooter,
   IdsDetailPanelCollapsedRail,
   IdsDetailPanelToggleButton,
+  IdsDetailPanelDetachButton,
+  IdsDetailPanelSection,
+  IdsDetailPanelField,
+  IdsDetailPanelBlock,
   type IdsDetailPanelProps,
   type IdsDetailPanelAttachMode,
   type IdsDetailPanelContentProps,
@@ -16,5 +20,9 @@ export {
   type IdsDetailPanelFooterProps,
   type IdsDetailPanelCollapsedRailProps,
   type IdsDetailPanelToggleButtonProps,
+  type IdsDetailPanelDetachButtonProps,
+  type IdsDetailPanelSectionProps,
+  type IdsDetailPanelFieldProps,
+  type IdsDetailPanelBlockProps,
 } from "./IdsDetailPanel";
 export { default } from "./IdsDetailPanel";

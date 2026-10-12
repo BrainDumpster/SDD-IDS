@@ -41,6 +41,7 @@ Import from \`@ids/react/datagrid\`.
 | \`selectionMode\` | \`IdsDatagridSelectionMode\` | — |
 | \`showSingleSelectionRadio\` | \`boolean\` | — |
 | \`withDetailPanel\` | \`boolean\` | — |
+| \`activeRowId\` | \`string \\| null\` | — (controlled highlighted row, e.g. for a page-level detail panel) |
 | \`pageSize\` | \`number\` | — |
 | \`readOnly\` | \`boolean\` | — |
 | \`rowVerticalIndicator\` | \`boolean\` | — |

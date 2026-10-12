@@ -1135,12 +1135,14 @@
   max-height: 48px;
   padding-top: 0;
   padding-bottom: 0;
+  align-items: center;
   border-bottom: 1px solid var(--color-border-gray-neutral-base);
 }
 
-.detailBody {
+.detailEmpty {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
-  font-size: 14px;
 }
 
 /* Compact 16×16 selection chrome — Figma selection column */
