@@ -26,6 +26,7 @@ export interface IdsAccordionProps {
   defaultValue?: string[];
   variant?: AccordionVariant;
   chevronPosition?: AccordionChevronPosition;
+  maxWidth?: number | string;
 }
 
 export const ACCORDION_ROOT_PROP_KEYS = [
@@ -34,6 +35,7 @@ export const ACCORDION_ROOT_PROP_KEYS = [
   "defaultValue",
   "chevronPosition",
   "variant",
+  "maxWidth",
 ] as const;
 
 export const ACCORDION_ITEM_INPUT_KEYS = [
