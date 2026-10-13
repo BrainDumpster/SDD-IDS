@@ -1,0 +1,46 @@
+# iDRAC Design System Configuration
+# Inherits from IDS baseline with programme-specific overrides
+
+name: idrac
+display_name: iDRAC
+token_transform: ids
+
+# Component library (inherits from IDS baseline)
+figma_file_key: "0bHk3XhrjFhowgFkz9yLr4"
+# Canonical centralized variable definitions (inherited from IDS)
+figma_variables_library_key: "r0Ex6TumqcR3HINamsfXCV"
+
+figma_map_path: data/idrac-component-figma-map.json
+rules_path: rules.json
+allowed_tokens_path: allowed_tokens.json
+component_registry_path: component_registry.json
+theme_css_path: components/idrac-theme.css
+base_ui_mapping_path: ""
+
+components_dir: components/idrac
+baseline_components_dir: components/ids
+baseline_root_spec_path: components/ids/root-spec.md
+baseline_theme_css_path: components/ids-theme.css
+program_components_dir: ""
+program_root_spec_path: components/idrac/root-spec.md
+program_theme_css_path: components/idrac-theme.css
+
+qdrant_collection: design_knowledge
+
+framework_layer: ""
+root_spec_path: components/idrac/root-spec.md
+generated_storybook_dir: storybook-generated/idrac
+strict_storybook_gate: false
+
+# Optional: concrete paths for codegen / agents in this repository only (not part of Figma contract).
+codegen:
+  react:
+    icon_component_module: storybook/src/components/Icon
+
+breakpoints:
+  sm: "576px"
+  md: "768px"
+  lg: "992px"
+  xl: "1200px"
+
+elevation_levels: {}
