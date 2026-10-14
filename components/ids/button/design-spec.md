@@ -53,17 +53,16 @@ Figma component properties (Icon Button set `52172:249499`):
   - `medium`: height `32px`, vertical padding `6px`
   - `large`: height `40px`, vertical padding `10px`
 - Icon+text glyph size: `16px × 16px` (all sizes).
-- Icon-only signatures (Figma Icon Button set `52172:249499` — square control, padding none):
-  - Control box bound to `var(--sizing-size-24)` / `var(--sizing-size-32)` / `var(--sizing-size-40)`
+- Icon-only signatures (Figma Icon Button set `52172:249499` — **square** control, padding none):
+
+  | Size | Control (square) | Glyph (Primary / Secondary / Tertiary) | Glyph (Ghost Neutral) |
+  | --- | --- | --- | --- |
+  | `small` | **24×24** (`var(--sizing-size-24)`) | **12×12** (`var(--ui-icon-spacing-icon-12)`) | **12×12** |
+  | `medium` | **32×32** (`var(--sizing-size-32)`) | **14×14** (`var(--ui-icon-spacing-icon-14)`) | **14×14** |
+  | `large` | **40×40** (`var(--sizing-size-40)`) | **16×16** (`var(--ui-icon-spacing-icon-16)`) | **14×14** (`var(--ui-icon-spacing-icon-14)`) — Figma Large Ghost → `icon-14`, not `icon-16` |
+
   - Padding bound to `var(--padding-padding-none)` (all sides `0`)
-  - Glyph sizes (Primary / Secondary / Tertiary):
-    - `small`: `var(--ui-icon-spacing-icon-12)` (**12×12**)
-    - `medium`: `var(--ui-icon-spacing-icon-14)` (**14×14**)
-    - `large`: `var(--ui-icon-spacing-icon-16)` (**16×16**)
-  - Glyph sizes (Ghost Neutral / Figma `Type=Ghost` — Figma-verified):
-    - `small`: `var(--ui-icon-spacing-icon-12)` (**12×12**)
-    - `medium`: `var(--ui-icon-spacing-icon-14)` (**14×14**)
-    - `large`: `var(--ui-icon-spacing-icon-14)` (**14×14**) — Large Ghost Neutral resolves Width/Height → `UI Icon Spacing/icon-14`, not `icon-16`
+  - Runtime: `iconOnly=true` **requires** `ariaLabel` (or native `aria-label`) — no visible label to name the control
 - Control border (`1px` / `Border Width/border-default`) is an **inside stroke** and must NOT add to the control's height/width. Render via `box-shadow: inset` (not CSS `border` under global `border-box`).
 - Focus ring geometry (focus-visible) — **dual drop shadows** on `ButtonRoot` (not `::after`, not `outline`). Use **Figma tokens only** (no invented `--button-focus-*` aliases):
   - Inner gap ring spread: `var(--scale-2)` — Figma `Focus Drop Shadow/Spread/Inner Ring` → `Scale/2`
@@ -197,12 +196,12 @@ Inputs:
 - `variant?: "primary" | "secondary" | "tertiary" | "destructive" | "ghostNeutral" | "ghost"` (default `primary`; `ghostNeutral` / alias `ghost` requires `iconOnly=true`)
 - `size?: "small" | "medium" | "large"` (default `large`; icon-only supports all three)
 - `iconSlug?: string` (optional; maps to Figma `Select Icon` / `/asset/icons/<slug>.svg`)
-- `iconOnly?: boolean` (default `false`; maps to Icon Button set when true)
+- `iconOnly?: boolean` (default `false`; maps to Icon Button set when true — square control: small 24×24 / medium 32×32 / large 40×40; glyph 12 / 14 / 16 except Ghost Neutral large = 14)
 - `showIcon?: boolean` (optional convenience; when false, hide leading icon even if projected/`iconSlug` present — Figma `Show Icon` default false)
 - `disabled?: boolean` (default `false`)
 - `loading?: boolean` (default `false`; if true, interactions are blocked)
 - `type?: "button" | "submit" | "reset"` (default `button`)
-- `ariaLabel?: string` (required when `iconOnly=true`)
+- `ariaLabel?: string` (**required** when `iconOnly=true` or `variant` is `ghostNeutral` / `ghost`; native `aria-label` also satisfies the contract)
 - `name?: string`
 - `value?: string`
 - `autofocus?: boolean`
@@ -255,6 +254,7 @@ Outputs / events:
   - `ghostNeutral` (or alias `ghost`) without `iconOnly` → validation error (or coerce `iconOnly=true` only if product enables coercion).
 ### Accessibility contract
   - Native `button` semantics.
+  - `iconOnly=true` (including coerced Ghost Neutral) **must** set `ariaLabel` / `aria-label` — validation error if missing.
   - `aria-disabled` mirrors disabled state for non-native fallbacks.
   - Keyboard parity: `Enter` and `Space` activate.
   - Visible `focus-visible` treatment required (dual rings).
