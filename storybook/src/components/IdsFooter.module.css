@@ -1,6 +1,9 @@
 .root {
   box-sizing: border-box;
   width: 100%;
+  /* Component minimum: the footer never compresses below 944px — hosts
+     narrower than that scroll horizontally instead. */
+  min-width: 944px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -9,14 +12,6 @@
   background: var(--color-background-surface-primary);
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   font-family: inherit;
-}
-
-/* Below the compact breakpoint the footer no longer compresses — it keeps
-   its 1024px layout width and the host/page scrolls horizontally instead. */
-@media (max-width: 1024px) {
-  .root {
-    min-width: 1024px;
-  }
 }
 
 .left {
