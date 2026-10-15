@@ -631,7 +631,7 @@ export function IdsMainMenuLeft({
                 {showChevron ? (
                   <IdsIcon
                     shape={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
-                    size={14}
+                    size={16}
                     className={styles.chevronIcon}
                   />
                 ) : null}
