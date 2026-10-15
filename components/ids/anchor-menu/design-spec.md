@@ -22,7 +22,7 @@
 - **link**: focusable control inside the item (`a` when `href` is present).
 - **activeIndicator** (`AnchorActiveIndicator` / `ids-anchor-active-indicator`): 4px brand left bar aligned to the active item (`get_design_context` Selected `border-l-4` on `11955:229728`).
 - Default left rail: 1.2px `var(--color-border-gray-neutral-base)` on each unselected item (`11955:229730`).
-- Focus ring: 2px brand outline on the item (`11955:230551`, `11955:230577`).
+- Focus ring: 2px brand ring **inside** the item, 4px in from each side, flush top/bottom (`11955:230551`, `11955:230577`).
 
 ## Layout & Measurements
 - Standard height: Auto (based on content)
@@ -34,7 +34,7 @@
 - Long text: wrap up to 2 lines, then `…` ellipsis; a tooltip is shown on hover/focus only for labels that are truncated. Tooltip mode is selectable (`nativeTooltip` prop, boolean, default `false`): when `false`, `IdsTooltip` is anchored to the label text (inline trigger, beside the text edge) so it never overlaps other menu items; when `true`, the browser `title` attribute is used. The `IdsTooltip` side auto-flips from the menu's viewport position — `side="right"` when the menu is in the left half of the viewport, `side="left"` when it is in the right half — so a right-hand-rail menu opens tooltips toward the page instead of off-screen (`IdsTooltip` has no built-in collision detection).
 - Section-item padding: `8px` top/bottom and `24px` left/right
 - Item border radius: 0 (square); focus ring radius: `4px` (`var(--corner-radius-radius-4)`)
-- Focus ring: `2px` brand border hugging the item, inset `-3px` top/bottom and `-5px` left/right
+- Focus ring: `2px` (`var(--border-width-border-2)`) brand border **inside** the item — `inset: 0 var(--padding-padding-4)` (4px from the left rail and the right edge, flush top/bottom). Applies to Unselected-Focus and Selected-Focus; on Selected-Focus the 4px active indicator stays visible to the left of the ring.
 - Minimum width: 200px (soft floor via `min(200px, 100%)` — shrinks below 200px only when the container is narrower)
 - Maximum width: 300px (`min(300px, 100%)`)
 - Item spacing: 0 (adjacent)
@@ -64,7 +64,8 @@
 | Menu Container | transparent | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) |
 | Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
 | Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Focus) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` + 2px `var(--color-border-brand-base)` ring inside the item (`inset: 0 4px`) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Active + Focus) | transparent | left border `4px` `var(--color-border-brand-base)` + 2px ring inside the item (`inset: 0 4px`) | `var(--color-text-brand-strong)` (#055fa9) |
 | Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
 | Anchor Item (Active + Hover) | transparent | left border `4px` `var(--color-border-brand-strong)` (#055fa9) | `var(--color-text-brand-strong)` (#055fa9) |
 | Progress Indicator | `var(--color-background-controls-base)` (#0672cb) | transparent | transparent |
@@ -89,7 +90,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Smooth scrolling to sections
 - Scroll spy updates active item based on scroll position
 ### Accessibility
-- Focus ring: 1px brand color border
+- Focus ring: 2px brand color border inside the item
 - Keyboard navigation: Tab to focus, ArrowUp/ArrowDown to move between items, Enter/Space to activate
 - Screen reader support: Proper ARIA attributes for navigation
 - High contrast: Meets WCAG AA standards with provided colors
@@ -172,7 +173,7 @@ Figma `11955:229709` (`AnchorMenu-Example`):
 - Item link: min-height `var(--scale-40)`; `padding: var(--padding-padding-8) var(--padding-padding-24)`; `width: fit-content` (hugs label, wraps within root max-width); Body 1; square corners.
 - Default rail: `border-left: 1.2px solid var(--color-border-gray-neutral-base)`.
 - Hover/active rail: `4px` `var(--color-border-brand-base)` overlay **centered on** the `1.2px` default rail (no layout shift). Hover label stays `var(--color-text-gray-neutral)`; active label `var(--color-text-brand-strong)`.
-- Focus-visible: `1px` `var(--color-border-brand-base)` ring, `var(--corner-radius-radius-4)`, inset `-3px -5px`.
+- Focus-visible: `2px` `var(--color-border-brand-base)` ring, `var(--corner-radius-radius-4)`, `inset: 0 var(--padding-padding-4)` (inside the item).
 - No hardcoded colors in implementation; measurements `1.2px` / `4px` / `200px` / `300px` are Figma/spec literals (no token).
 
 ### Behavior contract
@@ -206,9 +207,15 @@ No image or icon assets.
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
 ## Implementation Notes
+
+### Updates (2026-10-15, Figma `11955:229729`)
+1. **Focus ring inside the item** — 2px `var(--color-border-brand-base)`, radius 4px, `inset: 0 var(--padding-padding-4)` (4px from each side, flush top/bottom) for Unselected-Focus `11955:230551` and Selected-Focus `11955:230577`. The ring never overlaps the left rail or the 4px active indicator. Implemented in `lib/react/ids/anchor-menu/IdsAnchorMenu.module.css` and `lib/angular/ids/anchor-menu/ids-anchor-menu.component.scss`.
+2. **Sticky list scrollport** — the scrolling list only pads the left edge (5px, pulled back with a negative margin) so the 4px active indicator is not clipped; no top/bottom bleed is needed now that the ring is inside.
+3. **Other states re-verified** — Unselected (1.2px gray rail, neutral text), Unselected-Hover (4px brand-base bar, neutral text), Selected (4px brand-base bar, brand-strong text), Selected-Hover (4px brand-strong bar) match the implementation.
+
 - Last updated: 2026-08-30
 - `AnchorMenu.module.css`: `max-width: 300px` on root; labels wrap to 2 lines via `-webkit-line-clamp` and `line-clamp`; `IdsTooltip` only renders for labels where `scrollHeight > clientHeight`.
-- Focus ring uses `var(--border-width-border-1)` with `inset: -3px -5px`.
+- Focus ring uses `var(--border-width-border-2)` with `inset: 0 var(--padding-padding-4)` (inside the item).
 - `AnchorMenu.tsx`: keeps `active` text `var(--color-text-brand-strong)` on hover (`active:hover`); supports `Tab` to focus, `ArrowUp`/`ArrowDown` to move focus, `Enter` to follow link, `Space` to trigger click.
 - `IdsAnchorMenu.stories.tsx`: `WithPageContent` uses real `<section>` content, sticky Anchor Menu, and body-level scrolling for `scrollIntoView` behavior.
 
@@ -221,7 +228,7 @@ No image or icon assets.
 - Angular Storybook (new): `storybook-angular/src/components/ids-anchor-menu/`
 - React reference (unchanged): `storybook/src/components/AnchorMenu.tsx`, `storybook/src/components/IdsAnchorMenu.stories.tsx`
 - Component map entry: `data/component-figma-map.json` → component "Anchor Menu" (category "Navigation"; node "11067-54486")
-- Last live verification: Figma MCP 2026-08-18 (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Last live verification: Figma MCP 2026-10-15 (`get_metadata`, `get_design_context`, `get_variable_defs` on `11955:229729` and its six state variants)
 
 ### Implementation notes
 - Group styles live in `ids-anchor-menu.component.scss` (`ViewEncapsulation.None`) covering all slots.

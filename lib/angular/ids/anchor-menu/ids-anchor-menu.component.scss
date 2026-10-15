@@ -125,7 +125,9 @@ ids-anchor-active-indicator {
 .ids-anchor-menu__link:focus-visible::after {
   content: "";
   position: absolute;
-  inset: -3px -5px;
+  /* Figma `11955:230551` / `11955:230577`: ring sits INSIDE the item, 4px in
+     from each side, flush top/bottom. */
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
