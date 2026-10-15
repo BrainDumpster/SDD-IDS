@@ -115,54 +115,58 @@
   margin-inline-end: 0;
 }
 
-/* IDS large scrollbar (Figma Storybook-Test `6191:59167`; Main Menu uses the
-   large size, confirmed by Mona and Reut): native scrollbar recoloured for IDS —
-   14px track `var(--color-background-gray-neutral-lighter)` with 2px block
-   padding, 10px `var(--color-background-gray-neutral-base)` thumb with 8px
-   radius, 10px carets at both ends. Styling the WebKit pseudo-elements forces a
+/* IDS small scrollbar (Figma Storybook-Test `6191:59167`; small content
+   display like Anchor Menu, confirmed by Mona and Reut): native scrollbar
+   recoloured for IDS — 8px track `var(--color-background-gray-neutral-light)`
+   with 2px radius, 6px `var(--color-border-gray-neutral-base)` thumb with 8px
+   radius, 8px carets at both ends. Styling the WebKit pseudo-elements forces a
    classic, always-visible scrollbar; `scrollbar-width` / `scrollbar-color` stay
    unset because setting them makes Chromium ignore these rules. Firefox falls
    back to its own scrollbar. */
 .root:not(.programmeSynapse) .content::-webkit-scrollbar {
-  width: 14px;
-  background: var(--color-background-gray-neutral-lighter);
+  width: var(--sizing-size-8);
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
 }
 
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-track {
-  background: var(--color-background-gray-neutral-lighter);
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
 }
 
-/* 10px thumb centred in the 14px track (2px transparent border, padding-box clip). */
+/* 6px thumb centred in the 8px track (1px transparent border, padding-box clip). */
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-thumb {
-  background: var(--color-background-gray-neutral-base);
+  background: var(--color-border-gray-neutral-base);
   background-clip: padding-box;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: var(--corner-radius-radius-8);
 }
 
-/* Carets: one button per end (2px block padding + 10px caret). The triangle is
+/* Carets: one button per end (2px block padding + 8px caret). The triangle is
    drawn with two half-gradients so its colour comes from the token. */
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-button:vertical {
   display: block;
-  width: 14px;
-  height: 12px;
-  background-color: var(--color-background-gray-neutral-lighter);
+  width: var(--sizing-size-8);
+  height: 10px;
+  background-color: var(--color-background-gray-neutral-light);
   background-repeat: no-repeat;
-  background-size: 4px 4px, 4px 4px;
+  background-size: 3px 3px, 3px 3px;
 }
 
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-button:vertical:start:decrement {
+  border-radius: var(--corner-radius-radius-2) var(--corner-radius-radius-2) 0 0;
   background-image:
-    linear-gradient(to top left, var(--color-background-gray-neutral-base) 50%, transparent 50%),
-    linear-gradient(to top right, var(--color-background-gray-neutral-base) 50%, transparent 50%);
-  background-position: 3px 5px, 7px 5px;
+    linear-gradient(to top left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to top right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 4px, 4px 4px;
 }
 
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-button:vertical:end:increment {
+  border-radius: 0 0 var(--corner-radius-radius-2) var(--corner-radius-radius-2);
   background-image:
-    linear-gradient(to bottom left, var(--color-background-gray-neutral-base) 50%, transparent 50%),
-    linear-gradient(to bottom right, var(--color-background-gray-neutral-base) 50%, transparent 50%);
-  background-position: 3px 3px, 7px 3px;
+    linear-gradient(to bottom left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to bottom right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 3px, 4px 3px;
 }
 
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-button:vertical:start:increment,
