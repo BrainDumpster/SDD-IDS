@@ -200,6 +200,13 @@ export class IdsButton extends LitElement {
     const hasPropLabel = Boolean(this.label);
     const hasIcon = Boolean(slug) && variant !== "destructive";
     const hideContent = this.loading;
+    const accessibleName = (this.ariaLabel || (iconOnly ? this.label : "") || "").trim();
+    if (iconOnly && !accessibleName) {
+      throw new Error("IdsButton: `ariaLabel` is required when `iconOnly` is true.");
+    }
+    if (iconOnly && !hasIcon) {
+      throw new Error("IdsButton: `iconSlug` is required when `iconOnly` is true.");
+    }
 
     const variantClass =
       variant === "ghostNeutral" || variant === "ghost"
@@ -225,7 +232,7 @@ export class IdsButton extends LitElement {
         name=${this.name || nothing}
         .value=${this.value}
         ?autofocus=${this.autofocus}
-        aria-label=${this.ariaLabel || (iconOnly ? this.label : nothing)}
+        aria-label=${accessibleName || nothing}
         aria-disabled=${disabled ? "true" : nothing}
         aria-busy=${this.loading ? "true" : nothing}
         data-hook-ids="ids-button"
