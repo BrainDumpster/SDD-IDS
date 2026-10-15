@@ -39,6 +39,7 @@
 - Maximum width: 300px (`min(300px, 100%)`)
 - Item spacing: 0 (adjacent)
 - Progress indicator height: 2px
+- Scrollbar (sticky list, when it overflows): **IDS small scrollbar** — native scrollbar recoloured: 8px (`var(--sizing-size-8)`) track `var(--color-background-gray-neutral-light)` with `var(--corner-radius-radius-2)`; 6px thumb `var(--color-border-gray-neutral-base)` with `var(--corner-radius-radius-8)`; 8px carets at top and bottom (2px block padding). Source: Figma Storybook-Test `6191:59167` (AnchorMenu-Main `6191:59227`), confirmed by Mona and Reut. WebKit/Blink only — Firefox shows its own scrollbar.
 ## Tokens
 ### Colors
 - Brand base: `var(--color-background-controls-base)` = #0672cb
@@ -211,7 +212,8 @@ No image or icon assets.
 ### Updates (2026-10-15, Figma `11955:229729`)
 1. **Focus ring inside the item** — 2px `var(--color-border-brand-base)`, radius 4px, `inset: 0 var(--padding-padding-4)` (4px from each side, flush top/bottom) for Unselected-Focus `11955:230551` and Selected-Focus `11955:230577`. The ring never overlaps the left rail or the 4px active indicator. Implemented in `lib/react/ids/anchor-menu/IdsAnchorMenu.module.css` and `lib/angular/ids/anchor-menu/ids-anchor-menu.component.scss`.
 2. **Sticky list scrollport** — the scrolling list only pads the left edge (5px, pulled back with a negative margin) so the 4px active indicator is not clipped; no top/bottom bleed is needed now that the ring is inside.
-3. **Other states re-verified** — Unselected (1.2px gray rail, neutral text), Unselected-Hover (4px brand-base bar, neutral text), Selected (4px brand-base bar, brand-strong text), Selected-Hover (4px brand-strong bar) match the implementation.
+3. **IDS small scrollbar** — the sticky list's scrollbar follows the small scrollbar (Figma Storybook-Test `6191:59167`, confirmed by Mona and Reut): 8px track `var(--color-background-gray-neutral-light)` radius 2px, 6px thumb `var(--color-border-gray-neutral-base)` radius 8px, 8px carets top/bottom. Same rules are in the Angular stylesheet on `.ids-anchor-menu__list`.
+4. **Other states re-verified** — Unselected (1.2px gray rail, neutral text), Unselected-Hover (4px brand-base bar, neutral text), Selected (4px brand-base bar, brand-strong text), Selected-Hover (4px brand-strong bar) match the implementation.
 
 - Last updated: 2026-08-30
 - `AnchorMenu.module.css`: `max-width: 300px` on root; labels wrap to 2 lines via `-webkit-line-clamp` and `line-clamp`; `IdsTooltip` only renders for labels where `scrollHeight > clientHeight`.

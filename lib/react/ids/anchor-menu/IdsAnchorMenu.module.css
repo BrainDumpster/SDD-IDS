@@ -55,34 +55,64 @@
   margin: 0 0 0 -5px;
 }
 
-/* Keep the scrollbar visible when the list overflows, even on platforms (e.g.
-   macOS) that hide overlay scrollbars until actively scrolling. Styling the
-   WebKit pseudo-element forces a classic, always-visible scrollbar that
-   reserves layout width — so the standard `scrollbar-width` is left untouched,
-   since setting it would make Chromium ignore these rules. Firefox falls back
-   to its own always-visible scrollbar. */
+/* IDS small scrollbar (Figma Storybook-Test `6191:59167` → AnchorMenu-Main `6191:59227`;
+   confirmed by Mona and Reut): native scrollbar recoloured for IDS — 8px track
+   `#eaeaea` with 2px radius, 6px `#757575` thumb with 8px radius, 8px carets at
+   both ends. Styling the WebKit pseudo-elements forces a classic, always-visible
+   scrollbar that reserves layout width (even where the OS hides overlay
+   scrollbars), so the standard `scrollbar-width` / `scrollbar-color` are left
+   unset — setting them makes Chromium ignore these rules. Firefox falls back to
+   its own always-visible scrollbar. */
 .ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Mirror the IDS ScrollBar look used by the dropdown combo box: a slim ~6px
-   light thumb, inset from the edges (via the transparent border + padding-box
-   clip), rounded, darkening on hover. Thumb length stays proportional — the
-   browser controls it. */
-.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-thumb {
-  background: var(--color-border-gray-neutral-light);
-  background-clip: padding-box;
-  border: 2px solid transparent;
-  border-radius: var(--corner-radius-radius-4);
-}
-
-.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-gray-neutral);
-  background-clip: padding-box;
+  width: var(--sizing-size-8);
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
 }
 
 .ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
+}
+
+/* 6px thumb centred in the 8px track (1px transparent border, padding-box clip).
+   Thumb length stays proportional — the browser controls it. */
+.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-thumb {
+  background: var(--color-border-gray-neutral-base);
+  background-clip: padding-box;
+  border: 1px solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
+/* Carets: one button per end (2px block padding + 8px caret). The triangle is
+   drawn with two half-gradients so its colour comes from the token. */
+.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-button:vertical {
+  display: block;
+  width: var(--sizing-size-8);
+  height: 10px;
+  background-color: var(--color-background-gray-neutral-light);
+  background-repeat: no-repeat;
+  background-size: 3px 3px, 3px 3px;
+}
+
+.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-button:vertical:start:decrement {
+  border-radius: var(--corner-radius-radius-2) var(--corner-radius-radius-2) 0 0;
+  background-image:
+    linear-gradient(to top left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to top right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 4px, 4px 4px;
+}
+
+.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-button:vertical:end:increment {
+  border-radius: 0 0 var(--corner-radius-radius-2) var(--corner-radius-radius-2);
+  background-image:
+    linear-gradient(to bottom left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to bottom right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 3px, 4px 3px;
+}
+
+.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-button:vertical:start:increment,
+.ids-anchor-menu--sticky .ids-anchor-menu-list::-webkit-scrollbar-button:vertical:end:decrement {
+  display: none;
 }
 
 /* AnchorMenuHeader */
