@@ -62,7 +62,7 @@ Figma slot mapping:
 - **Expanded rail width:** `min 256px` / `max 356px` — both the fixed-expanded rail (`.reserveExpanded`, in flow) and the **collapsed hover-expand overlay** (out of flow, absolute) take their width from `--ids-main-menu-left-expanded-width` (default `278px`, clamped to the range) — set it to match the consumer's fixed-expanded rail width so the two read the same.
 - **Collapsed rail width:** `64px` (24px inline padding × 2 + 16px icon; Figma `11099:56206`)
 - **Sample frame height:** `888px` (container-driven at runtime; Storybook uses `100vh`)
-- **Menu top padding:** `var(--padding-padding-8)` on `MainMenuLeftRoot`
+- **Menu top padding:** `var(--padding-padding-8)` at the top of the rail — carried by `MainMenuList` (`padding-top`) so the scroll container and its scrollbar reach the rail's top edge; when a logo is present the logo slot carries it (`margin-top`) and the list has no top padding
 - **Menu list gap:** `var(--spacing-space-8)` between primary blocks
 - **MainMenuList scroll:** primary stack lives in a flex child with `min-height: 0` and `overflow-y: auto` so long menus scroll inside the rail (footer + optional logo stay fixed)
 - **MainMenuList scrollbar:** **IDS small scrollbar** (small content display, same as Anchor Menu) — native scrollbar recoloured: 8px (`var(--sizing-size-8)`) track `var(--color-background-gray-neutral-light)` with `var(--corner-radius-radius-2)`; 6px thumb `var(--color-border-gray-neutral-base)` with `var(--corner-radius-radius-8)`; 8px carets at top and bottom (2px block padding). Sits inside the rail's right border (the list only bleeds on the left). Source: Figma Storybook-Test `6191:59167` (small scrollbar), confirmed by Mona and Reut. WebKit/Blink only — Firefox shows its own scrollbar.
@@ -384,7 +384,8 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 5. **Secondary row padding** — 6px block, 58px leading, 24px trailing.
 6. **Secondary hover / weight** — hover tints the background only (label stays `var(--color-text-gray-neutral)`); selected secondary label weight 400 (Angular ports aligned).
 7. **IDS small scrollbar** — `MainMenuList` uses the small scrollbar, like Anchor Menu (Figma Storybook-Test `6191:59167`, confirmed by Mona and Reut): 8px track `var(--color-background-gray-neutral-light)` radius 2px, 6px thumb `var(--color-border-gray-neutral-base)` radius 8px, 8px carets top/bottom. The list's left-bleed padding is now left-only so the scrollbar sits inside the rail's right border.
-8. **Synapse** — the legacy `storybook/src/components/MainMenuLeft.module.css` keeps Synapse's outside focus ring, 14px chevron and brand-base selected-context icon via `.programmeSynapse` overrides.
+8. **Scrollbar reaches the rail top** — the rail's 8px top padding moved from `MainMenuLeftRoot` into `MainMenuList` (or onto the logo slot when a logo is present), so the scrollbar track starts at the rail's top edge. Item positions are unchanged.
+9. **Synapse** — the legacy `storybook/src/components/MainMenuLeft.module.css` keeps Synapse's outside focus ring, 14px chevron and brand-base selected-context icon via `.programmeSynapse` overrides.
 
 ### Updates (2026-07-30, PR #82)
 1. **Selected inset** — `var(--color-border-brand-base)`; `left: calc(-1 * var(--border-width-border-1))`, `width: calc(4px + var(--border-width-border-1))`; primary rows only (secondary never gets the 4px bar).

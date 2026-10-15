@@ -6,7 +6,6 @@
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
-  padding-top: var(--padding-padding-8);
 }
 
 .expanded {
@@ -23,7 +22,6 @@
 
 /* Synapse Left Nav (`47807:8153`) — same flow as IDS; width + border chrome differ. */
 .programmeSynapse {
-  padding-top: var(--padding-padding-8);
   border-top: none;
   border-left: none;
   border-bottom: none;
@@ -48,6 +46,8 @@
 
 .logoSlot {
   flex-shrink: 0;
+  /* Rail top padding (the list carries its own when there is no logo). */
+  margin-top: var(--padding-padding-8);
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-24) 0;
@@ -96,6 +96,9 @@
 
 .content {
   flex: 1;
+  /* The rail's 8px top padding lives here (not on the root) so the scroll
+     container — and its scrollbar — reaches the top edge of the rail. */
+  padding-top: var(--padding-padding-8);
   min-height: 0;
   overflow-y: auto;
   /* Keep the selected inset (1px bleed into the rail border zone) and the Synapse
@@ -172,6 +175,11 @@
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-button:vertical:start:increment,
 .root:not(.programmeSynapse) .content::-webkit-scrollbar-button:vertical:end:decrement {
   display: none;
+}
+
+/* With a logo above, the list starts right under it (logo keeps the top padding). */
+.logoSlot ~ .content {
+  padding-top: 0;
 }
 
 /* Synapse “New Chat” — first row in `MainMenuList` (Figma above primaries, inside Menu). */

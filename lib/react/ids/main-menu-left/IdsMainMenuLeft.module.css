@@ -11,7 +11,6 @@
   border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-top: none;
-  padding-top: var(--padding-padding-8);
 }
 
 .expanded {
@@ -77,6 +76,8 @@
 
 .logoSlot {
   flex-shrink: 0;
+  /* Rail top padding (the list carries its own when there is no logo). */
+  margin-top: var(--padding-padding-8);
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-24) 0;
@@ -125,6 +126,9 @@
    so hover/selected fills end flush against the rail stroke (Figma 11099:56218). */
 .content {
   flex: 1;
+  /* The rail's 8px top padding lives here (not on the root) so the scroll
+     container — and its scrollbar — reaches the top edge of the rail. */
+  padding-top: var(--padding-padding-8);
   min-height: 0;
   overflow-y: auto;
   /* Keep the selected inset (which bleeds 1px into the rail border zone) from
@@ -196,6 +200,11 @@
 .content::-webkit-scrollbar-button:vertical:start:increment,
 .content::-webkit-scrollbar-button:vertical:end:decrement {
   display: none;
+}
+
+/* With a logo above, the list starts right under it (logo keeps the top padding). */
+.logoSlot ~ .content {
+  padding-top: 0;
 }
 
 .itemBlock {
