@@ -804,7 +804,7 @@ function MainMenuLeftItemsAdapter({
                   <Icon
                     shapeName={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
                     className={styles.chevronIcon}
-                    style={{ width: 14, height: 14 }}
+                    size={programme === "synapse" ? 14 : 16}
                   />
                 ) : null}
                 {isFocused ? <span className={styles.focusRing} aria-hidden="true" /> : null}

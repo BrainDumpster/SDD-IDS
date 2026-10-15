@@ -129,7 +129,7 @@ ids-main-menu-left-item-icon {
   flex: 1;
   min-width: 0;
   font-size: var(--font-size-body-1);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--font-line-height-line-height-24);
   color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
@@ -173,8 +173,8 @@ ids-main-menu-left-item-icon {
 }
 
 .ids-main-menu-left__chevron-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   display: inline-block;
   background-color: currentColor;
   color: var(--color-icon-brand-strong, #0062ab);
@@ -197,7 +197,9 @@ ids-main-menu-left-item-icon {
   overflow: visible;
   background: transparent;
   text-align: left;
-  padding: var(--padding-padding-6, 6px) var(--padding-padding-58, 58px);
+  /* Figma `11099:56238`: 58px leading, 24px trailing. */
+  padding: var(--padding-padding-6, 6px) var(--padding-padding-24, 24px) var(--padding-padding-6, 6px)
+    var(--padding-padding-58, 58px);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
@@ -207,12 +209,12 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__secondary-row--selected {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .ids-main-menu-left__secondary-row--state-Hover {
   background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-main-menu-left__secondary-row--state-Press {
@@ -222,7 +224,7 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__secondary-row--interactive:hover {
   background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-main-menu-left__secondary-row--interactive:active {
@@ -232,6 +234,7 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__secondary-row--interactive.ids-main-menu-left__secondary-row--selected:hover {
   background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-brand-strong);
 }
 
 .ids-main-menu-left__secondary-row--interactive.ids-main-menu-left__secondary-row--selected:active {
@@ -245,8 +248,8 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__secondary-row--interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 var(--padding-padding-4, 4px);
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -297,10 +300,10 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__focus-ring {
   position: absolute;
-  /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
-     No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  /* Figma `12016:227840` / `12016:227537`: ring sits INSIDE the row, 4px in from
+     the rail's L/R border, flush top/bottom. */
+  inset: 0 var(--padding-padding-4, 4px);
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -313,11 +316,18 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__primary-row--interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 var(--padding-padding-4, 4px);
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
+}
+
+/* Selected-Focus (Figma `12016:227912`): the ring starts after the 4px selected
+   inset with a 3px gap (left 7px), so the bar stays visible. */
+.ids-main-menu-left__primary-row:has(.ids-main-menu-left__selected-inset) .ids-main-menu-left__focus-ring,
+.ids-main-menu-left__primary-row--interactive:has(.ids-main-menu-left__selected-inset):focus-visible::after {
+  left: 7px;
 }
 
 .ids-main-menu-left__selected-inset {
@@ -359,11 +369,11 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__primary-row--state-Selected .ids-main-menu-left__primary-icon,
 .ids-main-menu-left__primary-row--state-SelectedFocus .ids-main-menu-left__primary-icon {
-  color: var(--color-icon-brand-base, #0076ce);
+  color: var(--color-icon-brand-strong, #055fa9);
 }
 
 .ids-main-menu-left__primary-row--secondary-parent-selected .ids-main-menu-left__primary-icon {
-  color: var(--color-icon-brand-base, #0076ce);
+  color: var(--color-icon-brand-strong, #055fa9);
 }
 
 .ids-main-menu-left--collapsed .ids-main-menu-left__primary-row {

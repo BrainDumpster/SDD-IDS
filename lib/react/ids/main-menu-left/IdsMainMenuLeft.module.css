@@ -127,10 +127,9 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  /* Let the row focus ring sit fully outside the rail's L/R border (a 1px gap
-     between the ring's inner edge and the rail's outer edge) instead of being
-     clipped by this scroll container. The negative inline margin keeps the row
-     content-box — and its hover/selected fills — in place. */
+  /* Keep the selected inset (which bleeds 1px into the rail border zone) from
+     being clipped by this scroll container. The negative inline margin keeps
+     the row content-box — and its hover/selected fills — in place. */
   padding-inline: calc(4 * var(--border-width-border-1));
   margin-inline: calc(-4 * var(--border-width-border-1));
   display: flex;
@@ -204,8 +203,8 @@
 }
 
 .chevronIcon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   color: var(--color-icon-brand-strong);
   align-self: center;
@@ -235,7 +234,9 @@
   overflow: visible;
   background: transparent;
   text-align: left;
-  padding: var(--padding-padding-6) var(--padding-padding-58);
+  /* Figma `11099:56238`: 58px leading, 24px trailing. */
+  padding: var(--padding-padding-6) var(--padding-padding-24) var(--padding-padding-6)
+    var(--padding-padding-58);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
@@ -301,7 +302,7 @@
 .secondaryInteractive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 calc(-4 * var(--border-width-border-1));
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -370,9 +371,9 @@
 
 .focusRing {
   position: absolute;
-  /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
-     No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
-  inset: 0 calc(-4 * var(--border-width-border-1));
+  /* Figma `12016:227840` / `12016:227537`: ring sits INSIDE the row, 4px in from
+     the rail's L/R border, flush top/bottom. */
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -386,11 +387,18 @@
 .interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 calc(-4 * var(--border-width-border-1));
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
+}
+
+/* Selected-Focus (Figma `12016:227912`): the ring starts after the 4px selected
+   inset with a 3px gap (left 7px), so the bar stays visible. */
+.primaryRow:has(.selectedInset) .focusRing,
+.primaryRow.interactive:has(.selectedInset):focus-visible::after {
+  left: 7px;
 }
 
 .primaryRow:not(.interactive):focus,
@@ -450,7 +458,7 @@
 
 .stateSelected .primaryIcon,
 .stateSelectedFocus .primaryIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .secondaryParentSelected {
@@ -458,7 +466,7 @@
 }
 
 .secondaryParentSelected .primaryIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .secondaryParentSelected .primaryLabel {
@@ -466,7 +474,7 @@
 }
 
 .secondaryParentSelected .chevronIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .collapsed .primaryRow {
@@ -499,7 +507,7 @@
 
 .interactive.selected:hover .primaryIcon,
 .interactive.secondaryParentSelected:hover .primaryIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .interactive:active {
