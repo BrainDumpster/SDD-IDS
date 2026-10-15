@@ -93,11 +93,68 @@ ids-main-menu-left-item-icon {
   /* Keep the selected inset (which bleeds 1px into the rail border zone) from
      being clipped by this scroll container. The negative inline margin keeps
      the row content-box — and its hover/selected fills — in place. */
-  padding-inline: calc(4 * var(--border-width-border-1));
-  margin-inline: calc(-4 * var(--border-width-border-1));
+  /* Left only: the right edge stays inside the rail so the scrollbar sits
+     within the rail's right border. */
+  padding-inline-start: calc(4 * var(--border-width-border-1));
+  margin-inline-start: calc(-4 * var(--border-width-border-1));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
+}
+
+/* IDS large scrollbar (Figma Storybook-Test `6191:59167`; Main Menu uses the
+   large size, confirmed by Mona and Reut): native scrollbar recoloured for IDS —
+   14px track `var(--color-background-gray-neutral-lighter)` with 2px block
+   padding, 10px `var(--color-background-gray-neutral-base)` thumb with 8px
+   radius, 10px carets at both ends. Styling the WebKit pseudo-elements forces a
+   classic, always-visible scrollbar; `scrollbar-width` / `scrollbar-color` stay
+   unset because setting them makes Chromium ignore these rules. Firefox falls
+   back to its own scrollbar. */
+.ids-main-menu-left__content::-webkit-scrollbar {
+  width: 14px;
+  background: var(--color-background-gray-neutral-lighter);
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-track {
+  background: var(--color-background-gray-neutral-lighter);
+}
+
+/* 10px thumb centred in the 14px track (2px transparent border, padding-box clip). */
+.ids-main-menu-left__content::-webkit-scrollbar-thumb {
+  background: var(--color-background-gray-neutral-base);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
+/* Carets: one button per end (2px block padding + 10px caret). The triangle is
+   drawn with two half-gradients so its colour comes from the token. */
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical {
+  display: block;
+  width: 14px;
+  height: 12px;
+  background-color: var(--color-background-gray-neutral-lighter);
+  background-repeat: no-repeat;
+  background-size: 4px 4px, 4px 4px;
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:start:decrement {
+  background-image:
+    linear-gradient(to top left, var(--color-background-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to top right, var(--color-background-gray-neutral-base) 50%, transparent 50%);
+  background-position: 3px 5px, 7px 5px;
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:end:increment {
+  background-image:
+    linear-gradient(to bottom left, var(--color-background-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to bottom right, var(--color-background-gray-neutral-base) 50%, transparent 50%);
+  background-position: 3px 3px, 7px 3px;
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:start:increment,
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:end:decrement {
+  display: none;
 }
 
 .ids-main-menu-left__item-block {
