@@ -27,9 +27,15 @@ const meta: Meta<typeof IdsAccordion> = {
   args: {
     items: ACCORDION_SPEC_DEMO_ITEMS,
     ...ACCORDION_API_DEFAULTS,
+    width: "480px",
     maxWidth: "1594px",
   },
   argTypes: {
+    width: {
+      control: "text",
+      description: "Width of the accordion root.",
+      table: { category: "Props", defaultValue: { summary: "480px" } },
+    },
     maxWidth: {
       control: "text",
       description: "Max-width of the accordion root.",

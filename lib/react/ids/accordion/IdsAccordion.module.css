@@ -5,7 +5,8 @@
  */
 
 .ids-accordion {
-  width: 100%;
+  /* Spec default width; consumers override via the `width` prop (inline style). */
+  width: 480px;
   min-width: 240px;
   max-width: 1594px;
   box-sizing: border-box;

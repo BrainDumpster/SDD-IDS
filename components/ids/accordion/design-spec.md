@@ -25,7 +25,7 @@ Child components (deterministic order):
 Optional child sub-slots:
 - `AccordionMetaSlot` (optional helper text/metadata)
 ## Layout & Measurements
-- Root width is container-driven (`width: 100%`).
+- Root `width` is `480px` by default and may be overridden via the `width` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Root `max-width` is `1594px` by default and may be overridden via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
@@ -128,6 +128,7 @@ Main inputs:
 - `multiple?: boolean` (default `false`)
 - `defaultValue?: string[]`
 - `chevronPosition?: "left" | "right"` (default `"left"`)
+- `width?: number | string` (default `480px`; numbers are treated as px, strings as any CSS length)
 - `maxWidth?: number | string` (default `1594px`; numbers are treated as px, strings as any CSS length)
 
 Per-item inputs:

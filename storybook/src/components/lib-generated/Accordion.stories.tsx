@@ -78,6 +78,7 @@ const meta: Meta<IdsAccordionProps> = {
     chevronPosition: "left",
     variant: "default",
     defaultValue: ["network"],
+    width: "480px",
     maxWidth: "1594px",
   },
   argTypes: {
@@ -126,6 +127,11 @@ const meta: Meta<IdsAccordionProps> = {
     className: {
       control: false,
       table: { category: "Props" },
+    },
+    width: {
+      control: "text",
+      description: "Width of the accordion root.",
+      table: { category: "Props", defaultValue: { summary: "480px" } },
     },
     maxWidth: {
       control: "text",
