@@ -78,12 +78,6 @@
   width: var(--ui-icon-spacing-icon-16);
   height: var(--ui-icon-spacing-icon-16);
 }
-.iconOnly.lg.ghost .iconSlot,
-.iconOnly.lg.ghost-neutral .iconSlot {
-  width: var(--ui-icon-spacing-icon-14);
-  height: var(--ui-icon-spacing-icon-14);
-}
-
 .primary .iconSlot,
 .danger .iconSlot {
   color: var(--color-icon-gray-white);
@@ -176,7 +170,8 @@
 .primary[data-state="press"] {
   background: var(--color-background-controls-stronger);
 }
-.primary:disabled {
+.primary:disabled,
+.primary[data-state="disabled"] {
   background: var(--color-background-gray-lighter);
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
   color: var(--color-text-gray-disabled);
@@ -201,14 +196,15 @@
 }
 .secondary:active:not(:disabled),
 .secondary[data-state="press"] {
-  background: var(--color-background-controls-light);
+  background: var(--color-background-controls-press, var(--color-background-controls-light));
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-strong);
 }
 .iconOnly.secondary:active:not(:disabled),
 .iconOnly.secondary[data-state="press"] {
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
-.secondary:disabled {
+.secondary:disabled,
+.secondary[data-state="disabled"] {
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
   color: var(--color-text-gray-disabled);
@@ -234,10 +230,11 @@
 }
 .tertiary:active:not(:disabled),
 .tertiary[data-state="press"] {
-  background: var(--color-background-controls-light);
+  background: var(--color-background-controls-press, var(--color-background-controls-light));
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.tertiary:disabled {
+.tertiary:disabled,
+.tertiary[data-state="disabled"] {
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   color: var(--color-text-gray-disabled);
@@ -257,13 +254,16 @@
   color: var(--color-icon-gray-neutral-base);
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
+/* Ghost fills: Figma binds a duplicate gray-neutral-lighter variable whose
+   resolved RGB is slate-600 (#455666) with baked alpha — 10% hover/focus,
+   20% press. Expressed as slate-600 color-mix to keep the opacity step. */
 .ghost:hover:not(:disabled),
 .ghost-neutral:hover:not(:disabled),
 .ghost[data-state="hover"],
 .ghost-neutral[data-state="hover"] {
   background: color-mix(
     in srgb,
-    var(--color-background-gray-neutral-lighter) 10%,
+    var(--ui-palette-slate-600) 10%,
     transparent
   );
 }
@@ -273,12 +273,14 @@
 .ghost-neutral[data-state="press"] {
   background: color-mix(
     in srgb,
-    var(--color-background-gray-neutral-lighter) 20%,
+    var(--ui-palette-slate-600) 20%,
     transparent
   );
 }
 .ghost:disabled,
-.ghost-neutral:disabled {
+.ghost-neutral:disabled,
+.ghost[data-state="disabled"],
+.ghost-neutral[data-state="disabled"] {
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   color: var(--color-icon-gray-disabled);
@@ -289,7 +291,7 @@
 .ghost-neutral[data-state="focus-visible"] {
   background: color-mix(
     in srgb,
-    var(--color-background-gray-neutral-lighter) 10%,
+    var(--ui-palette-slate-600) 10%,
     transparent
   );
   box-shadow:
@@ -311,7 +313,8 @@
 .danger[data-state="press"] {
   background: var(--color-background-alerting-critical-stronger);
 }
-.danger:disabled {
+.danger:disabled,
+.danger[data-state="disabled"] {
   background: var(--color-background-gray-lighter);
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
   color: var(--color-text-gray-disabled);

@@ -87,16 +87,10 @@ function resolveSize(s: unknown): IdsButtonSize {
   return "large";
 }
 
-function iconGlyphSize(
-  size: IdsButtonSize,
-  iconOnly: boolean,
-  variant: IdsButtonVariant,
-): number {
+function iconGlyphSize(size: IdsButtonSize, iconOnly: boolean): number {
   if (!iconOnly) return 16;
   if (size === "small") return 12;
   if (size === "medium") return 14;
-  /* Ghost Neutral Large → UI Icon Spacing/icon-14 (Figma Type=Ghost) */
-  if (variant === "ghostNeutral" || variant === "ghost") return 14;
   return 16;
 }
 
@@ -254,7 +248,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const resolvedSize: IdsButtonSize = size;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
   const [isPressed, setIsPressed] = useState(false);
-  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly, variant);
+  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly);
 
   const { projectedIcon, projectedLabel } = partitionProjectedChildren(children);
 

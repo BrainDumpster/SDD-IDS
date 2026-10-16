@@ -164,28 +164,25 @@ export const IconOnly: Story = {
         </IdsButton>
         <IdsButton variant="ghostNeutral" iconOnly ariaLabel="Settings" size="large">
           <IdsButtonLeadingIcon>
-            <IdsIcon shape={DEMO_ICON} size={14} />
+            <IdsIcon shape={DEMO_ICON} size={16} />
           </IdsButtonLeadingIcon>
         </IdsButton>
       </div>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-        {(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map((variant) => {
-          const glyph = variant === "ghostNeutral" ? 14 : 16;
-          return (
-            <IdsButton
-              key={`disabled-${variant}`}
-              variant={variant}
-              iconOnly
-              disabled
-              ariaLabel={`${variant} disabled`}
-              size="large"
-            >
-              <IdsButtonLeadingIcon>
-                <IdsIcon shape={DEMO_ICON} size={glyph} />
-              </IdsButtonLeadingIcon>
-            </IdsButton>
-          );
-        })}
+        {(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map((variant) => (
+          <IdsButton
+            key={`disabled-${variant}`}
+            variant={variant}
+            iconOnly
+            disabled
+            ariaLabel={`${variant} disabled`}
+            size="large"
+          >
+            <IdsButtonLeadingIcon>
+              <IdsIcon shape={DEMO_ICON} size={16} />
+            </IdsButtonLeadingIcon>
+          </IdsButton>
+        ))}
       </div>
     </div>
   ),
@@ -237,7 +234,7 @@ export const ForcedStates: Story = {
             dataState={state === "default" ? undefined : state}
           >
             <IdsButtonLeadingIcon>
-              <IdsIcon shape={DEMO_ICON} size={14} />
+              <IdsIcon shape={DEMO_ICON} size={16} />
             </IdsButtonLeadingIcon>
           </IdsButton>
         ))}
@@ -317,12 +314,7 @@ export const AllTypesIconOnly: Story = {
           style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
         >
           {(["small", "medium", "large"] as const).map((size) => {
-            const glyph =
-              size === "small"
-                ? 12
-                : size === "medium" || variant === "ghostNeutral"
-                  ? 14
-                  : 16;
+            const glyph = size === "small" ? 12 : size === "medium" ? 14 : 16;
             return (
               <IdsButton
                 key={`${variant}-${size}`}
@@ -345,7 +337,7 @@ export const AllTypesIconOnly: Story = {
             ariaLabel={`${variant} disabled`}
           >
             <IdsButtonLeadingIcon>
-              <IdsIcon shape={DEMO_ICON} size={variant === "ghostNeutral" ? 14 : 16} />
+              <IdsIcon shape={DEMO_ICON} size={16} />
             </IdsButtonLeadingIcon>
           </IdsButton>
         </div>

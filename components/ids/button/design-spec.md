@@ -17,7 +17,7 @@
 - Icon Button focus reference: `9662:25541` (Icon Button Primary Large Focus — same dual-ring contract)
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Verification method: Figma MCP (`get_metadata`, `get_variable_defs`, `use_figma` Plugin API)
-- Verified at: 2026-10-12 (Icon Button set `52172:249499`; docs label **Ghost Neutral** for `Type=Ghost` live-verified)
+- Verified at: 2026-10-12 (Icon Button set `52172:249499`; docs label **Ghost Neutral** for `Type=Ghost` live-verified); re-verified 2026-10-16 (`get_variable_defs`/`get_metadata`/`get_screenshot` on press/hover/disabled/focus nodes incl. Storybook-Test `k5uXYlVNxZMpvO16H6n1qt` — duplicate-codeSyntax corrections: press fill `controls-press`/`brand-300`, Ghost fills `slate-600` @10%/20%, Ghost Large glyph `icon-16`)
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
 - `ButtonLabel` (optional for icon-only mode)
@@ -56,14 +56,10 @@ Figma component properties (Icon Button set `52172:249499`):
 - Icon-only signatures (Figma Icon Button set `52172:249499` — square control, padding none):
   - Control box bound to `var(--sizing-size-24)` / `var(--sizing-size-32)` / `var(--sizing-size-40)`
   - Padding bound to `var(--padding-padding-none)` (all sides `0`)
-  - Glyph sizes (Primary / Secondary / Tertiary):
+  - Glyph sizes (all types, incl. Ghost Neutral / Figma `Type=Ghost` — Figma-verified):
     - `small`: `var(--ui-icon-spacing-icon-12)` (**12×12**)
     - `medium`: `var(--ui-icon-spacing-icon-14)` (**14×14**)
-    - `large`: `var(--ui-icon-spacing-icon-16)` (**16×16**)
-  - Glyph sizes (Ghost Neutral / Figma `Type=Ghost` — Figma-verified):
-    - `small`: `var(--ui-icon-spacing-icon-12)` (**12×12**)
-    - `medium`: `var(--ui-icon-spacing-icon-14)` (**14×14**)
-    - `large`: `var(--ui-icon-spacing-icon-14)` (**14×14**) — Large Ghost Neutral resolves Width/Height → `UI Icon Spacing/icon-14`, not `icon-16`
+    - `large`: `var(--ui-icon-spacing-icon-16)` (**16×16**) — Ghost Neutral Large re-verified 2026-10-16 (`52173:249627`, `6413:60863`): Width/Height → `UI Icon Spacing/icon-16`
 - Control border (`1px` / `Border Width/border-default`) is an **inside stroke** and must NOT add to the control's height/width. Render via `box-shadow: inset` (not CSS `border` under global `border-box`).
 - Focus ring geometry (focus-visible) — **dual drop shadows** on `ButtonRoot` (not `::after`, not `outline`). Use **Figma tokens only** (no invented `--button-focus-*` aliases):
   - Inner gap ring spread: `var(--scale-2)` — Figma `Focus Drop Shadow/Spread/Inner Ring` → `Scale/2`
@@ -88,7 +84,7 @@ Figma component properties (Icon Button set `52172:249499`):
 | Icon-only Large glyph (non-Ghost) | size | `var(--ui-icon-spacing-icon-16)` (**16×16**) | `9662:25539` | `UI Icon Spacing/icon-16` |
 | Icon-only Medium glyph | size | `var(--ui-icon-spacing-icon-14)` (**14×14**) | `9662:25362` | `UI Icon Spacing/icon-14` |
 | Icon-only Small glyph | size | `var(--ui-icon-spacing-icon-12)` (**12×12**) | `52172:249509` | `UI Icon Spacing/icon-12` |
-| Icon-only Ghost Neutral Large glyph | size | `var(--ui-icon-spacing-icon-14)` (**14×14**) | `52173:249627` | Figma `Type=Ghost`; Width/Height → `UI Icon Spacing/icon-14` |
+| Icon-only Ghost Neutral Large glyph | size | `var(--ui-icon-spacing-icon-16)` (**16×16**) | `52173:249627` | Figma `Type=Ghost`; Width/Height → `UI Icon Spacing/icon-16` (re-verified 2026-10-16; supersedes earlier `icon-14` reading) |
 
 **Geometry authoring rules (mandatory):**
 - Focus is **dual drop shadows** stacked with the inset control stroke on `box-shadow` (inset stroke first, then gap ring, then outer ring).
@@ -115,7 +111,8 @@ Only programme-overridable control shell radius uses a component alias. Focus ge
   - `var(--color-border-brand-transparent-brand)`
   - `var(--color-text-gray-white)`
 - Secondary/tertiary tokens:
-  - `var(--color-background-controls-light)`
+  - `var(--color-background-controls-light)` (hover/focus-visible fill)
+  - `var(--color-background-controls-press)` (**press** fill) — Figma Press binds a *second* `Background/Controls/light` variable sharing the same codeSyntax; it resolves one step darker (`brand-300` / `#97c4e9` vs hover `brand-200` / `#daeaf7`). The IDS theme exposes the press-step as `--color-background-controls-press` since CSS cannot express the duplicate binding.
   - `var(--color-border-brand-base)`
   - `var(--color-border-brand-strong)` (text Button secondary **press** only)
   - `var(--color-text-brand-strong)`
@@ -125,8 +122,8 @@ Only programme-overridable control shell radius uses a component alias. Focus ge
   - `var(--color-background-alerting-critical-stronger)`
   - `var(--color-border-alerting-critical-transparent-base)`
 - Ghost Neutral (icon-only only; Figma `Type=Ghost`) tokens:
-  - `var(--color-background-gray-neutral-lighter)` at **10%** opacity (hover/focus fill)
-  - `var(--color-background-gray-neutral-lighter)` at **20%** opacity (press fill)
+  - Hover/focus fill: `var(--ui-palette-slate-600)` at **10%** opacity — Figma binds a `Background/Gray Neutral/lighter` variable that resolves to `#4556661a` (slate-600 RGB + baked alpha); the theme's solid `--color-background-gray-neutral-lighter` (`#f4f4f4`) is a different duplicate and must NOT be used here. Implement as `color-mix(in srgb, var(--ui-palette-slate-600) 10%, transparent)`.
+  - Press fill: same binding resolves `#45566633` → `color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent)`
   - `var(--color-icon-gray-neutral-base)` (default icon)
   - `var(--color-icon-gray-neutral-strong)` (hover/focus/press icon)
 - Disabled tokens:
@@ -154,12 +151,12 @@ Only programme-overridable control shell radius uses a component alias. Focus ge
 | primary | focus-visible | `var(--color-background-controls-strong)` (same as hover) | control border unchanged + dual focus rings | text/icon unchanged |
 | secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
 | secondary | hover | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-strong)` |
-| secondary | press | `var(--color-background-controls-light)` | text Button: `var(--color-border-brand-strong)` · icon-only: `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-stronger)` |
+| secondary | press | `var(--color-background-controls-press)` (press-step; Figma duplicate `controls-light` binding → `brand-300`) | text Button: `var(--color-border-brand-strong)` · icon-only: `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-stronger)` |
 | secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | secondary | focus-visible | `var(--color-background-controls-light)` (same as hover) | `var(--color-border-brand-base)` + dual focus rings | text/icon same as hover for mode |
 | tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-strong)` |
 | tertiary | hover | `var(--color-background-controls-light)` | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-strong)` |
-| tertiary | press | `var(--color-background-controls-light)` | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-stronger)` |
+| tertiary | press | `var(--color-background-controls-press)` (press-step; Figma duplicate `controls-light` binding → `brand-300`) | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-stronger)` |
 | tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
 | tertiary | focus-visible | `var(--color-background-controls-light)` (same as hover) | transparent + dual focus rings | text/icon same as hover for mode |
 | destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / n/a (no icon slot) |
@@ -168,10 +165,10 @@ Only programme-overridable control shell radius uses a component alias. Focus ge
 | destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / n/a |
 | destructive | focus-visible | `var(--color-background-alerting-critical-strong)` (same as hover) | control border unchanged + dual focus rings | text unchanged |
 | ghostNeutral | default | transparent | transparent | n/a / `var(--color-icon-gray-neutral-base)` |
-| ghostNeutral | hover | `var(--color-background-gray-neutral-lighter)` @ 10% | transparent | n/a / `var(--color-icon-gray-neutral-strong)` |
-| ghostNeutral | press | `var(--color-background-gray-neutral-lighter)` @ 20% | transparent | n/a / `var(--color-icon-gray-neutral-strong)` |
+| ghostNeutral | hover | `var(--ui-palette-slate-600)` @ 10% (bound `gray-neutral-lighter` var resolves `#4556661a`) | transparent | n/a / `var(--color-icon-gray-neutral-strong)` |
+| ghostNeutral | press | `var(--ui-palette-slate-600)` @ 20% (bound `gray-neutral-lighter` var resolves `#45566633`) | transparent | n/a / `var(--color-icon-gray-neutral-strong)` |
 | ghostNeutral | disabled | transparent | transparent | n/a / `var(--color-icon-gray-disabled)` |
-| ghostNeutral | focus-visible | `var(--color-background-gray-neutral-lighter)` @ 10% (same as hover) | transparent + dual focus rings | n/a / `var(--color-icon-gray-neutral-strong)` |
+| ghostNeutral | focus-visible | `var(--ui-palette-slate-600)` @ 10% (same as hover) | transparent + dual focus rings | n/a / `var(--color-icon-gray-neutral-strong)` |
 
 Notes:
 - `ghostNeutral` is **icon-only only**. Figma component-set axis value is `Type=Ghost`; documentation row label is **Ghost Neutral**. Do not use with a label. Alias `ghost` resolves to `ghostNeutral`.
@@ -188,6 +185,7 @@ Same semantic `var(--...)` names as **States (Light Theme)** for every row. Reso
 - Disabled state blocks all interaction and event emission (no focus rings while disabled, even if Figma Ghost Neutral Disabled still shows leftover DROP_SHADOW layers).
 - Runtime default must remain interactive.
 - Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
+- Forced `data-state="disabled"` must resolve the same disabled styling as native `:disabled` (selectors must cover both).
 - Icon Button supports only the Figma State axis actions: hover, press, focus-visible, disabled — no other interaction modes.
 ## Composition & API (runtime)
 - Suggested runtime component: `IdsButton`.
@@ -229,7 +227,7 @@ Outputs / events:
   - constraints: `ghostNeutral` ⇒ `iconOnly`; `destructive` ⇒ no leading icon; `iconOnly` ⇒ no `destructive`
 ### Per-slot style contract
   - `ButtonRoot`: height/padding (or square icon-only via `var(--sizing-size-*)` + `var(--padding-padding-none)`), radius, inset border, background, typography from tokens and size contract; focus via dual drop-shadow rings.
-  - `ButtonLeadingIcon`: icon+text `16×16`; icon-only Primary/Secondary/Tertiary `var(--ui-icon-spacing-icon-12|14|16)` by size; Ghost Neutral Large/Medium `icon-14`, Small `icon-12`. Colors per States table (icon-only Secondary/Tertiary use brand-strong / brand-stronger ladders). Mask rendering required.
+  - `ButtonLeadingIcon`: icon+text `16×16`; icon-only glyph `var(--ui-icon-spacing-icon-12|14|16)` by size for **all** types incl. Ghost Neutral. Colors per States table (icon-only Secondary/Tertiary use brand-strong / brand-stronger ladders). Mask rendering required.
   - `ButtonLabel`: `Body 2` (`14/20`, font-weight: `400`).
 ### Theme & programme resolution
 - Generators **must** emit Figma tokens for focus: `var(--scale-2)`, `var(--scale-4)`, `var(--color-border-gray-white)`, `var(--color-border-brand-base)`.
@@ -275,8 +273,8 @@ Outputs / events:
   - [ ] Focus uses Figma tokens only (`--scale-2`, `--scale-4`, `--color-border-gray-white`, `--color-border-brand-base`) — no invented `--button-focus-*` vars.
   - [ ] Focus uses dual `box-shadow` rings (inner gap + outer brand); **no** `::after` / `outline` focus chrome.
   - [ ] Focus fill matches hover for each variant.
-  - [ ] Secondary/tertiary hover/press use `controls-light`; tertiary has no control border on hover/press/focus.
-  - [ ] Icon-only square sizes use `sizing-size-24/32/40` + `padding-padding-none`; glyphs use `ui-icon-spacing-icon-12/14/16` (Ghost Neutral Large = `icon-14`).
+  - [ ] Secondary/tertiary hover/focus use `controls-light`; press uses the press-step fill `controls-press` (Figma Press binds a duplicate `controls-light` variable resolving to `brand-300` / `#97c4e9`); tertiary has no control border on hover/press/focus.
+  - [ ] Icon-only square sizes use `sizing-size-24/32/40` + `padding-padding-none`; glyphs use `ui-icon-spacing-icon-12/14/16` for all types (Ghost Neutral Large = `icon-16`).
   - [ ] Icon-only Secondary/Tertiary icon colors follow brand-base → brand-strong → brand-stronger ladder from set `52172:249499`.
   - [ ] Ghost Neutral icon-only states documented and implemented; disabled has no focus rings.
   - [ ] Disabled/loading modes prevent output events.
@@ -302,7 +300,7 @@ Outputs / events:
 - Text Button component set: `9662:25120`.
 - Icon Button component set: `52172:249499`.
 - Icon Button Primary Large Default / Focus evidence: `9662:25539` / `9662:25541`.
-- Icon Button Ghost Neutral Large Default evidence: `52173:249627` (Figma `Type=Ghost`; glyph `icon-14`; docs label Ghost Neutral).
+- Icon Button Ghost Neutral Large Default evidence: `52173:249627` (Figma `Type=Ghost`; glyph `icon-16`; docs label Ghost Neutral). Storybook-Test cross-check: `6413:60863`.
 - Focus evidence (text Button): `9662:25507` (Primary Large Focus).
 - Runtime contract: `component-contracts/ids/button.contract.ts`.
 - Reference implementations:
@@ -315,6 +313,7 @@ Outputs / events:
   - Lit: `storybook-lit/src/components/Button.stories.ts`
   - Spec Generated IDS/DAP: `storybook-generated/ids|dap/src/components/Button.stories.tsx`
 - Live verification (2026-10-12): Figma MCP `get_metadata` / `get_variable_defs` / `use_figma` on Icon Button set `52172:249499` (file `0bHk3XhrjFhowgFkz9yLr4`).
+- Live verification (2026-10-16): `get_variable_defs` on `9662:25482`, `9662:25466`, `9662:25524`, `9662:25513`, `9662:25526` (press/hover fill bindings), `52173:249625`/`249623`/`249618` (Ghost hover/press/focus fills `#4556661a`/`#45566633`), `52173:249627` (Ghost Large glyph `icon-16`), and Storybook-Test file `k5uXYlVNxZMpvO16H6n1qt` nodes `6413:60877`, `6413:60863`, `6413:60885`, `6413:60875`, `6413:60857`, `6413:60859` (icon-only press/disabled parity).
 
 ## Implementation Notes
 
@@ -343,13 +342,18 @@ Outputs / events:
 - Do not invent `--button-focus-ring-*` aliases; do not use `::after` or CSS `outline` for focus chrome.
 - Demo focus via `data-state="focus-visible"` must hit the same `box-shadow` rules.
 
-**Secondary / tertiary fill (2026-10-12)**
-- Hover/press backgrounds use `var(--color-background-controls-light)` (not `controls-lighter`).
-- Text Button secondary **press** border: `var(--color-border-brand-strong)`.
+**Secondary / tertiary fill (updated 2026-10-16)**
+- Hover/focus-visible backgrounds use `var(--color-background-controls-light)` (`brand-200` / `#daeaf7`, not `controls-lighter`).
+- **Press** backgrounds are one step darker: `var(--color-background-controls-press)` (`brand-300` / `#97c4e9`). Figma Press binds a second `Background/Controls/light` variable sharing the `controls-light` codeSyntax — verified on `9662:25482` (text Secondary Press), `9662:25466` (text Tertiary Press), `9662:25524` / `9662:25513` (Icon Button Secondary/Tertiary Press), `6413:60877` (Storybook-Test).
+- Text Button secondary **press** border: `var(--color-border-brand-strong)`; icon-only secondary **press** border stays `var(--color-border-brand-base)`.
+
+**Ghost Neutral fills (updated 2026-10-16)**
+- Hover/focus and press fills bind a `Background/Gray Neutral/lighter` variable that resolves with baked alpha: `#4556661a` (10%) / `#45566633` (20%) — verified on `52173:249625` (Hover), `52173:249623` (Press), `52173:249618` (Focus).
+- Implement as `color-mix(in srgb, var(--ui-palette-slate-600) 10%/20%, transparent)`; do NOT mix the theme's solid `--color-background-gray-neutral-lighter` (`#f4f4f4` — different duplicate).
 
 **Icon Button / Ghost Neutral (set `52172:249499`)**
 - Types: Primary, Secondary, Tertiary, Ghost (docs label **Ghost Neutral**) — no Destructive, no extra actions beyond Default/Hover/Press/Focus/Disabled.
 - Runtime variant: `ghostNeutral` (alias `ghost`).
-- Square control + `padding-none`; sizing tokens `size-24/32/40`; glyphs `icon-12/14/16` (Ghost Neutral Large = `icon-14`).
+- Square control + `padding-none`; sizing tokens `size-24/32/40`; glyphs `icon-12/14/16` for all types (Ghost Neutral Large = `icon-16`, re-verified 2026-10-16).
 - Ghost Neutral is icon-only-only.
 - Keep `lib/react|angular|lit/ids/button` as canonical ports.
