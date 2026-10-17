@@ -5,7 +5,8 @@
  */
 
 .ids-accordion {
-  width: 100%;
+  /* Spec default width; consumers override via the `width` prop (inline style). */
+  width: 480px;
   min-width: 240px;
   max-width: 1594px;
   box-sizing: border-box;
@@ -99,23 +100,25 @@
   background: var(--color-background-brand-lighter-slate);
 }
 
+/* Focus (IDS Design Library .Accordion-Element-Left State=Focus): tinted header,
+   1px neutral border (inset shadow, no layout shift), double ring — 2px separator +
+   4px brand outer ring — radius-4. z-index keeps the ring above sibling panels. */
 .ids-accordion-trigger:focus-visible {
   outline: none;
-  background: transparent;
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-background-brand-lighter-slate);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
-/* Focus ring: border-2 ring offset 4px beyond the trigger on left/right and
-   1px on top/bottom (outline can't do per-side offsets, so a pseudo-element). */
-.ids-accordion-trigger:focus-visible::after {
-  content: "";
-  position: absolute;
-  top: -1px;
-  bottom: -1px;
-  left: -4px;
-  right: -4px;
-  border: var(--border-width-border-2) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+.ids-accordion-trigger:focus-visible .ids-accordion-chevron,
+.ids-accordion-trigger--open:focus-visible .ids-accordion-chevron,
+.ids-accordion-item--open .ids-accordion-trigger:focus-visible .ids-accordion-chevron,
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:focus-visible .ids-accordion-chevron {
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .ids-accordion-trigger:disabled,
@@ -140,13 +143,13 @@
 .ids-accordion-trigger--open:hover:not(:disabled),
 .ids-accordion-item--open .ids-accordion-trigger:hover:not(:disabled),
 .ids-accordion-item[data-open="true"] .ids-accordion-trigger:hover:not(:disabled) {
-  background-color: var(--color-background-brand-light-slate);
+  background-color: var(--color-background-brand-lighter-slate);
   background-image: linear-gradient(
     90deg,
     var(--color-border-brand-base) 0,
     var(--color-border-brand-base) 4px,
-    var(--color-background-brand-light-slate) 4px,
-    var(--color-background-brand-light-slate) 100%
+    var(--color-background-brand-lighter-slate) 4px,
+    var(--color-background-brand-lighter-slate) 100%
   );
 }
 

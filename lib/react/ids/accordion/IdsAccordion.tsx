@@ -78,6 +78,8 @@ export interface IdsAccordionProps {
   chevronPosition?: "left" | "right";
   variant?: "default" | "form";
   className?: string;
+  /** Root width — defaults to 480px per spec; number values are px, strings any CSS length. */
+  width?: number | string;
   maxWidth?: number | string;
 }
 
@@ -215,8 +217,15 @@ export function IdsAccordion({
   chevronPosition: chevronPositionProp,
   variant: variantProp,
   className,
+  width,
   maxWidth,
 }: IdsAccordionProps) {
+  const widthValue =
+    width !== undefined
+      ? typeof width === "number"
+        ? `${width}px`
+        : width
+      : undefined;
   const maxWidthValue =
     maxWidth !== undefined
       ? typeof maxWidth === "number"
@@ -367,7 +376,11 @@ export function IdsAccordion({
         className={cx(s.accordion, variant === "form" && s.accordionForm, className)}
         data-ids="ids-accordion"
         data-variant={variant}
-        style={maxWidthValue !== undefined ? { maxWidth: maxWidthValue } : undefined}
+        style={
+          widthValue !== undefined || maxWidthValue !== undefined
+            ? { width: widthValue, maxWidth: maxWidthValue }
+            : undefined
+        }
       >
         {composedChildren}
       </div>

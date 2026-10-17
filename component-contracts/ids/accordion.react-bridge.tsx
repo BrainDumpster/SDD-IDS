@@ -26,6 +26,8 @@ export interface IdsAccordionProps {
   defaultValue?: string[];
   variant?: AccordionVariant;
   chevronPosition?: AccordionChevronPosition;
+  /** Root width — defaults to 480px; number values are px, strings any CSS length. */
+  width?: number | string;
   maxWidth?: number | string;
 }
 
@@ -35,6 +37,7 @@ export const ACCORDION_ROOT_PROP_KEYS = [
   "defaultValue",
   "chevronPosition",
   "variant",
+  "width",
   "maxWidth",
 ] as const;
 
