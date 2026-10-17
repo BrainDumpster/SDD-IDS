@@ -46,7 +46,7 @@ Extracted from Figma node 11067:54535 with mappings to existing semantic tokens 
 ## Interactions & A11y
 - Keyboard: Tab/Shift+Tab between headers; Enter/Space toggles; optional Up/Down to move focus (per designer-guidelines). Only one header focused at a time.
 - aria-expanded reflects panel state; aria-disabled when disabled. Headers are buttons or button-like elements.
-- Focus ring: `--color-focus-primary` outline 2px with offset 2px.
+- Focus ring (IDS Design Library `State=Focus`): tinted header `--color-background-brand-lighter-slate`, own 1px `--color-border-gray-neutral-base` border (inset shadow) + `radius-4`; double ring `0 0 0 var(--scale-2) var(--color-background-surface-component)` + `0 0 0 var(--scale-4) var(--color-border-brand-base)` — inner band follows the component surface (white in light, `#111619` in dark).
 
 ## Gaps / New Semantic Tokens
 - If `--color-background-brand-light` is unavailable for hover, continue with `--color-background-brand-lighter`. No new tokens required unless closer mid-tone blue is needed; propose `--color-background-brand-light` if design review requests it.
