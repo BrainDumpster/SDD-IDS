@@ -57,14 +57,14 @@ Deterministic child structure for **`DualListBoxRoot`**:
 ## Layout & Measurements
 - **Runtime width:** container-driven (`width: 100%`, `box-sizing: border-box`); Figma sample assembly ~`724×459` (`12114:232557`, reference only).
 - **Root container (`.root`):** background `var(--color-background-surface-component)`; border `var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base)`; padding `var(--padding-padding-24)` all sides.
-- **`ListsParent`:** CSS grid — `grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr)`; `grid-template-rows: auto minmax(384px, 1fr)`; `column-gap: var(--spacing-space-24)`; `row-gap: var(--spacing-space-8)`.
+- **`ListsParent`:** CSS grid — `grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr)`; `grid-template-rows: auto 384px`; `column-gap: var(--spacing-space-24)`; `row-gap: var(--spacing-space-8)`.
 - **Pane header:** full width of column; `justify-content: space-between`; title start-aligned; **Total** end-aligned flush with list panel right edge (no extra header inset).
-- **List panel (`.DualListBox-Elements-ListItemGroup`):** `width: 100%` of column (responsive); `min-height: 384px` (sample); padding `var(--padding-padding-24)` top, `var(--padding-padding-32)` bottom, inline `var(--padding-padding-24)`; vertical gap between items `var(--spacing-space-8)`.
+- **List panel (`.DualListBox-Elements-ListItemGroup`):** `width: 100%` of column (responsive); fixed `384px` height (`min-height` / `max-height`); `overflow-y: auto` with `overflow-x: hidden`; `scrollbar-gutter: stable`; padding is part of the scrollable content (`var(--padding-padding-24)` top, `var(--padding-padding-32)` bottom, inline `var(--padding-padding-24)`) so it scrolls with items; vertical gap between items `var(--spacing-space-8)`.
 - **Pane header row:** `justify-content: space-between`; title **Body 1** regular (`var(--font-size-body-1)` / `var(--line-height-body-1, 24px)`, `var(--color-text-gray-neutral-strong)`); metrics **Body 2** regular, right-aligned (`Total: N` only in default Figma sample `12114:232557`).
 - **Empty panel:** dashed border `var(--color-border-gray-neutral-base)`; placeholder **Body 2** regular, centered, user-defined per pane (defaults below).
 - **List item row:** width `100%` of panel; padding `var(--padding-padding-8)` inline start, `var(--padding-padding-16)` inline end, `var(--padding-padding-14)` block; `border-radius: 2px`; `border-width: var(--border-width-border-default, 1px)` solid `var(--color-border-gray-neutral-base)`.
 - **Item interior:** `gap: var(--spacing-space-8)` between drag handle and text; drag icon wrapper `16×16` with `var(--padding-padding-2)` block padding on icon rail.
-- **Item content block:** width `204px` (sample); **Body 2** regular (`var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`).
+- **Item content block:** width `204px` (sample); **Body 2** regular (`var(--font-size-body-2)` / `var(--line-height-body-2, 20px)`). Long labels and descriptions clip with `text-overflow: ellipsis` (`white-space: nowrap`) and do not expand the row or the component height.
 - **Transfer column:** vertical `gap: var(--spacing-space-16)`; each button `padding: var(--padding-padding-12)` block, `var(--padding-padding-16)` inline; `border-radius: 2px`; icon `16×16`.
 - **Metrics (header):** `gap: var(--spacing-space-4)`; optional “Selected: N” (regular) + “Total: N” (regular 14/20) on the **pane header row** (not below the list). Figma `12114:232557` uses **Total only** in the header.
 - **Scrollbar (12-item variant):** track `var(--color-background-gray-lighter)`; thumb `var(--color-background-gray-base)`; width `10px`; optional overflow gradient `var(--color-gradient-overflow-vertical-start)` → `var(--color-gradient-overflow-vertical-end)`.
@@ -140,7 +140,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
   - Description only → body only (no empty header).
   - Title only → body only (omit header slot per tooltip spec).
   - Full-width row trigger: `triggerDisplay="block"`.
-- **Scroll:** when items exceed panel height (`12 Items` + scrollbar variant), list scrolls inside panel; overflow fade at bottom edge.
+- **Scroll:** when items exceed the panel's `384px` height (`12 Items` + scrollbar variant), the pane scrolls vertically. The pane padding scrolls with the content so the top and bottom insets remain at the start and end of the list. Long labels and descriptions are clipped with ellipsis and do not expand the list or component. The scrollbar uses a `stable` gutter so the layout does not shift when the scrollbar appears.
 - **Keyboard (reference implementation):**
   - Tab into available or selected list (`tabIndex={0}` on scroll region) → roving focus on items (`tabIndex` 0 on focused row, `-1` on siblings).
   - `ArrowUp` / `ArrowDown` — previous/next item in active pane; `Home` / `End` — first/last item.
