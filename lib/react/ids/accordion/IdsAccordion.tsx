@@ -28,6 +28,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type HTMLAttributes,
   type KeyboardEvent,
   type ReactNode,
@@ -78,9 +79,11 @@ export interface IdsAccordionProps {
   chevronPosition?: "left" | "right";
   variant?: "default" | "form";
   className?: string;
-  /** Root width — defaults to 480px per spec; number values are px, strings any CSS length. */
+  /** Root width — fluid (100% of container) by default; number values are px, strings any CSS length. */
   width?: number | string;
   maxWidth?: number | string;
+  /** Expanded panel max-height — unconstrained by default; overflowing content scrolls. Numbers are px, strings any CSS length. */
+  panelMaxHeight?: number | string;
 }
 
 type ChevronPosition = "left" | "right";
@@ -91,6 +94,7 @@ interface IdsAccordionContextValue {
   multiple: boolean;
   chevronPosition: ChevronPosition;
   variant: Variant;
+  panelMaxHeight?: string;
   reactId: string;
   toggle: (itemValue: string, disabled?: boolean) => void;
   registerTrigger: (value: string, el: HTMLButtonElement | null) => void;
@@ -219,6 +223,7 @@ export function IdsAccordion({
   className,
   width,
   maxWidth,
+  panelMaxHeight,
 }: IdsAccordionProps) {
   const widthValue =
     width !== undefined
@@ -231,6 +236,12 @@ export function IdsAccordion({
       ? typeof maxWidth === "number"
         ? `${maxWidth}px`
         : maxWidth
+      : undefined;
+  const panelMaxHeightValue =
+    panelMaxHeight !== undefined
+      ? typeof panelMaxHeight === "number"
+        ? `${panelMaxHeight}px`
+        : panelMaxHeight
       : undefined;
   if (items) {
     assertUniqueValues(items);
@@ -328,6 +339,7 @@ export function IdsAccordion({
       multiple,
       chevronPosition,
       variant,
+      panelMaxHeight: panelMaxHeightValue,
       reactId,
       toggle,
       registerTrigger,
@@ -342,6 +354,7 @@ export function IdsAccordion({
       multiple,
       chevronPosition,
       variant,
+      panelMaxHeightValue,
       reactId,
       toggle,
       registerTrigger,
@@ -539,8 +552,13 @@ export interface IdsAccordionBodyProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-export function IdsAccordionBody({ children, className, ...rest }: IdsAccordionBodyProps) {
+export function IdsAccordionBody({ children, className, style, ...rest }: IdsAccordionBodyProps) {
+  const root = useIdsAccordion("IdsAccordionBody");
   const item = useIdsAccordionItem("IdsAccordionBody");
+
+  const panelStyle: CSSProperties | undefined = root.panelMaxHeight
+    ? { maxHeight: root.panelMaxHeight, overflowY: "auto", ...style }
+    : style;
 
   return (
     <div
@@ -550,6 +568,7 @@ export function IdsAccordionBody({ children, className, ...rest }: IdsAccordionB
       aria-labelledby={item.triggerId}
       hidden={!item.isOpen}
       className={cx(s.body, !item.isOpen && s.bodyHidden, className)}
+      style={panelStyle}
       data-ids="ids-accordion-body"
       data-open={item.isOpen ? "true" : "false"}
     >

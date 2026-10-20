@@ -27,19 +27,23 @@ const meta: Meta<typeof IdsAccordion> = {
   args: {
     items: ACCORDION_SPEC_DEMO_ITEMS,
     ...ACCORDION_API_DEFAULTS,
-    width: "480px",
     maxWidth: "1594px",
   },
   argTypes: {
     width: {
       control: "text",
-      description: "Width of the accordion root.",
-      table: { category: "Props", defaultValue: { summary: "480px" } },
+      description: "Width of the accordion root — fluid (100%) by default.",
+      table: { category: "Props", defaultValue: { summary: "100%" } },
     },
     maxWidth: {
       control: "text",
       description: "Max-width of the accordion root.",
       table: { category: "Props", defaultValue: { summary: "1594px" } },
+    },
+    panelMaxHeight: {
+      control: "text",
+      description: "Max-height of an expanded panel — overflowing content scrolls.",
+      table: { category: "Props" },
     },
   },
 };

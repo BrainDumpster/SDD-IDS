@@ -1,6 +1,8 @@
 .root {
-  /* Spec default width; consumers override via the `width` prop (inline style). */
-  width: 480px;
+  /* Fluid by default — fills its container within spec bounds; consumers
+     override via the `width`/`maxWidth` props (inline style). */
+  width: 100%;
+  min-width: 240px;
   max-width: 1594px;
   box-sizing: border-box;
 }

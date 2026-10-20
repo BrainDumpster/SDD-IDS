@@ -13,6 +13,7 @@ export function IdsAccordion({
   chevronPosition = "left",
   width,
   maxWidth,
+  panelMaxHeight,
 }: IdsAccordionProps) {
   const widthValue =
     width !== undefined
@@ -25,6 +26,12 @@ export function IdsAccordion({
       ? typeof maxWidth === "number"
         ? `${maxWidth}px`
         : maxWidth
+      : undefined;
+  const panelMaxHeightValue =
+    panelMaxHeight !== undefined
+      ? typeof panelMaxHeight === "number"
+        ? `${panelMaxHeight}px`
+        : panelMaxHeight
       : undefined;
   return (
     <BaseAccordion.Root
@@ -67,7 +74,14 @@ export function IdsAccordion({
               ) : null}
             </BaseAccordion.Trigger>
           </BaseAccordion.Header>
-          <BaseAccordion.Panel className={styles.panel}>
+          <BaseAccordion.Panel
+            className={styles.panel}
+            style={
+              panelMaxHeightValue !== undefined
+                ? { maxHeight: panelMaxHeightValue, overflowY: "auto" }
+                : undefined
+            }
+          >
             <div className={styles.content}>
               <div className={styles.contentCard}>{item.content}</div>
             </div>

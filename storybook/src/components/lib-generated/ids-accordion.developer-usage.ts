@@ -29,6 +29,7 @@ Import from \`@ids/react/accordion\` (or the compound \`IdsAccordionCompound\`).
 | \`chevronPosition\` | \`'left' \\| 'right'\` | \`'left'\` | Chevron slot on header |
 | \`variant\` | \`'default' \\| 'form'\` | \`'default'\` | Form layout variant |
 | \`className\` | \`string\` | — | Extra class on root |
+| \`panelMaxHeight\` | \`number \\| string\` | — | Caps expanded panel height; body scrolls |
 
 ### Item — \`IdsAccordionItem\`
 
