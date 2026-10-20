@@ -156,9 +156,22 @@ function AccordionTitle({ children }: { children: ReactNode }) {
     if (!element) return;
 
     const check = () => {
+      // `-webkit-box`/`line-clamp` clips text without growing scroll metrics,
+      // so temporarily render as a plain block — it grows to the full content
+      // height — and compare against the clamped height. Synchronous, so it
+      // never paints.
+      const clampedHeight = element.clientHeight;
+      const clampedWidth = element.clientWidth;
+      element.style.setProperty("display", "block");
+      element.style.setProperty("-webkit-line-clamp", "unset");
+      element.style.setProperty("line-clamp", "unset");
+      const fullHeight = element.offsetHeight;
+      const fullScrollWidth = element.scrollWidth;
+      element.style.removeProperty("display");
+      element.style.removeProperty("-webkit-line-clamp");
+      element.style.removeProperty("line-clamp");
       setIsTruncated(
-        element.scrollHeight > element.clientHeight + 1 ||
-          element.scrollWidth > element.clientWidth + 1,
+        fullHeight > clampedHeight + 1 || fullScrollWidth > clampedWidth + 1,
       );
     };
 
