@@ -24,6 +24,10 @@
 .ids-tabs-list-wrap {
   width: 100%;
   overflow: hidden;
+  /* Grow the clip window 4px on all sides (offset by negative margin so layout
+     size is unchanged) — the focused tab's outward double ring paints here. */
+  padding: var(--spacing-space-4, 4px);
+  margin: calc(var(--spacing-space-4, 4px) * -1);
 }
 
 .ids-tabs[data-overflow="false"] .ids-tabs-list-wrap {
@@ -131,20 +135,19 @@
   color: var(--color-text-brand-strong);
 }
 
+/* Focus (IDS Design Library .Tab-Element State=Focus): tinted tab, radius-2,
+   double ring — 2px surface separator + 4px brand outer ring drawn outside the
+   element (list-wrap padding above unclips it). The tab keeps its 38px height
+   so the focused tab's bottom border lines up with the row baseline; z-index
+   keeps the ring above sibling dividers. */
 .ids-tab-button:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: calc(var(--border-width-border-2) * -1);
-  border-radius: var(--corner-radius-radius-4);
-}
-
-.ids-tab-button--secondary:focus-visible {
-  height: var(--sizing-size-34, 34px);
-  margin: var(--spacing-space-2, 2px) 0;
-}
-
-.ids-tab-button--primary:focus-visible {
-  height: var(--sizing-size-36, 36px);
-  margin: var(--spacing-space-1, 1px) 0;
+  outline: none;
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-2);
+  background-color: var(--color-background-brand-lighter-slate);
+  box-shadow:
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .ids-tab-button[aria-selected="true"] {
@@ -169,11 +172,19 @@
   box-shadow: inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong);
 }
 
+.ids-tab-button[aria-selected="true"]:focus-visible {
+  /* [aria-selected] ties the base focus rule at 0,2,0 and comes later — this
+     combined selector wins the tinted focus background. */
+  background-color: var(--color-background-brand-lighter-slate);
+}
+
+/* Primary selected + focused: keep the top 2px indicator inside the element
+   while the double ring draws outside it. */
 .ids-tab-button--primary[aria-selected="true"]:focus-visible {
-  border-radius: var(--corner-radius-radius-4);
   box-shadow:
     inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong),
-    inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 /* Secondary selected: bottom 2px brand indicator replaces accessible baseline. */
@@ -325,15 +336,18 @@
 
 .ids-tabs-overflow-trigger:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-2);
+  box-shadow:
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .ids-tabs-overflow-trigger--primary[data-selected="true"]:focus-visible {
   box-shadow:
     inset 0 var(--border-width-border-2, 2px) 0 0 var(--color-border-brand-strong),
-    inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .ids-tabs-overflow-icon {
@@ -418,8 +432,11 @@
 
 .ids-tabs-add:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 var(--border-width-border-2, 2px) var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-2);
+  box-shadow:
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .ids-tabs-add-icon {
