@@ -17,8 +17,8 @@ Primary interactive control with variants, sizes, loading, and leading-icon proj
 | \`size\` | \`ButtonSize\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.size\` |
 | \`disabled\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.dis…\` |
 | \`loading\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.loa…\` |
-| \`iconOnly\` | \`boolean\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.ico…\` |
-| \`ariaLabel\` | \`—\` | \`""\` |
+| \`iconOnly\` | \`boolean\` | \`false\` — square sm 24 / md 32 / lg 40; glyph 12 / 14 / 16 |
+| \`ariaLabel\` | \`string\` | **required** when \`iconOnly\` (or Ghost Neutral) |
 | \`type\` | \`"button" \\| "submit" \\| "reset"\` | \`"button"\` |
 
 ## Events
@@ -80,12 +80,12 @@ export const BUTTON_COMPOSITION_DEMO_TEMPLATE = `
   [disabled]="disabled"
   [loading]="loading"
   [iconOnly]="iconOnly"
-  [ariaLabel]="ariaLabel"
+  [ariaLabel]="(iconOnly || variant === 'ghostNeutral' || variant === 'ghost') ? (ariaLabel || 'Icon only button') : ariaLabel"
 >
-  @if (!iconOnly && variant !== 'destructive') {
+  @if (!iconOnly && variant !== 'destructive' && variant !== 'ghostNeutral' && variant !== 'ghost') {
     <ids-icon shapeName="${DEMO_ICON}" variant="mask" />
   }
-  @if (!iconOnly) {
+  @if (!iconOnly && variant !== 'ghostNeutral' && variant !== 'ghost') {
     Button
   } @else {
     <ids-icon shapeName="${DEMO_ICON}" variant="mask" />

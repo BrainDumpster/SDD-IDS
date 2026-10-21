@@ -28,7 +28,10 @@ interface ButtonProps extends ComponentProps<"button"> {
   iconSlug?: string;
   /** Rendering mode for `iconSlug` shorthand only. */
   iconVariant?: "mask" | "img";
-  /** Icon only — use with leading `<Icon />` and an accessible `aria-label`. */
+  /**
+   * Icon only — square control (sm 24×24 / md 32×32 / lg 40×40);
+   * glyph 12 / 14 / 16 (Ghost Neutral lg = 14). Requires accessible `aria-label`.
+   */
   iconOnly?: boolean;
 }
 
