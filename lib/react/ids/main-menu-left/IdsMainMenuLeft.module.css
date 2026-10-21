@@ -11,7 +11,6 @@
   border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-top: none;
-  padding-top: var(--padding-padding-8);
 }
 
 .expanded {
@@ -77,6 +76,8 @@
 
 .logoSlot {
   flex-shrink: 0;
+  /* Rail top padding (the list carries its own when there is no logo). */
+  margin-top: var(--padding-padding-8);
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-padding-8) var(--padding-padding-24) 0;
@@ -125,17 +126,85 @@
    so hover/selected fills end flush against the rail stroke (Figma 11099:56218). */
 .content {
   flex: 1;
+  /* The rail's 8px top padding lives here (not on the root) so the scroll
+     container — and its scrollbar — reaches the top edge of the rail. */
+  padding-top: var(--padding-padding-8);
   min-height: 0;
   overflow-y: auto;
-  /* Let the row focus ring sit fully outside the rail's L/R border (a 1px gap
-     between the ring's inner edge and the rail's outer edge) instead of being
-     clipped by this scroll container. The negative inline margin keeps the row
-     content-box — and its hover/selected fills — in place. */
-  padding-inline: calc(4 * var(--border-width-border-1));
-  margin-inline: calc(-4 * var(--border-width-border-1));
+  /* Keep the selected inset (which bleeds 1px into the rail border zone) from
+     being clipped by this scroll container. The negative inline margin keeps
+     the row content-box — and its hover/selected fills — in place. */
+  /* Left only: the right edge stays inside the rail so the scrollbar sits
+     within the rail's right border. */
+  padding-inline-start: calc(4 * var(--border-width-border-1));
+  margin-inline-start: calc(-4 * var(--border-width-border-1));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
+}
+
+/* IDS small scrollbar (Figma Storybook-Test `6191:59167`; small content
+   display like Anchor Menu, confirmed by Mona and Reut): native scrollbar
+   recoloured for IDS — 8px track `var(--color-background-gray-neutral-light)`
+   with 2px radius, 6px `var(--color-border-gray-neutral-base)` thumb with 8px
+   radius, 8px carets at both ends. Styling the WebKit pseudo-elements forces a
+   classic, always-visible scrollbar; `scrollbar-width` / `scrollbar-color` stay
+   unset because setting them makes Chromium ignore these rules. Firefox falls
+   back to its own scrollbar. */
+.content::-webkit-scrollbar {
+  width: var(--sizing-size-8);
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
+}
+
+/* 6px thumb centred in the 8px track (1px transparent border, padding-box clip). */
+.content::-webkit-scrollbar-thumb {
+  background: var(--color-border-gray-neutral-base);
+  background-clip: padding-box;
+  border: 1px solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
+/* Carets: one button per end (2px block padding + 8px caret). The triangle is
+   drawn with two half-gradients so its colour comes from the token. */
+.content::-webkit-scrollbar-button:vertical {
+  display: block;
+  width: var(--sizing-size-8);
+  height: 10px;
+  background-color: var(--color-background-gray-neutral-light);
+  background-repeat: no-repeat;
+  background-size: 3px 3px, 3px 3px;
+}
+
+.content::-webkit-scrollbar-button:vertical:start:decrement {
+  border-radius: var(--corner-radius-radius-2) var(--corner-radius-radius-2) 0 0;
+  background-image:
+    linear-gradient(to top left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to top right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 4px, 4px 4px;
+}
+
+.content::-webkit-scrollbar-button:vertical:end:increment {
+  border-radius: 0 0 var(--corner-radius-radius-2) var(--corner-radius-radius-2);
+  background-image:
+    linear-gradient(to bottom left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to bottom right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 3px, 4px 3px;
+}
+
+.content::-webkit-scrollbar-button:vertical:start:increment,
+.content::-webkit-scrollbar-button:vertical:end:decrement {
+  display: none;
+}
+
+/* With a logo above, the list starts right under it (logo keeps the top padding). */
+.logoSlot ~ .content {
+  padding-top: 0;
 }
 
 .itemBlock {
@@ -204,8 +273,8 @@
 }
 
 .chevronIcon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   color: var(--color-icon-brand-strong);
   align-self: center;
@@ -235,7 +304,9 @@
   overflow: visible;
   background: transparent;
   text-align: left;
-  padding: var(--padding-padding-6) var(--padding-padding-58);
+  /* Figma `11099:56238`: 58px leading, 24px trailing. */
+  padding: var(--padding-padding-6) var(--padding-padding-24) var(--padding-padding-6)
+    var(--padding-padding-58);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
@@ -301,7 +372,7 @@
 .secondaryInteractive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 calc(-4 * var(--border-width-border-1));
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -370,9 +441,9 @@
 
 .focusRing {
   position: absolute;
-  /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
-     No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
-  inset: 0 calc(-4 * var(--border-width-border-1));
+  /* Figma `12016:227840` / `12016:227537`: ring sits INSIDE the row, 4px in from
+     the rail's L/R border, flush top/bottom. */
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
@@ -386,11 +457,18 @@
 .interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 calc(-4 * var(--border-width-border-1));
+  inset: 0 var(--padding-padding-4);
   border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
+}
+
+/* Selected-Focus (Figma `12016:227912`): the ring starts after the 4px selected
+   inset with a 3px gap (left 7px), so the bar stays visible. */
+.primaryRow:has(.selectedInset) .focusRing,
+.primaryRow.interactive:has(.selectedInset):focus-visible::after {
+  left: 7px;
 }
 
 .primaryRow:not(.interactive):focus,
@@ -450,7 +528,7 @@
 
 .stateSelected .primaryIcon,
 .stateSelectedFocus .primaryIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .secondaryParentSelected {
@@ -458,7 +536,7 @@
 }
 
 .secondaryParentSelected .primaryIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .secondaryParentSelected .primaryLabel {
@@ -466,7 +544,7 @@
 }
 
 .secondaryParentSelected .chevronIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .collapsed .primaryRow {
@@ -499,7 +577,7 @@
 
 .interactive.selected:hover .primaryIcon,
 .interactive.secondaryParentSelected:hover .primaryIcon {
-  color: var(--color-icon-brand-base);
+  color: var(--color-icon-brand-strong);
 }
 
 .interactive:active {
