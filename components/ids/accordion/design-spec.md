@@ -44,6 +44,7 @@ Optional child sub-slots:
 - Focus indicator must be visible on trigger row and not clipped by item container.
 - Group rows follow Figma contiguous model (1px overlap/no vertical gaps).
 - Expanded content container padding: `8px 24px 16px 40px` (implementations: `var(--padding-padding-40)` when present, otherwise `calc(var(--padding-padding-32) + var(--padding-padding-8))` so left inset is valid in Storybook themes).
+- Expanded content container minimum size: `min-width: 50px` and `min-height: 50px` (apply with `box-sizing: border-box` so the 50px floor includes padding).
 - Optional inner **content card**: **no background color**, **no border**, and **no padding**; it holds the body text. Content card text has a **max-width of 900px**.
 ## Tokens
 - Surface:

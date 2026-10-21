@@ -176,6 +176,9 @@
 }
 
 .ids-accordion-content {
+  box-sizing: border-box;
+  min-width: 50px;
+  min-height: 50px;
   padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-16)
     calc(var(--padding-padding-32) + var(--padding-padding-8));
   background-color: var(--color-background-surface-component);
