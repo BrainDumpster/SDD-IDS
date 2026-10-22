@@ -126,15 +126,60 @@ function resolveAlign(value: unknown): TooltipArrowAlign {
   return "center";
 }
 
-/** Trigger-to-tooltip spacing (with arrow): 16px — design-spec sideOffset. */
-const SIDE_OFFSET = 16;
+/**
+ * Visible gap between the object's edge and the tooltip's closest point — the
+ * arrow tip: `6px` (`spacing/space-6`). The arrow pokes `5px` past the panel
+ * edge toward the trigger, so the positioner offset is 6 + 5 = `11px`.
+ */
+const OBJECT_TO_ARROW_TIP_GAP = 6;
+const ARROW_EXTENSION = 5;
+const SIDE_OFFSET = OBJECT_TO_ARROW_TIP_GAP + ARROW_EXTENSION;
+
+/** Arrow lane length on the cross axis (10px arrow graphic). */
+const ARROW_LANE = 10;
+/** Keep the arrow lane clear of the panel's rounded corners. */
+const ARROW_EDGE_INSET = 4;
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), Math.max(min, max));
+}
+
+/**
+ * Measures the painted box of the slotted trigger object (button, badge, chip)
+ * rather than the inline wrapper's line box — the inline box follows text
+ * metrics and can sit inside the object's padding or be inflated by
+ * line-height, which would offset the 6px gap and the arrow from the wrong
+ * edge. Falls back to the wrapper rect when the trigger is, or mixes in,
+ * plain text — there the text run is the object.
+ */
+function measureTriggerBox(trigger: HTMLElement): DOMRect {
+  const hasText = Array.from(trigger.childNodes).some(
+    (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+  );
+  if (hasText || trigger.children.length === 0) {
+    return trigger.getBoundingClientRect();
+  }
+  let top = Infinity;
+  let left = Infinity;
+  let right = -Infinity;
+  let bottom = -Infinity;
+  for (const child of trigger.children) {
+    const r = child.getBoundingClientRect();
+    top = Math.min(top, r.top);
+    left = Math.min(left, r.left);
+    right = Math.max(right, r.right);
+    bottom = Math.max(bottom, r.bottom);
+  }
+  if (!Number.isFinite(top)) return trigger.getBoundingClientRect();
+  return new DOMRect(left, top, right - left, bottom - top);
+}
 
 function computePopupPosition(
   trigger: DOMRect,
   popup: DOMRect,
   side: TooltipSide,
   align: TooltipArrowAlign,
-): { top: number; left: number } {
+): { top: number; left: number; arrowOffset: number } {
   let top = 0;
   let left = 0;
 
@@ -148,17 +193,34 @@ function computePopupPosition(
     left = trigger.right + SIDE_OFFSET;
   }
 
+  let arrowOffset = 0;
+
   if (side === "top" || side === "bottom") {
     if (align === "start") left = trigger.left;
     else if (align === "end") left = trigger.right - popup.width;
     else left = trigger.left + trigger.width / 2 - popup.width / 2;
+
+    // Arrow cross-axis: centered on the trigger object, clamped to the panel.
+    const triggerCenter = trigger.left + trigger.width / 2;
+    arrowOffset = clamp(
+      triggerCenter - left - ARROW_LANE / 2,
+      ARROW_EDGE_INSET,
+      popup.width - ARROW_LANE - ARROW_EDGE_INSET,
+    );
   } else {
     if (align === "start") top = trigger.top;
     else if (align === "end") top = trigger.bottom - popup.height;
     else top = trigger.top + trigger.height / 2 - popup.height / 2;
+
+    const triggerCenter = trigger.top + trigger.height / 2;
+    arrowOffset = clamp(
+      triggerCenter - top - ARROW_LANE / 2,
+      ARROW_EDGE_INSET,
+      popup.height - ARROW_LANE - ARROW_EDGE_INSET,
+    );
   }
 
-  return { top, left };
+  return { top, left, arrowOffset };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -524,9 +586,12 @@ TooltipPanel.displayName = "TooltipPanel";
 function TooltipArrowGraphic({
   side,
   align,
+  offset,
 }: {
   side: TooltipSide;
   align: TooltipArrowAlign;
+  /** Cross-axis arrow position in px — centered on the trigger object. */
+  offset?: number;
 }) {
   return (
     <span
@@ -534,6 +599,11 @@ function TooltipArrowGraphic({
       data-ids="ids-tooltip-arrow"
       data-side={side}
       data-align={align}
+      style={
+        offset != null
+          ? ({ "--ids-tooltip-arrow-offset": `${offset}px` } as CSSProperties)
+          : undefined
+      }
       aria-hidden="true"
     >
       <span className={styles["ids-tooltip-arrow-graphic"]}>
@@ -582,9 +652,11 @@ function TooltipRoot({
   const triggerRef = useRef<HTMLSpanElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [coords, setCoords] = useState<{ top: number; left: number } | null>(
-    null,
-  );
+  const [coords, setCoords] = useState<{
+    top: number;
+    left: number;
+    arrowOffset: number;
+  } | null>(null);
 
   const clearCloseTimer = useCallback(() => {
     if (closeTimerRef.current != null) {
@@ -663,18 +735,35 @@ function TooltipRoot({
       const popupEl = popupRef.current;
       if (!triggerEl || !popupEl) return;
       const next = computePopupPosition(
-        triggerEl.getBoundingClientRect(),
+        measureTriggerBox(triggerEl),
         popupEl.getBoundingClientRect(),
         side,
         arrowAlign,
       );
-      setCoords(next);
+      setCoords((prev) =>
+        prev &&
+        prev.top === next.top &&
+        prev.left === next.left &&
+        prev.arrowOffset === next.arrowOffset
+          ? prev
+          : next,
+      );
     };
 
     update();
+
+    // Closable tooltips resize right after open — the scrollbar-width
+    // measurement changes the content padding (and thus panel height). For
+    // side=top/left a stale height pushes the panel edge off its anchor, so
+    // reposition whenever the trigger or popup box changes.
+    const resizeObserver = new ResizeObserver(update);
+    if (triggerRef.current) resizeObserver.observe(triggerRef.current);
+    if (popupRef.current) resizeObserver.observe(popupRef.current);
+
     window.addEventListener("scroll", update, true);
     window.addEventListener("resize", update);
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("scroll", update, true);
       window.removeEventListener("resize", update);
     };
@@ -757,7 +846,11 @@ function TooltipRoot({
             onMouseLeave={onPopupLeave}
             onKeyDown={handlePopupKeyDown}
           >
-            <TooltipArrowGraphic side={side} align={arrowAlign} />
+            <TooltipArrowGraphic
+              side={side}
+              align={arrowAlign}
+              offset={coords?.arrowOffset}
+            />
             {panel}
             {other}
           </div>,

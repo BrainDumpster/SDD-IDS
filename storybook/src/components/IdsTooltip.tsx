@@ -18,24 +18,18 @@ import styles from "./IdsTooltip.module.css";
 type TooltipSide = NonNullable<IdsTooltipProps["side"]>;
 type TooltipArrowAlign = NonNullable<IdsTooltipProps["arrowAlign"]>;
 
-/** Spec calibration insets — override Floating UI arrow x/y so align never drifts to center. */
-function arrowOffsetStyle(side: TooltipSide, align: TooltipArrowAlign): CSSProperties {
+/** Attachment-axis calibration only — the arrow's cross-axis position comes
+    from Floating UI's arrow middleware, which centers the arrow on the trigger
+    object. `arrowAlign` shifts the popup; the arrow always tracks the trigger. */
+function arrowOffsetStyle(side: TooltipSide): CSSProperties {
   if (side === "top" || side === "bottom") {
-    const left =
-      align === "start" ? 8 : align === "end" ? "calc(100% - 18px)" : "calc(50% - 5px)";
     return side === "bottom"
-      ? { top: -5, left }
-      : { bottom: -5, top: "auto", left };
+      ? { top: -5 }
+      : { bottom: -5, top: "auto" };
   }
-  const cross =
-    align === "start"
-      ? ({ top: 8, bottom: "auto" } as const)
-      : align === "end"
-        ? ({ top: "auto", bottom: 8 } as const)
-        : ({ top: "calc(50% - 5px)", bottom: "auto" } as const);
   return side === "right"
-    ? { ...cross, left: -5, right: "auto" }
-    : { ...cross, right: -5, left: "auto" };
+    ? { left: -5, right: "auto" }
+    : { right: -5, left: "auto" };
 }
 
 export {
@@ -163,7 +157,9 @@ export function IdsTooltip({
           <BaseTooltip.Positioner
             side={side}
             align={resolvedAlign}
-            sideOffset={16}
+            /* 6px visible gap (spacing/space-6) between the object edge and the
+               arrow tip; the arrow pokes 5px past the panel, so offset = 11. */
+            sideOffset={11}
             /* Keep requested side×arrowAlign (e.g. right-end); default align flip remaps to center. */
             collisionAvoidance={{ side: "none", align: "none", fallbackAxisSide: "none" }}
           >
@@ -178,7 +174,7 @@ export function IdsTooltip({
             >
               <BaseTooltip.Arrow
                 className={styles.arrow}
-                style={arrowOffsetStyle(side, resolvedAlign)}
+                style={arrowOffsetStyle(side)}
               >
                 <span className={styles.arrowGraphic} aria-hidden="true">
                   <svg className={styles.arrowSvg} viewBox="0 0 10 6">

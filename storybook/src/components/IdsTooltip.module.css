@@ -1,5 +1,8 @@
+/* inline-flex so the trigger box hugs the slotted object (badge, button) —
+   a plain inline box follows the line box and would offset the tooltip's 6px
+   gap and arrow from the text metrics instead of the object's edge. */
 .trigger {
-  display: inline;
+  display: inline-flex;
   cursor: default;
 }
 
@@ -117,69 +120,34 @@
   right: -4px !important;
 }
 
+/* Arrow cross-axis: centered on the trigger object. Floating UI's arrow
+   middleware writes the measured offset inline; these non-!important rules are
+   the fallback before it does. `arrowAlign` shifts the popup, the arrow always
+   tracks the trigger center. */
+.arrow[data-side="bottom"],
+.arrow[data-side="top"] {
+  left: calc(50% - 5px);
+}
+
+.arrow[data-side="left"],
+.arrow[data-side="right"] {
+  top: calc(50% - 5px);
+}
+
 .arrow[data-side="bottom"][data-align="start"],
-.arrow[data-side="top"][data-align="start"] {
-  left: 8px !important;
-}
-
-.arrow[data-side="bottom"][data-align="start"] {
-  top: -5px !important;
-}
-
 .arrow[data-side="bottom"][data-align="center"],
-.arrow[data-side="top"][data-align="center"] {
-  left: calc(50% - 5px) !important;
-}
-
-.arrow[data-side="bottom"][data-align="center"] {
-  top: -5px !important;
-}
-
-.arrow[data-side="bottom"][data-align="end"],
-.arrow[data-side="top"][data-align="end"] {
-  left: calc(100% - 18px) !important;
-}
-
 .arrow[data-side="bottom"][data-align="end"] {
   top: -5px !important;
 }
 
 .arrow[data-side="left"][data-align="start"],
-.arrow[data-side="right"][data-align="start"] {
-  top: 8px !important;
-}
-
-.arrow[data-side="left"][data-align="start"] {
-  right: -5px !important;
-}
-
-.arrow[data-side="right"][data-align="start"] {
-  left: -5px !important;
-}
-
 .arrow[data-side="left"][data-align="center"],
-.arrow[data-side="right"][data-align="center"] {
-  top: calc(50% - 5px) !important;
-}
-
-.arrow[data-side="left"][data-align="center"] {
-  right: -5px !important;
-}
-
-.arrow[data-side="right"][data-align="center"] {
-  left: -5px !important;
-}
-
-.arrow[data-side="left"][data-align="end"],
-.arrow[data-side="right"][data-align="end"] {
-  top: auto !important;
-  bottom: 8px !important;
-}
-
 .arrow[data-side="left"][data-align="end"] {
   right: -5px !important;
 }
 
+.arrow[data-side="right"][data-align="start"],
+.arrow[data-side="right"][data-align="center"],
 .arrow[data-side="right"][data-align="end"] {
   left: -5px !important;
 }

@@ -70,12 +70,12 @@ Arrow geometry contract:
 - Up/down pointer triangle: `10x6` (layout box).
 - Left/right pointer triangle: `6x10` (layout box); **same `10x6` SVG** rotated inside `.arrowGraphic` (do not scale SVG to `6x10`).
 - Arrow lane (Figma): `12px` on the attachment axis (`h-[12px]` top/bottom, `w-[12px]` left/right).
-- Arrow alignment inset on lane axis: `8px` (`padding-8`) for `start`/`end`.
+- Arrow cross-axis position: **centered on the trigger object** for every `arrowAlign` — `start | center | end` shifts the popup along the trigger edge while the arrow tip always tracks the trigger's center (e.g. the selected-count badge in a multiselect field). Keep a small edge inset (~`4px`) so the lane stays clear of the panel's rounded corners.
 - Panel-to-arrow overlap (Figma): `1px` negative margin (`mb-[-1px]` / `mr-[-1px]`) so the pointer tucks under the panel border segment.
 - Arrow fill bleed: SVG fill extends `0.5px` past triangle base (`L9.5 6.5L0.5 6.5Z`) to cover the panel border line.
 - Arrow stroke: `stroke-linecap: butt`, `stroke-linejoin: miter`; open path on the two sloped edges only.
 - Arrow position axis: `start | center | end` for each side.
-- Trigger-to-tooltip spacing (with arrow): `16px` (runtime positioner `sideOffset`).
+- Trigger-to-tooltip spacing (with arrow): `6px` (`spacing/space-6`) of *visible* gap between the object's edge and the arrow tip. The arrow pokes `5px` past the panel edge toward the trigger, so the runtime positioner `sideOffset` is `11px` (`6 + 5`). Measured from the slotted object's painted box (badge, button, chip) — not the inline trigger wrapper's line box, which follows text metrics and can sit inside the object's padding or be inflated by `line-height`.
 
 Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`):
 - `TriggerAnchor` / `.trigger` (inline) and `.triggerBlock` (block): the trigger anchor element. `.triggerBlock` uses `display: block`, `width: 100%`, `min-width: 0` to fill the host row and remain shrinkable in flex layouts. The `BaseTooltip.Trigger` is rendered with a `render` prop so the `className` and `children` merge correctly.
@@ -84,9 +84,9 @@ Runtime structure (Storybook reference: `storybook/src/components/IdsTooltip.tsx
 - `Arrow` / `.arrow`: absolute sibling above `.panel`; overlaps panel edge (no `::before`/`::after` border-notch masks).
 - `closable=true` (or any visible title): `.contentTop` top bar holds `.contentColumn` + `.close` as siblings; `.content` below it is the only scroll region, so the scrollbar starts under the title/close row.
 
-Storybook alignment insets (cross-axis; applies to all sides on that axis):
-- Top/Bottom tooltips — `start`: `left: 8px`; `center`: `left: calc(50% - 5px)`; `end`: `left: calc(100% - 18px)`.
-- Left/Right tooltips — `start`: `top: 8px`; `center`: `top: calc(50% - 5px)`; `end`: `top: auto; bottom: 8px` (prefer `bottom` over `top: calc(100% - 18px)` so Floating UI inline `top` cannot pin the arrow to center).
+Arrow cross-axis positioning (all sides, both implementations):
+- The arrow is **centered on the trigger object** at runtime. Lib (`lib/react/ids/tooltip/IdsTooltip.tsx`) measures the trigger rect and sets `--ids-tooltip-arrow-offset`; Storybook (`storybook/src/components/IdsTooltip.tsx`) lets Floating UI's arrow middleware produce the same anchor-centered offset. Fallback CSS centers the arrow on the popup only before measurement (`calc(50% - 5px)`).
+- `arrowAlign` (`start | center | end`) positions the popup relative to the trigger; it no longer pins the arrow to a fixed inset.
 
 Storybook attachment-axis calibration (Base UI `data-side` on arrow; tuned against IDS Design Library `38201:109592`):
 
@@ -260,6 +260,7 @@ Validation checklist (pass/fail):
 - Angular Storybook: `storybook-angular/src/components/ids-tooltip/`
 
 ## Changelog
+- **2026-10-21**: Changed trigger-to-tooltip spacing: the *visible* gap between the object's edge and the arrow tip is now `6px` (`spacing/space-6`); since the arrow pokes `5px` past the panel edge, the positioner `sideOffset` is `11px` (was `16px`). Also made the arrow track the trigger's cross-axis center on every `arrowAlign` (e.g. centered on the selected-count badge in dropdown multiselect) — previously `start`/`end` pinned the arrow to fixed `8px`/`18px` insets. `arrowAlign` now only shifts the popup. The lib implementation measures the trigger rect and sets `--ids-tooltip-arrow-offset` (clamped ~`4px` from panel corners); the Storybook implementation defers cross-axis positioning to Floating UI's arrow middleware. The 6px gap is measured from the slotted object's box — lib unions the trigger's element-children rects (`measureTriggerBox`, falling back to the wrapper rect for plain-text triggers); Storybook `.trigger` is now `inline-flex` so its box hugs the slotted object. Also fixed the closable gap drifting on open: the lib's scrollbar-width measurement changes content padding and panel height *after* the initial position compute (for `side=top`/`left` the stale height pushed the panel edge off its anchor); `update` now runs from a `ResizeObserver` on the trigger and popup so the gap is corrected in the same frame. Changed in `lib/react/ids/tooltip/IdsTooltip.tsx`, `IdsTooltip.module.css`, `storybook/src/components/IdsTooltip.tsx`, `storybook/src/components/IdsTooltip.module.css`.
 - **2026-10-14**: Tinted the scroll-region scrollbar with theme tokens — `scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter)` on `.ids-tooltip-content` (same contract as the dual-list-box pane) so the scrollbar follows dark mode. `scrollbar-color` is used instead of `::-webkit-scrollbar` rules so `scrollbar-width: thin` stays authoritative and the runtime `--ids-scrollbar-width` measurement remains exact for the closable 4px reserve. Changed in `lib/react/ids/tooltip/IdsTooltip.module.css`.
 - **2026-09-28**: Updated closable tooltip spacing tokens and scrollbar behavior. `ContentColumn` now uses `padding-right: var(--spacing-space-4)` (`spacing/space-4`) before the close icon. The scrollable `.ids-tooltip-content--closable` uses `scrollbar-gutter: stable` so the content/popup width never changes when the scrollbar appears, plus `padding-right: calc(var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4) - var(--ids-scrollbar-width, 0px))` with the scrollbar width measured at runtime, keeping the visible gap at exactly `4px`. Changed in `lib/react/ids/tooltip/IdsTooltip.tsx` and `IdsTooltip.module.css`.
 - **2026-09-28**: Moved vertical scrolling from `.ids-tooltip-panel` to a dedicated `.ids-tooltip-content` scroll region; when a title or close icon is present, they render in a fixed `.ids-tooltip-top` bar so the scrollbar runs underneath them. Panel is now a vertical flex column with `overflow: hidden`; removed the `.ids-tooltip-content--closable` row layout. Changed in `lib/react/ids/tooltip/IdsTooltip.tsx` and `IdsTooltip.module.css`.
