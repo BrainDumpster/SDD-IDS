@@ -280,3 +280,27 @@ export const HugContent: Story = {
     </Tooltip>
   ),
 };
+
+/** Tooltip group — a row of buttons each with its own tooltip. */
+export const TooltipGroup: Story = {
+  name: "Tooltip Group",
+  args: {
+    closable: false,
+    side: "top",
+    arrowAlign: "center",
+  },
+  render: ({ content, ...args }) => (
+    <div style={{ display: "flex", gap: 8 }}>
+      {["First", "Second", "Third"].map((label) => (
+        <Tooltip key={label} {...args}>
+          <TooltipTrigger>
+            <TriggerButton label={label} />
+          </TooltipTrigger>
+          <TooltipPanel>
+            <TooltipBody>{content}</TooltipBody>
+          </TooltipPanel>
+        </Tooltip>
+      ))}
+    </div>
+  ),
+};

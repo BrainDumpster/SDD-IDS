@@ -61,7 +61,7 @@ export interface IdsTooltipProps {
   triggerDisplay?: "inline" | "block";
   /** When true, the tooltip popup shrinks to fit its content instead of using the standard 240px width. */
   hugContent?: boolean;
-  /** Open delay in ms. Default is Base UI's 600ms. */
+  /** Open delay in ms — pointer must rest on the trigger this long. Default `300`. */
   delay?: number;
   /** Close delay in ms. Default is 0. */
   closeDelay?: number;
@@ -79,7 +79,7 @@ export function IdsTooltip({
   closable = false,
   triggerDisplay = "inline",
   hugContent = false,
-  delay,
+  delay = 300,
   closeDelay,
   onOpenChange,
   onClose,
@@ -143,7 +143,7 @@ export function IdsTooltip({
   );
 
   return (
-    <BaseTooltip.Provider>
+    <BaseTooltip.Provider delay={delay} closeDelay={closeDelay}>
       <BaseTooltip.Root open={closable ? open : undefined} onOpenChange={handleOpenChange}>
         <BaseTooltip.Trigger
           className={

@@ -70,6 +70,11 @@ export interface TooltipProps {
   maxWidth?: number;
   /** Maximum popup height (px); panel scrolls past this. Default `300`. */
   maxHeight?: number;
+  /**
+   * Hover open delay (ms) — the pointer must rest on the trigger this long
+   * before the tooltip appears; sweeping across never opens it. Default `300`.
+   */
+  delay?: number;
 }
 
 export interface TooltipTriggerProps extends HTMLAttributes<HTMLSpanElement> {
@@ -639,6 +644,7 @@ function TooltipRoot({
   hugContent = true,
   maxWidth = 244,
   maxHeight = 300,
+  delay = 300,
 }: TooltipProps) {
   const side = resolveSide(sideProp);
   const arrowAlign = resolveAlign(alignProp);
@@ -652,6 +658,7 @@ function TooltipRoot({
   const triggerRef = useRef<HTMLSpanElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [coords, setCoords] = useState<{
     top: number;
     left: number;
@@ -662,6 +669,13 @@ function TooltipRoot({
     if (closeTimerRef.current != null) {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
+    }
+  }, []);
+
+  const clearOpenTimer = useCallback(() => {
+    if (openTimerRef.current != null) {
+      clearTimeout(openTimerRef.current);
+      openTimerRef.current = null;
     }
   }, []);
 
@@ -676,18 +690,37 @@ function TooltipRoot({
   const dismiss = useCallback(
     (reason: TooltipCloseReason) => {
       clearCloseTimer();
+      clearOpenTimer();
       setOpenValue(false);
       onClose?.(reason);
     },
-    [clearCloseTimer, setOpenValue, onClose],
+    [clearCloseTimer, clearOpenTimer, setOpenValue, onClose],
   );
 
   const requestOpen = useCallback(() => {
     clearCloseTimer();
+    clearOpenTimer();
     setOpenValue(true);
-  }, [clearCloseTimer, setOpenValue]);
+  }, [clearCloseTimer, clearOpenTimer, setOpenValue]);
+
+  /** Hover path — only opens after the pointer rests `delay` ms. */
+  const scheduleOpen = useCallback(() => {
+    clearCloseTimer();
+    clearOpenTimer();
+    if (delay <= 0) {
+      setOpenValue(true);
+      return;
+    }
+    openTimerRef.current = setTimeout(() => {
+      openTimerRef.current = null;
+      setOpenValue(true);
+    }, delay);
+  }, [delay, clearCloseTimer, clearOpenTimer, setOpenValue]);
 
   const requestClose = useCallback(() => {
+    // A pending scheduled open is always cancelled on leave/blur — even for
+    // closable tooltips — so a quick sweep across the trigger never opens it.
+    clearOpenTimer();
     if (closable) {
       // Closable ignores leave/blur unless explicitly dismissed.
       return;
@@ -696,11 +729,11 @@ function TooltipRoot({
     closeTimerRef.current = setTimeout(() => {
       setOpenValue(false);
     }, 100);
-  }, [closable, clearCloseTimer, setOpenValue]);
+  }, [closable, clearOpenTimer, clearCloseTimer, setOpenValue]);
 
   const onTriggerEnter = useCallback(() => {
-    requestOpen();
-  }, [requestOpen]);
+    scheduleOpen();
+  }, [scheduleOpen]);
 
   const onTriggerLeave = useCallback(() => {
     requestClose();
@@ -722,7 +755,13 @@ function TooltipRoot({
     requestClose();
   }, [requestClose]);
 
-  useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
+  useEffect(
+    () => () => {
+      clearCloseTimer();
+      clearOpenTimer();
+    },
+    [clearCloseTimer, clearOpenTimer],
+  );
 
   useLayoutEffect(() => {
     if (!open) {
