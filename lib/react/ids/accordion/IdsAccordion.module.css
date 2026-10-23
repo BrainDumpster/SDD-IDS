@@ -122,6 +122,20 @@
   color: var(--color-icon-gray-neutral-strong);
 }
 
+/* Expanded + focused header: hide the 4px left brand strip — the focus ring
+   is the indicator while focused. Panel body keeps its strip. The
+   `:hover:not(:disabled)` variants are required because the open-hover rules
+   below carry higher specificity and would repaint the strip while the
+   pointer rests on the focused header. */
+.ids-accordion-trigger--open:focus-visible,
+.ids-accordion-item--open .ids-accordion-trigger:focus-visible,
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:focus-visible,
+.ids-accordion-trigger--open:focus-visible:hover:not(:disabled),
+.ids-accordion-item--open .ids-accordion-trigger:focus-visible:hover:not(:disabled),
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:focus-visible:hover:not(:disabled) {
+  background-image: none;
+}
+
 .ids-accordion-trigger:disabled,
 .ids-accordion-trigger--disabled {
   opacity: 0.5;
